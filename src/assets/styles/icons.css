@@ -1,0 +1,74 @@
+@font-face {
+  font-family: VXIcons;
+  src: url(../fonts/icons.woff2), url(../fonts/icons.woff);
+}
+
+span.vx-icon {
+  font-family: VXIcons;
+  font-size: 1.5em;
+}
+
+span.vx-icon-sm {
+  font-family: VXIcons;
+  font-size: 1em;
+}
+
+.vx-apps::before {
+  content: '\0040';
+}
+
+.vx-gateway::before {
+  content: '\0041';
+}
+
+.vx-graph::before {
+  content: '\0046';
+}
+
+.vx-actuator::before {
+  content: '\0045';
+}
+
+.vx-sensor::before {
+  content: '\0044';
+}
+
+.vx-logo::before {
+  content: '\0076';
+}
+
+.vx-burguer::before {
+  content: '\0047';
+}
+
+.vx-home::before {
+  content: '\0048';
+}
+
+.vx-search::before {
+  content: '\0049';
+}
+
+.vx-bar-graph::before {
+  content: '\004A';
+}
+
+.vx-files::before {
+  content: '\004B';
+}
+
+.vx-sales::before {
+  content: '\004C';
+}
+
+.vx-dialog::before {
+  content: '\004D';
+}
+
+.vx-settings::before {
+  content: '\004E';
+}
+
+.vx-users::before {
+  content: '\004F';
+}

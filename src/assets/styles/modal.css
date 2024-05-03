@@ -1,0 +1,7 @@
+.modal-shadow {
+  border: 1px solid #bbb2;
+  box-shadow: 0 2px 5px rgba(100, 100, 100, 0.3);
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.3);
+}

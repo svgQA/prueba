@@ -1,0 +1,37 @@
+import { Button, Input } from '@/components/common';
+import { PAGES_LIST } from '@/utils';
+import { type FunctionComponent } from 'preact';
+import { useEffect } from 'preact/hooks';
+import { Link } from 'wouter';
+
+export const SigninPage: FunctionComponent = () => {
+  // const authService = new AuthService();
+
+  useEffect(() => {
+    document.title = 'VX - Signin Service';
+  }, []);
+  return (
+    <section className='flex flex-row justify-center items-center h-full'>
+      <form className='bg-teal-500 bg-opacity-90 min-h-64 min-w-80 p-6 rounded flex flex-col justify-between'>
+        <Input
+          id='username'
+          name='username'
+          label='username'
+          type='email'
+          icon='settings'
+        />
+        <Input
+          id='password'
+          name='password'
+          label='password'
+          type='password'
+          icon='sensor'
+        />
+        <div className='text-right text-sm font-extralight mt-3'>
+          <Link to={PAGES_LIST.SIGNUP}>Register</Link>
+          <Button id='signin' name='signin' label='Sigin' type='submit' />
+        </div>
+      </form>
+    </section>
+  );
+};
