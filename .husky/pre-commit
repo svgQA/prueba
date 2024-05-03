@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+bun run prettier
+bash .validation.sh
 bun run build
 bun run test
