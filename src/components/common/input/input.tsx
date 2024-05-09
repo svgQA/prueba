@@ -27,7 +27,7 @@ export const Input: FunctionComponent<IInputProps> = ({
       </label>
       <div className='relative bg-red-400 border-gray-300 rounded flex items-center focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'>
         <input
-          className='w-full p-2.5 rounded bg-transparent'
+          className='w-full p-2.5 rounded pl-10 bg-transparent'
           onChange={onChange}
           onKeyUp={onKeyUp}
           type={type}
@@ -40,9 +40,7 @@ export const Input: FunctionComponent<IInputProps> = ({
           pattern={pattern}
           required={required}
         />
-        {icon && (
-          <span className={`absolute right-0 px-2 vx-icon vx-${icon}`} />
-        )}
+        {icon && <span className={`absolute left-0 px-2 vx-icon vx-${icon}`} />}
       </div>
     </div>
   );

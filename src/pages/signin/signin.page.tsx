@@ -27,8 +27,11 @@ export const SigninPage: FunctionComponent = () => {
           type='password'
           icon='sensor'
         />
-        <div className='text-right text-sm font-extralight mt-3'>
+        <div className='text-right text-sm font-extralight mt-3 text-white'>
           <Link to={PAGES_LIST.SIGNUP}>Register</Link>
+          <Link to={PAGES_LIST.HOME}>
+            <span className='vx-icon vx-home mx-2' />
+          </Link>
           <Button id='signin' name='signin' label='Sigin' type='submit' />
         </div>
       </form>

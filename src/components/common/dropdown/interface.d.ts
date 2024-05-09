@@ -1,5 +1,16 @@
 import { IComponentProps } from '../interface';
 
+export interface IDropdownElement {
+  label?: string;
+  name?: string;
+  id?: string;
+  value?: string;
+}
+export type DropdownElementKeys = keyof IDropdownElement;
+
 export interface IDropdownProps extends IComponentProps {
-  title?: string;
+  label?: string;
+  elements: IDropdownElement[];
+  labelTag?: DropdownElementKeys;
+  valueTag?: DropdownElementKeys;
 }
