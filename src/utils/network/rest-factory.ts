@@ -7,9 +7,7 @@ export class GenericResponse<T> {
   private model: T;
 
   constructor(model: IGenericData) {
-    // console.log(model);
     this.status = (model.code >= 200 && model.code < 300) || false;
-    // this.message = model.message || '';
     const data = this.status ? model.data : [];
     if (data?.length) {
       this.data = data;

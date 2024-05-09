@@ -11,7 +11,7 @@
     "prepare": "husky",
     "test": "vitest run",
     "test:e2e:report": "npx playwright show-report",
-    "prettier": "npx prettier . --write"
+    "prettier": "npx prettier src --write"
   },
   "dependencies": {
     "@preact/signals": "^1.2.3",
