@@ -1,4 +1,4 @@
-<p align="center"><img src="" width=500></p>
+<p align="center"><img src="https://preactjs.com/app-icon.png" width=200></p>
 <h3 align="center">Voxline Dashboard</h3>
 <p align="center">
     <a href=""><img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"></a>
@@ -9,26 +9,17 @@
     <a href=""><img src="https://img.shields.io/badge/-Playwright-%23242424?style=for-the-badge&logo=playwright&logoColor=058a5e" alt="Playwright"></a>
 </p>
 
-## Description
+# Description
 
-## Features
+# Features
 
-## Environment Vars
+# Environment Vars
 
 | VAR NAME                     | DEFAULT                | DESCRIPTION |
 | ---------------------------- | ---------------------- | ----------- |
 | VITE_UCA_DEFAULT_SERVICE_URL | http://localhost:8080/ | Server URL  |
 
-global export variables in linux and mac
-
-```bash
-export VITE_UCA_DEFAULT_SERVICE_URL=http://localhost:8080/
-...
-```
-
-or create **.env** file with environment vars.
-
-### Scaffolding
+# Scaffolding
 
 This project scaffolding organizes the main aspects of a scalable and maintainable application into specific, well-defined folders:
 
@@ -81,7 +72,7 @@ uca-web-client/
 
 ```
 
-## Installation
+# Installation
 
 ### Install Packages
 
