@@ -3,6 +3,8 @@ import { PAGES_LIST } from '@/utils';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { Link } from 'wouter';
+import Lottie from 'lottie-react';
+import SignupAnimation from '../../assets/animations/signup.json';
 
 export const SignupPage: FunctionComponent = () => {
   // const authService = new AuthService();
@@ -12,6 +14,9 @@ export const SignupPage: FunctionComponent = () => {
   }, []);
   return (
     <section className='flex flex-row justify-center items-center h-full'>
+      <div className='w-60 h-70 mr-12'>
+        <Lottie animationData={SignupAnimation} />
+      </div>
       <form className='bg-teal-500 bg-opacity-90 min-h-64 min-w-80 p-6 rounded flex flex-col justify-between'>
         <Input
           id='username'
