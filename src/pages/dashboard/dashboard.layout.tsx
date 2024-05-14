@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/common';
+import { Modal, Sidebar } from '@/components/common';
 import { PAGES_LIST, SIDEBAR_MENUS } from '@/utils';
 import { signal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
@@ -16,6 +16,7 @@ export const DashboardLayout: FunctionComponent = () => {
   const onHomeHandler = () => {
     showSettingsModal.value = !showSettingsModal.value;
   };
+
   return (
     <section className='w-screen h-screen'>
       <Sidebar
@@ -32,6 +33,12 @@ export const DashboardLayout: FunctionComponent = () => {
         <Route path={PAGES_LIST.FORMS} component={FormsPage} />
         <Route path={PAGES_LIST.DEVICES} component={DevicesPage} />
       </div>
+      <Modal
+        open={showSettingsModal.value}
+        onClose={onSettingHandler}
+        name='setting-modal'
+        id='setting-modal'
+      />
     </section>
   );
 };

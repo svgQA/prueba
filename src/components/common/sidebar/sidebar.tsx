@@ -11,6 +11,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   onHomeHandler,
   isNavigation = false,
   onHandlerClick,
+  position = 'fixed',
 }: ISidebarProps) => {
   const [menuSelected, setMenuSelected] = useState<string | null>('');
 
@@ -26,9 +27,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
     <div className='h-12 text-center relative cursor-pointer content-end px-1'>
       <span
         name={menu.to}
-        className={
-          'absolute w-full left-0 top-0 h-full vx-icon vx-' + menu.icon
-        }
+        className={'absolute w-full left-0 top-0 vx-icon vx-' + menu.icon}
       ></span>
       <h6 className='text-xs'>{menu.label}</h6>
     </div>
@@ -57,10 +56,10 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
       <nav
         id={`${id}-nav`}
         name={name}
-        className='bg-red-100 h-full fixed p-1 flex flex-col justify-between'
+        className={`bg-teal-400 h-full ${position} p-1 flex flex-col justify-between`}
       >
         {onHomeHandler && (
-          <ul className=''>
+          <ul>
             <a onClick={onHomeHandler} className='cursor-pointer'>
               <div className='text-center'>
                 <span className='vx-icon vx-logo'></span>

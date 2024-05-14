@@ -5,7 +5,7 @@ import { IComponentProps } from '../interface';
 export interface IInputProps extends IComponentProps {
   onChange?: (event: TargetedEvent<HTMLInputElement>) => void;
   onKeyUp?: (event: KeyboardEvent<HTMLElement>) => void;
-  label: string;
+  label?: string;
   min?: string;
   max?: string;
   value?: string | number;
