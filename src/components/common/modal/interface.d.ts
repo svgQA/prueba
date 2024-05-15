@@ -1,3 +1,4 @@
+import { VNode } from 'preact';
 import { IComponentProps } from '../interface';
 
 export interface IModalProps extends IComponentProps {
@@ -5,6 +6,9 @@ export interface IModalProps extends IComponentProps {
   title?: string;
   onClose?: () => void;
   rounded?: boolean;
+  header?: VNode;
+  sidebar?: VNode;
+  body?: VNode;
 }
 
 export interface Corner {
