@@ -14,8 +14,8 @@ export const SignupPage: FunctionComponent = () => {
   }, []);
   return (
     <section className='flex flex-row justify-center items-center h-full'>
-      <div className='w-60 h-70 mr-12'>
-        <Lottie animationData={SignupAnimation} />
+      <div>
+        <Lottie className='w-96 h-auto' animationData={SignupAnimation} />
       </div>
       <form className='bg-teal-500 bg-opacity-90 min-h-64 min-w-80 p-6 rounded flex flex-col justify-between'>
         <Input
@@ -72,6 +72,12 @@ export const SignupPage: FunctionComponent = () => {
           />
         </div>
       </form>
+      <div>
+        <Lottie
+          className='w-96 h-auto rotate-180'
+          animationData={SignupAnimation}
+        />
+      </div>
     </section>
   );
 };

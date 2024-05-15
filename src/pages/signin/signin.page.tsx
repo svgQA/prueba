@@ -40,6 +40,9 @@ export const SigninPage: FunctionComponent = () => {
           <Button id='signin' name='signin' label='Sigin' type='submit' />
         </div>
       </form>
+      <div className='w-80 h-50 rotate-180'>
+        <Lottie animationData={SigninAnimation} />
+      </div>
     </section>
   );
 };
