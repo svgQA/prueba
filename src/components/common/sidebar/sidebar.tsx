@@ -1,7 +1,8 @@
 import { type FunctionComponent } from 'preact';
-import { type IMenu, type ISidebarProps } from './interface';
+import { type ISidebarProps } from './interface';
 import { useEffect, useState } from 'preact/hooks';
 import { Link } from 'wouter';
+import { type IMenu } from '../interface';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
   id,

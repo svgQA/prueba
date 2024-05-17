@@ -37,7 +37,7 @@ export const SigninPage: FunctionComponent = () => {
           <Link to={PAGES_LIST.HOME}>
             <span className='vx-icon vx-home mx-2' />
           </Link>
-          <Button id='signin' name='signin' label='Sigin' type='submit' />
+          <Button id='signin' name='signin' label='Sigin' type='submit' full />
         </div>
       </form>
       <div className='w-80 h-50 rotate-180'>

@@ -53,7 +53,7 @@ export const SignupPage: FunctionComponent = () => {
           <Link to={PAGES_LIST.HOME}>
             <span className='vx-icon vx-home mx-2' />
           </Link>
-          <Button id='signup' name='signup' label='Sigup' type='submit' />
+          <Button id='signup' name='signup' label='Sigup' type='submit' full />
         </div>
         <div className='mt-3 py-2 border-t-2'>
           <Button
@@ -62,6 +62,7 @@ export const SignupPage: FunctionComponent = () => {
             label='Google'
             type='button'
             icon='settings'
+            full
           />
           <Button
             id='facebook'
@@ -69,6 +70,7 @@ export const SignupPage: FunctionComponent = () => {
             label='Facebook'
             type='button'
             icon='sales'
+            full
           />
         </div>
       </form>

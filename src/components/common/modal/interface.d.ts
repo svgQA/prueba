@@ -7,7 +7,6 @@ export interface IModalProps extends IComponentProps {
   onClose?: () => void;
   rounded?: boolean;
   header?: VNode;
-  sidebar?: VNode;
   body?: VNode;
 }
 

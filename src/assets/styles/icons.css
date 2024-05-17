@@ -13,6 +13,10 @@ span.vx-icon-sm {
   font-size: 1em;
 }
 
+span.vx-icon.size-sm {
+  font-size: 1em;
+}
+
 .vx-apps::before {
   content: '\0040';
 }
