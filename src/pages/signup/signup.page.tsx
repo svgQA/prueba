@@ -4,7 +4,7 @@ import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { Link } from 'wouter';
 import Lottie from 'lottie-react';
-import SignupAnimation from '../../assets/animations/signup.json';
+import SignupAnimation from '@/assets/animations/signup.json';
 
 export const SignupPage: FunctionComponent = () => {
   // const authService = new AuthService();
