@@ -173,7 +173,7 @@ export const DashboardLayout: FunctionComponent = () => {
           <>
             <div
               onClick={selectMenu}
-              className='w-3/12 max-w-72 min-w-64 p-1 max-h-[88vh] overflow-y-scroll'
+              className='w-3/12 max-w-72 min-w-64 p-1 max-h-[88vh]'
             >
               <CardSettingUser
                 id='user-information'
@@ -183,18 +183,20 @@ export const DashboardLayout: FunctionComponent = () => {
                 image={authModel.value.image}
                 rol={authModel.value.rol}
               />
-              {menuSettings.map((menu) => {
-                const name = `${menu.label}-menus`;
-                return (
-                  <CardSettingMenu
-                    key={name}
-                    id={name}
-                    name={name}
-                    label={menu.label}
-                    menus={menu.menus}
-                  />
-                );
-              })}
+              <div className='vox-modal-sidebar max-h-[80vh] overflow-y-scroll'>
+                {menuSettings.map((menu) => {
+                  const name = `${menu.label}-menus`;
+                  return (
+                    <CardSettingMenu
+                      key={name}
+                      id={name}
+                      name={name}
+                      label={menu.label}
+                      menus={menu.menus}
+                    />
+                  );
+                })}
+              </div>
             </div>
             <div className='w-10/12 max-h-[86vh] min-h-96 px-2'>
               <CardSettingHeader

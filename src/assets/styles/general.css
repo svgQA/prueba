@@ -2,3 +2,21 @@
   font-size: 0.7rem;
   line-height: 0.8rem;
 }
+
+.vox-modal-sidebar::-webkit-scrollbar {
+  width: 3px;
+  background-color: transparent;
+  position: absolute;
+  left: 0;
+}
+
+.vox-modal-sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 2em;
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 20px;
+}
