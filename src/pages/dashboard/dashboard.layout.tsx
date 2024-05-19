@@ -38,6 +38,16 @@ import {
   DevicesSettingPage,
   IotSettingPage,
 } from '../settings/iot';
+import {
+  FormAnalyticSettingPage,
+  FormCreateSettingPage,
+} from '../settings/forms';
+import { IASettingPage } from '../settings/ia';
+import { SalesSettingPage } from '../settings/sales';
+import {
+  AsociateSettingPage,
+  ResourcesSettingPage,
+} from '../settings/asociate';
 
 const showSettingsModal = signal<boolean>(true);
 export const DashboardLayout: FunctionComponent = () => {
@@ -224,6 +234,14 @@ export const DashboardLayout: FunctionComponent = () => {
                     component={PaymentSettingPage}
                   />
                   {/* FORMS MENU */}
+                  <Route
+                    path={PAGES_LIST_ROUTER.dashboard.forms.create.base}
+                    component={FormCreateSettingPage}
+                  />
+                  <Route
+                    path={PAGES_LIST_ROUTER.dashboard.forms.analytic.base}
+                    component={FormAnalyticSettingPage}
+                  />
                   {/* IOT MENU */}
                   <Route
                     path={PAGES_LIST_ROUTER.dashboard.iot.devices.base}
@@ -238,8 +256,24 @@ export const DashboardLayout: FunctionComponent = () => {
                     component={ChannelsSettingPage}
                   />
                   {/* IA MENU */}
+                  <Route
+                    path={PAGES_LIST_ROUTER.dashboard.ia.ia.base}
+                    component={IASettingPage}
+                  />
                   {/* SALES MENU */}
+                  <Route
+                    path={PAGES_LIST_ROUTER.dashboard.sales.sales.base}
+                    component={SalesSettingPage}
+                  />
                   {/* ASOCIATE MENU */}
+                  <Route
+                    path={PAGES_LIST_ROUTER.dashboard.asociate.list.base}
+                    component={ResourcesSettingPage}
+                  />
+                  <Route
+                    path={PAGES_LIST_ROUTER.dashboard.asociate.resource.base}
+                    component={AsociateSettingPage}
+                  />
                 </Router>
               </section>
             </div>

@@ -5,5 +5,5 @@ export const ModulesSettingPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = 'Modules Settings';
   }, []);
-  return <section>Modules</section>;
+  return <section>MODULES</section>;
 };
