@@ -15,3 +15,4 @@ export * from './sidebar/sidebar';
 
 export * from './slider/slider';
 export * from './switch/switch';
+export * from './badge/badge';

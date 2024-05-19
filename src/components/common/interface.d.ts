@@ -8,4 +8,5 @@ export interface IMenu {
   description: string;
   icon?: string;
   to: string;
+  status?: boolean;
 }

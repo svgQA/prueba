@@ -1,9 +1,9 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 
-export const ShiftsSetting: FunctionComponent = () => {
+export const ShiftsSettingPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = 'Shifts Settings';
   }, []);
-  return <section></section>;
+  return <section>SHIFTS</section>;
 };

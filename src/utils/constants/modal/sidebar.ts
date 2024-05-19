@@ -1,5 +1,5 @@
 import { IModalSidebarMenu } from '@/components/compose/modal';
-import { PAGES_LIST } from '../pages';
+import { PAGES_LIST, PAGES_LIST_ROUTER } from '../pages';
 
 export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
   {
@@ -9,25 +9,37 @@ export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
         icon: 'users',
         label: 'user',
         description: 'User',
-        to: PAGES_LIST.DASHBOARD,
+        to: PAGES_LIST_ROUTER.dashboard.setting.user.to,
       },
       {
         icon: 'home',
         label: 'company',
         description: 'Company',
-        to: PAGES_LIST.DASHBOARD,
+        to: PAGES_LIST_ROUTER.dashboard.setting.company.to,
       },
       {
         icon: 'apps',
         label: 'modules',
         description: 'Company',
-        to: PAGES_LIST.DASHBOARD,
+        to: PAGES_LIST_ROUTER.dashboard.setting.modules.to,
       },
       {
         icon: 'apps',
         label: 'integraciones',
         description: 'Company',
-        to: PAGES_LIST.DASHBOARD,
+        to: PAGES_LIST_ROUTER.dashboard.setting.integration.to,
+      },
+      {
+        icon: 'gateway',
+        label: 'App Voxline',
+        description: 'Company',
+        to: PAGES_LIST_ROUTER.dashboard.setting.voxline.to,
+      },
+      {
+        icon: 'gateway',
+        label: 'App Solo Por',
+        description: 'Company',
+        to: PAGES_LIST_ROUTER.dashboard.setting.solo.to,
       },
     ],
   },

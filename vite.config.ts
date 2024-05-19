@@ -31,15 +31,15 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          if (id.includes('wouter')) {
-            return '@router-bas';
-          }
-          if (id.includes('preact')) {
-            return '@preact-bas';
-          }
-          if (id.includes('components')) {
-            return '@components-loc';
-          }
+          // if (id.includes('wouter')) {
+          //   return '@router-bas';
+          // }
+          // if (id.includes('preact')) {
+          //   return '@preact-bas';
+          // }
+          // if (id.includes('components')) {
+          //   return '@components-loc';
+          // }
         },
       },
     },

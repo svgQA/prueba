@@ -27,10 +27,10 @@ export const Modal: FunctionComponent<IModalProps> = ({
       className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-gray-800 bg-opacity-60`}
     >
       <div
-        className={`${expand ? 'h-full' : 'h-fit'} overflow-y-hidden modal-shadow w-full p-1 border-2 bg-purple-100`}
+        className={`${expand ? 'h-full' : 'h-fit'} overflow-y-hidden rounded-md modal-shadow w-full p-1 border-2 bg-purple-100`}
       >
-        <div className='flex flex-row w-full items-center p-1 bg-red-700'>
-          <div class='flex flex-row w-full items-center justify-end bg-blue-200 px-2'>
+        <div className='flex flex-row w-full items-center p-1'>
+          <div class='flex flex-row w-full items-center justify-end mb-2'>
             {header}
             <div className='w-32 flex items-center justify-end ml-2'>
               <Button
