@@ -16,6 +16,6 @@ export interface ICardSettingUserProps extends IComponentProps {
 }
 
 export interface ICardSettingHeaderProps extends IComponentProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
 }

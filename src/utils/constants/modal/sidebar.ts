@@ -8,7 +8,7 @@ export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
       {
         icon: 'users',
         label: 'user',
-        description: 'User',
+        description: 'Update user Information',
         to: PAGES_LIST_ROUTER.dashboard.setting.user.to,
       },
       {

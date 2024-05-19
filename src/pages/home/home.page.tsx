@@ -19,7 +19,7 @@ export const HomePage: FunctionComponent = () => {
       {/* No tocar esta parte */}
       <div className='w-full h-screen max-h-screen overflow-y-hidden pt-10 bg-purple-300'>
         {/* Trabajar desde aquí */}
-        <section className='m-1 p-2 w-100 h-100 bg-teal-200'>HOME</section>
+        <section className='p-2 w-100 h-100 bg-teal-200'>HOME</section>
       </div>
     </section>
   );

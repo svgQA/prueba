@@ -48,14 +48,31 @@ import {
   AsociateSettingPage,
   ResourcesSettingPage,
 } from '../settings/asociate';
+import { IMenu } from '@/components/common/interface';
+import { authModel } from '@/store';
+import { navigate } from 'wouter/use-browser-location';
+
+const GENERAL_GROUP_MENU = 0,
+  SETTING_USER_MENU = 0;
 
 const showSettingsModal = signal<boolean>(true);
 export const DashboardLayout: FunctionComponent = () => {
   const [menuSettings, setMenuSettings] =
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
+  const [menuInformationSelected, setMenuInformationSelected] = useState<IMenu>(
+    { description: 'Description', label: 'Title', to: '' }
+  );
 
   const onSettingHandler = () => {
     showSettingsModal.value = !showSettingsModal.value;
+    if (showSettingsModal.value) {
+      navigate(PAGES_LIST.DASHBOARD + PAGES_LIST.SETTING);
+      const menu = menuSettings[GENERAL_GROUP_MENU].menus[SETTING_USER_MENU];
+      setMenuInformationSelected(menu);
+      updateMenu(menu.to);
+    } else {
+      navigate(PAGES_LIST.DASHBOARD);
+    }
   };
 
   const onHomeHandler = () => {
@@ -66,23 +83,29 @@ export const DashboardLayout: FunctionComponent = () => {
   const goForward = () => {};
   const minMenu = () => {};
 
+  const updateMenu = (name: string | null) => {
+    if (!name) return;
+    const menus: IModalSidebarMenu[] = menuSettings.map(
+      (menu): IModalSidebarMenu => {
+        menu.menus.forEach((xmenu) => {
+          if (xmenu.to === name) {
+            xmenu.status = true;
+            setMenuInformationSelected(xmenu);
+          } else {
+            xmenu.status = false;
+          }
+        });
+        return menu;
+      }
+    );
+    setMenuSettings(menus);
+  };
+
   const selectMenu = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (target.nodeName === 'A') {
       const menuClicked = target.getAttribute('name');
-      const menus: IModalSidebarMenu[] = menuSettings.map(
-        (menu): IModalSidebarMenu => {
-          menu.menus.forEach((xmenu) => {
-            if (xmenu.to === menuClicked) {
-              xmenu.status = true;
-            } else {
-              xmenu.status = false;
-            }
-          });
-          return menu;
-        }
-      );
-      setMenuSettings(menus);
+      updateMenu(menuClicked);
     }
   };
 
@@ -111,7 +134,7 @@ export const DashboardLayout: FunctionComponent = () => {
         id='setting-modal'
         header={
           <>
-            <div className='w-4/12 flex items-center justify-center'>
+            <div className='w-4/12 max-w-[30vh] flex items-center justify-center'>
               <Button
                 id='setting-go-back'
                 name='setting-go-back'
@@ -155,10 +178,10 @@ export const DashboardLayout: FunctionComponent = () => {
               <CardSettingUser
                 id='user-information'
                 name='user-information'
-                company='voxline'
-                username='juan pablo rodriguez fernandez'
-                image='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'
-                rol='administrador'
+                company={authModel.value.company}
+                username={authModel.value.username}
+                image={authModel.value.image}
+                rol={authModel.value.rol}
               />
               {menuSettings.map((menu) => {
                 const name = `${menu.label}-menus`;
@@ -177,8 +200,8 @@ export const DashboardLayout: FunctionComponent = () => {
               <CardSettingHeader
                 id='setting-header'
                 name='setting-header'
-                title='Title'
-                description='Description'
+                title={menuInformationSelected?.label}
+                description={menuInformationSelected?.description}
               />
               <section className='w-full h-20 bg-red-200'>
                 <Router base={PAGES_LIST.SETTING}>

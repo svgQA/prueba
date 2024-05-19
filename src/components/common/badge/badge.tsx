@@ -8,7 +8,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
 }: IBadgeProps) => {
   return (
     <span
-      className={`text-${color}-800 text-xs font-medium items-center capitalize pl-1 pr-2 flex justify-between rounded-md bg-${color}-200`}
+      className={`text-${color}-800 text-2xs font-extralight items-center capitalize pl-1 pr-2 flex justify-between rounded-md bg-${color}-200`}
     >
       <span className={`vx-icon mx-1 vx-${icon} size-sm`}></span>
       {label}

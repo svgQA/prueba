@@ -5,11 +5,16 @@ import { IAuthState } from './auth';
 
 export const AuthInitialState: IAuthState = {
   status: false,
-  username: '',
+  username: 'Juan Pablo Rodrìguez Fernàndez',
+  company: 'Inndico S.A.S',
+  rol: 'Administrador',
+  image:
+    'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L3BmLWljb240LWppcjIwNjItcG9yLWwtam9iNzg4LnBuZw.png',
 };
 
 export const authState = signal<IAuthState>(AuthInitialState);
 export const authStatus = computed(() => authState.value.status);
+export const authModel = computed(() => authState.value);
 
 export const logout = () => {
   authState.value = AuthInitialState;

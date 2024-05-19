@@ -1,4 +1,7 @@
 export interface IAuthState {
   status: boolean;
-  username?: string;
+  username: string;
+  rol: string;
+  company: string;
+  image: string;
 }
