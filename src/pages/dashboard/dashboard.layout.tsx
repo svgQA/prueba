@@ -51,6 +51,11 @@ import {
 import { IMenu } from '@/components/common/interface';
 import { authModel } from '@/store';
 import { navigate } from 'wouter/use-browser-location';
+import {
+  AnalyticAdminSettingPage,
+  DatabaseSettingPage,
+  TenantSettingPage,
+} from '../settings/admin';
 
 const GENERAL_GROUP_MENU = 0,
   SETTING_USER_MENU = 0;
@@ -207,6 +212,19 @@ export const DashboardLayout: FunctionComponent = () => {
               />
               <section className='w-full h-20 bg-red-200'>
                 <Router base={PAGES_LIST.SETTING}>
+                  {/* GENERAL ADMINISTRATOR */}
+                  <Route
+                    path={PAGES_LIST_ROUTER.dashboard.admin.analytic.base}
+                    component={AnalyticAdminSettingPage}
+                  />
+                  <Route
+                    path={PAGES_LIST_ROUTER.dashboard.admin.database.base}
+                    component={DatabaseSettingPage}
+                  />
+                  <Route
+                    path={PAGES_LIST_ROUTER.dashboard.admin.tenant.base}
+                    component={TenantSettingPage}
+                  />
                   {/* GENERAL MENU */}
                   <Route
                     path={PAGES_LIST_ROUTER.dashboard.setting.user.base}

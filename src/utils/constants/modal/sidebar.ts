@@ -3,6 +3,29 @@ import { PAGES_LIST_ROUTER } from '../pages';
 
 export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
   {
+    label: 'admin',
+    menus: [
+      {
+        icon: 'home',
+        label: 'analytic',
+        description: 'analytic',
+        to: PAGES_LIST_ROUTER.dashboard.admin.analytic.to,
+      },
+      {
+        icon: 'home',
+        label: 'database',
+        description: 'database',
+        to: PAGES_LIST_ROUTER.dashboard.admin.database.to,
+      },
+      {
+        icon: 'home',
+        label: 'tenant',
+        description: 'tenant',
+        to: PAGES_LIST_ROUTER.dashboard.admin.tenant.to,
+      },
+    ],
+  },
+  {
     label: 'general',
     menus: [
       {

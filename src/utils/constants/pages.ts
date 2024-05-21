@@ -17,6 +17,10 @@ export enum PAGES_LIST {
   SETTING_VOXLINE = '/setting/voxline',
   SETTING_SOLO = '/setting/solo',
   // SETTING SECURITY ROUTES
+  SETTING_ADMIN = '/setting/admin',
+  SETTING_ADMIN_DATABASE = '/setting/admin/database',
+  SETTING_ADMIN_TENANT = '/setting/admin/tenant',
+  // SETTING SECURITY ROUTES
   SETTING_SECURITY_USERS = '/setting/security/users',
   SETTING_SECURITY_KEYS = '/setting/security/keys',
   SETTING_SECURITY_ROLES = '/setting/security/roles',
@@ -70,6 +74,20 @@ export const PAGES_LIST_ROUTER = {
     devices: {
       base: '/devices',
       to: PAGES_LIST.DEVICES,
+    },
+    admin: {
+      analytic: {
+        base: '/admin',
+        to: PAGES_LIST.SETTING_ADMIN,
+      },
+      database: {
+        base: '/admin/database',
+        to: PAGES_LIST.SETTING_ADMIN_DATABASE,
+      },
+      tenant: {
+        base: '/admin/tenant',
+        to: PAGES_LIST.SETTING_ADMIN_TENANT,
+      },
     },
     setting: {
       user: {
