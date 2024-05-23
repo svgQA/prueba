@@ -2,9 +2,8 @@ import { IGenericData } from './types';
 
 export class GenericResponse<T> {
   private status: boolean;
-  // private message: string;
   private data: T[] = [];
-  private model: T;
+  private model: T | any;
 
   constructor(model: IGenericData) {
     this.status = (model.code >= 200 && model.code < 300) || false;
@@ -27,7 +26,7 @@ export class GenericResponse<T> {
   }
 
   getMany(): T[] {
-    return this.data;
+    return this.data.length > 0 ? this.data : this.model.data;
   }
 
   getOne(): T {

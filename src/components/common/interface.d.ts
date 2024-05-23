@@ -1,5 +1,5 @@
 export interface IComponentProps {
-  id: string;
+  id?: string;
   name: string;
 }
 

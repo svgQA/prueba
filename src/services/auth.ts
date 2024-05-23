@@ -1,4 +1,4 @@
-import { IAuth, ISignin } from './auth';
+import { IAuth, ISignin } from '@/types';
 import { BaseService, IMakeRequest, REQUEST_METHODS } from '@/utils/network';
 import { VOX_DEFAULT_SERVICE_URL } from '@/utils/network/constants';
 

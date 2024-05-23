@@ -1,9 +1,13 @@
-const MY_LOCATION = window.location.protocol + '//' + window.location.host;
-const VITE_VOX_LOCAL_SERVICE_URL = 'http://localhost:8080';
+const VITE_LOCAL_DEFAULT_SERVICE_URL = 'http://localhost:8080';
+const VITE_LOCAL_TENANT_SERVICE_URL = 'http://localhost:8000';
+const VITE_LOCAL_LATITUDE_SERVICE_URL = 'http://localhost:3000';
 
-export const VOX_DEFAULT_SERVICE_URL = import.meta.env.PROD
-  ? MY_LOCATION
-  : import.meta.env.VITE_DEFAULT_SERVICE_URL || VITE_VOX_LOCAL_SERVICE_URL;
+export const VOX_DEFAULT_SERVICE_URL =
+  import.meta.env.VITE_DEFAULT_SERVICE_URL || VITE_LOCAL_DEFAULT_SERVICE_URL;
+export const VOX_TENANT_SERVICE_URL =
+  import.meta.env.VITE_TENANT_SERVICE_URL || VITE_LOCAL_TENANT_SERVICE_URL;
+export const VOX_LATITUDE_SERVICE_URL =
+  import.meta.env.VITE_LATITUDE_SERVICE_URL || VITE_LOCAL_LATITUDE_SERVICE_URL;
 
 export const VOX_DEFAULT_PATH = {
   PROD: '/api/',

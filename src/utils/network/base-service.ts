@@ -5,18 +5,18 @@ import { VOX_DEFAULT_PATH, VOX_DEFAULT_SERVICE_URL } from './constants';
 
 export class BaseService {
   private base: string = '';
+  private prefix: string = '';
   private request = new MakeRequest();
 
-  constructor(base: string = VOX_DEFAULT_SERVICE_URL) {
+  constructor(base: string = VOX_DEFAULT_SERVICE_URL, prefix: string = '') {
     this.base = base;
+    this.prefix = prefix;
   }
 
   private makeUrl(path: string[]): string {
-    const section = import.meta.env.PROD
-      ? VOX_DEFAULT_PATH.PROD
-      : VOX_DEFAULT_PATH.DEFAULT;
-    const subdirectory = path.join(VOX_DEFAULT_PATH.DEFAULT);
-    return `${this.base}${section}${subdirectory}`;
+    const model = [this.prefix, ...path];
+    const subdirectory = model.join(VOX_DEFAULT_PATH.DEFAULT);
+    return `${this.base}/${subdirectory}`;
   }
 
   protected async makeRequest<T>(

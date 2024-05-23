@@ -5,5 +5,5 @@ export const ShiftsPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = 'VX - Shifts Service';
   }, []);
-  return <section>Memos</section>;
+  return <section>Shift</section>;
 };
