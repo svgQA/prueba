@@ -210,7 +210,7 @@ export const DashboardLayout: FunctionComponent = () => {
                 title={menuInformationSelected?.label}
                 description={menuInformationSelected?.description}
               />
-              <section className='w-full bg-red-200 h-[80vh]'>
+              <section className='w-full h-[80vh]'>
                 <Router base={PAGES_LIST.SETTING}>
                   {/* GENERAL ADMINISTRATOR */}
                   <Route

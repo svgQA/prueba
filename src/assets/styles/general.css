@@ -3,6 +3,16 @@
   line-height: 0.8rem;
 }
 
+.text-3xs {
+  font-size: 0.5rem;
+  line-height: 0.6rem;
+}
+
+.text-2xs {
+  font-4ize: 0.3rem;
+  line-height: 0.4rem;
+}
+
 .vox-modal-sidebar::-webkit-scrollbar {
   width: 3px;
   background-color: transparent;

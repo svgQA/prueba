@@ -1,0 +1,15 @@
+export enum FORM_ITEM {
+  TEXT = 'text',
+  AREA = 'area',
+  NUMBER = 'number',
+  CHECKBOX = 'checkbox',
+  DROPDOWN = 'dropdown',
+  SWITCH = 'switch',
+  TITLE = 'title',
+  PARAGRAPH = 'paragraph',
+  PHOTO = 'photo',
+  QR = 'qr',
+  CAMERA = 'camera',
+  AUDIO = 'audio',
+  SIGN = 'sign',
+}

@@ -2,7 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { type ISidebarProps } from './interface';
 import { useEffect, useState } from 'preact/hooks';
 import { Link } from 'wouter';
-import { type IMenu } from '../interface';
+import { ButtonMenu } from '../button/menu/button';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
   id,
@@ -23,16 +23,6 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   const isActive = (value: string) => {
     return value === menuSelected;
   };
-
-  const getMenu = (menu: IMenu) => (
-    <div className='h-12 text-center relative cursor-pointer content-end px-1'>
-      <span
-        name={menu.to}
-        className={'absolute w-full left-0 top-0 vx-icon vx-' + menu.icon}
-      ></span>
-      <h6 className='text-xs'>{menu.label}</h6>
-    </div>
-  );
 
   const selectMenu = (event: MouseEvent) => {
     if (!isNavigation) {
@@ -62,10 +52,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
         {onHomeHandler && (
           <ul>
             <a onClick={onHomeHandler} className='cursor-pointer'>
-              <div className='text-center'>
-                <span className='vx-icon vx-logo'></span>
-                <h6 className='text-xs'>Home</h6>
-              </div>
+              <ButtonMenu name='vx-home-button' label='home' icon='logo' />
             </a>
           </ul>
         )}
@@ -81,14 +68,22 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
                 key={id}
                 className={`p-1 mt-1 bg-opacity-20 rounded-sm ${isActive(menu.to) ? 'bg-red-800' : 'bg-blue-800'}`}
               >
-                {getMenu(menu)}
+                <ButtonMenu
+                  name={menu.to}
+                  label={menu.label}
+                  icon={menu.icon}
+                />
               </Link>
             ) : (
               <a
                 name={menu.to}
                 className={`p-1 mt-1 bg-opacity-20 rounded-sm ${isActive(menu.to) ? 'bg-red-800' : 'bg-blue-800'}`}
               >
-                {getMenu(menu)}
+                <ButtonMenu
+                  name={menu.to}
+                  label={menu.label}
+                  icon={menu.icon}
+                />
               </a>
             );
           })}
@@ -96,10 +91,11 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
         {onSettingHandler && (
           <ul className=''>
             <a onClick={onSettingHandler} className='cursor-pointer'>
-              <div className='text-center'>
-                <span className='vx-icon vx-settings'></span>
-                <h6 className='text-xs'>Settings</h6>
-              </div>
+              <ButtonMenu
+                name='vx-setting-button'
+                label='setting'
+                icon='settings'
+              />
             </a>
           </ul>
         )}

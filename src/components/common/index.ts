@@ -17,3 +17,5 @@ export * from './slider/slider';
 export * from './switch/switch';
 export * from './badge/badge';
 export * from './expand/expand';
+
+export * from './button/menu/button';
