@@ -1,21 +1,21 @@
 import { MakeRequest } from './make-request';
 import { IMakeRequest } from './types';
 import { GenericResponse } from './rest-factory';
-import { UCA_DEFAULT_PATH, UCA_DEFAULT_SERVICE_URL } from './constants';
+import { VOX_DEFAULT_PATH, VOX_DEFAULT_SERVICE_URL } from './constants';
 
 export class BaseService {
   private base: string = '';
   private request = new MakeRequest();
 
-  constructor(base: string = UCA_DEFAULT_SERVICE_URL) {
+  constructor(base: string = VOX_DEFAULT_SERVICE_URL) {
     this.base = base;
   }
 
   private makeUrl(path: string[]): string {
     const section = import.meta.env.PROD
-      ? UCA_DEFAULT_PATH.PROD
-      : UCA_DEFAULT_PATH.DEFAULT;
-    const subdirectory = path.join(UCA_DEFAULT_PATH.DEFAULT);
+      ? VOX_DEFAULT_PATH.PROD
+      : VOX_DEFAULT_PATH.DEFAULT;
+    const subdirectory = path.join(VOX_DEFAULT_PATH.DEFAULT);
     return `${this.base}${section}${subdirectory}`;
   }
 

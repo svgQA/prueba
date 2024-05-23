@@ -1,10 +1,10 @@
 import { IAuth, ISignin } from './auth';
 import { BaseService, IMakeRequest, REQUEST_METHODS } from '@/utils/network';
-import { UCA_DEFAULT_SERVICE_URL } from '@/utils/network/constants';
+import { VOX_DEFAULT_SERVICE_URL } from '@/utils/network/constants';
 
 export class AuthService extends BaseService {
   constructor() {
-    super(UCA_DEFAULT_SERVICE_URL);
+    super(VOX_DEFAULT_SERVICE_URL);
   }
 
   async signin(payload: ISignin) {

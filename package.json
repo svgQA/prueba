@@ -14,6 +14,7 @@
     "prettier": "npx prettier src --write"
   },
   "dependencies": {
+    "@latitude-data/react": "^0.7.2",
     "@preact/signals": "^1.2.3",
     "dayjs": "^1.11.11",
     "lottie-react": "^2.4.0",
