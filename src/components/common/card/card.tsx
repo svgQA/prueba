@@ -10,7 +10,7 @@ export const Card: FunctionComponent<ICardProps> = ({
     <div
       id={id}
       name={name}
-      className='capitalize w-full rounded p-2 bg-gray-100 my-1 min-w-40 overflow-x-hidden'
+      className='capitalize w-full rounded p-2 bg-gray-100 my-1 min-w-40 overflow-hidden'
     >
       {children}
     </div>

@@ -44,21 +44,24 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   return (
     <section className='h-full'>
       <div className='flex flex-row'>
-        <div className='flex flex-col w-full pr-2'>
-          <Card name='header-create-form'>
-            <div className='flex flex-col justify-between'>
-              <Input
-                name='input-name-form'
-                placeholder='Form Name'
-                icon='apps'
-              />
-              <Input
-                name='input-description-form'
-                placeholder='Description'
-                icon='apps'
-              />
-            </div>
-          </Card>
+        <div className='flex flex-col w-full max-h-[80vh] overflow-auto vox-scroll-design mr-2'>
+          <div>
+            <Card name='header-create-form'>
+              <div className='flex flex-col justify-between'>
+                <Input
+                  name='input-name-form'
+                  placeholder='Form Name'
+                  icon='apps'
+                />
+                <span className='my-2 w-full border-t-2'></span>
+                <Input
+                  name='input-description-form'
+                  placeholder='Description'
+                  icon='apps'
+                />
+              </div>
+            </Card>
+          </div>
           <div onClick={closeMenu}>
             {elements.map((element) => (
               <Card
@@ -68,7 +71,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                 <div className='relative h-20 w-full bg-red-100'>
                   <span
                     name={`element-${element.id}`}
-                    className='cursor-pointer bg-purple-200 px-1 absolute font-bold vx-icon vx-apps top-0 right-1'
+                    className='cursor-pointer px-1 absolute font-bold vx-icon vx-apps top-0 right-1'
                   ></span>
                   {element.id}
                 </div>

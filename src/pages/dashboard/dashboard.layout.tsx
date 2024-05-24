@@ -188,7 +188,7 @@ export const DashboardLayout: FunctionComponent = () => {
                 image={authModel.value.image}
                 rol={authModel.value.rol}
               />
-              <div className='vox-modal-sidebar max-h-[80vh] overflow-y-scroll'>
+              <div className='vox-scroll-design max-h-[80vh] overflow-y-scroll'>
                 {menuSettings.map((menu) => {
                   const name = `${menu.label}-menus`;
                   return (
