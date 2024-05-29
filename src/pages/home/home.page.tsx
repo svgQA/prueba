@@ -1,4 +1,5 @@
-import { Navbar } from '@/components/common';
+import { Carousel, Navbar, Slide } from '@/components/common';
+import { CardProductHomeMenu } from '@/components/compose/home';
 import { NAVBAR_MENUS } from '@/utils/constants/navbar';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
@@ -13,13 +14,26 @@ export const HomePage: FunctionComponent = () => {
         id='voxline-navbar'
         name='voxline-navbar'
         menus={NAVBAR_MENUS}
-        logo={<p>LOGO</p>}
+        logo={<span className='vx-icon vx-logo' />}
         actions={<p>ACTIONS</p>}
       />
       {/* No tocar esta parte */}
-      <div className='w-full h-screen max-h-screen overflow-y-hidden pt-10 bg-purple-300'>
+      <div className='w-full h-screen pt-10 bg-red-300'>
         {/* Trabajar desde aquí */}
-        <section className='p-2 w-100 h-100 bg-teal-200'>HOME</section>
+        <Carousel name='sponsor-carrousel' visibleCount={3}>
+          <Slide>
+            <CardProductHomeMenu name='users' icon='gateway' />
+          </Slide>
+          <Slide>
+            <CardProductHomeMenu name='users' icon='apps' />
+          </Slide>
+          <Slide>
+            <CardProductHomeMenu name='users' icon='settings' />
+          </Slide>
+          <Slide>
+            <CardProductHomeMenu name='users' icon='actuator' />
+          </Slide>
+        </Carousel>
       </div>
     </section>
   );

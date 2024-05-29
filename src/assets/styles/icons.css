@@ -8,13 +8,20 @@ span.vx-icon {
   font-size: 1.5em;
 }
 
-span.vx-icon-sm {
-  font-family: VXIcons;
+span.vx-icon.size-sm {
   font-size: 1em;
 }
 
-span.vx-icon.size-sm {
-  font-size: 1em;
+span.vx-icon.size-md {
+  font-size: 1.5em;
+}
+
+span.vx-icon.size-lg {
+  font-size: 2em;
+}
+
+span.vx-icon.size-xl {
+  font-size: 2.5em;
 }
 
 .vx-apps::before {
