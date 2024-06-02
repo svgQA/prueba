@@ -1,19 +1,33 @@
-import { Input, Modal, Sidebar, Button } from '@/components/common';
+import { Button, Input, Modal, Sidebar } from '@/components/common';
 import { PAGES_LIST, PAGES_LIST_ROUTER, SIDEBAR_MENUS } from '@/utils';
 import { signal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
+import { useState } from 'preact/hooks';
 import { Route, Router, Switch } from 'wouter';
+import { navigate } from 'wouter/use-browser-location';
+
+import { DevicesPage } from './devices/devices.page';
+import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
 import { ShiftsPage } from './shifts/shifts.page';
-import { FormsPage } from './forms/forms.page';
-import { DevicesPage } from './devices/devices.page';
+
+import { IMenu } from '@/components/common/interface';
 import {
   CardSettingHeader,
   CardSettingMenu,
   CardSettingUser,
   IModalSidebarMenu,
 } from '@/components/compose/modal';
+import { authModel } from '@/store';
 import { MODAL_SIDEBAR_MENUS } from '@/utils/constants/modal/sidebar';
+
+import {
+  AnalyticAdminSettingPage,
+  DatabaseSettingPage,
+  TenantSettingPage,
+} from '&/admin';
+import { AsociateSettingPage, ResourcesSettingPage } from '&/asociate';
+import { FormAnalyticSettingPage, FormCreateSettingPage } from '&/forms';
 import {
   CompanySettingPage,
   IntegrationSettingPage,
@@ -21,41 +35,17 @@ import {
   SoloSettingPage,
   UserSettingPage,
   VoxlineSettingPage,
-} from '../settings/general';
-import { useState } from 'preact/hooks';
+} from '&/general';
+import { IASettingPage } from '&/ia';
+import { ChannelsSettingPage, DevicesSettingPage, IotSettingPage } from '&/iot';
+import { PaymentHistorySettingPage, PaymentSettingPage } from '&/payment';
+import { SalesSettingPage } from '&/sales';
 import {
   GroupSettingPage,
   KeysSettingPage,
   RolesSettingPage,
   UsersSettingPage,
-} from '../settings/security';
-import {
-  PaymentHistorySettingPage,
-  PaymentSettingPage,
-} from '../settings/payment';
-import {
-  ChannelsSettingPage,
-  DevicesSettingPage,
-  IotSettingPage,
-} from '../settings/iot';
-import {
-  FormAnalyticSettingPage,
-  FormCreateSettingPage,
-} from '../settings/forms';
-import { IASettingPage } from '../settings/ia';
-import { SalesSettingPage } from '../settings/sales';
-import {
-  AsociateSettingPage,
-  ResourcesSettingPage,
-} from '../settings/asociate';
-import { IMenu } from '@/components/common/interface';
-import { authModel } from '@/store';
-import { navigate } from 'wouter/use-browser-location';
-import {
-  AnalyticAdminSettingPage,
-  DatabaseSettingPage,
-  TenantSettingPage,
-} from '../settings/admin';
+} from '&/security';
 
 const GENERAL_GROUP_MENU = 0,
   SETTING_USER_MENU = 0;
