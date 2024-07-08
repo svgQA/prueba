@@ -1,5 +1,6 @@
 import { VNode } from 'preact';
-import { type IComponentProps, type IMenu } from '../interface';
+import { type IMenu } from '../interface';
+import { type IComponentProps } from '@/components/utils/interface';
 
 export interface INavbarProps extends IComponentProps {
   menus: IMenu[];

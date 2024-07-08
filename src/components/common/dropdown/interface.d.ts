@@ -1,4 +1,4 @@
-import { IComponentProps } from '../interface';
+import { type IComponentProps } from '@/components/utils/interface';
 
 export interface IDropdownElement {
   label?: string;

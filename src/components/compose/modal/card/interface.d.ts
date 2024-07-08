@@ -1,7 +1,5 @@
-import {
-  type IComponentProps,
-  type IMenu,
-} from '@/components/common/interface';
+import { type IMenu } from '@/components/common/interface';
+import { type IComponentProps } from '@/components/utils/interface';
 
 export interface ICardSettingMenuProps extends IComponentProps {
   menus: IMenu[];
