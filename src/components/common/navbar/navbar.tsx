@@ -13,7 +13,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
     <nav
       id={id}
       name={name}
-      className='flex font-bold px-5 py-8 flex-row justify-between w-full h-10 content-center items-center absolute text-white'
+      className='flex font-bold px-5 py-4 flex-row justify-between w-full content-center items-center absolute text-white top-0'
     >
       <span>{logo}</span>
       {/* <span className='px-5 content-center'>{actions}</span> */}

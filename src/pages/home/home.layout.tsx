@@ -1,3 +1,4 @@
+import { Layer } from '@/components/compose';
 import './home.css';
 import { Navbar } from '@/components/common';
 import { NAVBAR_MENUS } from '@/utils/constants/navbar';
@@ -9,27 +10,40 @@ export const HomeLayout: FunctionComponent = () => {
     document.title = 'Voxline';
   }, []);
   return (
-    <section className='relative'>
-      <header>
-        <Navbar
-          id='voxline-navbar'
-          name='voxline-navbar'
-          menus={NAVBAR_MENUS}
-          logo={
-            <div className='flex flex-row items-center'>
-              <span className='vx-icon vx-logo' />
-              <div className='text-left mx-3'>
-                <h1 className='font-bold'>VOXLINE</h1>
-                <p className='text-xs capitalize font-light'>
-                  Make your Dreams
-                </p>
-              </div>
+    <section className='relative overflow-hidden'>
+      <Navbar
+        id='voxline-navbar'
+        name='voxline-navbar'
+        menus={NAVBAR_MENUS}
+        logo={
+          <div className='flex flex-row items-center'>
+            <span className='vx-icon vx-logo' />
+            <div className='text-left mx-3'>
+              <h1 className='font-bold'>VOXLINE</h1>
+              <p className='text-xs capitalize font-light'>Make your Dreams</p>
             </div>
-          }
-        />
-      </header>
+          </div>
+        }
+      />
+
       {/* No tocar esta parte */}
-      <div className='w-full h-screen pt-10 bg-gradient-to-r from-cyan-500 to-emerald-400'></div>
+      <div className='w-full h-screen pt-16 bg-gradient-to-r from-cyan-500 to-emerald-400 content-center'>
+        <Layer
+          title='Gestión Simplificada de Recursos Informativos'
+          subtitle='Todo lo Que Necesitas, Organizado Perfectamente'
+          description='Facilita la gestión del conocimiento dentro de tu organización con herramientas poderosas para crear y compartir hitos informativos. Desde políticas internas hasta guías y tutoriales externos, organiza y distribuye contenido que empodera a tus empleados y mejora su productividad.'
+        />
+        {/* <Layer
+          title='Conecta, Informa, Empodera'
+          subtitle='Revoluciona la Comunicación Interna con Información Accesible'
+          description='Eleva la experiencia de tus empleados con un acceso transparente y directo a la información que importa. Aprovecha nuestra plataforma para garantizar que todos en tu organización tengan la información necesaria para tomar decisiones informadas y actuar con confianza.'
+        />
+        <Layer
+          title='Centro de Información Empresarial'
+          subtitle='Acceso Instantáneo a Recursos Clave, en Cualquier Momento y en Cualquier Lugar'
+          description='Descubre la eficiencia de tener toda la información crítica de la empresa al alcance de tu mano. Nuestro Módulo de Información te permite navegar, visualizar y acceder a recursos esenciales con solo unos clics. Ideal para empleados que necesitan respuestas rápidas y administradores que buscan distribuir información vital de manera efectiva.'
+        /> */}
+      </div>
       <div className='cursor-pointer hover:bg-cyan-600 absolute bottom-20 right-14 text-white bg-cyan-500 h-20 w-20 rounded-full text-center content-center z-10'>
         <span className='absolute text-left px-5 -top-16 min-w-80 -left-64 bg-white text-cyan-500 rounded-xl py-2'>
           ¿En què te podemos Ayudar?
