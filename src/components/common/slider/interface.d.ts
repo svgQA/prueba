@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'preact/compat';
 import { IComponentProps } from '../interface';
 
-export interface ISidebarProps extends IComponentProps, PropsWithChildren {
+export interface ISliderProps extends IComponentProps, PropsWithChildren {
   interval?: number;
 }

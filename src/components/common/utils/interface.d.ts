@@ -5,7 +5,7 @@ export interface IComponentProps {
 
 export interface IMenu {
   label: string;
-  description: string;
+  description?: string;
   icon?: string;
   to: string;
   status?: boolean;

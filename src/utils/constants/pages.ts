@@ -9,6 +9,7 @@ export enum PAGES_LIST {
   MEMOS = '/memos',
   DEVICES = '/devices',
   SETTING = '/setting',
+  SERVICES = '/services',
   // SETTING GENERAL ROUTES
   SETTING_USER = '/setting/user',
   SETTING_COMPANY = '/setting/company',
