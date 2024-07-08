@@ -13,7 +13,7 @@ export const ButtonMenu: FunctionComponent<IButtonMenuProps> = ({
     >
       <span
         name={name}
-        className={'absolute w-full left-0 top-0 vx-icon vx-' + icon}
+        className={'absolute w-full left-0 size-2md -top-1 vx-icon vx-' + icon}
       ></span>
       <h6 className={`${small ? 'text-3xs' : 'text-xs'} capitalize`}>
         {label}

@@ -20,8 +20,10 @@ export const TenantSettingPage: FunctionComponent = () => {
       setInstances(data);
     }
   };
+
   return (
     <section className='h-full'>
+      TENANT
       {instances.map((instance) => (
         <Expand
           key={`instances-id-${instance.name}`}

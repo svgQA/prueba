@@ -11,7 +11,7 @@ export const CardSettingHeader: FunctionComponent<ICardSettingHeaderProps> = ({
   return (
     <Card id={id} name={name}>
       <div className='flex flex-row items-center'>
-        <span className='vx-icon vx-apps mx-3' />
+        <span className='size-lg text-cyan-500 vx-icon vx-apps mx-3' />
         <div className='w-full px-2'>
           <h3 className='text-xl font-bold text-pretty'>{title}</h3>
           <p className='font-thin'>{description}</p>

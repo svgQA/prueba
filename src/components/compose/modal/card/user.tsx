@@ -24,7 +24,12 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
           </p>
           <div className='flex flex-row justify-between mt-2'>
             <p className='font-bold mr-1 text-xs'>{company}</p>
-            <Badge label={rol} icon='users' color='teal' />
+            <Badge
+              label={rol}
+              icon='users'
+              color='text-white'
+              bgColor='bg-cyan-500'
+            />
           </div>
         </div>
       </div>

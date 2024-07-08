@@ -36,6 +36,7 @@ import {
   UserSettingPage,
   VoxlineSettingPage,
 } from '&/general';
+import { RoundsSettingPage } from '&/shifts';
 import { IASettingPage } from '&/ia';
 import { ChannelsSettingPage, DevicesSettingPage, IotSettingPage } from '&/iot';
 import { PaymentHistorySettingPage, PaymentSettingPage } from '&/payment';
@@ -292,6 +293,11 @@ export const DashboardLayout: FunctionComponent = () => {
                   <Route
                     path={PAGES_LIST_ROUTER.dashboard.ia.ia.base}
                     component={IASettingPage}
+                  />
+                  {/* SHIFTS MENU */}
+                  <Route
+                    path={PAGES_LIST_ROUTER.dashboard.shifts.rounds.base}
+                    component={RoundsSettingPage}
                   />
                   {/* SALES MENU */}
                   <Route

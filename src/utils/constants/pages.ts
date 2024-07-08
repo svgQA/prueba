@@ -40,6 +40,8 @@ export enum PAGES_LIST {
   SETTING_IA_ANALYTIC = '/setting/ia',
   // SETTING SALES ROUTES
   SETTING_SALES_ANALYTIC = '/setting/sales',
+  // SETTING SHIFTS ROUNDS
+  SETTING_SHIFTS_ROUNDS = '/setting/rounds',
   // SETTING ASOCIATE ROUTES
   SETTING_ASOCIATE_LIST = '/setting/asociate',
   SETTING_ASOCIATE_RESOURCES = '/setting/asociate/resources',
@@ -75,6 +77,12 @@ export const PAGES_LIST_ROUTER = {
     devices: {
       base: '/devices',
       to: PAGES_LIST.DEVICES,
+    },
+    shifts: {
+      rounds: {
+        base: '/rounds',
+        to: PAGES_LIST.SETTING_SHIFTS_ROUNDS,
+      },
     },
     admin: {
       analytic: {

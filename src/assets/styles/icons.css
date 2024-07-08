@@ -16,12 +16,20 @@ span.vx-icon.size-md {
   font-size: 1.5em;
 }
 
+span.vx-icon.size-2md {
+  font-size: 1.8em;
+}
+
 span.vx-icon.size-lg {
   font-size: 2em;
 }
 
 span.vx-icon.size-xl {
   font-size: 2.5em;
+}
+
+span.vx-icon.size-2xl {
+  font-size: 3em;
 }
 
 .vx-apps::before {
