@@ -25,17 +25,23 @@ export default defineConfig({
       all: true,
     },
   },
+  base: '',
   clearScreen: false,
   build: {
     chunkSizeWarningLimit: 50,
+    outDir: 'dist',
+    assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          // if (id.includes('wouter')) {
-          //   return '@router-bas';
-          // }
-          // if (id.includes('preact')) {
-          //   return '@preact-bas';
+          if (id.includes('wouter')) {
+            return '@router-bas';
+          }
+          if (id.includes('preact')) {
+            return '@preact-bas';
+          }
+          // if (id.includes('components')) {
+          //   return '@components-loc';
           // }
           // if (id.includes('components')) {
           //   return '@components-loc';
