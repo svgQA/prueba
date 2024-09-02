@@ -1,6 +1,6 @@
 import { INPUTS_STATUS, uca_variable } from '@/types/types';
 import { type TargetedEvent } from 'preact/compat';
-import { IComponentProps } from '../interface';
+import { type IComponentProps } from '@/components/utils/interface';
 
 export interface IInputProps extends IComponentProps {
   onChange?: (event: TargetedEvent<HTMLInputElement>) => void;

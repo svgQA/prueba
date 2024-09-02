@@ -47,11 +47,14 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
       <nav
         id={`${id}-nav`}
         name={name}
-        className={`bg-teal-400 h-full ${position} p-1 flex flex-col justify-between`}
+        className={`bg-neutral-100 h-full ${position} p-1 flex flex-col justify-between`}
       >
         {onHomeHandler && (
           <ul>
-            <a onClick={onHomeHandler} className='cursor-pointer'>
+            <a
+              onClick={onHomeHandler}
+              className='cursor-pointer text-black hover:text-black'
+            >
               <ButtonMenu name='vx-home-button' label='home' icon='logo' />
             </a>
           </ul>
@@ -66,7 +69,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
               <Link
                 to={menu.to}
                 key={id}
-                className={`p-1 mt-1 bg-opacity-20 rounded-sm ${isActive(menu.to) ? 'bg-red-800' : 'bg-blue-800'}`}
+                className={`p-1 mt-1 hover:disabled rounded-sm ${isActive(menu.to) ? 'bg-cyan-500 text-white hover:text-white' : 'text-black hover:text-black'}`}
               >
                 <ButtonMenu
                   name={menu.to}
@@ -77,7 +80,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
             ) : (
               <a
                 name={menu.to}
-                className={`p-1 mt-1 bg-opacity-20 rounded-sm ${isActive(menu.to) ? 'bg-red-800' : 'bg-blue-800'}`}
+                className={`p-1 mt-1 bg-opacity-20 rounded-sm ${isActive(menu.to) ? 'bg-cyan-500 text-white hover:text-white' : 'text-black hover:text-black'}`}
               >
                 <ButtonMenu
                   name={menu.to}
@@ -90,7 +93,10 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
         </ul>
         {onSettingHandler && (
           <ul className=''>
-            <a onClick={onSettingHandler} className='cursor-pointer'>
+            <a
+              onClick={onSettingHandler}
+              className='cursor-pointer text-black hover:text-black'
+            >
               <ButtonMenu
                 name='vx-setting-button'
                 label='setting'

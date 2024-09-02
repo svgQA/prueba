@@ -1,5 +1,5 @@
 import { VNode } from 'preact';
-import { IComponentProps } from '../interface';
+import { type IComponentProps } from '@/components/utils/interface';
 
 export interface IModalProps extends IComponentProps {
   open: boolean;

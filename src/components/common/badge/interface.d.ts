@@ -1,5 +1,6 @@
 export interface IBadgeProps {
   label: string;
   icon?: string;
-  color: string;
+  bgColor?: string;
+  color?: string;
 }

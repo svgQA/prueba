@@ -1,4 +1,5 @@
-import { type IComponentProps, type IMenu } from '../interface';
+import { IComponentProps } from '@/components/utils/interface';
+import { type IMenu } from '../interface';
 
 export interface ISidebarProps extends IComponentProps {
   menus: IMenu[];

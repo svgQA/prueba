@@ -1,9 +1,9 @@
 import { type FunctionComponent } from 'preact';
-import { type ISidebarProps } from './interface';
+import { type ISliderProps } from './interface';
 
-export const Slider: FunctionComponent<ISidebarProps> = ({
+export const Slider: FunctionComponent<ISliderProps> = ({
   id,
   name,
-}: ISidebarProps) => {
+}: ISliderProps) => {
   return <div id={id} name={name}></div>;
 };

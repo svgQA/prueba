@@ -153,6 +153,17 @@ export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
     ],
   },
   {
+    label: 'Shifts',
+    menus: [
+      {
+        icon: 'settings',
+        label: 'Rounds',
+        description: 'Rondas',
+        to: PAGES_LIST_ROUTER.dashboard.shifts.rounds.to,
+      },
+    ],
+  },
+  {
     label: 'IA',
     menus: [
       {
