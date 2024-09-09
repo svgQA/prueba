@@ -1,20 +1,23 @@
+import { IMenu } from '@/components/common/interface';
 import { PAGES_LIST } from './pages';
 
-export const NAVBAR_MENUS = [
+export const NAVBAR_MENUS: IMenu[] = [
   {
     label: 'Services',
-    desciption: '123',
+    description: '123',
     to: PAGES_LIST.SERVICES,
   },
   {
     label: 'Signin',
-    desciption: '123',
+    description: '123',
     to: PAGES_LIST.SIGNIN,
+    button: true,
   },
   {
     label: 'Signup',
-    desciption: '123',
+    description: '123',
     to: PAGES_LIST.SIGNUP,
+    button: true,
   },
   // {
   //   label: 'Dashboard',

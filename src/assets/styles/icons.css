@@ -53,6 +53,10 @@ span.vx-icon.size-2xl {
 }
 
 .vx-logo::before {
+  content: '\0097';
+}
+
+.vx-fruit::before {
   content: '\0076';
 }
 

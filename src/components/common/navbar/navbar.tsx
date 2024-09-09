@@ -7,7 +7,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
   name,
   menus,
   logo,
-  // actions,
+  onActionHandler,
 }: INavbarProps) => {
   return (
     <nav
@@ -20,7 +20,13 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
       <ul class='flex flex-row items-center text-center'>
         {menus.map((menu) => (
           <li key={`navbar-menu-${menu.to}`} className='px-2'>
-            <Link to={menu.to}>{menu.label}</Link>
+            {menu.button && onActionHandler ? (
+              <button onClick={() => onActionHandler(menu.to)}>
+                {menu.label}
+              </button>
+            ) : (
+              <Link to={menu.to}>{menu.label}</Link>
+            )}
           </li>
         ))}
       </ul>
