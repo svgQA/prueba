@@ -46,22 +46,26 @@ export const HomeLayout: FunctionComponent = () => {
           />
         )}
         {homeMenu === PAGES_LIST.SIGNIN && (
-          <Layer
-            title='SIGNIN'
-            subtitle='Revoluciona la Comunicación Interna con Información Accesible'
-            description='Eleva la experiencia de tus empleados con un acceso transparente y directo a la información que importa. Aprovecha nuestra plataforma para garantizar que todos en tu organización tengan la información necesaria para tomar decisiones informadas y actuar con confianza.'
-          >
+          // <Layer
+          //   title='SIGNIN'
+          //   subtitle='Revoluciona la Comunicación Interna con Información Accesible'
+          //   description='Eleva la experiencia de tus empleados con un acceso transparente y directo a la información que importa. Aprovecha nuestra plataforma para garantizar que todos en tu organización tengan la información necesaria para tomar decisiones informadas y actuar con confianza.'
+          // >
+          // </Layer>
+          <div className='flex justify-center items-center w-full h-full -mt-40'>
             <SigninPage />
-          </Layer>
+          </div>
         )}
         {homeMenu === PAGES_LIST.SIGNUP && (
-          <Layer
-            title='SIGNUP'
-            subtitle='Acceso Instantáneo a Recursos Clave, en Cualquier Momento y en Cualquier Lugar'
-            description='Descubre la eficiencia de tener toda la información crítica de la empresa al alcance de tu mano. Nuestro Módulo de Información te permite navegar, visualizar y acceder a recursos esenciales con solo unos clics. Ideal para empleados que necesitan respuestas rápidas y administradores que buscan distribuir información vital de manera efectiva.'
-          >
+          // <Layer
+          //   title='SIGNUP'
+          //   subtitle='Acceso Instantáneo a Recursos Clave, en Cualquier Momento y en Cualquier Lugar'
+          //   description='Descubre la eficiencia de tener toda la información crítica de la empresa al alcance de tu mano. Nuestro Módulo de Información te permite navegar, visualizar y acceder a recursos esenciales con solo unos clics. Ideal para empleados que necesitan respuestas rápidas y administradores que buscan distribuir información vital de manera efectiva.'
+          // >
+          // </Layer>
+          <div className='flex justify-center items-center w-full h-full -mt-40'>
             <SignupPage />
-          </Layer>
+          </div>
         )}
       </div>
       {/*

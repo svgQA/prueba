@@ -27,7 +27,7 @@ export const Input: FunctionComponent<IInputProps> = ({
       </label>
       <div className='relative border-gray-300 rounded flex items-center'>
         <input
-          className='w-full p-2.5 rounded pl-10 bg-transparent capitalize'
+          className='w-full p-2.5 rounded pl-10 bg-transparent border border-gray-300 capitalize'
           onChange={onChange}
           onKeyUp={onKeyUp}
           type={type}

@@ -11,25 +11,25 @@ export const SignupPage: FunctionComponent = () => {
     document.title = 'VX - Signup Service';
   }, []);
   return (
-    <form className='bg-teal-500 bg-opacity-90 max-w-96 min-h-64 min-w-80 p-6 rounded flex flex-col justify-between'>
+    <form className='bg-white bg-opacity-90 max-w-96 min-h-64 min-w-80 p-6 rounded flex flex-col justify-between'>
       <Input
         id='username'
         name='username'
-        label='username'
+        label='Correo Electrónico'
         type='email'
         icon='settings'
       />
       <Input
         id='password'
         name='password'
-        label='password'
+        label='Contraseña'
         type='password'
         icon='sensor'
       />
       <Input
         id='repeat'
         name='repeat'
-        label='repeat password'
+        label='Repetir Contraseña'
         type='password'
         icon='logo'
       />
