@@ -11,7 +11,7 @@ export const SigninPage: FunctionComponent = () => {
     document.title = 'VX - Signin Service';
   }, []);
   return (
-    <form className='bg-white bg-opacity-90 min-h-64 min-w-80 max-w-96 p-6 rounded flex flex-col justify-between'>
+    <form className='bg-white min-h-64 min-w-80 max-w-96 p-6 rounded flex flex-col justify-between relative z-10'>
       <Input
         id='username'
         name='username'

@@ -11,7 +11,7 @@ export const SignupPage: FunctionComponent = () => {
     document.title = 'VX - Signup Service';
   }, []);
   return (
-    <form className='bg-white bg-opacity-90 max-w-96 min-h-64 min-w-80 p-6 rounded flex flex-col justify-between'>
+    <form className='bg-white max-w-96 min-h-64 min-w-80 p-6 rounded flex flex-col justify-between relative z-10'>
       <Input
         id='username'
         name='username'

@@ -30,7 +30,7 @@ export const HomeLayout: FunctionComponent = () => {
           <div className='flex flex-row items-center'>
             <span className='vx-icon vx-logo' />
             <div className='text-left mx-3'>
-              <h1 className='font-bold'>VOLINE</h1>
+              <h1 className='font-bold'>VOXLINE</h1>
               <p className='text-xs capitalize font-light'>Make your Dreams</p>
             </div>
           </div>
@@ -52,7 +52,7 @@ export const HomeLayout: FunctionComponent = () => {
           //   description='Eleva la experiencia de tus empleados con un acceso transparente y directo a la información que importa. Aprovecha nuestra plataforma para garantizar que todos en tu organización tengan la información necesaria para tomar decisiones informadas y actuar con confianza.'
           // >
           // </Layer>
-          <div className='flex justify-center items-center w-full h-full -mt-40'>
+          <div className='flex justify-center items-center w-full h-full -mt-20'>
             <SigninPage />
           </div>
         )}
@@ -63,7 +63,7 @@ export const HomeLayout: FunctionComponent = () => {
           //   description='Descubre la eficiencia de tener toda la información crítica de la empresa al alcance de tu mano. Nuestro Módulo de Información te permite navegar, visualizar y acceder a recursos esenciales con solo unos clics. Ideal para empleados que necesitan respuestas rápidas y administradores que buscan distribuir información vital de manera efectiva.'
           // >
           // </Layer>
-          <div className='flex justify-center items-center w-full h-full -mt-40'>
+          <div className='flex justify-center items-center w-full h-full -mt-20'>
             <SignupPage />
           </div>
         )}
