@@ -6,4 +6,5 @@ export interface INavbarProps extends IComponentProps {
   menus: IMenu[];
   logo?: VNode;
   actions?: VNode;
+  onActionHandler?: (action: string) => void;
 }

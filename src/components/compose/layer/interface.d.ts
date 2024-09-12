@@ -6,5 +6,4 @@ export interface ILayerProps extends PropsWithChildren {
   title: string;
   subtitle: string;
   description: string;
-  image?: VNode;
 }
