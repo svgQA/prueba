@@ -21,3 +21,6 @@ export * from './expand/expand';
 export * from './button/menu/button';
 export * from './carousel/carousel';
 export * from './carousel/slide';
+export * from './table/table';
+
+export * from './search/search';

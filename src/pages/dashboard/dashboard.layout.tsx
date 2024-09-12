@@ -51,7 +51,7 @@ import {
 const GENERAL_GROUP_MENU = 0,
   SETTING_USER_MENU = 0;
 
-const showSettingsModal = signal<boolean>(true);
+const showSettingsModal = signal<boolean>(false);
 export const DashboardLayout: FunctionComponent = () => {
   const [menuSettings, setMenuSettings] =
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
@@ -115,7 +115,7 @@ export const DashboardLayout: FunctionComponent = () => {
         menus={SIDEBAR_MENUS}
         isNavigation
       />
-      <div className='flex flex-col pl-20 w-full bg-green-100 pr-2'>
+      <div className='flex flex-col pl-20 w-full pr-2'>
         <Switch>
           <Route path={PAGES_LIST.HOME} component={MemosPage} />
           <Route path={PAGES_LIST.SHIFTS} component={ShiftsPage} />

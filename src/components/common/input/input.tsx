@@ -1,7 +1,6 @@
 import { type IInputProps } from './interface';
-import { type FunctionComponent } from 'preact';
 
-export const Input: FunctionComponent<IInputProps> = ({
+export const Input = ({
   id,
   name,
   min,
