@@ -1,4 +1,3 @@
-import { INPUTS_STATUS, uca_variable } from '@/types/types';
 import { type TargetedEvent } from 'preact/compat';
 import { type IComponentProps } from '@/components/utils/interface';
 
