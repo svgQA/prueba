@@ -18,7 +18,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
       type={type}
       onClick={onClick}
       className={`${rounded ? 'rounded-3xl p-1' : 'rounded px-2'} ${full ? 'w-full' : ''} mx-1 text-sm items-center py-2 my-0.5 justify-center inline-flex font-bold 
-      ${label === 'Facebook' ? 'bg-blue-700 text-white' : ''}
+      ${label === 'Facebook' ? 'bg-white text-blue-700 border-gray-300' : ''}
       ${label === 'Google' ? 'bg-white text-gray-600 border border-gray-300' : ''}
       ${label !== 'Facebook' && label !== 'Google' ? 'bg-cyan-500 text-white' : ''}
       `}
