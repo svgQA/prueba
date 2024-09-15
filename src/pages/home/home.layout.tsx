@@ -1,12 +1,13 @@
 import './home.css';
 import { Layer } from '@/components/compose';
-import { Navbar } from '@/components/common';
+import { Navbar, Logo } from '@/components/common';
 import { NAVBAR_MENUS } from '@/utils/constants/navbar';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { PAGES_LIST } from '@/utils';
 import { SignupPage } from '../signup/signup.page';
 import { SigninPage } from '../signin/signin.page';
+import { ModalServices } from './modal/modal.services';
 
 export const HomeLayout: FunctionComponent = () => {
   useEffect(() => {
@@ -26,15 +27,8 @@ export const HomeLayout: FunctionComponent = () => {
         name='voxline-navbar'
         menus={NAVBAR_MENUS}
         onActionHandler={onHandlerNavbarButton}
-        logo={
-          <div className='flex flex-row items-center'>
-            <span className='vx-icon vx-logo' />
-            <div className='text-left mx-3'>
-              <h1 className='font-bold'>VOXLINE</h1>
-              <p className='text-xs capitalize font-light'>Make your Dreams</p>
-            </div>
-          </div>
-        }
+        logo={<Logo title='voxline' slogan='make your dreams' />}
+        service={<ModalServices label='Services' />}
       />
 
       <div className='w-full h-screen pt-16 bg-gradient-to-r from-cyan-500 to-emerald-400 content-center'>
