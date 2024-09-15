@@ -48,7 +48,14 @@ export const SignupPage: FunctionComponent = () => {
           <span className='vx-icon vx-home mx-2' />
         </Link>
         */}
-        <Button id='signup' name='signup' label='Sigup' type='submit' full />
+        <Button
+          id='signup'
+          name='signup'
+          label='Sigup'
+          type='submit'
+          full
+          className='bg-cyan-500 text-white'
+        />
       </div>
       <div className='mt-3 py-2 border-t-2'>
         <Button
@@ -58,6 +65,7 @@ export const SignupPage: FunctionComponent = () => {
           type='button'
           icon='google'
           full
+          className='text-gray-600 border border-gray-300'
         />
         <Button
           id='facebook'
@@ -66,6 +74,7 @@ export const SignupPage: FunctionComponent = () => {
           type='button'
           icon='facebook'
           full
+          className='text-blue-700 border border-gray-300'
         />
       </div>
     </form>

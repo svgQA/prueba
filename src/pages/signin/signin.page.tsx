@@ -50,7 +50,14 @@ export const SigninPage: FunctionComponent = () => {
           <span className='vx-icon vx-home mx-2' />
         </Link>
        */}
-        <Button id='signin' name='signin' label='Sigin' type='submit' full />
+        <Button
+          id='signin'
+          name='signin'
+          label='Sigin'
+          type='submit'
+          full
+          className='bg-cyan-500 text-white'
+        />
       </div>
     </form>
   );
