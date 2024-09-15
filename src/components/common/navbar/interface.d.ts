@@ -7,4 +7,5 @@ export interface INavbarProps extends IComponentProps {
   logo?: VNode;
   actions?: VNode;
   onActionHandler?: (action: string) => void;
+  service?: VNode;
 }

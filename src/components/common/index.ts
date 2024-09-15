@@ -24,3 +24,4 @@ export * from './carousel/slide';
 export * from './table/table';
 
 export * from './search/search';
+export * from './logo/logo';

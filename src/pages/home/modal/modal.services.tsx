@@ -1,56 +1,21 @@
-import { FunctionComponent, useState, useRef, useEffect } from 'preact/compat';
-import { Link } from 'wouter';
+import './modal.services.css';
+import { FunctionComponent } from 'preact/compat';
 
-interface ModalServicesProps {
-  to: string;
+interface IModalServicesProps {
   label: string;
 }
 
-export const ModalServices: FunctionComponent<ModalServicesProps> = ({
-  to,
+export const ModalServices: FunctionComponent<IModalServicesProps> = ({
   label,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const linkRef = useRef<HTMLAnchorElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node) &&
-        linkRef.current &&
-        !linkRef.current.contains(event.target as Node)
-      ) {
-        setIsModalOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   return (
-    <div className='relative'>
-      <Link
-        to={to}
-        className='z-40 relative'
-        ref={linkRef}
-        onMouseEnter={() => setIsModalOpen(true)}
-      >
-        {label}
-      </Link>
-
-      {isModalOpen && (
-        <div
-          ref={modalRef}
-          className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] h-[85%] bg-white shadow-lg rounded-lg overflow-auto z-40 text-black'
-        >
-          <div className='p-6'></div>
+    <button className='navbar-services-button'>
+      {label}
+      <div className='fixed left-16 bg-transparent w-[85vw] h-[90vh] z-20 invisible p-2 cursor-default'>
+        <div className='w-100 h-full bg-white rounded-xl shadow-xl'>
+          LA INFORMACION
         </div>
-      )}
-    </div>
+      </div>
+    </button>
   );
 };

@@ -2,11 +2,12 @@ import { IMenu } from '@/components/common/interface';
 import { PAGES_LIST } from './pages';
 
 export const NAVBAR_MENUS: IMenu[] = [
-  {
-    label: 'Services',
-    description: '123',
-    to: PAGES_LIST.SERVICES,
-  },
+  // {
+  //   label: 'Services',
+  //   description: '123',
+  //   to: PAGES_LIST.SERVICES,
+  //   button: true,
+  // },
   {
     label: 'Signin',
     description: '123',
@@ -19,9 +20,9 @@ export const NAVBAR_MENUS: IMenu[] = [
     to: PAGES_LIST.SIGNUP,
     button: true,
   },
-  // {
-  //   label: 'Dashboard',
-  //   desciption: '123',
-  //   to: PAGES_LIST.DASHBOARD,
-  // },
+  {
+    label: 'Dashboard',
+    description: '123',
+    to: PAGES_LIST.DASHBOARD,
+  },
 ];
