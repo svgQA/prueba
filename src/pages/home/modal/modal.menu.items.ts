@@ -1,52 +1,56 @@
-// menuItems.ts
+// modal.menu.items.ts
 
 export interface MenuItem {
-  label: string;
   id: string;
-  subItems?: { label: string; id: string }[];
+  label: string;
+  description: string;
+  subItems?: { id: string; label: string }[];
 }
 
 export const menuItems: MenuItem[] = [
   {
-    label: 'Servicios',
     id: 'servicios',
+    label: 'Servicios',
+    description:
+      'Explora nuestra amplia gama de servicios diseñados para impulsar tu negocio.',
     subItems: [
-      { label: 'Servicio 1', id: 'servicio1' },
-      { label: 'Servicio 2', id: 'servicio2' },
-      { label: 'Servicio 3', id: 'servicio3' },
+      { id: 'servicio1', label: 'Servicio 1' },
+      { id: 'servicio2', label: 'Servicio 2' },
+      { id: 'servicio3', label: 'Servicio 3' },
     ],
   },
   {
-    label: 'Planes y Precios',
     id: 'planes-y-precios',
+    label: 'Planes y Precios',
+    description:
+      'Descubre nuestros planes flexibles y precios competitivos adaptados a tus necesidades.',
     subItems: [
-      { label: 'Plan Básico', id: 'plan-basico' },
-      { label: 'Plan Pro', id: 'plan-pro' },
-      { label: 'Plan Enterprise', id: 'plan-enterprise' },
+      { id: 'plan-basico', label: 'Plan Básico' },
+      { id: 'plan-pro', label: 'Plan Pro' },
+      { id: 'plan-enterprise', label: 'Plan Enterprise' },
     ],
   },
   {
-    label: 'Aliados',
     id: 'aliados',
-    subItems: [
-      { label: 'Aliado 1', id: 'aliado1' },
-      { label: 'Aliado 2', id: 'aliado2' },
-    ],
+    label: 'Aliados',
+    description:
+      'Conoce a nuestros aliados estratégicos que nos ayudan a ofrecer soluciones integrales.',
   },
   {
-    label: 'Clientes',
     id: 'clientes',
-    subItems: [
-      { label: 'Cliente 1', id: 'cliente1' },
-      { label: 'Cliente 2', id: 'cliente2' },
-    ],
+    label: 'Clientes',
+    description:
+      'Descubre cómo hemos ayudado a nuestros clientes a alcanzar el éxito.',
   },
   {
-    label: 'Política de seguridad',
     id: 'politica-seguridad',
+    label: 'Política de seguridad',
+    description:
+      'Infórmate sobre nuestras rigurosas políticas de seguridad para proteger tu información.',
   },
   {
-    label: 'Política de tratamiento de datos',
     id: 'politica-datos',
+    label: 'Tratamiento de datos',
+    description: 'Conoce cómo manejamos y protegemos tus datos personales.',
   },
 ];

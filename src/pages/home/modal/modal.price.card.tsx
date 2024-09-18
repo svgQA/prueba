@@ -17,8 +17,8 @@ export const PriceCard: FunctionComponent<PriceCardProps> = ({
   semiannualPrice,
 }) => {
   return (
-    <div className='bg-white h-[37em] rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105'>
-      <div className='p-8'>
+    <div className='bg-with h-[38em] rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105'>
+      <div className='p-8 bg-gray'>
         <h3 className='text-4xl font-bold mb-4 text-gray-800'>{title}</h3>
         <p className='text-gray-600 mb-6 text-left'>{description}</p>
         <div className='space-y-10'>
