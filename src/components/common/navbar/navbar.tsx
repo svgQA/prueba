@@ -1,6 +1,7 @@
 import { type FunctionComponent } from 'preact';
 import { type INavbarProps } from './interface';
 import { Link } from 'wouter';
+import { ModalServices } from '@/pages/home/modal/modal.services';
 
 export const Navbar: FunctionComponent<INavbarProps> = ({
   id,
@@ -14,19 +15,29 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
     <nav
       id={id}
       name={name}
-      className='flex font-bold px-5 py-4 flex-row justify-between w-full content-center items-center absolute text-white top-0'
+      className='flex font-bold px-5 py-4 flex-row justify-between w-full content-center items-center absolute text-white top-0 z-50'
     >
-      <span>{logo}</span>
-      <ul className='flex flex-row items-center text-center '>
-        <li>{service}</li>
+      <span className='text-xl'>{logo}</span>
+      <ul className='flex flex-row items-center text-center space-x-4'>
+        {service && <li>{service}</li>}
         {menus.map((menu) => (
-          <li key={`navbar-menu-${menu.to}`}>
+          <li key={`navbar-menu-${menu.to}`} className='relative'>
             {menu.button && onActionHandler ? (
-              <button onClick={() => onActionHandler(menu.to)}>
+              <button
+                onClick={() => onActionHandler(menu.to)}
+                className='px-3 py-2 rounded hover:bg-white hover:bg-opacity-20 transition-colors duration-200'
+              >
                 {menu.label}
               </button>
+            ) : menu.label === 'Services' ? (
+              <ModalServices label={menu.label} />
             ) : (
-              <Link to={menu.to}>{menu.label}</Link>
+              <Link
+                to={menu.to}
+                className='px-3 py-2 rounded hover:bg-white hover:bg-opacity-20 transition-colors duration-200'
+              >
+                {menu.label}
+              </Link>
             )}
           </li>
         ))}
@@ -34,3 +45,42 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
     </nav>
   );
 };
+
+// import { type FunctionComponent } from 'preact';
+// import { type INavbarProps } from './interface';
+// import { Link } from 'wouter';
+
+// export const Navbar: FunctionComponent<INavbarProps> = ({
+//   id,
+//   name,
+//   menus,
+//   logo,
+//   onActionHandler,
+//   service,
+// }: INavbarProps) => {
+//   return (
+//     <nav
+//       id={id}
+//       name={name}
+//       className='flex font-bold px-5 py-4 flex-row justify-between w-full content-center items-center absolute text-white top-0'
+//     >
+//       <span>{logo}</span>
+//       <ul className='flex flex-row items-center text-center '>
+//         <li>{service}</li>
+//         {menus.map((menu) => (
+//           <li key={`navbar-menu-${menu.to}`}>
+//             {menu.button && onActionHandler ? (
+//               <button onClick={() => onActionHandler(menu.to)}>
+//                 {menu.label}
+//               </button>
+//             ) : (
+//               <Link to={menu.to}>{menu.label}</Link>
+
+//             )}
+//           </li>
+//         ))}
+//       </ul>
+
+//     </nav>
+//   );
+// };
