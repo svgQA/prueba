@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'preact/compat';
-import { MenuItem } from './menu.items';
+import { MenuItem } from './modal.menu.items';
+import { PriceCard } from './modal.price.card';
 
 interface VerticalMenuProps {
   items: MenuItem[];
@@ -26,23 +27,49 @@ export const VerticalMenu: FunctionComponent<VerticalMenuProps> = ({
                 )}
               </a>
               {item.subItems && (
-                <div className='absolute left-full top-0 ml-2 invisible group-hover:visible bg-transparent backdrop-blur-sm w-[calc(80vw-16rem)] h-[72vh] overflow-auto z-30'>
-                  <div className='p-4 bg-white bg-opacity-80 rounded-lg h-full'>
-                    <h3 className='text-lg font-semibold mb-2 text-gray-800'>
+                <div className='absolute left-full top-0 ml-2 invisible group-hover:visible bg-transparent backdrop-blur-sm w-[calc(90vw-16rem)] h-[72vh] overflow-auto z-30'>
+                  <div className='p-6 bg-white bg-opacity-90 rounded-lg h-full'>
+                    <h3 className='text-2xl font-bold mb-6 text-gray-800'>
                       {item.label}
                     </h3>
-                    <ul className='space-y-2'>
-                      {item.subItems.map((subItem) => (
-                        <li key={subItem.id}>
-                          <a
-                            href={`#${subItem.id}`}
-                            className='block px-2 py-1 text-sm text-gray-700 hover:bg-gray-200 hover:bg-opacity-50 rounded transition-colors duration-200'
-                          >
-                            {subItem.label}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
+                    {item.id === 'planes-y-precios' ? (
+                      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                        <PriceCard
+                          title='Plan Básico'
+                          description='Ideal para pequeñas empresas. Incluye funcionalidades esenciales para crecer'
+                          monthlyPrice={29.99}
+                          annualPrice={299.99}
+                          semiannualPrice={432.34}
+                        />
+                        <PriceCard
+                          title='Plan Pro'
+                          description='Para empresas en crecimiento. Características avanzadas para optimizar tus operaciones.'
+                          monthlyPrice={59.99}
+                          annualPrice={599.99}
+                          semiannualPrice={329.99}
+                        />
+                        <PriceCard
+                          title='Plan Enterprise'
+                          description='Solución completa para grandes empresas. Personalización total y soporte prioritario incluido.'
+                          monthlyPrice={99.99}
+                          annualPrice={999.99}
+                          semiannualPrice={549.99}
+                        />
+                      </div>
+                    ) : (
+                      <ul className='space-y-2'>
+                        {item.subItems.map((subItem) => (
+                          <li key={subItem.id}>
+                            <a
+                              href={`#${subItem.id}`}
+                              className='block px-2 py-1 text-sm text-gray-700 hover:bg-gray-200 hover:bg-opacity-50 rounded transition-colors duration-200'
+                            >
+                              {subItem.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
               )}
@@ -53,7 +80,6 @@ export const VerticalMenu: FunctionComponent<VerticalMenuProps> = ({
     </div>
   );
 };
-
 // import { FunctionComponent } from 'preact/compat';
 // import { MenuItem } from './menu.items';
 

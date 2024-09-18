@@ -2,8 +2,8 @@
 
 import './modal.services.css';
 import { FunctionComponent } from 'preact/compat';
-import { VerticalMenu } from './vertical.menu';
-import { menuItems } from './menu.items';
+import { VerticalMenu } from './modal.vertical.menu';
+import { menuItems } from './modal.menu.items';
 
 interface IModalServicesProps {
   label: string;
