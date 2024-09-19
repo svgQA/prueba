@@ -1,5 +1,4 @@
 import './home.css';
-import React from 'react';
 import { Layer } from '@/components/compose';
 import { Navbar, Logo } from '@/components/common';
 import { NAVBAR_MENUS } from '@/utils/constants/navbar';
@@ -34,13 +33,13 @@ export const HomeLayout: FunctionComponent = () => {
 
       <div className='w-full h-screen pt-16 bg-gradient-to-r from-cyan-500 to-emerald-400 content-center'>
         {homeMenu === '/' && (
-          <React.Fragment>
+          <>
             <Layer
               title='Gestión Simplificada de Recursos Informativos'
               subtitle='Todo lo Que Necesitas, Organizado Perfectamente'
               description='Facilita la gestión del conocimiento dentro de tu organización con herramientas poderosas para crear y compartir hitos informativos. Desde políticas internas hasta guías y tutoriales externos, organiza y distribuye contenido que empodera a tus empleados y mejora su productividad.'
             />
-          </React.Fragment>
+          </>
         )}
         {homeMenu === PAGES_LIST.SIGNIN && (
           // <Layer
