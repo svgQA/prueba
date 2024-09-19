@@ -1,6 +1,6 @@
 import './home.css';
 import { Layer } from '@/components/compose';
-import { Navbar, Logo } from '@/components/common';
+import { Navbar, Logo, Button } from '@/components/common';
 import { NAVBAR_MENUS } from '@/utils/constants/navbar';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
@@ -8,6 +8,7 @@ import { PAGES_LIST } from '@/utils';
 import { SignupPage } from '../signup/signup.page';
 import { SigninPage } from '../signin/signin.page';
 import { ModalServices } from './modal/modal.services';
+import { TenantService } from '@/services';
 
 export const HomeLayout: FunctionComponent = () => {
   useEffect(() => {
@@ -18,6 +19,13 @@ export const HomeLayout: FunctionComponent = () => {
 
   const onHandlerNavbarButton = (menu: string) => {
     setHomeMenu(menu);
+  };
+
+  const onMakeRequest = async () => {
+    const response = await TenantService.get_tenants();
+    if (response.getStatus()) {
+      console.log(response.getMany());
+    }
   };
 
   return (
@@ -64,6 +72,7 @@ export const HomeLayout: FunctionComponent = () => {
           </div>
         )}
       </div>
+
       {/*
       <div className='cursor-pointer hover:bg-cyan-600 absolute bottom-20 right-14 text-white bg-cyan-500 h-20 w-20 rounded-full text-center content-center z-10'>
         <span className='absolute text-left px-5 -top-16 min-w-80 -left-64 bg-white text-cyan-500 rounded-xl py-2'>
@@ -87,6 +96,12 @@ export const HomeLayout: FunctionComponent = () => {
           <a href='#' name='link-to-twitter'>
             <span className='vx-icon vx-sensor mx-2' />
           </a>
+          <Button
+            onClick={onMakeRequest}
+            name='Button'
+            type='button'
+            label='Button'
+          />
         </div>
         <svg
           className='waves'
