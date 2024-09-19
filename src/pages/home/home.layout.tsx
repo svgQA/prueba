@@ -1,4 +1,5 @@
 import './home.css';
+import React from 'react';
 import { Layer } from '@/components/compose';
 import { Navbar } from '@/components/common';
 import { NAVBAR_MENUS } from '@/utils/constants/navbar';
@@ -7,6 +8,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { PAGES_LIST } from '@/utils';
 import { SignupPage } from '../signup/signup.page';
 import { SigninPage } from '../signin/signin.page';
+import { Onbording } from '../onbording/onbording.page';
 
 export const HomeLayout: FunctionComponent = () => {
   useEffect(() => {
@@ -39,11 +41,16 @@ export const HomeLayout: FunctionComponent = () => {
 
       <div className='w-full h-screen pt-16 bg-gradient-to-r from-cyan-500 to-emerald-400 content-center'>
         {homeMenu === '/' && (
-          <Layer
-            title='Gestión Simplificada de Recursos Informativos'
-            subtitle='Todo lo Que Necesitas, Organizado Perfectamente'
-            description='Facilita la gestión del conocimiento dentro de tu organización con herramientas poderosas para crear y compartir hitos informativos. Desde políticas internas hasta guías y tutoriales externos, organiza y distribuye contenido que empodera a tus empleados y mejora su productividad.'
-          />
+          <React.Fragment>
+            <Layer
+              title='Gestión Simplificada de Recursos Informativos'
+              subtitle='Todo lo Que Necesitas, Organizado Perfectamente'
+              description='Facilita la gestión del conocimiento dentro de tu organización con herramientas poderosas para crear y compartir hitos informativos. Desde políticas internas hasta guías y tutoriales externos, organiza y distribuye contenido que empodera a tus empleados y mejora su productividad.'
+            />
+            <div className='relative z-10'>
+              <Onbording />
+            </div>
+          </React.Fragment>
         )}
         {homeMenu === PAGES_LIST.SIGNIN && (
           // <Layer
