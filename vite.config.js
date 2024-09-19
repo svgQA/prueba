@@ -37,6 +37,7 @@ export default defineConfig({
         alias: {
             '@': path.resolve(__dirname, './src'),
             '&': path.resolve(__dirname, './src/pages/settings'),
+            $: path.resolve(__dirname, 'src/services'),
         },
     },
 });

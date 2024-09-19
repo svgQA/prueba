@@ -1,0 +1,27 @@
+export enum REQUEST_METHODS {
+  GET = 'GET',
+  POST = 'POST',
+  DELETE = 'DELETE',
+  PUT = 'PUT',
+  PACTH = 'PATCH',
+}
+
+export const VOX_DEFAULT_PATH = {
+  PROD: '/api/',
+  DEFAULT: '/',
+};
+
+const VITE_LOCAL_DEFAULT_SERVICE_URL = 'http://localhost:8080';
+const VITE_LOCAL_TENANT_SERVICE_URL = 'http://localhost:8000';
+
+export const VOX_DEFAULT_SERVICE_URL =
+  import.meta.env.VITE_DEFAULT_SERVICE_URL || VITE_LOCAL_DEFAULT_SERVICE_URL;
+
+const VOX_TENANT_SERVICE_URL =
+  import.meta.env.VITE_TENANT_SERVICE_URL || VITE_LOCAL_TENANT_SERVICE_URL;
+
+export const VOX_SERVICES = {
+  TenantService: VOX_TENANT_SERVICE_URL,
+  ShiftService: VOX_TENANT_SERVICE_URL,
+  AuthService: VOX_TENANT_SERVICE_URL,
+};

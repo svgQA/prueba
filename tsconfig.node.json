@@ -9,7 +9,8 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "&/*": ["src/pages/settings/*"]
+      "&/*": ["src/pages/settings/*"],
+      "$/*": ["src/services/*"]
     }
   },
   "include": ["vite.config.ts"]
