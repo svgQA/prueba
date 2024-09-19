@@ -33,11 +33,13 @@ export const HomeLayout: FunctionComponent = () => {
 
       <div className='w-full h-screen pt-16 bg-gradient-to-r from-cyan-500 to-emerald-400 content-center'>
         {homeMenu === '/' && (
-          <Layer
-            title='Gestión Simplificada de Recursos Informativos'
-            subtitle='Todo lo Que Necesitas, Organizado Perfectamente'
-            description='Facilita la gestión del conocimiento dentro de tu organización con herramientas poderosas para crear y compartir hitos informativos. Desde políticas internas hasta guías y tutoriales externos, organiza y distribuye contenido que empodera a tus empleados y mejora su productividad.'
-          />
+          <>
+            <Layer
+              title='Gestión Simplificada de Recursos Informativos'
+              subtitle='Todo lo Que Necesitas, Organizado Perfectamente'
+              description='Facilita la gestión del conocimiento dentro de tu organización con herramientas poderosas para crear y compartir hitos informativos. Desde políticas internas hasta guías y tutoriales externos, organiza y distribuye contenido que empodera a tus empleados y mejora su productividad.'
+            />
+          </>
         )}
         {homeMenu === PAGES_LIST.SIGNIN && (
           // <Layer
