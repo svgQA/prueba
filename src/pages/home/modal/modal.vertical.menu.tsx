@@ -37,7 +37,7 @@ export const VerticalMenu: FunctionComponent<VerticalMenuProps> = ({
                 <div className='absolute left-full top-0 ml-2 invisible group-hover:visible bg-transparent backdrop-blur-sm w-[calc(90vw-16rem)] h-[72vh] overflow-auto z-30'>
                   <div className='p-6 bg-white bg-opacity-90 rounded-lg h-full'>
                     <h3 className='text-2xl font-bold mb-6 text-gray-800'>
-                      {item.label}
+                      {/* {item.label} Se muestra un subtitulo */}
                     </h3>
                     {item.id === 'planes-y-precios' ? (
                       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
