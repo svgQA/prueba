@@ -11,6 +11,8 @@ import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
 import { ShiftsPage } from './shifts/shifts.page';
 
+import { Onbording } from '../onbording/onbording.page';
+
 import { IMenu } from '@/components/common/interface';
 import {
   CardSettingHeader,
@@ -47,11 +49,14 @@ import {
   RolesSettingPage,
   UsersSettingPage,
 } from '&/security';
+import { IOnboardingModel } from '../onbording/interface';
 
 const GENERAL_GROUP_MENU = 0,
   SETTING_USER_MENU = 0;
 
-const showSettingsModal = signal<boolean>(true);
+const showSettingsModal = signal<boolean>(false);
+const hasTenant = signal<boolean>(false);
+
 export const DashboardLayout: FunctionComponent = () => {
   const [menuSettings, setMenuSettings] =
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
@@ -105,7 +110,15 @@ export const DashboardLayout: FunctionComponent = () => {
     }
   };
 
-  return (
+  const onFinishedBoarding = (model: IOnboardingModel) => {
+    console.log('ON BOARDING: ', model);
+    hasTenant.value = true;
+  };
+  return !hasTenant.value ? (
+    <div className='relative z-10'>
+      <Onbording onFinished={onFinishedBoarding} />
+    </div>
+  ) : (
     <section className='w-screen h-screen'>
       <Sidebar
         id='sidebar'
@@ -115,7 +128,7 @@ export const DashboardLayout: FunctionComponent = () => {
         menus={SIDEBAR_MENUS}
         isNavigation
       />
-      <div className='flex flex-col pl-20 w-full bg-green-100 pr-2'>
+      <div className='flex flex-col pl-20 w-full pr-2'>
         <Switch>
           <Route path={PAGES_LIST.HOME} component={MemosPage} />
           <Route path={PAGES_LIST.SHIFTS} component={ShiftsPage} />

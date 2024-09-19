@@ -1,20 +1,13 @@
-import { type FunctionComponent } from 'preact';
-// import { h } from 'preact';
+import './onboarding.css';
 import { useState, useRef, useEffect } from 'preact/hooks';
+import { IOnboardingModel, IOnboardingProps } from './interface';
+import { DEFAULT_STEP, INIT_ONBOARDING_MODEL_STATE, STEPS } from './constants';
 
-export const Onbording: FunctionComponent = () => {
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    adminName: '',
-    adminPhone: '',
-    adminAddress: '',
-    companyName: '',
-    companyNIT: '',
-    companyLocation: '',
-    companyIndustry: '',
-    serviceOfInterest: '',
-    employeeCount: 0,
-  });
+export const Onbording = ({ onFinished }: IOnboardingProps) => {
+  const [step, setStep] = useState<number>(DEFAULT_STEP);
+  const [formData, setFormData] = useState<IOnboardingModel>(
+    INIT_ONBOARDING_MODEL_STATE
+  );
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (e: Event) => {
@@ -22,7 +15,7 @@ export const Onbording: FunctionComponent = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleNext = () => setStep((prev) => Math.min(prev + 1, 5));
+  const handleNext = () => setStep((prev) => Math.min(prev + 1, STEPS));
   const handlePrev = () => setStep((prev) => Math.max(prev - 1, 1));
 
   useEffect(() => {
@@ -33,23 +26,16 @@ export const Onbording: FunctionComponent = () => {
 
   const renderSteps = () => (
     <div
-      className='flex transition-transform duration-300 ease-in-out h-full '
+      className='flex transition-transform duration-300 ease-in-out h-full'
       ref={sliderRef}
     >
-      <div className='min-w-full p-5 h-full flex flex-col justify-between'>
+      <div className='onboarding-slide'>
         <div className='flex-1 flex flex-col justify-center items-center'>
           <h1 className='text-2xl font-bold mb-8 text-[#1D2128]'>Voxline</h1>
-          <button
-            className='bg-[#00BDD6] text-white py-2 px-4 rounded'
-            onClick={handleNext}
-          >
-            Siguiente
-          </button>
         </div>
       </div>
-      <div className='min-w-full p-5 h-full flex flex-col justify-between'>
+      <div className='onboarding-slide'>
         <div className='flex-1'>
-          <div className='text-sm text-[#A5ACBA] mb-2'>Paso 1 de 5</div>
           <h2 className='text-lg font-bold mb-4 text-[#1D2128]'>
             Información del administrador
           </h2>
@@ -75,24 +61,9 @@ export const Onbording: FunctionComponent = () => {
             placeholder='Dirección'
           />
         </div>
-        <div className='flex justify-between'>
-          <button
-            className='bg-[#A5ACBA] text-white py-2 px-4 rounded'
-            onClick={handlePrev}
-          >
-            Anterior
-          </button>
-          <button
-            className='bg-[#00BDD6] text-white py-2 px-4 rounded'
-            onClick={handleNext}
-          >
-            Siguiente
-          </button>
-        </div>
       </div>
-      <div className='min-w-full p-5 h-full flex flex-col justify-between'>
+      <div className='onboarding-slide'>
         <div className='flex-1'>
-          <div className='text-sm text-[#A5ACBA] mb-2'>Paso 2 de 5</div>
           <h2 className='text-lg font-bold mb-4 text-[#1D2128]'>
             Información de la empresa
           </h2>
@@ -118,24 +89,9 @@ export const Onbording: FunctionComponent = () => {
             placeholder='Ubicación'
           />
         </div>
-        <div className='flex justify-between'>
-          <button
-            className='bg-[#A5ACBA] text-white py-2 px-4 rounded'
-            onClick={handlePrev}
-          >
-            Anterior
-          </button>
-          <button
-            className='bg-[#00BDD6] text-white py-2 px-4 rounded'
-            onClick={handleNext}
-          >
-            Siguiente
-          </button>
-        </div>
       </div>
-      <div className='min-w-full p-5 h-full flex flex-col justify-between'>
+      <div className='onboarding-slide'>
         <div className='flex-1 overflow-y-auto'>
-          <div className='text-sm text-[#A5ACBA] mb-2'>Paso 3 de 5</div>
           <h2 className='text-lg font-bold mb-4 text-[#1D2128]'>
             Rubro de la empresa y Servicios de interés
           </h2>
@@ -183,24 +139,9 @@ export const Onbording: FunctionComponent = () => {
             <option value='Soporte Técnico'>Soporte Técnico</option>
           </select>
         </div>
-        <div className='flex justify-between'>
-          <button
-            className='bg-[#A5ACBA] text-white py-2 px-4 rounded'
-            onClick={handlePrev}
-          >
-            Anterior
-          </button>
-          <button
-            className='bg-[#00BDD6] text-white py-2 px-4 rounded'
-            onClick={handleNext}
-          >
-            Siguiente
-          </button>
-        </div>
       </div>
-      <div className='min-w-full p-5 h-full flex flex-col justify-between'>
+      <div className='onboarding-slide'>
         <div className='flex-1 overflow-y-auto'>
-          <div className='text-sm text-[#A5ACBA] mb-2'>Paso 5 de 5</div>
           <h2 className='text-lg font-bold mb-4 text-[#1D2128]'>
             Número de empleados
           </h2>
@@ -215,28 +156,34 @@ export const Onbording: FunctionComponent = () => {
           />
           <p>Número de empleados: {formData.employeeCount}</p>
         </div>
-        <div className='flex justify-between'>
+      </div>
+      <div className='onboarding-slide'>FINAL</div>
+    </div>
+  );
+
+  return (
+    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+      <div className='bg-white rounded-lg shadow-lg w-96 overflow-hidden relative pt-10'>
+        <span
+          className={`top-0 right-0 absolute p-4 text-sm text-[#A5ACBA] mb-2 ${step > 1 ? 'visibe' : 'invisible'}`}
+        >
+          Step {step - 1} de {STEPS}
+        </span>
+        {renderSteps()}
+        <div className='flex justify-evenly pb-5'>
           <button
-            className='bg-[#A5ACBA] text-white py-2 px-4 rounded'
+            className={`bg-[#A5ACBA] text-white py-2 px-4 rounded ${step > 1 ? 'visible' : 'invisible'}`}
             onClick={handlePrev}
           >
             Anterior
           </button>
           <button
             className='bg-[#00BDD6] text-white py-2 px-4 rounded'
-            onClick={() => console.log('Form submitted:', formData)}
+            onClick={step === STEPS ? () => onFinished(formData) : handleNext}
           >
-            Finalizar
+            {step === STEPS ? 'Finalizar' : 'Siguiente'}
           </button>
         </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-      <div className='bg-white rounded-lg shadow-lg w-96 h-96 overflow-hidden'>
-        {renderSteps()}
       </div>
     </div>
   );
