@@ -1,3 +1,4 @@
+// modal.vertical.menu.tsx
 import { FunctionComponent } from 'preact/compat';
 import { MenuItem } from './modal.menu.items';
 import { PriceCard } from './modal.price.card';
@@ -36,10 +37,7 @@ export const VerticalMenu: FunctionComponent<VerticalMenuProps> = ({
               {item.subItems && (
                 <div className='absolute left-full top-0 ml-2 invisible group-hover:visible bg-transparent backdrop-blur-sm w-[calc(90vw-16rem)] h-[72vh] overflow-auto z-30'>
                   <div className='p-6 bg-white bg-opacity-90 rounded-lg h-full'>
-                    <h3 className='text-2xl font-bold mb-6 text-gray-800'>
-                      {/* {item.label} Se muestra un subtitulo */}
-                    </h3>
-                    {item.id === 'planes-y-precios' ? (
+                    {item.id === 'planes-y-precios' && (
                       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
                         <PriceCard
                           title='Plan Básico'
@@ -63,20 +61,24 @@ export const VerticalMenu: FunctionComponent<VerticalMenuProps> = ({
                           semiannualPrice={549.99}
                         />
                       </div>
-                    ) : (
-                      <ul className='space-y-2'>
-                        {item.subItems.map((subItem) => (
-                          <li key={subItem.id}>
-                            <a
-                              href={`#${subItem.id}`}
-                              className='block px-2 py-1 text-sm text-gray-700 hover:bg-gray-200 hover:bg-opacity-50 rounded transition-colors duration-200'
-                            >
-                              {subItem.label}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
                     )}
+                    {item.id !== 'planes-y-precios' &&
+                      item.id !== 'clientes' &&
+                      item.id !== 'aliados' &&
+                      item.subItems && (
+                        <ul className='space-y-2'>
+                          {item.subItems.map((subItem) => (
+                            <li key={subItem.id}>
+                              <a
+                                href={`#${subItem.id}`}
+                                className='block px-2 py-1 text-sm text-gray-700 hover:bg-gray-200 hover:bg-opacity-50 rounded transition-colors duration-200'
+                              >
+                                {subItem.label}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                   </div>
                 </div>
               )}

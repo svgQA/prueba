@@ -2,6 +2,8 @@ import './modal.services.css';
 import { FunctionComponent, useState } from 'preact/compat';
 import { VerticalMenu } from './modal.vertical.menu';
 import { menuItems, MenuItem } from './modal.menu.items';
+import { LogoGrid } from './modal.logo.grid'; // Esta
+import { clientLogos, allyLogos } from './modal.constant.logo'; // Esta
 
 interface IModalServicesProps {
   label: string;
@@ -34,11 +36,29 @@ export const ModalServices: FunctionComponent<IModalServicesProps> = ({
             <h2 className='text-4xl font-bold mb-4 text-black'>
               {currentItem ? currentItem.label : 'Nuestros Servicios'}
             </h2>
-            <p className='text-black'>
+            {/* Renderización de Aliados, puse */}
+            {currentItem?.id === 'aliados' && (
+              <LogoGrid logos={allyLogos} title='Nuestros Aliados' />
+            )}
+            {/* Renderización de Aliados, puse */}
+            {currentItem?.id === 'clientes' && (
+              <LogoGrid logos={clientLogos} title='Nuestros Clientes' />
+            )}
+            {/* Renderización del texto sino se cumple alguna de las condiciones, puse */}
+            {currentItem?.id !== 'aliados' &&
+              currentItem?.id !== 'clientes' && (
+                <p className='text-black'>
+                  {currentItem
+                    ? currentItem.description
+                    : 'Pon el cursos sobre el item del menú para ver mas detalle'}
+                </p>
+              )}
+
+            {/* <p className='text-black'> Version anterior
               {currentItem
                 ? currentItem.description
                 : 'Pasa el cursor sobre un ítem del menú para ver más detalles.'}
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
