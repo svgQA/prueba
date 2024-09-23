@@ -9,7 +9,7 @@ export const INIT_ONBOARDING_MODEL_STATE: IOnboardingModel = {
   companyLocation: '',
   companyIndustry: '',
   serviceOfInterest: '',
-  employeeCount: 0,
+  employeeCount: '',
 };
 
 export const STEPS = 6;

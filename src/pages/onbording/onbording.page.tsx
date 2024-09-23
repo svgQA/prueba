@@ -15,6 +15,10 @@ export const Onbording = ({ onFinished }: IOnboardingProps) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleEmployeeCountSelect = (count: string) => {
+    setFormData((prev) => ({ ...prev, employeeCount: count }));
+  };
+
   const handleNext = () => setStep((prev) => Math.min(prev + 1, STEPS));
   const handlePrev = () => setStep((prev) => Math.max(prev - 1, 1));
 
@@ -23,6 +27,20 @@ export const Onbording = ({ onFinished }: IOnboardingProps) => {
       sliderRef.current.style.transform = `translateX(-${(step - 1) * 100}%)`;
     }
   }, [step]);
+
+  const employeeCountOptions = [
+    '1-100',
+    '101-200',
+    '201-300',
+    '301-400',
+    '401-500',
+    '501-600',
+    '601-700',
+    '701-800',
+    '801-900',
+    '901-1000',
+    'Más de 1000',
+  ];
 
   const renderSteps = () => (
     <div
@@ -141,29 +159,85 @@ export const Onbording = ({ onFinished }: IOnboardingProps) => {
         </div>
       </div>
       <div className='onboarding-slide'>
-        <div className='flex-1 overflow-y-auto'>
+        <div className='flex-1'>
           <h2 className='text-lg font-bold mb-4 text-[#1D2128]'>
             Número de empleados
           </h2>
-          <input
-            className='w-full mb-4'
-            type='range'
-            name='employeeCount'
-            value={formData.employeeCount}
-            onChange={handleInputChange}
-            min='0'
-            max='1000'
-          />
-          <p>Número de empleados: {formData.employeeCount}</p>
+          <div className='grid grid-cols-3 gap-2'>
+            {employeeCountOptions.map((option) => (
+              <span
+                key={option}
+                onClick={() => handleEmployeeCountSelect(option)}
+                className={`flex items-center justify-center w-full py-2 px-3 rounded-[100px] text-base cursor-pointer border ${
+                  formData.employeeCount === option
+                    ? 'bg-[#00BDD6] text-white border-[#00BDD6]'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                } outline-none focus:outline-none active:outline-none`}
+              >
+                {option}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
-      <div className='onboarding-slide'>FINAL</div>
+      <div className='onboarding-slide'>
+        <div className='scroll-bar flex-1 overflow-y-auto'>
+          <h2 className='text-lg font-bold mb-8 text-[#1D2128]'>
+            Resumen de la información
+          </h2>
+          <div className='grid grid-cols-3 gap-8'>
+            <div>
+              <h3 className='text-class'>Información del administrador:</h3>
+              <p className='text-class2'>
+                <strong>Nombre:</strong> {formData.adminName}
+              </p>
+              <p className='text-class2'>
+                <strong>Teléfono:</strong> {formData.adminPhone}
+              </p>
+              <p className='text-class2'>
+                <strong>Dirección: </strong>
+                {formData.adminAddress}
+              </p>
+            </div>
+            <div>
+              <h3 className='text-class'>Información de la empresa:</h3>
+              <p className='text-class2'>
+                <strong>Nombre:</strong> {formData.companyName}
+              </p>
+              <p className='text-class2'>
+                <strong>NIT:</strong> {formData.companyNIT}
+              </p>
+              <p className='text-class2'>
+                <strong>Ubicación:</strong> {formData.companyLocation}
+              </p>
+            </div>
+            <div>
+              <h3 className='text-class'>Rubro de la empresa:</h3>
+              <p className='text-class2'>
+                <strong>{formData.companyIndustry}</strong>
+              </p>
+            </div>
+            <div>
+              <h3 className='text-class'>Servicios de interés:</h3>
+              <p className='text-class2'>
+                <strong>{formData.serviceOfInterest}</strong>
+              </p>
+            </div>
+            <div>
+              <h3 className='text-class'>Número de empleados:</h3>
+              <p className='text-class2'>
+                <strong>{formData.employeeCount}</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 
   return (
     <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-      <div className='bg-white rounded-lg shadow-lg w-96 overflow-hidden relative pt-10'>
+      <div className='bg-white rounded-lg shadow-lg w-[55vw] overflow-hidden relative pt-10'>
         <span
           className={`top-0 right-0 absolute p-4 text-sm text-[#A5ACBA] mb-2 ${step > 1 ? 'visibe' : 'invisible'}`}
         >
@@ -172,13 +246,13 @@ export const Onbording = ({ onFinished }: IOnboardingProps) => {
         {renderSteps()}
         <div className='flex justify-evenly pb-5'>
           <button
-            className={`bg-[#A5ACBA] text-white py-2 px-4 rounded ${step > 1 ? 'visible' : 'invisible'}`}
+            className={`bg-[#A5ACBA] text-white py-2 px-4 rounded ${step > 1 ? 'visible' : 'invisible'} focus:outline-none active:bg-[#A5ACBA]`}
             onClick={handlePrev}
           >
             Anterior
           </button>
           <button
-            className='bg-[#00BDD6] text-white py-2 px-4 rounded'
+            className='bg-[#00BDD6] text-white py-2 px-4 rounded focus:outline-none active:bg-[#00BDD6]'
             onClick={step === STEPS ? () => onFinished(formData) : handleNext}
           >
             {step === STEPS ? 'Finalizar' : 'Siguiente'}
