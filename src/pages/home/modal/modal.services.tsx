@@ -3,7 +3,7 @@ import { FunctionComponent, useState } from 'preact/compat';
 import { VerticalMenu } from './modal.vertical.menu';
 import { menuItems, MenuItem } from './modal.menu.items';
 import { LogoGrid } from './modal.logo.grid'; // Esta
-import { clientLogos, allyLogos } from './modal.constant.logo'; // Esta
+import { clientLogos, allyLogos } from './modal.generate.logo'; // Esta
 
 interface IModalServicesProps {
   label: string;

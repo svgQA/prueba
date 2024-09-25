@@ -1,7 +1,6 @@
-// Componente donde se renderizarán los logos,
-// si quiero dos aliados, pongo dos veces el componente Logo
+// LogoGrid.tsx
 import { FunctionComponent } from 'preact/compat';
-import { LogoItem } from './modal.constant.logo';
+import { LogoItem } from './modal.generate.logo';
 import { Logo } from './modal.logo';
 
 interface LogoGridProps {
