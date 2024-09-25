@@ -17,6 +17,7 @@
     "@tanstack/react-table": "^8.20.5",
     "dayjs": "^1.11.13",
     "short-uuid": "^5.2.0",
+    "socket.io-client": "^4.8.0",
     "wouter": "^3.3.5",
     "zustand": "^4.5.5"
   },
