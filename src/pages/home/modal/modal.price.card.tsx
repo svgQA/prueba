@@ -1,44 +1,35 @@
-// PriceCard.tsx
+// modal.price.card.tsx
 import { FunctionComponent } from 'preact/compat';
+import { PlanData } from './modal.price.data';
 
 interface PriceCardProps {
-  title: string;
-  description: string;
-  monthlyPrice: number;
-  annualPrice: number;
-  semiannualPrice?: number;
+  plan: PlanData;
 }
 
-export const PriceCard: FunctionComponent<PriceCardProps> = ({
-  title,
-  description,
-  monthlyPrice,
-  annualPrice,
-  semiannualPrice,
-}) => {
+export const PriceCard: FunctionComponent<PriceCardProps> = ({ plan }) => {
   return (
     <div className='bg-with h-[95%] rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105'>
       <div className='p-8 bg-gray'>
-        <h3 className='text-4xl font-bold mb-4 text-gray-800'>{title}</h3>
-        <p className='text-gray-600 mb-6 text-left'>{description}</p>
+        <h3 className='text-4xl font-bold mb-4 text-gray-800'>{plan.title}</h3>
+        <p className='text-gray-600 mb-6 text-left'>{plan.description}</p>
         <div className='space-y-10 my-[10%]'>
           <div className='flex justify-between items-center border-t pt-4'>
             <span className='text-1xl text-gray-600'>Mensual</span>
             <span className='text-2xl font-bold text-gray-800'>
-              ${monthlyPrice} COP /mes
+              ${plan.monthlyPrice} COP /mes
             </span>
           </div>
           <div className='flex justify-between items-center border-t pt-4'>
             <span className='text-1xl text-gray-600'>Anual</span>
             <span className='text-2xl font-bold text-gray-800'>
-              ${annualPrice} COP /año
+              ${plan.annualPrice} COP /año
             </span>
           </div>
-          {semiannualPrice && (
+          {plan.semiannualPrice && (
             <div className='flex justify-between items-center border-t pt-4'>
               <span className='text-1xl text-gray-600'>Semestral</span>
               <span className='text-2xl font-bold text-gray-800'>
-                ${semiannualPrice} COP /semestre
+                ${plan.semiannualPrice} COP /semestre
               </span>
             </div>
           )}

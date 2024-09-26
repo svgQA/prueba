@@ -1,5 +1,39 @@
-// Inserte nuevos logos de clientes de la misma manera
+// Follow the pattern fonr insert new client logos
 export const clientImageUrls: string[] = [
+  'https://www.novaseguridad.com.co/wp-content/uploads/2020/10/Empresas-de-seguridad-G4S.jpg',
+  'https://www.novaseguridad.com.co/wp-content/uploads/2020/10/Empresas-de-seguridad-GardaWorld.jpg',
+  'https://elearning.servagro.com.co/web/image/26019-828c68a9/logo%20servagro_horizontal.png',
+  'https://sibcolombia.net/wp-content/uploads/2019/10/logo-celsia.png',
+  'https://www.unicauca.edu.co/wp-content/uploads/2024/06/UniV.png',
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQQJ5FU7aa3CWW1QN3akjmXKv9WdgCGoYtsw&s',
+  'https://revistas.ucc.edu.co/public/journals/7/logoucc_.png',
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKgOICVMX1cO1ddD56uQsLb4wu5QwcqS4SUA&s',
+  'https://www.uniautonoma.edu.co/sites/default/files/contenido/logo_autonoma_png.png',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Logo-unicomfacauca-2-1.png/1280px-Logo-unicomfacauca-2-1.png',
+  'https://fup.edu.co/wp-content/uploads/FUP-40-Logo-Horizontal-01.jpeg',
+  'https://www.univalle.edu.co/images/Univalle/70_Rojo.jpg',
+  'https://www1.funcionpublica.gov.co/documents/28587425/41589060/logo-Universidad-Nacional.png/92343759-b2d7-7df3-4425-efa3337f2da7?t=1671747619326',
+  'https://www.icesi.edu.co/servicios/wp-content/uploads/2017/05/logo_icesi.png',
+  'https://thunder.cdn.overdrive.com/logo-resized/8395?1537541594',
+  'https://www.indeportescauca.gov.co/wp-content/uploads/2024/03/gobernacion-del-cauca.png',
+  'https://hospitalsanjose.gov.co/wp-content/uploads/2024/04/logo-HJUS-2024.png',
+  'https://campanariopopayan.com/wp-content/uploads/2020/08/logo2020.png',
+  'https://www.cccauca.org.co/assets/Logo_CCCauca_Horizontal.png',
+  'https://www.fumc.edu.co/wp-content/uploads/RutaN.png',
+  'https://seeklogo.com/images/J/Juan_Valdez_Cafe-logo-9D9A5C862E-seeklogo.com.png',
+  'https://federaciondecafeteros.org/app/uploads/2022/12/LogoCOP.png',
+  'https://seeklogo.com/images/S/sena-colombia-logo-C25D90A9FA-seeklogo.com.png',
+  'https://michel.udenar.edu.co/wp-content/uploads/2020/10/Escudo-Gobernacion-Valle-del-cauca.png',
+  'https://corregimientos.antioquia.gov.co/wp-content/uploads/2023/12/cropped-cropped-cropped-LOGO-GERENCIA-1.png',
+  'https://sed.narino.gov.co/wp-content/uploads/2024/01/logo_color.png',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Her%C3%A1ldica_del_Escudo_del_Huila.svg/1200px-Her%C3%A1ldica_del_Escudo_del_Huila.svg.png',
+  'https://www.cpnaa.gov.co/wp-content/uploads/2020/05/Logo_Universidad-de-La-Salle_sin-fondo.png',
+  'https://aapsa.com.co/wp-content/uploads/logo_aapsa.png',
+  'https://pagosvirtuales.alcanosesp.com/public/img/logo_q.png',
+];
+
+// Follow de pattern for add new ally logos
+export const allyImageUrls: string[] = [
   'https://lh3.googleusercontent.com/qnaJEbFIpvsWJm2KrRI_GIvz1yZdXntgEsCZxy-1pVZi244bCk1RFwdk0ZBRmmvdHiUl6sIa_tsmskL5WLKiigp2AMsIIxinOJNf39qCmacViRGXIOY',
   'https://lh3.googleusercontent.com/wAPeTvxh_EwOisF8kMR2L2eOrIOzjfA5AjE28W5asyfGeH85glwrO6zyqL71dCC26R63chADTO7DLOjnqRoXXOAB8t2f4C3QnU6o0BA',
   'https://lh3.googleusercontent.com/1_zuTrfPYKeiyDbvjHcuEATBnqZ6_yT6xRjKfg8P-DCwNYSiXpLDeOBfV92AO0fIPnd8OP0KLAzu9Eed_kiW1Vx9RPlPOvTfna8u',
@@ -21,20 +55,13 @@ export const clientImageUrls: string[] = [
   'https://lh3.googleusercontent.com/NoH5jn0ZNLP0uUMKPOhHBqDPGaseCtaQfBhxExSNf6L_zXB3r7spA4AVNXkLESSpVUwwvZ507yGxM_3dk7havspHQekYDwKk1v6XjA',
   'https://lh3.googleusercontent.com/lEo7f8JpLiPpBcGDweZKLfQjzxoZVr72Vmzi_Z-IqqmIA57bJejlD6yYZdveQ4Gw9jwnPYJYKJpmzOrSGHF0ebdviuUyyu4G4nS36g',
   'https://pngimg.com/uploads/github/github_PNG23.png',
-  'https://w7.pngwing.com/pngs/875/224/png-transparent-amazon-com-amazon-web-services-logo-cloud-computing-cloud-computing-text-service-logo.png',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1280px-Amazon_Web_Services_Logo.svg.png',
   'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Node.js_logo_2015.svg/2560px-Node.js_logo_2015.svg.png',
   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNdl8fP8Y6KBoTNDpLEJ7mEEeyGT-O8YmQpQ&s',
   'https://plpartnerguide.org/wp-content/uploads/2024/02/amplify-education-logo.png',
   'https://ausum.cloud/wp-content/uploads/2024/09/docker.png',
-  'data:image/png;base64,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',
   'https://odoocdn.com/web/image/res.partner/760752/avatar_1920/Servagro%20Ltda?unique=f152542',
   'https://qualitapps.com/wp-content/uploads/2023/02/102.png',
   'https://www.cdnlogo.com/logos/t/34/tailwind-css.svg',
-];
-
-// Inserte nuevos logos de Aliados de la misma manera
-export const allyImageUrls: string[] = [
-  'https://www.novaseguridad.com.co/wp-content/uploads/2020/10/Empresas-de-seguridad-G4S.jpg',
-  'https://www.novaseguridad.com.co/wp-content/uploads/2020/10/Empresas-de-seguridad-GardaWorld.jpg',
-  'https://elearning.servagro.com.co/web/image/26019-828c68a9/logo%20servagro_horizontal.png',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Microsoft_Azure_Logo.svg/1280px-Microsoft_Azure_Logo.svg.png',
 ];

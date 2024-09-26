@@ -2,6 +2,7 @@
 import { FunctionComponent } from 'preact/compat';
 import { MenuItem } from './modal.menu.items';
 import { PriceCard } from './modal.price.card';
+import { plans } from './modal.price.data'; // Importamos los planes dinámicos
 
 interface VerticalMenuProps {
   items: MenuItem[];
@@ -39,27 +40,9 @@ export const VerticalMenu: FunctionComponent<VerticalMenuProps> = ({
                   <div className='p-6 bg-white bg-opacity-90 rounded-lg h-full'>
                     {item.id === 'planes-y-precios' && (
                       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                        <PriceCard
-                          title='Plan Básico'
-                          description='Ideal para pequeñas empresas. Incluye funcionalidades esenciales para crecer'
-                          monthlyPrice={29.99}
-                          annualPrice={299.99}
-                          semiannualPrice={432.34}
-                        />
-                        <PriceCard
-                          title='Plan Pro'
-                          description='Para empresas en crecimiento. Características avanzadas para optimizar tus operaciones.'
-                          monthlyPrice={59.99}
-                          annualPrice={599.99}
-                          semiannualPrice={329.99}
-                        />
-                        <PriceCard
-                          title='Plan Enterprise'
-                          description='Solución completa para grandes empresas. Personalización total y soporte prioritario incluido.'
-                          monthlyPrice={99.99}
-                          annualPrice={999.99}
-                          semiannualPrice={549.99}
-                        />
+                        {plans.map((plan) => (
+                          <PriceCard key={plan.id} plan={plan} />
+                        ))}
                       </div>
                     )}
                     {item.id !== 'planes-y-precios' &&
