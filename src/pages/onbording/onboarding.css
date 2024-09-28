@@ -1,9 +1,3 @@
 .onboarding-slide {
   @apply min-w-full h-[45vh] flex flex-col justify-between px-5  py-4;
 }
-.text-class {
-  @apply font-bold mb-1 text-base;
-}
-.text-class2 {
-  @apply mb-1 text-sm text-gray-600;
-}

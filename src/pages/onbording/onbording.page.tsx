@@ -1,7 +1,12 @@
 import './onboarding.css';
 import { useState, useRef, useEffect } from 'preact/hooks';
 import { IOnboardingModel, IOnboardingProps } from './interface';
-import { DEFAULT_STEP, INIT_ONBOARDING_MODEL_STATE, STEPS } from './constants';
+import {
+  DEFAULT_STEP,
+  INIT_ONBOARDING_MODEL_STATE,
+  employeeCountOptions,
+  STEPS,
+} from './constants';
 
 export const Onbording = ({ onFinished }: IOnboardingProps) => {
   const [step, setStep] = useState<number>(DEFAULT_STEP);
@@ -27,20 +32,6 @@ export const Onbording = ({ onFinished }: IOnboardingProps) => {
       sliderRef.current.style.transform = `translateX(-${(step - 1) * 100}%)`;
     }
   }, [step]);
-
-  const employeeCountOptions = [
-    '1-100',
-    '101-200',
-    '201-300',
-    '301-400',
-    '401-500',
-    '501-600',
-    '601-700',
-    '701-800',
-    '801-900',
-    '901-1000',
-    'Más de 1000',
-  ];
 
   const renderSteps = () => (
     <div
@@ -187,45 +178,45 @@ export const Onbording = ({ onFinished }: IOnboardingProps) => {
           </h2>
           <div className='grid grid-cols-3 gap-8'>
             <div>
-              <h3 className='text-class'>Información del administrador:</h3>
-              <p className='text-class2'>
+              <h3>Información del administrador:</h3>
+              <p>
                 <strong>Nombre:</strong> {formData.adminName}
               </p>
-              <p className='text-class2'>
+              <p>
                 <strong>Teléfono:</strong> {formData.adminPhone}
               </p>
-              <p className='text-class2'>
+              <p>
                 <strong>Dirección: </strong>
                 {formData.adminAddress}
               </p>
             </div>
             <div>
-              <h3 className='text-class'>Información de la empresa:</h3>
-              <p className='text-class2'>
+              <h3>Información de la empresa:</h3>
+              <p>
                 <strong>Nombre:</strong> {formData.companyName}
               </p>
-              <p className='text-class2'>
+              <p>
                 <strong>NIT:</strong> {formData.companyNIT}
               </p>
-              <p className='text-class2'>
+              <p>
                 <strong>Ubicación:</strong> {formData.companyLocation}
               </p>
             </div>
             <div>
-              <h3 className='text-class'>Rubro de la empresa:</h3>
-              <p className='text-class2'>
+              <h3>Rubro de la empresa:</h3>
+              <p>
                 <strong>{formData.companyIndustry}</strong>
               </p>
             </div>
             <div>
-              <h3 className='text-class'>Servicios de interés:</h3>
-              <p className='text-class2'>
+              <h3>Servicios de interés:</h3>
+              <p>
                 <strong>{formData.serviceOfInterest}</strong>
               </p>
             </div>
             <div>
-              <h3 className='text-class'>Número de empleados:</h3>
-              <p className='text-class2'>
+              <h3>Número de empleados:</h3>
+              <p>
                 <strong>{formData.employeeCount}</strong>
               </p>
             </div>
