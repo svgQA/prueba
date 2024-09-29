@@ -11,5 +11,5 @@ export interface IOnboardingModel {
   companyLocation: string;
   companyIndustry: string;
   serviceOfInterest: string;
-  employeeCount: number;
+  employeeCount: string;
 }
