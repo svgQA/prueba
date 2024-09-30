@@ -13,6 +13,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   isNavigation = false,
   onHandlerClick,
   position = 'fixed',
+  onLogout,
 }: ISidebarProps) => {
   const [menuSelected, setMenuSelected] = useState<string | null>('');
 
@@ -103,6 +104,18 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
                 icon='settings'
               />
             </a>
+            {onLogout && (
+              <a
+                onClick={onLogout}
+                className='cursor-pointer text-black hover:text-black'
+              >
+                <ButtonMenu
+                  name='vx-logout-button'
+                  label='logout'
+                  icon='users'
+                />
+              </a>
+            )}
           </ul>
         )}
       </nav>

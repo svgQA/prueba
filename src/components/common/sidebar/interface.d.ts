@@ -7,6 +7,7 @@ export interface ISidebarProps extends IComponentProps {
   onHomeHandler?: () => void;
   color?: string;
   size?: string;
+  onLogout?: () => void;
   isNavigation?: boolean;
   onHandlerClick?: (menu: string) => void;
   position?: 'fixed' | 'relative' | 'relative' | 'static' | 'sticky';

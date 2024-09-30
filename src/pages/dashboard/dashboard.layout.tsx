@@ -10,7 +10,6 @@ import { DevicesPage } from './devices/devices.page';
 import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
 import { ShiftsPage } from './shifts/shifts.page';
-
 import { Onbording } from '../onbording/onbording.page';
 
 import { IMenu } from '@/components/common/interface';
@@ -50,6 +49,9 @@ import {
   UsersSettingPage,
 } from '&/security';
 import { IOnboardingModel } from '../onbording/interface';
+import { AuthAmplifyProps } from './inteface';
+
+import { fetchAuthSession } from 'aws-amplify/auth';
 
 const GENERAL_GROUP_MENU = 0,
   SETTING_USER_MENU = 0;
@@ -57,12 +59,21 @@ const GENERAL_GROUP_MENU = 0,
 const showSettingsModal = signal<boolean>(false);
 const hasTenant = signal<boolean>(false);
 
-export const DashboardLayout: FunctionComponent = () => {
+export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
+  // isPassedToWithAuthenticator,
+  signOut,
+  // user,
+}: AuthAmplifyProps) => {
   const [menuSettings, setMenuSettings] =
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
   const [menuInformationSelected, setMenuInformationSelected] = useState<IMenu>(
     { description: 'Description', label: 'Title', to: '' }
   );
+
+  const getUserInfo = async () => {
+    const value = await fetchAuthSession();
+    console.log(value.tokens?.idToken?.toString());
+  };
 
   const onSettingHandler = () => {
     showSettingsModal.value = !showSettingsModal.value;
@@ -113,7 +124,9 @@ export const DashboardLayout: FunctionComponent = () => {
   const onFinishedBoarding = (model: IOnboardingModel) => {
     console.log('ON BOARDING: ', model);
     hasTenant.value = true;
+    getUserInfo();
   };
+
   return !hasTenant.value ? (
     <div className='relative z-10'>
       <Onbording onFinished={onFinishedBoarding} />
@@ -127,6 +140,7 @@ export const DashboardLayout: FunctionComponent = () => {
         onHomeHandler={onHomeHandler}
         menus={SIDEBAR_MENUS}
         isNavigation
+        onLogout={signOut}
       />
       <div className='flex flex-col pl-20 w-full pr-2'>
         <Switch>
