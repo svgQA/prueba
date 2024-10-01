@@ -3,7 +3,6 @@ import { type FunctionComponent } from 'preact';
 import { Route, Router, Switch } from 'wouter';
 import { Authenticator } from '@aws-amplify/ui-react';
 import { DashboardLayout } from './pages/dashboard';
-// import { SigninPage, SignupPage } from './pages';
 import { PAGES_LIST } from './utils';
 import { HomeLayout } from './pages/home/home.layout';
 import { AuthAmplifyProps } from './pages/dashboard/inteface';
@@ -17,14 +16,12 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
     <section className='h-screen w-screen'>
       <Switch>
         <Route path={PAGES_LIST.HOME} component={HomeLayout} />
-        {/* <Route path={PAGES_LIST.SIGNIN} component={SigninPage} /> */}
-        {/* <Route path={PAGES_LIST.SIGNUP} component={SignupPage} /> */}
         <Router base={PAGES_LIST.DASHBOARD}>
-          <Authenticator
-          // socialProviders={['amazon', 'apple', 'facebook', 'google']}
-          >
-            {(authProps) => <DashboardLayout {...authProps} {...props} />}
-          </Authenticator>
+          <div className='bg-red-400 w-full h-full flex justify-center items-center'>
+            <Authenticator socialProviders={['google']}>
+              {(authProps) => <DashboardLayout {...authProps} {...props} />}
+            </Authenticator>
+          </div>
         </Router>
       </Switch>
     </section>

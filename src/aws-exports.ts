@@ -1,24 +1,25 @@
-export const AWS_AMPLIFY_SETTINGS = {
+import { ResourcesConfig } from 'aws-amplify';
+
+export const AWS_AMPLIFY_SETTINGS: ResourcesConfig = {
   Auth: {
     Cognito: {
       userPoolId: import.meta.env.VITE_AWS_COGNITO_USER_POOL_ID || '',
       userPoolClientId: import.meta.env.VITE_AWS_COGNITO_CLIENT_ID || '',
-      // identityPoolId: '',
+      signUpVerificationMethod: 'code' as 'code' | 'link',
       loginWith: {
-        // oauth: {
-        //   domain:
-        //     'abcdefghij1234567890-29051e27.auth.us-east-1.amazoncognito.com',
-        //   scopes: [
-        //     'openid',
-        //     'email',
-        //     'phone',
-        //     'profile',
-        //     'aws.cognito.signin.user.admin',
-        //   ],
-        //   redirectSignIn: ['http://localhost:3050/dashboard'],
-        //   redirectSignOut: ['http://localhost:3000/', 'https://example.com/'],
-        //   responseType: 'code',
-        // },
+        oauth: {
+          domain: import.meta.env.VITE_AWS_OAUTH_DOMAIN || '',
+          scopes: [
+            'openid',
+            'email',
+            'phone',
+            'profile',
+            'aws.cognito.signin.user.admin',
+          ],
+          redirectSignIn: ['http://localhost:3050/dashboard'],
+          redirectSignOut: ['http://localhost:3050/'],
+          responseType: 'code',
+        },
         username: true,
         email: false,
         phone: false,
