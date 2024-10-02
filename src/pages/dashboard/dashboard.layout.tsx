@@ -55,11 +55,9 @@ import { IOnboardingModel } from '@/store/signals/interface';
 import {
   getStatusOnBoardingModal,
   toggleOnBoardingModal,
-} from '@/store/signals/modals';
-import {
   getStatusSettingModal,
   toggleSettingModal,
-} from '@/store/signals/modals/settings/settings';
+} from '@/store/signals/modals';
 
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
@@ -131,7 +129,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
     getUserInfo();
   };
 
-  const onFinishedBoarding = (model: IOnboardingModel) => {
+  const onSubmitOnBoarding = (model: IOnboardingModel) => {
     onCreateTenant(model);
     toggleOnBoardingModal();
   };
@@ -350,7 +348,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
       </Modal>
       <OnBordingPage
         closed={getStatusOnBoardingModal.value}
-        onFinished={onFinishedBoarding}
+        onSubmit={onSubmitOnBoarding}
       />
     </section>
   );

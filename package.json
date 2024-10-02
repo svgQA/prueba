@@ -18,6 +18,8 @@
     "@tanstack/react-table": "^8.20.5",
     "aws-amplify": "^6.6.2",
     "dayjs": "^1.11.13",
+    "final-form": "^4.20.10",
+    "react-final-form": "^6.5.9",
     "short-uuid": "^5.2.0",
     "wouter": "^3.3.5",
     "zustand": "^4.5.5"
