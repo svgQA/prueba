@@ -92,8 +92,8 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
             );
           })}
         </ul>
-        {onSettingHandler && (
-          <ul className=''>
+        <ul className=''>
+          {onSettingHandler && (
             <a
               onClick={onSettingHandler}
               className='cursor-pointer text-black hover:text-black'
@@ -104,20 +104,16 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
                 icon='settings'
               />
             </a>
-            {onLogout && (
-              <a
-                onClick={onLogout}
-                className='cursor-pointer text-black hover:text-black'
-              >
-                <ButtonMenu
-                  name='vx-logout-button'
-                  label='logout'
-                  icon='users'
-                />
-              </a>
-            )}
-          </ul>
-        )}
+          )}
+          {onLogout && (
+            <a
+              onClick={onLogout}
+              className='cursor-pointer text-black hover:text-black'
+            >
+              <ButtonMenu name='vx-logout-button' label='logout' icon='users' />
+            </a>
+          )}
+        </ul>
       </nav>
     </aside>
   );

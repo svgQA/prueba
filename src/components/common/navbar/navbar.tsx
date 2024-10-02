@@ -21,7 +21,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
       <ul className='flex flex-row items-center text-center space-x-4'>
         {service && <li>{service}</li>}
         {menus.map((menu) => (
-          <li key={`navbar-menu-${menu.to}`} className='relative'>
+          <li key={`navbar-menu-${menu.id}`} className='relative'>
             {menu.button && onActionHandler ? (
               <button
                 onClick={() => onActionHandler(menu.to)}

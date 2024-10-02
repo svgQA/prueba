@@ -1,3 +1,9 @@
 .onboarding-slide {
-  @apply min-w-full h-[45vh] flex flex-col justify-between px-5  py-4;
+  @apply min-w-full h-[45vh] flex flex-col justify-between px-5;
+}
+
+/* Esto solo porque en dark mode se ve feo, mientras se define los temas, ya quitar esto */
+input,
+select {
+  @apply bg-white;
 }

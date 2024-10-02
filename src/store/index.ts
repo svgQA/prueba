@@ -1,1 +1,1 @@
-export * from './signals/auth.signal';
+export * from './signals/access';
