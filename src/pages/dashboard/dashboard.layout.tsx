@@ -60,12 +60,11 @@ const showSettingsModal = signal<boolean>(false);
 const hasTenant = signal<boolean>(false);
 
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
-  // isPassedToWithAuthenticator,
   signOut,
-  // user,
 }: AuthAmplifyProps) => {
   const [menuSettings, setMenuSettings] =
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
+
   const [menuInformationSelected, setMenuInformationSelected] = useState<IMenu>(
     { description: 'Description', label: 'Title', to: '' }
   );

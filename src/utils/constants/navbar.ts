@@ -6,7 +6,6 @@ export const NAVBAR_MENUS: IMenu[] = [
     label: 'Signin',
     description: '123',
     to: PAGES_LIST.DASHBOARD,
-    button: true,
   },
   {
     label: 'Signup',
