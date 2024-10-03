@@ -36,15 +36,15 @@ export class BaseService {
   ): Promise<GenericResponse<T>> {
     const url = this.make_url(model.url, instance.name);
 
-    const method = model?.params?.method || REQUEST_METHODS.GET;
-    const body =
-      method !== REQUEST_METHODS.GET
-        ? JSON.stringify(model?.params?.data || {})
-        : undefined;
+    const method = model?.method || REQUEST_METHODS.GET;
+    if (method === REQUEST_METHODS.POST) {
+      model.headers = { ...model.headers, 'Content-type': 'application/json' };
+      model.data = JSON.stringify(model.data || {});
+    }
     try {
       const response = await fetch(url, {
-        headers: model.params?.headers,
-        body,
+        headers: model.headers,
+        body: model.data,
         method,
       });
       const content_type = response.headers.get('content-type');

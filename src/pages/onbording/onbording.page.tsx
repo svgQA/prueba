@@ -135,27 +135,18 @@ const OnBoardingSteps = ({ sliderRef }: IOnBoardingStepsProps) => (
               type='text'
               tabIndex={-1}
             >
-              <option value=''>Selecciona un rubro...</option>
-              <option value='Tecnología'>Tecnología</option>
-              <option value='Salud'>Salud</option>
-              <option value='Alimentación y bebidas'>
-                Alimentación y bebidas
+              <option value='1' default>
+                Tecnología
               </option>
-              <option value='Construcción e inmobiliaria'>
-                Construcción e inmobiliaria
-              </option>
-              <option value='Educación'>Educación</option>
-              <option value='Finanzas'>Finanzas</option>
-              <option value='Transporte y logística'>
-                Transporte y logística
-              </option>
-              <option value='Turismo y Hospitalidad'>
-                Turismo y Hospitalidad
-              </option>
-              <option value='Energía y recursos naturales'>
-                Energía y recursos naturales
-              </option>
-              <option value='Otra'>Otra</option>
+              <option value='2'>Salud</option>
+              <option value='3'>Alimentación y bebidas</option>
+              <option value='4'>Construcción e inmobiliaria</option>
+              <option value='5'>Educación</option>
+              <option value='6'>Finanzas</option>
+              <option value='7'>Transporte y logística</option>
+              <option value='8'>Turismo y Hospitalidad</option>
+              <option value='9'>Energía y recursos naturales</option>
+              <option value='10'>Otra</option>
             </select>
             {meta.touched && meta.error && <span>{meta.error}</span>}
           </div>
@@ -171,13 +162,13 @@ const OnBoardingSteps = ({ sliderRef }: IOnBoardingStepsProps) => (
               type='text'
               tabIndex={-1}
             >
-              <option value='Consultoria'>Consultoria</option>
-              <option value='Desarrollo de Software'>
-                Desarrollo de Software
+              <option value='1' default>
+                Consultoria
               </option>
-              <option value='Diseño UX/UI'>Diseño UX/UI</option>
-              <option value='Marketing DIgital'>Marketing DIgital</option>
-              <option value='Soporte Técnico'>Soporte Técnico</option>
+              <option value='2'>Desarrollo de Software</option>
+              <option value='3'>Diseño UX/UI</option>
+              <option value='4'>Marketing DIgital</option>
+              <option value='5'>Soporte Técnico</option>
             </select>
             {meta.touched && meta.error && <span>{meta.error}</span>}
           </div>
@@ -242,7 +233,7 @@ export const OnBordingPage = ({ onSubmit, closed }: IOnboardingProps) => {
         subscription={{ submitting: true, pristine: true }}
         render={({ handleSubmit, values }) => (
           <form
-            className='bg-white rounded-sm shadow-lg w-[80vw] overflow-hidden relative pt-10'
+            className='bg-white rounded-sm shadow-lg w-[65vw] overflow-hidden relative pt-10'
             onSubmit={handleSubmit}
           >
             <span

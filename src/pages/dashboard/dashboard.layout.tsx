@@ -1,10 +1,8 @@
 import { Button, Input, Modal, Sidebar } from '@/components/common';
 import { PAGES_LIST, PAGES_LIST_ROUTER, SIDEBAR_MENUS } from '@/utils';
-// import { signal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { Route, Router, Switch } from 'wouter';
-// import { navigate } from 'wouter/use-browser-location';
 
 import { DevicesPage } from './devices/devices.page';
 import { FormsPage } from './forms/forms.page';
@@ -19,7 +17,7 @@ import {
   CardSettingUser,
   IModalSidebarMenu,
 } from '@/components/compose/modal';
-import { authModel } from '@/store';
+import { authModel } from '@/store/signals/access';
 import { MODAL_SIDEBAR_MENUS } from '@/utils/constants/modal/sidebar';
 
 import {
@@ -50,14 +48,16 @@ import {
 } from '&/security';
 import { AuthAmplifyProps } from './inteface';
 
-import { fetchAuthSession } from 'aws-amplify/auth';
 import { IOnboardingModel } from '@/store/signals/interface';
 import {
   getStatusOnBoardingModal,
-  toggleOnBoardingModal,
   getStatusSettingModal,
   toggleSettingModal,
+  openOnBoardingModal,
+  closeOnBoardingModal,
 } from '@/store/signals/modals';
+import { TenantService } from '@/services';
+import { hasUserTenant } from '@/store/slices';
 
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
@@ -69,12 +69,17 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
 
   const [menuInformationSelected, setMenuInformationSelected] = useState<IMenu>(
-    { description: 'Description', label: 'Title', to: '', id: '' }
+    { description: 'Description', label: 'Title', to: '', id: 'id-default-1' }
   );
 
-  const getUserInfo = async () => {
-    const value = await fetchAuthSession();
-    console.log(value.tokens?.idToken?.toString());
+  useEffect(() => {
+    validateUser();
+  }, []);
+
+  const validateUser = async () => {
+    const existTenant = await hasUserTenant();
+    if (!existTenant) openOnBoardingModal();
+    else closeOnBoardingModal();
   };
 
   const onSettingHandler = () => {
@@ -124,14 +129,15 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
     }
   };
 
-  const onCreateTenant = (model: IOnboardingModel) => {
-    console.log('PROCESS CREATE TENANT: ', model);
-    getUserInfo();
+  const onCreateTenant = async (model: IOnboardingModel) => {
+    const response = await TenantService.create_tenant(model);
+    if (response.getStatus()) {
+      closeOnBoardingModal();
+    }
   };
 
-  const onSubmitOnBoarding = (model: IOnboardingModel) => {
-    onCreateTenant(model);
-    toggleOnBoardingModal();
+  const onSubmitOnBoarding = async (model: IOnboardingModel) => {
+    await onCreateTenant(model);
   };
 
   return (
