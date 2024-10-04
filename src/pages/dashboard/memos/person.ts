@@ -40,4 +40,12 @@ export const defaultData: Person[] = [
     status: 'Complicated',
     progress: 10,
   },
+  {
+    firstName: 'Jesus',
+    lastName: 'Legarda',
+    age: 30,
+    visits: 11,
+    status: 'Complicated',
+    progress: 10,
+  },
 ];
