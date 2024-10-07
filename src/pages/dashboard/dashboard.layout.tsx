@@ -1,9 +1,25 @@
-import { Button, Input, Modal, Sidebar } from '@/components/common';
-import { PAGES_LIST, PAGES_LIST_ROUTER, SIDEBAR_MENUS } from '@/utils';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Route, Router, Switch } from 'wouter';
 
+/** ***********************************************************************
+ * UTILS
+ ** ***********************************************************************/
+import {
+  PAGES_LIST,
+  PAGES_LIST_ROUTER,
+  SIDEBAR_MENUS,
+  MODAL_SIDEBAR_MENUS,
+} from '@/utils/constants';
+
+/** ***********************************************************************
+ * COMPONENTS
+ ** ***********************************************************************/
+import { Button, Input, Modal, Sidebar } from '@/components/common';
+
+/** ***********************************************************************
+ * PAGES
+ ** ***********************************************************************/
 import { DevicesPage } from './devices/devices.page';
 import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
@@ -17,9 +33,10 @@ import {
   CardSettingUser,
   IModalSidebarMenu,
 } from '@/components/compose/modal';
-import { authModel } from '@/store/signals/access';
-import { MODAL_SIDEBAR_MENUS } from '@/utils/constants/modal/sidebar';
 
+/** ***********************************************************************
+ * SETTINS COMPONENTS
+ ** ***********************************************************************/
 import {
   AnalyticAdminSettingPage,
   DatabaseSettingPage,
@@ -46,22 +63,39 @@ import {
   RolesSettingPage,
   UsersSettingPage,
 } from '&/security';
-import { AuthAmplifyProps } from './inteface';
 
-import { IOnboardingModel } from '@/store/signals/interface';
+/** ***********************************************************************
+ * AMPLIFY AWS
+ ** ***********************************************************************/
+import { AuthAmplifyProps } from '../types';
+
+/** ***********************************************************************
+ * STORE SIGNALS
+ ** ***********************************************************************/
+import { authModel } from '@/store/signals/access';
+import { type IOnboardingModel } from '@/store/signals/types';
 import {
   getStatusOnBoardingModal,
   getStatusSettingModal,
   toggleSettingModal,
   closeOnBoardingModal,
-  // openOnBoardingModal,
 } from '@/store/signals/modals';
-import { TenantService } from '@/services';
-// import { hasUserTenant } from '@/store/slices';
 
+/** ***********************************************************************
+ * SERVICES
+ ** ***********************************************************************/
+import { TenantService } from '@/services';
+
+/** ***********************************************************************
+ * COMMENTS
+ ** ***********************************************************************/
+// import { hasUserTenant } from '@/store/slices';
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
 
+/** ***********************************************************************
+ * COMPONENT
+ ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   signOut,
 }: AuthAmplifyProps) => {

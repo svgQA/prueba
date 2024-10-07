@@ -1,11 +1,3 @@
-export enum REQUEST_METHODS {
-  GET = 'GET',
-  POST = 'POST',
-  DELETE = 'DELETE',
-  PUT = 'PUT',
-  PACTH = 'PATCH',
-}
-
 export const VOX_DEFAULT_PATH = {
   PROD: '/api/',
   DEFAULT: '/',

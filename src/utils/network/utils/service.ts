@@ -1,12 +1,11 @@
 import {
-  REQUEST_METHODS,
   VOX_DEFAULT_PATH,
   VOX_DEFAULT_SERVICE_URL,
   VOX_SERVICES,
 } from './constants';
-import { IMakeRequest } from './interface';
+import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
-import { VoxServices } from './types';
+import { VoxServices } from '../types';
 
 export class BaseService {
   protected static prefix: string = 'api';
