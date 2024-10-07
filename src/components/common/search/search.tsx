@@ -76,8 +76,8 @@ export const Search = ({
     event: JSX.TargetedMouseEvent<HTMLDivElement>
   ) => {
     const target = event.target as HTMLElement;
-    const name = target.getAttribute('name');
     if (target instanceof HTMLSpanElement) {
+      const name = target.getAttribute('name');
       if (name && name.startsWith('filter-delete-')) {
         const key = name.split('-')[2];
         if (!key) return;
