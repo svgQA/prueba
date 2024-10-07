@@ -9,7 +9,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
   open,
   onClose,
   header,
-  body,
+  children,
 }: IModalProps) => {
   const [expand, setExpand] = useState(false);
 
@@ -52,7 +52,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
             </div>
           </div>
         </div>
-        <div className='flex flex-row'>{body}</div>
+        <div className='flex flex-row'>{children}</div>
       </div>
     </div>
   );
