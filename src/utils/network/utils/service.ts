@@ -1,8 +1,4 @@
-import {
-  VOX_DEFAULT_PATH,
-  VOX_DEFAULT_SERVICE_URL,
-  VOX_SERVICES,
-} from './constants';
+import { VOX_DEFAULT_PATH, VOS_SERVICES } from './constants';
 import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
@@ -13,16 +9,16 @@ export class BaseService {
   private static make_url(paths: string[], base: VoxServices): string {
     const model = [this.prefix, ...paths];
     const subdirectory = model.join(VOX_DEFAULT_PATH.DEFAULT);
-    const urlBase = VOX_SERVICES[base] || VOX_DEFAULT_SERVICE_URL;
+    const urlBase = VOS_SERVICES[base];
     return `${urlBase}/${subdirectory}`;
   }
 
   static async make_request<T>(
     instance: any,
     /* FIX:
-    	Pasar a usar unicamente el nombre del micro, porque esto va a
-      	ser administrado unicamente por un gateway que redirecciona todo
-       	el trafico segun el nombre del servicio (por tanto solo quedara
+     Pasar a usar unicamente el nombre del micro, porque esto va a
+       ser administrado unicamente por un gateway que redirecciona todo
+        el trafico segun el nombre del servicio (por tanto solo quedara
         un unico punto de acceso, pero se diferencia por el nombre del
         servicio):
         https://voxline.com/<base>/<service>/...
@@ -33,7 +29,7 @@ export class BaseService {
      */
     model: IMakeRequest
   ): Promise<GenericResponse<T>> {
-    const url = this.make_url(model.url, instance.name);
+    const url = this.make_url(model.url, instance.name as VoxServices);
 
     const method = model?.method || REQUEST_METHODS.GET;
     if (method === REQUEST_METHODS.POST) {

@@ -190,6 +190,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
         onLogout={signOut}
       />
       <div className='flex flex-col pl-20 w-full pr-2'>
+        {/* <button onClick={onCreateTenant}>TEST SERVICE</button> */}
         <Switch>
           <Route path={PAGES_LIST.HOME} component={MemosPage} />
           <Route path={PAGES_LIST.SHIFTS} component={ShiftsPage} />
