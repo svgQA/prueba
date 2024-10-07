@@ -5,4 +5,5 @@ export interface IMenu {
   to: string;
   status?: boolean;
   button?: boolean;
+  id: string;
 }
