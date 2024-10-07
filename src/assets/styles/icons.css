@@ -32,6 +32,14 @@ span.vx-icon.size-2xl {
   font-size: 3em;
 }
 
+.vx-email::before {
+  content: '\0030';
+}
+
+.vx-qr::before {
+  content: '\0031';
+}
+
 .vx-apps::before {
   content: '\0040';
 }

@@ -232,7 +232,7 @@ export const Onbording = ({ onFinished }: IOnboardingProps) => {
         <span
           className={`top-0 right-0 absolute p-4 text-sm text-[#A5ACBA] mb-2 ${step > 1 ? 'visibe' : 'invisible'}`}
         >
-          Step {step - 1} de {STEPS}
+          Paso {step - 1} de {STEPS}
         </span>
         {renderSteps()}
         <div className='flex justify-evenly pb-5'>
