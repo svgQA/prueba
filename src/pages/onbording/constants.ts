@@ -1,17 +1,3 @@
-import { IOnboardingModel } from './interface';
-
-export const INIT_ONBOARDING_MODEL_STATE: IOnboardingModel = {
-  adminName: '',
-  adminPhone: '',
-  adminAddress: '',
-  companyName: '',
-  companyNIT: '',
-  companyLocation: '',
-  companyIndustry: '',
-  serviceOfInterest: '',
-  employeeCount: '',
-};
-
 export const employeeCountOptions = [
   '1-100',
   '101-200',

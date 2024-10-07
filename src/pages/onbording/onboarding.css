@@ -1,3 +1,32 @@
 .onboarding-slide {
-  @apply min-w-full h-[45vh] flex flex-col justify-between px-5  py-4;
+  @apply min-w-full h-[45vh] flex flex-col justify-between px-5;
+}
+
+.onboarding-buttons {
+  @apply text-white py-2 px-4 rounded focus:outline-none w-36;
+}
+
+.onboarding-inputs {
+  @apply w-full p-2 mb-4 border border-gray-300 rounded;
+}
+
+.onboarding-inputs > input,
+select {
+  @apply w-10/12 bg-white h-full;
+}
+
+input,
+select {
+  border: none;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+}
+
+input::selection,
+selectselect {
+  background-color: transparent;
 }
