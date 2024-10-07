@@ -53,11 +53,11 @@ import {
   getStatusOnBoardingModal,
   getStatusSettingModal,
   toggleSettingModal,
-  openOnBoardingModal,
   closeOnBoardingModal,
+  // openOnBoardingModal,
 } from '@/store/signals/modals';
 import { TenantService } from '@/services';
-import { hasUserTenant } from '@/store/slices';
+// import { hasUserTenant } from '@/store/slices';
 
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
@@ -77,9 +77,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   }, []);
 
   const validateUser = async () => {
-    const existTenant = await hasUserTenant();
-    if (!existTenant) openOnBoardingModal();
-    else closeOnBoardingModal();
+    /* [TODO]: Bad code */
+    closeOnBoardingModal();
+
+    /* [TODO]: Correct code */
+    // const existTenant = await hasUserTenant();
+    // if (!existTenant) openOnBoardingModal();
+    // else closeOnBoardingModal();
   };
 
   const onSettingHandler = () => {
