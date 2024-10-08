@@ -1,4 +1,3 @@
-// LogoGrid.tsx
 import { FunctionComponent } from 'preact/compat';
 import { LogoItem } from './modal.generate.logo';
 import { Logo } from './modal.logo';
