@@ -1,21 +1,15 @@
-import { clientImageUrls, allyImageUrls } from './modal.image.urls';
+import { clientImageUrls, allyImageUrls, LogoData } from './modal.image.urls';
 
-export interface LogoItem {
+export interface LogoItem extends LogoData {
   id: string;
-  name: string;
-  imageUrl: string;
 }
 
-function generateLogoItems(imageUrls: string[], prefix: string): LogoItem[] {
-  return imageUrls.map((url, index) => ({
+function generateLogoItems(logoData: LogoData[]): LogoItem[] {
+  return logoData.map((logo, index) => ({
+    ...logo,
     id: (index + 1).toString(),
-    name: `${prefix} ${index + 1}`,
-    imageUrl: url,
   }));
 }
 
-export const clientLogos: LogoItem[] = generateLogoItems(
-  clientImageUrls,
-  'Cliente'
-);
-export const allyLogos: LogoItem[] = generateLogoItems(allyImageUrls, 'Aliado');
+export const clientLogos: LogoItem[] = generateLogoItems(clientImageUrls);
+export const allyLogos: LogoItem[] = generateLogoItems(allyImageUrls);
