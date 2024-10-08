@@ -1,4 +1,4 @@
-import { IGenericData } from './types';
+import { IGenericData } from './interface';
 
 export class GenericResponse<T> {
   private status: boolean;

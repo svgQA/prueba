@@ -8,4 +8,5 @@ export interface IButtonProps extends IComponentProps {
   onClick?: () => void;
   rounded?: boolean;
   full?: boolean;
+  className?: string;
 }

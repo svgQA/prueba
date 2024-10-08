@@ -1,24 +1,41 @@
+// import { Amplify } from 'aws-amplify';
+// import { Authenticator } from '@aws-amplify/ui-react';
 import { type FunctionComponent } from 'preact';
 import { Route, Router, Switch } from 'wouter';
-import { Security } from '@/components/common';
 import { DashboardLayout } from './pages/dashboard';
-import { SigninPage, SignupPage } from './pages';
 import { PAGES_LIST } from './utils';
 import { HomeLayout } from './pages/home/home.layout';
+import { AuthAmplifyProps } from './pages/dashboard/inteface';
 
-export const App: FunctionComponent = () => {
+/* [TODO]: Correct code */
+// import '@aws-amplify/ui-react/styles.css';
+// import { AWS_AMPLIFY_SETTINGS } from './aws-exports';
+// Amplify.configure(AWS_AMPLIFY_SETTINGS);
+
+export const App: FunctionComponent<AuthAmplifyProps> = (/*props*/) => {
   return (
     <section className='h-screen w-screen'>
       <Switch>
         <Route path={PAGES_LIST.HOME} component={HomeLayout} />
-        <Route path={PAGES_LIST.SIGNIN} component={SigninPage} />
-        <Route path={PAGES_LIST.SIGNUP} component={SignupPage} />
         <Router base={PAGES_LIST.DASHBOARD}>
-          <Security>
-            <DashboardLayout />
-          </Security>
+          <div className='bg-red-400 w-full h-full flex justify-center items-center'>
+            {/* [TODO]: Bad code */}
+            <DashboardLayout isPassedToWithAuthenticator={false} />
+            {/* [TODO]: Correct code */}
+            {/* <Authenticator socialProviders={['google']}>
+              {(authProps) => <DashboardLayout {...authProps} {...props} />}
+            </Authenticator> */}
+          </div>
         </Router>
       </Switch>
     </section>
   );
 };
+
+export async function getStaticProps() {
+  return {
+    props: {
+      isPassedToWithAuthenticator: true,
+    },
+  };
+}
