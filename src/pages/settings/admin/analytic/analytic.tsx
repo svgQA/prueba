@@ -1,4 +1,4 @@
-// import { VOX_LATITUDE_SERVICE_URL } from '@/utils/network/constants';
+// import { VOX_LATITUDE_SERVICE_URL } from '@/utils/Network/constants';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 // import { LatitudeEmbed } from '@latitude-data/react';

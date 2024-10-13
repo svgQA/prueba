@@ -1,4 +1,4 @@
-import { Button, Dropdown, Input } from '@/components/common';
+import { Button, Input } from '@/components/common';
 // import { PAGES_LIST } from '@/utils';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
@@ -17,7 +17,7 @@ export const SignupPage: FunctionComponent = () => {
         name='username'
         label='Correo Electrónico'
         type='email'
-        icon='settings'
+        icon='lambda'
       />
       <Input
         id='password'
@@ -33,7 +33,7 @@ export const SignupPage: FunctionComponent = () => {
         type='password'
         icon='logo'
       />
-      <Dropdown
+      {/* <Dropdown
         id='signup-type'
         name='signup-type'
         label='Company Type'
@@ -41,14 +41,21 @@ export const SignupPage: FunctionComponent = () => {
           { label: '123', value: '123' },
           { label: '1233', value: '2323' },
         ]}
-      />
+      /> */}
       <div className='text-right text-sm font-extralight mt-3 text-white'>
         {/*<Link to={PAGES_LIST.SIGNIN}>Sigin</Link>
         <Link to={PAGES_LIST.HOME}>
           <span className='vx-icon vx-home mx-2' />
         </Link>
         */}
-        <Button id='signup' name='signup' label='Sigup' type='submit' full />
+        <Button
+          id='signup'
+          name='signup'
+          label='Sigup'
+          type='submit'
+          full
+          className='bg-cyan-500 text-white'
+        />
       </div>
       <div className='mt-3 py-2 border-t-2'>
         <Button
@@ -56,16 +63,18 @@ export const SignupPage: FunctionComponent = () => {
           name='google'
           label='Google'
           type='button'
-          icon='settings'
+          icon='google'
           full
+          className='text-gray-600 border border-gray-300'
         />
         <Button
           id='facebook'
           name='facebook'
           label='Facebook'
           type='button'
-          icon='sales'
+          icon='facebook'
           full
+          className='text-blue-700 border border-gray-300'
         />
       </div>
     </form>

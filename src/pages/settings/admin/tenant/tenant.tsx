@@ -1,25 +1,17 @@
 import { Expand } from '@/components/common';
-import { TenantService } from '@/services';
 import { IInstance } from '@/types';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 export const TenantSettingPage: FunctionComponent = () => {
-  const tenantService = new TenantService();
-  const [instances, setInstances] = useState<IInstance[]>([]);
+  const [instances] = useState<IInstance[]>([]);
 
   useEffect(() => {
     document.title = 'Tenant Settings';
     getTenant();
   }, []);
 
-  const getTenant = async () => {
-    const response = await tenantService.instances();
-    if (response.getStatus()) {
-      const data = response.getMany();
-      setInstances(data);
-    }
-  };
+  const getTenant = async () => {};
 
   return (
     <section className='h-full'>
