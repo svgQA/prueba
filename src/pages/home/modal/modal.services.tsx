@@ -59,37 +59,39 @@ export const ModalServices: FunctionComponent<IModalServicesProps> = ({
       >
         <div className='w-full h-full flex'>
           <VerticalMenu items={menuItems} onItemChange={handleItemChange} />
-          <div className='flex-1 p-6 overflow-auto'>
+          <div className='flex-1 p-6 flex flex-col overflow-hidden'>
             <h2 className='text-4xl font-bold mb-4 text-black'>
               {currentItem ? currentItem.label : 'Nuestros Servicios'}
             </h2>
-            <div
-              className={`${currentItem?.id === 'aliados' ? 'visible opacity-100' : 'invisible opacity-0 h-0'} transition-opacity duration-300`}
-            >
-              <LogoGrid logos={allyLogos} title='Nuestros Aliados' />
-            </div>
-            <div
-              className={`${currentItem?.id === 'clientes' ? 'visible opacity-100' : 'invisible opacity-0 h-0'} transition-opacity duration-300`}
-            >
-              <LogoGrid logos={clientLogos} title='Nuestros Clientes' />
-            </div>
-            <div
-              className={`${currentItem?.id === 'planes-y-precios' ? 'visible opacity-100' : 'invisible opacity-0 h-0'} transition-opacity duration-300`}
-            >
-              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                {plans.map((plan) => (
-                  <PriceCard key={plan.id} plan={plan} />
-                ))}
+            <div className='flex-grow overflow-hidden'>
+              <div
+                className={`h-full ${currentItem?.id === 'aliados' ? 'block' : 'hidden'}`}
+              >
+                <LogoGrid logos={allyLogos} title='Nuestros Aliados' />
               </div>
-            </div>
-            <div
-              className={`${currentItem && !['aliados', 'clientes', 'planes-y-precios'].includes(currentItem.id) ? 'visible opacity-100' : 'invisible opacity-0 h-0'} transition-opacity duration-300`}
-            >
-              <p className='text-black'>
-                {currentItem
-                  ? currentItem.description
-                  : 'Selecciona un ítem del menú para ver más detalles'}
-              </p>
+              <div
+                className={`h-full ${currentItem?.id === 'clientes' ? 'block' : 'hidden'}`}
+              >
+                <LogoGrid logos={clientLogos} title='Nuestros Clientes' />
+              </div>
+              <div
+                className={`h-full overflow-auto ${currentItem?.id === 'planes-y-precios' ? 'block' : 'hidden'}`}
+              >
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                  {plans.map((plan) => (
+                    <PriceCard key={plan.id} plan={plan} />
+                  ))}
+                </div>
+              </div>
+              <div
+                className={`h-full ${currentItem && !['aliados', 'clientes', 'planes-y-precios'].includes(currentItem.id) ? 'block' : 'hidden'}`}
+              >
+                <p className='text-black'>
+                  {currentItem
+                    ? currentItem.description
+                    : 'Selecciona un ítem del menú para ver más detalles'}
+                </p>
+              </div>
             </div>
           </div>
         </div>

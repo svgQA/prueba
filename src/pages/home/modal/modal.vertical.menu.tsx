@@ -22,42 +22,35 @@ export const VerticalMenu: FunctionComponent<VerticalMenuProps> = ({
             >
               <a
                 href={`#${item.id}`}
-                className='block px-4 py-2 text-gray-700 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 transition-colors duration-200 flex justify-between items-center'
+                className='block px-4 py-2 text-gray-700 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 transition-all duration-200 flex justify-between items-center'
               >
                 {item.label}
-                <span
-                  className={`
-                    ${item.subItems && item.id !== 'planes-y-precios' ? 'visible' : 'invisible'}
-                    text-gray-400 group-hover:text-gray-700 transition-colors duration-200
-                  `}
-                >
-                  &#62;
-                </span>
+                {item.subItems &&
+                  item.subItems.length > 0 &&
+                  item.showSubmenu !== false && (
+                    <span className='text-gray-400 group-hover:text-gray-700 transition-colors duration-200'>
+                      &#62;
+                    </span>
+                  )}
               </a>
-              <div
-                className={`
-                  ${item.subItems && item.id !== 'planes-y-precios' ? 'group-hover:visible group-hover:opacity-100' : 'invisible opacity-0'}
-                  absolute left-full top-0 ml-2 bg-white bg-opacity-90 rounded-lg shadow-lg w-48 transition-opacity duration-200
-                `}
-              >
-                <ul className='py-2'>
-                  {items.map((subItem) => (
-                    <li
-                      key={subItem.id}
-                      className={`
-                        ${item.subItems && item.subItems.some((sub) => sub.id === subItem.id) ? 'block' : 'hidden'}
-                      `}
-                    >
-                      <a
-                        href={`#${subItem.id}`}
-                        className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                      >
-                        {subItem.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {item.subItems &&
+                item.subItems.length > 0 &&
+                item.showSubmenu !== false && (
+                  <div className='absolute left-full top-0 ml-2 bg-white bg-opacity-90 rounded-lg shadow-lg w-48 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200'>
+                    <ul className='py-2'>
+                      {item.subItems.map((subItem) => (
+                        <li key={subItem.id}>
+                          <a
+                            href={`#${subItem.id}`}
+                            className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                          >
+                            {subItem.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
             </li>
           ))}
         </ul>

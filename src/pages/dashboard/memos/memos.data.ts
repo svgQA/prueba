@@ -1,51 +1,54 @@
-export type Person = {
-  firstName: string;
-  lastName: string;
-  age: number;
-  visits: number;
-  status: string;
-  progress: number;
-};
+import { Memo } from './memos.d';
 
-export const defaultData: Person[] = [
+export const memosData: Memo[] = [
   {
+    id: '1',
     firstName: 'Tanner',
     lastName: 'Linsley',
     age: 24,
     visits: 100,
     status: 'In Relationship',
     progress: 50,
+    moreInfo: 'Información adicional sobre Tanner Linsley',
   },
   {
+    id: '2',
     firstName: 'Tandy',
     lastName: 'Miller',
     age: 40,
     visits: 40,
     status: 'Single',
     progress: 80,
+    moreInfo: 'Información adicional sobre Tandy Miller',
   },
   {
+    id: '3',
     firstName: 'Joe',
     lastName: 'Dirte',
     age: 45,
     visits: 20,
     status: 'Complicated',
     progress: 10,
+    moreInfo: 'Información adicional sobre Joe Dirte',
   },
   {
+    id: '4',
     firstName: 'Jordan',
     lastName: 'Giraldo',
     age: 30,
     visits: 11,
     status: 'Complicated',
     progress: 10,
+    moreInfo: 'Información adicional sobre Jordan Giraldo',
   },
   {
+    id: '5',
     firstName: 'Jesus',
     lastName: 'Legarda',
     age: 30,
     visits: 11,
     status: 'Complicated',
     progress: 10,
+    moreInfo: 'Información adicional sobre Jesus Legarda',
   },
 ];

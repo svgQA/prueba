@@ -1,30 +1,31 @@
 import { type FunctionComponent } from 'preact';
-import { useEffect, useMemo } from 'preact/hooks';
-import { defaultData, Person } from './person';
+import { useEffect, useMemo, useState } from 'preact/hooks';
+import { memosData } from './memos.data';
+import { Memo } from './memos.d';
 import { ColumnDef } from '@tanstack/react-table';
 import { Table } from '@/components/common/table/table';
+import { ProgressBar, InfoIcon, Modal } from './memos.columns';
 
 export const MemosPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = 'VX - Memos Service';
   }, []);
 
-  const columns = useMemo<ColumnDef<Person>[]>(
+  const [selectedMemo, setSelectedMemo] = useState<Memo | null>(null);
+
+  const columns = useMemo<ColumnDef<Memo>[]>(
     () => [
       {
         accessorKey: 'firstName',
-        header: 'First Name',
-        cell: (info) => info.getValue(),
+        header: 'Nombres',
       },
       {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        header: 'Last Name',
-        cell: (info) => info.getValue(),
+        accessorKey: 'lastName',
+        header: 'Apellidos',
       },
       {
         accessorKey: 'age',
-        header: 'Age',
+        header: 'Edad',
       },
       {
         accessorKey: 'visits',
@@ -32,88 +33,59 @@ export const MemosPage: FunctionComponent = () => {
       },
       {
         accessorKey: 'status',
-        header: 'Status',
+        header: 'Estado',
       },
       {
         accessorKey: 'progress',
-        header: 'Profile Progress',
+        header: 'Progreso',
+        cell: (info) => <ProgressBar progress={info.getValue() as number} />,
+      },
+      {
+        accessorKey: 'moreInfo',
+        header: 'Más información',
+        cell: (info) => (
+          <InfoIcon onClick={() => setSelectedMemo(info.row.original)} />
+        ),
       },
     ],
     []
   );
 
   return (
-    <section>
+    <section className='p-4'>
+      <h1 className='text-2xl font-bold mb-4'>Gestión de Memos</h1>
       <Table
-        data={defaultData}
+        data={memosData}
         columns={columns}
         searchPlaceholder='Buscar memos...'
         pageSize={20}
       />
+      <Modal isOpen={!!selectedMemo} onClose={() => setSelectedMemo(null)}>
+        {selectedMemo && (
+          <div>
+            <h2 className='text-xl font-bold mb-2'>Información adicional</h2>
+            <p>
+              <strong>Nombre:</strong> {selectedMemo.firstName}{' '}
+              {selectedMemo.lastName}
+            </p>
+            <p>
+              <strong>Edad:</strong> {selectedMemo.age}
+            </p>
+            <p>
+              <strong>Visitas:</strong> {selectedMemo.visits}
+            </p>
+            <p>
+              <strong>Estado:</strong> {selectedMemo.status}
+            </p>
+            <p>
+              <strong>Progreso:</strong> {selectedMemo.progress}%
+            </p>
+            <p>
+              <strong>Más información:</strong> {selectedMemo.moreInfo}
+            </p>
+          </div>
+        )}
+      </Modal>
     </section>
   );
 };
-
-// import { type FunctionComponent } from 'preact';
-// import { useEffect, useMemo, useState } from 'preact/hooks';
-// import { defaultData, Person } from './person';
-// import { ColumnDef } from '@tanstack/react-table';
-// import { Search, Table } from '@/components/common';
-
-// export const MemosPage: FunctionComponent = () => {
-//   const [data, _setData] = useState(() => [...defaultData]);
-//   useEffect(() => {
-//     document.title = 'VX - Memos Service';
-//   }, []);
-
-//   const columns = useMemo<ColumnDef<Person>[]>(
-//     () => [
-//       {
-//         accessorKey: 'firstName',
-//         header: 'First Name',
-//         cell: (info) => info.getValue(),
-//         footer: (props) => props.column.id,
-//       },
-//       {
-//         accessorFn: (row) => row.lastName,
-//         id: 'lastName',
-//         header: 'Last Name',
-//         cell: (info) => info.getValue(),
-//         footer: (props) => props.column.id,
-//       },
-//       {
-//         accessorKey: 'age',
-//         header: 'Age',
-//         footer: (props) => props.column.id,
-//       },
-//       {
-//         accessorKey: 'visits',
-//         header: 'Visitas',
-//         footer: (props) => props.column.id,
-//       },
-//       {
-//         accessorKey: 'status',
-//         header: 'Status',
-//         footer: (props) => props.column.id,
-//       },
-//       {
-//         accessorKey: 'progress',
-//         header: 'Profile Progress',
-//         footer: (props) => props.column.id,
-//       },
-//     ],
-//     []
-//   );
-
-//   return (
-//     <section>
-//       <Table
-//         search={<Search name='search-memos' />}
-//         {...{
-//           data,
-//           columns,
-//         }}
-//       />
-//     </section>
-//   );
-// };
