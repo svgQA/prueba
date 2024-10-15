@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'preact';
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import { Table } from '@/components/common/table/table';
 import { shiftsData } from './shifts.data';
 import { Shift } from './shifts.d';
@@ -10,15 +10,12 @@ import {
   ProgressBar,
   ActionButtons,
   InfoIcon,
-  Modal,
 } from './shift.columns.tsx';
 
 export const ShiftsPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = 'VX - Shifts Service';
   }, []);
-
-  const [selectedShift, setSelectedShift] = useState<Shift | null>(null);
 
   const columns = useMemo<ColumnDef<Shift>[]>(
     () => [
@@ -76,14 +73,51 @@ export const ShiftsPage: FunctionComponent = () => {
         ),
       },
       {
-        accessorKey: 'moreInfo',
+        id: 'expand',
         header: 'Más información',
-        cell: (info) => (
-          <InfoIcon onClick={() => setSelectedShift(info.row.original)} />
+        cell: ({ row }) => (
+          <InfoIcon
+            onClick={() => row.toggleExpanded()}
+            isExpanded={row.getIsExpanded()}
+          />
         ),
       },
     ],
     []
+  );
+
+  const renderExpandedRow = (rowData: Shift) => (
+    <div className='p-4 bg-gray-100'>
+      <h3 className='text-lg font-bold mb-2'>Información adicional</h3>
+      <p>
+        <strong>Empleado:</strong> {rowData.employeeName}
+      </p>
+      <p>
+        <strong>ID:</strong> {rowData.id}
+      </p>
+      <p>
+        <strong>ID Empleado:</strong> {rowData.employeeId}
+      </p>
+      <p>
+        <strong>Inicio:</strong> {new Date(rowData.startTime).toLocaleString()}
+      </p>
+      <p>
+        <strong>Finalización:</strong>{' '}
+        {new Date(rowData.endTime).toLocaleString()}
+      </p>
+      <p>
+        <strong>Duración:</strong> {rowData.duration}
+      </p>
+      <p>
+        <strong>Notificaciones:</strong> {rowData.notifications}
+      </p>
+      <p>
+        <strong>Progreso de actividades:</strong> {rowData.activitiesProgress}%
+      </p>
+      <p>
+        <strong>Más información:</strong> {rowData.moreInfo}
+      </p>
+    </div>
   );
 
   return (
@@ -93,44 +127,8 @@ export const ShiftsPage: FunctionComponent = () => {
         data={shiftsData}
         columns={columns}
         searchPlaceholder='Buscar turnos...'
+        renderExpandedRow={renderExpandedRow}
       />
-      <Modal isOpen={!!selectedShift} onClose={() => setSelectedShift(null)}>
-        {selectedShift && (
-          <div>
-            <h2 className='text-xl font-bold mb-2'>Información adicional</h2>
-            <p>
-              <strong>Empleado:</strong> {selectedShift.employeeName}
-            </p>
-            <p>
-              <strong>ID:</strong> {selectedShift.id}
-            </p>
-            <p>
-              <strong>ID Empleado:</strong> {selectedShift.employeeId}
-            </p>
-            <p>
-              <strong>Inicio:</strong>{' '}
-              {new Date(selectedShift.startTime).toLocaleString()}
-            </p>
-            <p>
-              <strong>Finalización:</strong>{' '}
-              {new Date(selectedShift.endTime).toLocaleString()}
-            </p>
-            <p>
-              <strong>Duración:</strong> {selectedShift.duration}
-            </p>
-            <p>
-              <strong>Notificaciones:</strong> {selectedShift.notifications}
-            </p>
-            <p>
-              <strong>Progreso de actividades:</strong>{' '}
-              {selectedShift.activitiesProgress}%
-            </p>
-            <p>
-              <strong>Más información:</strong> {selectedShift.moreInfo}
-            </p>
-          </div>
-        )}
-      </Modal>
     </section>
   );
 };

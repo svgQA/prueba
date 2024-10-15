@@ -7,6 +7,7 @@ export interface ITableProps<T> {
   search?: VNode;
   searchPlaceholder?: string;
   pageSize?: number;
+  renderExpandedRow?: (row: T) => React.ReactNode;
 }
 
 export interface ITableSearchProps {
@@ -14,10 +15,3 @@ export interface ITableSearchProps {
   setGlobalFilter: (value: string) => void;
   placeholder: string;
 }
-// import { VNode } from 'preact';
-
-// export interface ITableProps<T> {
-//   data: T[];
-//   columns: ColumnDef<T>[];
-//   search?: VNode;
-// }
