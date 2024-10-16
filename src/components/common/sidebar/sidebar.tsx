@@ -30,7 +30,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
       event.preventDefault();
     }
     const target = event.target as HTMLElement;
-    if (target.nodeName === 'SPAN') {
+    if (target instanceof HTMLSpanElement) {
       const menuClicked = target.getAttribute('name');
       setMenuSelected(menuClicked);
       if (

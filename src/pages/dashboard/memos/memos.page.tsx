@@ -6,6 +6,7 @@ import { Search, Table } from '@/components/common';
 
 export const MemosPage: FunctionComponent = () => {
   const [data, _setData] = useState(() => [...defaultData]);
+
   useEffect(() => {
     document.title = 'VX - Memos Service';
   }, []);
@@ -52,7 +53,13 @@ export const MemosPage: FunctionComponent = () => {
   return (
     <section>
       <Table
-        search={<Search name='search-memos' />}
+        search={
+          <Search
+            id='search-memos'
+            name='search-memos'
+            keys={['id_1', 'id_2', 'id_3', 'id_4']}
+          />
+        }
         {...{
           data,
           columns,
