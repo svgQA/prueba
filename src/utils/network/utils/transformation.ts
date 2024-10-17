@@ -1,4 +1,4 @@
-import { IOnboardingModel } from '@/store/signals/interface';
+import { IOnboardingModel } from '@/store/signals/types';
 
 interface ICreateTenantModel {
   owner: {

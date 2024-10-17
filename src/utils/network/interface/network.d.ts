@@ -1,4 +1,4 @@
-import { REQUEST_METHODS } from './constants';
+import { REQUEST_METHODS } from './network.enum';
 
 export interface IModelRequest {
   data?: any;

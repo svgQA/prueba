@@ -2,10 +2,12 @@
 // import { Authenticator } from '@aws-amplify/ui-react';
 import { type FunctionComponent } from 'preact';
 import { Route, Router, Switch } from 'wouter';
-import { DashboardLayout } from './pages/dashboard';
-import { PAGES_LIST } from './utils';
-import { HomeLayout } from './pages/home/home.layout';
-import { AuthAmplifyProps } from './pages/dashboard/inteface';
+
+import { PAGES_LIST } from '@/utils/constants';
+import { AuthAmplifyProps } from '@/pages/types';
+
+import { DashboardLayout } from '@/pages/dashboard';
+import { HomeLayout } from '@/pages/home/home.layout';
 
 /* [TODO]: Correct code */
 // import '@aws-amplify/ui-react/styles.css';

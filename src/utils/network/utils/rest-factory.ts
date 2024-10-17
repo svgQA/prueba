@@ -1,4 +1,4 @@
-import { IGenericData } from './interface';
+import { IGenericData } from '../interface';
 
 export class GenericResponse<T> {
   private status: boolean;
@@ -17,6 +17,7 @@ export class GenericResponse<T> {
     }
   }
 
+  showMessage() {}
   /**
    * @returns boolean true if status of code is >= 200 &&
    * code < 300 otherwise return false

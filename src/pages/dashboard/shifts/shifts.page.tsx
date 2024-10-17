@@ -12,6 +12,7 @@ import {
   InfoIcon,
   Modal,
 } from './shift.columns.tsx';
+import { Search } from '@/components/common';
 
 export const ShiftsPage: FunctionComponent = () => {
   useEffect(() => {
@@ -92,7 +93,13 @@ export const ShiftsPage: FunctionComponent = () => {
       <Table
         data={shiftsData}
         columns={columns}
-        searchPlaceholder='Buscar turnos...'
+        search={
+          <Search
+            id='search-memos'
+            name='search-memos'
+            keys={['id_1', 'id_2', 'id_3', 'id_4']}
+          />
+        }
       />
       <Modal isOpen={!!selectedShift} onClose={() => setSelectedShift(null)}>
         {selectedShift && (
