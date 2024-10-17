@@ -12,28 +12,35 @@ import {
   getExpandedRowModel,
 } from '@tanstack/react-table';
 import { useState } from 'preact/hooks';
-import { ITableProps, ITableSearchProps } from './interface';
+import { ITableProps } from './interface';
 
-const TableSearch = ({
-  globalFilter,
-  setGlobalFilter,
-  placeholder,
-}: ITableSearchProps) => (
-  <input
-    value={globalFilter ?? ''}
-    onChange={(e) => setGlobalFilter(e.currentTarget.value)}
-    className='p-2 font-lg shadow border border-block'
-    placeholder={placeholder}
-  />
-);
+// import {
+//   ExpandableContent,
+//   ExpandablePrioritySection,
+//   PrioritySection,
+// } from '../expansible/expansible';
+
+// const TableSearch = ({
+//   globalFilter,
+//   setGlobalFilter,
+//   placeholder,
+// }: ITableSearchProps) => (
+//   <input
+//     value={globalFilter ?? ''}
+//     onChange={(e) => setGlobalFilter(e.currentTarget.value)}
+//     className='p-2 font-lg shadow border border-block'
+//     placeholder={placeholder}
+//   />
+// );
 
 export const Table = <T,>({
   data,
   columns,
-  search,
-  searchPlaceholder = 'Buscar...',
+  // search,
+  // searchPlaceholder = 'Buscar...',
   pageSize = 10,
-  renderExpandedRow,
+  // renderExpandedRow,
+  // expandableData,
 }: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -65,6 +72,7 @@ export const Table = <T,>({
 
   return (
     <div>
+      {/*
       {search ? (
         search
       ) : (
@@ -74,6 +82,7 @@ export const Table = <T,>({
           placeholder={searchPlaceholder}
         />
       )}
+      */}
       <table className='w-full my-2'>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -112,13 +121,28 @@ export const Table = <T,>({
                   </td>
                 ))}
               </tr>
-              {row.getIsExpanded() && renderExpandedRow && (
+              {/* {row.getIsExpanded() && (
                 <tr>
                   <td colSpan={row.getVisibleCells().length}>
-                    {renderExpandedRow(row.original)}
+                    {expandableData && expandableData[row.index] ? (
+                      Array.isArray(expandableData[row.index]) ? (
+                        (expandableData[row.index] as PrioritySection[]).map(
+                          (section, index) => (
+                            <ExpandablePrioritySection
+                              key={index}
+                              section={section}
+                            />
+                          )
+                        )
+                      ) : (
+                        <ExpandableContent data={expandableData[row.index]} />
+                      )
+                    ) : (
+                      renderExpandedRow && renderExpandedRow(row.original)
+                    )}
                   </td>
                 </tr>
-              )}
+              )} */}
             </>
           ))}
         </tbody>

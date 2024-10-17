@@ -1,42 +1,57 @@
 import { type FunctionComponent } from 'preact';
-import { useEffect, useMemo } from 'preact/hooks';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 import { memosData } from './memos.data';
 import { Memo } from './memos.d';
 import { ColumnDef } from '@tanstack/react-table';
 import { Table } from '@/components/common/table/table';
-import { ProgressBar, InfoIcon } from './memos.columns';
+import { InfoIcon } from './memos.columns';
+// import { PrioritySection } from '@/components/common/expansible/expansible';
 
 export const MemosPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = 'VX - Memos Service';
   }, []);
 
+  // const [expandableData, setExpandableData] = useState<PrioritySection[]>([]);
+  const [filterValue, setFilterValue] = useState('');
+
+  useEffect(() => {
+    // const priorityData: PrioritySection[] = [
+    //   { title: 'Alta', items: [] },
+    //   { title: 'Media', items: [] },
+    //   { title: 'Baja', items: [] },
+    // ];
+    // memosData.forEach((memo) => {
+    //   const priorityIndex =
+    //     memo.priority === 'Alta' ? 0 : memo.priority === 'Media' ? 1 : 2;
+    //   priorityData[priorityIndex].items.push(memo);
+    // });
+    // setExpandableData(priorityData);
+  }, []);
+
   const columns = useMemo<ColumnDef<Memo>[]>(
     () => [
       {
-        accessorKey: 'firstName',
-        header: 'Nombres',
+        accessorKey: 'id',
+        header: 'ID',
       },
       {
-        accessorKey: 'lastName',
-        header: 'Apellidos',
+        accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+        header: 'Nombre',
       },
       {
-        accessorKey: 'age',
-        header: 'Edad',
+        accessorKey: 'noveltyType',
+        header: 'Tipo Novedad',
       },
       {
-        accessorKey: 'visits',
-        header: 'Visitas',
+        accessorKey: 'noveltyDate',
+        header: 'Fecha Novedad',
+        cell: (info) =>
+          new Date(info.getValue() as string).toLocaleDateString(),
       },
       {
-        accessorKey: 'status',
-        header: 'Estado',
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Progreso',
-        cell: (info) => <ProgressBar progress={info.getValue() as number} />,
+        accessorKey: 'priority',
+        header: 'Prioridad',
       },
       {
         id: 'expand',
@@ -52,40 +67,46 @@ export const MemosPage: FunctionComponent = () => {
     []
   );
 
-  const renderExpandedRow = (rowData: Memo) => (
-    <div className='p-4 bg-gray-100'>
-      <h3 className='text-lg font-bold mb-2'>Información adicional</h3>
-      <p>
-        <strong>Nombre completo:</strong> {rowData.firstName} {rowData.lastName}
-      </p>
-      <p>
-        <strong>Edad:</strong> {rowData.age}
-      </p>
-      <p>
-        <strong>Visitas:</strong> {rowData.visits}
-      </p>
-      <p>
-        <strong>Estado:</strong> {rowData.status}
-      </p>
-      <p>
-        <strong>Progreso:</strong> {rowData.progress}%
-      </p>
-      <p>
-        <strong>Más información:</strong> {rowData.moreInfo}
-      </p>
-    </div>
-  );
+  // const filteredData = useMemo(() => {
+  //   return expandableData.map((section) => ({
+  //     ...section,
+  //     items: section.items.filter((item) =>
+  //       Object.values(item).some((value) =>
+  //         value.toString().toLowerCase().includes(filterValue.toLowerCase())
+  //       )
+  //     ),
+  //   }));
+  // }, [expandableData, filterValue]);
 
   return (
     <section className='p-4'>
       <h1 className='text-2xl font-bold mb-4'>Gestión de Memos</h1>
-      <Table
+      <div className='mb-4'>
+        <input
+          type='text'
+          placeholder='Buscar memos...'
+          value={filterValue}
+          onChange={(e) => setFilterValue(e.currentTarget.value)}
+          className='w-full p-2 border border-gray-300 rounded'
+        />
+      </div>
+      {/*
+      {filteredData.map((prioritySection, index) => (
+        <div key={index} className='mb-8'>
+          <h2 className='text-xl font-semibold mb-4'>
+            {prioritySection.title}
+          </h2>
+          */}
+      <Table<Memo>
         data={memosData}
         columns={columns}
-        searchPlaceholder='Buscar memos...'
-        pageSize={20}
-        renderExpandedRow={renderExpandedRow}
+        // pageSize={10}
+        // expandableData={prioritySection.items}
       />
+      {/*
+        </div>
+      ))}
+      */}
     </section>
   );
 };

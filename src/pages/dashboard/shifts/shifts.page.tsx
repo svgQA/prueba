@@ -11,10 +11,46 @@ import {
   ActionButtons,
   InfoIcon,
 } from './shift.columns.tsx';
+// import { ExpandableContentProps } from '@/components/common/expansible/expansible';
 
 export const ShiftsPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = 'VX - Shifts Service';
+  }, []);
+
+  // const [expandableData, setExpandableData] = useState<
+  //   ExpandableContentProps['data'][]
+  // >([]);
+
+  useEffect(() => {
+    // Simular la obtención de datos del endpoint
+    // const fetchExpandableData = async () => {
+    // Aquí iría la llamada real al endpoint
+    // const data: ExpandableContentProps['data'][] = shiftsData.map(
+    //   (shift) => ({
+    //     description: `Descripción del turno ${shift.id}`,
+    //     supervisor: 'Supervisor del turno',
+    //     relatedShift: shift.id,
+    //     updatedBy: 'Último actualizador',
+    //     location: 'Ubicación del turno',
+    //     client: 'Cliente del turno',
+    //     city: 'Ciudad del turno',
+    //     company: 'Compañía del turno',
+    //     address: 'Dirección del turno',
+    //     mapUrl: 'https://via.placeholder.com/300x200',
+    //     attachments: [
+    //       {
+    //         type: 'image',
+    //         url: 'https://via.placeholder.com/100',
+    //         name: 'Imagen del turno',
+    //       },
+    //       { type: 'pdf', url: '#', name: 'Reporte del turno.pdf' },
+    //     ],
+    //   })
+    // );
+    // setExpandableData(data);
+    // };
+    // fetchExpandableData();
   }, []);
 
   const columns = useMemo<ColumnDef<Shift>[]>(
@@ -86,48 +122,14 @@ export const ShiftsPage: FunctionComponent = () => {
     []
   );
 
-  const renderExpandedRow = (rowData: Shift) => (
-    <div className='p-4 bg-gray-100'>
-      <h3 className='text-lg font-bold mb-2'>Información adicional</h3>
-      <p>
-        <strong>Empleado:</strong> {rowData.employeeName}
-      </p>
-      <p>
-        <strong>ID:</strong> {rowData.id}
-      </p>
-      <p>
-        <strong>ID Empleado:</strong> {rowData.employeeId}
-      </p>
-      <p>
-        <strong>Inicio:</strong> {new Date(rowData.startTime).toLocaleString()}
-      </p>
-      <p>
-        <strong>Finalización:</strong>{' '}
-        {new Date(rowData.endTime).toLocaleString()}
-      </p>
-      <p>
-        <strong>Duración:</strong> {rowData.duration}
-      </p>
-      <p>
-        <strong>Notificaciones:</strong> {rowData.notifications}
-      </p>
-      <p>
-        <strong>Progreso de actividades:</strong> {rowData.activitiesProgress}%
-      </p>
-      <p>
-        <strong>Más información:</strong> {rowData.moreInfo}
-      </p>
-    </div>
-  );
-
   return (
     <section className='p-4'>
       <h1 className='text-2xl font-bold mb-4'>Gestión de Turnos</h1>
-      <Table
+      <Table<Shift>
         data={shiftsData}
         columns={columns}
-        searchPlaceholder='Buscar turnos...'
-        renderExpandedRow={renderExpandedRow}
+        // searchPlaceholder='Buscar turnos...'
+        // expandableData={expandableData}
       />
     </section>
   );
