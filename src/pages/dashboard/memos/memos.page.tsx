@@ -48,7 +48,6 @@ export const MemosPage: FunctionComponent = () => {
       <Table
         data={defaultData}
         columns={columns}
-        searchPlaceholder='Buscar memos...'
         pageSize={20}
         search={
           <Search

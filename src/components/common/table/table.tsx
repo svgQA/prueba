@@ -10,26 +10,25 @@ import {
   SortingState,
 } from '@tanstack/react-table';
 import { useState } from 'preact/hooks';
-import { ITableProps, ITableSearchProps } from './interface';
+import { ITableProps } from './interface';
 
-const TableSearch = ({
-  globalFilter,
-  setGlobalFilter,
-  placeholder,
-}: ITableSearchProps) => (
-  <input
-    value={globalFilter ?? ''}
-    onChange={(e) => setGlobalFilter(e.currentTarget.value)}
-    className='p-2 font-lg shadow border border-block'
-    placeholder={placeholder}
-  />
-);
+// const TableSearch = ({
+//   globalFilter,
+//   setGlobalFilter,
+//   placeholder,
+// }: ITableSearchProps) => (
+//   <input
+//     value={globalFilter ?? ''}
+//     onChange={(e) => setGlobalFilter(e.currentTarget.value)}
+//     className='p-2 font-lg shadow border border-block'
+//     placeholder={placeholder}
+//   />
+// );
 
 export const Table = <T,>({
   data,
   columns,
   search,
-  searchPlaceholder = 'Buscar...',
   pageSize = 10,
 }: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -58,7 +57,8 @@ export const Table = <T,>({
 
   return (
     <div>
-      {search ? (
+      {search}
+      {/* {search ? (
         search
       ) : (
         <TableSearch
@@ -66,7 +66,7 @@ export const Table = <T,>({
           setGlobalFilter={setGlobalFilter}
           placeholder={searchPlaceholder}
         />
-      )}
+      )} */}
       <table className='w-full my-2'>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
