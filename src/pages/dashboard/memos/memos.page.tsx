@@ -1,12 +1,11 @@
 import { type FunctionComponent } from 'preact';
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import { defaultData, Person } from './person';
 import { ColumnDef } from '@tanstack/react-table';
-import { Search, Table } from '@/components/common';
+import { Table } from '@/components/common/table/table';
+import { Search } from '@/components/common';
 
 export const MemosPage: FunctionComponent = () => {
-  const [data, _setData] = useState(() => [...defaultData]);
-
   useEffect(() => {
     document.title = 'VX - Memos Service';
   }, []);
@@ -17,34 +16,28 @@ export const MemosPage: FunctionComponent = () => {
         accessorKey: 'firstName',
         header: 'First Name',
         cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
       },
       {
         accessorFn: (row) => row.lastName,
         id: 'lastName',
         header: 'Last Name',
         cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'age',
         header: 'Age',
-        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'visits',
-        header: 'Visits',
-        footer: (props) => props.column.id,
+        header: 'Visitas',
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'progress',
         header: 'Profile Progress',
-        footer: (props) => props.column.id,
       },
     ],
     []
@@ -53,6 +46,9 @@ export const MemosPage: FunctionComponent = () => {
   return (
     <section>
       <Table
+        data={defaultData}
+        columns={columns}
+        pageSize={20}
         search={
           <Search
             id='search-memos'
@@ -60,10 +56,6 @@ export const MemosPage: FunctionComponent = () => {
             keys={['id_1', 'id_2', 'id_3', 'id_4']}
           />
         }
-        {...{
-          data,
-          columns,
-        }}
       />
     </section>
   );
