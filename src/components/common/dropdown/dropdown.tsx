@@ -42,7 +42,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = ({
       <button
         id={`${id}-dropdown-button`}
         name={name}
-        class='w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+        class='w-full text-gray-600 border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
         type='button'
         onClick={toggleDropdown}
       >

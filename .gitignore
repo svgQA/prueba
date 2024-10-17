@@ -36,3 +36,6 @@ coverage
 
 # Fonts
 icomoon*
+*.tsbuildinfo
+
+client_google.json

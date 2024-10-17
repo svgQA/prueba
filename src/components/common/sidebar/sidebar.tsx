@@ -13,6 +13,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   isNavigation = false,
   onHandlerClick,
   position = 'fixed',
+  onLogout,
 }: ISidebarProps) => {
   const [menuSelected, setMenuSelected] = useState<string | null>('');
 
@@ -29,7 +30,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
       event.preventDefault();
     }
     const target = event.target as HTMLElement;
-    if (target.nodeName === 'SPAN') {
+    if (target instanceof HTMLSpanElement) {
       const menuClicked = target.getAttribute('name');
       setMenuSelected(menuClicked);
       if (
@@ -91,8 +92,8 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
             );
           })}
         </ul>
-        {onSettingHandler && (
-          <ul className=''>
+        <ul className=''>
+          {onSettingHandler && (
             <a
               onClick={onSettingHandler}
               className='cursor-pointer text-black hover:text-black'
@@ -103,8 +104,16 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
                 icon='settings'
               />
             </a>
-          </ul>
-        )}
+          )}
+          {onLogout && (
+            <a
+              onClick={onLogout}
+              className='cursor-pointer text-black hover:text-black'
+            >
+              <ButtonMenu name='vx-logout-button' label='logout' icon='users' />
+            </a>
+          )}
+        </ul>
       </nav>
     </aside>
   );

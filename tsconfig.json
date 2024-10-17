@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["vitest/globals"],
     "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
@@ -10,7 +11,8 @@
       "react": ["./node_modules/preact/compat/"],
       "react-dom": ["./node_modules/preact/compat/"],
       "@/*": ["src/*"],
-      "&/*": ["src/pages/settings/*"]
+      "&/*": ["src/pages/settings/*"],
+      "$/*": ["src/services/*"]
     },
 
     /* Bundler mode */

@@ -4,4 +4,6 @@ export interface IMenu {
   icon?: string;
   to: string;
   status?: boolean;
+  button?: boolean;
+  id: string;
 }

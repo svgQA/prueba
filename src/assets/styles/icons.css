@@ -53,6 +53,10 @@ span.vx-icon.size-2xl {
 }
 
 .vx-logo::before {
+  content: '\0097';
+}
+
+.vx-fruit::before {
   content: '\0076';
 }
 
@@ -90,4 +94,12 @@ span.vx-icon.size-2xl {
 
 .vx-users::before {
   content: '\004F';
+}
+
+.vx-facebook::before {
+  content: '\0053';
+}
+
+.vx-google::before {
+  content: '\0051';
 }
