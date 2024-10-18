@@ -105,52 +105,38 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
         </tbody>
       </table>
       {/* Pagination controls (unchanged) */}
-      <div className='flex flex-row justify-between items-center gap-2 mt-5 w-full'>
-        <div>
-          <button
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {'<<'}
-          </button>
-          <button
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {'<'}
-          </button>
-          <button
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            {'>'}
-          </button>
-          <button
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            {'>>'}
-          </button>
-        </div>
-        <span className='flex items-center gap-1'>
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
-          </strong>
-        </span>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number((e.target as HTMLSelectElement).value));
-          }}
+      <div className='flex justify-center items-center gap-2 mt-5'>
+        <button
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+          className='px-3 py-1 bg-[rgb(217,217,217)] text-gray-700 rounded'
         >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+          PREV
+        </button>
+        {table.getPageOptions().map((page, index) => (
+          <button
+            key={index}
+            onClick={() => table.setPageIndex(page)}
+            className={`px-3 py-1 bg-[rgb(217,217,217)] text-gray-700 rounded ${
+              table.getState().pagination.pageIndex === page ? 'font-bold' : ''
+            }`}
+          >
+            {page + 1}
+          </button>
+        ))}
+        {table.getPageCount() > 3 &&
+        table.getState().pagination.pageIndex < table.getPageCount() - 3 ? (
+          <span className='px-3 py-1 bg-[rgb(217,217,217)] text-gray-700 rounded'>
+            ...
+          </span>
+        ) : null}
+        <button
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+          className='px-3 py-1 bg-[rgb(217,217,217)] text-gray-700 rounded'
+        >
+          NEXT
+        </button>
       </div>
     </div>
   );
