@@ -14,36 +14,8 @@ import {
 import { useState } from 'preact/hooks';
 import { ITableProps } from './interface';
 
-// import {
-//   ExpandableContent,
-//   ExpandablePrioritySection,
-//   PrioritySection,
-// } from '../expansible/expansible';
-
-// const TableSearch = ({
-//   globalFilter,
-//   setGlobalFilter,
-//   placeholder,
-// }: ITableSearchProps) => (
-//   <input
-//     value={globalFilter ?? ''}
-//     onChange={(e) => setGlobalFilter(e.currentTarget.value)}
-//     className='p-2 font-lg shadow border border-block'
-//     placeholder={placeholder}
-//   />
-// );
-
-export const Table = <T,>({
-  data,
-  columns,
-  // search,
-  // searchPlaceholder = 'Buscar...',
-  pageSize = 10,
-  // renderExpandedRow,
-  // expandableData,
-}: ITableProps<T>) => {
+export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
@@ -59,12 +31,10 @@ export const Table = <T,>({
     getPaginationRowModel: getPaginationRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
     onPaginationChange: setPagination,
     onExpandedChange: setExpanded,
     state: {
       sorting,
-      globalFilter,
       pagination,
       expanded,
     },
@@ -72,23 +42,19 @@ export const Table = <T,>({
 
   return (
     <div>
-      {/*
-      {search ? (
-        search
-      ) : (
-        <TableSearch
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          placeholder={searchPlaceholder}
-        />
-      )}
-      */}
-      <table className='w-full my-2'>
+      <table className='w-full my-2 border-collapse'>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <tr
+              key={headerGroup.id}
+              className='bg-gray-50 border-b border-cyan-500'
+            >
               {headerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
+                <th
+                  key={header.id}
+                  colSpan={header.colSpan}
+                  className='p-2 text-left font-semibold text-gray-600'
+                >
                   <div
                     className={
                       header.column.getCanSort()
@@ -113,40 +79,32 @@ export const Table = <T,>({
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <>
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-              {/* {row.getIsExpanded() && (
-                <tr>
-                  <td colSpan={row.getVisibleCells().length}>
-                    {expandableData && expandableData[row.index] ? (
-                      Array.isArray(expandableData[row.index]) ? (
-                        (expandableData[row.index] as PrioritySection[]).map(
-                          (section, index) => (
-                            <ExpandablePrioritySection
-                              key={index}
-                              section={section}
-                            />
-                          )
-                        )
-                      ) : (
-                        <ExpandableContent data={expandableData[row.index]} />
-                      )
-                    ) : (
-                      renderExpandedRow && renderExpandedRow(row.original)
-                    )}
+            <tr
+              key={row.id}
+              className='border-b border-gray-200 hover:bg-gray-50'
+            >
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className='p-2 whitespace-nowrap'>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+          {table.getRowModel().rows.map((row) => {
+            if (row.getIsExpanded()) {
+              return (
+                <tr className='border-b border-black'>
+                  <td colSpan={row.getVisibleCells().length} className='p-2'>
+                    {/* Contenido expandido aquí */}
                   </td>
                 </tr>
-              )} */}
-            </>
-          ))}
+              );
+            }
+            return null;
+          })}
         </tbody>
       </table>
+      {/* Pagination controls (unchanged) */}
       <div className='flex flex-row justify-between items-center gap-2 mt-5 w-full'>
         <div>
           <button

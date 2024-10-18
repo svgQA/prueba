@@ -4,29 +4,15 @@ import { memosData } from './memos.data';
 import { Memo } from './memos.d';
 import { ColumnDef } from '@tanstack/react-table';
 import { Table } from '@/components/common/table/table';
-import { InfoIcon } from './memos.columns';
-// import { PrioritySection } from '@/components/common/expansible/expansible';
+import { InfoIcon, FormattedDate, PriorityBadge } from './memos.columns';
 
 export const MemosPage: FunctionComponent = () => {
+  const [data, setData] = useState<Memo[]>([]);
+  const [globalFilter, setGlobalFilter] = useState('');
+
   useEffect(() => {
     document.title = 'VX - Memos Service';
-  }, []);
-
-  // const [expandableData, setExpandableData] = useState<PrioritySection[]>([]);
-  const [filterValue, setFilterValue] = useState('');
-
-  useEffect(() => {
-    // const priorityData: PrioritySection[] = [
-    //   { title: 'Alta', items: [] },
-    //   { title: 'Media', items: [] },
-    //   { title: 'Baja', items: [] },
-    // ];
-    // memosData.forEach((memo) => {
-    //   const priorityIndex =
-    //     memo.priority === 'Alta' ? 0 : memo.priority === 'Media' ? 1 : 2;
-    //   priorityData[priorityIndex].items.push(memo);
-    // });
-    // setExpandableData(priorityData);
+    setData(memosData);
   }, []);
 
   const columns = useMemo<ColumnDef<Memo>[]>(
@@ -46,12 +32,16 @@ export const MemosPage: FunctionComponent = () => {
       {
         accessorKey: 'noveltyDate',
         header: 'Fecha Novedad',
-        cell: (info) =>
-          new Date(info.getValue() as string).toLocaleDateString(),
+        cell: (info) => <FormattedDate date={info.getValue() as string} />,
       },
       {
         accessorKey: 'priority',
         header: 'Prioridad',
+        cell: (info) => (
+          <PriorityBadge
+            priority={info.getValue() as 'Alta' | 'Media' | 'Baja'}
+          />
+        ),
       },
       {
         id: 'expand',
@@ -67,17 +57,6 @@ export const MemosPage: FunctionComponent = () => {
     []
   );
 
-  // const filteredData = useMemo(() => {
-  //   return expandableData.map((section) => ({
-  //     ...section,
-  //     items: section.items.filter((item) =>
-  //       Object.values(item).some((value) =>
-  //         value.toString().toLowerCase().includes(filterValue.toLowerCase())
-  //       )
-  //     ),
-  //   }));
-  // }, [expandableData, filterValue]);
-
   return (
     <section className='p-4'>
       <h1 className='text-2xl font-bold mb-4'>Gestión de Memos</h1>
@@ -85,28 +64,19 @@ export const MemosPage: FunctionComponent = () => {
         <input
           type='text'
           placeholder='Buscar memos...'
-          value={filterValue}
-          onChange={(e) => setFilterValue(e.currentTarget.value)}
+          value={globalFilter}
+          onChange={(e) => setGlobalFilter(e.currentTarget.value)}
           className='w-full p-2 border border-gray-300 rounded'
         />
       </div>
-      {/*
-      {filteredData.map((prioritySection, index) => (
-        <div key={index} className='mb-8'>
-          <h2 className='text-xl font-semibold mb-4'>
-            {prioritySection.title}
-          </h2>
-          */}
       <Table<Memo>
-        data={memosData}
+        data={data}
         columns={columns}
-        // pageSize={10}
-        // expandableData={prioritySection.items}
+        pageSize={10}
+        // expandableData={data}
+        // globalFilter={globalFilter}
+        // onGlobalFilterChange={setGlobalFilter}
       />
-      {/*
-        </div>
-      ))}
-      */}
     </section>
   );
 };

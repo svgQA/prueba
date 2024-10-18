@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Calendar, Shield } from 'lucide-react';
 
 interface ProgressBarProps {
   progress: number;
@@ -64,6 +64,47 @@ export const Modal: FunctionComponent<{
         </div>
         {children}
       </div>
+    </div>
+  );
+};
+
+export const FormattedDate: FunctionComponent<{ date: string }> = ({
+  date,
+}) => {
+  const dateObj = new Date(date);
+  const day = dateObj.getDate().toString().padStart(2, '0');
+  const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+  const year = dateObj.getFullYear();
+  const hours = dateObj.getHours().toString().padStart(2, '0');
+  const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+
+  const formattedDateStr = `${day}-${month}-${year} ${hours}:${minutes}`;
+
+  return (
+    <div className='flex items-center'>
+      <Calendar className='mr-2' size={16} />
+      <span>{formattedDateStr}</span>
+    </div>
+  );
+};
+
+export const PriorityBadge: FunctionComponent<{
+  priority: 'Alta' | 'Media' | 'Baja';
+}> = ({ priority }) => {
+  const bgColor =
+    priority === 'Alta'
+      ? 'rgb(224,88,88)'
+      : priority === 'Media'
+        ? 'rgb(255,128,0)'
+        : 'rgb(0,189,214)';
+
+  return (
+    <div
+      className='flex items-center justify-center  py-1 rounded text-white text-sm w-[90px]'
+      style={{ backgroundColor: bgColor }}
+    >
+      <Shield className='mr-2' size={20} />
+      <span>{priority}</span>
     </div>
   );
 };
