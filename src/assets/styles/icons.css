@@ -40,6 +40,22 @@ span.vx-icon.size-2xl {
   content: '\0031';
 }
 
+.vx-asterik::before {
+  content: '\0032';
+}
+
+.vx-alarm::before {
+  content: '\0033';
+}
+
+.vx-time::before {
+  content: '\0034';
+}
+
+.vx-currency::before {
+  content: '\0035';
+}
+
 .vx-apps::before {
   content: '\0040';
 }
