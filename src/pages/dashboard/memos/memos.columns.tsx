@@ -82,7 +82,7 @@ export const FormattedDate: FunctionComponent<{ date: string }> = ({
 
   return (
     <div className='flex items-center'>
-      <Calendar className='mr-2' size={16} />
+      <Calendar className='mr-2 text-cyan-500' size={16} />
       <span>{formattedDateStr}</span>
     </div>
   );
