@@ -107,6 +107,10 @@ export const memosColumns: ColumnDef<Memo>[] = [
     cell: (info) => <FormattedDate date={info.getValue() as string} />,
   },
   {
+    accessorKey: 'contact',
+    header: 'Contacto',
+  },
+  {
     accessorKey: 'priority',
     header: 'Prioridad',
     cell: (info) => (
@@ -115,12 +119,15 @@ export const memosColumns: ColumnDef<Memo>[] = [
   },
   {
     id: 'expand',
-    header: 'Más información',
+    // header: 'Más',
     cell: ({ row }) => (
-      <InfoIcon
-        onClick={() => row.toggleExpanded()}
-        isExpanded={row.getIsExpanded()}
-      />
+      <div className='flex justify-end'>
+        <InfoIcon
+          onClick={() => row.toggleExpanded()}
+          isExpanded={row.getIsExpanded()}
+        />
+      </div>
     ),
+    header: () => <div className='text-right'>Más</div>,
   },
 ];

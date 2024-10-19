@@ -3,6 +3,7 @@ export interface Memo {
   firstName: string;
   lastName: string;
   age: number;
+  contact: number;
   visits: number;
   status: string;
   progress: number;
