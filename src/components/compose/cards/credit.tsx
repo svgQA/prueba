@@ -12,7 +12,7 @@ export const CreditCard: FunctionComponent<ICreditCardProps> = ({
   return (
     <Card id={id} name={name} color={active ? 'bg-blue-200' : 'bg-zinc-300'}>
       <div
-        className={`${active ? 'text-white' : 'text-black'} max-h-20 justify-center flex`}
+        className={`${active ? 'text-white' : 'text-black'} ${onClick ? 'cursor-pointer' : ''} max-h-20 justify-center flex`}
         onClick={() => (onClick ? onClick(true) : null)}
       >
         {onClick ? (
