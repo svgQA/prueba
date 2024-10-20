@@ -1,5 +1,5 @@
-import { IMakeRequest } from './utils/interface';
-import { BaseService } from './utils/service';
+import { BaseService } from '@/utils/network';
+import { IMakeRequest } from '@/utils/network/types';
 
 export class ShiftService extends BaseService {
   static async get_shifts() {

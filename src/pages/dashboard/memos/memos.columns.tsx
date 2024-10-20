@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
-import { ChevronDown, ChevronUp, Calendar, Shield, Key } from 'lucide-react'; // Importar el ícono Key
 import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from './memos.d';
+import dayjs from 'dayjs';
 
 // Componentes adicionales que ya tenías en este archivo
 export const ProgressBar: FunctionComponent<{ progress: number }> = ({
@@ -26,26 +26,19 @@ export const InfoIcon: FunctionComponent<{
     onClick={onClick}
     className='p-1 rounded-full hover:bg-gray-200 transition-colors duration-200'
   >
-    {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+    <span
+      className={`vx-icon mx-1 vx-${isExpanded ? 'logo' : 'sensor'} size-sm`}
+    />
   </button>
 );
 
 export const FormattedDate: FunctionComponent<{ date: string }> = ({
   date,
 }) => {
-  const dateObj = new Date(date);
-  const day = dateObj.getDate().toString().padStart(2, '0');
-  const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-  const year = dateObj.getFullYear();
-  const hours = dateObj.getHours().toString().padStart(2, '0');
-  const minutes = dateObj.getMinutes().toString().padStart(2, '0');
-
-  const formattedDateStr = `${day}-${month}-${year} ${hours}:${minutes}`;
-
   return (
     <div className='flex items-center'>
-      <Calendar className='mr-2 text-cyan-500' size={16} />
-      <span>{formattedDateStr}</span>
+      <span className='vx-icon mx-1 vx-sensor size-sm'></span>
+      <span>{dayjs(date).format('[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]')}</span>
     </div>
   );
 };
@@ -65,7 +58,7 @@ export const PriorityBadge: FunctionComponent<{
       className='flex items-center justify-center py-1 rounded text-white text-sm w-[90px]'
       style={{ backgroundColor: bgColor }}
     >
-      <Shield className='mr-2' size={20} />
+      <span className='vx-icon mx-1 vx-sensor size-sm'></span>
       <span>{priority}</span>
     </div>
   );
@@ -79,7 +72,7 @@ export const memosColumns: ColumnDef<Memo>[] = [
     // Modificamos la celda para agregar el ícono junto al ID
     cell: (info) => (
       <div className='flex items-center'>
-        <Key className='text-cyan-500 mr-2' size={16} />
+        <span className='vx-icon mx-1 vx-sensor size-sm'></span>
         <span>{String(info.getValue())}</span>
       </div>
     ),

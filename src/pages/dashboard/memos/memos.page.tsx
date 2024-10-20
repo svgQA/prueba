@@ -4,6 +4,7 @@ import { memosData } from './memos.data';
 import { Memo } from './memos.d';
 import { Table } from '@/components/common/table/table';
 import { memosColumns } from './memos.columns'; // Importar las columnas
+import { Search } from '@/components/common';
 
 export const MemosPage: FunctionComponent = () => {
   const [data, setData] = useState<Memo[]>([]);
@@ -30,6 +31,13 @@ export const MemosPage: FunctionComponent = () => {
         data={data}
         columns={memosColumns} // Usar las columnas importadas
         pageSize={10}
+        search={
+          <Search
+            id='search-memos'
+            name='search-memos'
+            keys={['id_1', 'id_2', 'id_3', 'id_4']}
+          />
+        }
       />
     </section>
   );

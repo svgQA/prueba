@@ -14,7 +14,12 @@ import {
 import { useState } from 'preact/hooks';
 import { ITableProps } from './interface';
 
-export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
+export const Table = <T,>({
+  data,
+  columns,
+  search,
+  pageSize = 10,
+}: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -42,6 +47,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
 
   return (
     <div>
+      {search}
       <table className='w-full my-2 border-collapse'>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

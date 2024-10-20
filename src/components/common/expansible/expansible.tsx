@@ -1,6 +1,5 @@
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export interface ExpandableContentProps {
   data: {
@@ -48,7 +47,9 @@ export const ExpandablePrioritySection: FunctionComponent<
         className='flex items-center justify-between w-full p-2 bg-gray-100 hover:bg-gray-200 transition-colors duration-200'
       >
         <span className='font-semibold'>{section.title}</span>
-        {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+        <span
+          className={`vx-icon mx-1 vx-${isExpanded ? 'logo' : 'sensor'} size-sm`}
+        />
       </button>
       {isExpanded && (
         <div className='mt-2 space-y-4'>

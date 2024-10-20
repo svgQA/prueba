@@ -1,5 +1,4 @@
 import { FunctionComponent } from 'preact';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface SendIconProps {
   onClick: () => void;
@@ -98,7 +97,9 @@ export const InfoIcon: FunctionComponent<InfoIconProps> = ({
     onClick={onClick}
     className='p-1 rounded-full hover:bg-gray-200 transition-colors duration-200'
   >
-    {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+    <span
+      className={`vx-icon mx-1 vx-${isExpanded ? 'logo' : 'sensor'} size-sm`}
+    />
   </button>
 );
 
