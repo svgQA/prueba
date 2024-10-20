@@ -12,12 +12,12 @@ export const CreditCard: FunctionComponent<ICreditCardProps> = ({
   return (
     <Card id={id} name={name} color={active ? 'bg-blue-200' : 'bg-zinc-300'}>
       <div
-        className={`${active ? 'text-white' : 'text-black'} max-h-20`}
+        className={`${active ? 'text-white' : 'text-black'} max-h-20 justify-center flex`}
         onClick={() => (onClick ? onClick(true) : null)}
       >
         {onClick ? (
           <svg
-            className='h-8 w-8 text-gray-400 mt'
+            className='h-7 w-7 text-gray-400 mt'
             fill='none'
             viewBox='0 0 24 24'
             stroke='currentColor'
@@ -32,7 +32,7 @@ export const CreditCard: FunctionComponent<ICreditCardProps> = ({
         ) : (
           <div className='flex items-center space-x-4'>
             <svg
-              className='h-8 w-8 text-gray-500 '
+              className='h-7 w-7 text-gray-500 '
               fill='none'
               viewBox='0 0 24 24'
               stroke='currentColor'
@@ -45,8 +45,10 @@ export const CreditCard: FunctionComponent<ICreditCardProps> = ({
               />
             </svg>
             <div className='flex-1'>
-              <div className='bg-white h-6 w-full rounded flex items-center px-2 '>
-                <span className='text-gray-400'>•••• •••• {number}</span>
+              <div className='bg-white rounded items-center px-2 min-w-32 flex justify-center'>
+                <span className='text-gray-400 text-sm'>
+                  •••• •••• {number}
+                </span>
               </div>
             </div>
           </div>

@@ -39,7 +39,7 @@ export const CompanySettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <div className='container h-full overflow-y-auto'>
+    <div className='container h-full overflow-y-auto vox-scroll-design'>
       <div className='container flex flex-row justify-between p-8'>
         <div className='container-input w-1/2  space-y-6 pr-4 '>
           <form className='space-y-4'>
