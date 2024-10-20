@@ -20,6 +20,12 @@ export class TenantService extends BaseService {
     };
     return await super.make_request<ITenant>(this, model);
   }
+  static async get_my_tenants(id: string) {
+    const model: IMakeRequest = {
+      url: ['users', id],
+    };
+    return await super.make_request<any>(this, model);
+  }
   static async get_tenants() {
     const model: IMakeRequest = {
       url: ['tenants'],
