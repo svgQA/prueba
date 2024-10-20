@@ -1,4 +1,4 @@
-import { TenantService } from '@/services';
+// import { TenantService } from '@/services';
 import { fetchAuthSession } from 'aws-amplify/auth';
 // import { JwtPayload } from '@aws-amplify/core/dist/esm/singleton/Auth/types';
 
@@ -12,13 +12,14 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 // };
 
 export const hasUserTenant = async (): Promise<boolean> => {
-  const user = await getUser();
-  if (!user?.sub) return false;
-  const response = await TenantService.get_my_tenants(user.sub);
-  if (!response.getStatus()) return false;
-  const userTenant = response.getOne()?.data;
-  if (!userTenant) return false;
-  return userTenant?.companies?.length > 0;
+  return true;
+  // const user = await getUser();
+  // if (!user?.sub) return false;
+  // const response = await TenantService.get_my_tenants(user.sub);
+  // if (!response.getStatus()) return false;
+  // const userTenant = response.getOne()?.data;
+  // if (!userTenant) return false;
+  // return userTenant?.companies?.length > 0;
 };
 
 export const getUser = async (): Promise<any /* JwtPayload */ | undefined> => {

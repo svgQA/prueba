@@ -95,8 +95,8 @@ export const ShiftsPage: FunctionComponent = () => {
         columns={columns}
         search={
           <Search
-            id='search-memos'
-            name='search-memos'
+            id='search-shift'
+            name='search-shift'
             keys={['id_1', 'id_2', 'id_3', 'id_4']}
           />
         }

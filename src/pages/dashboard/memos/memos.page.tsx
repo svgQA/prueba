@@ -8,7 +8,7 @@ import { Search } from '@/components/common';
 
 export const MemosPage: FunctionComponent = () => {
   const [data, setData] = useState<Memo[]>([]);
-  const [globalFilter, setGlobalFilter] = useState('');
+  // const [globalFilter, setGlobalFilter] = useState('');
 
   useEffect(() => {
     document.title = 'VX - Memos Service';
@@ -18,7 +18,7 @@ export const MemosPage: FunctionComponent = () => {
   return (
     <section className='p-4'>
       <h1 className='text-2xl font-bold mb-4'>Gestión de Memos</h1>
-      <div className='mb-4'>
+      {/* <div className='mb-4'>
         <input
           type='text'
           placeholder='Buscar memos...'
@@ -26,10 +26,10 @@ export const MemosPage: FunctionComponent = () => {
           onChange={(e) => setGlobalFilter(e.currentTarget.value)}
           className='w-full p-2 border border-gray-300 rounded'
         />
-      </div>
+      </div> */}
       <Table<Memo>
         data={data}
-        columns={memosColumns} // Usar las columnas importadas
+        columns={memosColumns}
         pageSize={10}
         search={
           <Search
