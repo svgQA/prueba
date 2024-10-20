@@ -1,7 +1,7 @@
 import { type FunctionComponent } from 'preact';
 import { TargetedEvent } from 'preact/compat';
 import { useEffect, useState, useRef } from 'preact/hooks';
-import { Cards } from '@/components/compose/cards/cards';
+import { CreditCard, InvoiceCard } from '@/components/compose';
 
 export const CompanySettingPage: FunctionComponent = () => {
   const [imagenPreview, setImagenPreview] = useState<string | null>(null);
@@ -129,25 +129,19 @@ export const CompanySettingPage: FunctionComponent = () => {
         </div>
 
         <div className='container-card w-1/2  space-y-6 pl-4'>
-          <Cards
-            id='ID'
-            name='Company 1'
+          <InvoiceCard
+            id='factura-1'
+            name='factura-1'
             color='bg-[#00BDD6]'
-            colorText='#fff'
-            qrIcon='qr'
-            currencyIcon='currency'
-            timeIcon='time'
-            alarmIcon='alarm'
+            total={20}
+            currency='EUR'
           />
-          <Cards
-            id='ID'
-            name='Company 2'
+          <InvoiceCard
+            id='factura-2'
+            name='factura-2'
             color='bg-[#D9D9D9]'
-            colorText='#000'
-            qrIcon='qr'
-            currencyIcon='currency'
-            timeIcon='time'
-            alarmIcon='alarm'
+            total={100}
+            currency='COP'
           />
         </div>
       </div>
@@ -156,67 +150,31 @@ export const CompanySettingPage: FunctionComponent = () => {
         <h2 className='text-sm font-bold'>FACTURACIÓN</h2>
       </div>
 
-      <div className='container flex flex-row justify-between p-8'>
-        <div className='container-card w-1/2  space-y-6 pr-4'>
-          <Cards
-            id='ID'
-            name='FAC/001'
-            color='bg-[#00BDD6]'
-            colorText='#fff'
-            qrIcon='qr'
-            currencyIcon='currency'
-            timeIcon='time'
-            alarmIcon='alarm'
-          />
-          <div className='container-card-credit space-y-4  flex flex-row '>
+      <div className='flex flex-row justify-between p-8'>
+        <div className='w-1/2  flex-wrap'>
+          <div className='flex flex-row'>
+            <InvoiceCard
+              id='fact-30'
+              name='FAC/001'
+              total={20}
+              currency='EUR'
+              active
+            />
+          </div>
+          <div className='flex flex-row '>
             <div className='card-credit flex flex-row gap-4'>
               {cards.map((card, index) => (
-                <div
-                  key={index}
-                  className='bg-gray-200 w-64 p-4 rounded-lg shadow h-40'
-                >
-                  <div className='flex items-center space-x-4'>
-                    <svg
-                      className='h-8 w-8 text-gray-500 '
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      stroke='currentColor'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'
-                      />
-                    </svg>
-                    <div className='flex-1'>
-                      <div className='bg-white h-6 w-full rounded flex items-center px-2 '>
-                        <span className='text-gray-400'>•••• •••• •••• </span>
-                      </div>
-                    </div>
-                    <div className='text-sm font-medium'>{card}</div>
-                  </div>
-                </div>
+                <CreditCard
+                  id={`credit-card-${index}`}
+                  name={`credit-card-${index}`}
+                  number={card}
+                />
               ))}
-
-              <div
-                className='card-add w-64 h-[72px] flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors border-dashed border-2 border-gray-300 rounded-lg h-40 '
-                onClick={() => setIsModalOpen(true)}
-              >
-                <svg
-                  className='h-8 w-8 text-gray-400 mt'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  stroke='currentColor'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M12 4v16m8-8H4'
-                  />
-                </svg>
-              </div>
+              <CreditCard
+                id='add-credit-card'
+                name='add-credit-card'
+                onClick={setIsModalOpen}
+              />
             </div>
             {isModalOpen && (
               <div className='modal-add fixed inset-0  flex items-center justify-center z-50'>
@@ -309,26 +267,20 @@ export const CompanySettingPage: FunctionComponent = () => {
           </div>
         </div>
 
-        <div className='container-card w-1/2  space-y-6  pl-4'>
-          <Cards
-            id='ID'
+        <div className='w-1/2 flex flex-row flex-wrap justify-evenly'>
+          <InvoiceCard
+            id='fact-1'
             name='FAC/002'
             color='bg-[#D9D9D9]'
-            colorText='#000'
-            qrIcon='qr'
-            currencyIcon='currency'
-            timeIcon='time'
-            alarmIcon='alarm'
+            currency='COP'
+            total={20}
           />
-          <Cards
-            id='ID'
+          <InvoiceCard
+            id='fact-2'
             name='FAC/003'
             color='bg-[#D9D9D9]'
-            colorText='#000'
-            qrIcon='qr'
-            currencyIcon='currency'
-            timeIcon='time'
-            alarmIcon='alarm'
+            currency='USD'
+            total={50}
           />
         </div>
       </div>

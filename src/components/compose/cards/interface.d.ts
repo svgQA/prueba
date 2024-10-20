@@ -1,11 +1,15 @@
+import { ICardProps } from '@/components/common/interface';
 import { type IComponentProps } from '@/components/utils/interface';
 import { type PropsWithChildren } from 'preact/compat';
 
-export interface ICardProps extends IComponentProps, PropsWithChildren {
-  color: string;
-  colorText: string;
-  qrIcon: string;
-  currencyIcon: string;
-  timeIcon: string;
-  alarmIcon: string;
+export interface IInvoiceCardProps extends ICardProps {
+  total: number;
+  currency: 'COP' | 'USD' | 'EUR';
+  active?: boolean;
+}
+
+export interface ICreditCardProps extends ICardProps {
+  active?: boolean;
+  number?: string;
+  onClick?: (value: boolean) => void;
 }
