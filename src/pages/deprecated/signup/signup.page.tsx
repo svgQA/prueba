@@ -17,7 +17,7 @@ export const SignupPage: FunctionComponent = () => {
         name='username'
         label='Correo Electrónico'
         type='email'
-        icon='lambda'
+        icon='email'
       />
       <Input
         id='password'

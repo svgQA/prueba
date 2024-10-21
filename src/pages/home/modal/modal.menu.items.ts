@@ -1,10 +1,9 @@
-// modal.menu.items.ts
-
 export interface MenuItem {
   id: string;
   label: string;
   description: string;
   subItems?: { id: string; label: string }[];
+  showSubmenu?: boolean;
 }
 
 export const menuItems: MenuItem[] = [
@@ -18,6 +17,7 @@ export const menuItems: MenuItem[] = [
       { id: 'servicio2', label: 'Servicio 2' },
       { id: 'servicio3', label: 'Servicio 3' },
     ],
+    showSubmenu: false,
   },
   {
     id: 'planes-y-precios',
@@ -29,6 +29,7 @@ export const menuItems: MenuItem[] = [
       { id: 'plan-pro', label: 'Plan Pro' },
       { id: 'plan-enterprise', label: 'Plan Enterprise' },
     ],
+    showSubmenu: false,
   },
   {
     id: 'aliados',
