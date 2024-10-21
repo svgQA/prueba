@@ -1,5 +1,9 @@
 import { VNode } from 'preact';
 import { ColumnDef } from '@tanstack/react-table';
+import {
+  ExpandableContentProps,
+  PrioritySection,
+} from '../expansible/expansible';
 
 export interface ITableProps<T> {
   data: T[];
@@ -7,9 +11,3 @@ export interface ITableProps<T> {
   search?: VNode;
   pageSize?: number;
 }
-
-// export interface ITableSearchProps {
-//   globalFilter: string;
-//   setGlobalFilter: (value: string) => void;
-//   placeholder: string;
-// }

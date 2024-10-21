@@ -126,6 +126,10 @@ export const clientImageUrls: LogoData[] = [
     name: 'Alcanos',
     url: 'https://pagosvirtuales.alcanosesp.com/public/img/logo_q.png',
   },
+  {
+    name: 'G4S',
+    url: 'https://www.novaseguridad.com.co/wp-content/uploads/2020/10/Empresas-de-seguridad-G4S.jpg',
+  },
 ];
 
 export const allyImageUrls: LogoData[] = [

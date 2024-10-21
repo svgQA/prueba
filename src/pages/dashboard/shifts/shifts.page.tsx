@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'preact';
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import { Table } from '@/components/common/table/table';
 import { shiftsData } from './shifts.data';
 import { Shift } from './shifts.d';
@@ -10,7 +10,6 @@ import {
   ProgressBar,
   ActionButtons,
   InfoIcon,
-  Modal,
 } from './shift.columns.tsx';
 import { Search } from '@/components/common';
 
@@ -18,8 +17,6 @@ export const ShiftsPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = 'VX - Shifts Service';
   }, []);
-
-  const [selectedShift, setSelectedShift] = useState<Shift | null>(null);
 
   const columns = useMemo<ColumnDef<Shift>[]>(
     () => [
@@ -77,10 +74,13 @@ export const ShiftsPage: FunctionComponent = () => {
         ),
       },
       {
-        accessorKey: 'moreInfo',
+        id: 'expand',
         header: 'Más información',
-        cell: (info) => (
-          <InfoIcon onClick={() => setSelectedShift(info.row.original)} />
+        cell: ({ row }) => (
+          <InfoIcon
+            onClick={() => row.toggleExpanded()}
+            isExpanded={row.getIsExpanded()}
+          />
         ),
       },
     ],
@@ -90,54 +90,17 @@ export const ShiftsPage: FunctionComponent = () => {
   return (
     <section className='p-4'>
       <h1 className='text-2xl font-bold mb-4'>Gestión de Turnos</h1>
-      <Table
+      <Table<Shift>
         data={shiftsData}
         columns={columns}
         search={
           <Search
-            id='search-memos'
-            name='search-memos'
+            id='search-shift'
+            name='search-shift'
             keys={['id_1', 'id_2', 'id_3', 'id_4']}
           />
         }
       />
-      <Modal isOpen={!!selectedShift} onClose={() => setSelectedShift(null)}>
-        {selectedShift && (
-          <div>
-            <h2 className='text-xl font-bold mb-2'>Información adicional</h2>
-            <p>
-              <strong>Empleado:</strong> {selectedShift.employeeName}
-            </p>
-            <p>
-              <strong>ID:</strong> {selectedShift.id}
-            </p>
-            <p>
-              <strong>ID Empleado:</strong> {selectedShift.employeeId}
-            </p>
-            <p>
-              <strong>Inicio:</strong>{' '}
-              {new Date(selectedShift.startTime).toLocaleString()}
-            </p>
-            <p>
-              <strong>Finalización:</strong>{' '}
-              {new Date(selectedShift.endTime).toLocaleString()}
-            </p>
-            <p>
-              <strong>Duración:</strong> {selectedShift.duration}
-            </p>
-            <p>
-              <strong>Notificaciones:</strong> {selectedShift.notifications}
-            </p>
-            <p>
-              <strong>Progreso de actividades:</strong>{' '}
-              {selectedShift.activitiesProgress}%
-            </p>
-            <p>
-              <strong>Más información:</strong> {selectedShift.moreInfo}
-            </p>
-          </div>
-        )}
-      </Modal>
     </section>
   );
 };
