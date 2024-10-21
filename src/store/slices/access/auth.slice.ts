@@ -1,7 +1,9 @@
-// import { TenantService } from '@/services';
+import { TenantService } from '@/services';
 import { fetchAuthSession } from 'aws-amplify/auth';
-// import { JwtPayload } from '@aws-amplify/core/dist/esm/singleton/Auth/types';
+import { parsingCompanies } from './user.slice';
+import { ICompany } from './interface/user.interface';
 
+// import { JwtPayload } from '@aws-amplify/core/dist/esm/singleton/Auth/types';
 // export const hasUserTenant = async (): Promise<boolean> => {
 //   const user = await getUser();
 //   if (!user) return false;
@@ -11,15 +13,16 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 //   return true;
 // };
 
-export const hasUserTenant = async (): Promise<boolean> => {
-  return true;
-  // const user = await getUser();
-  // if (!user?.sub) return false;
-  // const response = await TenantService.get_my_tenants(user.sub);
-  // if (!response.getStatus()) return false;
-  // const userTenant = response.getOne()?.data;
-  // if (!userTenant) return false;
-  // return userTenant?.companies?.length > 0;
+export const hasUserTenant = async (
+  setCompanies: (companies: ICompany[]) => void
+): Promise<boolean> => {
+  const user = await getUser();
+  if (!user?.sub) return false;
+  const response = await TenantService.get_my_tenants(user.sub);
+  if (!response.getStatus()) return false;
+  const userTenants = parsingCompanies(response.getOne()?.data);
+  setCompanies(userTenants);
+  return userTenants.length < 2;
 };
 
 export const getUser = async (): Promise<any /* JwtPayload */ | undefined> => {

@@ -6,6 +6,8 @@ import { FunctionComponent } from 'preact';
 import { PropsWithChildren } from 'preact/compat';
 import { Form, Field, FormSpy } from 'react-final-form';
 import { required } from './validate';
+import { useUserStore } from '@/store/slices';
+import { ICompany } from '@/store/slices/access/interface/user.interface';
 
 interface IOnBoardingStepProps extends PropsWithChildren {
   title?: string;
@@ -28,14 +30,24 @@ const OnBoardingStep: FunctionComponent<IOnBoardingStepProps> = ({
 interface IOnBoardingStepsProps {
   sliderRef: any;
   values: any;
+  companies?: ICompany[];
 }
 
-const OnBoardingSteps = ({ sliderRef }: IOnBoardingStepsProps) => (
+const OnBoardingSteps = ({ sliderRef, companies }: IOnBoardingStepsProps) => (
   <div
     className='flex transition-transform duration-300 ease-in-out h-full mt-3'
     ref={sliderRef}
   >
-    <OnBoardingStep title='Voxline'></OnBoardingStep>
+    {/* Sacar este primer componente para capturar si ya tiene companies con el fin
+    	de evitar seguir sobre el proceso de creaciòn. */}
+    <OnBoardingStep title='Tryvoo'>
+      {companies?.map((company) => (
+        <div className='w-full bg-red-400 my-1 cursor-pointer hover:bg-opacity-40 p-2 rounded-md'>
+          <h2>{company.name}</h2>
+          <p>{company.id}</p>
+        </div>
+      ))}
+    </OnBoardingStep>
     <OnBoardingStep title='Información del administrador'>
       <Field<string> name='admin_name' validate={required}>
         {({ input, meta }) => (
@@ -215,6 +227,7 @@ const OnBoardingSteps = ({ sliderRef }: IOnBoardingStepsProps) => (
 
 export const OnBordingPage = ({ onSubmit, closed }: IOnboardingProps) => {
   const [step, setStep] = useState<number>(DEFAULT_STEP);
+  const { companies } = useUserStore();
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const handleNext = () => setStep((prev) => Math.min(prev + 1, STEPS));
@@ -241,7 +254,11 @@ export const OnBordingPage = ({ onSubmit, closed }: IOnboardingProps) => {
             >
               Paso {step - 1} de {STEPS}
             </span>
-            <OnBoardingSteps values={values} sliderRef={sliderRef} />
+            <OnBoardingSteps
+              companies={companies}
+              values={values}
+              sliderRef={sliderRef}
+            />
             <div className='py-2 bg-gray-100 flex justify-evenly'>
               <button
                 className={`onboarding-buttons bg-[#A5ACBA] ${step > 1 ? 'visible' : 'invisible'}`}

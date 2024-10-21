@@ -90,7 +90,7 @@ import { TenantService } from '@/services';
 /** ***********************************************************************
  * COMMENTS
  ** ***********************************************************************/
-import { hasUserTenant } from '@/store/slices';
+import { hasUserTenant, useUserStore } from '@/store/slices';
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
 
@@ -100,6 +100,7 @@ import { hasUserTenant } from '@/store/slices';
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   signOut,
 }: AuthAmplifyProps) => {
+  const { setCompanies } = useUserStore();
   const [menuSettings, setMenuSettings] =
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
 
@@ -116,7 +117,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
     // closeOnBoardingModal();
 
     /* [TODO]: Correct code */
-    const existTenant = await hasUserTenant();
+    const existTenant = await hasUserTenant(setCompanies);
     if (!existTenant) openOnBoardingModal();
     else closeOnBoardingModal();
   };
