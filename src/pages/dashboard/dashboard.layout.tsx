@@ -80,6 +80,9 @@ import {
   toggleSettingModal,
   closeOnBoardingModal,
   openOnBoardingModal,
+  getStatusLoading,
+  openLoading,
+  closeLoading,
 } from '@/store/signals/modals';
 
 /** ***********************************************************************
@@ -117,9 +120,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
     // closeOnBoardingModal();
 
     /* [TODO]: Correct code */
+    openLoading();
     const existTenant = await hasUserTenant(setCompanies);
     if (!existTenant) openOnBoardingModal();
     else closeOnBoardingModal();
+    closeLoading();
   };
 
   const onSettingHandler = () => {
@@ -182,6 +187,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
 
   return (
     <section className='w-screen h-screen'>
+      <div
+        className={`absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ${getStatusLoading.value ? 'visible' : 'invisible'}`}
+      >
+        <div className='animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white'></div>
+      </div>
       <Sidebar
         id='sidebar'
         name='sidebar'
