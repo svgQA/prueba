@@ -3,6 +3,8 @@ import { type ISidebarProps } from './interface';
 import { useEffect, useState } from 'preact/hooks';
 import { Link } from 'wouter';
 import { ButtonMenu } from '../button/menu/button';
+import { useUserStore } from '@/store/slices';
+import { closeOnBoardingModal } from '@/store/signals/modals';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
   id,
@@ -16,6 +18,11 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   onLogout,
 }: ISidebarProps) => {
   const [menuSelected, setMenuSelected] = useState<string | null>('');
+  const { companies, setSelected } = useUserStore();
+  const setCompanySelected = (company: string) => {
+    setSelected(company);
+    closeOnBoardingModal();
+  };
 
   useEffect(() => {
     setMenuSelected(menus[0].to);
@@ -113,6 +120,26 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
               <ButtonMenu name='vx-logout-button' label='logout' icon='users' />
             </a>
           )}
+          <div className='relative group'>
+            <a className='cursor-pointer text-black hover:text-black'>
+              <ButtonMenu
+                name='vx-company-button'
+                label='company'
+                icon='logo'
+              />
+            </a>
+            <div className='absolute left-full bottom-0 hidden group-hover:block bg-white shadow-lg rounded p-2'>
+              {companies.map((company) => (
+                <div
+                  key={company.id}
+                  className={`block cursor-pointer w-full text-left px-4 py-2 mb-1 ${company.selected ? 'bg-teal-500 text-white' : 'hover:bg-gray-100'}`}
+                  onClick={() => setCompanySelected(company.id)}
+                >
+                  {company.name}
+                </div>
+              ))}
+            </div>
+          </div>
         </ul>
       </nav>
     </aside>

@@ -20,7 +20,7 @@ export const hasUserTenant = async (
   if (!user?.sub) return false;
   const response = await TenantService.get_my_tenants(user.sub);
   if (!response.getStatus()) return false;
-  const userTenants = parsingCompanies(response.getOne()?.data);
+  const userTenants = parsingCompanies(response.getOne());
   setCompanies(userTenants);
   return userTenants.length < 2;
 };

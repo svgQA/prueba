@@ -4,6 +4,7 @@ export interface ICompany {
   nit: string;
   tenant_id: string;
   type: string;
+  selected?: boolean;
 }
 
 export interface IUser {

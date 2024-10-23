@@ -73,7 +73,6 @@ import { AuthAmplifyProps } from '../types';
  * STORE SIGNALS
  ** ***********************************************************************/
 import { authModel } from '@/store/signals/access';
-import { type IOnboardingModel } from '@/store/signals/types';
 import {
   getStatusOnBoardingModal,
   getStatusSettingModal,
@@ -84,11 +83,6 @@ import {
   openLoading,
   closeLoading,
 } from '@/store/signals/modals';
-
-/** ***********************************************************************
- * SERVICES
- ** ***********************************************************************/
-import { TenantService } from '@/services';
 
 /** ***********************************************************************
  * COMMENTS
@@ -172,17 +166,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
       const menuClicked = target.getAttribute('name');
       updateMenu(menuClicked);
     }
-  };
-
-  const onCreateTenant = async (model: IOnboardingModel) => {
-    const response = await TenantService.create_tenant(model);
-    if (response.getStatus()) {
-      closeOnBoardingModal();
-    }
-  };
-
-  const onSubmitOnBoarding = async (model: IOnboardingModel) => {
-    await onCreateTenant(model);
   };
 
   return (
@@ -403,10 +386,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
           </section>
         </div>
       </Modal>
-      <OnBordingPage
-        closed={getStatusOnBoardingModal.value}
-        onSubmit={onSubmitOnBoarding}
-      />
+      <OnBordingPage closed={getStatusOnBoardingModal.value} />
     </section>
   );
 };

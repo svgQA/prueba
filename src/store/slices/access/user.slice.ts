@@ -9,13 +9,31 @@ type State = {
 type Actions = {
   setUser: (user: IUser | null) => void;
   setCompanies: (companies: ICompany[]) => void;
+  setSelected: (company_id: string) => void;
+  getSelected: () => ICompany | undefined;
 };
 
-export const useUserStore = create<State & Actions>((set) => ({
+export const useUserStore = create<State & Actions>((set, get) => ({
   user: null,
   companies: [],
   setUser: (user) => set({ user }),
-  setCompanies: (companies) => set({ companies }),
+  setCompanies: (companies) =>
+    set({
+      companies: companies.map((company) => ({ ...company, selected: false })),
+    }),
+  setSelected: (company_id) => {
+    const { companies } = get();
+    set({
+      companies: companies.map((company) => ({
+        ...company,
+        selected: company.id === company_id,
+      })),
+    });
+  },
+  getSelected: () => {
+    const { companies } = get();
+    return companies.find((company) => company.selected);
+  },
 }));
 
 /**
@@ -24,11 +42,13 @@ export const useUserStore = create<State & Actions>((set) => ({
  * provienen, por ese motivo se "estabilizar" con el objeto company.
  */
 export const parsingCompanies = (data: any): ICompany[] => {
-  return data.companies.map((company: any) => ({
+  const model = data.data;
+  return model.companies.map((company: any) => ({
     id: company.company.id,
     name: company.company.name,
     nit: company.company.nit,
     tenant_id: company.company.tenant_id,
     type: company.company.type,
+    selected: false,
   }));
 };
