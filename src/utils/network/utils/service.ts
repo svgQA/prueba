@@ -18,7 +18,7 @@ export class BaseService {
     const subdirectory = model.join(VOX_DEFAULT_PATH.DEFAULT);
     const urlBase = 'https://tenant-qa.up.railway.app'; // VOS_SERVICES[base];
     const urlTotal = `${urlBase}/${subdirectory}`;
-    console.log(subdirectory, VOS_SERVICES[base], urlTotal);
+    console.log(subdirectory, VOS_SERVICES[base], urlTotal, base, VOS_SERVICES);
     return urlTotal;
   }
 
