@@ -24,12 +24,17 @@ export const Button: FunctionComponent<IButtonProps> = ({
     >
       {icon && (
         <span
-          className={`left-0 px-1 vx-icon ${loading ? 'vx-loading animate-spin' : `vx-${icon}`}`}
-          style={{ visibility: loading ? 'visible' : 'hidden' }}
+          className={`left-0 px-1 vx-icon vx-${icon}`}
+          // style={{ visibility: loading ? 'visible' : 'hidden' }}
         />
       )}
       {label && !rounded && (
-        <p className='w-full capitalize text-center'>{label}</p>
+        <div className='flex flex-row justify-between items-center'>
+          <p className='w-full capitalize text-center'>{label}</p>
+          <span
+            className={`left-0 px-1 vx-icon vx-logo ${loading ? 'visible' : 'invisible'}`}
+          />
+        </div>
       )}
     </button>
   );
