@@ -16,8 +16,10 @@ export class BaseService {
   private static make_url(paths: string[], base: VoxServices): string {
     const model = [this.prefix, ...paths];
     const subdirectory = model.join(VOX_DEFAULT_PATH.DEFAULT);
-    const urlBase = VOS_SERVICES[base];
-    return `${urlBase}/${subdirectory}`;
+    const urlBase = 'https://tenant-qa.up.railway.app'; // VOS_SERVICES[base];
+    const urlTotal = `${urlBase}/${subdirectory}`;
+    console.log(subdirectory, VOS_SERVICES[base], urlTotal);
+    return urlTotal;
   }
 
   static async make_request<T>(
