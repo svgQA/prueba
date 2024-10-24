@@ -1,4 +1,4 @@
-import { IBase } from './general';
+import { type IBase } from './general';
 
 export interface IModule extends IBase {}
 export interface ITenant extends IBase {

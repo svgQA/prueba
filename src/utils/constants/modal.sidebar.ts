@@ -1,5 +1,5 @@
-import { IModalSidebarMenu } from '@/components/compose/modal';
-import { PAGES_LIST_ROUTER } from '../pages';
+import { type IModalSidebarMenu } from '@/components/compose/modal';
+import { PAGES_LIST_ROUTER } from './pages';
 
 export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
   {

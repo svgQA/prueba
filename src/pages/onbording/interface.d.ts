@@ -1,6 +1,7 @@
 import { IOnboardingModel } from '@/store/signals/interface';
+import { AuthEventData } from '@/types';
 
 export interface IOnboardingProps {
-  onSubmit: (IOnboardingModel) => void;
   closed?: boolean;
+  onLogout: (data?: AuthEventData) => void;
 }

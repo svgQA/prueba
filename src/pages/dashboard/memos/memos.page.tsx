@@ -4,10 +4,11 @@ import { memosData } from './memos.data';
 import { Memo } from './memos.d';
 import { Table } from '@/components/common/table/table'; // Asegúrate de que la ruta es correcta
 import { memosColumns } from './memos.columns'; // Asegúrate de que esta importación se usa
+import { Search } from '@/components/common';
 
 export const MemosPage: FunctionComponent = () => {
   const [data, setData] = useState<Memo[]>([]); // Estado para almacenar los datos
-  const [globalFilter, setGlobalFilter] = useState(''); // Filtro global
+  // const [globalFilter, setGlobalFilter] = useState(''); // Filtro global
 
   useEffect(() => {
     document.title = 'VX - Memos Service'; // Establecer el título del documento
@@ -17,7 +18,7 @@ export const MemosPage: FunctionComponent = () => {
   return (
     <section className='p-4'>
       <h1 className='text-2xl font-bold mb-4'>Gestión de Memos</h1>
-      <div className='mb-4'>
+      {/* <div className='mb-4'>
         <input
           type='text'
           placeholder='Buscar memos...'
@@ -27,7 +28,14 @@ export const MemosPage: FunctionComponent = () => {
         />
       </div>
       {/* Usar las columnas importadas y pasar los datos a la tabla */}
-      <Table
+      <Table<Memo>
+        search={
+          <Search
+            id='search-memos'
+            name='search-memos'
+            keys={['id_1', 'id_2', 'id_3', 'id_4']}
+          />
+        }
         data={data} // Pasar los datos cargados
         columns={memosColumns} // Pasar las columnas importadas
         pageSize={16} // Tamaño de página, ajusta según sea necesario

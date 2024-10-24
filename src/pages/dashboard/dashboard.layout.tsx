@@ -1,9 +1,25 @@
-import { Button, Input, Modal, Sidebar } from '@/components/common';
-import { PAGES_LIST, PAGES_LIST_ROUTER, SIDEBAR_MENUS } from '@/utils';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Route, Router, Switch } from 'wouter';
 
+/** ***********************************************************************
+ * UTILS
+ ** ***********************************************************************/
+import {
+  PAGES_LIST,
+  PAGES_LIST_ROUTER,
+  SIDEBAR_MENUS,
+  MODAL_SIDEBAR_MENUS,
+} from '@/utils/constants';
+
+/** ***********************************************************************
+ * COMPONENTS
+ ** ***********************************************************************/
+import { Button, Input, Modal, Sidebar } from '@/components/common';
+
+/** ***********************************************************************
+ * PAGES
+ ** ***********************************************************************/
 import { DevicesPage } from './devices/devices.page';
 import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
@@ -17,9 +33,10 @@ import {
   CardSettingUser,
   IModalSidebarMenu,
 } from '@/components/compose/modal';
-import { authModel } from '@/store/signals/access';
-import { MODAL_SIDEBAR_MENUS } from '@/utils/constants/modal/sidebar';
 
+/** ***********************************************************************
+ * SETTINS COMPONENTS
+ ** ***********************************************************************/
 import {
   AnalyticAdminSettingPage,
   DatabaseSettingPage,
@@ -46,25 +63,42 @@ import {
   RolesSettingPage,
   UsersSettingPage,
 } from '&/security';
-import { AuthAmplifyProps } from './inteface';
 
-import { IOnboardingModel } from '@/store/signals/interface';
+/** ***********************************************************************
+ * AMPLIFY AWS
+ ** ***********************************************************************/
+import { AuthAmplifyProps } from '../types';
+
+/** ***********************************************************************
+ * STORE SIGNALS
+ ** ***********************************************************************/
+import { authModel } from '@/store/signals/access';
 import {
   getStatusOnBoardingModal,
   getStatusSettingModal,
   toggleSettingModal,
   closeOnBoardingModal,
-  // openOnBoardingModal,
+  openOnBoardingModal,
+  getStatusLoading,
+  openLoading,
+  closeLoading,
 } from '@/store/signals/modals';
-import { TenantService } from '@/services';
-// import { hasUserTenant } from '@/store/slices';
 
+/** ***********************************************************************
+ * COMMENTS
+ ** ***********************************************************************/
+import { hasUserTenant, useUserStore } from '@/store/slices';
+import { BaseService } from '@/utils/network';
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
 
+/** ***********************************************************************
+ * COMPONENT
+ ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   signOut,
 }: AuthAmplifyProps) => {
+  const { setCompanies, setSelected } = useUserStore();
   const [menuSettings, setMenuSettings] =
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
 
@@ -73,17 +107,18 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   );
 
   useEffect(() => {
+    BaseService.setLoading(openLoading, closeLoading);
     validateUser();
   }, []);
 
   const validateUser = async () => {
     /* [TODO]: Bad code */
-    closeOnBoardingModal();
+    // closeOnBoardingModal();
 
     /* [TODO]: Correct code */
-    // const existTenant = await hasUserTenant();
-    // if (!existTenant) openOnBoardingModal();
-    // else closeOnBoardingModal();
+    const existTenant = await hasUserTenant(setCompanies, setSelected);
+    if (!existTenant) openOnBoardingModal();
+    else closeOnBoardingModal();
   };
 
   const onSettingHandler = () => {
@@ -133,19 +168,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
     }
   };
 
-  const onCreateTenant = async (model: IOnboardingModel) => {
-    const response = await TenantService.create_tenant(model);
-    if (response.getStatus()) {
-      closeOnBoardingModal();
-    }
-  };
-
-  const onSubmitOnBoarding = async (model: IOnboardingModel) => {
-    await onCreateTenant(model);
-  };
-
   return (
     <section className='w-screen h-screen'>
+      <div
+        className={`absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ${getStatusLoading.value ? 'visible' : 'invisible'}`}
+      >
+        <div className='animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white'></div>
+      </div>
       <Sidebar
         id='sidebar'
         name='sidebar'
@@ -156,6 +185,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
         onLogout={signOut}
       />
       <div className='flex flex-col pl-20 w-full pr-2'>
+        {/* <button onClick={onCreateTenant}>TEST SERVICE</button> */}
         <Switch>
           <Route path={PAGES_LIST.HOME} component={MemosPage} />
           <Route path={PAGES_LIST.SHIFTS} component={ShiftsPage} />
@@ -358,7 +388,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
       </Modal>
       <OnBordingPage
         closed={getStatusOnBoardingModal.value}
-        onSubmit={onSubmitOnBoarding}
+        onLogout={signOut || (() => {})}
       />
     </section>
   );
