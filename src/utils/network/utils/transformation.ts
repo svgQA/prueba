@@ -1,16 +1,17 @@
 import { IOnboardingModel } from '@/store/signals/types';
 
 interface ICreateTenantModel {
-  owner: {
+  user: {
     name: string;
     phone: string;
     address: string;
+    cognito: string;
   };
   company: {
     name: string;
     nit: string;
-    location: string;
-    type_company: string;
+    address: string;
+    type: string;
     services: [string];
   };
   tenant: {
@@ -22,16 +23,17 @@ export const onboarding2Tenant = (
   data: IOnboardingModel
 ): ICreateTenantModel => {
   return {
-    owner: {
+    user: {
       name: data.admin_name,
       phone: data.admin_phone,
       address: data.admin_address,
+      cognito: data.admin_cognito,
     },
     company: {
       name: data.company_name,
       nit: data.company_nit,
-      location: data.company_address,
-      type_company: data.company_industry,
+      address: data.company_address,
+      type: data.company_industry,
       services: ['any'],
     },
     tenant: {

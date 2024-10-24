@@ -9,4 +9,5 @@ export interface IButtonProps extends IComponentProps {
   rounded?: boolean;
   full?: boolean;
   className?: string;
+  loading?: boolean;
 }
