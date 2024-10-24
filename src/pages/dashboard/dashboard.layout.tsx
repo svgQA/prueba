@@ -88,6 +88,7 @@ import {
  * COMMENTS
  ** ***********************************************************************/
 import { hasUserTenant, useUserStore } from '@/store/slices';
+import { BaseService } from '@/utils/network';
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
 
@@ -97,7 +98,7 @@ import { hasUserTenant, useUserStore } from '@/store/slices';
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   signOut,
 }: AuthAmplifyProps) => {
-  const { setCompanies } = useUserStore();
+  const { setCompanies, setSelected } = useUserStore();
   const [menuSettings, setMenuSettings] =
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
 
@@ -106,6 +107,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   );
 
   useEffect(() => {
+    BaseService.setLoading(openLoading, closeLoading);
     validateUser();
   }, []);
 
@@ -114,11 +116,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
     // closeOnBoardingModal();
 
     /* [TODO]: Correct code */
-    openLoading();
-    const existTenant = await hasUserTenant(setCompanies);
+    const existTenant = await hasUserTenant(setCompanies, setSelected);
     if (!existTenant) openOnBoardingModal();
     else closeOnBoardingModal();
-    closeLoading();
   };
 
   const onSettingHandler = () => {
@@ -386,7 +386,10 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
           </section>
         </div>
       </Modal>
-      <OnBordingPage closed={getStatusOnBoardingModal.value} />
+      <OnBordingPage
+        closed={getStatusOnBoardingModal.value}
+        onLogout={signOut || (() => {})}
+      />
     </section>
   );
 };

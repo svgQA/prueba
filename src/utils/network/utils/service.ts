@@ -5,6 +5,13 @@ import { VoxServices } from '../types';
 
 export class BaseService {
   protected static prefix: string = 'api';
+  protected static openLoading: () => void = () => {};
+  protected static closeLoading: () => void = () => {};
+
+  public static setLoading(open: () => void, close: () => void) {
+    this.openLoading = open;
+    this.closeLoading = close;
+  }
 
   private static make_url(paths: string[], base: VoxServices): string {
     const model = [this.prefix, ...paths];
@@ -29,6 +36,7 @@ export class BaseService {
      */
     model: IMakeRequest
   ): Promise<GenericResponse<T>> {
+    this.openLoading();
     const url = this.make_url(model.url, instance.name as VoxServices);
 
     const method = model?.method || REQUEST_METHODS.GET;
@@ -45,6 +53,7 @@ export class BaseService {
       const content_type = response.headers.get('content-type');
       if (content_type?.includes('application/json')) {
         const result = await response.json();
+        this.closeLoading();
         return new GenericResponse<T>({
           code: response?.status,
           message: result?.message,
@@ -52,6 +61,7 @@ export class BaseService {
         });
       } else {
         const result = await response.text();
+        this.closeLoading();
         return new GenericResponse<T>({
           code: response?.status,
           message: result,
@@ -62,6 +72,7 @@ export class BaseService {
       const message =
         JSON.parse(error?.request?.response || `{"message": "${error}"}`)
           ?.message || 'ERROR: Not Found Data';
+      this.closeLoading();
       return new GenericResponse<T>({
         code: 404,
         message,

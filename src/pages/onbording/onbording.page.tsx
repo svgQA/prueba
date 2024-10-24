@@ -6,7 +6,7 @@ import { FunctionComponent } from 'preact';
 import { PropsWithChildren } from 'preact/compat';
 import { Form, Field, FormSpy } from 'react-final-form';
 import { required } from './validate';
-import { useUserStore } from '@/store/slices';
+import { getUserId, useUserStore } from '@/store/slices';
 import { ICompany } from '@/store/slices/interface';
 import { IOnboardingModel } from '@/store/signals/types';
 import { TenantService } from '@/services';
@@ -246,7 +246,7 @@ const OnBoardingSteps = ({ sliderRef, companies }: IOnBoardingStepsProps) => {
   );
 };
 
-export const OnBordingPage = ({ closed }: IOnboardingProps) => {
+export const OnBordingPage = ({ closed, onLogout }: IOnboardingProps) => {
   const [step, setStep] = useState<number>(DEFAULT_STEP);
   const { companies } = useUserStore();
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -255,7 +255,15 @@ export const OnBordingPage = ({ closed }: IOnboardingProps) => {
   const handlePrev = () => setStep((prev) => Math.max(prev - 1, 1));
 
   const onCreateTenant = async (model: IOnboardingModel) => {
-    const response = await TenantService.create_tenant(model);
+    const admin_cognito = await getUserId();
+
+    if (!admin_cognito) {
+      return console.error('No existe usuario valido con ese uuid');
+    }
+    const response = await TenantService.create_tenant({
+      ...model,
+      admin_cognito,
+    });
     if (response.getStatus()) {
       closeOnBoardingModal();
     }
@@ -278,7 +286,14 @@ export const OnBordingPage = ({ closed }: IOnboardingProps) => {
             onSubmit={handleSubmit}
           >
             <span
-              className={`top-0 right-0 absolute p-4 text-sm text-[#A5ACBA] mb-2 ${step > 1 ? 'visibe' : 'invisible'}`}
+              onClick={onLogout}
+              className='absolute top-0 right-2 p-2 text-gray-500 hover:text-gray-700 cursor-pointer'
+              type='button'
+            >
+              <span className='vx-icon vx-logo' />
+            </span>
+            <span
+              className={`top-0 right-8 absolute p-4 text-sm text-[#A5ACBA] mb-2 ${step > 1 ? 'visibe' : 'invisible'}`}
             >
               Paso {step - 1} de {STEPS}
             </span>
