@@ -16,23 +16,13 @@ export class BaseService {
   private static make_url(paths: string[], base: VoxServices): string {
     const model = [this.prefix, ...paths];
     const subdirectory = model.join(VOX_DEFAULT_PATH.DEFAULT);
-    const urlBase = 'https://tenant-qa.up.railway.app'; // VOS_SERVICES[base];
+    const urlBase = VOS_SERVICES[base];
     const urlTotal = `${urlBase}/${subdirectory}`;
-    console.log(
-      subdirectory,
-      VOS_SERVICES[base],
-      urlTotal,
-      base,
-      VOS_SERVICES,
-      VOX_DEFAULT_PATH.DEFAULT,
-      this.prefix,
-      paths
-    );
     return urlTotal;
   }
 
   static async make_request<T>(
-    instance: any,
+    instance: VoxServices,
     /* FIX:
      Pasar a usar unicamente el nombre del micro, porque esto va a
        ser administrado unicamente por un gateway que redirecciona todo
@@ -48,7 +38,7 @@ export class BaseService {
     model: IMakeRequest
   ): Promise<GenericResponse<T>> {
     this.openLoading();
-    const url = this.make_url(model.url, instance.name as VoxServices);
+    const url = this.make_url(model.url, instance);
 
     const method = model?.method || REQUEST_METHODS.GET;
     if (method === REQUEST_METHODS.POST) {
