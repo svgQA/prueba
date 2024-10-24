@@ -43,12 +43,15 @@ export const useUserStore = create<State & Actions>((set, get) => ({
  */
 export const parsingCompanies = (data: any): ICompany[] => {
   const model = data.data;
-  return model.companies.map((company: any) => ({
-    id: company.company.id,
-    name: company.company.name,
-    nit: company.company.nit,
-    tenant_id: company.company.tenant_id,
-    type: company.company.type,
-    selected: false,
-  }));
+  return model.companies.map(
+    (company: any): ICompany => ({
+      id: company.company.id,
+      name: company.company.name,
+      nit: company.company.nit,
+      tenant_id: company.company.tenant_id,
+      type: company.company.type,
+      selected: false,
+      role: company.type,
+    })
+  );
 };

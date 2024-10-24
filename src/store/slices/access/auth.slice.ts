@@ -30,18 +30,18 @@ const getTenancies = async (
   return userTenants.length < 2;
 };
 
+export const getUserId = async (): Promise<string | undefined> => {
+  const user = await getUser();
+  return user.sub;
+};
+
 export const hasUserTenant = async (
   setCompanies: (companies: ICompany[]) => void,
   setSelected: (uuid: string) => void
 ): Promise<boolean> => {
-  const user = await getUser();
-  if (!user?.sub) return false;
-  return getTenancies(user.sub, setCompanies, setSelected);
-};
-
-export const getUserId = async (): Promise<string | undefined> => {
-  const user = await getUser();
-  return user.sub;
+  const user = await getUserId();
+  if (!user) return false;
+  return getTenancies(user, setCompanies, setSelected);
 };
 
 export const getUser = async (): Promise<any /* JwtPayload */ | undefined> => {

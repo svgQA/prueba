@@ -7,7 +7,6 @@ import { PropsWithChildren } from 'preact/compat';
 import { Form, Field, FormSpy } from 'react-final-form';
 import { required } from './validate';
 import { getUserId, useUserStore } from '@/store/slices';
-import { ICompany } from '@/store/slices/interface';
 import { IOnboardingModel } from '@/store/signals/types';
 import { TenantService } from '@/services';
 import { closeOnBoardingModal } from '@/store/signals/modals';
@@ -33,11 +32,10 @@ const OnBoardingStep: FunctionComponent<IOnBoardingStepProps> = ({
 interface IOnBoardingStepsProps {
   sliderRef: any;
   values: any;
-  companies?: ICompany[];
 }
 
-const OnBoardingSteps = ({ sliderRef, companies }: IOnBoardingStepsProps) => {
-  const { setSelected } = useUserStore();
+const OnBoardingSteps = ({ sliderRef }: IOnBoardingStepsProps) => {
+  const { setSelected, companies } = useUserStore();
   const setCompanySelected = (company: string) => {
     setSelected(company);
     closeOnBoardingModal();
@@ -52,16 +50,18 @@ const OnBoardingSteps = ({ sliderRef, companies }: IOnBoardingStepsProps) => {
       <OnBoardingStep title='Companies'>
         <div className='w-full'>
           <h4 className='font-semibold text-3xl'>Tryvoo:</h4>
-          {companies?.map((company) => (
+          {companies.map((company) => (
             <div
               key={`selector-company-${company.name}`}
               name={company.id}
               className='w-full border-2 my-1 cursor-pointer hover:bg-gray-100 py-2 rounded-md flex flex-row justify-between px-4 items-center'
               onClick={() => setCompanySelected(company.id)}
             >
-              <div>
-                <h2>{company.name}</h2>
-                <p>{company.id}</p>
+              <div className='flex flex-row'>
+                <h4 className='w-96'>{company.name}</h4>
+                <span className='bg-teal-500 text-white px-2 py-1 rounded-full text-sm'>
+                  {company.role}
+                </span>
               </div>
               <span className='vx-icon vx-users' />
             </div>
@@ -248,7 +248,6 @@ const OnBoardingSteps = ({ sliderRef, companies }: IOnBoardingStepsProps) => {
 
 export const OnBordingPage = ({ closed, onLogout }: IOnboardingProps) => {
   const [step, setStep] = useState<number>(DEFAULT_STEP);
-  const { companies } = useUserStore();
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const handleNext = () => setStep((prev) => Math.min(prev + 1, STEPS));
@@ -297,11 +296,7 @@ export const OnBordingPage = ({ closed, onLogout }: IOnboardingProps) => {
             >
               Paso {step - 1} de {STEPS}
             </span>
-            <OnBoardingSteps
-              companies={companies}
-              values={values}
-              sliderRef={sliderRef}
-            />
+            <OnBoardingSteps values={values} sliderRef={sliderRef} />
             <div className='py-2 bg-gray-100 flex justify-evenly'>
               <button
                 className={`onboarding-buttons bg-[#A5ACBA] ${step > 1 ? 'visible' : 'invisible'}`}

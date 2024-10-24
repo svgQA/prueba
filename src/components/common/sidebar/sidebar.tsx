@@ -128,14 +128,18 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
                 icon='logo'
               />
             </a>
-            <div className='absolute left-full bottom-0 hidden group-hover:block bg-white shadow-lg rounded p-2'>
+            <div className='absolute left-full bottom-0 hidden group-hover:block bg-white shadow-xl rounded p-2 w-52 border border-gray-200'>
               {companies.map((company) => (
                 <div
                   key={company.id}
-                  className={`block cursor-pointer w-full text-left px-4 py-2 mb-1 ${company.selected ? 'bg-teal-500 text-white' : 'hover:bg-gray-100'}`}
+                  className={`flex cursor-pointer w-full px-4 py-2 mb-1 flex-row justify-between items-center ${company.selected ? 'bg-teal-500 text-white' : 'hover:bg-gray-100'}`}
                   onClick={() => setCompanySelected(company.id)}
                 >
-                  {company.name}
+                  <div>
+                    <h4>{company.name}</h4>
+                    <span>{company.role}</span>
+                  </div>
+                  <span className='vx-icon vx-users' />
                 </div>
               ))}
             </div>
