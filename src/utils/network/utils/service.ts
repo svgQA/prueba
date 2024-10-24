@@ -50,6 +50,7 @@ export class BaseService {
         body: model.data,
         method,
       });
+      console.log('REQUEST: ', response);
       const content_type = response.headers.get('content-type');
       if (content_type?.includes('application/json')) {
         const result = await response.json();
