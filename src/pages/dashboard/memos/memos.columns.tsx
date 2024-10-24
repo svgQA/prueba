@@ -3,7 +3,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from './memos.d';
 import dayjs from 'dayjs';
 
-// Componentes adicionales que ya tenías en este archivo
 export const ProgressBar: FunctionComponent<{ progress: number }> = ({
   progress,
 }) => (
@@ -64,12 +63,10 @@ export const PriorityBadge: FunctionComponent<{
   );
 };
 
-// Definición de las columnas
 export const memosColumns: ColumnDef<Memo>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
-    // Modificamos la celda para agregar el ícono junto al ID
     cell: (info) => (
       <div className='flex items-center'>
         <span className='vx-icon mx-1 vx-sensor size-sm'></span>
@@ -112,15 +109,18 @@ export const memosColumns: ColumnDef<Memo>[] = [
   },
   {
     id: 'expand',
-    // header: 'Más',
+    header: () => <div className='text-right'>Más</div>,
     cell: ({ row }) => (
       <div className='flex justify-end'>
-        <InfoIcon
+        <button
           onClick={() => row.toggleExpanded()}
-          isExpanded={row.getIsExpanded()}
-        />
+          className='flex items-center'
+        >
+          <span
+            className={`vx-icon ${row.getIsExpanded() ? 'vx-users' : 'vx-logo'}`}
+          />
+        </button>
       </div>
     ),
-    header: () => <div className='text-right'>Más</div>,
   },
 ];
