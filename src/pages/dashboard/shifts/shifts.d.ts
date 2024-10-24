@@ -10,4 +10,6 @@ export interface Shift {
   notifications: number;
   activitiesProgress: number;
   moreInfo: string;
+  city: string;
+  address: string;
 }

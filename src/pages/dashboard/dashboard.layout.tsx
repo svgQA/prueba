@@ -73,23 +73,22 @@ import { AuthAmplifyProps } from '../types';
  * STORE SIGNALS
  ** ***********************************************************************/
 import { authModel } from '@/store/signals/access';
-import { type IOnboardingModel } from '@/store/signals/types';
 import {
   getStatusOnBoardingModal,
   getStatusSettingModal,
   toggleSettingModal,
   closeOnBoardingModal,
+  openOnBoardingModal,
+  getStatusLoading,
+  openLoading,
+  closeLoading,
 } from '@/store/signals/modals';
-
-/** ***********************************************************************
- * SERVICES
- ** ***********************************************************************/
-import { TenantService } from '@/services';
 
 /** ***********************************************************************
  * COMMENTS
  ** ***********************************************************************/
-// import { hasUserTenant } from '@/store/slices';
+import { hasUserTenant, useUserStore } from '@/store/slices';
+import { BaseService } from '@/utils/network';
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
 
@@ -99,6 +98,7 @@ import { TenantService } from '@/services';
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   signOut,
 }: AuthAmplifyProps) => {
+  const { setCompanies, setSelected } = useUserStore();
   const [menuSettings, setMenuSettings] =
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
 
@@ -107,17 +107,18 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   );
 
   useEffect(() => {
+    BaseService.setLoading(openLoading, closeLoading);
     validateUser();
   }, []);
 
   const validateUser = async () => {
     /* [TODO]: Bad code */
-    closeOnBoardingModal();
+    // closeOnBoardingModal();
 
     /* [TODO]: Correct code */
-    // const existTenant = await hasUserTenant();
-    // if (!existTenant) openOnBoardingModal();
-    // else closeOnBoardingModal();
+    const existTenant = await hasUserTenant(setCompanies, setSelected);
+    if (!existTenant) openOnBoardingModal();
+    else closeOnBoardingModal();
   };
 
   const onSettingHandler = () => {
@@ -167,19 +168,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
     }
   };
 
-  const onCreateTenant = async (model: IOnboardingModel) => {
-    const response = await TenantService.create_tenant(model);
-    if (response.getStatus()) {
-      closeOnBoardingModal();
-    }
-  };
-
-  const onSubmitOnBoarding = async (model: IOnboardingModel) => {
-    await onCreateTenant(model);
-  };
-
   return (
     <section className='w-screen h-screen'>
+      <div
+        className={`absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ${getStatusLoading.value ? 'visible' : 'invisible'}`}
+      >
+        <div className='animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white'></div>
+      </div>
       <Sidebar
         id='sidebar'
         name='sidebar'
@@ -393,7 +388,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
       </Modal>
       <OnBordingPage
         closed={getStatusOnBoardingModal.value}
-        onSubmit={onSubmitOnBoarding}
+        onLogout={signOut || (() => {})}
       />
     </section>
   );

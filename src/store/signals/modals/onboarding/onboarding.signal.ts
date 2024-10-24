@@ -1,6 +1,6 @@
 import { computed, signal } from '@preact/signals';
 
-const showOnBoardingModal = signal<boolean>(false);
+const showOnBoardingModal = signal<boolean>(true);
 
 export const getStatusOnBoardingModal = computed(
   () => showOnBoardingModal.value

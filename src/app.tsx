@@ -20,9 +20,10 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
       <Switch>
         <Route path={PAGES_LIST.HOME} component={HomeLayout} />
         <Router base={PAGES_LIST.DASHBOARD}>
-          <div className='bg-red-400 w-full h-full flex justify-center items-center'>
+          <div className='w-full h-full flex justify-center items-center'>
             <Authenticator
-              hideSignUp // socialProviders={['google']}
+            // hideSignUp
+            // socialProviders={['google']}
             >
               {(authProps) => <DashboardLayout {...authProps} {...props} />}
             </Authenticator>

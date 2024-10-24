@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'preact';
 
+// Componente para el ícono de envío
 interface SendIconProps {
   onClick: () => void;
 }
-
 export const SendIcon: FunctionComponent<SendIconProps> = ({ onClick }) => (
   <button onClick={onClick} className='text-blue-500 hover:text-blue-700'>
     <svg
@@ -17,10 +17,10 @@ export const SendIcon: FunctionComponent<SendIconProps> = ({ onClick }) => (
   </button>
 );
 
+// Componente para mostrar las notificaciones
 interface NotificationBadgeProps {
   count: number;
 }
-
 export const NotificationBadge: FunctionComponent<NotificationBadgeProps> = ({
   count,
 }) => (
@@ -29,10 +29,10 @@ export const NotificationBadge: FunctionComponent<NotificationBadgeProps> = ({
   </span>
 );
 
+// Barra de progreso para mostrar el estado de las actividades
 interface ProgressBarProps {
   progress: number;
 }
-
 export const ProgressBar: FunctionComponent<ProgressBarProps> = ({
   progress,
 }) => (
@@ -47,11 +47,11 @@ export const ProgressBar: FunctionComponent<ProgressBarProps> = ({
   </div>
 );
 
+// Botones de acción para editar o eliminar
 interface ActionButtonsProps {
   onEdit: () => void;
   onDelete: () => void;
 }
-
 export const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
   onEdit,
   onDelete,
@@ -84,60 +84,95 @@ export const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
   </div>
 );
 
+// Ícono para expandir/cerrar las filas
 interface InfoIconProps {
   onClick: () => void;
+  isExpanded: boolean;
 }
-
-export const InfoIcon: FunctionComponent<InfoIconProps> = ({ onClick }) => (
-  <button onClick={onClick} className='text-blue-500 hover:text-blue-700'>
-    <svg
-      xmlns='http://www.w3.org/2000/svg'
-      className='h-5 w-5'
-      viewBox='0 0 20 20'
-      fill='currentColor'
-    >
-      <path
-        fillRule='evenodd'
-        d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z'
-        clipRule='evenodd'
-      />
-    </svg>
+export const InfoIcon: FunctionComponent<InfoIconProps> = ({
+  onClick,
+  isExpanded,
+}) => (
+  <button
+    onClick={onClick}
+    className='p-1 rounded-full hover:bg-gray-200 transition-colors duration-200'
+  >
+    <span
+      className={`vx-icon mx-1 vx-${isExpanded ? 'logo' : 'sensor'} size-sm`}
+    />
   </button>
 );
 
-export const Modal: FunctionComponent<{
-  isOpen: boolean;
-  onClose: () => void;
-  children: preact.ComponentChildren;
-}> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
-      <div className='bg-white p-6 rounded-lg max-w-lg w-full'>
-        <div className='flex justify-end'>
-          <button
-            onClick={onClose}
-            className='text-gray-500 hover:text-gray-700'
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='h-6 w-6'
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M6 18L18 6M6 6l12 12'
-              />
-            </svg>
-          </button>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-};
+// Agregamos columnas de "Ciudad" y "Dirección"
+export const shiftsColumns = [
+  {
+    accessorKey: 'id',
+    header: 'ID',
+  },
+  {
+    accessorKey: 'employeeName',
+    header: 'Empleado',
+  },
+  {
+    accessorKey: 'employeeId',
+    header: 'ID Empleado',
+  },
+  {
+    accessorKey: 'city',
+    header: 'Ciudad',
+    cell: (info: any) => info.getValue(), // Renderiza la ciudad
+  },
+  {
+    accessorKey: 'address',
+    header: 'Dirección',
+    cell: (info: any) => info.getValue(), // Renderiza la dirección
+  },
+  {
+    accessorKey: 'startTime',
+    header: 'Hora inicio',
+    cell: (info: any) =>
+      new Date(info.getValue() as string).toLocaleTimeString(),
+  },
+  {
+    accessorKey: 'endTime',
+    header: 'Hora fin',
+    cell: (info: any) =>
+      new Date(info.getValue() as string).toLocaleTimeString(),
+  },
+  {
+    accessorKey: 'duration',
+    header: 'Duración',
+  },
+  {
+    accessorKey: 'notifications',
+    header: 'Notificaciones',
+    cell: (info: any) => (
+      <NotificationBadge count={info.getValue() as number} />
+    ),
+  },
+  {
+    accessorKey: 'activitiesProgress',
+    header: 'Progreso',
+    cell: (info: any) => <ProgressBar progress={info.getValue() as number} />,
+  },
+  {
+    id: 'actions',
+    header: 'Acciones',
+    cell: () => (
+      <ActionButtons
+        onEdit={() => console.log('Edit clicked')}
+        onDelete={() => console.log('Delete clicked')}
+      />
+    ),
+  },
+  {
+    id: 'expand',
+    header: 'Más información',
+    cell: ({ row }: any) => (
+      <InfoIcon
+        onClick={() => row.toggleExpanded()}
+        isExpanded={row.getIsExpanded()}
+      />
+    ),
+  },
+];
