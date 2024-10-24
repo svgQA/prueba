@@ -8,11 +8,9 @@ const getTenancies = async (
   setCompanies: (companies: ICompany[]) => void,
   setSelected: (uuid: string) => void
 ): Promise<boolean> => {
-  console.log('MAKING REQUEST: ', uuid);
   const response = await TenantService.get_my_tenants(uuid);
   /* Corregir toda esta mierda porque tenant esta respondiendo como true
      a los errores (corregir tenant Service) */
-  console.log('SERVER: ', response);
   if (!response.getStatus()) {
     setCompanies([]);
     return false;
