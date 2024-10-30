@@ -56,6 +56,18 @@ span.vx-icon.size-2xl {
   content: '\0035';
 }
 
+.vx-plus::before {
+  content: '\0036';
+}
+
+.vx-credit-card::before {
+  content: '\0037';
+}
+
+.vx-user::before {
+  content: '\0038';
+}
+
 .vx-apps::before {
   content: '\0040';
 }

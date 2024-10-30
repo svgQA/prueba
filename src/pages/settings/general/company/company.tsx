@@ -2,6 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { TargetedEvent } from 'preact/compat';
 import { useEffect, useState, useRef } from 'preact/hooks';
 import { CreditCard, InvoiceCard } from '@/components/compose';
+import { InvoiceCard2 } from '@/components/compose/cards/invoice2';
 
 export const CompanySettingPage: FunctionComponent = () => {
   const [imagenPreview, setImagenPreview] = useState<string | null>(null);
@@ -80,20 +81,7 @@ export const CompanySettingPage: FunctionComponent = () => {
                   className='w-full h-full object-cover'
                 />
               ) : (
-                <svg
-                  className='w-1/3 h-1/3 text-blue-300'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
-                  />
-                </svg>
+                <span className='vx-icon vx-user text-lg' />
               )}
               <div className='absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all flex items-center justify-center'>
                 <button
@@ -129,14 +117,14 @@ export const CompanySettingPage: FunctionComponent = () => {
         </div>
 
         <div className='container-card w-1/2  space-y-6 pl-4'>
-          <InvoiceCard
+          <InvoiceCard2
             id='factura-1'
             name='factura-1'
             color='bg-[#00BDD6]'
             total={20}
             currency='EUR'
           />
-          <InvoiceCard
+          <InvoiceCard2
             id='factura-2'
             name='factura-2'
             color='bg-[#D9D9D9]'
@@ -151,8 +139,8 @@ export const CompanySettingPage: FunctionComponent = () => {
       </div>
 
       <div className='flex flex-row justify-between p-8'>
-        <div className='w-1/2  flex-wrap'>
-          <div className='flex flex-row'>
+        <div className='w-1/2 pr-2'>
+          <div className=''>
             <InvoiceCard
               id='fact-30'
               name='FAC/001'
@@ -161,8 +149,8 @@ export const CompanySettingPage: FunctionComponent = () => {
               active
             />
           </div>
-          <div className='flex flex-row '>
-            <div className='card-credit flex flex-row gap-4'>
+          <div className='flex flex-row justify-between'>
+            <div className='card-credit flex flex-row w-full justify-between'>
               {cards.map((card, index) => (
                 <CreditCard
                   id={`credit-card-${index}`}
@@ -267,7 +255,7 @@ export const CompanySettingPage: FunctionComponent = () => {
           </div>
         </div>
 
-        <div className='w-1/2 flex flex-row flex-wrap justify-evenly'>
+        <div className='w-1/2  justify-evenly pl-4'>
           <InvoiceCard
             id='fact-1'
             name='FAC/002'
@@ -275,13 +263,15 @@ export const CompanySettingPage: FunctionComponent = () => {
             currency='COP'
             total={20}
           />
-          <InvoiceCard
-            id='fact-2'
-            name='FAC/003'
-            color='bg-[#D9D9D9]'
-            currency='USD'
-            total={50}
-          />
+          <div className='mt-4'>
+            <InvoiceCard
+              id='fact-2'
+              name='FAC/003'
+              color='bg-[#D9D9D9]'
+              currency='USD'
+              total={50}
+            />
+          </div>
         </div>
       </div>
     </div>
