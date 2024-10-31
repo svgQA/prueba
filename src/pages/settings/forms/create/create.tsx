@@ -58,6 +58,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   };
 
   const actions = (action: string, id: string) => {
+    if (selected === id) return;
     switch (action) {
       case 'remove':
         setElements(elements.filter((element) => element.id !== id));
@@ -129,13 +130,13 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   return (
     <section className='h-full'>
       <div className='flex flex-row'>
-        <div className='w-7/12 relative'>
+        <div className='w-7/12 relative flex flex-col items-center'>
+          <h4 className='text-xl py-2 font-bold h-10'>{selected}</h4>
           <Form
             onSubmit={onSave}
             subscription={{ submitting: true, pristine: true }}
-            // @ts-ignore
-            render={({ handleSubmit, reset }) => (
-              <form onSubmit={(event) => handleSubmit(event)?.then(reset)}>
+            render={({ handleSubmit }) => (
+              <form onSubmit={handleSubmit} className='w-full'>
                 <div className='flex flex-col my-2 px-2 justify-center'>
                   <Field<string> name='label' validate={required}>
                     {({ input, meta }) => (

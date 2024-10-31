@@ -30,3 +30,7 @@
   background: transparent;
   border-radius: 20px;
 }
+
+input {
+  background-color: transparent !important;
+}
