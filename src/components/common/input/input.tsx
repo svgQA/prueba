@@ -17,7 +17,7 @@ export const Input = ({
   placeholder,
 }: IInputProps) => {
   return (
-    <div id={id} name={name} className='w-full'>
+    <div id={id} name={name} className='w-full border-2 my-1'>
       <label
         for={`${id}-input`}
         className='capitalize block text-sm font-medium text-gray-900 dark:text-white'

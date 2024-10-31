@@ -15,7 +15,7 @@ import {
 /** ***********************************************************************
  * COMPONENTS
  ** ***********************************************************************/
-import { Button, Input, Modal, Sidebar } from '@/components/common';
+import { Button, Modal, Search, Sidebar } from '@/components/common';
 
 /** ***********************************************************************
  * PAGES
@@ -226,12 +226,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
                 icon='graph'
               ></Button>
             </div>
-            <Input
-              id='setting-search'
-              name='setting-search'
-              placeholder='search'
-              icon='search'
-              type='text'
+            <Search
+              id='search-general'
+              name='search-general'
+              placeholder='Search'
+              keys={['id_1', 'id_2', 'id_3', 'id_4']}
             />
           </>
         }

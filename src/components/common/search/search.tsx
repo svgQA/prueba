@@ -7,6 +7,7 @@ export const Search = ({
   name,
   keys = [],
   lenThreshold = 3,
+  placeholder,
   // onChange = (_) => {},
 }: ISearchProps) => {
   const [inputState, setInputState] = useState<string>('');
@@ -137,6 +138,7 @@ export const Search = ({
         <input
           ref={inputRef}
           className='w-full p-2 rounded pl-10 bg-transparent capitalize'
+          placeholder={placeholder}
           onChange={handleChangeInput}
           onKeyDown={handleKeyPress}
           value={inputState}
