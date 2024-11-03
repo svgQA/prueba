@@ -1,0 +1,4 @@
+.vx-form-question {
+  @apply border-gray-300 p-0;
+  border-width: 0.5px;
+}

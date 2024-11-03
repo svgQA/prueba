@@ -1,233 +1,70 @@
-import update from 'immutability-helper';
 import { type FunctionComponent } from 'preact';
-import { useCallback, useEffect, useState } from 'preact/hooks';
-import { itemsForm } from './constants';
-import { ButtonMenu } from '@/components/common';
-import { FORM_ITEM, IFormElement } from '@/types';
-import shortUUID from 'short-uuid';
+import { useEffect } from 'preact/hooks';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { CardElement } from './card';
-import { Field, Form } from 'react-final-form';
-import { required } from '@/pages/onbording/validate';
-
-interface IGeneralForm {
-  label: string;
-  description: string;
-}
-const generalFormInitState: IGeneralForm = {
-  label: 'Nombre de Formulario',
-  description: 'Descripciòn de Formularion',
-};
+import { addQuestion, questions, removeQuestion } from './store';
+import { Question } from './components';
+import { useSignal } from '@preact/signals';
 
 export const FormCreateSettingPage: FunctionComponent = () => {
-  const [elements, setElements] = useState<IFormElement[]>([]);
-  const [selected, setSelected] = useState<string | undefined>();
-  const [generalForm, setGeneralForm] =
-    useState<IGeneralForm>(generalFormInitState);
-
-  const getElement = (type: FORM_ITEM): IFormElement => {
-    return {
-      type,
-      label: '',
-      description: '',
-      icon: '',
-      admin: false,
-      id: shortUUID.generate(),
-    };
-  };
-
-  const selectMenu = (event: MouseEvent) => {
-    const target = event.target as HTMLElement;
-    if (target.nodeName === 'SPAN') {
-      const menuClicked = target.getAttribute('name');
-      if (!menuClicked) return;
-      setElements([...elements, getElement(menuClicked as FORM_ITEM)]);
-    }
-  };
-
-  const actionMenu = (event: MouseEvent) => {
-    const target = event.target as HTMLElement;
-    if (target.nodeName === 'SPAN') {
-      const menuClicked = target.getAttribute('name');
-      if (!menuClicked) return;
-      const elementAction = menuClicked.split('-');
-      if (elementAction.length < 1) return;
-      actions(elementAction[0], elementAction[1]);
-    }
-  };
-
-  const actions = (action: string, id: string) => {
-    if (selected === id) return;
-    switch (action) {
-      case 'remove':
-        setElements(elements.filter((element) => element.id !== id));
-        break;
-      case 'setting':
-        setSelected(id);
-        setElements(
-          elements.map((element) => ({
-            ...element,
-            selected: element.id === id,
-          }))
-        );
-        break;
-      default:
-        console.log('No existe tal acciòn');
-        break;
-    }
-  };
-
-  const onSave = (value: any) => {
-    if (!selected) {
-      setGeneralForm(() => value);
-      return;
-    }
-
-    setElements(
-      elements.map((element) =>
-        element.id === selected ? { ...element, ...value } : element
-      )
-    );
-  };
-
-  const onCancel = () => {
-    setSelected(() => undefined);
-  };
-
-  const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
-    setElements((prevCards: IFormElement[]) =>
-      update(prevCards, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, prevCards[dragIndex]],
-        ],
-      })
-    );
-  }, []);
-
-  const renderCard = useCallback(
-    (element: IFormElement, index: number) => {
-      const id = `form-element-${element.id}`;
-      return (
-        <CardElement
-          key={id}
-          name={id}
-          id={element.id}
-          selected={element.selected && !!selected}
-          index={index}
-          element={element}
-          moveCard={moveCard}
-        />
-      );
-    },
-    [selected]
-  );
-
+  const selectedQuestionId = useSignal<string | null>(null);
   useEffect(() => {
     document.title = 'Forms Create Settings';
   }, []);
+
+  const showElements = () => {
+    console.log(questions.value);
+  };
+
+  const handleSelect = (id: string) => {
+    if (id === selectedQuestionId.value) return;
+    selectedQuestionId.value = selectedQuestionId.value === id ? null : id;
+  };
+
   return (
     <section className='h-full'>
-      <div className='flex flex-row'>
-        <div className='w-7/12 relative flex flex-col items-center'>
-          <h4 className='text-xl py-2 font-bold h-10'>{selected}</h4>
-          <Form
-            onSubmit={onSave}
-            subscription={{ submitting: true, pristine: true }}
-            render={({ handleSubmit }) => (
-              <form onSubmit={handleSubmit} className='w-full'>
-                <div className='flex flex-col my-2 px-2 justify-center'>
-                  <Field<string> name='label' validate={required}>
-                    {({ input, meta }) => (
-                      <div className='onboarding-inputs'>
-                        <input
-                          {...input}
-                          placeholder='Nombre del Campo'
-                          name='fm-input-name'
-                          type='text'
-                          aria-label='Field name input'
-                        />
-                        {meta.touched && meta.error && (
-                          <span>{meta.error}</span>
-                        )}
-                      </div>
-                    )}
-                  </Field>
-                  <Field<string> name='description' validate={required}>
-                    {({ input, meta }) => (
-                      <div className='onboarding-inputs'>
-                        <input
-                          {...input}
-                          placeholder='Descripciòn del Campo'
-                          name='fm-input-description'
-                          type='text'
-                          aria-label='Field description input'
-                        />
-                        {meta.touched && meta.error && (
-                          <span>{meta.error}</span>
-                        )}
-                      </div>
-                    )}
-                  </Field>
-                </div>
-
-                <div className='absolute bottom-4 right-1/4'>
-                  <button
-                    className='onboarding-buttons bg-[#00BDD6] mx-1'
-                    type='submit'
-                  >
-                    Save
-                  </button>
-                  <button
-                    className='onboarding-buttons bg-[#A5ACBA] mx-1'
-                    onClick={onCancel}
-                    type='button'
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            )}
-          ></Form>
-        </div>
-        <div
-          className='w-5/12 flex flex-col max-h-[80vh] mr-2 py-2 relative'
-          onClick={actionMenu}
-        >
-          <div className='absolute z-40 top-5 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-400 rounded-full' />
-          <div className='absolute z-20 bottom-6 left-1/2 w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center shadow text-white hover:bg-opacity-60'>
-            <span
-              className='cursor-pointer font-bold vx-icon vx-settings size-sm'
-              onClick={onCancel}
-            ></span>
-          </div>
-          <div className='flex flex-col bg-white border shadow-lg rounded-2xl w-[340px] h-[667px] overflow-y-auto mx-auto overflow-auto vox-scroll-design px-2 pt-6'>
+      <div className='flex flex-row relative'>
+        <div className='w-8/12 flex flex-col items-center h-[80vh] overflow-y-scroll vox-scroll-design'>
+          <div class='absolute left-0 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-10'>
             <div
-              className={`${selected ? '' : 'bg-teal-300'} flex flex-col items-center justify-center mb-2 rounded-md py-2`}
+              class='bg-blue-500 px-2 py-1 cursor-pointer text-white w-15 h-15 rounded-md text-center'
+              onClick={addQuestion}
             >
-              <h3 className='font-bold text-xl'>{generalForm.label}</h3>
-              <p className='font-thin text-sm text-gray-700'>
-                {generalForm.description}
-              </p>
+              <span className='vx-icon vx-users' />
+              <h6 className='text-xs'>Question</h6>
             </div>
-            <DndProvider backend={HTML5Backend}>
-              {elements.map((card, i) => renderCard(card, i))}
-            </DndProvider>
+            <div
+              class='bg-gray-300 px-2 py-1 cursor-pointer text-gray-700 w-15 h-15 rounded-md text-center'
+              onClick={showElements}
+            >
+              <span className='vx-icon vx-gateway' />
+              <h6 className='text-xs'>Section</h6>
+            </div>
           </div>
-        </div>
-        <div
-          onClick={selectMenu}
-          className='flex flex-col my-1 px-2 text-center min-w-10 max-w-12 rounded-sm bg-gray-100'
-        >
-          {itemsForm.map((item) => (
-            <ButtonMenu
-              small
-              icon={item.icon}
-              label={item.label}
-              name={item.label}
-            />
-          ))}
+          {/* START: Sesiones */}
+          <DndProvider backend={HTML5Backend}>
+            <table class='w-full text-left'>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Type of Response</th>
+                </tr>
+              </thead>
+              <tbody>
+                {questions.value.map((question, index) => (
+                  <Question
+                    key={question.id}
+                    question={question}
+                    index={index}
+                    selected={selectedQuestionId.value === question.id}
+                    onSelect={handleSelect}
+                    onDelete={removeQuestion}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </DndProvider>
+          {/* END: Sesiones */}
         </div>
       </div>
     </section>
