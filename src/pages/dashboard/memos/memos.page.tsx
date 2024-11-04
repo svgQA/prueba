@@ -2,17 +2,17 @@ import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { memosData } from './memos.data';
 import { Memo } from './memos.d';
-import { Table } from '@/components/common/table/table';
-import { memosColumns } from './memos.columns'; // Importar las columnas
+import { Table } from '@/components/common/table/table'; // Asegúrate de que la ruta es correcta
+import { memosColumns } from './memos.columns'; // Asegúrate de que esta importación se usa
 import { Search } from '@/components/common';
 
 export const MemosPage: FunctionComponent = () => {
-  const [data, setData] = useState<Memo[]>([]);
-  // const [globalFilter, setGlobalFilter] = useState('');
+  const [data, setData] = useState<Memo[]>([]); // Estado para almacenar los datos
+  // const [globalFilter, setGlobalFilter] = useState(''); // Filtro global
 
   useEffect(() => {
-    document.title = 'VX - Memos Service';
-    setData(memosData);
+    document.title = 'VX - Memos Service'; // Establecer el título del documento
+    setData(memosData); // Cargar los datos de los memos
   }, []);
 
   return (
@@ -26,11 +26,9 @@ export const MemosPage: FunctionComponent = () => {
           onChange={(e) => setGlobalFilter(e.currentTarget.value)}
           className='w-full p-2 border border-gray-300 rounded'
         />
-      </div> */}
+      </div>
+      {/* Usar las columnas importadas y pasar los datos a la tabla */}
       <Table<Memo>
-        data={data}
-        columns={memosColumns}
-        pageSize={10}
         search={
           <Search
             id='search-memos'
@@ -38,6 +36,9 @@ export const MemosPage: FunctionComponent = () => {
             keys={['id_1', 'id_2', 'id_3', 'id_4']}
           />
         }
+        data={data} // Pasar los datos cargados
+        columns={memosColumns} // Pasar las columnas importadas
+        pageSize={16} // Tamaño de página, ajusta según sea necesario
       />
     </section>
   );

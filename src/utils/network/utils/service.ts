@@ -5,16 +5,24 @@ import { VoxServices } from '../types';
 
 export class BaseService {
   protected static prefix: string = 'api';
+  protected static openLoading: () => void = () => {};
+  protected static closeLoading: () => void = () => {};
+
+  public static setLoading(open: () => void, close: () => void) {
+    this.openLoading = open;
+    this.closeLoading = close;
+  }
 
   private static make_url(paths: string[], base: VoxServices): string {
     const model = [this.prefix, ...paths];
     const subdirectory = model.join(VOX_DEFAULT_PATH.DEFAULT);
     const urlBase = VOS_SERVICES[base];
-    return `${urlBase}/${subdirectory}`;
+    const urlTotal = `${urlBase}/${subdirectory}`;
+    return urlTotal;
   }
 
   static async make_request<T>(
-    instance: any,
+    instance: VoxServices,
     /* FIX:
      Pasar a usar unicamente el nombre del micro, porque esto va a
        ser administrado unicamente por un gateway que redirecciona todo
@@ -29,7 +37,8 @@ export class BaseService {
      */
     model: IMakeRequest
   ): Promise<GenericResponse<T>> {
-    const url = this.make_url(model.url, instance.name as VoxServices);
+    this.openLoading();
+    const url = this.make_url(model.url, instance);
 
     const method = model?.method || REQUEST_METHODS.GET;
     if (method === REQUEST_METHODS.POST) {
@@ -45,6 +54,7 @@ export class BaseService {
       const content_type = response.headers.get('content-type');
       if (content_type?.includes('application/json')) {
         const result = await response.json();
+        this.closeLoading();
         return new GenericResponse<T>({
           code: response?.status,
           message: result?.message,
@@ -52,6 +62,7 @@ export class BaseService {
         });
       } else {
         const result = await response.text();
+        this.closeLoading();
         return new GenericResponse<T>({
           code: response?.status,
           message: result,
@@ -62,6 +73,7 @@ export class BaseService {
       const message =
         JSON.parse(error?.request?.response || `{"message": "${error}"}`)
           ?.message || 'ERROR: Not Found Data';
+      this.closeLoading();
       return new GenericResponse<T>({
         code: 404,
         message,

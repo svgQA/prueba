@@ -11,6 +11,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   rounded,
   full,
   className,
+  loading,
 }: IButtonProps) => {
   return (
     <button
@@ -18,11 +19,22 @@ export const Button: FunctionComponent<IButtonProps> = ({
       name={name}
       type={type}
       onClick={onClick}
+      disabled={loading}
       className={`${rounded ? 'rounded-3xl p-1' : 'rounded px-2'} ${full ? 'w-full' : ''} mx-1 text-sm items-center py-2 my-0.5 justify-center inline-flex font-bold ${className}`}
     >
-      {icon && <span className={`left-0 px-1 vx-icon vx-${icon}`} />}
+      {icon && (
+        <span
+          className={`left-0 px-1 vx-icon vx-${icon}`}
+          // style={{ visibility: loading ? 'visible' : 'hidden' }}
+        />
+      )}
       {label && !rounded && (
-        <p className='w-full capitalize text-center'>{label}</p>
+        <div className='flex flex-row justify-between items-center'>
+          <p className='w-full capitalize text-center'>{label}</p>
+          <span
+            className={`left-0 px-1 vx-icon vx-logo ${loading ? 'visible' : 'invisible'}`}
+          />
+        </div>
       )}
     </button>
   );
