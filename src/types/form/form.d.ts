@@ -7,6 +7,7 @@ export interface IFormElement {
   icon: string;
   admin: boolean;
   id: string;
+  selected?: boolean;
 }
 
 export interface IFormItem {

@@ -42,9 +42,6 @@ export const useUserStore = create<State & Actions>((set, get) => ({
  * provienen, por ese motivo se "estabilizar" con el objeto company.
  */
 export const parsingCompanies = (data: any): ICompany[] => {
-  console.log('DATA: ', data);
-  console.log('INFO: ', data?.data);
-  console.log('COMPANIES: ', data?.data?.companies);
   const model = data?.data;
   if (!model || !model?.companies) return [];
   return model?.companies.map(
