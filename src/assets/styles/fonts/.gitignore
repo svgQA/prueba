@@ -1,0 +1,8 @@
+# Ignorar todos los archivos por defecto
+*
+
+# Permitir archivos específicos de tipo .sfd, .woff, y .woff2
+!.gitignore
+!*.sfd
+!*.woff
+!*.woff2
