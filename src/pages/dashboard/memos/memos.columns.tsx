@@ -2,6 +2,7 @@ import { FunctionComponent } from 'preact';
 import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from './memos.d';
 import dayjs from 'dayjs';
+import { Badge } from '@/components/common/priority/priority.badge'; // Importación del nuevo componente
 
 export const ProgressBar: FunctionComponent<{ progress: number }> = ({
   progress,
@@ -42,34 +43,14 @@ export const FormattedDate: FunctionComponent<{ date: string }> = ({
   );
 };
 
-export const PriorityBadge: FunctionComponent<{
-  priority: 'Alta' | 'Media' | 'Baja';
-}> = ({ priority }) => {
-  const bgColor =
-    priority === 'Alta'
-      ? 'rgb(224,88,88)'
-      : priority === 'Media'
-        ? 'rgb(255,128,0)'
-        : 'rgb(0,189,214)';
-
-  return (
-    <div
-      className='flex items-center justify-center py-1 rounded text-white text-sm w-[90px]'
-      style={{ backgroundColor: bgColor }}
-    >
-      <span className='vx-icon mx-1 vx-sensor size-sm'></span>
-      <span>{priority}</span>
-    </div>
-  );
-};
-
+// Definición de las columnas
 export const memosColumns: ColumnDef<Memo>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
     cell: (info) => (
       <div className='flex items-center'>
-        <span className='vx-icon mx-1 vx-sensor size-sm'></span>
+        <span className='vx-icon mx-1 vx-users size-sm'></span>
         <span>{String(info.getValue())}</span>
       </div>
     ),
@@ -104,7 +85,7 @@ export const memosColumns: ColumnDef<Memo>[] = [
     accessorKey: 'priority',
     header: 'Prioridad',
     cell: (info) => (
-      <PriorityBadge priority={info.getValue() as 'Alta' | 'Media' | 'Baja'} />
+      <Badge priority={info.getValue() as 'Alta' | 'Media' | 'Baja'} />
     ),
   },
   {
@@ -117,7 +98,7 @@ export const memosColumns: ColumnDef<Memo>[] = [
           className='flex items-center'
         >
           <span
-            className={`vx-icon ${row.getIsExpanded() ? 'vx-users' : 'vx-logo'}`}
+            className={`vx-icon ${row.getIsExpanded() ? 'vx-chevron-down' : 'vx-google'}`}
           />
         </button>
       </div>
