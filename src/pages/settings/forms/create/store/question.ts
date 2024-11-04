@@ -1,34 +1,105 @@
-import { signal } from '@preact/signals';
+import { computed, signal } from '@preact/signals';
 import shortUUID from 'short-uuid';
 
-interface IQuestion {
+export enum ELEMENT_TYPE {
+  DROPDOWN,
+  INPUT,
+  NUMBER,
+  DATE,
+}
+
+interface IBase {
   id: string;
   label: string;
-  type: string;
-  required?: boolean;
+  description?: string;
 }
 
-export const questions = signal<IQuestion[]>([]);
+export interface IElement extends IBase {
+  type: ELEMENT_TYPE;
+  required: boolean;
+}
 
-export const addQuestion = () => {
-  questions.value = [
-    ...questions.value,
+interface IPage extends IBase {
+  elements: IElement[];
+}
+
+const getInitPage = (): IPage => ({
+  id: shortUUID.generate(),
+  label: 'New Page',
+  elements: [
     {
       id: shortUUID.generate(),
-      label: 'New Question',
-      type: 'text',
+      label: 'New Element',
+      type: ELEMENT_TYPE.INPUT,
       required: false,
     },
-  ];
+  ],
+});
+
+export const form = signal<IPage[]>([getInitPage()]);
+
+export const getFormLength = computed(() => form.value.length);
+
+export const addPage = () => {
+  form.value = [...form.value, getInitPage()];
 };
 
-export const moveQuestion = (dragIndex: number, hoverIndex: number) => {
-  const updatedQuestions = [...questions.value];
-  const [movedQuestion] = updatedQuestions.splice(dragIndex, 1);
-  updatedQuestions.splice(hoverIndex, 0, movedQuestion);
-  questions.value = updatedQuestions;
+export const addElement = (page: string) => {
+  form.value = form.value.map((p) => {
+    if (p.id === page) {
+      return {
+        ...p,
+        elements: [
+          ...p.elements,
+          {
+            id: shortUUID.generate(),
+            label: 'New Element',
+            type: ELEMENT_TYPE.INPUT,
+            required: false,
+          },
+        ],
+      };
+    }
+    return p;
+  });
 };
 
-export function removeQuestion(id: string) {
-  questions.value = questions.value.filter((question) => question.id !== id);
+export function removeElement(id: string, page: string) {
+  form.value = form.value.map((p) => {
+    if (p.id === page) {
+      return {
+        ...p,
+        elements: p.elements.filter((element) => element.id !== id),
+      };
+    }
+    return p;
+  });
 }
+
+export const moveElement = (
+  dragIndex: number,
+  hoverIndex: number,
+  pageId: string
+) => {
+  form.value = form.value.map((p) => {
+    if (p.id === pageId) {
+      const updatedElements = [...p.elements];
+      const [movedElement] = updatedElements.splice(dragIndex, 1);
+      updatedElements.splice(hoverIndex, 0, movedElement);
+      return {
+        ...p,
+        elements: updatedElements,
+      };
+    }
+    return p;
+  });
+};
+
+// export const questions = signal<IElement[]>([]);
+
+// export const moveQuestion = (dragIndex: number, hoverIndex: number) => {
+//   const updatedQuestions = [...questions.value];
+//   const [movedQuestion] = updatedQuestions.splice(dragIndex, 1);
+//   updatedQuestions.splice(hoverIndex, 0, movedQuestion);
+//   questions.value = updatedQuestions;
+// };
