@@ -1,6 +1,6 @@
 @font-face {
   font-family: VXIcons;
-  src: url(../fonts/icons.woff2), url(../fonts/icons.woff);
+  src: url(./fonts/icons.woff), url(./fonts/icons.woff2);
 }
 
 span.vx-icon {
@@ -138,4 +138,16 @@ span.vx-icon.size-2xl {
 
 .vx-google::before {
   content: '\0051';
+}
+
+.vx-chevron-down::before {
+  content: '\0098';
+}
+
+.vx-chevron-up::before {
+  content: '\0099';
+}
+
+.vx-siren::before {
+  content: '\0391';
 }
