@@ -2,7 +2,7 @@ import { FunctionComponent } from 'preact';
 import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from './memos.d';
 import dayjs from 'dayjs';
-import { Badge } from '@/components/common/priority/priority.badge'; // Importación del nuevo componente
+import { PBadge } from '@/components/common';
 
 export const ProgressBar: FunctionComponent<{ progress: number }> = ({
   progress,
@@ -85,7 +85,7 @@ export const memosColumns: ColumnDef<Memo>[] = [
     accessorKey: 'priority',
     header: 'Prioridad',
     cell: (info) => (
-      <Badge priority={info.getValue() as 'Alta' | 'Media' | 'Baja'} />
+      <PBadge priority={info.getValue() as 'Alta' | 'Media' | 'Baja'} />
     ),
   },
   {
