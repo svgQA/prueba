@@ -3,7 +3,7 @@ import { useEffect } from 'preact/hooks';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { addElement, addPage, form, removeElement } from './store';
-import { FormPhoneViewer, Question } from './components';
+import { FormPhoneViewer, FormElement } from './components';
 import { useSignal } from '@preact/signals';
 
 interface ISelected {
@@ -96,13 +96,13 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {page.elements.map((question, index) => (
-                        <Question
-                          key={question.id}
-                          question={question}
+                      {page.elements.map((element, index) => (
+                        <FormElement
+                          key={element.id}
+                          question={element}
                           page={page.id}
                           index={index}
-                          selected={selectedElement.value?.id === question.id}
+                          selected={selectedElement.value?.id === element.id}
                           onSelect={handleSelect}
                           onDelete={removeElement}
                         />

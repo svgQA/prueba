@@ -24,7 +24,6 @@ import { DevicesPage } from './devices/devices.page';
 import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
 import { ShiftsPage } from './shifts/shifts.page';
-import { OnBordingPage } from '../onbording/onbording.page';
 
 import { IMenu } from '@/components/common/interface';
 import {
@@ -89,6 +88,8 @@ import {
  ** ***********************************************************************/
 import { hasUserTenant, useUserStore } from '@/store/slices';
 import { BaseService } from '@/utils/network';
+import { OnBording } from '../onbording';
+import { IconsPage } from '../icons/icons';
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
 
@@ -385,10 +386,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
           </section>
         </div>
       </Modal>
-      <OnBordingPage
+      <OnBording
         closed={getStatusOnBoardingModal.value}
         onLogout={signOut || (() => {})}
       />
+      <IconsPage />
     </section>
   );
 };

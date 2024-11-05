@@ -1,7 +1,7 @@
 import { useDrag, useDrop } from 'react-dnd';
 import { form, moveElement, IElement } from '../store';
-import './index.css';
 import { TargetedEvent } from 'preact/compat';
+import '../assets/index.css';
 
 const ItemType = {
   QUESTION: 'question',
@@ -16,7 +16,7 @@ interface IElementProps {
   onDelete: (id: string, page: string) => void;
 }
 
-export const Question = ({
+export const FormElement = ({
   question,
   index,
   page,
