@@ -3,6 +3,7 @@
 @import url('./leaftlet.css');
 @import url('./modal.css');
 @import url('./icons.css');
+@import url('./licons.css');
 
 @tailwind base;
 @tailwind components;

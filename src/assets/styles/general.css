@@ -26,7 +26,20 @@
   width: 20px;
 }
 
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 ::-webkit-scrollbar-track {
   background: transparent;
   border-radius: 20px;
+}
+
+input {
+  background-color: transparent !important;
 }

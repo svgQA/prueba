@@ -1,11 +1,15 @@
-import './onboarding.css';
+import './assets/index.css';
 import { useState, useRef, useEffect } from 'preact/hooks';
-import { IOnboardingProps } from './interface';
-import { DEFAULT_STEP, employeeCountOptions, STEPS } from './constants';
+import {
+  IOnboardingProps,
+  required,
+  DEFAULT_STEP,
+  employeeCountOptions,
+  STEPS,
+} from './utils';
 import { FunctionComponent } from 'preact';
 import { PropsWithChildren } from 'preact/compat';
 import { Form, Field, FormSpy } from 'react-final-form';
-import { required } from './validate';
 import { getUserId, useUserStore } from '@/store/slices';
 import { IOnboardingModel } from '@/store/signals/types';
 import { TenantService } from '@/services';
@@ -246,7 +250,7 @@ const OnBoardingSteps = ({ sliderRef }: IOnBoardingStepsProps) => {
   );
 };
 
-export const OnBordingPage = ({ closed, onLogout }: IOnboardingProps) => {
+export const OnBording = ({ closed, onLogout }: IOnboardingProps) => {
   const [step, setStep] = useState<number>(DEFAULT_STEP);
   const sliderRef = useRef<HTMLDivElement>(null);
 
