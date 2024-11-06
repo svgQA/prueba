@@ -1,4 +1,6 @@
 import { FunctionComponent } from 'preact';
+import { Shift } from '../utils/shifts';
+import { ColumnDef } from '@tanstack/react-table';
 
 // Componente para el ícono de envío
 interface SendIconProps {
@@ -104,10 +106,19 @@ export const InfoIcon: FunctionComponent<InfoIconProps> = ({
 );
 
 // Agregamos columnas de "Ciudad" y "Dirección"
-export const shiftsColumns = [
+export const columns: ColumnDef<Shift>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
+    cell: (info) => (
+      <div className='flex items-center'>
+        <span
+          onClick={() => info.row.toggleExpanded()}
+          className='vox-icon vx-icon-005 cursor-pointer'
+        />
+        <span>{String(info.getValue())}</span>
+      </div>
+    ),
   },
   {
     accessorKey: 'employeeName',
@@ -162,16 +173,6 @@ export const shiftsColumns = [
       <ActionButtons
         onEdit={() => console.log('Edit clicked')}
         onDelete={() => console.log('Delete clicked')}
-      />
-    ),
-  },
-  {
-    id: 'expand',
-    header: 'Más información',
-    cell: ({ row }: any) => (
-      <InfoIcon
-        onClick={() => row.toggleExpanded()}
-        isExpanded={row.getIsExpanded()}
       />
     ),
   },

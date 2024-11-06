@@ -104,9 +104,9 @@ export const Search = ({
     <div
       id={id}
       name={name}
-      className='w-full flex flex-row items-center border-2 rounded-sm relative'
+      className='flex flex-row items-center border-2 rounded-sm relative w-full'
     >
-      <span className='left-0 px-2 vx-icon vx-search border-r-2' />
+      <span className='px-2 vox-icon vx-icon-153' />
       <div
         name='input-filter-chips'
         className='flex flex-row text-white'
