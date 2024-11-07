@@ -1,5 +1,5 @@
 import { useDrag, useDrop } from 'react-dnd';
-import { form, moveElement, IElement } from '../store';
+import { format, moveElement, IElement } from '../store';
 import { TargetedEvent } from 'preact/compat';
 import '../assets/index.css';
 
@@ -11,25 +11,30 @@ interface IElementProps {
   question: IElement;
   index: number;
   page: string;
+  section?: string;
   selected?: boolean;
-  onSelect: (id: string, page: string) => void;
-  onDelete: (id: string, page: string) => void;
+  onSelect: (id: string, page: string, section?: string) => void;
+  onDelete: (id: string, page: string, section?: string) => void;
 }
 
 export const FormElement = ({
   question,
   index,
   page,
+  section,
   selected,
   onSelect,
   onDelete,
 }: IElementProps) => {
-  const [, ref] = useDrag({
+  const [{ isDragging }, ref] = useDrag({
     type: ItemType.QUESTION,
     item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
   });
 
-  const [, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept: ItemType.QUESTION,
     hover: (item: any) => {
       if (item.index !== index) {
@@ -37,32 +42,60 @@ export const FormElement = ({
         item.index = index;
       }
     },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
   });
 
   const handleInputChange = (e: TargetedEvent<HTMLInputElement>) => {
-    form.value = form.value.map((p) => {
-      if (p.id === page) {
-        return {
-          ...p,
-          elements: p.elements.map((element: IElement) =>
-            element.id === question.id
-              ? { ...element, label: (e.target as HTMLInputElement).value }
-              : element
-          ),
-        };
-      }
-      return p;
-    });
+    const { value } = e.target as HTMLInputElement;
+    format.value = {
+      ...format.value,
+      pages: format.value.pages.map((p) => {
+        if (p.id === page) {
+          if (section) {
+            return {
+              ...p,
+              elements: p.elements.map((element: IElement) =>
+                element.id === section
+                  ? {
+                      ...element,
+                      elements: element.elements?.map((el) =>
+                        el.id === question.id
+                          ? {
+                              ...el,
+                              label: value,
+                            }
+                          : el
+                      ),
+                    }
+                  : element
+              ),
+            };
+          } else {
+            return {
+              ...p,
+              elements: p.elements.map((element: IElement) =>
+                element.id === question.id
+                  ? { ...element, label: value }
+                  : element
+              ),
+            };
+          }
+        }
+        return p;
+      }),
+    };
   };
 
   const handleSelect = (e: MouseEvent) => {
     e.stopPropagation();
-    onSelect(question.id, page);
+    onSelect(question.id, page, section);
   };
 
   const handleDelete = (e: MouseEvent) => {
     e.stopPropagation();
-    onDelete(question.id, page);
+    onDelete(question.id, page, section);
   };
 
   return (
@@ -70,7 +103,9 @@ export const FormElement = ({
       <tr ref={drop} className='vx-form-question' onClick={handleSelect}>
         <td
           class='w-9/12'
-          className={`flex flex-row ${selected ? 'border-2 border-teal-500' : ''}`}
+          className={`flex flex-row ${selected ? 'border-2 border-teal-500' : ''} ${
+            isOver ? 'bg-blue-100' : ''
+          } ${isDragging ? 'opacity-50' : ''}`}
         >
           <span
             ref={(node) => ref(drop(node))}
@@ -108,7 +143,7 @@ export const FormElement = ({
             class='bg-red-400 absolute cursor-pointer text-white w-8 h-8 rounded-md text-center -right-9'
             onClick={handleDelete}
           >
-            <span className='vx-icon vx-logo size-sm' />
+            <span className='vox-icon vx-icon-053 size-sm' />
             <h6 className='text-2xs'>Delete</h6>
           </div>
         </div>
