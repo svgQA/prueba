@@ -31,16 +31,23 @@ export const addPage = () => {
   };
 };
 
-export const addElement = (page: string, parentElementId?: string) => {
+export const removePage = (pageId: string) => {
+  format.value = {
+    ...format.value,
+    pages: format.value.pages.filter((page) => page.id !== pageId),
+  };
+};
+
+export const addElement = (page: string, section?: string) => {
   format.value = {
     ...format.value,
     pages: format.value.pages.map((p: IPage) => {
       if (p.id === page) {
-        if (parentElementId) {
+        if (section) {
           return {
             ...p,
             elements: p.elements.map((el: IElement) => {
-              if (el.id === parentElementId) {
+              if (el.id === section) {
                 return {
                   ...el,
                   elements: [
@@ -90,7 +97,14 @@ export const addSection = (page: string) => {
               label: 'New Section',
               type: ELEMENT_TYPE.SECTION,
               required: false,
-              elements: [],
+              elements: [
+                {
+                  id: shortUUID.generate(),
+                  label: 'New Element',
+                  type: ELEMENT_TYPE.INPUT,
+                  required: false,
+                },
+              ],
             },
           ],
         };
@@ -100,36 +114,48 @@ export const addSection = (page: string) => {
   };
 };
 
-export function removeElement(
-  id: string,
-  page: string,
-  parentElementId?: string
-) {
-  format.value = {
-    ...format.value,
-    pages: format.value.pages.map((p: IPage) => {
-      if (p.id === page) {
-        if (parentElementId) {
-          return {
-            ...p,
-            elements: p.elements.map((el: IElement) => {
-              if (el.id === parentElementId) {
+export function removeElement(id: string, page: string, section?: string) {
+  let updatedPages = format.value.pages.map((p: IPage) => {
+    if (p.id === page) {
+      if (section) {
+        return {
+          ...p,
+          elements: p.elements
+            .map((el: IElement) => {
+              if (el.id === section) {
+                const filteredElements =
+                  el.elements?.filter((e) => e.id !== id) || [];
+                if (filteredElements.length === 0) {
+                  // If section becomes empty, filter it out
+                  return null;
+                }
                 return {
                   ...el,
-                  elements: el.elements?.filter((e) => e.id !== id),
+                  elements: filteredElements,
                 };
               }
               return el;
-            }),
-          };
-        }
-        return {
-          ...p,
-          elements: p.elements.filter((element: IElement) => element.id !== id),
+            })
+            .filter((el): el is IElement => el !== null),
         };
       }
-      return p;
-    }),
+      const filteredElements = p.elements.filter(
+        (element: IElement) => element.id !== id
+      );
+      return {
+        ...p,
+        elements: filteredElements,
+      };
+    }
+    return p;
+  });
+
+  // Remove page if it has no elements
+  updatedPages = updatedPages.filter((page) => page.elements.length > 0);
+
+  format.value = {
+    ...format.value,
+    pages: updatedPages,
   };
 }
 

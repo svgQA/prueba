@@ -25,3 +25,9 @@ export interface IPage extends IBase {
 export interface IFormat extends IBase {
   pages: IPage[];
 }
+
+export interface ISelected {
+  id: string;
+  page: string;
+  section?: string;
+}

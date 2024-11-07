@@ -11,15 +11,17 @@ interface IElementProps {
   question: IElement;
   index: number;
   page: string;
+  section?: string;
   selected?: boolean;
-  onSelect: (id: string, page: string) => void;
-  onDelete: (id: string, page: string) => void;
+  onSelect: (id: string, page: string, section?: string) => void;
+  onDelete: (id: string, page: string, section?: string) => void;
 }
 
 export const FormElement = ({
   question,
   index,
   page,
+  section,
   selected,
   onSelect,
   onDelete,
@@ -46,18 +48,40 @@ export const FormElement = ({
   });
 
   const handleInputChange = (e: TargetedEvent<HTMLInputElement>) => {
+    const { value } = e.target as HTMLInputElement;
     format.value = {
       ...format.value,
       pages: format.value.pages.map((p) => {
         if (p.id === page) {
-          return {
-            ...p,
-            elements: p.elements.map((element: IElement) =>
-              element.id === question.id
-                ? { ...element, label: (e.target as HTMLInputElement).value }
-                : element
-            ),
-          };
+          if (section) {
+            return {
+              ...p,
+              elements: p.elements.map((element: IElement) =>
+                element.id === section
+                  ? {
+                      ...element,
+                      elements: element.elements?.map((el) =>
+                        el.id === question.id
+                          ? {
+                              ...el,
+                              label: value,
+                            }
+                          : el
+                      ),
+                    }
+                  : element
+              ),
+            };
+          } else {
+            return {
+              ...p,
+              elements: p.elements.map((element: IElement) =>
+                element.id === question.id
+                  ? { ...element, label: value }
+                  : element
+              ),
+            };
+          }
         }
         return p;
       }),
@@ -66,12 +90,12 @@ export const FormElement = ({
 
   const handleSelect = (e: MouseEvent) => {
     e.stopPropagation();
-    onSelect(question.id, page);
+    onSelect(question.id, page, section);
   };
 
   const handleDelete = (e: MouseEvent) => {
     e.stopPropagation();
-    onDelete(question.id, page);
+    onDelete(question.id, page, section);
   };
 
   return (
@@ -119,7 +143,7 @@ export const FormElement = ({
             class='bg-red-400 absolute cursor-pointer text-white w-8 h-8 rounded-md text-center -right-9'
             onClick={handleDelete}
           >
-            <span className='vx-icon vx-logo size-sm' />
+            <span className='vox-icon vx-icon-053 size-sm' />
             <h6 className='text-2xs'>Delete</h6>
           </div>
         </div>

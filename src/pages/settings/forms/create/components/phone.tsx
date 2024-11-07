@@ -1,28 +1,31 @@
-import { useState, useRef } from 'preact/hooks';
-import { format, getFormLength } from '../store';
+import { useRef, useEffect } from 'preact/hooks';
+import {
+  decrementPhonePage,
+  format,
+  getFormLength,
+  getPhonePage,
+  incrementPhonePage,
+} from '../store';
 import { CardElement } from './card';
 
 export const FormPhoneViewer = () => {
-  const [step, setStep] = useState<number>(0);
   const pagesRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (pagesRef.current) {
+      pagesRef.current.style.transform = `translateX(-${getPhonePage.value * 100}%)`;
+    }
+  }, [getPhonePage.value]);
+
   const handleNext = () => {
-    if (step < getFormLength.value - 1) {
-      const newStep = step + 1;
-      setStep(newStep);
-      if (pagesRef.current) {
-        pagesRef.current.style.transform = `translateX(-${newStep * 100}%)`;
-      }
+    if (getPhonePage.value < getFormLength.value - 1) {
+      incrementPhonePage();
     }
   };
 
   const handlePrev = () => {
-    if (step > 0) {
-      const newStep = step - 1;
-      setStep(newStep);
-      if (pagesRef.current) {
-        pagesRef.current.style.transform = `translateX(-${newStep * 100}%)`;
-      }
+    if (getPhonePage.value > 0) {
+      decrementPhonePage();
     }
   };
 
@@ -31,7 +34,7 @@ export const FormPhoneViewer = () => {
       <div className='absolute z-40 top-5 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-400 rounded-full' />
       <div className='absolute z-20 bottom-8 flex flex-row bg-white w-80 border-2 justify-between items-center p-1 rounded-xl'>
         <span
-          className={`${getFormLength.value > 1 && step !== 0 ? 'visible' : 'invisible'} cursor-pointer px-2 font-bold`}
+          className={`${getFormLength.value > 1 && getPhonePage.value !== 0 ? 'visible' : 'invisible'} cursor-pointer px-2 font-bold`}
           onClick={handlePrev}
         >
           Prev
@@ -40,7 +43,7 @@ export const FormPhoneViewer = () => {
           <span className='cursor-pointer font-bold vx-icon vx-settings size-sm'></span>
         </div>
         <span
-          className={`${getFormLength.value > 1 && step !== getFormLength.value - 1 ? 'visible' : 'invisible'} cursor-pointer px-2 font-bold`}
+          className={`${getFormLength.value > 1 && getPhonePage.value !== getFormLength.value - 1 ? 'visible' : 'invisible'} cursor-pointer px-2 font-bold`}
           onClick={handleNext}
         >
           Next

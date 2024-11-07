@@ -70,7 +70,7 @@ export const CardElement = ({
 
   return (
     <div
-      className={`${selected ? 'bg-teal-300' : ''} flex flex-row relative my-1 border-b-[1px] h-fit py-1 pl-2`}
+      className={`${selected ? 'bg-teal-300' : ''} ${element.elements ? '' : 'border-b-[1px]'} flex flex-row relative my-1 h-fit py-1 pl-2`}
       id={id}
       name={name}
     >
@@ -88,13 +88,30 @@ export const CardElement = ({
         ></span> */}
       </div>
       <div className='relative w-full h-fit'>
-        <h5 className='font-semibold text-sm'>
-          {element.label ? element.label : 'name'}{' '}
-        </h5>
-        <p className='font-thin text-sm'>
-          {element.description ? element.description : 'description'}{' '}
-        </p>
+        <div className='flex flex-row justify-between px-2'>
+          <h5
+            className={`font-semibold ${element.elements ? 'text-lg' : 'text-sm'}`}
+          >
+            {element.label ? element.label : 'Section Title'}
+          </h5>
+          {element.elements && <span className='vox-icon vx-icon-005' />}
+        </div>
+        {!element.elements && (
+          <p className='font-thin text-sm'>
+            {element.description ? element.description : 'description'}{' '}
+          </p>
+        )}
         {renderPreviewElement()}
+        {element.elements &&
+          element.elements.map((subElement, index) => (
+            <CardElement
+              key={index}
+              id={`${id}-${index}`}
+              name={`${name}-${index}`}
+              element={subElement}
+              selected={selected}
+            />
+          ))}
       </div>
     </div>
   );
