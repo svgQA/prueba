@@ -70,12 +70,12 @@ export const CardElement = ({
 
   return (
     <div
-      className={`${selected ? 'bg-teal-300' : ''} cursor-move flex flex-row relative my-1 border-b-[1px] h-fit py-1 pl-2`}
+      className={`${selected ? 'bg-teal-300' : ''} flex flex-row relative my-1 border-b-[1px] h-fit py-1 pl-2`}
       id={id}
       name={name}
     >
       <div className='absolute top-1 right-3 flex flex-row justify-end w-10 z-10 items-center'>
-        <div className='text-xs capitalize bg-gray-200 rounded-sm px-1 text-gray-600 font-medium h-fit mx-1'>
+        {/* <div className='text-xs capitalize bg-gray-200 rounded-sm px-1 text-gray-600 font-medium h-fit mx-1'>
           {element.type}
         </div>
         <span
@@ -85,7 +85,7 @@ export const CardElement = ({
         <span
           name={`setting-${id}`}
           className='cursor-pointer font-bold vx-icon vx-settings size-sm hover:bg-gray-400 hover:text-white rounded-full px-0.5'
-        ></span>
+        ></span> */}
       </div>
       <div className='relative w-full h-fit'>
         <h5 className='font-semibold text-sm'>

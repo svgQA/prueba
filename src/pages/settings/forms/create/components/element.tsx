@@ -1,5 +1,5 @@
 import { useDrag, useDrop } from 'react-dnd';
-import { form, moveElement, IElement } from '../store';
+import { format, moveElement, IElement } from '../store';
 import { TargetedEvent } from 'preact/compat';
 import '../assets/index.css';
 
@@ -24,12 +24,15 @@ export const FormElement = ({
   onSelect,
   onDelete,
 }: IElementProps) => {
-  const [, ref] = useDrag({
+  const [{ isDragging }, ref] = useDrag({
     type: ItemType.QUESTION,
     item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
   });
 
-  const [, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept: ItemType.QUESTION,
     hover: (item: any) => {
       if (item.index !== index) {
@@ -37,22 +40,28 @@ export const FormElement = ({
         item.index = index;
       }
     },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
   });
 
   const handleInputChange = (e: TargetedEvent<HTMLInputElement>) => {
-    form.value = form.value.map((p) => {
-      if (p.id === page) {
-        return {
-          ...p,
-          elements: p.elements.map((element: IElement) =>
-            element.id === question.id
-              ? { ...element, label: (e.target as HTMLInputElement).value }
-              : element
-          ),
-        };
-      }
-      return p;
-    });
+    format.value = {
+      ...format.value,
+      pages: format.value.pages.map((p) => {
+        if (p.id === page) {
+          return {
+            ...p,
+            elements: p.elements.map((element: IElement) =>
+              element.id === question.id
+                ? { ...element, label: (e.target as HTMLInputElement).value }
+                : element
+            ),
+          };
+        }
+        return p;
+      }),
+    };
   };
 
   const handleSelect = (e: MouseEvent) => {
@@ -70,7 +79,9 @@ export const FormElement = ({
       <tr ref={drop} className='vx-form-question' onClick={handleSelect}>
         <td
           class='w-9/12'
-          className={`flex flex-row ${selected ? 'border-2 border-teal-500' : ''}`}
+          className={`flex flex-row ${selected ? 'border-2 border-teal-500' : ''} ${
+            isOver ? 'bg-blue-100' : ''
+          } ${isDragging ? 'opacity-50' : ''}`}
         >
           <span
             ref={(node) => ref(drop(node))}

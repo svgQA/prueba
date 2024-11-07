@@ -2,9 +2,10 @@ import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { addElement, addPage, form, removeElement } from './store';
+import { addElement, addPage, format, removeElement } from './store';
 import { FormPhoneViewer, FormElement } from './components';
 import { useSignal } from '@preact/signals';
+import { TargetedEvent } from 'preact/compat';
 
 interface ISelected {
   id: string;
@@ -18,7 +19,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   const showElements = () => {
-    console.log(form.value);
+    console.log(format.value);
   };
 
   const handleSelect = (id: string, page: string) => {
@@ -29,6 +30,27 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   const addLelement = () => {
     if (!selectedElement.value) return;
     addElement(selectedElement.value.page);
+  };
+
+  const handleFormatInputChange = (e: TargetedEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
+    format.value = {
+      ...format.value,
+      [name]: value,
+    };
+  };
+
+  const handlePageInputChange = (e: TargetedEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
+    const pageId = e.currentTarget.getAttribute('data-pageid');
+    if (!pageId) return;
+
+    format.value = {
+      ...format.value,
+      pages: format.value.pages.map((page) =>
+        page.id === pageId ? { ...page, [name]: value } : page
+      ),
+    };
   };
 
   return (
@@ -45,11 +67,17 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                 type='text'
                 className='w-full text-2xl font-bold mb-2 p-2 border border-gray-200 rounded'
                 placeholder='Enter title'
+                name='label'
+                value={format.value.label}
+                onChange={handleFormatInputChange}
               />
               <input
                 type='text'
-                className='w-full text-sm text-gray-600 p-2 border border-gray-200 rounded'
+                className='w-full text-lg text-gray-600 p-2 border border-gray-200 rounded'
                 placeholder='Enter description'
+                name='description'
+                value={format.value.description}
+                onChange={handleFormatInputChange}
               />
             </div>
           </div>
@@ -78,13 +106,17 @@ export const FormCreateSettingPage: FunctionComponent = () => {
           </div>
           {/* START: Sesiones */}
           <div className='flex flex-col w-8/12 '>
-            {form.value.map((page) => (
+            {format.value.pages.map((page) => (
               <div key={page.id} className='w-full mb-5'>
                 <div className='flex-1'>
                   <input
                     type='text'
                     className='w-full text-xl font-bold mb-2 p-2 border border-gray-200 rounded'
                     placeholder='Enter title page'
+                    name='label'
+                    data-pageid={page.id}
+                    value={page.label}
+                    onChange={handlePageInputChange}
                   />
                 </div>
                 <DndProvider backend={HTML5Backend}>

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'preact/hooks';
-import { form, getFormLength } from '../store';
+import { format, getFormLength } from '../store';
 import { CardElement } from './card';
 
 export const FormPhoneViewer = () => {
@@ -48,19 +48,24 @@ export const FormPhoneViewer = () => {
       </div>
       <div className='flex flex-col bg-white border shadow-lg rounded-2xl w-[340px] h-[667px] overflow-hidden mx-auto vox-scroll-design px-2 pt-6 padd'>
         <div className='flex flex-col items-center justify-center mb-2 rounded-md py-2'>
-          <h3 className='font-bold text-xl'>title</h3>
-          <p className='font-thin text-sm text-gray-700'>des</p>
+          <h3 className='font-bold text-xl'>{format.value.label}</h3>
+          <p className='font-thin text-sm text-gray-700'>
+            {format.value.description}
+          </p>
         </div>
         <div className='relative flex h-full w-full overflow-hidden'>
           <div
             ref={pagesRef}
             className='flex transition-transform duration-300 h-full w-full'
           >
-            {form.value.map((page) => (
+            {format.value.pages.map((page) => (
               <div
                 key={page.id}
                 className='flex-shrink-0 w-full h-full overflow-y-auto pb-20 hide-scrollbar'
               >
+                <div className='mb-4 pb-2 border-b border-gray-300 text-center'>
+                  <h3 className='font-semibold font-md'>{page.label}</h3>
+                </div>
                 {page.elements.map((element) => (
                   <CardElement
                     element={element}
