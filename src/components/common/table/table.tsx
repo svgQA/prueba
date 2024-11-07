@@ -10,12 +10,30 @@ import {
   SortingState,
   ExpandedState,
   getExpandedRowModel,
+  Column,
 } from '@tanstack/react-table';
 import { useState } from 'preact/hooks';
 import { ITableProps } from './interface';
 import { RowExpandedContent } from './components';
 import React from 'preact/compat';
 import { Search } from '../search/search';
+
+const getCommonPinningStyles = (column: Column<any>) => {
+  const isPinned = column.getIsPinned();
+  const isLastLeftPinnedColumn =
+    isPinned === 'left' && column.getIsLastColumn('left');
+
+  return {
+    boxShadow: isLastLeftPinnedColumn
+      ? '-4px 0 4px -4px gray inset'
+      : undefined,
+    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
+    // opacity: isPinned ? 0.95 : 1,
+    position: isPinned ? 'sticky' : 'relative',
+    width: column.getSize(),
+    zIndex: isPinned ? 1 : 0,
+  };
+};
 
 export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -37,6 +55,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     onExpandedChange: setExpanded,
+    columnResizeMode: 'onChange',
     state: {
       sorting,
       pagination,
@@ -64,8 +83,18 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
               return (
                 <div
                   key={column.id}
-                  className='flex items-center space-x-2 py-1'
+                  className='flex items-center space-x-2 py-1 flex-row'
                 >
+                  <div>
+                    {column.getCanPin() && (
+                      <span
+                        className={`${column.getIsPinned() ? 'text-red-400' : 'text-green-400'} vox-icon vx-icon-305 px-2 py-1 size-sm`}
+                        onClick={() =>
+                          column.pin(column.getIsPinned() ? false : 'left')
+                        }
+                      />
+                    )}
+                  </div>
                   <label className='flex items-center cursor-pointer'>
                     <input
                       {...{
@@ -87,17 +116,15 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
       </div>
       <div className='w-full h-[87vh] overflow-x-auto vox-scroll-design scroll-x-md mt-2'>
         <table className='w-full'>
-          <thead className='sticky top-0'>
+          <thead className='sticky top-0 z-20'>
             {table.getHeaderGroups().map((headerGroup, index) => (
-              <tr
-                key={`${headerGroup.id}-${index}`}
-                className='bg-gray-50 border-b border-cyan-500'
-              >
+              <tr key={`${headerGroup.id}-${index}`}>
                 {headerGroup.headers.map((header, index) => (
                   <th
                     key={`${header.id}-${index}`}
                     colSpan={header.colSpan}
-                    className='p-2 text-left font-semibold text-gray-600'
+                    className='p-2 text-left font-semibold text-gray-600 bg-gray-50'
+                    style={getCommonPinningStyles(header.column)}
                   >
                     <div
                       className={
@@ -128,7 +155,8 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
                   {row.getVisibleCells().map((cell, index) => (
                     <td
                       key={`${cell.id}_${index}`}
-                      className='p-2 whitespace-nowrap'
+                      className='p-2 whitespace-nowrap bg-white'
+                      style={getCommonPinningStyles(cell.column)}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
