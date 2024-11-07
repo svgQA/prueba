@@ -69,7 +69,9 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
         <Search
           id='search-general'
           name='search-general'
-          keys={table.getAllLeafColumns().map((column) => column.id)}
+          keys={table
+            .getAllLeafColumns()
+            .map((column) => String(column.columnDef.header) || column.id)}
         />
         <div className='flex cursor-pointer bg-gray-100 hover:bg-gray-300 mx-2 text-center items-center rounded-md'>
           <span
@@ -105,7 +107,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
                       className='form-checkbox h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500'
                     />
                     <span className='ml-2 text-sm text-gray-700'>
-                      {column.id}
+                      {column.columnDef.header}
                     </span>
                   </label>
                 </div>
@@ -178,7 +180,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
         </table>
       </div>
       {/* Pagination controls */}
-      <div className='absolute flex justify-center gap-1 bottom-2 right-[43%] p-2 bg-white border-2 rounded-md shadow-sm'>
+      <div className='absolute flex justify-center gap-1 bottom-2 right-[43%] p-2 bg-white border-2 rounded-md shadow-sm z-10'>
         <button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
