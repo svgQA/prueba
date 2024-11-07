@@ -1,11 +1,10 @@
 import { type FunctionalComponent } from 'preact';
 import { AudioButton } from './audio/socket.button';
 import { useEffect } from 'preact/hooks';
-import { Table } from '@/components/common/table/table';
-import { shiftsData } from './shifts.data';
-import { shiftsColumns } from './shift.columns';
-import { Shift } from './shifts';
-import { Search } from '@/components/common';
+import { Section, Table } from '@/components/common';
+
+import { type Shift, shiftsData } from './utils';
+import { columns } from './components';
 
 export const ShiftsPage: FunctionalComponent = () => {
   useEffect(() => {
@@ -13,20 +12,10 @@ export const ShiftsPage: FunctionalComponent = () => {
   }, []);
 
   return (
-    <section className='p-4'>
+    <Section>
       <AudioButton />
       <h1 className='text-2xl font-bold mb-4'>Gestión de Turnos</h1>
-      <Table<Shift>
-        search={
-          <Search
-            id='search-shift'
-            name='search-shift'
-            keys={['id_1', 'id_2', 'id_3', 'id_4']}
-          />
-        }
-        data={shiftsData}
-        columns={shiftsColumns}
-      />
-    </section>
+      <Table<Shift> data={shiftsData} columns={columns} />
+    </Section>
   );
 };
