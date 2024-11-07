@@ -293,7 +293,7 @@ export const OnBording = ({ closed, onLogout }: IOnboardingProps) => {
               className='absolute top-0 right-2 p-2 text-gray-500 hover:text-gray-700 cursor-pointer'
               type='button'
             >
-              <span className='vx-icon vx-logo' />
+              <span className='vox-icon vx-icon-099' />
             </span>
             <span
               className={`top-0 right-8 absolute p-4 text-sm text-[#A5ACBA] mb-2 ${step > 1 ? 'visibe' : 'invisible'}`}

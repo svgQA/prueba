@@ -24,3 +24,5 @@ export * from './timeline/interface';
 export * from './table/interface';
 
 export * from './search/interface';
+export * from './section/interface';
+export * from './loading/interface';

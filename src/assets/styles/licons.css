@@ -8,6 +8,14 @@ span.vox-icon {
   font-size: 1.5em;
 }
 
+span.vox-icon.size-sm {
+  font-size: 1em;
+}
+
+span.vox-icon.size-md {
+  font-size: 1.5em;
+}
+
 .vx-icon-001::before {
   content: '\0108';
 }
@@ -1222,4 +1230,8 @@ span.vox-icon {
 
 .vx-icon-304::before {
   content: '\0237';
+}
+
+.vx-icon-305::before {
+  content: '\0238';
 }

@@ -8,6 +8,5 @@ import {
 export interface ITableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
-  search?: VNode;
   pageSize?: number;
 }
