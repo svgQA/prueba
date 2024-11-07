@@ -88,17 +88,19 @@ export const CardElement = ({
         ></span> */}
       </div>
       <div className='relative w-full h-fit'>
-        <div className='flex flex-row justify-between px-2'>
+        <div className='flex flex-row justify-between'>
           <h5
             className={`font-semibold ${element.elements ? 'text-lg' : 'text-sm'}`}
           >
-            {element.label ? element.label : 'Section Title'}
+            {element.label
+              ? element.label
+              : `Title ${element.elements ? 'Section' : 'Element'}`}
           </h5>
           {element.elements && <span className='vox-icon vx-icon-005' />}
         </div>
         {!element.elements && (
           <p className='font-thin text-sm'>
-            {element.description ? element.description : 'description'}{' '}
+            {element.description ? element.description : 'Element Description'}{' '}
           </p>
         )}
         {renderPreviewElement()}

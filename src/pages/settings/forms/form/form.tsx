@@ -8,24 +8,23 @@ import {
   format,
   removeElement,
   addSection,
-  ELEMENT_TYPE,
-  ISelected,
   setPhonePage,
-  IElement,
+  setSelectedElement,
+  getSelectedElement,
+  validateSelectedElement,
+  existSelectedElement,
 } from './store';
 import { FormPhoneViewer, FormElement } from './components';
-import { useSignal } from '@preact/signals';
 import { TargetedEvent } from 'preact/compat';
 
 export const FormCreateSettingPage: FunctionComponent = () => {
-  const selectedElement = useSignal<ISelected | null>(null);
   useEffect(() => {
     document.title = 'Forms Create Settings';
   }, []);
 
   const handleSelect = (id: string, page: string, section?: string) => {
-    if (id === selectedElement.value?.id) return;
-    selectedElement.value = { id, page, section };
+    if (id === getSelectedElement.value?.id) return;
+    setSelectedElement({ id, page, section });
     const pageIndex = format.value.pages.findIndex((p) => p.id === page);
     if (pageIndex >= 0) {
       setPhonePage(pageIndex);
@@ -33,13 +32,13 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   };
 
   const addLelement = () => {
-    if (!selectedElement.value) return;
-    addElement(selectedElement.value.page, selectedElement.value.section);
+    if (!getSelectedElement.value) return;
+    addElement(getSelectedElement.value.page, getSelectedElement.value.section);
   };
 
   const addLsection = () => {
-    if (!selectedElement.value) return;
-    addSection(selectedElement.value.page);
+    if (!getSelectedElement.value) return;
+    addSection(getSelectedElement.value.page);
   };
 
   const handleFormatInputChange = (e: TargetedEvent<HTMLInputElement>) => {
@@ -61,78 +60,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
         page.id === pageId ? { ...page, [name]: value } : page
       ),
     };
-  };
-
-  const handleSectionInputChange = (e: TargetedEvent<HTMLInputElement>) => {
-    const { name, value } = e.currentTarget;
-    const sectionId = e.currentTarget.getAttribute('data-sectionid');
-    const pageId = e.currentTarget.getAttribute('data-pageid');
-    if (!sectionId || !pageId) return;
-
-    format.value = {
-      ...format.value,
-      pages: format.value.pages.map((page) => {
-        if (page.id !== pageId) return page;
-
-        return {
-          ...page,
-          elements: page.elements.map((element) => {
-            if (element.id === sectionId) {
-              return { ...element, [name]: value };
-            }
-            return element;
-          }),
-        };
-      }),
-    };
-  };
-
-  const renderElements = (
-    elements: IElement[],
-    page: string,
-    section?: string
-  ) => {
-    return elements.map((element, index) => {
-      if (element.type === ELEMENT_TYPE.SECTION) {
-        return (
-          <tr key={element.id}>
-            <td colSpan={2} className='py-2 px-4'>
-              <div className='font-bold text-lg border-b border-gray-200 pb-2'>
-                <input
-                  type='text'
-                  className='w-full text-xl font-bold mb-2 p-2 border border-gray-200 rounded'
-                  placeholder='Enter Section Title'
-                  name='label'
-                  data-sectionid={element.id}
-                  data-pageid={page}
-                  value={element.label}
-                  onChange={handleSectionInputChange}
-                />
-              </div>
-              <table className='w-full'>
-                <tbody>
-                  {element.elements &&
-                    renderElements(element.elements, page, element.id)}
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        );
-      }
-
-      return (
-        <FormElement
-          key={element.id}
-          question={element}
-          page={page}
-          index={index}
-          section={section}
-          selected={selectedElement.value?.id === element.id}
-          onSelect={handleSelect}
-          onDelete={removeElement}
-        />
-      );
-    });
   };
 
   return (
@@ -165,7 +92,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
           </div>
           {/* START: Append menus */}
           <div
-            className={`${selectedElement.value ? 'visible' : 'invisible'} absolute left-0 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-10 bg-white p-1 shadow-md border-2 rounded-md`}
+            className={`${existSelectedElement.value ? 'visible' : 'invisible'} absolute left-0 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-10 bg-white p-1 shadow-md border-2 rounded-md`}
           >
             <div
               class='bg-blue-500 vx-form-actions-button'
@@ -201,17 +128,29 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                     onChange={handlePageInputChange}
                   />
                 </div>
-                <DndProvider backend={HTML5Backend}>
-                  <table class='w-full text-left relative'>
-                    <thead className='bg-red'>
-                      <tr className='bg-gray-200 rounded-t-2 text-gray-600'>
-                        <th className='py-1 px-2 rounded-tl-md'>Question</th>
-                        <th className='py-1 rounded-tr-md'>Type of Response</th>
-                      </tr>
-                    </thead>
-                    <tbody>{renderElements(page.elements, page.id)}</tbody>
-                  </table>
-                </DndProvider>
+                <table class='w-full text-left relative'>
+                  <thead className='bg-red'>
+                    <tr className='bg-gray-200 rounded-t-2 text-gray-600'>
+                      <th className='py-1 px-2 rounded-tl-md'>Question</th>
+                      <th className='py-1 rounded-tr-md'>Type of Response</th>
+                    </tr>
+                  </thead>
+                  <DndProvider backend={HTML5Backend}>
+                    <tbody>
+                      {page.elements.map((element, index) => (
+                        <FormElement
+                          key={element.id}
+                          question={element}
+                          page={page.id}
+                          index={index}
+                          selected={validateSelectedElement(element.id)}
+                          onSelect={handleSelect}
+                          onDelete={removeElement}
+                        />
+                      ))}
+                    </tbody>
+                  </DndProvider>
+                </table>
               </div>
             ))}
           </div>

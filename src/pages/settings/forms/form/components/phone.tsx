@@ -51,9 +51,13 @@ export const FormPhoneViewer = () => {
       </div>
       <div className='flex flex-col bg-white border shadow-lg rounded-2xl w-[340px] h-[667px] overflow-hidden mx-auto vox-scroll-design px-2 pt-6 padd'>
         <div className='flex flex-col items-center justify-center mb-2 rounded-md py-2'>
-          <h3 className='font-bold text-xl'>{format.value.label}</h3>
+          <h3 className='font-bold text-xl'>
+            {format.value.label ? format.value.label : 'Form Title'}
+          </h3>
           <p className='font-thin text-sm text-gray-700'>
-            {format.value.description}
+            {format.value.description
+              ? format.value.description
+              : 'Form Description'}
           </p>
         </div>
         <div className='relative flex h-full w-full overflow-hidden'>
@@ -67,7 +71,9 @@ export const FormPhoneViewer = () => {
                 className='flex-shrink-0 w-full h-full overflow-y-auto pb-20 hide-scrollbar'
               >
                 <div className='mb-4 pb-2 border-b border-gray-300 text-center'>
-                  <h3 className='font-semibold font-md'>{page.label}</h3>
+                  <h3 className='font-semibold font-md'>
+                    {page.label ? page.label : 'Page Title'}
+                  </h3>
                 </div>
                 {page.elements.map((element) => (
                   <CardElement

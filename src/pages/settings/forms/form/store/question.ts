@@ -4,11 +4,11 @@ import { ELEMENT_TYPE, IElement, IFormat, IPage } from './interface.d';
 
 const getInitPage = (): IPage => ({
   id: shortUUID.generate(),
-  label: 'New Page',
+  label: '',
   elements: [
     {
       id: shortUUID.generate(),
-      label: 'New Element',
+      label: '',
       type: ELEMENT_TYPE.INPUT,
       required: false,
     },
@@ -54,7 +54,7 @@ export const addElement = (page: string, section?: string) => {
                     ...(el.elements || []),
                     {
                       id: shortUUID.generate(),
-                      label: 'New Element',
+                      label: '',
                       type: ELEMENT_TYPE.INPUT,
                       required: false,
                     },
@@ -71,7 +71,7 @@ export const addElement = (page: string, section?: string) => {
             ...p.elements,
             {
               id: shortUUID.generate(),
-              label: 'New Element',
+              label: '',
               type: ELEMENT_TYPE.INPUT,
               required: false,
             },
@@ -94,13 +94,13 @@ export const addSection = (page: string) => {
             ...p.elements,
             {
               id: shortUUID.generate(),
-              label: 'New Section',
+              label: '',
               type: ELEMENT_TYPE.SECTION,
               required: false,
               elements: [
                 {
                   id: shortUUID.generate(),
-                  label: 'New Element',
+                  label: '',
                   type: ELEMENT_TYPE.INPUT,
                   required: false,
                 },
@@ -162,18 +162,18 @@ export function removeElement(id: string, page: string, section?: string) {
 export const moveElement = (
   dragIndex: number,
   hoverIndex: number,
-  pageId: string,
-  parentElementId?: string
+  page: string,
+  section?: string
 ) => {
   format.value = {
     ...format.value,
     pages: format.value.pages.map((p: IPage) => {
-      if (p.id === pageId) {
-        if (parentElementId) {
+      if (p.id === page) {
+        if (section) {
           return {
             ...p,
             elements: p.elements.map((el: IElement) => {
-              if (el.id === parentElementId && el.elements) {
+              if (el.id === section && el.elements) {
                 const updatedElements = [...el.elements];
                 const [movedElement] = updatedElements.splice(dragIndex, 1);
                 updatedElements.splice(hoverIndex, 0, movedElement);
