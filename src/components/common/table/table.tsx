@@ -69,7 +69,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
         <Search
           id='search-general'
           name='search-general'
-          keys={['id_1', 'id_2', 'id_3', 'id_4']}
+          keys={table.getAllLeafColumns().map((column) => column.id)}
         />
         <div className='flex cursor-pointer bg-gray-100 hover:bg-gray-300 mx-2 text-center items-center rounded-md'>
           <span
@@ -77,7 +77,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
             onClick={() => setSetting((prev) => !prev)}
           />
           <div
-            className={`${settings ? 'visible' : 'invisible'} absolute right-2 top-12 bg-white rounded-lg shadow-lg p-4 z-20`}
+            className={`${settings ? 'visible' : 'invisible'} absolute right-2 top-12 bg-white rounded-lg shadow-lg p-4 z-30`}
           >
             {table.getAllLeafColumns().map((column) => {
               return (
