@@ -10,4 +10,5 @@ export interface ISearchProps extends IComponentProps {
   keys?: string[];
   value?: IFilterModel[];
   onChange?: (filters: IFilterModel[]) => void;
+  placeholder?: string;
 }

@@ -1,11 +1,15 @@
-import './onboarding.css';
+import './assets/index.css';
 import { useState, useRef, useEffect } from 'preact/hooks';
-import { IOnboardingProps } from './interface';
-import { DEFAULT_STEP, employeeCountOptions, STEPS } from './constants';
+import {
+  IOnboardingProps,
+  required,
+  DEFAULT_STEP,
+  employeeCountOptions,
+  STEPS,
+} from './utils';
 import { FunctionComponent } from 'preact';
 import { PropsWithChildren } from 'preact/compat';
 import { Form, Field, FormSpy } from 'react-final-form';
-import { required } from './validate';
 import { getUserId, useUserStore } from '@/store/slices';
 import { IOnboardingModel } from '@/store/signals/types';
 import { TenantService } from '@/services';
@@ -246,7 +250,7 @@ const OnBoardingSteps = ({ sliderRef }: IOnBoardingStepsProps) => {
   );
 };
 
-export const OnBordingPage = ({ closed, onLogout }: IOnboardingProps) => {
+export const OnBording = ({ closed, onLogout }: IOnboardingProps) => {
   const [step, setStep] = useState<number>(DEFAULT_STEP);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -289,7 +293,7 @@ export const OnBordingPage = ({ closed, onLogout }: IOnboardingProps) => {
               className='absolute top-0 right-2 p-2 text-gray-500 hover:text-gray-700 cursor-pointer'
               type='button'
             >
-              <span className='vx-icon vx-logo' />
+              <span className='vox-icon vx-icon-099' />
             </span>
             <span
               className={`top-0 right-8 absolute p-4 text-sm text-[#A5ACBA] mb-2 ${step > 1 ? 'visibe' : 'invisible'}`}

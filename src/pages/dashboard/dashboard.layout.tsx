@@ -15,7 +15,7 @@ import {
 /** ***********************************************************************
  * COMPONENTS
  ** ***********************************************************************/
-import { Button, Input, Modal, Sidebar } from '@/components/common';
+import { Button, Modal, Search, Sidebar, Loading } from '@/components/common';
 
 /** ***********************************************************************
  * PAGES
@@ -24,7 +24,6 @@ import { DevicesPage } from './devices/devices.page';
 import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
 import { ShiftsPage } from './shifts/shifts.page';
-import { OnBordingPage } from '../onbording/onbording.page';
 
 import { IMenu } from '@/components/common/interface';
 import {
@@ -78,7 +77,7 @@ import {
   getStatusSettingModal,
   toggleSettingModal,
   closeOnBoardingModal,
-  openOnBoardingModal,
+  // openOnBoardingModal,
   getStatusLoading,
   openLoading,
   closeLoading,
@@ -87,8 +86,10 @@ import {
 /** ***********************************************************************
  * COMMENTS
  ** ***********************************************************************/
-import { hasUserTenant, useUserStore } from '@/store/slices';
+// import { hasUserTenant, useUserStore } from '@/store/slices';
 import { BaseService } from '@/utils/network';
+import { OnBording } from '../onbording';
+import { IconsPage } from '../icons/icons';
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
 
@@ -98,7 +99,7 @@ import { BaseService } from '@/utils/network';
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   signOut,
 }: AuthAmplifyProps) => {
-  const { setCompanies, setSelected } = useUserStore();
+  // const { setCompanies, setSelected } = useUserStore();
   const [menuSettings, setMenuSettings] =
     useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
 
@@ -113,12 +114,12 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
 
   const validateUser = async () => {
     /* [TODO]: Bad code */
-    // closeOnBoardingModal();
+    closeOnBoardingModal();
 
     /* [TODO]: Correct code */
-    const existTenant = await hasUserTenant(setCompanies, setSelected);
-    if (!existTenant) openOnBoardingModal();
-    else closeOnBoardingModal();
+    // const existTenant = await hasUserTenant(setCompanies, setSelected);
+    // if (!existTenant) openOnBoardingModal();
+    // else closeOnBoardingModal();
   };
 
   const onSettingHandler = () => {
@@ -169,12 +170,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   };
 
   return (
-    <section className='w-screen h-screen'>
-      <div
-        className={`absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ${getStatusLoading.value ? 'visible' : 'invisible'}`}
-      >
-        <div className='animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white'></div>
-      </div>
+    <section className='w-full h-full'>
+      <Loading open={getStatusLoading.value} />
       <Sidebar
         id='sidebar'
         name='sidebar'
@@ -184,8 +181,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
         isNavigation
         onLogout={signOut}
       />
-      <div className='flex flex-col pl-20 w-full pr-2'>
-        {/* <button onClick={onCreateTenant}>TEST SERVICE</button> */}
+      <div className='flex flex-col pl-20'>
         <Switch>
           <Route path={PAGES_LIST.HOME} component={MemosPage} />
           <Route path={PAGES_LIST.SHIFTS} component={ShiftsPage} />
@@ -226,12 +222,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
                 icon='graph'
               ></Button>
             </div>
-            <Input
-              id='setting-search'
-              name='setting-search'
-              placeholder='search'
-              icon='search'
-              type='text'
+            <Search
+              id='search-general'
+              name='search-general'
+              placeholder='Search'
+              keys={['id_1', 'id_2', 'id_3', 'id_4']}
             />
           </>
         }
@@ -386,10 +381,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
           </section>
         </div>
       </Modal>
-      <OnBordingPage
+      <OnBording
         closed={getStatusOnBoardingModal.value}
         onLogout={signOut || (() => {})}
       />
+      <IconsPage />
     </section>
   );
 };

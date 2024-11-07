@@ -18,6 +18,15 @@
   background-color: transparent;
   position: absolute;
   left: 0;
+  height: 3px;
+}
+
+.vox-scroll-design.scroll-x-md::-webkit-scrollbar {
+  height: 7px;
+}
+
+.vox-scroll-design.scroll-y-md::-webkit-scrollbar {
+  width: 7px;
 }
 
 .vox-scroll-design::-webkit-scrollbar-thumb {
@@ -26,7 +35,20 @@
   width: 20px;
 }
 
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 ::-webkit-scrollbar-track {
   background: transparent;
   border-radius: 20px;
+}
+
+input {
+  background-color: transparent !important;
 }

@@ -7,6 +7,7 @@ export const Search = ({
   name,
   keys = [],
   lenThreshold = 3,
+  placeholder,
   // onChange = (_) => {},
 }: ISearchProps) => {
   const [inputState, setInputState] = useState<string>('');
@@ -103,9 +104,9 @@ export const Search = ({
     <div
       id={id}
       name={name}
-      className='w-full flex flex-row items-center border-2 rounded-sm relative'
+      className='flex flex-row items-center border-2 rounded-sm relative w-full'
     >
-      <span className='left-0 px-2 vx-icon vx-search border-r-2' />
+      <span className='px-2 vox-icon vx-icon-153' />
       <div
         name='input-filter-chips'
         className='flex flex-row text-white'
@@ -137,6 +138,7 @@ export const Search = ({
         <input
           ref={inputRef}
           className='w-full p-2 rounded pl-10 bg-transparent capitalize'
+          placeholder={placeholder}
           onChange={handleChangeInput}
           onKeyDown={handleKeyPress}
           value={inputState}
@@ -144,21 +146,24 @@ export const Search = ({
       </div>
       <div
         ref={keysContainerRef}
-        className={`${inputState.length > lenThreshold ? 'visible' : 'invisible'} absolute right-0 top-10 w-48 bg-white border-2`}
+        className={`${inputState.length > lenThreshold ? 'visible' : 'invisible'} absolute right-0 top-10 min-w-48 bg-white border-2 py-2 z-30`}
         onClick={handleClickKeys}
       >
         {keys.map((key, index) => {
           const keyName = `filter-key-${key}`;
           return (
             <div
-              className={`px-2 py-0.5 cursor-pointer flex flex-row hover:bg-gray-200 ${
+              className={`px-2 py-0.5 cursor-pointer flex flex-row hover:bg-gray-200 min-w-40 ${
                 index === selectedKeyIndex ? 'bg-gray-200' : ''
               }`}
               name={keyName}
               key={keyName}
               tabIndex={index}
             >
-              <span className='bg-purple-800 px-1 text-white mr-1 w-4/12'>
+              <span
+                name={keyName}
+                className='bg-purple-600 px-2 text-white mr-1 min-w-8/12 rounded-md'
+              >
                 {key}
               </span>
               {inputState}
