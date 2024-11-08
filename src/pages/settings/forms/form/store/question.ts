@@ -23,6 +23,7 @@ export const format = signal<IFormat>({
 });
 
 export const getFormLength = computed(() => format.value.pages.length);
+export const getForm = computed(() => format.value);
 
 export const addPage = () => {
   format.value = {

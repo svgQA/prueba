@@ -13,6 +13,7 @@ import {
   getSelectedElement,
   validateSelectedElement,
   existSelectedElement,
+  getForm,
 } from './store';
 import { FormPhoneViewer, FormElement } from './components';
 import { TargetedEvent } from 'preact/compat';
@@ -29,6 +30,10 @@ export const FormCreateSettingPage: FunctionComponent = () => {
     if (pageIndex >= 0) {
       setPhonePage(pageIndex);
     }
+  };
+
+  const showFormat = () => {
+    console.log(getForm.value);
   };
 
   const addLelement = () => {
@@ -67,7 +72,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       <div className='flex flex-row relative'>
         <div className='pl-20 pr-9 w-full flex flex-col h-[80vh] overflow-y-scroll vox-scroll-design'>
           {/* START: Titles */}
-          <div className='flex flex-row w-full gap-4 my-2'>
+          <div className='flex flex-row w-8/12 my-5'>
             <div className='w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer'>
               <span className='vx-icon vx-upload text-gray-400 text-2xl' />
             </div>
@@ -89,6 +94,15 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                 onChange={handleFormatInputChange}
               />
             </div>
+            <button
+              id='bt-create-element'
+              name='bt-create-element'
+              className='h-fit'
+              type='button'
+              onClick={showFormat}
+            >
+              Create
+            </button>
           </div>
           {/* START: Append menus */}
           <div
@@ -114,7 +128,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             </div>
           </div>
           {/* START: Sesiones */}
-          <div className='flex flex-col w-8/12 '>
+          <div className='flex flex-col w-8/12'>
             {format.value.pages.map((page) => (
               <div key={page.id} className='w-full mb-5'>
                 <div className='flex-1'>
