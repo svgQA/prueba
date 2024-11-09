@@ -72,7 +72,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       <div className='flex flex-row relative'>
         <div className='pl-20 pr-9 w-full flex flex-col h-[80vh] overflow-y-scroll vox-scroll-design'>
           {/* START: Titles */}
-          <div className='flex flex-row w-8/12 my-5'>
+          <div className='flex flex-row 2xl:w-8/12 w-full my-5'>
             <div className='w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer'>
               <span className='vx-icon vx-upload text-gray-400 text-2xl' />
             </div>
@@ -128,7 +128,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             </div>
           </div>
           {/* START: Sesiones */}
-          <div className='flex flex-col w-8/12'>
+          <div className='flex flex-col 2xl:w-8/12 w-full'>
             {format.value.pages.map((page) => (
               <div key={page.id} className='w-full mb-5'>
                 <div className='flex-1'>
@@ -169,7 +169,9 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             ))}
           </div>
         </div>
-        <FormPhoneViewer />
+        <div className='hidden 2xl:block'>
+          <FormPhoneViewer />
+        </div>
       </div>
     </section>
   );

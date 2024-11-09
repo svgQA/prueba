@@ -250,7 +250,7 @@ const OnBoardingSteps = ({ sliderRef }: IOnBoardingStepsProps) => {
   );
 };
 
-export const OnBording = ({ closed, onLogout }: IOnboardingProps) => {
+export const OnBordingPage = ({ closed, onLogout }: IOnboardingProps) => {
   const [step, setStep] = useState<number>(DEFAULT_STEP);
   const sliderRef = useRef<HTMLDivElement>(null);
 

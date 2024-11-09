@@ -88,8 +88,7 @@ import {
  ** ***********************************************************************/
 // import { hasUserTenant, useUserStore } from '@/store/slices';
 import { BaseService } from '@/utils/network';
-import { OnBording } from '../onbording';
-import { IconsPage } from '../icons/icons';
+import { IconsPage, OnBordingPage } from '../globals';
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
 
@@ -381,7 +380,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
           </section>
         </div>
       </Modal>
-      <OnBording
+      <OnBordingPage
         closed={getStatusOnBoardingModal.value}
         onLogout={signOut || (() => {})}
       />
