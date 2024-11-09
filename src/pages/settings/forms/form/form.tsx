@@ -26,6 +26,8 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   const handleSelect = (id: string, page: string, section?: string) => {
     if (id === getSelectedElement.value?.id) return;
     setSelectedElement({ id, page, section });
+    console.log('SELECTED: ', id, page, section);
+
     const pageIndex = format.value.pages.findIndex((p) => p.id === page);
     if (pageIndex >= 0) {
       setPhonePage(pageIndex);

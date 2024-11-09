@@ -1,7 +1,7 @@
 import './home.css';
 import { Layer } from '@/components/compose';
 import { Navbar, Logo } from '@/components/common';
-import { NAVBAR_MENUS } from '@/utils/constants/navbar';
+import { NAVBAR_MENUS } from '@/utils/menus';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { ModalServices } from './modal/modal.services';

@@ -13,3 +13,10 @@
     @apply text-xs font-light;
   }
 }
+
+.vx-form-attrs {
+  @apply flex flex-row flex-wrap content-center justify-between w-full p-2;
+  div {
+    @apply flex items-center;
+  }
+}

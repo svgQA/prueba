@@ -8,20 +8,11 @@ import {
 } from '../store';
 import { TargetedEvent } from 'preact/compat';
 import '../assets/index.css';
+import { IElementProps } from './interace';
 
 const ItemType = {
   QUESTION: 'question',
 };
-
-interface IElementProps {
-  question: IElement;
-  index: number;
-  page: string;
-  section?: string;
-  selected?: boolean;
-  onSelect: (id: string, page: string, section?: string) => void;
-  onDelete: (id: string, page: string, section?: string) => void;
-}
 
 export const FormElement = ({
   question,
@@ -43,7 +34,6 @@ export const FormElement = ({
   const [{ isOver }, drop] = useDrop({
     accept: ItemType.QUESTION,
     drop: (item: { index: number }) => {
-      console.log('informaciòn: ', item.index, index, page, section);
       if (item.index !== index) {
         moveElement(item.index, index, page, section);
         item.index = index;
@@ -131,7 +121,7 @@ export const FormElement = ({
 
   return (
     <>
-      <tr ref={drop} className='vx-form-question' onClick={handleSelect}>
+      <tr ref={drop} className='vx-form-question'>
         {question.type === ELEMENT_TYPE.SECTION ? (
           <td colSpan={2} className='bg-gray-200'>
             <div className='font-bold border-b py-2 border-gray-200 flex flex-row items-center'>
@@ -169,9 +159,11 @@ export const FormElement = ({
           </td>
         ) : (
           <>
+            {/* before:content-[""] before:absolute before:w-3 before:h-3 before:bg-teal-500 before:top-0 before:left-0 after:content-[""] after:absolute after:w-3 after:h-3 after:bg-teal-500 after:bottom-0 after:right-0 */}
             <td
+              onClick={handleSelect}
               class='w-9/12'
-              className={`flex flex-row ${selected ? 'border-2 border-teal-500' : ''} ${
+              className={`flex flex-row relative ${selected ? 'border-2 border-teal-500 before:content-[""] before:absolute before:w-3 before:h-3 before:bg-teal-500 before:top-0 before:left-0 after:content-[""] after:absolute after:w-3 after:h-3 after:bg-teal-500 after:bottom-0 after:right-0' : ''} ${
                 isOver ? 'bg-blue-100' : ''
               } ${isDragging ? 'opacity-50' : ''}`}
             >
@@ -200,25 +192,77 @@ export const FormElement = ({
       </tr>
       {question.type !== ELEMENT_TYPE.SECTION && (
         <tr className='vx-form-question'>
-          <div
-            className={`${selected ? 'visible py-2' : 'invisible h-0'} px-2 flex items-center justify-between flex-row`}
+          <td
+            colspan={2}
+            className={`${selected ? 'table-cell' : 'hidden'} relative`}
           >
-            <div className='flex items-center'>
-              <input
-                type='checkbox'
-                checked={question.required}
-                className='h-4 w-4'
-              />
-              <span className='ml-2'>Required</span>
+            <div className='vx-form-attrs bg-blue-200'>
+              <div>
+                <input
+                  id={`cb-required-form-${question.id}`}
+                  checked={question.required}
+                  type='checkbox'
+                  className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                />
+                <label
+                  for={`cb-required-form-${question.id}`}
+                  className='ms-2 text-sm font-medium text-gray-800 dark:text-gray-800'
+                >
+                  Required
+                </label>
+              </div>
+              <div>
+                <input
+                  id={`cb-visible-form-${question.id}`}
+                  checked={question.visible}
+                  type='checkbox'
+                  className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                />
+                <label
+                  for={`cb-visible-form-${question.id}`}
+                  className='ms-2 text-sm font-medium text-gray-800 dark:text-gray-800'
+                >
+                  Visible
+                </label>
+              </div>
+              <div>
+                <input
+                  id={`cb-disable-form-${question.id}`}
+                  checked={question.disable}
+                  type='checkbox'
+                  className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                />
+                <label
+                  for={`cb-disable-form-${question.id}`}
+                  className='ms-2 text-sm font-medium text-gray-800 dark:text-gray-800'
+                >
+                  Disable
+                </label>
+              </div>
+              <div>
+                <input
+                  id={`cb-assigned-form-${question.id}`}
+                  checked={question.assigned}
+                  type='checkbox'
+                  className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                />
+                <label
+                  for={`cb-assigned-form-${question.id}`}
+                  className='ms-2 text-sm font-medium text-gray-800 dark:text-gray-800'
+                >
+                  Administrator
+                </label>
+              </div>
             </div>
+            <div className='p-2 bg-red-200'>OTRA MIERDA</div>
             <div
-              class='bg-red-400 absolute cursor-pointer text-white w-8 h-8 rounded-md text-center -right-9'
+              class='bg-red-400 absolute cursor-pointer text-white w-8 h-8 rounded-md text-center top-1/4 -right-10 2xl:-right-12'
               onClick={handleDelete}
             >
               <span className='vox-icon vx-icon-053 size-sm' />
               <h6 className='text-2xs'>Delete</h6>
             </div>
-          </div>
+          </td>
         </tr>
       )}
     </>

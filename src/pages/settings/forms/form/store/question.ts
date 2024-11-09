@@ -2,17 +2,20 @@ import { computed, signal } from '@preact/signals';
 import shortUUID from 'short-uuid';
 import { ELEMENT_TYPE, IElement, IFormat, IPage } from './interface.d';
 
+const getNewElement = (): IElement => ({
+  id: shortUUID.generate(),
+  label: '',
+  type: ELEMENT_TYPE.INPUT,
+  required: false,
+  visible: false,
+  disable: false,
+  assigned: false,
+});
+
 const getInitPage = (): IPage => ({
   id: shortUUID.generate(),
   label: '',
-  elements: [
-    {
-      id: shortUUID.generate(),
-      label: '',
-      type: ELEMENT_TYPE.INPUT,
-      required: false,
-    },
-  ],
+  elements: [getNewElement()],
 });
 
 export const format = signal<IFormat>({
@@ -51,15 +54,7 @@ export const addElement = (page: string, section?: string) => {
               if (el.id === section) {
                 return {
                   ...el,
-                  elements: [
-                    ...(el.elements || []),
-                    {
-                      id: shortUUID.generate(),
-                      label: '',
-                      type: ELEMENT_TYPE.INPUT,
-                      required: false,
-                    },
-                  ],
+                  elements: [...(el.elements || []), getNewElement()],
                 };
               }
               return el;
@@ -68,15 +63,7 @@ export const addElement = (page: string, section?: string) => {
         }
         return {
           ...p,
-          elements: [
-            ...p.elements,
-            {
-              id: shortUUID.generate(),
-              label: '',
-              type: ELEMENT_TYPE.INPUT,
-              required: false,
-            },
-          ],
+          elements: [...p.elements, getNewElement()],
         };
       }
       return p;
@@ -98,14 +85,7 @@ export const addSection = (page: string) => {
               label: '',
               type: ELEMENT_TYPE.SECTION,
               required: false,
-              elements: [
-                {
-                  id: shortUUID.generate(),
-                  label: '',
-                  type: ELEMENT_TYPE.INPUT,
-                  required: false,
-                },
-              ],
+              elements: [getNewElement()],
             },
           ],
         };

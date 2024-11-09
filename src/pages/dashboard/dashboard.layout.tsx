@@ -5,12 +5,8 @@ import { Route, Router, Switch } from 'wouter';
 /** ***********************************************************************
  * UTILS
  ** ***********************************************************************/
-import {
-  PAGES_LIST,
-  PAGES_LIST_ROUTER,
-  SIDEBAR_MENUS,
-  MODAL_SIDEBAR_MENUS,
-} from '@/utils/constants';
+import { MODAL_SIDEBAR_MENUS, SIDEBAR_MENUS } from '@/utils/menus';
+import { PAGES_LIST, PAGES_LIST_ROUTER } from '@/utils/routing';
 
 /** ***********************************************************************
  * COMPONENTS
@@ -89,6 +85,7 @@ import {
 // import { hasUserTenant, useUserStore } from '@/store/slices';
 import { BaseService } from '@/utils/network';
 import { IconsPage, OnBordingPage } from '../globals';
+
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
 

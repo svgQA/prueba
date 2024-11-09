@@ -21,10 +21,10 @@ export const CardElement = ({
         );
       // case 'area':
       //   return <textarea disabled className='w-full border rounded p-1' />;
-      case ELEMENT_TYPE.NUMBER:
-        return (
-          <input type='number' disabled className='w-full border rounded p-1' />
-        );
+      // case ELEMENT_TYPE.NUMBER:
+      //   return (
+      //     <input type='number' disabled className='w-full border rounded p-1' />
+      //   );
       // case 'checkbox':
       //   return <input type='checkbox' disabled className='border rounded' />;
       // case ELEMENT_TYPE:

@@ -1,8 +1,20 @@
 export enum ELEMENT_TYPE {
-  DROPDOWN,
+  TITLE,
+  PARAGRAPH,
   INPUT,
-  NUMBER,
+  TEXT_AREA,
+  NUMBER_INPUT,
+  DROPDOWN,
+  RADIO_BUTTON,
+  CHECK_BOX,
+  SWITCH,
   DATE,
+  RATING,
+  IMAGE,
+  SIGNATURE,
+  QR,
+  AUDIO,
+  CALCULATE,
   SECTION,
 }
 
@@ -27,11 +39,11 @@ export interface IElement extends IBase {
   type: ELEMENT_TYPE; // SECTION
 
   // ATTRS
-  required: boolean;
-  // visible: boolean;
-  // disable?: boolean;
+  required?: boolean;
+  visible?: boolean;
+  disable?: boolean;
 
-  // assigned?: string; // Para ver si este campo es de alguien administrativo
+  assigned?: boolean;
   // regex?: string; // INPUT
   // size?: number; // Text Area, Image.
   // maxNumberFiles?: number; // Cantiadad de imagenes
