@@ -1,5 +1,4 @@
 .vx-form-question {
-  border-width: 0.2px;
   td {
     @apply py-2;
   }

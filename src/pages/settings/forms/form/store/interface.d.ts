@@ -1,22 +1,4 @@
-export enum ELEMENT_TYPE {
-  TITLE,
-  PARAGRAPH,
-  INPUT,
-  TEXT_AREA,
-  NUMBER_INPUT,
-  DROPDOWN,
-  RADIO_BUTTON,
-  CHECK_BOX,
-  SWITCH,
-  DATE,
-  RATING,
-  IMAGE,
-  SIGNATURE,
-  QR,
-  AUDIO,
-  CALCULATE,
-  SECTION,
-}
+import { ELEMENT_TYPE } from './types';
 
 interface IBase {
   id: string;
@@ -44,17 +26,18 @@ export interface IElement extends IBase {
   disable?: boolean;
 
   assigned?: boolean;
-  // regex?: string; // INPUT
-  // size?: number; // Text Area, Image.
-  // maxNumberFiles?: number; // Cantiadad de imagenes
-  // default?: any;
+  regex?: string; // INPUT
+  size?: number; // Text Area, Image.
+  maxNumberFiles?: number; // Cantiadad de imagenes
+  default?: any;
+  min?: number;
+  max?: number;
 
+  // options?: number;
   // options?: IOption[]; // para un dropdown, selector, checkbox, switch
-
   // conditions?: ICondition[];
-  // parent?: string; // le asigno el valor de los hijos
-  // ATTRS
 
+  parent?: string; // le asigno el valor de los hijos
   elements?: IElement[]; // Optional nested elements for sections
 }
 

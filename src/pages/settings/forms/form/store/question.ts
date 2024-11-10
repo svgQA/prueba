@@ -1,11 +1,12 @@
 import { computed, signal } from '@preact/signals';
 import shortUUID from 'short-uuid';
-import { ELEMENT_TYPE, IElement, IFormat, IPage } from './interface.d';
+import { IElement, IFormat, IPage } from './interface.d';
+import { ELEMENT_TYPE } from './types';
 
-const getNewElement = (): IElement => ({
+const getNewElement = (type?: ELEMENT_TYPE): IElement => ({
   id: shortUUID.generate(),
   label: '',
-  type: ELEMENT_TYPE.INPUT,
+  type: type || ELEMENT_TYPE.INPUT,
   required: false,
   visible: false,
   disable: false,

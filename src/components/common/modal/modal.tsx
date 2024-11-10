@@ -39,7 +39,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
                 onClick={toggleExpand}
                 type='button'
                 rounded
-                icon='gateway'
+                icon='105'
               ></Button>
               <Button
                 id='setting-close'
@@ -47,7 +47,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
                 onClick={onClose}
                 type='button'
                 rounded
-                icon='logo'
+                icon='192'
               ></Button>
             </div>
           </div>

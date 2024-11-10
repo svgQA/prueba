@@ -26,8 +26,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   const handleSelect = (id: string, page: string, section?: string) => {
     if (id === getSelectedElement.value?.id) return;
     setSelectedElement({ id, page, section });
-    console.log('SELECTED: ', id, page, section);
-
     const pageIndex = format.value.pages.findIndex((p) => p.id === page);
     if (pageIndex >= 0) {
       setPhonePage(pageIndex);
@@ -78,7 +76,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             <div className='w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer'>
               <span className='vx-icon vx-upload text-gray-400 text-2xl' />
             </div>
-            <div className='flex-1'>
+            <div className='flex-1 ml-4'>
               <input
                 type='text'
                 className='w-full text-2xl font-bold mb-2 p-2 border border-gray-200 rounded'

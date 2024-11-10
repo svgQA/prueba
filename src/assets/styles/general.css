@@ -49,6 +49,8 @@
   border-radius: 20px;
 }
 
-input {
+input,
+textarea {
   background-color: transparent !important;
+  outline: none;
 }

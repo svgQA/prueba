@@ -12,7 +12,7 @@ const Icon = memo(({ name, number }: { name: string; number: string }) => (
   </div>
 ));
 
-export const IconsPage = () => {
+export const IconsModal = () => {
   const [copiedIcon, setCopiedIcon] = useState<string | null>(null);
 
   const copyToClipboard = useCallback((iconName: string) => {
@@ -44,7 +44,7 @@ export const IconsPage = () => {
         <span className='vx-icon vx-users'></span> {getStatusIconsPage.value}
       </button>
       <div
-        className={`${getStatusIconsPage.value ? 'invisible' : 'visible'} z-20 absolute w-screen h-full bg-gray-600 bg-opacity-95 top-0 flex justify-center items-center`}
+        className={`${getStatusIconsPage.value ? 'visible' : 'invisible'} z-20 absolute w-screen h-full bg-gray-600 bg-opacity-95 top-0 flex justify-center items-center`}
       >
         <div
           className='bg-zinc-50 w-11/12 h-5/6 overflow-y-scroll rounded-md shadow-md text-black flex flex-row flex-wrap gap-x-0.5 gap-y-0 p-3 relative vox-scroll-design'
