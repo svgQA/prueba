@@ -9,8 +9,13 @@ span.vox-icon {
   @apply text-b-dark dark:text-primary;
 }
 
+span.vx-icon {
+  font-family: vox-icons;
+  font-size: 1.5em;
+}
+
 .bg-primary,
-.bg-scondary,
+.bg-secondary,
 .bg-ternary,
 .bg-error {
   @apply text-t-dark;
@@ -19,11 +24,13 @@ span.vox-icon {
   }
 }
 
-span.vox-icon.size-sm {
+span.vox-icon.size-sm,
+span.vx-icon.size-sm {
   font-size: 1em;
 }
 
-span.vox-icon.size-md {
+span.vox-icon.size-md,
+span.vx-icon.size-md {
   font-size: 1.5em;
 }
 

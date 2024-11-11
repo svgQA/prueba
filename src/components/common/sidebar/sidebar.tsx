@@ -96,7 +96,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
           <a className='cursor-pointer'>
             <ButtonMenu name='vx-company-button' label='company' icon='281' />
           </a>
-          <div className='absolute left-full bottom-0 hidden group-hover:block shadow-xl rounded p-2 w-52 border'>
+          <div className='absolute left-full bottom-0 hidden group-hover:block shadow-xl rounded p-2 w-52 min-h-20 border-2 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light'>
             {companies.map((company) => (
               <div
                 key={company.id}

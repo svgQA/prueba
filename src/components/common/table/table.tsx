@@ -79,7 +79,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
             onClick={() => setSetting((prev) => !prev)}
           />
           <div
-            className={`${settings ? 'visible' : 'invisible'} absolute right-2 top-12 rounded-lg shadow-lg p-4 z-30`}
+            className={`${settings ? 'visible' : 'invisible'} absolute right-2 top-12 rounded-lg shadow-lg p-4 z-30 bg-b-light border-2 dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
           >
             {table.getAllLeafColumns().map((column) => {
               return (
@@ -90,7 +90,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
                   <div>
                     {column.getCanPin() && (
                       <span
-                        className={`${column.getIsPinned() ? 'poner text color' : 'poner text color'} vox-icon vx-icon-305 px-2 py-1 size-sm`}
+                        className={`vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'}`}
                         onClick={() =>
                           column.pin(column.getIsPinned() ? false : 'left')
                         }
@@ -180,11 +180,11 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
         </table>
       </div>
       {/* Pagination controls */}
-      <div className='absolute flex justify-center gap-1 bottom-2 right-[43%] p-2 border-2 rounded-md shadow-sm z-10'>
+      <div className='absolute flex justify-center gap-1 bottom-2 right-[43%] p-2 border-2 rounded-md shadow-sm z-10 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light'>
         <button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className='px-3 py-1 rounded'
+          className='px-3 py-1 rounded text-t-light dark:text-t-dark'
         >
           PREV
         </button>
@@ -192,7 +192,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
           <button
             key={index}
             onClick={() => table.setPageIndex(page)}
-            className={`px-3 py-1 rounded ${
+            className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${
               table.getState().pagination.pageIndex === page ? 'font-bold' : ''
             }`}
           >
@@ -206,7 +206,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
         <button
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className='px-3 py-1 rounded'
+          className='px-3 py-1 rounded text-t-light dark:text-t-dark'
         >
           NEXT
         </button>
