@@ -1,4 +1,3 @@
-// modal.price.card.tsx
 import { FunctionComponent } from 'preact/compat';
 import { PlanData } from './modal.price.data';
 
@@ -25,14 +24,14 @@ export const PriceCard: FunctionComponent<PriceCardProps> = ({ plan }) => {
               ${plan.annualPrice} COP /año
             </span>
           </div>
-          {plan.semiannualPrice && (
-            <div className='flex justify-between items-center border-t pt-4'>
-              <span className='text-1xl text-gray-600'>Semestral</span>
-              <span className='text-2xl font-bold text-gray-800'>
-                ${plan.semiannualPrice} COP /semestre
-              </span>
-            </div>
-          )}
+          <div
+            className={`flex justify-between items-center border-t pt-4 ${plan.semiannualPrice ? 'visible' : 'invisible'}`}
+          >
+            <span className='text-1xl text-gray-600'>Semestral</span>
+            <span className='text-2xl font-bold text-gray-800'>
+              ${plan.semiannualPrice || 0} COP /semestre
+            </span>
+          </div>
         </div>
       </div>
       <div className='bg-gray-50 p-4'>

@@ -1,7 +1,8 @@
-import { PAGES_LIST } from '@/utils';
 import { computed, signal } from '@preact/signals';
 import { navigate } from 'wouter/use-browser-location';
 import { IAuthState } from './interfaces';
+
+import { PAGES_LIST } from '@/utils/constants';
 
 export const AuthInitialState: IAuthState = {
   status: false,

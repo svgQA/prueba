@@ -1,0 +1,1527 @@
+[
+  {
+    "name": "vx-icon-001",
+    "code": "\\0108",
+    "number": "001"
+  },
+  {
+    "name": "vx-icon-002",
+    "code": "\\0109",
+    "number": "002"
+  },
+  {
+    "name": "vx-icon-003",
+    "code": "\\010A",
+    "number": "003"
+  },
+  {
+    "name": "vx-icon-004",
+    "code": "\\010B",
+    "number": "004"
+  },
+  {
+    "name": "vx-icon-005",
+    "code": "\\010C",
+    "number": "005"
+  },
+  {
+    "name": "vx-icon-006",
+    "code": "\\010D",
+    "number": "006"
+  },
+  {
+    "name": "vx-icon-007",
+    "code": "\\010E",
+    "number": "007"
+  },
+  {
+    "name": "vx-icon-008",
+    "code": "\\010F",
+    "number": "008"
+  },
+  {
+    "name": "vx-icon-009",
+    "code": "\\0110",
+    "number": "009"
+  },
+  {
+    "name": "vx-icon-010",
+    "code": "\\0111",
+    "number": "010"
+  },
+  {
+    "name": "vx-icon-011",
+    "code": "\\0112",
+    "number": "011"
+  },
+  {
+    "name": "vx-icon-012",
+    "code": "\\0113",
+    "number": "012"
+  },
+  {
+    "name": "vx-icon-013",
+    "code": "\\0114",
+    "number": "013"
+  },
+  {
+    "name": "vx-icon-014",
+    "code": "\\0115",
+    "number": "014"
+  },
+  {
+    "name": "vx-icon-015",
+    "code": "\\0116",
+    "number": "015"
+  },
+  {
+    "name": "vx-icon-016",
+    "code": "\\0117",
+    "number": "016"
+  },
+  {
+    "name": "vx-icon-017",
+    "code": "\\0118",
+    "number": "017"
+  },
+  {
+    "name": "vx-icon-018",
+    "code": "\\0119",
+    "number": "018"
+  },
+  {
+    "name": "vx-icon-019",
+    "code": "\\011A",
+    "number": "019"
+  },
+  {
+    "name": "vx-icon-020",
+    "code": "\\011B",
+    "number": "020"
+  },
+  {
+    "name": "vx-icon-021",
+    "code": "\\011C",
+    "number": "021"
+  },
+  {
+    "name": "vx-icon-022",
+    "code": "\\011D",
+    "number": "022"
+  },
+  {
+    "name": "vx-icon-023",
+    "code": "\\011E",
+    "number": "023"
+  },
+  {
+    "name": "vx-icon-024",
+    "code": "\\011F",
+    "number": "024"
+  },
+  {
+    "name": "vx-icon-025",
+    "code": "\\0120",
+    "number": "025"
+  },
+  {
+    "name": "vx-icon-026",
+    "code": "\\0121",
+    "number": "026"
+  },
+  {
+    "name": "vx-icon-027",
+    "code": "\\0122",
+    "number": "027"
+  },
+  {
+    "name": "vx-icon-028",
+    "code": "\\0123",
+    "number": "028"
+  },
+  {
+    "name": "vx-icon-029",
+    "code": "\\0124",
+    "number": "029"
+  },
+  {
+    "name": "vx-icon-030",
+    "code": "\\0125",
+    "number": "030"
+  },
+  {
+    "name": "vx-icon-031",
+    "code": "\\0126",
+    "number": "031"
+  },
+  {
+    "name": "vx-icon-032",
+    "code": "\\0127",
+    "number": "032"
+  },
+  {
+    "name": "vx-icon-033",
+    "code": "\\0128",
+    "number": "033"
+  },
+  {
+    "name": "vx-icon-034",
+    "code": "\\0129",
+    "number": "034"
+  },
+  {
+    "name": "vx-icon-035",
+    "code": "\\012A",
+    "number": "035"
+  },
+  {
+    "name": "vx-icon-036",
+    "code": "\\012B",
+    "number": "036"
+  },
+  {
+    "name": "vx-icon-037",
+    "code": "\\012C",
+    "number": "037"
+  },
+  {
+    "name": "vx-icon-038",
+    "code": "\\012D",
+    "number": "038"
+  },
+  {
+    "name": "vx-icon-039",
+    "code": "\\012E",
+    "number": "039"
+  },
+  {
+    "name": "vx-icon-040",
+    "code": "\\012F",
+    "number": "040"
+  },
+  {
+    "name": "vx-icon-041",
+    "code": "\\0130",
+    "number": "041"
+  },
+  {
+    "name": "vx-icon-042",
+    "code": "\\0131",
+    "number": "042"
+  },
+  {
+    "name": "vx-icon-043",
+    "code": "\\0132",
+    "number": "043"
+  },
+  {
+    "name": "vx-icon-044",
+    "code": "\\0133",
+    "number": "044"
+  },
+  {
+    "name": "vx-icon-045",
+    "code": "\\0134",
+    "number": "045"
+  },
+  {
+    "name": "vx-icon-046",
+    "code": "\\0135",
+    "number": "046"
+  },
+  {
+    "name": "vx-icon-047",
+    "code": "\\0136",
+    "number": "047"
+  },
+  {
+    "name": "vx-icon-048",
+    "code": "\\0137",
+    "number": "048"
+  },
+  {
+    "name": "vx-icon-049",
+    "code": "\\0138",
+    "number": "049"
+  },
+  {
+    "name": "vx-icon-050",
+    "code": "\\0139",
+    "number": "050"
+  },
+  {
+    "name": "vx-icon-051",
+    "code": "\\013A",
+    "number": "051"
+  },
+  {
+    "name": "vx-icon-052",
+    "code": "\\013B",
+    "number": "052"
+  },
+  {
+    "name": "vx-icon-053",
+    "code": "\\013C",
+    "number": "053"
+  },
+  {
+    "name": "vx-icon-054",
+    "code": "\\013D",
+    "number": "054"
+  },
+  {
+    "name": "vx-icon-055",
+    "code": "\\013E",
+    "number": "055"
+  },
+  {
+    "name": "vx-icon-056",
+    "code": "\\013F",
+    "number": "056"
+  },
+  {
+    "name": "vx-icon-057",
+    "code": "\\0140",
+    "number": "057"
+  },
+  {
+    "name": "vx-icon-058",
+    "code": "\\0141",
+    "number": "058"
+  },
+  {
+    "name": "vx-icon-059",
+    "code": "\\0142",
+    "number": "059"
+  },
+  {
+    "name": "vx-icon-060",
+    "code": "\\0143",
+    "number": "060"
+  },
+  {
+    "name": "vx-icon-061",
+    "code": "\\0144",
+    "number": "061"
+  },
+  {
+    "name": "vx-icon-062",
+    "code": "\\0145",
+    "number": "062"
+  },
+  {
+    "name": "vx-icon-063",
+    "code": "\\0146",
+    "number": "063"
+  },
+  {
+    "name": "vx-icon-064",
+    "code": "\\0147",
+    "number": "064"
+  },
+  {
+    "name": "vx-icon-065",
+    "code": "\\0148",
+    "number": "065"
+  },
+  {
+    "name": "vx-icon-066",
+    "code": "\\0149",
+    "number": "066"
+  },
+  {
+    "name": "vx-icon-067",
+    "code": "\\014A",
+    "number": "067"
+  },
+  {
+    "name": "vx-icon-068",
+    "code": "\\014B",
+    "number": "068"
+  },
+  {
+    "name": "vx-icon-069",
+    "code": "\\014C",
+    "number": "069"
+  },
+  {
+    "name": "vx-icon-070",
+    "code": "\\014D",
+    "number": "070"
+  },
+  {
+    "name": "vx-icon-071",
+    "code": "\\014E",
+    "number": "071"
+  },
+  {
+    "name": "vx-icon-072",
+    "code": "\\014F",
+    "number": "072"
+  },
+  {
+    "name": "vx-icon-073",
+    "code": "\\0150",
+    "number": "073"
+  },
+  {
+    "name": "vx-icon-074",
+    "code": "\\0151",
+    "number": "074"
+  },
+  {
+    "name": "vx-icon-075",
+    "code": "\\0152",
+    "number": "075"
+  },
+  {
+    "name": "vx-icon-076",
+    "code": "\\0153",
+    "number": "076"
+  },
+  {
+    "name": "vx-icon-077",
+    "code": "\\0154",
+    "number": "077"
+  },
+  {
+    "name": "vx-icon-078",
+    "code": "\\0155",
+    "number": "078"
+  },
+  {
+    "name": "vx-icon-079",
+    "code": "\\0156",
+    "number": "079"
+  },
+  {
+    "name": "vx-icon-080",
+    "code": "\\0157",
+    "number": "080"
+  },
+  {
+    "name": "vx-icon-081",
+    "code": "\\0158",
+    "number": "081"
+  },
+  {
+    "name": "vx-icon-082",
+    "code": "\\0159",
+    "number": "082"
+  },
+  {
+    "name": "vx-icon-083",
+    "code": "\\015A",
+    "number": "083"
+  },
+  {
+    "name": "vx-icon-084",
+    "code": "\\015B",
+    "number": "084"
+  },
+  {
+    "name": "vx-icon-085",
+    "code": "\\015C",
+    "number": "085"
+  },
+  {
+    "name": "vx-icon-086",
+    "code": "\\015D",
+    "number": "086"
+  },
+  {
+    "name": "vx-icon-087",
+    "code": "\\015E",
+    "number": "087"
+  },
+  {
+    "name": "vx-icon-088",
+    "code": "\\015F",
+    "number": "088"
+  },
+  {
+    "name": "vx-icon-089",
+    "code": "\\0160",
+    "number": "089"
+  },
+  {
+    "name": "vx-icon-090",
+    "code": "\\0161",
+    "number": "090"
+  },
+  {
+    "name": "vx-icon-091",
+    "code": "\\0162",
+    "number": "091"
+  },
+  {
+    "name": "vx-icon-092",
+    "code": "\\0163",
+    "number": "092"
+  },
+  {
+    "name": "vx-icon-093",
+    "code": "\\0164",
+    "number": "093"
+  },
+  {
+    "name": "vx-icon-094",
+    "code": "\\0165",
+    "number": "094"
+  },
+  {
+    "name": "vx-icon-095",
+    "code": "\\0166",
+    "number": "095"
+  },
+  {
+    "name": "vx-icon-096",
+    "code": "\\0167",
+    "number": "096"
+  },
+  {
+    "name": "vx-icon-097",
+    "code": "\\0168",
+    "number": "097"
+  },
+  {
+    "name": "vx-icon-098",
+    "code": "\\0169",
+    "number": "098"
+  },
+  {
+    "name": "vx-icon-099",
+    "code": "\\016A",
+    "number": "099"
+  },
+  {
+    "name": "vx-icon-100",
+    "code": "\\016B",
+    "number": "100"
+  },
+  {
+    "name": "vx-icon-101",
+    "code": "\\016C",
+    "number": "101"
+  },
+  {
+    "name": "vx-icon-102",
+    "code": "\\016D",
+    "number": "102"
+  },
+  {
+    "name": "vx-icon-103",
+    "code": "\\016E",
+    "number": "103"
+  },
+  {
+    "name": "vx-icon-104",
+    "code": "\\016F",
+    "number": "104"
+  },
+  {
+    "name": "vx-icon-105",
+    "code": "\\0170",
+    "number": "105"
+  },
+  {
+    "name": "vx-icon-106",
+    "code": "\\0171",
+    "number": "106"
+  },
+  {
+    "name": "vx-icon-107",
+    "code": "\\0172",
+    "number": "107"
+  },
+  {
+    "name": "vx-icon-108",
+    "code": "\\0173",
+    "number": "108"
+  },
+  {
+    "name": "vx-icon-109",
+    "code": "\\0174",
+    "number": "109"
+  },
+  {
+    "name": "vx-icon-110",
+    "code": "\\0175",
+    "number": "110"
+  },
+  {
+    "name": "vx-icon-111",
+    "code": "\\0176",
+    "number": "111"
+  },
+  {
+    "name": "vx-icon-112",
+    "code": "\\0177",
+    "number": "112"
+  },
+  {
+    "name": "vx-icon-113",
+    "code": "\\0178",
+    "number": "113"
+  },
+  {
+    "name": "vx-icon-114",
+    "code": "\\0179",
+    "number": "114"
+  },
+  {
+    "name": "vx-icon-115",
+    "code": "\\017A",
+    "number": "115"
+  },
+  {
+    "name": "vx-icon-116",
+    "code": "\\017B",
+    "number": "116"
+  },
+  {
+    "name": "vx-icon-117",
+    "code": "\\017C",
+    "number": "117"
+  },
+  {
+    "name": "vx-icon-118",
+    "code": "\\017D",
+    "number": "118"
+  },
+  {
+    "name": "vx-icon-119",
+    "code": "\\017E",
+    "number": "119"
+  },
+  {
+    "name": "vx-icon-120",
+    "code": "\\017F",
+    "number": "120"
+  },
+  {
+    "name": "vx-icon-121",
+    "code": "\\0180",
+    "number": "121"
+  },
+  {
+    "name": "vx-icon-122",
+    "code": "\\0181",
+    "number": "122"
+  },
+  {
+    "name": "vx-icon-123",
+    "code": "\\0182",
+    "number": "123"
+  },
+  {
+    "name": "vx-icon-124",
+    "code": "\\0183",
+    "number": "124"
+  },
+  {
+    "name": "vx-icon-125",
+    "code": "\\0184",
+    "number": "125"
+  },
+  {
+    "name": "vx-icon-126",
+    "code": "\\0185",
+    "number": "126"
+  },
+  {
+    "name": "vx-icon-127",
+    "code": "\\0186",
+    "number": "127"
+  },
+  {
+    "name": "vx-icon-128",
+    "code": "\\0187",
+    "number": "128"
+  },
+  {
+    "name": "vx-icon-129",
+    "code": "\\0188",
+    "number": "129"
+  },
+  {
+    "name": "vx-icon-130",
+    "code": "\\0189",
+    "number": "130"
+  },
+  {
+    "name": "vx-icon-131",
+    "code": "\\018A",
+    "number": "131"
+  },
+  {
+    "name": "vx-icon-132",
+    "code": "\\018B",
+    "number": "132"
+  },
+  {
+    "name": "vx-icon-133",
+    "code": "\\018C",
+    "number": "133"
+  },
+  {
+    "name": "vx-icon-134",
+    "code": "\\018D",
+    "number": "134"
+  },
+  {
+    "name": "vx-icon-135",
+    "code": "\\018E",
+    "number": "135"
+  },
+  {
+    "name": "vx-icon-136",
+    "code": "\\018F",
+    "number": "136"
+  },
+  {
+    "name": "vx-icon-137",
+    "code": "\\0190",
+    "number": "137"
+  },
+  {
+    "name": "vx-icon-138",
+    "code": "\\0191",
+    "number": "138"
+  },
+  {
+    "name": "vx-icon-139",
+    "code": "\\0192",
+    "number": "139"
+  },
+  {
+    "name": "vx-icon-140",
+    "code": "\\0193",
+    "number": "140"
+  },
+  {
+    "name": "vx-icon-141",
+    "code": "\\0194",
+    "number": "141"
+  },
+  {
+    "name": "vx-icon-142",
+    "code": "\\0195",
+    "number": "142"
+  },
+  {
+    "name": "vx-icon-143",
+    "code": "\\0196",
+    "number": "143"
+  },
+  {
+    "name": "vx-icon-144",
+    "code": "\\0197",
+    "number": "144"
+  },
+  {
+    "name": "vx-icon-145",
+    "code": "\\0198",
+    "number": "145"
+  },
+  {
+    "name": "vx-icon-146",
+    "code": "\\0199",
+    "number": "146"
+  },
+  {
+    "name": "vx-icon-147",
+    "code": "\\019A",
+    "number": "147"
+  },
+  {
+    "name": "vx-icon-148",
+    "code": "\\019B",
+    "number": "148"
+  },
+  {
+    "name": "vx-icon-149",
+    "code": "\\019C",
+    "number": "149"
+  },
+  {
+    "name": "vx-icon-150",
+    "code": "\\019D",
+    "number": "150"
+  },
+  {
+    "name": "vx-icon-151",
+    "code": "\\019E",
+    "number": "151"
+  },
+  {
+    "name": "vx-icon-152",
+    "code": "\\019F",
+    "number": "152"
+  },
+  {
+    "name": "vx-icon-153",
+    "code": "\\01A0",
+    "number": "153"
+  },
+  {
+    "name": "vx-icon-154",
+    "code": "\\01A1",
+    "number": "154"
+  },
+  {
+    "name": "vx-icon-155",
+    "code": "\\01A2",
+    "number": "155"
+  },
+  {
+    "name": "vx-icon-156",
+    "code": "\\01A3",
+    "number": "156"
+  },
+  {
+    "name": "vx-icon-157",
+    "code": "\\01A4",
+    "number": "157"
+  },
+  {
+    "name": "vx-icon-158",
+    "code": "\\01A5",
+    "number": "158"
+  },
+  {
+    "name": "vx-icon-159",
+    "code": "\\01A6",
+    "number": "159"
+  },
+  {
+    "name": "vx-icon-160",
+    "code": "\\01A7",
+    "number": "160"
+  },
+  {
+    "name": "vx-icon-161",
+    "code": "\\01A8",
+    "number": "161"
+  },
+  {
+    "name": "vx-icon-162",
+    "code": "\\01A9",
+    "number": "162"
+  },
+  {
+    "name": "vx-icon-163",
+    "code": "\\01AA",
+    "number": "163"
+  },
+  {
+    "name": "vx-icon-164",
+    "code": "\\01AB",
+    "number": "164"
+  },
+  {
+    "name": "vx-icon-165",
+    "code": "\\01AC",
+    "number": "165"
+  },
+  {
+    "name": "vx-icon-166",
+    "code": "\\01AD",
+    "number": "166"
+  },
+  {
+    "name": "vx-icon-167",
+    "code": "\\01AE",
+    "number": "167"
+  },
+  {
+    "name": "vx-icon-168",
+    "code": "\\01AF",
+    "number": "168"
+  },
+  {
+    "name": "vx-icon-169",
+    "code": "\\01B0",
+    "number": "169"
+  },
+  {
+    "name": "vx-icon-170",
+    "code": "\\01B1",
+    "number": "170"
+  },
+  {
+    "name": "vx-icon-171",
+    "code": "\\01B2",
+    "number": "171"
+  },
+  {
+    "name": "vx-icon-172",
+    "code": "\\01B3",
+    "number": "172"
+  },
+  {
+    "name": "vx-icon-173",
+    "code": "\\01B4",
+    "number": "173"
+  },
+  {
+    "name": "vx-icon-174",
+    "code": "\\01B5",
+    "number": "174"
+  },
+  {
+    "name": "vx-icon-175",
+    "code": "\\01B6",
+    "number": "175"
+  },
+  {
+    "name": "vx-icon-176",
+    "code": "\\01B7",
+    "number": "176"
+  },
+  {
+    "name": "vx-icon-177",
+    "code": "\\01B8",
+    "number": "177"
+  },
+  {
+    "name": "vx-icon-178",
+    "code": "\\01B9",
+    "number": "178"
+  },
+  {
+    "name": "vx-icon-179",
+    "code": "\\01BA",
+    "number": "179"
+  },
+  {
+    "name": "vx-icon-180",
+    "code": "\\01BB",
+    "number": "180"
+  },
+  {
+    "name": "vx-icon-181",
+    "code": "\\01BC",
+    "number": "181"
+  },
+  {
+    "name": "vx-icon-182",
+    "code": "\\01BD",
+    "number": "182"
+  },
+  {
+    "name": "vx-icon-183",
+    "code": "\\01BE",
+    "number": "183"
+  },
+  {
+    "name": "vx-icon-184",
+    "code": "\\01BF",
+    "number": "184"
+  },
+  {
+    "name": "vx-icon-185",
+    "code": "\\01C0",
+    "number": "185"
+  },
+  {
+    "name": "vx-icon-186",
+    "code": "\\01C1",
+    "number": "186"
+  },
+  {
+    "name": "vx-icon-187",
+    "code": "\\01C2",
+    "number": "187"
+  },
+  {
+    "name": "vx-icon-188",
+    "code": "\\01C3",
+    "number": "188"
+  },
+  {
+    "name": "vx-icon-189",
+    "code": "\\01C4",
+    "number": "189"
+  },
+  {
+    "name": "vx-icon-190",
+    "code": "\\01C5",
+    "number": "190"
+  },
+  {
+    "name": "vx-icon-191",
+    "code": "\\01C6",
+    "number": "191"
+  },
+  {
+    "name": "vx-icon-192",
+    "code": "\\01C7",
+    "number": "192"
+  },
+  {
+    "name": "vx-icon-193",
+    "code": "\\01C8",
+    "number": "193"
+  },
+  {
+    "name": "vx-icon-194",
+    "code": "\\01C9",
+    "number": "194"
+  },
+  {
+    "name": "vx-icon-195",
+    "code": "\\01CA",
+    "number": "195"
+  },
+  {
+    "name": "vx-icon-196",
+    "code": "\\01CB",
+    "number": "196"
+  },
+  {
+    "name": "vx-icon-197",
+    "code": "\\01CC",
+    "number": "197"
+  },
+  {
+    "name": "vx-icon-198",
+    "code": "\\01CD",
+    "number": "198"
+  },
+  {
+    "name": "vx-icon-199",
+    "code": "\\01CE",
+    "number": "199"
+  },
+  {
+    "name": "vx-icon-200",
+    "code": "\\01CF",
+    "number": "200"
+  },
+  {
+    "name": "vx-icon-201",
+    "code": "\\01D0",
+    "number": "201"
+  },
+  {
+    "name": "vx-icon-202",
+    "code": "\\01D1",
+    "number": "202"
+  },
+  {
+    "name": "vx-icon-203",
+    "code": "\\01D2",
+    "number": "203"
+  },
+  {
+    "name": "vx-icon-204",
+    "code": "\\01D3",
+    "number": "204"
+  },
+  {
+    "name": "vx-icon-205",
+    "code": "\\01D4",
+    "number": "205"
+  },
+  {
+    "name": "vx-icon-206",
+    "code": "\\01D5",
+    "number": "206"
+  },
+  {
+    "name": "vx-icon-207",
+    "code": "\\01D6",
+    "number": "207"
+  },
+  {
+    "name": "vx-icon-208",
+    "code": "\\01D7",
+    "number": "208"
+  },
+  {
+    "name": "vx-icon-209",
+    "code": "\\01D8",
+    "number": "209"
+  },
+  {
+    "name": "vx-icon-210",
+    "code": "\\01D9",
+    "number": "210"
+  },
+  {
+    "name": "vx-icon-211",
+    "code": "\\01DA",
+    "number": "211"
+  },
+  {
+    "name": "vx-icon-212",
+    "code": "\\01DB",
+    "number": "212"
+  },
+  {
+    "name": "vx-icon-213",
+    "code": "\\01DC",
+    "number": "213"
+  },
+  {
+    "name": "vx-icon-214",
+    "code": "\\01DD",
+    "number": "214"
+  },
+  {
+    "name": "vx-icon-215",
+    "code": "\\01DE",
+    "number": "215"
+  },
+  {
+    "name": "vx-icon-216",
+    "code": "\\01DF",
+    "number": "216"
+  },
+  {
+    "name": "vx-icon-217",
+    "code": "\\01E0",
+    "number": "217"
+  },
+  {
+    "name": "vx-icon-218",
+    "code": "\\01E1",
+    "number": "218"
+  },
+  {
+    "name": "vx-icon-219",
+    "code": "\\01E2",
+    "number": "219"
+  },
+  {
+    "name": "vx-icon-220",
+    "code": "\\01E3",
+    "number": "220"
+  },
+  {
+    "name": "vx-icon-221",
+    "code": "\\01E4",
+    "number": "221"
+  },
+  {
+    "name": "vx-icon-222",
+    "code": "\\01E5",
+    "number": "222"
+  },
+  {
+    "name": "vx-icon-223",
+    "code": "\\01E6",
+    "number": "223"
+  },
+  {
+    "name": "vx-icon-224",
+    "code": "\\01E7",
+    "number": "224"
+  },
+  {
+    "name": "vx-icon-225",
+    "code": "\\01E8",
+    "number": "225"
+  },
+  {
+    "name": "vx-icon-226",
+    "code": "\\01E9",
+    "number": "226"
+  },
+  {
+    "name": "vx-icon-227",
+    "code": "\\01EA",
+    "number": "227"
+  },
+  {
+    "name": "vx-icon-228",
+    "code": "\\01EB",
+    "number": "228"
+  },
+  {
+    "name": "vx-icon-229",
+    "code": "\\01EC",
+    "number": "229"
+  },
+  {
+    "name": "vx-icon-230",
+    "code": "\\01ED",
+    "number": "230"
+  },
+  {
+    "name": "vx-icon-231",
+    "code": "\\01EE",
+    "number": "231"
+  },
+  {
+    "name": "vx-icon-232",
+    "code": "\\01EF",
+    "number": "232"
+  },
+  {
+    "name": "vx-icon-233",
+    "code": "\\01F0",
+    "number": "233"
+  },
+  {
+    "name": "vx-icon-234",
+    "code": "\\01F1",
+    "number": "234"
+  },
+  {
+    "name": "vx-icon-235",
+    "code": "\\01F2",
+    "number": "235"
+  },
+  {
+    "name": "vx-icon-236",
+    "code": "\\01F3",
+    "number": "236"
+  },
+  {
+    "name": "vx-icon-237",
+    "code": "\\01F4",
+    "number": "237"
+  },
+  {
+    "name": "vx-icon-238",
+    "code": "\\01F5",
+    "number": "238"
+  },
+  {
+    "name": "vx-icon-239",
+    "code": "\\01F6",
+    "number": "239"
+  },
+  {
+    "name": "vx-icon-240",
+    "code": "\\01F7",
+    "number": "240"
+  },
+  {
+    "name": "vx-icon-241",
+    "code": "\\01F8",
+    "number": "241"
+  },
+  {
+    "name": "vx-icon-242",
+    "code": "\\01F9",
+    "number": "242"
+  },
+  {
+    "name": "vx-icon-243",
+    "code": "\\01FA",
+    "number": "243"
+  },
+  {
+    "name": "vx-icon-244",
+    "code": "\\01FB",
+    "number": "244"
+  },
+  {
+    "name": "vx-icon-245",
+    "code": "\\01FC",
+    "number": "245"
+  },
+  {
+    "name": "vx-icon-246",
+    "code": "\\01FD",
+    "number": "246"
+  },
+  {
+    "name": "vx-icon-247",
+    "code": "\\01FE",
+    "number": "247"
+  },
+  {
+    "name": "vx-icon-248",
+    "code": "\\01FF",
+    "number": "248"
+  },
+  {
+    "name": "vx-icon-249",
+    "code": "\\0200",
+    "number": "249"
+  },
+  {
+    "name": "vx-icon-250",
+    "code": "\\0201",
+    "number": "250"
+  },
+  {
+    "name": "vx-icon-251",
+    "code": "\\0202",
+    "number": "251"
+  },
+  {
+    "name": "vx-icon-252",
+    "code": "\\0203",
+    "number": "252"
+  },
+  {
+    "name": "vx-icon-253",
+    "code": "\\0204",
+    "number": "253"
+  },
+  {
+    "name": "vx-icon-254",
+    "code": "\\0205",
+    "number": "254"
+  },
+  {
+    "name": "vx-icon-255",
+    "code": "\\0206",
+    "number": "255"
+  },
+  {
+    "name": "vx-icon-256",
+    "code": "\\0207",
+    "number": "256"
+  },
+  {
+    "name": "vx-icon-257",
+    "code": "\\0208",
+    "number": "257"
+  },
+  {
+    "name": "vx-icon-258",
+    "code": "\\0209",
+    "number": "258"
+  },
+  {
+    "name": "vx-icon-259",
+    "code": "\\020A",
+    "number": "259"
+  },
+  {
+    "name": "vx-icon-260",
+    "code": "\\020B",
+    "number": "260"
+  },
+  {
+    "name": "vx-icon-261",
+    "code": "\\020C",
+    "number": "261"
+  },
+  {
+    "name": "vx-icon-262",
+    "code": "\\020D",
+    "number": "262"
+  },
+  {
+    "name": "vx-icon-263",
+    "code": "\\020E",
+    "number": "263"
+  },
+  {
+    "name": "vx-icon-264",
+    "code": "\\020F",
+    "number": "264"
+  },
+  {
+    "name": "vx-icon-265",
+    "code": "\\0210",
+    "number": "265"
+  },
+  {
+    "name": "vx-icon-266",
+    "code": "\\0211",
+    "number": "266"
+  },
+  {
+    "name": "vx-icon-267",
+    "code": "\\0212",
+    "number": "267"
+  },
+  {
+    "name": "vx-icon-268",
+    "code": "\\0213",
+    "number": "268"
+  },
+  {
+    "name": "vx-icon-269",
+    "code": "\\0214",
+    "number": "269"
+  },
+  {
+    "name": "vx-icon-270",
+    "code": "\\0215",
+    "number": "270"
+  },
+  {
+    "name": "vx-icon-271",
+    "code": "\\0216",
+    "number": "271"
+  },
+  {
+    "name": "vx-icon-272",
+    "code": "\\0217",
+    "number": "272"
+  },
+  {
+    "name": "vx-icon-273",
+    "code": "\\0218",
+    "number": "273"
+  },
+  {
+    "name": "vx-icon-274",
+    "code": "\\0219",
+    "number": "274"
+  },
+  {
+    "name": "vx-icon-275",
+    "code": "\\021A",
+    "number": "275"
+  },
+  {
+    "name": "vx-icon-276",
+    "code": "\\021B",
+    "number": "276"
+  },
+  {
+    "name": "vx-icon-277",
+    "code": "\\021C",
+    "number": "277"
+  },
+  {
+    "name": "vx-icon-278",
+    "code": "\\021D",
+    "number": "278"
+  },
+  {
+    "name": "vx-icon-279",
+    "code": "\\021E",
+    "number": "279"
+  },
+  {
+    "name": "vx-icon-280",
+    "code": "\\021F",
+    "number": "280"
+  },
+  {
+    "name": "vx-icon-281",
+    "code": "\\0220",
+    "number": "281"
+  },
+  {
+    "name": "vx-icon-282",
+    "code": "\\0221",
+    "number": "282"
+  },
+  {
+    "name": "vx-icon-283",
+    "code": "\\0222",
+    "number": "283"
+  },
+  {
+    "name": "vx-icon-284",
+    "code": "\\0223",
+    "number": "284"
+  },
+  {
+    "name": "vx-icon-285",
+    "code": "\\0224",
+    "number": "285"
+  },
+  {
+    "name": "vx-icon-286",
+    "code": "\\0225",
+    "number": "286"
+  },
+  {
+    "name": "vx-icon-287",
+    "code": "\\0226",
+    "number": "287"
+  },
+  {
+    "name": "vx-icon-288",
+    "code": "\\0227",
+    "number": "288"
+  },
+  {
+    "name": "vx-icon-289",
+    "code": "\\0228",
+    "number": "289"
+  },
+  {
+    "name": "vx-icon-290",
+    "code": "\\0229",
+    "number": "290"
+  },
+  {
+    "name": "vx-icon-291",
+    "code": "\\022A",
+    "number": "291"
+  },
+  {
+    "name": "vx-icon-292",
+    "code": "\\022B",
+    "number": "292"
+  },
+  {
+    "name": "vx-icon-293",
+    "code": "\\022C",
+    "number": "293"
+  },
+  {
+    "name": "vx-icon-294",
+    "code": "\\022D",
+    "number": "294"
+  },
+  {
+    "name": "vx-icon-295",
+    "code": "\\022E",
+    "number": "295"
+  },
+  {
+    "name": "vx-icon-296",
+    "code": "\\022F",
+    "number": "296"
+  },
+  {
+    "name": "vx-icon-297",
+    "code": "\\0230",
+    "number": "297"
+  },
+  {
+    "name": "vx-icon-298",
+    "code": "\\0231",
+    "number": "298"
+  },
+  {
+    "name": "vx-icon-299",
+    "code": "\\0232",
+    "number": "299"
+  },
+  {
+    "name": "vx-icon-300",
+    "code": "\\0233",
+    "number": "300"
+  },
+  {
+    "name": "vx-icon-301",
+    "code": "\\0234",
+    "number": "301"
+  },
+  {
+    "name": "vx-icon-302",
+    "code": "\\0235",
+    "number": "302"
+  },
+  {
+    "name": "vx-icon-303",
+    "code": "\\0236",
+    "number": "303"
+  },
+  {
+    "name": "vx-icon-304",
+    "code": "\\0237",
+    "number": "304"
+  },
+  {
+    "name": "vx-icon-305",
+    "code": "\\0238",
+    "number": "305"
+  }
+]
