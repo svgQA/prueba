@@ -14,7 +14,6 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'preact/hooks';
 import { ITableProps } from './interface';
-import { RowExpandedContent } from './components';
 import React from 'preact/compat';
 import { Search } from '../search/search';
 
@@ -28,14 +27,18 @@ const getCommonPinningStyles = (column: Column<any>) => {
       ? '-4px 0 4px -4px gray inset'
       : undefined,
     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    // opacity: isPinned ? 0.95 : 1,
     position: isPinned ? 'sticky' : 'relative',
     width: column.getSize(),
     zIndex: isPinned ? 1 : 0,
   };
 };
 
-export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
+export const Table = <T,>({
+  data,
+  columns,
+  pageSize = 10,
+  expandable,
+}: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [settings, setSetting] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -167,10 +170,10 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
                     </td>
                   ))}
                 </tr>
-                {row.getIsExpanded() && (
+                {expandable && row.getIsExpanded() && (
                   <tr>
                     <td colSpan={row.getVisibleCells().length} className='p-4'>
-                      <RowExpandedContent row={row} />
+                      {expandable(row.original)}
                     </td>
                   </tr>
                 )}

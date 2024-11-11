@@ -38,7 +38,7 @@ export const RowExpandedContent = ({ row }: { row: any }) => {
             <strong>Compañía:</strong> {row.original.company}
           </p>
           <p>
-            <strong>Dirección:</strong> {row.original.address}
+            <strong>Dirección Prueba:</strong> {row.original.address}
           </p>
         </div>
 

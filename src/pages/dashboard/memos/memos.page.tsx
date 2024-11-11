@@ -4,6 +4,7 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { type Memo, memosData } from './utils';
 import { columns } from './components';
+import { ExpandableMemos } from '@/components/compose';
 
 export const MemosPage: FunctionComponent = () => {
   const [data, setData] = useState<Memo[]>([]);
@@ -16,7 +17,12 @@ export const MemosPage: FunctionComponent = () => {
   return (
     <Section>
       <h2 className='text-2xl font-bold m-1'>Gestión de Memos</h2>
-      <Table<Memo> data={data} columns={columns} pageSize={16} />
+      <Table<Memo>
+        data={data}
+        columns={columns}
+        pageSize={16}
+        expandable={(row: Memo) => <ExpandableMemos row={row} />}
+      />
     </Section>
   );
 };
