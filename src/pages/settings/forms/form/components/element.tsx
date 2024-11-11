@@ -141,15 +141,19 @@ export const FormElement = ({
     <>
       <tr ref={drop} className='vx-form-question relative'>
         {question.type === ELEMENT_TYPE.SECTION ? (
-          <td colSpan={2} className='bg-gray-200'>
-            <div className='font-bold border-b py-2 border-gray-200 flex flex-row items-center'>
+          <td
+            colSpan={2}
+            onClick={handleSelect}
+            className={`${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`}
+          >
+            <div className='flex flex-row items-center'>
               <span
                 ref={(node) => ref(drop(node))}
-                className='cursor-move vx-icon vx-apps size-sm mx-2'
+                className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
               ></span>
               <input
                 type='text'
-                className='w-full text-xl font-bold border border-gray-200 rounded'
+                className='w-full rounded'
                 placeholder='Enter Section Title'
                 name='label'
                 data-sectionid={question.id}
@@ -158,54 +162,42 @@ export const FormElement = ({
                 onChange={handleSectionInputChange}
               />
             </div>
-            <table className='w-full'>
-              <tbody>
-                {question.elements?.map((element, index) => (
-                  <FormElement
-                    key={element.id}
-                    question={element}
-                    page={page}
-                    index={index}
-                    section={question.id}
-                    selected={validateSelectedElement(element.id)}
-                    onSelect={onSelect}
-                    onDelete={onDelete}
-                  />
-                ))}
-              </tbody>
-            </table>
           </td>
         ) : (
           <>
             {/* INPUT: title element */}
             <td
               onClick={handleSelect}
-              class='w-9/12'
-              className={`flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1' : ''} ${
-                isOver ? 'bg-blue-100' : ''
-              } ${isDragging ? 'opacity-50' : ''}`}
+              className={`flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
+                isOver ? 'bg-ternary text-t-dark' : ''
+              } ${isDragging ? 'opacity-70' : ''}`}
             >
-              <span
-                ref={(node) => ref(drop(node))}
-                className='cursor-move vx-icon vx-apps size-sm mx-2'
-              ></span>
-              <input
-                type='text'
-                className='w-full'
-                name='label'
-                placeholder='Enter Element Title'
-                value={question.label}
-                onChange={handleInputChange}
-              />
+              {question.section && (
+                <div className=' mx-3 w-1 h-6 rounded-lg bg-primary dark:bg-b-light-dark'></div>
+              )}
+              <div className='flex flex-row'>
+                <span
+                  ref={(node) => ref(drop(node))}
+                  className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
+                ></span>
+                <input
+                  type='text'
+                  className='w-full'
+                  name='label'
+                  placeholder='Enter Element Title'
+                  value={question.label}
+                  onChange={handleInputChange}
+                />
+              </div>
             </td>
             {/* DROPDOW: select type */}
-            <td onClick={handleSelect} className='w-3/12 pr-2'>
-              <div className='relative w-full'>
+            <td onClick={handleSelect} className='w-3/12'>
+              <div className='w-full mx-2'>
                 <select
                   value={question.type}
                   name='type'
                   onChange={handleInputChange}
-                  className='w-full px-3 pr-8 border rounded-md text-sm transition duration-150 ease-in-out appearance-none'
+                  className='w-full rounded-md text-sm transition duration-150 ease-in-out appearance-none'
                 >
                   {ELEMENT_TYPE_VALUES.map((element) => (
                     <option
@@ -221,99 +213,98 @@ export const FormElement = ({
           </>
         )}
       </tr>
-      {question.type !== ELEMENT_TYPE.SECTION && (
-        <tr className='vx-form-question vx-form-attrs relative'>
+
+      <tr className='vx-form-question vx-form-attrs relative'>
+        <td
+          colspan={2}
+          className={`${selected ? 'table-cell' : 'hidden'} relative`}
+        >
+          {/* CHECKBOX: required, visible, disable, administrator */}
           {question.type !== ELEMENT_TYPE.TITLE && (
-            <td
-              colspan={2}
-              className={`${selected ? 'table-cell' : 'hidden'} relative`}
-            >
-              {/* CHECKBOX: required, visible, disable, administrator */}
-              {question.type !== ELEMENT_TYPE.PARAGRAPH && (
-                <div className='vx-form-attrs-checkbox'>
+            <div className='vx-form-attrs-checkbox'>
+              <div>
+                <input
+                  id={`cb-required-form-${question.id}`}
+                  checked={question.required}
+                  type='checkbox'
+                  name='required'
+                  onChange={handleInputChange}
+                  className='w-4 h-4 rounded'
+                />
+                <label
+                  for={`cb-required-form-${question.id}`}
+                  className='ms-2 text-sm font-medium'
+                >
+                  Required
+                </label>
+              </div>
+              <div>
+                <input
+                  id={`cb-visible-form-${question.id}`}
+                  checked={question.visible}
+                  type='checkbox'
+                  name='visible'
+                  onChange={handleInputChange}
+                  className='w-4 h-4 text-blue-600'
+                />
+                <label
+                  for={`cb-visible-form-${question.id}`}
+                  className='ms-2 text-sm font-medium'
+                >
+                  Visible
+                </label>
+              </div>
+              {question.type !== ELEMENT_TYPE.IMAGE &&
+                question.type !== ELEMENT_TYPE.SIGNATURE && (
                   <div>
                     <input
-                      id={`cb-required-form-${question.id}`}
-                      checked={question.required}
+                      id={`cb-disable-form-${question.id}`}
+                      checked={question.disable}
                       type='checkbox'
-                      name='required'
-                      onChange={handleInputChange}
-                      className='w-4 h-4 rounded'
-                    />
-                    <label
-                      for={`cb-required-form-${question.id}`}
-                      className='ms-2 text-sm font-medium'
-                    >
-                      Required
-                    </label>
-                  </div>
-                  <div>
-                    <input
-                      id={`cb-visible-form-${question.id}`}
-                      checked={question.visible}
-                      type='checkbox'
-                      name='visible'
-                      onChange={handleInputChange}
-                      className='w-4 h-4 text-blue-600'
-                    />
-                    <label
-                      for={`cb-visible-form-${question.id}`}
-                      className='ms-2 text-sm font-medium'
-                    >
-                      Visible
-                    </label>
-                  </div>
-                  {question.type !== ELEMENT_TYPE.IMAGE &&
-                    question.type !== ELEMENT_TYPE.SIGNATURE && (
-                      <div>
-                        <input
-                          id={`cb-disable-form-${question.id}`}
-                          checked={question.disable}
-                          type='checkbox'
-                          name='disable'
-                          onChange={handleInputChange}
-                          className='w-4 h-4'
-                        />
-                        <label
-                          for={`cb-disable-form-${question.id}`}
-                          className='ms-2 text-sm font-medium'
-                        >
-                          Disable
-                        </label>
-                      </div>
-                    )}
-                  <div>
-                    <input
-                      id={`cb-assigned-form-${question.id}`}
-                      checked={question.assigned}
-                      type='checkbox'
-                      name='assigned'
+                      name='disable'
                       onChange={handleInputChange}
                       className='w-4 h-4'
                     />
                     <label
-                      for={`cb-assigned-form-${question.id}`}
+                      for={`cb-disable-form-${question.id}`}
                       className='ms-2 text-sm font-medium'
                     >
-                      Administrator
+                      Disable
                     </label>
                   </div>
-                </div>
-              )}
+                )}
+              <div>
+                <input
+                  id={`cb-assigned-form-${question.id}`}
+                  checked={question.assigned}
+                  type='checkbox'
+                  name='assigned'
+                  onChange={handleInputChange}
+                  className='w-4 h-4'
+                />
+                <label
+                  for={`cb-assigned-form-${question.id}`}
+                  className='ms-2 text-sm font-medium'
+                >
+                  Administrator
+                </label>
+              </div>
+            </div>
+          )}
 
-              {/* INPUT: description, default value, regex, size, number files */}
-              <div className='vx-form-attrs-fields'>
-                <div className='col-span-2'>
-                  <textarea
-                    className='w-full min-h-6 vox-scroll-design'
-                    name='description'
-                    value={question.description}
-                    onChange={handleInputChange}
-                    placeholder='Description'
-                  />
-                </div>
+          {/* INPUT: description, default value, regex, size, number files */}
+          <div className='vx-form-attrs-fields'>
+            <div className='col-span-2'>
+              <textarea
+                className='w-full min-h-6 vox-scroll-design'
+                name='description'
+                value={question.description}
+                onChange={handleInputChange}
+                placeholder='Description'
+              />
+            </div>
 
-                {/* <div className='col-span-2 py-1'>
+            {/* <div className='col-span-2 py-1'>
                 <input
                   className='w-full'
                   type='number'
@@ -323,180 +314,185 @@ export const FormElement = ({
                 />
               </div> */}
 
-                {question.type === ELEMENT_TYPE.INPUT && (
-                  <div>
-                    <label className='block text-sm font-medium mb-1'>
-                      Regex
-                    </label>
-                    <div className='relative'>
-                      <select
-                        className='w-full text-sm'
-                        name='regex'
-                        value={question.regex}
-                        onChange={handleInputChange}
-                      >
-                        <option value=''>Select a regex pattern</option>
-                        <option value='^[A-Za-z0-9]+$'>
-                          Alphanumeric only
-                        </option>
-                        <option value='^[A-Za-z]+$'>Letters only</option>
-                        <option value='^[0-9]+$'>Numbers only</option>
-                        <option value='^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'>
-                          Email
-                        </option>
-                        <option value='^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$'>
-                          Phone number
-                        </option>
-                        <option value='^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$'>
-                          URL
-                        </option>
-                        {/* <option value='custom'>Custom Regex...</option> */}
-                      </select>
-                    </div>
-                  </div>
-                )}
+            {question.type === ELEMENT_TYPE.INPUT && (
+              <div>
+                <label className='block text-sm font-medium mb-1'>Regex</label>
+                <div className='relative'>
+                  <select
+                    className='w-full text-sm'
+                    name='regex'
+                    value={question.regex}
+                    onChange={handleInputChange}
+                  >
+                    <option value=''>Select a regex pattern</option>
+                    <option value='^[A-Za-z0-9]+$'>Alphanumeric only</option>
+                    <option value='^[A-Za-z]+$'>Letters only</option>
+                    <option value='^[0-9]+$'>Numbers only</option>
+                    <option value='^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'>
+                      Email
+                    </option>
+                    <option value='^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$'>
+                      Phone number
+                    </option>
+                    <option value='^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$'>
+                      URL
+                    </option>
+                    {/* <option value='custom'>Custom Regex...</option> */}
+                  </select>
+                </div>
+              </div>
+            )}
 
-                {(question.type === ELEMENT_TYPE.TIME ||
-                  question.type === ELEMENT_TYPE.DATE) && (
-                  <>
-                    <div>
-                      <label className='block text-sm font-medium mb-1'>
-                        Minimum
-                      </label>
-                      <div className='relative'>
-                        <input
-                          className='w-full'
-                          name='min'
-                          type={
-                            question.type === ELEMENT_TYPE.TIME
-                              ? 'time'
-                              : 'date'
-                          }
-                          value={question.min}
-                          placeholder={`Min ${question.type === ELEMENT_TYPE.TIME ? 'Time' : 'Date'}`}
-                          onChange={handleInputChange}
-                        />
-                        {/* <span
+            {(question.type === ELEMENT_TYPE.TIME ||
+              question.type === ELEMENT_TYPE.DATE) && (
+              <>
+                <div>
+                  <label className='block text-sm font-medium mb-1'>
+                    Minimum
+                  </label>
+                  <div className='relative'>
+                    <input
+                      className='w-full'
+                      name='min'
+                      type={
+                        question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'
+                      }
+                      value={question.min}
+                      placeholder={`Min ${question.type === ELEMENT_TYPE.TIME ? 'Time' : 'Date'}`}
+                      onChange={handleInputChange}
+                    />
+                    {/* <span
                           className={`absolute vox-icon size-sm inset-y-0 right-5 ${question.type === ELEMENT_TYPE.TIME ? 'vx-icon-049' : 'vx-icon-025'}`}
                         /> */}
-                      </div>
-                    </div>
-                    <div>
-                      <label className='block text-sm font-medium mb-1'>
-                        Maximum
-                      </label>
-                      <div className='relative'>
-                        <input
-                          className='w-full'
-                          name='max'
-                          type={
-                            question.type === ELEMENT_TYPE.TIME
-                              ? 'time'
-                              : 'date'
-                          }
-                          value={question.max}
-                          placeholder={`Max ${question.type === ELEMENT_TYPE.TIME ? 'Time' : 'Date'}`}
-                          onChange={handleInputChange}
-                        />
-                        {/* <span
+                  </div>
+                </div>
+                <div>
+                  <label className='block text-sm font-medium mb-1'>
+                    Maximum
+                  </label>
+                  <div className='relative'>
+                    <input
+                      className='w-full'
+                      name='max'
+                      type={
+                        question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'
+                      }
+                      value={question.max}
+                      placeholder={`Max ${question.type === ELEMENT_TYPE.TIME ? 'Time' : 'Date'}`}
+                      onChange={handleInputChange}
+                    />
+                    {/* <span
                           className={`absolute vox-icon size-sm inset-y-0 right-5 ${question.type === ELEMENT_TYPE.TIME ? 'vx-icon-049' : 'vx-icon-025'}`}
                         /> */}
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {(question.type === ELEMENT_TYPE.NUMBER_INPUT ||
-                  question.type === ELEMENT_TYPE.RATING) && (
-                  <div>
-                    <label className='block text-sm font-medium mb-1'>
-                      Minimum
-                    </label>
-                    <div className='relative'>
-                      <input
-                        className='w-full'
-                        name='min'
-                        value={question.min}
-                        placeholder='Min Length'
-                        onChange={handleInputChange}
-                      />
-                      <span className='absolute vox-icon size-sm inset-y-0 right-0 vx-icon-001' />
-                    </div>
                   </div>
-                )}
+                </div>
+              </>
+            )}
 
-                {(question.type === ELEMENT_TYPE.INPUT ||
-                  question.type === ELEMENT_TYPE.NUMBER_INPUT ||
-                  question.type === ELEMENT_TYPE.TEXT_AREA ||
-                  question.type === ELEMENT_TYPE.RATING) && (
-                  <div>
-                    <label className='block text-sm font-medium mb-1'>
-                      Maximum
-                    </label>
-                    <div className='relative'>
-                      <input
-                        className='w-full'
-                        name='max'
-                        value={question.min}
-                        placeholder='Max Length'
-                        onChange={handleInputChange}
-                      />
-                      <span className='absolute vox-icon size-sm inset-y-0 right-0 vx-icon-002' />
-                    </div>
-                  </div>
-                )}
-
-                {(question.type === ELEMENT_TYPE.IMAGE ||
-                  question.type === ELEMENT_TYPE.FILES ||
-                  question.type === ELEMENT_TYPE.AUDIO) && (
-                  <div>
-                    <label className='block text-sm font-medium mb-1'>
-                      Size
-                    </label>
-                    <div className='relative'>
-                      <input
-                        className='w-full'
-                        type='number'
-                        name='size'
-                        value={question.size}
-                        placeholder='Size'
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {(question.type === ELEMENT_TYPE.IMAGE ||
-                  question.type === ELEMENT_TYPE.FILES) && (
-                  <div>
-                    <label className='block text-sm font-medium mb-1'>
-                      Number Files
-                    </label>
-                    <div className='relative'>
-                      <input
-                        className='w-full'
-                        type='number'
-                        name='maxNumberFiles'
-                        value={question.maxNumberFiles}
-                        placeholder='Number Files'
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                )}
+            {(question.type === ELEMENT_TYPE.NUMBER_INPUT ||
+              question.type === ELEMENT_TYPE.RATING) && (
+              <div>
+                <label className='block text-sm font-medium mb-1'>
+                  Minimum
+                </label>
+                <div className='relative'>
+                  <input
+                    className='w-full'
+                    name='min'
+                    value={question.min}
+                    placeholder='Min Length'
+                    onChange={handleInputChange}
+                  />
+                  <span className='absolute vox-icon size-sm inset-y-0 right-0 vx-icon-001' />
+                </div>
               </div>
+            )}
 
-              {/* BUTTON: delete */}
-              <div
-                class='-right-9 2xl:-right-11 bg-red-500 absolute cursor-pointer text-white w-8 h-8 rounded-md text-center top-1/4'
-                onClick={handleDelete}
-              >
-                <span className='vox-icon vx-icon-053 size-sm' />
-                <h6 className='text-2xs'>Delete</h6>
+            {(question.type === ELEMENT_TYPE.INPUT ||
+              question.type === ELEMENT_TYPE.NUMBER_INPUT ||
+              question.type === ELEMENT_TYPE.TEXT_AREA ||
+              question.type === ELEMENT_TYPE.RATING) && (
+              <div>
+                <label className='block text-sm font-medium mb-1'>
+                  Maximum
+                </label>
+                <div className='relative'>
+                  <input
+                    className='w-full'
+                    name='max'
+                    value={question.min}
+                    placeholder='Max Length'
+                    onChange={handleInputChange}
+                  />
+                  <span className='absolute vox-icon size-sm inset-y-0 right-0 vx-icon-002' />
+                </div>
               </div>
-            </td>
-          )}
-        </tr>
+            )}
+
+            {(question.type === ELEMENT_TYPE.IMAGE ||
+              question.type === ELEMENT_TYPE.FILES ||
+              question.type === ELEMENT_TYPE.AUDIO) && (
+              <div>
+                <label className='block text-sm font-medium mb-1'>Size</label>
+                <div className='relative'>
+                  <input
+                    className='w-full'
+                    type='number'
+                    name='size'
+                    value={question.size}
+                    placeholder='Size'
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            )}
+
+            {(question.type === ELEMENT_TYPE.IMAGE ||
+              question.type === ELEMENT_TYPE.FILES) && (
+              <div>
+                <label className='block text-sm font-medium mb-1'>
+                  Number Files
+                </label>
+                <div className='relative'>
+                  <input
+                    className='w-full'
+                    type='number'
+                    name='maxNumberFiles'
+                    value={question.maxNumberFiles}
+                    placeholder='Number Files'
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* BUTTON: delete */}
+          <div
+            class='-right-9 2xl:-right-11 absolute cursor-pointer w-8 h-8 rounded-md text-center top-1/4 border-2 border-b-light-dark dark:border-b-dark-light'
+            onClick={handleDelete}
+          >
+            <span className='vox-icon vx-icon-053 size-sm' />
+            {/* <h6 className='text-2xs'>Delete</h6> */}
+          </div>
+        </td>
+      </tr>
+
+      {question.type === ELEMENT_TYPE.SECTION && (
+        <>
+          {question.elements?.map((element, index) => (
+            <FormElement
+              key={element.id}
+              question={element}
+              page={page}
+              index={index}
+              section={question.id}
+              selected={validateSelectedElement(element.id)}
+              onSelect={onSelect}
+              onDelete={onDelete}
+            />
+          ))}
+        </>
       )}
     </>
   );

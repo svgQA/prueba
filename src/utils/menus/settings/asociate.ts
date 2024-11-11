@@ -5,14 +5,14 @@ export const MODAL_SETTING_ASSOCIATE: IModalSidebarMenu = {
   label: 'Asociados',
   menus: [
     {
-      icon: 'apps',
-      label: 'Lista',
+      icon: '096',
+      label: 'Listas',
       description: 'Devices',
       to: PAGES_LIST_ROUTER.dashboard.asociate.list.to,
       id: 'lists',
     },
     {
-      icon: 'settings',
+      icon: '168',
       label: 'recursos',
       description: 'Devices',
       to: PAGES_LIST_ROUTER.dashboard.asociate.resource.to,

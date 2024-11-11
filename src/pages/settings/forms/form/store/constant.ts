@@ -5,10 +5,10 @@ export const ELEMENT_TYPE_VALUES = [
     value: ELEMENT_TYPE.TITLE,
     label: 'Title',
   },
-  {
-    value: ELEMENT_TYPE.PARAGRAPH,
-    label: 'Paragraph',
-  },
+  // {
+  //   value: ELEMENT_TYPE.PARAGRAPH,
+  //   label: 'Paragraph',
+  // },
   {
     value: ELEMENT_TYPE.INPUT,
     label: 'Input',

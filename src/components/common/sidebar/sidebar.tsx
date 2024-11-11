@@ -53,7 +53,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
     <nav
       id={`${id}-nav`}
       name={name}
-      className='fixed left-0 top-0 transform px-1 flex flex-col justify-between h-screen'
+      className='fixed left-0 top-0 transform px-1 flex flex-col justify-between h-screen border-2 border-b-light-dark dark:border-b-dark-light'
     >
       {onHomeHandler && (
         <ul>

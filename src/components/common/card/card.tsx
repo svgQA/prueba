@@ -11,7 +11,7 @@ export const Card: FunctionComponent<ICardProps> = ({
     <div
       id={id}
       name={name}
-      className={`${color} capitalize rounded-lg p-2 m-1 h-fit`}
+      className={`${color} capitalize rounded-lg p-2 m-1 h-fit bg-b-light-dark dark:bg-b-dark-light`}
     >
       {children}
     </div>

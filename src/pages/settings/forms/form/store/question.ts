@@ -3,7 +3,7 @@ import shortUUID from 'short-uuid';
 import { IElement, IFormat, IPage } from './interface.d';
 import { ELEMENT_TYPE } from './types';
 
-const getNewElement = (type?: ELEMENT_TYPE): IElement => ({
+const getNewElement = (section?: string, type?: ELEMENT_TYPE): IElement => ({
   id: shortUUID.generate(),
   label: '',
   type: type || ELEMENT_TYPE.INPUT,
@@ -11,6 +11,7 @@ const getNewElement = (type?: ELEMENT_TYPE): IElement => ({
   visible: false,
   disable: false,
   assigned: false,
+  section,
 });
 
 const getInitPage = (): IPage => ({
@@ -55,7 +56,7 @@ export const addElement = (page: string, section?: string) => {
               if (el.id === section) {
                 return {
                   ...el,
-                  elements: [...(el.elements || []), getNewElement()],
+                  elements: [...(el.elements || []), getNewElement(section)],
                 };
               }
               return el;
@@ -77,16 +78,17 @@ export const addSection = (page: string) => {
     ...format.value,
     pages: format.value.pages.map((p: IPage) => {
       if (p.id === page) {
+        const sectionId = shortUUID.generate();
         return {
           ...p,
           elements: [
             ...p.elements,
             {
-              id: shortUUID.generate(),
+              id: sectionId,
               label: '',
               type: ELEMENT_TYPE.SECTION,
               required: false,
-              elements: [getNewElement()],
+              elements: [getNewElement(sectionId)],
             },
           ],
         };
@@ -157,24 +159,38 @@ export const moveElement = (
             elements: p.elements.map((el: IElement) => {
               if (el.id === section && el.elements) {
                 const updatedElements = [...el.elements];
-                const [movedElement] = updatedElements.splice(dragIndex, 1);
-                updatedElements.splice(hoverIndex, 0, movedElement);
-                return {
-                  ...el,
-                  elements: updatedElements,
-                };
+
+                const dragElement = updatedElements[dragIndex];
+                const hoverElement = updatedElements[hoverIndex];
+
+                if (dragElement.section === hoverElement.section) {
+                  const [movedElement] = updatedElements.splice(dragIndex, 1);
+                  updatedElements.splice(hoverIndex, 0, movedElement);
+                  return {
+                    ...el,
+                    elements: updatedElements,
+                  };
+                }
+                return el;
               }
               return el;
             }),
           };
         }
         const updatedElements = [...p.elements];
-        const [movedElement] = updatedElements.splice(dragIndex, 1);
-        updatedElements.splice(hoverIndex, 0, movedElement);
-        return {
-          ...p,
-          elements: updatedElements,
-        };
+
+        const dragElement = updatedElements[dragIndex];
+        const hoverElement = updatedElements[hoverIndex];
+
+        if (dragElement.section === hoverElement.section) {
+          const [movedElement] = updatedElements.splice(dragIndex, 1);
+          updatedElements.splice(hoverIndex, 0, movedElement);
+          return {
+            ...p,
+            elements: updatedElements,
+          };
+        }
+        return p;
       }
       return p;
     }),

@@ -6,18 +6,18 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
   id,
   name,
   username,
-  image,
+  // image,
   company,
   rol,
 }: ICardSettingUserProps) => {
   return (
     <Card id={id} name={name}>
       <div className='flex flex-row justify-center items-center'>
-        <img
+        {/* <img
           src={image}
           alt={`sett-user-${id}`}
-          className='w-12 h-12 rounded-full'
-        ></img>
+          className='w-12 h-12 mr-2 rounded-full'
+        ></img> */}
         <div className='w-full mx-1'>
           <p className='text-sm h-5 font-thin max-w-40 overflow-hidden'>
             {username}

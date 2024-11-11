@@ -5,7 +5,7 @@ export const MODAL_SETTING_IA: IModalSidebarMenu = {
   label: 'IA',
   menus: [
     {
-      icon: 'settings',
+      icon: '202',
       label: 'IA',
       description: 'Devices',
       to: PAGES_LIST_ROUTER.dashboard.ia.ia.to,

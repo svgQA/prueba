@@ -109,14 +109,14 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             className={`${existSelectedElement.value ? 'visible' : 'invisible'} absolute left-0 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-10 p-1 rounded-md`}
           >
             <div
-              class='bg-primary vx-form-actions-button'
+              class='bg-ternary vx-form-actions-button'
               onClick={addLelement}
             >
               <span className='vox-icon vx-icon-245' />
               <h6>Element</h6>
             </div>
             <div
-              class='bg-secondary vx-form-actions-button'
+              class='bg-primary vx-form-actions-button'
               onClick={addLsection}
             >
               <span className='vox-icon vx-icon-274' />
@@ -134,7 +134,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                 <div className='flex-1'>
                   <input
                     type='text'
-                    className='w-full text-xl font-bold mb-2 p-2 border border-gray-200 rounded'
+                    className='w-full text-xl font-bold mb-2 p-2 border rounded'
                     placeholder='Enter title page'
                     name='label'
                     data-pageid={page.id}
@@ -142,7 +142,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                     onChange={handlePageInputChange}
                   />
                 </div>
-                <table class='w-full text-left relative'>
+                <table class='w-full text-left relative border-2'>
                   <thead>
                     <tr>
                       <th className='py-1 px-2 rounded-tl-md'>Question</th>

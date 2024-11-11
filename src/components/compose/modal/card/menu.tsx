@@ -18,9 +18,9 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = ({
           <Link
             to={menu.to}
             name={menu.to}
-            className={`${menu.status ? 'poner color bg y text' : 'color en text hover'} capitalize flex flex-row px-2 py-1 text-sm items-center my-0.5`}
+            className={`${menu.status ? 'bg-primary text-white' : ''} capitalize flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
           >
-            <span className={`vx-icon size-sm mr-2 vx-${menu.icon}`} />
+            <span className={`vox-icon vx-icon-${menu.icon} size-sm mr-2`} />
             {menu.label}
           </Link>
         ))}

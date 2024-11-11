@@ -5,7 +5,7 @@ export const MODAL_SETTING_SALES: IModalSidebarMenu = {
   label: 'Sales',
   menus: [
     {
-      icon: 'sales',
+      icon: '167',
       label: 'Solo Por',
       description: 'Devices',
       to: PAGES_LIST_ROUTER.dashboard.sales.sales.to,

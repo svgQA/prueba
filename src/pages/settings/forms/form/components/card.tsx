@@ -15,54 +15,144 @@ export const CardElement = ({
 }: CardElementProps) => {
   const renderPreviewElement = () => {
     switch (element.type) {
+      case ELEMENT_TYPE.TITLE:
+        return <div className='text-sm text-gray-600'>{element.label}</div>;
+      // case ELEMENT_TYPE.PARAGRAPH:
+      //   return (
+      //     <div className='text-sm'>
+      //       <div className='font-medium'>{element.label}</div>
+      //       {/* <div className='text-gray-600'>{element.description}</div> */}
+      //     </div>
+      //   );
       case ELEMENT_TYPE.INPUT:
         return (
-          <input type='text' disabled className='w-full border rounded p-1' />
+          <div className='text-sm'>
+            <input
+              type='text'
+              placeholder='Text input'
+              className='border rounded w-full text-gray-500'
+              disabled
+            />
+          </div>
         );
-      // case 'area':
-      //   return <textarea disabled className='w-full border rounded p-1' />;
-      // case ELEMENT_TYPE.NUMBER:
-      //   return (
-      //     <input type='number' disabled className='w-full border rounded p-1' />
-      //   );
-      // case 'checkbox':
-      //   return <input type='checkbox' disabled className='border rounded' />;
-      // case ELEMENT_TYPE:
-      //   return (
-      //     <select className='w-full border rounded'>
-      //       <option>Select...</option>
-      //       <option>opcion_1</option>
-      //       <option>opcion_2</option>
-      //       <option>opcion_3</option>
-      //       <option>opcion_4</option>
-      //       <option>opcion_5</option>
-      //     </select>
-      //   );
-      // case 'switch':
-      //   return (
-      //     <div className='w-10 h-6 bg-gray-300 rounded-full relative'>
-      //       <div className='absolute w-5 h-5 bg-white rounded-full left-0.5 top-0.5 shadow'></div>
-      //     </div>
-      //   );
-      // case 'title':
-      //   return <h3 className='font-bold'>Sample Title</h3>;
-      // case 'paragraph':
-      //   return <p className='text-sm'>Sample paragraph text</p>;
-      // case 'photo':
-      //   return (
-      //     <div className='w-full h-20 bg-gray-200 flex items-center justify-center'>
-      //       Photo
-      //     </div>
-      //   );
-      // case 'qr':
-      // case 'camera':
-      // case 'audio':
-      // case 'sign':
-      //   return (
-      //     <div className='w-full h-20 border-2 border-dashed border-gray-300 flex items-center justify-center'>
-      //       {element.type.toUpperCase()}
-      //     </div>
-      //   );
+      case ELEMENT_TYPE.TEXT_AREA:
+        return (
+          <div className='text-sm'>
+            <textarea placeholder='Text area' className='w-full' disabled />
+          </div>
+        );
+      case ELEMENT_TYPE.NUMBER_INPUT:
+        return (
+          <div className='text-sm'>
+            <input
+              type='number'
+              placeholder='123'
+              className='w-full'
+              disabled
+            />
+          </div>
+        );
+      case ELEMENT_TYPE.DROPDOWN:
+        return (
+          <div className='text-sm'>
+            <select className='w-full' disabled>
+              <option>Select an option</option>
+            </select>
+          </div>
+        );
+      case ELEMENT_TYPE.RADIO_BUTTON:
+        return (
+          <div className='text-sm flex gap-4'>
+            <label className='flex items-center'>
+              <input type='radio' disabled className='mr-1' />
+              Option 1
+            </label>
+            <label className='flex items-center'>
+              <input type='radio' disabled className='mr-1' />
+              Option 2
+            </label>
+          </div>
+        );
+      case ELEMENT_TYPE.CHECK_BOX:
+        return (
+          <div className='text-sm flex gap-4'>
+            <label className='flex items-center'>
+              <input type='checkbox' disabled className='mr-1' />
+              Option 1
+            </label>
+            <label className='flex items-center'>
+              <input type='checkbox' disabled className='mr-1' />
+              Option 2
+            </label>
+          </div>
+        );
+      case ELEMENT_TYPE.SWITCH:
+        return (
+          <div className='text-sm'>
+            <label className='relative inline-flex items-center cursor-pointer'>
+              <input type='checkbox' className='sr-only peer' disabled />
+              <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+            </label>
+          </div>
+        );
+      case ELEMENT_TYPE.DATE:
+        return (
+          <div className='text-sm'>
+            <input
+              type='date'
+              className='border rounded p-1 w-full text-gray-500'
+              disabled
+            />
+          </div>
+        );
+      case ELEMENT_TYPE.TIME:
+        return (
+          <div className='text-sm'>
+            <input type='time' className='w-full' disabled />
+          </div>
+        );
+      case ELEMENT_TYPE.RATING:
+        return (
+          <div className='text-sm flex gap-1'>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span key={star}>★</span>
+            ))}
+          </div>
+        );
+      case ELEMENT_TYPE.IMAGE:
+        return (
+          <div className='text-sm text-center'>Click or drag image here</div>
+        );
+      case ELEMENT_TYPE.SIGNATURE:
+        return <div className='text-sm'>Signature pad</div>;
+      case ELEMENT_TYPE.QR:
+        return <div className='text-sm'>QR Code</div>;
+      case ELEMENT_TYPE.AUDIO:
+        return (
+          <div className='text-sm'>
+            <span>🎤</span>
+            <div className='h-1 flex-1'></div>
+          </div>
+        );
+      case ELEMENT_TYPE.CALCULATE:
+        return (
+          <div className='text-sm'>
+            <input
+              type='text'
+              placeholder='Calculation result'
+              className='border'
+              disabled
+            />
+          </div>
+        );
+      case ELEMENT_TYPE.LOCATION:
+        return <div className='text-sm'>Map location picker</div>;
+      case ELEMENT_TYPE.FILES:
+        return (
+          <div className='text-sm border-2 border-dashed rounded p-4 text-center'>
+            Click or drag files here
+          </div>
+        );
       default:
         return null;
     }
@@ -70,7 +160,7 @@ export const CardElement = ({
 
   return (
     <div
-      className={`${selected ? 'bg-teal-300' : ''} ${element.elements ? '' : 'border-b-[1px]'} flex flex-row relative my-1 h-fit py-1 pl-2`}
+      className={`${selected ? 'bg-teal-300' : ''} flex flex-row relative my-1 h-fit py-1 pl-2`}
       id={id}
       name={name}
     >
@@ -90,7 +180,7 @@ export const CardElement = ({
       <div className='relative w-full h-fit'>
         <div className='flex flex-row justify-between'>
           <h5
-            className={`font-semibold ${element.elements ? 'text-lg' : 'text-sm'}`}
+            className={`font-semibold ${element.elements || element.type === ELEMENT_TYPE.TITLE ? 'text-lg' : 'text-sm'}`}
           >
             {element.label
               ? element.label
@@ -98,7 +188,7 @@ export const CardElement = ({
           </h5>
           {element.elements && <span className='vox-icon vx-icon-005' />}
         </div>
-        {!element.elements && (
+        {element.type === ELEMENT_TYPE.TITLE && (
           <p className='font-thin text-sm'>
             {element.description ? element.description : 'Element Description'}{' '}
           </p>

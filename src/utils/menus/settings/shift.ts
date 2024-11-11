@@ -5,7 +5,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
   label: 'Shifts',
   menus: [
     {
-      icon: 'settings',
+      icon: '142',
       label: 'Rounds',
       description: 'Rondas',
       to: PAGES_LIST_ROUTER.dashboard.shifts.rounds.to,

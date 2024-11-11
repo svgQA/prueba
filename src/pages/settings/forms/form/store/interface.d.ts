@@ -37,6 +37,7 @@ export interface IElement extends IBase {
   // options?: IOption[]; // para un dropdown, selector, checkbox, switch
   // conditions?: ICondition[];
 
+  section?: string;
   parent?: string; // le asigno el valor de los hijos
   elements?: IElement[]; // Optional nested elements for sections
 }

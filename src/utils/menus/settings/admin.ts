@@ -5,22 +5,22 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
   label: 'admin',
   menus: [
     {
-      icon: 'home',
+      icon: '023',
       label: 'analytic',
       description: 'analytic',
       to: PAGES_LIST_ROUTER.dashboard.admin.analytic.to,
       id: 'analytic',
     },
     {
-      icon: 'home',
+      icon: '054',
       label: 'database',
       description: 'database',
       to: PAGES_LIST_ROUTER.dashboard.admin.database.to,
       id: 'database',
     },
     {
-      icon: 'home',
-      label: 'tenant',
+      icon: '088',
+      label: 'Tenants',
       description: 'tenant',
       to: PAGES_LIST_ROUTER.dashboard.admin.tenant.to,
       id: 'tenant',

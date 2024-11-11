@@ -1,6 +1,6 @@
 export enum ELEMENT_TYPE {
   /*[+]*/ TITLE, // Label
-  /*[+]*/ PARAGRAPH, // label + description
+  // /*[+]*/ PARAGRAPH, // label + description
   /*[default]*/ INPUT, // Label + (conditions) + description + regex + max + default
   /*[default]*/ TEXT_AREA, // Label + (conditions) + description + max + default
   /*[default]*/ NUMBER_INPUT, // Label + (conditions) + description + *(regex) + min + max + default

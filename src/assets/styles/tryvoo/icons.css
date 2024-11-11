@@ -6,6 +6,17 @@
 span.vox-icon {
   font-family: vox-icons;
   font-size: 1.5em;
+  @apply text-b-dark dark:text-primary;
+}
+
+.bg-primary,
+.bg-scondary,
+.bg-ternary,
+.bg-error {
+  @apply text-t-dark;
+  span.vox-icon {
+    @apply text-t-dark;
+  }
 }
 
 span.vox-icon.size-sm {
