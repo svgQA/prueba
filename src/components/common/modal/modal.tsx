@@ -24,10 +24,10 @@ export const Modal: FunctionComponent<IModalProps> = ({
       name={name}
       tabIndex={-1}
       aria-hidden='true'
-      className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-gray-500 bg-opacity-60`}
+      className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-opacity-60`}
     >
       <div
-        className={`${expand ? 'h-full' : 'h-fit'} overflow-y-hidden rounded-md modal-shadow w-full p-1 border-2 bg-neutral-100`}
+        className={`${expand ? 'h-full' : 'h-fit'} overflow-y-hidden rounded-md modal-shadow w-full p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
       >
         <div className='flex flex-row w-full items-center p-1'>
           <div class='flex flex-row w-full items-center justify-end mb-2'>

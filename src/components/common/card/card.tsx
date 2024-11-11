@@ -5,7 +5,7 @@ export const Card: FunctionComponent<ICardProps> = ({
   id,
   name,
   children,
-  color = 'bg-neutral-200 bg-opacity-40',
+  color = 'bg-opacity-40',
 }: ICardProps) => {
   return (
     <div

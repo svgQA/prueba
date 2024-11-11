@@ -48,7 +48,10 @@ export const SettingsModal = () => {
 
   const goBack = () => {};
   const goForward = () => {};
-  const minMenu = () => {};
+  const toggleTheme = (event: MouseEvent) => {
+    event.stopPropagation();
+    document.body.classList.toggle('dark');
+  };
 
   const selectMenu = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
@@ -122,10 +125,10 @@ export const SettingsModal = () => {
             <Button
               id='setting-min-menu'
               name='setting-min-menu'
-              onClick={minMenu}
+              onClick={toggleTheme}
               type='button'
               rounded
-              icon='276'
+              icon='301'
             ></Button>
           </div>
           <Search

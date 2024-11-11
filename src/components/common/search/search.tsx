@@ -104,12 +104,12 @@ export const Search = ({
     <div
       id={id}
       name={name}
-      className='flex flex-row items-center border-2 rounded-sm relative w-full'
+      className='flex flex-row items-center border-2 rounded-sm relative w-full border-b-light-dark dark:border-b-dark-light bg-transparent'
     >
       <span className='px-2 vox-icon vx-icon-153' />
       <div
         name='input-filter-chips'
-        className='flex flex-row text-white'
+        className='flex flex-row'
         onClick={handleClickFilters}
       >
         {searchArray.map((item) => {
@@ -118,11 +118,9 @@ export const Search = ({
             <div
               key={keyName}
               name={keyName}
-              className='rounded mx-1 bg-gray-800 pr-2 flex flex-row justify-center relative'
+              className='rounded mx-1 pr-2 flex flex-row justify-center relative'
             >
-              <span className='bg-purple-800 px-1 text-white mr-1'>
-                {item.key}
-              </span>
+              <span className='px-1 mr-1'>{item.key}</span>
               <span className='pr-2'>{item.value.join(' | ')}</span>
               <span
                 name={`filter-delete-${item.key}`}
@@ -134,10 +132,10 @@ export const Search = ({
           );
         })}
       </div>
-      <div className='relative border-gray-300 rounded flex items-center w-full'>
+      <div className='relative rounded flex items-center w-full'>
         <input
           ref={inputRef}
-          className='w-full p-2 rounded pl-10 bg-transparent capitalize'
+          className='w-full p-2 rounded pl-10 capitalize'
           placeholder={placeholder}
           onChange={handleChangeInput}
           onKeyDown={handleKeyPress}
@@ -146,24 +144,21 @@ export const Search = ({
       </div>
       <div
         ref={keysContainerRef}
-        className={`${inputState.length > lenThreshold ? 'visible' : 'invisible'} absolute right-0 top-10 min-w-48 bg-white border-2 py-2 z-30`}
+        className={`${inputState.length > lenThreshold ? 'visible' : 'invisible'} absolute right-0 top-10 min-w-48 border-2 py-2 z-30`}
         onClick={handleClickKeys}
       >
         {keys.map((key, index) => {
           const keyName = `filter-key-${key}`;
           return (
             <div
-              className={`px-2 py-0.5 cursor-pointer flex flex-row hover:bg-gray-200 min-w-40 ${
-                index === selectedKeyIndex ? 'bg-gray-200' : ''
+              className={`px-2 py-0.5 cursor-pointer flex flex-row min-w-40 ${
+                index === selectedKeyIndex ? 'aqui un bg' : ''
               }`}
               name={keyName}
               key={keyName}
               tabIndex={index}
             >
-              <span
-                name={keyName}
-                className='bg-purple-600 px-2 text-white mr-1 min-w-8/12 rounded-md'
-              >
+              <span name={keyName} className='px-2 mr-1 min-w-8/12 rounded-md'>
                 {key}
               </span>
               {inputState}

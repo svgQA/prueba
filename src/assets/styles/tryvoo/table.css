@@ -1,0 +1,6 @@
+table {
+  @apply border-b-light-dark dark:border-b-dark-light border-2 rounded-lg;
+  thead {
+    @apply bg-b-light-dark dark:bg-b-dark-light;
+  }
+}

@@ -17,16 +17,20 @@ export const Input = ({
   placeholder,
 }: IInputProps) => {
   return (
-    <div id={id} name={name} className='w-full border-2 my-1'>
+    <div
+      id={id}
+      name={name}
+      className='w-full my-1 border-b-light-dark dark:border-b-dark-light border-2'
+    >
       <label
         for={`${id}-input`}
-        className='capitalize block text-sm font-medium text-gray-900 dark:text-white'
+        className='capitalize block text-sm font-medium'
       >
         {label}
       </label>
-      <div className='relative border-gray-300 rounded flex items-center'>
+      <div className='relative rounded flex items-center'>
         <input
-          className='w-full p-2.5 rounded pl-10 bg-transparent border border-gray-300 capitalize'
+          className='w-full p-2.5 rounded pl-10 border capitalize'
           onChange={onChange}
           onKeyUp={onKeyUp}
           type={type}

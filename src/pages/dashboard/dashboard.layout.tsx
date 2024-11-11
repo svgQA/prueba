@@ -74,7 +74,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = ({
   };
 
   return (
-    <section className='w-full h-full'>
+    <section className='w-full h-full bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark'>
       <Loading open={getStatusLoading.value} />
       <Sidebar
         id='sidebar'

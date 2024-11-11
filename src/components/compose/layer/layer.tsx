@@ -9,7 +9,7 @@ export const Layer: FunctionComponent<ILayerProps> = ({
 }: ILayerProps) => {
   return (
     <div className='capitalize w-full mx-10 py-5 relative flex flex-row'>
-      <div className='text-white max-w-4xl px-10'>
+      <div className='max-w-4xl px-10'>
         <h2 className='text-5xl font-bold mb-2'>{title}</h2>
         <h4 className='text-2xl font-semibold mb-10'>{subtitle}</h4>
         <p className='h-80 text-lg font-medium'>{description}</p>

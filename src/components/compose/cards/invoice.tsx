@@ -10,8 +10,14 @@ export const InvoiceCard: FunctionComponent<IInvoiceCardProps> = ({
   active = false,
 }: IInvoiceCardProps) => {
   return (
-    <Card id={id} name={name} color={active ? 'bg-teal-500' : 'bg-zinc-300'}>
-      <div className={`${active ? 'text-white' : 'text-black'} max-h-20`}>
+    <Card
+      id={id}
+      name={name}
+      color={active ? 'poner bg color' : 'poner bg color'}
+    >
+      <div
+        className={`${active ? 'poner color text' : 'poner color text'} max-h-20`}
+      >
         <div className='flex justify-between w-full items-center'>
           <h2 className='text-xl font-bold'>{name}</h2>
           <span className='vx-icon vx-qr' />

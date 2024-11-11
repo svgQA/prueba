@@ -53,16 +53,12 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
     <nav
       id={`${id}-nav`}
       name={name}
-      className='fixed left-0 top-0 transform bg-neutral-100 px-1 flex flex-col justify-between h-screen'
+      className='fixed left-0 top-0 transform px-1 flex flex-col justify-between h-screen'
     >
-      {/* className={`bg-neutral-100 h-full px-1 flex flex-col justify-between ${position}`} */}
       {onHomeHandler && (
         <ul>
-          <a
-            onClick={onHomeHandler}
-            className='cursor-pointer text-black hover:text-black'
-          >
-            <ButtonMenu name='vx-home-button' label='home' icon='logo' />
+          <a onClick={onHomeHandler} className='cursor-pointer'>
+            <ButtonMenu name='vx-home-button' label='home' icon='023' />
           </a>
         </ul>
       )}
@@ -76,14 +72,14 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
             <Link
               to={menu.to}
               key={id}
-              className={`p-1 mt-1 hover:disabled rounded-sm ${isActive(menu.to) ? 'bg-cyan-500 text-white hover:text-white' : 'text-black hover:text-black'}`}
+              className={`p-1 mt-1 hover:disabled rounded-sm ${isActive(menu.to) ? 'poner color text' : 'poner color text'}`}
             >
               <ButtonMenu name={menu.to} label={menu.label} icon={menu.icon} />
             </Link>
           ) : (
             <a
               name={menu.to}
-              className={`p-1 mt-1 bg-opacity-20 rounded-sm ${isActive(menu.to) ? 'bg-cyan-500 text-white hover:text-white' : 'text-black hover:text-black'}`}
+              className={`p-1 mt-1 bg-opacity-20 rounded-sm ${isActive(menu.to) ? 'poner bg y text color' : 'poner text color'}`}
             >
               <ButtonMenu name={menu.to} label={menu.label} icon={menu.icon} />
             </a>
@@ -92,34 +88,19 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
       </ul>
       <ul className=''>
         {onSettingHandler && (
-          <a
-            onClick={onSettingHandler}
-            className='cursor-pointer text-black hover:text-black'
-          >
-            <ButtonMenu
-              name='vx-setting-button'
-              label='setting'
-              icon='settings'
-            />
-          </a>
-        )}
-        {onLogout && (
-          <a
-            onClick={onLogout}
-            className='cursor-pointer text-black hover:text-black'
-          >
-            <ButtonMenu name='vx-logout-button' label='logout' icon='users' />
+          <a onClick={onSettingHandler} className='cursor-pointer'>
+            <ButtonMenu name='vx-setting-button' label='setting' icon='169' />
           </a>
         )}
         <div className='relative group'>
-          <a className='cursor-pointer text-black hover:text-black'>
-            <ButtonMenu name='vx-company-button' label='company' icon='logo' />
+          <a className='cursor-pointer'>
+            <ButtonMenu name='vx-company-button' label='company' icon='281' />
           </a>
-          <div className='absolute left-full bottom-0 hidden group-hover:block bg-white shadow-xl rounded p-2 w-52 border border-gray-200'>
+          <div className='absolute left-full bottom-0 hidden group-hover:block shadow-xl rounded p-2 w-52 border'>
             {companies.map((company) => (
               <div
                 key={company.id}
-                className={`flex cursor-pointer w-full px-4 py-2 mb-1 flex-row justify-between items-center ${company.selected ? 'bg-teal-500 text-white' : 'hover:bg-gray-100'}`}
+                className={`flex cursor-pointer w-full px-4 py-2 mb-1 flex-row justify-between items-center ${company.selected ? 'poner bg y text color' : 'poner hiver bg'}`}
                 onClick={() => setCompanySelected(company.id)}
               >
                 <div>
@@ -131,6 +112,11 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
             ))}
           </div>
         </div>
+        {onLogout && (
+          <a onClick={onLogout} className='cursor-pointer'>
+            <ButtonMenu name='vx-logout-button' label='logout' icon='224' />
+          </a>
+        )}
       </ul>
     </nav>
   );

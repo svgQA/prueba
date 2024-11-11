@@ -1,6 +1,6 @@
 @font-face {
   font-family: vox-icons;
-  src: url(./fonts/icons.woff), url(./fonts/icons.woff2);
+  src: url(../fonts/icons.woff), url(../fonts/icons.woff2);
 }
 
 span.vox-icon {

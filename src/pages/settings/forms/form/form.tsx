@@ -106,23 +106,23 @@ export const FormCreateSettingPage: FunctionComponent = () => {
           </div>
           {/* START: Append menus */}
           <div
-            className={`${existSelectedElement.value ? 'visible' : 'invisible'} absolute left-0 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-10 bg-white p-1 shadow-md border-2 rounded-md`}
+            className={`${existSelectedElement.value ? 'visible' : 'invisible'} absolute left-0 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-10 p-1 rounded-md`}
           >
             <div
-              class='bg-blue-500 vx-form-actions-button'
+              class='bg-primary vx-form-actions-button'
               onClick={addLelement}
             >
               <span className='vox-icon vx-icon-245' />
               <h6>Element</h6>
             </div>
             <div
-              class='bg-gray-600 vx-form-actions-button'
+              class='bg-secondary vx-form-actions-button'
               onClick={addLsection}
             >
               <span className='vox-icon vx-icon-274' />
               <h6>Section</h6>
             </div>
-            <div class='bg-teal-500 vx-form-actions-button' onClick={addPage}>
+            <div class='bg-ternary vx-form-actions-button' onClick={addPage}>
               <span className='vox-icon vx-icon-064' />
               <h6>Page</h6>
             </div>
@@ -143,8 +143,8 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                   />
                 </div>
                 <table class='w-full text-left relative'>
-                  <thead className='bg-red'>
-                    <tr className='bg-gray-200 rounded-t-2 text-gray-600'>
+                  <thead>
+                    <tr>
                       <th className='py-1 px-2 rounded-tl-md'>Question</th>
                       <th className='py-1 rounded-tr-md'>Type of Response</th>
                     </tr>

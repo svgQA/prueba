@@ -27,8 +27,8 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
             <Badge
               label={rol}
               icon='users'
-              color='text-white'
-              bgColor='bg-cyan-500'
+              color='poner color'
+              bgColor='poner color'
             />
           </div>
         </div>

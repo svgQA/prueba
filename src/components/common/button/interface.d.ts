@@ -5,7 +5,7 @@ export interface IButtonProps extends IComponentProps {
   icon?: string;
   color?: string;
   type: 'button' | 'submit' | 'reset';
-  onClick?: () => void;
+  onClick?: (event: MouseEvent) => void;
   rounded?: boolean;
   full?: boolean;
   className?: string;

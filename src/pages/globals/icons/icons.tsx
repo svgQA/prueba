@@ -37,11 +37,8 @@ export const IconsModal = () => {
 
   return (
     <div className='bg-red-200'>
-      <button
-        className='fixed top-1/2 right-0 bg-teal-600 text-white z-30'
-        onClick={toggleIconsPage}
-      >
-        <span className='vx-icon vx-users'></span> {getStatusIconsPage.value}
+      <button className='fixed top-1/2 right-0 z-30' onClick={toggleIconsPage}>
+        <span className='vox-icon vx-icon-009' /> {getStatusIconsPage.value}
       </button>
       <div
         className={`${getStatusIconsPage.value ? 'visible' : 'invisible'} z-20 absolute w-screen h-full bg-gray-600 bg-opacity-95 top-0 flex justify-center items-center`}

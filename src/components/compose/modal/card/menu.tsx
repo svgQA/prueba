@@ -12,13 +12,13 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = ({
 }: ICardSettingMenuProps) => {
   return (
     <Card id={id} name={name}>
-      <div className='text-gray-600 hover:text-gray-900'>
+      <div className=''>
         <h2 className='capitalize text-sm font-semibold mb-2'>{label}</h2>
         {menus.map((menu: IMenu) => (
           <Link
             to={menu.to}
             name={menu.to}
-            className={`${menu.status ? 'bg-cyan-500 text-white hover:text-white' : 'hover:text-black'} capitalize flex flex-row px-2 py-1 text-sm items-center my-0.5`}
+            className={`${menu.status ? 'poner color bg y text' : 'color en text hover'} capitalize flex flex-row px-2 py-1 text-sm items-center my-0.5`}
           >
             <span className={`vx-icon size-sm mr-2 vx-${menu.icon}`} />
             {menu.label}

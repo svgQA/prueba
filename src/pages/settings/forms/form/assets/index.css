@@ -1,21 +1,8 @@
-.vx-form-question {
-  td {
-    @apply py-2;
-  }
-}
-
 .vx-form-actions-button {
   @apply p-1 cursor-pointer rounded-md text-center text-white;
   width: 3.7rem;
   height: 3.7rem;
   h6 {
-    @apply text-xs font-light;
-  }
-}
-
-.vx-form-attrs {
-  @apply flex flex-row flex-wrap content-center justify-between w-full p-2;
-  div {
-    @apply flex items-center;
+    @apply text-xs font-semibold;
   }
 }
