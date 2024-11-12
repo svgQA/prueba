@@ -72,8 +72,8 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       <div className='flex flex-row relative'>
         <div className='pl-20 pr-9 w-full flex flex-col h-[80vh] overflow-y-scroll vox-scroll-design'>
           {/* START: Titles */}
-          <div className='flex flex-row 2xl:w-8/12 w-full my-5'>
-            <div className='w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer'>
+          <div className='flex flex-row 2xl:w-8/12 w-full my-5 items-center'>
+            <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-b-dark-light dark:border-b-light-dark'>
               <span className='vx-icon vx-upload text-gray-400 text-2xl' />
             </div>
             <div className='flex-1 ml-4'>
@@ -87,7 +87,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               />
               <input
                 type='text'
-                className='w-full text-lg text-gray-600 p-2 border border-gray-200 rounded'
+                className='w-full text-lg p-2 rounded'
                 placeholder='Enter description'
                 name='description'
                 value={format.value.description}

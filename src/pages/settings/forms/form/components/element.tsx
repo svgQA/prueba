@@ -175,7 +175,7 @@ export const FormElement = ({
               {question.section && (
                 <div className=' mx-3 w-1 h-6 rounded-lg bg-primary dark:bg-b-light-dark'></div>
               )}
-              <div className='flex flex-row'>
+              <div className='flex flex-row w-full'>
                 <span
                   ref={(node) => ref(drop(node))}
                   className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
