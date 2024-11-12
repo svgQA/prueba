@@ -5,7 +5,7 @@ import {
   CardSettingUser,
   IModalSidebarMenu,
 } from '@/components/compose/modal';
-import { PAGES_LIST, PAGES_LIST_ROUTER } from '@/utils/routing';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { Route, Router } from 'wouter';
 import {
   AnalyticAdminSettingPage,
@@ -27,27 +27,171 @@ import {
   UsersSettingPage,
 } from './security';
 import { PaymentHistorySettingPage, PaymentSettingPage } from './payment';
-import { FormAnalyticSettingPage, FormCreateSettingPage } from './forms';
+import {
+  FormAnalyticSettingPage,
+  FormCreateSettingPage,
+  FormListsSettingPage,
+  FormReportSettingPage,
+  FormSettingPage,
+} from './forms';
 import { ChannelsSettingPage, DevicesSettingPage, IotSettingPage } from './iot';
 import { IASettingPage } from './ia';
 import { RoundsSettingPage } from './shifts';
 import { SalesSettingPage } from './sales';
 import { AsociateSettingPage, ResourcesSettingPage } from './asociate';
+
 import { MODAL_SIDEBAR_MENUS } from '@/utils/menus';
-import { useState } from 'preact/hooks';
+import { memo } from 'preact/compat';
 import {
   getStatusSettingModal,
   toggleSettingModal,
 } from '@/store/signals/modals';
 import { authModel } from '@/store/signals/access';
+
 import { IMenu } from '@/components/common/interface';
+import { useSignal } from '@preact/signals';
+
+const RoutingContent = memo(() => {
+  return (
+    <Router base={PAGES_LIST_ROUTER.dashboard.setting.base}>
+      {/* GENERAL ADMINISTRATOR */}
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.admin.analytic.to}
+        component={AnalyticAdminSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.admin.database.to}
+        component={DatabaseSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.admin.tenant.to}
+        component={TenantSettingPage}
+      />
+      {/* GENERAL MENU */}
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.setting.user.to}
+        component={UserSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.setting.company.to}
+        component={CompanySettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.setting.modules.to}
+        component={ModulesSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.setting.integration.to}
+        component={IntegrationSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.setting.voxline.to}
+        component={VoxlineSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.setting.solo.to}
+        component={SoloSettingPage}
+      />
+      {/* SECURITY MENU */}
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.security.keys.to}
+        component={KeysSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.security.users.to}
+        component={UsersSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.security.roles.to}
+        component={RolesSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.security.groups.to}
+        component={GroupSettingPage}
+      />
+      {/* PAYMENT MENU */}
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.payment.history.to}
+        component={PaymentHistorySettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.payment.payment.to}
+        component={PaymentSettingPage}
+      />
+      {/* FORMS MENU */}
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
+        component={FormSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.forms.create.to}
+        component={FormCreateSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
+        component={FormAnalyticSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
+        component={FormListsSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
+        component={FormReportSettingPage}
+      />
+      {/* IOT MENU */}
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.iot.devices.to}
+        component={DevicesSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.iot.iot.to}
+        component={IotSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.iot.channels.to}
+        component={ChannelsSettingPage}
+      />
+      {/* IA MENU */}
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.ia.ia.to}
+        component={IASettingPage}
+      />
+      {/* SHIFTS MENU */}
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.to}
+        component={RoundsSettingPage}
+      />
+      {/* SALES MENU */}
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.sales.sales.to}
+        component={SalesSettingPage}
+      />
+      {/* ASOCIATE MENU */}
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.asociate.list.to}
+        component={ResourcesSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.asociate.resource.to}
+        component={AsociateSettingPage}
+      />
+    </Router>
+  );
+});
 
 export const SettingsModal = () => {
-  const [menuSettings, setMenuSettings] =
-    useState<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
+  const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
+  const menuInformationSelected = useSignal<IMenu>({
+    description: 'Description',
+    label: 'Title',
+    to: '',
+    id: 'id-default-1',
+  });
 
   const goBack = () => {};
   const goForward = () => {};
+
   const toggleTheme = (event: MouseEvent) => {
     event.stopPropagation();
     document.body.classList.toggle('dark');
@@ -56,45 +200,13 @@ export const SettingsModal = () => {
   const selectMenu = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (target.nodeName === 'A') {
-      const menuClicked = target.getAttribute('name');
-      updateMenu(menuClicked);
+      const to = target.getAttribute('data-to');
+      const label = target.getAttribute('data-label');
+      const description = target.getAttribute('data-description');
+      const id = target.getAttribute('id');
+      if (!to || !label || !description || !id) return;
+      menuInformationSelected.value = { to, description, label, id };
     }
-  };
-
-  // --------------------------------------------------------------------------------------------
-  // TODO: Cuando se abre una vista se requiere que inicie en un menu guardado,
-  // para eso es esta lògica.
-  // --------------------------------------------------------------------------------------------
-  // showSettingsModal.value = !showSettingsModal.value;
-  // if (showSettingsModal.value) {
-  //   navigate(PAGES_LIST.DASHBOARD + PAGES_LIST.SETTING);
-  //   const menu = menuSettings[GENERAL_GROUP_MENU].menus[SETTING_USER_MENU];
-  //   setMenuInformationSelected(menu);
-  //   updateMenu(menu.to);
-  // } else {
-  //   navigate(PAGES_LIST.DASHBOARD);
-  // }
-
-  const [menuInformationSelected, setMenuInformationSelected] = useState<IMenu>(
-    { description: 'Description', label: 'Title', to: '', id: 'id-default-1' }
-  );
-
-  const updateMenu = (name: string | null) => {
-    if (!name) return;
-    const menus: IModalSidebarMenu[] = menuSettings.map(
-      (menu): IModalSidebarMenu => {
-        menu.menus.forEach((xmenu) => {
-          if (xmenu.to === name) {
-            xmenu.status = true;
-            setMenuInformationSelected(xmenu);
-          } else {
-            xmenu.status = false;
-          }
-        });
-        return menu;
-      }
-    );
-    setMenuSettings(menus);
   };
 
   return (
@@ -153,15 +265,17 @@ export const SettingsModal = () => {
           rol={authModel.value.rol}
         />
         <div className='vox-scroll-design max-h-[80vh] overflow-y-scroll'>
-          {menuSettings.map((menu) => {
+          {menuSettings.value.map((menu) => {
             const name = `${menu.label}-menus`;
             return (
               <CardSettingMenu
                 key={name}
                 id={name}
                 name={name}
+                base={menu.base}
                 label={menu.label}
                 menus={menu.menus}
+                selected={menuInformationSelected.value}
               />
             );
           })}
@@ -171,122 +285,11 @@ export const SettingsModal = () => {
         <CardSettingHeader
           id='setting-header'
           name='setting-header'
-          title={menuInformationSelected?.label}
-          description={menuInformationSelected?.description}
+          title={menuInformationSelected.value.label}
+          description={menuInformationSelected.value.description}
         />
         <section className='w-full h-[80vh]'>
-          <Router base={PAGES_LIST.SETTING}>
-            {/* GENERAL ADMINISTRATOR */}
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.admin.analytic.base}
-              component={AnalyticAdminSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.admin.database.base}
-              component={DatabaseSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.admin.tenant.base}
-              component={TenantSettingPage}
-            />
-            {/* GENERAL MENU */}
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.setting.user.base}
-              component={UserSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.setting.company.base}
-              component={CompanySettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.setting.modules.base}
-              component={ModulesSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.setting.integration.base}
-              component={IntegrationSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.setting.voxline.base}
-              component={VoxlineSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.setting.solo.base}
-              component={SoloSettingPage}
-            />
-            {/* SECURITY MENU */}
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.security.keys.base}
-              component={KeysSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.security.users.base}
-              component={UsersSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.security.roles.base}
-              component={RolesSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.security.groups.base}
-              component={GroupSettingPage}
-            />
-            {/* PAYMENT MENU */}
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.payment.history.base}
-              component={PaymentHistorySettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.payment.payment.base}
-              component={PaymentSettingPage}
-            />
-            {/* FORMS MENU */}
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.forms.create.base}
-              component={FormCreateSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.forms.analytic.base}
-              component={FormAnalyticSettingPage}
-            />
-            {/* IOT MENU */}
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.iot.devices.base}
-              component={DevicesSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.iot.iot.base}
-              component={IotSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.iot.channels.base}
-              component={ChannelsSettingPage}
-            />
-            {/* IA MENU */}
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.ia.ia.base}
-              component={IASettingPage}
-            />
-            {/* SHIFTS MENU */}
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.shifts.rounds.base}
-              component={RoundsSettingPage}
-            />
-            {/* SALES MENU */}
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.sales.sales.base}
-              component={SalesSettingPage}
-            />
-            {/* ASOCIATE MENU */}
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.asociate.list.base}
-              component={ResourcesSettingPage}
-            />
-            <Route
-              path={PAGES_LIST_ROUTER.dashboard.asociate.resource.base}
-              component={AsociateSettingPage}
-            />
-          </Router>
+          <RoutingContent />
         </section>
       </div>
     </Modal>

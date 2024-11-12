@@ -1,49 +1,57 @@
 import { IModalSidebarMenu } from '@/components/compose/modal';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
+const base = PAGES_LIST_ROUTER.dashboard.setting.setting.base;
 export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
   label: 'general',
+  base: PAGES_LIST_ROUTER.dashboard.setting.base,
   menus: [
     {
       icon: '007',
       label: 'user',
       description: 'Update user Information',
-      to: PAGES_LIST_ROUTER.dashboard.setting.user.to,
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.setting.user.base,
       id: 'user',
     },
     {
       icon: '088',
       label: 'company',
       description: 'Company',
-      to: PAGES_LIST_ROUTER.dashboard.setting.company.to,
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.setting.company.base,
       id: 'company',
     },
     {
       icon: '092',
       label: 'modules',
       description: 'Company',
-      to: PAGES_LIST_ROUTER.dashboard.setting.modules.to,
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.setting.modules.base,
       id: 'modules',
     },
     {
       icon: '160',
       label: 'integraciones',
       description: 'Company',
-      to: PAGES_LIST_ROUTER.dashboard.setting.integration.to,
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.setting.integration.base,
       id: 'integrations',
     },
     {
       icon: '195',
       label: 'App Voxline',
       description: 'Company',
-      to: PAGES_LIST_ROUTER.dashboard.setting.voxline.to,
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.setting.voxline.base,
       id: 'voxline',
     },
     {
       icon: '117',
       label: 'App Solo Por',
       description: 'Company',
-      to: PAGES_LIST_ROUTER.dashboard.setting.solo.to,
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.setting.solo.base,
       id: 'solopor',
     },
   ],

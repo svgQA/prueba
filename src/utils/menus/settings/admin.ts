@@ -1,28 +1,33 @@
 import { IModalSidebarMenu } from '@/components/compose/modal';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
+const BASE_ADMIN = PAGES_LIST_ROUTER.dashboard.setting.admin.base;
 export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
   label: 'admin',
+  base: PAGES_LIST_ROUTER.dashboard.setting.base,
   menus: [
     {
       icon: '023',
       label: 'analytic',
       description: 'analytic',
-      to: PAGES_LIST_ROUTER.dashboard.admin.analytic.to,
+      base: BASE_ADMIN,
+      to: PAGES_LIST_ROUTER.dashboard.setting.admin.analytic.base,
       id: 'analytic',
     },
     {
       icon: '054',
       label: 'database',
       description: 'database',
-      to: PAGES_LIST_ROUTER.dashboard.admin.database.to,
+      base: BASE_ADMIN,
+      to: PAGES_LIST_ROUTER.dashboard.setting.admin.database.base,
       id: 'database',
     },
     {
       icon: '088',
       label: 'Tenants',
       description: 'tenant',
-      to: PAGES_LIST_ROUTER.dashboard.admin.tenant.to,
+      base: BASE_ADMIN,
+      to: PAGES_LIST_ROUTER.dashboard.setting.admin.tenant.base,
       id: 'tenant',
     },
   ],
