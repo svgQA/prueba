@@ -35,7 +35,6 @@ export const SettingsModal = () => {
         const adminMenu = menuSettings.value[0]?.menus[0];
         if (adminMenu) {
           const to = `/setting${adminMenu.base}/`;
-          console.log('MI OTRO MENU: ', to);
           menuInformationSelected.value = {
             ...adminMenu,
             to,
