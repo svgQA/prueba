@@ -2,63 +2,16 @@ import { type FunctionComponent } from 'preact';
 
 import { type ISidebarProps } from './interface';
 import { useEffect, useMemo } from 'preact/hooks';
-import { Link, useLocation } from 'wouter';
+import { useLocation } from 'wouter';
 import { ButtonMenu } from '../button/menu/button';
 import { useUserStore } from '@/store/slices';
-import { closeOnBoardingModal } from '@/store/signals/modals';
-import { memo } from 'preact/compat';
-import { IMenu } from '../interface';
-import { ICompany } from '@/store/slices/interface';
+import {
+  closeOnBoardingModal,
+  getStatusSettingModal,
+} from '@/store/signals/modals';
 import { useSignal } from '@preact/signals';
-
-interface IMenuItem {
-  menu: IMenu;
-  isNavigation: boolean;
-  getSelected: (to: string) => string;
-}
-
-const MenuItem = memo<IMenuItem>(
-  ({ menu, isNavigation, getSelected }: IMenuItem) => {
-    const id = `menu-${menu.label}`.toLowerCase();
-    return isNavigation ? (
-      <Link
-        to={menu.to}
-        key={id}
-        className={`p-1 mt-1 hover:disabled rounded-sm ${getSelected(menu.to)}`}
-      >
-        <ButtonMenu name={menu.to} label={menu.label} icon={menu.icon} />
-      </Link>
-    ) : (
-      <a
-        name={menu.to}
-        className={`p-1 mt-1 bg-opacity-20 rounded-sm ${getSelected(menu.to)}`}
-      >
-        <ButtonMenu name={menu.to} label={menu.label} icon={menu.icon} />
-      </a>
-    );
-  }
-);
-
-interface ICompanyItem {
-  company: ICompany;
-  setCompanySelected: (id: string) => void;
-}
-
-const CompanyItem = memo<ICompanyItem>(
-  ({ company, setCompanySelected }: ICompanyItem) => (
-    <div
-      key={company.id}
-      className={`flex cursor-pointer w-full px-4 py-2 mb-1 flex-row justify-between items-center ${company.selected ? 'bg-primary' : ''}`}
-      onClick={() => setCompanySelected(company.id)}
-    >
-      <div>
-        <h4>{company.name}</h4>
-        <span>{company.role}</span>
-      </div>
-      <span className='vx-icon vx-users' />
-    </div>
-  )
-);
+import { CompanyItem } from './company';
+import { MenuItem } from './menu';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
   id,
@@ -70,7 +23,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   onHandlerClick,
   onLogout,
 }: ISidebarProps) => {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
   const menuSelected = useSignal<string | null>('');
   const { companies, setSelected } = useUserStore();
 
@@ -81,6 +34,19 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
     },
     [setSelected]
   );
+
+  useEffect(() => {
+    if (!getStatusSettingModal.value) {
+      if (!menuSelected.value || menuSelected.value.includes('setting')) {
+        const firstMenu = menus[0];
+        if (firstMenu)
+          if (firstMenu) {
+            menuSelected.value = firstMenu.to;
+            navigate(firstMenu.to);
+          }
+      }
+    }
+  }, [getStatusSettingModal.value]);
 
   useEffect(() => {
     menuSelected.value = location;
