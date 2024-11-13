@@ -14,7 +14,7 @@ export class BaseService {
   }
 
   private static make_url(paths: string[], base: VoxServices): string {
-    const model = [this.prefix, ...paths];
+    const model = [/*this.prefix,*/ ...paths];
     const subdirectory = model.join(VOX_DEFAULT_PATH.DEFAULT);
     const urlBase = VOS_SERVICES[base];
     const urlTotal = `${urlBase}/${subdirectory}`;

@@ -31,6 +31,7 @@ export const SettingsModal = () => {
   });
   const [_, navigate] = useLocation();
 
+  // TODO: Revisar esta parte para cuando se abre y ya existia un menu seleccionado.
   useEffect(() => {
     if (getStatusSettingModal.value) {
       if (!menuInformationSelected.value.to) {
