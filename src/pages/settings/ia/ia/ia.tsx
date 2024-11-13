@@ -54,6 +54,7 @@ export const IASettingPage: FunctionComponent = () => {
   const selectedTenant = useSignal('tenant1');
   const isTyping = useSignal(false);
   const typeTimeout = useRef<NodeJS.Timeout>();
+  const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     document.title = 'IA Settings';
@@ -103,6 +104,26 @@ export const IASettingPage: FunctionComponent = () => {
     await IaService.create_tenant(newTenantId);
   }, []);
 
+  const handleFileUpload = useCallback(
+    async (event: Event) => {
+      const target = event.target as HTMLInputElement;
+      if (!target.files?.length) return;
+
+      const file = target.files[0];
+      const formData = new FormData();
+      formData.append('document', file);
+      formData.append('tenant', selectedTenant.value);
+
+      try {
+        await IaService.document(formData);
+        alert('Document uploaded successfully!');
+      } catch (error) {
+        alert('Error uploading document');
+      }
+    },
+    [selectedTenant.value]
+  );
+
   return (
     <section className='mt-4'>
       <div className='mb-4'>
@@ -114,6 +135,35 @@ export const IASettingPage: FunctionComponent = () => {
           value={inputValue.value}
           onChange={(value) => (inputValue.value = value)}
         />
+        <div className='mb-4'>
+          <input
+            type='file'
+            ref={fileInput}
+            onChange={handleFileUpload}
+            className='hidden'
+            accept='.pdf,.doc,.docx,.txt'
+          />
+          <button
+            onClick={() => fileInput.current?.click()}
+            className='w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='h-5 w-5 mr-2'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12'
+              />
+            </svg>
+            Upload Document
+          </button>
+        </div>
       </div>
       <div className='flex gap-4'>
         <button

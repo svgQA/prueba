@@ -21,6 +21,10 @@ export class IaService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
+  static async document(data: FormData) {
+    console.log(data);
+  }
+
   static async create_tenant(tenant: string) {
     const model: IMakeRequest = {
       url: ['create'],
