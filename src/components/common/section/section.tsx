@@ -4,5 +4,5 @@ import { ISectionProps } from './interface';
 export const Section: FunctionComponent<ISectionProps> = ({
   children,
 }: ISectionProps) => {
-  return <section className='mr-3 my-1 relative'>{children}</section>;
+  return <section className='mr-3 my-1 pt-7 relative px-7'>{children}</section>;
 };
