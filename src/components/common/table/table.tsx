@@ -37,7 +37,6 @@ const getCommonPinningStyles = (column: Column<any>) => {
 
 export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [settings, setSetting] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
@@ -64,59 +63,56 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
   });
 
   return (
-    <div className='relative'>
-      <div className='flex flex-row'>
+    <div className='w-full h-full min-h-[60vh]'>
+      {/* TABLE: HEADER */}
+      <div className='w-96 mb-2'>
         <Search
           id='search-general'
           name='search-general'
           keys={table
             .getAllLeafColumns()
             .map((column) => String(column.columnDef.header) || column.id)}
-        />
-        <div className='flex cursor-pointer mx-2 text-center items-center rounded-md'>
-          <span
-            className='vox-icon vx-icon-255 px-2 py-1'
-            onClick={() => setSetting((prev) => !prev)}
-          />
-          <div
-            className={`${settings ? 'visible' : 'invisible'} absolute right-2 top-12 rounded-lg shadow-lg p-4 z-30 bg-b-light border-2 dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
-          >
-            {table.getAllLeafColumns().map((column) => {
-              return (
-                <div
-                  key={column.id}
-                  className='flex items-center space-x-2 py-1 flex-row'
-                >
-                  <div>
-                    {column.getCanPin() && (
-                      <span
-                        className={`vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'}`}
-                        onClick={() =>
-                          column.pin(column.getIsPinned() ? false : 'left')
-                        }
+          settings={
+            <>
+              {table.getAllLeafColumns().map((column) => {
+                return (
+                  <div
+                    key={column.id}
+                    className='flex items-center space-x-2 py-1 flex-row'
+                  >
+                    <div>
+                      {column.getCanPin() && (
+                        <span
+                          className={`vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'}`}
+                          onClick={() =>
+                            column.pin(column.getIsPinned() ? false : 'left')
+                          }
+                        />
+                      )}
+                    </div>
+                    <label className='flex items-center cursor-pointer'>
+                      <input
+                        {...{
+                          type: 'checkbox',
+                          checked: column.getIsVisible(),
+                          onChange: column.getToggleVisibilityHandler(),
+                        }}
+                        className='form-checkbox h-4 w-4 rounded'
                       />
-                    )}
+                      <span className='ml-2 text-sm'>
+                        {column.columnDef.header}
+                      </span>
+                    </label>
                   </div>
-                  <label className='flex items-center cursor-pointer'>
-                    <input
-                      {...{
-                        type: 'checkbox',
-                        checked: column.getIsVisible(),
-                        onChange: column.getToggleVisibilityHandler(),
-                      }}
-                      className='form-checkbox h-4 w-4 rounded'
-                    />
-                    <span className='ml-2 text-sm'>
-                      {column.columnDef.header}
-                    </span>
-                  </label>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+                );
+              })}
+            </>
+          }
+        />
       </div>
-      <div className='w-full h-[87vh] overflow-x-auto vox-scroll-design scroll-x-md mt-2'>
+
+      {/* TABLE: ROWS */}
+      <div className=''>
         <table className='w-full'>
           <thead className='sticky top-0 z-20'>
             {table.getHeaderGroups().map((headerGroup, index) => (
@@ -157,7 +153,6 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
                   {row.getVisibleCells().map((cell, index) => (
                     <td
                       key={`${cell.id}_${index}`}
-                      className='p-2 whitespace-nowrap'
                       style={getCommonPinningStyles(cell.column)}
                     >
                       {flexRender(
@@ -179,8 +174,9 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
           </tbody>
         </table>
       </div>
-      {/* Pagination controls */}
-      <div className='absolute flex justify-center gap-1 bottom-2 right-[43%] p-2 border-2 rounded-md shadow-sm z-10 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light'>
+
+      {/* TABLE: PAGINATION CONTROLS */}
+      <div className='sticky w-fit flex justify-center gap-1 bottom-2 right-0 p-2 border-2 rounded-md shadow-sm z-10 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light'>
         <button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}

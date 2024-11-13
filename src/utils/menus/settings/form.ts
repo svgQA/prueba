@@ -8,16 +8,16 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
   menus: [
     {
       icon: '094',
-      label: 'crear',
-      description: 'Payment',
+      label: 'Forms',
+      description: 'Forms',
       base,
-      to: PAGES_LIST_ROUTER.dashboard.setting.forms.create.base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.forms.form.base,
       id: 'form-create',
     },
     {
       icon: '028',
       label: 'analytic',
-      description: 'Payment',
+      description: 'Responses',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.base,
       id: 'form-analytic',

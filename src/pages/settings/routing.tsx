@@ -104,23 +104,23 @@ export const RoutingContent = memo(() => {
       />
       {/* FORMS MENU */}
       <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
+        path={PAGES_LIST_ROUTER.dashboard.setting.forms.form.to}
         component={FormSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.forms.create.to}
-        component={FormCreateSettingPage}
       />
       <Route
         path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
         component={FormAnalyticSettingPage}
       />
       <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
+        path={PAGES_LIST_ROUTER.dashboard.setting.forms.create.to}
+        component={FormCreateSettingPage}
+      />
+      <Route
+        path={PAGES_LIST_ROUTER.dashboard.setting.forms.list.to}
         component={FormListsSettingPage}
       />
       <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
+        path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.to}
         component={FormReportSettingPage}
       />
       {/* IOT MENU */}

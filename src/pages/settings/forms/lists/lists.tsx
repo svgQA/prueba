@@ -1,3 +1,3 @@
 export const FormListsSettingPage = () => {
-  return <div>List Settings</div>;
+  return <div>Vista para crear listas</div>;
 };

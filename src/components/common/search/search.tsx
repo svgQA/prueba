@@ -8,6 +8,7 @@ export const Search = ({
   keys = [],
   lenThreshold = 3,
   placeholder,
+  settings,
   // onChange = (_) => {},
 }: ISearchProps) => {
   const [inputState, setInputState] = useState<string>('');
@@ -15,6 +16,7 @@ export const Search = ({
   const [selectedKeyIndex, setSelectedKeyIndex] = useState<number>(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const keysContainerRef = useRef<HTMLDivElement>(null);
+  const [openSettings, setOpenSetting] = useState<boolean>(false);
 
   const handleChangeInput = (
     event: JSX.TargetedEvent<HTMLInputElement, Event>
@@ -166,6 +168,19 @@ export const Search = ({
           );
         })}
       </div>
+      {settings && (
+        <>
+          <span
+            className='px-2 vox-icon vx-icon-168 cursor-pointer'
+            onClick={() => setOpenSetting((prev) => !prev)}
+          />
+          <div
+            className={`${openSettings ? 'visible' : 'invisible'} absolute right-2 top-12 rounded-lg shadow-lg p-4 z-30 bg-b-light border-2 dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
+          >
+            {settings}
+          </div>
+        </>
+      )}
     </div>
   );
 };

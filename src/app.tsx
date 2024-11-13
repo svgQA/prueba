@@ -20,7 +20,7 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
       <Switch>
         <Route path={PAGES_LIST.HOME} component={HomeLayout} />
         <Router base={PAGES_LIST.DASHBOARD}>
-          <div className='w-full h-full flex justify-center items-center'>
+          <div className='w-full h-full flex justify-center items-center bg-b-light dark:bg-b-dark'>
             <Authenticator
             // hideSignUp
             // socialProviders={['google']}

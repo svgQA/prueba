@@ -1,4 +1,5 @@
 import { type IComponentProps } from '@/components/utils/interface';
+import { VNode } from 'preact';
 
 export interface IFilterModel {
   key: string;
@@ -11,4 +12,5 @@ export interface ISearchProps extends IComponentProps {
   value?: IFilterModel[];
   onChange?: (filters: IFilterModel[]) => void;
   placeholder?: string;
+  settings?: VNode;
 }

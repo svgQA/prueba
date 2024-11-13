@@ -27,7 +27,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
       className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-opacity-60`}
     >
       <div
-        className={`${expand ? 'h-full' : 'h-fit'} overflow-y-hidden rounded-md modal-shadow w-full p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
+        className={`${expand ? 'h-full' : 'h-fit'} overflow-y-hidden vox-scroll-design rounded-md modal-shadow w-full p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
       >
         <div className='flex flex-row w-full items-center p-1'>
           <div class='flex flex-row w-full items-center justify-end mb-2'>

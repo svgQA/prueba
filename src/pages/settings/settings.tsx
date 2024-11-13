@@ -73,7 +73,7 @@ export const SettingsModal = () => {
       id='setting-modal'
       header={
         <>
-          <div className='w-4/12 max-w-[30vh] flex items-center justify-center'>
+          <div className='max-w-48 min-w-44 p-1 max-h-[88vh] mr-3 flex items-center justify-center'>
             <Button
               id='setting-go-back'
               name='setting-go-back'
@@ -108,18 +108,18 @@ export const SettingsModal = () => {
         </>
       }
     >
-      <div
-        onClick={selectMenu}
-        className='w-3/12 max-w-72 min-w-64 p-1 max-h-[88vh]'
-      >
-        <CardSettingUser
-          id='user-information'
-          name='user-information'
-          company={authModel.value.company}
-          username={authModel.value.username}
-          image={authModel.value.image}
-          rol={authModel.value.rol}
-        />
+      <div onClick={selectMenu} className='max-w-48 min-w-44 p-1 max-h-[88vh]'>
+        <div className='mr-0.5'>
+          <CardSettingUser
+            id='user-information'
+            name='user-information'
+            company={authModel.value.company}
+            username={authModel.value.username}
+            image={authModel.value.image}
+            rol={authModel.value.rol}
+          />
+        </div>
+        {/* max-h-[80vh] */}
         <div className='vox-scroll-design max-h-[80vh] overflow-y-scroll'>
           {menuSettings.value.map((menu) => {
             const name = `${menu.label}-menus`;
@@ -137,16 +137,18 @@ export const SettingsModal = () => {
           })}
         </div>
       </div>
-      <div className='w-10/12 max-h-[86vh] min-h-96 px-2'>
+      {/*  */}
+      <div className='w-full'>
         <CardSettingHeader
           id='setting-header'
           name='setting-header'
           title={menuInformationSelected.value.label}
           description={menuInformationSelected.value.description}
         />
-        <section className='w-full h-[80vh]'>
+
+        <div className=' relative max-h-[79vh] overflow-y-auto overflow-x-hidden vox-scroll-design w-full px-1'>
           <RoutingContent />
-        </section>
+        </div>
       </div>
     </Modal>
   );
