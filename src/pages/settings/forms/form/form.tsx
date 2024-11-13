@@ -6,8 +6,7 @@ import { formData } from './utils/form.data';
 import { columns } from './components';
 export const FormSettingPage = () => {
   return (
-    <section className='mt-3'>
-      {/* <div class='p-4 h-20 w-full'> */}
+    <section>
       <div class='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6'>
         <Link to='/form/create' className='form-button-general'>
           <span className='vx-icon vx-icon-055 size-xl text-primary' />
@@ -26,7 +25,6 @@ export const FormSettingPage = () => {
         </Link>
       </div>
       <Table<IForm> data={formData} columns={columns} pageSize={20} />
-      {/* </div> */}
     </section>
   );
 };

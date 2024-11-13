@@ -70,7 +70,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
   }, [table]);
 
   return (
-    <div className='w-full h-full min-h-[60vh]'>
+    <>
       {/* TABLE: HEADER */}
       <div className='w-full mb-2 flex flex-col items-end'>
         <Search
@@ -81,11 +81,12 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
       </div>
 
       {/* TABLE: ROWS */}
-      <div className=''>
-        <table className='w-full'>
+      {/* className='w-full h-[87vh] overflow-x-auto vox-scroll-design scroll-x-md mt-2' */}
+      <div className='w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light'>
+        <table className='w-full border-collapse'>
           <thead>
             {table.getHeaderGroups().map((headerGroup, index) => (
-              <tr key={`${headerGroup.id}-${index}`}>
+              <tr key={`${headerGroup.id}-${index}`} className='sticky top-0'>
                 {headerGroup.headers.map((header, index) => (
                   <th
                     key={`${header.id}-${index}`}
@@ -230,6 +231,6 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
           NEXT
         </button>
       </div>
-    </div>
+    </>
   );
 };
