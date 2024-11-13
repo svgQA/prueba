@@ -21,6 +21,8 @@ import { RoutingContent } from './routing';
 
 export const SettingsModal = () => {
   const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
+  const historyLocation = useSignal<IMenu[]>([]);
+  const currentPosition = useSignal<number>(0);
   const menuInformationSelected = useSignal<IMenu>({
     description: '',
     label: '',
@@ -34,19 +36,39 @@ export const SettingsModal = () => {
       if (!menuInformationSelected.value.to) {
         const adminMenu = menuSettings.value[0]?.menus[0];
         if (adminMenu) {
-          const to = `/setting${adminMenu.base}/`;
-          menuInformationSelected.value = {
+          const menuSelected = {
             ...adminMenu,
-            to,
+            to: `/setting${adminMenu.base}/`,
           };
-          navigate(to);
+          appendHistory(menuSelected);
+          navigate(menuSelected.to);
         }
       }
     }
   }, [getStatusSettingModal.value]);
 
-  const goBack = useCallback(() => {}, []);
-  const goForward = useCallback(() => {}, []);
+  const setMenuSelected = (menu: IMenu) =>
+    (menuInformationSelected.value = menu);
+
+  const appendHistory = (menu: IMenu) => {
+    const position = currentPosition.value;
+    setMenuSelected(menu);
+    const cleanHistory = historyLocation.value.slice(0, position + 1);
+    currentPosition.value = cleanHistory.length;
+    historyLocation.value = [...cleanHistory, menu];
+  };
+
+  const goBack = useCallback(() => {
+    if (currentPosition.value === 0) return;
+    --currentPosition.value;
+    navigate(historyLocation.value[currentPosition.value].to);
+  }, []);
+
+  const goForward = useCallback(() => {
+    if (currentPosition.value === historyLocation.value.length - 1) return;
+    ++currentPosition.value;
+    navigate(historyLocation.value[currentPosition.value].to);
+  }, []);
 
   const toggleTheme = useCallback((event: MouseEvent) => {
     event.stopPropagation();
@@ -61,7 +83,8 @@ export const SettingsModal = () => {
       const description = target.getAttribute('data-description');
       const id = target.getAttribute('id');
       if (!to || !label || !description || !id) return;
-      menuInformationSelected.value = { to, description, label, id };
+      const menuSelected = { to, description, label, id };
+      appendHistory(menuSelected);
     }
   }, []);
 
@@ -105,7 +128,7 @@ export const SettingsModal = () => {
         </div>
         <MenuList
           menuSettings={menuSettings}
-          menuInformationSelected={menuInformationSelected}
+          menuInformationSelected={menuInformationSelected.value}
         />
       </div>
       <div className='w-full mt-0.5'>

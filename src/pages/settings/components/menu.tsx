@@ -14,7 +14,7 @@ export const MenuList = memo(
             base={menu.base}
             label={menu.label}
             menus={menu.menus}
-            selected={menuInformationSelected.value}
+            selected={menuInformationSelected}
           />
         );
       })}
