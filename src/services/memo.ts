@@ -1,11 +1,11 @@
 import { BaseService } from '@/utils/network';
 import { IMakeRequest, VoxServices } from '@/utils/network/types';
 
-export class ShiftService extends BaseService {
-  static name: VoxServices = 'shift';
+export class MemoService extends BaseService {
+  static name: VoxServices = 'memo';
   static async get_all() {
     const model: IMakeRequest = {
-      url: ['shifts'],
+      url: ['memos'],
     };
     return await super.make_request<any>(this.name, model);
   }
