@@ -1,4 +1,4 @@
-import './assets/table.css';
+import './index.css';
 import {
   flexRender,
   getCoreRowModel,
@@ -13,6 +13,7 @@ import {
   Column,
 } from '@tanstack/react-table';
 import { useState } from 'preact/hooks';
+import { useSignal } from '@preact/signals';
 import { ITableProps } from './interface';
 import { RowExpandedContent } from './components';
 import React from 'preact/compat';
@@ -28,7 +29,6 @@ const getCommonPinningStyles = (column: Column<any>) => {
       ? '-4px 0 4px -4px gray inset'
       : undefined,
     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    // opacity: isPinned ? 0.95 : 1,
     position: isPinned ? 'sticky' : 'relative',
     width: column.getSize(),
     zIndex: isPinned ? 1 : 0,
@@ -42,6 +42,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
     pageSize: pageSize,
   });
   const [expanded, setExpanded] = useState<ExpandedState>({});
+  const openSettings = useSignal<boolean>(false);
 
   const table = useReactTable({
     columns,
@@ -62,6 +63,12 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
     },
   });
 
+  const memoizedLeafColumns = React.useMemo(() => {
+    return table
+      .getAllLeafColumns()
+      .map((column) => String(column.columnDef.header) || column.id);
+  }, [table]);
+
   return (
     <div className='w-full h-full min-h-[60vh]'>
       {/* TABLE: HEADER */}
@@ -69,52 +76,14 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
         <Search
           id='search-general'
           name='search-general'
-          keys={table
-            .getAllLeafColumns()
-            .map((column) => String(column.columnDef.header) || column.id)}
-          settings={
-            <>
-              {table.getAllLeafColumns().map((column) => {
-                return (
-                  <div
-                    key={column.id}
-                    className='flex items-center space-x-2 py-1 flex-row'
-                  >
-                    <div>
-                      {column.getCanPin() && (
-                        <span
-                          className={`vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'}`}
-                          onClick={() =>
-                            column.pin(column.getIsPinned() ? false : 'left')
-                          }
-                        />
-                      )}
-                    </div>
-                    <label className='flex items-center cursor-pointer'>
-                      <input
-                        {...{
-                          type: 'checkbox',
-                          checked: column.getIsVisible(),
-                          onChange: column.getToggleVisibilityHandler(),
-                        }}
-                        className='form-checkbox h-4 w-4 rounded'
-                      />
-                      <span className='ml-2 text-sm'>
-                        {column.columnDef.header}
-                      </span>
-                    </label>
-                  </div>
-                );
-              })}
-            </>
-          }
+          keys={memoizedLeafColumns}
         />
       </div>
 
       {/* TABLE: ROWS */}
       <div className=''>
         <table className='w-full'>
-          <thead className='sticky top-0 z-20'>
+          <thead>
             {table.getHeaderGroups().map((headerGroup, index) => (
               <tr key={`${headerGroup.id}-${index}`}>
                 {headerGroup.headers.map((header, index) => (
@@ -124,22 +93,75 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
                     className='p-2 text-left font-semibold'
                     style={getCommonPinningStyles(header.column)}
                   >
-                    <div
-                      className={
-                        header.column.getCanSort()
-                          ? 'cursor-pointer select-none'
-                          : ''
-                      }
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
+                    <div className='flex justify-between items-center'>
+                      <div
+                        className={
+                          header.column.getCanSort()
+                            ? 'cursor-pointer select-none'
+                            : ''
+                        }
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: ' 🔼',
+                          desc: ' 🔽',
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                      {index === headerGroup.headers.length - 1 && (
+                        <>
+                          <span
+                            className='px-2 vox-icon vx-icon-168 cursor-pointer size-sm'
+                            onClick={() =>
+                              (openSettings.value = !openSettings.value)
+                            }
+                          />
+                          <div
+                            className={`${openSettings.value ? 'visible' : 'invisible'} absolute right-2 top-12 rounded-lg shadow-lg p-4 z-30 bg-b-light border-2 dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
+                          >
+                            {table.getAllLeafColumns().map((column) => {
+                              return (
+                                <div
+                                  key={column.id}
+                                  className='flex items-center space-x-2 py-1 flex-row'
+                                >
+                                  <div>
+                                    {column.getCanPin() && (
+                                      <span
+                                        className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'}`}
+                                        onClick={() =>
+                                          column.pin(
+                                            column.getIsPinned()
+                                              ? false
+                                              : 'left'
+                                          )
+                                        }
+                                      />
+                                    )}
+                                  </div>
+                                  <label className='flex items-center cursor-pointer'>
+                                    <input
+                                      {...{
+                                        type: 'checkbox',
+                                        checked: column.getIsVisible(),
+                                        onChange:
+                                          column.getToggleVisibilityHandler(),
+                                      }}
+                                      className='form-checkbox h-4 w-4 rounded'
+                                    />
+                                    <span className='ml-2 text-sm'>
+                                      {column.columnDef.header}
+                                    </span>
+                                  </label>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
                       )}
-                      {{
-                        asc: ' 🔼',
-                        desc: ' 🔽',
-                      }[header.column.getIsSorted() as string] ?? null}
                     </div>
                   </th>
                 ))}
@@ -176,7 +198,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
       </div>
 
       {/* TABLE: PAGINATION CONTROLS */}
-      <div className='sticky w-fit flex justify-center gap-1 bottom-2 right-0 p-2 border-2 rounded-md shadow-sm z-10 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light'>
+      <div className='flex flex-row gap-3 justify-end p-3'>
         <button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}

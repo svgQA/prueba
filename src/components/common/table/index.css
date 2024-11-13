@@ -1,5 +1,5 @@
-thead {
-  /* @apply bg-rose-50; */
+/* thead {
+  @apply bg-red-100;
 }
 
 thead th > div {
@@ -7,11 +7,14 @@ thead th > div {
   text-align: left;
 }
 
+thead td {
+  @apply px-1 border-2;
+}
+
 tbody td {
-  @apply px-1;
-  text-align: left;
+  @apply px-1 border-2;
 }
 
 button {
   @apply border rounded px-3 py-1;
-}
+} */

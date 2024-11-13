@@ -1,10 +1,47 @@
 table {
-  @apply border-b-light-dark dark:border-b-dark-light rounded-lg;
+  @apply overflow-hidden rounded-xl border-separate border-spacing-0;
+
   thead {
-    @apply bg-b-light-dark dark:bg-b-dark-light;
+    @apply bg-b-light-dark dark:bg-b-dark-light sticky top-0 z-20;
+
+    th {
+      @apply border-t-2 border-b-light-dark dark:border-b-dark-light;
+    }
+    th:first-child {
+      @apply border-l-2;
+    }
+    th:last-child {
+      @apply border-r-2;
+    }
   }
-  /* td,
-  th {
-    @apply border;
-  } */
+
+  tbody {
+    td {
+      @apply border-b-2 px-1 border-b-light-dark dark:border-b-dark-light;
+
+      &:first-child {
+        @apply border-l-2;
+      }
+      &:last-child {
+        @apply border-r-2;
+      }
+    }
+  }
+}
+
+/* CSS puro adicional para redondear las esquinas */
+thead th:first-child {
+  border-top-left-radius: 12px;
+}
+
+thead th:last-child {
+  border-top-right-radius: 12px;
+}
+
+tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
 }

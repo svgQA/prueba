@@ -20,7 +20,7 @@ export const HomeLayout: FunctionComponent = () => {
   };
 
   return (
-    <section className='relative overflow-hidden'>
+    <section className='relative overflow-hidden text-t-dark'>
       <Navbar
         id='voxline-navbar'
         name='voxline-navbar'
