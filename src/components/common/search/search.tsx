@@ -198,13 +198,15 @@ export const Search = ({
           value={inputState.value}
         />
       </div>
-      <div
-        ref={keysContainerRef}
-        className={`${inputState.value.length > lenThreshold ? 'visible' : 'invisible'} absolute right-0 top-10 min-w-48 border-2 py-2 z-30 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
-        onClick={handleClickKeys}
-      >
-        {keysList}
-      </div>
+      {keys.length > 0 && (
+        <div
+          ref={keysContainerRef}
+          className={`${inputState.value.length > lenThreshold ? 'visible' : 'invisible'} absolute right-0 top-10 min-w-48 border-2 py-2 z-30 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
+          onClick={handleClickKeys}
+        >
+          {keysList}
+        </div>
+      )}
     </div>
   );
 };

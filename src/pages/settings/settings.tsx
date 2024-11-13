@@ -47,27 +47,29 @@ export const SettingsModal = () => {
     }
   }, [getStatusSettingModal.value]);
 
-  const setMenuSelected = (menu: IMenu) =>
-    (menuInformationSelected.value = menu);
+  const setMenuSelected = (menu: IMenu) => {
+    menuInformationSelected.value = menu;
+    navigate(menu.to);
+  };
 
   const appendHistory = (menu: IMenu) => {
     const position = currentPosition.value;
-    setMenuSelected(menu);
     const cleanHistory = historyLocation.value.slice(0, position + 1);
     currentPosition.value = cleanHistory.length;
     historyLocation.value = [...cleanHistory, menu];
+    setMenuSelected(menu);
   };
 
   const goBack = useCallback(() => {
     if (currentPosition.value === 0) return;
     --currentPosition.value;
-    navigate(historyLocation.value[currentPosition.value].to);
+    setMenuSelected(historyLocation.value[currentPosition.value]);
   }, []);
 
   const goForward = useCallback(() => {
     if (currentPosition.value === historyLocation.value.length - 1) return;
     ++currentPosition.value;
-    navigate(historyLocation.value[currentPosition.value].to);
+    setMenuSelected(historyLocation.value[currentPosition.value]);
   }, []);
 
   const toggleTheme = useCallback((event: MouseEvent) => {
@@ -106,7 +108,6 @@ export const SettingsModal = () => {
               id='search-general'
               name='search-general'
               placeholder='Search'
-              keys={['id_1', 'id_2', 'id_3', 'id_4']}
             />
           </div>
         </>
