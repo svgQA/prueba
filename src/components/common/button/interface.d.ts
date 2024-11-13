@@ -10,4 +10,5 @@ export interface IButtonProps extends IComponentProps {
   full?: boolean;
   className?: string;
   loading?: boolean;
+  disabled?: boolean;
 }

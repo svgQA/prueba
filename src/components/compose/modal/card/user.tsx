@@ -12,7 +12,7 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
 }: ICardSettingUserProps) => {
   return (
     <Card id={id} name={name}>
-      <div className='flex flex-row justify-center items-center'>
+      <div className='flex flex-row justify-center items-center h-12'>
         {/* <img
           src={image}
           alt={`sett-user-${id}`}

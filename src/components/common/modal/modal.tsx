@@ -29,10 +29,10 @@ export const Modal: FunctionComponent<IModalProps> = ({
       <div
         className={`${expand ? 'h-full' : 'h-fit'} overflow-y-hidden vox-scroll-design rounded-md modal-shadow w-full p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
       >
-        <div className='flex flex-row w-full items-center p-1'>
-          <div class='flex flex-row w-full items-center justify-end mb-2'>
-            {header}
-            <div className='w-32 flex items-center justify-end ml-2'>
+        <div className='flex flex-row w-full items-center pt-2'>
+          <div class='flex flex-row w-full items-center px-2.5'>
+            <div className='flex flex-row w-10/12 items-center'>{header}</div>
+            <div className='flex w-2/12 items-center justify-end'>
               <Button
                 id='setting-expand'
                 name='setting-expand'

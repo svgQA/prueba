@@ -72,7 +72,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
   return (
     <div className='w-full h-full min-h-[60vh]'>
       {/* TABLE: HEADER */}
-      <div className='w-96 mb-2'>
+      <div className='w-full mb-2 flex flex-col items-end'>
         <Search
           id='search-general'
           name='search-general'
@@ -122,6 +122,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
                           <div
                             className={`${openSettings.value ? 'visible' : 'invisible'} absolute right-2 top-12 rounded-lg shadow-lg p-4 z-30 bg-b-light border-2 dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
                           >
+                            <h5>Hidde or Pinned Columns</h5>
                             {table.getAllLeafColumns().map((column) => {
                               return (
                                 <div
