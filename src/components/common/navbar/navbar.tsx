@@ -15,7 +15,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
     <nav
       id={id}
       name={name}
-      className='flex font-bold px-5 py-4 flex-row justify-between w-full content-center items-center absolute text-white top-0 z-50'
+      className='flex font-bold px-5 py-4 flex-row justify-between w-full content-center items-center absolute top-0 z-50'
     >
       <span className='text-xl'>{logo}</span>
       <ul className='flex flex-row items-center text-center space-x-4'>
@@ -25,7 +25,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
             {menu.button && onActionHandler ? (
               <button
                 onClick={() => onActionHandler(menu.to)}
-                className='px-3 py-2 rounded hover:bg-white hover:bg-opacity-20 transition-colors duration-200'
+                className='px-3 py-2 rounded hover:bg-opacity-20 transition-colors duration-200'
               >
                 {menu.label}
               </button>
@@ -34,7 +34,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
             ) : (
               <Link
                 to={menu.to}
-                className='px-3 py-2 rounded hover:bg-white hover:bg-opacity-20 transition-colors duration-200'
+                className='px-3 py-2 rounded hover:bg-opacity-20 transition-colors duration-200'
               >
                 {menu.label}
               </Link>

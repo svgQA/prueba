@@ -34,7 +34,7 @@ export const ExpandableRow: FunctionComponent<ExpandableContentProps> = ({
   attachments,
 }) => {
   return (
-    <div className='grid grid-cols-1 md:grid-cols-5 gap-4 p-4 bg-white shadow rounded-lg'>
+    <div className='grid grid-cols-1 md:grid-cols-5 gap-4 p-4 shadow rounded-lg'>
       <div className='md:col-span-1'>
         <h3 className='font-semibold mb-2'>Descripción</h3>
         <p>{description}</p>
@@ -82,7 +82,7 @@ export const ExpandableRow: FunctionComponent<ExpandableContentProps> = ({
                 href={attachment.url}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='flex items-center text-blue-600 hover:underline'
+                className='flex items-center hover:underline'
               >
                 {attachment.type === 'image' && (
                   <img

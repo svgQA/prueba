@@ -41,21 +41,21 @@ export const itemsForm: IFormItem[] = [
     icon: 'users',
     type: FORM_ITEM.PARAGRAPH,
   },
-  {
-    label: FORM_ITEM.PHOTO,
-    icon: 'users',
-    type: FORM_ITEM.PHOTO,
-  },
+  // {
+  //   label: FORM_ITEM.PHOTO,
+  //   icon: 'users',
+  //   type: FORM_ITEM.PHOTO,
+  // },
   {
     label: FORM_ITEM.QR,
     icon: 'users',
     type: FORM_ITEM.QR,
   },
-  {
-    label: FORM_ITEM.CAMERA,
-    icon: 'users',
-    type: FORM_ITEM.CAMERA,
-  },
+  // {
+  //   label: FORM_ITEM.CAMERA,
+  //   icon: 'users',
+  //   type: FORM_ITEM.CAMERA,
+  // },
   {
     label: FORM_ITEM.AUDIO,
     icon: 'users',
