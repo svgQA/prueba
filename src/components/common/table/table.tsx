@@ -15,7 +15,6 @@ import {
 import { useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import { ITableProps } from './interface';
-import { RowExpandedContent } from './components';
 import React from 'preact/compat';
 import { Search } from '../search/search';
 
@@ -35,7 +34,12 @@ const getCommonPinningStyles = (column: Column<any>) => {
   };
 };
 
-export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
+export const Table = <T,>({
+  data,
+  columns,
+  pageSize = 10,
+  expandable,
+}: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -186,10 +190,10 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
                     </td>
                   ))}
                 </tr>
-                {row.getIsExpanded() && (
-                  <tr>
+                {expandable && row.getIsExpanded() && (
+                  <tr className='border-b border-gray-200'>
                     <td colSpan={row.getVisibleCells().length} className='p-4'>
-                      <RowExpandedContent row={row} />
+                      {expandable(row.original)}
                     </td>
                   </tr>
                 )}

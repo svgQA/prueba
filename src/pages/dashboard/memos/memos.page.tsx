@@ -4,6 +4,7 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { type Memo, memosData } from './utils';
 import { columns } from './components';
+import { ExpandableMemos } from '@/components/compose';
 import { CardData } from '@/components/compose';
 
 export const MemosPage: FunctionComponent = () => {
@@ -41,7 +42,12 @@ export const MemosPage: FunctionComponent = () => {
           icon='110'
         />
       </div>
-      <Table<Memo> data={data} columns={columns} pageSize={16} />
+      <Table<Memo>
+        data={data}
+        columns={columns}
+        pageSize={16}
+        expandable={(row: Memo) => <ExpandableMemos row={row} />}
+      />
     </Section>
   );
 };

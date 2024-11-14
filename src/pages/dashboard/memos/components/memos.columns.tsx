@@ -38,7 +38,7 @@ export const FormattedDate: FunctionComponent<{ date: string }> = ({
 }) => {
   return (
     <div className='flex items-center'>
-      <span className='vx-icon vx-sensor size-sm'></span>
+      <span className='vx-icon-025" size-sm'></span>
       <span>{dayjs(date).format('YYYY-MM-DD HH:mm')}</span>
     </div>
   );
