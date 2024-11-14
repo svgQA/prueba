@@ -18,10 +18,10 @@ export const Expand: FunctionComponent<IExpandProps> = ({
     <div
       id={id}
       name={name}
-      className='capitalize w-full rounded p-2 bg-gray-100 my-1 flex flex-col relative'
+      className='capitalize w-full rounded p-2 my-1 flex flex-col relative'
     >
       <span
-        className='bottom-1 left-[45%] absolute bg-gray-400 rounded-xl w-20 h-1 cursor-pointer'
+        className='bottom-1 left-[45%] absolute rounded-xl w-20 h-1 cursor-pointer'
         onClick={onToggle}
       ></span>
       <div className='h-20 w-100 overflow-hidden flex flex-row relative'>

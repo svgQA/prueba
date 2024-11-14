@@ -14,7 +14,7 @@ export const PBadge: FunctionComponent<PriorityBadgeProps> = memo(
 
     return (
       <div
-        className={`flex items-center justify-center py-1 rounded text-white text-sm w-[90px] ${bgColorClass}`}
+        className={`flex items-center justify-center py-1 rounded text-sm w-[90px] ${bgColorClass}`}
       >
         <span className='vx-icon mx-1 vx-siren size-sm'></span>
         <span>{priority}</span>

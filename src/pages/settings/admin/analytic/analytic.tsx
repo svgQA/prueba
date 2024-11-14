@@ -8,7 +8,7 @@ export const AnalyticAdminSettingPage: FunctionComponent = () => {
     document.title = 'Analytic Admin Settings';
   }, []);
   return (
-    <section className='h-full bg-neutral-100'>
+    <section>
       ANALYTIC
       {/* <LatitudeEmbed url={VOX_LATITUDE_SERVICE_URL} /> */}
     </section>

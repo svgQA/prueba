@@ -1,0 +1,23 @@
+table.info {
+  thead {
+    @apply rounded-xl bg-b-light-dark dark:bg-b-dark-light sticky -top-1 z-10;
+  }
+
+  thead th:first-child {
+    @apply rounded-tl-lg;
+  }
+
+  thead th:last-child {
+    @apply rounded-tr-lg;
+  }
+
+  thead th:last-child {
+    border-top-right-radius: 0.1em;
+  }
+
+  tbody {
+    td {
+      @apply border-t-2 px-1 border-b-light-dark dark:border-b-dark-light;
+    }
+  }
+}

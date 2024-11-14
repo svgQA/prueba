@@ -5,13 +5,14 @@ export const Card: FunctionComponent<ICardProps> = ({
   id,
   name,
   children,
-  color = 'bg-neutral-200 bg-opacity-40',
+  color = 'bg-opacity-40',
+  shadow = false,
 }: ICardProps) => {
   return (
     <div
       id={id}
       name={name}
-      className={`${color} capitalize rounded-lg p-2 m-1 h-fit`}
+      className={`${color} ${shadow ? 'shadow-md' : ''} capitalize rounded-lg p-2 m-1 h-fit bg-b-light-dark dark:bg-b-dark-light`}
     >
       {children}
     </div>
