@@ -6,8 +6,18 @@ export const ExpandableShift: FunctionComponent<IExpandableProps> = ({
 }: IExpandableProps) => {
   return (
     <div>
-      <h3>SHIFT</h3>
-      {JSON.stringify(row)}
+      <div style={{ display: 'flex', gap: '2rem' }}>
+        <div>
+          <h4>Check In</h4>
+          <p>Date: {row.checkIn.date}</p>
+          <p>Status: {row.checkIn.status}</p>
+        </div>
+        <div>
+          <h4>Check Out</h4>
+          <p>Date: {row.checkOut.date}</p>
+          <p>Status: {row.checkOut.status}</p>
+        </div>
+      </div>
     </div>
   );
 };

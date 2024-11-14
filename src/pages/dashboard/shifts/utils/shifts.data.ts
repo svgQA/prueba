@@ -10,6 +10,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 3,
     activitiesProgress: 75,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Juan Pérez',
     city: 'Ciudad de México', // Nueva propiedad
     address: 'Calle Reforma 123, Col. Centro', // Nueva propiedad
@@ -23,6 +31,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 1,
     activitiesProgress: 50,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre María González',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -37,6 +53,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 0,
     activitiesProgress: 100,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Carlos Rodríguez',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -50,6 +74,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 2,
     activitiesProgress: 25,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Ana Martínez',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -63,6 +95,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 5,
     activitiesProgress: 60,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Luis Sánchez',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -76,6 +116,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 5,
     activitiesProgress: 90,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Luis Sánchez',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -89,6 +137,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 5,
     activitiesProgress: 90,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Luis Sánchez',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -102,6 +158,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 3,
     activitiesProgress: 85,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Andrés Torres',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -115,6 +179,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 4,
     activitiesProgress: 95,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Camila Rojas',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -128,6 +200,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 1,
     activitiesProgress: 70,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Valeria García',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -141,6 +221,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 6,
     activitiesProgress: 80,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Mateo Pérez',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -154,6 +242,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 2,
     activitiesProgress: 75,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Juan López',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -167,6 +263,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 0,
     activitiesProgress: 88,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Sofía Herrera',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -180,6 +284,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 5,
     activitiesProgress: 92,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Lucas Ortiz',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -193,6 +305,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 3,
     activitiesProgress: 78,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Gabriela Mendoza',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -206,6 +326,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 4,
     activitiesProgress: 90,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Sebastián Ruiz',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -219,6 +347,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 1,
     activitiesProgress: 85,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Daniela Gómez',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -232,6 +368,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 2,
     activitiesProgress: 76,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Carlos Moreno',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -245,6 +389,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 3,
     activitiesProgress: 89,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Fernanda Castro',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -258,6 +410,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 4,
     activitiesProgress: 80,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Ricardo Ramírez',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -271,6 +431,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 2,
     activitiesProgress: 95,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Mariana Silva',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -284,6 +452,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 1,
     activitiesProgress: 77,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Miguel Castro',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -297,6 +473,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 0,
     activitiesProgress: 88,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Alejandra Díaz',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -310,6 +494,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 2,
     activitiesProgress: 79,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Eduardo Serrano',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -323,6 +515,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 1,
     activitiesProgress: 81,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Isabella Vargas',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -336,6 +536,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 5,
     activitiesProgress: 84,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Julio Hernández',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -349,6 +557,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 6,
     activitiesProgress: 82,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre Lucía Vega',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
@@ -362,6 +578,14 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 2,
     activitiesProgress: 87,
+    checkIn: {
+      date: '123123123123',
+      status: '123123213',
+    },
+    checkOut: {
+      date: '123123123123',
+      status: '123123213',
+    },
     moreInfo: 'Información adicional sobre David Molina',
     city: 'Guadalajara', // Nueva propiedad
     address: 'Avenida Juárez 456, Col. Americana', // Nueva propiedad
