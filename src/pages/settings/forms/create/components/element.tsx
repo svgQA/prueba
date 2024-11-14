@@ -144,8 +144,9 @@ export const FormElement = ({
           <td
             colSpan={2}
             onClick={handleSelect}
-            className={`${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`}
+            className={`${selected ? 'border-2 border-red-300' : ''}`}
           >
+            {/* className={`${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`} */}
             <div className='flex flex-row items-center'>
               <span
                 ref={(node) => ref(drop(node))}

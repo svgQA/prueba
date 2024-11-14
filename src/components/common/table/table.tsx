@@ -83,7 +83,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
       {/* TABLE: ROWS */}
       {/* className='w-full h-[87vh] overflow-x-auto vox-scroll-design scroll-x-md mt-2' */}
       <div className='w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light'>
-        <table className='w-full border-collapse'>
+        <table className='w-full border-collapse info'>
           <thead>
             {table.getHeaderGroups().map((headerGroup, index) => (
               <tr key={`${headerGroup.id}-${index}`} className='sticky top-0'>
@@ -173,7 +173,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
           <tbody>
             {table.getRowModel().rows.map((row, index) => (
               <React.Fragment key={`${row.id}_${index}`}>
-                <tr>
+                <tr className='h-14 hover:shadow'>
                   {row.getVisibleCells().map((cell, index) => (
                     <td
                       key={`${cell.id}_${index}`}

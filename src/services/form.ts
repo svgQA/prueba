@@ -27,7 +27,14 @@ export class FormService extends BaseService {
 
   static async get_all() {
     const model: IMakeRequest = {
-      url: ['forms'],
+      url: ['form'],
+      headers: {
+        'voxline-tenant': 'form',
+      },
+      params: {
+        page: 1,
+        items: 10,
+      },
     };
     return await super.make_request<any>(this.name, model);
   }

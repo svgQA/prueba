@@ -142,29 +142,31 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                     onChange={handlePageInputChange}
                   />
                 </div>
-                <table class='w-full text-left relative border-2'>
-                  <thead>
-                    <tr>
-                      <th className='py-1 px-2 rounded-tl-md'>Question</th>
-                      <th className='py-1 rounded-tr-md'>Type of Response</th>
-                    </tr>
-                  </thead>
-                  <DndProvider backend={HTML5Backend}>
-                    <tbody>
-                      {page.elements.map((element, index) => (
-                        <FormElement
-                          key={element.id}
-                          question={element}
-                          page={page.id}
-                          index={index}
-                          selected={validateSelectedElement(element.id)}
-                          onSelect={handleSelect}
-                          onDelete={removeElement}
-                        />
-                      ))}
-                    </tbody>
-                  </DndProvider>
-                </table>
+                <div className='w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light'>
+                  <table class='w-full text-left px-2'>
+                    <thead className='border-b-2 border-b-light-dark dark:border-b-dark-light'>
+                      <tr>
+                        <th className='py-1 px-2 rounded-tl-md'>Question</th>
+                        <th className='py-1 rounded-tr-md'>Type of Response</th>
+                      </tr>
+                    </thead>
+                    <DndProvider backend={HTML5Backend}>
+                      <tbody>
+                        {page.elements.map((element, index) => (
+                          <FormElement
+                            key={element.id}
+                            question={element}
+                            page={page.id}
+                            index={index}
+                            selected={validateSelectedElement(element.id)}
+                            onSelect={handleSelect}
+                            onDelete={removeElement}
+                          />
+                        ))}
+                      </tbody>
+                    </DndProvider>
+                  </table>
+                </div>
               </div>
             ))}
           </div>
