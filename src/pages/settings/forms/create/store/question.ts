@@ -1,18 +1,23 @@
 import { computed, signal } from '@preact/signals';
 import shortUUID from 'short-uuid';
-import { ELEMENT_TYPE, IElement, IFormat, IPage } from './interface.d';
+import { IElement, IFormat, IPage } from './interface.d';
+import { ELEMENT_TYPE } from './types';
+
+const getNewElement = (section?: string, type?: ELEMENT_TYPE): IElement => ({
+  id: shortUUID.generate(),
+  label: '',
+  type: type || ELEMENT_TYPE.INPUT,
+  required: false,
+  visible: false,
+  disable: false,
+  assigned: false,
+  section,
+});
 
 const getInitPage = (): IPage => ({
   id: shortUUID.generate(),
-  label: 'New Page',
-  elements: [
-    {
-      id: shortUUID.generate(),
-      label: 'New Element',
-      type: ELEMENT_TYPE.INPUT,
-      required: false,
-    },
-  ],
+  label: '',
+  elements: [getNewElement()],
 });
 
 export const format = signal<IFormat>({
@@ -23,6 +28,7 @@ export const format = signal<IFormat>({
 });
 
 export const getFormLength = computed(() => format.value.pages.length);
+export const getForm = computed(() => format.value);
 
 export const addPage = () => {
   format.value = {
@@ -50,15 +56,7 @@ export const addElement = (page: string, section?: string) => {
               if (el.id === section) {
                 return {
                   ...el,
-                  elements: [
-                    ...(el.elements || []),
-                    {
-                      id: shortUUID.generate(),
-                      label: 'New Element',
-                      type: ELEMENT_TYPE.INPUT,
-                      required: false,
-                    },
-                  ],
+                  elements: [...(el.elements || []), getNewElement(section)],
                 };
               }
               return el;
@@ -67,15 +65,7 @@ export const addElement = (page: string, section?: string) => {
         }
         return {
           ...p,
-          elements: [
-            ...p.elements,
-            {
-              id: shortUUID.generate(),
-              label: 'New Element',
-              type: ELEMENT_TYPE.INPUT,
-              required: false,
-            },
-          ],
+          elements: [...p.elements, getNewElement()],
         };
       }
       return p;
@@ -88,23 +78,17 @@ export const addSection = (page: string) => {
     ...format.value,
     pages: format.value.pages.map((p: IPage) => {
       if (p.id === page) {
+        const sectionId = shortUUID.generate();
         return {
           ...p,
           elements: [
             ...p.elements,
             {
-              id: shortUUID.generate(),
-              label: 'New Section',
+              id: sectionId,
+              label: '',
               type: ELEMENT_TYPE.SECTION,
               required: false,
-              elements: [
-                {
-                  id: shortUUID.generate(),
-                  label: 'New Element',
-                  type: ELEMENT_TYPE.INPUT,
-                  required: false,
-                },
-              ],
+              elements: [getNewElement(sectionId)],
             },
           ],
         };
@@ -162,37 +146,51 @@ export function removeElement(id: string, page: string, section?: string) {
 export const moveElement = (
   dragIndex: number,
   hoverIndex: number,
-  pageId: string,
-  parentElementId?: string
+  page: string,
+  section?: string
 ) => {
   format.value = {
     ...format.value,
     pages: format.value.pages.map((p: IPage) => {
-      if (p.id === pageId) {
-        if (parentElementId) {
+      if (p.id === page) {
+        if (section) {
           return {
             ...p,
             elements: p.elements.map((el: IElement) => {
-              if (el.id === parentElementId && el.elements) {
+              if (el.id === section && el.elements) {
                 const updatedElements = [...el.elements];
-                const [movedElement] = updatedElements.splice(dragIndex, 1);
-                updatedElements.splice(hoverIndex, 0, movedElement);
-                return {
-                  ...el,
-                  elements: updatedElements,
-                };
+
+                const dragElement = updatedElements[dragIndex];
+                const hoverElement = updatedElements[hoverIndex];
+
+                if (dragElement.section === hoverElement.section) {
+                  const [movedElement] = updatedElements.splice(dragIndex, 1);
+                  updatedElements.splice(hoverIndex, 0, movedElement);
+                  return {
+                    ...el,
+                    elements: updatedElements,
+                  };
+                }
+                return el;
               }
               return el;
             }),
           };
         }
         const updatedElements = [...p.elements];
-        const [movedElement] = updatedElements.splice(dragIndex, 1);
-        updatedElements.splice(hoverIndex, 0, movedElement);
-        return {
-          ...p,
-          elements: updatedElements,
-        };
+
+        const dragElement = updatedElements[dragIndex];
+        const hoverElement = updatedElements[hoverIndex];
+
+        if (dragElement.section === hoverElement.section) {
+          const [movedElement] = updatedElements.splice(dragIndex, 1);
+          updatedElements.splice(hoverIndex, 0, movedElement);
+          return {
+            ...p,
+            elements: updatedElements,
+          };
+        }
+        return p;
       }
       return p;
     }),

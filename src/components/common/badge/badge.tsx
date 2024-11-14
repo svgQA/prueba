@@ -11,7 +11,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
     <span
       className={`${color} ${bgColor} text-xs font-extralight items-center capitalize pl-1 pr-2 flex justify-between rounded-md`}
     >
-      <span className={`vx-icon mx-1 vx-${icon} size-sm`}></span>
+      <span className={`vox-icon vx-icon-${icon} size-sm mx-1`}></span>
       {label}
     </span>
   );

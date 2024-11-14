@@ -13,8 +13,12 @@ export class BaseService {
     this.closeLoading = close;
   }
 
-  private static make_url(paths: string[], base: VoxServices): string {
-    const model = [this.prefix, ...paths];
+  private static make_url(
+    paths: string[],
+    base: VoxServices,
+    prefix?: boolean
+  ): string {
+    const model = prefix ? [this.prefix, ...paths] : paths;
     const subdirectory = model.join(VOX_DEFAULT_PATH.DEFAULT);
     const urlBase = VOS_SERVICES[base];
     const urlTotal = `${urlBase}/${subdirectory}`;
@@ -35,16 +39,26 @@ export class BaseService {
         https://voxline.com/api/shift/...
         https://voxline.com/api/form/...
      */
-    model: IMakeRequest
+    model: IMakeRequest,
+    prefix?: boolean
   ): Promise<GenericResponse<T>> {
     this.openLoading();
-    const url = this.make_url(model.url, instance);
+    let url = this.make_url(model.url, instance, prefix);
+
+    if (model.params) {
+      const queryParams = new URLSearchParams();
+      Object.entries(model.params).forEach(([key, value]) => {
+        queryParams.append(key, String(value));
+      });
+      url = `${url}?${queryParams.toString()}`;
+    }
 
     const method = model?.method || REQUEST_METHODS.GET;
     if (method === REQUEST_METHODS.POST) {
       model.headers = { ...model.headers, 'Content-type': 'application/json' };
       model.data = JSON.stringify(model.data || {});
     }
+
     try {
       const response = await fetch(url, {
         headers: model.headers,

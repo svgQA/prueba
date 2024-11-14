@@ -2,8 +2,8 @@ import { REQUEST_METHODS } from './network.enum';
 
 export interface IModelRequest {
   data?: any;
-  params?: any;
-  headers?: any;
+  params?: { [key: string]: string | number };
+  headers?: { [key: string]: string };
   method?: REQUEST_METHODS;
 }
 

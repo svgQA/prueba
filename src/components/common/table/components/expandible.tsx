@@ -1,7 +1,7 @@
 export const RowExpandedContent = ({ row }: { row: any }) => {
   if (row.original.moreInfo) {
     return (
-      <div className='grid grid-cols-1 md:grid-cols-5 gap-4 p-4 bg-white shadow rounded-lg'>
+      <div className='grid grid-cols-1 md:grid-cols-5 gap-4 p-4 shadow rounded-lg'>
         {/* Columna de Descripción */}
         <div className='md:col-span-1'>
           <h3 className='font-semibold mb-2'>Descripción</h3>
@@ -63,7 +63,7 @@ export const RowExpandedContent = ({ row }: { row: any }) => {
                     href={attachment.url}
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='flex items-center text-blue-600 hover:underline'
+                    className='flex items-center hover:underline'
                   >
                     {attachment.type === 'image' && (
                       <img

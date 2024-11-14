@@ -24,22 +24,22 @@ export const Modal: FunctionComponent<IModalProps> = ({
       name={name}
       tabIndex={-1}
       aria-hidden='true'
-      className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-gray-500 bg-opacity-60`}
+      className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-opacity-60`}
     >
       <div
-        className={`${expand ? 'h-full' : 'h-fit'} overflow-y-hidden rounded-md modal-shadow w-full p-1 border-2 bg-neutral-100`}
+        className={`${expand ? 'h-full' : 'h-fit'} overflow-y-hidden vox-scroll-design rounded-md modal-shadow w-full p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
       >
-        <div className='flex flex-row w-full items-center p-1'>
-          <div class='flex flex-row w-full items-center justify-end mb-2'>
-            {header}
-            <div className='w-32 flex items-center justify-end ml-2'>
+        <div className='flex flex-row w-full items-center pt-2'>
+          <div class='flex flex-row w-full items-center px-2.5'>
+            <div className='flex flex-row w-10/12 items-center'>{header}</div>
+            <div className='flex w-2/12 items-center justify-end'>
               <Button
                 id='setting-expand'
                 name='setting-expand'
                 onClick={toggleExpand}
                 type='button'
                 rounded
-                icon='gateway'
+                icon='105'
               ></Button>
               <Button
                 id='setting-close'
@@ -47,7 +47,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
                 onClick={onClose}
                 type='button'
                 rounded
-                icon='logo'
+                icon='192'
               ></Button>
             </div>
           </div>

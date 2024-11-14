@@ -1,0 +1,12 @@
+button {
+  @apply border border-b-light-dark dark:border-b-dark-light text-primary;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+}
