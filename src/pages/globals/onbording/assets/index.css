@@ -7,7 +7,7 @@
 }
 
 .onboarding-inputs {
-  @apply w-full p-2 mb-4 border border-gray-300 rounded;
+  @apply w-full p-2 mb-4 border rounded;
 }
 
 .onboarding-inputs > input,

@@ -1,21 +1,25 @@
 import { IModalSidebarMenu } from '@/components/compose/modal';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
+const base = PAGES_LIST_ROUTER.dashboard.setting.forms.base;
 export const MODAL_SETTING_FORM: IModalSidebarMenu = {
   label: 'formularios',
+  base: PAGES_LIST_ROUTER.dashboard.setting.base,
   menus: [
     {
-      icon: 'apps',
-      label: 'crear',
-      description: 'Payment',
-      to: PAGES_LIST_ROUTER.dashboard.forms.create.to,
+      icon: '094',
+      label: 'Forms',
+      description: 'Forms',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.forms.form.base,
       id: 'form-create',
     },
     {
-      icon: 'graph',
+      icon: '028',
       label: 'analytic',
-      description: 'Payment',
-      to: PAGES_LIST_ROUTER.dashboard.forms.analytic.to,
+      description: 'Responses',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.base,
       id: 'form-analytic',
     },
   ],

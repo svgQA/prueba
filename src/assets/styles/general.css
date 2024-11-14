@@ -49,6 +49,14 @@
   border-radius: 20px;
 }
 
-input {
+input,
+textarea {
   background-color: transparent !important;
+  outline: none;
+  color: red;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='time']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }

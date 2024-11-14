@@ -30,8 +30,11 @@ export enum PAGES_LIST {
   SETTING_PAYMENT_PAYMENT = '/setting/payment',
   SETTING_PAYMENT_HISTORY = '/setting/payment/history',
   // SETTING FORM ROUTES
-  SETTING_FORMS_CREATE = '/setting/form',
+  SETTING_FORMS = '/setting/form',
+  SETTING_FORMS_CREATE = '/setting/form/create',
   SETTING_FORMS_ANALYTIC = '/setting/form/analytic',
+  SETTING_FORMS_LIST = '/setting/form/list',
+  SETTING_FORMS_REPORT = '/setting/form/report',
   // SETTING IOT ROUTES
   SETTING_IOT_ANALYTIC = '/setting/iot',
   SETTING_IOT_DEVICES = '/setting/iot/devices',

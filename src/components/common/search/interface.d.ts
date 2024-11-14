@@ -1,4 +1,5 @@
 import { type IComponentProps } from '@/components/utils/interface';
+import { VNode } from 'preact';
 
 export interface IFilterModel {
   key: string;

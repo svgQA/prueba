@@ -1,2 +1,1 @@
-export * from './element';
-export * from './phone';
+export * from './form.columns';

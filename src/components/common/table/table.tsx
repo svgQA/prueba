@@ -1,4 +1,4 @@
-import './assets/table.css';
+import './index.css';
 import {
   flexRender,
   getCoreRowModel,
@@ -13,6 +13,7 @@ import {
   Column,
 } from '@tanstack/react-table';
 import { useState } from 'preact/hooks';
+import { useSignal } from '@preact/signals';
 import { ITableProps } from './interface';
 import React from 'preact/compat';
 import { Search } from '../search/search';
@@ -40,12 +41,12 @@ export const Table = <T,>({
   expandable,
 }: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [settings, setSetting] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
   });
   const [expanded, setExpanded] = useState<ExpandedState>({});
+  const openSettings = useSignal<boolean>(false);
 
   const table = useReactTable({
     columns,
@@ -66,87 +67,107 @@ export const Table = <T,>({
     },
   });
 
+  const memoizedLeafColumns = React.useMemo(() => {
+    return table
+      .getAllLeafColumns()
+      .map((column) => String(column.columnDef.header) || column.id);
+  }, [table]);
+
   return (
-    <div className='relative'>
-      <div className='flex flex-row'>
+    <>
+      {/* TABLE: HEADER */}
+      <div className='w-full mb-2 flex flex-col items-end'>
         <Search
           id='search-general'
           name='search-general'
-          keys={table
-            .getAllLeafColumns()
-            .map((column) => String(column.columnDef.header) || column.id)}
+          keys={memoizedLeafColumns}
         />
-        <div className='flex cursor-pointer bg-gray-100 hover:bg-gray-300 mx-2 text-center items-center rounded-md'>
-          <span
-            className='vox-icon vx-icon-255 px-2 py-1'
-            onClick={() => setSetting((prev) => !prev)}
-          />
-          <div
-            className={`${settings ? 'visible' : 'invisible'} absolute right-2 top-12 bg-white rounded-lg shadow-lg p-4 z-30`}
-          >
-            {table.getAllLeafColumns().map((column) => {
-              return (
-                <div
-                  key={column.id}
-                  className='flex items-center space-x-2 py-1 flex-row'
-                >
-                  <div>
-                    {column.getCanPin() && (
-                      <span
-                        className={`${column.getIsPinned() ? 'text-red-400' : 'text-green-400'} vox-icon vx-icon-305 px-2 py-1 size-sm`}
-                        onClick={() =>
-                          column.pin(column.getIsPinned() ? false : 'left')
-                        }
-                      />
-                    )}
-                  </div>
-                  <label className='flex items-center cursor-pointer'>
-                    <input
-                      {...{
-                        type: 'checkbox',
-                        checked: column.getIsVisible(),
-                        onChange: column.getToggleVisibilityHandler(),
-                      }}
-                      className='form-checkbox h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500'
-                    />
-                    <span className='ml-2 text-sm text-gray-700'>
-                      {column.columnDef.header}
-                    </span>
-                  </label>
-                </div>
-              );
-            })}
-          </div>
-        </div>
       </div>
-      <div className='w-full h-[87vh] overflow-x-auto vox-scroll-design scroll-x-md mt-2'>
-        <table className='w-full border-collapse'>
-          <thead className='sticky top-0 z-20'>
+
+      {/* TABLE: ROWS */}
+      {/* className='w-full h-[87vh] overflow-x-auto vox-scroll-design scroll-x-md mt-2' */}
+      <div className='w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light'>
+        <table className='w-full border-collapse info'>
+          <thead>
             {table.getHeaderGroups().map((headerGroup, index) => (
-              <tr key={`${headerGroup.id}-${index}`}>
+              <tr key={`${headerGroup.id}-${index}`} className='sticky top-0'>
                 {headerGroup.headers.map((header, index) => (
                   <th
                     key={`${header.id}-${index}`}
                     colSpan={header.colSpan}
-                    className='p-2 text-left font-semibold text-gray-600 bg-gray-50 border-b border-gray-300'
+                    className='p-2 text-left font-semibold'
                     style={getCommonPinningStyles(header.column)}
                   >
-                    <div
-                      className={
-                        header.column.getCanSort()
-                          ? 'cursor-pointer select-none'
-                          : ''
-                      }
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
+                    <div className='flex justify-between items-center'>
+                      <div
+                        className={
+                          header.column.getCanSort()
+                            ? 'cursor-pointer select-none'
+                            : ''
+                        }
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: ' 🔼',
+                          desc: ' 🔽',
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                      {index === headerGroup.headers.length - 1 && (
+                        <>
+                          <span
+                            className='px-2 vox-icon vx-icon-168 cursor-pointer size-sm'
+                            onClick={() =>
+                              (openSettings.value = !openSettings.value)
+                            }
+                          />
+                          <div
+                            className={`${openSettings.value ? 'visible' : 'invisible'} absolute right-2 top-12 rounded-lg shadow-lg p-4 z-30 bg-b-light border-2 dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
+                          >
+                            <h5>Hidde or Pinned Columns</h5>
+                            {table.getAllLeafColumns().map((column) => {
+                              return (
+                                <div
+                                  key={column.id}
+                                  className='flex items-center space-x-2 py-1 flex-row'
+                                >
+                                  <div>
+                                    {column.getCanPin() && (
+                                      <span
+                                        className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'}`}
+                                        onClick={() =>
+                                          column.pin(
+                                            column.getIsPinned()
+                                              ? false
+                                              : 'left'
+                                          )
+                                        }
+                                      />
+                                    )}
+                                  </div>
+                                  <label className='flex items-center cursor-pointer'>
+                                    <input
+                                      {...{
+                                        type: 'checkbox',
+                                        checked: column.getIsVisible(),
+                                        onChange:
+                                          column.getToggleVisibilityHandler(),
+                                      }}
+                                      className='form-checkbox h-4 w-4 rounded'
+                                    />
+                                    <span className='ml-2 text-sm'>
+                                      {column.columnDef.header}
+                                    </span>
+                                  </label>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </>
                       )}
-                      {{
-                        asc: ' 🔼',
-                        desc: ' 🔽',
-                      }[header.column.getIsSorted() as string] ?? null}
                     </div>
                   </th>
                 ))}
@@ -156,11 +177,10 @@ export const Table = <T,>({
           <tbody>
             {table.getRowModel().rows.map((row, index) => (
               <React.Fragment key={`${row.id}_${index}`}>
-                <tr className='border-b border-gray-200'>
+                <tr className='h-14 hover:shadow'>
                   {row.getVisibleCells().map((cell, index) => (
                     <td
                       key={`${cell.id}_${index}`}
-                      className='p-2 whitespace-nowrap bg-white'
                       style={getCommonPinningStyles(cell.column)}
                     >
                       {flexRender(
@@ -182,12 +202,13 @@ export const Table = <T,>({
           </tbody>
         </table>
       </div>
-      {/* Pagination controls */}
-      <div className='absolute flex justify-center gap-1 bottom-2 right-[43%] p-2 bg-white border-2 rounded-md shadow-sm z-10'>
+
+      {/* TABLE: PAGINATION CONTROLS */}
+      <div className='flex flex-row gap-3 justify-end p-3'>
         <button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className='px-3 py-1 bg-[rgb(217,217,217)] text-gray-700 rounded'
+          className='px-3 py-1 rounded text-t-light dark:text-t-dark'
         >
           PREV
         </button>
@@ -195,7 +216,7 @@ export const Table = <T,>({
           <button
             key={index}
             onClick={() => table.setPageIndex(page)}
-            className={`px-3 py-1 bg-[rgb(217,217,217)] text-gray-700 rounded ${
+            className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${
               table.getState().pagination.pageIndex === page ? 'font-bold' : ''
             }`}
           >
@@ -204,18 +225,16 @@ export const Table = <T,>({
         ))}
         {table.getPageCount() > 3 &&
         table.getState().pagination.pageIndex < table.getPageCount() - 3 ? (
-          <span className='px-3 py-1 bg-[rgb(217,217,217)] text-gray-700 rounded'>
-            ...
-          </span>
+          <span className='px-3 py-1 rounded'>...</span>
         ) : null}
         <button
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className='px-3 py-1 bg-[rgb(217,217,217)] text-gray-700 rounded'
+          className='px-3 py-1 rounded text-t-light dark:text-t-dark'
         >
           NEXT
         </button>
       </div>
-    </div>
+    </>
   );
 };

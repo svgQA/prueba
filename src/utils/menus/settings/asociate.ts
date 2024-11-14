@@ -1,21 +1,25 @@
 import { IModalSidebarMenu } from '@/components/compose/modal';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
+const base = PAGES_LIST_ROUTER.dashboard.setting.asociate.base;
 export const MODAL_SETTING_ASSOCIATE: IModalSidebarMenu = {
   label: 'Asociados',
+  base: PAGES_LIST_ROUTER.dashboard.setting.base,
   menus: [
     {
-      icon: 'apps',
-      label: 'Lista',
+      icon: '096',
+      label: 'Listas',
       description: 'Devices',
-      to: PAGES_LIST_ROUTER.dashboard.asociate.list.to,
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.asociate.list.base,
       id: 'lists',
     },
     {
-      icon: 'settings',
+      icon: '168',
       label: 'recursos',
       description: 'Devices',
-      to: PAGES_LIST_ROUTER.dashboard.asociate.resource.to,
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.asociate.resource.base,
       id: 'resources',
     },
   ],

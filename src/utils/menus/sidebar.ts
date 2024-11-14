@@ -1,33 +1,33 @@
 import { type IMenu } from '@/components/common/interface';
-import { PAGES_LIST } from '../routing';
+import { PAGES_LIST_ROUTER } from '../routing';
 
 export const SIDEBAR_MENUS: IMenu[] = [
   {
     label: 'memos',
-    to: PAGES_LIST.HOME,
+    to: PAGES_LIST_ROUTER.dashboard.memos,
     description: 'este es',
-    icon: 'burguer',
+    icon: '152',
     id: 'memos',
   },
   {
     label: 'shifts',
-    to: PAGES_LIST.SHIFTS,
+    to: PAGES_LIST_ROUTER.dashboard.shift,
     description: 'este es',
-    icon: 'gateway',
+    icon: '050',
     id: 'shift',
   },
   {
     label: 'forms',
-    to: PAGES_LIST.FORMS,
+    to: PAGES_LIST_ROUTER.dashboard.form,
     description: 'este es',
-    icon: 'graph',
+    icon: '091',
     id: 'form',
   },
   {
     label: 'devices',
-    to: PAGES_LIST.DEVICES,
+    to: PAGES_LIST_ROUTER.dashboard.devices,
     description: 'este es',
-    icon: 'graph',
+    icon: '144',
     id: 'device',
   },
 ];

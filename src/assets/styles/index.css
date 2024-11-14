@@ -1,18 +1,8 @@
-@import url('./general.css');
-@import url('./clean.css');
-@import url('./leaftlet.css');
-@import url('./modal.css');
-@import url('./icons.css');
-@import url('./licons.css');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-button {
-  border: none;
-}
-
-button:hover {
-  @apply bg-opacity-50;
-}
+@import url('./tryvoo/clean.css');
+@import url('./tryvoo/icons.css');
+@import url('./tryvoo/scroll.css');
+@import url('./tryvoo/inputs.css');
+@import url('./tryvoo/texts.css');
+@import url('./tryvoo/table.css');
+@import url('./tryvoo/forms.css');
+@import url('./tryvoo/button.css');
