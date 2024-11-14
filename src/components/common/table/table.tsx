@@ -120,7 +120,7 @@ export const Table = <T,>({
         </div>
       </div>
       <div className='w-full h-[87vh] overflow-x-auto vox-scroll-design scroll-x-md mt-2'>
-        <table className='w-full'>
+        <table className='w-full border-collapse'>
           <thead className='sticky top-0 z-20'>
             {table.getHeaderGroups().map((headerGroup, index) => (
               <tr key={`${headerGroup.id}-${index}`}>
@@ -128,7 +128,7 @@ export const Table = <T,>({
                   <th
                     key={`${header.id}-${index}`}
                     colSpan={header.colSpan}
-                    className='p-2 text-left font-semibold text-gray-600 bg-gray-50'
+                    className='p-2 text-left font-semibold text-gray-600 bg-gray-50 border-b border-gray-300'
                     style={getCommonPinningStyles(header.column)}
                   >
                     <div
@@ -156,7 +156,7 @@ export const Table = <T,>({
           <tbody>
             {table.getRowModel().rows.map((row, index) => (
               <React.Fragment key={`${row.id}_${index}`}>
-                <tr>
+                <tr className='border-b border-gray-200'>
                   {row.getVisibleCells().map((cell, index) => (
                     <td
                       key={`${cell.id}_${index}`}
@@ -171,7 +171,7 @@ export const Table = <T,>({
                   ))}
                 </tr>
                 {expandable && row.getIsExpanded() && (
-                  <tr>
+                  <tr className='border-b border-gray-200'>
                     <td colSpan={row.getVisibleCells().length} className='p-4'>
                       {expandable(row.original)}
                     </td>
