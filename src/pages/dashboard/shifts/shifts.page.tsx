@@ -5,6 +5,7 @@ import { Section, Table } from '@/components/common';
 
 import { type Shift, shiftsData } from './utils';
 import { columns } from './components';
+import { ExpandableShift } from '@/components/compose';
 import { CardData } from '@/components/compose';
 
 export const ShiftsPage: FunctionalComponent = () => {
@@ -40,7 +41,11 @@ export const ShiftsPage: FunctionalComponent = () => {
           icon='110'
         />
       </div>
-      <Table<Shift> data={shiftsData} columns={columns} />
+      <Table<Shift>
+        data={shiftsData}
+        columns={columns}
+        expandable={(row: Shift) => <ExpandableShift row={row} />}
+      />
     </Section>
   );
 };

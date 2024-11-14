@@ -9,4 +9,5 @@ export interface ITableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
   pageSize?: number;
+  expandable?: (row: Row<T>) => VNode;
 }
