@@ -1,8 +1,11 @@
 export interface Memo {
   id: number;
+  description: string;
   firstName: string;
   lastName: string;
-  age: number;
+  workerAge: number;
+  workerPhoto: string;
+  workerEmail: string;
   contact: number;
   visits: number;
   status: string;
@@ -12,10 +15,18 @@ export interface Memo {
   noveltyDate: string;
   moreInfo: string;
   supervisor: string;
-  relatedShift: string;
+  supervisorPhoto: string;
+  supervisorPhone: number;
+  supervisorEmail: string;
+  supervisorAge: number;
+  shift: string;
   updatedBy: string;
   location: string;
-  client: string;
+  clientName: string;
+  clientPhone: number;
+  clientEmail: string;
+  clientPhoto: string;
+  clientLocation: string;
   city: string;
   company: string;
   address: string;

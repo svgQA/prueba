@@ -93,3 +93,17 @@ bun run start
 ```bash
 bun run build
 ```
+
+# NAMING ELEMENTS IN FRONTEND Only en ID
+
+- vx-{element}-{page}-{name}
+
+## ELEMENTS
+	1. input = inp
+	2. checkbox = che
+	3. radiobutton = rdb
+	4. switch = swt
+	5. dropdown = dpn
+	6. number = nmr
+	7. texarea = txa
+	8. button = btn

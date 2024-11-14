@@ -35,14 +35,14 @@ export const Dropdown: FunctionComponent<IDropdownProps> = ({
     <div className='relative my-1 w-full'>
       <label
         for={`${id}-input`}
-        className='capitalize block mb-1 text-sm font-medium text-gray-900 dark:text-white'
+        className='capitalize block mb-1 text-sm font-medium'
       >
         {label}
       </label>
       <button
         id={`${id}-dropdown-button`}
         name={name}
-        class='w-full text-gray-600 border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+        class='w-fullborder focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center'
         type='button'
         onClick={toggleDropdown}
       >
@@ -50,18 +50,15 @@ export const Dropdown: FunctionComponent<IDropdownProps> = ({
       </button>
       <div
         id={`${id}-dropdown`}
-        className={`w-full z-10 ${isOpen ? '' : 'hidden'} absolute bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700`}
+        className={`w-full z-10 ${isOpen ? '' : 'hidden'} absolute divide-y rounded-lg shadow`}
       >
-        <ul
-          className='py-2 text-sm text-gray-700 dark:text-gray-200'
-          onClick={selectElement}
-        >
+        <ul className='py-2 text-sm' onClick={selectElement}>
           {elements.map((element) => (
             <li
               key={`${element[labelTag]}-dropdown-element`}
               id={`${element[labelTag]}-dropdown-element`}
               name={`${element[labelTag]}`}
-              class='block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+              class='block px-4 py-2'
             >
               {element[labelTag]}
             </li>

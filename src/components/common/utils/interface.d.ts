@@ -3,6 +3,7 @@ export interface IMenu {
   description?: string;
   icon?: string;
   to: string;
+  base?: string;
   status?: boolean;
   button?: boolean;
   id: string;
