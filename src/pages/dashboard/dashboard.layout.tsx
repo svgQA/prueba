@@ -69,6 +69,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       // closeOnBoardingModal();
 
       /* [TODO]: Correct code */
+
       const existTenant = await hasUserTenant(setCompanies, setSelected);
       if (!existTenant) openOnBoardingModal();
       else closeOnBoardingModal();

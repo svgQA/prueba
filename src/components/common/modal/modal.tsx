@@ -25,10 +25,10 @@ export const Modal: FunctionComponent<IModalProps> = ({
       name={name}
       tabIndex={-1}
       aria-hidden='true'
-      className={`${open ? 'visible' : 'invisible'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-opacity-95 bg-b-dark`}
+      className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-opacity-95 bg-b-dark`}
     >
       <div
-        className={`${expand ? 'h-full' : 'h-fit'}  overflow-hidden  rounded-md modal-shadow w-full p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
+        className={`${expand ? 'h-full' : 'h-fit'} overflow-hidden rounded-md modal-shadow w-full p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
       >
         {/* vox-scroll-design */}
         <div className='flex flex-row w-full items-center pt-2'>
