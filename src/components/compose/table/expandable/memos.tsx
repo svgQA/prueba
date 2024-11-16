@@ -17,16 +17,16 @@ export const ExpandableMemos: FunctionComponent<IExpandableProps> = ({
           />
 
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Email:</span>
-            <span className='text-gray-800'>{row.workerEmail}</span>
+            <span className='text-gray-800 w-32'>Email:</span>
+            <span className='text-gray-600'>{row.workerEmail}</span>
           </div>
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Teléfono:</span>
-            <span className='text-gray-800'>{row.contact}</span>
+            <span className='text-gray-800 w-32'>Teléfono:</span>
+            <span className='text-gray-600'>{row.contact}</span>
           </div>
           <div className='flex items-center'>
-            <span className=' text-gray-600 w-32'>Turno:</span>
-            <span className='text-gray-800'>{row.shift}</span>
+            <span className=' text-gray-800 w-32'>Turno:</span>
+            <span className='text-gray-600'>{row.shift}</span>
           </div>
         </div>
 
@@ -41,16 +41,16 @@ export const ExpandableMemos: FunctionComponent<IExpandableProps> = ({
             className='w-32 h-32 rounded-full mb-4 object-cover'
           />
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Nombre:</span>
-            <span className='text-gray-800'>{row.supervisor}</span>
+            <span className='text-gray-800 w-32'>Nombre:</span>
+            <span className='text-gray-600'>{row.supervisor}</span>
           </div>
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Email:</span>
-            <span className='text-gray-800'>{row.supervisorEmail}</span>
+            <span className='text-gray-800 w-32'>Email:</span>
+            <span className='text-gray-600'>{row.supervisorEmail}</span>
           </div>
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Teléfono:</span>
-            <span className='text-gray-800'>{row.supervisorPhone}</span>
+            <span className='text-gray-800 w-32'>Teléfono:</span>
+            <span className='text-gray-600'>{row.supervisorPhone}</span>
           </div>
         </div>
 
@@ -63,16 +63,16 @@ export const ExpandableMemos: FunctionComponent<IExpandableProps> = ({
             className='w-32 h-32 rounded-full mb-4 object-cover'
           />
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Nombre:</span>
-            <span className='text-gray-800'>{row.clientName}</span>
+            <span className='text-gray-800 w-32'>Nombre:</span>
+            <span className='text-gray-600'>{row.clientName}</span>
           </div>
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Email:</span>
-            <span className='text-gray-800'>{row.clientEmail}</span>
+            <span className='text-gray-800 w-32'>Email:</span>
+            <span className='text-gray-600'>{row.clientEmail}</span>
           </div>
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Teléfono:</span>
-            <span className='text-gray-800'>{row.clientPhone}</span>
+            <span className='text-gray-800 w-32'>Teléfono:</span>
+            <span className='text-gray-600'>{row.clientPhone}</span>
           </div>
         </div>
 
