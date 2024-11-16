@@ -11,9 +11,9 @@ export const ExpandableMemos: FunctionComponent<IExpandableProps> = ({
         <div className='space-y-1'>
           <h4 className='text-gray-600 mb-2 font-medium'>Datos del Empleado</h4>
           <img
-            src={row.workerPhoto || '/placeholder-image.jpg'}
+            src={row.workerPhoto || 'https://i.pravatar.cc/150?img=1'}
             alt='Foto del empleado'
-            className='w-32 h-32 rounded-full mb-4 object-cover hidden [&:not([src="/placeholder-image.jpg"])]:block'
+            className='w-32 h-32 rounded-full mb-4 object-cover'
           />
 
           <div className='flex items-center'>
@@ -36,9 +36,9 @@ export const ExpandableMemos: FunctionComponent<IExpandableProps> = ({
             Datos del Supervisor
           </h4>
           <img
-            src={row.supervisorPhoto || '/placeholder-image.jpg'}
+            src={row.supervisorPhoto || 'https://i.pravatar.cc/150?img=2'}
             alt='Foto del supervisor'
-            className='w-32 h-32 rounded-full mb-4 object-cover hidden [&:not([src="/placeholder-image.jpg"])]:block'
+            className='w-32 h-32 rounded-full mb-4 object-cover'
           />
           <div className='flex items-center'>
             <span className='text-gray-600 w-32'>Nombre:</span>
@@ -57,13 +57,11 @@ export const ExpandableMemos: FunctionComponent<IExpandableProps> = ({
         {/* Columna del Cliente */}
         <div className='space-y-2'>
           <h4 className='text-gray-600 mb-2 font-medium'>Datos del Cliente</h4>
-          {row.clientPhoto && (
-            <img
-              src={row.clientPhoto}
-              alt='Foto del cliente'
-              className='w-32 h-32 rounded-full mb-4 object-cover'
-            />
-          )}
+          <img
+            src={row.clientPhoto || 'https://i.pravatar.cc/150?img=3'}
+            alt='Foto del cliente'
+            className='w-32 h-32 rounded-full mb-4 object-cover'
+          />
           <div className='flex items-center'>
             <span className='text-gray-600 w-32'>Nombre:</span>
             <span className='text-gray-800'>{row.clientName}</span>
