@@ -10,6 +10,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
   onClose,
   header,
   children,
+  footer,
 }: IModalProps) => {
   const [expand, setExpand] = useState(false);
 
@@ -24,11 +25,12 @@ export const Modal: FunctionComponent<IModalProps> = ({
       name={name}
       tabIndex={-1}
       aria-hidden='true'
-      className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-opacity-60`}
+      className={`${open ? 'visible' : 'invisible'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-opacity-95 bg-b-dark`}
     >
       <div
-        className={`${expand ? 'h-full' : 'h-fit'} overflow-y-hidden vox-scroll-design rounded-md modal-shadow w-full p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
+        className={`${expand ? 'h-full' : 'h-fit'}  overflow-hidden  rounded-md modal-shadow w-full p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
       >
+        {/* vox-scroll-design */}
         <div className='flex flex-row w-full items-center pt-2'>
           <div class='flex flex-row w-full items-center px-2.5'>
             <div className='flex flex-row w-10/12 items-center'>{header}</div>
@@ -41,18 +43,23 @@ export const Modal: FunctionComponent<IModalProps> = ({
                 rounded
                 icon='105'
               ></Button>
-              <Button
-                id='setting-close'
-                name='setting-close'
-                onClick={onClose}
-                type='button'
-                rounded
-                icon='192'
-              ></Button>
+              {onClose && (
+                <Button
+                  id='setting-close'
+                  name='setting-close'
+                  onClick={onClose}
+                  type='button'
+                  rounded
+                  icon='192'
+                ></Button>
+              )}
             </div>
           </div>
         </div>
         <div className='flex flex-row'>{children}</div>
+        {footer && (
+          <div className='flex flex-row w-full justify-end gap-2'>{footer}</div>
+        )}
       </div>
     </div>
   );

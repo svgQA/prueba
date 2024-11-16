@@ -1,7 +1,8 @@
 import { Button } from '@/components/common';
+import { ThemeButton } from '@/components/compose';
 import { memo } from 'preact/compat';
 
-export const MenuButtons = memo(({ goBack, goForward, toggleTheme }: any) => (
+export const MenuButtons = memo(({ goBack, goForward }: any) => (
   <div className='mr-3 flex items-center justify-center max-w-44 min-w-40'>
     <Button
       id='setting-go-back'
@@ -19,13 +20,6 @@ export const MenuButtons = memo(({ goBack, goForward, toggleTheme }: any) => (
       rounded
       icon='212'
     />
-    <Button
-      id='setting-min-menu'
-      name='setting-min-menu'
-      onClick={toggleTheme}
-      type='button'
-      rounded
-      icon='301'
-    />
+    <ThemeButton />
   </div>
 ));

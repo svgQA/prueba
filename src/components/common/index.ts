@@ -29,3 +29,4 @@ export * from './priority/priority';
 export * from './section/section';
 
 export * from './loading/loading';
+export * from './select/select';

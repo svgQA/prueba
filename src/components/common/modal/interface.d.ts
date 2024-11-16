@@ -8,6 +8,7 @@ export interface IModalProps extends IComponentProps, PropsWithChildren {
   onClose?: () => void;
   rounded?: boolean;
   header?: VNode;
+  footer?: VNode;
 }
 
 export interface Corner {
