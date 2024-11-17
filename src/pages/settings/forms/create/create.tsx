@@ -123,7 +123,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             onClick={showFormat}
           />
         </div>
-        <div className='flex flex-col w-[95%]'>
+        <div className='flex flex-col w-[98%]'>
           {format.value.pages.map((page) => (
             <div key={page.id} className='w-full mb-5'>
               <Input

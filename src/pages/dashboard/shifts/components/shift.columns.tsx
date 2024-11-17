@@ -108,7 +108,9 @@ export const InfoIcon: FunctionComponent<InfoIconProps> = ({
 // Agregamos columnas de "Ciudad" y "Dirección"
 export const columns: ColumnDef<Shift>[] = [
   {
+    id: 'id',
     accessorKey: 'id',
+    // size: 100,
     header: 'ID',
     cell: (info) => (
       <div className='flex items-center'>
@@ -121,53 +123,72 @@ export const columns: ColumnDef<Shift>[] = [
     ),
   },
   {
+    id: 'employeeName',
     accessorKey: 'employeeName',
+    // size: 100,
     header: 'Empleado',
   },
   {
+    id: 'employeeId',
     accessorKey: 'employeeId',
+    // size: 100,
     header: 'ID Empleado',
   },
   {
+    id: 'city',
     accessorKey: 'city',
+    // size: 100,
     header: 'Ciudad',
     cell: (info: any) => info.getValue(), // Renderiza la ciudad
   },
   {
+    id: 'address',
     accessorKey: 'address',
+    // size: 100,
     header: 'Dirección',
     cell: (info: any) => info.getValue(), // Renderiza la dirección
   },
   {
+    id: 'startTime',
     accessorKey: 'startTime',
+    // size: 100,
     header: 'Hora inicio',
     cell: (info: any) =>
       new Date(info.getValue() as string).toLocaleTimeString(),
   },
   {
+    id: 'endTime',
     accessorKey: 'endTime',
+    // size: 100,
     header: 'Hora fin',
     cell: (info: any) =>
       new Date(info.getValue() as string).toLocaleTimeString(),
   },
   {
+    id: 'duration',
     accessorKey: 'duration',
+    // size: 100,
     header: 'Duración',
   },
   {
+    id: 'notifications',
     accessorKey: 'notifications',
-    header: 'Notificaciones',
+    // size: 100,
+    // header: 'Notificaciones',
     cell: (info: any) => (
       <NotificationBadge count={info.getValue() as number} />
     ),
   },
   {
+    id: 'activitiesProgress',
     accessorKey: 'activitiesProgress',
+    // size: 100,
     header: 'Progreso',
     cell: (info: any) => <ProgressBar progress={info.getValue() as number} />,
   },
   {
     id: 'actions',
+    // size: 100,
     header: 'Acciones',
     cell: () => (
       <ActionButtons
