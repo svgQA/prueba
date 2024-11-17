@@ -17,6 +17,23 @@ import { useSignal } from '@preact/signals';
 import { ITableProps } from './interface';
 import React from 'preact/compat';
 import { Search } from '../search/search';
+import {
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import {
+  arrayMove,
+  SortableContext,
+  horizontalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const getCommonPinningStyles = (column: Column<any>) => {
   const isPinned = column.getIsPinned();
@@ -30,16 +47,86 @@ const getCommonPinningStyles = (column: Column<any>) => {
     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
     position: isPinned ? 'sticky' : 'relative',
     width: column.getSize(),
+    whiteSpace: 'nowrap',
     zIndex: isPinned ? 1 : 0,
   };
 };
 
-export const Table = <T,>({
-  data,
-  columns,
-  pageSize = 10,
-  // expandable,
-}: ITableProps<T>) => {
+const DraggableTableHeader = ({
+  header,
+  index,
+  lastIndex,
+  openSettings,
+  setOpenSettings,
+}: any) => {
+  const { attributes, isDragging, listeners, setNodeRef, transform } =
+    useSortable({
+      id: header.column.id,
+    });
+
+  const style = {
+    ...getCommonPinningStyles(header.column),
+    opacity: isDragging ? 0.8 : 1,
+    transform: CSS.Translate.toString(transform),
+    transition: 'width transform 0.2s ease-in-out',
+  };
+
+  return (
+    <th
+      ref={setNodeRef}
+      colSpan={header.colSpan}
+      className='p-2 text-left font-semibold'
+      style={style}
+    >
+      <div className='flex justify-between items-center'>
+        <div
+          className={
+            header.column.getCanSort() ? 'cursor-pointer select-none' : ''
+          }
+          onClick={header.column.getToggleSortingHandler()}
+        >
+          {flexRender(header.column.columnDef.header, header.getContext())}
+          {{
+            asc: ' 🔼',
+            desc: ' 🔽',
+          }[header.column.getIsSorted() as string] ?? null}
+          <button {...attributes} {...listeners} className='ml-2' role='button'>
+            🟰
+          </button>
+        </div>
+        {index === lastIndex && (
+          <>
+            <span
+              className='px-2 vox-icon vx-icon-168 cursor-pointer size-sm'
+              onClick={() => setOpenSettings(!openSettings)}
+            />
+          </>
+        )}
+      </div>
+    </th>
+  );
+};
+
+const DraggableCell = ({ cell }: any) => {
+  const { setNodeRef, isDragging, transform } = useSortable({
+    id: cell.column.id,
+  });
+
+  const style = {
+    ...getCommonPinningStyles(cell.column),
+    opacity: isDragging ? 0.8 : 1,
+    transform: CSS.Translate.toString(transform),
+    transition: 'width transform 0.2s ease-in-out',
+  };
+
+  return (
+    <td ref={setNodeRef} style={style}>
+      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+    </td>
+  );
+};
+
+export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -47,10 +134,19 @@ export const Table = <T,>({
   });
   const [expanded, setExpanded] = useState<ExpandedState>({});
   const openSettings = useSignal<boolean>(false);
+  const [columnOrder, setColumnOrder] = useState(() =>
+    columns.map((c) => c.id as string)
+  );
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {}),
+    useSensor(TouchSensor, {}),
+    useSensor(KeyboardSensor, {})
+  );
 
   const table = useReactTable({
-    columns,
     data,
+    columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -64,7 +160,12 @@ export const Table = <T,>({
       sorting,
       pagination,
       expanded,
+      columnOrder,
     },
+    onColumnOrderChange: setColumnOrder,
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
   });
 
   const memoizedLeafColumns = React.useMemo(() => {
@@ -73,9 +174,24 @@ export const Table = <T,>({
       .map((column) => String(column.columnDef.header) || column.id);
   }, [table]);
 
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+    if (active && over && active.id !== over.id) {
+      setColumnOrder((columnOrder) => {
+        const oldIndex = columnOrder.indexOf(active.id);
+        const newIndex = columnOrder.indexOf(over.id);
+        return arrayMove(columnOrder, oldIndex, newIndex);
+      });
+    }
+  };
+
   return (
-    <>
-      {/* TABLE: HEADER */}
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      modifiers={[restrictToHorizontalAxis]}
+      onDragEnd={handleDragEnd}
+    >
       <div className='w-full mb-2 flex flex-col items-end'>
         <Search
           id='search-general'
@@ -84,126 +200,48 @@ export const Table = <T,>({
         />
       </div>
 
-      {/* TABLE: ROWS */}
-      {/* className='w-full h-[87vh] overflow-x-auto vox-scroll-design scroll-x-md mt-2' */}
-      <div className='w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light'>
+      <div className='relative w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light scroll-x-md overflow-x-auto vox-scroll-design max-h-[80vh]'>
         <table className='w-full border-collapse info'>
           <thead>
-            {table.getHeaderGroups().map((headerGroup, index) => (
-              <tr key={`${headerGroup.id}-${index}`} className='sticky top-0'>
-                {headerGroup.headers.map((header, index) => (
-                  <th
-                    key={`${header.id}-${index}`}
-                    colSpan={header.colSpan}
-                    className='p-2 text-left font-semibold'
-                    style={getCommonPinningStyles(header.column)}
-                  >
-                    <div className='flex justify-between items-center'>
-                      <div
-                        className={
-                          header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : ''
-                        }
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                      {index === headerGroup.headers.length - 1 && (
-                        <>
-                          <span
-                            className='px-2 vox-icon vx-icon-168 cursor-pointer size-sm'
-                            onClick={() =>
-                              (openSettings.value = !openSettings.value)
-                            }
-                          />
-                          <div
-                            className={`${openSettings.value ? 'visible' : 'invisible'} absolute right-2 top-12 rounded-lg shadow-lg p-4 z-30 bg-b-light border-2 dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
-                          >
-                            <h5>Hidde or Pinned Columns</h5>
-                            {table.getAllLeafColumns().map((column) => {
-                              return (
-                                <div
-                                  key={column.id}
-                                  className='flex items-center space-x-2 py-1 flex-row'
-                                >
-                                  <div>
-                                    {column.getCanPin() && (
-                                      <span
-                                        className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'}`}
-                                        onClick={() =>
-                                          column.pin(
-                                            column.getIsPinned()
-                                              ? false
-                                              : 'left'
-                                          )
-                                        }
-                                      />
-                                    )}
-                                  </div>
-                                  <label className='flex items-center cursor-pointer'>
-                                    <input
-                                      {...{
-                                        type: 'checkbox',
-                                        checked: column.getIsVisible(),
-                                        onChange:
-                                          column.getToggleVisibilityHandler(),
-                                      }}
-                                      className='form-checkbox h-4 w-4 rounded'
-                                    />
-                                    <span className='ml-2 text-sm'>
-                                      {column.columnDef.header}
-                                    </span>
-                                  </label>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </th>
-                ))}
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className='sticky top-0'>
+                <SortableContext
+                  items={columnOrder}
+                  strategy={horizontalListSortingStrategy}
+                >
+                  {headerGroup.headers.map((header, index) => (
+                    <DraggableTableHeader
+                      key={header.id}
+                      header={header}
+                      index={index}
+                      lastIndex={headerGroup.headers.length - 1}
+                      openSettings={openSettings.value}
+                      setOpenSettings={(value: any) =>
+                        (openSettings.value = value)
+                      }
+                    />
+                  ))}
+                </SortableContext>
               </tr>
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map((row, index) => (
-              <React.Fragment key={`${row.id}_${index}`}>
-                <tr className='h-14 hover:shadow'>
-                  {row.getVisibleCells().map((cell, index) => (
-                    <td
-                      key={`${cell.id}_${index}`}
-                      style={getCommonPinningStyles(cell.column)}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className='h-14 hover:shadow'>
+                <SortableContext
+                  items={columnOrder}
+                  strategy={horizontalListSortingStrategy}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <DraggableCell key={cell.id} cell={cell} />
                   ))}
-                </tr>
-                {/* {expandable && row.getIsExpanded() && (
-                  <tr className='border-b border-gray-200'>
-                    <td colSpan={row.getVisibleCells().length} className='p-4'>
-                      {expandable(row.original)}
-                    </td>
-                  </tr>
-                )} */}
-              </React.Fragment>
+                </SortableContext>
+              </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* TABLE: PAGINATION CONTROLS */}
       <div className='flex flex-row gap-3 justify-end p-3'>
         <button
           onClick={() => table.previousPage()}
@@ -235,6 +273,6 @@ export const Table = <T,>({
           NEXT
         </button>
       </div>
-    </>
+    </DndContext>
   );
 };

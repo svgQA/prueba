@@ -9,3 +9,12 @@ textarea {
   background-color: transparent !important;
   outline: none;
 }
+
+@layer utilities {
+  .custom-input:-webkit-autofill {
+    box-shadow: 0 0 0px 1000px transparent inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    -webkit-text-fill-color: inherit !important;
+    border: dotted green;
+  }
+}

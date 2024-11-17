@@ -14,8 +14,10 @@ export interface IInputProps extends IComponentProps {
   required?: boolean;
   placeholder?: string;
   icon?: string;
-  type?: 'text' | 'password' | 'number' | 'tel' | 'email';
+  type?: 'text' | 'password' | 'number' | 'tel' | 'email' | 'time' | 'date';
   meta?: FieldMetaState<string>;
   end?: boolean;
+  borderless?: boolean;
   tabIndex?: number;
+  thin?: boolean;
 }

@@ -22,4 +22,7 @@ export interface ISelectProps extends IComponentProps {
   meta?: FieldMetaState<string>;
   end?: boolean;
   options?: ISelectOptions[];
+  borderless?: boolean;
+  thin?: boolean;
+  tabIndex?: number;
 }
