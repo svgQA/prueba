@@ -50,10 +50,6 @@ export const columns: ColumnDef<Memo>[] = [
     header: 'ID',
     cell: (info) => (
       <div className='flex items-center'>
-        <span
-          onClick={() => info.row.toggleExpanded()}
-          className='vox-icon vx-icon-005 cursor-pointer'
-        />
         <span>{String(info.getValue())}</span>
       </div>
     ),

@@ -1,6 +1,9 @@
 table.info {
   thead {
     @apply rounded-xl bg-b-light-dark dark:bg-b-dark-light sticky -top-1 z-10;
+    th {
+      @apply h-10;
+    }
   }
 
   thead th:first-child {
@@ -17,7 +20,7 @@ table.info {
 
   tbody {
     td {
-      @apply border-t-2 px-1 border-b-light-dark dark:border-b-dark-light;
+      @apply h-10 border-t-2 px-1 border-b-light-dark dark:border-b-dark-light items-center;
     }
   }
 }

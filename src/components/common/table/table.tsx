@@ -1,6 +1,5 @@
-import './index.css';
+import './table.css';
 import {
-  flexRender,
   getCoreRowModel,
   // getFilteredRowModel,
   getPaginationRowModel,
@@ -8,18 +7,13 @@ import {
   useReactTable,
   PaginationState,
   SortingState,
-  // ExpandedState,
-  // getExpandedRowModel,
-  // Column,
-  Cell,
-  Header,
+  ExpandedState,
+  getExpandedRowModel,
   ColumnDef,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'preact/hooks';
-// import { useSignal } from '@preact/signals';
 import { ITableProps } from './interface';
-import { CSSProperties } from 'preact/compat';
-// import { Search } from '../search/search';
+import { Search } from '../search/search';
 import {
   DndContext,
   KeyboardSensor,
@@ -35,138 +29,23 @@ import {
   arrayMove,
   SortableContext,
   horizontalListSortingStrategy,
-  useSortable,
 } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { DraggableCell, DraggableTableHeader, Pagination } from './components';
+import { Fragment } from 'preact/jsx-runtime';
 
-// const getCommonPinningStyles = (column: Column<any>, isDragging: boolean) => {
-//   const isPinned = column.getIsPinned();
-//   const isLastLeftPinnedColumn =
-//     isPinned === 'left' && column.getIsLastColumn('left');
-
-//   return {
-//     boxShadow: isLastLeftPinnedColumn
-//       ? '-4px 0 4px -4px gray inset'
-//       : undefined,
-//     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-//     position: isPinned ? 'sticky' : 'relative',
-//     width: column.getSize(),
-//     whiteSpace: 'nowrap',
-//     zIndex: isPinned || isDragging ? 1 : 0,
-//   };
-// };
-
-const DraggableTableHeader = <T,>({
-  header,
-  // index,
-  // lastIndex,
-  // openSettings,
-  // setOpenSettings,
-}: {
-  header: Header<T, unknown>;
-}) => {
-  const { attributes, isDragging, listeners, setNodeRef, transform } =
-    useSortable({
-      id: header.column.id,
-    });
-
-  // const style = {
-  //   ...getCommonPinningStyles(header.column, isDragging),
-  //   opacity: isDragging ? 0.8 : 1,
-  //   transform: CSS.Translate.toString(transform),
-  //   transition: 'width transform 0.2s ease-in-out',
-  // };
-
-  const style: CSSProperties = {
-    opacity: isDragging ? 0.8 : 1,
-    position: 'relative',
-    transform: CSS.Translate.toString(transform),
-    transition: 'width transform 0.2s ease-in-out',
-    whiteSpace: 'nowrap',
-    width: header.column.getSize(),
-    zIndex: isDragging ? 1 : 0,
-  };
-
-  return (
-    <th
-      ref={setNodeRef}
-      colSpan={header.colSpan}
-      style={style}
-      className='py-3'
-    >
-      <div className='flex justify-center'>
-        <div
-          className={
-            header.column.getCanSort() ? 'cursor-pointer select-none' : ''
-          }
-          onClick={header.column.getToggleSortingHandler()}
-        >
-          {flexRender(header.column.columnDef.header, header.getContext())}
-          {{
-            asc: ' 🔼',
-            desc: ' 🔽',
-          }[header.column.getIsSorted() as string] ?? null}
-          <span
-            {...attributes}
-            {...listeners}
-            className='ml-2 cursor-move'
-            role='button'
-          >
-            🟰
-          </span>
-        </div>
-        {/*
-        {index === lastIndex && (
-          <>
-            <span
-              className='px-2 vox-icon vx-icon-168 cursor-pointer size-sm'
-              onClick={() => setOpenSettings(!openSettings)}
-            />
-          </>
-        )}
-        */}
-      </div>
-    </th>
-  );
-};
-
-const DraggableCell = <T,>({ cell }: { cell: Cell<T, unknown> }) => {
-  const { setNodeRef, isDragging, transform } = useSortable({
-    id: cell.column.id,
-  });
-
-  // const style = {
-  //   ...getCommonPinningStyles(cell.column, isDragging),
-  //   opacity: isDragging ? 0.8 : 1,
-  //   transform: CSS.Translate.toString(transform),
-  //   transition: 'width transform 0.2s ease-in-out',
-  // };
-  //
-  const style: CSSProperties = {
-    opacity: isDragging ? 0.8 : 1,
-    position: 'relative',
-    transform: CSS.Translate.toString(transform),
-    transition: 'width transform 0.2s ease-in-out',
-    width: cell.column.getSize(),
-    zIndex: isDragging ? 1 : 0,
-  };
-
-  return (
-    <td ref={setNodeRef} style={style}>
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-    </td>
-  );
-};
-
-export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
+export const Table = <T,>({
+  data,
+  columns,
+  pageSize = 10,
+  expandable,
+}: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
   });
-  // const openSettings = useSignal<boolean>(false);
-  // const [expanded, setExpanded] = useState<ExpandedState>({});
+  const [expanded, setExpanded] = useState<ExpandedState>({});
   const [columnOrder, setColumnOrder] = useState(() =>
     columnsData.map((c) => c.id as string)
   );
@@ -178,15 +57,15 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
     getSortedRowModel: getSortedRowModel(),
     // getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    // getExpandedRowModel: getExpandedRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
-    // onExpandedChange: setExpanded,
+    onExpandedChange: setExpanded,
     // columnResizeMode: 'onChange',
     state: {
       sorting,
       pagination,
-      // expanded,
+      expanded,
       columnOrder,
     },
     onColumnOrderChange: setColumnOrder,
@@ -195,11 +74,11 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
     debugColumns: true,
   });
 
-  // const memoizedLeafColumns = React.useMemo(() => {
-  //   return table
-  //     .getAllLeafColumns()
-  //     .map((column) => String(column.columnDef.header) || column.id);
-  // }, [table]);
+  const memoizedLeafColumns = useMemo(() => {
+    return table
+      .getAllLeafColumns()
+      .map((column) => String(column.columnDef.header) || column.id);
+  }, [table]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -212,6 +91,41 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
     }
   };
 
+  const buildSettings = () => (
+    <div className='invisible absolute left-0 top-10 rounded-lg shadow-lg p-4 z-30 bg-b-light border-2 dark:bg-b-dark border-b-light-dark dark:border-b-dark-light'>
+      {table.getAllLeafColumns().map((column) => {
+        return (
+          <div
+            key={column.id}
+            className='flex items-center space-x-2 py-1 flex-row'
+          >
+            <div>
+              {column.getCanPin() && (
+                <span
+                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'}`}
+                  onClick={() =>
+                    column.pin(column.getIsPinned() ? false : 'left')
+                  }
+                />
+              )}
+            </div>
+            <label className='flex items-center cursor-pointer'>
+              <input
+                {...{
+                  type: 'checkbox',
+                  checked: column.getIsVisible(),
+                  onChange: column.getToggleVisibilityHandler(),
+                }}
+                className='form-checkbox h-4 w-4 rounded'
+              />
+              <span className='ml-2 text-sm'>{column.columnDef.header}</span>
+            </label>
+          </div>
+        );
+      })}
+    </div>
+  );
+
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
@@ -220,13 +134,13 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
 
   return (
     <>
-      {/* <div className='w-full mb-2 flex flex-col items-end'>
+      <div className='w-full mb-2 flex flex-col items-end'>
         <Search
           id='search-general'
           name='search-general'
-          // keys={memoizedLeafColumns}
+          keys={memoizedLeafColumns}
         />
-      </div> */}
+      </div>
       <DndContext
         collisionDetection={closestCenter}
         modifiers={[restrictToHorizontalAxis]}
@@ -235,11 +149,15 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
       >
         <div className='relative w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light scroll-x-md overflow-x-auto vox-scroll-design max-h-[80vh]'>
           <table className='w-full border-collapse info'>
-            {/* className='w-full border-collapse info' (arriba) */}
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className='sticky top-0'>
-                  {/* className='sticky top-0' (arriba) */}
+                  {expandable && (
+                    <th className='table-setting-button w-8 border-0'>
+                      <span className='vox-icon vx-icon-168 size-sm' />
+                      {buildSettings()}
+                    </th>
+                  )}
                   <SortableContext
                     items={columnOrder}
                     strategy={horizontalListSortingStrategy}
@@ -248,12 +166,6 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
                       <DraggableTableHeader<T>
                         key={header.id}
                         header={header}
-                        // index={index}
-                        // lastIndex={headerGroup.headers.length - 1}
-                        // openSettings={openSettings.value}
-                        // setOpenSettings={(value: any) =>
-                        //   (openSettings.value = value)
-                        // }
                       />
                     ))}
                   </SortableContext>
@@ -261,31 +173,49 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className='h-12'>
-                  {row.getVisibleCells().map((cell) => (
-                    <SortableContext
-                      key={cell.id}
-                      items={columnOrder}
-                      strategy={horizontalListSortingStrategy}
-                    >
-                      <DraggableCell<T> key={cell.id} cell={cell} />
-                    </SortableContext>
-                  ))}
-                </tr>
+              {table.getRowModel().rows.map((row, index) => (
+                <Fragment key={`${row.id}_${index}`}>
+                  <tr>
+                    {expandable && (
+                      <td className='text-center'>
+                        <span
+                          onClick={() => row.toggleExpanded()}
+                          className='vox-icon vx-icon-001 cursor-pointer size-sm'
+                        />
+                      </td>
+                    )}
+                    {row.getVisibleCells().map((cell) => (
+                      <SortableContext
+                        key={cell.id}
+                        items={columnOrder}
+                        strategy={horizontalListSortingStrategy}
+                      >
+                        <DraggableCell<T> key={cell.id} cell={cell} />
+                      </SortableContext>
+                    ))}
+                  </tr>
+                  {expandable && row.getIsExpanded() && (
+                    <tr className='border-b border-gray-200'>
+                      <td
+                        colSpan={row.getVisibleCells().length + 1}
+                        className='p-4'
+                      >
+                        {expandable(row.original)}
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
               ))}
             </tbody>
           </table>
         </div>
       </DndContext>
-      <div className='flex flex-row gap-3 justify-end p-3'>
-        <button
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-          className='px-3 py-1 rounded text-t-light dark:text-t-dark'
-        >
-          PREV
-        </button>
+      <Pagination
+        onNext={table.previousPage}
+        onBack={table.nextPage}
+        disableNext={!table.getCanNextPage()}
+        disableBack={!table.getCanPreviousPage()}
+      >
         {table.getPageOptions().map((page, index) => (
           <button
             key={index}
@@ -301,14 +231,7 @@ export const Table = <T,>({ data, columns, pageSize = 10 }: ITableProps<T>) => {
         table.getState().pagination.pageIndex < table.getPageCount() - 3 ? (
           <span className='px-3 py-1 rounded'>...</span>
         ) : null}
-        <button
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-          className='px-3 py-1 rounded text-t-light dark:text-t-dark'
-        >
-          NEXT
-        </button>
-      </div>
+      </Pagination>
     </>
   );
 };
