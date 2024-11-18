@@ -1,22 +1,26 @@
 import { Column } from '@tanstack/react-table';
 import { CSSProperties } from 'preact/compat';
+import { CSS, Transform } from '@dnd-kit/utilities';
 
-export const getCommonPinningStyles = (
-  column: Column<any>,
-  isDragging: boolean
+const LIMIT_WIDTH = 60;
+export const getCommonPinningStyles = <T>(
+  column: Column<T>,
+  isDragging: boolean,
+  transform: Transform | null
 ): CSSProperties => {
   const isPinned = column.getIsPinned();
-  const isLastLeftPinnedColumn =
-    isPinned === 'left' && column.getIsLastColumn('left');
-
+  const isLastLeftPinnedColumn = isPinned && column.getIsLastColumn('left');
+  const width = column.getSize() < LIMIT_WIDTH ? LIMIT_WIDTH : column.getSize();
   return {
     boxShadow: isLastLeftPinnedColumn
-      ? '-4px 0 4px -4px gray inset'
+      ? '-2px 0 2px -2px gray inset'
       : undefined,
-    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
+    left: isPinned ? `${column.getStart('left') + 30}px` : undefined,
+    // opacity: isDragging || isPinned ? 0.9 : 1,
     position: isPinned ? 'sticky' : 'relative',
-    width: column.getSize(),
-    whiteSpace: 'nowrap',
-    zIndex: isPinned || isDragging ? 1 : 0,
+    minWidth: width,
+    zIndex: isDragging || isPinned ? 1 : 0,
+    transition: isDragging ? 'width transform 0.2s ease-in-out' : undefined,
+    transform: isDragging ? CSS.Translate.toString(transform) : undefined,
   };
 };

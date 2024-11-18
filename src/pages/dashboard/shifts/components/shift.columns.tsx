@@ -26,7 +26,7 @@ interface NotificationBadgeProps {
 export const NotificationBadge: FunctionComponent<NotificationBadgeProps> = ({
   count,
 }) => (
-  <span className='inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full'>
+  <span className='inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-180 bg-red-600 rounded-full'>
     {count}
   </span>
 );
@@ -78,7 +78,7 @@ export const ActionButtons: FunctionComponent<ActionButtonsProps> = ({
       >
         <path
           fillRule='evenodd'
-          d='M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z'
+          d='M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 180-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z'
           clipRule='evenodd'
         />
       </svg>
@@ -110,67 +110,67 @@ export const columns: ColumnDef<Shift>[] = [
   {
     id: 'id',
     accessorKey: 'id',
-    // size: 100,
+    size: 60,
     header: 'ID',
-    cell: (info) => (
-      <div className='flex items-center'>
-        <span>{String(info.getValue())}</span>
-      </div>
-    ),
+    // cell: (info) => (
+    //   <div className='flex items-center w-20 bg-blue-300'>
+    //     <span>{String(info.getValue())}</span>
+    //   </div>
+    // ),
   },
   {
     id: 'employeeName',
     accessorKey: 'employeeName',
-    // size: 100,
+    size: 180,
     header: 'Empleado',
   },
   {
     id: 'employeeId',
     accessorKey: 'employeeId',
-    // size: 100,
+    size: 180,
     header: 'ID Empleado',
   },
   {
     id: 'city',
     accessorKey: 'city',
-    // size: 100,
+    size: 180,
     header: 'Ciudad',
-    cell: (info: any) => info.getValue(), // Renderiza la ciudad
+    // cell: (info: any) => info.getValue(), // Renderiza la ciudad
   },
   {
     id: 'address',
     accessorKey: 'address',
-    // size: 100,
+    size: 180,
     header: 'Dirección',
-    cell: (info: any) => info.getValue(), // Renderiza la dirección
+    // cell: (info: any) => info.getValue(), // Renderiza la dirección
   },
   {
     id: 'startTime',
     accessorKey: 'startTime',
-    // size: 100,
+    size: 180,
     header: 'Hora inicio',
-    cell: (info: any) =>
-      new Date(info.getValue() as string).toLocaleTimeString(),
+    //   cell: (info: any) =>
+    //     new Date(info.getValue() as string).toLocaleTimeString(),
   },
   {
     id: 'endTime',
     accessorKey: 'endTime',
-    // size: 100,
+    size: 180,
     header: 'Hora fin',
-    cell: (info: any) =>
-      new Date(info.getValue() as string).toLocaleTimeString(),
+    //   cell: (info: any) =>
+    //     new Date(info.getValue() as string).toLocaleTimeString(),
   },
   {
     id: 'duration',
     accessorKey: 'duration',
-    // size: 100,
+    size: 180,
     header: 'Duración',
   },
   {
     id: 'notifications',
     accessorKey: 'notifications',
-    // size: 100,
-    // header: 'Notificaciones',
+    size: 180,
+    header: 'Notificaciones',
     cell: (info: any) => (
       <NotificationBadge count={info.getValue() as number} />
     ),
@@ -178,13 +178,13 @@ export const columns: ColumnDef<Shift>[] = [
   {
     id: 'activitiesProgress',
     accessorKey: 'activitiesProgress',
-    // size: 100,
+    size: 180,
     header: 'Progreso',
     cell: (info: any) => <ProgressBar progress={info.getValue() as number} />,
   },
   {
     id: 'actions',
-    // size: 100,
+    size: 180,
     header: 'Acciones',
     cell: () => (
       <ActionButtons

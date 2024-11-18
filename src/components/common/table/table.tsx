@@ -1,7 +1,7 @@
 import './table.css';
 import {
   getCoreRowModel,
-  // getFilteredRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
@@ -10,6 +10,7 @@ import {
   ExpandedState,
   getExpandedRowModel,
   ColumnDef,
+  ColumnFiltersState,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'preact/hooks';
 import { ITableProps } from './interface';
@@ -49,36 +50,35 @@ export const Table = <T,>({
   const [columnOrder, setColumnOrder] = useState(() =>
     columnsData.map((c) => c.id as string)
   );
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
     data,
     columns: columnsData,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    // getFilteredRowModel: getFilteredRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     onExpandedChange: setExpanded,
-    // columnResizeMode: 'onChange',
     state: {
       sorting,
       pagination,
       expanded,
       columnOrder,
+      columnFilters,
     },
     onColumnOrderChange: setColumnOrder,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
   });
 
   const memoizedLeafColumns = useMemo(() => {
-    return table
-      .getAllLeafColumns()
-      .map((column) => String(column.columnDef.header) || column.id);
-  }, [table]);
+    return table.getAllLeafColumns().map((column) => ({
+      label: String(column.columnDef.header),
+      id: column.id,
+    }));
+  }, []);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -92,7 +92,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='invisible absolute left-0 top-10 rounded-lg shadow-lg p-4 z-30 bg-b-light border-2 dark:bg-b-dark border-b-light-dark dark:border-b-dark-light'>
+    <div className='invisible absolute left-1 top-10 rounded-md p-4 z-30 bg-b-light dark:bg-b-dark border-2 border-b-light-dark dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column) => {
         return (
           <div
@@ -139,6 +139,7 @@ export const Table = <T,>({
           id='search-general'
           name='search-general'
           keys={memoizedLeafColumns}
+          onChange={setColumnFilters}
         />
       </div>
       <DndContext
@@ -151,9 +152,13 @@ export const Table = <T,>({
           <table className='w-full border-collapse info'>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className='sticky top-0'>
+                <tr key={headerGroup.id} className='sticky top-0 z-20'>
                   {expandable && (
-                    <th className='table-setting-button w-8 border-0'>
+                    <th
+                      colSpan={1}
+                      className='table-setting-button left-0 min-w-[30px]'
+                      style={{ position: 'sticky', zIndex: 1 }}
+                    >
                       <span className='vox-icon vx-icon-168 size-sm' />
                       {buildSettings()}
                     </th>
@@ -177,7 +182,10 @@ export const Table = <T,>({
                 <Fragment key={`${row.id}_${index}`}>
                   <tr>
                     {expandable && (
-                      <td className='text-center'>
+                      <td
+                        className='text-center left-0 min-w-[30px]'
+                        style={{ position: 'sticky', zIndex: 1 }}
+                      >
                         <span
                           onClick={() => row.toggleExpanded()}
                           className='vox-icon vx-icon-001 cursor-pointer size-sm'
