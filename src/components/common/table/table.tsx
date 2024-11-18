@@ -31,8 +31,9 @@ import {
   SortableContext,
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { DraggableCell, DraggableTableHeader, Pagination } from './components';
+import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
+import { Button } from '../button/button';
 
 export const Table = <T,>({
   data,
@@ -218,12 +219,15 @@ export const Table = <T,>({
           </table>
         </div>
       </DndContext>
-      <Pagination
-        onNext={table.previousPage}
-        onBack={table.nextPage}
-        disableNext={!table.getCanNextPage()}
-        disableBack={!table.getCanPreviousPage()}
-      >
+      <div className='flex flex-row gap-3 justify-end p-3'>
+        <Button
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+          type='button'
+          label='back'
+          icon='123'
+          name='back'
+        />
         {table.getPageOptions().map((page, index) => (
           <button
             key={index}
@@ -239,7 +243,15 @@ export const Table = <T,>({
         table.getState().pagination.pageIndex < table.getPageCount() - 3 ? (
           <span className='px-3 py-1 rounded'>...</span>
         ) : null}
-      </Pagination>
+        <Button
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+          type='button'
+          label='next'
+          icon='123'
+          name='next'
+        />
+      </div>
     </>
   );
 };
