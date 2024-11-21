@@ -3,6 +3,6 @@
   width: 3.7rem;
   height: 3.7rem;
   h6 {
-    @apply text-xs font-semibold;
+    @apply text-xs font-semibold capitalize;
   }
 }

@@ -18,7 +18,7 @@ export const FormPhoneViewer = () => {
   };
 
   return (
-    <div className='absolute flex flex-col mx-3 items-center right-1 top-2'>
+    <div className='flex flex-col absolute -top-64 mt-3'>
       <div className='absolute z-40 top-5 left-1/2 transform -translate-x-1/2 w-24 h-1 rounded-full bg-b-dark-light' />
       <div className='relative border-b-dark-light border-2 flex flex-col shadow-lg bg-b-dark rounded-2xl w-[340px] h-[667px] px-2 pt-10 pb-4'>
         <div className='bg-b-light h-full rounded-xl overflow-hidden vox-scroll-design text-t-light px-4 flex flex-col'>

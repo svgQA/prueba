@@ -18,12 +18,7 @@ export const CardElement = ({
       case ELEMENT_TYPE.INPUT:
         return (
           <div className='text-sm border border-zinc-300 rounded-md p-2 mt-1'>
-            <input
-              type='text'
-              placeholder='Text input'
-              className='border-2 border-b-dark-light'
-              disabled
-            />
+            <input type='text' placeholder='Text input' disabled />
           </div>
         );
       case ELEMENT_TYPE.TEXT_AREA:

@@ -1,16 +1,16 @@
 import { FunctionComponent } from 'preact';
 import { IOnBoardingStepProps } from '../utils';
+import { memo } from 'preact/compat';
 
-export const OnBoardingStep: FunctionComponent<IOnBoardingStepProps> = ({
-  children,
-  title,
-}) => {
-  return (
-    <div className='onboarding-slide'>
-      <h2 className='text-lg font-bold text-[#1D2128]'>{title}</h2>
-      <div className='flex-1 flex flex-col justify-center items-center'>
-        {children}
+export const OnBoardingStep: FunctionComponent<IOnBoardingStepProps> = memo(
+  ({ children, title }) => {
+    return (
+      <div className='onboarding-slide onboarding-step'>
+        <h2 className='text-2xl font-bold'>{title}</h2>
+        <div className='flex-1 flex flex-col justify-center items-center max-w-[90vw]'>
+          {children}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);

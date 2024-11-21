@@ -38,7 +38,7 @@ export const IconsModal = () => {
   return (
     <div className='bg-red-200'>
       <button
-        className='fixed top-1/2 right-0 z-30 bg-b-light dark:bg-b-dark'
+        className='fixed top-1/2 right-0 z-30 px-3 py-2 bg-b-light border-b-light-dark dark:bg-b-dark dark:border-b-dark-light border-2 rounded-md'
         onClick={toggleIconsPage}
       >
         <span className='vox-icon vx-icon-009' /> {getStatusIconsPage.value}

@@ -1,9 +1,9 @@
 import { BaseService } from '@/utils/network';
 import { type IOnboardingModel } from '@/store/signals/types';
 import {
-  type IInstance,
-  type IModule,
-  type IOwner,
+  // type IInstance,
+  // type IModule,
+  // type IOwner,
   type ITenant,
   type IMakeRequest,
   REQUEST_METHODS,
@@ -21,41 +21,41 @@ export class TenantService extends BaseService {
       method: REQUEST_METHODS.POST,
       data: tenant,
     };
-    return await super.make_request<ITenant>(this.name, model);
+    return await super.make_request<ITenant>(this.name, model, true);
   }
 
   static async get_my_tenants(id: string) {
     const model: IMakeRequest = {
       url: ['users', id],
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<any>(this.name, model, true);
   }
 
-  static async get_tenants() {
-    const model: IMakeRequest = {
-      url: ['tenants'],
-    };
-    return await super.make_request<ITenant>(this.name, model);
-  }
+  // static async get_tenants() {
+  //   const model: IMakeRequest = {
+  //     url: ['tenants'],
+  //   };
+  //   return await super.make_request<ITenant>(this.name, model);
+  // }
 
-  static async get_instances() {
-    const model: IMakeRequest = {
-      url: ['instances'],
-    };
-    return await super.make_request<IInstance>(this.name, model);
-  }
+  // static async get_instances() {
+  //   const model: IMakeRequest = {
+  //     url: ['instances'],
+  //   };
+  //   return await super.make_request<IInstance>(this.name, model);
+  // }
 
-  static async get_modules() {
-    const model: IMakeRequest = {
-      url: ['modules'],
-    };
-    return await super.make_request<IModule>(this.name, model);
-  }
+  // static async get_modules() {
+  //   const model: IMakeRequest = {
+  //     url: ['modules'],
+  //   };
+  //   return await super.make_request<IModule>(this.name, model);
+  // }
 
-  static async get_owners() {
-    const model: IMakeRequest = {
-      url: ['owner'],
-    };
-    return await super.make_request<IOwner>(this.name, model);
-  }
+  // static async get_owners() {
+  //   const model: IMakeRequest = {
+  //     url: ['owner'],
+  //   };
+  //   return await super.make_request<IOwner>(this.name, model);
+  // }
 }
