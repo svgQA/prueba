@@ -1,15 +1,16 @@
 import { type IComponentProps } from '@/components/utils/interface';
+import { ColumnFiltersState } from '@tanstack/react-table';
 import { VNode } from 'preact';
 
-export interface IFilterModel {
-  key: string;
-  value: string[];
-}
+export type IKey = {
+  label: string;
+  id: string;
+};
 
 export interface ISearchProps extends IComponentProps {
   lenThreshold?: number;
-  keys?: string[];
-  value?: IFilterModel[];
-  onChange?: (filters: IFilterModel[]) => void;
+  keys?: IKey[];
+  value?: ColumnFiltersState;
+  onChange?: (filters: ColumnFiltersState) => void;
   placeholder?: string;
 }

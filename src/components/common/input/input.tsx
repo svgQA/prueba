@@ -18,9 +18,12 @@ export const Input = ({
   meta,
   end,
   tabIndex,
+  borderless,
+  thin,
+  ...props
 }: IInputProps) => {
   return (
-    <div id={id} name={name} className='my-1 w-full'>
+    <div id={id} name={name} className='w-full'>
       {label && (
         <label
           for={`${id}-input`}
@@ -29,13 +32,16 @@ export const Input = ({
           {label}
         </label>
       )}
-      <div className='rounded flex flex-row items-center border-b-light-dark dark:border-b-dark-light border-2 py-1 px-2'>
+      <div
+        className={`${borderless ? '' : 'border-b-light-dark dark:border-b-dark-light border-2'} rounded flex flex-row items-center`}
+      >
         {!end && icon && (
-          <span className={`vox-icon size-sm vx-icon-${icon}`} />
+          <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
         <input
-          className='capitalize px-2 py-1 w-full'
+          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'}`}
           onChange={onChange}
+          name={name}
           onKeyUp={onKeyUp}
           type={type}
           value={value}
@@ -47,6 +53,7 @@ export const Input = ({
           pattern={pattern}
           required={required}
           tabIndex={tabIndex}
+          {...props}
         />
         {end && icon && <span className={`vox-icon vx-icon-${icon}`} />}
       </div>
