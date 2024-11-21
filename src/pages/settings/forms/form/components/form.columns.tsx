@@ -10,6 +10,7 @@ dayjs.locale('es');
 export const columns: ColumnDef<IForm>[] = [
   {
     accessorKey: 'title',
+    id: 'title',
     header: 'Título',
     cell: (info) => {
       const { title, description } = info.row.original;
@@ -26,16 +27,19 @@ export const columns: ColumnDef<IForm>[] = [
   },
   {
     accessorKey: 'category',
+    id: 'category',
     header: 'Categoría',
     cell: (info) => info.getValue() || '-',
   },
   {
     accessorKey: 'createdAt',
+    id: 'createdAt',
     header: 'Fecha de creación',
     cell: (info) => dayjs(info.getValue() as string).fromNow(),
   },
   {
     accessorKey: 'updatedAt',
+    id: 'updatedAt',
     header: 'Última actualización',
     cell: (info) => dayjs(info.getValue() as string).fromNow(),
   },

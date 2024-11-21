@@ -46,6 +46,7 @@ export const FormattedDate: FunctionComponent<{ date: string }> = ({
 
 export const columns: ColumnDef<Memo>[] = [
   {
+    id: 'id',
     accessorKey: 'id',
     header: 'ID',
     cell: (info) => (
@@ -55,32 +56,39 @@ export const columns: ColumnDef<Memo>[] = [
     ),
   },
   {
+    id: 'name',
     accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     header: 'Nombre',
   },
   {
+    id: 'city',
     accessorKey: 'city',
     header: 'Ciudad',
   },
   {
+    id: 'address',
     accessorKey: 'address',
     header: 'Dirección',
     cell: (info) => <span>{String(info.getValue())}</span>,
   },
   {
+    id: 'noveltyType',
     accessorKey: 'noveltyType',
     header: 'Tipo Novedad',
   },
   {
+    id: 'noveltyDate',
     accessorKey: 'noveltyDate',
     header: 'Fecha Novedad',
     cell: (info) => <FormattedDate date={info.getValue() as string} />,
   },
   {
+    id: 'contact',
     accessorKey: 'contact',
     header: 'Contacto',
   },
   {
+    id: 'priority',
     accessorKey: 'priority',
     header: 'Prioridad',
     cell: (info) => (
