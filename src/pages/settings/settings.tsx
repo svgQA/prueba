@@ -73,11 +73,6 @@ export const SettingsModal = () => {
     setMenuSelected(historyLocation.value[currentPosition.value]);
   }, []);
 
-  const toggleTheme = useCallback((event: MouseEvent) => {
-    event.stopPropagation();
-    document.body.classList.toggle('dark');
-  }, []);
-
   const selectMenu = useCallback((event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (target.nodeName === 'A') {
@@ -99,11 +94,7 @@ export const SettingsModal = () => {
       id='setting-modal'
       header={
         <>
-          <MenuButtons
-            goBack={goBack}
-            goForward={goForward}
-            toggleTheme={toggleTheme}
-          />
+          <MenuButtons goBack={goBack} goForward={goForward} />
           <div className='min-w-40 flex flex-row'>
             <Search
               id='search-general'

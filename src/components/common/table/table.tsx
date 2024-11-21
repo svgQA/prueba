@@ -38,7 +38,7 @@ export const Table = <T,>({
   data,
   columns,
   pageSize = 10,
-  expandable,
+  // expandable,
 }: ITableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -190,13 +190,13 @@ export const Table = <T,>({
                     </td>
                   ))}
                 </tr>
-                {expandable && row.getIsExpanded() && (
+                {/* {expandable && row.getIsExpanded() && (
                   <tr className='border-b border-gray-200'>
                     <td colSpan={row.getVisibleCells().length} className='p-4'>
                       {expandable(row.original)}
                     </td>
                   </tr>
-                )}
+                )} */}
               </React.Fragment>
             ))}
           </tbody>

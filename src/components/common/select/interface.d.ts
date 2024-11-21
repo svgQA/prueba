@@ -2,8 +2,13 @@ import { type TargetedEvent } from 'preact/compat';
 import { type IComponentProps } from '@/components/utils/interface';
 import { FieldMetaState } from 'react-final-form';
 
-export interface IInputProps extends IComponentProps {
-  onChange?: (event: TargetedEvent<HTMLInputElement>) => void;
+interface ISelectOptions {
+  key: string;
+  value: string | number;
+}
+
+export interface ISelectProps extends IComponentProps {
+  onChange?: (event: TargetedEvent<HTMLSelectElement>) => void;
   onKeyUp?: (event: KeyboardEvent<HTMLElement>) => void;
   label?: string;
   min?: string;
@@ -14,8 +19,7 @@ export interface IInputProps extends IComponentProps {
   required?: boolean;
   placeholder?: string;
   icon?: string;
-  type?: 'text' | 'password' | 'number' | 'tel' | 'email';
   meta?: FieldMetaState<string>;
   end?: boolean;
-  tabIndex?: number;
+  options?: ISelectOptions[];
 }

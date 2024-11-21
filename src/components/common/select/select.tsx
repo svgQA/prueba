@@ -1,29 +1,23 @@
-import { type IInputProps } from './interface';
+import { type ISelectProps } from './interface';
 
-export const Input = ({
+export const Select = ({
   id,
   name,
-  min,
-  max,
   value,
-  step,
-  type,
   label,
   icon,
   required,
-  pattern,
   onChange,
-  onKeyUp,
   placeholder,
   meta,
   end,
-  tabIndex,
-}: IInputProps) => {
+  options,
+}: ISelectProps) => {
   return (
     <div id={id} name={name} className='my-1 w-full'>
       {label && (
         <label
-          for={`${id}-input`}
+          for={`${id}-select`}
           className='capitalize block text-sm font-medium'
         >
           {label}
@@ -33,21 +27,21 @@ export const Input = ({
         {!end && icon && (
           <span className={`vox-icon size-sm vx-icon-${icon}`} />
         )}
-        <input
+        <select
           className='capitalize px-2 py-1 w-full'
           onChange={onChange}
-          onKeyUp={onKeyUp}
-          type={type}
           value={value}
-          step={step}
-          min={min}
-          max={max}
-          id={`${id}-input`}
+          id={`${id}-select`}
           placeholder={placeholder}
-          pattern={pattern}
           required={required}
-          tabIndex={tabIndex}
-        />
+        >
+          <option value=''>{placeholder}</option>
+          {options?.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.key}
+            </option>
+          ))}
+        </select>
         {end && icon && <span className={`vox-icon vx-icon-${icon}`} />}
       </div>
       {meta && meta.touched && meta.error && <span>{meta?.error}</span>}

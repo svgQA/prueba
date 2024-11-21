@@ -82,7 +82,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
     <nav
       id={`${id}-nav`}
       name={name}
-      className='fixed left-0 top-0 transform px-1 flex flex-col justify-between h-screen border-2 border-b-light-dark dark:border-b-dark-light'
+      className='fixed left-0 top-0 transform px-1 flex flex-col justify-between h-screen border-2 border-b-light-dark dark:border-b-dark-light z-20'
     >
       {onHomeHandler && (
         <ul>
@@ -115,7 +115,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
           <a className='cursor-pointer'>
             <ButtonMenu name='vx-company-button' label='company' icon='281' />
           </a>
-          <div className='absolute left-full bottom-0 hidden group-hover:block shadow-xl rounded p-2 w-52 min-h-20 border-2 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light'>
+          <div className='absolute z-50 left-full bottom-0 hidden group-hover:block shadow-xl rounded p-2 w-52 min-h-20 border-2 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light'>
             {companies.map((company) => (
               <CompanyItem
                 key={company.id}

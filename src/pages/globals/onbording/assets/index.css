@@ -6,15 +6,19 @@
   @apply text-white py-2 px-4 rounded focus:outline-none w-36;
 }
 
-.onboarding-inputs {
-  @apply w-full p-2 mb-4 border rounded;
-}
+/* .onboarding-inputs {
+  @apply w-full p-2 mb-4 rounded border-2 border-b-light-dark dark:border-b-dark-light;
+  input {
+    @apply w-11/12 bg-red-200;
+  }
+} */
 
-.onboarding-inputs > input,
+/* .onboarding-inputs > input,
 select {
   @apply w-10/12 bg-white h-full;
-}
+} */
 
+/*
 input,
 select {
   border: none;
@@ -29,4 +33,4 @@ select:focus {
 input::selection,
 selectselect {
   background-color: transparent;
-}
+} */
