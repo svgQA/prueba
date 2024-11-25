@@ -22,7 +22,7 @@ export interface IElement extends IBase {
 
   // ATTRS
   required?: boolean;
-  visible?: boolean;
+  invisible?: boolean;
   disable?: boolean;
 
   assigned?: boolean;

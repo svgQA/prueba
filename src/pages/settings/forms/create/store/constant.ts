@@ -77,10 +77,6 @@ export const ELEMENT_TYPE_VALUES = [
 
 export const REGEX_PATTERNS = [
   {
-    value: '',
-    key: 'Select a regex pattern',
-  },
-  {
     value: '^[A-Za-z0-9]+$',
     key: 'Alphanumeric only',
   },

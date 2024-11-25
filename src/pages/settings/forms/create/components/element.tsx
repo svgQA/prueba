@@ -10,7 +10,7 @@ import {
 } from '../store';
 import { TargetedEvent } from 'preact/compat';
 import { IElementProps } from './interace';
-import { Input, Select } from '@/components/common';
+import { Input, MultipleInput, Select } from '@/components/common';
 
 const ItemType = {
   QUESTION: 'question',
@@ -46,6 +46,10 @@ export const FormElement = ({
     }),
   });
 
+  const onChangeMulty = (value: string[]) => {
+    updateForm('default', value);
+  };
+
   const handleInputChange = (
     e: TargetedEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -64,7 +68,10 @@ export const FormElement = ({
           : target.value;
 
     if (!name) return;
+    updateForm(name, value);
+  };
 
+  const updateForm = (name: string, value: unknown) => {
     format.value = {
       ...format.value,
       pages: format.value.pages.map((p) => {
@@ -197,8 +204,8 @@ export const FormElement = ({
             {/* DROPDOW: select type */}
             <td onClick={handleSelect} className='w-3/12'>
               <Select
-                placeholder='Company Industry'
-                id='ob-select-company-industry'
+                placeholder='Type Element'
+                id='select-type-element'
                 icon='106'
                 value={question.type}
                 name='type'
@@ -239,9 +246,9 @@ export const FormElement = ({
               <div>
                 <input
                   id={`cb-visible-form-${question.id}`}
-                  checked={question.visible}
+                  checked={question.invisible}
                   type='checkbox'
-                  name='visible'
+                  name='invisible'
                   onChange={handleInputChange}
                   className='w-4 h-4 text-blue-600'
                 />
@@ -249,7 +256,7 @@ export const FormElement = ({
                   for={`cb-visible-form-${question.id}`}
                   className='ms-2 text-sm font-medium'
                 >
-                  Visible
+                  Invisible
                 </label>
               </div>
               {question.type !== ELEMENT_TYPE.IMAGE &&
@@ -302,15 +309,67 @@ export const FormElement = ({
               />
             </div>
 
-            {/* <div className='col-span-2 py-1'>
-                <input
-                  className='w-full'
-                  type='number'
+            <div className='col-span-2 py-1'>
+              {question.type === ELEMENT_TYPE.NUMBER_INPUT && (
+                <Input
                   name='default'
+                  label='Default'
+                  type='number'
                   value={question.default}
-                  placeholder='Default Value'
+                  onChange={handleInputChange}
+                  placeholder='Default value'
+                  borderless
+                  thin
+                  icon='123'
                 />
-              </div> */}
+              )}
+              {(question.type === ELEMENT_TYPE.INPUT ||
+                question.type === ELEMENT_TYPE.TEXT_AREA) && (
+                <Input
+                  name='default'
+                  label='Default'
+                  type='text'
+                  value={question.default}
+                  onChange={handleInputChange}
+                  placeholder='Default value'
+                  borderless
+                  thin
+                  icon='123'
+                />
+              )}
+              {(question.type === ELEMENT_TYPE.CHECK_BOX ||
+                question.type === ELEMENT_TYPE.RADIO_BUTTON ||
+                question.type === ELEMENT_TYPE.DROPDOWN) && (
+                <MultipleInput
+                  value={question.default}
+                  onChange={onChangeMulty}
+                />
+              )}
+              {question.type === ELEMENT_TYPE.DATE && (
+                <Input
+                  name='default'
+                  label='Default'
+                  type='date'
+                  value={question.default}
+                  onChange={handleInputChange}
+                  borderless
+                  thin
+                  icon='123'
+                />
+              )}
+              {question.type === ELEMENT_TYPE.TIME && (
+                <Input
+                  name='default'
+                  label='Default'
+                  type='time'
+                  value={question.default}
+                  onChange={handleInputChange}
+                  borderless
+                  thin
+                  icon='123'
+                />
+              )}
+            </div>
 
             {question.type === ELEMENT_TYPE.INPUT && (
               <Select

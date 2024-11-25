@@ -39,7 +39,7 @@ export const Input = ({
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
         <input
-          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'}`}
+          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'} [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
           onChange={onChange}
           name={name}
           onKeyUp={onKeyUp}

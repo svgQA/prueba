@@ -8,7 +8,7 @@ const getNewElement = (section?: string, type?: ELEMENT_TYPE): IElement => ({
   label: '',
   type: type || ELEMENT_TYPE.INPUT,
   required: false,
-  visible: false,
+  invisible: false,
   disable: false,
   assigned: false,
   section,
