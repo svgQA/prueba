@@ -2,8 +2,6 @@ import { useDrag, useDrop } from 'react-dnd';
 import {
   format,
   moveElement,
-  IElement,
-  ELEMENT_TYPE,
   validateSelectedElement,
   ELEMENT_TYPE_VALUES,
   REGEX_PATTERNS,
@@ -11,6 +9,7 @@ import {
 import { TargetedEvent } from 'preact/compat';
 import { IElementProps } from './interace';
 import { Input, MultipleInput, Select } from '@/components/common';
+import { ELEMENT_TYPE, IElement } from '@/types/form';
 
 const ItemType = {
   QUESTION: 'question',

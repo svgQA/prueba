@@ -18,6 +18,8 @@ import { FormPhoneViewer, FormElement } from './components';
 import { TargetedEvent } from 'preact/compat';
 import { Button, Input } from '@/components/common';
 import { FormButton } from '@/components/compose';
+import { FormService } from '@/services';
+import { IFormRequest } from '@/types/form';
 
 export const FormCreateSettingPage: FunctionComponent = () => {
   useEffect(() => {
@@ -33,8 +35,15 @@ export const FormCreateSettingPage: FunctionComponent = () => {
     }
   };
 
-  const showFormat = () => {
-    console.log(getForm.value);
+  const showFormat = async () => {
+    const format: IFormRequest = {
+      title: getForm.value.label,
+      description: getForm.value.description || getForm.value.label,
+      structure: getForm.value,
+    };
+    const response = await FormService.create(format);
+
+    if (!response.getStatus()) return;
   };
 
   const addLelement = () => {

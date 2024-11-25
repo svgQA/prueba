@@ -1,4 +1,4 @@
-import { ELEMENT_TYPE, IElement } from '../store';
+import { ELEMENT_TYPE, IElement } from '@/types/form';
 
 export interface CardElementProps {
   id: string;

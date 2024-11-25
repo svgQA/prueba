@@ -1,3 +1,4 @@
+import { IFormRequest } from '@/types/form';
 import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
@@ -7,9 +8,9 @@ import {
 
 export class FormService extends BaseService {
   static name: VoxServices = 'form';
-  static async create(data: any) {
+  static async create(data: IFormRequest) {
     const model: IMakeRequest = {
-      url: ['create'],
+      url: ['form'],
       method: REQUEST_METHODS.POST,
       data,
     };
@@ -28,9 +29,6 @@ export class FormService extends BaseService {
   static async get_all() {
     const model: IMakeRequest = {
       url: ['form'],
-      headers: {
-        'voxline-tenant': 'form',
-      },
       params: {
         page: 1,
         items: 10,

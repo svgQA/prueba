@@ -57,7 +57,9 @@ import { SettingsModal } from '../settings/settings';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    const { setSelected, companies, setCompanies } = useUserStore();
+    const { setSelected, companies, setCompanies, getSelected, getUser } =
+      useUserStore();
+
     const setCompanySelected = (company: string) => {
       setSelected(company);
       closeOnBoardingModal();
@@ -65,6 +67,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
+      BaseService.setUser(getSelected, getUser);
       validateUser();
     }, []);
 

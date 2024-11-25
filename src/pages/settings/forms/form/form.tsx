@@ -1,14 +1,14 @@
 import './index.css';
 import { Table } from '@/components/common';
 import { Link } from 'wouter';
-import { IForm } from './utils/form';
 import { columns } from './components';
 import { useEffect } from 'preact/hooks';
 import { FormService } from '@/services';
 import { useSignal } from '@preact/signals';
+import { IFormResponse } from '@/types/form';
 
 export const FormSettingPage = () => {
-  const forms = useSignal<IForm[]>([]);
+  const forms = useSignal<IFormResponse[]>([]);
 
   useEffect(() => {
     getFormsHandler();
@@ -39,7 +39,11 @@ export const FormSettingPage = () => {
           <p>Create Report to format</p>
         </Link>
       </div>
-      <Table<IForm> data={forms.value} columns={columns} pageSize={20} />
+      <Table<IFormResponse>
+        data={forms.value}
+        columns={columns}
+        pageSize={20}
+      />
     </section>
   );
 };

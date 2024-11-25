@@ -1,5 +1,5 @@
 import { Expand } from '@/components/common';
-import { IInstance } from '@/types';
+import { IInstance } from '@/types/tenant';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 

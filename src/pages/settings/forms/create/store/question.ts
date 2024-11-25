@@ -1,7 +1,6 @@
+import { ELEMENT_TYPE, IElement, IFormat, IPage } from '@/types/form';
 import { computed, signal } from '@preact/signals';
 import shortUUID from 'short-uuid';
-import { IElement, IFormat, IPage } from './interface.d';
-import { ELEMENT_TYPE } from './types';
 
 const getNewElement = (section?: string, type?: ELEMENT_TYPE): IElement => ({
   id: shortUUID.generate(),

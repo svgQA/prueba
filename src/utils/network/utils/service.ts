@@ -2,15 +2,26 @@ import { VOX_DEFAULT_PATH, VOS_SERVICES } from './constants';
 import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
+import { ICompany, IUser } from '@/store/slices/interface';
 
 export class BaseService {
   protected static prefix: string = 'api';
   protected static openLoading: () => void = () => {};
   protected static closeLoading: () => void = () => {};
+  protected static getSelected: () => ICompany | undefined = () => undefined;
+  protected static getUser: () => IUser | null = () => null;
 
-  public static setLoading(open: () => void, close: () => void) {
-    this.openLoading = open;
-    this.closeLoading = close;
+  public static setLoading(onOpen: () => void, onClose: () => void) {
+    this.openLoading = onOpen;
+    this.closeLoading = onClose;
+  }
+
+  public static setUser(
+    getSelected: () => ICompany | undefined,
+    getUser: () => IUser | null
+  ) {
+    this.getSelected = getSelected;
+    this.getUser = getUser;
   }
 
   private static make_url(
@@ -40,7 +51,8 @@ export class BaseService {
         https://voxline.com/api/form/...
      */
     model: IMakeRequest,
-    prefix?: boolean
+    prefix?: boolean,
+    tenance: boolean = true
   ): Promise<GenericResponse<T>> {
     this.openLoading();
     let url = this.make_url(model.url, instance, prefix);
@@ -55,8 +67,17 @@ export class BaseService {
 
     const method = model?.method || REQUEST_METHODS.GET;
     if (method === REQUEST_METHODS.POST) {
-      model.headers = { ...model.headers, 'Content-type': 'application/json' };
+      model.headers = { ...model.headers, 'Content-Type': 'application/json' };
       model.data = JSON.stringify(model.data || {});
+    }
+
+    if (tenance) {
+      const tenant = this.getSelected();
+      const tenant_header = import.meta.env.VITE_TENANT_HEADER;
+      if (!tenant_header || !tenant?.tenant_id) {
+        throw new Error('ERROR: not include header');
+      }
+      model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
     }
 
     try {
@@ -83,16 +104,9 @@ export class BaseService {
           data: result,
         });
       }
-    } catch (error: any) {
-      const message =
-        JSON.parse(error?.request?.response || `{"message": "${error}"}`)
-          ?.message || 'ERROR: Not Found Data';
-      this.closeLoading();
-      return new GenericResponse<T>({
-        code: 404,
-        message,
-        data: {},
-      });
+    } catch (error: unknown) {
+      console.log(error);
+      throw new Error('ERROR: processing response');
     }
   }
 }

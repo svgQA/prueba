@@ -1,4 +1,4 @@
-import { ELEMENT_TYPE } from './types';
+import { ELEMENT_TYPE } from '@/types/form';
 
 export const ELEMENT_TYPE_VALUES = [
   {
