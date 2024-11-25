@@ -1,5 +1,3 @@
-import { closeOnBoardingModal } from '@/store/signals/modals';
-import { useUserStore } from '@/store/slices';
 import { Field, FormSpy } from 'react-final-form';
 import {
   employeeCountOptions,
@@ -11,13 +9,10 @@ import {
 import { Input, Select } from '@/components/common';
 import { OnBoardingStep } from './step';
 
-export const OnBoardingSteps = ({ sliderRef }: IOnBoardingStepsProps) => {
-  const { setSelected, companies } = useUserStore();
-  const setCompanySelected = (company: string) => {
-    setSelected(company);
-    closeOnBoardingModal();
-  };
-
+export const OnBoardingSteps = ({
+  sliderRef,
+  children,
+}: IOnBoardingStepsProps) => {
   const handleTabKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'Tab') {
       const currentStep = (e.target as HTMLElement).closest('.onboarding-step');
@@ -53,25 +48,8 @@ export const OnBoardingSteps = ({ sliderRef }: IOnBoardingStepsProps) => {
       {/* Sacar este primer componente para capturar si ya tiene companies con el fin
      de evitar seguir sobre el proceso de creaciòn. */}
       <OnBoardingStep title='Companies'>
-        <div className='w-full'>
-          <h4 className='font-semibold text-3xl'>Tryvoo:</h4>
-          {companies.map((company) => (
-            <div
-              key={`selector-company-${company.name}`}
-              name={company.id}
-              className='w-full my-1 cursor-pointer py-2 rounded-md flex flex-row justify-between px-4 items-center'
-              onClick={() => setCompanySelected(company.id)}
-              tabIndex={0}
-            >
-              <div className='flex flex-row'>
-                <h4 className='w-96'>{company.name}</h4>
-                <span className='bg-teal-500 text-white px-2 py-1 rounded-full text-sm'>
-                  {company.role}
-                </span>
-              </div>
-              <span className='vx-icon vx-users' />
-            </div>
-          ))}
+        <div className='w-full flex flex-row flex-wrap gap-3 justify-evenly'>
+          {children}
         </div>
       </OnBoardingStep>
       <OnBoardingStep title='Información del administrador'>

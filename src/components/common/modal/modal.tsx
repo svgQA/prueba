@@ -11,6 +11,8 @@ export const Modal: FunctionComponent<IModalProps> = ({
   header,
   children,
   footer,
+  expandable,
+  width,
 }: IModalProps) => {
   const [expand, setExpand] = useState(false);
 
@@ -28,21 +30,23 @@ export const Modal: FunctionComponent<IModalProps> = ({
       className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-opacity-95 bg-b-dark`}
     >
       <div
-        className={`${expand ? 'h-full' : 'h-fit'} overflow-hidden rounded-md modal-shadow w-full p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
+        className={`${expand ? 'h-full' : 'h-fit'} ${width ? width : 'w-full'} overflow-hidden rounded-md modal-shadow p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
       >
         {/* vox-scroll-design */}
         <div className='flex flex-row w-full items-center pt-2'>
           <div class='flex flex-row w-full items-center px-2.5'>
             <div className='flex flex-row w-10/12 items-center'>{header}</div>
             <div className='flex w-2/12 items-center justify-end'>
-              <Button
-                id='setting-expand'
-                name='setting-expand'
-                onClick={toggleExpand}
-                type='button'
-                rounded
-                icon='105'
-              ></Button>
+              {expandable && (
+                <Button
+                  id='setting-expand'
+                  name='setting-expand'
+                  onClick={toggleExpand}
+                  type='button'
+                  rounded
+                  icon='105'
+                ></Button>
+              )}
               {onClose && (
                 <Button
                   id='setting-close'
@@ -56,6 +60,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
             </div>
           </div>
         </div>
+
         <div className='flex flex-row'>{children}</div>
         {footer && (
           <div className='flex flex-row w-full justify-end gap-2'>{footer}</div>

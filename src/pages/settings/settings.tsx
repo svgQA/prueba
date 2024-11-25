@@ -92,6 +92,7 @@ export const SettingsModal = () => {
       onClose={toggleSettingModal}
       name='setting-modal'
       id='setting-modal'
+      expandable
       header={
         <>
           <MenuButtons goBack={goBack} goForward={goForward} />

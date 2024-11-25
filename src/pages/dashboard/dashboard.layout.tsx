@@ -57,7 +57,11 @@ import { SettingsModal } from '../settings/settings';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    const { setCompanies, setSelected } = useUserStore();
+    const { setSelected, companies, setCompanies } = useUserStore();
+    const setCompanySelected = (company: string) => {
+      setSelected(company);
+      closeOnBoardingModal();
+    };
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
@@ -115,7 +119,33 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         <OnBordingModal
           closed={getStatusOnBoardingModal.value}
           onLogout={signOut || (() => {})}
-        />
+        >
+          {companies.map((company) => (
+            <div
+              key={`selector-company-${company.name}`}
+              name={company.id}
+              className='w-5/12 float-left cursor-pointer py-3 rounded-lg flex flex-row justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 border border-gray-200 dark:border-gray-700'
+              onClick={() => setCompanySelected(company.id)}
+              tabIndex={0}
+            >
+              <div className='flex flex-row items-center space-x-4 px-2'>
+                <div className='w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-teal-400 flex items-center justify-center text-white font-bold'>
+                  {company.name.charAt(0).toUpperCase()}
+                </div>
+                <div className='flex flex-col'>
+                  <h4 className='font-medium text-lg'>{company.name}</h4>
+                  <span className='text-sm text-gray-500 dark:text-gray-400'>
+                    {company.id}
+                  </span>
+                </div>
+                <span className='bg-gradient-to-r from-teal-400 to-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium'>
+                  {company.role}
+                </span>
+              </div>
+              <span className='vx-icon vx-arrow-right text-gray-400' />
+            </div>
+          ))}
+        </OnBordingModal>
         <IconsModal />
       </section>
     );
