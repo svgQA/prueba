@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { ColumnDef } from '@tanstack/react-table';
 import { User } from '../utils/user';
-import { PBadge } from '@/components/common';
+import { PBadge2 } from '@/components/common/connection/connection';
 
 import dayjs from 'dayjs';
 
@@ -80,23 +80,16 @@ export const columns: ColumnDef<User>[] = [
   //   cell: (info) => <span>{String(info.getValue())}</span>,
   // },
   {
-    accessorKey: 'noveltyType',
-    header: 'Tipo Novedad',
+    accessorKey: 'department',
+    header: 'Departamento',
   },
   {
-    accessorKey: 'noveltyDate',
-    header: 'Fecha Novedad',
-    cell: (info) => <FormattedDate date={info.getValue() as string} />,
-  },
-  {
-    accessorKey: 'contact',
-    header: 'Contacto',
-  },
-  {
-    accessorKey: 'priority',
-    header: 'Prioridad',
+    accessorKey: 'connection',
+    header: 'Conexión',
     cell: (info) => (
-      <PBadge priority={info.getValue() as 'Alta' | 'Media' | 'Baja'} />
+      <PBadge2
+        connection={info.getValue() as 'Conectado' | 'Inactivo' | 'Nunca'}
+      />
     ),
   },
 ];

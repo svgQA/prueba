@@ -7,11 +7,13 @@ export interface User {
   workerAge: number;
   workerPhoto: string;
   workerEmail: string;
+  department: string;
   contact: number;
   visits: number;
   status: string;
   progress: number;
   priority: 'Alta' | 'Media' | 'Baja';
+  connection: 'Conectado' | 'Inactivo' | 'Nunca';
   noveltyType: string;
   noveltyDate: string;
   moreInfo: string;
