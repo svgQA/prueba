@@ -102,3 +102,14 @@ export const REGEX_PATTERNS = [
     label: 'URL',
   },
 ];
+
+export const SWITCH_OPTIONS = [
+  {
+    value: 0,
+    label: 'False',
+  },
+  {
+    value: 1,
+    label: 'True',
+  },
+];

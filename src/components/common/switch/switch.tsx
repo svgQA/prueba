@@ -1,20 +1,15 @@
 import { type FunctionComponent } from 'preact';
 import { type ISwitchProps } from './interface';
-import { useState } from 'preact/hooks';
 
 export const Switch: FunctionComponent<ISwitchProps> = ({
   id,
   name,
-  checked = false,
   label = '',
   onChange,
+  value = false,
 }: ISwitchProps) => {
-  const [isChecked, setIsChecked] = useState(checked);
-
   const handleChange = () => {
-    const newValue = !isChecked;
-    setIsChecked(newValue);
-    onChange?.(newValue);
+    onChange?.(!value);
   };
 
   return (
@@ -24,9 +19,8 @@ export const Switch: FunctionComponent<ISwitchProps> = ({
           type='checkbox'
           id={id}
           name={name}
-          checked={isChecked}
+          checked={value}
           className='sr-only peer'
-          onChange={handleChange}
         />
         <div
           onClick={handleChange}

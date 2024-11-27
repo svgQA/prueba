@@ -5,6 +5,7 @@ import {
   validateSelectedElement,
   ELEMENT_TYPE_VALUES,
   REGEX_PATTERNS,
+  SWITCH_OPTIONS,
 } from '../store';
 import { TargetedEvent } from 'preact/compat';
 import { IElementProps } from './interace';
@@ -17,6 +18,7 @@ import {
 } from '@/components/common';
 import { ELEMENT_TYPE, IElement } from '@/types/form';
 import { IOption } from '@/components/common/interface';
+import { useSignal } from '@preact/signals';
 
 const ItemType = {
   QUESTION: 'question',
@@ -31,6 +33,9 @@ export const FormElement = ({
   onSelect,
   onDelete,
 }: IElementProps) => {
+  const typeDropdown = useSignal<boolean>(false);
+  const onChangeDropdown = (value: boolean) => (typeDropdown.value = value);
+
   const [{ isDragging }, ref] = useDrag({
     type: ItemType.QUESTION,
     item: { index },
@@ -105,10 +110,20 @@ export const FormElement = ({
                                     : tsk
                                 ),
                               }
-                            : {
-                                ...el,
-                                [name]: value,
-                              }
+                            : name === 'type'
+                              ? {
+                                  ...el,
+                                  type: value as ELEMENT_TYPE,
+                                  options:
+                                    (value as ELEMENT_TYPE) ===
+                                    ELEMENT_TYPE.SWITCH
+                                      ? SWITCH_OPTIONS
+                                      : [],
+                                }
+                              : {
+                                  ...el,
+                                  [name]: value,
+                                }
                           : el
                       ),
                     }
@@ -129,10 +144,19 @@ export const FormElement = ({
                             : tsk
                         ),
                       }
-                    : {
-                        ...element,
-                        [name]: value,
-                      }
+                    : name === 'type'
+                      ? {
+                          ...element,
+                          type: value as ELEMENT_TYPE,
+                          options:
+                            (value as ELEMENT_TYPE) === ELEMENT_TYPE.SWITCH
+                              ? SWITCH_OPTIONS
+                              : [],
+                        }
+                      : {
+                          ...element,
+                          [name]: value,
+                        }
                   : element
               ),
             };
@@ -377,21 +401,37 @@ export const FormElement = ({
               {question.type === ELEMENT_TYPE.DROPDOWN && (
                 <div className='w-full flex flex-row items-end'>
                   <div class='w-full mr-4'>
-                    {/* onChange={handleInputChange} */}
-                    <Select
-                      label=''
-                      name=''
-                      placeholder='regex patters'
-                      id={`se-form-${question.id}-element-options`}
-                      value={question.regex}
-                      options={[{ label: '112', value: 'Musica' }]}
-                      icon='104'
-                      borderless
-                      thin
-                    />
+                    {typeDropdown.value ? (
+                      <Input
+                        label='List URL'
+                        name='url'
+                        placeholder='List URL'
+                        value={question.url}
+                        onChange={handleInputChange}
+                        id={`se-form-${question.id}-element-options-url`}
+                        borderless
+                        icon='104'
+                        thin
+                      />
+                    ) : (
+                      <Select
+                        label='List Selector'
+                        name='list'
+                        placeholder='List selector'
+                        id={`se-form-${question.id}-element-options-list`}
+                        value={question.list}
+                        onChange={handleInputChange}
+                        options={[{ label: 'Sexo', value: 1 }]}
+                        icon='104'
+                        borderless
+                        thin
+                      />
+                    )}
                   </div>
                   <Switch
                     label='URL'
+                    value={typeDropdown.value}
+                    onChange={onChangeDropdown}
                     name={`sw-form-${question.id}-element-option-type`}
                   />
                 </div>
@@ -548,7 +588,8 @@ export const FormElement = ({
             )}
 
             {(question.type === ELEMENT_TYPE.CHECK_BOX ||
-              question.type === ELEMENT_TYPE.RADIO_BUTTON) && (
+              question.type === ELEMENT_TYPE.RADIO_BUTTON ||
+              question.type === ELEMENT_TYPE.SWITCH) && (
               <div className='col-span-2'>
                 <MultipleInput
                   name='tasks'
