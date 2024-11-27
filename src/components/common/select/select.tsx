@@ -47,7 +47,7 @@ export const Select = ({
           <option value=''>{placeholder}</option>
           {options?.map((option) => (
             <option key={option.value} value={option.value}>
-              {option.key}
+              {option.label}
             </option>
           ))}
         </select>

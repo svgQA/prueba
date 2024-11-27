@@ -18,17 +18,15 @@ import { useEffect, useCallback } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { MenuButtons, MenuList } from './components';
 import { RoutingContent } from './routing';
+import {
+  currentPosition,
+  historyLocation,
+  menuInformationSelected,
+  setMenu,
+} from './store';
 
 export const SettingsModal = () => {
   const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
-  const historyLocation = useSignal<IMenu[]>([]);
-  const currentPosition = useSignal<number>(0);
-  const menuInformationSelected = useSignal<IMenu>({
-    description: '',
-    label: '',
-    to: '',
-    id: '',
-  });
   const [_, navigate] = useLocation();
 
   // TODO: Revisar esta parte para cuando se abre y ya existia un menu seleccionado.
@@ -49,7 +47,7 @@ export const SettingsModal = () => {
   }, [getStatusSettingModal.value]);
 
   const setMenuSelected = (menu: IMenu) => {
-    menuInformationSelected.value = menu;
+    setMenu(menu);
     navigate(menu.to);
   };
 

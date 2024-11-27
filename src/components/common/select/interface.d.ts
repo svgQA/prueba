@@ -1,11 +1,7 @@
 import { type TargetedEvent } from 'preact/compat';
 import { type IComponentProps } from '@/components/utils/interface';
 import { FieldMetaState } from 'react-final-form';
-
-interface ISelectOptions {
-  key: string;
-  value: string | number;
-}
+import { IOption } from '../interface';
 
 export interface ISelectProps extends IComponentProps {
   onChange?: (event: TargetedEvent<HTMLSelectElement>) => void;
@@ -21,7 +17,7 @@ export interface ISelectProps extends IComponentProps {
   icon?: string;
   meta?: FieldMetaState<string>;
   end?: boolean;
-  options?: ISelectOptions[];
+  options?: IOption[];
   borderless?: boolean;
   thin?: boolean;
   tabIndex?: number;

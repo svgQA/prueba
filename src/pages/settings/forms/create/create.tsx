@@ -110,6 +110,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               placeholder='Enter title'
               name='label'
               icon='245'
+              id={`in-form-${format.value.id}-format-title`}
               value={format.value.label}
               onChange={handleFormatInputChange}
               borderless
@@ -119,6 +120,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               placeholder='Enter description'
               name='description'
               icon='123'
+              id={`in-form-${format.value.id}-format-description`}
               borderless
               value={format.value.description}
               onChange={handleFormatInputChange}
@@ -139,6 +141,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                 type='text'
                 placeholder='Enter title page'
                 name='label'
+                id={`in-form-${page.id}-page-title`}
                 data-pageid={page.id}
                 value={page.label}
                 onChange={handlePageInputChange}

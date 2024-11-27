@@ -1,14 +1,11 @@
+import { IOption } from '@/components/common/interface';
 import { ELEMENT_TYPE } from './form.enum';
+import { ITask } from '../shift';
 
 interface IBase {
   id: string;
   label: string;
   description?: string;
-}
-
-interface IOption {
-  value: string;
-  label: string;
 }
 
 interface ICondition {
@@ -35,9 +32,10 @@ export interface IElement extends IBase {
   section?: string;
   parent?: string; // le asigno el valor de los hijos
   elements?: IElement[]; // Optional nested elements for sections
+  tasks?: ITask[];
 
   // options?: number;
-  // options?: IOption[]; // para un dropdown, selector, checkbox, switch
+  options?: IOption[]; // para un dropdown, selector, checkbox, switch
   // conditions?: ICondition[];
 }
 

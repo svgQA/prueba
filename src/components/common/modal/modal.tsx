@@ -26,9 +26,9 @@ export const Modal: FunctionComponent<IModalProps> = ({
       id={id}
       name={name}
       tabIndex={-1}
-      aria-hidden='true'
       className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-opacity-95 bg-b-dark`}
     >
+      {/*aria-hidden={true}*/}
       <div
         className={`${expand ? 'h-full' : 'h-fit'} ${width ? width : 'w-full'} overflow-hidden rounded-md modal-shadow p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
       >

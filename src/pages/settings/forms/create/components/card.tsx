@@ -18,7 +18,12 @@ export const CardElement = ({
       case ELEMENT_TYPE.INPUT:
         return (
           <div className='text-sm border border-zinc-300 rounded-md p-2 mt-1'>
-            <input type='text' placeholder='Text input' disabled />
+            <input
+              type='text'
+              placeholder='Text input'
+              disabled
+              value={element.default}
+            />
           </div>
         );
       case ELEMENT_TYPE.TEXT_AREA:
@@ -28,6 +33,7 @@ export const CardElement = ({
               placeholder='Text area'
               className='w-full min-h-6'
               disabled
+              value={element.default}
             />
           </div>
         );
@@ -39,6 +45,7 @@ export const CardElement = ({
               placeholder='123'
               className='w-full'
               disabled
+              value={element.default}
             />
           </div>
         );
@@ -46,51 +53,52 @@ export const CardElement = ({
         return (
           <div className='text-sm border border-zinc-300 rounded-md p-2 mt-1 flex flex-row'>
             <span className='vx-icon vx-icon-096' />
-            <select className='w-full ml-2' disabled>
-              <option>Select an option</option>
+            <select className='w-full ml-2'>
+              {Array.isArray(element.options) &&
+                element.options?.map((option, index) => (
+                  <option key={`se-option-${option.label}-${index}`}>
+                    {option.label}
+                  </option>
+                ))}
             </select>
           </div>
         );
       case ELEMENT_TYPE.RADIO_BUTTON:
         return (
           <div className='text-sm gap-3 flex flex-col mt-2'>
-            <label className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'>
-              <input
-                type='radio'
-                disabled
-                className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer'
-              />
-              <span className='text-gray-700'>Option 1</span>
-            </label>
-            <label className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'>
-              <input
-                type='radio'
-                disabled
-                className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer'
-              />
-              <span className='text-gray-700'>Option 2</span>
-            </label>
+            {Array.isArray(element.options) &&
+              element.options?.map((option, index) => (
+                <label
+                  key={`ra-option-${option.label}-${index}`}
+                  className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'
+                >
+                  <input
+                    type='radio'
+                    disabled
+                    className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer'
+                  />
+                  <span className='text-gray-700'>{option.label}</span>
+                </label>
+              ))}
           </div>
         );
       case ELEMENT_TYPE.CHECK_BOX:
         return (
           <div className='text-sm gap-3 flex flex-col mt-2'>
-            <label className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'>
-              <input
-                type='checkbox'
-                disabled
-                className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer border-gray-300'
-              />
-              <span className='text-gray-700'>Option 1</span>
-            </label>
-            <label className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'>
-              <input
-                type='checkbox'
-                disabled
-                className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer border-gray-300'
-              />
-              <span className='text-gray-700'>Option 2</span>
-            </label>
+            {Array.isArray(element.options) &&
+              element.options?.map((option, index) => (
+                <label
+                  key={`ch-option-${option.label}-${index}`}
+                  className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'
+                >
+                  <input
+                    type='checkbox'
+                    disabled
+                    className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer border-gray-300'
+                  />
+                  <span className='text-gray-700'>{option.label}</span>
+                </label>
+              ))}
           </div>
         );
       case ELEMENT_TYPE.SWITCH:

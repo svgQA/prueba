@@ -8,8 +8,15 @@ import {
 } from '../store';
 import { TargetedEvent } from 'preact/compat';
 import { IElementProps } from './interace';
-import { Input, MultipleInput, Select } from '@/components/common';
+import {
+  Card,
+  Input,
+  MultipleInput,
+  Select,
+  Switch,
+} from '@/components/common';
 import { ELEMENT_TYPE, IElement } from '@/types/form';
+import { IOption } from '@/components/common/interface';
 
 const ItemType = {
   QUESTION: 'question',
@@ -45,8 +52,8 @@ export const FormElement = ({
     }),
   });
 
-  const onChangeMulty = (value: string[]) => {
-    updateForm('default', value);
+  const onChangeMulty = (value: IOption[], name: string) => {
+    updateForm(name, value);
   };
 
   const handleInputChange = (
@@ -56,7 +63,9 @@ export const FormElement = ({
       | HTMLInputElement
       | HTMLTextAreaElement
       | HTMLSelectElement;
-    const name = target.name;
+    const [name, task] = target.name.includes('task-')
+      ? target.name.split('-')
+      : [target.name, undefined];
     const value =
       target.type === 'checkbox'
         ? (target as HTMLInputElement).checked
@@ -67,10 +76,10 @@ export const FormElement = ({
           : target.value;
 
     if (!name) return;
-    updateForm(name, value);
+    updateForm(name, value, task);
   };
 
-  const updateForm = (name: string, value: unknown) => {
+  const updateForm = (name: string, value: unknown, task?: string | number) => {
     format.value = {
       ...format.value,
       pages: format.value.pages.map((p) => {
@@ -84,10 +93,22 @@ export const FormElement = ({
                       ...element,
                       elements: element.elements?.map((el) =>
                         el.id === question.id
-                          ? {
-                              ...el,
-                              [name]: value,
-                            }
+                          ? name === 'task'
+                            ? {
+                                ...el,
+                                tasks: element.tasks?.map((tsk) =>
+                                  tsk.value == task
+                                    ? {
+                                        ...tsk,
+                                        control: value as string | number,
+                                      }
+                                    : tsk
+                                ),
+                              }
+                            : {
+                                ...el,
+                                [name]: value,
+                              }
                           : el
                       ),
                     }
@@ -99,7 +120,19 @@ export const FormElement = ({
               ...p,
               elements: p.elements.map((element: IElement) =>
                 element.id === question.id
-                  ? { ...element, [name]: value }
+                  ? name === 'task'
+                    ? {
+                        ...element,
+                        tasks: element.tasks?.map((tsk) =>
+                          tsk.value == task
+                            ? { ...tsk, control: value as string | number }
+                            : tsk
+                        ),
+                      }
+                    : {
+                        ...element,
+                        [name]: value,
+                      }
                   : element
               ),
             };
@@ -163,6 +196,7 @@ export const FormElement = ({
                 type='text'
                 placeholder='Enter Section Title'
                 name='label'
+                id={`in-form-${question.id}-section-title`}
                 data-sectionid={question.id}
                 data-pageid={page}
                 value={question.label}
@@ -193,6 +227,7 @@ export const FormElement = ({
                   type='text'
                   name='label'
                   placeholder='Enter Element Title'
+                  id={`in-form-${question.id}-element-title`}
                   value={question.label}
                   onChange={handleInputChange}
                   borderless
@@ -204,7 +239,7 @@ export const FormElement = ({
             <td onClick={handleSelect} className='w-3/12'>
               <Select
                 placeholder='Type Element'
-                id='select-type-element'
+                id={`se-form-${question.id}-element-type`}
                 icon='106'
                 value={question.type}
                 name='type'
@@ -228,7 +263,7 @@ export const FormElement = ({
             <div className='vx-form-attrs-checkbox'>
               <div>
                 <input
-                  id={`cb-required-form-${question.id}`}
+                  id={`cb-form-${question.id}-element-required`}
                   checked={question.required}
                   type='checkbox'
                   name='required'
@@ -236,7 +271,7 @@ export const FormElement = ({
                   className='w-4 h-4 rounded'
                 />
                 <label
-                  for={`cb-required-form-${question.id}`}
+                  for={`cb-form-${question.id}-element-required`}
                   className='ms-2 text-sm font-medium'
                 >
                   Required
@@ -244,7 +279,7 @@ export const FormElement = ({
               </div>
               <div>
                 <input
-                  id={`cb-visible-form-${question.id}`}
+                  id={`cb-form-${question.id}-element-visible`}
                   checked={question.invisible}
                   type='checkbox'
                   name='invisible'
@@ -252,7 +287,7 @@ export const FormElement = ({
                   className='w-4 h-4 text-blue-600'
                 />
                 <label
-                  for={`cb-visible-form-${question.id}`}
+                  for={`cb-form-${question.id}-element-visible`}
                   className='ms-2 text-sm font-medium'
                 >
                   Invisible
@@ -262,7 +297,7 @@ export const FormElement = ({
                 question.type !== ELEMENT_TYPE.SIGNATURE && (
                   <div>
                     <input
-                      id={`cb-disable-form-${question.id}`}
+                      id={`cb-form-${question.id}-element-disable`}
                       checked={question.disable}
                       type='checkbox'
                       name='disable'
@@ -270,7 +305,7 @@ export const FormElement = ({
                       className='w-4 h-4'
                     />
                     <label
-                      for={`cb-disable-form-${question.id}`}
+                      for={`cb-form-${question.id}-element-disable`}
                       className='ms-2 text-sm font-medium'
                     >
                       Disable
@@ -279,7 +314,7 @@ export const FormElement = ({
                 )}
               <div>
                 <input
-                  id={`cb-assigned-form-${question.id}`}
+                  id={`cb-form-${question.id}-element-assigned`}
                   checked={question.assigned}
                   type='checkbox'
                   name='assigned'
@@ -287,7 +322,7 @@ export const FormElement = ({
                   className='w-4 h-4'
                 />
                 <label
-                  for={`cb-assigned-form-${question.id}`}
+                  for={`cb-form-${question.id}-element-assigned`}
                   className='ms-2 text-sm font-medium'
                 >
                   Administrator
@@ -302,6 +337,7 @@ export const FormElement = ({
               <textarea
                 className='w-full min-h-6 vox-scroll-design'
                 name='description'
+                id={`ta-form-${question.id}-element-description`}
                 value={question.description}
                 onChange={handleInputChange}
                 placeholder='Description'
@@ -314,6 +350,7 @@ export const FormElement = ({
                   name='default'
                   label='Default'
                   type='number'
+                  id={`in-number-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
                   placeholder='Default value'
@@ -328,6 +365,7 @@ export const FormElement = ({
                   name='default'
                   label='Default'
                   type='text'
+                  id={`in-text-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
                   placeholder='Default value'
@@ -336,11 +374,36 @@ export const FormElement = ({
                   icon='123'
                 />
               )}
+              {question.type === ELEMENT_TYPE.DROPDOWN && (
+                <div className='w-full flex flex-row items-end'>
+                  <div class='w-full mr-4'>
+                    {/* onChange={handleInputChange} */}
+                    <Select
+                      label=''
+                      name=''
+                      placeholder='regex patters'
+                      id={`se-form-${question.id}-element-options`}
+                      value={question.regex}
+                      options={[{ label: '112', value: 'Musica' }]}
+                      icon='104'
+                      borderless
+                      thin
+                    />
+                  </div>
+                  <Switch
+                    label='URL'
+                    name={`sw-form-${question.id}-element-option-type`}
+                  />
+                </div>
+              )}
               {(question.type === ELEMENT_TYPE.CHECK_BOX ||
-                question.type === ELEMENT_TYPE.RADIO_BUTTON ||
-                question.type === ELEMENT_TYPE.DROPDOWN) && (
+                question.type === ELEMENT_TYPE.RADIO_BUTTON) && (
                 <MultipleInput
-                  value={question.default}
+                  name='options'
+                  label='Options'
+                  id={`mt-form-${question.id}-element-options`}
+                  icon='123'
+                  value={question.options}
                   onChange={onChangeMulty}
                 />
               )}
@@ -349,6 +412,7 @@ export const FormElement = ({
                   name='default'
                   label='Default'
                   type='date'
+                  id={`in-date-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
                   borderless
@@ -361,6 +425,7 @@ export const FormElement = ({
                   name='default'
                   label='Default'
                   type='time'
+                  id={`in-time-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
                   borderless
@@ -375,6 +440,7 @@ export const FormElement = ({
                 label='regex'
                 name='regex'
                 placeholder='regex patters'
+                id={`se-form-${question.id}-element-regex`}
                 value={question.regex}
                 onChange={handleInputChange}
                 options={REGEX_PATTERNS}
@@ -392,6 +458,7 @@ export const FormElement = ({
                   label='Minimun'
                   type={question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'}
                   value={question.min}
+                  id={`in-time-form-${question.id}-element-min`}
                   placeholder={`Min ${question.type === ELEMENT_TYPE.TIME ? 'Time' : 'Date'}`}
                   onChange={handleInputChange}
                   borderless
@@ -401,6 +468,7 @@ export const FormElement = ({
                 <Input
                   name='max'
                   label='Maximum'
+                  id={`in-time-form-${question.id}-element-max`}
                   type={question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'}
                   value={question.max}
                   placeholder={`Max ${question.type === ELEMENT_TYPE.TIME ? 'Time' : 'Date'}`}
@@ -418,6 +486,7 @@ export const FormElement = ({
                 name='min'
                 label='Minimun'
                 type='number'
+                id={`in-number-form-${question.id}-element-min`}
                 value={question.min}
                 placeholder='Min Length'
                 onChange={handleInputChange}
@@ -435,6 +504,7 @@ export const FormElement = ({
                 name='max'
                 label='Maximum'
                 type='number'
+                id={`in-number-form-${question.id}-element-max`}
                 value={question.max}
                 placeholder='Max Length'
                 onChange={handleInputChange}
@@ -451,6 +521,7 @@ export const FormElement = ({
                 type='number'
                 name='size'
                 label='size'
+                id={`in-number-form-${question.id}-element-size`}
                 value={question.size}
                 placeholder='Size'
                 onChange={handleInputChange}
@@ -466,6 +537,7 @@ export const FormElement = ({
                 type='number'
                 name='maxNumberFiles'
                 label='Number Files'
+                id={`in-number-form-${question.id}-element-files`}
                 value={question.maxNumberFiles}
                 placeholder='Number Files'
                 onChange={handleInputChange}
@@ -473,6 +545,41 @@ export const FormElement = ({
                 thin
                 icon='234'
               />
+            )}
+
+            {(question.type === ELEMENT_TYPE.CHECK_BOX ||
+              question.type === ELEMENT_TYPE.RADIO_BUTTON) && (
+              <div className='col-span-2'>
+                <MultipleInput
+                  name='tasks'
+                  label='Tasks'
+                  id={`mt-form-${question.id}-element-tasks`}
+                  icon='123'
+                  value={question.tasks}
+                  onChange={onChangeMulty}
+                  bottom
+                  getElement={(option: IOption, index: number) => (
+                    <Card
+                      key={`task-validation-${question}-${index}`}
+                      color='bg-transparent'
+                      maxWidth='w-52'
+                    >
+                      <p className='font-bold truncate mt-2'>{option.label}</p>
+                      {question.options && question.tasks && (
+                        <Select
+                          name={`task-${option.value}`}
+                          id={`sl-task-${question.id}-${option.value}`}
+                          options={question.options}
+                          value={question.tasks[index].control}
+                          onChange={handleInputChange}
+                          borderless
+                          icon='079'
+                        />
+                      )}
+                    </Card>
+                  )}
+                />
+              </div>
             )}
           </div>
 

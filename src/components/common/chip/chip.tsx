@@ -6,16 +6,13 @@ export const Chip: FunctionComponent<IChipProps> = ({
   onDelete,
 }: IChipProps) => {
   return (
-    <div class='flex items-center rounded-full border border-slate-300 py-0.5 px-2.5 text-center text-sm transition-all shadow-sm text-slate-600'>
+    <div class='relative flex items-center rounded-full border border-slate-300 dark:border-slate-600 py-0.5 px-2.5 text-center text-sm transition-all text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800'>
       {label}
       {onDelete && (
-        <button
-          class='flex items-center justify-center transition-all p-0.5 rounded-md text-white hover:bg-white/10 active:bg-white/10 ml-1 scale-75'
-          type='button'
+        <span
+          className='right-3 vox-icon vx-icon-192 cursor-pointer size-sm pl-3'
           onClick={onDelete}
-        >
-          <span className='vox-icon vx-icon-192' />
-        </button>
+        />
       )}
     </div>
   );

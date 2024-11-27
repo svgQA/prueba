@@ -1,10 +1,9 @@
 import { type IComponentProps } from '@/components/utils/interface';
+import { IOption } from '../interface';
 
-export interface IDropdownOptions {
-  label: string;
+export interface IDropdownOptions extends IOption {
   name?: string;
   id?: string;
-  value?: string;
 }
 export type DropdownOptionsKeys = keyof IDropdownOptions;
 

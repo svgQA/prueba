@@ -1,44 +1,86 @@
-import { useState } from 'preact/hooks';
+import { useState, useCallback, useMemo } from 'preact/hooks';
 import { IMultiProps } from './interface';
 import { Chip } from '../chip/chip';
 import { Input } from '../input/input';
 
-export const MultipleInput = ({ value = [], onChange }: IMultiProps) => {
-  const [inputValue, setInputValue] = useState('');
+export const MultipleInput = ({
+  value = [],
+  onChange,
+  label,
+  name,
+  id,
+  icon,
+  bottom,
+  placeholder,
+  getElement,
+}: IMultiProps) => {
+  const [inputValue, setInputValue] = useState<string>('');
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter' && inputValue) {
-      const newValue = [...value, inputValue];
-      onChange(newValue);
-      setInputValue('');
-    }
-  };
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && inputValue) {
+        const newValue = [...value, { value: value.length, label: inputValue }];
+        onChange(newValue, name);
+        setInputValue('');
+      }
+    },
+    [inputValue, value, onChange, name]
+  );
 
-  const handleDelete = (chipToDelete: string) => {
-    const newValue = value.filter((item) => item !== chipToDelete);
-    onChange(newValue);
-  };
+  const handleDelete = useCallback(
+    (chipToDelete: string | number) => {
+      const newValue = value.filter((item) => item.value !== chipToDelete);
+      onChange(newValue, name);
+    },
+    [value, onChange, name]
+  );
 
-  const handleInputChange = (e: Event) => {
+  const handleInputChange = useCallback((e: Event) => {
     const target = e.target as HTMLInputElement;
     setInputValue(target.value);
-  };
+  }, []);
+
+  const defaultChips = useMemo(
+    () => (
+      <div className='flex flex-wrap gap-1 justify-center'>
+        {Array.isArray(value) &&
+          value.map((item, index) =>
+            getElement ? (
+              <div className='relative border rounded-md flex flex-col border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'>
+                <span
+                  className='absolute z-10 right-2 top-0.5 vox-icon vx-icon-192 size-sm cursor-pointer'
+                  onClick={() => handleDelete(item.value)}
+                ></span>
+                {getElement(item, index)}
+              </div>
+            ) : (
+              <Chip
+                key={item.value}
+                label={item.label}
+                onDelete={() => handleDelete(item.value)}
+              />
+            )
+          )}
+      </div>
+    ),
+    [value, handleDelete]
+  );
 
   return (
     <div className='w-full'>
-      <div className='flex flex-wrap gap-2 mb-2'>
-        {value.map((item, index) => (
-          <Chip key={index} label={item} onDelete={() => handleDelete(item)} />
-        ))}
-      </div>
+      {!bottom && defaultChips}
       <Input
         type='text'
-        name='multi-input'
+        label={label}
+        name={name}
+        id={id}
+        icon={icon}
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        placeholder='Type and press Enter'
+        placeholder={placeholder || 'Type and press Enter'}
       />
+      {bottom && defaultChips}
     </div>
   );
 };
