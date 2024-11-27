@@ -13,12 +13,12 @@ type CardProps = {
 export const CardData: FunctionalComponent<CardProps> = memo(
   ({ title, count, subtitle, color, icon = '071' }) => (
     <Card name={`card-data-${title}`} shadow>
-      <div className=' p-6 flex items-center'>
+      <div className='flex items-center'>
         <span className={`vox-icon vx-icon-${icon} size-xl mr-4`} />
-        <div>
-          <h3 className='text-xl font-bold mb-2'>{title}</h3>
-          <p className={`text-3xl font-bold ${color}`}>{count}</p>
-          <p className='mt-2 text-t-light-dark dark:text-t-dark-light'>
+        <div className='max-w-96 min-h-[120px] overflow-hidden'>
+          <h3 className='text-xl font-bold mb-2 truncate'>{title}</h3>
+          <p className={`text-3xl font-bold ${color} truncate`}>{count}</p>
+          <p className='mt-2 text-t-light-dark dark:text-t-dark-light truncate'>
             {subtitle}
           </p>
         </div>

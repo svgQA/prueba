@@ -1,1 +1,2 @@
-export * from './tenant';
+export * from './tenant.d';
+export * from './service.d';
