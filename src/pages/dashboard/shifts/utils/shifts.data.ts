@@ -15,7 +15,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 75,
     checkIn: {
       date: '2024-03-12:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '2024-03-01T16:00:00',
@@ -42,7 +42,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '2024-03-01T16:10:20',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -85,7 +85,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 25,
     checkIn: {
       date: '2024-03-02T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '2024-03-01T16:00:23',
@@ -112,7 +112,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '2024-03-02T16:02:35',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -131,7 +131,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 90,
     checkIn: {
       date: '2024-03-01T16:12:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '123123123123',
@@ -158,7 +158,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '2024-03-01T16:13:20',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -177,7 +177,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 85,
     checkIn: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '2024-03-01T16:2:33',
@@ -204,7 +204,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '2024-03-01T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -223,7 +223,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 70,
     checkIn: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '2024-03-01T16:00:00',
@@ -250,7 +250,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -269,7 +269,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 75,
     checkIn: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '2024-03-01T16:00:00',
@@ -296,7 +296,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -315,7 +315,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 92,
     checkIn: {
       date: '2024-03-01T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '2024-03-01T16:00:00',
@@ -342,7 +342,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -361,7 +361,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 90,
     checkIn: {
       date: '2024-03-01T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '123123123123',
@@ -388,7 +388,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '2024-03-01T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -407,7 +407,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 76,
     checkIn: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '2024-03-01T16:00:00',
@@ -434,7 +434,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '2024-03-01T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -453,7 +453,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 80,
     checkIn: {
       date: '2024-03-01T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '123123123123',
@@ -480,7 +480,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -499,7 +499,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 77,
     checkIn: {
       date: '2024-03-01T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '2024-03-01T16:00:00',
@@ -526,7 +526,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -545,7 +545,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 79,
     checkIn: {
       date: '2024-03-01T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '123123123123',
@@ -572,7 +572,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -591,7 +591,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 84,
     checkIn: {
       date: '2024-03-01T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '123123123123',
@@ -618,7 +618,7 @@ export const shiftsData: Shift[] = [
     },
     checkOut: {
       date: '123123123123',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',
@@ -637,7 +637,7 @@ export const shiftsData: Shift[] = [
     activitiesProgress: 87,
     checkIn: {
       date: '2024-03-01T16:00:00',
-      status: 'Retraso',
+      status: 'Con Retraso',
     },
     checkOut: {
       date: '2024-03-01T16:00:00',
