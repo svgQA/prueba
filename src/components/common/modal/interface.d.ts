@@ -13,6 +13,7 @@ export interface IModalProps extends IComponentProps, PropsWithChildren {
   width?: string;
   transparent?: boolean;
   shadowed?: boolean;
+  position?: 'absolute' | 'relative' | 'fixed';
 }
 
 export interface Corner {

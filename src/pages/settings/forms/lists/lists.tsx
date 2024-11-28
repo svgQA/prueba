@@ -55,11 +55,12 @@ export const ListFormModal = ({
       onClose={toggleListModal}
       name='setting-list-modal'
       id='setting-list-modal'
-      transparent
       width='w-[50vw]'
       shadowed
       header={<h2>Agregar o Seleccionar una lista</h2>}
+      position='fixed'
     >
+      {/* transparent */}
       <div className='p-3 w-full flex flex-col max-h-[70vh] overflow-y-hidden'>
         <Form
           onSubmit={saveList}
@@ -94,6 +95,7 @@ export const ListFormModal = ({
                 buttonIcon='054'
                 button
                 buttonType='submit'
+                scrollable
               />
             </form>
           )}

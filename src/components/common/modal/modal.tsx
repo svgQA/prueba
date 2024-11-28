@@ -15,6 +15,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
   width,
   transparent,
   shadowed,
+  position = 'absolute',
 }: IModalProps) => {
   const [expand, setExpand] = useState(false);
 
@@ -28,7 +29,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
       id={id}
       name={name}
       tabIndex={-1}
-      className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} ${transparent ? 'bg-transparent' : 'bg-b-dark'}  w-full h-full absolute right-0 top-0 flex justify-center items-center z-50 bg-opacity-95`}
+      className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} ${transparent ? 'bg-transparent' : 'bg-b-dark'} ${position} w-full h-full  right-0 top-0 flex justify-center items-center z-50 bg-opacity-95`}
     >
       {/*aria-hidden={true}*/}
       <div

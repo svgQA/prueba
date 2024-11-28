@@ -207,73 +207,25 @@ export const updateForm =
           if (section) {
             return {
               ...p,
-              elements: p.elements.map((element: IElement) =>
-                element.id === section
+              elements: p.elements.map((s: IElement) =>
+                s.id === section
                   ? {
-                      ...element,
-                      elements: element.elements?.map((el) =>
-                        el.id === question
-                          ? name === 'task'
-                            ? {
-                                ...el,
-                                tasks: element.tasks?.map((tsk) =>
-                                  tsk.value == task
-                                    ? {
-                                        ...tsk,
-                                        control: value as string | number,
-                                      }
-                                    : tsk
-                                ),
-                              }
-                            : name === 'type'
-                              ? {
-                                  ...el,
-                                  type: value as ELEMENT_TYPE,
-                                  options:
-                                    (value as ELEMENT_TYPE) ===
-                                    ELEMENT_TYPE.SWITCH
-                                      ? SWITCH_OPTIONS
-                                      : [],
-                                }
-                              : {
-                                  ...el,
-                                  [name]: value,
-                                }
-                          : el
+                      ...s,
+                      elements: updateElement(
+                        name,
+                        question,
+                        value,
+                        task,
+                        s.elements
                       ),
                     }
-                  : element
+                  : s
               ),
             };
           } else {
             return {
               ...p,
-              elements: p.elements.map((element: IElement) =>
-                element.id === question
-                  ? name === 'task'
-                    ? {
-                        ...element,
-                        tasks: element.tasks?.map((tsk) =>
-                          tsk.value == task
-                            ? { ...tsk, control: value as string | number }
-                            : tsk
-                        ),
-                      }
-                    : name === 'type'
-                      ? {
-                          ...element,
-                          type: value as ELEMENT_TYPE,
-                          options:
-                            (value as ELEMENT_TYPE) === ELEMENT_TYPE.SWITCH
-                              ? SWITCH_OPTIONS
-                              : [],
-                        }
-                      : {
-                          ...element,
-                          [name]: value,
-                        }
-                  : element
-              ),
+              elements: updateElement(name, question, value, task, p.elements),
             };
           }
         }
@@ -281,3 +233,42 @@ export const updateForm =
       }),
     };
   };
+
+const updateElement = (
+  name: string,
+  question: string,
+  value: unknown,
+  task?: string | number,
+  elements?: IElement[]
+): IElement[] => {
+  if (!elements) return [];
+  return elements?.map((element) =>
+    element.id === question
+      ? name === 'task'
+        ? {
+            ...element,
+            tasks: element.tasks?.map((tsk) =>
+              tsk.value == task
+                ? {
+                    ...tsk,
+                    control: value as string | number,
+                  }
+                : tsk
+            ),
+          }
+        : name === 'type'
+          ? {
+              ...element,
+              type: value as ELEMENT_TYPE,
+              options:
+                (value as ELEMENT_TYPE) === ELEMENT_TYPE.SWITCH
+                  ? SWITCH_OPTIONS
+                  : [],
+            }
+          : {
+              ...element,
+              [name]: value,
+            }
+      : element
+  );
+};
