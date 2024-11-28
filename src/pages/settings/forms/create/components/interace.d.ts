@@ -1,4 +1,4 @@
-import { IElement } from '../store';
+import { IElement } from '@/types/form';
 
 export interface IElementProps {
   question: IElement;

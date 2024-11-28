@@ -26,7 +26,7 @@ import { PaymentHistorySettingPage, PaymentSettingPage } from './payment';
 import {
   FormAnalyticSettingPage,
   FormCreateSettingPage,
-  FormListsSettingPage,
+  // FormListsSettingPage,
   FormReportSettingPage,
   FormSettingPage,
 } from './forms';
@@ -139,12 +139,14 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: FormCreateSettingPage })
           )}
         />
+        {/*
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.list.to}
           component={lazy(() =>
             Promise.resolve({ default: FormListsSettingPage })
           )}
         />
+        */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.to}
           component={lazy(() =>

@@ -1,4 +1,4 @@
-import { IForm } from '../utils/form';
+import { IFormResponse } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -7,7 +7,7 @@ import 'dayjs/locale/es';
 dayjs.extend(relativeTime);
 dayjs.locale('es');
 
-export const columns: ColumnDef<IForm>[] = [
+export const columns: ColumnDef<IFormResponse>[] = [
   {
     accessorKey: 'title',
     id: 'title',

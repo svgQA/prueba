@@ -23,7 +23,7 @@ export const Input = ({
   ...props
 }: IInputProps) => {
   return (
-    <div id={id} name={name} className='w-full'>
+    <div id={id} name={name} className='w-full my-1'>
       {label && (
         <label
           for={`${id}-input`}
@@ -39,7 +39,7 @@ export const Input = ({
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
         <input
-          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'}`}
+          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'} [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
           onChange={onChange}
           name={name}
           onKeyUp={onKeyUp}

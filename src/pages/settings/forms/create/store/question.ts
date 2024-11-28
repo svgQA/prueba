@@ -1,14 +1,14 @@
+import { ELEMENT_TYPE, IElement, IFormat, IPage } from '@/types/form';
 import { computed, signal } from '@preact/signals';
 import shortUUID from 'short-uuid';
-import { IElement, IFormat, IPage } from './interface.d';
-import { ELEMENT_TYPE } from './types';
+import { SWITCH_OPTIONS } from './constant';
 
 const getNewElement = (section?: string, type?: ELEMENT_TYPE): IElement => ({
   id: shortUUID.generate(),
   label: '',
   type: type || ELEMENT_TYPE.INPUT,
   required: false,
-  visible: false,
+  invisible: false,
   disable: false,
   assigned: false,
   section,
@@ -196,3 +196,88 @@ export const moveElement = (
     }),
   };
 };
+
+export const updateForm =
+  (question: string, page?: string, section?: string) =>
+  (name: string, value: unknown, task?: string | number) => {
+    format.value = {
+      ...format.value,
+      pages: format.value.pages.map((p) => {
+        if (p.id === page) {
+          if (section) {
+            return {
+              ...p,
+              elements: p.elements.map((element: IElement) =>
+                element.id === section
+                  ? {
+                      ...element,
+                      elements: element.elements?.map((el) =>
+                        el.id === question
+                          ? name === 'task'
+                            ? {
+                                ...el,
+                                tasks: element.tasks?.map((tsk) =>
+                                  tsk.value == task
+                                    ? {
+                                        ...tsk,
+                                        control: value as string | number,
+                                      }
+                                    : tsk
+                                ),
+                              }
+                            : name === 'type'
+                              ? {
+                                  ...el,
+                                  type: value as ELEMENT_TYPE,
+                                  options:
+                                    (value as ELEMENT_TYPE) ===
+                                    ELEMENT_TYPE.SWITCH
+                                      ? SWITCH_OPTIONS
+                                      : [],
+                                }
+                              : {
+                                  ...el,
+                                  [name]: value,
+                                }
+                          : el
+                      ),
+                    }
+                  : element
+              ),
+            };
+          } else {
+            return {
+              ...p,
+              elements: p.elements.map((element: IElement) =>
+                element.id === question
+                  ? name === 'task'
+                    ? {
+                        ...element,
+                        tasks: element.tasks?.map((tsk) =>
+                          tsk.value == task
+                            ? { ...tsk, control: value as string | number }
+                            : tsk
+                        ),
+                      }
+                    : name === 'type'
+                      ? {
+                          ...element,
+                          type: value as ELEMENT_TYPE,
+                          options:
+                            (value as ELEMENT_TYPE) === ELEMENT_TYPE.SWITCH
+                              ? SWITCH_OPTIONS
+                              : [],
+                        }
+                      : {
+                          ...element,
+                          [name]: value,
+                        }
+                  : element
+              ),
+            };
+          }
+        }
+        return p;
+      }),
+    };
+  };

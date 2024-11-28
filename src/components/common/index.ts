@@ -30,3 +30,7 @@ export * from './section/section';
 
 export * from './loading/loading';
 export * from './select/select';
+export * from './chip/chip';
+export * from './multi/multi';
+
+export * from './switch/switch';

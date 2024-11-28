@@ -10,4 +10,6 @@ export interface ITableProps<T> {
   columns: ColumnDef<T>[];
   pageSize?: number;
   expandable?: (row: Row<T>) => VNode;
+  unscroll?: boolean;
+  unsettings?: boolean;
 }

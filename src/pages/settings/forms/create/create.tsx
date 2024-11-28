@@ -10,14 +10,19 @@ import {
   addSection,
   setPhonePage,
   setSelectedElement,
-  getSelectedElement,
   validateSelectedElement,
   getForm,
+  getSelectedElement,
+  updateForm,
 } from './store';
 import { FormPhoneViewer, FormElement } from './components';
 import { TargetedEvent } from 'preact/compat';
 import { Button, Input } from '@/components/common';
 import { FormButton } from '@/components/compose';
+import { FormService } from '@/services';
+import { IFormRequest, IListResponse } from '@/types/form';
+import { ListFormModal } from '../lists/lists';
+import { getStatusElementSelected, toggleListModal } from '../lists/store';
 
 export const FormCreateSettingPage: FunctionComponent = () => {
   useEffect(() => {
@@ -33,8 +38,15 @@ export const FormCreateSettingPage: FunctionComponent = () => {
     }
   };
 
-  const showFormat = () => {
-    console.log(getForm.value);
+  const saveFormat = async () => {
+    const format: IFormRequest = {
+      title: getForm.value.label,
+      description: getForm.value.description || getForm.value.label,
+      structure: getForm.value,
+    };
+    const response = await FormService.create(format);
+
+    if (!response.getStatus()) return;
   };
 
   const addLelement = () => {
@@ -68,6 +80,17 @@ export const FormCreateSettingPage: FunctionComponent = () => {
     };
   };
 
+  const onSelectedList = (element: IListResponse) => {
+    const selected = getStatusElementSelected.value;
+    if (!selected) return;
+    updateForm(
+      selected.question,
+      selected.page,
+      selected.section
+    )(selected.field, element.structure);
+    toggleListModal();
+  };
+
   return (
     <section className='flex flex-row'>
       <div class='sticky top-1/2 -translate-y-1/2 h-44 flex flex-col gap-2'>
@@ -91,16 +114,17 @@ export const FormCreateSettingPage: FunctionComponent = () => {
         />
       </div>
       <div class='flex-grow min-h-[78vh] p-3'>
-        <div className='flex flex-row w-full items-center mb-4'>
+        <div className='flex flex-row w-full items-center mb-4 pr-3'>
           <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-b-dark-light dark:border-b-light-dark'>
             <span className='vx-icon vx-upload text-gray-400 text-2xl' />
           </div>
-          <div className='flex flex-col gap-1  w-8/12'>
+          <div className='flex flex-col gap-1 w-10/12'>
             <Input
               type='text'
               placeholder='Enter title'
               name='label'
               icon='245'
+              id={`in-form-${format.value.id}-format-title`}
               value={format.value.label}
               onChange={handleFormatInputChange}
               borderless
@@ -110,6 +134,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               placeholder='Enter description'
               name='description'
               icon='123'
+              id={`in-form-${format.value.id}-format-description`}
               borderless
               value={format.value.description}
               onChange={handleFormatInputChange}
@@ -120,16 +145,17 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             type='button'
             label='Create'
             icon='212'
-            onClick={showFormat}
+            onClick={saveFormat}
           />
         </div>
-        <div className='flex flex-col w-[98%]'>
+        <div className='flex flex-col w-[98%] 2xl:max-w-[60vw]'>
           {format.value.pages.map((page) => (
             <div key={page.id} className='w-full mb-5'>
               <Input
                 type='text'
                 placeholder='Enter title page'
                 name='label'
+                id={`in-form-${page.id}-page-title`}
                 data-pageid={page.id}
                 value={page.label}
                 onChange={handlePageInputChange}
@@ -168,6 +194,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       <div class='sticky top-1/2 -translate-y-1/2 h-44 w-[400px] justify-center hidden 2xl:flex'>
         <FormPhoneViewer />
       </div>
+      <ListFormModal onSelected={onSelectedList} />
     </section>
   );
 };
