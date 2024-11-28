@@ -3,6 +3,12 @@ import { type IComponentProps } from '@/components/utils/interface';
 import { FieldMetaState } from 'react-final-form';
 import { IOption } from '../interface';
 
+export interface ISelectedOptions extends IOption {
+  value: number | string;
+  name?: string;
+  id?: string;
+}
+
 export interface ISelectProps extends IComponentProps {
   onChange?: (event: TargetedEvent<HTMLSelectElement>) => void;
   onKeyUp?: (event: KeyboardEvent<HTMLElement>) => void;
@@ -17,7 +23,7 @@ export interface ISelectProps extends IComponentProps {
   icon?: string;
   meta?: FieldMetaState<string>;
   end?: boolean;
-  options?: IOption[];
+  options?: ISelectedOptions[];
   borderless?: boolean;
   thin?: boolean;
   tabIndex?: number;

@@ -5,7 +5,7 @@ import {
   validateSelectedElement,
   ELEMENT_TYPE_VALUES,
   REGEX_PATTERNS,
-  SWITCH_OPTIONS,
+  updateForm,
 } from '../store';
 import { TargetedEvent } from 'preact/compat';
 import { IElementProps } from './interace';
@@ -16,9 +16,10 @@ import {
   Select,
   Switch,
 } from '@/components/common';
-import { ELEMENT_TYPE, IElement } from '@/types/form';
+import { ELEMENT_TYPE } from '@/types/form';
 import { IOption } from '@/components/common/interface';
 import { useSignal } from '@preact/signals';
+import { toggleListModal } from '../../lists/store';
 
 const ItemType = {
   QUESTION: 'question',
@@ -34,7 +35,11 @@ export const FormElement = ({
   onDelete,
 }: IElementProps) => {
   const typeDropdown = useSignal<boolean>(false);
-  const onChangeDropdown = (value: boolean) => (typeDropdown.value = value);
+  const onChangeDropdown = () => (typeDropdown.value = !typeDropdown.value);
+
+  const openModalList = () => {
+    toggleListModal({ question: question.id, page, section, field: 'options' });
+  };
 
   const [{ isDragging }, ref] = useDrag({
     type: ItemType.QUESTION,
@@ -58,7 +63,7 @@ export const FormElement = ({
   });
 
   const onChangeMulty = (value: IOption[], name: string) => {
-    updateForm(name, value);
+    updateForm(question.id, page, section)(name, value);
   };
 
   const handleInputChange = (
@@ -71,6 +76,7 @@ export const FormElement = ({
     const [name, task] = target.name.includes('task-')
       ? target.name.split('-')
       : [target.name, undefined];
+
     const value =
       target.type === 'checkbox'
         ? (target as HTMLInputElement).checked
@@ -81,90 +87,7 @@ export const FormElement = ({
           : target.value;
 
     if (!name) return;
-    updateForm(name, value, task);
-  };
-
-  const updateForm = (name: string, value: unknown, task?: string | number) => {
-    format.value = {
-      ...format.value,
-      pages: format.value.pages.map((p) => {
-        if (p.id === page) {
-          if (section) {
-            return {
-              ...p,
-              elements: p.elements.map((element: IElement) =>
-                element.id === section
-                  ? {
-                      ...element,
-                      elements: element.elements?.map((el) =>
-                        el.id === question.id
-                          ? name === 'task'
-                            ? {
-                                ...el,
-                                tasks: element.tasks?.map((tsk) =>
-                                  tsk.value == task
-                                    ? {
-                                        ...tsk,
-                                        control: value as string | number,
-                                      }
-                                    : tsk
-                                ),
-                              }
-                            : name === 'type'
-                              ? {
-                                  ...el,
-                                  type: value as ELEMENT_TYPE,
-                                  options:
-                                    (value as ELEMENT_TYPE) ===
-                                    ELEMENT_TYPE.SWITCH
-                                      ? SWITCH_OPTIONS
-                                      : [],
-                                }
-                              : {
-                                  ...el,
-                                  [name]: value,
-                                }
-                          : el
-                      ),
-                    }
-                  : element
-              ),
-            };
-          } else {
-            return {
-              ...p,
-              elements: p.elements.map((element: IElement) =>
-                element.id === question.id
-                  ? name === 'task'
-                    ? {
-                        ...element,
-                        tasks: element.tasks?.map((tsk) =>
-                          tsk.value == task
-                            ? { ...tsk, control: value as string | number }
-                            : tsk
-                        ),
-                      }
-                    : name === 'type'
-                      ? {
-                          ...element,
-                          type: value as ELEMENT_TYPE,
-                          options:
-                            (value as ELEMENT_TYPE) === ELEMENT_TYPE.SWITCH
-                              ? SWITCH_OPTIONS
-                              : [],
-                        }
-                      : {
-                          ...element,
-                          [name]: value,
-                        }
-                  : element
-              ),
-            };
-          }
-        }
-        return p;
-      }),
-    };
+    updateForm(question.id, page, section)(name, value, task);
   };
 
   const handleSectionInputChange = (e: TargetedEvent<HTMLInputElement>) => {
@@ -285,73 +208,39 @@ export const FormElement = ({
           {/* CHECKBOX: required, visible, disable, administrator */}
           {question.type !== ELEMENT_TYPE.TITLE && (
             <div className='vx-form-attrs-checkbox'>
-              <div>
-                <input
-                  id={`cb-form-${question.id}-element-required`}
-                  checked={question.required}
-                  type='checkbox'
-                  name='required'
-                  onChange={handleInputChange}
-                  className='w-4 h-4 rounded'
-                />
-                <label
-                  for={`cb-form-${question.id}-element-required`}
-                  className='ms-2 text-sm font-medium'
-                >
-                  Required
-                </label>
-              </div>
-              <div>
-                <input
-                  id={`cb-form-${question.id}-element-visible`}
-                  checked={question.invisible}
-                  type='checkbox'
-                  name='invisible'
-                  onChange={handleInputChange}
-                  className='w-4 h-4 text-blue-600'
-                />
-                <label
-                  for={`cb-form-${question.id}-element-visible`}
-                  className='ms-2 text-sm font-medium'
-                >
-                  Invisible
-                </label>
-              </div>
+              <Switch
+                id={`cb-form-${question.id}-element-required`}
+                name='required'
+                label='Required'
+                onChange={handleInputChange}
+                value={question.required}
+              />
+
+              <Switch
+                id={`cb-form-${question.id}-element-visible`}
+                name='invisible'
+                label='Invisible'
+                onChange={handleInputChange}
+                value={question.invisible}
+              />
+
               {question.type !== ELEMENT_TYPE.IMAGE &&
                 question.type !== ELEMENT_TYPE.SIGNATURE && (
-                  <div>
-                    <input
-                      id={`cb-form-${question.id}-element-disable`}
-                      checked={question.disable}
-                      type='checkbox'
-                      name='disable'
-                      onChange={handleInputChange}
-                      className='w-4 h-4'
-                    />
-                    <label
-                      for={`cb-form-${question.id}-element-disable`}
-                      className='ms-2 text-sm font-medium'
-                    >
-                      Disable
-                    </label>
-                  </div>
+                  <Switch
+                    id={`cb-form-${question.id}-element-disable`}
+                    name='disable'
+                    label='Disable'
+                    onChange={handleInputChange}
+                    value={question.disable}
+                  />
                 )}
-              <div>
-                <input
-                  id={`cb-form-${question.id}-element-assigned`}
-                  checked={question.assigned}
-                  type='checkbox'
-                  name='assigned'
-                  onChange={handleInputChange}
-                  className='w-4 h-4'
-                />
-                <label
-                  for={`cb-form-${question.id}-element-assigned`}
-                  className='ms-2 text-sm font-medium'
-                >
-                  Administrator
-                </label>
-              </div>
+              <Switch
+                id={`cb-form-${question.id}-element-assigned`}
+                name='assigned'
+                label='Administrator'
+                onChange={handleInputChange}
+                value={question.assigned}
+              />
             </div>
           )}
 
@@ -399,7 +288,7 @@ export const FormElement = ({
                 />
               )}
               {question.type === ELEMENT_TYPE.DROPDOWN && (
-                <div className='w-full flex flex-row items-end'>
+                <div className='w-full flex flex-row items-center h-20'>
                   <div class='w-full mr-4'>
                     {typeDropdown.value ? (
                       <Input
@@ -414,17 +303,17 @@ export const FormElement = ({
                         thin
                       />
                     ) : (
-                      <Select
-                        label='List Selector'
-                        name='list'
-                        placeholder='List selector'
-                        id={`se-form-${question.id}-element-options-list`}
-                        value={question.list}
-                        onChange={handleInputChange}
-                        options={[{ label: 'Sexo', value: 1 }]}
-                        icon='104'
-                        borderless
-                        thin
+                      <MultipleInput
+                        name='options'
+                        label='Options'
+                        id={`mt-form-${question.id}-element-options`}
+                        icon='123'
+                        value={question.options}
+                        onChange={onChangeMulty}
+                        button
+                        onSelect={openModalList}
+                        buttonIcon='093'
+                        ellipse={4}
                       />
                     )}
                   </div>
@@ -432,7 +321,8 @@ export const FormElement = ({
                     label='URL'
                     value={typeDropdown.value}
                     onChange={onChangeDropdown}
-                    name={`sw-form-${question.id}-element-option-type`}
+                    name='type-dropdown'
+                    id={`sw-form-${question.id}-element-option-type`}
                   />
                 </div>
               )}
@@ -445,6 +335,10 @@ export const FormElement = ({
                   icon='123'
                   value={question.options}
                   onChange={onChangeMulty}
+                  button
+                  onSelect={openModalList}
+                  buttonIcon='093'
+                  scrollable
                 />
               )}
               {question.type === ELEMENT_TYPE.DATE && (

@@ -4,10 +4,10 @@ import {
   industryOptions,
   interestOptions,
   IOnBoardingStepsProps,
-  required,
 } from '../utils';
 import { Input, Select } from '@/components/common';
 import { OnBoardingStep } from './step';
+import { required } from '@/utils/utilities';
 
 export const OnBoardingSteps = ({
   sliderRef,

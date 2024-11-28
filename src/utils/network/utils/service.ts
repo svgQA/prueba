@@ -82,7 +82,7 @@ export class BaseService {
 
     try {
       const response = await fetch(url, {
-        headers: model.headers,
+        headers: model.headers as any,
         body: model.data,
         method,
       });

@@ -1,9 +1,15 @@
 import { REQUEST_METHODS } from './network.enum';
 
+export interface IParams {
+  [key: string]: string | number;
+}
+
+export interface IHeaders extends IParams {}
+
 export interface IModelRequest {
   data?: any;
-  params?: { [key: string]: string | number };
-  headers?: { [key: string]: string };
+  params?: IParams;
+  headers?: IHeaders;
   method?: REQUEST_METHODS;
 }
 

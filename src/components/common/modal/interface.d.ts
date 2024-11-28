@@ -11,6 +11,8 @@ export interface IModalProps extends IComponentProps, PropsWithChildren {
   footer?: VNode;
   expandable?: boolean;
   width?: string;
+  transparent?: boolean;
+  shadowed?: boolean;
 }
 
 export interface Corner {

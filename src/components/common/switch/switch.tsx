@@ -8,10 +8,6 @@ export const Switch: FunctionComponent<ISwitchProps> = ({
   onChange,
   value = false,
 }: ISwitchProps) => {
-  const handleChange = () => {
-    onChange?.(!value);
-  };
-
   return (
     <div className='flex items-center gap-2'>
       <div className='relative inline-flex items-center cursor-pointer'>
@@ -20,18 +16,24 @@ export const Switch: FunctionComponent<ISwitchProps> = ({
           id={id}
           name={name}
           checked={value}
+          onChange={onChange}
           className='sr-only peer'
         />
         <div
-          onClick={handleChange}
-          className="w-8 h-4 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
+          onClick={() => {
+            const event = {
+              target: { type: 'checkbox', checked: !value, name: name },
+            };
+            onChange?.(event as any);
+          }}
+          className="w-8 h-4 bg-gray-200 peer-focus:outline-none peer-focus:ring-2
         peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full
         peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px]
-        after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
-        after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"
+        after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full
+        after:h-3 after:w-3 after:transition-all peer-checked:bg-primary"
         />
       </div>
-      <label htmlFor={id} className='cursor-pointer' onClick={handleChange}>
+      <label htmlFor={id} className='cursor-pointer'>
         {label}
       </label>
     </div>
