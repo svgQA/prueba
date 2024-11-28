@@ -37,7 +37,7 @@ export const ExpandableShift: FunctionComponent<IExpandableProps> = ({
               <div className='flex flex-col md:flex-row items-center md:items-start'>
                 <span className='text-gray-800 w-full md:w-32'>Estado:</span>
                 <span
-                  className={`px-2 py-1 rounded ${row.checkIn.status === 'Retraso' ? 'bg-red-500 text-white' : row.checkIn.status === 'A Tiempo' ? 'bg-green-500 text-white' : 'text-gray-600'}`}
+                  className={`px-2 py-1 rounded ${row.checkIn.status === 'Con Retraso' ? 'bg-red-500 text-white' : row.checkIn.status === 'A Tiempo' ? 'bg-green-500 text-white' : 'text-gray-600'}`}
                 >
                   {row.checkIn.status}
                 </span>
@@ -88,7 +88,7 @@ export const ExpandableShift: FunctionComponent<IExpandableProps> = ({
               <div className='flex flex-col md:flex-row items-center md:items-start'>
                 <span className='text-gray-800 w-full md:w-32'>Estado:</span>
                 <span
-                  className={`px-2 py-1 rounded ${row.checkOut.status === 'Retraso' ? 'bg-red-500 text-white' : row.checkOut.status === 'A Tiempo' ? 'bg-green-500 text-white' : 'text-gray-600'}`}
+                  className={`px-2 py-1 rounded ${row.checkOut.status === 'Con Retraso' ? 'bg-red-500 text-white' : row.checkOut.status === 'A Tiempo' ? 'bg-green-500 text-white' : 'text-gray-600'}`}
                 >
                   {row.checkOut.status}
                 </span>

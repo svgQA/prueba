@@ -74,8 +74,6 @@ export class BaseService {
     if (tenance) {
       const tenant = this.getSelected();
       const tenant_header = import.meta.env.VITE_TENANT_HEADER;
-      console.log('HEADER: ', tenant_header);
-      console.table(tenant);
       if (!tenant_header || !tenant?.tenant_id) {
         throw new Error('ERROR: not include header');
       }
