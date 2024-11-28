@@ -13,24 +13,24 @@ export const employeeCountOptions = [
 ];
 
 export const industryOptions = [
-  { value: '1', key: 'Tecnología' },
-  { value: '2', key: 'Salud' },
-  { value: '3', key: 'Alimentación y bebidas' },
-  { value: '4', key: 'Construcción e inmobiliaria' },
-  { value: '5', key: 'Educación' },
-  { value: '6', key: 'Finanzas' },
-  { value: '7', key: 'Transporte y logística' },
-  { value: '8', key: 'Turismo y Hospitalidad' },
-  { value: '9', key: 'Energía y recursos naturales' },
-  { value: '10', key: 'Otra' },
+  { value: '1', label: 'Tecnología' },
+  { value: '2', label: 'Salud' },
+  { value: '3', label: 'Alimentación y bebidas' },
+  { value: '4', label: 'Construcción e inmobiliaria' },
+  { value: '5', label: 'Educación' },
+  { value: '6', label: 'Finanzas' },
+  { value: '7', label: 'Transporte y logística' },
+  { value: '8', label: 'Turismo y Hospitalidad' },
+  { value: '9', label: 'Energía y recursos naturales' },
+  { value: '10', label: 'Otra' },
 ];
 
 export const interestOptions = [
-  { value: '1', key: 'Consultoria' },
-  { value: '2', key: 'Desarrollo de Software' },
-  { value: '3', key: 'Diseño UX/UI' },
-  { value: '4', key: 'Marketing DIgital' },
-  { value: '5', key: 'Soporte Técnico' },
+  { value: '1', label: 'Consultoria' },
+  { value: '2', label: 'Desarrollo de Software' },
+  { value: '3', label: 'Diseño UX/UI' },
+  { value: '4', label: 'Marketing DIgital' },
+  { value: '5', label: 'Soporte Técnico' },
 ];
 
 export const STEPS = 6;

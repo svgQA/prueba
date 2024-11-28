@@ -5,6 +5,7 @@ import { FieldMetaState } from 'react-final-form';
 export interface IInputProps extends IComponentProps {
   onChange?: (event: TargetedEvent<HTMLInputElement>) => void;
   onKeyUp?: (event: KeyboardEvent<HTMLElement>) => void;
+  onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
   label?: string;
   min?: string;
   max?: string;

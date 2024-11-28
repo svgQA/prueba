@@ -27,3 +27,8 @@ export * from './search/interface';
 export * from './section/interface';
 export * from './loading/interface';
 export * from './select/interface';
+
+export * from './chip/interface';
+export * from './multi/interface';
+
+export * from './switch/interface';

@@ -40,6 +40,8 @@ export const Table = <T,>({
   columns,
   pageSize = 10,
   expandable,
+  unscroll,
+  unsettings,
 }: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -93,7 +95,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='invisible absolute left-1 top-10 rounded-md p-4 z-30 bg-b-light dark:bg-b-dark border-2 border-b-light-dark dark:border-b-dark-light'>
+    <div className='invisible absolute left-1 top-10 rounded-md p-4 z-50 bg-b-light dark:bg-b-dark border-2 border-b-light-dark dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column) => {
         return (
           <div
@@ -149,12 +151,14 @@ export const Table = <T,>({
         onDragEnd={handleDragEnd}
         sensors={sensors}
       >
-        <div className='relative w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light scroll-x-md overflow-x-auto vox-scroll-design max-h-[80vh]'>
+        <div
+          className={`${unscroll ? 'overflow-y-hidden' : ''} relative w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light scroll-x-md overflow-x-auto vox-scroll-design max-h-[80vh]`}
+        >
           <table className='w-full border-collapse info'>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className='sticky top-0 z-20'>
-                  {expandable && (
+                  {!unsettings && (
                     <th
                       colSpan={1}
                       className='table-setting-button left-0 min-w-[30px]'
@@ -182,15 +186,17 @@ export const Table = <T,>({
               {table.getRowModel().rows.map((row, index) => (
                 <Fragment key={`${row.id}_${index}`}>
                   <tr>
-                    {expandable && (
+                    {!unsettings && (
                       <td
                         className='text-center left-0 min-w-[30px]'
                         style={{ position: 'sticky', zIndex: 1 }}
                       >
-                        <span
-                          onClick={() => row.toggleExpanded()}
-                          className='vox-icon vx-icon-001 cursor-pointer size-sm'
-                        />
+                        {expandable && (
+                          <span
+                            onClick={() => row.toggleExpanded()}
+                            className='vox-icon vx-icon-001 cursor-pointer size-sm'
+                          />
+                        )}
                       </td>
                     )}
                     {row.getVisibleCells().map((cell) => (

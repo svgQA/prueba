@@ -11,7 +11,7 @@ import { Modal } from '@/components/common';
 import { ThemeButton } from '@/components/compose';
 import { useSignal } from '@preact/signals';
 
-export const OnBordingModal = ({ closed }: IOnboardingProps) => {
+export const OnBordingModal = ({ closed, children }: IOnboardingProps) => {
   const step = useSignal<number>(DEFAULT_STEP);
   const sliderRef = useRef<HTMLDivElement>(null);
   const admin_cognito = useRef<string>();
@@ -92,13 +92,16 @@ export const OnBordingModal = ({ closed }: IOnboardingProps) => {
       header={headerContent}
       footer={footerContent}
     >
+      {/* width='min-w-[500px] max-w-[800px]' */}
       <div>
         <Form
           onSubmit={onCreateTenant}
           subscription={{ submitting: true, pristine: true }}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
-              <OnBoardingSteps sliderRef={sliderRef} />
+              <OnBoardingSteps sliderRef={sliderRef}>
+                {children}
+              </OnBoardingSteps>
             </form>
           )}
         ></Form>

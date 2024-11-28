@@ -8,12 +8,12 @@ export class GenericResponse<T> {
   constructor(model: IGenericData) {
     this.status = (model.code >= 200 && model.code < 300) || false;
     const data = this.status ? model.data : [];
-    if (data?.length) {
+    if (Array.isArray(data)) {
       this.data = data;
-      this.model = {} as any;
+      this.model = {} as T;
     } else {
       this.data = [];
-      this.model = data;
+      this.model = data as T;
     }
   }
 
@@ -27,10 +27,10 @@ export class GenericResponse<T> {
   }
 
   getMany(): T[] {
-    return this.data.length > 0 ? this.data : this.model.data;
+    return this.data.length > 0 ? this.data : this.model?.data || [];
   }
 
   getOne(): T {
-    return this.data.length > 0 ? this.data[0] : this.model;
+    return this.data.length > 0 ? this.data[0] : this.model || {};
   }
 }
