@@ -5,7 +5,7 @@ export const ExpandableMemos: FunctionComponent<IExpandableProps> = ({
   row,
 }: IExpandableProps) => {
   return (
-    <div className='p-6 bg-white rounded-lg shadow-md'>
+    <div className='p-6 bg-white rounded-lg shadow-md '>
       <div className='grid grid-cols-4 gap-4'>
         {/* Columna del Empleado */}
         <div className='space-y-1'>
