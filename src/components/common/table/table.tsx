@@ -34,6 +34,7 @@ import {
 import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
 import { Button } from '../button/button';
+import { Switch } from '../switch/switch';
 
 export const Table = <T,>({
   data,
@@ -42,6 +43,7 @@ export const Table = <T,>({
   expandable,
   unscroll,
   unsettings,
+  visibility,
 }: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -74,6 +76,9 @@ export const Table = <T,>({
       columnFilters,
     },
     onColumnOrderChange: setColumnOrder,
+    initialState: {
+      columnVisibility: visibility,
+    },
   });
 
   const memoizedLeafColumns = useMemo(() => {
@@ -95,7 +100,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='invisible absolute left-1 top-10 rounded-md p-4 z-50 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
+    <div className='invisible absolute left-0 top-10 rounded-md p-4 z-50 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column) => {
         return (
           <div
@@ -112,17 +117,13 @@ export const Table = <T,>({
                 />
               )}
             </div>
-            <label className='flex items-center cursor-pointer'>
-              <input
-                {...{
-                  type: 'checkbox',
-                  checked: column.getIsVisible(),
-                  onChange: column.getToggleVisibilityHandler(),
-                }}
-                className='form-checkbox h-4 w-4 rounded'
-              />
-              <span className='ml-2 text-sm'>{column.columnDef.header}</span>
-            </label>
+            <Switch
+              name={`ch-hidden-${column.id}`}
+              id={`ch-hidden-${column.id}`}
+              value={column.getIsVisible()}
+              onChange={column.getToggleVisibilityHandler()}
+              label={column.columnDef.header as string | undefined}
+            />
           </div>
         );
       })}

@@ -12,4 +12,5 @@ export interface ITableProps<T> {
   expandable?: (row: Row<T>) => VNode;
   unscroll?: boolean;
   unsettings?: boolean;
+  visibility?: { [key: string]: boolean };
 }

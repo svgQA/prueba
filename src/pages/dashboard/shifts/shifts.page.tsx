@@ -44,6 +44,10 @@ export const ShiftsPage: FunctionalComponent = () => {
         data={shiftsData}
         columns={columns}
         expandable={(row: Shift) => <ExpandableShift row={row} />}
+        visibility={{
+          address: false,
+          city: false,
+        }}
       />
     </Section>
   );
