@@ -95,7 +95,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='invisible absolute left-1 top-10 rounded-md p-4 z-50 bg-b-light dark:bg-b-dark border-2 border-b-light-dark dark:border-b-dark-light'>
+    <div className='invisible absolute left-1 top-10 rounded-md p-4 z-50 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column) => {
         return (
           <div
@@ -152,7 +152,7 @@ export const Table = <T,>({
         sensors={sensors}
       >
         <div
-          className={`${unscroll ? 'overflow-y-hidden' : ''} relative w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light scroll-x-md overflow-x-auto vox-scroll-design max-h-[80vh]`}
+          className={`${unscroll ? 'overflow-y-hidden' : ''} relative w-full rounded-xl border border-b-light-dark dark:border-b-dark-light scroll-x-md overflow-x-auto vox-scroll-design max-h-[80vh]`}
         >
           <table className='w-full border-collapse info'>
             <thead>
