@@ -26,8 +26,10 @@ import { FormService } from '@/services';
 import { IFormRequest, IListResponse } from '@/types/form';
 import { ListFormModal } from '../lists/lists';
 import { getStatusElementSelected, toggleListModal } from '../lists/store';
+import { useLocation } from 'wouter';
 
 export const FormCreateSettingPage: FunctionComponent = () => {
+  const [_, navigate] = useLocation();
   useEffect(() => {
     document.title = 'Forms Create Settings';
   }, []);
@@ -48,8 +50,8 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       structure: getForm.value,
     };
     const response = await FormService.create(format);
-
     if (!response.getStatus()) return;
+    navigate('/form');
   };
 
   const addLelement = () => {
