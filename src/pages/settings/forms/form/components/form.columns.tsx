@@ -16,7 +16,7 @@ export const columns: ColumnDef<IFormResponse>[] = [
       const { title, description } = info.row.original;
       return (
         <div className='flex items-center'>
-          <span className='vox-icon vx-icon-152 mt-1 size-xl' />
+          <span className='vox-icon vx-icon-152 mt-1 size-sm' />
           <div className='flex flex-col ml-3'>
             <div className='font-bold'>{String(title)}</div>
             <div className='text-sm text-gray-500'>{String(description)}</div>
@@ -51,9 +51,9 @@ export const columns: ColumnDef<IFormResponse>[] = [
     cell: (info) => {
       const { id } = info.row.original;
       return (
-        <div className='bg-red-200 w-fit'>
+        <div className='w-full flex justify-center'>
           <span
-            className='vox-icon vx-icon-119 p-1 cursor-pointer'
+            className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
             data-id={id}
             data-type='form'
             data-action='update'

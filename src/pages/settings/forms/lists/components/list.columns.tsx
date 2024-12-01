@@ -28,9 +28,9 @@ export const columns: ColumnDef<IListResponse>[] = [
     cell: (info) => {
       const { id } = info.row.original;
       return (
-        <div className='bg-red-200 w-fit'>
+        <div className='w-full flex justify-center'>
           <span
-            className='vox-icon vx-icon-123 p-1 cursor-pointer'
+            className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
             data-id={id}
             data-type='list'
             data-action='select'
