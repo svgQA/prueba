@@ -21,9 +21,9 @@ export const Button: FunctionComponent<IButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={loading || disabled}
-      className={`${rounded ? 'rounded-full p-1' : 'rounded px-2'} ${full ? 'w-full' : ''} h-fit mx-1 text-sm items-center py-2 my-0.5 justify-center inline-flex font-bold ${className} border border-b-light-dark dark:border-b-dark-light`}
+      className={`${rounded ? 'rounded-full px-1' : 'rounded px-2'} ${full ? 'w-full' : ''} h-fit mx-1 text-sm items-center py-2 my-0.5 justify-center inline-flex font-bold ${className} border border-b-light-dark dark:border-b-dark-light`}
     >
-      {icon && <span className={`left-0 px-1 vox-icon vx-icon-${icon}`} />}
+      {icon && <span className={`left-0 px-1 size vox-icon vx-icon-${icon}`} />}
       {label && !rounded && (
         <div className='flex flex-row justify-between items-center'>
           <p className='w-full capitalize text-center'>{label}</p>

@@ -33,7 +33,7 @@ export const Input = ({
         </label>
       )}
       <div
-        className={`${borderless ? '' : 'border-b-light-dark dark:border-b-dark-light border-2'} rounded flex flex-row items-center`}
+        className={`${borderless ? '' : 'border-b-light-dark dark:border-b-dark-light border'} rounded flex flex-row items-center`}
       >
         {!end && icon && (
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />

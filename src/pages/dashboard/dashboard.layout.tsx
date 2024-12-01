@@ -94,7 +94,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           isNavigation
           onLogout={signOut}
         />
-        <div className='flex flex-col pl-20'>
+        <div className='flex flex-col pl-[4.5rem]'>
           <Router>
             <Suspense fallback={<div>Loading...</div>}>
               <Route
@@ -138,7 +138,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <div className='flex flex-col'>
                   <h4 className='font-medium text-lg'>{company.name}</h4>
                   <span className='text-sm text-gray-500 dark:text-gray-400'>
-                    {company.id}
+                    {company.tenant_id}
                   </span>
                 </div>
                 <span className='bg-gradient-to-r from-teal-400 to-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium'>

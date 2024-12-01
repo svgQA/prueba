@@ -5,6 +5,12 @@ import {
   PrioritySection,
 } from '../expansible/expansible';
 
+export interface IRowAction {
+  id: number | string;
+  type: string;
+  action: string;
+}
+
 export interface ITableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
@@ -12,4 +18,6 @@ export interface ITableProps<T> {
   expandable?: (row: Row<T>) => VNode;
   unscroll?: boolean;
   unsettings?: boolean;
+  visibility?: { [key: string]: boolean };
+  onClickAction?: (action: IRowAction) => void;
 }
