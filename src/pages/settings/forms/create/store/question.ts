@@ -2,6 +2,10 @@ import { ELEMENT_TYPE, IElement, IFormat, IPage } from '@/types/form';
 import { computed, signal } from '@preact/signals';
 import shortUUID from 'short-uuid';
 import { SWITCH_OPTIONS } from './constant';
+export enum FORMAT_MODE_SERVICE {
+  CREATE,
+  UPDATE,
+}
 
 const getNewElement = (section?: string, type?: ELEMENT_TYPE): IElement => ({
   id: shortUUID.generate(),
@@ -20,15 +24,27 @@ const getInitPage = (): IPage => ({
   elements: [getNewElement()],
 });
 
-export const format = signal<IFormat>({
+const buildInitFormat = (): IFormat => ({
   id: shortUUID.generate(),
   label: '',
   description: '',
   pages: [getInitPage()],
 });
 
+const format = signal<IFormat>(buildInitFormat());
+const formatMode = signal<FORMAT_MODE_SERVICE>(FORMAT_MODE_SERVICE.CREATE);
+export const setFormat = (
+  model: IFormat,
+  mode: FORMAT_MODE_SERVICE = FORMAT_MODE_SERVICE.CREATE
+) => {
+  format.value =
+    mode === FORMAT_MODE_SERVICE.CREATE ? buildInitFormat() : model;
+  formatMode.value = mode;
+};
+
 export const getFormLength = computed(() => format.value.pages.length);
 export const getForm = computed(() => format.value);
+export const getFormMode = computed(() => formatMode.value);
 
 export const addPage = () => {
   format.value = {
@@ -197,6 +213,26 @@ export const moveElement = (
   };
 };
 
+export const udpateGeneralForm = (name: string, value: string) => {
+  format.value = {
+    ...format.value,
+    [name]: value,
+  };
+};
+
+export const updatePageForm = (
+  name: string,
+  value: string,
+  page_id: string
+) => {
+  format.value = {
+    ...format.value,
+    pages: format.value.pages.map((page) =>
+      page.id === page_id ? { ...page, [name]: value } : page
+    ),
+  };
+};
+
 export const updateForm =
   (question: string, page?: string, section?: string) =>
   (name: string, value: unknown, task?: string | number) => {
@@ -271,4 +307,28 @@ const updateElement = (
             }
       : element
   );
+};
+
+export const updateSectionForm = (
+  name: string,
+  value: string,
+  page_id: string,
+  section_id: string
+) => {
+  format.value = {
+    ...format.value,
+    pages: format.value.pages.map((page) => {
+      if (page.id !== page_id) return page;
+
+      return {
+        ...page,
+        elements: page.elements.map((element) => {
+          if (element.id === section_id) {
+            return { ...element, [name]: value };
+          }
+          return element;
+        }),
+      };
+    }),
+  };
 };

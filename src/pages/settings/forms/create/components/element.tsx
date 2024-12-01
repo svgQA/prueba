@@ -1,11 +1,11 @@
 import { useDrag, useDrop } from 'react-dnd';
 import {
-  format,
   moveElement,
   validateSelectedElement,
   ELEMENT_TYPE_VALUES,
   REGEX_PATTERNS,
   updateForm,
+  updateSectionForm,
 } from '../store';
 import { TargetedEvent } from 'preact/compat';
 import { IElementProps } from './interace';
@@ -93,26 +93,10 @@ export const FormElement = ({
 
   const handleSectionInputChange = (e: TargetedEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-    const sectionId = e.currentTarget.getAttribute('data-sectionid');
-    const pageId = e.currentTarget.getAttribute('data-pageid');
-    if (!sectionId || !pageId) return;
-
-    format.value = {
-      ...format.value,
-      pages: format.value.pages.map((page) => {
-        if (page.id !== pageId) return page;
-
-        return {
-          ...page,
-          elements: page.elements.map((element) => {
-            if (element.id === sectionId) {
-              return { ...element, [name]: value };
-            }
-            return element;
-          }),
-        };
-      }),
-    };
+    const section_id = e.currentTarget.getAttribute('data-sectionid');
+    const page_id = e.currentTarget.getAttribute('data-pageid');
+    if (!section_id || !page_id) return;
+    updateSectionForm(name, value, page_id, section_id);
   };
 
   const handleSelect = (e: MouseEvent) => {
