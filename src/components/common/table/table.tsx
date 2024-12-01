@@ -34,6 +34,7 @@ import {
 import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
 import { Button } from '../button/button';
+import { Switch } from '../switch/switch';
 
 export const Table = <T,>({
   data,
@@ -42,6 +43,8 @@ export const Table = <T,>({
   expandable,
   unscroll,
   unsettings,
+  visibility,
+  onClickAction,
 }: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -74,6 +77,9 @@ export const Table = <T,>({
       columnFilters,
     },
     onColumnOrderChange: setColumnOrder,
+    initialState: {
+      columnVisibility: visibility,
+    },
   });
 
   const memoizedLeafColumns = useMemo(() => {
@@ -94,12 +100,24 @@ export const Table = <T,>({
     }
   };
 
+  const handleClick = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName.toLowerCase() === 'span') {
+      const id = target.dataset.id;
+      const type = target.dataset.type;
+      const action = target.dataset.action;
+      if (id && type && action) {
+        onClickAction?.({ id, type, action });
+      }
+    }
+  };
+
   const buildSettings = () => (
-    <div className='invisible absolute left-1 top-10 rounded-md p-4 z-50 bg-b-light dark:bg-b-dark border-2 border-b-light-dark dark:border-b-dark-light'>
-      {table.getAllLeafColumns().map((column) => {
+    <div className='invisible absolute left-0 top-10 rounded-md p-4 z-50 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
+      {table.getAllLeafColumns().map((column, index) => {
         return (
           <div
-            key={column.id}
+            key={`${column.id}-${index}`}
             className='flex items-center space-x-2 py-1 flex-row'
           >
             <div>
@@ -112,17 +130,13 @@ export const Table = <T,>({
                 />
               )}
             </div>
-            <label className='flex items-center cursor-pointer'>
-              <input
-                {...{
-                  type: 'checkbox',
-                  checked: column.getIsVisible(),
-                  onChange: column.getToggleVisibilityHandler(),
-                }}
-                className='form-checkbox h-4 w-4 rounded'
-              />
-              <span className='ml-2 text-sm'>{column.columnDef.header}</span>
-            </label>
+            <Switch
+              name={`ch-hidden-${column.id}`}
+              id={`ch-hidden-${column.id}`}
+              value={column.getIsVisible()}
+              onChange={column.getToggleVisibilityHandler()}
+              label={column.columnDef.header as string | undefined}
+            />
           </div>
         );
       })}
@@ -152,12 +166,16 @@ export const Table = <T,>({
         sensors={sensors}
       >
         <div
-          className={`${unscroll ? 'overflow-y-hidden' : ''} relative w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light scroll-x-md overflow-x-auto vox-scroll-design max-h-[80vh]`}
+          className={`${unscroll ? 'overflow-y-hidden' : ''} relative w-full rounded-xl border border-b-light-dark dark:border-b-dark-light scroll-x-md overflow-x-auto vox-scroll-design max-h-[80vh]`}
+          onClick={handleClick}
         >
           <table className='w-full border-collapse info'>
             <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className='sticky top-0 z-20'>
+              {table.getHeaderGroups().map((headerGroup, index) => (
+                <tr
+                  key={`${headerGroup.id}-${index}`}
+                  className='sticky top-0 z-20'
+                >
                   {!unsettings && (
                     <th
                       colSpan={1}
@@ -172,9 +190,9 @@ export const Table = <T,>({
                     items={columnOrder}
                     strategy={horizontalListSortingStrategy}
                   >
-                    {headerGroup.headers.map((header) => (
+                    {headerGroup.headers.map((header, index) => (
                       <DraggableTableHeader<T>
-                        key={header.id}
+                        key={`${header.id}-${index}`}
                         header={header}
                       />
                     ))}
@@ -184,7 +202,7 @@ export const Table = <T,>({
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row, index) => (
-                <Fragment key={`${row.id}_${index}`}>
+                <Fragment key={`${row.id}-${index}`}>
                   <tr>
                     {!unsettings && (
                       <td
@@ -199,13 +217,16 @@ export const Table = <T,>({
                         )}
                       </td>
                     )}
-                    {row.getVisibleCells().map((cell) => (
+                    {row.getVisibleCells().map((cell, index) => (
                       <SortableContext
-                        key={cell.id}
+                        key={`${cell.id}-${index}`}
                         items={columnOrder}
                         strategy={horizontalListSortingStrategy}
                       >
-                        <DraggableCell<T> key={cell.id} cell={cell} />
+                        <DraggableCell<T>
+                          key={`${cell.id}-${index}`}
+                          cell={cell}
+                        />
                       </SortableContext>
                     ))}
                   </tr>
@@ -236,7 +257,7 @@ export const Table = <T,>({
         />
         {table.getPageOptions().map((page, index) => (
           <button
-            key={index}
+            key={`${page}-${index}`}
             onClick={() => table.setPageIndex(page)}
             className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${
               table.getState().pagination.pageIndex === page ? 'font-bold' : ''

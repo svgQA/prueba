@@ -137,7 +137,7 @@ export const Search = ({
   const keysList = useMemo(
     () =>
       keys.map((key, index) => {
-        const keyName = `filter-key-${key.id}`;
+        const keyName = `filter-key-${key.id}-${index}`;
         return (
           <div
             className={`px-2 py-0.5 cursor-pointer flex flex-row min-w-40 hover:bg-primary hover:text-t-dark ${
@@ -161,8 +161,8 @@ export const Search = ({
 
   const searchList = useMemo(
     () =>
-      searchArray.value.map((item) => {
-        const keyName = `filter-search-${item.id}`;
+      searchArray.value.map((item, index) => {
+        const keyName = `filter-search-${item.id}-${index}`;
         return (
           <div
             key={keyName}
@@ -189,7 +189,7 @@ export const Search = ({
     <div
       id={id}
       name={name}
-      className='max-w-[100%] flex flex-row items-center border-2 rounded-sm relative border-b-light-dark dark:border-b-dark-light bg-transparent'
+      className='max-w-[100%] flex flex-row items-center border rounded-sm relative border-b-light-dark dark:border-b-dark-light bg-transparent'
     >
       <span className='px-2 vox-icon vx-icon-153' />
       <div
@@ -212,7 +212,7 @@ export const Search = ({
       {keys.length > 0 && (
         <div
           ref={keysContainerRef}
-          className={`${inputState.value.length > lenThreshold ? 'visible' : 'invisible'} absolute right-0 top-10 min-w-48 border-2 py-2 z-30 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
+          className={`${inputState.value.length > lenThreshold ? 'visible' : 'invisible'} absolute right-0 top-10 min-w-48 border py-2 z-30 bg-b-light dark:bg-b-dark border-b-light-dark dark:border-b-dark-light`}
           onClick={handleClickKeys}
         >
           {keysList}

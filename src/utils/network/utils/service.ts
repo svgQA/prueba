@@ -67,29 +67,32 @@ export class BaseService {
 
     const method = model?.method || REQUEST_METHODS.GET;
     if (method === REQUEST_METHODS.POST) {
-      model.headers = { ...model.headers, 'Content-Type': 'application/json' };
+      model.headers = {
+        ...model.headers,
+        'Content-Type': 'application/json',
+      };
       model.data = JSON.stringify(model.data || {});
     }
 
-    if (tenance) {
-      const tenant = this.getSelected();
-      const tenant_header = import.meta.env.VITE_TENANT_HEADER;
-      if (!tenant_header || !tenant?.tenant_id) {
-        throw new Error('ERROR: not include header');
-      }
-      model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
-    }
-
     try {
+      if (tenance) {
+        const tenant = this.getSelected();
+        const tenant_header = import.meta.env.VITE_TENANT_HEADER;
+        if (!tenant_header || !tenant?.tenant_id) {
+          throw new Error('ERROR: not include header');
+        }
+        model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
+      }
+
       const response = await fetch(url, {
         headers: model.headers as any,
         body: model.data,
         method,
       });
+
       const content_type = response.headers.get('content-type');
       if (content_type?.includes('application/json')) {
         const result = await response.json();
-        this.closeLoading();
         return new GenericResponse<T>({
           code: response?.status,
           message: result?.message,
@@ -97,7 +100,6 @@ export class BaseService {
         });
       } else {
         const result = await response.text();
-        this.closeLoading();
         return new GenericResponse<T>({
           code: response?.status,
           message: result,
@@ -105,8 +107,11 @@ export class BaseService {
         });
       }
     } catch (error: unknown) {
-      console.log(error);
+      // TODO: Agregar un modal si se presenta un error.
+      console.error(error);
       throw new Error('ERROR: processing response');
+    } finally {
+      this.closeLoading();
     }
   }
 }
