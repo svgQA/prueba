@@ -3,43 +3,40 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/es';
 import { IListResponse } from '@/types/form';
-import { Button } from '@/components/common';
 
 dayjs.extend(relativeTime);
 dayjs.locale('es');
 
-export const columns = (
-  action: (value: any) => void
-): ColumnDef<IListResponse>[] => {
-  return [
-    {
-      accessorKey: 'name',
-      id: 'name',
-      header: 'Name',
-      cell: (info) => info.getValue() || '-',
-      size: 150,
+export const columns: ColumnDef<IListResponse>[] = [
+  {
+    accessorKey: 'name',
+    id: 'name',
+    header: 'Name',
+    cell: (info) => info.getValue() || '-',
+    size: 150,
+  },
+  {
+    accessorKey: 'createdAt',
+    id: 'createdAt',
+    header: 'Fecha de creación',
+    cell: (info) => dayjs(info.getValue() as string).fromNow(),
+    size: 200,
+  },
+  {
+    id: 'actions',
+    size: 20,
+    cell: (info) => {
+      const { id } = info.row.original;
+      return (
+        <div className='bg-red-200 w-fit'>
+          <span
+            className='vox-icon vx-icon-123 p-1 cursor-pointer'
+            data-id={id}
+            data-type='list'
+            data-action='select'
+          ></span>
+        </div>
+      );
     },
-    {
-      accessorKey: 'createdAt',
-      id: 'createdAt',
-      header: 'Fecha de creación',
-      cell: (info) => dayjs(info.getValue() as string).fromNow(),
-      size: 200,
-    },
-    {
-      id: 'actions',
-      cell: (info) => {
-        return (
-          <Button
-            name='action-cell'
-            type='button'
-            icon='123'
-            rounded
-            onClick={() => action(info.row.original)}
-          />
-        );
-      },
-      size: 30,
-    },
-  ];
-};
+  },
+];

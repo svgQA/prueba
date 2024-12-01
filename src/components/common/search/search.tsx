@@ -137,7 +137,7 @@ export const Search = ({
   const keysList = useMemo(
     () =>
       keys.map((key, index) => {
-        const keyName = `filter-key-${key.id}`;
+        const keyName = `filter-key-${key.id}-${index}`;
         return (
           <div
             className={`px-2 py-0.5 cursor-pointer flex flex-row min-w-40 hover:bg-primary hover:text-t-dark ${
@@ -161,8 +161,8 @@ export const Search = ({
 
   const searchList = useMemo(
     () =>
-      searchArray.value.map((item) => {
-        const keyName = `filter-search-${item.id}`;
+      searchArray.value.map((item, index) => {
+        const keyName = `filter-search-${item.id}-${index}`;
         return (
           <div
             key={keyName}

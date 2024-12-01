@@ -43,4 +43,23 @@ export const columns: ColumnDef<IFormResponse>[] = [
     header: 'Última actualización',
     cell: (info) => dayjs(info.getValue() as string).fromNow(),
   },
+  {
+    accessorKey: 'Action',
+    id: 'action',
+    header: 'Action',
+    size: 20,
+    cell: (info) => {
+      const { id } = info.row.original;
+      return (
+        <div className='bg-red-200 w-fit'>
+          <span
+            className='vox-icon vx-icon-119 p-1 cursor-pointer'
+            data-id={id}
+            data-type='form'
+            data-action='update'
+          ></span>
+        </div>
+      );
+    },
+  },
 ];
