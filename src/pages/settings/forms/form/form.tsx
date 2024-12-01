@@ -1,15 +1,17 @@
 import './index.css';
 import { Table } from '@/components/common';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { columns } from './components';
 import { useEffect } from 'preact/hooks';
 import { FormService } from '@/services';
 import { useSignal } from '@preact/signals';
 import { IFormResponse } from '@/types/form';
 import { IRowAction } from '@/components/common/interface';
+import { FORMAT_MODE_SERVICE, setFormat } from '../create/store';
 
 export const FormSettingPage = () => {
   const forms = useSignal<IFormResponse[]>([]);
+  const [_, navigate] = useLocation();
 
   useEffect(() => {
     getFormsHandler();
@@ -22,7 +24,14 @@ export const FormSettingPage = () => {
   };
 
   const handleOnClick = (action: IRowAction) => {
-    console.table(action);
+    const format = forms.value.find((format) => format.id == action.id);
+    if (!format?.structure) throw Error('ERROR: Not exist format in this form');
+    try {
+      setFormat(format.structure, FORMAT_MODE_SERVICE.UPDATE);
+      navigate('/form/create');
+    } catch {
+      throw Error('ERROR: Not allowed convert form-struct.');
+    }
   };
 
   return (

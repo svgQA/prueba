@@ -5,7 +5,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
   addElement,
   addPage,
-  format,
   removeElement,
   addSection,
   setPhonePage,
@@ -14,6 +13,10 @@ import {
   getForm,
   getSelectedElement,
   updateForm,
+  udpateGeneralForm,
+  updatePageForm,
+  getFormMode,
+  FORMAT_MODE_SERVICE,
 } from './store';
 import { FormPhoneViewer, FormElement } from './components';
 import { TargetedEvent } from 'preact/compat';
@@ -23,8 +26,10 @@ import { FormService } from '@/services';
 import { IFormRequest, IListResponse } from '@/types/form';
 import { ListFormModal } from '../lists/lists';
 import { getStatusElementSelected, toggleListModal } from '../lists/store';
+import { useLocation } from 'wouter';
 
 export const FormCreateSettingPage: FunctionComponent = () => {
+  const [_, navigate] = useLocation();
   useEffect(() => {
     document.title = 'Forms Create Settings';
   }, []);
@@ -32,7 +37,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   const handleSelect = (id: string, page: string, section?: string) => {
     if (id === getSelectedElement.value?.id) return;
     setSelectedElement({ id, page, section });
-    const pageIndex = format.value.pages.findIndex((p) => p.id === page);
+    const pageIndex = getForm.value.pages.findIndex((p) => p.id === page);
     if (pageIndex >= 0) {
       setPhonePage(pageIndex);
     }
@@ -45,8 +50,8 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       structure: getForm.value,
     };
     const response = await FormService.create(format);
-
     if (!response.getStatus()) return;
+    navigate('/form');
   };
 
   const addLelement = () => {
@@ -61,23 +66,14 @@ export const FormCreateSettingPage: FunctionComponent = () => {
 
   const handleFormatInputChange = (e: TargetedEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-    format.value = {
-      ...format.value,
-      [name]: value,
-    };
+    udpateGeneralForm(name, value);
   };
 
   const handlePageInputChange = (e: TargetedEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-    const pageId = e.currentTarget.getAttribute('data-pageid');
-    if (!pageId) return;
-
-    format.value = {
-      ...format.value,
-      pages: format.value.pages.map((page) =>
-        page.id === pageId ? { ...page, [name]: value } : page
-      ),
-    };
+    const page_id = e.currentTarget.getAttribute('data-pageid');
+    if (!page_id) return;
+    updatePageForm(name, value, page_id);
   };
 
   const onSelectedList = (element: IListResponse) => {
@@ -124,8 +120,8 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               placeholder='Enter title'
               name='label'
               icon='245'
-              id={`in-form-${format.value.id}-format-title`}
-              value={format.value.label}
+              id={`in-form-${getForm.value.id}-format-title`}
+              value={getForm.value.label}
               onChange={handleFormatInputChange}
               borderless
             />
@@ -134,22 +130,26 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               placeholder='Enter description'
               name='description'
               icon='123'
-              id={`in-form-${format.value.id}-format-description`}
+              id={`in-form-${getForm.value.id}-format-description`}
               borderless
-              value={format.value.description}
+              value={getForm.value.description}
               onChange={handleFormatInputChange}
             />
           </div>
           <Button
             name='bnt-create-form'
             type='button'
-            label='Create'
+            label={
+              getFormMode.value === FORMAT_MODE_SERVICE.UPDATE
+                ? 'Update'
+                : 'Create'
+            }
             icon='212'
             onClick={saveFormat}
           />
         </div>
         <div className='flex flex-col w-[98%] 2xl:max-w-[60vw]'>
-          {format.value.pages.map((page) => (
+          {getForm.value.pages.map((page) => (
             <div key={page.id} className='w-full mb-5'>
               <Input
                 type='text'
