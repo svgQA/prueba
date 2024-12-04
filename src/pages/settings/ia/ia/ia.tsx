@@ -1,189 +1,192 @@
-import { type FunctionComponent } from 'preact';
-import { useEffect, useRef, useCallback } from 'preact/hooks';
-import { useSignal } from '@preact/signals';
-import { memo } from 'preact/compat';
 import { IaService } from '@/services';
-import shortUUID from 'short-uuid';
+import { IModelFile, IModelStatus } from '@/types/ia';
+import { useSignal } from '@preact/signals';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useRef, useMemo } from 'preact/hooks';
+import { Bar } from 'react-chartjs-2';
+import dayjs from 'dayjs';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  LogarithmicScale,
+} from 'chart.js';
+import { FileCard } from './components/file.card';
+import { Button } from '@/components/common';
 
-interface TenantResponse {
-  answer: string;
-  status: boolean;
-}
-
-const SelectInput = memo(
-  ({
-    value,
-    onChange,
-  }: {
-    value: string;
-    onChange: (value: string) => void;
-  }) => (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.currentTarget.value)}
-      className='w-full px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition duration-200'
-    >
-      <option value='tenant1'>Tenant 1 (Journey)</option>
-      <option value='tenant2'>Tenant 2 (Recipes)</option>
-    </select>
-  )
-);
-
-const TextInput = memo(
-  ({
-    value,
-    onChange,
-  }: {
-    value: string;
-    onChange: (value: string) => void;
-  }) => (
-    <input
-      type='text'
-      value={value}
-      onChange={(e) => onChange(e.currentTarget.value)}
-      className='w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition duration-200'
-      placeholder='Ingrese información del tenant'
-    />
-  )
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  LogarithmicScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
 );
 
 export const IASettingPage: FunctionComponent = () => {
-  const tenantResponse = useSignal<TenantResponse | null>(null);
-  const displayText = useSignal('');
-  const inputValue = useSignal('');
-  const selectedTenant = useSignal('tenant1');
-  const isTyping = useSignal(false);
-  const typeTimeout = useRef<NodeJS.Timeout>();
-  const fileInput = useRef<HTMLInputElement>(null);
+  const model_status = useSignal<IModelStatus>();
+  const model_files = useSignal<IModelFile[]>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     document.title = 'IA Settings';
+    get_config_model();
   }, []);
 
-  useEffect(() => {
-    if (tenantResponse.value?.answer && !isTyping.value) {
-      isTyping.value = true;
-      displayText.value = '';
+  const get_config_model = async () => {
+    try {
+      const [response_model, response_files] = await Promise.all([
+        IaService.model_status(),
+        IaService.model_files(),
+      ]);
 
-      const answer = tenantResponse.value.answer;
-      let currentIndex = 0;
-      const textChunks = answer.split('');
-
-      const typeChar = () => {
-        if (currentIndex < textChunks.length) {
-          displayText.value = displayText.value + textChunks[currentIndex];
-          currentIndex++;
-          typeTimeout.current = setTimeout(typeChar, 20);
-        } else {
-          isTyping.value = false;
-        }
-      };
-
-      typeChar();
-
-      return () => {
-        if (typeTimeout.current) {
-          clearTimeout(typeTimeout.current);
-        }
-      };
-    }
-  }, [tenantResponse.value]);
-
-  const createTenant = useCallback(async () => {
-    const response = await IaService.question({
-      tenant: selectedTenant.value,
-      question: inputValue.value,
-    });
-    if (!response.getStatus()) return;
-    const value = response.getOne();
-    tenantResponse.value = value;
-  }, [selectedTenant.value, inputValue.value]);
-
-  const handleCreateNewTenant = useCallback(async () => {
-    const newTenantId = shortUUID.generate();
-    await IaService.create_tenant(newTenantId);
-  }, []);
-
-  const handleFileUpload = useCallback(
-    async (event: Event) => {
-      const target = event.target as HTMLInputElement;
-      if (!target.files?.length) return;
-
-      const file = target.files[0];
-      const formData = new FormData();
-      formData.append('document', file);
-      formData.append('tenant', selectedTenant.value);
-
-      try {
-        await IaService.document(formData);
-        alert('Document uploaded successfully!');
-      } catch (error) {
-        alert('Error uploading document');
+      if (response_model.getStatus()) {
+        model_status.value = response_model.getOne();
       }
-    },
-    [selectedTenant.value]
+
+      if (response_files.getStatus()) {
+        model_files.value = response_files.getMany();
+      }
+    } catch (error) {
+      console.error('Error fetching model data:', error);
+    }
+  };
+
+  const uploadFile = (e: Event) => {
+    e.preventDefault();
+    const files = fileInputRef.current?.files;
+    if (files && files[0]) {
+      console.log('File to upload:', files[0]);
+    }
+  };
+
+  const create_model = async () => {
+    console.log('CREATE MODEL');
+  };
+
+  const sync_model = async () => {
+    const response = await IaService.model_sync();
+    if (!response.getStatus()) return;
+    console.log(response.getOne());
+  };
+
+  const chartData = useMemo(
+    () => ({
+      labels: model_status.value?.execution_history.map((h) =>
+        dayjs(h.start_time).format('MM/DD/YYYY HH:mm')
+      ),
+      datasets: [
+        {
+          label: 'Execution Duration (milliseconds)',
+          data: model_status.value?.execution_history.map((h) => {
+            const start = dayjs(h.start_time);
+            const end = dayjs(h.end_time);
+            return end.diff(start, 'milliseconds');
+          }),
+          backgroundColor: model_status.value?.execution_history.map((h) =>
+            h.status === 'success'
+              ? 'rgba(75, 192, 92, 0.5)'
+              : 'rgba(255, 99, 132, 0.5)'
+          ),
+          borderWidth: 1,
+        },
+      ],
+    }),
+    [model_status.value?.execution_history]
   );
 
-  return (
-    <section className='mt-4'>
-      <div className='mb-4'>
-        <SelectInput
-          value={selectedTenant.value}
-          onChange={(value) => (selectedTenant.value = value)}
-        />
-        <TextInput
-          value={inputValue.value}
-          onChange={(value) => (inputValue.value = value)}
-        />
-        <div className='mb-4'>
-          <input
-            type='file'
-            ref={fileInput}
-            onChange={handleFileUpload}
-            className='hidden'
-            accept='.pdf,.doc,.docx,.txt'
-          />
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (context: any) {
+            const history =
+              model_status.value?.execution_history[context.dataIndex];
+            return [
+              `Items Processed: ${history?.item_count}`,
+              `Failed Items: ${history?.failed_item_count}`,
+            ];
+          },
+        },
+      },
+    },
+  };
+
+  if (!model_status.value) {
+    return (
+      <div className='flex items-center justify-center min-h-screen bg-gray-50'>
+        <div className='p-8 bg-white rounded-lg shadow-md text-center'>
+          <h2 className='text-2xl font-bold mb-4'>
+            Create AI Model Integration
+          </h2>
+          <p className='mb-6 text-gray-600'>
+            No model configuration found. Let's create one!
+          </p>
           <button
-            onClick={() => fileInput.current?.click()}
-            className='w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center'
+            onClick={create_model}
+            className='px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition'
           >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='h-5 w-5 mr-2'
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12'
-              />
-            </svg>
-            Upload Document
+            Create New Model
           </button>
         </div>
       </div>
-      <div className='flex gap-4'>
-        <button
-          className='bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-105'
-          onClick={createTenant}
-        >
-          Make question
-        </button>
-        <button
-          className='bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-105'
-          onClick={handleCreateNewTenant}
-        >
-          Create New Tenant
-        </button>
-      </div>
-      {tenantResponse.value && (
-        <div className='mt-4 text-xl'>
-          <p className='whitespace-pre-wrap'>{displayText.value}</p>
+    );
+  }
+
+  return (
+    <section className='container mx-auto p-4'>
+      <div className='grid gap-6'>
+        {/* Status Section */}
+        <div className='border rounded-lg p-4'>
+          <div className='w-full bg-red- flex-row flex justify-between'>
+            <div className='w-11/12'>
+              <h2 className='text-xl font-bold mb-4'>Model Status</h2>
+              <p>
+                Current Status:{' '}
+                <span className='font-semibold'>
+                  {model_status.value?.status}
+                </span>
+              </p>
+            </div>
+            <Button
+              id='btn-sync-model'
+              name='btn-sync-model'
+              type='button'
+              onClick={sync_model}
+              icon='080'
+            />
+          </div>
+          {/* Execution History Chart */}
+          <div className='mt-4 h-64'>
+            <Bar data={chartData} options={chartOptions} />
+          </div>
         </div>
-      )}
+
+        {/* File Upload Section */}
+        <div className='border rounded-lg p-4'>
+          <h2 className='text-xl font-bold mb-4'>Upload New File</h2>
+          <input
+            type='file'
+            ref={fileInputRef}
+            className='block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'
+            onChange={uploadFile}
+          />
+        </div>
+
+        {/* Files Grid */}
+        <div className='flex flex-row flex-wrap justify-center gap-2'>
+          {model_files.value?.map((file) => (
+            <FileCard file={file} key={file.id} />
+          ))}
+        </div>
+      </div>
     </section>
   );
 };
