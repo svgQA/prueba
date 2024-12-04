@@ -8,7 +8,7 @@ interface IWarning {
 }
 
 interface IExecutionResult {
-  additional_properties: {
+  additional_properties?: {
     metrics: any;
   };
   status: string;
@@ -33,10 +33,32 @@ interface ILimits {
 export interface IModelStatus {
   additional_properties: {
     name: string;
-    '@odata.context': string;
   };
   status: string;
-  last_result: IExecutionResult;
+  last_result: IExecutionResult | null;
   execution_history: IExecutionResult[];
   limits: ILimits;
+}
+
+export interface ITenantModelStatus {
+  id: number;
+  status: string;
+  search: boolean;
+  blood: boolean;
+  skill: boolean;
+  tenant: string | null;
+  tenant_id: string;
+  created_at: string;
+  updated_at: string;
+  sync_at: string;
+  files: any | null;
+  deleted_at: string | null;
+}
+
+export interface IQueryRequest {
+  question: string;
+}
+
+export interface IQueryResponse {
+  answer: string;
 }

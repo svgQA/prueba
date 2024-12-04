@@ -36,6 +36,48 @@ export class BaseService {
     return urlTotal;
   }
 
+  protected static make_request_model(
+    instance: VoxServices,
+    model: IMakeRequest,
+    prefix?: boolean,
+    tenance: boolean = true
+  ) {
+    let url = this.make_url(model.url, instance, prefix);
+    if (model.params) {
+      const queryParams = new URLSearchParams();
+      Object.entries(model.params).forEach(([key, value]) => {
+        queryParams.append(key, String(value));
+      });
+      url = `${url}?${queryParams.toString()}`;
+    }
+    const method = model?.method || REQUEST_METHODS.GET;
+    if (method === REQUEST_METHODS.POST) {
+      if (!model.uncontent) {
+        model.headers = {
+          ...model?.headers,
+          'Content-Type': 'application/json',
+        };
+        model.data = JSON.stringify(model.data || {});
+      }
+    }
+
+    if (tenance) {
+      const tenant = this.getSelected();
+      const tenant_header = import.meta.env.VITE_TENANT_HEADER;
+      if (!tenant_header || !tenant?.tenant_id) {
+        throw new Error('ERROR: not include header');
+      }
+      model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
+    }
+
+    return {
+      header: model.headers as any,
+      data: model.data,
+      url,
+      method,
+    };
+  }
+
   static async make_request<T>(
     instance: VoxServices,
     /* FIX:
@@ -55,39 +97,18 @@ export class BaseService {
     tenance: boolean = true
   ): Promise<GenericResponse<T>> {
     this.openLoading();
-    let url = this.make_url(model.url, instance, prefix);
-
-    if (model.params) {
-      const queryParams = new URLSearchParams();
-      Object.entries(model.params).forEach(([key, value]) => {
-        queryParams.append(key, String(value));
-      });
-      url = `${url}?${queryParams.toString()}`;
-    }
-
-    const method = model?.method || REQUEST_METHODS.GET;
-    if (method === REQUEST_METHODS.POST) {
-      model.headers = {
-        ...model.headers,
-        'Content-Type': 'application/json',
-      };
-      model.data = JSON.stringify(model.data || {});
-    }
 
     try {
-      if (tenance) {
-        const tenant = this.getSelected();
-        const tenant_header = import.meta.env.VITE_TENANT_HEADER;
-        if (!tenant_header || !tenant?.tenant_id) {
-          throw new Error('ERROR: not include header');
-        }
-        model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
-      }
-
-      const response = await fetch(url, {
-        headers: model.headers as any,
+      const model_request = this.make_request_model(
+        instance,
+        model,
+        prefix,
+        tenance
+      );
+      const response = await fetch(model_request.url, {
+        headers: model_request.header,
         body: model.data,
-        method,
+        method: model.method,
       });
 
       const content_type = response.headers.get('content-type');

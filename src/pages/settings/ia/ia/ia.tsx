@@ -1,37 +1,23 @@
 import { IaService } from '@/services';
-import { IModelFile, IModelStatus } from '@/types/ia';
+import { IModelFile, IModelStatus, ITenantModelStatus } from '@/types/ia';
 import { useSignal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
-import { useEffect, useRef, useMemo } from 'preact/hooks';
-import { Bar } from 'react-chartjs-2';
-import dayjs from 'dayjs';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  LogarithmicScale,
-} from 'chart.js';
-import { FileCard } from './components/file.card';
-import { Button } from '@/components/common';
+import { useEffect, useRef } from 'preact/hooks';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  LogarithmicScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import { FileCard, HistoryCard } from './components';
+import { Button, Input } from '@/components/common';
 
 export const IASettingPage: FunctionComponent = () => {
-  const model_status = useSignal<IModelStatus>();
+  const model_status = useSignal<IModelStatus | null>(null);
   const model_files = useSignal<IModelFile[]>();
+  const tenant_status = useSignal<ITenantModelStatus | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const selectedFileName = useSignal<string>('');
+  const uploadStatus = useSignal<'idle' | 'uploading' | 'success' | 'error'>(
+    'idle'
+  );
+  const testMessage = useSignal<string>('');
+  const testResponse = useSignal<string>('');
 
   useEffect(() => {
     document.title = 'IA Settings';
@@ -40,10 +26,12 @@ export const IASettingPage: FunctionComponent = () => {
 
   const get_config_model = async () => {
     try {
-      const [response_model, response_files] = await Promise.all([
-        IaService.model_status(),
-        IaService.model_files(),
-      ]);
+      const [response_model, response_files /*, response_tenant_status*/] =
+        await Promise.all([
+          IaService.model_status(),
+          IaService.model_files(),
+          // IaService.tenant_status(),
+        ]);
 
       if (response_model.getStatus()) {
         model_status.value = response_model.getOne();
@@ -52,132 +40,185 @@ export const IASettingPage: FunctionComponent = () => {
       if (response_files.getStatus()) {
         model_files.value = response_files.getMany();
       }
+
+      // if (response_tenant_status.getStatus()) {
+      //   tenant_status.value = response_tenant_status.getOne();
+      // }
     } catch (error) {
       console.error('Error fetching model data:', error);
     }
   };
 
-  const uploadFile = (e: Event) => {
-    e.preventDefault();
-    const files = fileInputRef.current?.files;
-    if (files && files[0]) {
-      console.log('File to upload:', files[0]);
+  const handleFileChange = () => {
+    if (fileInputRef.current?.files?.[0]) {
+      selectedFileName.value = fileInputRef.current.files[0].name;
+      uploadStatus.value = 'idle';
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!fileInputRef.current?.files?.[0]) return;
+    uploadStatus.value = 'uploading';
+    const response = await IaService.upload_file(fileInputRef.current.files[0]);
+    if (!response.getStatus()) {
+      uploadStatus.value = 'error';
+    } else {
+      uploadStatus.value = 'success';
+      fileInputRef.current.value = '';
+      selectedFileName.value = '';
+      get_config_model();
     }
   };
 
   const create_model = async () => {
-    console.log('CREATE MODEL');
+    const response = await IaService.create_model();
+    if (!response.getStatus()) return;
+    get_config_model();
   };
 
   const sync_model = async () => {
     const response = await IaService.model_sync();
     if (!response.getStatus()) return;
-    console.log(response.getOne());
+    model_status.value = response.getOne();
   };
 
-  const chartData = useMemo(
-    () => ({
-      labels: model_status.value?.execution_history.map((h) =>
-        dayjs(h.start_time).format('MM/DD/YYYY HH:mm')
-      ),
-      datasets: [
-        {
-          label: 'Execution Duration (milliseconds)',
-          data: model_status.value?.execution_history.map((h) => {
-            const start = dayjs(h.start_time);
-            const end = dayjs(h.end_time);
-            return end.diff(start, 'milliseconds');
-          }),
-          backgroundColor: model_status.value?.execution_history.map((h) =>
-            h.status === 'success'
-              ? 'rgba(75, 192, 92, 0.5)'
-              : 'rgba(255, 99, 132, 0.5)'
-          ),
-          borderWidth: 1,
-        },
-      ],
-    }),
-    [model_status.value?.execution_history]
-  );
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: function (context: any) {
-            const history =
-              model_status.value?.execution_history[context.dataIndex];
-            return [
-              `Items Processed: ${history?.item_count}`,
-              `Failed Items: ${history?.failed_item_count}`,
-            ];
-          },
-        },
-      },
-    },
+  const makeRequest = async () => {
+    const response = await IaService.make_query({
+      question: testMessage.value,
+    });
+    if (!response.getStatus()) testResponse.value = 'error.';
+    else testResponse.value = response.getOne().answer;
   };
-
-  if (!model_status.value) {
-    return (
-      <div className='flex items-center justify-center min-h-screen bg-gray-50'>
-        <div className='p-8 bg-white rounded-lg shadow-md text-center'>
-          <h2 className='text-2xl font-bold mb-4'>
-            Create AI Model Integration
-          </h2>
-          <p className='mb-6 text-gray-600'>
-            No model configuration found. Let's create one!
-          </p>
-          <button
-            onClick={create_model}
-            className='px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition'
-          >
-            Create New Model
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <section className='container mx-auto p-4'>
       <div className='grid gap-6'>
         {/* Status Section */}
-        <div className='border rounded-lg p-4'>
-          <div className='w-full bg-red- flex-row flex justify-between'>
-            <div className='w-11/12'>
+        {tenant_status.value}
+        <div className='border rounded-lg p-4 dark:border-b-dark-light border-b-light-dark'>
+          <div className='bg-red- flex-row flex justify-between'>
+            <div className='w-10/12'>
               <h2 className='text-xl font-bold mb-4'>Model Status</h2>
               <p>
                 Current Status:{' '}
                 <span className='font-semibold'>
-                  {model_status.value?.status}
+                  {model_status.value?.status || 'Inactive'}
                 </span>
               </p>
             </div>
-            <Button
-              id='btn-sync-model'
-              name='btn-sync-model'
-              type='button'
-              onClick={sync_model}
-              icon='080'
-            />
+            <div className='w-2/12 flex flex-row justify-end items-center'>
+              {!model_status.value && (
+                <Button
+                  id='btn-sync-model'
+                  name='btn-sync-model'
+                  type='button'
+                  onClick={create_model}
+                  icon='128'
+                />
+              )}
+              <Button
+                id='btn-sync-model'
+                name='btn-sync-model'
+                type='button'
+                onClick={sync_model}
+                icon='127'
+              />
+            </div>
           </div>
-          {/* Execution History Chart */}
-          <div className='mt-4 h-64'>
-            <Bar data={chartData} options={chartOptions} />
-          </div>
+
+          {/* Execution History List */}
+          {model_status.value?.execution_history && (
+            <div className='mt-4'>
+              <h3 className='text-lg font-semibold mb-2'>Execution History</h3>
+              <div className='space-y-2 max-h-64 overflow-y-auto'>
+                {model_status.value.execution_history.map((history, index) => (
+                  <HistoryCard key={index} history={history} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
+        {/* Test Section */}
+        {model_status.value?.status === 'running' && (
+          <div className='border rounded-lg p-6 dark:border-b-dark-light border-b-light-dark shadow-sm'>
+            <div className='max-w-2xl mx-auto space-y-4'>
+              {testResponse.value && (
+                <div className='p-4 rounded-lg bg-gray-50 dark:bg-gray-700 mb-4'>
+                  <p className='text-gray-800 dark:text-gray-200'>
+                    {testResponse.value}
+                  </p>
+                </div>
+              )}
+              <div className='flex gap-2 justify-center fler-row items-center'>
+                <Input
+                  name='in-ia-test-model'
+                  id='in-ia-test-model'
+                  type='text'
+                  placeholder='Enter your test message...'
+                  icon='231'
+                  value={testMessage.value}
+                  onChange={(e) =>
+                    (testMessage.value = (e.target as HTMLInputElement).value)
+                  }
+                />
+                <Button
+                  id='test-message'
+                  name='test-message'
+                  onClick={makeRequest}
+                  type='button'
+                  label='Send'
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* File Upload Section */}
-        <div className='border rounded-lg p-4'>
-          <h2 className='text-xl font-bold mb-4'>Upload New File</h2>
-          <input
-            type='file'
-            ref={fileInputRef}
-            className='block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'
-            onChange={uploadFile}
-          />
+        <div className='border rounded-lg p-4 dark:border-b-dark-light border-b-light-dark'>
+          <h2 className='text-xl font-bold mb-6'>Upload New File</h2>
+          <div className='flex flex-col items-center space-y-4'>
+            <label className='w-full max-w-md flex flex-col items-center px-4 py-6 rounded-lg border-2 border-dashed cursor-pointer dark:hover:bg-b-dark-light hover:bg-b-light-dark transition-colors border-b-light-dark dark:border-b-dark-light'>
+              <span className='vox-icon vx-icon-052' />
+              <span className='mt-2 text-sm'>
+                {selectedFileName.value || 'Select a file'}
+              </span>
+              <input
+                type='file'
+                className='hidden'
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                disabled={
+                  !model_status.value || uploadStatus.value === 'uploading'
+                }
+                onClick={(e) => (e.currentTarget.value = '')}
+              />
+            </label>
+            <Button
+              id='upload-ia-file'
+              name='upload-ia-file'
+              onClick={handleUpload}
+              disabled={
+                !model_status.value || uploadStatus.value === 'uploading'
+              }
+              type='button'
+              label={
+                uploadStatus.value === 'uploading'
+                  ? 'Uploading...'
+                  : 'Upload File'
+              }
+            />
+            {uploadStatus.value === 'error' && (
+              <p className='text-error text-sm'>
+                Upload failed. Please try again.
+              </p>
+            )}
+            {uploadStatus.value === 'success' && (
+              <p className='text-green-500 text-sm'>
+                File uploaded successfully!
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Files Grid */}

@@ -1,6 +1,16 @@
-import { IModelFile, IModelStatus } from '@/types/ia';
+import {
+  IModelFile,
+  IModelStatus,
+  IQueryRequest,
+  IQueryResponse,
+  ITenantModelStatus,
+} from '@/types/ia';
 import { BaseService } from '@/utils/network';
-import { IMakeRequest, VoxServices } from '@/utils/network/types';
+import {
+  IMakeRequest,
+  REQUEST_METHODS,
+  VoxServices,
+} from '@/utils/network/types';
 
 export class IaService extends BaseService {
   static name: VoxServices = 'ia';
@@ -37,15 +47,27 @@ export class IaService extends BaseService {
     const model: IMakeRequest = {
       url: ['model', 'tenant'],
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<ITenantModelStatus>(this.name, model);
   }
 
-  // static async question(data: IQuestionIA) {
-  //   const model: IMakeRequest = {
-  //     url: ['ask'],
-  //     method: REQUEST_METHODS.POST,
-  //     data,
-  //   };
-  //   return await super.make_request<any>(this.name, model);
-  // }
+  static async make_query(data: IQueryRequest) {
+    const model: IMakeRequest = {
+      url: ['service', 'question'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<IQueryResponse>(this.name, model);
+  }
+
+  static async upload_file(file: any) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const model: IMakeRequest = {
+      url: ['file'],
+      method: REQUEST_METHODS.POST,
+      data: formData,
+      uncontent: true,
+    };
+    return await super.make_request(this.name, model);
+  }
 }
