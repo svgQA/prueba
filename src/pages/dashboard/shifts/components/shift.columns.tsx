@@ -1,6 +1,7 @@
 import { Shift } from '../utils/shifts';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge, Gauge } from '@/components/common';
+import { ROW_ACTIONS } from '@/components/common/interface';
 
 export const columns: ColumnDef<Shift>[] = [
   {
@@ -84,13 +85,13 @@ export const columns: ColumnDef<Shift>[] = [
             className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
             data-id={id}
             data-type='shift'
-            data-action='select'
+            data-action={ROW_ACTIONS.UPDATE}
           ></span>
           <span
             className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
             data-id={id}
             data-type='shift'
-            data-action='delete'
+            data-action={ROW_ACTIONS.DELETE}
           ></span>
         </div>
       );

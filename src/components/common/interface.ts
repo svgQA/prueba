@@ -1,36 +1,37 @@
-export * from './utils/interface';
-export * from './alert/interface';
-export * from './badge/interface';
-export * from './button/interface';
+export * from './utils/interface.d';
+export * from './alert/interface.d';
+export * from './badge/interface.d';
+export * from './button/interface.d';
 
-export * from './card/interface';
-export * from './carousel/interface';
-export * from './dropdown/interface';
-export * from './expand/interface';
+export * from './card/interface.d';
+export * from './carousel/interface.d';
+export * from './dropdown/interface.d';
+export * from './expand/interface.d';
 
-export * from './graph/interface';
-export * from './input/interface';
-export * from './map/interface';
-export * from './modal/interface';
+export * from './graph/interface.d';
+export * from './input/interface.d';
+export * from './map/interface.d';
+export * from './modal/interface.d';
 
-export * from './navbar/interface';
-export * from './radio/interface';
-export * from './security/interface';
-export * from './sidebar/interface';
+export * from './navbar/interface.d';
+export * from './radio/interface.d';
+export * from './security/interface.d';
+export * from './sidebar/interface.d';
 
-export * from './slider/interface';
-export * from './switch/interface';
-export * from './timeline/interface';
-export * from './table/interface';
+export * from './slider/interface.d';
+export * from './switch/interface.d';
+export * from './timeline/interface.d';
+export * from './table/interface.d';
 
-export * from './search/interface';
-export * from './section/interface';
-export * from './loading/interface';
-export * from './select/interface';
+export * from './search/interface.d';
+export * from './section/interface.d';
+export * from './loading/interface.d';
+export * from './select/interface.d';
 
-export * from './chip/interface';
-export * from './multi/interface';
+export * from './chip/interface.d';
+export * from './multi/interface.d';
+export * from './switch/interface.d';
+export * from './gauge/interface.d';
 
-export * from './switch/interface';
-export * from './gauge/interface';
-export * from './progress/interface';
+export * from './progress/interface.d';
+export * from './relative/interface.d';

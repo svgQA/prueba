@@ -39,12 +39,15 @@ interface IFormMode {
 
 const format = signal<IFormat>(buildInitFormat());
 const formatMode = signal<IFormMode>({ mode: FORMAT_MODE_SERVICE.CREATE });
+
 export const setFormat = (
-  model: IFormat,
-  mode: IFormMode = { mode: FORMAT_MODE_SERVICE.CREATE }
+  mode: IFormMode = { mode: FORMAT_MODE_SERVICE.CREATE },
+  model?: IFormat
 ) => {
   format.value =
-    mode.mode === FORMAT_MODE_SERVICE.CREATE ? buildInitFormat() : model;
+    mode.mode === FORMAT_MODE_SERVICE.CREATE
+      ? buildInitFormat()
+      : model || buildInitFormat();
   formatMode.value = mode;
 };
 

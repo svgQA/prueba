@@ -1,11 +1,7 @@
 import { IFormResponse } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/es';
-
-dayjs.extend(relativeTime);
-dayjs.locale('es');
+import { ROW_ACTIONS } from '@/components/common/interface';
+import { RelativeTime } from '@/components/common';
 
 export const columns: ColumnDef<IFormResponse>[] = [
   {
@@ -26,27 +22,25 @@ export const columns: ColumnDef<IFormResponse>[] = [
     },
   },
   {
+    accessorKey: 'createdAt',
+    id: 'createdAt',
+    header: 'Fecha de creación',
+    cell: (info) => <RelativeTime date={info.getValue() as string} />,
+  },
+  {
+    accessorKey: 'updatedAt',
+    id: 'updatedAt',
+    header: 'Última actualización',
+    cell: (info) => <RelativeTime date={info.getValue() as string} />,
+  },
+  {
     accessorKey: 'category',
     id: 'category',
     header: 'Categoría',
     cell: (info) => info.getValue() || '-',
   },
   {
-    accessorKey: 'createdAt',
-    id: 'createdAt',
-    header: 'Fecha de creación',
-    cell: (info) => dayjs(info.getValue() as string).fromNow(),
-  },
-  {
-    accessorKey: 'updatedAt',
-    id: 'updatedAt',
-    header: 'Última actualización',
-    cell: (info) => dayjs(info.getValue() as string).fromNow(),
-  },
-  {
-    accessorKey: 'Action',
     id: 'action',
-    header: 'Action',
     size: 10,
     cell: (info) => {
       const { id } = info.row.original;
@@ -56,7 +50,13 @@ export const columns: ColumnDef<IFormResponse>[] = [
             className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
             data-id={id}
             data-type='form'
-            data-action='update'
+            data-action={ROW_ACTIONS.UPDATE}
+          ></span>
+          <span
+            className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
+            data-id={id}
+            data-type='form'
+            data-action={ROW_ACTIONS.DELETE}
           ></span>
         </div>
       );

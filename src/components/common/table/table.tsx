@@ -13,7 +13,7 @@ import {
   ColumnFiltersState,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'preact/hooks';
-import { ITableProps } from './interface';
+import { ITableProps, ROW_ACTIONS } from './interface';
 import { Search } from '../search/search';
 import {
   DndContext,
@@ -107,7 +107,7 @@ export const Table = <T,>({
       const type = target.dataset.type;
       const action = target.dataset.action;
       if (id && type && action) {
-        onClickAction?.({ id, type, action });
+        onClickAction?.({ id, type, action: Number(action) as ROW_ACTIONS });
       }
     }
   };

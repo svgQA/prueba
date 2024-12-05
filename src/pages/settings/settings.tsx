@@ -19,6 +19,7 @@ import { useLocation } from 'wouter';
 import { MenuButtons, MenuList } from './components';
 import { RoutingContent } from './routing';
 import {
+  appendHistory,
   currentPosition,
   historyLocation,
   menuInformationSelected,
@@ -39,7 +40,7 @@ export const SettingsModal = () => {
             ...adminMenu,
             to: `/setting${adminMenu.base}/`,
           };
-          appendHistory(menuSelected);
+          appendHistory(menuSelected, setMenuSelected);
           navigate(menuSelected.to);
         }
       }
@@ -49,14 +50,6 @@ export const SettingsModal = () => {
   const setMenuSelected = (menu: IMenu) => {
     setMenu(menu);
     navigate(menu.to);
-  };
-
-  const appendHistory = (menu: IMenu) => {
-    const position = currentPosition.value;
-    const cleanHistory = historyLocation.value.slice(0, position + 1);
-    currentPosition.value = cleanHistory.length;
-    historyLocation.value = [...cleanHistory, menu];
-    setMenuSelected(menu);
   };
 
   const goBack = useCallback(() => {
@@ -80,7 +73,7 @@ export const SettingsModal = () => {
       const id = target.getAttribute('id');
       if (!to || !label || !description || !id) return;
       const menuSelected = { to, description, label, id };
-      appendHistory(menuSelected);
+      appendHistory(menuSelected, setMenuSelected);
     }
   }, []);
 
