@@ -32,3 +32,5 @@ export * from './chip/interface';
 export * from './multi/interface';
 
 export * from './switch/interface';
+export * from './gauge/interface';
+export * from './progress/interface';

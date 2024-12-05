@@ -47,7 +47,7 @@ export const columns: ColumnDef<IFormResponse>[] = [
     accessorKey: 'Action',
     id: 'action',
     header: 'Action',
-    size: 20,
+    size: 10,
     cell: (info) => {
       const { id } = info.row.original;
       return (

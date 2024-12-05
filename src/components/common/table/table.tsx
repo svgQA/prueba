@@ -113,8 +113,13 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='invisible absolute left-0 top-10 rounded-md p-4 z-50 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
+    <div className='invisible absolute left-0 top-10 rounded-md p-4 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column, index) => {
+        const columnHeader =
+          typeof column.columnDef.header !== 'string'
+            ? column.id
+            : (column.columnDef.header as string);
+
         return (
           <div
             key={`${column.id}-${index}`}
@@ -130,12 +135,13 @@ export const Table = <T,>({
                 />
               )}
             </div>
+            {}
             <Switch
               name={`ch-hidden-${column.id}`}
               id={`ch-hidden-${column.id}`}
               value={column.getIsVisible()}
               onChange={column.getToggleVisibilityHandler()}
-              label={column.columnDef.header as string | undefined}
+              label={columnHeader}
             />
           </div>
         );
@@ -151,7 +157,7 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className='w-full mb-2 flex flex-col items-end'>
+      <div className='relative w-full mb-2 flex flex-col items-end'>
         <Search
           id='search-general'
           name='search-general'
@@ -166,7 +172,7 @@ export const Table = <T,>({
         sensors={sensors}
       >
         <div
-          className={`${unscroll ? 'overflow-y-hidden' : ''} relative w-full rounded-xl border border-b-light-dark dark:border-b-dark-light scroll-x-md overflow-x-auto vox-scroll-design max-h-[80vh]`}
+          className={`${unscroll ? 'overflow-y-hidden' : 'overflow-auto vox-scroll-design'} relative w-full rounded-xl border border-b-light-dark dark:border-b-dark-light scroll-x-md min-h-[50vh] max-h-[80vh]`}
           onClick={handleClick}
         >
           <table className='w-full border-collapse info'>

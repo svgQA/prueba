@@ -20,11 +20,11 @@ export const columns: ColumnDef<IListResponse>[] = [
     id: 'createdAt',
     header: 'Fecha de creación',
     cell: (info) => dayjs(info.getValue() as string).fromNow(),
-    size: 200,
+    size: 180,
   },
   {
     id: 'actions',
-    size: 20,
+    size: 10,
     cell: (info) => {
       const { id } = info.row.original;
       return (

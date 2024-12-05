@@ -34,3 +34,5 @@ export * from './chip/chip';
 export * from './multi/multi';
 
 export * from './switch/switch';
+export * from './progress/progress';
+export * from './gauge/gauge';
