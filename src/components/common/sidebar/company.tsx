@@ -10,7 +10,7 @@ export const CompanyItem = memo<ICompanyItem>(
   ({ company, setCompanySelected }: ICompanyItem) => (
     <div
       key={company.id}
-      className={`flex cursor-pointer w-full px-4 py-2 mb-1 flex-row justify-between items-center ${company.selected ? 'bg-primary' : ''}`}
+      className={`flex rounded-md cursor-pointer w-full px-4 py-2 flex-row justify-between items-center ${company.selected ? 'bg-primary' : 'bg-b-light dark:bg-b-dark'}`}
       onClick={() => setCompanySelected(company.id)}
     >
       <div>

@@ -46,45 +46,49 @@ export const FormattedDate: FunctionComponent<{ date: string }> = ({
 
 export const columns: ColumnDef<Memo>[] = [
   {
+    id: 'id',
     accessorKey: 'id',
     header: 'ID',
     cell: (info) => (
       <div className='flex items-center'>
-        <span
-          onClick={() => info.row.toggleExpanded()}
-          className='vox-icon vx-icon-005 cursor-pointer'
-        />
         <span>{String(info.getValue())}</span>
       </div>
     ),
   },
   {
+    id: 'name',
     accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     header: 'Nombre',
   },
   {
+    id: 'city',
     accessorKey: 'city',
     header: 'Ciudad',
   },
   {
+    id: 'address',
     accessorKey: 'address',
     header: 'Dirección',
     cell: (info) => <span>{String(info.getValue())}</span>,
   },
   {
+    id: 'noveltyType',
     accessorKey: 'noveltyType',
     header: 'Tipo Novedad',
   },
   {
+    id: 'noveltyDate',
     accessorKey: 'noveltyDate',
     header: 'Fecha Novedad',
     cell: (info) => <FormattedDate date={info.getValue() as string} />,
   },
   {
+    id: 'contact',
     accessorKey: 'contact',
     header: 'Contacto',
   },
   {
+    id: 'priority',
     accessorKey: 'priority',
     header: 'Prioridad',
     cell: (info) => (

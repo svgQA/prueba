@@ -11,6 +11,7 @@ type Actions = {
   setCompanies: (companies: ICompany[]) => void;
   setSelected: (company_id: string) => void;
   getSelected: () => ICompany | undefined;
+  getUser: () => IUser | null;
 };
 
 export const useUserStore = create<State & Actions>((set, get) => ({
@@ -33,6 +34,10 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   getSelected: () => {
     const { companies } = get();
     return companies.find((company) => company.selected);
+  },
+  getUser: () => {
+    const { user } = get();
+    return user;
   },
 }));
 

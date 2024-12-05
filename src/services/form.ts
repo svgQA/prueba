@@ -1,3 +1,14 @@
+import { IPagination } from '@/types';
+import {
+  IFormRequest,
+  IFormResponse,
+  IListRequest,
+  IListResponse,
+  IReportRequest,
+  IReportResponse,
+  IResponseRequest,
+  IResponseResponse,
+} from '@/types/form';
 import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
@@ -6,43 +17,88 @@ import {
 } from '@/utils/network/types';
 
 export class FormService extends BaseService {
-  static name: VoxServices = 'form';
-  static async create(data: any) {
+  static sname: VoxServices = 'form';
+  static async create(data: IFormRequest) {
     const model: IMakeRequest = {
-      url: ['create'],
+      url: ['form'],
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<any>(this.sname, model);
   }
 
-  static async update(data: any, id: string) {
+  static async update(data: IFormRequest, id: number) {
     const model: IMakeRequest = {
-      url: ['form', id],
+      url: ['form', String(id)],
       method: REQUEST_METHODS.PUT,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<IFormResponse>(this.sname, model);
   }
 
-  static async get_all() {
+  static async get_all(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
       url: ['form'],
-      headers: {
-        'voxline-tenant': 'form',
-      },
-      params: {
-        page: 1,
-        items: 10,
-      },
+      params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<IFormResponse>(this.sname, model);
+  }
+
+  static async get_list_all(params: IPagination = { page: 1, items: 10 }) {
+    const model: IMakeRequest = {
+      url: ['list'],
+      params: params as any,
+    };
+    return await super.make_request<IListResponse>(this.sname, model);
+  }
+
+  static async create_report(data: IReportRequest) {
+    const model: IMakeRequest = {
+      url: ['report'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<IResponseResponse>(this.sname, model);
+  }
+
+  static async get_report_all(params: IPagination = { page: 1, items: 10 }) {
+    const model: IMakeRequest = {
+      url: ['report'],
+      params: params as any,
+    };
+    return await super.make_request<IReportResponse>(this.sname, model);
+  }
+
+  static async create_response(data: IResponseRequest) {
+    const model: IMakeRequest = {
+      url: ['response'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<IResponseResponse>(this.sname, model);
+  }
+
+  static async get_response_all(params: IPagination = { page: 1, items: 10 }) {
+    const model: IMakeRequest = {
+      url: ['report'],
+      params: params as any,
+    };
+    return await super.make_request<IResponseResponse>(this.sname, model);
+  }
+
+  static async create_list(data: IListRequest) {
+    const model: IMakeRequest = {
+      url: ['list'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<IListResponse>(this.sname, model);
   }
 
   static async get_one(id: string) {
     const model: IMakeRequest = {
       url: ['form', id],
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<IFormResponse>(this.sname, model);
   }
 }

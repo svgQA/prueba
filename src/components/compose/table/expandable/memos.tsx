@@ -5,28 +5,28 @@ export const ExpandableMemos: FunctionComponent<IExpandableProps> = ({
   row,
 }: IExpandableProps) => {
   return (
-    <div className='p-6 bg-white rounded-lg shadow-md'>
+    <div className='p-6 bg-white rounded-lg shadow-md '>
       <div className='grid grid-cols-4 gap-4'>
         {/* Columna del Empleado */}
         <div className='space-y-1'>
           <h4 className='text-gray-600 mb-2 font-medium'>Datos del Empleado</h4>
           <img
-            src={row.workerPhoto || '/placeholder-image.jpg'}
+            src={row.workerPhoto || 'https://i.pravatar.cc/150?img=1'}
             alt='Foto del empleado'
-            className='w-32 h-32 rounded-full mb-4 object-cover hidden [&:not([src="/placeholder-image.jpg"])]:block'
+            className='w-32 h-32 rounded-full mb-4 object-cover'
           />
 
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Email:</span>
-            <span className='text-gray-800'>{row.workerEmail}</span>
+            <span className='text-gray-800 w-32'>Email:</span>
+            <span className='text-gray-600'>{row.workerEmail}</span>
           </div>
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Teléfono:</span>
-            <span className='text-gray-800'>{row.contact}</span>
+            <span className='text-gray-800 w-32'>Teléfono:</span>
+            <span className='text-gray-600'>{row.contact}</span>
           </div>
           <div className='flex items-center'>
-            <span className=' text-gray-600 w-32'>Turno:</span>
-            <span className='text-gray-800'>{row.shift}</span>
+            <span className=' text-gray-800 w-32'>Turno:</span>
+            <span className='text-gray-600'>{row.shift}</span>
           </div>
         </div>
 
@@ -36,45 +36,43 @@ export const ExpandableMemos: FunctionComponent<IExpandableProps> = ({
             Datos del Supervisor
           </h4>
           <img
-            src={row.supervisorPhoto || '/placeholder-image.jpg'}
+            src={row.supervisorPhoto || 'https://i.pravatar.cc/150?img=2'}
             alt='Foto del supervisor'
-            className='w-32 h-32 rounded-full mb-4 object-cover hidden [&:not([src="/placeholder-image.jpg"])]:block'
+            className='w-32 h-32 rounded-full mb-4 object-cover'
           />
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Nombre:</span>
-            <span className='text-gray-800'>{row.supervisor}</span>
+            <span className='text-gray-800 w-32'>Nombre:</span>
+            <span className='text-gray-600'>{row.supervisor}</span>
           </div>
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Email:</span>
-            <span className='text-gray-800'>{row.supervisorEmail}</span>
+            <span className='text-gray-800 w-32'>Email:</span>
+            <span className='text-gray-600'>{row.supervisorEmail}</span>
           </div>
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Teléfono:</span>
-            <span className='text-gray-800'>{row.supervisorPhone}</span>
+            <span className='text-gray-800 w-32'>Teléfono:</span>
+            <span className='text-gray-600'>{row.supervisorPhone}</span>
           </div>
         </div>
 
         {/* Columna del Cliente */}
         <div className='space-y-2'>
           <h4 className='text-gray-600 mb-2 font-medium'>Datos del Cliente</h4>
-          {row.clientPhoto && (
-            <img
-              src={row.clientPhoto}
-              alt='Foto del cliente'
-              className='w-32 h-32 rounded-full mb-4 object-cover'
-            />
-          )}
+          <img
+            src={row.clientPhoto || 'https://i.pravatar.cc/150?img=3'}
+            alt='Foto del cliente'
+            className='w-32 h-32 rounded-full mb-4 object-cover'
+          />
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Nombre:</span>
-            <span className='text-gray-800'>{row.clientName}</span>
+            <span className='text-gray-800 w-32'>Nombre:</span>
+            <span className='text-gray-600'>{row.clientName}</span>
           </div>
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Email:</span>
-            <span className='text-gray-800'>{row.clientEmail}</span>
+            <span className='text-gray-800 w-32'>Email:</span>
+            <span className='text-gray-600'>{row.clientEmail}</span>
           </div>
           <div className='flex items-center'>
-            <span className='text-gray-600 w-32'>Teléfono:</span>
-            <span className='text-gray-800'>{row.clientPhone}</span>
+            <span className='text-gray-800 w-32'>Teléfono:</span>
+            <span className='text-gray-600'>{row.clientPhone}</span>
           </div>
         </div>
 

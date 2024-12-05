@@ -1,4 +1,4 @@
-import { ELEMENT_TYPE, IElement } from '../store';
+import { ELEMENT_TYPE, IElement } from '@/types/form';
 
 export interface CardElementProps {
   id: string;
@@ -21,8 +21,8 @@ export const CardElement = ({
             <input
               type='text'
               placeholder='Text input'
-              className='border-2 border-b-dark-light'
               disabled
+              value={element.default}
             />
           </div>
         );
@@ -33,6 +33,7 @@ export const CardElement = ({
               placeholder='Text area'
               className='w-full min-h-6'
               disabled
+              value={element.default}
             />
           </div>
         );
@@ -44,6 +45,7 @@ export const CardElement = ({
               placeholder='123'
               className='w-full'
               disabled
+              value={element.default}
             />
           </div>
         );
@@ -51,51 +53,52 @@ export const CardElement = ({
         return (
           <div className='text-sm border border-zinc-300 rounded-md p-2 mt-1 flex flex-row'>
             <span className='vx-icon vx-icon-096' />
-            <select className='w-full ml-2' disabled>
-              <option>Select an option</option>
+            <select className='w-full ml-2'>
+              {Array.isArray(element.options) &&
+                element.options?.map((option, index) => (
+                  <option key={`se-option-${option.label}-${index}`}>
+                    {option.label}
+                  </option>
+                ))}
             </select>
           </div>
         );
       case ELEMENT_TYPE.RADIO_BUTTON:
         return (
           <div className='text-sm gap-3 flex flex-col mt-2'>
-            <label className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'>
-              <input
-                type='radio'
-                disabled
-                className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer'
-              />
-              <span className='text-gray-700'>Option 1</span>
-            </label>
-            <label className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'>
-              <input
-                type='radio'
-                disabled
-                className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer'
-              />
-              <span className='text-gray-700'>Option 2</span>
-            </label>
+            {Array.isArray(element.options) &&
+              element.options?.map((option, index) => (
+                <label
+                  key={`ra-option-${option.label}-${index}`}
+                  className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'
+                >
+                  <input
+                    type='radio'
+                    disabled
+                    className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer'
+                  />
+                  <span className='text-gray-700'>{option.label}</span>
+                </label>
+              ))}
           </div>
         );
       case ELEMENT_TYPE.CHECK_BOX:
         return (
           <div className='text-sm gap-3 flex flex-col mt-2'>
-            <label className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'>
-              <input
-                type='checkbox'
-                disabled
-                className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer border-gray-300'
-              />
-              <span className='text-gray-700'>Option 1</span>
-            </label>
-            <label className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'>
-              <input
-                type='checkbox'
-                disabled
-                className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer border-gray-300'
-              />
-              <span className='text-gray-700'>Option 2</span>
-            </label>
+            {Array.isArray(element.options) &&
+              element.options?.map((option, index) => (
+                <label
+                  key={`ch-option-${option.label}-${index}`}
+                  className='flex items-center cursor-pointer hover:bg-gray-50 rounded-lg transition-colors'
+                >
+                  <input
+                    type='checkbox'
+                    disabled
+                    className='w-4 h-4 mr-3 accent-teal-600 cursor-pointer border-gray-300'
+                  />
+                  <span className='text-gray-700'>{option.label}</span>
+                </label>
+              ))}
           </div>
         );
       case ELEMENT_TYPE.SWITCH:
@@ -160,6 +163,17 @@ export const CardElement = ({
               <div className='text-center text-gray-500'>
                 <span className='vx-icon vx-icon-132 text-2xl block mb-1' />
                 <span>Escanear código QR</span>
+              </div>
+            </div>
+          </div>
+        );
+      case ELEMENT_TYPE.BARCODE:
+        return (
+          <div className='text-sm border border-zinc-300 rounded-md p-2 mt-1'>
+            <div className='h-24 bg-gray-50 rounded flex items-center justify-center border-2 border-dashed'>
+              <div className='text-center text-gray-500'>
+                <span className='vx-icon vx-icon-132 text-2xl block mb-1' />
+                <span>Escanear código Barcode</span>
               </div>
             </div>
           </div>

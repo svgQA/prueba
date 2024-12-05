@@ -1,17 +1,56 @@
-import { FORM_ITEM } from './form.enum';
+import { IOption } from '@/components/common/interface';
+import { ELEMENT_TYPE } from './form.enum';
+import { ITask } from '../shift';
 
-export interface IFormElement {
-  type: FORM_ITEM;
-  label: string;
-  description: string;
-  icon: string;
-  admin: boolean;
+interface IBase {
   id: string;
-  selected?: boolean;
+  label: string;
+  description?: string;
 }
 
-export interface IFormItem {
-  label: string;
-  icon: string;
-  type: FORM_ITEM;
+interface ICondition {
+  id: number;
+  item: string;
+  children: string[];
+}
+
+export interface IElement extends IBase {
+  type: ELEMENT_TYPE; // SECTION
+
+  required?: boolean;
+  invisible?: boolean;
+  disable?: boolean;
+
+  assigned?: boolean;
+  regex?: string; // INPUT
+  size?: number; // Text Area, Image.
+  maxNumberFiles?: number; // Cantiadad de imagenes
+  default?: any;
+  min?: number;
+  max?: number;
+
+  section?: string;
+  parent?: string; // le asigno el valor de los hijos
+  elements?: IElement[]; // Optional nested elements for sections
+  tasks?: ITask[];
+  url?: string;
+  list?: number | string;
+
+  // options?: number;
+  options?: IOption[]; // para un dropdown, selector, checkbox, switch
+  // conditions?: ICondition[];
+}
+
+export interface IPage extends IBase {
+  elements: IElement[];
+}
+
+export interface IFormat extends IBase {
+  pages: IPage[];
+}
+
+export interface IElementSelected {
+  id: string;
+  page: string;
+  section?: string;
 }

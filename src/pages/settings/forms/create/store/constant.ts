@@ -1,14 +1,10 @@
-import { ELEMENT_TYPE } from './types';
+import { ELEMENT_TYPE } from '@/types/form';
 
 export const ELEMENT_TYPE_VALUES = [
   {
     value: ELEMENT_TYPE.TITLE,
     label: 'Title',
   },
-  // {
-  //   value: ELEMENT_TYPE.PARAGRAPH,
-  //   label: 'Paragraph',
-  // },
   {
     value: ELEMENT_TYPE.INPUT,
     label: 'Input',
@@ -62,6 +58,10 @@ export const ELEMENT_TYPE_VALUES = [
     label: 'QR',
   },
   {
+    value: ELEMENT_TYPE.BARCODE,
+    label: 'Barcode',
+  },
+  {
     value: ELEMENT_TYPE.AUDIO,
     label: 'Audio',
   },
@@ -76,5 +76,44 @@ export const ELEMENT_TYPE_VALUES = [
   {
     value: ELEMENT_TYPE.FILES,
     label: 'Files',
+  },
+];
+
+export const REGEX_PATTERNS = [
+  {
+    value: '^[A-Za-z0-9]+$',
+    label: 'Alphanumeric only',
+  },
+  {
+    value: '^[A-Za-z]+$',
+    label: 'Letters only',
+  },
+  {
+    value: '^[0-9]+$',
+    label: 'Numbers only',
+  },
+  {
+    value: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$',
+    label: 'Email',
+  },
+  {
+    value: '^(\\+\\d{1,2}\\s?)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$',
+    label: 'Phone number',
+  },
+  {
+    value:
+      '^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$',
+    label: 'URL',
+  },
+];
+
+export const SWITCH_OPTIONS = [
+  {
+    value: 0,
+    label: 'False',
+  },
+  {
+    value: 1,
+    label: 'True',
   },
 ];

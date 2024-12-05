@@ -14,51 +14,42 @@ import { authModel } from '@/store/signals/access';
 
 import { IMenu } from '@/components/common/interface';
 import { useSignal } from '@preact/signals';
-import { useEffect, useCallback } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { MenuButtons, MenuList } from './components';
 import { RoutingContent } from './routing';
+import {
+  appendHistory,
+  currentPosition,
+  historyLocation,
+  menuInformationSelected,
+  setMenu,
+} from './store';
 
 export const SettingsModal = () => {
   const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
-  const historyLocation = useSignal<IMenu[]>([]);
-  const currentPosition = useSignal<number>(0);
-  const menuInformationSelected = useSignal<IMenu>({
-    description: '',
-    label: '',
-    to: '',
-    id: '',
-  });
   const [_, navigate] = useLocation();
 
   // TODO: Revisar esta parte para cuando se abre y ya existia un menu seleccionado.
-  useEffect(() => {
-    if (getStatusSettingModal.value) {
-      if (!menuInformationSelected.value.to) {
-        const adminMenu = menuSettings.value[0]?.menus[0];
-        if (adminMenu) {
-          const menuSelected = {
-            ...adminMenu,
-            to: `/setting${adminMenu.base}/`,
-          };
-          appendHistory(menuSelected);
-          navigate(menuSelected.to);
-        }
-      }
-    }
-  }, [getStatusSettingModal.value]);
+  // useEffect(() => {
+  //   if (getStatusSettingModal.value) {
+  //     if (!menuInformationSelected.value.to) {
+  //       const adminMenu = menuSettings.value[0]?.menus[0];
+  //       if (adminMenu) {
+  //         const menuSelected = {
+  //           ...adminMenu,
+  //           to: `/setting${adminMenu.base}/`,
+  //         };
+  //         appendHistory(menuSelected, setMenuSelected);
+  //         navigate(menuSelected.to);
+  //       }
+  //     }
+  //   }
+  // }, [getStatusSettingModal.value]);
 
   const setMenuSelected = (menu: IMenu) => {
-    menuInformationSelected.value = menu;
+    setMenu(menu);
     navigate(menu.to);
-  };
-
-  const appendHistory = (menu: IMenu) => {
-    const position = currentPosition.value;
-    const cleanHistory = historyLocation.value.slice(0, position + 1);
-    currentPosition.value = cleanHistory.length;
-    historyLocation.value = [...cleanHistory, menu];
-    setMenuSelected(menu);
   };
 
   const goBack = useCallback(() => {
@@ -73,11 +64,6 @@ export const SettingsModal = () => {
     setMenuSelected(historyLocation.value[currentPosition.value]);
   }, []);
 
-  const toggleTheme = useCallback((event: MouseEvent) => {
-    event.stopPropagation();
-    document.body.classList.toggle('dark');
-  }, []);
-
   const selectMenu = useCallback((event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (target.nodeName === 'A') {
@@ -87,7 +73,7 @@ export const SettingsModal = () => {
       const id = target.getAttribute('id');
       if (!to || !label || !description || !id) return;
       const menuSelected = { to, description, label, id };
-      appendHistory(menuSelected);
+      appendHistory(menuSelected, setMenuSelected);
     }
   }, []);
 
@@ -97,13 +83,10 @@ export const SettingsModal = () => {
       onClose={toggleSettingModal}
       name='setting-modal'
       id='setting-modal'
+      expandable
       header={
         <>
-          <MenuButtons
-            goBack={goBack}
-            goForward={goForward}
-            toggleTheme={toggleTheme}
-          />
+          <MenuButtons goBack={goBack} goForward={goForward} />
           <div className='min-w-40 flex flex-row'>
             <Search
               id='search-general'

@@ -5,9 +5,25 @@ import {
   PrioritySection,
 } from '../expansible/expansible';
 
+export enum ROW_ACTIONS {
+  UPDATE,
+  CREATE,
+  DELETE,
+}
+
+export interface IRowAction {
+  id: number | string;
+  type: string;
+  action: ROW_ACTIONS;
+}
+
 export interface ITableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
   pageSize?: number;
   expandable?: (row: Row<T>) => VNode;
+  unscroll?: boolean;
+  unsettings?: boolean;
+  visibility?: { [key: string]: boolean };
+  onClickAction?: (action: IRowAction) => void;
 }

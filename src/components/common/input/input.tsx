@@ -15,23 +15,33 @@ export const Input = ({
   onChange,
   onKeyUp,
   placeholder,
+  meta,
+  end,
+  tabIndex,
+  borderless,
+  thin,
+  ...props
 }: IInputProps) => {
   return (
-    <div
-      id={id}
-      name={name}
-      className='w-full my-1 border-b-light-dark dark:border-b-dark-light border-2'
-    >
-      <label
-        for={`${id}-input`}
-        className='capitalize block text-sm font-medium'
+    <div id={id} name={name} className='w-full my-1'>
+      {label && (
+        <label
+          for={`${id}-input`}
+          className='capitalize block text-sm font-medium'
+        >
+          {label}
+        </label>
+      )}
+      <div
+        className={`${borderless ? '' : 'border-b-light-dark dark:border-b-dark-light border'} rounded flex flex-row items-center`}
       >
-        {label}
-      </label>
-      <div className='relative rounded flex items-center'>
+        {!end && icon && (
+          <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
+        )}
         <input
-          className='w-full p-2.5 rounded pl-10 border capitalize'
+          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'} [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
           onChange={onChange}
+          name={name}
           onKeyUp={onKeyUp}
           type={type}
           value={value}
@@ -42,9 +52,12 @@ export const Input = ({
           placeholder={placeholder}
           pattern={pattern}
           required={required}
+          tabIndex={tabIndex}
+          {...props}
         />
-        {icon && <span className={`absolute left-0 px-2 vx-icon vx-${icon}`} />}
+        {end && icon && <span className={`vox-icon vx-icon-${icon}`} />}
       </div>
+      {meta && meta.touched && meta.error && <span>{meta?.error}</span>}
     </div>
   );
 };

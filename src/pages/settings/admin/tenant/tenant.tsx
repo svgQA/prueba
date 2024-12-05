@@ -1,11 +1,12 @@
-import { Expand } from '@/components/common';
-import { IInstance } from '@/types';
+import { Section, Table } from '@/components/common';
+import { CardData } from '@/components/compose';
 import { type FunctionComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
+import { columns } from './components';
+import { tenantData } from './utils/tenant.data';
+import { IUserResponse } from '@/types/auth';
 
 export const TenantSettingPage: FunctionComponent = () => {
-  const [instances] = useState<IInstance[]>([]);
-
   useEffect(() => {
     document.title = 'Tenant Settings';
     getTenant();
@@ -14,32 +15,34 @@ export const TenantSettingPage: FunctionComponent = () => {
   const getTenant = async () => {};
 
   return (
-    <section className='h-full'>
-      TENANT
-      {instances.map((instance) => (
-        <Expand
-          key={`instances-id-${instance.name}`}
-          name={`instances-id-${instance.name}`}
-          header={
-            <>
-              <h3 className='text-xl font-bold'>{instance.name}</h3>
-              <div>
-                <p className='text-sm text-gray-500'>{instance.id}</p>
-                <div className='flex flex-row justify-between'>
-                  <p>{instance.host}</p>
-                  <p>{instance.port}</p>
-                  <p>{instance.url}</p>
-                  <p>{instance.count}</p>
-                  <p>{instance.database}</p>
-                  <p>{instance.status}</p>
-                </div>
-              </div>
-            </>
-          }
-        >
-          {instance?.tenants?.map((tenant) => <div>{tenant.name}</div>)}
-        </Expand>
-      ))}
-    </section>
+    <Section>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+        <CardData
+          title='Total Marcas'
+          count={400}
+          subtitle='Tenant registrados'
+          color='text-secondary'
+          icon='171'
+        />
+
+        <CardData
+          title='Nuevas Marcas'
+          count={300}
+          subtitle='En este momento'
+          color='text-primary'
+          icon='020'
+        />
+
+        <CardData
+          title='Numero de Empresas'
+          count={200}
+          subtitle='Total'
+          color='text-error'
+          icon='110'
+        />
+      </div>
+
+      <Table<IUserResponse> data={tenantData} columns={columns} />
+    </Section>
   );
 };

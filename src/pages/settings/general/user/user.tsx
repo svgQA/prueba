@@ -1,51 +1,46 @@
-import { type FunctionComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
 import { Section, Table } from '@/components/common';
-
-import { type User, userData } from './utils';
-import { columns } from './components';
-import { ExpandableUser } from '@/components/compose/table/expandable/user';
 import { CardData } from '@/components/compose';
+import { type FunctionComponent } from 'preact';
+import { useEffect } from 'preact/hooks';
+import { userData } from './utils/user.data';
+import { columns } from './components';
+import { User } from './utils';
 
 export const UserSettingPage: FunctionComponent = () => {
-  const [data, setData] = useState<User[]>([]);
+  // const [data, setData] = useState<User[]>([]);
   useEffect(() => {
     document.title = 'User Settings';
-    setData(userData);
+    // setData(userData);
   }, []);
   return (
     <Section>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='Conectados'
-          count={1000}
-          subtitle='Usuarios Conectados'
+          title='Total Usuario'
+          count={400}
+          subtitle='Usuarios registrados'
           color='text-secondary'
-          icon='190'
+          icon='171'
         />
 
         <CardData
-          title='Inactivos'
+          title='Clientes'
           count={300}
-          subtitle='Usuarios Inactivos'
+          subtitle='Clientes registrados'
           color='text-primary'
-          icon='191'
+          icon='020'
         />
 
         <CardData
-          title='Nunca'
+          title='Administradores'
           count={200}
-          subtitle='Usuarios Nunca Conectados'
+          subtitle='Administradores Registrados'
           color='text-error'
-          icon='192'
+          icon='110'
         />
       </div>
-      <Table<User>
-        data={data}
-        columns={columns}
-        pageSize={16}
-        expandable={(row: User) => <ExpandableUser row={row} />}
-      />
+
+      <Table<User> data={userData} columns={columns} />
     </Section>
   );
 };
