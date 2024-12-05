@@ -14,7 +14,7 @@ import { authModel } from '@/store/signals/access';
 
 import { IMenu } from '@/components/common/interface';
 import { useSignal } from '@preact/signals';
-import { useEffect, useCallback } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { MenuButtons, MenuList } from './components';
 import { RoutingContent } from './routing';
@@ -31,21 +31,21 @@ export const SettingsModal = () => {
   const [_, navigate] = useLocation();
 
   // TODO: Revisar esta parte para cuando se abre y ya existia un menu seleccionado.
-  useEffect(() => {
-    if (getStatusSettingModal.value) {
-      if (!menuInformationSelected.value.to) {
-        const adminMenu = menuSettings.value[0]?.menus[0];
-        if (adminMenu) {
-          const menuSelected = {
-            ...adminMenu,
-            to: `/setting${adminMenu.base}/`,
-          };
-          appendHistory(menuSelected, setMenuSelected);
-          navigate(menuSelected.to);
-        }
-      }
-    }
-  }, [getStatusSettingModal.value]);
+  // useEffect(() => {
+  //   if (getStatusSettingModal.value) {
+  //     if (!menuInformationSelected.value.to) {
+  //       const adminMenu = menuSettings.value[0]?.menus[0];
+  //       if (adminMenu) {
+  //         const menuSelected = {
+  //           ...adminMenu,
+  //           to: `/setting${adminMenu.base}/`,
+  //         };
+  //         appendHistory(menuSelected, setMenuSelected);
+  //         navigate(menuSelected.to);
+  //       }
+  //     }
+  //   }
+  // }, [getStatusSettingModal.value]);
 
   const setMenuSelected = (menu: IMenu) => {
     setMenu(menu);

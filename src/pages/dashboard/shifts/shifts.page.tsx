@@ -6,10 +6,22 @@ import { type Shift, shiftsData } from './utils';
 import { columns } from './components';
 import { ExpandableShift } from '@/components/compose';
 import { CardData } from '@/components/compose';
+import { useSignal } from '@preact/signals';
+import { IReportResponse } from '@/types/form';
+import { FormService } from '@/services';
 
 export const ShiftsPage: FunctionalComponent = () => {
+  const reports = useSignal<IReportResponse[]>([]);
+
+  const getReportHandler = async () => {
+    const response = await FormService.get_report_all();
+    if (!response.getStatus()) return;
+    reports.value = response.getMany();
+  };
+
   useEffect(() => {
     document.title = 'VX - Shifts Service';
+    getReportHandler();
   }, []);
 
   return (

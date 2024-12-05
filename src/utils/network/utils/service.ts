@@ -97,8 +97,7 @@ export class BaseService {
     prefix?: boolean,
     tenance: boolean = true
   ): Promise<GenericResponse<T>> {
-    this.openLoading();
-
+    // this.openLoading();
     try {
       const model_request = this.make_request_model(
         instance,
@@ -133,7 +132,7 @@ export class BaseService {
       console.error(error);
       throw new Error('ERROR: processing response');
     } finally {
-      this.closeLoading();
+      // this.closeLoading();
     }
   }
 }
