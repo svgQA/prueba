@@ -1,66 +1,11 @@
-import { FunctionComponent } from 'preact';
 import { ColumnDef } from '@tanstack/react-table';
 import { User } from '../utils/user';
-import { PBadge2 } from '@/components/common/connection/connection';
-
-import dayjs from 'dayjs';
-
-export const ProgressBar: FunctionComponent<{ progress: number }> = ({
-  progress,
-}) => (
-  <div className='flex items-center w-full'>
-    <div className='w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700'>
-      <div
-        className='bg-blue-600 h-2.5 rounded-full'
-        style={{ width: `${progress}%` }}
-      ></div>
-    </div>
-    <span className='text-sm font-medium'>{progress}%</span>
-  </div>
-);
-
-export const InfoIcon: FunctionComponent<{
-  onClick: () => void;
-  isExpanded: boolean;
-}> = ({ onClick, isExpanded }) => (
-  <button
-    onClick={onClick}
-    className='rounded-full hover:bg-gray-200 transition-colors duration-200'
-  >
-    <span
-      className={`vx-icon mx-1 vx-${isExpanded ? 'logo' : 'sensor'} size-sm`}
-    />
-  </button>
-);
-
-export const FormattedDate: FunctionComponent<{ date: string }> = ({
-  date,
-}) => {
-  return (
-    <div className='flex items-center'>
-      <span className='vx-icon-025" size-sm'></span>
-      <span>{dayjs(date).format('YYYY-MM-DD HH:mm')}</span>
-    </div>
-  );
-};
+import { Badge } from '@/components/common';
 
 export const columns: ColumnDef<User>[] = [
   {
-    accessorKey: 'id',
-    header: 'ID',
-    cell: (info) => (
-      <div className='flex items-center'>
-        <span
-          onClick={() => info.row.toggleExpanded()}
-          className='vox-icon vx-icon-005 cursor-pointer'
-        />
-        <span>{String(info.getValue())}</span>
-      </div>
-    ),
-  },
-  {
-    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     header: 'Nombre',
+    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
   },
   {
     accessorKey: 'personalID',
@@ -74,11 +19,6 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: 'company',
     header: 'Compañia',
   },
-  // {
-  //   accessorKey: 'address',
-  //   header: 'Dirección',
-  //   cell: (info) => <span>{String(info.getValue())}</span>,
-  // },
   {
     accessorKey: 'department',
     header: 'Departamento',
@@ -87,9 +27,13 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: 'connection',
     header: 'Conexión',
     cell: (info) => (
-      <PBadge2
-        connection={info.getValue() as 'Conectado' | 'Inactivo' | 'Nunca'}
-      />
+      <div className='flex flex-row justify-center'>
+        <Badge
+          label={info.getValue() as string}
+          bgColor='bg-primary'
+          icon='067'
+        />
+      </div>
     ),
   },
 ];

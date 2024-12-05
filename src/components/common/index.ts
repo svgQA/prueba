@@ -26,7 +26,6 @@ export * from './table/table';
 export * from './search/search';
 export * from './logo/logo';
 export * from './priority/priority';
-export * from './connection/connection';
 export * from './section/section';
 
 export * from './loading/loading';
