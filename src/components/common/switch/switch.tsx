@@ -33,7 +33,7 @@ export const Switch: FunctionComponent<ISwitchProps> = ({
         after:h-3 after:w-3 after:transition-all peer-checked:bg-primary"
         />
       </div>
-      <label htmlFor={id} className='cursor-pointer'>
+      <label htmlFor={id} className='cursor-pointer capitalize'>
         {label}
       </label>
     </div>

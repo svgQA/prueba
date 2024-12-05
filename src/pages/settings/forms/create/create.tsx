@@ -49,8 +49,14 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       description: getForm.value.description || getForm.value.label,
       structure: getForm.value,
     };
-    const response = await FormService.create(format);
-    if (!response.getStatus()) return;
+    if (getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE) {
+      if (!getFormMode.value.id) return;
+      const response = await FormService.update(format, getFormMode.value.id);
+      if (!response.getStatus()) return;
+    } else {
+      const response = await FormService.create(format);
+      if (!response.getStatus()) return;
+    }
     navigate('/form');
   };
 
@@ -140,7 +146,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             name='bnt-create-form'
             type='button'
             label={
-              getFormMode.value === FORMAT_MODE_SERVICE.UPDATE
+              getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE
                 ? 'Update'
                 : 'Create'
             }

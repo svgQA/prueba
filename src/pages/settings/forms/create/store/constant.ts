@@ -58,6 +58,10 @@ export const ELEMENT_TYPE_VALUES = [
     label: 'QR',
   },
   {
+    value: ELEMENT_TYPE.BARCODE,
+    label: 'Barcode',
+  },
+  {
     value: ELEMENT_TYPE.AUDIO,
     label: 'Audio',
   },

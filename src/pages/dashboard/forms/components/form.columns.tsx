@@ -1,25 +1,14 @@
-import { IFormResponse } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
-import { ROW_ACTIONS } from '@/components/common/interface';
 import { RelativeTime } from '@/components/common';
+import { ROW_ACTIONS } from '@/components/common/interface';
+import { IResponseResponse } from '@/types/form';
 
-export const columns: ColumnDef<IFormResponse>[] = [
+export const columns: ColumnDef<IResponseResponse>[] = [
   {
-    accessorKey: 'title',
-    id: 'title',
-    header: 'Título',
-    cell: (info) => {
-      const { title, description } = info.row.original;
-      return (
-        <div className='flex items-center'>
-          <span className='vox-icon vx-icon-152 mt-1 size-sm' />
-          <div className='flex flex-col ml-3'>
-            <div className='font-bold'>{String(title)}</div>
-            <div className='text-sm text-gray-500'>{String(description)}</div>
-          </div>
-        </div>
-      );
-    },
+    id: 'id',
+    accessorKey: 'id',
+    size: 60,
+    header: 'ID',
   },
   {
     accessorKey: 'createdAt',
@@ -34,14 +23,8 @@ export const columns: ColumnDef<IFormResponse>[] = [
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
-    accessorKey: 'category',
-    id: 'category',
-    header: 'Categoría',
-    cell: (info) => info.getValue() || '-',
-  },
-  {
-    id: 'action',
-    size: 10,
+    id: 'actions',
+    size: 20,
     cell: (info) => {
       const { id } = info.row.original;
       return (
@@ -49,13 +32,13 @@ export const columns: ColumnDef<IFormResponse>[] = [
           <span
             className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
             data-id={id}
-            data-type='form'
+            data-type='shift'
             data-action={ROW_ACTIONS.UPDATE}
           ></span>
           <span
             className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
             data-id={id}
-            data-type='form'
+            data-type='shift'
             data-action={ROW_ACTIONS.DELETE}
           ></span>
         </div>

@@ -1,0 +1,48 @@
+import { FunctionComponent } from 'preact';
+import { IGaugeProps } from './interface';
+
+export const Gauge: FunctionComponent<IGaugeProps> = ({
+  progress,
+  size = 10,
+  stroke = 10,
+}) => (
+  <div className={`flex items-center gap-2`}>
+    <div className={`w-${size} h-${size} relative`}>
+      <svg className='w-full h-full' viewBox='0 0 100 100'>
+        <circle
+          className='stroke-gray-200 dark:stroke-gray-700 fill-none'
+          cx='50'
+          cy='50'
+          r='45'
+          strokeWidth={stroke}
+        />
+        <circle
+          className='stroke-blue-600 fill-none'
+          cx='50'
+          cy='50'
+          r='45'
+          strokeWidth={stroke}
+          strokeLinecap='round'
+          style={{
+            strokeDasharray: `${2 * Math.PI * 45}`,
+            strokeDashoffset: `${2 * Math.PI * 45 * (1 - progress / 100)}`,
+            transform: 'rotate(-90deg)',
+            transformOrigin: 'center',
+          }}
+        />
+        {size >= 15 && (
+          <text
+            x='50'
+            y='50'
+            className='text-sm font-medium'
+            dominantBaseline='middle'
+            textAnchor='middle'
+          >
+            {progress}%
+          </text>
+        )}
+      </svg>
+    </div>
+    {size < 15 && <span className='text-base font-medium'>{progress}%</span>}
+  </div>
+);

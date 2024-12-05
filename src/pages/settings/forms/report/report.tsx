@@ -1,6 +1,10 @@
 import { Button, Input, Switch } from '@/components/common';
 import { useSignal } from '@preact/signals';
 import { PropsWithChildren } from 'preact/compat';
+import { TargetedEvent } from 'preact/compat';
+import { getReport, ReportKey, updateReport } from './store';
+import { IReportRequest } from '@/types/form';
+import { FormService } from '@/services';
 
 interface TabProps extends PropsWithChildren {
   title: string;
@@ -52,7 +56,27 @@ const TabContainer = ({ children, className }: TabContainerProps) => {
 };
 
 export const FormReportSettingPage = () => {
-  const viewMode = useSignal('pdf');
+  const handleChange = (
+    e: TargetedEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.currentTarget;
+    const vout =
+      type === 'checkbox'
+        ? (e.currentTarget as HTMLInputElement).checked
+        : value;
+    if (!name || !value) return;
+    updateReport(name as ReportKey, vout);
+  };
+
+  const saveReport = async () => {
+    const report: IReportRequest = {
+      title: getReport.value.title,
+      description: getReport.value.title,
+      structure: getReport.value,
+    };
+    const response = await FormService.create_report(report);
+    if (!response.getStatus()) return;
+  };
 
   return (
     <div className='flex w-full mt-3'>
@@ -60,10 +84,12 @@ export const FormReportSettingPage = () => {
         <div className='space-y-2'>
           <h2 className='text-xl font-bold'>New Format</h2>
           <Input
-            name='title-format'
+            name='title'
             id='in-title-format'
             placeholder='Name Format'
             borderless
+            onChange={handleChange}
+            value={getReport.value.title}
           />
         </div>
         <TabContainer className='w-full min-h-[50vh]'>
@@ -79,7 +105,7 @@ export const FormReportSettingPage = () => {
                   <p className='text-gray-600'>
                     Drop your cover page file here or click to browse
                   </p>
-                  <input type='file' className='hidden' />
+                  <input type='file' name='coverPage' className='hidden' />
                 </div>
               </div>
 
@@ -93,7 +119,12 @@ export const FormReportSettingPage = () => {
                   <p className='text-gray-600'>
                     Drop your logo here or click to upload
                   </p>
-                  <input type='file' accept='image/*' className='hidden' />
+                  <input
+                    type='file'
+                    name='logo'
+                    accept='image/*'
+                    className='hidden'
+                  />
                 </div>
               </div>
 
@@ -102,7 +133,12 @@ export const FormReportSettingPage = () => {
                   <i className='fas fa-expand-arrows-alt text-gray-600'></i>
                   <h3 className='text-lg font-medium'>PDF Size</h3>
                 </div>
-                <select className='w-full p-2 border rounded-lg'>
+                <select
+                  name='pdfSize'
+                  className='w-full p-2 border rounded-lg'
+                  value={getReport.value.pdfSize}
+                  onChange={handleChange}
+                >
                   <option value='a4'>A4</option>
                   <option value='letter'>US Letter</option>
                 </select>
@@ -114,13 +150,43 @@ export const FormReportSettingPage = () => {
                   <h3 className='text-lg font-medium'>Thumbnail Size</h3>
                 </div>
                 <div className='grid grid-cols-3 gap-3'>
-                  <div className='border rounded-lg p-3 text-center cursor-pointer hover:bg-gray-50'>
+                  <div
+                    className='border rounded-lg p-3 text-center cursor-pointer hover:bg-gray-50'
+                    onClick={() => {
+                      const event = new Event('change') as any;
+                      event.currentTarget = {
+                        name: 'thumbnailSize',
+                        value: 'small',
+                      };
+                      handleChange(event);
+                    }}
+                  >
                     Small
                   </div>
-                  <div className='border rounded-lg p-3 text-center cursor-pointer hover:bg-gray-50'>
+                  <div
+                    className='border rounded-lg p-3 text-center cursor-pointer hover:bg-gray-50'
+                    onClick={() => {
+                      const event = new Event('change') as any;
+                      event.currentTarget = {
+                        name: 'thumbnailSize',
+                        value: 'medium',
+                      };
+                      handleChange(event);
+                    }}
+                  >
                     Medium
                   </div>
-                  <div className='border rounded-lg p-3 text-center cursor-pointer hover:bg-gray-50'>
+                  <div
+                    className='border rounded-lg p-3 text-center cursor-pointer hover:bg-gray-50'
+                    onClick={() => {
+                      const event = new Event('change') as any;
+                      event.currentTarget = {
+                        name: 'thumbnailSize',
+                        value: 'large',
+                      };
+                      handleChange(event);
+                    }}
+                  >
                     Large
                   </div>
                 </div>
@@ -129,65 +195,92 @@ export const FormReportSettingPage = () => {
           </Tab>
           <Tab title='Content'>
             <div className='w-full space-y-2'>
-              <Switch id='cb-form-header' name='header' label='Header' />
-              <Switch id='cb-form-footer' name='footer' label='Footer' />
+              <Switch
+                id='cb-form-header'
+                name='header'
+                label='Header'
+                value={getReport.value.header}
+                onChange={handleChange}
+              />
+              <Switch
+                id='cb-form-footer'
+                name='footer'
+                label='Footer'
+                value={getReport.value.footer}
+                onChange={handleChange}
+              />
               <Switch
                 id='cb-form-page-break'
                 name='pageBreak'
                 label='Page Break'
+                value={getReport.value.pageBreak}
+                onChange={handleChange}
               />
               <Switch
                 id='cb-form-flagged-items'
                 name='flaggedItems'
                 label='Flagged Items'
+                value={getReport.value.flaggedItems}
+                onChange={handleChange}
               />
-              <Switch id='cb-form-actions' name='actions' label='Actions' />
+              <Switch
+                id='cb-form-actions'
+                name='actions'
+                label='Actions'
+                value={getReport.value.actions}
+                onChange={handleChange}
+              />
               <Switch
                 id='cb-form-disclaimer'
                 name='disclaimer'
                 label='Disclaimer'
+                value={getReport.value.disclaimer}
+                onChange={handleChange}
               />
               <Switch
                 id='cb-form-media-summary'
                 name='mediaSummary'
                 label='Media Summary'
+                value={getReport.value.mediaSummary}
+                onChange={handleChange}
               />
             </div>
           </Tab>
-          {/*
-          <Tab title='Template'>
-            <div className='w-full'>Email template settings here</div>
-          </Tab>
-          */}
         </TabContainer>
-        <div className='space-y-2 w-full flex absolute bottom-0 left-4'>
-          <Button
-            name='button-safe-format'
-            id='button-safe-format'
-            className='w-80 bg-primary'
-            type='button'
-            label='Save'
-            icon='456'
-          />
-        </div>
       </div>
       <div className='w-[75%] p-4'>
         <div className='flex justify-between items-center mb-6 border-b pb-4'>
           <h1 className='text-2xl font-bold'>Report</h1>
           <div className='space-x-2'>
             <Button
-              name='pdf-view'
+              name='btn-pdf-view'
+              id='btn-pdf-view'
               type='button'
               label='PDF View'
+              icon='156'
+            />
+            {/*
               className={`${viewMode.value === 'pdf' ? 'bg-primary' : 'bg-gray-200'}`}
               onClick={() => (viewMode.value = 'pdf')}
-            />
+            */}
             <Button
-              name='web-view'
+              name='btn-web-view'
+              id='btn-web-view'
               type='button'
               label='Web View'
+              icon='056'
+            />
+            {/*
               className={`${viewMode.value === 'web' ? 'bg-primary' : 'bg-gray-200'}`}
               onClick={() => (viewMode.value = 'web')}
+            */}
+            <Button
+              name='btn-safe-format'
+              id='btn-safe-format'
+              type='button'
+              label='Save'
+              icon='156'
+              onClick={saveReport}
             />
           </div>
         </div>
