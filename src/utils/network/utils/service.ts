@@ -51,7 +51,7 @@ export class BaseService {
       url = `${url}?${queryParams.toString()}`;
     }
     const method = model?.method || REQUEST_METHODS.GET;
-    if (method === REQUEST_METHODS.POST) {
+    if (method === REQUEST_METHODS.POST || method === REQUEST_METHODS.PUT) {
       if (!model.uncontent) {
         model.headers = {
           ...model?.headers,
@@ -70,12 +70,13 @@ export class BaseService {
       model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
     }
 
-    return {
+    const output = {
       header: model.headers as any,
       data: model.data,
       url,
       method,
     };
+    return output;
   }
 
   static async make_request<T>(

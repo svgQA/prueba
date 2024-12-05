@@ -27,7 +27,10 @@ export const FormSettingPage = () => {
     const format = forms.value.find((format) => format.id == action.id);
     if (!format?.structure) throw Error('ERROR: Not exist format in this form');
     try {
-      setFormat(format.structure, FORMAT_MODE_SERVICE.UPDATE);
+      setFormat(format.structure, {
+        mode: FORMAT_MODE_SERVICE.UPDATE,
+        id: format.id,
+      });
       navigate('/form/create');
     } catch {
       throw Error('ERROR: Not allowed convert form-struct.');

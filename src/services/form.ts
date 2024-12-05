@@ -23,13 +23,13 @@ export class FormService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async update(data: any, id: string) {
+  static async update(data: IFormRequest, id: number) {
     const model: IMakeRequest = {
-      url: ['form', id],
+      url: ['form', String(id)],
       method: REQUEST_METHODS.PUT,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<IFormResponse>(this.name, model);
   }
 
   static async get_all(params: IPagination = { page: 1, items: 10 }) {
