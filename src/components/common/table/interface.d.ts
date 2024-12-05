@@ -5,10 +5,16 @@ import {
   PrioritySection,
 } from '../expansible/expansible';
 
+export enum ROW_ACTIONS {
+  UPDATE,
+  CREATE,
+  DELETE,
+}
+
 export interface IRowAction {
   id: number | string;
   type: string;
-  action: string;
+  action: ROW_ACTIONS;
 }
 
 export interface ITableProps<T> {

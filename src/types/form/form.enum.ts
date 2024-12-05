@@ -20,4 +20,5 @@ export enum ELEMENT_TYPE {
   /*[+]*/ FILES, // Label + (conditions) + description + size + numberFiles
   /*[+]*/ SECTION, // Label + description,
   /*[+]*/ CONTROLLER, // Label + description (NO PENSAR EN ESTO)
+  /*[+]*/ BARCODE, // Label + (conditions) + description
 }

@@ -21,4 +21,5 @@ export interface IGenericData {
 
 export interface IMakeRequest extends IModelRequest {
   url: string[];
+  uncontent?: boolean;
 }

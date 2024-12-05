@@ -167,6 +167,17 @@ export const CardElement = ({
             </div>
           </div>
         );
+      case ELEMENT_TYPE.BARCODE:
+        return (
+          <div className='text-sm border border-zinc-300 rounded-md p-2 mt-1'>
+            <div className='h-24 bg-gray-50 rounded flex items-center justify-center border-2 border-dashed'>
+              <div className='text-center text-gray-500'>
+                <span className='vx-icon vx-icon-132 text-2xl block mb-1' />
+                <span>Escanear código Barcode</span>
+              </div>
+            </div>
+          </div>
+        );
       case ELEMENT_TYPE.AUDIO:
         return (
           <div className='text-sm border border-zinc-300 rounded-md p-2 mt-1'>

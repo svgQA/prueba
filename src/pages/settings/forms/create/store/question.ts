@@ -2,6 +2,7 @@ import { ELEMENT_TYPE, IElement, IFormat, IPage } from '@/types/form';
 import { computed, signal } from '@preact/signals';
 import shortUUID from 'short-uuid';
 import { SWITCH_OPTIONS } from './constant';
+
 export enum FORMAT_MODE_SERVICE {
   CREATE,
   UPDATE,
@@ -31,14 +32,22 @@ const buildInitFormat = (): IFormat => ({
   pages: [getInitPage()],
 });
 
+interface IFormMode {
+  mode: FORMAT_MODE_SERVICE;
+  id?: number;
+}
+
 const format = signal<IFormat>(buildInitFormat());
-const formatMode = signal<FORMAT_MODE_SERVICE>(FORMAT_MODE_SERVICE.CREATE);
+const formatMode = signal<IFormMode>({ mode: FORMAT_MODE_SERVICE.CREATE });
+
 export const setFormat = (
-  model: IFormat,
-  mode: FORMAT_MODE_SERVICE = FORMAT_MODE_SERVICE.CREATE
+  mode: IFormMode = { mode: FORMAT_MODE_SERVICE.CREATE },
+  model?: IFormat
 ) => {
   format.value =
-    mode === FORMAT_MODE_SERVICE.CREATE ? buildInitFormat() : model;
+    mode.mode === FORMAT_MODE_SERVICE.CREATE
+      ? buildInitFormat()
+      : model || buildInitFormat();
   formatMode.value = mode;
 };
 

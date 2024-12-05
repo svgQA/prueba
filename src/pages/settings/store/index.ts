@@ -13,3 +13,11 @@ export const menuInformationSelected = signal<IMenu>({
 export const setMenu = (menu: IMenu) => {
   menuInformationSelected.value = menu;
 };
+
+export const appendHistory = (menu: IMenu, action?: (menu: IMenu) => void) => {
+  const position = currentPosition.value;
+  const cleanHistory = historyLocation.value.slice(0, position + 1);
+  currentPosition.value = cleanHistory.length;
+  historyLocation.value = [...cleanHistory, menu];
+  action?.(menu);
+};
