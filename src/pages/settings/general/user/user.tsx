@@ -2,13 +2,15 @@ import { Section, Table } from '@/components/common';
 import { CardData } from '@/components/compose';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
-import { userData } from './utils/tenant.data';
+import { userData } from './utils/user.data';
 import { columns } from './components';
-import { IUserResponse } from '@/types/auth';
+import { User } from './utils';
 
 export const UserSettingPage: FunctionComponent = () => {
+  // const [data, setData] = useState<User[]>([]);
   useEffect(() => {
     document.title = 'User Settings';
+    // setData(userData);
   }, []);
   return (
     <Section>
@@ -38,7 +40,7 @@ export const UserSettingPage: FunctionComponent = () => {
         />
       </div>
 
-      <Table<IUserResponse> data={userData} columns={columns} />
+      <Table<User> data={userData} columns={columns} />
     </Section>
   );
 };

@@ -118,15 +118,15 @@ export const CompanySettingPage: FunctionComponent = () => {
 
         <div className='container-card w-1/2  space-y-6 pl-4'>
           <InvoiceCard2
-            id='factura-1'
-            name='factura-1'
-            color='bg-[#00BDD6]'
+            id='company-1'
+            name='Company-1'
             total={20}
             currency='EUR'
+            active
           />
           <InvoiceCard2
-            id='factura-2'
-            name='factura-2'
+            id='Company-2'
+            name='Company-2'
             color='bg-[#D9D9D9]'
             total={100}
             currency='COP'
