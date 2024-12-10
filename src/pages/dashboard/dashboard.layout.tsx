@@ -3,6 +3,7 @@ import { useEffect } from 'preact/hooks';
 import { Route, Router } from 'wouter';
 import { Suspense, lazy } from 'preact/compat';
 import { memo } from 'preact/compat';
+import 'react-toastify/dist/ReactToastify.css';
 
 /** ***********************************************************************
  * UTILS
@@ -13,7 +14,7 @@ import { PAGES_LIST } from '@/utils/routing';
 /** ***********************************************************************
  * COMPONENTS
  ** ***********************************************************************/
-import { Sidebar, Loading } from '@/components/common';
+import { Loading, Sidebar } from '@/components/common';
 
 /** ***********************************************************************
  * PAGES
@@ -36,7 +37,6 @@ import {
   toggleSettingModal,
   closeOnBoardingModal,
   openOnBoardingModal,
-  getStatusLoading,
   openLoading,
   closeLoading,
 } from '@/store/signals/modals';
@@ -48,6 +48,7 @@ import { hasUserTenant, useUserStore } from '@/store/slices';
 import { BaseService } from '@/utils/network';
 import { IconsModal, OnBordingModal } from '../globals';
 import { SettingsModal } from '../settings/settings';
+import { ToastContainer } from 'react-toastify';
 
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
@@ -94,7 +95,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     return (
       <section className='w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
-        <Loading open={getStatusLoading.value} />
+        <Loading />
         <Sidebar
           id='sidebar'
           name='sidebar'
@@ -160,6 +161,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           ))}
         </OnBordingModal>
         <IconsModal />
+        <ToastContainer />
       </section>
     );
   }
