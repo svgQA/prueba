@@ -2,14 +2,14 @@ import { VOX_DEFAULT_PATH, VOS_SERVICES } from './constants';
 import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
-import { ICompany, IUser } from '@/store/slices/interface';
+import { ICompany } from '@/store/slices/interface';
 
 export class BaseService {
   protected static prefix: string = 'api';
   protected static openLoading: () => void = () => {};
   protected static closeLoading: () => void = () => {};
   protected static getSelected: () => ICompany | undefined = () => undefined;
-  protected static getUser: () => IUser | null = () => null;
+  protected static getToken: () => string = () => 'Bearer';
 
   public static setLoading(onOpen: () => void, onClose: () => void) {
     this.openLoading = onOpen;
@@ -18,10 +18,10 @@ export class BaseService {
 
   public static setUser(
     getSelected: () => ICompany | undefined,
-    getUser: () => IUser | null
+    getToken: () => string
   ) {
     this.getSelected = getSelected;
-    this.getUser = getUser;
+    this.getToken = getToken;
   }
 
   private static make_url(
@@ -69,6 +69,7 @@ export class BaseService {
       }
       model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
     }
+    model.headers = { ...model.headers, Authorization: this.getToken() };
 
     const output = {
       header: model.headers as any,

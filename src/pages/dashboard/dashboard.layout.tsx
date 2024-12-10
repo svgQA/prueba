@@ -57,8 +57,14 @@ import { SettingsModal } from '../settings/settings';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    const { setSelected, companies, setCompanies, getSelected, getUser } =
-      useUserStore();
+    const {
+      setSelected,
+      companies,
+      setCompanies,
+      getSelected,
+      setToken,
+      getToken,
+    } = useUserStore();
 
     const setCompanySelected = (company: string) => {
       setSelected(company);
@@ -67,7 +73,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
-      BaseService.setUser(getSelected, getUser);
+      BaseService.setUser(getSelected, getToken);
       validateUser();
     }, []);
 
@@ -77,7 +83,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
       /* [TODO]: Correct code */
 
-      const existTenant = await hasUserTenant(setCompanies, setSelected);
+      const existTenant = await hasUserTenant(
+        setCompanies,
+        setSelected,
+        setToken
+      );
       if (!existTenant) openOnBoardingModal();
       else closeOnBoardingModal();
     };
