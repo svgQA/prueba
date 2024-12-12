@@ -4,19 +4,25 @@ import { type ICompany, type IUser } from './interface/user.interface';
 type State = {
   user: IUser | null;
   companies: ICompany[];
+  token: string;
 };
 
 type Actions = {
   setUser: (user: IUser | null) => void;
+  setToken: (token: string) => void;
   setCompanies: (companies: ICompany[]) => void;
   setSelected: (company_id: string) => void;
   getSelected: () => ICompany | undefined;
+  getUser: () => IUser | null;
+  getToken: () => string;
 };
 
 export const useUserStore = create<State & Actions>((set, get) => ({
   user: null,
+  token: 'Bearer',
   companies: [],
   setUser: (user) => set({ user }),
+  setToken: (token) => set({ token: `Bearer ${token}` }),
   setCompanies: (companies) =>
     set({
       companies: companies.map((company) => ({ ...company, selected: false })),
@@ -33,6 +39,14 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   getSelected: () => {
     const { companies } = get();
     return companies.find((company) => company.selected);
+  },
+  getUser: () => {
+    const { user } = get();
+    return user;
+  },
+  getToken: () => {
+    const { token } = get();
+    return token;
   },
 }));
 

@@ -1,0 +1,17 @@
+export enum ACTIVITY_STATUS {
+  CREATED,
+  OPENED,
+  CLOSED,
+  RESOLVED,
+}
+
+export enum TASK_STATUS {
+  CREATED,
+  RESOLVED,
+  CLOSED,
+}
+
+export enum ACTIVITY_TYPE {
+  EXTERNAL,
+  INTERNAL,
+}

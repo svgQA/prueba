@@ -1,11 +1,16 @@
-import { type ILoading } from './interface';
+import { getStatusLoading } from '@/store/signals/modals';
+import './index.css';
+import { type ILoadingProps } from './interface';
+import { memo } from 'preact/compat';
 
-export const Loading = ({ open }: ILoading) => {
+export const Loading = memo((_: ILoadingProps) => {
   return (
     <div
-      className={` ${open ? 'visible' : 'invisible'} absolute inset-0 bg-opacity-50 flex items-center justify-center z-50`}
+      className={` ${getStatusLoading.value ? 'visible' : 'invisible'} bg-b-dark absolute inset-0 bg-opacity-90 flex items-center justify-center z-[999]`}
     >
-      <div className='animate-spin rounded-full h-32 w-32 border-t-2 border-b-2'></div>
+      <div className='w-10 h-10 relative'>
+        <div className='loader'></div>
+      </div>
     </div>
   );
-};
+});

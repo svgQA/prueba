@@ -2,15 +2,26 @@ import { VOX_DEFAULT_PATH, VOS_SERVICES } from './constants';
 import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
+import { ICompany } from '@/store/slices/interface';
 
 export class BaseService {
   protected static prefix: string = 'api';
   protected static openLoading: () => void = () => {};
   protected static closeLoading: () => void = () => {};
+  protected static getSelected: () => ICompany | undefined = () => undefined;
+  protected static getToken: () => string = () => 'Bearer';
 
-  public static setLoading(open: () => void, close: () => void) {
-    this.openLoading = open;
-    this.closeLoading = close;
+  public static setLoading(onOpen: () => void, onClose: () => void) {
+    this.openLoading = onOpen;
+    this.closeLoading = onClose;
+  }
+
+  public static setUser(
+    getSelected: () => ICompany | undefined,
+    getToken: () => string
+  ) {
+    this.getSelected = getSelected;
+    this.getToken = getToken;
   }
 
   private static make_url(
@@ -23,6 +34,50 @@ export class BaseService {
     const urlBase = VOS_SERVICES[base];
     const urlTotal = `${urlBase}/${subdirectory}`;
     return urlTotal;
+  }
+
+  protected static make_request_model(
+    instance: VoxServices,
+    model: IMakeRequest,
+    prefix?: boolean,
+    tenance: boolean = true
+  ) {
+    let url = this.make_url(model.url, instance, prefix);
+    if (model.params) {
+      const queryParams = new URLSearchParams();
+      Object.entries(model.params).forEach(([key, value]) => {
+        queryParams.append(key, String(value));
+      });
+      url = `${url}?${queryParams.toString()}`;
+    }
+    const method = model?.method || REQUEST_METHODS.GET;
+    if (method === REQUEST_METHODS.POST || method === REQUEST_METHODS.PUT) {
+      if (!model.uncontent) {
+        model.headers = {
+          ...model?.headers,
+          'Content-Type': 'application/json',
+        };
+        model.data = JSON.stringify(model.data || {});
+      }
+    }
+
+    if (tenance) {
+      const tenant = this.getSelected();
+      const tenant_header = import.meta.env.VITE_TENANT_HEADER;
+      if (!tenant_header || !tenant?.tenant_id) {
+        throw new Error('ERROR: not include header');
+      }
+      model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
+    }
+    model.headers = { ...model.headers, Authorization: this.getToken() };
+
+    const output = {
+      header: model.headers as any,
+      data: model.data,
+      url,
+      method,
+    };
+    return output;
   }
 
   static async make_request<T>(
@@ -40,35 +95,26 @@ export class BaseService {
         https://voxline.com/api/form/...
      */
     model: IMakeRequest,
-    prefix?: boolean
+    prefix?: boolean,
+    tenance: boolean = true
   ): Promise<GenericResponse<T>> {
     this.openLoading();
-    let url = this.make_url(model.url, instance, prefix);
-
-    if (model.params) {
-      const queryParams = new URLSearchParams();
-      Object.entries(model.params).forEach(([key, value]) => {
-        queryParams.append(key, String(value));
-      });
-      url = `${url}?${queryParams.toString()}`;
-    }
-
-    const method = model?.method || REQUEST_METHODS.GET;
-    if (method === REQUEST_METHODS.POST) {
-      model.headers = { ...model.headers, 'Content-type': 'application/json' };
-      model.data = JSON.stringify(model.data || {});
-    }
-
     try {
-      const response = await fetch(url, {
-        headers: model.headers,
+      const model_request = this.make_request_model(
+        instance,
+        model,
+        prefix,
+        tenance
+      );
+      const response = await fetch(model_request.url, {
+        headers: model_request.header,
         body: model.data,
-        method,
+        method: model.method,
       });
+
       const content_type = response.headers.get('content-type');
       if (content_type?.includes('application/json')) {
         const result = await response.json();
-        this.closeLoading();
         return new GenericResponse<T>({
           code: response?.status,
           message: result?.message,
@@ -76,23 +122,19 @@ export class BaseService {
         });
       } else {
         const result = await response.text();
-        this.closeLoading();
         return new GenericResponse<T>({
           code: response?.status,
           message: result,
           data: result,
         });
       }
-    } catch (error: any) {
-      const message =
-        JSON.parse(error?.request?.response || `{"message": "${error}"}`)
-          ?.message || 'ERROR: Not Found Data';
+    } catch (error: unknown) {
+      // TODO: Agregar un modal si se presenta un error.
+      console.error(error);
+      throw new Error('ERROR: processing response');
+    } finally {
+      // toast('Wow so easy!');
       this.closeLoading();
-      return new GenericResponse<T>({
-        code: 404,
-        message,
-        data: {},
-      });
     }
   }
 }

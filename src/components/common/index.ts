@@ -29,3 +29,11 @@ export * from './priority/priority';
 export * from './section/section';
 
 export * from './loading/loading';
+export * from './select/select';
+export * from './chip/chip';
+export * from './multi/multi';
+
+export * from './switch/switch';
+export * from './progress/progress';
+export * from './gauge/gauge';
+export * from './relative/relative';

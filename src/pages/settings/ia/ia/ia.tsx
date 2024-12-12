@@ -1,189 +1,233 @@
-import { type FunctionComponent } from 'preact';
-import { useEffect, useRef, useCallback } from 'preact/hooks';
-import { useSignal } from '@preact/signals';
-import { memo } from 'preact/compat';
 import { IaService } from '@/services';
-import shortUUID from 'short-uuid';
+import { IModelFile, IModelStatus, ITenantModelStatus } from '@/types/ia';
+import { useSignal } from '@preact/signals';
+import { type FunctionComponent } from 'preact';
+import { useEffect, useRef } from 'preact/hooks';
 
-interface TenantResponse {
-  answer: string;
-  status: boolean;
-}
-
-const SelectInput = memo(
-  ({
-    value,
-    onChange,
-  }: {
-    value: string;
-    onChange: (value: string) => void;
-  }) => (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.currentTarget.value)}
-      className='w-full px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition duration-200'
-    >
-      <option value='tenant1'>Tenant 1 (Journey)</option>
-      <option value='tenant2'>Tenant 2 (Recipes)</option>
-    </select>
-  )
-);
-
-const TextInput = memo(
-  ({
-    value,
-    onChange,
-  }: {
-    value: string;
-    onChange: (value: string) => void;
-  }) => (
-    <input
-      type='text'
-      value={value}
-      onChange={(e) => onChange(e.currentTarget.value)}
-      className='w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition duration-200'
-      placeholder='Ingrese información del tenant'
-    />
-  )
-);
+import { FileCard, HistoryCard } from './components';
+import { Button, Input } from '@/components/common';
 
 export const IASettingPage: FunctionComponent = () => {
-  const tenantResponse = useSignal<TenantResponse | null>(null);
-  const displayText = useSignal('');
-  const inputValue = useSignal('');
-  const selectedTenant = useSignal('tenant1');
-  const isTyping = useSignal(false);
-  const typeTimeout = useRef<NodeJS.Timeout>();
-  const fileInput = useRef<HTMLInputElement>(null);
+  const model_status = useSignal<IModelStatus | null>(null);
+  const model_files = useSignal<IModelFile[]>();
+  const tenant_status = useSignal<ITenantModelStatus | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const selectedFileName = useSignal<string>('');
+  const uploadStatus = useSignal<'idle' | 'uploading' | 'success' | 'error'>(
+    'idle'
+  );
+  const testMessage = useSignal<string>('');
+  const testResponse = useSignal<string>('');
 
   useEffect(() => {
     document.title = 'IA Settings';
+    get_config_model();
   }, []);
 
-  useEffect(() => {
-    if (tenantResponse.value?.answer && !isTyping.value) {
-      isTyping.value = true;
-      displayText.value = '';
+  const get_config_model = async () => {
+    try {
+      const [response_model, response_files /*, response_tenant_status*/] =
+        await Promise.all([
+          IaService.model_status(),
+          IaService.model_files(),
+          // IaService.tenant_status(),
+        ]);
 
-      const answer = tenantResponse.value.answer;
-      let currentIndex = 0;
-      const textChunks = answer.split('');
-
-      const typeChar = () => {
-        if (currentIndex < textChunks.length) {
-          displayText.value = displayText.value + textChunks[currentIndex];
-          currentIndex++;
-          typeTimeout.current = setTimeout(typeChar, 20);
-        } else {
-          isTyping.value = false;
-        }
-      };
-
-      typeChar();
-
-      return () => {
-        if (typeTimeout.current) {
-          clearTimeout(typeTimeout.current);
-        }
-      };
-    }
-  }, [tenantResponse.value]);
-
-  const createTenant = useCallback(async () => {
-    const response = await IaService.question({
-      tenant: selectedTenant.value,
-      question: inputValue.value,
-    });
-    if (!response.getStatus()) return;
-    const value = response.getOne();
-    tenantResponse.value = value;
-  }, [selectedTenant.value, inputValue.value]);
-
-  const handleCreateNewTenant = useCallback(async () => {
-    const newTenantId = shortUUID.generate();
-    await IaService.create_tenant(newTenantId);
-  }, []);
-
-  const handleFileUpload = useCallback(
-    async (event: Event) => {
-      const target = event.target as HTMLInputElement;
-      if (!target.files?.length) return;
-
-      const file = target.files[0];
-      const formData = new FormData();
-      formData.append('document', file);
-      formData.append('tenant', selectedTenant.value);
-
-      try {
-        await IaService.document(formData);
-        alert('Document uploaded successfully!');
-      } catch (error) {
-        alert('Error uploading document');
+      if (response_model.getStatus()) {
+        model_status.value = response_model.getOne();
       }
-    },
-    [selectedTenant.value]
-  );
+
+      if (response_files.getStatus()) {
+        model_files.value = response_files.getMany();
+      }
+
+      // if (response_tenant_status.getStatus()) {
+      //   tenant_status.value = response_tenant_status.getOne();
+      // }
+    } catch (error) {
+      console.error('Error fetching model data:', error);
+    }
+  };
+
+  const handleFileChange = () => {
+    if (fileInputRef.current?.files?.[0]) {
+      selectedFileName.value = fileInputRef.current.files[0].name;
+      uploadStatus.value = 'idle';
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!fileInputRef.current?.files?.[0]) return;
+    uploadStatus.value = 'uploading';
+    const response = await IaService.upload_file(fileInputRef.current.files[0]);
+    if (!response.getStatus()) {
+      uploadStatus.value = 'error';
+    } else {
+      uploadStatus.value = 'success';
+      fileInputRef.current.value = '';
+      selectedFileName.value = '';
+      get_config_model();
+    }
+  };
+
+  const create_model = async () => {
+    const response = await IaService.create_model();
+    if (!response.getStatus()) return;
+    get_config_model();
+  };
+
+  const sync_model = async () => {
+    const response = await IaService.model_sync();
+    if (!response.getStatus()) return;
+    model_status.value = response.getOne();
+  };
+
+  const makeRequest = async () => {
+    const response = await IaService.make_query({
+      question: testMessage.value,
+    });
+    if (!response.getStatus()) testResponse.value = 'error.';
+    else testResponse.value = response.getOne().answer;
+  };
 
   return (
-    <section className='mt-4'>
-      <div className='mb-4'>
-        <SelectInput
-          value={selectedTenant.value}
-          onChange={(value) => (selectedTenant.value = value)}
-        />
-        <TextInput
-          value={inputValue.value}
-          onChange={(value) => (inputValue.value = value)}
-        />
-        <div className='mb-4'>
-          <input
-            type='file'
-            ref={fileInput}
-            onChange={handleFileUpload}
-            className='hidden'
-            accept='.pdf,.doc,.docx,.txt'
-          />
-          <button
-            onClick={() => fileInput.current?.click()}
-            className='w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center'
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='h-5 w-5 mr-2'
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12'
+    <section className='container mx-auto p-4'>
+      <div className='grid gap-6'>
+        {/* Status Section */}
+        {tenant_status.value}
+        <div className='border rounded-lg p-4 dark:border-b-dark-light border-b-light-dark'>
+          <div className='bg-red- flex-row flex justify-between'>
+            <div className='w-10/12'>
+              <h2 className='text-xl font-bold mb-4'>Model Status</h2>
+              <p>
+                Current Status:{' '}
+                <span className='font-semibold'>
+                  {model_status.value?.status || 'Inactive'}
+                </span>
+              </p>
+            </div>
+            <div className='w-2/12 flex flex-row justify-end items-center'>
+              {!model_status.value && (
+                <Button
+                  id='btn-sync-model'
+                  name='btn-sync-model'
+                  type='button'
+                  onClick={create_model}
+                  icon='128'
+                />
+              )}
+              <Button
+                id='btn-sync-model'
+                name='btn-sync-model'
+                type='button'
+                onClick={sync_model}
+                icon='127'
               />
-            </svg>
-            Upload Document
-          </button>
+            </div>
+          </div>
+
+          {/* Execution History List */}
+          {model_status.value?.execution_history && (
+            <div className='mt-4'>
+              <h3 className='text-lg font-semibold mb-2'>Execution History</h3>
+              <div className='space-y-2 max-h-64 overflow-y-auto'>
+                {model_status.value.execution_history.map((history, index) => (
+                  <HistoryCard key={index} history={history} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Test Section */}
+        {model_status.value?.status === 'running' && (
+          <div className='border rounded-lg p-6 dark:border-b-dark-light border-b-light-dark shadow-sm'>
+            <div className='max-w-2xl mx-auto space-y-4'>
+              {testResponse.value && (
+                <div className='p-4 rounded-lg bg-gray-50 dark:bg-gray-700 mb-4'>
+                  <p className='text-gray-800 dark:text-gray-200'>
+                    {testResponse.value}
+                  </p>
+                </div>
+              )}
+              <div className='flex gap-2 justify-center fler-row items-center'>
+                <Input
+                  name='in-ia-test-model'
+                  id='in-ia-test-model'
+                  type='text'
+                  placeholder='Enter your test message...'
+                  icon='231'
+                  value={testMessage.value}
+                  onChange={(e) =>
+                    (testMessage.value = (e.target as HTMLInputElement).value)
+                  }
+                />
+                <Button
+                  id='test-message'
+                  name='test-message'
+                  onClick={makeRequest}
+                  type='button'
+                  label='Send'
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* File Upload Section */}
+        <div className='border rounded-lg p-4 dark:border-b-dark-light border-b-light-dark'>
+          <h2 className='text-xl font-bold mb-6'>Upload New File</h2>
+          <div className='flex flex-col items-center space-y-4'>
+            <label className='w-full max-w-md flex flex-col items-center px-4 py-6 rounded-lg border-2 border-dashed cursor-pointer dark:hover:bg-b-dark-light hover:bg-b-light-dark transition-colors border-b-light-dark dark:border-b-dark-light'>
+              <span className='vox-icon vx-icon-052' />
+              <span className='mt-2 text-sm'>
+                {selectedFileName.value || 'Select a file'}
+              </span>
+              <input
+                type='file'
+                className='hidden'
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                disabled={
+                  !model_status.value || uploadStatus.value === 'uploading'
+                }
+                onClick={(e) => (e.currentTarget.value = '')}
+              />
+            </label>
+            <Button
+              id='upload-ia-file'
+              name='upload-ia-file'
+              onClick={handleUpload}
+              disabled={
+                !model_status.value || uploadStatus.value === 'uploading'
+              }
+              type='button'
+              label={
+                uploadStatus.value === 'uploading'
+                  ? 'Uploading...'
+                  : 'Upload File'
+              }
+            />
+            {uploadStatus.value === 'error' && (
+              <p className='text-error text-sm'>
+                Upload failed. Please try again.
+              </p>
+            )}
+            {uploadStatus.value === 'success' && (
+              <p className='text-green-500 text-sm'>
+                File uploaded successfully!
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Files Grid */}
+        <div className='flex flex-row flex-wrap justify-center gap-2'>
+          {model_files.value?.map((file) => (
+            <FileCard file={file} key={file.id} />
+          ))}
         </div>
       </div>
-      <div className='flex gap-4'>
-        <button
-          className='bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-105'
-          onClick={createTenant}
-        >
-          Make question
-        </button>
-        <button
-          className='bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-105'
-          onClick={handleCreateNewTenant}
-        >
-          Create New Tenant
-        </button>
-      </div>
-      {tenantResponse.value && (
-        <div className='mt-4 text-xl'>
-          <p className='whitespace-pre-wrap'>{displayText.value}</p>
-        </div>
-      )}
     </section>
   );
 };

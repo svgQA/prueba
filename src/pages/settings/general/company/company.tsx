@@ -1,47 +1,47 @@
 import { type FunctionComponent } from 'preact';
-import { TargetedEvent } from 'preact/compat';
-import { useEffect, useState, useRef } from 'preact/hooks';
-import { CreditCard, InvoiceCard } from '@/components/compose';
-import { InvoiceCard2 } from '@/components/compose/cards/invoice2';
+// import { TargetedEvent } from 'preact/compat';
+import { useEffect } from 'preact/hooks';
+// import { CreditCard, InvoiceCard } from '@/components/compose';
+// import { InvoiceCard2 } from '@/components/compose/cards/invoice2';
 
 export const CompanySettingPage: FunctionComponent = () => {
-  const [imagenPreview, setImagenPreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // const [imagenPreview, setImagenPreview] = useState<string | null>(null);
+  // const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [cards, setCards] = useState<string[]>(['1234']);
-  const [newCard, setNewCard] = useState({ number: '', expiry: '', cvc: '' });
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [cards, setCards] = useState<string[]>(['1234']);
+  // const [newCard, setNewCard] = useState({ number: '', expiry: '', cvc: '' });
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAddCard = () => {
-    if (newCard.number && newCard.expiry && newCard.cvc) {
-      setCards([...cards, newCard.number.slice(-4)]);
-      setNewCard({ number: '', expiry: '', cvc: '' });
-      setIsModalOpen(false);
-    }
-  };
+  // const handleAddCard = () => {
+  //   if (newCard.number && newCard.expiry && newCard.cvc) {
+  //     setCards([...cards, newCard.number.slice(-4)]);
+  //     setNewCard({ number: '', expiry: '', cvc: '' });
+  //     setIsModalOpen(false);
+  //   }
+  // };
 
-  const handleImagenChange = (event: TargetedEvent<HTMLInputElement>) => {
-    const file = event.currentTarget.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagenPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const handleImagenChange = (event: TargetedEvent<HTMLInputElement>) => {
+  //   const file = event.currentTarget.files?.[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setImagenPreview(reader.result as string);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
-  const handleClickSubir = () => {
-    fileInputRef.current?.click();
-  };
+  // const handleClickSubir = () => {
+  //   fileInputRef.current?.click();
+  // };
 
   useEffect(() => {
     document.title = 'Company Settings';
   }, []);
 
   return (
-    <div className='container h-full overflow-y-auto vox-scroll-design'>
-      <div className='container flex flex-row justify-between p-8'>
+    <div>
+      {/* <div className='container flex flex-row justify-between p-8'>
         <div className='container-input w-1/2  space-y-6 pr-4 '>
           <form className='space-y-4'>
             <div className='space-y-2'>
@@ -118,15 +118,15 @@ export const CompanySettingPage: FunctionComponent = () => {
 
         <div className='container-card w-1/2  space-y-6 pl-4'>
           <InvoiceCard2
-            id='factura-1'
-            name='factura-1'
-            color='bg-[#00BDD6]'
+            id='company-1'
+            name='Company-1'
             total={20}
             currency='EUR'
+            active
           />
           <InvoiceCard2
-            id='factura-2'
-            name='factura-2'
+            id='Company-2'
+            name='Company-2'
             color='bg-[#D9D9D9]'
             total={100}
             currency='COP'
@@ -273,7 +273,7 @@ export const CompanySettingPage: FunctionComponent = () => {
             />
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

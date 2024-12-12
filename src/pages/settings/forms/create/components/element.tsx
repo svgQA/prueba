@@ -1,15 +1,25 @@
 import { useDrag, useDrop } from 'react-dnd';
 import {
-  format,
   moveElement,
-  IElement,
-  ELEMENT_TYPE,
   validateSelectedElement,
   ELEMENT_TYPE_VALUES,
+  REGEX_PATTERNS,
+  updateForm,
+  updateSectionForm,
 } from '../store';
 import { TargetedEvent } from 'preact/compat';
-import '../assets/index.css';
 import { IElementProps } from './interace';
+import {
+  Card,
+  Input,
+  MultipleInput,
+  Select,
+  Switch,
+} from '@/components/common';
+import { ELEMENT_TYPE } from '@/types/form';
+import { IOption } from '@/components/common/interface';
+import { useSignal } from '@preact/signals';
+import { toggleListModal } from '../../lists/store';
 
 const ItemType = {
   QUESTION: 'question',
@@ -24,6 +34,13 @@ export const FormElement = ({
   onSelect,
   onDelete,
 }: IElementProps) => {
+  const typeDropdown = useSignal<boolean>(false);
+  const onChangeDropdown = () => (typeDropdown.value = !typeDropdown.value);
+
+  const openModalList = () => {
+    toggleListModal({ question: question.id, page, section, field: 'options' });
+  };
+
   const [{ isDragging }, ref] = useDrag({
     type: ItemType.QUESTION,
     item: { index },
@@ -45,6 +62,10 @@ export const FormElement = ({
     }),
   });
 
+  const onChangeMulty = (value: IOption[], name: string) => {
+    updateForm(question.id, page, section)(name, value);
+  };
+
   const handleInputChange = (
     e: TargetedEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -52,7 +73,10 @@ export const FormElement = ({
       | HTMLInputElement
       | HTMLTextAreaElement
       | HTMLSelectElement;
-    const name = target.name;
+    const [name, task] = target.name.includes('task-')
+      ? target.name.split('-')
+      : [target.name, undefined];
+
     const value =
       target.type === 'checkbox'
         ? (target as HTMLInputElement).checked
@@ -63,68 +87,16 @@ export const FormElement = ({
           : target.value;
 
     if (!name) return;
-
-    format.value = {
-      ...format.value,
-      pages: format.value.pages.map((p) => {
-        if (p.id === page) {
-          if (section) {
-            return {
-              ...p,
-              elements: p.elements.map((element: IElement) =>
-                element.id === section
-                  ? {
-                      ...element,
-                      elements: element.elements?.map((el) =>
-                        el.id === question.id
-                          ? {
-                              ...el,
-                              [name]: value,
-                            }
-                          : el
-                      ),
-                    }
-                  : element
-              ),
-            };
-          } else {
-            return {
-              ...p,
-              elements: p.elements.map((element: IElement) =>
-                element.id === question.id
-                  ? { ...element, [name]: value }
-                  : element
-              ),
-            };
-          }
-        }
-        return p;
-      }),
-    };
+    // console.table({ question: question.id, page, section, name, value, task });
+    updateForm(question.id, page, section)(name, value, task);
   };
 
   const handleSectionInputChange = (e: TargetedEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-    const sectionId = e.currentTarget.getAttribute('data-sectionid');
-    const pageId = e.currentTarget.getAttribute('data-pageid');
-    if (!sectionId || !pageId) return;
-
-    format.value = {
-      ...format.value,
-      pages: format.value.pages.map((page) => {
-        if (page.id !== pageId) return page;
-
-        return {
-          ...page,
-          elements: page.elements.map((element) => {
-            if (element.id === sectionId) {
-              return { ...element, [name]: value };
-            }
-            return element;
-          }),
-        };
-      }),
-    };
+    const section_id = e.currentTarget.getAttribute('data-sectionid');
+    const page_id = e.currentTarget.getAttribute('data-pageid');
+    if (!section_id || !page_id) return;
+    updateSectionForm(name, value, page_id, section_id);
   };
 
   const handleSelect = (e: MouseEvent) => {
@@ -144,23 +116,25 @@ export const FormElement = ({
           <td
             colSpan={2}
             onClick={handleSelect}
-            className={`${selected ? 'border-2 border-red-300' : ''}`}
+            className={`${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`}
           >
-            {/* className={`${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`} */}
+            {/* className={`${selected ? 'border-2 border-red-300' : ''}`} */}
             <div className='flex flex-row items-center'>
               <span
                 ref={(node) => ref(drop(node))}
                 className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
               ></span>
-              <input
+              <Input
                 type='text'
-                className='w-full rounded'
                 placeholder='Enter Section Title'
                 name='label'
+                id={`in-form-${question.id}-section-title`}
                 data-sectionid={question.id}
                 data-pageid={page}
                 value={question.label}
                 onChange={handleSectionInputChange}
+                borderless
+                thin
               />
             </div>
           </td>
@@ -181,35 +155,31 @@ export const FormElement = ({
                   ref={(node) => ref(drop(node))}
                   className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
                 ></span>
-                <input
+                <Input
                   type='text'
-                  className='w-full'
                   name='label'
                   placeholder='Enter Element Title'
+                  id={`in-form-${question.id}-element-title`}
                   value={question.label}
                   onChange={handleInputChange}
+                  borderless
+                  thin
                 />
               </div>
             </td>
             {/* DROPDOW: select type */}
             <td onClick={handleSelect} className='w-3/12'>
-              <div className='w-full mx-2'>
-                <select
-                  value={question.type}
-                  name='type'
-                  onChange={handleInputChange}
-                  className='w-full rounded-md text-sm transition duration-150 ease-in-out appearance-none'
-                >
-                  {ELEMENT_TYPE_VALUES.map((element) => (
-                    <option
-                      key={`opt-type-${element.value}`}
-                      value={element.value}
-                    >
-                      {element.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Select
+                placeholder='Type Element'
+                id={`se-form-${question.id}-element-type`}
+                icon='106'
+                value={question.type}
+                name='type'
+                onChange={handleInputChange}
+                options={ELEMENT_TYPE_VALUES}
+                borderless
+                thin
+              />
             </td>
           </>
         )}
@@ -223,73 +193,39 @@ export const FormElement = ({
           {/* CHECKBOX: required, visible, disable, administrator */}
           {question.type !== ELEMENT_TYPE.TITLE && (
             <div className='vx-form-attrs-checkbox'>
-              <div>
-                <input
-                  id={`cb-required-form-${question.id}`}
-                  checked={question.required}
-                  type='checkbox'
-                  name='required'
-                  onChange={handleInputChange}
-                  className='w-4 h-4 rounded'
-                />
-                <label
-                  for={`cb-required-form-${question.id}`}
-                  className='ms-2 text-sm font-medium'
-                >
-                  Required
-                </label>
-              </div>
-              <div>
-                <input
-                  id={`cb-visible-form-${question.id}`}
-                  checked={question.visible}
-                  type='checkbox'
-                  name='visible'
-                  onChange={handleInputChange}
-                  className='w-4 h-4 text-blue-600'
-                />
-                <label
-                  for={`cb-visible-form-${question.id}`}
-                  className='ms-2 text-sm font-medium'
-                >
-                  Visible
-                </label>
-              </div>
+              <Switch
+                id={`cb-form-${question.id}-element-required`}
+                name='required'
+                label='Required'
+                onChange={handleInputChange}
+                value={question.required}
+              />
+
+              <Switch
+                id={`cb-form-${question.id}-element-visible`}
+                name='invisible'
+                label='Invisible'
+                onChange={handleInputChange}
+                value={question.invisible}
+              />
+
               {question.type !== ELEMENT_TYPE.IMAGE &&
                 question.type !== ELEMENT_TYPE.SIGNATURE && (
-                  <div>
-                    <input
-                      id={`cb-disable-form-${question.id}`}
-                      checked={question.disable}
-                      type='checkbox'
-                      name='disable'
-                      onChange={handleInputChange}
-                      className='w-4 h-4'
-                    />
-                    <label
-                      for={`cb-disable-form-${question.id}`}
-                      className='ms-2 text-sm font-medium'
-                    >
-                      Disable
-                    </label>
-                  </div>
+                  <Switch
+                    id={`cb-form-${question.id}-element-disable`}
+                    name='disable'
+                    label='Disable'
+                    onChange={handleInputChange}
+                    value={question.disable}
+                  />
                 )}
-              <div>
-                <input
-                  id={`cb-assigned-form-${question.id}`}
-                  checked={question.assigned}
-                  type='checkbox'
-                  name='assigned'
-                  onChange={handleInputChange}
-                  className='w-4 h-4'
-                />
-                <label
-                  for={`cb-assigned-form-${question.id}`}
-                  className='ms-2 text-sm font-medium'
-                >
-                  Administrator
-                </label>
-              </div>
+              <Switch
+                id={`cb-form-${question.id}-element-assigned`}
+                name='assigned'
+                label='Administrator'
+                onChange={handleInputChange}
+                value={question.assigned}
+              />
             </div>
           )}
 
@@ -299,171 +235,270 @@ export const FormElement = ({
               <textarea
                 className='w-full min-h-6 vox-scroll-design'
                 name='description'
+                id={`ta-form-${question.id}-element-description`}
                 value={question.description}
                 onChange={handleInputChange}
                 placeholder='Description'
               />
             </div>
 
-            {/* <div className='col-span-2 py-1'>
-                <input
-                  className='w-full'
-                  type='number'
+            <div className='col-span-2 py-1'>
+              {question.type === ELEMENT_TYPE.NUMBER_INPUT && (
+                <Input
                   name='default'
+                  label='Default'
+                  type='number'
+                  id={`in-number-form-${question.id}-element-default`}
                   value={question.default}
-                  placeholder='Default Value'
+                  onChange={handleInputChange}
+                  placeholder='Default value'
+                  borderless
+                  thin
+                  icon='123'
                 />
-              </div> */}
+              )}
+              {(question.type === ELEMENT_TYPE.INPUT ||
+                question.type === ELEMENT_TYPE.TEXT_AREA) && (
+                <Input
+                  name='default'
+                  label='Default'
+                  type='text'
+                  id={`in-text-form-${question.id}-element-default`}
+                  value={question.default}
+                  onChange={handleInputChange}
+                  placeholder='Default value'
+                  borderless
+                  thin
+                  icon='123'
+                />
+              )}
+              {question.type === ELEMENT_TYPE.DROPDOWN && (
+                <div className='w-full flex flex-row items-center h-20'>
+                  <div class='w-full mr-4'>
+                    {typeDropdown.value ? (
+                      <Input
+                        label='List URL'
+                        name='url'
+                        placeholder='List URL'
+                        value={question.url}
+                        onChange={handleInputChange}
+                        id={`se-form-${question.id}-element-options-url`}
+                        borderless
+                        icon='104'
+                        thin
+                      />
+                    ) : (
+                      <MultipleInput
+                        name='options'
+                        label='Options'
+                        id={`mt-form-${question.id}-element-options`}
+                        icon='123'
+                        value={question.options}
+                        onChange={onChangeMulty}
+                        button
+                        onSelect={openModalList}
+                        buttonIcon='093'
+                        scrollable
+                      />
+                    )}
+                  </div>
+                  <Switch
+                    label='URL'
+                    value={typeDropdown.value}
+                    onChange={onChangeDropdown}
+                    name='type-dropdown'
+                    id={`sw-form-${question.id}-element-option-type`}
+                  />
+                </div>
+              )}
+              {(question.type === ELEMENT_TYPE.CHECK_BOX ||
+                question.type === ELEMENT_TYPE.RADIO_BUTTON) && (
+                <MultipleInput
+                  name='options'
+                  label='Options'
+                  id={`mt-form-${question.id}-element-options`}
+                  icon='123'
+                  value={question.options}
+                  onChange={onChangeMulty}
+                  button
+                  onSelect={openModalList}
+                  buttonIcon='093'
+                  scrollable
+                />
+              )}
+              {question.type === ELEMENT_TYPE.DATE && (
+                <Input
+                  name='default'
+                  label='Default'
+                  type='date'
+                  id={`in-date-form-${question.id}-element-default`}
+                  value={question.default}
+                  onChange={handleInputChange}
+                  borderless
+                  thin
+                  icon='123'
+                />
+              )}
+              {question.type === ELEMENT_TYPE.TIME && (
+                <Input
+                  name='default'
+                  label='Default'
+                  type='time'
+                  id={`in-time-form-${question.id}-element-default`}
+                  value={question.default}
+                  onChange={handleInputChange}
+                  borderless
+                  thin
+                  icon='123'
+                />
+              )}
+            </div>
 
             {question.type === ELEMENT_TYPE.INPUT && (
-              <div>
-                <label className='block text-sm font-medium mb-1'>Regex</label>
-                <div className='relative'>
-                  <select
-                    className='w-full text-sm'
-                    name='regex'
-                    value={question.regex}
-                    onChange={handleInputChange}
-                  >
-                    <option value=''>Select a regex pattern</option>
-                    <option value='^[A-Za-z0-9]+$'>Alphanumeric only</option>
-                    <option value='^[A-Za-z]+$'>Letters only</option>
-                    <option value='^[0-9]+$'>Numbers only</option>
-                    <option value='^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'>
-                      Email
-                    </option>
-                    <option value='^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$'>
-                      Phone number
-                    </option>
-                    <option value='^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$'>
-                      URL
-                    </option>
-                    {/* <option value='custom'>Custom Regex...</option> */}
-                  </select>
-                </div>
-              </div>
+              <Select
+                label='regex'
+                name='regex'
+                placeholder='regex patters'
+                id={`se-form-${question.id}-element-regex`}
+                value={question.regex}
+                onChange={handleInputChange}
+                options={REGEX_PATTERNS}
+                icon='104'
+                borderless
+                thin
+              />
             )}
 
             {(question.type === ELEMENT_TYPE.TIME ||
               question.type === ELEMENT_TYPE.DATE) && (
               <>
-                <div>
-                  <label className='block text-sm font-medium mb-1'>
-                    Minimum
-                  </label>
-                  <div className='relative'>
-                    <input
-                      className='w-full'
-                      name='min'
-                      type={
-                        question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'
-                      }
-                      value={question.min}
-                      placeholder={`Min ${question.type === ELEMENT_TYPE.TIME ? 'Time' : 'Date'}`}
-                      onChange={handleInputChange}
-                    />
-                    {/* <span
-                          className={`absolute vox-icon size-sm inset-y-0 right-5 ${question.type === ELEMENT_TYPE.TIME ? 'vx-icon-049' : 'vx-icon-025'}`}
-                        /> */}
-                  </div>
-                </div>
-                <div>
-                  <label className='block text-sm font-medium mb-1'>
-                    Maximum
-                  </label>
-                  <div className='relative'>
-                    <input
-                      className='w-full'
-                      name='max'
-                      type={
-                        question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'
-                      }
-                      value={question.max}
-                      placeholder={`Max ${question.type === ELEMENT_TYPE.TIME ? 'Time' : 'Date'}`}
-                      onChange={handleInputChange}
-                    />
-                    {/* <span
-                          className={`absolute vox-icon size-sm inset-y-0 right-5 ${question.type === ELEMENT_TYPE.TIME ? 'vx-icon-049' : 'vx-icon-025'}`}
-                        /> */}
-                  </div>
-                </div>
+                <Input
+                  name='min'
+                  label='Minimun'
+                  type={question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'}
+                  value={question.min}
+                  id={`in-time-form-${question.id}-element-min`}
+                  placeholder={`Min ${question.type === ELEMENT_TYPE.TIME ? 'Time' : 'Date'}`}
+                  onChange={handleInputChange}
+                  borderless
+                  thin
+                  icon='123'
+                />
+                <Input
+                  name='max'
+                  label='Maximum'
+                  id={`in-time-form-${question.id}-element-max`}
+                  type={question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'}
+                  value={question.max}
+                  placeholder={`Max ${question.type === ELEMENT_TYPE.TIME ? 'Time' : 'Date'}`}
+                  onChange={handleInputChange}
+                  borderless
+                  thin
+                  icon='123'
+                />
               </>
             )}
 
             {(question.type === ELEMENT_TYPE.NUMBER_INPUT ||
               question.type === ELEMENT_TYPE.RATING) && (
-              <div>
-                <label className='block text-sm font-medium mb-1'>
-                  Minimum
-                </label>
-                <div className='relative'>
-                  <input
-                    className='w-full'
-                    name='min'
-                    value={question.min}
-                    placeholder='Min Length'
-                    onChange={handleInputChange}
-                  />
-                  <span className='absolute vox-icon size-sm inset-y-0 right-0 vx-icon-001' />
-                </div>
-              </div>
+              <Input
+                name='min'
+                label='Minimun'
+                type='number'
+                id={`in-number-form-${question.id}-element-min`}
+                value={question.min}
+                placeholder='Min Length'
+                onChange={handleInputChange}
+                borderless
+                thin
+                icon='234'
+              />
             )}
 
             {(question.type === ELEMENT_TYPE.INPUT ||
               question.type === ELEMENT_TYPE.NUMBER_INPUT ||
               question.type === ELEMENT_TYPE.TEXT_AREA ||
               question.type === ELEMENT_TYPE.RATING) && (
-              <div>
-                <label className='block text-sm font-medium mb-1'>
-                  Maximum
-                </label>
-                <div className='relative'>
-                  <input
-                    className='w-full'
-                    name='max'
-                    value={question.min}
-                    placeholder='Max Length'
-                    onChange={handleInputChange}
-                  />
-                  <span className='absolute vox-icon size-sm inset-y-0 right-0 vx-icon-002' />
-                </div>
-              </div>
+              <Input
+                name='max'
+                label='Maximum'
+                type='number'
+                id={`in-number-form-${question.id}-element-max`}
+                value={question.max}
+                placeholder='Max Length'
+                onChange={handleInputChange}
+                borderless
+                thin
+                icon='234'
+              />
             )}
 
             {(question.type === ELEMENT_TYPE.IMAGE ||
               question.type === ELEMENT_TYPE.FILES ||
               question.type === ELEMENT_TYPE.AUDIO) && (
-              <div>
-                <label className='block text-sm font-medium mb-1'>Size</label>
-                <div className='relative'>
-                  <input
-                    className='w-full'
-                    type='number'
-                    name='size'
-                    value={question.size}
-                    placeholder='Size'
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
+              <Input
+                type='number'
+                name='size'
+                label='size'
+                id={`in-number-form-${question.id}-element-size`}
+                value={question.size}
+                placeholder='Size'
+                onChange={handleInputChange}
+                borderless
+                thin
+                icon='234'
+              />
             )}
 
             {(question.type === ELEMENT_TYPE.IMAGE ||
               question.type === ELEMENT_TYPE.FILES) && (
-              <div>
-                <label className='block text-sm font-medium mb-1'>
-                  Number Files
-                </label>
-                <div className='relative'>
-                  <input
-                    className='w-full'
-                    type='number'
-                    name='maxNumberFiles'
-                    value={question.maxNumberFiles}
-                    placeholder='Number Files'
-                    onChange={handleInputChange}
-                  />
-                </div>
+              <Input
+                type='number'
+                name='maxNumberFiles'
+                label='Number Files'
+                id={`in-number-form-${question.id}-element-files`}
+                value={question.maxNumberFiles}
+                placeholder='Number Files'
+                onChange={handleInputChange}
+                borderless
+                thin
+                icon='234'
+              />
+            )}
+
+            {(question.type === ELEMENT_TYPE.CHECK_BOX ||
+              question.type === ELEMENT_TYPE.RADIO_BUTTON ||
+              question.type === ELEMENT_TYPE.SWITCH) && (
+              <div className='col-span-2'>
+                <MultipleInput
+                  name='tasks'
+                  label='Tasks'
+                  id={`mt-form-${question.id}-element-tasks`}
+                  icon='123'
+                  value={question.tasks}
+                  onChange={onChangeMulty}
+                  bottom
+                  getElement={(option: IOption, index: number) => (
+                    <Card
+                      key={`task-validation-${question}-${index}`}
+                      color='bg-transparent'
+                      maxWidth='w-52'
+                    >
+                      <p className='font-bold truncate mt-2'>{option.label}</p>
+                      {question.options && question.tasks && (
+                        <Select
+                          name={`task-${option.value}`}
+                          id={`sl-task-${question.id}-${option.value}`}
+                          options={question.options}
+                          value={question.tasks[index].control}
+                          onChange={handleInputChange}
+                          borderless
+                          icon='079'
+                        />
+                      )}
+                    </Card>
+                  )}
+                />
               </div>
             )}
           </div>
@@ -474,7 +509,6 @@ export const FormElement = ({
             onClick={handleDelete}
           >
             <span className='vox-icon vx-icon-053 size-sm' />
-            {/* <h6 className='text-2xs'>Delete</h6> */}
           </div>
         </td>
       </tr>

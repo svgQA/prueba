@@ -1,14 +1,19 @@
+import { ELEMENT_TYPE, IElement, IFormat, IPage } from '@/types/form';
 import { computed, signal } from '@preact/signals';
 import shortUUID from 'short-uuid';
-import { IElement, IFormat, IPage } from './interface.d';
-import { ELEMENT_TYPE } from './types';
+import { SWITCH_OPTIONS } from './constant';
+
+export enum FORMAT_MODE_SERVICE {
+  CREATE,
+  UPDATE,
+}
 
 const getNewElement = (section?: string, type?: ELEMENT_TYPE): IElement => ({
   id: shortUUID.generate(),
   label: '',
   type: type || ELEMENT_TYPE.INPUT,
   required: false,
-  visible: false,
+  invisible: false,
   disable: false,
   assigned: false,
   section,
@@ -20,15 +25,35 @@ const getInitPage = (): IPage => ({
   elements: [getNewElement()],
 });
 
-export const format = signal<IFormat>({
+const buildInitFormat = (): IFormat => ({
   id: shortUUID.generate(),
   label: '',
   description: '',
   pages: [getInitPage()],
 });
 
+interface IFormMode {
+  mode: FORMAT_MODE_SERVICE;
+  id?: number;
+}
+
+const format = signal<IFormat>(buildInitFormat());
+const formatMode = signal<IFormMode>({ mode: FORMAT_MODE_SERVICE.CREATE });
+
+export const setFormat = (
+  mode: IFormMode = { mode: FORMAT_MODE_SERVICE.CREATE },
+  model?: IFormat
+) => {
+  format.value =
+    mode.mode === FORMAT_MODE_SERVICE.CREATE
+      ? buildInitFormat()
+      : model || buildInitFormat();
+  formatMode.value = mode;
+};
+
 export const getFormLength = computed(() => format.value.pages.length);
 export const getForm = computed(() => format.value);
+export const getFormMode = computed(() => formatMode.value);
 
 export const addPage = () => {
   format.value = {
@@ -193,6 +218,126 @@ export const moveElement = (
         return p;
       }
       return p;
+    }),
+  };
+};
+
+export const udpateGeneralForm = (name: string, value: string) => {
+  format.value = {
+    ...format.value,
+    [name]: value,
+  };
+};
+
+export const updatePageForm = (
+  name: string,
+  value: string,
+  page_id: string
+) => {
+  format.value = {
+    ...format.value,
+    pages: format.value.pages.map((page) =>
+      page.id === page_id ? { ...page, [name]: value } : page
+    ),
+  };
+};
+
+export const updateForm =
+  (question: string, page?: string, section?: string) =>
+  (name: string, value: unknown, task?: string | number) => {
+    format.value = {
+      ...format.value,
+      pages: format.value.pages.map((p) => {
+        if (p.id === page) {
+          if (section) {
+            return {
+              ...p,
+              elements: p.elements.map((s: IElement) =>
+                s.id === section
+                  ? {
+                      ...s,
+                      elements: updateElement(
+                        name,
+                        question,
+                        value,
+                        task,
+                        s.elements
+                      ),
+                    }
+                  : s
+              ),
+            };
+          } else {
+            return {
+              ...p,
+              elements: updateElement(name, question, value, task, p.elements),
+            };
+          }
+        }
+        return p;
+      }),
+    };
+  };
+
+const updateElement = (
+  name: string,
+  question: string,
+  value: unknown,
+  task?: string | number,
+  elements?: IElement[]
+): IElement[] => {
+  if (!elements) return [];
+  return elements?.map((element) =>
+    element.id === question
+      ? name === 'task'
+        ? {
+            ...element,
+            tasks: element.tasks?.map((tsk) =>
+              tsk.value == task
+                ? {
+                    ...tsk,
+                    control: value as string | number,
+                  }
+                : tsk
+            ),
+          }
+        : name === 'type'
+          ? {
+              ...element,
+              type: value as ELEMENT_TYPE,
+              options:
+                (value as ELEMENT_TYPE) === ELEMENT_TYPE.SWITCH
+                  ? SWITCH_OPTIONS
+                  : [],
+            }
+          : {
+              ...element,
+              [name]: value,
+            }
+      : element
+  );
+};
+
+export const updateSectionForm = (
+  name: string,
+  value: string,
+  page_id: string,
+  section_id: string
+) => {
+  format.value = {
+    ...format.value,
+    pages: format.value.pages.map((page) => {
+      if (page.id !== page_id) return page;
+
+      return {
+        ...page,
+        elements: page.elements.map((element) => {
+          if (element.id === section_id) {
+            return { ...element, [name]: value };
+          }
+          return element;
+        }),
+      };
     }),
   };
 };

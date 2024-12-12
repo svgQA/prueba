@@ -1,0 +1,5 @@
+.table-setting-button:hover {
+  div {
+    @apply visible;
+  }
+}

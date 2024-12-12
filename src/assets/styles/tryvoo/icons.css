@@ -6,7 +6,7 @@
 span.vox-icon {
   font-family: vox-icons;
   font-size: 1.5em;
-  @apply text-b-dark dark:text-primary;
+  @apply text-b-dark dark:text-primary font-extralight;
 }
 
 span.vx-icon {

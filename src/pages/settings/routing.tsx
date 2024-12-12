@@ -1,6 +1,7 @@
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { memo } from 'preact/compat';
 import { Route, Router } from 'wouter';
+import { Suspense, lazy } from 'preact/compat';
 
 import {
   AnalyticAdminSettingPage,
@@ -25,7 +26,7 @@ import { PaymentHistorySettingPage, PaymentSettingPage } from './payment';
 import {
   FormAnalyticSettingPage,
   FormCreateSettingPage,
-  FormListsSettingPage,
+  // FormListsSettingPage,
   FormReportSettingPage,
   FormSettingPage,
 } from './forms';
@@ -36,130 +37,172 @@ import { SalesSettingPage } from './sales';
 import { AsociateSettingPage, ResourcesSettingPage } from './asociate';
 
 export const RoutingContent = memo(() => {
-  return (
+  const content = (
     <Router base={PAGES_LIST_ROUTER.dashboard.setting.base}>
       {/* GENERAL ADMINISTRATOR */}
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.admin.analytic.to}
-        component={AnalyticAdminSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.admin.database.to}
-        component={DatabaseSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.admin.tenant.to}
-        component={TenantSettingPage}
-      />
-      {/* GENERAL MENU */}
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.setting.user.to}
-        component={UserSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.setting.company.to}
-        component={CompanySettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.setting.modules.to}
-        component={ModulesSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.setting.integration.to}
-        component={IntegrationSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.setting.voxline.to}
-        component={VoxlineSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.setting.solo.to}
-        component={SoloSettingPage}
-      />
-      {/* SECURITY MENU */}
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.security.keys.to}
-        component={KeysSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.security.users.to}
-        component={UsersSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.security.roles.to}
-        component={RolesSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.security.groups.to}
-        component={GroupSettingPage}
-      />
-      {/* PAYMENT MENU */}
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.payment.history.to}
-        component={PaymentHistorySettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.payment.payment.to}
-        component={PaymentSettingPage}
-      />
-      {/* FORMS MENU */}
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.forms.form.to}
-        component={FormSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
-        component={FormAnalyticSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.forms.create.to}
-        component={FormCreateSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.forms.list.to}
-        component={FormListsSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.to}
-        component={FormReportSettingPage}
-      />
-      {/* IOT MENU */}
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.iot.devices.to}
-        component={DevicesSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.iot.iot.to}
-        component={IotSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.iot.channels.to}
-        component={ChannelsSettingPage}
-      />
-      {/* IA MENU */}
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.ia.ia.to}
-        component={IASettingPage}
-      />
-      {/* SHIFTS MENU */}
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.to}
-        component={RoundsSettingPage}
-      />
-      {/* SALES MENU */}
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.sales.sales.to}
-        component={SalesSettingPage}
-      />
-      {/* ASOCIATE MENU */}
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.asociate.list.to}
-        component={ResourcesSettingPage}
-      />
-      <Route
-        path={PAGES_LIST_ROUTER.dashboard.setting.asociate.resource.to}
-        component={AsociateSettingPage}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.admin.analytic.to}
+          component={lazy(() =>
+            Promise.resolve({ default: AnalyticAdminSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.admin.database.to}
+          component={lazy(() =>
+            Promise.resolve({ default: DatabaseSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.admin.tenant.to}
+          component={lazy(() =>
+            Promise.resolve({ default: TenantSettingPage })
+          )}
+        />
+        {/* GENERAL MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.user.to}
+          component={lazy(() => Promise.resolve({ default: UserSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.company.to}
+          component={lazy(() =>
+            Promise.resolve({ default: CompanySettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.modules.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ModulesSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.integration.to}
+          component={lazy(() =>
+            Promise.resolve({ default: IntegrationSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.voxline.to}
+          component={lazy(() =>
+            Promise.resolve({ default: VoxlineSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.solo.to}
+          component={lazy(() => Promise.resolve({ default: SoloSettingPage }))}
+        />
+        {/* SECURITY MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.security.keys.to}
+          component={lazy(() => Promise.resolve({ default: KeysSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.security.users.to}
+          component={lazy(() => Promise.resolve({ default: UsersSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.security.roles.to}
+          component={lazy(() => Promise.resolve({ default: RolesSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.security.groups.to}
+          component={lazy(() => Promise.resolve({ default: GroupSettingPage }))}
+        />
+        {/* PAYMENT MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.payment.history.to}
+          component={lazy(() =>
+            Promise.resolve({ default: PaymentHistorySettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.payment.payment.to}
+          component={lazy(() =>
+            Promise.resolve({ default: PaymentSettingPage })
+          )}
+        />
+        {/* FORMS MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.form.to}
+          component={lazy(() => Promise.resolve({ default: FormSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
+          component={lazy(() =>
+            Promise.resolve({ default: FormAnalyticSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: FormCreateSettingPage })
+          )}
+        />
+        {/*
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.list.to}
+          component={lazy(() =>
+            Promise.resolve({ default: FormListsSettingPage })
+          )}
+        />
+        */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.to}
+          component={lazy(() =>
+            Promise.resolve({ default: FormReportSettingPage })
+          )}
+        />
+        {/* IOT MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.iot.devices.to}
+          component={lazy(() =>
+            Promise.resolve({ default: DevicesSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.iot.iot.to}
+          component={lazy(() => Promise.resolve({ default: IotSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.iot.channels.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ChannelsSettingPage })
+          )}
+        />
+        {/* IA MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.ia.ia.to}
+          component={lazy(() => Promise.resolve({ default: IASettingPage }))}
+        />
+        {/* SHIFTS MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.to}
+          component={lazy(() =>
+            Promise.resolve({ default: RoundsSettingPage })
+          )}
+        />
+        {/* SALES MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.sales.sales.to}
+          component={lazy(() => Promise.resolve({ default: SalesSettingPage }))}
+        />
+        {/* ASOCIATE MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.asociate.list.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ResourcesSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.asociate.resource.to}
+          component={lazy(() =>
+            Promise.resolve({ default: AsociateSettingPage })
+          )}
+        />
+      </Suspense>
     </Router>
   );
+
+  return content;
 });

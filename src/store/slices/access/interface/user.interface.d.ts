@@ -14,4 +14,5 @@ export interface IUser {
   phone: string;
   address: string;
   cognito: string;
+  token: string;
 }
