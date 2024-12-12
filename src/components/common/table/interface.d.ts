@@ -9,6 +9,7 @@ export enum ROW_ACTIONS {
   UPDATE,
   CREATE,
   DELETE,
+  REPORT,
 }
 
 export interface IRowAction {

@@ -1,3 +1,1 @@
-export interface ILoading {
-  open: boolean;
-}
+export interface ILoadingProps {}

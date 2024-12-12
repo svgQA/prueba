@@ -1,10 +1,13 @@
-import { Button, Input, Switch } from '@/components/common';
+import { Button, Input, Select, Switch } from '@/components/common';
 import { useSignal } from '@preact/signals';
 import { PropsWithChildren } from 'preact/compat';
 import { TargetedEvent } from 'preact/compat';
 import { getReport, ReportKey, updateReport } from './store';
 import { IReportRequest } from '@/types/form';
 import { FormService } from '@/services';
+import { ELEMENT_PDF_SIZES, ELEMENT_THUMBNAIL_SIZES } from './constant';
+import { CardDropzone } from './components/card.image';
+import { CardReport } from './components/card.page';
 
 interface TabProps extends PropsWithChildren {
   title: string;
@@ -29,10 +32,10 @@ const TabContainer = ({ children, className }: TabContainerProps) => {
   };
   return (
     <div className={className}>
-      <div className='flex w-full flex-row border-b'>
+      <div className='flex w-full flex-row'>
         {tabs.map((tab: any, index: number) => (
           <div
-            className={`flex-1 text-center px-4 py-2 cursor-pointer hover:bg-gray-100 ${
+            className={`flex-1 text-center px-4 py-2 cursor-pointer hover:bg-b-light-dark hover:dark:bg-b-dark-light hover ${
               index === activeTab.value ? 'border-b-4 border-primary' : ''
             }`}
             key={`format-tab-${tab.props.title}`}
@@ -82,119 +85,63 @@ export const FormReportSettingPage = () => {
     <div className='flex w-full mt-3'>
       <div className='w-[25%] flex flex-col vox-scroll-design overflow-y-auto'>
         <div className='space-y-2'>
-          <h2 className='text-xl font-bold'>New Format</h2>
           <Input
             name='title'
             id='in-title-format'
             placeholder='Name Format'
-            borderless
             onChange={handleChange}
             value={getReport.value.title}
+            icon='132'
           />
         </div>
         <TabContainer className='w-full min-h-[50vh]'>
           <Tab title='Style'>
-            <div className='w-full space-y-2'>
+            <div className='w-full space-y-2 px-2'>
               <div className='space-y-3'>
-                <div className='flex items-center gap-2'>
-                  <i className='fas fa-file-alt text-gray-600'></i>
-                  <h3 className='text-lg font-medium'>Cover Page</h3>
-                </div>
-                <div className='border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer'>
-                  <i className='fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2'></i>
-                  <p className='text-gray-600'>
-                    Drop your cover page file here or click to browse
-                  </p>
-                  <input type='file' name='coverPage' className='hidden' />
-                </div>
+                <h3 className='text-lg font-medium'>Cover Page</h3>
+                <CardDropzone
+                  icon='009'
+                  description='Drop your cover page file here or click to browse'
+                />
               </div>
 
               <div className='space-y-3'>
-                <div className='flex items-center gap-2'>
-                  <i className='fas fa-image text-gray-600'></i>
-                  <h3 className='text-lg font-medium'>Logo</h3>
-                </div>
-                <div className='border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer'>
-                  <i className='fas fa-upload text-3xl text-gray-400 mb-2'></i>
-                  <p className='text-gray-600'>
-                    Drop your logo here or click to upload
-                  </p>
-                  <input
-                    type='file'
-                    name='logo'
-                    accept='image/*'
-                    className='hidden'
-                  />
-                </div>
+                <h3 className='text-lg font-medium'>Logo</h3>
+                <CardDropzone
+                  icon='010'
+                  description='Drop your logo here or click to upload'
+                />
               </div>
 
               <div className='space-y-3'>
-                <div className='flex items-center gap-2'>
-                  <i className='fas fa-expand-arrows-alt text-gray-600'></i>
-                  <h3 className='text-lg font-medium'>PDF Size</h3>
-                </div>
-                <select
-                  name='pdfSize'
-                  className='w-full p-2 border rounded-lg'
+                <h3 className='text-lg font-medium'>PDF Size</h3>
+                <Select
+                  placeholder='Type Element'
+                  id='se-form-report-pdfsize'
+                  icon='106'
                   value={getReport.value.pdfSize}
+                  name='pdfSize'
                   onChange={handleChange}
-                >
-                  <option value='a4'>A4</option>
-                  <option value='letter'>US Letter</option>
-                </select>
+                  options={ELEMENT_PDF_SIZES}
+                />
               </div>
 
               <div className='space-y-3'>
-                <div className='flex items-center gap-2'>
-                  <i className='fas fa-compress-arrows-alt text-gray-600'></i>
-                  <h3 className='text-lg font-medium'>Thumbnail Size</h3>
-                </div>
-                <div className='grid grid-cols-3 gap-3'>
-                  <div
-                    className='border rounded-lg p-3 text-center cursor-pointer hover:bg-gray-50'
-                    onClick={() => {
-                      const event = new Event('change') as any;
-                      event.currentTarget = {
-                        name: 'thumbnailSize',
-                        value: 'small',
-                      };
-                      handleChange(event);
-                    }}
-                  >
-                    Small
-                  </div>
-                  <div
-                    className='border rounded-lg p-3 text-center cursor-pointer hover:bg-gray-50'
-                    onClick={() => {
-                      const event = new Event('change') as any;
-                      event.currentTarget = {
-                        name: 'thumbnailSize',
-                        value: 'medium',
-                      };
-                      handleChange(event);
-                    }}
-                  >
-                    Medium
-                  </div>
-                  <div
-                    className='border rounded-lg p-3 text-center cursor-pointer hover:bg-gray-50'
-                    onClick={() => {
-                      const event = new Event('change') as any;
-                      event.currentTarget = {
-                        name: 'thumbnailSize',
-                        value: 'large',
-                      };
-                      handleChange(event);
-                    }}
-                  >
-                    Large
-                  </div>
-                </div>
+                <h3 className='text-lg font-medium'>Thumbnail Size</h3>
+                <Select
+                  placeholder='Type Element'
+                  id='se-form-report-thumbnailSize'
+                  icon='106'
+                  value={getReport.value.thumbnailSize}
+                  name='thumbnailSize'
+                  onChange={handleChange}
+                  options={ELEMENT_THUMBNAIL_SIZES}
+                />
               </div>
             </div>
           </Tab>
           <Tab title='Content'>
-            <div className='w-full space-y-2'>
+            <div className='w-full space-y-4 px-4'>
               <Switch
                 id='cb-form-header'
                 name='header'
@@ -248,8 +195,8 @@ export const FormReportSettingPage = () => {
           </Tab>
         </TabContainer>
       </div>
-      <div className='w-[75%] p-4'>
-        <div className='flex justify-between items-center mb-6 border-b pb-4'>
+      <div className='w-[75%] px-4'>
+        <div className='flex justify-between items-center mb-3'>
           <h1 className='text-2xl font-bold'>Report</h1>
           <div className='space-x-2'>
             <Button
@@ -268,7 +215,7 @@ export const FormReportSettingPage = () => {
               id='btn-web-view'
               type='button'
               label='Web View'
-              icon='056'
+              icon='076'
             />
             {/*
               className={`${viewMode.value === 'web' ? 'bg-primary' : 'bg-gray-200'}`}
@@ -284,62 +231,7 @@ export const FormReportSettingPage = () => {
             />
           </div>
         </div>
-        <div className='bg-white shadow-lg p-8 w-full vox-scroll-design overflow-y-auto max-h-[70vh]'>
-          <div className='space-y-6'>
-            <div className='border-b pb-4'>
-              <h2 className='text-xl font-bold mb-2'>Company Name</h2>
-              <p className='text-gray-600'>123 Business Street</p>
-              <p className='text-gray-600'>City, State 12345</p>
-            </div>
-
-            <div className='space-y-4'>
-              <h3 className='text-lg font-semibold'>Report Details</h3>
-              <div className='grid grid-cols-2 gap-4'>
-                <div>
-                  <p className='text-gray-600'>
-                    Date: {new Date().toLocaleDateString()}
-                  </p>
-                  <p className='text-gray-600'>Report ID: REP-2023-001</p>
-                </div>
-                <div>
-                  <p className='text-gray-600'>Department: Sales</p>
-                  <p className='text-gray-600'>Generated by: John Doe</p>
-                </div>
-              </div>
-            </div>
-
-            <div className='space-y-4'>
-              <h3 className='text-lg font-semibold'>Summary</h3>
-              <p className='text-gray-700'>
-                This is an example report summary with sample content. The
-                actual content will be populated based on the selected template
-                and configuration.
-              </p>
-            </div>
-
-            <table className='w-full border-collapse'>
-              <thead>
-                <tr className='bg-gray-50'>
-                  <th className='border p-2 text-left'>Item</th>
-                  <th className='border p-2 text-left'>Description</th>
-                  <th className='border p-2 text-right'>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className='border p-2'>Item 1</td>
-                  <td className='border p-2'>Description for item 1</td>
-                  <td className='border p-2 text-right'>$100.00</td>
-                </tr>
-                <tr>
-                  <td className='border p-2'>Item 2</td>
-                  <td className='border p-2'>Description for item 2</td>
-                  <td className='border p-2 text-right'>$150.00</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <CardReport />
       </div>
     </div>
   );

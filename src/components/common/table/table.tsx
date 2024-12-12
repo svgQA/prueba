@@ -83,10 +83,16 @@ export const Table = <T,>({
   });
 
   const memoizedLeafColumns = useMemo(() => {
-    return table.getAllLeafColumns().map((column) => ({
-      label: String(column.columnDef.header),
-      id: column.id,
-    }));
+    return table.getAllLeafColumns().map((column) => {
+      const columnHeader =
+        typeof column.columnDef.header !== 'string'
+          ? column.id
+          : (column.columnDef.header as string);
+      return {
+        label: columnHeader,
+        id: column.id,
+      };
+    });
   }, []);
 
   const handleDragEnd = (event: DragEndEvent) => {

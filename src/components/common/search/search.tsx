@@ -140,7 +140,7 @@ export const Search = ({
         const keyName = `filter-key-${key.id}-${index}`;
         return (
           <div
-            className={`px-2 py-0.5 cursor-pointer flex flex-row min-w-40 hover:bg-primary hover:text-t-dark ${
+            className={`px-2 py-0.5 cursor-pointer flex flex-row min-w-40 hover:bg-primary hover:text-t-dark capitalize ${
               index === selectedKeyIndex.value ? 'bg-primary' : ''
             }`}
             key={keyName}
