@@ -6,7 +6,7 @@ import { useEffect } from 'preact/hooks';
 import { FormService } from '@/services';
 import { useSignal } from '@preact/signals';
 import { IFormResponse } from '@/types/form';
-import { IRowAction } from '@/components/common/interface';
+import { IRowAction, ROW_ACTIONS } from '@/components/common/interface';
 import { FORMAT_MODE_SERVICE, setFormat } from '../create/store';
 import { CardMenu } from './components/card.menu';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
@@ -25,20 +25,29 @@ export const FormSettingPage = () => {
     forms.value = response.getMany();
   };
 
+  const redirect = (format: IFormResponse) => {
+    setFormat(
+      { mode: FORMAT_MODE_SERVICE.UPDATE, id: format.id },
+      format.structure
+    );
+    navigate('/form/create');
+  };
+
   const handleOnClick = (action: IRowAction) => {
     const format = forms.value.find((format) => format.id == action.id);
     if (!format?.structure) throw Error('ERROR: Not exist format in this form');
-    try {
-      setFormat(
-        {
-          mode: FORMAT_MODE_SERVICE.UPDATE,
-          id: format.id,
-        },
-        format.structure
-      );
-      navigate('/form/create');
-    } catch {
-      throw Error('ERROR: Not allowed convert form-struct.');
+    switch (action.action) {
+      case ROW_ACTIONS.UPDATE:
+        redirect(format);
+        break;
+      case ROW_ACTIONS.DELETE:
+        console.log('ELIMINAR ESTA VUELTA');
+        break;
+      case ROW_ACTIONS.REPORT:
+        navigate('/form/report');
+        break;
+      default:
+        break;
     }
   };
 
@@ -56,6 +65,7 @@ export const FormSettingPage = () => {
           icon='123'
           event={() => setFormat({ mode: FORMAT_MODE_SERVICE.CREATE })}
         />
+        {/*
         <CardMenu
           menu={{
             to: PAGES_LIST_ROUTER.dashboard.setting.forms.report.to,
@@ -66,6 +76,7 @@ export const FormSettingPage = () => {
           description='Create Report to format'
           icon='023'
         />
+        */}
       </div>
       <Table<IFormResponse>
         data={forms.value}

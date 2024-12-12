@@ -41,7 +41,7 @@ export const columns: ColumnDef<IFormResponse>[] = [
   },
   {
     id: 'action',
-    size: 10,
+    size: 20,
     cell: (info) => {
       const { id } = info.row.original;
       return (
@@ -57,6 +57,12 @@ export const columns: ColumnDef<IFormResponse>[] = [
             data-id={id}
             data-type='form'
             data-action={ROW_ACTIONS.DELETE}
+          ></span>
+          <span
+            className='vox-icon vx-icon-143 p-1 size-sm cursor-pointer'
+            data-id={id}
+            data-type='form'
+            data-action={ROW_ACTIONS.REPORT}
           ></span>
         </div>
       );
