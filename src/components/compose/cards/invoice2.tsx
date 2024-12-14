@@ -8,11 +8,7 @@ export const InvoiceCard2: FunctionComponent<IInvoiceCardProps> = ({
   active = false,
 }: IInvoiceCardProps) => {
   return (
-    <Card
-      id={id}
-      name={name}
-      color={active ? 'poner bg color' : 'poner bg color'}
-    >
+    <Card id={id} name={name} color={active ? 'bg-gray-300' : 'bg-gray-300'}>
       <div
         className={`${active ? 'poner color text' : 'poner color text'} max-h-20`}
       >

@@ -10,11 +10,7 @@ export const CreditCard: FunctionComponent<ICreditCardProps> = ({
   onClick,
 }: ICreditCardProps) => {
   return (
-    <Card
-      id={id}
-      name={name}
-      color={active ? 'poner bg color' : 'poner bg color'}
-    >
+    <Card id={id} name={name} color={active ? 'bg-gray-300' : 'bg-gray-300'}>
       <div
         className={`${active ? 'poner text color' : 'poner text color'} ${onClick ? 'cursor-pointer' : ''} max-h-20 w-full justify-center flex`}
         onClick={() => (onClick ? onClick(true) : null)}
