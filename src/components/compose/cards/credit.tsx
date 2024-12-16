@@ -16,16 +16,16 @@ export const CreditCard: FunctionComponent<ICreditCardProps> = ({
         onClick={() => (onClick ? onClick(true) : null)}
       >
         {onClick ? (
-          <span className='vx-icon vx-plus text-3xl size-20 flex items-center justify-center' />
+          <span className='vx-icon vx-icon-055 text-3xl size-20 flex items-center justify-center' />
         ) : (
           <div className='px-4 py-2'>
             <div className='flex items-center space-x-36'>
               <div className='flex-1'>
                 <div className='rounded items-center px-2 min-w-32 flex justify-center'>
-                  <span className='text-sm'>•••• •••• {number}</span>
+                  <span className='text-sm '>•••• •••• {number}</span>
                 </div>
               </div>
-              <span className='vx-icon vx-credit-card text-sm size-base' />
+              <span className='vx-icon vx-icon-015 text-sm size-base' />
             </div>
             <div className='flex flex-row justify-between'>
               <div className='rounded flex justify-center my-6'>

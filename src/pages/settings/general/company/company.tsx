@@ -81,7 +81,10 @@ export const CompanySettingPage: FunctionComponent = () => {
                   className='w-full h-full object-cover'
                 />
               ) : (
-                <span className='vx-icon vx-user text-lg' />
+                <span
+                  className='vx-icon vx-icon-0091'
+                  style={{ fontSize: '400%' }}
+                />
               )}
               <div className='absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all flex items-center justify-center'>
                 <button
