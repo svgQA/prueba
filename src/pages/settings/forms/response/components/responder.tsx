@@ -1,3 +1,7 @@
+import { Input, Select } from '@/components/common';
+import { Checkbox } from '@/components/common/checkbox/checkbox';
+import { Radio } from '@/components/common/radio/radio';
+import { TextArea } from '@/components/common/text.area/text.area';
 import { ELEMENT_TYPE, IElement, IFormat } from '@/types/form';
 import { useState } from 'preact/hooks';
 
@@ -8,7 +12,7 @@ interface FormatBuilderProps {
 export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [responses, setResponses] = useState<{ [key: string]: any }>({});
+  // const [responses, setResponses] = useState<{ [key: string]: any }>({});
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev) =>
@@ -18,22 +22,23 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
     );
   };
 
-  const handleInputChange = (id: string, value: any) => {
-    setResponses((prev) => ({ ...prev, [id]: value }));
-  };
+  // const handleInputChange = (id: string, value: any) => {
+  //   setResponses((prev) => ({ ...prev, [id]: value }));
+  // };
 
   const renderElement = (element: IElement) => {
-    const commonClasses =
-      'w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500';
+    // const commonClasses =
+    //   'w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500';
 
     switch (element.type) {
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
         return (
-          <div class='mb-4'>
+          <div class='mb-4 bg-b-light-dark dark:bg-b-dark-light'>
+            <span />
             <button
               onClick={() => toggleSection(element.id)}
-              class='w-full flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg'
+              class='w-full flex justify-between items-center p-4 rounded-lg'
             >
               <span class='font-medium'>{element.label}</span>
               <span class='transform transition-transform duration-200'>
@@ -49,174 +54,75 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
         );
       case ELEMENT_TYPE.TITLE:
         return (
-          <div class='mb-4 p-4 bg-white rounded-lg shadow-sm'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
             <h2 class='text-xl font-bold'>{element.label}</h2>
           </div>
         );
       case ELEMENT_TYPE.INPUT:
         return (
-          <div class='mb-4 p-4 bg-white rounded-lg shadow-sm'>
-            <label class='block text-sm font-medium text-gray-700 mb-1'>
-              {element.label}{' '}
-              {element.required && <span class='text-red-500'>*</span>}
-            </label>
-            {element.description && (
-              <p class='text-sm text-gray-500 mb-2'>{element.description}</p>
-            )}
-            <input
+          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+            <Input
+              name={element.id}
               type='text'
-              class={commonClasses}
-              value={responses[element.id] || element.default || ''}
-              onChange={(e) =>
-                handleInputChange(element.id, e.currentTarget.value)
-              }
-              pattern={element.regex}
-              maxLength={element.max}
-              required={element.required}
-              disabled={element.disable}
+              label={element.label}
+              icon='123'
+              borderless
             />
           </div>
         );
       case ELEMENT_TYPE.TEXT_AREA:
         return (
-          <div class='mb-4 p-4 bg-white rounded-lg shadow-sm'>
-            <label class='block text-sm font-medium text-gray-700 mb-1'>
-              {element.label}{' '}
-              {element.required && <span class='text-red-500'>*</span>}
-            </label>
-            {element.description && (
-              <p class='text-sm text-gray-500 mb-2'>{element.description}</p>
-            )}
-            <textarea
-              class={commonClasses}
-              value={responses[element.id] || element.default || ''}
-              onChange={(e) =>
-                handleInputChange(element.id, e.currentTarget.value)
-              }
-              maxLength={element.max}
-              required={element.required}
-              disabled={element.disable}
-            />
+          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+            <TextArea name={element.id} label={element.label} icon='123' />
           </div>
         );
       case ELEMENT_TYPE.NUMBER_INPUT:
         return (
-          <div class='mb-4 p-4 bg-white rounded-lg shadow-sm'>
-            <label class='block text-sm font-medium text-gray-700 mb-1'>
-              {element.label}{' '}
-              {element.required && <span class='text-red-500'>*</span>}
-            </label>
-            {element.description && (
-              <p class='text-sm text-gray-500 mb-2'>{element.description}</p>
-            )}
-            <input
+          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+            <Input
+              name={element.id}
               type='number'
-              class={commonClasses}
-              value={responses[element.id] || element.default || ''}
-              onChange={(e) =>
-                handleInputChange(element.id, Number(e.currentTarget.value))
-              }
-              min={element.min}
-              max={element.max}
-              required={element.required}
-              disabled={element.disable}
+              label={element.label}
+              icon='123'
+              borderless
             />
           </div>
         );
       case ELEMENT_TYPE.DROPDOWN:
         return (
-          <div class='mb-4 p-4 bg-white rounded-lg shadow-sm'>
-            <label class='block text-sm font-medium text-gray-700 mb-1'>
-              {element.label}{' '}
-              {element.required && <span class='text-red-500'>*</span>}
-            </label>
-            {element.description && (
-              <p class='text-sm text-gray-500 mb-2'>{element.description}</p>
-            )}
-            <select
-              class={commonClasses}
-              value={responses[element.id] || element.default || ''}
-              onChange={(e) =>
-                handleInputChange(element.id, e.currentTarget.value)
-              }
-              required={element.required}
-              disabled={element.disable}
-            >
-              <option value=''>Select an option</option>
-              {element.options?.map((option) => (
-                <option value={option.value}>{option.label}</option>
-              ))}
-            </select>
+          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+            <Select
+              name={element.id}
+              options={element?.options}
+              label={element.label}
+              icon='123'
+              borderless
+            />
           </div>
         );
       case ELEMENT_TYPE.RADIO_BUTTON:
         return (
-          <div class='mb-4 p-4 bg-white rounded-lg shadow-sm'>
-            <label class='block text-sm font-medium text-gray-700 mb-1'>
-              {element.label}{' '}
-              {element.required && <span class='text-red-500'>*</span>}
-            </label>
-            {element.description && (
-              <p class='text-sm text-gray-500 mb-2'>{element.description}</p>
-            )}
-            <div class='space-y-2'>
-              {element.options?.map((option) => (
-                <label class='flex items-center space-x-2'>
-                  <input
-                    type='radio'
-                    name={element.id}
-                    value={option.value}
-                    checked={responses[element.id] === option.value}
-                    onChange={(e) =>
-                      handleInputChange(element.id, e.currentTarget.value)
-                    }
-                    required={element.required}
-                    disabled={element.disable}
-                  />
-                  <span>{option.label}</span>
-                </label>
-              ))}
-            </div>
+          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+            <Radio
+              name={element.id}
+              label={element.label}
+              options={element.options}
+            />
           </div>
         );
       case ELEMENT_TYPE.CHECK_BOX:
         return (
-          <div class='mb-4 p-4 bg-white rounded-lg shadow-sm'>
-            <label class='block text-sm font-medium text-gray-700 mb-1'>
-              {element.label}{' '}
-              {element.required && <span class='text-red-500'>*</span>}
-            </label>
-            {element.description && (
-              <p class='text-sm text-gray-500 mb-2'>{element.description}</p>
-            )}
-            <div class='space-y-2'>
-              {element.options?.map((option) => (
-                <label class='flex items-center space-x-2'>
-                  <input
-                    type='checkbox'
-                    value={option.value}
-                    checked={responses[element.id]?.includes(option.value)}
-                    onChange={(e) => {
-                      const current = responses[element.id] || [];
-                      const value = e.currentTarget.value;
-                      handleInputChange(
-                        element.id,
-                        current.includes(value)
-                          ? current.filter((v: string) => v !== value)
-                          : [...current, value]
-                      );
-                    }}
-                    disabled={element.disable}
-                  />
-                  <span>{option.label}</span>
-                </label>
-              ))}
-            </div>
+          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+            <Checkbox
+              name={element.id}
+              label={element.label}
+              options={element.options}
+            />
           </div>
         );
       default:
         return (
-          <div class='mb-4 p-4 bg-white rounded-lg shadow-sm'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
             <label class='block text-sm font-medium text-gray-700 mb-1'>
               {element.label}
             </label>

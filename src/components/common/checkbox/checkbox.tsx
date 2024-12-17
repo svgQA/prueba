@@ -1,7 +1,7 @@
 import { type FunctionComponent } from 'preact';
-import { type IRadioProps } from './interface';
+import { type ICheckboxProps } from './interface';
 
-export const Radio: FunctionComponent<IRadioProps> = ({
+export const Checkbox: FunctionComponent<ICheckboxProps> = ({
   onChange,
   id,
   name,
@@ -10,7 +10,7 @@ export const Radio: FunctionComponent<IRadioProps> = ({
   value,
   required,
   ...props
-}: IRadioProps) => {
+}: ICheckboxProps) => {
   return (
     <div id={id} name={name} className='w-full my-1'>
       {label && (
@@ -25,7 +25,7 @@ export const Radio: FunctionComponent<IRadioProps> = ({
         {options?.map((option) => (
           <div key={option.value} className='flex items-center'>
             <input
-              type='radio'
+              type='checkbox'
               id={`${id}-${option.value}`}
               name={name}
               value={option.value}
