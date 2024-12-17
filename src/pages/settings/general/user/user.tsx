@@ -1,4 +1,4 @@
-import { Section, Table } from '@/components/common';
+import { Table } from '@/components/common';
 import { CardData } from '@/components/compose';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
@@ -13,7 +13,7 @@ export const UserSettingPage: FunctionComponent = () => {
     // setData(userData);
   }, []);
   return (
-    <Section>
+    <section>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
           title='Total Usuario'
@@ -22,7 +22,6 @@ export const UserSettingPage: FunctionComponent = () => {
           color='text-secondary'
           icon='171'
         />
-
         <CardData
           title='Clientes'
           count={300}
@@ -30,7 +29,6 @@ export const UserSettingPage: FunctionComponent = () => {
           color='text-primary'
           icon='020'
         />
-
         <CardData
           title='Administradores'
           count={200}
@@ -39,8 +37,7 @@ export const UserSettingPage: FunctionComponent = () => {
           icon='110'
         />
       </div>
-
-      <Table<User> data={userData} columns={columns} />
-    </Section>
+      <Table<User> data={userData} columns={columns} unsearch />
+    </section>
   );
 };

@@ -61,6 +61,15 @@ export class FormService extends BaseService {
     return await super.make_request<IResponseResponse>(this.sname, model);
   }
 
+  static async get_report_by_id(id: number) {
+    const model: IMakeRequest = {
+      url: ['report', `${id}`],
+      method: REQUEST_METHODS.GET,
+      params: { id },
+    };
+    return await super.make_request<IReportResponse>(this.sname, model);
+  }
+
   static async get_report_all(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
       url: ['report'],

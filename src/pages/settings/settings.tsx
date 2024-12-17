@@ -123,7 +123,7 @@ export const SettingsModal = () => {
           title={menuInformationSelected.value.label}
           description={menuInformationSelected.value.description}
         />
-        <div className='relative max-h-[79vh] overflow-y-auto overflow-x-hidden vox-scroll-design w-full px-1'>
+        <div className='relative max-h-[79vh] min-h-[78vh] overflow-y-auto overflow-x-hidden vox-scroll-design w-full px-1'>
           <RoutingContent />
         </div>
       </div>

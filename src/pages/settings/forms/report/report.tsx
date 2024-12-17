@@ -1,13 +1,13 @@
 import { Button, Input, Select, Switch } from '@/components/common';
 import { useSignal } from '@preact/signals';
-import { PropsWithChildren } from 'preact/compat';
+import { PropsWithChildren, useEffect } from 'preact/compat';
 import { TargetedEvent } from 'preact/compat';
-import { getReport, ReportKey, updateReport } from './store';
-import { IReportRequest } from '@/types/form';
+import { getReport, ReportKey, updateReport } from './store/report';
 import { FormService } from '@/services';
 import { ELEMENT_PDF_SIZES, ELEMENT_THUMBNAIL_SIZES } from './constant';
 import { CardDropzone } from './components/card.image';
 import { CardReport } from './components/card.page';
+import { useLocation } from 'wouter';
 
 interface TabProps extends PropsWithChildren {
   title: string;
@@ -59,6 +59,11 @@ const TabContainer = ({ children, className }: TabContainerProps) => {
 };
 
 export const FormReportSettingPage = () => {
+  const [_, navigate] = useLocation();
+  useEffect(() => {
+    document.title = 'Forms Create Report';
+  }, []);
+
   const handleChange = (
     e: TargetedEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -72,13 +77,9 @@ export const FormReportSettingPage = () => {
   };
 
   const saveReport = async () => {
-    const report: IReportRequest = {
-      title: getReport.value.title,
-      description: getReport.value.title,
-      structure: getReport.value,
-    };
-    const response = await FormService.create_report(report);
+    const response = await FormService.create_report(getReport.value);
     if (!response.getStatus()) return;
+    navigate('/form');
   };
 
   return (

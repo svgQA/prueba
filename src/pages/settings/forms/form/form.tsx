@@ -11,6 +11,7 @@ import { CardMenu } from './components/card.menu';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store';
 import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
+import { setReport, updateReport } from '../report/store/report';
 
 export const FormSettingPage = () => {
   const forms = useSignal<IFormResponse[]>([]);
@@ -26,7 +27,17 @@ export const FormSettingPage = () => {
     forms.value = response.getMany();
   };
 
-  const handleOnClick = (action: IRowAction) => {
+  const navigateReport = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.forms.report.to,
+      label: 'report',
+      id: 'form-report',
+    };
+    appendHistory(menu);
+    navigate(menu.to);
+  };
+
+  const handleOnClick = async (action: IRowAction) => {
     const format = forms.value.find((format) => format.id == action.id);
     if (!format?.structure) throw Error('ERROR: Not exist format in this form');
     switch (action.action) {
@@ -60,14 +71,17 @@ export const FormSettingPage = () => {
         break;
       }
       case ROW_ACTIONS.REPORT: {
-        const menu = {
-          to: PAGES_LIST_ROUTER.dashboard.setting.forms.report.to,
-          label: 'report',
-          id: 'form-report',
-        };
-        appendHistory(menu);
-        navigate(menu.to);
-        break;
+        if (!format.report) {
+          updateReport('formId', format.id);
+          return navigateReport();
+        }
+        const response = await FormService.get_report_by_id(format.report.id);
+        if (!response.getStatus()) {
+          updateReport('formId', format.id);
+        } else {
+          setReport(response.getOne());
+        }
+        return navigateReport();
       }
       default:
         break;

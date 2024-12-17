@@ -1,9 +1,9 @@
 table.elements {
   @apply w-full;
   thead {
-    @apply rounded-xl bg-b-light-dark dark:bg-b-dark-light;
+    @apply rounded-xl;
     th {
-      @apply h-10;
+      @apply h-10 bg-b-light-dark dark:bg-b-dark-light;
       &:first-child {
         @apply rounded-tl-lg;
       }
@@ -13,9 +13,9 @@ table.elements {
     }
   }
   tbody {
-    @apply border-x border-b-light-dark dark:border-b-dark-light bg-b-light dark:bg-b-dark;
+    @apply border-x border-b-light-dark dark:border-b-dark-light;
     td {
-      @apply h-24 border-b-2 border-b-light-dark dark:border-b-dark-light;
+      @apply h-24 border-b-2 border-b-light-dark dark:border-b-dark-light bg-b-light dark:bg-b-dark;
     }
   }
 }

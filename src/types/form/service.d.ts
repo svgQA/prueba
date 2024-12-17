@@ -7,6 +7,7 @@ export interface IFormRequest {
   structure: IFormat;
   description: string;
   category?: string;
+  report?: { id: number };
 }
 
 export interface IFormResponse extends IFormRequest {
@@ -29,11 +30,7 @@ export interface IListResponse extends IListRequest {
   deletedAt?: Date;
 }
 
-export interface IReportRequest {
-  title: string;
-  structure: IReport;
-  description: string;
-}
+export interface IReportRequest extends IReport {}
 
 export interface IReportResponse extends IReportRequest {
   id: number;
