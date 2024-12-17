@@ -35,6 +35,8 @@ import { IASettingPage } from './ia';
 import { RoundsSettingPage } from './shifts';
 import { SalesSettingPage } from './sales';
 import { AsociateSettingPage, ResourcesSettingPage } from './asociate';
+import { FormInspectSettingPage } from './forms/inspect/inspect';
+import { FormResponseSettingPage } from './forms/response/response';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -137,6 +139,18 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.create.to}
           component={lazy(() =>
             Promise.resolve({ default: FormCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to}
+          component={lazy(() =>
+            Promise.resolve({ default: FormInspectSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.response.to}
+          component={lazy(() =>
+            Promise.resolve({ default: FormResponseSettingPage })
           )}
         />
         {/*

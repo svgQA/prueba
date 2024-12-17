@@ -87,7 +87,7 @@ export const SettingsModal = () => {
       header={
         <>
           <MenuButtons goBack={goBack} goForward={goForward} />
-          <div className='min-w-40 flex flex-row'>
+          <div className='ml-5 min-w-40 flex flex-row'>
             <Search
               id='search-general'
               name='search-general'
@@ -116,14 +116,13 @@ export const SettingsModal = () => {
           menuInformationSelected={menuInformationSelected.value}
         />
       </div>
-      <div className='w-full mt-0.5'>
+      <div className='w-full mt-0.5 px-5'>
         <CardSettingHeader
           id='setting-header'
           name='setting-header'
           title={menuInformationSelected.value.label}
           description={menuInformationSelected.value.description}
         />
-
         <div className='relative max-h-[79vh] overflow-y-auto overflow-x-hidden vox-scroll-design w-full px-1'>
           <RoutingContent />
         </div>

@@ -41,10 +41,10 @@ export const Table = <T,>({
   columns,
   pageSize = 10,
   expandable,
-  unscroll,
   unsettings,
   visibility,
   onClickAction,
+  unsearch,
 }: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -119,7 +119,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='invisible absolute left-0 top-10 rounded-md p-4 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
+    <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column, index) => {
         const columnHeader =
           typeof column.columnDef.header !== 'string'
@@ -163,13 +163,15 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className='relative w-full mb-2 flex flex-col items-end'>
-        <Search
-          id='search-general'
-          name='search-general'
-          keys={memoizedLeafColumns}
-          onChange={setColumnFilters}
-        />
+      <div className='relative w-full mb-2'>
+        {!unsearch && (
+          <Search
+            id='search-general'
+            name='search-general'
+            keys={memoizedLeafColumns}
+            onChange={setColumnFilters}
+          />
+        )}
       </div>
       <DndContext
         collisionDetection={closestCenter}
@@ -177,11 +179,10 @@ export const Table = <T,>({
         onDragEnd={handleDragEnd}
         sensors={sensors}
       >
-        <div
-          className={`${unscroll ? 'overflow-y-hidden' : 'overflow-auto vox-scroll-design'} relative w-full rounded-xl border border-b-light-dark dark:border-b-dark-light scroll-x-md min-h-[50vh] max-h-[80vh]`}
-          onClick={handleClick}
-        >
-          <table className='w-full border-collapse info'>
+        {/*min-h-[50vh] max-h-[80vh] */}
+        {/* className={`${unscroll ? 'overflow-y-hidden' : 'overflow-auto vox-scroll-design'} relative w-full rounded-xl border border-b-light-dark dark:border-b-dark-light scroll-x-md`} */}
+        <div onClick={handleClick} className=''>
+          <table className='elements'>
             <thead>
               {table.getHeaderGroups().map((headerGroup, index) => (
                 <tr
@@ -258,6 +259,7 @@ export const Table = <T,>({
           </table>
         </div>
       </DndContext>
+
       <div className='flex flex-row gap-3 justify-end p-3'>
         <Button
           onClick={() => table.previousPage()}

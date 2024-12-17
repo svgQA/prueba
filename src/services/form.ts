@@ -80,7 +80,7 @@ export class FormService extends BaseService {
 
   static async get_response_all(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
-      url: ['report'],
+      url: ['response'],
       params: params as any,
     };
     return await super.make_request<IResponseResponse>(this.sname, model);

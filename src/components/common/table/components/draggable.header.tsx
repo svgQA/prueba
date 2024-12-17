@@ -29,10 +29,12 @@ export const DraggableTableHeader = <T,>({
           asc: <span className='vox-icon vx-icon-002 size-sm mx-1' />,
           desc: <span className='vox-icon vx-icon-001 size-sm mx-1' />,
         }[header.column.getIsSorted() as string] ?? null}
-        <span
-          {...listeners}
-          className='mx-1 cursor-move vox-icon vx-icon-031 size-sm'
-        ></span>
+        {header.column.columnDef.id !== 'action' && (
+          <span
+            {...listeners}
+            className='mx-1 cursor-move vox-icon vx-icon-031 size-sm'
+          ></span>
+        )}
       </div>
     </th>
   );

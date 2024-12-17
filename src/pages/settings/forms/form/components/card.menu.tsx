@@ -1,3 +1,4 @@
+import './index.css';
 import { IMenu } from '@/components/common/interface';
 import { appendHistory } from '@/pages/settings/store';
 import { type FunctionComponent } from 'preact';

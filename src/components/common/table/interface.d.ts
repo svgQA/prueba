@@ -10,6 +10,7 @@ export enum ROW_ACTIONS {
   CREATE,
   DELETE,
   REPORT,
+  RESPONSE,
 }
 
 export interface IRowAction {
@@ -25,6 +26,7 @@ export interface ITableProps<T> {
   expandable?: (row: Row<T>) => VNode;
   unscroll?: boolean;
   unsettings?: boolean;
+  unsearch?: boolean;
   visibility?: { [key: string]: boolean };
   onClickAction?: (action: IRowAction) => void;
 }

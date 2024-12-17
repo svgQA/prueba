@@ -43,12 +43,13 @@ export interface IReportResponse extends IReportRequest {
 }
 
 export interface IResponseRequest {
-  form_id: string;
-  structure: IResponse;
+  formId: number;
+  structure: IFormat;
 }
 
 export interface IResponseResponse extends IResponseRequest {
   id: number;
+  userId: number;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
