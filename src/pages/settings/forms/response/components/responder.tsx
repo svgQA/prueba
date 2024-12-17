@@ -1,4 +1,4 @@
-import { Input, Select } from '@/components/common';
+import { Button, Input, Select } from '@/components/common';
 import { Checkbox } from '@/components/common/checkbox/checkbox';
 import { Radio } from '@/components/common/radio/radio';
 import { TextArea } from '@/components/common/text.area/text.area';
@@ -34,11 +34,11 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
         return (
-          <div class='mb-4 bg-b-light-dark dark:bg-b-dark-light'>
+          <div class='mb-4 bg-b-light dark:bg-b-dark'>
             <span />
             <button
               onClick={() => toggleSection(element.id)}
-              class='w-full flex justify-between items-center p-4 rounded-lg'
+              class='w-full flex justify-between items-center p-4 rounded-lg border-0'
             >
               <span class='font-medium'>{element.label}</span>
               <span class='transform transition-transform duration-200'>
@@ -54,13 +54,13 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
         );
       case ELEMENT_TYPE.TITLE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <h2 class='text-xl font-bold'>{element.label}</h2>
           </div>
         );
       case ELEMENT_TYPE.INPUT:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <Input
               name={element.id}
               type='text'
@@ -72,13 +72,18 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
         );
       case ELEMENT_TYPE.TEXT_AREA:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
-            <TextArea name={element.id} label={element.label} icon='123' />
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <TextArea
+              name={element.id}
+              label={element.label}
+              icon='123'
+              borderless
+            />
           </div>
         );
       case ELEMENT_TYPE.NUMBER_INPUT:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <Input
               name={element.id}
               type='number'
@@ -90,7 +95,7 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
         );
       case ELEMENT_TYPE.DROPDOWN:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <Select
               name={element.id}
               options={element?.options}
@@ -102,7 +107,7 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
         );
       case ELEMENT_TYPE.RADIO_BUTTON:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <Radio
               name={element.id}
               label={element.label}
@@ -112,7 +117,7 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
         );
       case ELEMENT_TYPE.CHECK_BOX:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <Checkbox
               name={element.id}
               label={element.label}
@@ -122,12 +127,12 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
         );
       default:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light-dark dark:bg-b-dark-light'>
-            <label class='block text-sm font-medium text-gray-700 mb-1'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <label class='block text-sm font-medium mb-1'>
               {element.label}
             </label>
             {element.description && (
-              <p class='text-sm text-gray-500 mb-2'>{element.description}</p>
+              <p class='text-sm mb-2'>{element.description}</p>
             )}
           </div>
         );
@@ -135,12 +140,10 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
   };
 
   return (
-    <div class='max-w-4xl mx-auto p-4'>
+    <div class='max-w-4xl mx-auto py-4 px-8 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
       <h1 class='text-2xl font-bold mb-6'>{format.label}</h1>
 
-      {format.description && (
-        <p class='text-gray-600 mb-8'>{format.description}</p>
-      )}
+      {format.description && <p class='mb-8'>{format.description}</p>}
 
       <div class='mb-6'>
         <h2 class='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
@@ -152,27 +155,29 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
       </div>
 
       <div class='flex justify-between items-center'>
-        <button
+        <Button
+          name='btn-response-prev'
+          type='button'
+          label='previus'
+          icon='003'
           onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
-          disabled={currentPage === 0}
-          class='px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed'
-        >
-          Previous
-        </button>
-        <span class='text-sm text-gray-600'>
+        />
+        <span class='text-sm'>
           Page {currentPage + 1} of {format.pages.length}
         </span>
-        <button
+        <Button
+          name='btn-response-next'
+          type='button'
+          label='next'
+          icon='004'
+          end
+          disabled={currentPage === format.pages.length - 1}
           onClick={() =>
             setCurrentPage((prev) =>
               Math.min(format.pages.length - 1, prev + 1)
             )
           }
-          disabled={currentPage === format.pages.length - 1}
-          class='px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed'
-        >
-          Next
-        </button>
+        />
       </div>
     </div>
   );
