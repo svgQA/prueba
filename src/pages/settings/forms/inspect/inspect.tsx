@@ -24,6 +24,7 @@ export const FormInspectSettingPage: FunctionComponent = () => {
     if (!response.getStatus()) return;
     responses.value = response.getMany();
   };
+
   const navigateResponse = () => {
     const menu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.response.to,
@@ -34,7 +35,7 @@ export const FormInspectSettingPage: FunctionComponent = () => {
     navigate(menu.to);
   };
 
-  const handleOnClick = (action: IRowAction) => {
+  const handleOnClick = async (action: IRowAction) => {
     const response = responses.value.find(
       (response) => response.id == action.id
     );
@@ -46,6 +47,9 @@ export const FormInspectSettingPage: FunctionComponent = () => {
         break;
       }
       case ROW_ACTIONS.DELETE: {
+        const respons = await FormService.remove_response_one(response.id);
+        if (!respons.getStatus()) return;
+        getResponseHandler();
         break;
       }
       case ROW_ACTIONS.REPORT: {

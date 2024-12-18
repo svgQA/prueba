@@ -12,6 +12,7 @@ import { appendHistory } from '../../store';
 // import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
 import { setReport, updateReport } from '../report/store/report';
 import { CardMenu } from '@/components/compose';
+import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
 
 export const FormSettingPage = () => {
   const forms = useSignal<IFormResponse[]>([]);
@@ -49,7 +50,7 @@ export const FormSettingPage = () => {
 
   const handleOnClick = async (action: IRowAction) => {
     const format = forms.value.find((format) => format.id == action.id);
-    if (!format?.structure) throw Error('ERROR: Not exist format');
+    if (!format?.structure) throw Error('ERROR: Not exist format in this form');
     switch (action.action) {
       case ROW_ACTIONS.UPDATE: {
         const menu = {
@@ -66,16 +67,20 @@ export const FormSettingPage = () => {
         break;
       }
       case ROW_ACTIONS.DELETE: {
-        console.log('ELIMINAR ESTo');
+        console.log('ELIMINAR ESTO');
         break;
       }
       case ROW_ACTIONS.RESPONSE: {
-        // setResponse({ mode: RESPONSE_MODE_SERVICE.CREATE }, format.structure);
         const response = await FormService.create_response({
           formId: format.id,
           structure: format.structure,
         });
         if (!response.getStatus()) return;
+        const responseModel = response.getOne();
+        setResponse(
+          { mode: RESPONSE_MODE_SERVICE.UPDATE, id: responseModel.id },
+          responseModel.structure
+        );
         return navigateResponse();
       }
       case ROW_ACTIONS.REPORT: {

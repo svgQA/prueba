@@ -13,7 +13,6 @@ interface FormatBuilderProps {
 export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  // const [responses, setResponses] = useState<{ [key: string]: any }>({});
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev) =>
@@ -22,10 +21,6 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
         : [...prev, sectionId]
     );
   };
-
-  // const handleInputChange = (id: string, value: any) => {
-  //   setResponses((prev) => ({ ...prev, [id]: value }));
-  // };
 
   const handleInputChange = (
     e: TargetedEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
