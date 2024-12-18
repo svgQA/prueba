@@ -41,10 +41,10 @@ export const Table = <T,>({
   columns,
   pageSize = 10,
   expandable,
-  unscroll,
   unsettings,
   visibility,
   onClickAction,
+  unsearch,
 }: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -119,7 +119,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='invisible absolute left-0 top-10 rounded-md p-4 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
+    <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column, index) => {
         const columnHeader =
           typeof column.columnDef.header !== 'string'
@@ -163,13 +163,15 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className='relative w-full mb-2 flex flex-col items-end'>
-        <Search
-          id='search-general'
-          name='search-general'
-          keys={memoizedLeafColumns}
-          onChange={setColumnFilters}
-        />
+      <div className='relative w-full mb-2'>
+        {!unsearch && (
+          <Search
+            id='search-general'
+            name='search-general'
+            keys={memoizedLeafColumns}
+            onChange={setColumnFilters}
+          />
+        )}
       </div>
       <DndContext
         collisionDetection={closestCenter}
@@ -177,11 +179,8 @@ export const Table = <T,>({
         onDragEnd={handleDragEnd}
         sensors={sensors}
       >
-        <div
-          className={`${unscroll ? 'overflow-y-hidden' : 'overflow-auto vox-scroll-design'} relative w-full rounded-xl border border-b-light-dark dark:border-b-dark-light scroll-x-md min-h-[50vh] max-h-[80vh]`}
-          onClick={handleClick}
-        >
-          <table className='w-full border-collapse info'>
+        <div onClick={handleClick} className=''>
+          <table className='elements'>
             <thead>
               {table.getHeaderGroups().map((headerGroup, index) => (
                 <tr
@@ -258,39 +257,44 @@ export const Table = <T,>({
           </table>
         </div>
       </DndContext>
-      <div className='flex flex-row gap-3 justify-end p-3'>
-        <Button
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-          type='button'
-          label='back'
-          icon='123'
-          name='back'
-        />
-        {table.getPageOptions().map((page, index) => (
-          <button
-            key={`${page}-${index}`}
-            onClick={() => table.setPageIndex(page)}
-            className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${
-              table.getState().pagination.pageIndex === page ? 'font-bold' : ''
-            }`}
-          >
-            {page + 1}
-          </button>
-        ))}
-        {table.getPageCount() > 3 &&
-        table.getState().pagination.pageIndex < table.getPageCount() - 3 ? (
-          <span className='px-3 py-1 rounded'>...</span>
-        ) : null}
-        <Button
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-          type='button'
-          label='next'
-          icon='123'
-          name='next'
-        />
-      </div>
+
+      {data.length > pageSize && (
+        <div className='flex flex-row gap-3 justify-end p-3'>
+          <Button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            type='button'
+            label='back'
+            icon='123'
+            name='back'
+          />
+          {table.getPageOptions().map((page, index) => (
+            <button
+              key={`${page}-${index}`}
+              onClick={() => table.setPageIndex(page)}
+              className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${
+                table.getState().pagination.pageIndex === page
+                  ? 'font-bold'
+                  : ''
+              }`}
+            >
+              {page + 1}
+            </button>
+          ))}
+          {table.getPageCount() > 3 &&
+          table.getState().pagination.pageIndex < table.getPageCount() - 3 ? (
+            <span className='px-3 py-1 rounded'>...</span>
+          ) : null}
+          <Button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            type='button'
+            label='next'
+            icon='123'
+            name='next'
+          />
+        </div>
+      )}
     </>
   );
 };

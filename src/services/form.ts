@@ -61,6 +61,24 @@ export class FormService extends BaseService {
     return await super.make_request<IResponseResponse>(this.sname, model);
   }
 
+  static async update_report(data: IReportRequest, id: number) {
+    const model: IMakeRequest = {
+      url: ['report', `${id}`],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<IReportResponse>(this.sname, model);
+  }
+
+  static async get_report_by_id(id: number) {
+    const model: IMakeRequest = {
+      url: ['report', `${id}`],
+      method: REQUEST_METHODS.GET,
+      params: { id },
+    };
+    return await super.make_request<IReportResponse>(this.sname, model);
+  }
+
   static async get_report_all(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
       url: ['report'],
@@ -78,9 +96,18 @@ export class FormService extends BaseService {
     return await super.make_request<IResponseResponse>(this.sname, model);
   }
 
+  static async update_response(data: IResponseRequest, id: number) {
+    const model: IMakeRequest = {
+      url: ['response', `${id}`],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<IResponseResponse>(this.sname, model);
+  }
+
   static async get_response_all(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
-      url: ['report'],
+      url: ['response'],
       params: params as any,
     };
     return await super.make_request<IResponseResponse>(this.sname, model);
@@ -98,6 +125,14 @@ export class FormService extends BaseService {
   static async get_one(id: string) {
     const model: IMakeRequest = {
       url: ['form', id],
+    };
+    return await super.make_request<IFormResponse>(this.sname, model);
+  }
+
+  static async remove_response_one(id: number) {
+    const model: IMakeRequest = {
+      url: ['response', `${id}`],
+      method: REQUEST_METHODS.DELETE,
     };
     return await super.make_request<IFormResponse>(this.sname, model);
   }

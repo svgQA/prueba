@@ -35,6 +35,9 @@ import { IASettingPage } from './ia';
 import { RoundsSettingPage } from './shifts';
 import { SalesSettingPage } from './sales';
 import { AsociateSettingPage, ResourcesSettingPage } from './asociate';
+import { FormInspectSettingPage } from './forms/inspect/inspect';
+import { FormResponseSettingPage } from './forms/response/response';
+import { UserCreateSettingPage } from './general/user/create/create';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -63,6 +66,12 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.setting.user.to}
           component={lazy(() => Promise.resolve({ default: UserSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.userCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: UserCreateSettingPage })
+          )}
         />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.setting.company.to}
@@ -137,6 +146,18 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.create.to}
           component={lazy(() =>
             Promise.resolve({ default: FormCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to}
+          component={lazy(() =>
+            Promise.resolve({ default: FormInspectSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.response.to}
+          component={lazy(() =>
+            Promise.resolve({ default: FormResponseSettingPage })
           )}
         />
         {/*

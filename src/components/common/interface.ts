@@ -14,7 +14,7 @@ export * from './map/interface.d';
 export * from './modal/interface.d';
 
 export * from './navbar/interface.d';
-export * from './radio/interface.d';
+// export * from './radio/interface.d';
 export * from './security/interface.d';
 export * from './sidebar/interface.d';
 
