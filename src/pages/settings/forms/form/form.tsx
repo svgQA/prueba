@@ -1,6 +1,6 @@
 import { Table } from '@/components/common';
 import { useLocation } from 'wouter';
-import { columns } from './components';
+import { columns } from './components/form.columns';
 import { useEffect } from 'preact/hooks';
 import { FormService } from '@/services';
 import { useSignal } from '@preact/signals';
@@ -49,7 +49,7 @@ export const FormSettingPage = () => {
 
   const handleOnClick = async (action: IRowAction) => {
     const format = forms.value.find((format) => format.id == action.id);
-    if (!format?.structure) throw Error('ERROR: Not exist format in this form');
+    if (!format?.structure) throw Error('ERROR: Not exist format');
     switch (action.action) {
       case ROW_ACTIONS.UPDATE: {
         const menu = {

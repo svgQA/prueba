@@ -1,6 +1,7 @@
 import { IOption } from '@/components/common/interface';
 import { IFormat } from './form';
 import { IReport } from './report';
+import { RESPONSE_STATUS } from './form.enum';
 
 export interface IFormRequest {
   title: string;
@@ -47,6 +48,7 @@ export interface IResponseRequest {
 export interface IResponseResponse extends IResponseRequest {
   id: number;
   userId: number;
+  status: RESPONSE_STATUS;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
