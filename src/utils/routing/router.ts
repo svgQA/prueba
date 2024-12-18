@@ -38,6 +38,10 @@ export const PAGES_LIST_ROUTER = {
           base: '/',
           to: '/setting',
         },
+        userCreate: {
+          base: '/user/create',
+          to: '/setting/user/create',
+        },
         company: {
           base: '/company',
           to: '/setting/company',

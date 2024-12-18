@@ -4,7 +4,7 @@ import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { columns } from './components';
 import { tenantData } from './utils/tenant.data';
-import { IUserResponse } from '@/types/auth';
+import { ITenantResponse } from '@/types/tenant';
 
 export const TenantSettingPage: FunctionComponent = () => {
   useEffect(() => {
@@ -42,7 +42,7 @@ export const TenantSettingPage: FunctionComponent = () => {
         />
       </div>
 
-      <Table<IUserResponse> data={tenantData} columns={columns} />
+      <Table<ITenantResponse> data={tenantData} columns={columns} />
     </Section>
   );
 };

@@ -7,11 +7,11 @@ import { useSignal } from '@preact/signals';
 import { IFormResponse } from '@/types/form';
 import { IRowAction, ROW_ACTIONS } from '@/components/common/interface';
 import { FORMAT_MODE_SERVICE, setFormat } from '../create/store';
-import { CardMenu } from './components/card.menu';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store';
-import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
+// import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
 import { setReport, updateReport } from '../report/store/report';
+import { CardMenu } from '@/components/compose';
 
 export const FormSettingPage = () => {
   const forms = useSignal<IFormResponse[]>([]);
@@ -37,6 +37,16 @@ export const FormSettingPage = () => {
     navigate(menu.to);
   };
 
+  const navigateResponse = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.forms.response.to,
+      label: 'response',
+      id: 'form-response',
+    };
+    appendHistory(menu);
+    navigate(menu.to);
+  };
+
   const handleOnClick = async (action: IRowAction) => {
     const format = forms.value.find((format) => format.id == action.id);
     if (!format?.structure) throw Error('ERROR: Not exist format in this form');
@@ -56,19 +66,17 @@ export const FormSettingPage = () => {
         break;
       }
       case ROW_ACTIONS.DELETE: {
-        console.log('ELIMINAR ESTA VUELTA');
+        console.log('ELIMINAR ESTo');
         break;
       }
       case ROW_ACTIONS.RESPONSE: {
-        const menu = {
-          to: PAGES_LIST_ROUTER.dashboard.setting.forms.response.to,
-          label: 'response',
-          id: 'form-response',
-        };
-        appendHistory(menu);
-        setResponse({ mode: RESPONSE_MODE_SERVICE.CREATE }, format.structure);
-        navigate(menu.to);
-        break;
+        // setResponse({ mode: RESPONSE_MODE_SERVICE.CREATE }, format.structure);
+        const response = await FormService.create_response({
+          formId: format.id,
+          structure: format.structure,
+        });
+        if (!response.getStatus()) return;
+        return navigateResponse();
       }
       case ROW_ACTIONS.REPORT: {
         if (!format.report) {

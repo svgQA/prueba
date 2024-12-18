@@ -1,12 +1,10 @@
 import { type FunctionComponent } from 'preact';
-import { type IInvoiceCardProps } from './interface';
 import { Card } from '@/components/common';
+import { IInvoiceCardProps } from '../interface';
 
-export const InvoiceCard: FunctionComponent<IInvoiceCardProps> = ({
+export const InvoiceCard2: FunctionComponent<IInvoiceCardProps> = ({
   id,
   name,
-  total,
-  currency,
   active = false,
 }: IInvoiceCardProps) => {
   return (
@@ -24,11 +22,8 @@ export const InvoiceCard: FunctionComponent<IInvoiceCardProps> = ({
         </div>
         <div className='flex flex-row justify-between items-center pt-3'>
           <div className='min-w-36'>
-            <span className='vx-icon vx-currency text-sm size-sm' />
-            Price:
-            <strong className='px-2'>
-              {total} {currency}
-            </strong>
+            <span className='vx-icon vx-asterik text-sm size-sm mr-4' />
+            Main
           </div>
           <div className='flex items-center max-w-24'>
             <span className='vx-icon vx-time size-sm mr-2' />

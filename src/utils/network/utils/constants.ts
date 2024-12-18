@@ -16,4 +16,5 @@ export const VOS_SERVICES = {
   auth: default_service_url,
   form: default_service_url,
   memo: default_service_url,
+  user: default_service_url,
 };
