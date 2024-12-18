@@ -1,4 +1,5 @@
 export interface IReport {
+  id?: number;
   title: string;
   description?: string;
 

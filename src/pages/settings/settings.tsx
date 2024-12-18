@@ -87,7 +87,7 @@ export const SettingsModal = () => {
       header={
         <>
           <MenuButtons goBack={goBack} goForward={goForward} />
-          <div className='ml-5 min-w-40 flex flex-row'>
+          <div className='ml-5 flex flex-row w-full'>
             <Search
               id='search-general'
               name='search-general'

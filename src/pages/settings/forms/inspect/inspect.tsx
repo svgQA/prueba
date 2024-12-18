@@ -4,7 +4,7 @@ import { useSignal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 // import { useLocation } from 'wouter';
-import { columns } from './components/response.columns';
+import { columns } from './components/inspect.columns';
 import { IRowAction } from '@/components/common/interface';
 import { FormService } from '@/services';
 

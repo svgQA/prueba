@@ -77,8 +77,16 @@ export const FormReportSettingPage = () => {
   };
 
   const saveReport = async () => {
-    const response = await FormService.create_report(getReport.value);
-    if (!response.getStatus()) return;
+    if (!getReport.value.id) {
+      const response = await FormService.create_report(getReport.value);
+      if (!response.getStatus()) return;
+    } else {
+      const response = await FormService.update_report(
+        getReport.value,
+        getReport.value.id
+      );
+      if (!response.getStatus()) return;
+    }
     navigate('/form');
   };
 
@@ -226,8 +234,9 @@ export const FormReportSettingPage = () => {
               name='btn-safe-format'
               id='btn-safe-format'
               type='button'
-              label='Save'
+              label={getReport.value.id ? 'Update' : 'Save'}
               icon='156'
+              end
               onClick={saveReport}
             />
           </div>

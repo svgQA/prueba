@@ -41,7 +41,7 @@ export const columns: ColumnDef<IResponseResponse>[] = [
       return (
         <div className='w-full flex justify-center'>
           <span
-            className='border text-primary border-b-light-dark dark:border-b-dark-light rounded px-2 py-1 text-sm cursor-pointer'
+            className='border text-primary border-b-light-dark dark:border-b-dark-light rounded px-2 py-1 text-sm cursor-pointer mr-3'
             data-id={id}
             data-type='response'
             data-action={ROW_ACTIONS.RESPONSE}
