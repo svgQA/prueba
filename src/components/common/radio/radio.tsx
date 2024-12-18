@@ -26,7 +26,7 @@ export const Radio: FunctionComponent<IRadioProps> = ({
           <div key={option.value} className='flex items-center'>
             <input
               type='radio'
-              id={`${id}-${option.value}`}
+              id={`${id}-${option.value}-ra`}
               name={name}
               value={option.value}
               checked={value === option.value}
@@ -35,7 +35,7 @@ export const Radio: FunctionComponent<IRadioProps> = ({
               className='mr-2'
               {...props}
             />
-            <label htmlFor={`${id}-${option.value}`} className='text-sm'>
+            <label for={`${id}-${option.value}-ra`} className='text-sm'>
               {option.label}
             </label>
           </div>

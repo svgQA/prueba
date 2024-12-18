@@ -3,6 +3,7 @@ import { Checkbox } from '@/components/common/checkbox/checkbox';
 import { Radio } from '@/components/common/radio/radio';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { ELEMENT_TYPE, IElement, IFormat } from '@/types/form';
+import { TargetedEvent } from 'preact/compat';
 import { useState } from 'preact/hooks';
 
 interface FormatBuilderProps {
@@ -26,10 +27,36 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
   //   setResponses((prev) => ({ ...prev, [id]: value }));
   // };
 
-  const renderElement = (element: IElement) => {
-    // const commonClasses =
-    //   'w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500';
+  const handleInputChange = (
+    e: TargetedEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const target = e.target as
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | HTMLSelectElement;
 
+    const name = target.name;
+    const value =
+      target.type === 'checkbox'
+        ? (target as HTMLInputElement).checked
+        : target.type === 'number' || target instanceof HTMLSelectElement
+          ? isNaN(Number(target.value))
+            ? target.value
+            : Number(target.value)
+          : target.value;
+
+    const page = target.dataset.page;
+    const section = target.dataset.section;
+
+    // Aqui se tiene la informaciòn para agregar en el value
+    console.log('DATOS: ', value, name, page, section);
+  };
+
+  const renderElement = (
+    element: IElement,
+    page?: string,
+    section?: string
+  ) => {
     switch (element.type) {
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
@@ -47,7 +74,9 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
             </button>
             {isExpanded && element.elements && (
               <div class='pl-4 mt-2'>
-                {element.elements.map((el) => renderElement(el))}
+                {element.elements.map((el) =>
+                  renderElement(el, page, element.id)
+                )}
               </div>
             )}
           </div>
@@ -67,6 +96,9 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
               label={element.label}
               icon='123'
               borderless
+              onChange={handleInputChange}
+              data-page={page}
+              data-section={section}
             />
           </div>
         );
@@ -78,6 +110,9 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
               label={element.label}
               icon='123'
               borderless
+              onChange={handleInputChange}
+              data-page={page}
+              data-section={section}
             />
           </div>
         );
@@ -90,6 +125,9 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
               label={element.label}
               icon='123'
               borderless
+              onChange={handleInputChange}
+              data-page={page}
+              data-section={section}
             />
           </div>
         );
@@ -102,6 +140,9 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
               label={element.label}
               icon='123'
               borderless
+              onChange={handleInputChange}
+              data-page={page}
+              data-section={section}
             />
           </div>
         );
@@ -112,6 +153,9 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
               name={element.id}
               label={element.label}
               options={element.options}
+              onChange={handleInputChange}
+              data-page={page}
+              data-section={section}
             />
           </div>
         );
@@ -122,6 +166,9 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
               name={element.id}
               label={element.label}
               options={element.options}
+              onChange={handleInputChange}
+              data-page={page}
+              data-section={section}
             />
           </div>
         );
@@ -150,7 +197,7 @@ export const ResponderBuilder = ({ format }: FormatBuilderProps) => {
           {format.pages[currentPage].label}
         </h2>
         {format.pages[currentPage].elements.map((element) =>
-          renderElement(element)
+          renderElement(element, format.pages[currentPage].id)
         )}
       </div>
 
