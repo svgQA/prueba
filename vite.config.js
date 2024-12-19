@@ -14,10 +14,10 @@ export default defineConfig({
             output: {
                 manualChunks: function (id) {
                     // if (id.includes('wouter')) {
-                    //     return '@router-bas';
+                    //   return '@router-bas';
                     // }
                     // if (id.includes('preact')) {
-                    //     return '@preact-bas';
+                    //   return '@preact-bas';
                     // }
                     // if (id.includes('components')) {
                     //   return '@components-loc';
