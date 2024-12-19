@@ -26,10 +26,11 @@ export const updateResponse = (
   value: any,
   question: string,
   page: string,
-  section?: string
+  section?: string,
+  cvalue?: string
 ) => {
-  if (!response.value || !value) return;
-  const output = {
+  if (!response.value) return;
+  response.value = {
     ...response.value,
     pages: response.value.pages.map((p) => {
       if (p.id === page) {
@@ -42,10 +43,18 @@ export const updateResponse = (
                     ...s,
                     elements: s.elements?.map((element) =>
                       element.id === question
-                        ? {
-                            ...element,
-                            value,
-                          }
+                        ? cvalue
+                          ? {
+                              ...element,
+                              value: {
+                                ...element.value,
+                                [cvalue]: value,
+                              },
+                            }
+                          : {
+                              ...element,
+                              value,
+                            }
                         : element
                     ),
                   }
@@ -57,10 +66,18 @@ export const updateResponse = (
             ...p,
             elements: p?.elements.map((element) =>
               element.id === question
-                ? {
-                    ...element,
-                    value,
-                  }
+                ? cvalue
+                  ? {
+                      ...element,
+                      value: {
+                        ...element.value,
+                        [cvalue]: value,
+                      },
+                    }
+                  : {
+                      ...element,
+                      value,
+                    }
                 : element
             ),
           };
@@ -69,5 +86,4 @@ export const updateResponse = (
       return p;
     }),
   };
-  console.log(output);
 };

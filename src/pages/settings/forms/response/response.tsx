@@ -5,12 +5,16 @@ import { Radio } from '@/components/common/radio/radio';
 import { Button, Input, Select } from '@/components/common';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { TargetedEvent, useState } from 'preact/compat';
-import { getResponse, updateResponse } from './store/response';
+import { getResponse, getResponseMode, updateResponse } from './store/response';
+import { FormService } from '@/services';
+import { useLocation } from 'wouter';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 // TODO: ahora es una mierda pequeña.
 export const FormResponseSettingPage: FunctionComponent = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [_, navigate] = useLocation();
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev: any) =>
@@ -32,6 +36,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
     if (!page) return;
 
     const name = target.name;
+
     const value =
       target.type === 'checkbox'
         ? (target as HTMLInputElement).checked
@@ -41,8 +46,11 @@ export const FormResponseSettingPage: FunctionComponent = () => {
             : Number(target.value)
           : target.value;
 
+    const cvalue =
+      target.type === 'checkbox' ? target.dataset.value : undefined;
+
     const section = target.dataset.section;
-    updateResponse(value, name, page, section);
+    updateResponse(value, name, page, section, cvalue);
   };
 
   const renderElement = (
@@ -165,6 +173,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               label={element.label}
               options={element.options}
               onChange={handleInputChange}
+              value={element.value}
               data-page={page}
               data-section={section}
             />
@@ -199,9 +208,25 @@ export const FormResponseSettingPage: FunctionComponent = () => {
     return getResponse.value.pages[currentPage].id;
   };
 
-  const saveResponse = () => {};
+  const saveResponse = async () => {
+    if (!getResponse?.value || !getResponseMode?.value?.id) return;
+    const response = await FormService.update_response(
+      { structure: getResponse.value },
+      getResponseMode.value.id
+    );
+    if (!response.getStatus()) return;
+    navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
+  };
 
-  const finishResponse = () => {};
+  const finishResponse = async () => {
+    if (!getResponse?.value || !getResponseMode?.value?.id) return;
+    const response = await FormService.finish_response(
+      { structure: getResponse.value },
+      getResponseMode.value.id
+    );
+    if (!response.getStatus()) return;
+    navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
+  };
 
   return (
     <section className='pt-5'>

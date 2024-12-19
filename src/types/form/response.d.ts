@@ -25,8 +25,12 @@ export interface IRValueObject {
   date?: Date;
 }
 
+export interface IRValueCheckbox {
+  [key: string]: boolean;
+}
+
 export interface IRElement extends IElement {
-  value?: number | string | IRValueObject | boolean | any;
+  value?: any; // number | string | boolean | IRValueCheckbox | IRValueObject;
   elements?: IRElement[];
 }
 

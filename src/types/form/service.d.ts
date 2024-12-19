@@ -2,7 +2,6 @@ import { IOption } from '@/components/common/interface';
 import { IFormat } from './form';
 import { IReport } from './report';
 import { RESPONSE_STATUS } from './form.enum';
-import { extend } from 'immutability-helper';
 
 export interface IFormRequest {
   title: string;
@@ -19,6 +18,8 @@ export interface IFormResponse extends IFormRequest {
   updatedAt?: Date;
   deletedAt?: Date;
 }
+
+export interface UResponseRequest extends Omit<IResponseRequest, 'formId'> {}
 
 export interface IListRequest {
   name: string;

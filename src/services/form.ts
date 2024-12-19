@@ -8,6 +8,7 @@ import {
   IReportResponse,
   IResponseRequest,
   IResponseResponse,
+  UResponseRequest,
 } from '@/types/form';
 import { BaseService } from '@/utils/network';
 import {
@@ -96,9 +97,18 @@ export class FormService extends BaseService {
     return await super.make_request<IResponseResponse>(this.sname, model);
   }
 
-  static async update_response(data: IResponseRequest, id: number) {
+  static async update_response(data: UResponseRequest, id: number) {
     const model: IMakeRequest = {
       url: ['response', `${id}`],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<IResponseResponse>(this.sname, model);
+  }
+
+  static async finish_response(data: UResponseRequest, id: number) {
+    const model: IMakeRequest = {
+      url: ['response', `${id}`, 'end'],
       method: REQUEST_METHODS.PUT,
       data,
     };
