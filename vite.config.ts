@@ -5,7 +5,7 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [preact()],
-  base: '',
+  base: '/',
   clearScreen: false,
   build: {
     chunkSizeWarningLimit: 50,
