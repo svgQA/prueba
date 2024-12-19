@@ -8,6 +8,7 @@ import { ELEMENT_PDF_SIZES, ELEMENT_THUMBNAIL_SIZES } from './constant';
 import { CardDropzone } from './components/card.image';
 import { CardReport } from './components/card.page';
 import { useLocation } from 'wouter';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 interface TabProps extends PropsWithChildren {
   title: string;
@@ -87,7 +88,7 @@ export const FormReportSettingPage = () => {
       );
       if (!response.getStatus()) return;
     }
-    navigate('/form');
+    navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.form.to);
   };
 
   return (

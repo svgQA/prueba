@@ -5,9 +5,9 @@ export const Checkbox: FunctionComponent<ICheckboxProps> = ({
   onChange,
   id,
   name,
-  options,
+  options = [], // Add default empty array
   label,
-  value,
+  value = {}, // Add default empty object
   required,
   ...props
 }: ICheckboxProps) => {
@@ -22,16 +22,17 @@ export const Checkbox: FunctionComponent<ICheckboxProps> = ({
         </label>
       )}
       <div className='flex flex-col gap-2'>
-        {options?.map((option) => (
+        {options.map((option) => (
           <div key={option.value} className='flex items-center'>
             <input
               type='checkbox'
               id={`${id}-${option.value}-ch`}
               name={name}
               value={option.value}
-              checked={value === option.value}
+              checked={value[option.value] || false}
               onChange={onChange}
               required={required}
+              data-value={option.value}
               className='mr-2'
               {...props}
             />

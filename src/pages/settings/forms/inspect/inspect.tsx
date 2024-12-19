@@ -42,7 +42,10 @@ export const FormInspectSettingPage: FunctionComponent = () => {
     if (!response?.structure) throw Error('ERROR: Not exist response');
     switch (action.action) {
       case ROW_ACTIONS.RESPONSE: {
-        setResponse({ mode: RESPONSE_MODE_SERVICE.UPDATE }, response.structure);
+        setResponse(
+          { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id },
+          response.structure
+        );
         navigateResponse();
         break;
       }

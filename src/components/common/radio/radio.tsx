@@ -29,7 +29,7 @@ export const Radio: FunctionComponent<IRadioProps> = ({
               id={`${id}-${option.value}-ra`}
               name={name}
               value={option.value}
-              checked={value === option.value}
+              checked={String(value) === String(option.value)}
               onChange={onChange}
               required={required}
               className='mr-2'

@@ -9,7 +9,6 @@ import { IRowAction, ROW_ACTIONS } from '@/components/common/interface';
 import { FORMAT_MODE_SERVICE, setFormat } from '../create/store';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store';
-// import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
 import { setReport, updateReport } from '../report/store/report';
 import { CardMenu } from '@/components/compose';
 import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';

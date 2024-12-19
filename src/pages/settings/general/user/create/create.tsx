@@ -30,7 +30,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
       });
       if (!request.getStatus()) return;
     }
-    // TODO: Actualizar esta ruta
+    // TODO: Actualizar esta ruta (Esto es mierda)
     navigate('/dashboard/setting/setting');
   };
 
