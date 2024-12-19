@@ -13,12 +13,12 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: function (id) {
-                    if (id.includes('wouter')) {
-                        return '@router-bas';
-                    }
-                    if (id.includes('preact')) {
-                        return '@preact-bas';
-                    }
+                    // if (id.includes('wouter')) {
+                    //     return '@router-bas';
+                    // }
+                    // if (id.includes('preact')) {
+                    //     return '@preact-bas';
+                    // }
                     // if (id.includes('components')) {
                     //   return '@components-loc';
                     // }
