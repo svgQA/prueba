@@ -13,6 +13,7 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 3,
     activitiesProgress: 75,
+
     checkIn: {
       date: '2024-03-12:00:00',
       status: 'Con Retraso',
