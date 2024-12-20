@@ -1,5 +1,3 @@
-import { CardDropzone } from './card.image';
-
 export const CardReport = () => {
   return (
     <div className='bg-b-light-dark dark:bg-b-dark-light p-8 w-full vox-scroll-design overflow-y-auto max-h-[70vh] rounded-md'>
@@ -10,10 +8,18 @@ export const CardReport = () => {
             <p>123 Business Street</p>
             <p>City, State 12345</p>
           </div>
-          <CardDropzone
-            icon='023'
-            description='Drop your cover page file here or click to browse'
-          />
+          <div className='border-2 rounded-lg p-8 text-center border-b-light-dark dark:border-b-dark-light flex flex-row justify-between items-center'>
+            <span className='vox-icon vx-icon-023' />
+            <p className='text-t-light dark:text-t-dark mx-3'>
+              Drop your cover page file here or click to browse
+            </p>
+            <input
+              type='file'
+              name='logo'
+              accept='image/*'
+              className='hidden'
+            />
+          </div>
         </div>
 
         <div className='space-y-4'>

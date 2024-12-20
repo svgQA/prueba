@@ -1,1 +1,0 @@
-export const LATITUDE_SERVICE_URL = import.meta.env.VITE_LATITUDE_SERVICE_URL;

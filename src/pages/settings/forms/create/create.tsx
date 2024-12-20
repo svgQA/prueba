@@ -27,6 +27,7 @@ import { IFormRequest, IListResponse } from '@/types/form';
 import { ListFormModal } from '../lists/lists';
 import { getStatusElementSelected, toggleListModal } from '../lists/store';
 import { useLocation } from 'wouter';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 export const FormCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -57,7 +58,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       const response = await FormService.create(format);
       if (!response.getStatus()) return;
     }
-    navigate('/form');
+    navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.form.to);
   };
 
   const addLelement = () => {

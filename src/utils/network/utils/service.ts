@@ -3,6 +3,7 @@ import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
 import { ICompany } from '@/store/slices/interface';
+import { tenant_header } from '@/env.config';
 
 export class BaseService {
   protected static prefix: string = 'api';
@@ -63,7 +64,6 @@ export class BaseService {
 
     if (tenance) {
       const tenant = this.getSelected();
-      const tenant_header = import.meta.env.VITE_TENANT_HEADER;
       if (!tenant_header || !tenant?.tenant_id) {
         throw new Error('ERROR: not include header');
       }

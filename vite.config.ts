@@ -5,7 +5,7 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [preact()],
-  base: '',
+  base: '/',
   clearScreen: false,
   build: {
     chunkSizeWarningLimit: 50,
@@ -14,12 +14,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          if (id.includes('wouter')) {
-            return '@router-bas';
-          }
-          if (id.includes('preact')) {
-            return '@preact-bas';
-          }
+          // if (id.includes('wouter')) {
+          //   return '@router-bas';
+          // }
+          // if (id.includes('preact')) {
+          //   return '@preact-bas';
+          // }
           // if (id.includes('components')) {
           //   return '@components-loc';
           // }
