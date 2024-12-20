@@ -189,7 +189,7 @@ export const Search = ({
     <div
       id={id}
       name={name}
-      className='max-w-[100%] flex flex-row items-center border rounded-sm relative border-b-light-dark dark:border-b-dark-light bg-transparent'
+      className='w-full flex flex-row items-center border rounded-sm relative border-b-light-dark dark:border-b-dark-light bg-transparent'
     >
       <span className='px-2 vox-icon vx-icon-153' />
       <div
@@ -199,10 +199,10 @@ export const Search = ({
       >
         {searchList}
       </div>
-      <div className='relative rounded flex items-center w-full min-w-60 max-w-[20em]'>
+      <div className='relative w-10/12 rounded flex items-center'>
         <input
           ref={inputRef}
-          className='w-full rounded pl-2 capitalize'
+          className='w-full rounded pl-2 capitalize bg-red-300'
           placeholder={placeholder}
           onChange={handleChangeInput}
           onKeyDown={handleKeyPress}

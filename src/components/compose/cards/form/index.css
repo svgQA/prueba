@@ -1,0 +1,9 @@
+.form-button-general {
+  @apply p-4 rounded text-center min-w-80 bg-b-light dark:bg-b-dark;
+  h4 {
+    @apply text-primary text-lg;
+  }
+  p {
+    @apply text-t-light-dark dark:text-t-dark-light text-base;
+  }
+}

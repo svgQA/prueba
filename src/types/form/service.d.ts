@@ -1,12 +1,14 @@
 import { IOption } from '@/components/common/interface';
 import { IFormat } from './form';
 import { IReport } from './report';
+import { RESPONSE_STATUS } from './form.enum';
 
 export interface IFormRequest {
   title: string;
   structure: IFormat;
   description: string;
   category?: string;
+  report?: { id: number };
 }
 
 export interface IFormResponse extends IFormRequest {
@@ -16,6 +18,8 @@ export interface IFormResponse extends IFormRequest {
   updatedAt?: Date;
   deletedAt?: Date;
 }
+
+export interface UResponseRequest extends Omit<IResponseRequest, 'formId'> {}
 
 export interface IListRequest {
   name: string;
@@ -29,11 +33,7 @@ export interface IListResponse extends IListRequest {
   deletedAt?: Date;
 }
 
-export interface IReportRequest {
-  title: string;
-  structure: IReport;
-  description: string;
-}
+export interface IReportRequest extends IReport {}
 
 export interface IReportResponse extends IReportRequest {
   id: number;
@@ -43,12 +43,14 @@ export interface IReportResponse extends IReportRequest {
 }
 
 export interface IResponseRequest {
-  form_id: string;
-  structure: IResponse;
+  formId: number;
+  structure: IFormat;
 }
 
 export interface IResponseResponse extends IResponseRequest {
   id: number;
+  userId: number;
+  status: RESPONSE_STATUS;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;

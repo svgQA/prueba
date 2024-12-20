@@ -1,14 +1,19 @@
 import { ResourcesConfig } from 'aws-amplify';
+import {
+  aws_cognito_client_id,
+  aws_cognito_user_pool,
+  aws_oauth_domain,
+} from './env.config';
 
 export const AWS_AMPLIFY_SETTINGS: ResourcesConfig = {
   Auth: {
     Cognito: {
-      userPoolId: import.meta.env.VITE_AWS_COGNITO_USER_POOL_ID || '',
-      userPoolClientId: import.meta.env.VITE_AWS_COGNITO_CLIENT_ID || '',
+      userPoolId: aws_cognito_user_pool,
+      userPoolClientId: aws_cognito_client_id,
       signUpVerificationMethod: 'code' as 'code' | 'link',
       loginWith: {
         oauth: {
-          domain: import.meta.env.VITE_AWS_OAUTH_DOMAIN || '',
+          domain: aws_oauth_domain,
           scopes: [
             'openid',
             'email',

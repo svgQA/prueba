@@ -1,9 +1,0 @@
-.form-button-general {
-  @apply p-4 border-2 rounded hover:bg-b-light-dark dark:hover:bg-b-dark-light text-center border-b-light-dark dark:border-b-dark-light min-w-80;
-  h4 {
-    @apply text-primary text-lg;
-  }
-  p {
-    @apply text-t-light-dark dark:text-t-dark-light text-base;
-  }
-}

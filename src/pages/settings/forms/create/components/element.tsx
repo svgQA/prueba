@@ -87,7 +87,6 @@ export const FormElement = ({
           : target.value;
 
     if (!name) return;
-    // console.table({ question: question.id, page, section, name, value, task });
     updateForm(question.id, page, section)(name, value, task);
   };
 

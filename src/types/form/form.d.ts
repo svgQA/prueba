@@ -2,7 +2,7 @@ import { IOption } from '@/components/common/interface';
 import { ELEMENT_TYPE } from './form.enum';
 import { ITask } from '../shift';
 
-interface IBase {
+interface IFormBase {
   id: string;
   label: string;
   description?: string;
@@ -14,7 +14,7 @@ interface ICondition {
   children: string[];
 }
 
-export interface IElement extends IBase {
+export interface IElement extends IFormBase {
   type: ELEMENT_TYPE; // SECTION
 
   required?: boolean;
@@ -41,11 +41,11 @@ export interface IElement extends IBase {
   // conditions?: ICondition[];
 }
 
-export interface IPage extends IBase {
+export interface IPage extends IFormBase {
   elements: IElement[];
 }
 
-export interface IFormat extends IBase {
+export interface IFormat extends IFormBase {
   pages: IPage[];
 }
 

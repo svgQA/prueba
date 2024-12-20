@@ -35,6 +35,7 @@ export enum PAGES_LIST {
   SETTING_FORMS_ANALYTIC = '/setting/form/analytic',
   SETTING_FORMS_LIST = '/setting/form/list',
   SETTING_FORMS_REPORT = '/setting/form/report',
+  SETTING_FORMS_INSPECT = '/setting/form/inspect',
   // SETTING IOT ROUTES
   SETTING_IOT_ANALYTIC = '/setting/iot',
   SETTING_IOT_DEVICES = '/setting/iot/devices',
