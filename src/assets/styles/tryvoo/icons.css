@@ -72,7 +72,11 @@ span.vx-icon.size-xl {
 }
 
 .vx-icon-009::before {
-  content: '\0110';
+  content: '\0039';
+}
+
+.vx-icon-0091::before {
+  content: '\003A';
 }
 
 .vx-icon-010::before {
