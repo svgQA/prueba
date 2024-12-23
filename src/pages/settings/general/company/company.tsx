@@ -2,7 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { TargetedEvent } from 'preact/compat';
 import { useEffect, useState, useRef } from 'preact/hooks';
 import { CreditCard, InvoiceCard } from '@/components/compose';
-import { InvoiceCard2 } from '@/components/compose/cards/invoice2';
+// import { InvoiceCard2 } from '@/components/compose/cards/invoice2';
 
 export const CompanySettingPage: FunctionComponent = () => {
   const [imagenPreview, setImagenPreview] = useState<string | null>(null);
@@ -120,20 +120,20 @@ export const CompanySettingPage: FunctionComponent = () => {
         </div>
 
         <div className='container-card w-1/2  space-y-6 pl-4'>
-          <InvoiceCard2
+          {/* <InvoiceCard2
             id='company-1'
             name='Company-1'
             total={20}
             currency='EUR'
             active
-          />
-          <InvoiceCard2
+          /> */}
+          {/* <InvoiceCard2
             id='Company-2'
             name='Company-2'
             color='bg-[#D9D9D9]'
             total={100}
             currency='COP'
-          />
+          /> */}
         </div>
       </div>
 

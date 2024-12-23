@@ -32,7 +32,10 @@ import {
 } from './forms';
 import { ChannelsSettingPage, DevicesSettingPage, IotSettingPage } from './iot';
 import { IASettingPage } from './ia';
-import { RoundsSettingPage } from './shifts';
+import { 
+  RoundsSettingPage,
+  RoundCreateSettingPage 
+} from './shifts';
 import { SalesSettingPage } from './sales';
 import { AsociateSettingPage, ResourcesSettingPage } from './asociate';
 import { FormInspectSettingPage } from './forms/inspect/inspect';
@@ -201,6 +204,12 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.to}
           component={lazy(() =>
             Promise.resolve({ default: RoundsSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: RoundCreateSettingPage })
           )}
         />
         {/* SALES MENU */}

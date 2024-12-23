@@ -31,6 +31,10 @@ export const PAGES_LIST_ROUTER = {
           base: '/',
           to: '/rounds',
         },
+        create: {
+          base: '/create',
+          to: '/round/create',
+        },
       },
       setting: {
         base: '/setting',
