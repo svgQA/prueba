@@ -1,4 +1,3 @@
-import { Modal, Search } from '@/components/common';
 import {
   CardSettingHeader,
   CardSettingUser,
@@ -12,19 +11,22 @@ import {
 } from '@/store/signals/modals';
 import { authModel } from '@/store/signals/access';
 
-import { IMenu } from '@/components/common/interface';
 import { useSignal } from '@preact/signals';
 import { useCallback } from 'preact/hooks';
 import { useLocation } from 'wouter';
-import { MenuButtons, MenuList } from './components';
 import { RoutingContent } from './routing';
+import { IMenu } from '@/components/common/utils/interface';
+import { Modal } from '@/components/common/modal/modal';
+import { MenuButtons } from './components/header';
+import { Search } from '@/components/common/search/search';
+import { MenuList } from './components/menu';
 import {
   appendHistory,
   currentPosition,
   historyLocation,
   menuInformationSelected,
   setMenu,
-} from './store';
+} from './store/settings';
 
 export const SettingsModal = () => {
   const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);

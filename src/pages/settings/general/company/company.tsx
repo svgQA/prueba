@@ -1,8 +1,7 @@
+import { CreditCard, InvoiceCard } from '@/components/compose/cards';
 import { type FunctionComponent } from 'preact';
 import { TargetedEvent } from 'preact/compat';
 import { useEffect, useState, useRef } from 'preact/hooks';
-import { CreditCard, InvoiceCard } from '@/components/compose';
-// import { InvoiceCard2 } from '@/components/compose/cards/invoice2';
 
 export const CompanySettingPage: FunctionComponent = () => {
   const [imagenPreview, setImagenPreview] = useState<string | null>(null);

@@ -1,7 +1,7 @@
 import { type FunctionComponent } from 'preact';
-import { Button } from '@/components/common';
 import { useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
+import { Button } from '@/components/common/button/button';
 
 interface ChatHeaderProps {
   onMenuClick?: () => void;

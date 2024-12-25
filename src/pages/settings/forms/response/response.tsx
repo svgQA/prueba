@@ -2,7 +2,6 @@ import { type FunctionComponent } from 'preact';
 import { ELEMENT_TYPE, IElement, IRElement } from '@/types/form';
 import { Checkbox } from '@/components/common/checkbox/checkbox';
 import { Radio } from '@/components/common/radio/radio';
-import { Button, Input, Select } from '@/components/common';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { TargetedEvent, useState } from 'preact/compat';
 import { getResponse, getResponseMode, updateResponse } from './store/response';
@@ -10,6 +9,9 @@ import { FormService } from '@/services';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { File } from '@/components/common/file/file';
+import { Input } from '@/components/common/input/input';
+import { Select } from '@/components/common/select/select';
+import { Button } from '@/components/common/button/button';
 
 // TODO: ahora es una mierda pequeña.
 export const FormResponseSettingPage: FunctionComponent = () => {

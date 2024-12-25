@@ -1,9 +1,8 @@
-import { Rounds } from '../utils/rounds';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { Round } from '../utils/rounds';
 import { ColumnDef } from '@tanstack/react-table';
-// import { Badge, Gauge } from '@/components/common';
-import { ROW_ACTIONS } from '@/components/common/interface';
 
-export const columns: ColumnDef<Rounds>[] = [
+export const columns: ColumnDef<Round>[] = [
   {
     id: 'id',
     accessorKey: 'id',

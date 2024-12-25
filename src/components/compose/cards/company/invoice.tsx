@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
-import { Card } from '@/components/common';
 import { IInvoiceCardProps } from '../interface';
+import { Card } from '@/components/common/card/card';
 
 export const InvoiceCard: FunctionComponent<IInvoiceCardProps> = ({
   id,

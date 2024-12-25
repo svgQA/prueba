@@ -2,32 +2,36 @@ import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import {
-  addElement,
-  addPage,
-  removeElement,
-  addSection,
-  setPhonePage,
-  setSelectedElement,
-  validateSelectedElement,
-  getForm,
-  getSelectedElement,
-  updateForm,
-  udpateGeneralForm,
-  updatePageForm,
-  getFormMode,
-  FORMAT_MODE_SERVICE,
-} from './store';
-import { FormPhoneViewer, FormElement } from './components';
-import { TargetedEvent } from 'preact/compat';
-import { Button, Input } from '@/components/common';
-import { FormButton } from '@/components/compose';
 import { FormService } from '@/services';
 import { IFormRequest, IListResponse } from '@/types/form';
 import { ListFormModal } from '../lists/lists';
-import { getStatusElementSelected, toggleListModal } from '../lists/store';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import {
+  getSelectedElement,
+  setSelectedElement,
+  validateSelectedElement,
+} from './store/control';
+import {
+  addElement,
+  addPage,
+  addSection,
+  FORMAT_MODE_SERVICE,
+  getForm,
+  getFormMode,
+  removeElement,
+  udpateGeneralForm,
+  updateForm,
+  updatePageForm,
+} from './store/question';
+import { setPhonePage } from './store/phone';
+import { TargetedEvent } from 'preact/compat';
+import { FormButton } from '@/components/compose/button';
+import { Input } from '@/components/common/input/input';
+import { Button } from '@/components/common/button/button';
+import { FormElement } from './components/element';
+import { FormPhoneViewer } from './components/phone';
+import { getStatusElementSelected, toggleListModal } from '../lists/store/list';
 
 export const FormCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();

@@ -1,7 +1,8 @@
+import { Badge } from '@/components/common/badge/badge';
 import { Shift } from '../utils/shifts';
 import { ColumnDef } from '@tanstack/react-table';
-import { Badge, Gauge } from '@/components/common';
-import { ROW_ACTIONS } from '@/components/common/interface';
+import { Gauge } from '@/components/common/gauge/gauge';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 export const columns: ColumnDef<Shift>[] = [
   {

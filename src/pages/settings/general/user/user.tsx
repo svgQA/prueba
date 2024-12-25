@@ -1,12 +1,12 @@
-import { Table } from '@/components/common';
-import { CardData, CardMenu } from '@/components/compose';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { userData } from './utils/user.data';
-import { columns } from './components';
-import { User } from './utils';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { setUser, USER_MODE_SERVICE } from './create/store/user';
+import { CardData, CardMenu } from '@/components/compose/cards';
+import { Table } from '@/components/common/table/table';
+import { User } from './utils/user';
+import { columns } from './components/users.columns';
 
 export const UserSettingPage: FunctionComponent = () => {
   // const [data, setData] = useState<User[]>([]);

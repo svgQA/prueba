@@ -1,6 +1,6 @@
-import { Rounds } from './rounds.d';
+import { Round } from './rounds.d';
 
-export const roundsData: Rounds[] = [
+export const roundsData: Round[] = [
   {
     id: 1,
     employeeId: '1010567890',

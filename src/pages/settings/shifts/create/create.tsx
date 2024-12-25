@@ -1,6 +1,7 @@
-import { Button, Input } from '@/components/common';
+import { Button } from '@/components/common/button/button';
+import { Input } from '@/components/common/input/input';
+import { Map } from '@/components/common/map/map';
 import { FunctionComponent } from 'preact';
-import { Map } from '@/components/common';
 import { useState } from 'preact/hooks';
 
 export const RoundCreateSettingPage: FunctionComponent = () => {

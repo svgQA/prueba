@@ -1,5 +1,5 @@
-import { Button } from '@/components/common';
-import { ThemeButton } from '@/components/compose';
+import { Button } from '@/components/common/button/button';
+import { ThemeButton } from '@/components/compose/button';
 import { memo } from 'preact/compat';
 
 export const MenuButtons = memo(({ goBack, goForward }: any) => (

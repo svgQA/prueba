@@ -4,14 +4,7 @@ import {
   ExpandableContentProps,
   PrioritySection,
 } from '../expansible/expansible';
-
-export enum ROW_ACTIONS {
-  UPDATE,
-  CREATE,
-  DELETE,
-  REPORT,
-  RESPONSE,
-}
+import { ROW_ACTIONS } from './enum';
 
 export interface IRowAction {
   id: number | string;

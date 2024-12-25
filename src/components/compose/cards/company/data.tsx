@@ -1,4 +1,4 @@
-import { Card } from '@/components/common';
+import { Card } from '@/components/common/card/card';
 import { FunctionalComponent } from 'preact';
 import { memo } from 'preact/compat';
 

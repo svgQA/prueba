@@ -1,6 +1,7 @@
-import { Badge, Card } from '@/components/common';
 import { type FunctionComponent } from 'preact';
 import { type ICardSettingUserProps } from './interface';
+import { Card } from '@/components/common/card/card';
+import { Badge } from '@/components/common/badge/badge';
 
 export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
   id,

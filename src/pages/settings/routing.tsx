@@ -3,41 +3,37 @@ import { memo } from 'preact/compat';
 import { Route, Router } from 'wouter';
 import { Suspense, lazy } from 'preact/compat';
 
-import {
-  AnalyticAdminSettingPage,
-  DatabaseSettingPage,
-  TenantSettingPage,
-} from './admin';
-import {
-  CompanySettingPage,
-  IntegrationSettingPage,
-  ModulesSettingPage,
-  SoloSettingPage,
-  UserSettingPage,
-  VoxlineSettingPage,
-} from './general';
-import {
-  GroupSettingPage,
-  KeysSettingPage,
-  RolesSettingPage,
-  UsersSettingPage,
-} from './security';
-import { PaymentHistorySettingPage, PaymentSettingPage } from './payment';
-import {
-  FormAnalyticSettingPage,
-  FormCreateSettingPage,
-  // FormListsSettingPage,
-  FormReportSettingPage,
-  FormSettingPage,
-} from './forms';
-import { ChannelsSettingPage, DevicesSettingPage, IotSettingPage } from './iot';
-import { IASettingPage } from './ia';
-import { RoundsSettingPage, RoundCreateSettingPage } from './shifts';
-import { SalesSettingPage } from './sales';
-import { AsociateSettingPage, ResourcesSettingPage } from './asociate';
 import { FormInspectSettingPage } from './forms/inspect/inspect';
 import { FormResponseSettingPage } from './forms/response/response';
 import { UserCreateSettingPage } from './general/user/create/create';
+import { AnalyticAdminSettingPage } from './admin/analytic/analytic';
+import { DatabaseSettingPage } from './admin/database/database';
+import { TenantSettingPage } from './admin/tenant/tenant';
+import { UserSettingPage } from './general/user/user';
+import { CompanySettingPage } from './general/company/company';
+import { ModulesSettingPage } from './general/modules/modules';
+import { IntegrationSettingPage } from './general/integration/integration';
+import { VoxlineSettingPage } from './general/voxline/voxline';
+import { SoloSettingPage } from './general/solo/solo';
+import { KeysSettingPage } from './security/keys/keys';
+import { UsersSettingPage } from './security/users/users';
+import { RolesSettingPage } from './security/roles/roles';
+import { GroupSettingPage } from './security/groups/groups';
+import { PaymentHistorySettingPage } from './payment/history/history';
+import { PaymentSettingPage } from './payment/payment/payment';
+import { FormSettingPage } from './forms/form/form';
+import { FormAnalyticSettingPage } from './forms/analytic/analytic';
+import { FormCreateSettingPage } from './forms/create/create';
+import { FormReportSettingPage } from './forms/report/report';
+import { DevicesSettingPage } from './iot/devices/devices';
+import { IotSettingPage } from './iot/iot/iot';
+import { ChannelsSettingPage } from './iot/channels/channels';
+import { IASettingPage } from './ia/ia/ia';
+import { RoundsSettingPage } from './shifts/rounds/rounds';
+import { RoundCreateSettingPage } from './shifts/create/create';
+import { SalesSettingPage } from './sales/sales/sales';
+import { ResourcesSettingPage } from './asociate/resource/resource';
+import { AsociateSettingPage } from './asociate/asociate/asociate';
 
 export const RoutingContent = memo(() => {
   const content = (

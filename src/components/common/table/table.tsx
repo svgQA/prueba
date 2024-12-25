@@ -13,7 +13,8 @@ import {
   ColumnFiltersState,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'preact/hooks';
-import { ITableProps, ROW_ACTIONS } from './interface';
+import { ITableProps } from './interface';
+
 import { Search } from '../search/search';
 import {
   DndContext,
@@ -35,6 +36,7 @@ import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
 import { Button } from '../button/button';
 import { Switch } from '../switch/switch';
+import { ROW_ACTIONS } from './enum';
 
 export const Table = <T,>({
   data,

@@ -1,8 +1,8 @@
 import { IFormResponse } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
-import { ROW_ACTIONS } from '@/components/common/interface';
-import { RelativeTime } from '@/components/common';
 import { FloatBadge } from '@/components/common/badge/float';
+import { RelativeTime } from '@/components/common/relative/relative';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 export const columns: ColumnDef<IFormResponse>[] = [
   {

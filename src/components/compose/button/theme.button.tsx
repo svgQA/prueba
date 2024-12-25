@@ -1,4 +1,4 @@
-import { Button } from '@/components/common';
+import { Button } from '@/components/common/button/button';
 import { useCallback } from 'preact/hooks';
 
 export const ThemeButton = () => {

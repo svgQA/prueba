@@ -1,12 +1,16 @@
+import { Button } from '@/components/common/button/button';
+import { Section } from '@/components/common/section/section';
+import { IRowAction } from '@/components/common/table/interface.d';
+import { Table } from '@/components/common/table/table';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
-import { Button, Section, Table } from '@/components/common';
-import { type Rounds, roundsData } from './utils';
-import { columns } from './components';
-import { IRowAction, ROW_ACTIONS } from '@/components/common/interface';
 // import { IFormResponse } from '@/types/form';
 // import { FORMAT_MODE_SERVICE, setFormat } from '../../forms/create/store';
 import { useLocation } from 'wouter';
+import { Round } from './utils/rounds';
+import { roundsData } from './utils/rounds.data';
+import { columns } from './components/rounds.columns';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 export const RoundsSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -42,7 +46,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
         icon='123'
         name='back'
       />
-      <Table<Rounds>
+      <Table<Round>
         data={roundsData}
         columns={columns}
         pageSize={20}

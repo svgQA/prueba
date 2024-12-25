@@ -1,12 +1,13 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { Form, Field } from 'react-final-form';
-import { Button, Input } from '@/components/common';
 import { required } from '@/utils/utilities';
 import { IUserRequest } from '@/types/auth';
 import { UserService } from '@/services/user';
 import { getUserMode, USER_MODE_SERVICE } from './store/user';
 import { navigate } from 'wouter/use-browser-location';
+import { Input } from '@/components/common/input/input';
+import { Button } from '@/components/common/button/button';
 
 export const UserCreateSettingPage: FunctionComponent = () => {
   useEffect(() => {

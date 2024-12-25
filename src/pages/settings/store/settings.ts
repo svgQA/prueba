@@ -1,4 +1,4 @@
-import { IMenu } from '@/components/common/interface';
+import { IMenu } from '@/components/common/utils/interface';
 import { signal } from '@preact/signals';
 
 export const historyLocation = signal<IMenu[]>([]);
