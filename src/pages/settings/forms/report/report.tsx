@@ -1,4 +1,3 @@
-import { Button, Input, Select, Switch } from '@/components/common';
 import { useSignal } from '@preact/signals';
 import { PropsWithChildren, useEffect } from 'preact/compat';
 import { TargetedEvent } from 'preact/compat';
@@ -9,6 +8,10 @@ import { CardDropzone } from './components/card.image';
 import { CardReport } from './components/card.page';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { Input } from '@/components/common/input/input';
+import { Select } from '@/components/common/select/select';
+import { Switch } from '@/components/common/switch/switch';
+import { Button } from '@/components/common/button/button';
 
 interface TabProps extends PropsWithChildren {
   title: string;

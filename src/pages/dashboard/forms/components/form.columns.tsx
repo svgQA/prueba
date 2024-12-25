@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { RelativeTime } from '@/components/common';
-import { ROW_ACTIONS } from '@/components/common/interface';
 import { IResponseResponse } from '@/types/form';
+import { RelativeTime } from '@/components/common/relative/relative';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 export const columns: ColumnDef<IResponseResponse>[] = [
   {

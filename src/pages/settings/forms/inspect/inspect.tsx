@@ -1,15 +1,16 @@
-import { Table } from '@/components/common';
 import { IResponseResponse } from '@/types/form';
 import { useSignal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { columns } from './components/inspect.columns';
-import { IRowAction, ROW_ACTIONS } from '@/components/common/interface';
 import { FormService } from '@/services';
 import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
-import { appendHistory } from '../../store';
+import { IRowAction } from '@/components/common/table/interface.d';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { Table } from '@/components/common/table/table';
+import { appendHistory } from '../../store/settings';
 
 export const FormInspectSettingPage: FunctionComponent = () => {
   const responses = useSignal<IResponseResponse[]>([]);

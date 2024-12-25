@@ -17,4 +17,5 @@ export const VOS_SERVICES = {
   form: default_service_url,
   memo: default_service_url,
   user: default_service_url,
+  file: default_service_url,
 };

@@ -12,22 +12,12 @@ import { SIDEBAR_MENUS } from '@/utils/menus';
 import { PAGES_LIST } from '@/utils/routing';
 
 /** ***********************************************************************
- * COMPONENTS
- ** ***********************************************************************/
-import { Loading, Sidebar } from '@/components/common';
-
-/** ***********************************************************************
  * PAGES
  ** ***********************************************************************/
 import { DevicesPage } from './devices/devices.page';
 import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
 import { ShiftsPage } from './shifts/shifts.page';
-
-/** ***********************************************************************
- * AMPLIFY AWS
- ** ***********************************************************************/
-import { AuthAmplifyProps } from '../types';
 
 /** ***********************************************************************
  * STORE SIGNALS
@@ -46,9 +36,13 @@ import {
  ** ***********************************************************************/
 import { hasUserTenant, useUserStore } from '@/store/slices';
 import { BaseService } from '@/utils/network';
-import { IconsModal, OnBordingModal } from '../globals';
 import { SettingsModal } from '../settings/settings';
 import { ToastContainer } from 'react-toastify';
+import { Loading } from '@/components/common/loading/loading';
+import { Sidebar } from '@/components/common/sidebar/sidebar';
+import { OnBordingModal } from '../globals/onbording/onboarding';
+import { IconsModal } from '../globals/icons/icons';
+import { AuthAmplifyProps } from '../interface';
 
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;

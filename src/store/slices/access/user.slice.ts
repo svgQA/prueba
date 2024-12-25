@@ -22,7 +22,7 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   token: 'Bearer',
   companies: [],
   setUser: (user) => set({ user }),
-  setToken: (token) => set({ token: `Bearer ${token}` }),
+  setToken: (token) => set({ token }),
   setCompanies: (companies) =>
     set({
       companies: companies.map((company) => ({ ...company, selected: false })),
@@ -46,7 +46,7 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   },
   getToken: () => {
     const { token } = get();
-    return token;
+    return `Bearer ${token}`;
   },
 }));
 

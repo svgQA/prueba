@@ -1,8 +1,8 @@
+import { IMenu } from '@/components/common/utils/interface';
 import './index.css';
-import { IMenu } from '@/components/common/interface';
-import { appendHistory } from '@/pages/settings/store';
 import { type FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
+import { appendHistory } from '@/pages/settings/store/settings';
 
 export interface ICardMenuProps {
   menu: IMenu;

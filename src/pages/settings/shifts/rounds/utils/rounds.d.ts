@@ -1,4 +1,4 @@
-export interface Rounds {
+export interface Round {
   id: number;
   employeeId: string;
   employeeName: string;
