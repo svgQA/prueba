@@ -1,12 +1,13 @@
 import './home.css';
-import { Layer } from '@/components/compose';
-import { Navbar, Logo } from '@/components/common';
 import { NAVBAR_MENUS } from '@/utils/menus';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { ModalServices } from './modal/modal.services';
 import { VOX_SOCIAL_MEDIA } from './constants';
 import { Waves } from '@/components/styles';
+import { Navbar } from '@/components/common/navbar/navbar';
+import { Logo } from '@/components/common/logo/logo';
+import { Layer } from '@/components/compose/layer';
 
 export const HomeLayout: FunctionComponent = () => {
   useEffect(() => {

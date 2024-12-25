@@ -1,25 +1,18 @@
 import { useDrag, useDrop } from 'react-dnd';
-import {
-  moveElement,
-  validateSelectedElement,
-  ELEMENT_TYPE_VALUES,
-  REGEX_PATTERNS,
-  updateForm,
-  updateSectionForm,
-} from '../store';
 import { TargetedEvent } from 'preact/compat';
 import { IElementProps } from './interace';
-import {
-  Card,
-  Input,
-  MultipleInput,
-  Select,
-  Switch,
-} from '@/components/common';
 import { ELEMENT_TYPE } from '@/types/form';
-import { IOption } from '@/components/common/interface';
 import { useSignal } from '@preact/signals';
-import { toggleListModal } from '../../lists/store';
+import { IOption } from '@/components/common/multi/interface';
+import { Input } from '@/components/common/input/input';
+import { Select } from '@/components/common/select/select';
+import { Switch } from '@/components/common/switch/switch';
+import { MultipleInput } from '@/components/common/multi/multi';
+import { Card } from '@/components/common/card/card';
+import { moveElement, updateForm, updateSectionForm } from '../store/question';
+import { ELEMENT_TYPE_VALUES, REGEX_PATTERNS } from '../store/constant';
+import { validateSelectedElement } from '../store/control';
+import { toggleListModal } from '../../lists/store/list';
 
 const ItemType = {
   QUESTION: 'question',

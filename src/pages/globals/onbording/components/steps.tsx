@@ -5,9 +5,10 @@ import {
   interestOptions,
   IOnBoardingStepsProps,
 } from '../utils';
-import { Input, Select } from '@/components/common';
 import { OnBoardingStep } from './step';
 import { required } from '@/utils/utilities';
+import { Input } from '@/components/common/input/input';
+import { Select } from '@/components/common/select/select';
 
 export const OnBoardingSteps = ({
   sliderRef,

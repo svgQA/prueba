@@ -1,11 +1,12 @@
+import { Button } from '@/components/common/button/button';
 import { IaService } from '@/services';
 import { IModelFile, IModelStatus, ITenantModelStatus } from '@/types/ia';
 import { useSignal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
-
-import { FileCard, HistoryCard } from './components';
-import { Button, Input } from '@/components/common';
+import { HistoryCard } from './components/history.card';
+import { Input } from '@/components/common/input/input';
+import { FileCard } from './components/file.card';
 
 export const IASettingPage: FunctionComponent = () => {
   const model_status = useSignal<IModelStatus | null>(null);

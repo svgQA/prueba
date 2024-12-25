@@ -1,3 +1,4 @@
+import { ITask } from '@/types/shift';
 import { VNode } from 'preact';
 import { PropsWithChildren } from 'preact/compat';
 
@@ -13,7 +14,7 @@ export interface IMultiProps {
   buttonIcon?: string;
   buttonType?: 'button' | 'submit';
   id?: string;
-  value?: IOption[];
+  value?: IOption[] | ITask[];
   bottom?: boolean;
   onChange: (value: IOption[], name: string) => void;
   placeholder?: string;

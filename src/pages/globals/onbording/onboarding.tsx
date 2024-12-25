@@ -7,9 +7,9 @@ import { IOnboardingModel } from '@/store/signals/types';
 import { TenantService } from '@/services';
 import { closeOnBoardingModal } from '@/store/signals/modals';
 import { OnBoardingSteps } from './components';
-import { Modal } from '@/components/common';
-import { ThemeButton } from '@/components/compose';
 import { useSignal } from '@preact/signals';
+import { ThemeButton } from '@/components/compose/button';
+import { Modal } from '@/components/common/modal/modal';
 
 export const OnBordingModal = ({ closed, children }: IOnboardingProps) => {
   const step = useSignal<number>(DEFAULT_STEP);

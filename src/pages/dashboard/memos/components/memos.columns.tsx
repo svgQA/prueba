@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'preact';
 import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from '../utils/memos';
-import { PBadge } from '@/components/common';
 
 import dayjs from 'dayjs';
+import { PBadge } from '@/components/common/priority/priority';
 
 export const ProgressBar: FunctionComponent<{ progress: number }> = ({
   progress,

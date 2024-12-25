@@ -1,6 +1,6 @@
 import { expect, it, describe } from 'vitest';
 import { render, screen } from '@testing-library/preact';
-import { Dropdown } from '@/components/common';
+import { Dropdown } from '@/components/common/dropdown/dropdown';
 
 describe('Components | Common | Dropdown', () => {
   it('check spinner and text property is ok', () => {

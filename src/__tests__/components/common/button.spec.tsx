@@ -1,6 +1,6 @@
 import { expect, it, describe } from 'vitest';
 import { render, screen } from '@testing-library/preact';
-import { Button } from '@/components/common';
+import { Button } from '@/components/common/button/button';
 
 describe('Components | Common | Button', () => {
   it('check text property is ok', () => {
