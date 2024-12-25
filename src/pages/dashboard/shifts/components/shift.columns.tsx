@@ -28,24 +28,28 @@ export const columns: ColumnDef<Shift>[] = [
     accessorKey: 'city',
     size: 180,
     header: 'Ciudad',
+    enableGrouping: true, // AGREGADO para permitir agrupar por 'city'
   },
   {
     id: 'address',
     accessorKey: 'address',
     size: 180,
     header: 'Dirección',
+    enableGrouping: true, // AGREGADO para permitir agrupar por 'Dirección'
   },
   {
     id: 'startTime',
     accessorKey: 'startTime',
     size: 180,
     header: 'Hora inicio',
+    enableGrouping: true, // AGREGADO para permitir agrupar por 'hora inicio'
   },
   {
     id: 'endTime',
     accessorKey: 'endTime',
     size: 180,
     header: 'Hora fin',
+    enableGrouping: true, // AGREGADO para permitir agrupar por hora fin'
   },
   {
     id: 'duration',

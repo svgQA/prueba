@@ -1,3 +1,4 @@
+// src/components/common/table/table.tsx
 import './table.css';
 import {
   getCoreRowModel,
@@ -11,6 +12,8 @@ import {
   getExpandedRowModel,
   ColumnDef,
   ColumnFiltersState,
+  getGroupedRowModel, // AGREGADO
+  GroupingState, // AGREGADO
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'preact/hooks';
 import { ITableProps } from './interface';
@@ -37,6 +40,8 @@ import { Fragment } from 'preact/jsx-runtime';
 import { Button } from '../button/button';
 import { Switch } from '../switch/switch';
 import { ROW_ACTIONS } from './enum';
+// AGREGADO: Importar el componente Group
+import { Group } from './components/group/group';
 
 export const Table = <T,>({
   data,
@@ -55,6 +60,9 @@ export const Table = <T,>({
     pageSize: pageSize,
   });
   const [expanded, setExpanded] = useState<ExpandedState>({});
+  // AGREGADO: Estado para el agrupamiento
+  const [grouping, setGrouping] = useState<GroupingState>([]);
+
   const [columnOrder, setColumnOrder] = useState(() =>
     columnsData.map((c) => c.id as string)
   );
@@ -68,15 +76,18 @@ export const Table = <T,>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
+    getGroupedRowModel: getGroupedRowModel(), // AGREGADO
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     onExpandedChange: setExpanded,
+    onGroupingChange: setGrouping, // AGREGADO
     state: {
       sorting,
       pagination,
       expanded,
       columnOrder,
       columnFilters,
+      grouping, // AGREGADO
     },
     onColumnOrderChange: setColumnOrder,
     initialState: {
@@ -90,10 +101,7 @@ export const Table = <T,>({
         typeof column.columnDef.header !== 'string'
           ? column.id
           : (column.columnDef.header as string);
-      return {
-        label: columnHeader,
-        id: column.id,
-      };
+      return { label: columnHeader, id: column.id };
     });
   }, []);
 
@@ -127,7 +135,6 @@ export const Table = <T,>({
           typeof column.columnDef.header !== 'string'
             ? column.id
             : (column.columnDef.header as string);
-
         return (
           <div
             key={`${column.id}-${index}`}
@@ -136,7 +143,9 @@ export const Table = <T,>({
             <div>
               {column.getCanPin() && (
                 <span
-                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'}`}
+                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${
+                    column.getIsPinned() ? 'text-error' : 'text-primary'
+                  }`}
                   onClick={() =>
                     column.pin(column.getIsPinned() ? false : 'left')
                   }
@@ -165,7 +174,7 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className='relative w-full mb-2'>
+      <div className='relative w-full mb-2 flex flex-col items-end'>
         {!unsearch && (
           <Search
             id='search-general'
@@ -174,6 +183,8 @@ export const Table = <T,>({
             onChange={setColumnFilters}
           />
         )}
+        {/* AGREGADO: Componente de agrupación */}
+        <Group table={table} />
       </div>
       <DndContext
         collisionDetection={closestCenter}
