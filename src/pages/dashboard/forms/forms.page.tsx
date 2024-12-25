@@ -1,11 +1,12 @@
-import { Section, Table } from '@/components/common';
-import { CardData } from '@/components/compose';
 import { FormService } from '@/services';
 import { IResponseResponse } from '@/types/form';
 import { useSignal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
-import { columns } from './components';
+import { Section } from '@/components/common/section/section';
+import { CardData } from '@/components/compose/cards';
+import { Table } from '@/components/common/table/table';
+import { columns } from './components/form.columns';
 
 export const FormsPage: FunctionComponent = () => {
   const responses = useSignal<IResponseResponse[]>([]);

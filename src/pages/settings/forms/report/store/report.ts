@@ -10,14 +10,14 @@ const buildInitReport = (): IReport => ({
   actions: false,
   disclaimer: false,
   mediaSummary: false,
-  pdfSize: 'a4',
+  pdfSize: 'A4',
   thumbnailSize: 'small',
 });
 export type ReportKey = keyof IReport;
 
 const report = signal<IReport>(buildInitReport());
 export const getReport = computed(() => report.value);
-
+export const setReport = (beport: IReport) => (report.value = beport);
 export const updateReport = (
   name: ReportKey,
   value: string | number | boolean

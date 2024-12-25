@@ -22,3 +22,9 @@ export enum ELEMENT_TYPE {
   /*[+]*/ CONTROLLER, // Label + description (NO PENSAR EN ESTO)
   /*[+]*/ BARCODE, // Label + (conditions) + description
 }
+
+export enum RESPONSE_STATUS {
+  OPENED = 'OPENED',
+  ADMIND = 'ADMIND',
+  CLOSED = 'CLOSED',
+}

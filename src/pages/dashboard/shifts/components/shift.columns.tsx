@@ -1,7 +1,8 @@
+import { Badge } from '@/components/common/badge/badge';
 import { Shift } from '../utils/shifts';
 import { ColumnDef } from '@tanstack/react-table';
-import { Badge, Gauge } from '@/components/common';
-import { ROW_ACTIONS } from '@/components/common/interface';
+import { Gauge } from '@/components/common/gauge/gauge';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 export const columns: ColumnDef<Shift>[] = [
   {
@@ -27,24 +28,28 @@ export const columns: ColumnDef<Shift>[] = [
     accessorKey: 'city',
     size: 180,
     header: 'Ciudad',
+    enableGrouping: true, // AGREGADO para permitir agrupar por 'city'
   },
   {
     id: 'address',
     accessorKey: 'address',
     size: 180,
     header: 'Dirección',
+    enableGrouping: true, // AGREGADO para permitir agrupar por 'Dirección'
   },
   {
     id: 'startTime',
     accessorKey: 'startTime',
     size: 180,
     header: 'Hora inicio',
+    enableGrouping: true, // AGREGADO para permitir agrupar por 'hora inicio'
   },
   {
     id: 'endTime',
     accessorKey: 'endTime',
     size: 180,
     header: 'Hora fin',
+    enableGrouping: true, // AGREGADO para permitir agrupar por hora fin'
   },
   {
     id: 'duration',

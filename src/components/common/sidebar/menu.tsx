@@ -1,7 +1,7 @@
 import { memo } from 'preact/compat';
-import { IMenu } from '../interface';
 import { Link } from 'wouter';
 import { ButtonMenu } from '../button/menu/button';
+import { IMenu } from '../utils/interface';
 
 interface IMenuItem {
   menu: IMenu;

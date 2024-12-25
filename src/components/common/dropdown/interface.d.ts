@@ -1,5 +1,5 @@
 import { type IComponentProps } from '@/components/utils/interface';
-import { IOption } from '../interface';
+import { IOption } from '../multi/interface';
 
 export interface IDropdownOptions extends IOption {
   value: number | string;

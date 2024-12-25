@@ -13,6 +13,7 @@ export const shiftsData: Shift[] = [
     duration: '8h',
     notifications: 3,
     activitiesProgress: 75,
+
     checkIn: {
       date: '2024-03-12:00:00',
       status: 'Con Retraso',
@@ -205,29 +206,6 @@ export const shiftsData: Shift[] = [
     checkOut: {
       date: '2024-03-01T16:00:00',
       status: 'Con Retraso',
-    },
-    city: 'Guadalajara',
-    address: 'Avenida Juárez 456, Col. Americana',
-  },
-  {
-    id: 10,
-    employeeId: '1010567897',
-    employeeName: 'Valeria García',
-    contact: 3115172239,
-    workerPhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
-    workerEmail: 'valeria.garcia@example.com',
-    startTime: '2024-03-02T07:00:00',
-    endTime: '2024-03-02T15:00:00',
-    duration: '8h',
-    notifications: 1,
-    activitiesProgress: 70,
-    checkIn: {
-      date: '123123123123',
-      status: 'Con Retraso',
-    },
-    checkOut: {
-      date: '2024-03-01T16:00:00',
-      status: 'A Tiempo',
     },
     city: 'Guadalajara',
     address: 'Avenida Juárez 456, Col. Americana',

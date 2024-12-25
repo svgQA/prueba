@@ -1,4 +1,26 @@
-table.info {
+table.elements {
+  @apply w-full;
+  thead {
+    @apply rounded-xl;
+    th {
+      @apply h-10 bg-b-light-dark dark:bg-b-dark-light;
+      &:first-child {
+        @apply rounded-tl-lg;
+      }
+      &:last-child {
+        @apply rounded-tr-lg;
+      }
+    }
+  }
+  tbody {
+    @apply border-x border-b-light-dark dark:border-b-dark-light;
+    td {
+      @apply h-24 border-b-2 border-b-light-dark dark:border-b-dark-light bg-b-light dark:bg-b-dark;
+    }
+  }
+}
+
+/* table.info {
   @apply border-collapse border-spacing-0;
   thead {
     @apply rounded-xl sticky top-0 py-1 z-10 bg-b-light-dark dark:bg-b-dark-light;
@@ -22,7 +44,6 @@ table.info {
   tbody {
     td {
       @apply h-10 p-1 border-b border-b-light-dark dark:border-b-dark-light items-center bg-b-light dark:bg-b-dark;
-      /* @apply h-6 border border-red-300; */
     }
   }
-}
+} */

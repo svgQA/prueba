@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'preact/hooks';
-import { getForm, getPhonePage, setPhonePage } from '../store';
 import { CardElement } from './card';
+import { getForm } from '../store/question';
+import { getPhonePage, setPhonePage } from '../store/phone';
 
 export const FormPhoneViewer = () => {
   const pagesRef = useRef<HTMLDivElement>(null);

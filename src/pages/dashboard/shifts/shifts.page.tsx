@@ -1,15 +1,17 @@
 import { type FunctionalComponent } from 'preact';
 import { AudioButton } from './audio/socket.button';
 import { useEffect } from 'preact/hooks';
-import { Section, Table } from '@/components/common';
 
-import { type Shift, shiftsData } from './utils';
-import { columns } from './components';
-import { ExpandableShift } from '@/components/compose';
-import { CardData } from '@/components/compose';
 import { useSignal } from '@preact/signals';
 import { IReportResponse } from '@/types/form';
 import { FormService } from '@/services';
+import { Section } from '@/components/common/section/section';
+import { CardData } from '@/components/compose/cards';
+import { Table } from '@/components/common/table/table';
+import { ExpandableShift } from '@/components/compose/table';
+import { Shift } from './utils/shifts';
+import { shiftsData } from './utils/shifts.data';
+import { columns } from './components/shift.columns';
 
 export const ShiftsPage: FunctionalComponent = () => {
   const reports = useSignal<IReportResponse[]>([]);

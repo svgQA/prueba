@@ -31,12 +31,20 @@ export const PAGES_LIST_ROUTER = {
           base: '/',
           to: '/rounds',
         },
+        create: {
+          base: '/create',
+          to: '/round/create',
+        },
       },
       setting: {
         base: '/setting',
         user: {
           base: '/',
           to: '/setting',
+        },
+        userCreate: {
+          base: '/user/create',
+          to: '/setting/user/create',
         },
         company: {
           base: '/company',
@@ -102,6 +110,14 @@ export const PAGES_LIST_ROUTER = {
         analytic: {
           base: '/analytic',
           to: '/form/analytic',
+        },
+        inspect: {
+          base: '/inspect',
+          to: '/form/inspect',
+        },
+        response: {
+          base: '/response',
+          to: '/form/response',
         },
         list: {
           base: '/list',

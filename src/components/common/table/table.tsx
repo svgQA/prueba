@@ -1,3 +1,4 @@
+// src/components/common/table/table.tsx
 import './table.css';
 import {
   getCoreRowModel,
@@ -11,9 +12,12 @@ import {
   getExpandedRowModel,
   ColumnDef,
   ColumnFiltersState,
+  getGroupedRowModel, // AGREGADO
+  GroupingState, // AGREGADO
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'preact/hooks';
-import { ITableProps, ROW_ACTIONS } from './interface';
+import { ITableProps } from './interface';
+
 import { Search } from '../search/search';
 import {
   DndContext,
@@ -35,16 +39,19 @@ import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
 import { Button } from '../button/button';
 import { Switch } from '../switch/switch';
+import { ROW_ACTIONS } from './enum';
+// AGREGADO: Importar el componente Group
+import { Group } from './components/group/group';
 
 export const Table = <T,>({
   data,
   columns,
   pageSize = 10,
   expandable,
-  unscroll,
   unsettings,
   visibility,
   onClickAction,
+  unsearch,
 }: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -53,6 +60,9 @@ export const Table = <T,>({
     pageSize: pageSize,
   });
   const [expanded, setExpanded] = useState<ExpandedState>({});
+  // AGREGADO: Estado para el agrupamiento
+  const [grouping, setGrouping] = useState<GroupingState>([]);
+
   const [columnOrder, setColumnOrder] = useState(() =>
     columnsData.map((c) => c.id as string)
   );
@@ -66,15 +76,18 @@ export const Table = <T,>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
+    getGroupedRowModel: getGroupedRowModel(), // AGREGADO
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     onExpandedChange: setExpanded,
+    onGroupingChange: setGrouping, // AGREGADO
     state: {
       sorting,
       pagination,
       expanded,
       columnOrder,
       columnFilters,
+      grouping, // AGREGADO
     },
     onColumnOrderChange: setColumnOrder,
     initialState: {
@@ -88,10 +101,7 @@ export const Table = <T,>({
         typeof column.columnDef.header !== 'string'
           ? column.id
           : (column.columnDef.header as string);
-      return {
-        label: columnHeader,
-        id: column.id,
-      };
+      return { label: columnHeader, id: column.id };
     });
   }, []);
 
@@ -119,13 +129,12 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='invisible absolute left-0 top-10 rounded-md p-4 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
+    <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column, index) => {
         const columnHeader =
           typeof column.columnDef.header !== 'string'
             ? column.id
             : (column.columnDef.header as string);
-
         return (
           <div
             key={`${column.id}-${index}`}
@@ -134,7 +143,9 @@ export const Table = <T,>({
             <div>
               {column.getCanPin() && (
                 <span
-                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'}`}
+                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${
+                    column.getIsPinned() ? 'text-error' : 'text-primary'
+                  }`}
                   onClick={() =>
                     column.pin(column.getIsPinned() ? false : 'left')
                   }
@@ -164,12 +175,16 @@ export const Table = <T,>({
   return (
     <>
       <div className='relative w-full mb-2 flex flex-col items-end'>
-        <Search
-          id='search-general'
-          name='search-general'
-          keys={memoizedLeafColumns}
-          onChange={setColumnFilters}
-        />
+        {!unsearch && (
+          <Search
+            id='search-general'
+            name='search-general'
+            keys={memoizedLeafColumns}
+            onChange={setColumnFilters}
+          />
+        )}
+        {/* AGREGADO: Componente de agrupación */}
+        <Group table={table} />
       </div>
       <DndContext
         collisionDetection={closestCenter}
@@ -177,11 +192,8 @@ export const Table = <T,>({
         onDragEnd={handleDragEnd}
         sensors={sensors}
       >
-        <div
-          className={`${unscroll ? 'overflow-y-hidden' : 'overflow-auto vox-scroll-design'} relative w-full rounded-xl border border-b-light-dark dark:border-b-dark-light scroll-x-md min-h-[50vh] max-h-[80vh]`}
-          onClick={handleClick}
-        >
-          <table className='w-full border-collapse info'>
+        <div onClick={handleClick} className=''>
+          <table className='elements'>
             <thead>
               {table.getHeaderGroups().map((headerGroup, index) => (
                 <tr
@@ -258,39 +270,44 @@ export const Table = <T,>({
           </table>
         </div>
       </DndContext>
-      <div className='flex flex-row gap-3 justify-end p-3'>
-        <Button
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-          type='button'
-          label='back'
-          icon='123'
-          name='back'
-        />
-        {table.getPageOptions().map((page, index) => (
-          <button
-            key={`${page}-${index}`}
-            onClick={() => table.setPageIndex(page)}
-            className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${
-              table.getState().pagination.pageIndex === page ? 'font-bold' : ''
-            }`}
-          >
-            {page + 1}
-          </button>
-        ))}
-        {table.getPageCount() > 3 &&
-        table.getState().pagination.pageIndex < table.getPageCount() - 3 ? (
-          <span className='px-3 py-1 rounded'>...</span>
-        ) : null}
-        <Button
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-          type='button'
-          label='next'
-          icon='123'
-          name='next'
-        />
-      </div>
+
+      {data.length > pageSize && (
+        <div className='flex flex-row gap-3 justify-end p-3'>
+          <Button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            type='button'
+            label='back'
+            icon='123'
+            name='back'
+          />
+          {table.getPageOptions().map((page, index) => (
+            <button
+              key={`${page}-${index}`}
+              onClick={() => table.setPageIndex(page)}
+              className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${
+                table.getState().pagination.pageIndex === page
+                  ? 'font-bold'
+                  : ''
+              }`}
+            >
+              {page + 1}
+            </button>
+          ))}
+          {table.getPageCount() > 3 &&
+          table.getState().pagination.pageIndex < table.getPageCount() - 3 ? (
+            <span className='px-3 py-1 rounded'>...</span>
+          ) : null}
+          <Button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            type='button'
+            label='next'
+            icon='123'
+            name='next'
+          />
+        </div>
+      )}
     </>
   );
 };

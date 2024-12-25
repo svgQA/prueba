@@ -1,4 +1,4 @@
-import { ICardProps } from '@/components/common/interface';
+import { ICardProps } from '@/components/common/card/interface';
 import { type IComponentProps } from '@/components/utils/interface';
 import { type PropsWithChildren } from 'preact/compat';
 
