@@ -14,24 +14,24 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          if (id.includes('wouter')) {
-            return '@router-base';
-          }
-          if (id.includes('preact')) {
-            return '@preact-base';
-          }
-          if (id.includes('components/common')) {
-            return '@components-common-base';
-          }
-          if (id.includes('components/compose')) {
-            return '@components-compose-base';
-          }
-          if (id.includes('utils')) {
-            return '@utils-base';
-          }
-          if (id.includes('assets')) {
-            return '@assets-base';
-          }
+          // if (id.includes('wouter')) {
+          //   return '@router-base';
+          // }
+          // if (id.includes('preact')) {
+          //   return '@preact-base';
+          // }
+          // if (id.includes('components/common')) {
+          //   return '@components-common-base';
+          // }
+          // if (id.includes('components/compose')) {
+          //   return '@components-compose-base';
+          // }
+          // if (id.includes('utils')) {
+          //   return '@utils-base';
+          // }
+          // if (id.includes('assets')) {
+          //   return '@assets-base';
+          // }
         },
       },
     },
