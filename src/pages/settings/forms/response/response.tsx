@@ -9,6 +9,7 @@ import { getResponse, getResponseMode, updateResponse } from './store/response';
 import { FormService } from '@/services';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { File } from '@/components/common/file/file';
 
 // TODO: ahora es una mierda pequeña.
 export const FormResponseSettingPage: FunctionComponent = () => {
@@ -179,6 +180,35 @@ export const FormResponseSettingPage: FunctionComponent = () => {
             />
           </div>
         );
+      case ELEMENT_TYPE.IMAGE:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <File
+              name={element.id}
+              onChange={handleInputChange}
+              data-page={page}
+              value={element.value}
+              label={element.label}
+              data-section={section}
+              accept='image/*'
+            />
+          </div>
+        );
+      case ELEMENT_TYPE.FILES:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <File
+              name={element.id}
+              onChange={handleInputChange}
+              data-page={page}
+              value={element.value}
+              label={element.label}
+              data-section={section}
+              accept=':not(image/*),.pdf,.doc,.docx,.txt,.xls,.xlsx,.csv'
+            />
+          </div>
+        );
+
       default:
         return (
           <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>

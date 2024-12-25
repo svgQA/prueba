@@ -24,6 +24,11 @@ span.vx-icon {
   }
 }
 
+span.vox-icon.size-xs,
+span.vx-icon.size-xs {
+  font-size: 0.7em;
+}
+
 span.vox-icon.size-sm,
 span.vx-icon.size-sm {
   font-size: 1em;
