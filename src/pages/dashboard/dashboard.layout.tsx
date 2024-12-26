@@ -59,11 +59,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       getSelected,
       setToken,
       getToken,
+      getUrlSocket,
     } = useUserStore();
 
     const setCompanySelected = (company: string) => {
       setSelected(company);
       closeOnBoardingModal();
+      initSocket();
     };
 
     useEffect(() => {
@@ -85,6 +87,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       );
       if (!existTenant) openOnBoardingModal();
       else closeOnBoardingModal();
+    };
+
+    const initSocket = () => {
+      const ws = new WebSocket(getUrlSocket());
+      ws.onmessage = (event) => {
+        console.log('Received message:', event.data);
+      };
     };
 
     return (

@@ -51,6 +51,7 @@ export const getUser = async (
   setToken?: (token: string) => void
 ): Promise<any /* JwtPayload */ | undefined> => {
   const user = await fetchAuthSession();
-  setToken?.(user.tokens?.accessToken.toString() || '');
+  const token = user.tokens?.accessToken.toString() || '';
+  setToken?.(token);
   return user.tokens?.accessToken?.payload;
 };
