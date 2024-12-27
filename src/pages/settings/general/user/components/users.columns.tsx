@@ -1,44 +1,74 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { User } from '../utils/user';
+import { IUserResponse } from '@/types/auth';
 import { Badge } from '@/components/common/badge/badge';
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<IUserResponse>[] = [
   {
     id: 'name',
     header: 'Nombre',
-    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+    accessorFn: (row) => `${row.name} ${row.surname}`,
   },
   {
     id: 'id',
-    accessorKey: 'personalID',
-    header: 'Identificación',
+    accessorKey: 'id',
+    header: 'ID',
   },
   {
     id: 'email',
-    accessorKey: 'workerEmail',
+    accessorKey: 'email',
     header: 'Email',
   },
   {
-    id: 'company',
-    accessorKey: 'company',
-    header: 'Compañia',
+    id: 'phone',
+    accessorKey: 'phone',
+    header: 'Teléfono',
   },
   {
-    id: 'department',
-    accessorKey: 'department',
-    header: 'Departamento',
+    id: 'cardId',
+    accessorKey: 'cardId',
+    header: 'ID Tarjeta',
+  },
+  {
+    id: 'country',
+    accessorFn: (row) => row.extraData?.country,
+    header: 'País',
+  },
+  {
+    id: 'state',
+    accessorFn: (row) => row.extraData?.state,
+    header: 'Estado',
+  },
+  {
+    id: 'city',
+    accessorFn: (row) => row.extraData?.city,
+    header: 'Ciudad',
+  },
+  {
+    id: 'job',
+    accessorFn: (row) => row.extraData?.job,
+    header: 'Trabajo',
+  },
+  {
+    id: 'area',
+    accessorFn: (row) => row.extraData?.area,
+    header: 'Área',
+  },
+  {
+    id: 'sucursal',
+    accessorFn: (row) => row.extraData?.sucursal,
+    header: 'Sucursal',
+  },
+  {
+    id: 'createdAt',
+    accessorKey: 'createdAt',
+    header: 'Fecha de Creación',
   },
   {
     id: 'connection',
-    accessorKey: 'connection',
     header: 'Conexión',
-    cell: (info) => (
+    cell: () => (
       <div className='flex flex-row justify-center'>
-        <Badge
-          label={info.getValue() as string}
-          bgColor='bg-primary'
-          icon='067'
-        />
+        <Badge label='active' bgColor='bg-primary' icon='067' />
       </div>
     ),
   },

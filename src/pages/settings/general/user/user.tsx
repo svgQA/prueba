@@ -1,19 +1,27 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
-import { userData } from './utils/user.data';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { setUser, USER_MODE_SERVICE } from './create/store/user';
 import { CardData, CardMenu } from '@/components/compose/cards';
 import { Table } from '@/components/common/table/table';
-import { User } from './utils/user';
 import { columns } from './components/users.columns';
+import { UserService } from '@/services/user';
+import { useSignal } from '@preact/signals';
+import { IUserResponse } from '@/types/auth';
 
 export const UserSettingPage: FunctionComponent = () => {
-  // const [data, setData] = useState<User[]>([]);
+  const users = useSignal<IUserResponse[]>([]);
   useEffect(() => {
     document.title = 'User Settings';
-    // setData(userData);
+    getUsersHandler();
   }, []);
+
+  const getUsersHandler = async () => {
+    const response = await UserService.get_all();
+    if (!response.getStatus()) return;
+    users.value = response.getMany();
+  };
+
   return (
     <section>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
@@ -43,7 +51,21 @@ export const UserSettingPage: FunctionComponent = () => {
           icon='110'
         />
       </div>
-      <Table<User> data={userData} columns={columns} unsearch />
+      <Table<IUserResponse>
+        data={users.value}
+        columns={columns}
+        unsearch
+        visibility={{
+          createdAt: false,
+          sucursal: false,
+          area: false,
+          job: false,
+          city: false,
+          state: false,
+          country: false,
+          cardId: false,
+        }}
+      />
     </section>
   );
 };

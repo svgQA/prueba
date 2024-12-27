@@ -1,32 +1,10 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import { Button } from '@/components/common/button/button';
-
-interface ChatHeaderProps {
-  onMenuClick?: () => void;
-  onSettingsClick?: () => void;
-  onMoreClick?: () => void;
-}
-
-interface ChatCardProps {
-  id: number;
-  name: string;
-  lastMessage: string;
-  time: string;
-  isAI?: boolean;
-  onClick: (id: number) => void;
-  isSelected?: boolean;
-}
-
-interface ChatMessageProps {
-  message: string;
-  isSender: boolean;
-}
-
-interface ChatInputProps {
-  onSend?: (message: string) => void;
-}
+import { ChatHeader } from './components/chat.header';
+import { ChatCard } from './components/chat.card';
+import { ChatMessage } from './components/chat.message';
+import { ChatInput } from './components/chat.input';
 
 interface FrequentQuestion {
   id: number;
@@ -41,84 +19,6 @@ interface ChatMessage {
 type Chats = {
   [key: number]: ChatMessage[];
 };
-
-// Components
-const ChatHeader = ({
-  onMenuClick,
-  onSettingsClick,
-  onMoreClick,
-}: ChatHeaderProps) => (
-  <div className='flex justify-between items-center p-4 bg-b-light-dark dark:bg-b-dark-light'>
-    <div className='flex gap-2'>
-      <Button
-        icon='123'
-        rounded
-        id='menu-btn'
-        name='menu'
-        type='button'
-        onClick={onMenuClick}
-      />
-      <Button
-        icon='231'
-        rounded
-        id='settings-btn'
-        name='settings'
-        type='button'
-        onClick={onSettingsClick}
-      />
-    </div>
-    <Button
-      icon='233'
-      rounded
-      id='more-btn'
-      name='more'
-      type='button'
-      onClick={onMoreClick}
-    />
-  </div>
-);
-
-const ChatCard = ({
-  id,
-  name,
-  lastMessage,
-  time,
-  isAI,
-  onClick,
-  isSelected,
-}: ChatCardProps) => (
-  <div
-    className={`flex items-center gap-3 p-4 cursor-pointer transition-colors duration-200 border-b dark:border-b-dark-light ${
-      isSelected ? 'bg-primary text-white' : 'hover:bg-blue-50'
-    }`}
-    onClick={() => onClick(id)}
-  >
-    <div
-      className={`w-10 h-10 rounded-full ${isAI ? 'bg-gradient-to-r from-primary to-blue-500 text-white flex items-center justify-center' : 'bg-gray-300'}`}
-    >
-      {isAI && <span className='left-0 px-1 vx-icon vx-icon-123' />}
-    </div>
-    <div className='flex-1'>
-      <h3 className='font-semibold'>{name}</h3>
-      <p className={`text-sm ${isSelected ? 'text-white' : 'text-gray-500'}`}>
-        {lastMessage}
-      </p>
-    </div>
-    <span className={`text-xs ${isSelected ? 'text-white' : 'text-gray-500'}`}>
-      {time}
-    </span>
-  </div>
-);
-
-const ChatMessage = ({ message, isSender }: ChatMessageProps) => (
-  <div className={`flex ${isSender ? 'justify-end' : 'justify-start'} mb-4`}>
-    <div
-      className={`max-w-[70%] p-3 rounded-lg ${isSender ? 'bg-primary text-white' : 'bg-b-light-dark dark:bg-b-dark-light'}`}
-    >
-      {message}
-    </div>
-  </div>
-);
 
 const FrequentQuestions = () => {
   const questions: FrequentQuestion[] = [
@@ -137,41 +37,6 @@ const FrequentQuestions = () => {
           {q.question}
         </div>
       ))}
-    </div>
-  );
-};
-
-const ChatInput = ({ onSend }: ChatInputProps) => {
-  const currentMessage = useSignal('');
-
-  const handleSubmit = () => {
-    if (currentMessage.value.trim()) {
-      onSend?.(currentMessage.value);
-      currentMessage.value = '';
-    }
-  };
-
-  return (
-    <div className='flex items-center gap-2 p-4 border-t dark:border-b-dark-light'>
-      <Button icon='011' rounded id='attach-btn' name='attach' type='button' />
-      <Button icon='156' rounded id='emoji-btn' name='emoji' type='button' />
-      <input
-        type='text'
-        className='flex-1 py-2 px-4 border dark:border-b-dark-light rounded-full'
-        placeholder='Type a message...'
-        value={currentMessage.value}
-        onInput={(e) => (currentMessage.value = e.currentTarget.value)}
-        onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
-      />
-      <Button
-        icon='142'
-        rounded
-        id='send-btn'
-        name='send'
-        type='button'
-        onClick={handleSubmit}
-      />
-      <Button icon='012' rounded id='voice-btn' name='voice' type='button' />
     </div>
   );
 };
