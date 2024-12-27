@@ -1,8 +1,5 @@
-// Components
-
 import { Button } from '@/components/common/button/button';
 
-//
 interface ChatHeaderProps {
   onMenuClick?: () => void;
   onSettingsClick?: () => void;

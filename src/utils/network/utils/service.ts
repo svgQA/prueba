@@ -4,6 +4,7 @@ import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
 import { ICompany } from '@/store/slices/interface';
 import { tenant_header } from '@/env.config';
+import { toast } from 'react-toastify';
 
 export class BaseService {
   protected static prefix: string = 'api';
@@ -112,6 +113,16 @@ export class BaseService {
         method: model.method,
       });
 
+      if (!response.ok) {
+        const result = await response.json();
+        toast.error(result.error, { position: 'top-right' });
+        return new GenericResponse<T>({
+          code: response?.status,
+          message: result?.text,
+          data: {},
+        });
+      }
+
       const content_type = response.headers.get('content-type');
       if (content_type?.includes('application/json')) {
         const result = await response.json();
@@ -129,11 +140,8 @@ export class BaseService {
         });
       }
     } catch (error: unknown) {
-      // TODO: Agregar un modal si se presenta un error.
-      console.error(error);
       throw new Error('ERROR: processing response');
     } finally {
-      // toast('Wow so easy!');
       this.closeLoading();
     }
   }
