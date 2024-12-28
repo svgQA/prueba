@@ -27,6 +27,7 @@ export class WebSocketManager implements IWebSocketManager {
     if (!this.url && url) {
       this.url = url;
     }
+
     try {
       this.ws = new WebSocket(this.url);
       this.ws.onopen = () => {
