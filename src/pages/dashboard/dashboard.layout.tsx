@@ -43,6 +43,7 @@ import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { OnBordingModal } from '../globals/onbording/onboarding';
 import { IconsModal } from '../globals/icons/icons';
 import { AuthAmplifyProps } from '../interface';
+import { useWebSocket } from '@/utils/socket';
 
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
@@ -52,6 +53,8 @@ import { AuthAmplifyProps } from '../interface';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
+    const wsManager = useWebSocket();
+
     const {
       setSelected,
       companies,
@@ -72,14 +75,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       BaseService.setLoading(openLoading, closeLoading);
       BaseService.setUser(getSelected, getToken);
       validateUser();
+      console.log('DASHBOARD.layout.tsx');
     }, []);
 
     const validateUser = async () => {
       /* [TODO]: Bad code */
       // closeOnBoardingModal();
-
       /* [TODO]: Correct code */
-
       const existTenant = await hasUserTenant(
         setCompanies,
         setSelected,
@@ -90,10 +92,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     };
 
     const initSocket = () => {
-      const ws = new WebSocket(getUrlSocket());
-      ws.onmessage = (event) => {
-        console.log('Received message:', event.data);
-      };
+      wsManager.connect(getUrlSocket());
     };
 
     return (

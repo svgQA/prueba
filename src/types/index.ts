@@ -16,6 +16,7 @@ export type AllowedFileTypes =
   | 'audio/aac'
   | 'video/mpeg'
   | 'video/ogg'
+  | 'audio/m4a'
   | 'video/3gpp'
   | 'text/csv'
   | 'application/pdf'
