@@ -1,8 +1,18 @@
-import { AllowedAreaTypes, AllowedFileTypes } from '..';
+import {
+  AllowedAreaTypes,
+  AllowedAudioTypes,
+  AllowedDocumentTypes,
+  AllowedImageTypes,
+  AllowedVideoTypes,
+} from '..';
 
 export interface IPresignedRequest {
   name: string;
-  type: AllowedFileTypes;
+  type:
+    | AllowedImageTypes
+    | AllowedDocumentTypes
+    | AllowedAudioTypes
+    | AllowedVideoTypes;
   uuid: string;
   area?: AllowedAreaTypes;
 }

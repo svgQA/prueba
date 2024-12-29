@@ -2,8 +2,13 @@ import { type IFileProps } from './interface';
 import shortUUID from 'short-uuid';
 import { useSignal } from '@preact/signals';
 import { IPresignedRequest } from '@/types/file';
-import { AllowedFileTypes } from '@/types';
 import { GeneralService } from '@/services/general';
+import {
+  AllowedAudioTypes,
+  AllowedDocumentTypes,
+  AllowedImageTypes,
+  AllowedVideoTypes,
+} from '@/types';
 
 export const File = ({
   id,
@@ -34,7 +39,11 @@ export const File = ({
     isLoading.value = true;
     const model: IPresignedRequest = {
       name: file.name,
-      type: file.type as AllowedFileTypes,
+      type: file.type as
+        | AllowedAudioTypes
+        | AllowedImageTypes
+        | AllowedVideoTypes
+        | AllowedDocumentTypes,
       uuid: shortUUID.generate(),
     };
 

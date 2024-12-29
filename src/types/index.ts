@@ -4,25 +4,24 @@ export interface IPagination {
 }
 
 export type AllowedAreaTypes = 'form' | 'memo';
-export type AllowedFileTypes =
-  | 'image/jpeg'
-  | 'image/png'
-  | 'image/svg+xml'
+
+export type AllowedAudioTypes =
   | 'audio/mp3'
   | 'audio/wav'
   | 'audio/midi'
   | 'audio/ogg'
   | 'audio/3gpp'
   | 'audio/aac'
-  | 'video/mpeg'
-  | 'video/ogg'
   | 'audio/m4a'
-  | 'video/3gpp'
+  | 'audio/mpeg';
+
+export type AllowedDocumentTypes =
   | 'text/csv'
   | 'application/pdf'
-  | 'application/x-tar'
   | 'application/msword'
-  | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   | 'application/vnd.ms-excel'
-  | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   | 'text/plain';
+
+export type AllowedImageTypes = 'image/jpeg' | 'image/png' | 'image/svg+xml';
+
+export type AllowedVideoTypes = 'video/mpeg' | 'video/ogg' | 'video/3gpp';
