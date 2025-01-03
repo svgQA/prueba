@@ -125,7 +125,7 @@ export const File = ({
         </div>
         {meta && meta.touched && meta.error && <span>{meta?.error}</span>}
         <div className='mt-4 grid grid-cols-4 gap-4'>
-          {value &&
+          {Array.isArray(value) &&
             value.map((file) => (
               <div
                 key={file.uuid}
