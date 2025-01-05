@@ -12,8 +12,8 @@ import { File } from '@/components/common/file/file';
 import { Input } from '@/components/common/input/input';
 import { Select } from '@/components/common/select/select';
 import { Button } from '@/components/common/button/button';
+import { handleChange } from '@/components/utils/input';
 
-// TODO: ahora es una mierda pequeña.
 export const FormResponseSettingPage: FunctionComponent = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
@@ -30,30 +30,15 @@ export const FormResponseSettingPage: FunctionComponent = () => {
   const handleInputChange = (
     e: TargetedEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const target = e.target as
-      | HTMLInputElement
-      | HTMLTextAreaElement
-      | HTMLSelectElement;
-
-    const page = target.dataset.page;
-    if (!page) return;
-
-    const name = target.name;
-
-    const value =
-      target.type === 'checkbox'
-        ? (target as HTMLInputElement).checked
-        : target.type === 'number' || target instanceof HTMLSelectElement
-          ? isNaN(Number(target.value))
-            ? target.value
-            : Number(target.value)
-          : target.value;
-
-    const cvalue =
-      target.type === 'checkbox' ? target.dataset.value : undefined;
-
-    const section = target.dataset.section;
-    updateResponse(value, name, page, section, cvalue);
+    const model = handleChange(e);
+    if (!model.page) return;
+    updateResponse(
+      model.value,
+      model.name,
+      model.page,
+      model.section,
+      model.calue
+    );
   };
 
   const renderElement = (

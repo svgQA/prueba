@@ -43,7 +43,6 @@ export const FormInspectSettingPage: FunctionComponent = () => {
     if (!response?.structure) throw Error('ERROR: Not exist response');
     switch (action.action) {
       case ROW_ACTIONS.RESPONSE: {
-        // console.log('DATOS: ', response);
         setResponse(
           { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id },
           response.structure
@@ -58,6 +57,7 @@ export const FormInspectSettingPage: FunctionComponent = () => {
         break;
       }
       case ROW_ACTIONS.REPORT: {
+        console.log('IR PARA EL REPORTE: ');
         break;
       }
       default: {

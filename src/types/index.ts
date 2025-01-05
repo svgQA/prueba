@@ -3,7 +3,7 @@ export interface IPagination {
   items: number;
 }
 
-export type AllowedAreaTypes = 'form' | 'memo';
+export type AllowedAreaTypes = 'form' | 'memo' | 'report' | 'shift' | 'user';
 
 export type AllowedAudioTypes =
   | 'audio/mp3'
