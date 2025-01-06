@@ -1,5 +1,3 @@
-// src/components/common/table/components/group/group.tsx
-
 import { Table } from '@tanstack/react-table';
 
 interface IGroupProps<T> {
@@ -47,58 +45,3 @@ export const Group = <T,>({ table }: IGroupProps<T>) => {
     </div>
   );
 };
-
-// import { FunctionComponent } from 'preact';
-// import { useState } from 'preact/hooks';
-// import { Table } from '@tanstack/react-table';
-
-// interface IGroupProps<T> {
-//   table: Table<T>;
-// }
-
-// export const Group = <T,>({ table }: IGroupProps<T>) => {
-//   const [selectedColumn, setSelectedColumn] = useState('');
-
-//   const groupableColumns = table.getAllLeafColumns().filter((col) => {
-//     // Si la columna tiene enableGrouping: true, se puede agrupar
-//     return (col.columnDef as any)?.enableGrouping === true;
-//   });
-
-//   const handleGroup = () => {
-//     if (selectedColumn) {
-//       // Agrupa por la columna seleccionada
-//       table.setGrouping([selectedColumn]);
-//     } else {
-//       // Sin columna seleccionada, se quita el agrupamiento
-//       table.setGrouping([]);
-//     }
-//   };
-
-//   return (
-//     <div className='flex items-center space-x-2'>
-//       <select
-//         className='border rounded px-2 py-1'
-//         value={selectedColumn}
-//         onChange={(e) => {
-//           const target = e.target as HTMLSelectElement;
-//           setSelectedColumn(target.value);
-//         }}
-//       >
-//         <option value=''>Sin agrupamiento</option>
-//         {groupableColumns.map((col) => (
-//           <option key={col.id} value={col.id}>
-//             {typeof col.columnDef.header === 'string'
-//               ? col.columnDef.header
-//               : col.id}
-//           </option>
-//         ))}
-//       </select>
-//       <button
-//         className='border rounded px-3 py-1 bg-gray-100 hover:bg-gray-200'
-//         onClick={handleGroup}
-//       >
-//         Agrupar datos
-//       </button>
-//     </div>
-//   );
-// };
