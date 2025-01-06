@@ -1,4 +1,5 @@
 // src/components/common/table/table.tsx
+import { VNode } from 'preact'; // AGREGADO
 import './table.css';
 import {
   getCoreRowModel,
@@ -14,6 +15,7 @@ import {
   ColumnFiltersState,
   getGroupedRowModel, // AGREGADO
   GroupingState, // AGREGADO
+  Row,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'preact/hooks';
 import { ITableProps, ROW_ACTIONS } from './interface';
@@ -38,8 +40,7 @@ import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
 import { Button } from '../button/button';
 import { Switch } from '../switch/switch';
-// AGREGADO: Importar el componente Group
-import { Group } from './components/group/group';
+import { Group } from './components/group/group'; // Ya agregado antes
 
 export const Table = <T,>({
   data,
@@ -58,8 +59,7 @@ export const Table = <T,>({
     pageSize: pageSize,
   });
   const [expanded, setExpanded] = useState<ExpandedState>({});
-  // AGREGADO: Estado para el agrupamiento
-  const [grouping, setGrouping] = useState<GroupingState>([]);
+  const [grouping, setGrouping] = useState<GroupingState>([]); // AGREGADO estado para agrupamiento
 
   const [columnOrder, setColumnOrder] = useState(() =>
     columnsData.map((c) => c.id as string)
@@ -74,7 +74,7 @@ export const Table = <T,>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    getGroupedRowModel: getGroupedRowModel(), // AGREGADO
+    getGroupedRowModel: getGroupedRowModel(), // AGREGADO para agrupamiento
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     onExpandedChange: setExpanded,
@@ -170,6 +170,103 @@ export const Table = <T,>({
     useSensor(KeyboardSensor, {})
   );
 
+  // AGREGADO: Función recursiva para renderizar las filas con grupos
+  function renderRows(rows: Row<T>[]): VNode {
+    return (
+      <>
+        {rows.map((row) => {
+          if (row.getIsGrouped()) {
+            // Es una fila de grupo
+            // row.getValue(row.groupingColumnId) nos da el valor del grupo
+            // Mostramos una fila con el valor del grupo y un ícono para expandir/contraer
+            return (
+              <Fragment key={row.id}>
+                <tr>
+                  {!unsettings && (
+                    <td
+                      className='text-center left-0 min-w-[30px]'
+                      style={{ position: 'sticky', zIndex: 1 }}
+                    >
+                      <span
+                        onClick={() => row.toggleExpanded()}
+                        className={`vox-icon ${
+                          row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
+                        } cursor-pointer size-sm`}
+                      />
+                    </td>
+                  )}
+                  {/* Una sola celda que abarca todas las columnas visibles mostrando el nombre del grupo */}
+                  <td
+                    colSpan={
+                      row.getVisibleCells().length + (!unsettings ? 0 : 0)
+                    }
+                    className='p-2 bg-gray-200 font-semibold'
+                  >
+                    {row.groupingColumnId && (
+                      <span>
+                        {typeof row.columnFilters?.[0] === 'string' ? '' : ''}
+                        {row.getValue(row.groupingColumnId)} (
+                        {row.subRows.length})
+                      </span>
+                    )}
+                  </td>
+                </tr>
+                {
+                  row.getIsExpanded() &&
+                    row.subRows.length > 0 &&
+                    renderRows(row.subRows) // Renderizamos subfilas recursivamente
+                }
+              </Fragment>
+            );
+          } else {
+            // Es una fila normal
+            return (
+              <Fragment key={row.id}>
+                <tr>
+                  {!unsettings && (
+                    <td
+                      className='text-center left-0 min-w-[30px]'
+                      style={{ position: 'sticky', zIndex: 1 }}
+                    >
+                      {expandable && (
+                        <span
+                          onClick={() => row.toggleExpanded()}
+                          className='vox-icon vx-icon-001 cursor-pointer size-sm'
+                        />
+                      )}
+                    </td>
+                  )}
+                  {row.getVisibleCells().map((cell, index) => (
+                    <SortableContext
+                      key={`${cell.id}-${index}`}
+                      items={columnOrder}
+                      strategy={horizontalListSortingStrategy}
+                    >
+                      <DraggableCell<T>
+                        key={`${cell.id}-${index}`}
+                        cell={cell}
+                      />
+                    </SortableContext>
+                  ))}
+                </tr>
+                {expandable && row.getIsExpanded() && (
+                  <tr className='border-b border-gray-200'>
+                    <td
+                      colSpan={row.getVisibleCells().length + 1}
+                      className='p-4'
+                    >
+                      {expandable(row.original)}
+                    </td>
+                  </tr>
+                )}
+              </Fragment>
+            );
+          }
+        })}
+      </>
+    );
+  }
+
   return (
     <>
       <div className='relative w-full mb-2 flex flex-col items-end'>
@@ -179,7 +276,6 @@ export const Table = <T,>({
           keys={memoizedLeafColumns}
           onChange={setColumnFilters}
         />
-        {/* AGREGADO: Componente de agrupación */}
         <Group table={table} />
       </div>
       <DndContext
@@ -226,47 +322,11 @@ export const Table = <T,>({
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map((row, index) => (
-                <Fragment key={`${row.id}-${index}`}>
-                  <tr>
-                    {!unsettings && (
-                      <td
-                        className='text-center left-0 min-w-[30px]'
-                        style={{ position: 'sticky', zIndex: 1 }}
-                      >
-                        {expandable && (
-                          <span
-                            onClick={() => row.toggleExpanded()}
-                            className='vox-icon vx-icon-001 cursor-pointer size-sm'
-                          />
-                        )}
-                      </td>
-                    )}
-                    {row.getVisibleCells().map((cell, index) => (
-                      <SortableContext
-                        key={`${cell.id}-${index}`}
-                        items={columnOrder}
-                        strategy={horizontalListSortingStrategy}
-                      >
-                        <DraggableCell<T>
-                          key={`${cell.id}-${index}`}
-                          cell={cell}
-                        />
-                      </SortableContext>
-                    ))}
-                  </tr>
-                  {expandable && row.getIsExpanded() && (
-                    <tr className='border-b border-gray-200'>
-                      <td
-                        colSpan={row.getVisibleCells().length + 1}
-                        className='p-4'
-                      >
-                        {expandable(row.original)}
-                      </td>
-                    </tr>
-                  )}
-                </Fragment>
-              ))}
+              {
+                renderRows(
+                  table.getRowModel().rows
+                ) /* Renderizamos las filas */
+              }
             </tbody>
           </table>
         </div>
@@ -308,6 +368,7 @@ export const Table = <T,>({
   );
 };
 
+// // src/components/common/table/table.tsx
 // import './table.css';
 // import {
 //   getCoreRowModel,
@@ -321,11 +382,8 @@ export const Table = <T,>({
 //   getExpandedRowModel,
 //   ColumnDef,
 //   ColumnFiltersState,
-//   // AGREGADO: importar getGroupedRowModel
-//   getGroupedRowModel,
-//   // AGREGADO: importar GroupingState
-//   GroupingState,
-//   Row,
+//   getGroupedRowModel, // AGREGADO
+//   GroupingState, // AGREGADO
 // } from '@tanstack/react-table';
 // import { useMemo, useState } from 'preact/hooks';
 // import { ITableProps, ROW_ACTIONS } from './interface';
@@ -370,7 +428,6 @@ export const Table = <T,>({
 //     pageSize: pageSize,
 //   });
 //   const [expanded, setExpanded] = useState<ExpandedState>({});
-
 //   // AGREGADO: Estado para el agrupamiento
 //   const [grouping, setGrouping] = useState<GroupingState>([]);
 
@@ -387,13 +444,11 @@ export const Table = <T,>({
 //     getFilteredRowModel: getFilteredRowModel(),
 //     getPaginationRowModel: getPaginationRowModel(),
 //     getExpandedRowModel: getExpandedRowModel(),
-//     // AGREGADO: Añadir getGroupedRowModel para el agrupamiento
-//     getGroupedRowModel: getGroupedRowModel(),
+//     getGroupedRowModel: getGroupedRowModel(), // AGREGADO
 //     onSortingChange: setSorting,
 //     onPaginationChange: setPagination,
 //     onExpandedChange: setExpanded,
-//     // AGREGADO: Añadir onGroupingChange y el estado grouping
-//     onGroupingChange: setGrouping,
+//     onGroupingChange: setGrouping, // AGREGADO
 //     state: {
 //       sorting,
 //       pagination,
@@ -512,7 +567,10 @@ export const Table = <T,>({
 //           <table className='w-full border-collapse info'>
 //             <thead>
 //               {table.getHeaderGroups().map((headerGroup, index) => (
-//                 <tr key={`${headerGroup.id}-${index}`} className='sticky top-0 z-20'>
+//                 <tr
+//                   key={`${headerGroup.id}-${index}`}
+//                   className='sticky top-0 z-20'
+//                 >
 //                   {!unsettings && (
 //                     <th
 //                       colSpan={1}
@@ -560,13 +618,19 @@ export const Table = <T,>({
 //                         items={columnOrder}
 //                         strategy={horizontalListSortingStrategy}
 //                       >
-//                         <DraggableCell<T> key={`${cell.id}-${index}`} cell={cell} />
+//                         <DraggableCell<T>
+//                           key={`${cell.id}-${index}`}
+//                           cell={cell}
+//                         />
 //                       </SortableContext>
 //                     ))}
 //                   </tr>
 //                   {expandable && row.getIsExpanded() && (
 //                     <tr className='border-b border-gray-200'>
-//                       <td colSpan={row.getVisibleCells().length + 1} className='p-4'>
+//                       <td
+//                         colSpan={row.getVisibleCells().length + 1}
+//                         className='p-4'
+//                       >
 //                         {expandable(row.original)}
 //                       </td>
 //                     </tr>
