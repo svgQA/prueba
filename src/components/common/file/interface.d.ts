@@ -1,0 +1,27 @@
+import { type TargetedEvent } from 'preact/compat';
+import { type IComponentProps } from '@/components/utils/interface';
+import { FieldMetaState } from 'react-final-form';
+import { IPresignedRequest } from '@/types/file';
+
+export interface IFileProps extends IComponentProps {
+  onChange?: (event: KeyboardEvent<HTMLInputElement>) => void;
+  onKeyUp?: (event: KeyboardEvent<HTMLElement>) => void;
+  onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
+  label?: string;
+  min?: string;
+  max?: string;
+  step?: number;
+  pattern?: string;
+  required?: boolean;
+  placeholder?: string;
+  icon?: string;
+  type?: 'text' | 'password' | 'number' | 'tel' | 'email' | 'time' | 'date';
+  meta?: FieldMetaState<string>;
+  end?: boolean;
+  borderless?: boolean;
+  tabIndex?: number;
+  thin?: boolean;
+  accept: string;
+  multiple?: boolean;
+  value: IPresignedRequest[];
+}

@@ -1,9 +1,9 @@
-import { Card } from '@/components/common';
 import { type FunctionComponent } from 'preact';
 import { type ICardSettingMenuProps } from './interface';
-import { type IMenu } from '@/components/common/interface';
 import { Link } from 'wouter';
 import { memo } from 'preact/compat';
+import { IMenu } from '@/components/common/utils/interface';
+import { Card } from '@/components/common/card/card';
 
 export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
   ({ id, name, menus, label, base, selected }: ICardSettingMenuProps) => {

@@ -1,7 +1,7 @@
 import { type TargetedEvent } from 'preact/compat';
 import { type IComponentProps } from '@/components/utils/interface';
 import { FieldMetaState } from 'react-final-form';
-import { IOption } from '../interface';
+import { IOption } from '../multi/interface';
 
 export interface ISelectedOptions extends IOption {
   value: number | string;

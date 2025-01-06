@@ -4,13 +4,7 @@ import {
   ExpandableContentProps,
   PrioritySection,
 } from '../expansible/expansible';
-
-export enum ROW_ACTIONS {
-  UPDATE,
-  CREATE,
-  DELETE,
-  REPORT,
-}
+import { ROW_ACTIONS } from './enum';
 
 export interface IRowAction {
   id: number | string;
@@ -25,6 +19,7 @@ export interface ITableProps<T> {
   expandable?: (row: T) => VNode; // Aquí row es el dato original, no hace falta Row<T> si no lo usas
   unscroll?: boolean;
   unsettings?: boolean;
+  unsearch?: boolean;
   visibility?: { [key: string]: boolean };
   onClickAction?: (action: IRowAction) => void;
 }

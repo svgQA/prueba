@@ -1,4 +1,3 @@
-import { Modal, Search } from '@/components/common';
 import {
   CardSettingHeader,
   CardSettingUser,
@@ -12,19 +11,22 @@ import {
 } from '@/store/signals/modals';
 import { authModel } from '@/store/signals/access';
 
-import { IMenu } from '@/components/common/interface';
 import { useSignal } from '@preact/signals';
 import { useCallback } from 'preact/hooks';
 import { useLocation } from 'wouter';
-import { MenuButtons, MenuList } from './components';
 import { RoutingContent } from './routing';
+import { IMenu } from '@/components/common/utils/interface';
+import { Modal } from '@/components/common/modal/modal';
+import { MenuButtons } from './components/header';
+import { Search } from '@/components/common/search/search';
+import { MenuList } from './components/menu';
 import {
   appendHistory,
   currentPosition,
   historyLocation,
   menuInformationSelected,
   setMenu,
-} from './store';
+} from './store/settings';
 
 export const SettingsModal = () => {
   const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
@@ -87,7 +89,7 @@ export const SettingsModal = () => {
       header={
         <>
           <MenuButtons goBack={goBack} goForward={goForward} />
-          <div className='min-w-40 flex flex-row'>
+          <div className='ml-5 flex flex-row w-full'>
             <Search
               id='search-general'
               name='search-general'
@@ -116,15 +118,14 @@ export const SettingsModal = () => {
           menuInformationSelected={menuInformationSelected.value}
         />
       </div>
-      <div className='w-full mt-0.5'>
+      <div className='w-full mt-0.5 px-5'>
         <CardSettingHeader
           id='setting-header'
           name='setting-header'
           title={menuInformationSelected.value.label}
           description={menuInformationSelected.value.description}
         />
-
-        <div className='relative max-h-[79vh] overflow-y-auto overflow-x-hidden vox-scroll-design w-full px-1'>
+        <div className='relative max-h-[79vh] min-h-[78vh] overflow-y-auto overflow-x-hidden vox-scroll-design w-full px-1'>
           <RoutingContent />
         </div>
       </div>

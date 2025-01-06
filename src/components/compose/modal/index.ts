@@ -1,4 +1,4 @@
-import { IMenu } from '@/components/common/interface';
+import { IMenu } from '@/components/common/utils/interface';
 
 export * from './card/menu';
 export * from './card/user';

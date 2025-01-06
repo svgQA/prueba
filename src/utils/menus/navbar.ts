@@ -1,4 +1,4 @@
-import { type IMenu } from '@/components/common/interface';
+import { IMenu } from '@/components/common/utils/interface';
 import { PAGES_LIST_ROUTER } from '../routing';
 
 export const NAVBAR_MENUS: IMenu[] = [

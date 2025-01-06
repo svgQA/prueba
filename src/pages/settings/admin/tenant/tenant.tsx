@@ -1,10 +1,11 @@
-import { Section, Table } from '@/components/common';
-import { CardData } from '@/components/compose';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
-import { columns } from './components';
 import { tenantData } from './utils/tenant.data';
-import { IUserResponse } from '@/types/auth';
+import { ITenantResponse } from '@/types/tenant';
+import { Section } from '@/components/common/section/section';
+import { CardData } from '@/components/compose/cards';
+import { Table } from '@/components/common/table/table';
+import { columns } from './components/tenant.columns';
 
 export const TenantSettingPage: FunctionComponent = () => {
   useEffect(() => {
@@ -42,7 +43,7 @@ export const TenantSettingPage: FunctionComponent = () => {
         />
       </div>
 
-      <Table<IUserResponse> data={tenantData} columns={columns} />
+      <Table<ITenantResponse> data={tenantData} columns={columns} />
     </Section>
   );
 };

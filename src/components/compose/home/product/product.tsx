@@ -1,6 +1,6 @@
-import { Card } from '@/components/common';
 import { type FunctionComponent } from 'preact';
 import { type ICardProductHomeMenuProps } from './interface';
+import { Card } from '@/components/common/card/card';
 
 export const CardProductHomeMenu: FunctionComponent<
   ICardProductHomeMenuProps

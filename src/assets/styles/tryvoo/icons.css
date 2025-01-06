@@ -24,6 +24,11 @@ span.vx-icon {
   }
 }
 
+span.vox-icon.size-xs,
+span.vx-icon.size-xs {
+  font-size: 0.7em;
+}
+
 span.vox-icon.size-sm,
 span.vx-icon.size-sm {
   font-size: 1em;
@@ -72,7 +77,11 @@ span.vx-icon.size-xl {
 }
 
 .vx-icon-009::before {
-  content: '\0110';
+  content: '\0039';
+}
+
+.vx-icon-0091::before {
+  content: '\003A';
 }
 
 .vx-icon-010::before {
