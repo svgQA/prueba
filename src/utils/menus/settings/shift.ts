@@ -14,5 +14,13 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.base,
       id: 'rounds',
     },
+    {
+      icon: '143',
+      label: 'Places',
+      description: 'Lugares',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.places.base,
+      id: 'places',
+    },
   ],
 };
