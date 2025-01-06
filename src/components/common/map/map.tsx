@@ -4,33 +4,33 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import React from 'preact/compat';
 
 export const Map: FunctionComponent<IMapProps> = () => {
-  const [map, setMap] = React.useState(null)
-  
+  // const [map, setMap] = React.useState(null);
+
   const containerStyle = {
     width: '1100px',
     height: '350px',
-  }
-  
+  };
+
   const center = {
     lat: -3.745,
     lng: -38.523,
-  }
+  };
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: 'AIzaSyA3gRFb6tnTOMmU3gZWaGu85gVPQ9DTpS8',
-  })
+  });
 
   const onLoad = React.useCallback(function callback(map: any) {
-    const bounds = new window.google.maps.LatLngBounds(center)
-    map.fitBounds(bounds)
+    const bounds = new window.google.maps.LatLngBounds(center);
+    map.fitBounds(bounds);
 
-    setMap(map)
-  }, [])
+    // setMap(map);
+  }, []);
 
   const onUnmount = React.useCallback(function callback() {
-    setMap(null)
-  }, [])
+    // setMap(null);
+  }, []);
 
   return isLoaded ? (
     <GoogleMap
@@ -44,5 +44,5 @@ export const Map: FunctionComponent<IMapProps> = () => {
     </GoogleMap>
   ) : (
     <></>
-  )
+  );
 };

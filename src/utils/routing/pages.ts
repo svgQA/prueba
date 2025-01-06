@@ -49,5 +49,7 @@ export enum PAGES_LIST {
   // SETTING ASOCIATE ROUTES
   SETTING_ASOCIATE_LIST = '/setting/asociate',
   SETTING_ASOCIATE_RESOURCES = '/setting/asociate/resources',
+  // SETTING OPTIMUS ROUTES
+  SETTING_OPTIMUS_RESOURCES = '/setting/optimus',
   FALLBACK = '*',
 }
