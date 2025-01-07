@@ -3,6 +3,8 @@ import { FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
+import { toast } from "react-toastify";
+import { ShiftService } from "@/services/shift";
 
 export const PlaceCreateSettingPage: FunctionComponent = () => {
     const [formData, setFormData] = useState({
@@ -22,7 +24,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
         });
     };
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         const obj = {
             name: formData.name,
@@ -30,6 +32,17 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
             latitude: markers[0].position.lat,
             longitude: markers[0].position.lng
         }
+
+        const request = await ShiftService.createPlace({
+            ...obj
+        });
+
+        if (!request.getStatus()) return;
+
+        toast.success("Lugar creado exitosamente!", {
+            position: "top-right",
+        });
+
         console.log('Datos del formulario:', obj);
     };
 

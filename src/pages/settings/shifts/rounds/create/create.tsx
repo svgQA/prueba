@@ -3,6 +3,8 @@ import { Input } from '@/components/common/input/input';
 import { Map } from '@/components/common/map/map';
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
+import { toast } from "react-toastify";
+import { ShiftService } from "@/services/shift";
 
 export const RoundCreateSettingPage: FunctionComponent = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     time: '',
     distance: '',
     frequency: '',
+    markers: []
   });
 
   const handleFormatInputChange = (e: any) => {
@@ -21,10 +24,30 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     });
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+    const obj = {
+      name: formData.name,
+      distance: formData.distance,
+      frequency: formData.frequency,
+      time: formData.time,
+      markers: formData.markers
+    }
+
+    const request = await ShiftService.createRound({
+      ...obj
+    });
+
+    if (!request.getStatus()) return;
+
+    toast.success("Ronda creada exitosamente!", {
+      position: "top-right",
+    });
+
     console.log('Datos del formulario:', formData);
   };
+
+  const addPlace = () => { }
 
   return (
     <section className='flex flex-row'>
@@ -80,7 +103,11 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
           </div>
         </div>
         <div>
-          <Map id='1' name='mapa' />
+          <Map
+            name='mapa'
+            addPlaceEvent={addPlace}
+            markers={formData.markers}
+          />
         </div>
       </div>
     </section>
