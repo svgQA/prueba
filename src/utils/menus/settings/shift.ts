@@ -22,5 +22,13 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.places.base,
       id: 'places',
     },
+    {
+      icon: '143',
+      label: 'Shifts',
+      description: 'Rondas',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.shiftsCreate.base,
+      id: 'shifts',
+    },
   ],
 };
