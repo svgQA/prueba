@@ -4,6 +4,7 @@ import { Map } from '@/components/common/map/map';
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import { toast } from "react-toastify";
+import { ShiftService } from "@/services/shift";
 
 export const RoundCreateSettingPage: FunctionComponent = () => {
   const [formData, setFormData] = useState({
@@ -23,8 +24,21 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     });
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+    const obj = {
+      name: formData.name,
+      distance: formData.distance,
+      frequency: formData.frequency,
+      time: formData.time,
+      markers: formData.markers
+    }
+
+    const request = await ShiftService.createRound({
+      ...obj
+    });
+
+    if (!request.getStatus()) return;
 
     toast.success("Ronda creada exitosamente!", {
       position: "top-right",
@@ -33,7 +47,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     console.log('Datos del formulario:', formData);
   };
 
-  const addPlace = () => {}
+  const addPlace = () => { }
 
   return (
     <section className='flex flex-row'>
