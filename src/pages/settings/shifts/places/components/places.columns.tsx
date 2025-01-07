@@ -9,21 +9,27 @@ export const columns: ColumnDef<Place>[] = [
         header: 'ID',
     },
     {
-        id: 'code',
-        accessorKey: 'code',
+        id: 'name',
+        accessorKey: 'name',
         size: 60,
-        header: 'Code',
+        header: 'Nombre',
+    },
+    {
+        id: 'description',
+        accessorKey: 'description',
+        size: 60,
+        header: 'Descripción',
     },
     {
         id: 'latitude',
         accessorKey: 'latitude',
         size: 60,
-        header: 'Latitude',
+        header: 'Latitud',
     },
     {
         id: 'longitude',
         accessorKey: 'longitude',
         size: 60,
-        header: 'Longitude',
+        header: 'Longitud',
     },
 ]

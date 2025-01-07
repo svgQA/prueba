@@ -36,6 +36,7 @@ import { ResourcesSettingPage } from './asociate/resource/resource';
 import { AsociateSettingPage } from './asociate/asociate/asociate';
 import { PlacesSettingPage } from './shifts/places/places';
 import { PlaceCreateSettingPage } from './shifts/places/create/create';
+import { ShiftsSettingPage } from './shifts/shifts/shifts';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -217,6 +218,12 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.placesCreate.to}
           component={lazy(() =>
             Promise.resolve({ default: PlaceCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.shiftsCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ShiftsSettingPage })
           )}
         />
         {/* SALES MENU */}
