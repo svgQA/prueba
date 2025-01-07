@@ -3,6 +3,7 @@ import { Input } from '@/components/common/input/input';
 import { Map } from '@/components/common/map/map';
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
+import { toast } from "react-toastify";
 
 export const RoundCreateSettingPage: FunctionComponent = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     time: '',
     distance: '',
     frequency: '',
+    markers: []
   });
 
   const handleFormatInputChange = (e: any) => {
@@ -23,8 +25,15 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+
+    toast.success("Ronda creada exitosamente!", {
+      position: "top-right",
+    });
+
     console.log('Datos del formulario:', formData);
   };
+
+  const addPlace = () => {}
 
   return (
     <section className='flex flex-row'>
@@ -80,7 +89,11 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
           </div>
         </div>
         <div>
-          <Map id='1' name='mapa' />
+          <Map
+            name='mapa'
+            addPlaceEvent={addPlace}
+            markers={formData.markers}
+          />
         </div>
       </div>
     </section>
