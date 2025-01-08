@@ -37,3 +37,9 @@ export interface IRoundRequest {
   readonly frequency: string;
   readonly markers: any
 }
+
+export interface IShiftRequest {
+  readonly address: string;
+  readonly city: string;
+  readonly employee: string;
+}
