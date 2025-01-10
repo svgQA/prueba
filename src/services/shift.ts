@@ -1,6 +1,10 @@
 import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
 import { BaseService } from '@/utils/network';
-import { IMakeRequest, VoxServices, REQUEST_METHODS } from '@/utils/network/types';
+import {
+  IMakeRequest,
+  VoxServices,
+  REQUEST_METHODS,
+} from '@/utils/network/types';
 
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';

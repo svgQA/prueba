@@ -61,7 +61,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
             icon='039'
             name='back'
             rounded={true}
-            className="w-auto"
+            className='w-auto'
           />
         </div>
       </div>

@@ -35,7 +35,7 @@ export interface IRoundRequest {
   readonly time: string;
   readonly distance: string;
   readonly frequency: string;
-  readonly markers: any
+  readonly markers: any;
 }
 
 export interface IShiftRequest {
