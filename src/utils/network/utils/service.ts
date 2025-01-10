@@ -95,8 +95,8 @@ export class BaseService {
         https://voxline.com/api/form/...
      */
     model: IMakeRequest,
-    prefix?: boolean,
-    tenance: boolean = true
+    tenance: boolean = true,
+    prefix: boolean = false
   ): Promise<GenericResponse<T>> {
     this.openLoading();
     try {
@@ -106,6 +106,7 @@ export class BaseService {
         prefix,
         tenance
       );
+      console.log('DATOS: ', model_request);
       const response = await fetch(model_request.url, {
         headers: model_request.header,
         body: model.data,

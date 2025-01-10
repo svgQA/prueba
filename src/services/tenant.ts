@@ -21,14 +21,14 @@ export class TenantService extends BaseService {
       method: REQUEST_METHODS.POST,
       data: tenant,
     };
-    return await super.make_request<ITenant>(this.name, model);
+    return await super.make_request<ITenant>(this.name, model, false);
   }
 
-  static async get_my_tenants(id: string) {
+  static async get_my_tenants() {
     const model: IMakeRequest = {
-      url: ['user', id],
+      url: ['user'],
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<any>(this.name, model, false);
   }
 
   // static async get_tenants() {
@@ -40,7 +40,7 @@ export class TenantService extends BaseService {
 
   // static async get_instances() {
   //   const model: IMakeRequest = {
-  //     url: ['instance'],
+  //     url: ['instances'],
   //   };
   //   return await super.make_request<IInstance>(this.name, model);
   // }
