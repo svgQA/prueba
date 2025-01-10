@@ -17,18 +17,18 @@ export class TenantService extends BaseService {
   static async create_tenant(data: IOnboardingModel) {
     const tenant = onboarding2Tenant(data);
     const model: IMakeRequest = {
-      url: ['tenants'],
+      url: ['tenant'],
       method: REQUEST_METHODS.POST,
       data: tenant,
     };
-    return await super.make_request<ITenant>(this.name, model, true, false);
+    return await super.make_request<ITenant>(this.name, model);
   }
 
   static async get_my_tenants(id: string) {
     const model: IMakeRequest = {
-      url: ['users', id],
+      url: ['user', id],
     };
-    return await super.make_request<any>(this.name, model, true, false);
+    return await super.make_request<any>(this.name, model);
   }
 
   // static async get_tenants() {
@@ -40,14 +40,14 @@ export class TenantService extends BaseService {
 
   // static async get_instances() {
   //   const model: IMakeRequest = {
-  //     url: ['instances'],
+  //     url: ['instance'],
   //   };
   //   return await super.make_request<IInstance>(this.name, model);
   // }
 
   // static async get_modules() {
   //   const model: IMakeRequest = {
-  //     url: ['modules'],
+  //     url: ['module'],
   //   };
   //   return await super.make_request<IModule>(this.name, model);
   // }
