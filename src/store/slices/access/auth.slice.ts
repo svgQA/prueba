@@ -4,11 +4,10 @@ import { parsingCompanies } from './user.slice';
 import { ICompany } from './interface/user.interface';
 
 const getTenancies = async (
-  uuid: string,
   setCompanies: (companies: ICompany[]) => void,
   setSelected: (uuid: string) => void
 ): Promise<boolean> => {
-  const response = await TenantService.get_my_tenants(uuid);
+  const response = await TenantService.get_my_tenants();
   /* Corregir toda esta mierda porque tenant esta respondiendo como true
      a los errores (corregir tenant Service) */
   if (!response.getStatus()) {
@@ -44,7 +43,7 @@ export const hasUserTenant = async (
 ): Promise<boolean> => {
   const user = await getUserId(setToken);
   if (!user) return false;
-  return getTenancies(user, setCompanies, setSelected);
+  return getTenancies(setCompanies, setSelected);
 };
 
 export const getUser = async (
