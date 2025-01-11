@@ -69,15 +69,17 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
           <div className='grid grid-cols-2 gap-2'>
             <Input
               type='text'
-              placeholder='Tiempo del lugar'
+              placeholder='Nombre'
+              label='Nombre'
               name='name'
               value={formData.name}
               onChange={handleFormatInputChange}
             />
             <Input
               type='text'
-              placeholder='Descripción del lugar'
+              placeholder='Descripción'
               name='description'
+              label='Descripción'
               value={formData.description}
               onChange={handleFormatInputChange}
             />
