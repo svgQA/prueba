@@ -32,10 +32,9 @@ export interface IPlaceRequest {
 
 export interface IRoundRequest {
   readonly name: string;
-  readonly time: string;
-  readonly distance: string;
   readonly frequency: string;
   readonly markers: any;
+  readonly place: string;
 }
 
 export interface IShiftRequest {
