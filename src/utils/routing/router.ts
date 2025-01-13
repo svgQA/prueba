@@ -142,13 +142,24 @@ export const PAGES_LIST_ROUTER = {
       },
       asociate: {
         base: '/asociate',
-        list: {
+        resources: {
           base: '/',
           to: '/asociate',
         },
+      },
+      access: {
+        base: '/access',
         resource: {
-          base: '/resources',
-          to: '/asociate/resources',
+          base: '/',
+          to: '/access',
+        },
+        sets: {
+          base: '/sets',
+          to: '/access/sets',
+        },
+        place: {
+          base: '/place',
+          to: '/access/place',
         },
       },
       ia: {

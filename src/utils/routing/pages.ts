@@ -47,7 +47,10 @@ export enum PAGES_LIST {
   // SETTING SHIFTS ROUNDS
   SETTING_SHIFTS_ROUNDS = '/setting/rounds',
   // SETTING ASOCIATE ROUTES
-  SETTING_ASOCIATE_LIST = '/setting/asociate',
-  SETTING_ASOCIATE_RESOURCES = '/setting/asociate/resources',
+  SETTING_ASOCIATE_RESOURCES = '/setting/asociate',
+  // SETTING ACCESS ROUTES
+  SETTING_ACCESS_RESOURCES = '/setting/access',
+  SETTING_ACCESS_SETS = '/setting/access/sets',
+  SETTING_ACCESS_PLACES = '/setting/access/place',
   FALLBACK = '*',
 }

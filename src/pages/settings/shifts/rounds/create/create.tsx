@@ -33,7 +33,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       name: formData.name,
       frequency: formData.frequency,
       markers: markers,
-      place: formData.place
+      place: formData.place,
     };
 
     const request = await ShiftService.createRound({
@@ -86,16 +86,16 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     const φ2 = toRad(marker.position.lat);
     const Δφ = toRad(marker.position.lat - markerReference.position.lat);
     const Δλ = toRad(marker.position.lng - markerReference.position.lng);
-  
+
     const a =
       Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
       Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  
-    return (R * c) > 1000;
+
+    return R * c > 1000;
   };
 
-  const selectPlace = async(e: any) => {
+  const selectPlace = async (e: any) => {
     handleFormatInputChange(e);
     setMarkers([]);
 
@@ -106,32 +106,32 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     const marker = {
       id: 1,
       position: {
-          lat: newMarker.latitude,
-          lng: newMarker.longitude,
-      }
+        lat: newMarker.latitude,
+        lng: newMarker.longitude,
+      },
     };
 
     setPlace(marker);
-    setMarkers((prevMarkers) => [...prevMarkers, marker])
-  }
+    setMarkers((prevMarkers) => [...prevMarkers, marker]);
+  };
 
-  const getPlaces = async() => {
+  const getPlaces = async () => {
     const places = [
       {
         value: 1,
         label: 'Bogota',
         description: 'Centro comercial',
         latitude: 4.670343272976993,
-        longitude: -74.0871440295104
-      }
+        longitude: -74.0871440295104,
+      },
     ];
 
     setPlaces(places);
-  }
+  };
 
   useEffect(() => {
     getPlaces();
-  }, []); 
+  }, []);
 
   return (
     <section className='flex flex-row'>
@@ -178,11 +178,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
           </div>
         </div>
         <div>
-          <Map
-            name='mapa'
-            addPlaceEvent={addPlace}
-            markers={markers}
-          />
+          <Map name='mapa' addPlaceEvent={addPlace} markers={markers} />
         </div>
       </div>
     </section>
