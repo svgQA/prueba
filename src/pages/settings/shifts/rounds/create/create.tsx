@@ -12,11 +12,14 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     name: '',
     frequency: '',
     place: '',
+    latitude: '',
+    longitude: ''
   });
 
   const [markers, setMarkers] = useState<{ id: number; position: any }[]>([]);
   const [place, setPlace] = useState<{ id: number; position: any }>();
   const [places, setPlaces] = useState<any[]>([]);
+  const [addPoint, setAddPoint] = useState<boolean>(false);
 
   const handleFormatInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -63,7 +66,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         position: 'top-right',
       });
 
-      return;
+      return false;
     }
 
     const pointValidation = haversineDistance(place, marker);
@@ -73,10 +76,12 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         position: 'top-right',
       });
 
-      return;
+      return false;
     }
 
     setMarkers((prevMarkers) => [...prevMarkers, marker]);
+
+    return true;
   };
 
   const haversineDistance = (markerReference: any, marker: any) => {
@@ -86,16 +91,16 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     const φ2 = toRad(marker.position.lat);
     const Δφ = toRad(marker.position.lat - markerReference.position.lat);
     const Δλ = toRad(marker.position.lng - markerReference.position.lng);
-  
+
     const a =
       Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
       Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  
+
     return (R * c) > 1000;
   };
 
-  const selectPlace = async(e: any) => {
+  const selectPlace = async (e: any) => {
     handleFormatInputChange(e);
     setMarkers([]);
 
@@ -106,8 +111,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     const marker = {
       id: 1,
       position: {
-          lat: newMarker.latitude,
-          lng: newMarker.longitude,
+        lat: newMarker.latitude,
+        lng: newMarker.longitude,
       }
     };
 
@@ -115,7 +120,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     setMarkers((prevMarkers) => [...prevMarkers, marker])
   }
 
-  const getPlaces = async() => {
+  const getPlaces = async () => {
     const places = [
       {
         value: 1,
@@ -129,9 +134,49 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     setPlaces(places);
   }
 
+  const savePoint = () => {
+    if (markers.length === 0) {
+      toast.error('Debes seleccionar un lugar para agregar puntos', {
+        position: 'top-right',
+      });
+
+      return;
+    }
+
+
+    const data = {
+      latitude: Number(formData.latitude),
+      longitude: Number(formData.longitude)
+    }
+
+    const validation = addPlace(data);
+
+    if (!validation) return;
+
+    setAddPoint(false);
+
+    setFormData({
+      ...formData,
+      latitude: '',
+      longitude: ''
+    });
+  }
+
+  const addPointValidation = () => {
+    if (markers.length === 0) {
+      toast.error('Debes seleccionar un lugar para agregar puntos', {
+        position: 'top-right',
+      });
+
+      return;
+    }
+
+    setAddPoint(true);
+  }
+
   useEffect(() => {
     getPlaces();
-  }, []); 
+  }, []);
 
   return (
     <section className='flex flex-row'>
@@ -139,17 +184,16 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         <div>
           <h1>Crear nueva ronda</h1>
         </div>
-        <div className='flex flex-col gap-1 w-10/12'>
-          <Input
-            type='text'
-            placeholder='Nombre'
-            label='Nombre'
-            name='name'
-            value={formData.name}
-            onChange={handleFormatInputChange}
-          />
-
-          <div className='grid grid-cols-2 gap-2'>
+        <div className='flex'>
+          <div className='w-1/2'>
+            <Input
+              type='text'
+              placeholder='Nombre'
+              label='Nombre'
+              name='name'
+              value={formData.name}
+              onChange={handleFormatInputChange}
+            />
             <Input
               type='number'
               placeholder='Frecuencia'
@@ -166,15 +210,62 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
               options={places}
               onChange={selectPlace}
             />
-          </div>
-          <div>
             <Button
               id='setting-close'
               name='setting-close'
               type='button'
               label='Guardar'
               onClick={handleSubmit}
+              className='mt-2 mb-2'
             />
+          </div>
+          <div className='w-1/2 ml-5'>
+            <h2>Agregar punto por coordenadas</h2>
+            {!addPoint &&
+              <Button
+                id='setting-close'
+                name='setting-close'
+                type='button'
+                label='Agregar punto'
+                onClick={addPointValidation}
+              />
+
+            }
+
+            {addPoint &&
+              <div>
+                <Input
+                  type='number'
+                  placeholder='Latitud'
+                  label='Latitud'
+                  name='latitude'
+                  value={formData.latitude}
+                  onChange={handleFormatInputChange}
+                />
+                <Input
+                  type='number'
+                  placeholder='Longitud'
+                  label='Longitud'
+                  name='longitude'
+                  value={formData.longitude}
+                  onChange={handleFormatInputChange}
+                />
+                <Button
+                  id='setting-close'
+                  name='setting-close'
+                  type='button'
+                  label='Guardar punto'
+                  onClick={savePoint}
+                />
+                <Button
+                  id='setting-close'
+                  name='setting-close'
+                  type='button'
+                  label='Cancelar'
+                  onClick={() => { setAddPoint(false)}}
+                />
+              </div>
+            }
           </div>
         </div>
         <div>
