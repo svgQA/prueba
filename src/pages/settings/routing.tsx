@@ -30,10 +30,13 @@ import { IotSettingPage } from './iot/iot/iot';
 import { ChannelsSettingPage } from './iot/channels/channels';
 import { IASettingPage } from './ia/ia/ia';
 import { RoundsSettingPage } from './shifts/rounds/rounds';
-import { RoundCreateSettingPage } from './shifts/create/create';
+import { RoundCreateSettingPage } from './shifts/rounds/create/create';
 import { SalesSettingPage } from './sales/sales/sales';
 import { ResourcesSettingPage } from './asociate/resource/resource';
 import { AsociateSettingPage } from './asociate/asociate/asociate';
+import { PlacesSettingPage } from './shifts/places/places';
+import { PlaceCreateSettingPage } from './shifts/places/create/create';
+import { ShiftsSettingPage } from './shifts/shifts/shifts';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -203,6 +206,24 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.create.to}
           component={lazy(() =>
             Promise.resolve({ default: RoundCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.places.to}
+          component={lazy(() =>
+            Promise.resolve({ default: PlacesSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.placesCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: PlaceCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.shiftsCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ShiftsSettingPage })
           )}
         />
         {/* SALES MENU */}

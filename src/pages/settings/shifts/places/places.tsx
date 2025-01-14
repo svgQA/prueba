@@ -1,28 +1,22 @@
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { IRowAction } from '@/components/common/table/interface.d';
-import { Table } from '@/components/common/table/table';
-import { type FunctionComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
-// import { IFormResponse } from '@/types/form';
-// import { FORMAT_MODE_SERVICE, setFormat } from '../../forms/create/store';
+import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { Round } from './utils/rounds';
-import { roundsData } from './utils/rounds.data';
-import { columns } from './components/rounds.columns';
+import { placesData } from './utils/places.data';
+import { Place } from './utils/places';
+import { columns } from './components/places.columns';
+import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { IRowAction } from '@/components/common/table/interface';
 import { Input } from '@/components/common/input/input';
+import { useState } from 'preact/hooks';
 
-export const RoundsSettingPage: FunctionComponent = () => {
+export const PlacesSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const [search, setSearch] = useState('');
 
   const redirect = () => {
-    // setFormat(
-    //   { mode: FORMAT_MODE_SERVICE.UPDATE, id: format.id },
-    //   format.structure
-    // );
-    navigate('/round/create');
+    navigate('/rounds/places/create');
   };
 
   const handleOnClick = (action: IRowAction) => {
@@ -34,10 +28,6 @@ export const RoundsSettingPage: FunctionComponent = () => {
         break;
     }
   };
-
-  useEffect(() => {
-    document.title = 'Rounds Settings';
-  }, []);
 
   const handleFormatInputChange = (e: any) => {
     const { value } = e.target;
@@ -56,7 +46,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
             onChange={handleFormatInputChange}
           />
           <Button
-            onClick={() => navigate('/round/create')}
+            onClick={() => navigate('/rounds/places/create')}
             type='button'
             icon='039'
             name='back'
@@ -65,8 +55,8 @@ export const RoundsSettingPage: FunctionComponent = () => {
           />
         </div>
       </div>
-      <Table<Round>
-        data={roundsData}
+      <Table<Place>
+        data={placesData}
         columns={columns}
         pageSize={20}
         visibility={{

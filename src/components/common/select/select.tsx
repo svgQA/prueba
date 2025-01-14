@@ -34,7 +34,7 @@ export const Select = ({
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
         <select
-          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'}`}
+          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md appearance-none ${thin ? '' : 'py-2'}`}
           onChange={onChange}
           value={value}
           name={name}
@@ -42,6 +42,7 @@ export const Select = ({
           placeholder={placeholder}
           required={required}
           tabIndex={tabIndex}
+          style={{ WebkitAppearance: 'none' }}
           {...props}
         >
           <option value=''>{placeholder}</option>

@@ -212,8 +212,11 @@ export const FormResponseSettingPage: FunctionComponent = () => {
         );
 
       default:
-        return (
+        return;
+        {
+          /*(
           <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            {element.type}
             <label class='block text-sm font-medium mb-1'>
               {element.label}
             </label>
@@ -222,6 +225,8 @@ export const FormResponseSettingPage: FunctionComponent = () => {
             )}
           </div>
         );
+        */
+        }
     }
   };
 
