@@ -8,6 +8,8 @@ import { columns } from './components/users.columns';
 import { UserService } from '@/services/user';
 import { useSignal } from '@preact/signals';
 import { IUserResponse } from '@/types/auth';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { IRowAction } from '@/components/common/table/interface';
 
 export const UserSettingPage: FunctionComponent = () => {
   const users = useSignal<IUserResponse[]>([]);
@@ -20,6 +22,20 @@ export const UserSettingPage: FunctionComponent = () => {
     const response = await UserService.get_all();
     if (!response.getStatus()) return;
     users.value = response.getMany();
+  };
+
+  const handleOnClick = async (action: IRowAction) => {
+    switch (action.action) {
+      case ROW_ACTIONS.CREATE: {
+        const response = await UserService.createProfile(action.id);
+        if (!response.getStatus()) {
+          return;
+        }
+        return await getUsersHandler();
+      }
+      default:
+        break;
+    }
   };
 
   return (
@@ -55,6 +71,7 @@ export const UserSettingPage: FunctionComponent = () => {
         data={users.value}
         columns={columns}
         unsearch
+        onClickAction={handleOnClick}
         visibility={{
           createdAt: false,
           sucursal: false,

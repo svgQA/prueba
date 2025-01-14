@@ -1,6 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { IUserResponse } from '@/types/auth';
 import { Badge } from '@/components/common/badge/badge';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { ButtonAction } from '@/components/common/button/column';
 
 export const columns: ColumnDef<IUserResponse>[] = [
   {
@@ -71,5 +73,36 @@ export const columns: ColumnDef<IUserResponse>[] = [
         <Badge label='active' bgColor='bg-primary' icon='067' />
       </div>
     ),
+  },
+  {
+    id: 'actions',
+    size: 20,
+    cell: (info) => {
+      const { id, cognitoId } = info.row.original;
+      return (
+        <div className='w-full flex justify-center'>
+          {!cognitoId && (
+            <ButtonAction
+              id={id}
+              type='form'
+              action={ROW_ACTIONS.CREATE}
+              label='Create Account'
+            />
+          )}
+          <ButtonAction
+            id={id}
+            type='shift'
+            action={ROW_ACTIONS.UPDATE}
+            icon='123'
+          />
+          <ButtonAction
+            id={id}
+            type='shift'
+            action={ROW_ACTIONS.DELETE}
+            icon='053'
+          />
+        </div>
+      );
+    },
   },
 ];

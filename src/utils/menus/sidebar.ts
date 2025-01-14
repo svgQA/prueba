@@ -31,7 +31,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     id: 'access',
   },
   {
-    label: 'corresponde',
+    label: 'Inbox',
     to: PAGES_LIST_ROUTER.dashboard.correspondence,
     description: 'Correspondence',
     icon: '102',
