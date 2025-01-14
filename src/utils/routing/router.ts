@@ -35,6 +35,18 @@ export const PAGES_LIST_ROUTER = {
           base: '/create',
           to: '/round/create',
         },
+        places: {
+          base: '/places',
+          to: '/rounds/places',
+        },
+        placesCreate: {
+          base: '/places/create',
+          to: '/rounds/places/create',
+        },
+        shiftsCreate: {
+          base: '/shifts/create',
+          to: '/rounds/shifts/create',
+        },
       },
       setting: {
         base: '/setting',
