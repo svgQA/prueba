@@ -63,11 +63,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setToken,
       getToken,
       getUrlSocket,
+      setCognito,
     } = useUserStore();
 
     const setCompanySelected = (company: string) => {
       setSelected(company);
       closeOnBoardingModal();
+      // getProfile();
       initSocket();
     };
 
@@ -75,7 +77,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       BaseService.setLoading(openLoading, closeLoading);
       BaseService.setUser(getSelected, getToken);
       validateUser();
-      console.log('DASHBOARD.layout.tsx');
     }, []);
 
     const validateUser = async () => {
@@ -85,11 +86,25 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       const existTenant = await hasUserTenant(
         setCompanies,
         setSelected,
-        setToken
+        setToken,
+        setCognito
       );
       if (!existTenant) openOnBoardingModal();
       else closeOnBoardingModal();
     };
+
+    // const getProfile = async () => {
+    //   const response = await UserService.profile();
+    //   if (!response.getStatus()) return;
+    //   const user = response.getOne();
+    //   setUser({
+    //     id: user.id,
+    //     name: user.name,
+    //     phone: user.phone,
+    //     address: user.email,
+    //     cognito: user.cognitoId,
+    //   });
+    // };
 
     const initSocket = () => {
       wsManager.connect(getUrlSocket());

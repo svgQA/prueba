@@ -7,6 +7,7 @@ type State = {
   companies: ICompany[];
   token: string;
   socket: string;
+  cognito: string;
 };
 
 type Actions = {
@@ -18,6 +19,8 @@ type Actions = {
   getUser: () => IUser | null;
   getToken: () => string;
   getUrlSocket: () => string;
+  setCognito: (uuid: string) => void;
+  getCognito: () => string;
 };
 
 export const useUserStore = create<State & Actions>((set, get) => ({
@@ -25,6 +28,12 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   token: 'Bearer',
   companies: [],
   socket: '',
+  cognito: '',
+  getCognito: () => {
+    const { cognito } = get();
+    return cognito;
+  },
+  setCognito: (cognito: string) => set({ cognito }),
   setUser: (user) => set({ user }),
   setToken: (token) => {
     set({ token });

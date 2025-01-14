@@ -1,4 +1,4 @@
-import { IWebSocketManager } from './interface';
+import { IMessage, IWebSocketManager } from './interface';
 
 type NamedListener = {
   name: string;
@@ -35,13 +35,18 @@ export class WebSocketManager implements IWebSocketManager {
       };
 
       this.ws.onmessage = (event) => {
-        this.listeners.forEach((listener) => listener.callback(event.data));
+        try {
+          const message: IMessage = JSON.parse(event.data);
+          this.listeners.forEach((listener) => listener.callback(message));
+        } catch (e) {
+          console.error('No allow connect with message', e);
+        }
       };
 
       this.ws.onclose = () => {
         console.warn('WebSocket disconnected. Trying to connect.');
         this.ws = null;
-        // setTimeout(() => this.connect(), 10000);
+        setTimeout(() => this.connect(), 5000);
       };
 
       this.ws.onerror = (error) => {
@@ -54,7 +59,9 @@ export class WebSocketManager implements IWebSocketManager {
 
   sendMessage(message: any) {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(message);
+      const msg =
+        typeof message === 'string' ? message : JSON.stringify(message);
+      this.ws.send(msg);
     } else {
       console.error(
         'No se puede enviar el mensaje. WebSocket no está conectado.'

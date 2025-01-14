@@ -19,6 +19,7 @@ const getTenancies = async (
     setCompanies([]);
     return false;
   }
+
   const userTenants = parsingCompanies(value);
   setCompanies(userTenants);
 
@@ -39,10 +40,12 @@ export const getUserId = async (
 export const hasUserTenant = async (
   setCompanies: (companies: ICompany[]) => void,
   setSelected: (uuid: string) => void,
-  setToken: (token: string) => void
+  setToken: (token: string) => void,
+  setCognito: (uuid: string) => void
 ): Promise<boolean> => {
   const user = await getUserId(setToken);
   if (!user) return false;
+  setCognito(user);
   return getTenancies(setCompanies, setSelected);
 };
 

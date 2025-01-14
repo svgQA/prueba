@@ -18,7 +18,7 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
   return (
     <div className='flex items-center gap-2 p-4 border-t dark:border-b-dark-light'>
       <Button icon='011' rounded id='attach-btn' name='attach' type='button' />
-      <Button icon='156' rounded id='emoji-btn' name='emoji' type='button' />
+      <Button icon='142' rounded id='emoji-btn' name='emoji' type='button' />
       <input
         type='text'
         className='flex-1 py-2 px-4 border dark:border-b-dark-light rounded-full'
@@ -28,7 +28,7 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
         onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
       />
       <Button
-        icon='142'
+        icon='156'
         rounded
         id='send-btn'
         name='send'
