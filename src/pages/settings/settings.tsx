@@ -101,7 +101,7 @@ export const SettingsModal = () => {
     >
       <div
         onClick={selectMenu}
-        className='max-w-48 min-w-44 p-0.5 max-h-[88vh]'
+        className='max-w-48 min-w-44 p-0.5 max-h-[90vh]'
       >
         <div className='mr-0.5'>
           <CardSettingUser
