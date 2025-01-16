@@ -30,6 +30,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-final-form": "^6.5.9",
+    "react-to-print": "^3.0.4",
     "react-toastify": "^10.0.6",
     "short-uuid": "^5.2.0",
     "wouter": "^3.3.5",

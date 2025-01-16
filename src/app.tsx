@@ -11,6 +11,7 @@ import '@aws-amplify/ui-react/styles.css';
 import { AWS_AMPLIFY_SETTINGS } from './aws-exports';
 import { AuthAmplifyProps } from './pages/interface';
 import { DashboardLayout } from './pages/dashboard/dashboard.layout';
+import { WebSocketProvider } from './utils/socket';
 Amplify.configure(AWS_AMPLIFY_SETTINGS);
 
 export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
@@ -24,7 +25,11 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
             // hideSignUp
             // socialProviders={['google']}
             >
-              {(authProps) => <DashboardLayout {...authProps} {...props} />}
+              {(authProps) => (
+                <WebSocketProvider>
+                  <DashboardLayout {...authProps} {...props} />
+                </WebSocketProvider>
+              )}
             </Authenticator>
           </div>
         </Router>

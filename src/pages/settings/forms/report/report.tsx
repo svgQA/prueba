@@ -1,5 +1,4 @@
-import { useSignal } from '@preact/signals';
-import { PropsWithChildren, useEffect } from 'preact/compat';
+import { useEffect } from 'preact/compat';
 import { TargetedEvent } from 'preact/compat';
 import { getReport, ReportKey, updateReport } from './store/report';
 import { FormService } from '@/services';
@@ -12,72 +11,24 @@ import { Input } from '@/components/common/input/input';
 import { Select } from '@/components/common/select/select';
 import { Switch } from '@/components/common/switch/switch';
 import { Button } from '@/components/common/button/button';
-
-interface TabProps extends PropsWithChildren {
-  title: string;
-  isActive?: boolean;
-  onClick?: () => void;
-}
-
-const Tab = (_: TabProps) => {
-  return <></>;
-};
-
-interface TabContainerProps extends PropsWithChildren {
-  children: React.ReactNode;
-  className?: string;
-}
-
-const TabContainer = ({ children, className }: TabContainerProps) => {
-  const activeTab = useSignal(0);
-  const tabs = Array.isArray(children) ? children : [children];
-  const onClick = (pos: number) => {
-    activeTab.value = pos;
-  };
-  return (
-    <div className={className}>
-      <div className='flex w-full flex-row'>
-        {tabs.map((tab: any, index: number) => (
-          <div
-            className={`flex-1 text-center px-4 py-2 cursor-pointer hover:bg-b-light-dark hover:dark:bg-b-dark-light hover ${
-              index === activeTab.value ? 'border-b-4 border-primary' : ''
-            }`}
-            key={`format-tab-${tab.props.title}`}
-            onClick={() => onClick(index)}
-          >
-            {tab.props.title}
-          </div>
-        ))}
-      </div>
-      {tabs.map((tab: any, index: number) => (
-        <div
-          className={`${
-            index === activeTab.value ? 'flex opacity-100' : 'hidden opacity-0'
-          } w-full transition-opacity duration-300 ease-in-out mt-3`}
-        >
-          {tab.props.children}
-        </div>
-      ))}
-    </div>
-  );
-};
+import { TabContainer } from '@/components/common/tab/container';
+import { Tab } from '@/components/common/tab/tab';
+import { handleChange } from '@/components/utils/input';
 
 export const FormReportSettingPage = () => {
   const [_, navigate] = useLocation();
+
   useEffect(() => {
     document.title = 'Forms Create Report';
   }, []);
 
-  const handleChange = (
+  const handleInputChange = (
     e: TargetedEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value, type } = e.currentTarget;
-    const vout =
-      type === 'checkbox'
-        ? (e.currentTarget as HTMLInputElement).checked
-        : value;
-    if (!name || !value) return;
-    updateReport(name as ReportKey, vout);
+    e.stopPropagation();
+    const model = handleChange(e);
+    if (!model.name) return;
+    updateReport(model.name as ReportKey, model.value);
   };
 
   const saveReport = async () => {
@@ -102,7 +53,7 @@ export const FormReportSettingPage = () => {
             name='title'
             id='in-title-format'
             placeholder='Name Format'
-            onChange={handleChange}
+            onChange={handleInputChange}
             value={getReport.value.title}
             icon='132'
           />
@@ -113,7 +64,10 @@ export const FormReportSettingPage = () => {
               <div className='space-y-3'>
                 <h3 className='text-lg font-medium'>Cover Page</h3>
                 <CardDropzone
+                  name='coverPage'
                   icon='009'
+                  onChange={handleInputChange}
+                  value={getReport.value.coverPage}
                   description='Drop your cover page file here or click to browse'
                 />
               </div>
@@ -121,7 +75,10 @@ export const FormReportSettingPage = () => {
               <div className='space-y-3'>
                 <h3 className='text-lg font-medium'>Logo</h3>
                 <CardDropzone
+                  name='logoPage'
                   icon='010'
+                  onChange={handleInputChange}
+                  value={getReport.value.logoPage}
                   description='Drop your logo here or click to upload'
                 />
               </div>
@@ -134,7 +91,7 @@ export const FormReportSettingPage = () => {
                   icon='106'
                   value={getReport.value.pdfSize}
                   name='pdfSize'
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   options={ELEMENT_PDF_SIZES}
                 />
               </div>
@@ -147,106 +104,80 @@ export const FormReportSettingPage = () => {
                   icon='106'
                   value={getReport.value.thumbnailSize}
                   name='thumbnailSize'
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   options={ELEMENT_THUMBNAIL_SIZES}
                 />
               </div>
             </div>
           </Tab>
           <Tab title='Content'>
-            <div className='w-full space-y-4 px-4'>
+            <div className='w-full space-y-4 px-4 flex flex-col'>
               <Switch
-                id='cb-form-header'
+                id='cb-report-header'
                 name='header'
                 label='Header'
                 value={getReport.value.header}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
               <Switch
-                id='cb-form-footer'
+                id='cb-report-footer'
                 name='footer'
                 label='Footer'
                 value={getReport.value.footer}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
               <Switch
-                id='cb-form-page-break'
+                id='cb-report-page-break'
                 name='pageBreak'
                 label='Page Break'
                 value={getReport.value.pageBreak}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
               <Switch
-                id='cb-form-flagged-items'
+                id='cb-report-flagged-items'
                 name='flaggedItems'
                 label='Flagged Items'
                 value={getReport.value.flaggedItems}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
               <Switch
-                id='cb-form-actions'
+                id='cb-report-actions'
                 name='actions'
                 label='Actions'
                 value={getReport.value.actions}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
               <Switch
-                id='cb-form-disclaimer'
+                id='cb-report-disclaimer'
                 name='disclaimer'
                 label='Disclaimer'
                 value={getReport.value.disclaimer}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
               <Switch
-                id='cb-form-media-summary'
+                id='cb-report-media-summary'
                 name='mediaSummary'
                 label='Media Summary'
                 value={getReport.value.mediaSummary}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
             </div>
           </Tab>
         </TabContainer>
       </div>
-      <div className='w-[75%] px-4'>
-        <div className='flex justify-between items-center mb-3'>
-          <h1 className='text-2xl font-bold'>Report</h1>
-          <div className='space-x-2'>
-            <Button
-              name='btn-pdf-view'
-              id='btn-pdf-view'
-              type='button'
-              label='PDF View'
-              icon='156'
-            />
-            {/*
-              className={`${viewMode.value === 'pdf' ? 'bg-primary' : 'bg-gray-200'}`}
-              onClick={() => (viewMode.value = 'pdf')}
-            */}
-            <Button
-              name='btn-web-view'
-              id='btn-web-view'
-              type='button'
-              label='Web View'
-              icon='076'
-            />
-            {/*
-              className={`${viewMode.value === 'web' ? 'bg-primary' : 'bg-gray-200'}`}
-              onClick={() => (viewMode.value = 'web')}
-            */}
-            <Button
-              name='btn-safe-format'
-              id='btn-safe-format'
-              type='button'
-              label={getReport.value.id ? 'Update' : 'Save'}
-              icon='156'
-              end
-              onClick={saveReport}
-            />
-          </div>
-        </div>
-        <CardReport />
-      </div>
+      <CardReport
+        menu={
+          <Button
+            name='btn-safe-format'
+            id='btn-safe-format'
+            type='button'
+            label={getReport.value.id ? 'Update' : 'Save'}
+            icon='156'
+            end
+            onClick={saveReport}
+          />
+        }
+      />
     </div>
   );
 };

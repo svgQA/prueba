@@ -97,7 +97,7 @@ export class FormService extends BaseService {
     return await super.make_request<IResponseResponse>(this.sname, model);
   }
 
-  static async update_response(data: UResponseRequest, id: number) {
+  static async update_response(data: UResponseRequest, id: string) {
     const model: IMakeRequest = {
       url: ['response', `${id}`],
       method: REQUEST_METHODS.PUT,
@@ -106,7 +106,7 @@ export class FormService extends BaseService {
     return await super.make_request<IResponseResponse>(this.sname, model);
   }
 
-  static async finish_response(data: UResponseRequest, id: number) {
+  static async finish_response(data: UResponseRequest, id: string) {
     const model: IMakeRequest = {
       url: ['response', `${id}`, 'end'],
       method: REQUEST_METHODS.PUT,
@@ -139,7 +139,7 @@ export class FormService extends BaseService {
     return await super.make_request<IFormResponse>(this.sname, model);
   }
 
-  static async remove_response_one(id: number) {
+  static async remove_response_one(id: string) {
     const model: IMakeRequest = {
       url: ['response', `${id}`],
       method: REQUEST_METHODS.DELETE,

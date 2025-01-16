@@ -13,7 +13,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     frequency: '',
     place: '',
     latitude: '',
-    longitude: ''
+    longitude: '',
   });
 
   const [markers, setMarkers] = useState<{ id: number; position: any }[]>([]);
@@ -36,7 +36,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       name: formData.name,
       frequency: formData.frequency,
       markers: markers,
-      place: formData.place
+      place: formData.place,
     };
 
     const request = await ShiftService.createRound({
@@ -97,7 +97,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    return (R * c) > 1000;
+    return R * c > 1000;
   };
 
   const selectPlace = async (e: any) => {
@@ -113,12 +113,12 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       position: {
         lat: newMarker.latitude,
         lng: newMarker.longitude,
-      }
+      },
     };
 
     setPlace(marker);
-    setMarkers((prevMarkers) => [...prevMarkers, marker])
-  }
+    setMarkers((prevMarkers) => [...prevMarkers, marker]);
+  };
 
   const getPlaces = async () => {
     const places = [
@@ -127,12 +127,12 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         label: 'Bogota',
         description: 'Centro comercial',
         latitude: 4.670343272976993,
-        longitude: -74.0871440295104
-      }
+        longitude: -74.0871440295104,
+      },
     ];
 
     setPlaces(places);
-  }
+  };
 
   const savePoint = () => {
     if (markers.length === 0) {
@@ -143,11 +143,10 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       return;
     }
 
-
     const data = {
       latitude: Number(formData.latitude),
-      longitude: Number(formData.longitude)
-    }
+      longitude: Number(formData.longitude),
+    };
 
     const validation = addPlace(data);
 
@@ -158,9 +157,9 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     setFormData({
       ...formData,
       latitude: '',
-      longitude: ''
+      longitude: '',
     });
-  }
+  };
 
   const addPointValidation = () => {
     if (markers.length === 0) {
@@ -172,7 +171,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     }
 
     setAddPoint(true);
-  }
+  };
 
   useEffect(() => {
     getPlaces();
@@ -221,7 +220,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
           </div>
           <div className='w-1/2 ml-5'>
             <h2>Agregar punto por coordenadas</h2>
-            {!addPoint &&
+            {!addPoint && (
               <Button
                 id='setting-close'
                 name='setting-close'
@@ -229,10 +228,9 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 label='Agregar punto'
                 onClick={addPointValidation}
               />
+            )}
 
-            }
-
-            {addPoint &&
+            {addPoint && (
               <div>
                 <Input
                   type='number'
@@ -262,18 +260,16 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   name='setting-close'
                   type='button'
                   label='Cancelar'
-                  onClick={() => { setAddPoint(false)}}
+                  onClick={() => {
+                    setAddPoint(false);
+                  }}
                 />
               </div>
-            }
+            )}
           </div>
         </div>
         <div>
-          <Map
-            name='mapa'
-            addPlaceEvent={addPlace}
-            markers={markers}
-          />
+          <Map name='mapa' addPlaceEvent={addPlace} markers={markers} />
         </div>
       </div>
     </section>

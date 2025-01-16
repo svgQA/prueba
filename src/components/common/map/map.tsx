@@ -43,8 +43,8 @@ export const Map: FunctionComponent<IMapProps> = ({
   };
 
   const getTitle = (marker: any): string => {
-    return `Punto ${marker.id}, Latitud: ${marker.position.lat}, Longitud: ${marker.position.lng}`
-  }
+    return `Punto ${marker.id}, Latitud: ${marker.position.lat}, Longitud: ${marker.position.lng}`;
+  };
 
   return isLoaded ? (
     <GoogleMap
@@ -56,7 +56,11 @@ export const Map: FunctionComponent<IMapProps> = ({
       onClick={handleMapClick}
     >
       {markers.map((marker) => (
-        <Marker key={marker.id} position={marker.position} title={getTitle(marker)} />
+        <Marker
+          key={marker.id}
+          position={marker.position}
+          title={getTitle(marker)}
+        />
       ))}
     </GoogleMap>
   ) : (
