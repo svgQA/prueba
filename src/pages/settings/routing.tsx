@@ -34,6 +34,7 @@ import { RoundCreateSettingPage } from './shifts/create/create';
 import { SalesSettingPage } from './sales/sales/sales';
 import { ResourcesSettingPage } from './asociate/resource/resource';
 import { AsociateSettingPage } from './asociate/asociate/asociate';
+import { OptimusSettingPage } from './optimus/recursos/recursos';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -221,6 +222,12 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.asociate.resource.to}
           component={lazy(() =>
             Promise.resolve({ default: AsociateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.optimus.resource.to}
+          component={lazy(() =>
+            Promise.resolve({ default: OptimusSettingPage })
           )}
         />
       </Suspense>
