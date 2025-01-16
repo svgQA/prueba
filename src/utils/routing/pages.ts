@@ -6,6 +6,7 @@ export enum PAGES_LIST {
   DASHBOARD = '/dashboard',
   SHIFTS = '/shifts',
   ACCESS = '/access',
+  CORRESPONDENCE = '/correspondence',
   FORMS = '/forms',
   MEMOS = '/memos',
   DEVICES = '/devices',
