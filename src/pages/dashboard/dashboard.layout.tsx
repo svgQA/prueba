@@ -19,6 +19,7 @@ import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
 import { ShiftsPage } from './shifts/shifts.page';
 import { AccesPage } from './access/access.page';
+import { CorrespondencePage } from './correspondence/correspondence.page';
 
 /** ***********************************************************************
  * STORE SIGNALS
@@ -114,6 +115,12 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
               <Route
                 path={PAGES_LIST.ACCESS}
                 component={lazy(() => Promise.resolve({ default: AccesPage }))}
+              />
+              <Route
+                path={PAGES_LIST.CORRESPONDENCE}
+                component={lazy(() =>
+                  Promise.resolve({ default: CorrespondencePage })
+                )}
               />
               <Route
                 path={PAGES_LIST.FORMS}
