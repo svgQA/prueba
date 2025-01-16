@@ -1,6 +1,6 @@
-import { IOption } from '@/components/common/interface';
 import { ELEMENT_TYPE } from './form.enum';
 import { ITask } from '../shift';
+import { IOption } from '@/components/common/multi/interface';
 
 interface IFormBase {
   id: string;
@@ -35,6 +35,7 @@ export interface IElement extends IFormBase {
   tasks?: ITask[];
   url?: string;
   list?: number | string;
+  isUrl?: boolean;
 
   // options?: number;
   options?: IOption[]; // para un dropdown, selector, checkbox, switch
