@@ -22,3 +22,23 @@ export interface IActivityResponse extends IActivityRequest {
   updatedAt?: Date;
   deletedAt?: Date;
 }
+
+export interface IPlaceRequest {
+  readonly name: string;
+  readonly description: string;
+  readonly longitude: number;
+  readonly latitude: number;
+}
+
+export interface IRoundRequest {
+  readonly name: string;
+  readonly frequency: string;
+  readonly markers: any;
+  readonly place: string;
+}
+
+export interface IShiftRequest {
+  readonly address: string;
+  readonly city: string;
+  readonly employee: string;
+}

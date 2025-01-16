@@ -30,10 +30,15 @@ import { IotSettingPage } from './iot/iot/iot';
 import { ChannelsSettingPage } from './iot/channels/channels';
 import { IASettingPage } from './ia/ia/ia';
 import { RoundsSettingPage } from './shifts/rounds/rounds';
-import { RoundCreateSettingPage } from './shifts/create/create';
+import { RoundCreateSettingPage } from './shifts/rounds/create/create';
 import { SalesSettingPage } from './sales/sales/sales';
 import { ResourcesSettingPage } from './asociate/resource/resource';
-import { AsociateSettingPage } from './asociate/asociate/asociate';
+import { PlacesSettingPage } from './shifts/places/places';
+import { PlaceCreateSettingPage } from './shifts/places/create/create';
+import { ShiftsSettingPage } from './shifts/shifts/shifts';
+import { ResourceSettingPage } from './access/resource/resource';
+import { SetsSettingPage } from './access/sets/sets';
+import { PlaceSettingPage } from './access/places/places';
 import { OptimusSettingPage } from './optimus/recursos/recursos';
 
 export const RoutingContent = memo(() => {
@@ -206,6 +211,24 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: RoundCreateSettingPage })
           )}
         />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.places.to}
+          component={lazy(() =>
+            Promise.resolve({ default: PlacesSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.placesCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: PlaceCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.shiftsCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ShiftsSettingPage })
+          )}
+        />
         {/* SALES MENU */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.sales.sales.to}
@@ -213,16 +236,25 @@ export const RoutingContent = memo(() => {
         />
         {/* ASOCIATE MENU */}
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.asociate.list.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.asociate.resources.to}
           component={lazy(() =>
             Promise.resolve({ default: ResourcesSettingPage })
           )}
         />
+        {/* ACCESS MENU */}
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.asociate.resource.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.resource.to}
           component={lazy(() =>
-            Promise.resolve({ default: AsociateSettingPage })
+            Promise.resolve({ default: ResourceSettingPage })
           )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.sets.to}
+          component={lazy(() => Promise.resolve({ default: SetsSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.place.to}
+          component={lazy(() => Promise.resolve({ default: PlaceSettingPage }))}
         />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.optimus.resource.to}

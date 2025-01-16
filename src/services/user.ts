@@ -19,6 +19,21 @@ export class UserService extends BaseService {
     return await super.make_request<IUserResponse>(this.sname, model);
   }
 
+  static async profile() {
+    const model: IMakeRequest = {
+      url: ['user', 'profile'],
+    };
+    return await super.make_request<IUserResponse>(this.sname, model);
+  }
+
+  static async createProfile(id: number | string) {
+    const model: IMakeRequest = {
+      url: ['user', 'profile', String(id), 'create'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<IUserResponse>(this.sname, model);
+  }
+
   static async update(data: IUserRequest, id: number) {
     const model: IMakeRequest = {
       url: ['user', String(id)],

@@ -48,7 +48,7 @@ export interface IResponseRequest {
 }
 
 export interface IResponseResponse extends IResponseRequest {
-  id: number;
+  id: string;
   userId: number;
   status: RESPONSE_STATUS;
   createdAt?: Date;

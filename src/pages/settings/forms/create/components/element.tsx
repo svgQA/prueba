@@ -2,7 +2,6 @@ import { useDrag, useDrop } from 'react-dnd';
 import { TargetedEvent } from 'preact/compat';
 import { IElementProps } from './interace';
 import { ELEMENT_TYPE } from '@/types/form';
-import { useSignal } from '@preact/signals';
 import { IOption } from '@/components/common/multi/interface';
 import { Input } from '@/components/common/input/input';
 import { Select } from '@/components/common/select/select';
@@ -13,6 +12,7 @@ import { moveElement, updateForm, updateSectionForm } from '../store/question';
 import { ELEMENT_TYPE_VALUES, REGEX_PATTERNS } from '../store/constant';
 import { validateSelectedElement } from '../store/control';
 import { toggleListModal } from '../../lists/store/list';
+import { toast } from 'react-toastify';
 
 const ItemType = {
   QUESTION: 'question',
@@ -27,9 +27,6 @@ export const FormElement = ({
   onSelect,
   onDelete,
 }: IElementProps) => {
-  const typeDropdown = useSignal<boolean>(false);
-  const onChangeDropdown = () => (typeDropdown.value = !typeDropdown.value);
-
   const openModalList = () => {
     toggleListModal({ question: question.id, page, section, field: 'options' });
   };
@@ -57,6 +54,42 @@ export const FormElement = ({
 
   const onChangeMulty = (value: IOption[], name: string) => {
     updateForm(question.id, page, section)(name, value);
+  };
+
+  const onTestUrl = (event: string) => {
+    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)(:\d+)?([/\w .-]*)*\/?$/;
+    const isURL = urlPattern.test(event);
+
+    if (!isURL) {
+      toast.error('No es una url valida!', {
+        position: 'top-right',
+      });
+      return;
+    }
+
+    fetch(event)
+      .then((res) => res.json())
+      .then((data) => {
+        if (
+          !Array.isArray(data) ||
+          !data.every(
+            (item) =>
+              typeof item === 'object' && 'label' in item && 'value' in item
+          )
+        ) {
+          toast.error('La estructura de datos no es válida', {
+            position: 'top-right',
+          });
+          return;
+        }
+        toast.success('Los datos estan bien.');
+        updateForm(question.id, page, section)('options', data.slice(0, 50));
+      })
+      .catch(() => {
+        toast.error('Error al obtener los datos', {
+          position: 'top-right',
+        });
+      });
   };
 
   const handleInputChange = (
@@ -267,17 +300,20 @@ export const FormElement = ({
               {question.type === ELEMENT_TYPE.DROPDOWN && (
                 <div className='w-full flex flex-row items-center h-20'>
                   <div class='w-full mr-4'>
-                    {typeDropdown.value ? (
+                    {question.isUrl ? (
                       <Input
                         label='List URL'
                         name='url'
                         placeholder='List URL'
-                        value={question.url}
                         onChange={handleInputChange}
                         id={`se-form-${question.id}-element-options-url`}
-                        borderless
                         icon='104'
+                        onClick={onTestUrl}
+                        value={question.url}
+                        button
+                        borderless
                         thin
+                        normal
                       />
                     ) : (
                       <MultipleInput
@@ -296,9 +332,9 @@ export const FormElement = ({
                   </div>
                   <Switch
                     label='URL'
-                    value={typeDropdown.value}
-                    onChange={onChangeDropdown}
-                    name='type-dropdown'
+                    value={question.isUrl}
+                    onChange={handleInputChange}
+                    name='isUrl'
                     id={`sw-form-${question.id}-element-option-type`}
                   />
                 </div>

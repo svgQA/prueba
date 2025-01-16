@@ -1,19 +1,17 @@
 import { type FunctionComponent } from 'preact';
 import { type IMapProps } from './interface';
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import React from 'preact/compat';
 
-export const Map: FunctionComponent<IMapProps> = () => {
-  // const [map, setMap] = React.useState(null);
+export const Map: FunctionComponent<IMapProps> = ({
+  addPlaceEvent,
+  markers,
+}) => {
+  const [_, setMap] = React.useState(null);
 
   const containerStyle = {
     width: '1100px',
     height: '350px',
-  };
-
-  const center = {
-    lat: -3.745,
-    lng: -38.523,
   };
 
   const { isLoaded } = useJsApiLoader({
@@ -25,22 +23,45 @@ export const Map: FunctionComponent<IMapProps> = () => {
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
 
-    // setMap(map);
+    setMap(map);
   }, []);
 
   const onUnmount = React.useCallback(function callback() {
-    // setMap(null);
+    setMap(null);
   }, []);
+
+  const handleMapClick = (event: any) => {
+    const lat: number = event.latLng.lat();
+    const lng: number = event.latLng.lng();
+
+    addPlaceEvent({ latitude: lat, longitude: lng });
+  };
+
+  const center = {
+    lat: 4.670355108326989,
+    lng: -74.08689346772478,
+  };
+
+  const getTitle = (marker: any): string => {
+    return `Punto ${marker.id}, Latitud: ${marker.position.lat}, Longitud: ${marker.position.lng}`;
+  };
 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={10}
+      zoom={12}
       onLoad={onLoad}
       onUnmount={onUnmount}
+      onClick={handleMapClick}
     >
-      <></>
+      {markers.map((marker) => (
+        <Marker
+          key={marker.id}
+          position={marker.position}
+          title={getTitle(marker)}
+        />
+      ))}
     </GoogleMap>
   ) : (
     <></>

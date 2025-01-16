@@ -4,11 +4,16 @@ import { type IFloatBadgeProps } from './interface';
 export const FloatBadge: FunctionComponent<IFloatBadgeProps> = ({
   label,
   children,
+  size = 'h-4 w-4',
+  position = '-top-1 -right-1',
+  color = 'bg-secondary',
 }: IFloatBadgeProps) => {
   return (
-    <div className='relative flex justify-center'>
+    <div className='relative'>
       {label && (
-        <span className='text-center font-bold text-xs absolute w-4 h-4 bg-primary -top-1 -right-1 rounded-full border border-b-light-dark dark:border-b-dark-light'>
+        <span
+          className={`${size} ${position} ${color} text-center font-bold text-xs absolute rounded-full border border-b-light-dark dark:border-b-dark-light`}
+        >
           {label}
         </span>
       )}

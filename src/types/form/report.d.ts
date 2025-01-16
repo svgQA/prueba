@@ -1,3 +1,5 @@
+import { IPresignedRequest } from '../file';
+
 export interface IReport {
   id?: number;
   title: string;
@@ -13,7 +15,7 @@ export interface IReport {
   pdfSize: string;
   thumbnailSize: string;
 
-  coverPage?: string;
-  logoPage?: string;
+  coverPage?: IPresignedRequest;
+  logoPage?: IPresignedRequest;
   formId?: number;
 }

@@ -34,6 +34,11 @@ span.vx-icon.size-sm {
   font-size: 1em;
 }
 
+span.vox-icon.size-xsm,
+span.vx-icon.size-xsm {
+  font-size: 1.2em;
+}
+
 span.vox-icon.size-md,
 span.vx-icon.size-md {
   font-size: 1.5em;

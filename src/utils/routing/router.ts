@@ -7,6 +7,9 @@ export const PAGES_LIST_ROUTER = {
     memos: '/',
     shift: '/shifts',
     form: '/forms',
+    access: '/access',
+    correspondence: '/correspondence',
+    users: '/users',
     devices: '/devices',
     setting: {
       base: '/setting',
@@ -34,6 +37,18 @@ export const PAGES_LIST_ROUTER = {
         create: {
           base: '/create',
           to: '/round/create',
+        },
+        places: {
+          base: '/places',
+          to: '/rounds/places',
+        },
+        placesCreate: {
+          base: '/places/create',
+          to: '/rounds/places/create',
+        },
+        shiftsCreate: {
+          base: '/shifts/create',
+          to: '/rounds/shifts/create',
         },
       },
       setting: {
@@ -130,13 +145,24 @@ export const PAGES_LIST_ROUTER = {
       },
       asociate: {
         base: '/asociate',
-        list: {
+        resources: {
           base: '/',
           to: '/asociate',
         },
+      },
+      access: {
+        base: '/access',
         resource: {
-          base: '/resources',
-          to: '/asociate/resources',
+          base: '/',
+          to: '/access',
+        },
+        sets: {
+          base: '/sets',
+          to: '/access/sets',
+        },
+        place: {
+          base: '/place',
+          to: '/access/place',
         },
       },
       ia: {

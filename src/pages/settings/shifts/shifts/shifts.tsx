@@ -1,15 +1,17 @@
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
-import { Map } from '@/components/common/map/map';
+import { Section } from '@/components/common/section/section';
+import { Select } from '@/components/common/select/select';
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
+import { ShiftService } from '@/services/shift';
+import { toast } from 'react-toastify';
 
-export const RoundCreateSettingPage: FunctionComponent = () => {
+export const ShiftsSettingPage: FunctionComponent = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    time: '',
-    distance: '',
-    frequency: '',
+    address: '',
+    city: '',
+    employee: '',
   });
 
   const handleFormatInputChange = (e: any) => {
@@ -21,52 +23,54 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     });
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    const obj = {
+      address: formData.address,
+      city: formData.city,
+      employee: formData.employee,
+    };
+
+    const request = await ShiftService.createShift({
+      ...obj,
+    });
+
+    if (!request.getStatus()) return;
+
+    toast.success('Ronda creada exitosamente!', {
+      position: 'top-right',
+    });
+
     console.log('Datos del formulario:', formData);
   };
 
   return (
-    <section className='flex flex-row'>
+    <Section className='flex flex-row'>
       <div className='w-full'>
         <div>
-          <h1>Crear nueva ronda</h1>
+          <h1>Crear turno</h1>
         </div>
         <div className='flex flex-col gap-1 w-10/12'>
-          <Input
-            type='text'
-            placeholder='Nombre de la ronda'
-            name='name'
-            value={formData.name}
-            onChange={handleFormatInputChange}
-          />
-
           <div className='grid grid-cols-2 gap-2'>
             <Input
               type='text'
-              placeholder='Tiempo de la ronda'
-              name='time'
-              value={formData.time}
+              placeholder='Dirección'
+              name='address'
+              value={formData.address}
               onChange={handleFormatInputChange}
             />
-            <Input
-              type='text'
-              placeholder='Distancia de la ronda'
-              name='distance'
-              value={formData.distance}
+            <Select
+              name='city'
+              placeholder='Ciudad'
+              value={formData.city}
               onChange={handleFormatInputChange}
             />
-            <Input
-              type='text'
-              placeholder='Frecuencia de la ronda'
-              name='frequency'
-              value={formData.frequency}
+            <Select
+              name='employee'
+              placeholder='Empleado'
+              value={formData.employee}
               onChange={handleFormatInputChange}
-            />
-            <Input
-              type='text'
-              placeholder='Seleccionar un lugar'
-              name='label'
             />
           </div>
           <div>
@@ -79,10 +83,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
             />
           </div>
         </div>
-        <div>
-          <Map id='1' name='mapa' />
-        </div>
       </div>
-    </section>
+    </Section>
   );
 };
