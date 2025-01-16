@@ -8,5 +8,8 @@ export interface IBadgeProps {
 }
 
 export interface IFloatBadgeProps extends PropsWithChildren {
-  label?: string;
+  label?: string | number;
+  size?: string;
+  position?: string;
+  color?: string;
 }

@@ -18,6 +18,8 @@ import { DevicesPage } from './devices/devices.page';
 import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
 import { ShiftsPage } from './shifts/shifts.page';
+import { AccesPage } from './access/access.page';
+import { CorrespondencePage } from './correspondence/correspondence.page';
 
 /** ***********************************************************************
  * STORE SIGNALS
@@ -43,6 +45,7 @@ import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { OnBordingModal } from '../globals/onbording/onboarding';
 import { IconsModal } from '../globals/icons/icons';
 import { AuthAmplifyProps } from '../interface';
+import { useWebSocket } from '@/utils/socket';
 
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
@@ -52,6 +55,8 @@ import { AuthAmplifyProps } from '../interface';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
+    const wsManager = useWebSocket();
+
     const {
       setSelected,
       companies,
@@ -59,11 +64,15 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       getSelected,
       setToken,
       getToken,
+      getUrlSocket,
+      setCognito,
     } = useUserStore();
 
     const setCompanySelected = (company: string) => {
       setSelected(company);
       closeOnBoardingModal();
+      // getProfile();
+      initSocket();
     };
 
     useEffect(() => {
@@ -75,16 +84,32 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const validateUser = async () => {
       /* [TODO]: Bad code */
       // closeOnBoardingModal();
-
       /* [TODO]: Correct code */
-
       const existTenant = await hasUserTenant(
         setCompanies,
         setSelected,
-        setToken
+        setToken,
+        setCognito
       );
       if (!existTenant) openOnBoardingModal();
       else closeOnBoardingModal();
+    };
+
+    // const getProfile = async () => {
+    //   const response = await UserService.profile();
+    //   if (!response.getStatus()) return;
+    //   const user = response.getOne();
+    //   setUser({
+    //     id: user.id,
+    //     name: user.name,
+    //     phone: user.phone,
+    //     address: user.email,
+    //     cognito: user.cognitoId,
+    //   });
+    // };
+
+    const initSocket = () => {
+      wsManager.connect(getUrlSocket());
     };
 
     return (
@@ -109,6 +134,16 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
               <Route
                 path={PAGES_LIST.SHIFTS}
                 component={lazy(() => Promise.resolve({ default: ShiftsPage }))}
+              />
+              <Route
+                path={PAGES_LIST.ACCESS}
+                component={lazy(() => Promise.resolve({ default: AccesPage }))}
+              />
+              <Route
+                path={PAGES_LIST.CORRESPONDENCE}
+                component={lazy(() =>
+                  Promise.resolve({ default: CorrespondencePage })
+                )}
               />
               <Route
                 path={PAGES_LIST.FORMS}

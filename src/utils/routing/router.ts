@@ -7,6 +7,9 @@ export const PAGES_LIST_ROUTER = {
     memos: '/',
     shift: '/shifts',
     form: '/forms',
+    access: '/access',
+    correspondence: '/correspondence',
+    users: '/users',
     devices: '/devices',
     setting: {
       base: '/setting',
@@ -189,6 +192,13 @@ export const PAGES_LIST_ROUTER = {
         channels: {
           base: '/channels',
           to: '/iot/channels',
+        },
+      },
+      optimus: {
+        base: '/optimus',
+        resource: {
+          base: '/',
+          to: '/optimus',
         },
       },
     },

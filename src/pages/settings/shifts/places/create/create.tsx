@@ -43,7 +43,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       position: 'top-right',
     });
 
-    console.log('Datos del formulario:', obj);
+    // console.log('Datos del formulario:', obj);
   };
 
   const addPlace = (data: any) => {

@@ -9,10 +9,10 @@ export interface ICompany {
 }
 
 export interface IUser {
-  id: string;
+  id: string | number;
   name: string;
-  phone: string;
+  phone?: string;
   address: string;
   cognito: string;
-  token: string;
+  // token: string;
 }

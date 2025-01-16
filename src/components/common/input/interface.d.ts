@@ -6,6 +6,7 @@ export interface IInputProps extends IComponentProps {
   onChange?: (event: TargetedEvent<HTMLInputElement>) => void;
   onKeyUp?: (event: KeyboardEvent<HTMLElement>) => void;
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
+  onClick?: (event: any) => void;
   label?: string;
   min?: string;
   max?: string;
@@ -21,4 +22,8 @@ export interface IInputProps extends IComponentProps {
   borderless?: boolean;
   tabIndex?: number;
   thin?: boolean;
+  button?: boolean;
+  buttonIcon?: string;
+  buttonType?: 'button' | 'submit' | 'reset';
+  normal?: boolean;
 }

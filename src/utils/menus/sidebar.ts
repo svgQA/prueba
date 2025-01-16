@@ -24,6 +24,27 @@ export const SIDEBAR_MENUS: IMenu[] = [
     id: 'form',
   },
   {
+    label: 'access',
+    to: PAGES_LIST_ROUTER.dashboard.access,
+    description: 'Accesos a la aplicación',
+    icon: '099',
+    id: 'access',
+  },
+  {
+    label: 'Inbox',
+    to: PAGES_LIST_ROUTER.dashboard.correspondence,
+    description: 'Correspondence',
+    icon: '102',
+    id: 'correspondencia',
+  },
+  {
+    label: 'users',
+    to: PAGES_LIST_ROUTER.dashboard.users,
+    description: 'Usuarios de la aplicación',
+    icon: '008',
+    id: 'users-dashoboar-externo',
+  },
+  {
     label: 'devices',
     to: PAGES_LIST_ROUTER.dashboard.devices,
     description: 'este es',

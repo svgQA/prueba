@@ -39,6 +39,7 @@ import { ShiftsSettingPage } from './shifts/shifts/shifts';
 import { ResourceSettingPage } from './access/resource/resource';
 import { SetsSettingPage } from './access/sets/sets';
 import { PlaceSettingPage } from './access/places/places';
+import { OptimusSettingPage } from './optimus/recursos/recursos';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -254,6 +255,12 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.access.place.to}
           component={lazy(() => Promise.resolve({ default: PlaceSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.optimus.resource.to}
+          component={lazy(() =>
+            Promise.resolve({ default: OptimusSettingPage })
+          )}
         />
       </Suspense>
     </Router>

@@ -57,6 +57,7 @@ export const FormInspectSettingPage: FunctionComponent = () => {
         break;
       }
       case ROW_ACTIONS.REPORT: {
+        console.log('IR PARA EL REPORTE: ');
         break;
       }
       default: {
