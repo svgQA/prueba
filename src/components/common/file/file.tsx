@@ -1,9 +1,7 @@
 import { type IFileProps } from './interface';
-import shortUUID from 'short-uuid';
 import { useSignal } from '@preact/signals';
 import { IPresignedRequest } from '@/types/file';
-import { AllowedFileTypes } from '@/types';
-import { GeneralService } from '@/services/general';
+import { handleFileChangeWrapper } from './utils';
 
 export const File = ({
   id,
@@ -27,55 +25,39 @@ export const File = ({
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target || !(e.target instanceof HTMLInputElement)) return;
-    const files = e.target.files;
-    if (!files || !files[0]) return;
-    const file = files[0];
+    dataset.value = e.target.dataset;
 
     isLoading.value = true;
-    const model: IPresignedRequest = {
-      name: file.name,
-      type: file.type as AllowedFileTypes,
-      uuid: shortUUID.generate(),
-    };
-
     try {
-      const response = await GeneralService.presigned(model);
-      if (!response.getStatus()) return;
-
-      const urlModel = response.getOne();
-
-      dataset.value = e.target.dataset;
-      await fetch(urlModel.url, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-      emitChange(e.target.dataset, [...value, model]);
+      await handleFileChangeWrapper(e, emitChange);
     } catch (error) {
       console.log('ERROR: No se ha podido cargar la imagen', error);
     } finally {
-      e.target.value = '';
       isLoading.value = false;
+      e.target.value = '';
     }
   };
 
-  const emitChange = (dataset: any, images: IPresignedRequest[]) => {
+  const emitChange = (dataset: any, image: IPresignedRequest) => {
     onChange?.({
       target: {
         name: name,
         type: 'file',
         dataset: dataset,
-        value: images,
+        value: [...value, image],
       },
     });
   };
+
   const removeAction = (file: string) => {
-    emitChange(
-      dataset.value,
-      value.filter((f) => f.uuid !== file)
-    );
+    onChange?.({
+      target: {
+        name: name,
+        type: 'file',
+        dataset: dataset.value,
+        value: value.filter((f) => f.uuid !== file),
+      },
+    });
   };
 
   return (
@@ -116,7 +98,7 @@ export const File = ({
         </div>
         {meta && meta.touched && meta.error && <span>{meta?.error}</span>}
         <div className='mt-4 grid grid-cols-4 gap-4'>
-          {value &&
+          {Array.isArray(value) &&
             value.map((file) => (
               <div
                 key={file.uuid}

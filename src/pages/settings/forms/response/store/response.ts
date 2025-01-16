@@ -8,7 +8,7 @@ export enum RESPONSE_MODE_SERVICE {
 
 interface IResponseMode {
   mode: RESPONSE_MODE_SERVICE;
-  id?: number;
+  id?: string;
 }
 
 const response = signal<IResponse>();

@@ -33,10 +33,12 @@ import { RoundsSettingPage } from './shifts/rounds/rounds';
 import { RoundCreateSettingPage } from './shifts/rounds/create/create';
 import { SalesSettingPage } from './sales/sales/sales';
 import { ResourcesSettingPage } from './asociate/resource/resource';
-import { AsociateSettingPage } from './asociate/asociate/asociate';
 import { PlacesSettingPage } from './shifts/places/places';
 import { PlaceCreateSettingPage } from './shifts/places/create/create';
 import { ShiftsSettingPage } from './shifts/shifts/shifts';
+import { ResourceSettingPage } from './access/resource/resource';
+import { SetsSettingPage } from './access/sets/sets';
+import { PlaceSettingPage } from './access/places/places';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -233,16 +235,25 @@ export const RoutingContent = memo(() => {
         />
         {/* ASOCIATE MENU */}
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.asociate.list.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.asociate.resources.to}
           component={lazy(() =>
             Promise.resolve({ default: ResourcesSettingPage })
           )}
         />
+        {/* ACCESS MENU */}
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.asociate.resource.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.resource.to}
           component={lazy(() =>
-            Promise.resolve({ default: AsociateSettingPage })
+            Promise.resolve({ default: ResourceSettingPage })
           )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.sets.to}
+          component={lazy(() => Promise.resolve({ default: SetsSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.place.to}
+          component={lazy(() => Promise.resolve({ default: PlaceSettingPage }))}
         />
       </Suspense>
     </Router>
