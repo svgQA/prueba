@@ -7,6 +7,7 @@ export enum PAGES_LIST {
   SHIFTS = '/shifts',
   ACCESS = '/access',
   CORRESPONDENCE = '/correspondence',
+  USERS = '/users',
   FORMS = '/forms',
   MEMOS = '/memos',
   DEVICES = '/devices',
