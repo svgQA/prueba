@@ -16,22 +16,12 @@ export const UserCreateSettingPage: FunctionComponent = () => {
 
   const onSubmit = async (values: IUserRequest) => {
     if (getUserMode.value.mode === USER_MODE_SERVICE.UPDATE) {
-      const request = await UserService.update(
-        {
-          ...values,
-          cognitoId: 'a488a458-f021-70a7-587c-5949b8dd396a',
-        },
-        1
-      );
+      const request = await UserService.update(values, 1);
       if (!request.getStatus()) return;
     } else {
-      const request = await UserService.create({
-        ...values,
-        cognitoId: 'a488a458-f021-70a7-587c-5949b8dd396a',
-      });
+      const request = await UserService.create(values);
       if (!request.getStatus()) return;
     }
-    // TODO: Actualizar esta ruta (Esto es mierda)
     navigate('/dashboard/setting/setting');
   };
 
@@ -73,6 +63,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
                   label='Email'
                   type='email'
                   meta={meta}
+                  normal
                 />
               )}
             </Field>
@@ -85,10 +76,12 @@ export const UserCreateSettingPage: FunctionComponent = () => {
                   label='Teléfono'
                   type='tel'
                   meta={meta}
+                  normal
                 />
               )}
             </Field>
 
+            {/*
             <Field<string> name='cardId'>
               {({ input, meta }) => (
                 <Input
@@ -101,7 +94,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
               )}
             </Field>
 
-            <Field<string> name='extraData.country' validate={required}>
+            <Field<string> name='extraData.country'>
               {({ input, meta }) => (
                 <Input
                   {...input}
@@ -113,7 +106,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
               )}
             </Field>
 
-            <Field<string> name='extraData.state' validate={required}>
+            <Field<string> name='extraData.state'>
               {({ input, meta }) => (
                 <Input
                   {...input}
@@ -125,7 +118,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
               )}
             </Field>
 
-            <Field<string> name='extraData.city' validate={required}>
+            <Field<string> name='extraData.city'>
               {({ input, meta }) => (
                 <Input
                   {...input}
@@ -137,7 +130,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
               )}
             </Field>
 
-            <Field<string> name='extraData.job' validate={required}>
+            <Field<string> name='extraData.job'>
               {({ input, meta }) => (
                 <Input
                   {...input}
@@ -149,7 +142,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
               )}
             </Field>
 
-            <Field<string> name='extraData.area' validate={required}>
+            <Field<string> name='extraData.area'>
               {({ input, meta }) => (
                 <Input
                   {...input}
@@ -161,7 +154,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
               )}
             </Field>
 
-            <Field<string> name='extraData.sucursal' validate={required}>
+            <Field<string> name='extraData.sucursal'>
               {({ input, meta }) => (
                 <Input
                   {...input}
@@ -172,6 +165,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
                 />
               )}
             </Field>
+            */}
           </div>
 
           <Button

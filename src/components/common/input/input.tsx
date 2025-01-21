@@ -1,3 +1,4 @@
+import { Button } from '../button/button';
 import { type IInputProps } from './interface';
 
 export const Input = ({
@@ -20,6 +21,11 @@ export const Input = ({
   tabIndex,
   borderless,
   thin,
+  button,
+  onClick,
+  normal,
+  buttonIcon = '123',
+  buttonType = 'button',
   ...props
 }: IInputProps) => {
   return (
@@ -39,7 +45,7 @@ export const Input = ({
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
         <input
-          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'} [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+          className={`${normal ? '' : 'capitalize'} px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'} [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
           onChange={onChange}
           name={name}
           onKeyUp={onKeyUp}
@@ -55,7 +61,18 @@ export const Input = ({
           tabIndex={tabIndex}
           {...props}
         />
-        {end && icon && <span className={`vox-icon vx-icon-${icon}`} />}
+        {button && (
+          <Button
+            onClick={() => onClick?.(value)}
+            name='btn-input-action'
+            icon={buttonIcon}
+            type={buttonType}
+            rounded
+          />
+        )}
+        {!button && end && icon && (
+          <span className={`vox-icon vx-icon-${icon}`} />
+        )}
       </div>
       {meta && meta.touched && meta.error && <span>{meta?.error}</span>}
     </div>

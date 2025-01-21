@@ -5,6 +5,8 @@ export enum PAGES_LIST {
   SIGNUP = '/signup',
   DASHBOARD = '/dashboard',
   SHIFTS = '/shifts',
+  ACCESS = '/access',
+  CORRESPONDENCE = '/correspondence',
   FORMS = '/forms',
   MEMOS = '/memos',
   DEVICES = '/devices',
@@ -47,7 +49,7 @@ export enum PAGES_LIST {
   // SETTING SHIFTS ROUNDS
   SETTING_SHIFTS_ROUNDS = '/setting/rounds',
   // SETTING ASOCIATE ROUTES
-  SETTING_ASOCIATE_RESOURCES = '/setting/asociate',
+  // SETTING_ASOCIATE_RESOURCES = '/setting/asociate',
   // SETTING ACCESS ROUTES
   SETTING_ACCESS_RESOURCES = '/setting/access',
   SETTING_ACCESS_SETS = '/setting/access/sets',

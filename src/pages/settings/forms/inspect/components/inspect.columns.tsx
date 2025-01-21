@@ -1,3 +1,4 @@
+import { ButtonAction } from '@/components/common/button/column';
 import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IFormat, IResponseResponse, RESPONSE_STATUS } from '@/types/form';
@@ -40,28 +41,22 @@ export const columns: ColumnDef<IResponseResponse>[] = [
       const { id, status } = info.row.original;
       return (
         <div className='w-full flex justify-center'>
-          {status === RESPONSE_STATUS.OPENED && (
-            <span
-              className='border text-primary border-b-light-dark dark:border-b-dark-light rounded px-2 py-1 text-sm cursor-pointer mr-3'
-              data-id={id}
-              data-type='response'
-              data-action={ROW_ACTIONS.RESPONSE}
-            >
-              Continue
-            </span>
+          {status === RESPONSE_STATUS.OPENED ? (
+            <ButtonAction
+              id={id}
+              type='response'
+              action={ROW_ACTIONS.RESPONSE}
+              label='Continue'
+            />
+          ) : (
+            <ButtonAction id={id} type='response' action={ROW_ACTIONS.REPORT} />
           )}
-          <span
-            className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
-            data-id={id}
-            data-type='response'
-            data-action={ROW_ACTIONS.DELETE}
-          ></span>
-          <span
-            className='vox-icon vx-icon-143 p-1 size-sm cursor-pointer'
-            data-id={id}
-            data-type='response'
-            data-action={ROW_ACTIONS.REPORT}
-          ></span>
+          <ButtonAction
+            id={id}
+            type='response'
+            icon='053'
+            action={ROW_ACTIONS.DELETE}
+          />
         </div>
       );
     },

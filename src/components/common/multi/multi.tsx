@@ -2,7 +2,6 @@ import { useState, useCallback, useMemo } from 'preact/hooks';
 import { IMultiProps } from './interface';
 import { Chip } from '../chip/chip';
 import { Input } from '../input/input';
-import { Button } from '../button/button';
 
 export const MultipleInput = ({
   value = [],
@@ -55,12 +54,12 @@ export const MultipleInput = ({
   }, []);
 
   const defaultChips = useMemo(
-    () => (
-      <div
-        className={`${scrollable ? 'max-w-full overflow-scroll vox-scroll-design py-1' : 'flex-wrap'} flex gap-1 justify-center`}
-      >
-        {Array.isArray(value) &&
-          value.map((item, index) => {
+    () =>
+      Array.isArray(value) && value.length > 0 ? (
+        <div
+          className={`${scrollable ? 'max-w-full overflow-auto vox-scroll-design py-1' : 'flex-wrap'} flex gap-1 justify-center`}
+        >
+          {value.map((item, index) => {
             const total = ellipse || value.length;
             return index < total ? (
               getElement ? (
@@ -70,6 +69,7 @@ export const MultipleInput = ({
                     onClick={() => handleDelete(item.value)}
                   ></span>
                   {getElement(item, index)}
+                  asdasd
                 </div>
               ) : (
                 <Chip
@@ -80,11 +80,11 @@ export const MultipleInput = ({
               )
             ) : null;
           })}
-        {(ellipse || Infinity) < value.length && (
-          <span className='vox-icon vx-icon-085' />
-        )}
-      </div>
-    ),
+          {(ellipse || Infinity) < value.length && (
+            <span className='vox-icon vx-icon-085' />
+          )}
+        </div>
+      ) : null,
     [value, handleDelete]
   );
 
@@ -105,16 +105,11 @@ export const MultipleInput = ({
           placeholder={placeholder || 'Type and press Enter'}
           thin
           borderless
+          button
+          onClick={onSelect}
+          buttonIcon={buttonIcon}
+          buttonType={buttonType}
         />
-        {button && (
-          <Button
-            onClick={onSelect}
-            name='btn-multy-select'
-            icon={buttonIcon}
-            type={buttonType}
-            rounded
-          />
-        )}
       </div>
       {bottom && defaultChips}
     </div>
