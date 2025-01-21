@@ -2,8 +2,11 @@ import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 import { CardAccess } from '@/components/compose/cards/company/cardAccess';
+import { useLocation } from 'wouter';
 
 export const ResourceSettingPage: FunctionComponent = () => {
+  const [_, navigate] = useLocation();
+
   useEffect(() => {
     document.title = 'Resources Settings';
     getTenant();
@@ -15,7 +18,10 @@ export const ResourceSettingPage: FunctionComponent = () => {
     <Section>
       <div className='flex flex-col gap-1 w-10/12'>
         <div className='flex justify-between items-center w-full mb-4 ml-6'>
-          <button className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'>
+          <button
+            onClick={() => navigate('/access/createResource')}
+            className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
+          >
             Crear Recurso
           </button>
         </div>
