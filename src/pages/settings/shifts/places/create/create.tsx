@@ -1,6 +1,6 @@
 import { Map } from '@/components/common/map/map';
 import { FunctionComponent } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
 import { toast } from 'react-toastify';
@@ -13,7 +13,11 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     markers: [],
   });
 
-  const [markers, setMarkers] = useState<{ id: number; position: any }[]>([]);
+  const [points, setPoint] = useState<{ id: number; position: any }[]>([]);
+
+  useEffect(() => {
+    setPoint([]);
+  }, []);
 
   const handleFormatInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -24,13 +28,17 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     });
   };
 
+  const sendPointsRef = (data: any) => {
+    setPoint(data);
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const obj = {
       name: formData.name,
       description: formData.description,
-      latitude: markers[0].position.lat,
-      longitude: markers[0].position.lng,
+      latitude: points[0].position.lat,
+      longitude: points[0].position.lng,
     };
 
     const request = await ShiftService.createPlace({
@@ -44,19 +52,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     });
 
     // console.log('Datos del formulario:', obj);
-  };
-
-  const addPlace = (data: any) => {
-    const markers = [];
-    const marker = {
-      id: 1,
-      position: {
-        lat: data.latitude,
-        lng: data.longitude,
-      },
-    };
-    markers.push(marker);
-    setMarkers(markers);
   };
 
   return (
@@ -95,7 +90,16 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
           </div>
         </div>
         <div>
-          <Map name='Map' addPlaceEvent={addPlace} markers={markers} />
+          <Map
+            name='Map'
+            pointsAmount={1}
+            sendPoints={sendPointsRef}
+            pointsRef={points}
+            condition={false}
+            errorCondition=''
+            radialPoint={null}
+            errorRadialPoint=''
+          />
         </div>
       </div>
     </section>

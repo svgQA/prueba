@@ -39,6 +39,9 @@ import { ShiftsSettingPage } from './shifts/shifts/shifts';
 import { ResourceSettingPage } from './access/resource/resource';
 import { SetsSettingPage } from './access/sets/sets';
 import { PlaceSettingPage } from './access/places/places';
+import { CreateResourceSettingPage } from './access/resource/create/createResource';
+import { CreateSetsSettingPage } from './access/sets/createSets/createSets';
+import { CreatePlacesSettingPage } from './access/places/createPlaces/createPlaces';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -254,6 +257,24 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.access.place.to}
           component={lazy(() => Promise.resolve({ default: PlaceSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.createResource.to}
+          component={lazy(() =>
+            Promise.resolve({ default: CreateResourceSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.createSets.to}
+          component={lazy(() =>
+            Promise.resolve({ default: CreateSetsSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.createPlaces.to}
+          component={lazy(() =>
+            Promise.resolve({ default: CreatePlacesSettingPage })
+          )}
         />
       </Suspense>
     </Router>

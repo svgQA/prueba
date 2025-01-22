@@ -16,7 +16,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     longitude: '',
   });
 
-  const [markers, setMarkers] = useState<{ id: number; position: any }[]>([]);
+  const [points, setPoint] = useState<{ id: number; position: any }[]>([]);
   const [place, setPlace] = useState<{ id: number; position: any }>();
   const [places, setPlaces] = useState<any[]>([]);
   const [addPoint, setAddPoint] = useState<boolean>(false);
@@ -30,12 +30,20 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     });
   };
 
+  useEffect(() => {
+    setPoint([]);
+  }, []);
+
+  const sendPointsRef = (data: any) => {
+    setPoint(data);
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const obj = {
       name: formData.name,
       frequency: formData.frequency,
-      markers: markers,
+      markers: points,
       place: formData.place,
     };
 
@@ -54,20 +62,12 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
   const addPlace = (data: any) => {
     const marker = {
-      id: markers.length + 1,
+      id: points.length + 1,
       position: {
         lat: data.latitude,
         lng: data.longitude,
       },
     };
-
-    if (markers.length === 0) {
-      toast.error('Debes seleccionar un lugar para agregar puntos', {
-        position: 'top-right',
-      });
-
-      return false;
-    }
 
     const pointValidation = haversineDistance(place, marker);
 
@@ -79,8 +79,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       return false;
     }
 
-    setMarkers((prevMarkers) => [...prevMarkers, marker]);
-
+    setPoint((prevMarkers) => [...prevMarkers, marker]);
     return true;
   };
 
@@ -102,7 +101,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
   const selectPlace = async (e: any) => {
     handleFormatInputChange(e);
-    setMarkers([]);
+    setPoint([]);
 
     const { value } = e.target;
 
@@ -117,7 +116,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     };
 
     setPlace(marker);
-    setMarkers((prevMarkers) => [...prevMarkers, marker]);
+    setPoint([marker]);
   };
 
   const getPlaces = async () => {
@@ -135,12 +134,12 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
 
   const savePoint = () => {
-    if (markers.length === 0) {
+    if (points.length === 0) {
       toast.error('Debes seleccionar un lugar para agregar puntos', {
         position: 'top-right',
       });
 
-      return;
+      return true;
     }
 
     const data = {
@@ -161,8 +160,12 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     });
   };
 
+  const validatePoint = (): boolean => {
+    return !!(points.length === 0);
+  };
+
   const addPointValidation = () => {
-    if (markers.length === 0) {
+    if (points.length === 0) {
       toast.error('Debes seleccionar un lugar para agregar puntos', {
         position: 'top-right',
       });
@@ -269,7 +272,16 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
           </div>
         </div>
         <div>
-          <Map name='mapa' addPlaceEvent={addPlace} markers={markers} />
+          <Map
+            name='Map'
+            pointsAmount={100}
+            sendPoints={sendPointsRef}
+            pointsRef={points}
+            condition={validatePoint()}
+            errorCondition='Debes seleccionar un lugar para agregar puntos'
+            radialPoint={place}
+            errorRadialPoint='Punto de la ronda fuera del radio del lugar'
+          />
         </div>
       </div>
     </section>

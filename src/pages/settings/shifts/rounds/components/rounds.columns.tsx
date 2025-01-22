@@ -13,65 +13,19 @@ export const columns: ColumnDef<Round>[] = [
     id: 'employeeName',
     accessorKey: 'employeeName',
     size: 180,
-    header: 'Empleado',
+    header: 'Nombre',
   },
   {
-    id: 'employeeId',
-    accessorKey: 'employeeId',
+    id: 'notifications',
+    accessorKey: 'notifications',
     size: 180,
-    header: 'ID Empleado',
+    header: 'Frecuencia',
   },
   {
     id: 'city',
     accessorKey: 'city',
     size: 180,
-    header: 'Ciudad',
-  },
-  {
-    id: 'address',
-    accessorKey: 'address',
-    size: 180,
-    header: 'Dirección',
-  },
-  {
-    id: 'startTime',
-    accessorKey: 'startTime',
-    size: 180,
-    header: 'Hora inicio',
-  },
-  {
-    id: 'endTime',
-    accessorKey: 'endTime',
-    size: 180,
-    header: 'Hora fin',
-  },
-  {
-    id: 'duration',
-    accessorKey: 'duration',
-    size: 180,
-    header: 'Duración',
-  },
-  {
-    id: 'notifications',
-    accessorKey: 'notifications',
-    size: 100,
-    header: 'Notificaciones',
-    // cell: (info: any) => (
-    //   <div className='flex flex-row justify-center'>
-    //     <Badge label={info.getValue()} icon='123' color='bg-primary' />
-    //   </div>
-    // ),
-  },
-  {
-    id: 'activitiesProgress',
-    accessorKey: 'activitiesProgress',
-    size: 50,
-    header: 'Progreso',
-    // cell: (info: any) => (
-    //   <div className='flex flex-row justify-center'>
-    //     <Gauge progress={info.getValue() as number} />
-    //   </div>
-    // ),
+    header: 'Lugar',
   },
   {
     id: 'actions',

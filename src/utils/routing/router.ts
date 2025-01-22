@@ -164,6 +164,18 @@ export const PAGES_LIST_ROUTER = {
           base: '/place',
           to: '/access/place',
         },
+        createResource: {
+          base: '/create',
+          to: '/access/createResource',
+        },
+        createSets: {
+          base: '/create',
+          to: '/access/createSets',
+        },
+        createPlaces: {
+          base: '/create',
+          to: '/access/createPlaces',
+        },
       },
       ia: {
         base: '/ia',
@@ -192,6 +204,13 @@ export const PAGES_LIST_ROUTER = {
         channels: {
           base: '/channels',
           to: '/iot/channels',
+        },
+      },
+      optimus: {
+        base: '/optimus',
+        resource: {
+          base: '/',
+          to: '/optimus',
         },
       },
     },
