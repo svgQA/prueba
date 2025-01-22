@@ -1,36 +1,3 @@
-// import { Card } from '@/components/common/card/card';
-// import { FunctionalComponent } from 'preact';
-// import { memo } from 'preact/compat';
-
-// type CardProps = {
-//     title: string;
-//     subtitle: string;
-//     imageUrl: string;
-//     icon: string;
-//     onEdit: () => void;
-// };
-
-// export const CardAccess: FunctionalComponent<CardProps> = memo(
-//     ({ title, subtitle, imageUrl, icon = '071', onEdit }) => (
-//         <Card name={`card-data-${title}`} shadow maxWidth="max-w-md">
-//             <div className="flex">
-//                 <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0 bg-gray-300 flex items-center justify-center">
-//                     <img src={imageUrl} className="w-full h-full object-cover" />
-//                 </div>
-//                 <div className="ml-4 flex-1">
-//                     <h3 className="text-xl font-bold mb-2">{title}</h3>
-//                     <p className="text-sm text-gray-600 line-clamp-3">{subtitle}</p>
-//                 </div>
-//                 <button
-//                     type="button"
-//                     onClick={onEdit}
-//                     className={`vox-icon vx-icon-${icon} absolute bottom-4 right-4 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors`}
-//                 ></button>
-//             </div>
-//         </Card>
-//     )
-// );
-
 import { Card } from '@/components/common/card/card';
 import { memo } from 'react';
 
