@@ -11,6 +11,7 @@ import { Round } from './utils/rounds';
 import { roundsData } from './utils/rounds.data';
 import { columns } from './components/rounds.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { ExpandableRounds } from '@/components/compose/table/expandable/rounds';
 
 export const RoundsSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -54,6 +55,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
       <Table<Round>
         data={roundsData}
         columns={columns}
+        expandable={(row: any) => <ExpandableRounds row={row} />}
         pageSize={20}
         visibility={{
           address: false,

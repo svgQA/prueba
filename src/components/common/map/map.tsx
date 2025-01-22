@@ -11,7 +11,11 @@ export const Map: FunctionComponent<IMapProps> = ({
   condition,
   errorCondition,
   radialPoint,
-  errorRadialPoint
+  errorRadialPoint,
+  draggable,
+  width,
+  height,
+  clickPoint
 }) => {
   const [_, setMap] = React.useState(null);
   const [points, setPoint] = React.useState<{ id: number; position: any }[]>([]);
@@ -26,8 +30,8 @@ export const Map: FunctionComponent<IMapProps> = ({
   }, pointsRef)
 
   const containerStyle = {
-    width: '1100px',
-    height: '350px',
+    width: width ?? '1100px',
+    height: height ?? '350px',
   };
 
   const { isLoaded } = useJsApiLoader({
@@ -162,6 +166,8 @@ export const Map: FunctionComponent<IMapProps> = ({
   };
 
   const handleMarkerClick = (id: any) => {
+    const marker = points.find((item: any) => item.id === id);
+    clickPoint(marker);
     setActiveMarker(id);
   };
 
@@ -187,7 +193,7 @@ export const Map: FunctionComponent<IMapProps> = ({
         <Marker
           key={marker.id}
           position={marker.position}
-          draggable={true}
+          draggable={!!draggable}
           onDragEnd={(event) => handleMarkerDragEnd(event, marker.id)}
           onClick={() => handleMarkerClick(marker.id)}
           label={getTitleLabel(marker.id)}

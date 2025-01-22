@@ -23,6 +23,22 @@ export const roundsData: Round[] = [
     },
     city: 'Ciudad de México',
     address: 'Calle Reforma 123, Col. Centro',
+    markers: [
+      {
+       id: 1,
+       position: {
+        lat: 4.670343272976993,
+        lng: -74.0871440295104,
+       } 
+      },
+      {
+        id: 2,
+        position: {
+         lat: 4.670343272976993,
+         lng: -74.0879440295104,
+        } 
+      }
+    ]
   },
   {
     id: 2,
