@@ -7,7 +7,11 @@ export interface IMapProps extends IComponentProps {
   condition: boolean,
   errorCondition: string,
   radialPoint: any,
-  errorRadialPoint: string
+  errorRadialPoint: string,
+  draggable?: boolean,
+  width?: string,
+  height?: string
+  clickPoint: (data: any) => void;
 }
 
 export interface Marker {

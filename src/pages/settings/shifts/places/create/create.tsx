@@ -99,7 +99,9 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
             errorCondition=''
             radialPoint={null}
             errorRadialPoint=''
-            />
+            draggable={true}
+            clickPoint={() => { }}
+          />
         </div>
       </div>
     </section>

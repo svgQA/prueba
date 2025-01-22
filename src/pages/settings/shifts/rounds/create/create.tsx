@@ -281,6 +281,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
             errorCondition='Debes seleccionar un lugar para agregar puntos'
             radialPoint={place}
             errorRadialPoint='Punto de la ronda fuera del radio del lugar'
+            draggable={true}
           />
         </div>
       </div>
