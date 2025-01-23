@@ -9,6 +9,7 @@ export const Radio: FunctionComponent<IRadioProps> = ({
   label,
   value,
   required,
+  disabled,
   ...props
 }: IRadioProps) => {
   return (
@@ -33,6 +34,7 @@ export const Radio: FunctionComponent<IRadioProps> = ({
               onChange={onChange}
               required={required}
               className='mr-2'
+              disabled={disabled}
               {...props}
             />
             <label for={`${id}-${option.value}-ra`} className='text-sm'>

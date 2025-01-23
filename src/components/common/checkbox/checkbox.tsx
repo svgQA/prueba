@@ -9,6 +9,7 @@ export const Checkbox: FunctionComponent<ICheckboxProps> = ({
   label,
   value = {}, // Add default empty object
   required,
+  disabled,
   ...props
 }: ICheckboxProps) => {
   return (
@@ -34,6 +35,7 @@ export const Checkbox: FunctionComponent<ICheckboxProps> = ({
               required={required}
               data-value={option.value}
               className='mr-2'
+              disabled={disabled}
               {...props}
             />
             <label for={`${id}-${option.value}-ch`} className='text-sm'>

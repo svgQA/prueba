@@ -1,6 +1,11 @@
 import { type FunctionComponent } from 'preact';
 import { type IMapProps } from './interface';
-import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
+import {
+  GoogleMap,
+  InfoWindow,
+  Marker,
+  useJsApiLoader,
+} from '@react-google-maps/api';
 import React, { useState, useEffect } from 'preact/compat';
 import { toast } from 'react-toastify';
 
@@ -15,19 +20,21 @@ export const Map: FunctionComponent<IMapProps> = ({
   draggable,
   width,
   height,
-  clickPoint
+  clickPoint,
 }) => {
   const [_, setMap] = React.useState(null);
-  const [points, setPoint] = React.useState<{ id: number; position: any }[]>([]);
+  const [points, setPoint] = React.useState<{ id: number; position: any }[]>(
+    []
+  );
   const [activeMarker, setActiveMarker] = useState(null);
 
   useEffect(() => {
-    sendPoints(points)
+    sendPoints(points);
   }, points);
 
   useEffect(() => {
-    setPoint(pointsRef)
-  }, pointsRef)
+    setPoint(pointsRef);
+  }, pointsRef);
 
   const containerStyle = {
     width: width ?? '1100px',
@@ -73,11 +80,11 @@ export const Map: FunctionComponent<IMapProps> = ({
       });
 
       return;
-    };
+    }
 
     if (pointsAmount === 1) {
       setPoint([]);
-    };
+    }
 
     const lat: number = event.latLng.lat();
     const lng: number = event.latLng.lng();
@@ -100,7 +107,7 @@ export const Map: FunctionComponent<IMapProps> = ({
 
         return;
       }
-    };
+    }
 
     setPoint((prevMarkers) => [...prevMarkers, marker]);
   };
@@ -131,16 +138,16 @@ export const Map: FunctionComponent<IMapProps> = ({
 
     const pointValidation = haversineDistance(radialPoint, marker);
 
-      if (pointValidation) {
-        toast.error(`${errorRadialPoint}`, {
-          position: 'top-right',
-        });
+    if (pointValidation) {
+      toast.error(`${errorRadialPoint}`, {
+        position: 'top-right',
+      });
 
-        setPoint([]);
-        setPoint(pointsRef);
+      setPoint([]);
+      setPoint(pointsRef);
 
-        return;
-      }
+      return;
+    }
 
     setPoint([]);
 
@@ -148,8 +155,8 @@ export const Map: FunctionComponent<IMapProps> = ({
       if (item.id === id) {
         item.position = {
           lat: lat,
-          lng: lng
-        }
+          lng: lng,
+        };
       }
     }
 
@@ -167,7 +174,7 @@ export const Map: FunctionComponent<IMapProps> = ({
 
   const handleMarkerClick = (id: any) => {
     const marker = points.find((item: any) => item.id === id);
-    clickPoint(marker);
+    clickPoint?.(marker);
     setActiveMarker(id);
   };
 
@@ -178,7 +185,7 @@ export const Map: FunctionComponent<IMapProps> = ({
     }
 
     return title;
-  }
+  };
 
   return isLoaded ? (
     <GoogleMap

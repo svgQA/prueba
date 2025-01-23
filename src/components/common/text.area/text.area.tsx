@@ -20,6 +20,7 @@ export const TextArea = ({
   tabIndex,
   borderless,
   thin,
+  disabled,
   ...props
 }: ITextAreaProps) => {
   return (
@@ -48,6 +49,7 @@ export const TextArea = ({
           placeholder={placeholder}
           required={required}
           tabIndex={tabIndex}
+          disabled={disabled}
           {...props}
         />
         {end && icon && <span className={`vox-icon vx-icon-${icon}`} />}

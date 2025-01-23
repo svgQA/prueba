@@ -23,5 +23,6 @@ export interface IFileProps extends IComponentProps {
   thin?: boolean;
   accept: string;
   multiple?: boolean;
+  disabled?: boolean;
   value: IPresignedRequest[];
 }

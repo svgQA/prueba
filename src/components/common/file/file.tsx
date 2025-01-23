@@ -18,6 +18,7 @@ export const File = ({
   multiple = false,
   accept,
   value = [],
+  disabled,
   ...props
 }: IFileProps) => {
   const dataset = useSignal({});
@@ -92,6 +93,7 @@ export const File = ({
             tabIndex={tabIndex}
             multiple={multiple}
             accept={accept}
+            disabled={disabled}
             {...props}
           />
           {end && icon && <span className={`vox-icon vx-icon-${icon}`} />}
@@ -104,10 +106,12 @@ export const File = ({
                 key={file.uuid}
                 className='p-2 border rounded border-green-500 relative'
               >
-                <span
-                  className='vox-icon vx-icon-008 size-xs absolute top-0 right-1 cursor-pointer'
-                  onClick={() => removeAction(file.uuid)}
-                ></span>
+                {!disabled && (
+                  <span
+                    className='vox-icon vx-icon-008 size-xs absolute top-0 right-1 cursor-pointer'
+                    onClick={() => removeAction(file.uuid)}
+                  ></span>
+                )}
                 <p className='text-sm truncate'>{file.name}</p>
                 <p className='text-xs text-gray-500'>{file.type}</p>
               </div>
