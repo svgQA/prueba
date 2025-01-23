@@ -67,7 +67,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       position: 'top-right',
     });
 
-    navigate('/round');
+    navigate('/rounds');
   };
 
   const addPlace = (data: any) => {
