@@ -33,11 +33,19 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async createRound(data: IRoundRequest) {
+  static async createRound(data: any) {
     const model: IMakeRequest = {
       url: ['round'],
       method: REQUEST_METHODS.POST,
       data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getRounds(params: IPagination = { page: 1, items: 20 }) {
+    const model: IMakeRequest = {
+      url: ['round'],
+      params: params as any,
     };
     return await super.make_request<any>(this.name, model);
   }

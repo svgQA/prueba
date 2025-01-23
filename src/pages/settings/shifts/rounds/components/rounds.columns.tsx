@@ -10,8 +10,8 @@ export const columns: ColumnDef<Round>[] = [
     header: 'ID',
   },
   {
-    id: 'employeeName',
-    accessorKey: 'employeeName',
+    id: 'name',
+    accessorKey: 'name',
     size: 180,
     header: 'Nombre',
   },

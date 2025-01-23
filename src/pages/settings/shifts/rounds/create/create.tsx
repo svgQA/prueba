@@ -6,6 +6,7 @@ import { useState, useEffect } from 'preact/hooks';
 import { toast } from 'react-toastify';
 import { ShiftService } from '@/services/shift';
 import { Select } from '@/components/common/select/select';
+import { useLocation } from 'wouter';
 
 export const RoundCreateSettingPage: FunctionComponent = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +21,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const [place, setPlace] = useState<{ id: number; position: any }>();
   const [places, setPlaces] = useState<any[]>([]);
   const [addPoint, setAddPoint] = useState<boolean>(false);
+  const [_, navigate] = useLocation();
 
   const handleFormatInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -40,11 +42,19 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    const pointsRef = points.map((item: any) => {
+      return {
+        latitude: String(item.position.lat),
+        longitude: String(item.position.lng)
+      }
+    })
+
     const obj = {
       name: formData.name,
-      frequency: formData.frequency,
-      markers: points,
-      place: formData.place,
+      // frequency: formData.frequency,
+      placeId: place?.id,
+      points : pointsRef
     };
 
     const request = await ShiftService.createRound({
@@ -57,7 +67,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       position: 'top-right',
     });
 
-    console.log('Datos del formulario:', formData);
+    navigate('/round');
   };
 
   const addPlace = (data: any) => {
@@ -108,7 +118,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     const newMarker = places.find((item: any) => item.value === Number(value));
 
     const marker = {
-      id: 1,
+      id: newMarker.value,
       position: {
         lat: newMarker.latitude,
         lng: newMarker.longitude,
@@ -120,17 +130,20 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
 
   const getPlaces = async () => {
-    const places = [
-      {
-        value: 1,
-        label: 'Bogota',
-        description: 'Centro comercial',
-        latitude: 4.670343272976993,
-        longitude: -74.0871440295104,
-      },
-    ];
+    const request: any = await ShiftService.getPlaces();
+    setPlaces(request.data);
 
-    setPlaces(places);
+    const placesData = request.data.map((item: any) => {
+      return {
+        value: item.id,
+        label: item.name,
+        description: item.name,
+        latitude: Number(item.latitude),
+        longitude: Number(item.longitude)
+      }
+    })
+
+    setPlaces(placesData);
   };
 
   const savePoint = () => {
@@ -282,6 +295,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
             radialPoint={place}
             errorRadialPoint='Punto de la ronda fuera del radio del lugar'
             draggable={true}
+            clickPoint={() => {}}
           />
         </div>
       </div>
