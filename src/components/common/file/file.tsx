@@ -2,6 +2,7 @@ import { type IFileProps } from './interface';
 import { useSignal } from '@preact/signals';
 import { IPresignedRequest } from '@/types/file';
 import { handleFileChangeWrapper } from './utils';
+import { GeneralService } from '@/services/general';
 
 export const File = ({
   id,
@@ -50,15 +51,37 @@ export const File = ({
     });
   };
 
-  const removeAction = (file: string) => {
+  const removeAction = (fileUUID: string) => {
     onChange?.({
       target: {
         name: name,
         type: 'file',
         dataset: dataset.value,
-        value: value.filter((f) => f.uuid !== file),
+        value: value.filter((f) => f.uuid !== fileUUID),
       },
     });
+  };
+
+  const downloadAction = async (fileUUID: string) => {
+    const fileInfo = value.find((f) => f.uuid === fileUUID);
+    if (!fileInfo) return;
+    const preResponse = await GeneralService.presigned(fileInfo);
+    if (!preResponse.getStatus()) return;
+    const urlModel = preResponse.getOne();
+
+    try {
+      const filResponse = await fetch(urlModel.url);
+      if (!filResponse.ok) throw new Error('Failed to fetch image');
+      const blob = await filResponse.blob();
+      const downloadUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = fileInfo.name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(downloadUrl);
+    } catch {}
   };
 
   return (
@@ -106,10 +129,15 @@ export const File = ({
                 key={file.uuid}
                 className='p-2 border rounded border-green-500 relative'
               >
-                {!disabled && (
+                {!disabled ? (
                   <span
                     className='vox-icon vx-icon-008 size-xs absolute top-0 right-1 cursor-pointer'
                     onClick={() => removeAction(file.uuid)}
+                  ></span>
+                ) : (
+                  <span
+                    className='vox-icon vx-icon-207 size-xs absolute top-0 right-1 cursor-pointer'
+                    onClick={() => downloadAction(file.uuid)}
                   ></span>
                 )}
                 <p className='text-sm truncate'>{file.name}</p>
