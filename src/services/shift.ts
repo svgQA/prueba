@@ -1,3 +1,4 @@
+import { IPagination } from '@/types';
 import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
 import { BaseService } from '@/utils/network';
 import {
@@ -15,11 +16,19 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async createPlace(data: IPlaceRequest) {
+  static async createPlace(data: any) {
     const model: IMakeRequest = {
       url: ['place'],
       method: REQUEST_METHODS.POST,
       data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getPlaces(params: IPagination = { page: 1, items: 10 }) {
+    const model: IMakeRequest = {
+      url: ['place'],
+      params: params as any,
     };
     return await super.make_request<any>(this.name, model);
   }

@@ -15,8 +15,8 @@ export const columns: ColumnDef<Place>[] = [
     header: 'Nombre',
   },
   {
-    id: 'description',
-    accessorKey: 'description',
+    id: 'code',
+    accessorKey: 'code',
     size: 60,
     header: 'Descripción',
   },
