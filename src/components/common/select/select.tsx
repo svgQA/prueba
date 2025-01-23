@@ -15,6 +15,7 @@ export const Select = ({
   borderless,
   thin,
   tabIndex,
+  disabled,
   ...props
 }: ISelectProps) => {
   return (
@@ -43,6 +44,7 @@ export const Select = ({
           required={required}
           tabIndex={tabIndex}
           style={{ WebkitAppearance: 'none' }}
+          disabled={disabled}
           {...props}
         >
           <option value=''>{placeholder}</option>

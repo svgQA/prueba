@@ -36,7 +36,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
   const sendPointsRef = (data: any) => {
     setPoint(data);
-  }
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -158,10 +158,10 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       latitude: '',
       longitude: '',
     });
-  }
+  };
 
   const validatePoint = (): boolean => {
-    return !!(points.length === 0); 
+    return !!(points.length === 0);
   };
 
   const addPointValidation = () => {
@@ -273,9 +273,9 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         </div>
         <div>
           <Map
-            name='Map' 
-            pointsAmount={100} 
-            sendPoints={sendPointsRef} 
+            name='Map'
+            pointsAmount={100}
+            sendPoints={sendPointsRef}
             pointsRef={points}
             condition={validatePoint()}
             errorCondition='Debes seleccionar un lugar para agregar puntos'

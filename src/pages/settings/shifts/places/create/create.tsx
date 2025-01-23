@@ -30,7 +30,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
 
   const sendPointsRef = (data: any) => {
     setPoint(data);
-  }
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -90,17 +90,17 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
           </div>
         </div>
         <div>
-          <Map 
-            name='Map' 
-            pointsAmount={1} 
-            sendPoints={sendPointsRef} 
+          <Map
+            name='Map'
+            pointsAmount={1}
+            sendPoints={sendPointsRef}
             pointsRef={points}
             condition={false}
             errorCondition=''
             radialPoint={null}
             errorRadialPoint=''
             draggable={true}
-            clickPoint={() => { }}
+            clickPoint={() => {}}
           />
         </div>
       </div>
