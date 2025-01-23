@@ -5,6 +5,7 @@ import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
 import { toast } from 'react-toastify';
 import { ShiftService } from '@/services/shift';
+import { useLocation } from 'wouter';
 
 export const PlaceCreateSettingPage: FunctionComponent = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     description: '',
     markers: [],
   });
+  const [_, navigate] = useLocation();
 
   const [points, setPoint] = useState<{ id: number; position: any }[]>([]);
 
@@ -36,9 +38,10 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     e.preventDefault();
     const obj = {
       name: formData.name,
-      description: formData.description,
-      latitude: points[0].position.lat,
-      longitude: points[0].position.lng,
+      code: 123,
+      // description: formData.description,
+      latitude: String(points[0].position.lat),
+      longitude: String(points[0].position.lng),
     };
 
     const request = await ShiftService.createPlace({
@@ -51,7 +54,9 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       position: 'top-right',
     });
 
-    // console.log('Datos del formulario:', obj);
+    navigate('/rounds/places');
+
+    console.log('Datos del formulario:', request);
   };
 
   return (

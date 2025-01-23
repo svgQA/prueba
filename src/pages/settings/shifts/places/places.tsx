@@ -2,15 +2,26 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { placesData } from './utils/places.data';
 import { Place } from './utils/places';
 import { columns } from './components/places.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IRowAction } from '@/components/common/table/interface';
+import { useEffect, useState } from 'preact/hooks';
+import { ShiftService } from '@/services/shift';
 
 export const PlacesSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
+  const [places, setPlaces] = useState([]);
+
+  useEffect(() => {
+   getPlaces();
+  }, [])
+
+  const getPlaces = async () => {
+    const request: any = await ShiftService.getPlaces();
+    setPlaces(request.data);
+  }
 
   const redirect = () => {
     navigate('/rounds/places/create');
@@ -41,7 +52,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
         </div>
       </div>
       <Table<Place>
-        data={placesData}
+        data={places}
         columns={columns}
         pageSize={20}
         visibility={{
