@@ -1,8 +1,11 @@
 // Definimos la estructura de los datos de "User"
 
+import { IconParams } from 'node_modules/react-toastify/dist/components';
+
 export interface User {
   id: number;
   name: string;
+  notificar: string;
   identification: string;
   email: string;
   company: string;

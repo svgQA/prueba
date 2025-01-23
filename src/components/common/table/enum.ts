@@ -4,4 +4,5 @@ export enum ROW_ACTIONS {
   DELETE,
   REPORT,
   RESPONSE,
+  MESSAGE,
 }

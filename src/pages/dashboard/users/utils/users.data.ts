@@ -4,6 +4,7 @@ export const usersData: User[] = [
   {
     id: 1,
     name: 'Juan Pérez',
+    notificar: '155',
     identification: '100200300',
     email: 'juan.perez@example.com',
     company: 'TechCorp',
@@ -18,6 +19,7 @@ export const usersData: User[] = [
   {
     id: 2,
     name: 'María Gómez',
+    notificar: '155',
     identification: '100200301',
     email: 'maria.gomez@example.com',
     company: 'Innovate',
@@ -32,6 +34,7 @@ export const usersData: User[] = [
   {
     id: 3,
     name: 'Luis Hernández',
+    notificar: '155',
     identification: '100200302',
     email: 'luis.hernandez@example.com',
     company: 'MegaSoft',
@@ -46,6 +49,7 @@ export const usersData: User[] = [
   {
     id: 4,
     name: 'Ana Ramírez',
+    notificar: '155',
     identification: '100200303',
     email: 'ana.ramirez@example.com',
     company: 'TechGuard',
