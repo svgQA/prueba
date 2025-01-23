@@ -3,6 +3,8 @@ import { User } from '../utils';
 import { Gauge } from '@/components/common/gauge/gauge';
 //import { ROW_ACTIONS } from '@/components/common/table/enum'; // Ajusta según tu ruta
 import { Badge } from '@/components/common/badge/badge';
+//import { ROW_ACTIONS } from '@/components/common/table/enum';
+//import { spawn } from 'child_process';
 
 export const userColumns: ColumnDef<User>[] = [
   {
@@ -17,6 +19,20 @@ export const userColumns: ColumnDef<User>[] = [
     size: 180,
     header: 'Nombre',
     enableGrouping: true, // habilitar agrupación si deseas
+  },
+  {
+    id: 'notificar',
+    //accessorKey: 'notificar',
+    header: 'Notificar',
+    size: 100,
+    cell: (info) => {
+      return (
+        <span
+          className='vox-icon vx-icon-155 p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        />
+      );
+    },
   },
   {
     id: 'identification',
@@ -68,7 +84,7 @@ export const userColumns: ColumnDef<User>[] = [
     id: 'taskProgress',
     accessorKey: 'taskProgress',
     size: 180,
-    header: 'Progreso',
+    header: 'Progreso de tareas',
     cell: (info) => (
       <div className='flex flex-row justify-center'>
         <Gauge progress={info.getValue() as number} />
