@@ -46,15 +46,15 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     const pointsRef = points.map((item: any) => {
       return {
         latitude: String(item.position.lat),
-        longitude: String(item.position.lng)
-      }
-    })
+        longitude: String(item.position.lng),
+      };
+    });
 
     const obj = {
       name: formData.name,
       // frequency: formData.frequency,
       placeId: place?.id,
-      points : pointsRef
+      points: pointsRef,
     };
 
     const request = await ShiftService.createRound({
@@ -139,9 +139,9 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         label: item.name,
         description: item.name,
         latitude: Number(item.latitude),
-        longitude: Number(item.longitude)
-      }
-    })
+        longitude: Number(item.longitude),
+      };
+    });
 
     setPlaces(placesData);
   };
