@@ -8,4 +8,5 @@ export interface IRadioProps extends IComponentProps {
   onChange?: Function;
   value?: any;
   required?: boolean;
+  disabled?: boolean;
 }

@@ -27,4 +27,5 @@ export interface ISelectProps extends IComponentProps {
   borderless?: boolean;
   thin?: boolean;
   tabIndex?: number;
+  disabled?: boolean;
 }

@@ -8,12 +8,9 @@ import { columns } from './components/places.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IRowAction } from '@/components/common/table/interface';
-import { Input } from '@/components/common/input/input';
-import { useState } from 'preact/hooks';
 
 export const PlacesSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const [search, setSearch] = useState('');
 
   const redirect = () => {
     navigate('/rounds/places/create');
@@ -29,22 +26,10 @@ export const PlacesSettingPage: FunctionComponent = () => {
     }
   };
 
-  const handleFormatInputChange = (e: any) => {
-    const { value } = e.target;
-    setSearch(value);
-  };
-
   return (
     <Section>
       <div className='flex flex-col gap-1 w-10/12'>
         <div className='flex flex-row'>
-          <Input
-            type='text'
-            placeholder='Buscar'
-            name='search'
-            value={search}
-            onChange={handleFormatInputChange}
-          />
           <Button
             onClick={() => navigate('/rounds/places/create')}
             type='button'
@@ -66,7 +51,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
           duration: false,
         }}
         onClickAction={handleOnClick}
-        unsearch
+        unsearch={false}
       />
     </Section>
   );

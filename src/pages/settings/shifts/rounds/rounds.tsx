@@ -3,7 +3,7 @@ import { Section } from '@/components/common/section/section';
 import { IRowAction } from '@/components/common/table/interface.d';
 import { Table } from '@/components/common/table/table';
 import { type FunctionComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 // import { IFormResponse } from '@/types/form';
 // import { FORMAT_MODE_SERVICE, setFormat } from '../../forms/create/store';
 import { useLocation } from 'wouter';
@@ -11,11 +11,10 @@ import { Round } from './utils/rounds';
 import { roundsData } from './utils/rounds.data';
 import { columns } from './components/rounds.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { Input } from '@/components/common/input/input';
+import { ExpandableRounds } from '@/components/compose/table/expandable/rounds';
 
 export const RoundsSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const [search, setSearch] = useState('');
 
   const redirect = () => {
     // setFormat(
@@ -39,22 +38,10 @@ export const RoundsSettingPage: FunctionComponent = () => {
     document.title = 'Rounds Settings';
   }, []);
 
-  const handleFormatInputChange = (e: any) => {
-    const { value } = e.target;
-    setSearch(value);
-  };
-
   return (
     <Section>
       <div className='flex flex-col gap-1 w-10/12'>
         <div className='flex flex-row'>
-          <Input
-            type='text'
-            placeholder='Buscar'
-            name='search'
-            value={search}
-            onChange={handleFormatInputChange}
-          />
           <Button
             onClick={() => navigate('/round/create')}
             type='button'
@@ -68,6 +55,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
       <Table<Round>
         data={roundsData}
         columns={columns}
+        expandable={(row: any) => <ExpandableRounds row={row} />}
         pageSize={20}
         visibility={{
           address: false,
@@ -76,7 +64,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
           duration: false,
         }}
         onClickAction={handleOnClick}
-        unsearch
+        unsearch={false}
       />
     </Section>
   );
