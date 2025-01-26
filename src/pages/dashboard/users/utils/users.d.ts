@@ -10,7 +10,7 @@ export interface User {
   email: string;
   company: string;
   department: string;
-  connection: 'Activo' | 'Inactivo';
+  connection: 'Activo' | 'Inactivo' | 'Sin conexión';
   taskProgress: number; // 0 - 100 (por ejemplo)
 
   // Campos extras que irán en el expansible
