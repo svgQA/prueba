@@ -50,9 +50,9 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async createShift(data: IShiftRequest) {
+  static async createShift(data: any) {
     const model: IMakeRequest = {
-      url: ['shift'],
+      url: ['activity'],
       method: REQUEST_METHODS.POST,
       data,
     };
