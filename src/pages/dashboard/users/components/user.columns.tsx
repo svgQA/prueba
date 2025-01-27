@@ -1,10 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { User } from '../utils';
 import { Gauge } from '@/components/common/gauge/gauge';
-//import { ROW_ACTIONS } from '@/components/common/table/enum'; // Ajusta según tu ruta
-import { Badge } from '@/components/common/badge/badge';
-//import { ROW_ACTIONS } from '@/components/common/table/enum';
-//import { spawn } from 'child_process';
 
 export const userColumns: ColumnDef<User>[] = [
   {
@@ -67,15 +63,27 @@ export const userColumns: ColumnDef<User>[] = [
     size: 100,
     header: 'Conexión',
     cell: (info) => {
-      const value = info.getValue() as string; // 'Activo' | 'Inactivo'
-      // Podrías usar un badge distinto para "Activo" (verde) / "Inactivo" (rojo)
+      const value = info.getValue() as string; // 'Activo' | 'Inactivo' | 'Sin conexión'
+
+      let iconClass = 'vox-icon p-1 size-sm cursor-pointer';
+      let containerClass = 'flex justify-center items-center border-2';
+      let icon;
+
+      if (value === 'Activo') {
+        containerClass += ' border-green-500  bg-green-500';
+        icon = 'vx-icon-189 rounded-full size-lg';
+      } else if (value === 'Inactivo') {
+        containerClass += ' border-red-500 bg-red-500';
+        icon = 'vx-icon-190 rounded-full size-lg';
+      } else {
+        containerClass += ' border-gray-500 bg-gray-500';
+        icon = 'vx-icon-186 rounded-full size-lg';
+      }
+
       return (
         <div className='flex justify-center'>
-          {value === 'Activo' ? (
-            <Badge label='' icon='190' /*color='bg-green-500'*/ />
-          ) : (
-            <Badge label='' icon='190' /*color='bg-red-500'*/ />
-          )}
+          {/* Contenedor con borde y fondo dinámico */}
+          <span className={`${iconClass} ${icon} ${containerClass}`} />
         </div>
       );
     },
@@ -85,10 +93,26 @@ export const userColumns: ColumnDef<User>[] = [
     accessorKey: 'taskProgress',
     size: 180,
     header: 'Progreso de tareas',
-    cell: (info) => (
-      <div className='flex flex-row justify-center'>
-        <Gauge progress={info.getValue() as number} />
-      </div>
-    ),
+    cell: (info) => {
+      const progress = info.getValue() as number;
+
+      // Definir el color dinámico basado en el progreso
+      let progressColor = '#E05858'; // Rojo por defecto para progreso <= 30%
+
+      if (progress > 30 && progress <= 60) {
+        progressColor = '#FFC772'; // Amarillo para progreso entre 30% y 60%
+      } else if (progress > 60 && progress <= 90) {
+        progressColor = '#00BDD6'; // Azul para progreso entre 60% y 90%
+      } else if (progress > 90) {
+        progressColor = '#1DD75B'; // Verde para progreso > 90%
+      }
+
+      return (
+        <div className='flex flex-row justify-center'>
+          {/* Pasar el color dinámico al componente Gauge */}
+          <Gauge progress={progress} color={progressColor} />
+        </div>
+      );
+    },
   },
 ];
