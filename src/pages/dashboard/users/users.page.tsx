@@ -21,7 +21,7 @@ export const UsersPage: FunctionalComponent = () => {
           count={usersData.length}
           subtitle='Registrados'
           color='text-secondary'
-          icon='171'
+          icon='189'
         />
         <CardData
           title='Conexión Activa'

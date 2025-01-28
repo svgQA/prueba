@@ -58,8 +58,8 @@ export const correspondenceColumns: ColumnDef<ICorrespondence>[] = [
         <span
           className={`px-2 py-1 rounded ${
             value === 'Entregado'
-              ? 'bg-green-600 text-white'
-              : 'bg-orange-400 text-white'
+              ? 'bg-secondary text-white'
+              : 'bg-error text-white'
           }`}
         >
           {value}
@@ -71,6 +71,6 @@ export const correspondenceColumns: ColumnDef<ICorrespondence>[] = [
     id: 'whoPickedUp',
     accessorKey: 'whoPickedUp',
     size: 180,
-    header: 'Quién recibe',
+    header: 'Entregado a...',
   },
 ];

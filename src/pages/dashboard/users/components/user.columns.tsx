@@ -70,14 +70,14 @@ export const userColumns: ColumnDef<User>[] = [
       let icon;
 
       if (value === 'Activo') {
-        containerClass += ' border-green-500  bg-green-500';
-        icon = 'vx-icon-189 rounded-full size-lg';
+        containerClass += ' bg-green-500'; // Cambiar fondo a verde para "Activo"
+        icon = 'vx-icon-189 rounded-full size-lg text-green-500'; // Cambiar color del ícono a verde
       } else if (value === 'Inactivo') {
-        containerClass += ' border-red-500 bg-red-500';
-        icon = 'vx-icon-190 rounded-full size-lg';
+        containerClass += ' border-red-500 bg-red-500'; // Fondo y borde rojos para "Inactivo"
+        icon = 'vx-icon-190 rounded-full size-lg text-red-500'; // Cambiar color del ícono a rojo
       } else {
-        containerClass += ' border-gray-500 bg-gray-500';
-        icon = 'vx-icon-186 rounded-full size-lg';
+        containerClass += ' border-gray-500 bg-gray-500'; // Fondo gris para "Sin conexión"
+        icon = 'vx-icon-186 rounded-full size-lg text-gray-500'; // Cambiar color del ícono a gris
       }
 
       return (
@@ -99,12 +99,12 @@ export const userColumns: ColumnDef<User>[] = [
       // Definir el color dinámico basado en el progreso
       let progressColor = '#E05858'; // Rojo por defecto para progreso <= 30%
 
-      if (progress > 30 && progress <= 60) {
-        progressColor = '#FFC772'; // Amarillo para progreso entre 30% y 60%
-      } else if (progress > 60 && progress <= 90) {
-        progressColor = '#00BDD6'; // Azul para progreso entre 60% y 90%
-      } else if (progress > 90) {
-        progressColor = '#1DD75B'; // Verde para progreso > 90%
+      if (progress < 30) {
+        progressColor = '#E05858';
+      } else if (progress >= 30 && progress < 70) {
+        progressColor = '#FFC772';
+      } else if (progress >= 70) {
+        progressColor = '#00BDD6';
       }
 
       return (
