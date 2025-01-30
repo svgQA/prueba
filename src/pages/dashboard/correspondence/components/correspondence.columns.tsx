@@ -11,16 +11,24 @@ import dayjs from 'dayjs';
  */
 export const correspondenceColumns: ColumnDef<ICorrespondence>[] = [
   {
-    id: 'id',
-    accessorKey: 'id',
-    size: 60,
-    header: 'ID',
-  },
-  {
     id: 'sender',
     accessorKey: 'sender',
     size: 160,
     header: 'Remitente',
+  },
+  {
+    id: 'notificar',
+    //accessorKey: 'notificar',
+    header: 'Notificar',
+    size: 100,
+    cell: (info) => {
+      return (
+        <span
+          className='vox-icon vx-icon-155 p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        />
+      );
+    },
   },
   {
     id: 'owner',

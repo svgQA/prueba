@@ -1,6 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { User } from '../utils';
 import { Gauge } from '@/components/common/gauge/gauge';
+//import { Badge } from '@aws-amplify/ui-react';
+import { Badge } from '@/components/common/badge/badge';
 
 export const userColumns: ColumnDef<User>[] = [
   {
@@ -63,27 +65,15 @@ export const userColumns: ColumnDef<User>[] = [
     size: 100,
     header: 'Conexión',
     cell: (info) => {
-      const value = info.getValue() as string; // 'Activo' | 'Inactivo' | 'Sin conexión'
-
-      let iconClass = 'vox-icon p-1 size-sm cursor-pointer';
-      let containerClass = 'flex justify-center items-center border-2';
-      let icon;
-
-      if (value === 'Activo') {
-        containerClass += ' bg-green-500'; // Cambiar fondo a verde para "Activo"
-        icon = 'vx-icon-189 rounded-full size-lg text-green-500'; // Cambiar color del ícono a verde
-      } else if (value === 'Inactivo') {
-        containerClass += ' border-red-500 bg-red-500'; // Fondo y borde rojos para "Inactivo"
-        icon = 'vx-icon-190 rounded-full size-lg text-red-500'; // Cambiar color del ícono a rojo
-      } else {
-        containerClass += ' border-gray-500 bg-gray-500'; // Fondo gris para "Sin conexión"
-        icon = 'vx-icon-186 rounded-full size-lg text-gray-500'; // Cambiar color del ícono a gris
-      }
-
+      const value = info.getValue() as string; // 'Activo' | 'Inactivo'
+      // Podrías usar un badge distinto para "Activo" (verde) / "Inactivo" (rojo)
       return (
         <div className='flex justify-center'>
-          {/* Contenedor con borde y fondo dinámico */}
-          <span className={`${iconClass} ${icon} ${containerClass}`} />
+          {value === 'Activo' ? (
+            <Badge label='' icon='190' textColor='text-secondary' />
+          ) : (
+            <Badge label='' icon='190' textColor='text-error' />
+          )}
         </div>
       );
     },
