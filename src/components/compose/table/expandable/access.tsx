@@ -5,7 +5,7 @@ export const ExpandableAccess: FunctionComponent<IExpandableProps> = ({
   row,
 }) => {
   return (
-    <div className='w-full p-4 bg-white rounded-lg shadow'>
+    <div className='w-full p-4 bg-b-light rounded-lg shadow'>
       <h4 className='text-gray-800 font-semibold mb-3'>
         Detalles del Vehículo
       </h4>

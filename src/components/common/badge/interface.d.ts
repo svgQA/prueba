@@ -6,6 +6,7 @@ export interface IBadgeProps {
   bgColor?: string;
   color?: string;
   style?: React.CSSProperties;
+  textColor?: string;
 }
 
 export interface IFloatBadgeProps extends PropsWithChildren {
