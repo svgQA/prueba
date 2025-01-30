@@ -3,9 +3,17 @@ import { useEffect } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 import { CardAccess } from '@/components/compose/cards/company/cardAccess';
 import { useLocation } from 'wouter';
+import resoursesImage from '../../../../assets/image/recursos.jpg';
 
 export const ResourceSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
+
+  //vvv
+  const handleEdit = (title: string, subtitle: string, imageUrl: string) => {
+    navigate(
+      `/access/createResource?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(subtitle)}&imageUrl=${encodeURIComponent(imageUrl)}`
+    );
+  };
 
   useEffect(() => {
     document.title = 'Resources Settings';
@@ -31,9 +39,11 @@ export const ResourceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Recurso 1'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={resoursesImage}
             icon='123'
-            onEdit={() => console.log('Edit clicked')}
+            onEdit={() =>
+              handleEdit('Recurso 1', 'Lorem Ipsum Es Simplemente...', '')
+            } //vvv
           />
         </div>
 
@@ -41,9 +51,11 @@ export const ResourceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Recurso 2'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={resoursesImage}
             icon='123'
-            onEdit={() => console.log('Edit clicked')}
+            onEdit={() =>
+              handleEdit('Recurso 1', 'Lorem Ipsum Es Simplemente...', '')
+            } //vvv
           />
         </div>
 
@@ -51,18 +63,22 @@ export const ResourceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Recurso 3'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={resoursesImage}
             icon='123'
-            onEdit={() => console.log('Edit clicked')}
+            onEdit={() =>
+              handleEdit('Recurso 1', 'Lorem Ipsum Es Simplemente...', '')
+            } //vvv
           />
         </div>
         <div className='p-4'>
           <CardAccess
             title='Recurso 4'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={resoursesImage}
             icon='123'
-            onEdit={() => console.log('Edit clicked')}
+            onEdit={() =>
+              handleEdit('Recurso 1', 'Lorem Ipsum Es Simplemente...', '')
+            } //vvv
           />
         </div>
 
@@ -70,9 +86,11 @@ export const ResourceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Recurso 5'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={resoursesImage}
             icon='123'
-            onEdit={() => console.log('Edit clicked')}
+            onEdit={() =>
+              handleEdit('Recurso 1', 'Lorem Ipsum Es Simplemente...', '')
+            } //vvv
           />
         </div>
 
@@ -80,9 +98,11 @@ export const ResourceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Recurso 6'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={resoursesImage}
             icon='123'
-            onEdit={() => console.log('Edit clicked')}
+            onEdit={() =>
+              handleEdit('Recurso 1', 'Lorem Ipsum Es Simplemente...', '')
+            } //vvv
           />
         </div>
       </div>
