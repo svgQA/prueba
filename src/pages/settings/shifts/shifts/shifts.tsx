@@ -15,7 +15,7 @@ export const ShiftsSettingPage: FunctionComponent = () => {
     employee: '',
     start: '',
     end: '',
-    round: ''
+    round: '',
   });
   const [employees, setEmployees] = useState([]);
   const [rounds, setRounds] = useState([]);
@@ -32,11 +32,11 @@ export const ShiftsSettingPage: FunctionComponent = () => {
       return {
         label: item.name,
         value: item.id,
-        ...item
-      }
-    })
+        ...item,
+      };
+    });
     setRounds(roundsMap);
-  }
+  };
 
   const getUsers = async () => {
     const request: any = await UserService.get_all();
@@ -45,11 +45,11 @@ export const ShiftsSettingPage: FunctionComponent = () => {
       return {
         label: item.name + ' ' + item.surname,
         value: item.cognitoId,
-        ...item
-      }
-    })
+        ...item,
+      };
+    });
     setEmployees(employeesMap);
-  }
+  };
 
   const handleFormatInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -70,7 +70,7 @@ export const ShiftsSettingPage: FunctionComponent = () => {
       roundId: Number(formData.round),
       userId: formData.employee,
       tasks: [],
-      extraData: {}
+      extraData: {},
     };
 
     const request = await ShiftService.createShift({
@@ -88,23 +88,27 @@ export const ShiftsSettingPage: FunctionComponent = () => {
 
   const selectEmployee = async (e: any) => {
     handleFormatInputChange(e);
-    const employeeRef: any = employees.find((item: any) => item.cognitoId === e.target.value);
+    const employeeRef: any = employees.find(
+      (item: any) => item.cognitoId === e.target.value
+    );
 
     setFormData({
       ...formData,
-      employee: employeeRef.cognitoId
+      employee: employeeRef.cognitoId,
     });
-  }
+  };
 
   const selectRound = async (e: any) => {
     handleFormatInputChange(e);
-    const roundRef: any = rounds.find((item: any) => item.id === e.target.value);
+    const roundRef: any = rounds.find(
+      (item: any) => item.id === e.target.value
+    );
 
     setFormData({
       ...formData,
-      round: roundRef.id
+      round: roundRef.id,
     });
-  }
+  };
 
   return (
     <Section className='flex flex-row'>
