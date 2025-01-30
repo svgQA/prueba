@@ -71,11 +71,27 @@ export const columns: ColumnDef<Shift>[] = [
     accessorKey: 'activitiesProgress',
     size: 50,
     header: 'Progreso',
-    cell: (info: any) => (
-      <div className='flex flex-row justify-center'>
-        <Gauge progress={info.getValue() as number} />
-      </div>
-    ),
+    cell: (info: any) => {
+      const progress = info.getValue() as number;
+
+      // Definir el color dinámico basado en el progreso
+      let progressColor = '#E05858'; // Rojo por defecto para progreso <= 30%
+
+      if (progress < 30) {
+        progressColor = '#E05858';
+      } else if (progress >= 30 && progress < 70) {
+        progressColor = '#FFC772';
+      } else if (progress >= 70) {
+        progressColor = '#00BDD6';
+      }
+
+      return (
+        <div className='flex flex-row justify-center'>
+          {/* Pasar el color dinámico al componente Gauge */}
+          <Gauge progress={progress} color={progressColor} />
+        </div>
+      );
+    },
   },
   {
     id: 'actions',

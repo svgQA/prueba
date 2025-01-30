@@ -28,7 +28,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
 
   useEffect(() => {
     getRounds();
-  }, [])
+  }, []);
 
   const getRounds = async () => {
     const request: any = await ShiftService.getRounds();
@@ -41,21 +41,21 @@ export const RoundsSettingPage: FunctionComponent = () => {
           id: point.id,
           position: {
             lat: Number(point.latitude),
-            lng: Number(point.longitude)
-          }
-        }
+            lng: Number(point.longitude),
+          },
+        };
 
         points.push(marker);
       }
 
       return {
         markers: points,
-        ...item
-      }
+        ...item,
+      };
     });
 
     setRounds(rounds);
-  }
+  };
 
   const handleOnClick = (action: IRowAction) => {
     switch (action.action) {

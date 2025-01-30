@@ -15,13 +15,13 @@ export const PlacesSettingPage: FunctionComponent = () => {
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
-   getPlaces();
-  }, [])
+    getPlaces();
+  }, []);
 
   const getPlaces = async () => {
     const request: any = await ShiftService.getPlaces();
     setPlaces(request.data);
-  }
+  };
 
   const redirect = () => {
     navigate('/rounds/places/create');

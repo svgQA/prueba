@@ -38,7 +38,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
   const sendPointsRef = (data: any) => {
     setPoint(data);
-  }
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -46,15 +46,15 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     const pointsRef = points.map((item: any) => {
       return {
         latitude: String(item.position.lat),
-        longitude: String(item.position.lng)
-      }
-    })
+        longitude: String(item.position.lng),
+      };
+    });
 
     const obj = {
       name: formData.name,
       // frequency: formData.frequency,
       placeId: place?.id,
-      points : pointsRef
+      points: pointsRef,
     };
 
     const request = await ShiftService.createRound({
@@ -139,9 +139,9 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         label: item.name,
         description: item.name,
         latitude: Number(item.latitude),
-        longitude: Number(item.longitude)
-      }
-    })
+        longitude: Number(item.longitude),
+      };
+    });
 
     setPlaces(placesData);
   };
@@ -171,10 +171,10 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       latitude: '',
       longitude: '',
     });
-  }
+  };
 
   const validatePoint = (): boolean => {
-    return !!(points.length === 0); 
+    return !!(points.length === 0);
   };
 
   const addPointValidation = () => {
@@ -286,9 +286,9 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         </div>
         <div>
           <Map
-            name='Map' 
-            pointsAmount={100} 
-            sendPoints={sendPointsRef} 
+            name='Map'
+            pointsAmount={100}
+            sendPoints={sendPointsRef}
             pointsRef={points}
             condition={validatePoint()}
             errorCondition='Debes seleccionar un lugar para agregar puntos'

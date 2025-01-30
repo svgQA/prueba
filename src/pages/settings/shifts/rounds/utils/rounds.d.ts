@@ -20,5 +20,5 @@ export interface Round {
   };
   city: string;
   address: string;
-  markers?: any[]
+  markers?: any[];
 }

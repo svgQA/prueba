@@ -4,18 +4,11 @@ import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import { IExpandableProps } from './interface'; // Ajusta si tu interface se ubica en otro lado
 
-/**
- * Se asume que `row` es de tipo ICorrespondence.
- * Mostrar en el expansible:
- * - Tipo de paquete
- * - Observación
- * - Mensaje para el propietario
- * - Botón para "enviar" el mensaje
- */
 export const ExpandableCorrespondence: FunctionComponent<IExpandableProps> = ({
   row,
 }) => {
   // Podríamos usar un estado local para "messageToOwner"
+  const [titleMsg, setTitleMsg] = useState('');
   const [message, setMessage] = useState(row.messageToOwner || '');
 
   const handleSend = () => {
@@ -25,10 +18,8 @@ export const ExpandableCorrespondence: FunctionComponent<IExpandableProps> = ({
   };
 
   return (
-    <div className='w-full p-4 bg-white rounded-lg shadow space-y-4'>
-      <h4 className='font-semibold text-gray-800 mb-3'>
-        Información Adicional
-      </h4>
+    <div className='w-full p-4 bg-b-light rounded-lg shadow space-y-4'>
+      <h4 className='font-semibold text-gray-800 mb-3'>Enviar notificación</h4>
 
       <div className='flex flex-col md:flex-row gap-4'>
         {/* Tipo de paquete */}
@@ -47,26 +38,32 @@ export const ExpandableCorrespondence: FunctionComponent<IExpandableProps> = ({
       </div>
 
       {/* Campo para escribir mensaje al propietario */}
-      <div>
-        <label className='text-gray-600 text-sm'>Mensaje al Propietario:</label>
+      <div className='mt-4 block  md:flex-row gap-4 '>
+        <input
+          type='text'
+          placeholder='Asunto del mensaje'
+          className='border border-gray-300 pl-4 p-2 rounded-sm  md:w-full '
+          value={titleMsg}
+          onInput={(e) => setTitleMsg(e.currentTarget.value)}
+        />
+      </div>
+      <div className='mt-4 flex w-full md:flex-row gap-4 '>
         <textarea
+          type='text'
+          placeholder='Descripción'
+          className='border border-gray-300 pl-4 p-2 rounded-sm w-full md:w-full'
           value={message}
-          onInput={(e) => setMessage((e.target as HTMLTextAreaElement).value)}
-          className='w-full mt-1 p-2 border border-gray-300 rounded'
-          rows={3}
-          placeholder='Escribe un mensaje...'
+          onInput={(e) => setMessage(e.currentTarget.value)}
         />
       </div>
 
       {/* Botón para enviar el mensaje */}
-      <div className='text-right'>
-        <button
-          onClick={handleSend}
-          className='px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700'
-        >
-          Enviar
-        </button>
-      </div>
+      <button
+        onClick={handleSend}
+        className='mt-3 px-4 py-2 bg-primary text-white rounded-full shadow w-48'
+      >
+        Enviar
+      </button>
     </div>
   );
 };
