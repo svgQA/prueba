@@ -1,5 +1,5 @@
 import { IPagination } from '@/types';
-import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
+// import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
 import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
@@ -28,6 +28,30 @@ export class ShiftService extends BaseService {
   static async getPlaces(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
       url: ['place'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getProjects(params: IPagination = { page: 1, items: 10 }) {
+    const model: IMakeRequest = {
+      url: ['project'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getDepartments(params: IPagination = { page: 1, items: 10 }) {
+    const model: IMakeRequest = {
+      url: ['place/departments'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getMunicipalities(id: string, params: IPagination = { page: 1, items: 10 }) {
+    const model: IMakeRequest = {
+      url: ['place/municipalities', id],
       params: params as any,
     };
     return await super.make_request<any>(this.name, model);
