@@ -3,6 +3,7 @@ import { useEffect } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 import { CardAccess } from '@/components/compose/cards/company/cardAccess';
 import { useLocation } from 'wouter';
+import lugaresImage from '../../../../assets/image/lugares.jpg';
 
 export const PlaceSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -30,7 +31,7 @@ export const PlaceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Lugares 1'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={lugaresImage}
             icon='123'
             onEdit={() => console.log('Edit clicked')}
           />
@@ -40,7 +41,7 @@ export const PlaceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Lugares 2'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={lugaresImage}
             icon='123'
             onEdit={() => console.log('Edit clicked')}
           />
@@ -50,7 +51,7 @@ export const PlaceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Recurso 3'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={lugaresImage}
             icon='123'
             onEdit={() => console.log('Edit clicked')}
           />
@@ -59,7 +60,7 @@ export const PlaceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Lugares 4'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={lugaresImage}
             icon='123'
             onEdit={() => console.log('Edit clicked')}
           />
@@ -69,7 +70,7 @@ export const PlaceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Lugares 5'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={lugaresImage}
             icon='123'
             onEdit={() => console.log('Edit clicked')}
           />
@@ -79,7 +80,7 @@ export const PlaceSettingPage: FunctionComponent = () => {
           <CardAccess
             title='Lugares 6'
             subtitle='Lorem Ipsum Es Simplemente El Texto De Relleno De Las Imprentas Y Archivos De Texto. Lorem Ipsum.'
-            imageUrl=''
+            imageUrl={lugaresImage}
             icon='123'
             onEdit={() => console.log('Edit clicked')}
           />

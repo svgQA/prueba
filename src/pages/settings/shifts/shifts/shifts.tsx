@@ -3,16 +3,53 @@ import { Input } from '@/components/common/input/input';
 import { Section } from '@/components/common/section/section';
 import { Select } from '@/components/common/select/select';
 import { FunctionComponent } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
+import { UserService } from '@/services/user';
 
 export const ShiftsSettingPage: FunctionComponent = () => {
   const [formData, setFormData] = useState({
     address: '',
     city: '',
     employee: '',
+    start: '',
+    end: '',
+    round: '',
   });
+  const [employees, setEmployees] = useState([]);
+  const [rounds, setRounds] = useState([]);
+
+  useEffect(() => {
+    getUsers();
+    getRounds();
+  }, []);
+
+  const getRounds = async () => {
+    const request: any = await ShiftService.getRounds();
+
+    const roundsMap = request.data.map((item: any) => {
+      return {
+        label: item.name,
+        value: item.id,
+        ...item,
+      };
+    });
+    setRounds(roundsMap);
+  };
+
+  const getUsers = async () => {
+    const request: any = await UserService.get_all();
+
+    const employeesMap = request.data.map((item: any) => {
+      return {
+        label: item.name + ' ' + item.surname,
+        value: item.cognitoId,
+        ...item,
+      };
+    });
+    setEmployees(employeesMap);
+  };
 
   const handleFormatInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -27,9 +64,13 @@ export const ShiftsSettingPage: FunctionComponent = () => {
     e.preventDefault();
 
     const obj = {
-      address: formData.address,
-      city: formData.city,
       employee: formData.employee,
+      start: new Date(formData.start),
+      end: new Date(formData.end),
+      roundId: Number(formData.round),
+      userId: formData.employee,
+      tasks: [],
+      extraData: {},
     };
 
     const request = await ShiftService.createShift({
@@ -45,6 +86,30 @@ export const ShiftsSettingPage: FunctionComponent = () => {
     console.log('Datos del formulario:', formData);
   };
 
+  const selectEmployee = async (e: any) => {
+    handleFormatInputChange(e);
+    const employeeRef: any = employees.find(
+      (item: any) => item.cognitoId === e.target.value
+    );
+
+    setFormData({
+      ...formData,
+      employee: employeeRef.cognitoId,
+    });
+  };
+
+  const selectRound = async (e: any) => {
+    handleFormatInputChange(e);
+    const roundRef: any = rounds.find(
+      (item: any) => item.id === e.target.value
+    );
+
+    setFormData({
+      ...formData,
+      round: roundRef.id,
+    });
+  };
+
   return (
     <Section className='flex flex-row'>
       <div className='w-full'>
@@ -55,22 +120,43 @@ export const ShiftsSettingPage: FunctionComponent = () => {
           <div className='grid grid-cols-2 gap-2'>
             <Input
               type='text'
-              placeholder='Dirección'
+              placeholder='Descripción'
+              label='Descripción'
               name='address'
               value={formData.address}
               onChange={handleFormatInputChange}
             />
-            <Select
-              name='city'
-              placeholder='Ciudad'
-              value={formData.city}
+            <Input
+              type='date'
+              placeholder='Fecha de inicio'
+              label='Fecha de inicio'
+              name='start'
+              value={formData.start}
+              onChange={handleFormatInputChange}
+            />
+            <Input
+              type='date'
+              placeholder='Fecha de terminación'
+              label='Fecha de terminación'
+              name='end'
+              value={formData.end}
               onChange={handleFormatInputChange}
             />
             <Select
-              name='employee'
+              name='name'
               placeholder='Empleado'
+              label='Empleado'
               value={formData.employee}
-              onChange={handleFormatInputChange}
+              options={employees}
+              onChange={selectEmployee}
+            />
+            <Select
+              name='round'
+              placeholder='Ronda'
+              label='Ronda'
+              value={formData.round}
+              options={rounds}
+              onChange={selectRound}
             />
           </div>
           <div>

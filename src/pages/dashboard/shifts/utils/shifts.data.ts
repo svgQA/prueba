@@ -12,7 +12,7 @@ export const shiftsData: Shift[] = [
     endTime: '2024-03-01T16:00:00',
     duration: '8h',
     notifications: 3,
-    activitiesProgress: 75,
+    activitiesProgress: 10,
 
     checkIn: {
       date: '2024-03-12:00:00',
@@ -36,7 +36,7 @@ export const shiftsData: Shift[] = [
     endTime: '2024-03-02T00:00:00',
     duration: '8h',
     notifications: 1,
-    activitiesProgress: 50,
+    activitiesProgress: 29,
     checkIn: {
       date: '2024-03-12:00:00',
       status: 'A Tiempo',

@@ -7,7 +7,7 @@ export const ExpandableShift: FunctionComponent<IExpandableProps> = ({
 }: IExpandableProps) => {
   return (
     <div className='w-full'>
-      <div className='flex flex-col lg:flex-row gap-4 lg:gap-8 justify-between'>
+      <div className='bg-b-light flex flex-col lg:flex-row gap-4 lg:gap-8 justify-between'>
         <ShiftSection
           title='Inicio del Turno'
           data={row.checkIn}

@@ -1,10 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { User } from '../utils';
 import { Gauge } from '@/components/common/gauge/gauge';
-//import { ROW_ACTIONS } from '@/components/common/table/enum'; // Ajusta según tu ruta
+//import { Badge } from '@aws-amplify/ui-react';
 import { Badge } from '@/components/common/badge/badge';
-//import { ROW_ACTIONS } from '@/components/common/table/enum';
-//import { spawn } from 'child_process';
 
 export const userColumns: ColumnDef<User>[] = [
   {
@@ -72,9 +70,9 @@ export const userColumns: ColumnDef<User>[] = [
       return (
         <div className='flex justify-center'>
           {value === 'Activo' ? (
-            <Badge label='' icon='190' /*color='bg-green-500'*/ />
+            <Badge label='' icon='190' textColor='text-secondary' />
           ) : (
-            <Badge label='' icon='190' /*color='bg-red-500'*/ />
+            <Badge label='' icon='190' textColor='text-error' />
           )}
         </div>
       );
@@ -85,10 +83,26 @@ export const userColumns: ColumnDef<User>[] = [
     accessorKey: 'taskProgress',
     size: 180,
     header: 'Progreso de tareas',
-    cell: (info) => (
-      <div className='flex flex-row justify-center'>
-        <Gauge progress={info.getValue() as number} />
-      </div>
-    ),
+    cell: (info) => {
+      const progress = info.getValue() as number;
+
+      // Definir el color dinámico basado en el progreso
+      let progressColor = '#E05858'; // Rojo por defecto para progreso <= 30%
+
+      if (progress < 30) {
+        progressColor = '#E05858';
+      } else if (progress >= 30 && progress < 70) {
+        progressColor = '#FFC772';
+      } else if (progress >= 70) {
+        progressColor = '#00BDD6';
+      }
+
+      return (
+        <div className='flex flex-row justify-center'>
+          {/* Pasar el color dinámico al componente Gauge */}
+          <Gauge progress={progress} color={progressColor} />
+        </div>
+      );
+    },
   },
 ];

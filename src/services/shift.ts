@@ -1,5 +1,5 @@
 import { IPagination } from '@/types';
-import { IShiftRequest } from '@/types/shift';
+// import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
 import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
@@ -33,6 +33,30 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
+  static async getProjects(params: IPagination = { page: 1, items: 10 }) {
+    const model: IMakeRequest = {
+      url: ['project'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getDepartments(params: IPagination = { page: 1, items: 10 }) {
+    const model: IMakeRequest = {
+      url: ['place/departments'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getMunicipalities(id: string, params: IPagination = { page: 1, items: 10 }) {
+    const model: IMakeRequest = {
+      url: ['place/municipalities', id],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
   static async createRound(data: any) {
     const model: IMakeRequest = {
       url: ['round'],
@@ -50,9 +74,9 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async createShift(data: IShiftRequest) {
+  static async createShift(data: any) {
     const model: IMakeRequest = {
-      url: ['shift'],
+      url: ['activity'],
       method: REQUEST_METHODS.POST,
       data,
     };
