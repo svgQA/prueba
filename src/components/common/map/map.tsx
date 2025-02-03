@@ -21,6 +21,10 @@ export const Map: FunctionComponent<IMapProps> = ({
   width,
   height,
   clickPoint,
+  center = {
+    lat: 4.670355108326989,
+    lng: -74.08689346772478,
+  },
 }) => {
   const [_, setMap] = React.useState(null);
   const [points, setPoint] = React.useState<{ id: number; position: any }[]>(
@@ -161,11 +165,6 @@ export const Map: FunctionComponent<IMapProps> = ({
     }
 
     setPoint(pointsRef);
-  };
-
-  const center = {
-    lat: 4.670355108326989,
-    lng: -74.08689346772478,
   };
 
   const handleInfoWindowClose = () => {

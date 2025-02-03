@@ -41,7 +41,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getDepartments(params: IPagination = { page: 1, items: 10 }) {
+  static async getDepartments(params: IPagination = { page: 1, items: 50 }) {
     const model: IMakeRequest = {
       url: ['place/departments'],
       params: params as any,
@@ -49,7 +49,10 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getMunicipalities(id: string, params: IPagination = { page: 1, items: 10 }) {
+  static async getMunicipalities(
+    id: string,
+    params: IPagination = { page: 1, items: 50 }
+  ) {
     const model: IMakeRequest = {
       url: ['place/municipalities', id],
       params: params as any,
@@ -81,5 +84,13 @@ export class ShiftService extends BaseService {
       data,
     };
     return await super.make_request<any>(this.name, model);
+  }
+
+  static async deletePlace(id: string) {
+    const model: IMakeRequest = {
+      url: ['place', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
   }
 }
