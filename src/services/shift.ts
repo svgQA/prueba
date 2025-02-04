@@ -93,4 +93,46 @@ export class ShiftService extends BaseService {
     };
     return await super.make_request(this.name, model);
   }
+
+  static async deleteProject(id: string) {
+    const model: IMakeRequest = {
+      url: ['project', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async createProject(data: any) {
+    const model: IMakeRequest = {
+      url: ['project'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateProject(data: any, id: string) {
+    const model: IMakeRequest = {
+      url: ['project', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getProject(id: string) {
+    const model: IMakeRequest = {
+      url: ['project', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getPlaceById(id: string) {
+    const model: IMakeRequest = {
+      url: ['place', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
 }

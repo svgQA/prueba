@@ -36,6 +36,8 @@ import { ResourcesSettingPage } from './asociate/resource/resource';
 import { PlacesSettingPage } from './shifts/places/places';
 import { PlaceCreateSettingPage } from './shifts/places/create/create';
 import { ShiftsSettingPage } from './shifts/shifts/shifts';
+import { ProjectsSettingPage } from './shifts/projects/projects';
+import { ProjectCreateSettingPage } from './shifts/projects/create/create';
 import { ResourceSettingPage } from './access/resource/resource';
 import { SetsSettingPage } from './access/sets/sets';
 import { PlaceSettingPage } from './access/places/places';
@@ -226,9 +228,33 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.placesUpdate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: PlaceCreateSettingPage })
+          )}
+        />
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.shiftsCreate.to}
           component={lazy(() =>
             Promise.resolve({ default: ShiftsSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.projects.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ProjectsSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.projectCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ProjectCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.projectUpdate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ProjectCreateSettingPage })
           )}
         />
         {/* SALES MENU */}

@@ -5,29 +5,22 @@ import { FieldArray } from 'react-final-form-arrays';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
-import { required, validateExactLength, lengthSize } from '@/utils/utilities';
+import { required, lengthSize } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { Map } from '@/components/common/map/map';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import { toast } from 'react-toastify';
-import { useLocation } from 'wouter';
+import { useLocation, useParams } from 'wouter';
+import { omitBy, isNull, pick } from 'lodash';
 
 interface Workstation {
   name: string;
   description: string;
   latitude: string;
   longitude: string;
-}
-
-interface Point {
-  id: number;
-  position: {
-    lat: number | string;
-    lng: number | string;
-  };
 }
 
 interface FormData {
@@ -60,15 +53,21 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const municipalities: Signal<SelectOption[]> = useSignal([]);
   const projects = useSignal([]);
   const municipalityLocation = useSignal<ILocation>();
-  const departments = useSignal([]);
-  const [points, setPoint] = useState<{ id: number; position: any }[]>([]);
+  const departments = useSignal<any>([]);
+  const points = useSignal<any>([]);
+  const initialValues: Signal<Partial<FormData>> = useSignal({});
+
+  // const [points, setPoint] = useState<{ id: number; position: any }[]>([]);
+  const { id } = useParams(); // Obtiene el id de la URL
+
   const [_, navigate] = useLocation();
 
   const sendPointsRef = (data: any) => {
     console.log('data', data);
     if (!data.length) return;
     const { lat, lng } = data[0].position;
-    setPoint(data);
+    points.value = data;
+    // setPoint(data);
     municipalityLocation.value = { lat, lng };
     return { lat, lng };
   };
@@ -92,7 +91,13 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   };
 
   const onSubmit = async (model: FormData) => {
-    const request = await ShiftService.createPlace(model);
+    const { latitude, longitude } = model;
+    console.log(' FormData ==>', model);
+    const request = await ShiftService.createPlace({
+      ...model,
+      latitude: latitude?.toString(),
+      longitude: longitude?.toString(),
+    });
     console.log('request', request);
     if (!request.getStatus()) return;
 
@@ -116,12 +121,39 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     if (!municipality?.latitude) return;
     const lat = parseFloat(municipality.latitude.replace(',', '.'));
     const lng = parseFloat(municipality.longitude.replace(',', '.'));
-    setPoint([{ id: 1, position: { lat, lng } }]);
+    //setPoint([{ id: 1, position: { lat, lng } }]);
+    points.value = [{ id: 1, position: { lat, lng } }];
     municipalityLocation.value = { lat, lng };
   };
 
+  const setInitialValues = async () => {
+    if (!id) {
+      initialValues.value = {
+        workstations: [],
+      };
+    } else {
+      const userKeys = [
+        'code',
+        'name',
+        'description',
+        'address',
+        'latitude',
+        'longitude',
+        'state',
+        'type',
+        'municipalityId',
+        'projectId',
+        'workstations',
+      ] as const;
+
+      const request: any = await ShiftService.getPlaceById(id);
+      const model = pick(omitBy(request.model, isNull), userKeys);
+      initialValues.value = model;
+    }
+  };
+
   useEffect(() => {
-    setPoint([]);
+    setInitialValues();
     fetchDepartments();
     fetchProjects();
   }, []);
@@ -134,19 +166,15 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
           mutators={{
             ...arrayMutators,
           }}
-          initialValues={{
-            workstations: [],
-          }}
+          initialValues={initialValues.value}
           validate={(values) => {
             const errors: Partial<FormData> = {};
             if (!values.name) errors.name = 'Campo obligatorio';
             if (!values.description) errors.description = 'Campo obligatorio';
             if (!values.address) errors.address = 'Required';
-            if (!values.state) errors.state = 'Required';
-            if (!values.type) errors.type = 'Required';
             return errors;
           }}
-          render={({ handleSubmit, form, submitting, pristine, values }) => (
+          render={({ handleSubmit, form, submitting, pristine }) => (
             <form onSubmit={handleSubmit} className='space-y-6'>
               {/** FORMULARIO PRINCIPAL */}
               <div className='grid grid-cols-4 gap-3'>
@@ -293,7 +321,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         onChange={(e) => {
                           const id = parseInt(e.currentTarget.value);
                           input.onChange(id);
-                          // setPosition(id);
+                          setPosition(id);
                         }}
                         options={municipalities.value}
                         meta={meta}
@@ -318,18 +346,36 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 <div class='col-span-1'>
                   <Field<string> name='latitude'>
                     {({ input }) => (
-                      <Input {...input} label='Latitud' type='text' />
+                      <Input {...input} label='Latitud' type='text' disabled />
                     )}
                   </Field>
                 </div>
                 <div class='col-span-1'>
                   <Field<string> name='longitude'>
                     {({ input }) => (
-                      <Input {...input} label='Longitud' type='text' />
+                      <Input {...input} label='Longitud' type='text' disabled />
                     )}
                   </Field>
                 </div>
               </div>
+
+              <Map
+                name='Map'
+                pointsAmount={1}
+                sendPoints={(data) => {
+                  const result = sendPointsRef(data);
+                  form.change('latitude', result?.lat);
+                  form.change('longitude', result?.lng);
+                }}
+                pointsRef={points.value}
+                center={municipalityLocation.value}
+                condition={false}
+                errorCondition=''
+                radialPoint={null}
+                errorRadialPoint=''
+                draggable={true}
+                clickPoint={() => {}}
+              />
               {/** PUNTOS DE TRABAJO */}
 
               <FieldArray name='workstations'>
@@ -458,7 +504,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   id='btn-save'
                   name='btn-save'
                   type='submit'
-                  label='Guardar'
+                  label={id ? 'Editar' : 'Guardar'}
                   className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
                   disabled={submitting}
                 />

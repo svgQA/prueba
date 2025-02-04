@@ -46,9 +46,25 @@ export const PAGES_LIST_ROUTER = {
           base: '/places/create',
           to: '/rounds/places/create',
         },
+        placesUpdate: {
+          base: '/places/create',
+          to: '/rounds/places/update/:id',
+        },
         shiftsCreate: {
           base: '/shifts/create',
           to: '/rounds/shifts/create',
+        },
+        projects: {
+          base: '/projects',
+          to: '/rounds/projects',
+        },
+        projectCreate: {
+          base: '/project/create',
+          to: '/rounds/project/create',
+        },
+        projectUpdate: {
+          base: '/project/edit',
+          to: '/rounds/project/edit/:id',
         },
       },
       setting: {

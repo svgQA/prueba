@@ -15,7 +15,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       id: 'rounds',
     },
     {
-      icon: '143',
+      icon: '103',
       label: 'Places',
       description: 'Lugares',
       base,
@@ -23,12 +23,20 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       id: 'places',
     },
     {
-      icon: '143',
+      icon: '240',
       label: 'Shifts',
       description: 'Rondas',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.shiftsCreate.base,
       id: 'shifts',
+    },
+    {
+      icon: '064',
+      label: 'Projects',
+      description: 'Proyectos',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.projects.base,
+      id: 'projects',
     },
   ],
 };

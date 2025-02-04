@@ -4,5 +4,4 @@ export interface Place {
   description: string;
   latitude: string;
   longitude: string;
-  address: string;
 }
