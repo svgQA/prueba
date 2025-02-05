@@ -38,5 +38,13 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.projects.base,
       id: 'projects',
     },
+    {
+      icon: '067',
+      label: 'Novelty',
+      description: 'Novedades',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.novelty.base,
+      id: 'projects',
+    },
   ],
 };

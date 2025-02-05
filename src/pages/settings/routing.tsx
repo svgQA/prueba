@@ -44,7 +44,8 @@ import { PlaceSettingPage } from './access/places/places';
 import { CreateResourceSettingPage } from './access/resource/create/createResource';
 import { CreateSetsSettingPage } from './access/sets/createSets/createSets';
 import { CreatePlacesSettingPage } from './access/places/createPlaces/createPlaces';
-
+import { NoveltySettingPage } from './shifts/novelty/novelty';
+import { NoveltyCreateSettingPage } from './shifts/novelty/create/create';
 export const RoutingContent = memo(() => {
   const content = (
     <Router base={PAGES_LIST_ROUTER.dashboard.setting.base}>
@@ -216,6 +217,12 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: RoundCreateSettingPage })
+          )}
+        />
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.places.to}
           component={lazy(() =>
             Promise.resolve({ default: PlacesSettingPage })
@@ -255,6 +262,24 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.projectUpdate.to}
           component={lazy(() =>
             Promise.resolve({ default: ProjectCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.novelty.to}
+          component={lazy(() =>
+            Promise.resolve({ default: NoveltySettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.noveltyCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: NoveltyCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.noveltyUpdate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: NoveltyCreateSettingPage })
           )}
         />
         {/* SALES MENU */}

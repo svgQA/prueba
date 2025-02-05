@@ -71,6 +71,7 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
               pointsAmount={100}
               sendPoints={() => {}}
               pointsRef={row.markers ?? []}
+              center={row.markers[0].position ?? []}
               condition={true}
               errorCondition='No tienes autorizado modificar puntos'
               radialPoint={null}

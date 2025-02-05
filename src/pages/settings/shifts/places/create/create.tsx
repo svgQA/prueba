@@ -91,14 +91,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   };
 
   const onSubmit = async (model: FormData) => {
-    const { latitude, longitude } = model;
-    console.log(' FormData ==>', model);
-    const request = await ShiftService.createPlace({
-      ...model,
-      latitude: latitude?.toString(),
-      longitude: longitude?.toString(),
-    });
-    console.log('request', request);
+    const request = await ShiftService.createPlace(model);
     if (!request.getStatus()) return;
 
     toast.success('Lugar creado exitosamente!', {
@@ -361,7 +354,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
 
               <Map
                 name='Map'
-                pointsAmount={1}
+                pointsAmount={3}
                 sendPoints={(data) => {
                   const result = sendPointsRef(data);
                   form.change('latitude', result?.lat);

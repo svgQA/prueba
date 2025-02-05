@@ -38,6 +38,10 @@ export const PAGES_LIST_ROUTER = {
           base: '/create',
           to: '/round/create',
         },
+        update: {
+          base: '/update',
+          to: '/round/update/:id',
+        },
         places: {
           base: '/places',
           to: '/rounds/places',
@@ -65,6 +69,18 @@ export const PAGES_LIST_ROUTER = {
         projectUpdate: {
           base: '/project/edit',
           to: '/rounds/project/edit/:id',
+        },
+        novelty: {
+          base: '/novelty',
+          to: '/rounds/novelty',
+        },
+        noveltyCreate: {
+          base: '/novelty/create',
+          to: '/rounds/novelty/create',
+        },
+        noveltyUpdate: {
+          base: '/novelty/update',
+          to: '/rounds/novelty/update/:id',
         },
       },
       setting: {

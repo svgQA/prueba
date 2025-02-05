@@ -135,4 +135,71 @@ export class ShiftService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
+
+  static async createNovelty(data: any) {
+    const model: IMakeRequest = {
+      url: ['novelty'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateNovelty(data: any, id: string) {
+    const model: IMakeRequest = {
+      url: ['novelty', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteNovelty(id: string) {
+    const model: IMakeRequest = {
+      url: ['novelty', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async getNovelty(params: IPagination = { page: 1, items: 20 }) {
+    const model: IMakeRequest = {
+      url: ['novelty'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getNoveltyById(id: string) {
+    const model: IMakeRequest = {
+      url: ['novelty', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateRound(data: any, id: string) {
+    const model: IMakeRequest = {
+      url: ['round', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteRound(id: string) {
+    const model: IMakeRequest = {
+      url: ['round', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async getRoundById(id: string) {
+    const model: IMakeRequest = {
+      url: ['round', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
 }
