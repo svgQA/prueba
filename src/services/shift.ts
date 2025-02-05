@@ -7,6 +7,14 @@ import {
   REQUEST_METHODS,
 } from '@/utils/network/types';
 
+interface IPaginationPlace extends IPagination {
+  projectId?: number;
+}
+
+interface IPaginationRound extends IPagination {
+  placeId?: number;
+}
+
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';
   static async get_all() {
@@ -25,7 +33,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getPlaces(params: IPagination = { page: 1, items: 10 }) {
+  static async getPlaces(params: IPaginationPlace = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
       url: ['place'],
       params: params as any,
@@ -69,19 +77,10 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getRounds(params: IPagination = { page: 1, items: 20 }) {
+  static async getRounds(params: IPaginationRound = { page: 1, items: 20 }) {
     const model: IMakeRequest = {
       url: ['round'],
       params: params as any,
-    };
-    return await super.make_request<any>(this.name, model);
-  }
-
-  static async createShift(data: any) {
-    const model: IMakeRequest = {
-      url: ['activity'],
-      method: REQUEST_METHODS.POST,
-      data,
     };
     return await super.make_request<any>(this.name, model);
   }
@@ -198,6 +197,48 @@ export class ShiftService extends BaseService {
   static async getRoundById(id: string) {
     const model: IMakeRequest = {
       url: ['round', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async createActivity(data: any) {
+    const model: IMakeRequest = {
+      url: ['activity'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateActivity(data: any, id: string) {
+    const model: IMakeRequest = {
+      url: ['activity', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteActivity(id: string) {
+    const model: IMakeRequest = {
+      url: ['activity', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async getActivities(params: IPagination = { page: 1, items: 20 }) {
+    const model: IMakeRequest = {
+      url: ['activity'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getActivityById(id: string) {
+    const model: IMakeRequest = {
+      url: ['activity', id],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<any>(this.name, model);

@@ -54,9 +54,17 @@ export const PAGES_LIST_ROUTER = {
           base: '/places/create',
           to: '/rounds/places/update/:id',
         },
-        shiftsCreate: {
-          base: '/shifts/create',
-          to: '/rounds/shifts/create',
+        activity: {
+          base: '/activity',
+          to: '/rounds/activity',
+        },
+        activityCreate: {
+          base: '/activity/create',
+          to: '/rounds/activity/create',
+        },
+        activityUpdate: {
+          base: '/activity/update',
+          to: '/rounds/activity/update/:id',
         },
         projects: {
           base: '/projects',

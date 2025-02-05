@@ -35,7 +35,8 @@ import { SalesSettingPage } from './sales/sales/sales';
 import { ResourcesSettingPage } from './asociate/resource/resource';
 import { PlacesSettingPage } from './shifts/places/places';
 import { PlaceCreateSettingPage } from './shifts/places/create/create';
-import { ShiftsSettingPage } from './shifts/shifts/shifts';
+import { ActivitySettingPage } from './shifts/activity/activity';
+import { ActivityCreateSettingPage } from './shifts/activity/create/create';
 import { ProjectsSettingPage } from './shifts/projects/projects';
 import { ProjectCreateSettingPage } from './shifts/projects/create/create';
 import { ResourceSettingPage } from './access/resource/resource';
@@ -241,9 +242,21 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.shiftsCreate.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.activity.to}
           component={lazy(() =>
-            Promise.resolve({ default: ShiftsSettingPage })
+            Promise.resolve({ default: ActivitySettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.activityCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ActivityCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.activityUpdate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ActivityCreateSettingPage })
           )}
         />
         <Route

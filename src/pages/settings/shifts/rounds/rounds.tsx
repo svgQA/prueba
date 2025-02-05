@@ -54,8 +54,6 @@ export const RoundsSettingPage: FunctionComponent = () => {
       };
     });
 
-    console.log('request', rounds);
-
     setRounds(rounds);
   };
 

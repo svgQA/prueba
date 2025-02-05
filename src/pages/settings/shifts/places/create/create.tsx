@@ -354,7 +354,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
 
               <Map
                 name='Map'
-                pointsAmount={3}
+                pointsAmount={1}
                 sendPoints={(data) => {
                   const result = sendPointsRef(data);
                   form.change('latitude', result?.lat);
@@ -367,6 +367,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 radialPoint={null}
                 errorRadialPoint=''
                 draggable={true}
+                width='100%'
                 clickPoint={() => {}}
               />
               {/** PUNTOS DE TRABAJO */}

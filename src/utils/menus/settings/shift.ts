@@ -25,9 +25,9 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
     {
       icon: '240',
       label: 'Shifts',
-      description: 'Rondas',
+      description: 'Turnos',
       base,
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.shiftsCreate.base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.activity.base,
       id: 'shifts',
     },
     {
