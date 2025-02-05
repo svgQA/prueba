@@ -47,7 +47,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
 
   const onSubmit = async (model: FormData) => {
-    console.log('points,', points.value);
+    let request;
+    let message: string;
     if (!points.value.length) {
       return toast.warning('Ingrese puntos en el mapa', {
         position: 'top-right',
@@ -62,12 +63,16 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         }
       );
     }
-    const request = await ShiftService.createRound(model);
-    if (!request.getStatus()) return;
+    if (id) {
+      request = await ShiftService.updateRound(model, id);
+      message = 'Ronda editada exitosamente!';
+    } else {
+      request = await ShiftService.createRound(model);
+      message = 'Ronda creada exitosamente!';
+    }
 
-    toast.success('Ronda creado exitosamente!', {
-      position: 'top-right',
-    });
+    if (!request.getStatus()) return;
+    toast.success(message, { position: 'top-right' });
 
     navigate('/rounds');
   };
@@ -111,9 +116,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     points.value = [];
   };
 
+  const created = async () => {
+    await getPlaces();
+    await setInitialValues();
+  };
+
   useEffect(() => {
-    getPlaces();
-    setInitialValues();
+    created();
   }, []);
 
   return (

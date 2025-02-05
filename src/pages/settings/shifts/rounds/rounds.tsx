@@ -40,8 +40,8 @@ export const RoundsSettingPage: FunctionComponent = () => {
         const marker = {
           id: point.id,
           position: {
-            lat: Number(point.latitude),
-            lng: Number(point.longitude),
+            lat: point.latitude,
+            lng: point.longitude,
           },
         };
 
@@ -53,6 +53,8 @@ export const RoundsSettingPage: FunctionComponent = () => {
         ...item,
       };
     });
+
+    console.log('request', rounds);
 
     setRounds(rounds);
   };
