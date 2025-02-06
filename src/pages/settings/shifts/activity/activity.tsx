@@ -2,11 +2,12 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { Place } from './utils/places';
-import { columns } from './components/places.columns';
+import { columns } from './components/activity.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
+import { useSignal, Signal } from '@preact/signals';
+
 import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 
@@ -15,50 +16,60 @@ import {
   setMenu,
 } from '../../store/settings';
 
+export interface IActivity {
+  id: number;
+  start: number;
+  end: number;
+  roundId: number;
+  projectId: number;
+  status: string;
+  type: string;
+}
+
 export interface IRowActionPlace {
   id: string;
   type: string;
   action: ROW_ACTIONS;
 }
 
-export const PlacesSettingPage: FunctionComponent = () => {
+export const ActivitySettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const [places, setPlaces] = useState([]);
+  const activity: Signal<IActivity[]> = useSignal([]);
 
   useEffect(() => {
-    document.title = 'VX - Place Service';
-    getPlaces();
+    document.title = 'VX - Activity Service';
+    getActivities();
   }, []);
 
-  const getPlaces = async () => {
-    const request: any = await ShiftService.getPlaces();
-    setPlaces(request.data);
+  const getActivities = async () => {
+    const request: any = await ShiftService.getActivities();
+    activity.value = request.data;
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de lugar' });
-    navigate('/rounds/places/create');
+    setMenu({ ...infoMenu.value, label: 'Creacion de turno' });
+    navigate('/rounds/activity/create');
   };
 
-  const deletePlace = async (id: string) => {
-    const request = await ShiftService.deletePlace(id);
+  const updateActivity = (id: string) => {
+    setMenu({ ...infoMenu.value, label: 'Editar turno' });
+    navigate(`/rounds/activity/update/${id}`);
+  };
+
+  const deleteActivity = async (id: string) => {
+    const request = await ShiftService.deleteActivity(id);
     if (!request.getStatus()) return;
-    toast.success('Lugar eliminado', { position: 'top-right' });
-    getPlaces();
+    toast.success('Turno eliminado', { position: 'top-right' });
+    getActivities();
   };
 
-  const update = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar lugar' });
-    navigate(`/rounds/places/update/${id}`);
-  };
   const handleOnClick = async (action: IRowActionPlace | any) => {
-    console.log(action);
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
-        update(action.id);
+        updateActivity(action.id);
         break;
       case ROW_ACTIONS.DELETE:
-        await deletePlace(action.id);
+        await deleteActivity(action.id);
         break;
     }
   };
@@ -74,15 +85,17 @@ export const PlacesSettingPage: FunctionComponent = () => {
           rounded={true}
           className='w-auto'
         />
-        <Table<Place>
-          data={places}
+        <Table<IActivity>
+          data={activity.value}
           columns={columns}
           pageSize={20}
           visibility={{
-            address: true,
-            name: true,
-            description: true,
-            action: true,
+            start: true,
+            end: true,
+            roundId: true,
+            projectId: true,
+            status: true,
+            type: true,
           }}
           onClickAction={handleOnClick}
           unsearch={false}

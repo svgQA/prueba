@@ -1,44 +1,49 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Place } from '../utils/places';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { IActivity } from '../activity';
 
-export const columns: ColumnDef<Place>[] = [
+export const columns: ColumnDef<IActivity>[] = [
   {
     id: 'id',
     accessorKey: 'id',
     size: 60,
-
-    header: 'ID',
+    header: 'Id',
   },
   {
-    id: 'name',
-    accessorKey: 'name',
+    id: 'start',
+    accessorKey: 'start',
     size: 60,
-    header: 'Nombre',
+    header: 'Inicio',
   },
   {
-    id: 'code',
-    accessorKey: 'code',
+    id: 'end',
+    accessorKey: 'end',
     size: 60,
-    header: 'Descripción',
+    header: 'Fin',
   },
   {
-    id: 'latitude',
-    accessorKey: 'latitude',
+    id: 'roundId',
+    accessorKey: 'roundId',
     size: 60,
-    header: 'Latitud',
+    header: 'Ronda',
   },
   {
-    id: 'longitude',
-    accessorKey: 'longitude',
+    id: 'projectId',
+    accessorKey: 'projectId',
     size: 60,
-    header: 'Longitud',
+    header: 'Proyecto',
   },
   {
-    id: 'address',
-    accessorKey: 'address',
-    size: 180,
-    header: 'Dirección',
+    id: 'status',
+    accessorKey: 'status',
+    size: 60,
+    header: 'Estado',
+  },
+  {
+    id: 'type',
+    accessorKey: 'type',
+    size: 60,
+    header: 'Tipo',
   },
   {
     id: 'actions',

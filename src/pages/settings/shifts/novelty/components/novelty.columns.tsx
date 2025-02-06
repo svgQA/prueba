@@ -1,8 +1,8 @@
-import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { Round } from '../utils/rounds';
 import { ColumnDef } from '@tanstack/react-table';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { INovelty } from '../novelty';
 
-export const columns: ColumnDef<Round>[] = [
+export const columns: ColumnDef<INovelty>[] = [
   {
     id: 'id',
     accessorKey: 'id',
@@ -12,14 +12,28 @@ export const columns: ColumnDef<Round>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    size: 180,
+    size: 60,
     header: 'Nombre',
   },
   {
-    id: 'frequency',
-    accessorKey: 'frequency',
+    id: 'description',
+    accessorKey: 'description',
+    size: 60,
+    header: 'Descripción',
+  },
+  {
+    id: 'priority',
+    accessorKey: 'priority',
     size: 180,
-    header: 'Frecuencia',
+    header: 'prioridad',
+    cell: (info) => {
+      const value = info.getValue() as string;
+      return (
+        <span className={`px-2 py-1 rounded bg-secondary text-white`}>
+          {value}
+        </span>
+      );
+    },
   },
   {
     id: 'actions',
@@ -31,13 +45,13 @@ export const columns: ColumnDef<Round>[] = [
           <span
             className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
             data-id={id}
-            data-type='shift'
+            data-type='place-update'
             data-action={ROW_ACTIONS.UPDATE}
           ></span>
           <span
             className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
             data-id={id}
-            data-type='shift'
+            data-type='place-delete'
             data-action={ROW_ACTIONS.DELETE}
           ></span>
         </div>

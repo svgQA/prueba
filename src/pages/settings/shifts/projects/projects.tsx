@@ -2,11 +2,12 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { Place } from './utils/places';
 import { columns } from './components/places.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
+import { useSignal, Signal } from '@preact/signals';
+
 import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 
@@ -15,50 +16,60 @@ import {
   setMenu,
 } from '../../store/settings';
 
+export interface IProject {
+  id: number;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  state: string;
+  priority: string;
+}
+
 export interface IRowActionPlace {
   id: string;
   type: string;
   action: ROW_ACTIONS;
 }
 
-export const PlacesSettingPage: FunctionComponent = () => {
+export const ProjectsSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const [places, setPlaces] = useState([]);
+  const projects: Signal<IProject[]> = useSignal([]);
 
   useEffect(() => {
-    document.title = 'VX - Place Service';
-    getPlaces();
+    document.title = 'VX - Project Service';
+    getProjects();
   }, []);
 
-  const getPlaces = async () => {
-    const request: any = await ShiftService.getPlaces();
-    setPlaces(request.data);
+  const getProjects = async () => {
+    const request: any = await ShiftService.getProjects();
+    projects.value = request.data;
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de lugar' });
-    navigate('/rounds/places/create');
+    setMenu({ ...infoMenu.value, label: 'Creacion de proyecto' });
+    navigate('/rounds/project/create');
   };
 
-  const deletePlace = async (id: string) => {
-    const request = await ShiftService.deletePlace(id);
+  const editProject = (id: string) => {
+    setMenu({ ...infoMenu.value, label: 'Editar proyecto' });
+    navigate(`/rounds/project/edit/${id}`);
+  };
+
+  const deleteProject = async (id: string) => {
+    const request = await ShiftService.deleteProject(id);
     if (!request.getStatus()) return;
     toast.success('Lugar eliminado', { position: 'top-right' });
-    getPlaces();
+    getProjects();
   };
 
-  const update = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar lugar' });
-    navigate(`/rounds/places/update/${id}`);
-  };
   const handleOnClick = async (action: IRowActionPlace | any) => {
-    console.log(action);
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
-        update(action.id);
+        editProject(action.id);
         break;
       case ROW_ACTIONS.DELETE:
-        await deletePlace(action.id);
+        await deleteProject(action.id);
         break;
     }
   };
@@ -74,14 +85,17 @@ export const PlacesSettingPage: FunctionComponent = () => {
           rounded={true}
           className='w-auto'
         />
-        <Table<Place>
-          data={places}
+        <Table<IProject>
+          data={projects.value}
           columns={columns}
           pageSize={20}
           visibility={{
-            address: true,
             name: true,
             description: true,
+            startDate: true,
+            endDate: true,
+            state: true,
+            priority: true,
             action: true,
           }}
           onClickAction={handleOnClick}

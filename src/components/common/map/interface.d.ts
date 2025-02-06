@@ -12,6 +12,10 @@ export interface IMapProps extends IComponentProps {
   width?: string;
   height?: string;
   clickPoint?: (data: any) => void;
+  center?: {
+    lat: number;
+    lng: number;
+  };
 }
 
 export interface Marker {

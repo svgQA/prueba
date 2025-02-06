@@ -2,11 +2,12 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { Place } from './utils/places';
-import { columns } from './components/places.columns';
+import { columns } from './components/novelty.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
+import { useSignal, Signal } from '@preact/signals';
+
 import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 
@@ -15,50 +16,57 @@ import {
   setMenu,
 } from '../../store/settings';
 
+export interface INovelty {
+  id: number;
+  name: string;
+  description: string;
+  priority: string;
+}
+
 export interface IRowActionPlace {
   id: string;
   type: string;
   action: ROW_ACTIONS;
 }
 
-export const PlacesSettingPage: FunctionComponent = () => {
+export const NoveltySettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const [places, setPlaces] = useState([]);
+  const novelties: Signal<INovelty[]> = useSignal([]);
 
   useEffect(() => {
-    document.title = 'VX - Place Service';
-    getPlaces();
+    document.title = 'VX - Novelty Service';
+    getNovelties();
   }, []);
 
-  const getPlaces = async () => {
-    const request: any = await ShiftService.getPlaces();
-    setPlaces(request.data);
+  const getNovelties = async () => {
+    const request: any = await ShiftService.getNovelty();
+    novelties.value = request.data;
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de lugar' });
-    navigate('/rounds/places/create');
-  };
-
-  const deletePlace = async (id: string) => {
-    const request = await ShiftService.deletePlace(id);
-    if (!request.getStatus()) return;
-    toast.success('Lugar eliminado', { position: 'top-right' });
-    getPlaces();
+    setMenu({ ...infoMenu.value, label: 'Creacion de novedad' });
+    navigate('/rounds/novelty/create');
   };
 
   const update = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar lugar' });
-    navigate(`/rounds/places/update/${id}`);
+    setMenu({ ...infoMenu.value, label: 'Editar novedad' });
+    navigate(`/rounds/novelty/update/${id}`);
   };
+
+  const deleteNovelty = async (id: string) => {
+    const request = await ShiftService.deleteNovelty(id);
+    if (!request.getStatus()) return;
+    toast.success('Novedad eliminado', { position: 'top-right' });
+    getNovelties();
+  };
+
   const handleOnClick = async (action: IRowActionPlace | any) => {
-    console.log(action);
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
         update(action.id);
         break;
       case ROW_ACTIONS.DELETE:
-        await deletePlace(action.id);
+        await deleteNovelty(action.id);
         break;
     }
   };
@@ -74,14 +82,14 @@ export const PlacesSettingPage: FunctionComponent = () => {
           rounded={true}
           className='w-auto'
         />
-        <Table<Place>
-          data={places}
+        <Table<INovelty>
+          data={novelties.value}
           columns={columns}
           pageSize={20}
           visibility={{
-            address: true,
             name: true,
             description: true,
+            priority: true,
             action: true,
           }}
           onClickAction={handleOnClick}
