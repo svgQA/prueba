@@ -69,7 +69,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
 
             return errors;
           }}
-          render={({ handleSubmit, form, submitting, pristine, values }) => (
+          render={({ handleSubmit, form, submitting, pristine }) => (
             <form onSubmit={handleSubmit} className='space-y-6'>
               {/** FORMULARIO PRINCIPAL */}
               <div className='grid grid-cols-4 gap-3'>
@@ -91,14 +91,13 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                     name='priority'
                     parse={(value) => (value ? Number(value) : undefined)}
                   >
-                    {({ input, meta }) => {
+                    {({ input }) => {
                       return (
                         <div>
                           <Select
                             {...input}
                             placeholder='Selecione prioridad...'
                             label='Prioridad'
-                            meta={meta}
                             name='priority'
                             icon='252'
                             options={Array.from({ length: 10 }, (_, i) => ({

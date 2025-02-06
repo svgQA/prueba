@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IActivity } from '../activity';
-import dayjs from 'dayjs';
 
 export const columns: ColumnDef<IActivity>[] = [
   {
