@@ -40,6 +40,12 @@ export class ShiftService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
+  static async getWorkPointsByPlaceId(placeId: number) {
+    const model: IMakeRequest = {
+      url: ['place/workstation', `${placeId}`],
+    };
+    return await super.make_request<any>(this.name, model);
+  }
 
   static async getProjects(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
@@ -197,6 +203,14 @@ export class ShiftService extends BaseService {
   static async getRoundById(id: string) {
     const model: IMakeRequest = {
       url: ['round', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getWorkPointById(id: number) {
+    const model: IMakeRequest = {
+      url: ['place/workstationid', `${id}`],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<any>(this.name, model);

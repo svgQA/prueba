@@ -34,7 +34,7 @@ interface FormData {
   type?: string;
   municipalityId: number;
   projectId: number;
-  workstations?: Workstation[];
+  workstation?: Workstation[];
 }
 
 interface SelectOption {
@@ -122,7 +122,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const setInitialValues = async () => {
     if (!id) {
       initialValues.value = {
-        workstations: [],
+        workstation: [],
       };
     } else {
       const userKeys = [
@@ -140,6 +140,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       ] as const;
 
       const request: any = await ShiftService.getPlaceById(id);
+      console.log('request ==>', request);
       const model = pick(omitBy(request.model, isNull), userKeys);
       initialValues.value = model;
     }
@@ -372,7 +373,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               />
               {/** PUNTOS DE TRABAJO */}
 
-              <FieldArray name='workstations'>
+              <FieldArray name='workstation'>
                 {({ fields }) => (
                   <div>
                     <h3 className='text-lg dark:text-white font-medium text-gray-900 text-center p5'>
