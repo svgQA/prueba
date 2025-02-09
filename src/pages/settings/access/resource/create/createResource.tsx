@@ -1,20 +1,9 @@
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { FunctionComponent } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks'; //v
-import { useLocation } from 'wouter'; //vvv
+import { useEffect, useRef } from 'preact/hooks';
 
 export const CreateResourceSettingPage: FunctionComponent = () => {
-  //vvv
-  const [location] = useLocation();
-  const params = new URLSearchParams(location.split('?')[1]);
-
-  //vvv
-  const [title, setTitle] = useState(params.get('title') || '');
-  const [subtitle, setSubtitle] = useState(params.get('subtitle') || '');
-  const [image, setImage] = useState(params.get('imageUrl') || '');
-  console.log(params.get('title'));
-
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClickSubir = () => {
@@ -25,8 +14,6 @@ export const CreateResourceSettingPage: FunctionComponent = () => {
     const file = event.target.files[0];
     if (file) {
       console.log('Archivo seleccionado:', file.name);
-      //vvv
-      setImage(URL.createObjectURL(file)); // Para mostrar la imagen seleccionada
     }
   };
 
@@ -36,30 +23,16 @@ export const CreateResourceSettingPage: FunctionComponent = () => {
     <section className='flex flex-row'>
       <div className='w-full'>
         <div>
-          {/* <h1 className='text-cyan-500 text-lg py-6'>Crear Recurso</h1> */}
-          <h1 className='text-cyan-500 text-lg py-6'>
-            {title ? 'Editar Recurso' : 'Crear Recurso'}
-          </h1>{' '}
-          //vvv
+          <h1 className='text-cyan-500 text-lg py-6'>Crear Recurso</h1>
         </div>
         <div className='flex flex-col gap-1 w-10/12'>
-          <Input
-            type='text'
-            placeholder='Agregar Título'
-            name='name'
-            value={title} //vvv
-            onChange={(e) => setTitle((e.target as HTMLInputElement).value)} //vvv
-          />
+          <Input type='text' placeholder='Agregar Título' name='name' />
 
           <textarea
             id='message'
             rows={6}
             class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-sm border border-gray-300 focus:border-cyan-500 my-4'
             placeholder='Descripción'
-            value={subtitle} //vvv
-            onChange={(e) =>
-              setSubtitle((e.target as HTMLTextAreaElement).value)
-            } //vvv
           ></textarea>
 
           <div>
@@ -89,7 +62,6 @@ export const CreateResourceSettingPage: FunctionComponent = () => {
               className='hidden'
               onChange={handleFileChange}
               accept='image/*'
-              value={image} //vvv
             />
           </div>
 
@@ -105,8 +77,7 @@ export const CreateResourceSettingPage: FunctionComponent = () => {
               id='setting-create'
               name='setting-create'
               type='button'
-              // label='Crear Recurso'
-              label={title ? 'Guardar Cambios' : 'Crear Recurso'} //vvv
+              label='Crear Recurso'
               className='w-48 text-white bg-cyan-500'
             />
           </div>

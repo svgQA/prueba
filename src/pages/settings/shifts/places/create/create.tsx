@@ -16,7 +16,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     deparment: '',
     municipality: '',
     type: '',
-    address: ''
+    address: '',
   });
   const [_, navigate] = useLocation();
   const [departments, setDepartments] = useState([]);
@@ -36,26 +36,26 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     const typesRef: any = [
       {
         value: 'INDUSTRIAL',
-        label: 'Industrial'
+        label: 'Industrial',
       },
       {
         value: 'RESIDENTIAL',
-        label: 'Residencial'
+        label: 'Residencial',
       },
       {
         value: 'OTHER',
-        label: 'Otros'
-      }
+        label: 'Otros',
+      },
     ];
 
-    setTypes(typesRef)
-  }
+    setTypes(typesRef);
+  };
 
   const getProjects = async () => {
     const request: any = await ShiftService.getProjects();
 
-    console.log('getProjects:', request.data)
-  }
+    console.log('getProjects:', request.data);
+  };
 
   const getDepartments = async () => {
     const request: any = await ShiftService.getDepartments();
@@ -64,11 +64,11 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       return {
         ...item,
         value: item.id,
-        label: item.name
-      }
-    })
+        label: item.name,
+      };
+    });
     setDepartments(requestRef);
-  }
+  };
 
   const getMunicipalities = async (id: string) => {
     const request: any = await ShiftService.getMunicipalities(id);
@@ -77,12 +77,12 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       return {
         ...item,
         label: item.name,
-        value: item.id
-      }
+        value: item.id,
+      };
     });
 
-    setMunicipalities(requestRef)
-  }
+    setMunicipalities(requestRef);
+  };
 
   const handleFormatInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -110,7 +110,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       type: formData.type,
       municipalityId: Number(formData.deparment),
       projectId: 1,
-      workstation: []
+      workstation: [],
     };
 
     const request = await ShiftService.createPlace({
@@ -131,11 +131,11 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const selectDepartment = async (event: any) => {
     handleFormatInputChange(event);
     await getMunicipalities(event.target.value);
-  }
+  };
 
   const selectMunicipality = async (event: any) => {
     handleFormatInputChange(event);
-  }
+  };
 
   return (
     <section className='flex flex-row'>

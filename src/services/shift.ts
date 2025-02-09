@@ -49,7 +49,10 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getMunicipalities(id: string, params: IPagination = { page: 1, items: 10 }) {
+  static async getMunicipalities(
+    id: string,
+    params: IPagination = { page: 1, items: 10 }
+  ) {
     const model: IMakeRequest = {
       url: ['place/municipalities', id],
       params: params as any,
