@@ -214,13 +214,6 @@ export const PAGES_LIST_ROUTER = {
           to: '/iot/channels',
         },
       },
-      optimus: {
-        base: '/optimus',
-        resource: {
-          base: '/',
-          to: '/optimus',
-        },
-      },
     },
   },
 };
