@@ -164,6 +164,10 @@ export const PAGES_LIST_ROUTER = {
           base: '/place',
           to: '/access/place',
         },
+        information: {
+          base: '/information',
+          to: '/access/information',
+        },
         createResource: {
           base: '/create',
           to: '/access/createResource',
@@ -175,6 +179,10 @@ export const PAGES_LIST_ROUTER = {
         createPlaces: {
           base: '/create',
           to: '/access/createPlaces',
+        },
+        createInformation: {
+          base: '/create',
+          to: '/access/createInformation',
         },
       },
       ia: {
