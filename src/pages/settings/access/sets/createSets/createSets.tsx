@@ -1,5 +1,6 @@
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
+import { TextArea } from '@/components/common/text.area/text.area';
 import { FunctionComponent } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
@@ -27,35 +28,22 @@ export const CreateSetsSettingPage: FunctionComponent = () => {
         </div>
         <div className='flex flex-col gap-1 w-10/12'>
           <Input type='text' placeholder='Agregar Título' name='name' />
-
-          <textarea
-            id='message'
-            rows={6}
-            class='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-sm border border-gray-300 focus:border-cyan-500 my-4'
+          <TextArea
+            id='Description'
+            name='name'
+            className='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-sm border border-gray-300 focus:border-cyan-500 my-4'
             placeholder='Descripción'
-          ></textarea>
-
+          />
           <div>
-            <button
+            <Button
               onClick={handleClickSubir}
-              className=' text-gray-800  py-2 px-4 hover:bg-gray-100 transition-opacity focus:border-cyan-500'
-            >
-              <svg
-                className='w-5 h-5 mr-2 inline-block'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12'
-                />
-              </svg>
-              Subir Imagen
-            </button>
+              className=' text-gray-500  py-2 px-4 hover:bg-gray-100 transition-opacity focus:border-cyan-500'
+              id='setting-create'
+              name='setting-create'
+              type='button'
+              label='Subir Imagen'
+              icon='187'
+            />
             <input
               type='file'
               ref={fileInputRef}

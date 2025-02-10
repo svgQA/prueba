@@ -21,6 +21,7 @@ export const TextArea = ({
   borderless,
   thin,
   disabled,
+  className,
   ...props
 }: ITextAreaProps) => {
   return (
