@@ -36,7 +36,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       description: 'Contratos',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.projects.base,
-      id: 'projects',
+      id: 'contracts',
     },
     {
       icon: '067',
