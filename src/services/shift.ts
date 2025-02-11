@@ -8,7 +8,7 @@ import {
 } from '@/utils/network/types';
 
 interface IPaginationPlace extends IPagination {
-  projectId?: number;
+  contractId?: number;
 }
 
 interface IPaginationRound extends IPagination {
@@ -58,7 +58,7 @@ export class ShiftService extends BaseService {
 
   static async getProjects(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
-      url: ['project'],
+      url: ['contract'],
       params: params as any,
     };
     return await super.make_request<any>(this.name, model);
@@ -110,7 +110,7 @@ export class ShiftService extends BaseService {
 
   static async deleteProject(id: string) {
     const model: IMakeRequest = {
-      url: ['project', id],
+      url: ['contract', id],
       method: REQUEST_METHODS.DELETE,
     };
     return await super.make_request(this.name, model);
@@ -118,7 +118,7 @@ export class ShiftService extends BaseService {
 
   static async createProject(data: any) {
     const model: IMakeRequest = {
-      url: ['project'],
+      url: ['contract'],
       method: REQUEST_METHODS.POST,
       data,
     };
@@ -127,7 +127,7 @@ export class ShiftService extends BaseService {
 
   static async updateProject(data: any, id: string) {
     const model: IMakeRequest = {
-      url: ['project', id],
+      url: ['contract', id],
       method: REQUEST_METHODS.PUT,
       data,
     };
@@ -136,7 +136,7 @@ export class ShiftService extends BaseService {
 
   static async getProject(id: string) {
     const model: IMakeRequest = {
-      url: ['project', id],
+      url: ['contract', id],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<any>(this.name, model);

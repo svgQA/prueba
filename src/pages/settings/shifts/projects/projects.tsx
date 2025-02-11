@@ -47,19 +47,19 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de proyecto' });
+    setMenu({ ...infoMenu.value, label: 'Creacion de contrato' });
     navigate('/rounds/project/create');
   };
 
   const editProject = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar proyecto' });
+    setMenu({ ...infoMenu.value, label: 'Editar contrato' });
     navigate(`/rounds/project/edit/${id}`);
   };
 
   const deleteProject = async (id: string) => {
     const request = await ShiftService.deleteProject(id);
     if (!request.getStatus()) return;
-    toast.success('Lugar eliminado', { position: 'top-right' });
+    toast.success('Lugar contrato', { position: 'top-right' });
     getProjects();
   };
 
