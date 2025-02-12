@@ -51,6 +51,8 @@ import { ServiceSettingPage } from './shifts/service/service';
 import { ServiceCreateSettingPage } from './shifts/service/create/service';
 import { TaskSettingPage } from './shifts/task/task';
 import { TaskCreateSettingPage } from './shifts/task/create/task';
+import { ScheduleSettingPage } from './shifts/schedule/schedule';
+import { ScheduleCreateSettingPage } from './shifts/schedule/create/schedule';
 export const RoutingContent = memo(() => {
   const content = (
     <Router base={PAGES_LIST_ROUTER.dashboard.setting.base}>
@@ -333,6 +335,25 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.task.update.to}
           component={lazy(() =>
             Promise.resolve({ default: TaskCreateSettingPage })
+          )}
+        />
+        {/* TASK MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduleSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduleCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduleCreateSettingPage })
           )}
         />
         {/* SALES MENU */}

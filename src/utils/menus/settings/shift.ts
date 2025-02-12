@@ -49,10 +49,18 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
     {
       icon: '064',
       label: 'Services',
-      description: 'services',
+      description: 'Servicios',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.base,
       id: 'services',
+    },
+    {
+      icon: '064',
+      label: 'schedule',
+      description: 'Horarios',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.base,
+      id: 'schedule',
     },
   ],
 };

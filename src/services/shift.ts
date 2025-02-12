@@ -308,4 +308,46 @@ export class ShiftService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
+
+  static async createSchedule(data: any) {
+    const model: IMakeRequest = {
+      url: ['schedule'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateSchedule(data: any, id: string) {
+    const model: IMakeRequest = {
+      url: ['schedule', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteSchedule(id: string) {
+    const model: IMakeRequest = {
+      url: ['schedule', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async getSchedules(params: IPagination = { page: 1, items: 20 }) {
+    const model: IMakeRequest = {
+      url: ['schedule'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getScheduleById(id: string) {
+    const model: IMakeRequest = {
+      url: ['schedule', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
 }

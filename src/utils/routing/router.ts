@@ -57,6 +57,18 @@ export const PAGES_LIST_ROUTER = {
             to: '/rounds/service/update/:id',
           },
         },
+        schedule: {
+          base: '/schedule',
+          to: '/rounds/schedule',
+          create: {
+            base: '/schedule/create',
+            to: '/rounds/schedule/create',
+          },
+          update: {
+            base: '/schedule/update',
+            to: '/rounds/schedule/update/:id',
+          },
+        },
         task: {
           base: '/task',
           to: '/rounds/task',
