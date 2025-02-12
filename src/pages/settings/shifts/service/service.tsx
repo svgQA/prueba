@@ -2,7 +2,7 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { columns } from './components/places.columns';
+import { columns } from './components/service.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
@@ -16,13 +16,10 @@ import {
   setMenu,
 } from '../../store/settings';
 
-export interface IProject {
+export interface INovelty {
   id: number;
   name: string;
   description: string;
-  startDate: string;
-  endDate: string;
-  state: string;
   priority: string;
 }
 
@@ -32,44 +29,44 @@ export interface IRowActionPlace {
   action: ROW_ACTIONS;
 }
 
-export const ProjectsSettingPage: FunctionComponent = () => {
+export const ServiceSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const projects: Signal<IProject[]> = useSignal([]);
+  const novelties: Signal<INovelty[]> = useSignal([]);
 
   useEffect(() => {
-    document.title = 'VX - Project Service';
-    getProjects();
+    document.title = 'VX - Servie Service';
+    getNovelties();
   }, []);
 
-  const getProjects = async () => {
-    const request: any = await ShiftService.getProjects();
-    projects.value = request.data;
+  const getNovelties = async () => {
+    const request: any = await ShiftService.getNovelty();
+    novelties.value = request.data;
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de contrato' });
-    navigate('/rounds/project/create');
+    setMenu({ ...infoMenu.value, label: 'Creacion de servicio' });
+    navigate('/rounds/service/create');
   };
 
-  const editProject = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar contrato' });
-    navigate(`/rounds/project/edit/${id}`);
+  const update = (id: string) => {
+    setMenu({ ...infoMenu.value, label: 'Editar servicio' });
+    navigate(`/rounds/service/update/${id}`);
   };
 
-  const deleteProject = async (id: string) => {
-    const request = await ShiftService.deleteProject(id);
+  const deleteNovelty = async (id: string) => {
+    const request = await ShiftService.deleteNovelty(id);
     if (!request.getStatus()) return;
-    toast.success('Lugar contrato', { position: 'top-right' });
-    getProjects();
+    toast.success('Novedad eliminado', { position: 'top-right' });
+    getNovelties();
   };
 
   const handleOnClick = async (action: IRowActionPlace | any) => {
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
-        editProject(action.id);
+        update(action.id);
         break;
       case ROW_ACTIONS.DELETE:
-        await deleteProject(action.id);
+        await deleteNovelty(action.id);
         break;
     }
   };
@@ -85,16 +82,13 @@ export const ProjectsSettingPage: FunctionComponent = () => {
           rounded={true}
           className='w-auto'
         />
-        <Table<IProject>
-          data={projects.value}
+        <Table<INovelty>
+          data={novelties.value}
           columns={columns}
           pageSize={20}
           visibility={{
             name: true,
             description: true,
-            startDate: true,
-            endDate: true,
-            state: true,
             priority: true,
             action: true,
           }}

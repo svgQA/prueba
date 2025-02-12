@@ -8,7 +8,7 @@ import {
 } from '@/utils/network/types';
 
 interface IPaginationPlace extends IPagination {
-  projectId?: number;
+  contractId?: number;
 }
 
 interface IPaginationRound extends IPagination {
@@ -33,6 +33,15 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
+  static async updatePlace(data: any, id: string) {
+    const model: IMakeRequest = {
+      url: ['place', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
   static async getPlaces(params: IPaginationPlace = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
       url: ['place'],
@@ -49,7 +58,7 @@ export class ShiftService extends BaseService {
 
   static async getProjects(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
-      url: ['project'],
+      url: ['contract'],
       params: params as any,
     };
     return await super.make_request<any>(this.name, model);
@@ -101,7 +110,7 @@ export class ShiftService extends BaseService {
 
   static async deleteProject(id: string) {
     const model: IMakeRequest = {
-      url: ['project', id],
+      url: ['contract', id],
       method: REQUEST_METHODS.DELETE,
     };
     return await super.make_request(this.name, model);
@@ -109,7 +118,7 @@ export class ShiftService extends BaseService {
 
   static async createProject(data: any) {
     const model: IMakeRequest = {
-      url: ['project'],
+      url: ['contract'],
       method: REQUEST_METHODS.POST,
       data,
     };
@@ -118,7 +127,7 @@ export class ShiftService extends BaseService {
 
   static async updateProject(data: any, id: string) {
     const model: IMakeRequest = {
-      url: ['project', id],
+      url: ['contract', id],
       method: REQUEST_METHODS.PUT,
       data,
     };
@@ -127,7 +136,7 @@ export class ShiftService extends BaseService {
 
   static async getProject(id: string) {
     const model: IMakeRequest = {
-      url: ['project', id],
+      url: ['contract', id],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<any>(this.name, model);
@@ -253,6 +262,90 @@ export class ShiftService extends BaseService {
   static async getActivityById(id: string) {
     const model: IMakeRequest = {
       url: ['activity', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async createTask(data: any) {
+    const model: IMakeRequest = {
+      url: ['task'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateTask(data: any, id: string) {
+    const model: IMakeRequest = {
+      url: ['task', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteTask(id: string) {
+    const model: IMakeRequest = {
+      url: ['task', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async getTasks(params: IPagination = { page: 1, items: 20 }) {
+    const model: IMakeRequest = {
+      url: ['task'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getTaskById(id: string) {
+    const model: IMakeRequest = {
+      url: ['task', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async createSchedule(data: any) {
+    const model: IMakeRequest = {
+      url: ['schedule'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateSchedule(data: any, id: string) {
+    const model: IMakeRequest = {
+      url: ['schedule', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteSchedule(id: string) {
+    const model: IMakeRequest = {
+      url: ['schedule', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async getSchedules(params: IPagination = { page: 1, items: 20 }) {
+    const model: IMakeRequest = {
+      url: ['schedule'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getScheduleById(id: string) {
+    const model: IMakeRequest = {
+      url: ['schedule', id],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<any>(this.name, model);

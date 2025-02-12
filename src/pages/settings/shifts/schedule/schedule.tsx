@@ -2,7 +2,7 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { columns } from './components/novelty.columns';
+import { columns } from './components/schedule.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
@@ -16,11 +16,12 @@ import {
   setMenu,
 } from '../../store/settings';
 
-export interface INovelty {
+export interface ISchedule {
   id: number;
   name: string;
-  description: string;
-  priority: string;
+  day: string;
+  hourStart: string;
+  hourEnd: string;
 }
 
 export interface IRowActionPlace {
@@ -29,35 +30,35 @@ export interface IRowActionPlace {
   action: ROW_ACTIONS;
 }
 
-export const NoveltySettingPage: FunctionComponent = () => {
+export const ScheduleSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const novelties: Signal<INovelty[]> = useSignal([]);
+  const schedules: Signal<ISchedule[]> = useSignal([]);
 
   useEffect(() => {
-    document.title = 'VX - Novelty Service';
-    getNovelties();
+    document.title = 'VX - Schedule Service';
+    getSchedules();
   }, []);
 
-  const getNovelties = async () => {
-    const request: any = await ShiftService.getNovelty();
-    novelties.value = request.data;
+  const getSchedules = async () => {
+    const request: any = await ShiftService.getSchedules();
+    schedules.value = request.data;
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de novedad' });
-    navigate('/rounds/novelty/create');
+    setMenu({ ...infoMenu.value, label: 'Creacion de horarios' });
+    navigate('/rounds/schedule/create');
   };
 
   const update = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar novedad' });
-    navigate(`/rounds/novelty/update/${id}`);
+    setMenu({ ...infoMenu.value, label: 'Editar horarios' });
+    navigate(`/rounds/schedule/update/${id}`);
   };
 
-  const deleteNovelty = async (id: string) => {
-    const request = await ShiftService.deleteNovelty(id);
+  const deleteSchedule = async (id: string) => {
+    const request = await ShiftService.deleteSchedule(id);
     if (!request.getStatus()) return;
-    toast.success('Novedad eliminado', { position: 'top-right' });
-    getNovelties();
+    toast.success('horario eliminado', { position: 'top-right' });
+    getSchedules();
   };
 
   const handleOnClick = async (action: IRowActionPlace | any) => {
@@ -66,7 +67,7 @@ export const NoveltySettingPage: FunctionComponent = () => {
         update(action.id);
         break;
       case ROW_ACTIONS.DELETE:
-        await deleteNovelty(action.id);
+        await deleteSchedule(action.id);
         break;
     }
   };
@@ -82,8 +83,8 @@ export const NoveltySettingPage: FunctionComponent = () => {
           rounded={true}
           className='w-auto'
         />
-        <Table<INovelty>
-          data={novelties.value}
+        <Table<ISchedule>
+          data={schedules.value}
           columns={columns}
           pageSize={20}
           visibility={{
