@@ -11,7 +11,7 @@ import { MODAL_SETTING_IA } from './ia';
 import { MODAL_SETTING_SALES } from './sales';
 import { MODAL_SETTING_ASSOCIATE } from './asociate';
 import { MODAL_SETTING_ACCESS } from './access';
-import { MODAL_SETTING_OPTIMUS } from './optimus';
+// import { MODAL_SETTING_OPTIMUS } from './optimus';
 import { MODAL_SETTING_MEMO } from './memo';
 
 export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
@@ -27,5 +27,4 @@ export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
   MODAL_SETTING_SALES,
   MODAL_SETTING_ASSOCIATE,
   MODAL_SETTING_ACCESS,
-  MODAL_SETTING_OPTIMUS,
 ];

@@ -9,6 +9,7 @@ import {
 
 interface IPaginationPlace extends IPagination {
   contractId?: number;
+  projectId?: number;
 }
 
 interface IPaginationRound extends IPagination {

@@ -35,4 +35,5 @@ export interface IInputProps extends IComponentProps {
   buttonType?: 'button' | 'submit' | 'reset';
   normal?: boolean;
   disabled?: boolean;
+  className?: string;
 }
