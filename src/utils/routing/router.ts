@@ -38,6 +38,10 @@ export const PAGES_LIST_ROUTER = {
           base: '/create',
           to: '/round/create',
         },
+        update: {
+          base: '/update',
+          to: '/round/update/:id',
+        },
         places: {
           base: '/places',
           to: '/rounds/places',
@@ -46,9 +50,45 @@ export const PAGES_LIST_ROUTER = {
           base: '/places/create',
           to: '/rounds/places/create',
         },
-        shiftsCreate: {
-          base: '/shifts/create',
-          to: '/rounds/shifts/create',
+        placesUpdate: {
+          base: '/places/create',
+          to: '/rounds/places/update/:id',
+        },
+        activity: {
+          base: '/activity',
+          to: '/rounds/activity',
+        },
+        activityCreate: {
+          base: '/activity/create',
+          to: '/rounds/activity/create',
+        },
+        activityUpdate: {
+          base: '/activity/update',
+          to: '/rounds/activity/update/:id',
+        },
+        projects: {
+          base: '/projects',
+          to: '/rounds/projects',
+        },
+        projectCreate: {
+          base: '/project/create',
+          to: '/rounds/project/create',
+        },
+        projectUpdate: {
+          base: '/project/edit',
+          to: '/rounds/project/edit/:id',
+        },
+        novelty: {
+          base: '/novelty',
+          to: '/rounds/novelty',
+        },
+        noveltyCreate: {
+          base: '/novelty/create',
+          to: '/rounds/novelty/create',
+        },
+        noveltyUpdate: {
+          base: '/novelty/update',
+          to: '/rounds/novelty/update/:id',
         },
       },
       setting: {

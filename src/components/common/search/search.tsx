@@ -189,7 +189,7 @@ export const Search = ({
     <div
       id={id}
       name={name}
-      className='w-2/3 h-16 flex flex-row items-center border rounded-sm relative border-b-light-dark dark:border-b-dark-light bg-transparent'
+      className='flex flex-row items-center border rounded-lg  relative border-b-light-dark dark:border-b-dark-light bg-transparent'
     >
       <span className='px-2 vox-icon vx-icon-153 ' />
       <div

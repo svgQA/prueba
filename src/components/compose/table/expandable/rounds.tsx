@@ -6,6 +6,7 @@ import QRCode from 'react-qr-code';
 import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import { Button } from '@/components/common/button/button';
+import shortUUID from 'short-uuid';
 
 export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
   row,
@@ -27,12 +28,13 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
 
   const handleDownloadPDF = async () => {
     if (!qrRef.current) return;
+    console.log(qr);
 
     try {
       const qrImage = await toPng(qrRef.current);
       const pdf = new jsPDF();
 
-      pdf.addImage(qrImage, 'PNG', 10, 10, 150, 100); // Ajusta las coordenadas y tamaño según sea necesario
+      pdf.addImage(qrImage, 'PNG', 1, 5, 230, 50); // Ajusta las coordenadas y tamaño según sea necesario
 
       pdf.save('qr-code.pdf');
     } catch (error) {
@@ -42,16 +44,29 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
 
   return (
     <div>
-      <div className='flex flex-column'>
-        <div className='w-1/2'>
+      <div className='grid grid-cols-1 gap-3 border-2 border-cyan-500 '>
+        <div className=' text-center'>
           <div ref={qrRef}>
-            <h2>QR de ubicación del punto</h2>
-            <QRCode
-              size={256}
-              style={{ height: '50%', width: '50%' }}
-              value={qr}
-              viewBox={`0 0 256 256`}
-            />
+            <h1>QR de ubicación de los punto</h1>
+            <div className='grid grid-flow-col auto-cols-[200px]  gap-1  justify-center '>
+              {row.points.map((item: any, index: string) => (
+                <div class='p-1'>
+                  <QRCode
+                    size={256}
+                    id={index}
+                    style={{ height: '80%', width: '80%' }}
+                    value={JSON.stringify({
+                      roundId: row.id,
+                      uuid: shortUUID.generate(),
+                      pointId: item.id,
+                      latitude: item.latitude,
+                      longitude: item.longitude,
+                    })}
+                    viewBox={`0 0 256 256`}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
           <div>
             <Button
@@ -64,21 +79,21 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
             />
           </div>
         </div>
-        <div className='w-1/2'>
-          <div className='w-full'>
-            <Map
-              name='Map'
-              pointsAmount={100}
-              sendPoints={() => {}}
-              pointsRef={row.markers ?? []}
-              condition={true}
-              errorCondition='No tienes autorizado modificar puntos'
-              radialPoint={null}
-              errorRadialPoint=''
-              width='500px'
-              clickPoint={handlePoint}
-            />
-          </div>
+        <div className='text-center'>
+          <h2>Ubicación de los punto en mapa</h2>
+          <Map
+            name='Map'
+            pointsAmount={100}
+            sendPoints={() => {}}
+            pointsRef={row.markers ?? []}
+            center={row.markers[0].position ?? []}
+            condition={true}
+            errorCondition='No tienes autorizado modificar puntos'
+            radialPoint={null}
+            errorRadialPoint=''
+            width='100%'
+            clickPoint={handlePoint}
+          />
         </div>
       </div>
     </div>

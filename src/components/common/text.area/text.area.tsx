@@ -54,7 +54,9 @@ export const TextArea = ({
         />
         {end && icon && <span className={`vox-icon vx-icon-${icon}`} />}
       </div>
-      {meta && meta.touched && meta.error && <span>{meta?.error}</span>}
+      {meta && meta.touched && meta.error && (
+        <span className='text-red-500 text-sm'>{meta.error}</span>
+      )}
     </div>
   );
 };

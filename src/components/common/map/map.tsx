@@ -2,6 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { type IMapProps } from './interface';
 import {
   GoogleMap,
+  Polygon,
   InfoWindow,
   Marker,
   useJsApiLoader,
@@ -21,6 +22,10 @@ export const Map: FunctionComponent<IMapProps> = ({
   width,
   height,
   clickPoint,
+  center = {
+    lat: 4.670355108326989,
+    lng: -74.08689346772478,
+  },
 }) => {
   const [_, setMap] = React.useState(null);
   const [points, setPoint] = React.useState<{ id: number; position: any }[]>(
@@ -163,11 +168,6 @@ export const Map: FunctionComponent<IMapProps> = ({
     setPoint(pointsRef);
   };
 
-  const center = {
-    lat: 4.670355108326989,
-    lng: -74.08689346772478,
-  };
-
   const handleInfoWindowClose = () => {
     setActiveMarker(null);
   };
@@ -223,6 +223,17 @@ export const Map: FunctionComponent<IMapProps> = ({
           )}
         </Marker>
       ))}
+
+      <Polygon
+        paths={points.map((point) => point.position)}
+        options={{
+          fillColor: 'blue',
+          fillOpacity: 0.2,
+          strokeColor: 'blue',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+        }}
+      />
     </GoogleMap>
   ) : (
     <></>
