@@ -30,5 +30,13 @@ export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.access.place.base,
       id: 'places',
     },
+    {
+      icon: '096',
+      label: 'Information',
+      description: 'Devices',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.access.information.base,
+      id: 'information',
+    },
   ],
 };

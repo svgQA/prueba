@@ -2,8 +2,8 @@ import { Signal, useSignal } from '@preact/signals';
 import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
-import { TextArea } from '@/components/common/text.area/text.area';
-import { lengthSize } from '@/utils/utilities';
+// import { TextArea } from '@/components/common/text.area/text.area';
+import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
@@ -12,41 +12,44 @@ import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
+import dayjs from 'dayjs';
 
 interface FormData {
   name: string;
-  description: string;
-  priority: number;
+  day: string;
+  hourEnd: string;
+  hourStart: string;
 }
 
-export const NoveltyCreateSettingPage: FunctionComponent = () => {
+export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
+  const date = dayjs().format('YYYY-MM-DD');
 
   const onSubmit = async (model: FormData) => {
     let request;
     let message: string;
 
     if (id) {
-      request = await ShiftService.updateNovelty(model, id);
-      message = 'Novedad editado exitosamente!';
+      request = await ShiftService.updateSchedule(model, id);
+      message = 'Horario editado exitosamente!';
     } else {
-      request = await ShiftService.createNovelty(model);
-      message = 'Novedad creado exitosamente!';
+      request = await ShiftService.createSchedule(model);
+      message = 'Horario creado exitosamente!';
     }
 
     if (!request.getStatus()) return;
     toast.success(message, { position: 'top-right' });
-    navigate('/rounds/novelty');
+    navigate('/rounds/schedule');
   };
 
   const setInitialValues = async () => {
     if (!id) return;
 
-    const userKeys = ['name', 'description', 'priority'] as const;
+    const userKeys = ['name', 'day', 'hourStart', 'hourEnd'] as const;
 
-    const request: any = await ShiftService.getNoveltyById(id);
+    const request: any = await ShiftService.getScheduleById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
 
     initialValues.value = model;
@@ -63,18 +66,18 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
           initialValues={initialValues.value}
           validate={(values) => {
             const errors: Partial<FormData> = {};
-            if (!values.name) errors.name = 'Campo obligatorio';
-            if (!values.description) errors.description = 'Campo obligatorio';
-            if (!values.priority) errors.description = 'Campo obligatorio';
+
+            if (!values.hourStart) errors.hourStart = 'Campo obligatorio';
+            if (!values.hourEnd) errors.hourEnd = 'Campo obligatorio';
 
             return errors;
           }}
           render={({ handleSubmit, form, submitting, pristine }) => (
             <form onSubmit={handleSubmit} className='space-y-6'>
               {/** FORMULARIO PRINCIPAL */}
-              <div className='grid grid-cols-4 gap-3'>
-                <div class='col-span-3'>
-                  <Field<string> name='name' validate={lengthSize(5, 30)}>
+              <div className='grid grid-cols-2 gap-3'>
+                <div class='col-span-1'>
+                  <Field<string> name='name' validate={required}>
                     {({ input, meta }) => (
                       <Input
                         {...input}
@@ -87,43 +90,71 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
                 <div class='col-span-1'>
-                  <Field
-                    name='priority'
-                    parse={(value) => (value ? Number(value) : undefined)}
-                  >
-                    {({ input }) => {
+                  <Field<string> validate={required} name='day'>
+                    {({ input, meta }) => {
                       return (
                         <div>
                           <Select
                             {...input}
-                            placeholder='Selecione prioridad...'
-                            label='Prioridad'
-                            name='priority'
+                            meta={meta}
+                            placeholder='Selecione dia...'
+                            label='Dia'
+                            name='day'
                             icon='252'
-                            options={Array.from({ length: 10 }, (_, i) => ({
-                              value: i + 1,
-                              label: i + 1,
-                            }))}
+                            options={[
+                              { value: 'MONDAY', label: 'Lunes' },
+                              { value: 'TUESDAY', label: 'Martes' },
+                              { value: 'WEDNESDAY', label: 'Miercoles' },
+                              { value: 'THURSDAY', label: 'Jueves' },
+                              { value: 'FRIDAY', label: 'Viernes' },
+                              { value: 'SATURDAY', label: 'Sabado' },
+                              { value: 'SUNDAY', label: 'Domindo' },
+                            ]}
                           />
                         </div>
                       );
                     }}
                   </Field>
                 </div>
-                <div class='col-span-4'>
+
+                <div class='col-span-1'>
                   <Field<string>
-                    name='description'
-                    validate={lengthSize(5, 250)}
+                    name='hourStart'
+                    required={required}
+                    parse={(value) =>
+                      value ? dayjs(`${date}T${value}:00`).toISOString() : ''
+                    }
+                    format={(value) =>
+                      value ? dayjs(value).format('HH:mm') : ''
+                    }
                   >
                     {({ input, meta }) => (
-                      <TextArea
+                      <Input
                         {...input}
-                        min='3'
-                        max='300'
-                        placeholder='Ingrese Descripción...'
-                        label='Descripción'
-                        type='text'
                         meta={meta}
+                        type='time'
+                        label='Hora inicio'
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div class='col-span-1'>
+                  <Field<string>
+                    name='hourEnd'
+                    required={required}
+                    parse={(value) =>
+                      value ? dayjs(`${date}T${value}:00`).toISOString() : ''
+                    }
+                    format={(value) =>
+                      value ? dayjs(value).format('HH:mm') : ''
+                    }
+                  >
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        meta={meta}
+                        type='time'
+                        label='Hora fin'
                       />
                     )}
                   </Field>
@@ -150,6 +181,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                   disabled={submitting}
                 />
               </div>
+              {/*<pre>{JSON.stringify(values, 0, 2)}</pre>*/}
             </form>
           )}
         />

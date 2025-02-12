@@ -3,7 +3,7 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
-import { lengthSize } from '@/utils/utilities';
+import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
+import { UserService } from '@/services/user';
 import dayjs from 'dayjs';
 
 interface FormData {
@@ -21,20 +22,18 @@ interface FormData {
   endDate: string;
   state: string;
   priority: string;
+  clientId: number;
 }
 
 export const ProjectCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
+  const users = useSignal([]);
 
   const onSubmit = async (model: FormData) => {
-    const { startDate, endDate } = model;
     let request;
     let message: string;
-
-    if (startDate) model.startDate = dayjs(startDate).toISOString();
-    if (endDate) model.endDate = dayjs(endDate).toISOString();
 
     if (id) {
       request = await ShiftService.updateProject(model, id);
@@ -49,9 +48,15 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
     navigate('/rounds/projects');
   };
 
+  const getUsers = async () => {
+    const request: any = await UserService.get_all();
+    users.value = request.data.map((user: any) => {
+      return { ...user, fullname: `${user.name} ${user.surname}` };
+    });
+  };
+
   const setInitialValues = async () => {
     if (!id) return;
-
     const userKeys = [
       'name',
       'description',
@@ -59,19 +64,16 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
       'endDate',
       'state',
       'priority',
+      'clientId',
     ] as const;
 
     const request: any = await ShiftService.getProject(id);
-    const { startDate, endDate } = request.model;
     const model = pick(omitBy(request.model, isNull), userKeys);
-    if (startDate)
-      model.startDate = dayjs(startDate).format('YYYY-MM-DD HH:mm');
-    if (endDate) model.endDate = dayjs(endDate).format('YYYY-MM-DD HH:mm');
-
     initialValues.value = model;
   };
 
   useEffect(() => {
+    getUsers();
     setInitialValues();
   }, []);
   return (
@@ -90,8 +92,8 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
             <form onSubmit={handleSubmit} className='space-y-6'>
               {/** FORMULARIO PRINCIPAL */}
               <div className='grid grid-cols-2 gap-3'>
-                <div class='col-span-2'>
-                  <Field<string> name='name' validate={lengthSize(3, 30)}>
+                <div class='col-span-1'>
+                  <Field<string> name='name' validate={required}>
                     {({ input, meta }) => (
                       <Input
                         {...input}
@@ -103,11 +105,29 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                     )}
                   </Field>
                 </div>
+                <div class='col-span-1'>
+                  <Field<string> name='clientId' validate={required}>
+                    {({ input, meta }) => (
+                      <Select
+                        {...input}
+                        meta={meta}
+                        placeholder='Selecione cliente...'
+                        label='Cliente'
+                        name='Cliente'
+                        icon='252'
+                        options={users.value}
+                        optionValue='id'
+                        optionLabel='fullname'
+                        onChange={(e) => {
+                          const id = parseInt(e.currentTarget.value);
+                          input.onChange(id);
+                        }}
+                      />
+                    )}
+                  </Field>
+                </div>
                 <div class='col-span-2'>
-                  <Field<string>
-                    name='description'
-                    validate={lengthSize(3, 250)}
-                  >
+                  <Field<string> name='description' validate={required}>
                     {({ input, meta }) => (
                       <TextArea
                         {...input}
@@ -160,7 +180,14 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                 </div>
 
                 <div class='col-span-1'>
-                  <Field<string> name='startDate' validate={lengthSize(3, 30)}>
+                  <Field<string>
+                    name='startDate'
+                    validate={required}
+                    parse={(value) => (value ? dayjs(value).toISOString() : '')}
+                    format={(value) =>
+                      value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
+                    }
+                  >
                     {({ input, meta }) => (
                       <Input
                         {...input}
@@ -172,7 +199,14 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
                 <div class='col-span-1'>
-                  <Field<string> name='endDate' validate={lengthSize(3, 30)}>
+                  <Field<string>
+                    name='endDate'
+                    validate={required}
+                    parse={(value) => (value ? dayjs(value).toISOString() : '')}
+                    format={(value) =>
+                      value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
+                    }
+                  >
                     {({ input, meta }) => (
                       <Input
                         {...input}
