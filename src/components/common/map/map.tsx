@@ -2,6 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { type IMapProps } from './interface';
 import {
   GoogleMap,
+  Polygon,
   InfoWindow,
   Marker,
   useJsApiLoader,
@@ -17,6 +18,14 @@ export const Map: FunctionComponent<IMapProps> = ({
   errorCondition,
   radialPoint,
   errorRadialPoint,
+  draggable,
+  width,
+  height,
+  clickPoint,
+  center = {
+    lat: 4.670355108326989,
+    lng: -74.08689346772478,
+  },
 }) => {
   const [_, setMap] = React.useState(null);
   const [points, setPoint] = React.useState<{ id: number; position: any }[]>(
@@ -33,8 +42,8 @@ export const Map: FunctionComponent<IMapProps> = ({
   }, pointsRef);
 
   const containerStyle = {
-    width: '1100px',
-    height: '350px',
+    width: width ?? '1100px',
+    height: height ?? '350px',
   };
 
   const { isLoaded } = useJsApiLoader({
@@ -159,16 +168,13 @@ export const Map: FunctionComponent<IMapProps> = ({
     setPoint(pointsRef);
   };
 
-  const center = {
-    lat: 4.670355108326989,
-    lng: -74.08689346772478,
-  };
-
   const handleInfoWindowClose = () => {
     setActiveMarker(null);
   };
 
   const handleMarkerClick = (id: any) => {
+    const marker = points.find((item: any) => item.id === id);
+    clickPoint?.(marker);
     setActiveMarker(id);
   };
 
@@ -194,7 +200,7 @@ export const Map: FunctionComponent<IMapProps> = ({
         <Marker
           key={marker.id}
           position={marker.position}
-          draggable={true}
+          draggable={!!draggable}
           onDragEnd={(event) => handleMarkerDragEnd(event, marker.id)}
           onClick={() => handleMarkerClick(marker.id)}
           label={getTitleLabel(marker.id)}
@@ -217,6 +223,17 @@ export const Map: FunctionComponent<IMapProps> = ({
           )}
         </Marker>
       ))}
+
+      <Polygon
+        paths={points.map((point) => point.position)}
+        options={{
+          fillColor: 'blue',
+          fillOpacity: 0.2,
+          strokeColor: 'blue',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+        }}
+      />
     </GoogleMap>
   ) : (
     <></>

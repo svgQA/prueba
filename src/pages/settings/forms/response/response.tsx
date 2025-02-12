@@ -89,6 +89,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
+              disabled={getResponseMode.value?.hold}
             />
           </div>
         );
@@ -104,6 +105,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
+              disabled={getResponseMode.value?.hold}
             />
           </div>
         );
@@ -120,6 +122,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
+              disabled={getResponseMode.value?.hold}
             />
           </div>
         );
@@ -136,6 +139,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
+              disabled={getResponseMode.value?.hold}
             />
           </div>
         );
@@ -150,6 +154,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
+              disabled={getResponseMode.value?.hold}
             />
           </div>
         );
@@ -164,6 +169,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               value={element.value}
               data-page={page}
               data-section={section}
+              disabled={getResponseMode.value?.hold}
             />
           </div>
         );
@@ -178,6 +184,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               label={element.label}
               data-section={section}
               accept='image/*'
+              disabled={getResponseMode.value?.hold}
             />
           </div>
         );
@@ -192,6 +199,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               label={element.label}
               data-section={section}
               accept=':not(image/*),.pdf,.doc,.docx,.txt,.xls,.xlsx,.csv'
+              disabled={getResponseMode.value?.hold}
             />
           </div>
         );

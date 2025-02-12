@@ -25,7 +25,7 @@ export interface IActivityResponse extends IActivityRequest {
 
 export interface IPlaceRequest {
   readonly name: string;
-  readonly description: string;
+  // readonly description: string;
   readonly longitude: number;
   readonly latitude: number;
 }

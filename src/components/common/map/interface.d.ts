@@ -8,6 +8,14 @@ export interface IMapProps extends IComponentProps {
   errorCondition: string;
   radialPoint: any;
   errorRadialPoint: string;
+  draggable?: boolean;
+  width?: string;
+  height?: string;
+  clickPoint?: (data: any) => void;
+  center?: {
+    lat: number;
+    lng: number;
+  };
 }
 
 export interface Marker {

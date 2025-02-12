@@ -28,8 +28,59 @@ export const PAGES_LIST_ROUTER = {
           to: '/admin/tenant',
         },
       },
+      memo: {
+        base: '/memo',
+        novelty: {
+          base: '/novelty',
+          to: '/memo/novelty',
+          create: {
+            base: '/novelty/create',
+            to: '/memo/novelty/create',
+          },
+          update: {
+            base: '/novelty/update',
+            to: '/memo/novelty/update/:id',
+          },
+        },
+      },
       shifts: {
         base: '/rounds',
+        service: {
+          base: '/service',
+          to: '/rounds/service',
+          create: {
+            base: '/service/create',
+            to: '/rounds/service/create',
+          },
+          update: {
+            base: '/service/update',
+            to: '/rounds/service/update/:id',
+          },
+        },
+        schedule: {
+          base: '/schedule',
+          to: '/rounds/schedule',
+          create: {
+            base: '/schedule/create',
+            to: '/rounds/schedule/create',
+          },
+          update: {
+            base: '/schedule/update',
+            to: '/rounds/schedule/update/:id',
+          },
+        },
+        task: {
+          base: '/task',
+          to: '/rounds/task',
+          create: {
+            base: '/task/create',
+            to: '/rounds/task/create',
+          },
+          update: {
+            base: '/task/update',
+            to: '/rounds/task/update/:id',
+          },
+        },
         rounds: {
           base: '/',
           to: '/rounds',
@@ -37,6 +88,10 @@ export const PAGES_LIST_ROUTER = {
         create: {
           base: '/create',
           to: '/round/create',
+        },
+        update: {
+          base: '/update',
+          to: '/round/update/:id',
         },
         places: {
           base: '/places',
@@ -46,9 +101,33 @@ export const PAGES_LIST_ROUTER = {
           base: '/places/create',
           to: '/rounds/places/create',
         },
-        shiftsCreate: {
-          base: '/shifts/create',
-          to: '/rounds/shifts/create',
+        placesUpdate: {
+          base: '/places/create',
+          to: '/rounds/places/update/:id',
+        },
+        activity: {
+          base: '/activity',
+          to: '/rounds/activity',
+        },
+        activityCreate: {
+          base: '/activity/create',
+          to: '/rounds/activity/create',
+        },
+        activityUpdate: {
+          base: '/activity/update',
+          to: '/rounds/activity/update/:id',
+        },
+        projects: {
+          base: '/projects',
+          to: '/rounds/projects',
+        },
+        projectCreate: {
+          base: '/project/create',
+          to: '/rounds/project/create',
+        },
+        projectUpdate: {
+          base: '/project/edit',
+          to: '/rounds/project/edit/:id',
         },
       },
       setting: {

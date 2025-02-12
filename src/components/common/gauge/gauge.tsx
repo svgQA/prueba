@@ -5,10 +5,12 @@ export const Gauge: FunctionComponent<IGaugeProps> = ({
   progress,
   size = 10,
   stroke = 10,
+  color = 'blue', // Valor por defecto para color
 }) => (
   <div className={`flex items-center gap-2`}>
     <div className={`w-${size} h-${size} relative`}>
       <svg className='w-full h-full' viewBox='0 0 100 100'>
+        {/* Fondo del círculo */}
         <circle
           className='stroke-gray-200 dark:stroke-gray-700 fill-none'
           cx='50'
@@ -16,8 +18,9 @@ export const Gauge: FunctionComponent<IGaugeProps> = ({
           r='45'
           strokeWidth={stroke}
         />
+        {/* Progreso dinámico */}
         <circle
-          className='stroke-blue-600 fill-none'
+          className={`fill-none`}
           cx='50'
           cy='50'
           r='45'
@@ -28,6 +31,7 @@ export const Gauge: FunctionComponent<IGaugeProps> = ({
             strokeDashoffset: `${2 * Math.PI * 45 * (1 - progress / 100)}`,
             transform: 'rotate(-90deg)',
             transformOrigin: 'center',
+            stroke: color, // Usar el color dinámico para el progreso
           }}
         />
         {size >= 15 && (

@@ -57,7 +57,11 @@ export const FormInspectSettingPage: FunctionComponent = () => {
         break;
       }
       case ROW_ACTIONS.REPORT: {
-        console.log('IR PARA EL REPORTE: ');
+        setResponse(
+          { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id, hold: true },
+          response.structure
+        );
+        navigateResponse();
         break;
       }
       default: {

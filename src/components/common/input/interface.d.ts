@@ -16,7 +16,15 @@ export interface IInputProps extends IComponentProps {
   required?: boolean;
   placeholder?: string;
   icon?: string;
-  type?: 'text' | 'password' | 'number' | 'tel' | 'email' | 'time' | 'date';
+  type?:
+    | 'text'
+    | 'password'
+    | 'number'
+    | 'tel'
+    | 'email'
+    | 'time'
+    | 'date'
+    | 'datetime-local';
   meta?: FieldMetaState<string>;
   end?: boolean;
   borderless?: boolean;
@@ -26,4 +34,5 @@ export interface IInputProps extends IComponentProps {
   buttonIcon?: string;
   buttonType?: 'button' | 'submit' | 'reset';
   normal?: boolean;
+  disabled?: boolean;
 }

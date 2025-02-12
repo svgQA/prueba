@@ -15,3 +15,15 @@ export enum ACTIVITY_TYPE {
   EXTERNAL,
   INTERNAL,
 }
+
+export enum PLACE_STATUS {
+  ACTIVE,
+  INACTIVE,
+  UNCER_REVIEW,
+}
+
+export enum PLACE_TYPES {
+  INDUSTRIAL,
+  RESIDENTIAL,
+  OTHER,
+}

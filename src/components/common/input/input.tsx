@@ -26,6 +26,7 @@ export const Input = ({
   normal,
   buttonIcon = '123',
   buttonType = 'button',
+  disabled,
   ...props
 }: IInputProps) => {
   return (
@@ -59,6 +60,7 @@ export const Input = ({
           pattern={pattern}
           required={required}
           tabIndex={tabIndex}
+          disabled={disabled}
           {...props}
         />
         {button && (
@@ -74,7 +76,9 @@ export const Input = ({
           <span className={`vox-icon vx-icon-${icon}`} />
         )}
       </div>
-      {meta && meta.touched && meta.error && <span>{meta?.error}</span>}
+      {meta && meta.touched && meta.error && (
+        <span className='text-red-500 text-sm'>{meta.error}</span>
+      )}
     </div>
   );
 };

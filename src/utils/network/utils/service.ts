@@ -113,9 +113,9 @@ export class BaseService {
         body: model.data,
         method: model.method,
       });
-
       if (!response.ok) {
         const result = await response.json();
+        console.log('response error ==>', result);
         toast.error(result.error, { position: 'top-right' });
         return new GenericResponse<T>({
           code: response?.status,
@@ -141,6 +141,7 @@ export class BaseService {
         });
       }
     } catch (error: unknown) {
+      console.log('error consumiendo en BaseService =>', error);
       throw new Error('ERROR: processing response');
     } finally {
       this.closeLoading();

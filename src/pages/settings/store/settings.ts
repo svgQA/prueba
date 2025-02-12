@@ -11,6 +11,7 @@ export const menuInformationSelected = signal<IMenu>({
 });
 
 export const setMenu = (menu: IMenu) => {
+  console.log('menu', menu);
   menuInformationSelected.value = menu;
 };
 

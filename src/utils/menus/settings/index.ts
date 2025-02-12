@@ -12,6 +12,7 @@ import { MODAL_SETTING_SALES } from './sales';
 import { MODAL_SETTING_ASSOCIATE } from './asociate';
 import { MODAL_SETTING_ACCESS } from './access';
 import { MODAL_SETTING_OPTIMUS } from './optimus';
+import { MODAL_SETTING_MEMO } from './memo';
 
 export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
   MODAL_SETTING_ADMIN,
@@ -20,6 +21,7 @@ export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
   MODAL_SETTING_PAYMENT,
   MODAL_SETTING_FORM,
   MODAL_SETTING_IOT,
+  MODAL_SETTING_MEMO,
   MODAL_SETTING_SHIFT,
   MODAL_SETTING_IA,
   MODAL_SETTING_SALES,

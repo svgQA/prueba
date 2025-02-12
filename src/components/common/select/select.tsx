@@ -15,6 +15,9 @@ export const Select = ({
   borderless,
   thin,
   tabIndex,
+  disabled,
+  optionValue = 'value',
+  optionLabel = 'label',
   ...props
 }: ISelectProps) => {
   return (
@@ -43,18 +46,21 @@ export const Select = ({
           required={required}
           tabIndex={tabIndex}
           style={{ WebkitAppearance: 'none' }}
+          disabled={disabled}
           {...props}
         >
           <option value=''>{placeholder}</option>
           {options?.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
+            <option key={option[optionValue]} value={option[optionValue]}>
+              {option[optionLabel]}
             </option>
           ))}
         </select>
         {end && icon && <span className={`vox-icon vx-icon-${icon}`} />}
       </div>
-      {meta && meta.touched && meta.error && <span>{meta?.error}</span>}
+      {meta && meta.touched && meta.error && (
+        <span className='text-red-500 text-sm'>{meta.error}</span>
+      )}
     </div>
   );
 };

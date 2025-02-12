@@ -9,6 +9,7 @@ export enum RESPONSE_MODE_SERVICE {
 interface IResponseMode {
   mode: RESPONSE_MODE_SERVICE;
   id?: string;
+  hold?: boolean;
 }
 
 const response = signal<IResponse>();

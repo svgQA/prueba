@@ -189,9 +189,9 @@ export const Search = ({
     <div
       id={id}
       name={name}
-      className='w-full flex flex-row items-center border rounded-sm relative border-b-light-dark dark:border-b-dark-light bg-transparent'
+      className='flex flex-row items-center border rounded-lg  relative border-b-light-dark dark:border-b-dark-light bg-transparent'
     >
-      <span className='px-2 vox-icon vx-icon-153' />
+      <span className='px-2 vox-icon vx-icon-153 ' />
       <div
         name='input-filter-chips'
         className='flex flex-row max-w-[80%] overflow-auto'
