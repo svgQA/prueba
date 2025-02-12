@@ -266,4 +266,46 @@ export class ShiftService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
+
+  static async createTask(data: any) {
+    const model: IMakeRequest = {
+      url: ['task'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateTask(data: any, id: string) {
+    const model: IMakeRequest = {
+      url: ['task', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteTask(id: string) {
+    const model: IMakeRequest = {
+      url: ['task', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async getTasks(params: IPagination = { page: 1, items: 20 }) {
+    const model: IMakeRequest = {
+      url: ['task'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getTaskById(id: string) {
+    const model: IMakeRequest = {
+      url: ['task', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
 }

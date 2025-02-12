@@ -1,19 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { INovelty } from '../task';
+import { ITask } from '../task';
 
-export const columns: ColumnDef<INovelty>[] = [
+export const columns: ColumnDef<ITask>[] = [
   {
     id: 'id',
     accessorKey: 'id',
     size: 60,
     header: 'ID',
-  },
-  {
-    id: 'name',
-    accessorKey: 'name',
-    size: 60,
-    header: 'Nombre',
   },
   {
     id: 'description',
@@ -22,18 +16,22 @@ export const columns: ColumnDef<INovelty>[] = [
     header: 'Descripción',
   },
   {
-    id: 'priority',
-    accessorKey: 'priority',
-    size: 180,
-    header: 'prioridad',
-    cell: (info) => {
-      const value = info.getValue() as string;
-      return (
-        <span className={`px-2 py-1 rounded bg-secondary text-white`}>
-          {value}
-        </span>
-      );
-    },
+    id: 'status',
+    accessorKey: 'status',
+    size: 60,
+    header: 'Estado',
+  },
+  {
+    id: 'start',
+    accessorKey: 'start',
+    size: 60,
+    header: 'Fecha',
+  },
+  {
+    id: 'formId',
+    accessorKey: 'formId',
+    size: 60,
+    header: 'Formulario',
   },
   {
     id: 'actions',

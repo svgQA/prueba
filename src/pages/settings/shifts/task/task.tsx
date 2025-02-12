@@ -16,11 +16,12 @@ import {
   setMenu,
 } from '../../store/settings';
 
-export interface INovelty {
+export interface ITask {
   id: number;
-  name: string;
   description: string;
-  priority: string;
+  status: string;
+  formId: number;
+  start: string;
 }
 
 export interface IRowActionPlace {
@@ -31,16 +32,16 @@ export interface IRowActionPlace {
 
 export const TaskSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const novelties: Signal<INovelty[]> = useSignal([]);
+  const tasks: Signal<ITask[]> = useSignal([]);
 
   useEffect(() => {
     document.title = 'VX - Task Service';
-    getNovelties();
+    getTasks();
   }, []);
 
-  const getNovelties = async () => {
-    const request: any = await ShiftService.getNovelty();
-    novelties.value = request.data;
+  const getTasks = async () => {
+    const request: any = await ShiftService.getTasks();
+    tasks.value = request.data;
   };
 
   const redirect = () => {
@@ -53,11 +54,11 @@ export const TaskSettingPage: FunctionComponent = () => {
     navigate(`/rounds/task/update/${id}`);
   };
 
-  const deleteNovelty = async (id: string) => {
-    const request = await ShiftService.deleteNovelty(id);
+  const deleteTask = async (id: string) => {
+    const request = await ShiftService.deleteTask(id);
     if (!request.getStatus()) return;
-    toast.success('Novedad eliminado', { position: 'top-right' });
-    getNovelties();
+    toast.success('Tarea eliminado', { position: 'top-right' });
+    getTasks();
   };
 
   const handleOnClick = async (action: IRowActionPlace | any) => {
@@ -66,7 +67,7 @@ export const TaskSettingPage: FunctionComponent = () => {
         update(action.id);
         break;
       case ROW_ACTIONS.DELETE:
-        await deleteNovelty(action.id);
+        await deleteTask(action.id);
         break;
     }
   };
@@ -82,14 +83,13 @@ export const TaskSettingPage: FunctionComponent = () => {
           rounded={true}
           className='w-auto'
         />
-        <Table<INovelty>
-          data={novelties.value}
+        <Table<ITask>
+          data={tasks.value}
           columns={columns}
           pageSize={20}
           visibility={{
-            name: true,
             description: true,
-            priority: true,
+            status: true,
             action: true,
           }}
           onClickAction={handleOnClick}
