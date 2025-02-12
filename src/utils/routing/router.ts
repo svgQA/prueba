@@ -28,8 +28,47 @@ export const PAGES_LIST_ROUTER = {
           to: '/admin/tenant',
         },
       },
+      memo: {
+        base: '/memo',
+        novelty: {
+          base: '/novelty',
+          to: '/memo/novelty',
+          create: {
+            base: '/novelty/create',
+            to: '/memo/novelty/create',
+          },
+          update: {
+            base: '/novelty/update',
+            to: '/memo/novelty/update/:id',
+          },
+        },
+      },
       shifts: {
         base: '/rounds',
+        service: {
+          base: '/service',
+          to: '/rounds/service',
+          create: {
+            base: '/service/create',
+            to: '/rounds/service/create',
+          },
+          update: {
+            base: '/service/update',
+            to: '/rounds/service/update/:id',
+          },
+        },
+        task: {
+          base: '/task',
+          to: '/rounds/task',
+          create: {
+            base: '/task/create',
+            to: '/rounds/task/create',
+          },
+          update: {
+            base: '/task/update',
+            to: '/rounds/task/update/:id',
+          },
+        },
         rounds: {
           base: '/',
           to: '/rounds',
@@ -77,18 +116,6 @@ export const PAGES_LIST_ROUTER = {
         projectUpdate: {
           base: '/project/edit',
           to: '/rounds/project/edit/:id',
-        },
-        novelty: {
-          base: '/novelty',
-          to: '/rounds/novelty',
-        },
-        noveltyCreate: {
-          base: '/novelty/create',
-          to: '/rounds/novelty/create',
-        },
-        noveltyUpdate: {
-          base: '/novelty/update',
-          to: '/rounds/novelty/update/:id',
         },
       },
       setting: {

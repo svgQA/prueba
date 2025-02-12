@@ -45,8 +45,12 @@ import { PlaceSettingPage } from './access/places/places';
 import { CreateResourceSettingPage } from './access/resource/create/createResource';
 import { CreateSetsSettingPage } from './access/sets/createSets/createSets';
 import { CreatePlacesSettingPage } from './access/places/createPlaces/createPlaces';
-import { NoveltySettingPage } from './shifts/novelty/novelty';
-import { NoveltyCreateSettingPage } from './shifts/novelty/create/create';
+import { NoveltySettingPage } from './memo/novelty/novelty';
+import { NoveltyCreateSettingPage } from './memo/novelty/create/create';
+import { ServiceSettingPage } from './shifts/service/service';
+import { ServiceCreateSettingPage } from './shifts/service/create/service';
+import { TaskSettingPage } from './shifts/task/task';
+import { TaskCreateSettingPage } from './shifts/task/create/task';
 export const RoutingContent = memo(() => {
   const content = (
     <Router base={PAGES_LIST_ROUTER.dashboard.setting.base}>
@@ -278,21 +282,57 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.novelty.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.to}
           component={lazy(() =>
             Promise.resolve({ default: NoveltySettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.noveltyCreate.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.create.to}
           component={lazy(() =>
             Promise.resolve({ default: NoveltyCreateSettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.noveltyUpdate.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.update.to}
           component={lazy(() =>
             Promise.resolve({ default: NoveltyCreateSettingPage })
+          )}
+        />
+        {/* SERVICES MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.service.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ServiceSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.service.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ServiceCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.service.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ServiceCreateSettingPage })
+          )}
+        />
+        {/* TASK MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.task.to}
+          component={lazy(() => Promise.resolve({ default: TaskSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.task.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: TaskCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.task.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: TaskCreateSettingPage })
           )}
         />
         {/* SALES MENU */}

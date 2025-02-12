@@ -2,7 +2,7 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { columns } from './components/novelty.columns';
+import { columns } from './components/task.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
@@ -29,12 +29,12 @@ export interface IRowActionPlace {
   action: ROW_ACTIONS;
 }
 
-export const NoveltySettingPage: FunctionComponent = () => {
+export const TaskSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const novelties: Signal<INovelty[]> = useSignal([]);
 
   useEffect(() => {
-    document.title = 'VX - Novelty Service';
+    document.title = 'VX - Task Service';
     getNovelties();
   }, []);
 
@@ -44,13 +44,13 @@ export const NoveltySettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de novedad' });
-    navigate('/rounds/novelty/create');
+    setMenu({ ...infoMenu.value, label: 'Creacion de tarea' });
+    navigate('/rounds/task/create');
   };
 
   const update = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar novedad' });
-    navigate(`/rounds/novelty/update/${id}`);
+    setMenu({ ...infoMenu.value, label: 'Editar tarea' });
+    navigate(`/rounds/task/update/${id}`);
   };
 
   const deleteNovelty = async (id: string) => {

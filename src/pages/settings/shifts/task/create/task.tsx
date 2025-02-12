@@ -19,7 +19,7 @@ interface FormData {
   priority: number;
 }
 
-export const NoveltyCreateSettingPage: FunctionComponent = () => {
+export const TaskCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
@@ -38,7 +38,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     toast.success(message, { position: 'top-right' });
-    navigate('/rounds/novelty');
+    navigate('/memo/novelty');
   };
 
   const setInitialValues = async () => {
