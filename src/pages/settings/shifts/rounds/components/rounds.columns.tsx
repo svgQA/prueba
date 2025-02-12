@@ -16,16 +16,10 @@ export const columns: ColumnDef<Round>[] = [
     header: 'Nombre',
   },
   {
-    id: 'notifications',
-    accessorKey: 'notifications',
+    id: 'frequency',
+    accessorKey: 'frequency',
     size: 180,
     header: 'Frecuencia',
-  },
-  {
-    id: 'city',
-    accessorKey: 'city',
-    size: 180,
-    header: 'Lugar',
   },
   {
     id: 'actions',

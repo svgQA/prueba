@@ -35,7 +35,10 @@ import { SalesSettingPage } from './sales/sales/sales';
 import { ResourcesSettingPage } from './asociate/resource/resource';
 import { PlacesSettingPage } from './shifts/places/places';
 import { PlaceCreateSettingPage } from './shifts/places/create/create';
-import { ShiftsSettingPage } from './shifts/shifts/shifts';
+import { ActivitySettingPage } from './shifts/activity/activity';
+import { ActivityCreateSettingPage } from './shifts/activity/create/create';
+import { ProjectsSettingPage } from './shifts/projects/projects';
+import { ProjectCreateSettingPage } from './shifts/projects/create/create';
 import { ResourceSettingPage } from './access/resource/resource';
 import { SetsSettingPage } from './access/sets/sets';
 import { InformationSettingPage } from './access/information/information';
@@ -44,6 +47,14 @@ import { CreateResourceSettingPage } from './access/resource/create/createResour
 import { CreateSetsSettingPage } from './access/sets/createSets/createSets';
 import { CreatePlacesSettingPage } from './access/places/createPlaces/createPlaces';
 import { CreateInformationSettingPage } from './access/information/createInfo/createInfo';
+import { NoveltySettingPage } from './memo/novelty/novelty';
+import { NoveltyCreateSettingPage } from './memo/novelty/create/create';
+import { ServiceSettingPage } from './shifts/service/service';
+import { ServiceCreateSettingPage } from './shifts/service/create/service';
+import { TaskSettingPage } from './shifts/task/task';
+import { TaskCreateSettingPage } from './shifts/task/create/task';
+import { ScheduleSettingPage } from './shifts/schedule/schedule';
+import { ScheduleCreateSettingPage } from './shifts/schedule/create/schedule';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -216,6 +227,12 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: RoundCreateSettingPage })
+          )}
+        />
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.places.to}
           component={lazy(() =>
             Promise.resolve({ default: PlacesSettingPage })
@@ -228,9 +245,118 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.shiftsCreate.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.placesUpdate.to}
           component={lazy(() =>
-            Promise.resolve({ default: ShiftsSettingPage })
+            Promise.resolve({ default: PlaceCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.activity.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ActivitySettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.activityCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ActivityCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.activityUpdate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ActivityCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.projects.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ProjectsSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.projectCreate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ProjectCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.projectUpdate.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ProjectCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.to}
+          component={lazy(() =>
+            Promise.resolve({ default: NoveltySettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: NoveltyCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: NoveltyCreateSettingPage })
+          )}
+        />
+        {/* SERVICES MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.service.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ServiceSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.service.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ServiceCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.service.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ServiceCreateSettingPage })
+          )}
+        />
+        {/* TASK MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.task.to}
+          component={lazy(() => Promise.resolve({ default: TaskSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.task.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: TaskCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.task.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: TaskCreateSettingPage })
+          )}
+        />
+        {/* TASK MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduleSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduleCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduleCreateSettingPage })
           )}
         />
         {/* SALES MENU */}
