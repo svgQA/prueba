@@ -16,7 +16,7 @@ import {
   setMenu,
 } from '../../store/settings';
 
-export interface INovelty {
+export interface IServicio {
   id: number;
   name: string;
   description: string;
@@ -31,15 +31,15 @@ export interface IRowActionPlace {
 
 export const ServiceSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const novelties: Signal<INovelty[]> = useSignal([]);
+  const novelties: Signal<IServicio[]> = useSignal([]);
 
   useEffect(() => {
     document.title = 'VX - Servie Service';
-    getNovelties();
+    getServices();
   }, []);
 
-  const getNovelties = async () => {
-    const request: any = await ShiftService.getNovelty();
+  const getServices = async () => {
+    const request: any = await ShiftService.getServices();
     novelties.value = request.data;
   };
 
@@ -54,10 +54,10 @@ export const ServiceSettingPage: FunctionComponent = () => {
   };
 
   const deleteNovelty = async (id: string) => {
-    const request = await ShiftService.deleteNovelty(id);
+    const request = await ShiftService.deleteService(id);
     if (!request.getStatus()) return;
-    toast.success('Novedad eliminado', { position: 'top-right' });
-    getNovelties();
+    toast.success('Servicio eliminado', { position: 'top-right' });
+    getServices();
   };
 
   const handleOnClick = async (action: IRowActionPlace | any) => {
@@ -82,7 +82,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
           rounded={true}
           className='w-auto'
         />
-        <Table<INovelty>
+        <Table<IServicio>
           data={novelties.value}
           columns={columns}
           pageSize={20}
