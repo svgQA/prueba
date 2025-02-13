@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IActivity } from '../activity';
+import dayjs from 'dayjs';
 
 export const columns: ColumnDef<IActivity>[] = [
   {
@@ -14,24 +15,32 @@ export const columns: ColumnDef<IActivity>[] = [
     accessorKey: 'start',
     size: 60,
     header: 'Inicio',
+    cell: (info) => {
+      const dateStr = info.getValue() as string;
+      return dayjs(dateStr).format('YYYY-MM-DD HH:mm');
+    },
   },
   {
     id: 'end',
     accessorKey: 'end',
     size: 60,
     header: 'Fin',
+    cell: (info) => {
+      const dateStr = info.getValue() as string;
+      return dayjs(dateStr).format('YYYY-MM-DD HH:mm');
+    },
   },
   {
-    id: 'roundId',
-    accessorKey: 'roundId',
+    id: 'serviceId',
+    accessorKey: 'serviceId',
     size: 60,
-    header: 'Ronda',
+    header: 'Servicio',
   },
   {
-    id: 'projectId',
-    accessorKey: 'projectId',
+    id: 'employeedId',
+    accessorKey: 'employeedId',
     size: 60,
-    header: 'Proyecto',
+    header: 'Empleado',
   },
   {
     id: 'status',
