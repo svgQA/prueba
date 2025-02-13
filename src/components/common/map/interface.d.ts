@@ -16,6 +16,7 @@ export interface IMapProps extends IComponentProps {
     lat: number;
     lng: number;
   };
+  allowManualPoint?: boolean;
 }
 
 export interface Marker {

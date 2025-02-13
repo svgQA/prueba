@@ -2,7 +2,6 @@ import { Signal, useSignal } from '@preact/signals';
 import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
-// import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';

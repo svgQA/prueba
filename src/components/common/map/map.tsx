@@ -1,5 +1,7 @@
-import { type FunctionComponent } from 'preact';
-import { type IMapProps } from './interface';
+import { FunctionComponent } from 'preact';
+import { IMapProps } from './interface';
+import { Input } from '@/components/common/input/input';
+import { Button } from '@/components/common/button/button';
 import {
   GoogleMap,
   Polygon,
@@ -26,20 +28,26 @@ export const Map: FunctionComponent<IMapProps> = ({
     lat: 4.670355108326989,
     lng: -74.08689346772478,
   },
+  allowManualPoint,
 }) => {
-  const [_, setMap] = React.useState(null);
-  const [points, setPoint] = React.useState<{ id: number; position: any }[]>(
-    []
-  );
-  const [activeMarker, setActiveMarker] = useState(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [points, setPoint] = useState<
+    { id: number; position: google.maps.LatLngLiteral }[]
+  >([]);
+  const [activeMarker, setActiveMarker] = useState<number | null>(null);
+  const [coords, setCoords] = useState<{ lat: string; lng: string }>({
+    lat: '',
+    lng: '',
+  });
+  const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>(center);
 
   useEffect(() => {
     sendPoints(points);
-  }, points);
+  }, [points]);
 
   useEffect(() => {
     setPoint(pointsRef);
-  }, pointsRef);
+  }, [pointsRef]);
 
   const containerStyle = {
     width: width ?? '1100px',
@@ -51,14 +59,13 @@ export const Map: FunctionComponent<IMapProps> = ({
     googleMapsApiKey: 'AIzaSyA3gRFb6tnTOMmU3gZWaGu85gVPQ9DTpS8',
   });
 
-  const onLoad = React.useCallback(function callback(map: any) {
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-
+  const onLoad = React.useCallback((map: google.maps.Map) => {
     setMap(map);
   }, []);
 
-  const onUnmount = React.useCallback(function callback() {
+  const onUnmount = React.useCallback(() => {
+    console.log(map);
+
     setMap(null);
   }, []);
 
@@ -78,38 +85,42 @@ export const Map: FunctionComponent<IMapProps> = ({
     return R * c > 1000;
   };
 
-  const handleMapClick = (event: any) => {
-    if (condition) {
-      toast.error(`${errorCondition}`, {
-        position: 'top-right',
-      });
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: 'lat' | 'lng'
+  ) => {
+    const value = e.currentTarget.value;
+    setCoords((prev) => ({ ...prev, [type]: value }));
 
+    const newValue = parseFloat(value);
+    if (!isNaN(newValue)) {
+      setMapCenter((prev) => ({ ...prev, [type]: newValue }));
+    }
+  };
+
+  const addManualPoint = () => {
+    const lat = parseFloat(coords.lat);
+    const lng = parseFloat(coords.lng);
+    if (!isNaN(lat) && !isNaN(lng)) {
+      setMarkerOnMap(lat, lng);
+    }
+  };
+
+  const setMarkerOnMap = (lat: number, lng: number) => {
+    if (condition) {
+      toast.error(`${errorCondition}`, { position: 'top-right' });
       return;
     }
-
     if (pointsAmount === 1) {
       setPoint([]);
     }
 
-    const lat: number = event.latLng.lat();
-    const lng: number = event.latLng.lng();
-
-    const marker = {
-      id: points.length + 1,
-      position: {
-        lat: lat,
-        lng: lng,
-      },
-    };
+    const marker = { id: points.length + 1, position: { lat, lng } };
 
     if (radialPoint) {
       const pointValidation = haversineDistance(radialPoint, marker);
-
       if (pointValidation) {
-        toast.error(`${errorRadialPoint}`, {
-          position: 'top-right',
-        });
-
+        toast.error(`${errorRadialPoint}`, { position: 'top-right' });
         return;
       }
     }
@@ -117,40 +128,37 @@ export const Map: FunctionComponent<IMapProps> = ({
     setPoint((prevMarkers) => [...prevMarkers, marker]);
   };
 
-  const handleMarkerDragEnd = (event: any, id: number) => {
-    const lat: number = event.latLng.lat();
-    const lng: number = event.latLng.lng();
+  const handleMapClick = (event: google.maps.MapMouseEvent) => {
+    if (event.latLng) {
+      setMarkerOnMap(event.latLng.lat(), event.latLng.lng());
+    }
+  };
+
+  const handleMarkerDragEnd = (
+    event: google.maps.MapMouseEvent,
+    id: number
+  ) => {
+    const lat = event.latLng?.lat() ?? 0;
+    const lng = event.latLng?.lng() ?? 0;
     const pointsRef = JSON.parse(JSON.stringify(points));
 
-    if (id === radialPoint.id) {
+    if (id === radialPoint?.id) {
       setPoint([]);
       setPoint(pointsRef);
-
       toast.error('Punto del lugar no se debe mover', {
         position: 'top-right',
       });
-
       return;
     }
 
-    const marker = {
-      id: points.length + 1,
-      position: {
-        lat: lat,
-        lng: lng,
-      },
-    };
+    const marker = { id: points.length + 1, position: { lat, lng } };
 
     const pointValidation = haversineDistance(radialPoint, marker);
 
     if (pointValidation) {
-      toast.error(`${errorRadialPoint}`, {
-        position: 'top-right',
-      });
-
+      toast.error(`${errorRadialPoint}`, { position: 'top-right' });
       setPoint([]);
       setPoint(pointsRef);
-
       return;
     }
 
@@ -158,10 +166,7 @@ export const Map: FunctionComponent<IMapProps> = ({
 
     for (let item of pointsRef) {
       if (item.id === id) {
-        item.position = {
-          lat: lat,
-          lng: lng,
-        };
+        item.position = { lat, lng };
       }
     }
 
@@ -172,70 +177,132 @@ export const Map: FunctionComponent<IMapProps> = ({
     setActiveMarker(null);
   };
 
-  const handleMarkerClick = (id: any) => {
+  const handleMarkerClick = (id: number) => {
     const marker = points.find((item: any) => item.id === id);
     clickPoint?.(marker);
     setActiveMarker(id);
   };
 
+  const removeMarkerById = (id: number): void => {
+    const size = points.length;
+    setPoint((prevPoints) =>
+      prevPoints
+        .filter((point) => point.id !== id)
+        .map((val) => {
+          return { ...val, id: validateOrder(val.id, size, id) };
+        })
+    );
+  };
+
+  const validateOrder = (number: number, size: number, id: number) => {
+    if (id == size) return number;
+    return number - 1 || 1;
+  };
+
   const getTitleLabel = (id: number): string => {
-    const title = '';
     if (radialPoint && id === radialPoint.id) {
       return 'Lugar de referencia';
     }
-
-    return title;
+    return `${id}`;
   };
 
   return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={12}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-      onClick={handleMapClick}
-    >
-      {points.map((marker) => (
-        <Marker
-          key={marker.id}
-          position={marker.position}
-          draggable={!!draggable}
-          onDragEnd={(event) => handleMarkerDragEnd(event, marker.id)}
-          onClick={() => handleMarkerClick(marker.id)}
-          label={getTitleLabel(marker.id)}
-        >
-          {activeMarker === marker.id && (
-            <InfoWindow
-              position={{ lat: marker.position.lat, lng: marker.position.lng }}
-              onCloseClick={handleInfoWindowClose}
-            >
-              <div>
-                <h1>Punto: {marker.id}</h1>
-                <p>
-                  <strong>Lat:</strong> {marker.position.lat}
-                </p>
-                <p>
-                  <strong>Lng:</strong> {marker.position.lng}
-                </p>
-              </div>
-            </InfoWindow>
-          )}
-        </Marker>
-      ))}
+    <>
+      {allowManualPoint && (
+        <div className='grid grid-cols-5 gap-2'>
+          <div className='col-span-2'>
+            <Input
+              name='latitude'
+              placeholder='6.246631'
+              label='Latitud'
+              type='number'
+              value={coords.lat}
+              onChange={(e) => handleInputChange(e, 'lat')}
+            />
+          </div>
+          <div className='col-span-2'>
+            <Input
+              name='longitude'
+              placeholder='-75.581775'
+              label='Longitud'
+              type='number'
+              value={coords.lng}
+              onChange={(e) => handleInputChange(e, 'lng')}
+            />
+          </div>
+          <div className='col-span-1 mt-auto'>
+            <Button
+              id='btn-add'
+              name='btn-add'
+              type='button'
+              onClick={addManualPoint}
+              label='Añadir'
+              className='rounded-md bg-green-600 text-white px-4'
+            />
+          </div>
+        </div>
+      )}
 
-      <Polygon
-        paths={points.map((point) => point.position)}
-        options={{
-          fillColor: 'blue',
-          fillOpacity: 0.2,
-          strokeColor: 'blue',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-        }}
-      />
-    </GoogleMap>
-  ) : (
-    <></>
-  );
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={mapCenter}
+        zoom={12}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        onClick={handleMapClick}
+      >
+        {points.map((marker) => (
+          <Marker
+            key={marker.id}
+            position={marker.position}
+            draggable={!!draggable}
+            onDragEnd={(event) => handleMarkerDragEnd(event, marker.id)}
+            onClick={() => handleMarkerClick(marker.id)}
+            label={getTitleLabel(marker.id)}
+          >
+            {activeMarker === marker.id && (
+              <InfoWindow
+                position={{
+                  lat: marker.position.lat,
+                  lng: marker.position.lng,
+                }}
+                onCloseClick={handleInfoWindowClose}
+              >
+                <div>
+                  <h1>Punto: {marker.id}</h1>
+                  <p>
+                    <strong>Lat:</strong> {marker.position.lat}
+                  </p>
+                  <p>
+                    <strong>Lng:</strong> {marker.position.lng}
+                  </p>
+                  <Button
+                    id='btn-delete-marker'
+                    name='btn-delete-marker'
+                    type='button'
+                    onClick={() => {
+                      removeMarkerById(marker.id);
+                    }}
+                    label='eliminar'
+                    className='rounded-md bg-red-800 text-white px-4'
+                  />
+                </div>
+              </InfoWindow>
+            )}
+          </Marker>
+        ))}
+
+        <Polygon
+          paths={points.map((point) => point.position)}
+          options={{
+            fillColor: 'blue',
+            fillOpacity: 0.2,
+            strokeColor: 'blue',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+          }}
+        />
+      </GoogleMap>
+    </>
+  ) : null;
 };
