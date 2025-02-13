@@ -2,8 +2,7 @@ import { Signal, useSignal } from '@preact/signals';
 import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
-import { TextArea } from '@/components/common/text.area/text.area';
-import { lengthSize, required } from '@/utils/utilities';
+import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
@@ -72,7 +71,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
             return errors;
           }}
-          render={({ handleSubmit, form, submitting, pristine, values }) => (
+          render={({ handleSubmit, form, submitting, pristine }) => (
             <form onSubmit={handleSubmit} className='space-y-6'>
               {/** FORMULARIO PRINCIPAL */}
               <div className='grid grid-cols-2 gap-3'>
