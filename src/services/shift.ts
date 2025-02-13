@@ -345,7 +345,49 @@ export class ShiftService extends BaseService {
 
   static async getScheduleById(id: string) {
     const model: IMakeRequest = {
-      url: ['schedule', id],
+      url: ['service', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async createService(data: any) {
+    const model: IMakeRequest = {
+      url: ['service'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateService(data: any, id: string) {
+    const model: IMakeRequest = {
+      url: ['service', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteService(id: string) {
+    const model: IMakeRequest = {
+      url: ['service', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async getServices(params: IPagination = { page: 1, items: 20 }) {
+    const model: IMakeRequest = {
+      url: ['service'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getServiceById(id: string) {
+    const model: IMakeRequest = {
+      url: ['service', id],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<any>(this.name, model);

@@ -64,6 +64,8 @@ export const Map: FunctionComponent<IMapProps> = ({
   }, []);
 
   const onUnmount = React.useCallback(() => {
+    console.log(map);
+
     setMap(null);
   }, []);
 
