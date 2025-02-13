@@ -83,13 +83,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     navigate('/rounds');
   };
 
-  const setPosition = (placeId: number) => {
-    const place = places.value.find((val: any) => val.id === placeId);
-    currentLocation.value = {
-      lat: place.latitude,
-      lng: place.longitude,
-    };
-  };
+  // const setPosition = (placeId: number) => {
+  //   const place = places.value.find((val: any) => val.id === placeId);
+  //   currentLocation.value = {
+  //     lat: place.latitude,
+  //     lng: place.longitude,
+  //   };
+  // };
 
   const setInitialValues = async () => {
     if (!id) return;
