@@ -1,12 +1,11 @@
 import { Button } from '@/components/common/button/button';
-import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
+import { Input } from '@/components/common/input/input';
 import { FunctionComponent } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
-export const CreateSetsSettingPage: FunctionComponent = () => {
+export const CreateInformationSettingPage: FunctionComponent = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const handleClickSubir = () => {
     fileInputRef.current?.click();
   };
@@ -24,7 +23,7 @@ export const CreateSetsSettingPage: FunctionComponent = () => {
     <section className='flex flex-row'>
       <div className='w-full'>
         <div>
-          <h1 className='text-cyan-500 text-lg py-6'>Crear Conjunto</h1>
+          <h1 className='text-cyan-500 text-lg py-6'>Crear Informe</h1>
         </div>
         <div className='flex flex-col gap-1 w-10/12'>
           <Input type='text' placeholder='Agregar Título' name='name' />
@@ -65,7 +64,7 @@ export const CreateSetsSettingPage: FunctionComponent = () => {
               id='setting-create'
               name='setting-create'
               type='button'
-              label='Crear Conjunto'
+              label='Crear Informe'
               className='w-48 text-white bg-cyan-500'
             />
           </div>
