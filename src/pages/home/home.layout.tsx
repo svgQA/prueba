@@ -32,14 +32,19 @@ export const HomeLayout: FunctionComponent = () => {
       />
       <div className='w-full h-screen pt-16 bg-gradient-to-r from-cyan-500 to-emerald-400 content-center'>
         {homeMenu === '/' && (
-          <Layer
-            title='Gestión Simplificada de Recursos Informativos'
-            subtitle='Todo lo Que Necesitas, Organizado Perfectamente'
-            description='Facilita la gestión del conocimiento dentro de tu organización con herramientas poderosas para crear y compartir hitos informativos. Desde políticas internas hasta guías y tutoriales externos, organiza y distribuye contenido que empodera a tus empleados y mejora su productividad.'
-          />
+          // <Layer
+          //   title='Gestión Simplificada de Recursos Informativos'
+          //   subtitle='Todo lo Que Necesitas, Organizado Perfectamente'
+          //   description='Facilita la gestión del conocimiento dentro de tu organización con herramientas poderosas para crear y compartir hitos informativos. Desde políticas internas hasta guías y tutoriales externos, organiza y distribuye contenido que empodera a tus empleados y mejora su productividad.'
+          // />
+          <>
+            <div>
+              
+            </div>
+          </>
         )}
       </div>
-      <footer className='overflow-y-hidden container-waves text-white absolute bottom-0 w-full h-48 flex content-center items-center'>
+      {/* <footer className='overflow-y-hidden container-waves text-white absolute bottom-0 w-full h-48 flex content-center items-center'>
         <div className='px-5 absolute bottom-5 text-cyan-500'>
           {VOX_SOCIAL_MEDIA.map((media) => (
             <a key={media.id} id={media.id} href={media.href}>
@@ -48,7 +53,7 @@ export const HomeLayout: FunctionComponent = () => {
           ))}
         </div>
         <Waves />
-      </footer>
+      </footer> */}
     </section>
   );
 };
