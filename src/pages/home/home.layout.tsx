@@ -50,8 +50,16 @@ export const HomeLayout: FunctionComponent = () => {
           <>
             <div className='flex'>
               <div className='md:w-2/5 flex flex-col items-center text-left pl-10 pr-7 mt-7'>
-                <h1 className='text-4xl mb-3 mt-3'>Transforma la Gestión de Operaciones Con Tryvoo</h1>
-                <span className='mb-5 text-2xl'>Optimiza la gestión de actividades, recursos y activos, incluso sin <span className='font-bold'>conectividad para tus negocios</span></span>
+                <h1 className='text-4xl mb-3 mt-3'>
+                  Transforma la Gestión de Operaciones Con Tryvoo
+                </h1>
+                <span className='mb-5 text-2xl'>
+                  Optimiza la gestión de actividades, recursos y activos,
+                  incluso sin{' '}
+                  <span className='font-bold'>
+                    conectividad para tus negocios
+                  </span>
+                </span>
                 <Button
                   label='Agenda una Demo gratis'
                   type='button'
@@ -62,59 +70,113 @@ export const HomeLayout: FunctionComponent = () => {
               </div>
 
               <div className='md:w-3/5 flex items-center overflow-hidden'>
-                <img src={homeMainDesktop} alt="" className="w-[90vh] max-w-full object-contain" />
+                <img
+                  src={homeMainDesktop}
+                  alt=''
+                  className='w-[90vh] max-w-full object-contain'
+                />
               </div>
             </div>
 
             <div className='bg-white text-center text-[#28787B]'>
               <h2 className='text-[#28787B] text-3xl pt-5'>¿Por que Tryvoo?</h2>
-              <span className='text-[#28787B] pb-5 text-xl'>Simplifica. Optimiza. Crece</span>
+              <span className='text-[#28787B] pb-5 text-xl'>
+                Simplifica. Optimiza. Crece
+              </span>
 
               <div className='flex mt-7'>
                 <div className='md:w-1/2 flex flex-col items-center'>
-                  <img src={homeWithTryvooDesktop} alt="" className='w-[50%] h-auto' />
-                  <span className='font-bold text-2xl ml-10 mr-10'>El 60% de las empresas en LATAM buscan herramientas que mejoren la trazabilidad y reduzcan costos operativos</span>
-                  <p className='hidden md:block text-xl ml-10 mr-10 mt-5'>Tryvoo está liderando esta transformación, gracias a la Digitalización y automatización completa de las actividades en campo, llegando a soluciones intuitivas, accesibles incluso sin conexión.</p>
+                  <img
+                    src={homeWithTryvooDesktop}
+                    alt=''
+                    className='w-[50%] h-auto'
+                  />
+                  <span className='font-bold text-2xl ml-10 mr-10'>
+                    El 60% de las empresas en LATAM buscan herramientas que
+                    mejoren la trazabilidad y reduzcan costos operativos
+                  </span>
+                  <p className='hidden md:block text-xl ml-10 mr-10 mt-5'>
+                    Tryvoo está liderando esta transformación, gracias a la
+                    Digitalización y automatización completa de las actividades
+                    en campo, llegando a soluciones intuitivas, accesibles
+                    incluso sin conexión.
+                  </p>
                 </div>
 
                 <div className='md:w-1/2'>
-                  <div className="shadow-xl bg-white rounded-lg">
-                    <div className="flex items-start space-x-4 p-5">
-                      <img src={homeWhyTryvooIconAnalitics} alt="Gestión" className="w-8 h-8" />
+                  <div className='shadow-xl bg-white rounded-lg'>
+                    <div className='flex items-start space-x-4 p-5'>
+                      <img
+                        src={homeWhyTryvooIconAnalitics}
+                        alt='Gestión'
+                        className='w-8 h-8'
+                      />
                       <div className='text-left'>
                         <span>
-                          <span className="font-bold text-gray-700 text-xl">Fácil Gestión y Trazabilidad:</span>
-                          <span className="text-gray-600 text-sm text-xl">"Control total sobre las operaciones en campo, con visibilidad y seguimiento en tiempo real."</span>
+                          <span className='font-bold text-gray-700 text-xl'>
+                            Fácil Gestión y Trazabilidad:
+                          </span>
+                          <span className='text-gray-600 text-sm text-xl'>
+                            "Control total sobre las operaciones en campo, con
+                            visibilidad y seguimiento en tiempo real."
+                          </span>
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-start space-x-4 p-5">
-                      <img src={homeWhyTryvooIconAnalitics} alt="Gestión" className="w-8 h-8" />
+                    <div className='flex items-start space-x-4 p-5'>
+                      <img
+                        src={homeWhyTryvooIconAnalitics}
+                        alt='Gestión'
+                        className='w-8 h-8'
+                      />
                       <div className='text-left'>
                         <span>
-                          <span className="font-bold text-gray-700 text-xl">Asistencia con IA:</span>
-                          <span className="text-gray-600 text-sm text-xl">"Recibe recomendaciones automáticas y soporte para tus operativos directamente en el terreno."</span>
+                          <span className='font-bold text-gray-700 text-xl'>
+                            Asistencia con IA:
+                          </span>
+                          <span className='text-gray-600 text-sm text-xl'>
+                            "Recibe recomendaciones automáticas y soporte para
+                            tus operativos directamente en el terreno."
+                          </span>
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-start space-x-4 p-5">
-                      <img src={homeWhyTryvooIconAnalitics} alt="Gestión" className="w-8 h-8" />
+                    <div className='flex items-start space-x-4 p-5'>
+                      <img
+                        src={homeWhyTryvooIconAnalitics}
+                        alt='Gestión'
+                        className='w-8 h-8'
+                      />
                       <div className='text-left'>
                         <span>
-                          <span className="font-bold text-gray-700 text-xl">Sincronización Offline:</span>
-                          <span className="text-gray-600 text-sm text-xl">"Sigue gestionando incluso sin internet, y los datos se sincronizan al restaurar la conexión."</span>
+                          <span className='font-bold text-gray-700 text-xl'>
+                            Sincronización Offline:
+                          </span>
+                          <span className='text-gray-600 text-sm text-xl'>
+                            "Sigue gestionando incluso sin internet, y los datos
+                            se sincronizan al restaurar la conexión."
+                          </span>
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-start space-x-4 p-5">
-                      <img src={homeWhyTryvooIconAnalitics} alt="Gestión" className="w-8 h-8" />
+                    <div className='flex items-start space-x-4 p-5'>
+                      <img
+                        src={homeWhyTryvooIconAnalitics}
+                        alt='Gestión'
+                        className='w-8 h-8'
+                      />
                       <div className='text-left'>
                         <span>
-                          <span className="font-bold text-gray-700 text-xl">Escalabilidad:</span>
-                          <span className="text-gray-600 text-sm text-xl">"Adaptable a cualquier tamaño de empresa o industria, desde la vigilancia hasta la logística."</span>
+                          <span className='font-bold text-gray-700 text-xl'>
+                            Escalabilidad:
+                          </span>
+                          <span className='text-gray-600 text-sm text-xl'>
+                            "Adaptable a cualquier tamaño de empresa o
+                            industria, desde la vigilancia hasta la logística."
+                          </span>
                         </span>
                       </div>
                     </div>
@@ -133,38 +195,79 @@ export const HomeLayout: FunctionComponent = () => {
 
             <div className='flex flex-col items-center text-center bg-white text-[#28787B]'>
               <span className='text-3xl font-bold'>Servicios destacados</span>
-              <span className='text-xl'>Todo lo que necesitas en una sola plataforma</span>
+              <span className='text-xl'>
+                Todo lo que necesitas en una sola plataforma
+              </span>
 
               <div className='flex flex-wrap gap-6 justify-center mt-7'>
-                <div class="flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200">
-                  <img class="w-auto h-48 object-cover rounded-lg" src={homeService1} alt="Card Image" />
-                  <div class="mt-4">
-                    <h2 class="text-xl font-semibold text-gray-900">Monitorio en Tiempo Real</h2>
-                    <p class="text-gray-600 mt-2">Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real.</p>
+                <div class='flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200'>
+                  <img
+                    class='w-auto h-48 object-cover rounded-lg'
+                    src={homeService1}
+                    alt='Card Image'
+                  />
+                  <div class='mt-4'>
+                    <h2 class='text-xl font-semibold text-gray-900'>
+                      Monitorio en Tiempo Real
+                    </h2>
+                    <p class='text-gray-600 mt-2'>
+                      Visualiza el progreso de las tareas y el estado de los
+                      activos con actualizaciones automáticas y basadas en datos
+                      en tiempo real.
+                    </p>
                   </div>
                 </div>
 
-                <div class="flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200">
-                  <img class="w-auto h-48 object-cover rounded-lg" src={homeService2} alt="Card Image" />
-                  <div class="mt-4">
-                    <h2 class="text-xl font-semibold text-gray-900">Capacidades Offline</h2>
-                    <p class="text-gray-600 mt-2">Los operarios pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando la conexión a Internet es restaurada.</p>
+                <div class='flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200'>
+                  <img
+                    class='w-auto h-48 object-cover rounded-lg'
+                    src={homeService2}
+                    alt='Card Image'
+                  />
+                  <div class='mt-4'>
+                    <h2 class='text-xl font-semibold text-gray-900'>
+                      Capacidades Offline
+                    </h2>
+                    <p class='text-gray-600 mt-2'>
+                      Los operarios pueden seguir trabajando sin conexión, y
+                      todos los datos se sincronizan cuando la conexión a
+                      Internet es restaurada.
+                    </p>
                   </div>
                 </div>
 
-                <div class="flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200">
-                  <img class="w-auto h-48 object-cover rounded-lg" src={homeService3} alt="Card Image" />
-                  <div class="mt-4">
-                    <h2 class="text-xl font-semibold text-gray-900">IA y Soporte Virtual</h2>
-                    <p class="text-gray-600 mt-2">Tu asistente virtual para resolver problemas en campo, con recomendaciones basadas en los datos que se capturan durante las operaciones.</p>
+                <div class='flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200'>
+                  <img
+                    class='w-auto h-48 object-cover rounded-lg'
+                    src={homeService3}
+                    alt='Card Image'
+                  />
+                  <div class='mt-4'>
+                    <h2 class='text-xl font-semibold text-gray-900'>
+                      IA y Soporte Virtual
+                    </h2>
+                    <p class='text-gray-600 mt-2'>
+                      Tu asistente virtual para resolver problemas en campo, con
+                      recomendaciones basadas en los datos que se capturan
+                      durante las operaciones.
+                    </p>
                   </div>
                 </div>
 
-                <div class="flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200">
-                  <img class="w-auto h-48 object-cover rounded-lg" src={homeService4} alt="Card Image" />
-                  <div class="mt-4">
-                    <h2 class="text-xl font-semibold text-gray-900">Integración y Personalización</h2>
-                    <p class="text-gray-600 mt-2">Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector.</p>
+                <div class='flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200'>
+                  <img
+                    class='w-auto h-48 object-cover rounded-lg'
+                    src={homeService4}
+                    alt='Card Image'
+                  />
+                  <div class='mt-4'>
+                    <h2 class='text-xl font-semibold text-gray-900'>
+                      Integración y Personalización
+                    </h2>
+                    <p class='text-gray-600 mt-2'>
+                      Fácil integración con herramientas ya existentes y una
+                      plataforma que se adapta a las necesidades de cada sector.
+                    </p>
                     {/* <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">
                       Ver más
                     </button> */}
@@ -182,55 +285,71 @@ export const HomeLayout: FunctionComponent = () => {
             </div>
 
             <div className='flex flex-col items-center text-center bg-white text-[#28787B]'>
-              <span className='text-3xl font-bold'>Soluciones por industria</span>
-              <span className='text-xl'>Tryvoo esta optimizado para diferentes sectores.</span>
+              <span className='text-3xl font-bold'>
+                Soluciones por industria
+              </span>
+              <span className='text-xl'>
+                Tryvoo esta optimizado para diferentes sectores.
+              </span>
 
               <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 mb-10'>
-                <div class="flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md">
-                  <div class="bg-[#26B6D4] p-4 rounded-lg">
-                    <img src={homeSolution1} alt="" />
+                <div class='flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md'>
+                  <div class='bg-[#26B6D4] p-4 rounded-lg'>
+                    <img src={homeSolution1} alt='' />
                   </div>
-                  <div class="ml-4 text-left">
-                    <h2 class="text-lg font-semibold text-gray-900">Seguridad</h2>
-                    <p class="text-gray-600 text-sm">
-                      Gestiona rondas de vigilancia, genera reportes de incidentes y asegura un control completo sobre las actividades de los operarios.
+                  <div class='ml-4 text-left'>
+                    <h2 class='text-lg font-semibold text-gray-900'>
+                      Seguridad
+                    </h2>
+                    <p class='text-gray-600 text-sm'>
+                      Gestiona rondas de vigilancia, genera reportes de
+                      incidentes y asegura un control completo sobre las
+                      actividades de los operarios.
                     </p>
                   </div>
                 </div>
 
-                <div class="flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md">
-                  <div class="bg-[#26B6D4] p-4 rounded-lg">
-                    <img src={homeSolution1} alt="" />
+                <div class='flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md'>
+                  <div class='bg-[#26B6D4] p-4 rounded-lg'>
+                    <img src={homeSolution1} alt='' />
                   </div>
-                  <div class="ml-4 text-left">
-                    <h2 class="text-lg font-semibold text-gray-900">Logística</h2>
-                    <p class="text-gray-600 text-sm">
-                      Rastrea vehículos, monitorea entregas y optimiza la asignación de rutas para maximizar la eficiencia.
+                  <div class='ml-4 text-left'>
+                    <h2 class='text-lg font-semibold text-gray-900'>
+                      Logística
+                    </h2>
+                    <p class='text-gray-600 text-sm'>
+                      Rastrea vehículos, monitorea entregas y optimiza la
+                      asignación de rutas para maximizar la eficiencia.
                     </p>
                   </div>
                 </div>
 
-                <div class="flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md">
-                  <div class="bg-[#26B6D4] p-4 rounded-lg">
-                    <img src={homeSolution1} alt="" />
+                <div class='flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md'>
+                  <div class='bg-[#26B6D4] p-4 rounded-lg'>
+                    <img src={homeSolution1} alt='' />
                   </div>
-                  <div class="ml-4 text-left">
-                    <h2 class="text-lg font-semibold text-gray-900">Construcción</h2>
-                    <p class="text-gray-600 text-sm">
-                      Coordina las tareas de los trabajadores en campo, controla los recursos y realiza un seguimiento de los avances del proyecto.
+                  <div class='ml-4 text-left'>
+                    <h2 class='text-lg font-semibold text-gray-900'>
+                      Construcción
+                    </h2>
+                    <p class='text-gray-600 text-sm'>
+                      Coordina las tareas de los trabajadores en campo, controla
+                      los recursos y realiza un seguimiento de los avances del
+                      proyecto.
                     </p>
                   </div>
                 </div>
 
-
-                <div class="flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md">
-                  <div class="bg-[#26B6D4] p-4 rounded-lg">
-                    <img src={homeSolution1} alt="" />
+                <div class='flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md'>
+                  <div class='bg-[#26B6D4] p-4 rounded-lg'>
+                    <img src={homeSolution1} alt='' />
                   </div>
-                  <div class="ml-4 text-left">
-                    <h2 class="text-lg font-semibold text-gray-900">Salud</h2>
-                    <p class="text-gray-600 text-sm">
-                      Gestiona a los técnicos de salud, realiza un seguimiento de las visitas domiciliarias y administra las solicitudes en tiempo real.
+                  <div class='ml-4 text-left'>
+                    <h2 class='text-lg font-semibold text-gray-900'>Salud</h2>
+                    <p class='text-gray-600 text-sm'>
+                      Gestiona a los técnicos de salud, realiza un seguimiento
+                      de las visitas domiciliarias y administra las solicitudes
+                      en tiempo real.
                     </p>
                   </div>
                 </div>
@@ -247,137 +366,214 @@ export const HomeLayout: FunctionComponent = () => {
 
             <div className='flex flex-col items-center text-center bg-white text-[#28787B]'>
               <span className='text-3xl font-bold'>Quienes somos</span>
-              <span className='text-xl'>En Tryvoo, entedemos las complejidades de operar fuera de la oficina.</span>
+              <span className='text-xl'>
+                En Tryvoo, entedemos las complejidades de operar fuera de la
+                oficina.
+              </span>
 
               <div className='mt-7'>
-                <img src={homeWeCenter} alt="" className='w-auto h-[50vh]' />
+                <img src={homeWeCenter} alt='' className='w-auto h-[50vh]' />
               </div>
             </div>
 
             <div className='flex flex-col items-center text-center bg-white text-[#28787B]'>
               <span className='text-3xl font-bold'>Nuestros planes</span>
-              <span className='text-xl'>Elige el plan perfecto para tu negocio y transforma tus operaciones de campo. Comienza con Tryvoo hoy mismo!</span>
+              <span className='text-xl'>
+                Elige el plan perfecto para tu negocio y transforma tus
+                operaciones de campo. Comienza con Tryvoo hoy mismo!
+              </span>
 
               <div className='flex flex-wrap gap-6 justify-center mt-7 mb-10'>
-                <div class="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
-                  <div class="bg-[#26B6D4] text-white text-center py-2 font-semibold">
+                <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200'>
+                  <div class='bg-[#26B6D4] text-white text-center py-2 font-semibold'>
                     7 Días free
                   </div>
 
-                  <div class="p-6 text-center">
-                    <h2 class="text-[#26B6D4] text-xl font-bold">Prueba Gratis</h2>
-                    <p class="text-gray-600 text-sm mt-1">Inicio 7 días y un plan básico</p>
+                  <div class='p-6 text-center'>
+                    <h2 class='text-[#26B6D4] text-xl font-bold'>
+                      Prueba Gratis
+                    </h2>
+                    <p class='text-gray-600 text-sm mt-1'>
+                      Inicio 7 días y un plan básico
+                    </p>
                   </div>
 
-                  <div class="bg-[#26B6D4] text-white p-6">
-                    <ul class="space-y-3 text-sm">
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Gestión de operaciones limitada (hasta 5 usuarios).</span>
+                  <div class='bg-[#26B6D4] text-white p-6'>
+                    <ul class='space-y-3 text-sm'>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Gestión de operaciones limitada (hasta 5 usuarios).
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Monitoreo en tiempo real para un máximo de 3 activos.</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Monitoreo en tiempo real para un máximo de 3 activos.
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Asistencia virtual limitada (soporte solo en horario laboral).</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Asistencia virtual limitada (soporte solo en horario
+                          laboral).
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Integración con una herramienta externa. Duración: 30 días de prueba gratuita. Plan Enterprise (Intermedio).</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Integración con una herramienta externa. Duración: 30
+                          días de prueba gratuita. Plan Enterprise (Intermedio).
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Para empresas en crecimiento que necesitan mayor alcance.</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Para empresas en crecimiento que necesitan mayor
+                          alcance.
+                        </span>
                       </li>
                     </ul>
                   </div>
 
-                  <div class="p-6 flex justify-center">
-                    <button class="bg-white text-[#26B6D4] font-semibold border border-[#26B6D4] rounded-full px-6 py-2 hover:bg-[#26B6D4] hover:text-white transition">
+                  <div class='p-6 flex justify-center'>
+                    <button class='bg-white text-[#26B6D4] font-semibold border border-[#26B6D4] rounded-full px-6 py-2 hover:bg-[#26B6D4] hover:text-white transition'>
                       Iniciar prueba
                     </button>
                   </div>
                 </div>
 
-                <div class="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
-                  <div class="bg-[#1D2B53] text-white text-center py-2 font-semibold rounded-t-lg">
+                <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200'>
+                  <div class='bg-[#1D2B53] text-white text-center py-2 font-semibold rounded-t-lg'>
                     $49 USD/mes
                   </div>
 
-                  <div class="p-6 text-center">
-                    <h2 class="text-[#1D2B53] text-xl font-bold">Plan Enterprise</h2>
-                    <p class="text-gray-600 text-sm mt-1">obtén un mayor alcance.</p>
+                  <div class='p-6 text-center'>
+                    <h2 class='text-[#1D2B53] text-xl font-bold'>
+                      Plan Enterprise
+                    </h2>
+                    <p class='text-gray-600 text-sm mt-1'>
+                      obtén un mayor alcance.
+                    </p>
                   </div>
 
-                  <div class="bg-[#1D2B53] text-white p-6">
-                    <ul class="space-y-3 text-sm">
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Gestión de operaciones para hasta 50 usuarios.</span>
+                  <div class='bg-[#1D2B53] text-white p-6'>
+                    <ul class='space-y-3 text-sm'>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Gestión de operaciones para hasta 50 usuarios.
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Monitoreo en tiempo real sin límite de activos.</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Monitoreo en tiempo real sin límite de activos.
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Funcionalidades offline completas (sincronización automática de datos).</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Funcionalidades offline completas (sincronización
+                          automática de datos).
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Asistencia con IA personalizada (soporte 24/7).</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Asistencia con IA personalizada (soporte 24/7).
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Integración con hasta 3 herramientas externas.</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Integración con hasta 3 herramientas externas.
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Panel de informes básicos para análisis de datos.</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Panel de informes básicos para análisis de datos.
+                        </span>
                       </li>
                     </ul>
                   </div>
 
-                  <div class="p-6 flex justify-center">
-                    <button class="bg-white text-[#1D2B53] font-semibold border border-[#1D2B53] rounded-full px-6 py-2 hover:bg-[#1D2B53] hover:text-white transition">
+                  <div class='p-6 flex justify-center'>
+                    <button class='bg-white text-[#1D2B53] font-semibold border border-[#1D2B53] rounded-full px-6 py-2 hover:bg-[#1D2B53] hover:text-white transition'>
                       Iniciar plan
                     </button>
                   </div>
                 </div>
 
-                <div class="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+                <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200'>
                   {/* <div class="bg-[#1D2B53] text-white text-center py-2 font-semibold relative rounded-t-lg">
                     <span class="bg-white text-[#1D2B53] text-xs font-bold px-3 py-1 rounded-bl-lg absolute top-0 left-0">$49 USD/mes</span>
                   </div> */}
 
-                  <div class="bg-[#1D2B53] text-white text-center py-2 font-semibold rounded-t-lg">
+                  <div class='bg-[#1D2B53] text-white text-center py-2 font-semibold rounded-t-lg'>
                     $49 USD/mes
                   </div>
 
-                  <div class="p-6 text-center">
-                    <h2 class="text-[#1D2B53] text-xl font-bold">Plan Premium</h2>
-                    <p class="text-gray-600 text-sm mt-1">Empresas avanzadas</p>
+                  <div class='p-6 text-center'>
+                    <h2 class='text-[#1D2B53] text-xl font-bold'>
+                      Plan Premium
+                    </h2>
+                    <p class='text-gray-600 text-sm mt-1'>Empresas avanzadas</p>
                   </div>
 
-                  <div class="p-6">
-                    <ul class="space-y-3 text-sm text-gray-700">
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Usuarios ilimitados y operaciones escalables.</span>
+                  <div class='p-6'>
+                    <ul class='space-y-3 text-sm text-gray-700'>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Usuarios ilimitados y operaciones escalables.
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Monitoreo avanzado con reportes en tiempo real y análisis predictivo.</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Monitoreo avanzado con reportes en tiempo real y
+                          análisis predictivo.
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Funcionalidades offline avanzadas (soporte para dispositivos múltiples).</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Funcionalidades offline avanzadas (soporte para
+                          dispositivos múltiples).
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">IA avanzada con recomendaciones estratégicas y análisis de riesgos.</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          IA avanzada con recomendaciones estratégicas y
+                          análisis de riesgos.
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Integración ilimitada con herramientas externas.</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Integración ilimitada con herramientas externas.
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Panel de informes avanzado con personalización total.</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Panel de informes avanzado con personalización total.
+                        </span>
                       </li>
-                      <li class="flex items-start">
-                        ✅ <span class="ml-2">Soporte prioritario 24/7 con consultor dedicado.</span>
+                      <li class='flex items-start'>
+                        ✅{' '}
+                        <span class='ml-2'>
+                          Soporte prioritario 24/7 con consultor dedicado.
+                        </span>
                       </li>
                     </ul>
                   </div>
 
-                  <div class="p-6 flex justify-center">
-                    <button class="bg-[#1D2B53] text-white font-semibold rounded-full px-6 py-2 hover:bg-[#16203E] transition">
+                  <div class='p-6 flex justify-center'>
+                    <button class='bg-[#1D2B53] text-white font-semibold rounded-full px-6 py-2 hover:bg-[#16203E] transition'>
                       Iniciar plan
                     </button>
                   </div>
@@ -390,7 +586,10 @@ export const HomeLayout: FunctionComponent = () => {
                 <span>Te brindamos asesoria gratuita</span>
               </div>
               <div className='w-[30%] text-xl'>
-                <span>Para que comiences optimizar tu negocio con herramientas ágiles y operables en cualquiers espacio y lugar</span>
+                <span>
+                  Para que comiences optimizar tu negocio con herramientas
+                  ágiles y operables en cualquiers espacio y lugar
+                </span>
               </div>
               <div className='w-[30%] text-center'>
                 <Button
@@ -402,7 +601,6 @@ export const HomeLayout: FunctionComponent = () => {
                 />
               </div>
             </div>
-
           </>
         )}
       </div>
