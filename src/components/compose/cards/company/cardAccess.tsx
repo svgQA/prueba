@@ -20,19 +20,21 @@ export const CardAccess = memo(
           className='w-full h-full object-cover'
         />
       </div>
-      <div className='flex-1 min-w-0 pr-8'>
+      <div className='flex-1 min-w-0 pr-8 ml-4'>
         <h3 className='font-semibold text-lg text-gray-900 mb-4 mt-4'>
           {title}
         </h3>
         <p className='text-sm text-gray-600 line-clamp-2 mb-4'>{subtitle}</p>
       </div>
-      <button
-        onClick={onEdit}
-        className='bottom-4 right-4 p-2 rounded-full shadow-sm hover:bg-gray-300 transition-colors border-none ml-64'
-        aria-label='Edit'
-      >
-        <span className={`vox-icon vx-icon-${icon} text-xs`}></span>
-      </button>
+      <div className='flex justify-end mt-4'>
+        <button
+          onClick={onEdit}
+          className='p-2 rounded-full shadow-sm hover:bg-gray-300 transition-colors border-none'
+          aria-label='Edit'
+        >
+          <span className={`vox-icon vx-icon-${icon} text-xs`}></span>
+        </button>
+      </div>
     </Card>
   )
 );
