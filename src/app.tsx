@@ -16,7 +16,7 @@ Amplify.configure(AWS_AMPLIFY_SETTINGS);
 
 export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
   return (
-    <section className='h-screen w-screen'>
+    <section className='h-screen'>
       <Switch>
         <Route path={PAGES_LIST.HOME} component={HomeLayout} />
         <Router base={PAGES_LIST.DASHBOARD}>

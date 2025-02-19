@@ -1,13 +1,11 @@
 import { Signal, useSignal } from '@preact/signals';
 import { Form, Field } from 'react-final-form';
-import { TextArea } from '@/components/common/text.area/text.area';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { UserService } from '@/services/user';
-
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { toast } from 'react-toastify';
@@ -17,8 +15,6 @@ import { omitBy, isNull, pick } from 'lodash';
 import dayjs from 'dayjs';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
-import { IProject } from '../../projects/projects';
-import { Place } from '../../places/utils/places';
 
 interface ITask {
   start: string;
@@ -45,10 +41,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const inputKeywords = useSignal('');
-  const projects: Signal<IProject[]> = useSignal([]);
-  const places: Signal<Place[]> = useSignal([]);
-  const workPoints = useSignal([]);
-  const rounds = useSignal([]);
+  const services = useSignal([]);
   const users = useSignal([]);
 
   const { id } = useParams(); // Obtiene el id de la URL
@@ -83,74 +76,20 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
       'status',
       'type',
       'userId',
-      'projectId',
-      'placeId',
-      'workstationId',
-      'roundId',
+      'serviceId',
+      'employeedId',
       'externalId',
       'keywords',
-      'tasks',
     ] as const;
 
-    const task_key = ['start', 'description', 'status'] as const;
-    //Consulta la actividad
     const request: any = await ShiftService.getActivityById(id);
-    //Elimina los campos undefined o null
     const model = pick(omitBy(request.model, isNull), userKeys);
-    model.tasks = model.tasks.map((task: any) =>
-      pick(omitBy(task, isNull), task_key)
-    );
-    // Consulta los lugares
-    if (model.projectId) {
-      await getPlaces(model.projectId);
-      model.placeId = await assignPlaceId(model.roundId, model.workstationId);
-    }
-
     initialValues.value = model;
   };
 
-  async function assignPlaceId(roundId?: number, workstationId?: number) {
-    let result;
-    if (roundId) {
-      result = await getRoundById(roundId);
-      await getRounds(result.placeId);
-    }
-
-    if (workstationId) {
-      console.log('workstationId', workstationId);
-
-      result = await getWorkPointById(workstationId);
-      console.log('workstationId', result);
-      await getWorkPoints(result.placeId);
-    }
-    return result.placeId;
-  }
-  const getProjects = async () => {
-    const request: any = await ShiftService.getProjects();
-    projects.value = request.data;
-  };
-
-  const getPlaces = async (projectId: number) => {
-    const request: any = await ShiftService.getPlaces({
-      page: 1,
-      items: 30,
-      projectId,
-    });
-    places.value = request.data;
-  };
-
-  const getRounds = async (placeId: number) => {
-    const request: any = await ShiftService.getRounds({
-      page: 1,
-      items: 30,
-      placeId,
-    });
-    rounds.value = request.data;
-  };
-
-  const getWorkPoints = async (placeId: number) => {
-    const request: any = await ShiftService.getWorkPointsByPlaceId(placeId);
-    workPoints.value = request.data;
+  const getServices = async () => {
+    const request: any = await ShiftService.getServices();
+    services.value = request.data;
   };
 
   const getUsers = async () => {
@@ -160,18 +99,8 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
     });
   };
 
-  const getRoundById = async (roundId: number) => {
-    const request: any = await ShiftService.getRoundById(`${roundId}`);
-    return request.model;
-  };
-
-  const getWorkPointById = async (id: number) => {
-    const request: any = await ShiftService.getWorkPointById(id);
-    return request.model;
-  };
-
   const main = async () => {
-    await getProjects();
+    await getServices();
     await getUsers();
     await setInitialValues();
   };
@@ -268,13 +197,13 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
                 <div class='col-span-1'>
-                  <Field<string> name='userId'>
+                  <Field<string> name='employeedId'>
                     {({ input }) => (
                       <Select
                         {...input}
-                        placeholder='Selecione usuario...'
-                        label='Usuario'
-                        name='userId'
+                        placeholder='Selecione empleado...'
+                        label='Empleado'
+                        name='employeedId'
                         icon='252'
                         options={users.value}
                         optionValue='id'
@@ -288,60 +217,17 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
                 <div class='col-span-1'>
-                  <Field name='projectId'>
+                  <Field name='serviceId'>
                     {({ input }) => (
                       <Select
                         {...input}
-                        placeholder='Selecione proyecto...'
-                        label='Proyecto'
-                        name='projectId'
+                        placeholder='Selecione Servicio...'
+                        label='Servicio'
+                        name='serviceId'
                         icon='252'
                         optionValue='id'
-                        optionLabel='name'
-                        options={projects.value}
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                          getPlaces(id);
-                        }}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field<string> name='placeId'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione lugar...'
-                        label='Lugar'
-                        name='placeId'
-                        optionValue='id'
-                        optionLabel='name'
-                        icon='252'
-                        options={places.value}
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                          getRounds(id);
-                          getWorkPoints(id);
-                        }}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field<string> name='workstationId'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione punto de trabajo...'
-                        label='Punto de trabajo'
-                        name='workstationId'
-                        icon='252'
-                        optionValue='id'
-                        optionLabel='name'
-                        options={workPoints.value}
+                        optionLabel='description'
+                        options={services.value}
                         onChange={(e) => {
                           const id = parseInt(e.currentTarget.value);
                           input.onChange(id);
@@ -350,26 +236,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                     )}
                   </Field>
                 </div>
-                <div class='col-span-1'>
-                  <Field<string> name='roundId'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione ronda...'
-                        label='Ronda'
-                        name='roundId'
-                        icon='252'
-                        optionValue='id'
-                        optionLabel='name'
-                        options={rounds.value}
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                        }}
-                      />
-                    )}
-                  </Field>
-                </div>
+
                 <div class='col-span-1'>
                   <Field<string> name='externalId'>
                     {({ input }) => (
@@ -377,7 +244,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                     )}
                   </Field>
                 </div>
-                <div class='col-span-1'>
+                <div class='col-span-1 mt-4'>
                   <FieldArray<string> name='keywords'>
                     {({ fields }) => (
                       <div className='flex flex-col gap-2'>
@@ -427,7 +294,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                     )}
                   </FieldArray>
                 </div>
-                <div class='col-span-2'>
+                {/* <div class='col-span-2'>
                   <FieldArray name='tasks'>
                     {({ fields }) => (
                       <div>
@@ -532,7 +399,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                       </div>
                     )}
                   </FieldArray>
-                </div>
+                </div> */}
               </div>
 
               {/* Botonera */}

@@ -5,7 +5,7 @@ import { FunctionComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { useResourceStore } from '@/store/slices/optimusAccess/access.slice'; // Importamos el store
 
-export const CreateResourceSettingPage: FunctionComponent = () => {
+export const CreateInformationSettingPage: FunctionComponent = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { selectedResource, clearSelectedResource } = useResourceStore(); // Usamos el estado global
   const handleClickSubir = () => {
@@ -35,7 +35,6 @@ export const CreateResourceSettingPage: FunctionComponent = () => {
     <section className='flex flex-row'>
       <div className='w-full'>
         <div>
-          {/* <h1 className='text-cyan-500 text-lg py-6'>Crear Recurso</h1> */}
           <h1 className='text-cyan-500 text-lg py-6'>
             {selectedResource ? 'Editar Recurso' : 'Crear Recurso'}
           </h1>
@@ -92,8 +91,7 @@ export const CreateResourceSettingPage: FunctionComponent = () => {
               id='setting-create'
               name='setting-create'
               type='button'
-              // label='Crear Recurso'
-              label={selectedResource ? 'Guardar Cambios' : 'Crear Recurso'}
+              label={selectedResource ? 'Guardar Cambios' : 'Crear informe'}
               className='w-48 text-white bg-cyan-500'
             />
           </div>

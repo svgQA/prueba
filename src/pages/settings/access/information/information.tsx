@@ -7,11 +7,12 @@ import { useLocation } from 'wouter';
 import { useResourceStore } from '@/store/slices/optimusAccess/access.slice'; // Importamos el store
 import data from './data.json';
 
-export const PlaceSettingPage: FunctionComponent = () => {
+export const InformationSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const { setSelectedResource } = useResourceStore(); // Usamos el estado global
+
   useEffect(() => {
-    document.title = 'Places Settings';
+    document.title = 'Information Settings';
     getTenant();
   }, []);
 
@@ -36,7 +37,7 @@ export const PlaceSettingPage: FunctionComponent = () => {
             id='setting-sets'
             name='setting-sets'
             type='button'
-            label='Crear Lugares'
+            label='Crear Informe'
             className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
           />
         </div>

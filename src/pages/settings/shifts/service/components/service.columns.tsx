@@ -1,19 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { INovelty } from '../service';
+import { IServicio } from '../service';
 
-export const columns: ColumnDef<INovelty>[] = [
+export const columns: ColumnDef<IServicio>[] = [
   {
     id: 'id',
     accessorKey: 'id',
     size: 60,
     header: 'ID',
-  },
-  {
-    id: 'name',
-    accessorKey: 'name',
-    size: 60,
-    header: 'Nombre',
   },
   {
     id: 'description',
@@ -22,18 +16,22 @@ export const columns: ColumnDef<INovelty>[] = [
     header: 'Descripción',
   },
   {
-    id: 'priority',
-    accessorKey: 'priority',
+    id: 'roundId',
+    accessorKey: 'roundId',
+    size: 60,
+    header: 'Ronda',
+  },
+  {
+    id: 'contractId',
+    accessorKey: 'contractId',
+    size: 60,
+    header: 'Contrato',
+  },
+  {
+    id: 'placeId',
+    accessorKey: 'placeId',
     size: 180,
-    header: 'prioridad',
-    cell: (info) => {
-      const value = info.getValue() as string;
-      return (
-        <span className={`px-2 py-1 rounded bg-secondary text-white`}>
-          {value}
-        </span>
-      );
-    },
+    header: 'Place',
   },
   {
     id: 'actions',

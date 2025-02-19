@@ -3,7 +3,7 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-import { Select } from '@/components/common/select/select';
+// import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
@@ -12,6 +12,11 @@ import { useEffect } from 'preact/hooks';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
+import arrayMutators from 'final-form-arrays';
+// import { FieldArray } from 'react-final-form-arrays';
+// import { IFormResponse } from '@/types/form';
+// import { TextArea } from '@/components/common/text.area/text.area';
+// import dayjs from 'dayjs';
 
 interface IPoint {
   latitude: number;
@@ -42,6 +47,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
 
   const sendPointsRef = (data: any) => {
+    console.log('data ==>', data);
     if (!data.length) return;
     points.value = data;
   };
@@ -77,13 +83,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     navigate('/rounds');
   };
 
-  const setPosition = (placeId: number) => {
-    const place = places.value.find((val: any) => val.id === placeId);
-    currentLocation.value = {
-      lat: place.latitude,
-      lng: place.longitude,
-    };
-  };
+  // const setPosition = (placeId: number) => {
+  //   const place = places.value.find((val: any) => val.id === placeId);
+  //   currentLocation.value = {
+  //     lat: place.latitude,
+  //     lng: place.longitude,
+  //   };
+  // };
 
   const setInitialValues = async () => {
     if (!id) return;
@@ -103,7 +109,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       }) ?? [];
 
     const model = pick(omitBy(request.model, isNull), userKeys);
-    setPosition(model.placeId);
     initialValues.value = model;
   };
 
@@ -113,6 +118,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
 
   const resertMarket = async () => {
+    console.log('resertMarket');
     points.value = [];
   };
 
@@ -130,8 +136,11 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       <div className='p-4 dark:bg-b-dark bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
         <Form
           onSubmit={onSubmit}
+          mutators={{
+            ...arrayMutators,
+          }}
           initialValues={initialValues.value}
-          render={({ handleSubmit, form, submitting, pristine }) => (
+          render={({ handleSubmit, form, submitting }) => (
             <form onSubmit={handleSubmit} className='space-y-6'>
               {/** FORMULARIO PRINCIPAL */}
               <div className='grid grid-cols-3 gap-3'>
@@ -164,8 +173,27 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                     )}
                   </Field>
                 </div>
+                <div class='col-span-3'>
+                  <Map
+                    name='Map'
+                    pointsAmount={100}
+                    allowManualPoint={true}
+                    sendPoints={(data) => {
+                      sendPointsRef(data);
+                    }}
+                    pointsRef={points.value}
+                    center={currentLocation.value}
+                    condition={false}
+                    errorCondition=''
+                    radialPoint={null}
+                    errorRadialPoint=''
+                    draggable={true}
+                    width='100%'
+                    clickPoint={() => {}}
+                  />
+                </div>
 
-                <div class='col-span-2'>
+                {/* <div class='col-span-2'>
                   <Field<string> name='placeId' validate={required}>
                     {({ input, meta }) => (
                       <Select
@@ -196,24 +224,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   <br />
                   <label for='lname'>Longitud: </label>
                   {currentLocation.value?.lng}
-                </div>
+                </div> */}
               </div>
-
-              <Map
-                name='Map'
-                pointsAmount={3}
-                sendPoints={(data) => {
-                  sendPointsRef(data);
-                }}
-                pointsRef={points.value}
-                center={currentLocation.value}
-                condition={false}
-                errorCondition=''
-                radialPoint={null}
-                errorRadialPoint=''
-                draggable={true}
-                clickPoint={() => {}}
-              />
 
               {/* Botonera */}
               <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
@@ -226,7 +238,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                     form.reset();
                     resertMarket();
                   }}
-                  disabled={submitting || pristine}
                 />
 
                 <Button
@@ -238,7 +249,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   disabled={submitting}
                 />
               </div>
-              {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
+              {/* {<pre>{JSON.stringify(values, 0, 2)}</pre>} */}
             </form>
           )}
         />
