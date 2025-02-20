@@ -12,7 +12,7 @@ export const Layer: FunctionComponent<ILayerProps> = ({
       <div className='max-w-4xl px-10'>
         <h2 className='text-5xl font-bold mb-2'>{title}</h2>
         <h4 className='text-2xl font-semibold mb-10'>{subtitle}</h4>
-        <p className='h-80 text-lg font-medium'>{description}</p>
+        <p className='h-10 text-lg font-medium'>{description}</p>
       </div>
       <div className='w-2/4 h-100'>{children}</div>
     </div>
