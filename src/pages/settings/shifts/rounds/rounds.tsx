@@ -82,7 +82,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
 
   return (
     <Section>
-      <div className='p-4 dark:bg-black bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
+      <div className='p-4 dark:bg-black bg-white rounde shado border-t-4 border-cyan-500  '>
         <div className='flex flex-col gap-1 w-10/12'>
           <div className='flex flex-row'>
             <Button
