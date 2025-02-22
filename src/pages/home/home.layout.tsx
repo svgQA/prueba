@@ -20,7 +20,12 @@ import homeService1 from '../../assets/image/home-service-1.svg';
 import homeService2 from '../../assets/image/home-service-2.svg';
 import homeService3 from '../../assets/image/home-service-3.svg';
 import homeService4 from '../../assets/image/home-service-4.svg';
+
 import homeSolution1 from '../../assets/image/home-solution-1.svg';
+import homeSolution2 from '../../assets/image/home-solution-2.svg';
+import homeSolution3 from '../../assets/image/home-solution-3.svg';
+import homeSolution4 from '../../assets/image/home-solution-4.svg';
+
 import homeWeCenter from '../../assets/image/home-we-center.png';
 import homeWithTryvooDesktop from '../../assets/image/home-desktop-with-tryvoo.png';
 
@@ -128,11 +133,128 @@ export const HomeLayout: FunctionComponent = () => {
           type='button'
           id='schedule'
           name='schedule'
-          className='bg-[#20314F] text-[#FFFF] mb-4 mt-7 mb-10'
+          className='bg-[#20314F] text-[#FFFF] mb-4 mt-7 mb-10 text-xl rounded-full !p-5'
         />
       </div>
     )
 
+  }
+
+  const Services = () => {
+    const items: any[] = [
+      {
+        id: 1,
+        title: 'Monitorio en Tiempo Real',
+        subtitle: 'Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real.',
+        image: homeService1
+      },
+      {
+        id: 2,
+        title: 'Capacidades Offline',
+        subtitle: 'Los operarios pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando la conexión a Internet es restaurada.',
+        image: homeService2
+      },
+      {
+        id: 3,
+        title: 'IA y Soporte Virtual',
+        subtitle: 'Tu asistente virtual para resolver problemas en campo, con recomendaciones basadas en los datos que se capturan durante las operaciones.',
+        image: homeService3
+      },
+      {
+        id: 4,
+        title: 'Integración y Personalización',
+        subtitle: 'Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector.',
+        image: homeService4
+      }
+    ];
+
+    return (
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px]'>
+        <span className='text-3xl font-bold text-[#349396]'>Servicios destacados</span>
+        <span className='text-xl text-[#349396]'>Todo lo que necesitas en una sola plataforma</span>
+
+        <div className='flex flex-wrap gap-6 justify-center mt-7'>
+          {items.map((item: any, index: number) => (
+            <div key={index} class="flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200">
+              <img class="w-auto h-48 object-cover rounded-lg" src={item.image} alt="Card Image" />
+              <div class="mt-4">
+                <h2 class="text-2xl font-semibold text-[#349396]">{item.title}</h2>
+                <p class="text-[#349396] mt-2">{item.subtitle}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <Button
+          label='Ver detalle'
+          type='button'
+          id='schedule'
+          name='schedule'
+          className='bg-[#20314F] text-[#FFFF] mb-4 mt-10 text-xl rounded-full !p-5 !w-[400px]'
+        />
+      </div>
+    )
+  }
+
+  const Solutions = () => {
+    const items: any[] = [
+      {
+        id: 1,
+        title: 'Seguridad',
+        subtitle: 'Gestiona rondas de vigilancia, genera reportes de incidentes y asegura un control completo sobre las actividades de los operarios.',
+        image: homeSolution1
+      },
+      {
+        id: 2,
+        title: 'Logística',
+        subtitle: 'Rastrea vehículos, monitorea entregas y optimiza la asignación de rutas para maximizar la eficiencia.',
+        image: homeSolution2
+      },
+      {
+        id: 3,
+        title: 'Construcción',
+        subtitle: 'Coordina las tareas de los trabajadores en campo, controla los recursos y realiza un seguimiento de los avances del proyecto.',
+        image: homeSolution3
+      },
+      {
+        id: 4,
+        title: 'Salud',
+        subtitle: 'Gestiona a los técnicos de salud, realiza un seguimiento de las visitas domiciliarias y administra las solicitudes en tiempo real.',
+        image: homeSolution4
+      }
+    ];
+
+    return (
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px]'>
+        <span className='text-3xl font-bold mb-5 text-[#28787B]'>Soluciones por industria</span>
+        <span className='text-xl text-[#505050]'>Tryvoo esta optimizado para diferentes sectores.</span>
+
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 mb-10'>
+        {items.map((item: any, index: number) => (
+
+          <div key={index} class="flex items-center bg-white shadow-lg rounded-lg border border-gray-200 max-w-lg">
+            <div class="bg-[#26B6D4] p-4 rounded-lg h-full w-auto">
+              <img src={item.image} alt="" className='!h-[100%] w-auto ml-1 mr-7' />
+            </div>
+            <div class="text-left p-4">
+              <h2 class="text-2xl font-semibold text-[#505050]">{item.title}</h2>
+              <p class="text-[#505050] text-lg">
+                {item.subtitle}
+              </p>
+            </div>
+          </div>
+           ))}
+        </div>
+
+        <Button
+          label='Inicia prueba gratis!'
+          type='button'
+          id='schedule'
+          name='schedule'
+          className='bg-[#20314F] text-[#FFF] mb-4 text-xl rounded-full !p-5'
+        />
+      </div>
+    )
   }
 
   return (
@@ -150,120 +272,10 @@ export const HomeLayout: FunctionComponent = () => {
           <>
             <Main />
             <WhyTryvoo />
-
-            <div className='flex flex-col items-center text-center bg-white text-[#28787B]'>
-              <span className='text-3xl font-bold'>Servicios destacados</span>
-              <span className='text-xl'>Todo lo que necesitas en una sola plataforma</span>
-
-              <div className='flex flex-wrap gap-6 justify-center mt-7'>
-                <div class="flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200">
-                  <img class="w-auto h-48 object-cover rounded-lg" src={homeService1} alt="Card Image" />
-                  <div class="mt-4">
-                    <h2 class="text-xl font-semibold text-gray-900">Monitorio en Tiempo Real</h2>
-                    <p class="text-gray-600 mt-2">Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real.</p>
-                  </div>
-                </div>
-
-                <div class="flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200">
-                  <img class="w-auto h-48 object-cover rounded-lg" src={homeService2} alt="Card Image" />
-                  <div class="mt-4">
-                    <h2 class="text-xl font-semibold text-gray-900">Capacidades Offline</h2>
-                    <p class="text-gray-600 mt-2">Los operarios pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando la conexión a Internet es restaurada.</p>
-                  </div>
-                </div>
-
-                <div class="flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200">
-                  <img class="w-auto h-48 object-cover rounded-lg" src={homeService3} alt="Card Image" />
-                  <div class="mt-4">
-                    <h2 class="text-xl font-semibold text-gray-900">IA y Soporte Virtual</h2>
-                    <p class="text-gray-600 mt-2">Tu asistente virtual para resolver problemas en campo, con recomendaciones basadas en los datos que se capturan durante las operaciones.</p>
-                  </div>
-                </div>
-
-                <div class="flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200">
-                  <img class="w-auto h-48 object-cover rounded-lg" src={homeService4} alt="Card Image" />
-                  <div class="mt-4">
-                    <h2 class="text-xl font-semibold text-gray-900">Integración y Personalización</h2>
-                    <p class="text-gray-600 mt-2">Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector.</p>
-                    {/* <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">
-                      Ver más
-                    </button> */}
-                  </div>
-                </div>
-              </div>
-
-              <Button
-                label='Ver detalle'
-                type='button'
-                id='schedule'
-                name='schedule'
-                className='bg-[#20314F] text-[#FFFF] mb-4 mt-10'
-              />
-            </div>
-
-            <div className='flex flex-col items-center text-center bg-white text-[#28787B]'>
-              <span className='text-3xl font-bold'>Soluciones por industria</span>
-              <span className='text-xl'>Tryvoo esta optimizado para diferentes sectores.</span>
-
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 mb-10'>
-                <div class="flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md">
-                  <div class="bg-[#26B6D4] p-4 rounded-lg">
-                    <img src={homeSolution1} alt="" />
-                  </div>
-                  <div class="ml-4 text-left">
-                    <h2 class="text-lg font-semibold text-gray-900">Seguridad</h2>
-                    <p class="text-gray-600 text-sm">
-                      Gestiona rondas de vigilancia, genera reportes de incidentes y asegura un control completo sobre las actividades de los operarios.
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md">
-                  <div class="bg-[#26B6D4] p-4 rounded-lg">
-                    <img src={homeSolution1} alt="" />
-                  </div>
-                  <div class="ml-4 text-left">
-                    <h2 class="text-lg font-semibold text-gray-900">Logística</h2>
-                    <p class="text-gray-600 text-sm">
-                      Rastrea vehículos, monitorea entregas y optimiza la asignación de rutas para maximizar la eficiencia.
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md">
-                  <div class="bg-[#26B6D4] p-4 rounded-lg">
-                    <img src={homeSolution1} alt="" />
-                  </div>
-                  <div class="ml-4 text-left">
-                    <h2 class="text-lg font-semibold text-gray-900">Construcción</h2>
-                    <p class="text-gray-600 text-sm">
-                      Coordina las tareas de los trabajadores en campo, controla los recursos y realiza un seguimiento de los avances del proyecto.
-                    </p>
-                  </div>
-                </div>
+            <Services />
+            <Solutions />
 
 
-                <div class="flex items-center bg-white shadow-lg rounded-lg p-6 border border-gray-200 max-w-md">
-                  <div class="bg-[#26B6D4] p-4 rounded-lg">
-                    <img src={homeSolution1} alt="" />
-                  </div>
-                  <div class="ml-4 text-left">
-                    <h2 class="text-lg font-semibold text-gray-900">Salud</h2>
-                    <p class="text-gray-600 text-sm">
-                      Gestiona a los técnicos de salud, realiza un seguimiento de las visitas domiciliarias y administra las solicitudes en tiempo real.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <Button
-                label='Inicia prueba gratis!'
-                type='button'
-                id='schedule'
-                name='schedule'
-                className='bg-[#20314F] text-[#FFF] mb-4'
-              />
-            </div>
 
             <div className='flex flex-col items-center text-center bg-white text-[#28787B]'>
               <span className='text-3xl font-bold'>Quienes somos</span>
