@@ -10,7 +10,12 @@ import { Logo } from '@/components/common/logo/logo';
 // import { Layer } from '@/components/compose/layer';
 import { Button } from '@/components/common/button/button';
 import homeMainDesktop from '../../assets/image/home-main-desktop.png';
+
 import homeWhyTryvooIconAnalitics from '../../assets/image/home-icon-analitics.jpg';
+import homeWhyTryvooIconReason from '../../assets/image/home-icon-reason.jpg';
+import homeWhyTryvooIconPlace from '../../assets/image/home-icon-place.jpg';
+import homeWhyTryvooIconScalar from '../../assets/image/home-icon-scalar.jpg';
+
 import homeService1 from '../../assets/image/home-service-1.svg';
 import homeService2 from '../../assets/image/home-service-2.svg';
 import homeService3 from '../../assets/image/home-service-3.svg';
@@ -30,6 +35,106 @@ export const HomeLayout: FunctionComponent = () => {
     setHomeMenu(menu);
   };
 
+  const Main = () => {
+    return (
+      <div className='flex relative'>
+        <div className='md:w-2/5 flex flex-col items-center text-left pl-10 pr-7 mt-7'>
+          <h1 className='text-4xl mb-3 mt-3'>Transforma la Gestión de Operaciones Con Tryvoo</h1>
+          <span className='mb-5 text-2xl mt-5'>Optimiza la gestión de actividades, recursos y activos, incluso sin <span className='font-bold'>conectividad para tus negocios</span></span>
+          <Button
+            label='Agenda una Demo gratis'
+            type='button'
+            id='schedule'
+            name='schedule'
+            className='bg-[#43f876] text-[#393838] mb-4 mt-10 text-xl rounded-full !p-5'
+          />
+        </div>
+
+        <div className='md:w-3/5 flex items-center overflow-hidden'>
+          <img src={homeMainDesktop} alt="" className="w-[95vh] max-w-full object-contain z-[10]" />
+        </div>
+
+        <div class="absolute bottom-0 left-0 w-full h-[10vh] bg-white">  </div>
+      </div>
+    )
+  }
+
+  const WhyTryvoo = () => {
+    const items: any = [
+      {
+        id: 1,
+        title: 'Fácil Gestión y Trazabilidad:',
+        subtitle: '"Control total sobre las operaciones en campo, con visibilidad y seguimiento en tiempo real."',
+        image: homeWhyTryvooIconAnalitics
+      },
+      {
+        id: 2,
+        title: 'Asistencia con IA:',
+        subtitle: '"Recibe recomendaciones automáticas y soporte para tus operativos directamente en el terreno."',
+        image: homeWhyTryvooIconReason
+      },
+      {
+        id: 3,
+        title: 'Sincronización Offline:',
+        subtitle: '"Sigue gestionando incluso sin internet, y los datos se sincronizan al restaurar la conexión."',
+        image: homeWhyTryvooIconPlace
+      },
+      {
+        id: 4,
+        title: 'Escalabilidad:',
+        subtitle: '"Adaptable a cualquier tamaño de empresa o industria, desde la vigilancia hasta la logística."',
+        image: homeWhyTryvooIconScalar
+      }
+    ];
+
+    return (
+      <div className='bg-white text-center text-[#28787B]'>
+        <h2 className='text-[#28787B] text-3xl pt-5'>¿Por que Tryvoo?</h2>
+        <span className='text-[#28787B] pb-5 text-xl'>Simplifica. Optimiza. Crece</span>
+
+        <div className='flex mt-7'>
+          <div className='md:w-1/2 flex flex-col items-center'>
+            <img src={homeWithTryvooDesktop} alt="" className='w-[50%] h-auto' />
+            <span className='font-bold text-2xl ml-10 mr-10 text-left'>El 60% de las empresas en LATAM buscan herramientas que mejoren la trazabilidad y reduzcan costos operativos</span>
+            <p className='hidden md:block text-xl ml-10 mr-10 mt-5 text-left'>Tryvoo está liderando esta transformación, gracias a la Digitalización y automatización completa de las actividades en campo, llegando a soluciones intuitivas, accesibles incluso sin conexión.</p>
+          </div>
+
+          <div className='md:w-1/2 mt-7'>
+            <div className="shadow-xl bg-white rounded-lg">
+
+              {items.map((item: any, index: number) => (
+
+                <div key={index}>
+                  <div className="flex items-start space-x-4 p-5">
+                    <img src={item.image} alt="Gestión" className="w-16 h-16" />
+
+                    <div className='text-left'>
+                      <span>
+                        <span className="font-bold text-gray-700 text-xl">{item.title}</span>
+                        <span className="text-gray-600 text-sm text-xl">{item.subtitle}</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="w-[90%] h-px bg-[#CECECE]"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <Button
+          label='Conoce todas las posibilidades'
+          type='button'
+          id='schedule'
+          name='schedule'
+          className='bg-[#20314F] text-[#FFFF] mb-4 mt-7 mb-10'
+        />
+      </div>
+    )
+
+  }
+
   return (
     <section className='relative overflow-hidden text-t-dark'>
       <Navbar
@@ -42,94 +147,9 @@ export const HomeLayout: FunctionComponent = () => {
       />
       <div className='w-full pt-16 bg-gradient-to-r from-cyan-500 to-emerald-400 content-center'>
         {homeMenu === '/' && (
-          // <Layer
-          //   title='Gestión Simplificada de Recursos Informativos'
-          //   subtitle='Todo lo Que Necesitas, Organizado Perfectamente'
-          //   description='Facilita la gestión del conocimiento dentro de tu organización con herramientas poderosas para crear y compartir hitos informativos. Desde políticas internas hasta guías y tutoriales externos, organiza y distribuye contenido que empodera a tus empleados y mejora su productividad.'
-          // />
           <>
-            <div className='flex'>
-              <div className='md:w-2/5 flex flex-col items-center text-left pl-10 pr-7 mt-7'>
-                <h1 className='text-4xl mb-3 mt-3'>Transforma la Gestión de Operaciones Con Tryvoo</h1>
-                <span className='mb-5 text-2xl'>Optimiza la gestión de actividades, recursos y activos, incluso sin <span className='font-bold'>conectividad para tus negocios</span></span>
-                <Button
-                  label='Agenda una Demo gratis'
-                  type='button'
-                  id='schedule'
-                  name='schedule'
-                  className='bg-[#43f876] text-[#393838] mb-4 mt-10'
-                />
-              </div>
-
-              <div className='md:w-3/5 flex items-center overflow-hidden'>
-                <img src={homeMainDesktop} alt="" className="w-[90vh] max-w-full object-contain" />
-              </div>
-            </div>
-
-            <div className='bg-white text-center text-[#28787B]'>
-              <h2 className='text-[#28787B] text-3xl pt-5'>¿Por que Tryvoo?</h2>
-              <span className='text-[#28787B] pb-5 text-xl'>Simplifica. Optimiza. Crece</span>
-
-              <div className='flex mt-7'>
-                <div className='md:w-1/2 flex flex-col items-center'>
-                  <img src={homeWithTryvooDesktop} alt="" className='w-[50%] h-auto' />
-                  <span className='font-bold text-2xl ml-10 mr-10'>El 60% de las empresas en LATAM buscan herramientas que mejoren la trazabilidad y reduzcan costos operativos</span>
-                  <p className='hidden md:block text-xl ml-10 mr-10 mt-5'>Tryvoo está liderando esta transformación, gracias a la Digitalización y automatización completa de las actividades en campo, llegando a soluciones intuitivas, accesibles incluso sin conexión.</p>
-                </div>
-
-                <div className='md:w-1/2'>
-                  <div className="shadow-xl bg-white rounded-lg">
-                    <div className="flex items-start space-x-4 p-5">
-                      <img src={homeWhyTryvooIconAnalitics} alt="Gestión" className="w-8 h-8" />
-                      <div className='text-left'>
-                        <span>
-                          <span className="font-bold text-gray-700 text-xl">Fácil Gestión y Trazabilidad:</span>
-                          <span className="text-gray-600 text-sm text-xl">"Control total sobre las operaciones en campo, con visibilidad y seguimiento en tiempo real."</span>
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4 p-5">
-                      <img src={homeWhyTryvooIconAnalitics} alt="Gestión" className="w-8 h-8" />
-                      <div className='text-left'>
-                        <span>
-                          <span className="font-bold text-gray-700 text-xl">Asistencia con IA:</span>
-                          <span className="text-gray-600 text-sm text-xl">"Recibe recomendaciones automáticas y soporte para tus operativos directamente en el terreno."</span>
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4 p-5">
-                      <img src={homeWhyTryvooIconAnalitics} alt="Gestión" className="w-8 h-8" />
-                      <div className='text-left'>
-                        <span>
-                          <span className="font-bold text-gray-700 text-xl">Sincronización Offline:</span>
-                          <span className="text-gray-600 text-sm text-xl">"Sigue gestionando incluso sin internet, y los datos se sincronizan al restaurar la conexión."</span>
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4 p-5">
-                      <img src={homeWhyTryvooIconAnalitics} alt="Gestión" className="w-8 h-8" />
-                      <div className='text-left'>
-                        <span>
-                          <span className="font-bold text-gray-700 text-xl">Escalabilidad:</span>
-                          <span className="text-gray-600 text-sm text-xl">"Adaptable a cualquier tamaño de empresa o industria, desde la vigilancia hasta la logística."</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Button
-                label='Conoce todas las posibilidades'
-                type='button'
-                id='schedule'
-                name='schedule'
-                className='bg-[#20314F] text-[#FFFF] mb-4 mt-7 mb-10'
-              />
-            </div>
+            <Main />
+            <WhyTryvoo />
 
             <div className='flex flex-col items-center text-center bg-white text-[#28787B]'>
               <span className='text-3xl font-bold'>Servicios destacados</span>
