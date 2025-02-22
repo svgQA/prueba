@@ -443,7 +443,10 @@ export const HomeLayout: FunctionComponent = () => {
                 <span>Te brindamos asesoria gratuita</span>
               </div>
               <div className='w-[30%] text-xl'>
-                <span>Para que comiences optimizar tu negocio con herramientas ágiles y operables en cualquiers espacio y lugar</span>
+                <span>
+                  Para que comiences optimizar tu negocio con herramientas
+                  ágiles y operables en cualquiers espacio y lugar
+                </span>
               </div>
               <div className='w-[30%] text-center'>
                 <Button
