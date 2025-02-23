@@ -1,5 +1,5 @@
 import { Switch } from '@/components/common/switch/switch';
-import { ViewMode } from 'gantt-task-react';
+import { ViewMode } from '@/components/compose/gantt';
 
 export const ViewSwitcher = ({
   onViewModeChange,

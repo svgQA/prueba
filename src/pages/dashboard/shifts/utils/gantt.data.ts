@@ -1,4 +1,4 @@
-import { Task } from 'gantt-task-react';
+import { Task } from '@/components/compose/gantt';
 
 export const initTasks = (): Task[] => {
   const currentDate = new Date();
