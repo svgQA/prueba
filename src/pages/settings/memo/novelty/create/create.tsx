@@ -58,7 +58,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-b-dark bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
+      <div className='p-4 dark:bg-b-dark bg-white rounded-lg shado border-t-4 border-cyan-500  '>
         <Form
           onSubmit={onSubmit}
           initialValues={initialValues.value}
