@@ -1,7 +1,6 @@
-import { ResourcesConfig } from 'aws-amplify';
+import { ResourcesConfig } from '@aws-amplify/core';
 import {
   aws_cognito_client_id,
-  aws_cognito_identity_pool,
   aws_cognito_user_pool,
   aws_oauth_domain,
 } from './env.config';
@@ -11,7 +10,6 @@ export const AWS_AMPLIFY_SETTINGS: ResourcesConfig = {
     Cognito: {
       userPoolId: aws_cognito_user_pool,
       userPoolClientId: aws_cognito_client_id,
-      identityPoolId: aws_cognito_identity_pool,
       signUpVerificationMethod: 'code' as 'code' | 'link',
       loginWith: {
         username: true,
