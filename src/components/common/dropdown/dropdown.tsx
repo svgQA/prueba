@@ -16,7 +16,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
       (event: MouseEvent) => {
         const target = event.target as HTMLElement;
         if (target.nodeName === 'LI') {
-          const menuClicked = target.getAttribute('name');
+          const menuClicked = target.getAttribute('data-name');
           if (menuClicked) {
             const element = options.find(
               (element) => element[labelTag] === menuClicked
@@ -36,7 +36,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
           <li
             key={`${element[labelTag]}-dropdown-element`}
             id={`${element[labelTag]}-dropdown-element`}
-            name={`${element[labelTag]}`}
+            data-name={`${element[labelTag]}`}
             class='block px-4 py-2'
           >
             {element[labelTag]}

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 export const Carousel: FunctionComponent<ICarouselProps> = ({
   id,
-  name,
   children,
   visibleCount = 3,
 }: ICarouselProps) => {
@@ -34,7 +33,6 @@ export const Carousel: FunctionComponent<ICarouselProps> = ({
   return (
     <div
       id={id}
-      name={name}
       className='relative overflow-hidden w-36 h-96 m-1'
       ref={carouselRef}
     >

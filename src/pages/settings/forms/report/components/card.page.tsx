@@ -82,11 +82,10 @@ export const CardReport = ({ menu }: ICardReportProps) => {
       </div>
       <div
         ref={contentRef}
-        name='pdf-file'
         className='print-content bg-b-light-dark dark:bg-b-dark-light p-8 w-full vox-scroll-design overflow-y-auto max-h-[70vh] rounded-md'
       >
         <div className='space-y-6'>
-          <section name='report-header' className='flex flex-row border-b'>
+          <section className='flex flex-row border-b'>
             <div className=' pb-4 w-1/2'>
               <h2 className='text-xl font-bold mb-2 capitalize'>
                 {getReport.value.title}
@@ -103,7 +102,7 @@ export const CardReport = ({ menu }: ICardReportProps) => {
             </div>
           </section>
 
-          <section name='report-details' className='space-y-4'>
+          <section className='space-y-4'>
             <h3 className='text-lg font-semibold'>Report Details</h3>
             <div className='grid grid-cols-2 gap-4'>
               <div>
@@ -117,7 +116,7 @@ export const CardReport = ({ menu }: ICardReportProps) => {
             </div>
           </section>
 
-          <section name='report-summary' className='space-y-4'>
+          <section className='space-y-4'>
             <h3 className='text-lg font-semibold'>Summary</h3>
             <p>
               This is an example report summary with sample content. The actual
@@ -126,7 +125,7 @@ export const CardReport = ({ menu }: ICardReportProps) => {
             </p>
           </section>
 
-          <table name='report-data' className='w-full border-collapse'>
+          <table className='w-full border-collapse'>
             <thead>
               <tr>
                 <th className='border p-2 text-left'>Item</th>
@@ -148,7 +147,7 @@ export const CardReport = ({ menu }: ICardReportProps) => {
             </tbody>
           </table>
 
-          <section name='report-footer' className='grid grid-cols-4 gap-6 mt-6'>
+          <section className='grid grid-cols-4 gap-6 mt-6'>
             <div className='bg-gray-200 h-44 rounded-sm col-span-2'></div>
             <div className='bg-gray-300 h-44 rounded-sm'></div>
             <div className='bg-gray-400 h-44 rounded-sm'></div>
