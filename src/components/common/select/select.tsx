@@ -21,7 +21,7 @@ export const Select = ({
   ...props
 }: ISelectProps) => {
   return (
-    <div id={id} name={name} className='w-full'>
+    <div id={id} className='w-full'>
       {label && (
         <label
           for={`${id}-select`}
@@ -42,7 +42,6 @@ export const Select = ({
           value={value}
           name={name}
           id={`${id}-select`}
-          placeholder={placeholder}
           required={required}
           tabIndex={tabIndex}
           style={{ WebkitAppearance: 'none' }}

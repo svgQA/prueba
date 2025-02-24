@@ -6,7 +6,6 @@ import { ColumnFiltersState } from '@tanstack/react-table';
 
 export const Search = ({
   id,
-  name,
   keys = [],
   lenThreshold = 3,
   placeholder,
@@ -106,7 +105,7 @@ export const Search = ({
     (event: TargetedEvent<HTMLDivElement>) => {
       const target = event.target as HTMLElement;
       if (target instanceof HTMLSpanElement) {
-        const name = target.getAttribute('name');
+        const name = target.getAttribute('data-name');
         if (name && name.startsWith('filter-delete-')) {
           const key = name.split('-')[2];
           if (!key) return;
@@ -120,7 +119,7 @@ export const Search = ({
   const handleClickKeys = useCallback(
     (event: TargetedEvent<HTMLDivElement>) => {
       const target = event.target as HTMLDivElement;
-      const name = target.getAttribute('name');
+      const name = target.getAttribute('data-name');
       if (name && name.startsWith('filter-key-')) {
         const id = target.getAttribute('data-id');
         const label = target.getAttribute('data-label');
@@ -144,7 +143,7 @@ export const Search = ({
               index === selectedKeyIndex.value ? 'bg-primary' : ''
             }`}
             key={keyName}
-            name={keyName}
+            data-name={keyName}
             data-id={key.id}
             data-label={key.label}
             tabIndex={index}
@@ -166,7 +165,7 @@ export const Search = ({
         return (
           <div
             key={keyName}
-            name={keyName}
+            data-name={keyName}
             className='mx-1 pr-2 flex flex-row justify-center relative items-center overflow-hidden whitespace-nowrap border rounded-md border-b-light-dark dark:border-b-dark-light'
           >
             <span className='content-center h-full px-1 mr-1 bg-primary text-sm font-bold min-w-[30px] truncate'>
@@ -176,7 +175,7 @@ export const Search = ({
               {String(item.value) /* .join('|') */}
             </p>
             <span
-              name={`filter-delete-${item.id}`}
+              data-name={`filter-delete-${item.id}`}
               className='absolute vox-icon vx-icon-192 size-sm right-0'
             />
           </div>
@@ -188,12 +187,10 @@ export const Search = ({
   return (
     <div
       id={id}
-      name={name}
       className='flex flex-row items-center border rounded-lg  relative border-b-light-dark dark:border-b-dark-light bg-transparent'
     >
       <span className='px-2 vox-icon vx-icon-153 ' />
       <div
-        name='input-filter-chips'
         className='flex flex-row max-w-[80%] overflow-auto'
         onClick={handleClickFilters}
       >

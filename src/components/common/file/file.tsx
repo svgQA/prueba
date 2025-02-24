@@ -85,7 +85,7 @@ export const File = ({
   };
 
   return (
-    <div id={id} name={name} className='w-full my-1'>
+    <div id={id} className='w-full my-1'>
       <div className='relative'>
         {isLoading.value && (
           <div className='absolute inset-0 bg-white/50 dark:bg-black/50 z-10 flex items-center justify-center'>

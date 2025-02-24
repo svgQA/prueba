@@ -3,7 +3,6 @@ import { type ISliderProps } from './interface';
 
 export const Slider: FunctionComponent<ISliderProps> = ({
   id,
-  name,
 }: ISliderProps) => {
-  return <div id={id} name={name}></div>;
+  return <div id={id}></div>;
 };

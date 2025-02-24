@@ -15,7 +15,6 @@ import { MenuItem } from './menu';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
   id,
-  name,
   menus,
   onSettingHandler,
   onHomeHandler,
@@ -81,7 +80,6 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   return (
     <nav
       id={`${id}-nav`}
-      name={name}
       className='fixed left-0 top-0 transform px-1 flex flex-col justify-between h-screen border-r border-b-light-dark dark:border-b-dark-light z-20 bg-b-light dark:bg-b-dark-light'
     >
       {onHomeHandler && (
