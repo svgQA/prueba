@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     preact(),
     visualizer({
-      open: true, // Abre el reporte automáticamente en el navegador
+      open: false, // Abre el reporte automáticamente en el navegador
       filename: 'stats.html', // Nombre del archivo de salida
       // gzip: true, // Mostrar tamaño con gzip
       brotliSize: true, // Mostrar tamaño con Brotli
