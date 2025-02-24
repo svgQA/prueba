@@ -49,7 +49,6 @@ export const ExpandableCorrespondence: FunctionComponent<IExpandableProps> = ({
       </div>
       <div className='mt-4 flex w-full md:flex-row gap-4 '>
         <textarea
-          type='text'
           placeholder='Descripción'
           className='border border-gray-300 pl-4 p-2 rounded-sm w-full md:w-full'
           value={message}

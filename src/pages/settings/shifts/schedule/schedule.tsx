@@ -74,7 +74,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-black bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
+      <div className='p-4 dark:bg-black bg-white rounde shado border-t-4 border-cyan-500  '>
         <Button
           onClick={redirect}
           type='button'

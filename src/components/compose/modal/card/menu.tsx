@@ -18,7 +18,6 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
               <Link
                 to={to}
                 key={name}
-                name={name}
                 data-to={to}
                 data-label={menu.label}
                 data-description={menu.description}

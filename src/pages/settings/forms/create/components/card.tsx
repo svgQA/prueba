@@ -231,7 +231,6 @@ export const CardElement = ({
     <div
       className={`${selected ? 'bg-teal-300' : ''} flex flex-row relative my-1 h-fit`}
       id={id}
-      name={name}
     >
       <div className='absolute top-1 right-3 flex flex-row justify-end w-10 z-10 items-center'>
         {/* <div className='text-xs capitalize bg-gray-200 rounded-sm px-1 text-gray-600 font-medium h-fit mx-1'>

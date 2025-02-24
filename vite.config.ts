@@ -81,6 +81,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       '&': path.resolve(__dirname, './src/pages/settings'),
       $: path.resolve(__dirname, 'src/services'),
+      react: 'preact/compat',
+      'react-dom': 'preact/compat',
     },
   },
 });

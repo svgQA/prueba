@@ -22,7 +22,6 @@ export const MenuItem = memo<IMenuItem>(
       </Link>
     ) : (
       <a
-        name={menu.to}
         className={`p-1 mt-1 bg-opacity-20 rounded-sm ${getSelected(menu.to)}`}
       >
         <ButtonMenu name={menu.to} label={menu.label} icon={menu.icon} />

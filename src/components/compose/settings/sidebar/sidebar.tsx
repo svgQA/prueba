@@ -3,11 +3,10 @@ import { type ISidebarProps } from './interface';
 
 export const SSidebar: FunctionComponent<ISidebarProps> = ({
   id,
-  name,
 }: ISidebarProps) => {
   return (
     <aside>
-      <nav id={id} name={name}></nav>
+      <nav id={id}></nav>
     </aside>
   );
 };

@@ -3,10 +3,7 @@ import IconsList from './icons.json';
 import { useState, useCallback, memo } from 'preact/compat';
 
 const Icon = memo(({ name, number }: { name: string; number: string }) => (
-  <div
-    name={name}
-    className='h-13 px-3 cursor-pointer hover:bg-teal-600 hover:text-white rounded-md'
-  >
+  <div className='h-13 px-3 cursor-pointer hover:bg-teal-600 hover:text-white rounded-md'>
     <span className={`vox-icon ${name}`} />
     <p className='text-xs'>{number}</p>
   </div>

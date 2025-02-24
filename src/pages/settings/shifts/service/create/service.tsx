@@ -116,7 +116,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   }, []);
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-b-dark bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
+      <div className='p-4 dark:bg-b-dark bg-white rounde shado border-t-4 border-cyan-500  '>
         <Form
           mutators={{
             ...arrayMutators,
@@ -286,7 +286,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                         {fields.map((name, index) => (
                           <div
                             key={index}
-                            className='rounded-lg shadow p-2 border-2'
+                            className='rounde shadow p-2 border-2'
                           >
                             <div className='bg-gray-100 dark:bg-b-dark-light p-3 text-center'>
                               <h2 className='text-xl font-semibold '>
@@ -401,7 +401,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                         {fields.map((name, index) => (
                           <div
                             key={index}
-                            className='rounded-lg shadow p-2 border-2'
+                            className='rounde shadow p-2 border-2'
                           >
                             <div className='bg-gray-100 dark:bg-b-dark-light p-3 text-center'>
                               <h2 className='text-xl font-semibold '>

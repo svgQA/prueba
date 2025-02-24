@@ -5,7 +5,6 @@ import { ModalServices } from '@/pages/home/modal/modal.services';
 
 export const Navbar: FunctionComponent<INavbarProps> = ({
   id,
-  name,
   menus,
   logo,
   onActionHandler,
@@ -14,7 +13,6 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
   return (
     <nav
       id={id}
-      name={name}
       className='flex font-bold px-5 py-4 flex-row justify-between w-full content-center items-center absolute top-0 z-50'
     >
       <span className='text-xl'>{logo}</span>

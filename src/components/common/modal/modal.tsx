@@ -5,7 +5,6 @@ import { Button } from '../button/button';
 
 export const Modal: FunctionComponent<IModalProps> = ({
   id,
-  name,
   open,
   onClose,
   header,
@@ -27,7 +26,6 @@ export const Modal: FunctionComponent<IModalProps> = ({
   return (
     <div
       id={id}
-      name={name}
       tabIndex={-1}
       className={`${open ? '' : 'hidden'} ${expand ? '' : 'p-7'} ${transparent ? 'bg-transparent' : 'bg-b-dark'} ${position} w-full h-full  right-0 top-0 flex justify-center items-center z-50 bg-opacity-95`}
     >
