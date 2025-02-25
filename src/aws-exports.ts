@@ -1,4 +1,4 @@
-import { ResourcesConfig } from '@aws-amplify/core';
+import { ResourcesConfig } from 'aws-amplify';
 import {
   aws_cognito_client_id,
   aws_cognito_user_pool,
