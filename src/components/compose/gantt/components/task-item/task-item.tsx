@@ -39,7 +39,7 @@ export const TaskItem = (props: TaskItemProps) => {
   };
   const textRef = useRef<SVGTextElement>(null);
   const taskItem = useSignal<VNode>(<div />);
-  const isTextInside = useSignal(true);
+  const isTextInside = useSignal<boolean>(true);
 
   useEffect(() => {
     switch (task.typeInternal) {
@@ -120,7 +120,7 @@ export const TaskItem = (props: TaskItemProps) => {
         }
         ref={textRef}
       >
-        {task.name}
+        {/*{task.name}*/}
       </text>
     </g>
   );

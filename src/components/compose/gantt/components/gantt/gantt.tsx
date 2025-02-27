@@ -2,10 +2,10 @@ import { ComponentType } from 'preact';
 import { useSignal } from '@preact/signals';
 import { useState, useRef, useEffect } from 'preact/hooks';
 import { ViewMode, GanttProps, Task } from '../../types/public-types';
-import { GridProps } from '../grid/grid';
+// import { GridProps } from '../grid/grid';
 import { ganttDateRange, seedDates } from '../../helpers/date-helper';
-import { CalendarProps } from '../calendar/calendar';
-import { TaskGanttContentProps } from './task-gantt-content';
+// import { CalendarProps } from '../calendar/calendar';
+// import { TaskGanttContentProps } from './task-gantt-content';
 import { TaskListHeaderDefault } from '../task-list/task-list-header';
 import { TaskListTableDefault } from '../task-list/task-list-table';
 import { StandardTooltipContent, Tooltip } from '../other/tooltip';
@@ -17,8 +17,12 @@ import { convertToBarTasks } from '../../helpers/bar-helper';
 import { GanttEvent } from '../../types/gantt-task-actions';
 import { DateSetup } from '../../types/date-setup';
 import { HorizontalScroll } from '../other/horizontal-scroll';
-import { removeHiddenTasks, sortTasks } from '../../helpers/other-helper';
+// import { removeHiddenTasks } from '../../helpers/other-helper';
 import styles from './gantt.module.css';
+import { TaskGanttContentProps } from './task-gantt-content';
+import { CalendarProps } from '../calendar/calendar';
+import { GridProps } from '../grid/grid';
+// import { StandardTooltipContent } from '../other/tooltip';
 
 export const Gantt: ComponentType<GanttProps> = ({
   tasks,
@@ -65,7 +69,12 @@ export const Gantt: ComponentType<GanttProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
   const [dateSetup, setDateSetup] = useState<DateSetup>(() => {
-    const [startDate, endDate] = ganttDateRange(tasks, viewMode, preStepsCount);
+    const [startDate, endDate] = ganttDateRange(
+      tasks.startDate,
+      tasks.endDate,
+      viewMode,
+      preStepsCount
+    );
     return { viewMode, dates: seedDates(startDate, endDate, viewMode) };
   });
   const currentViewDate = useSignal<Date | undefined>(undefined);
@@ -84,22 +93,23 @@ export const Gantt: ComponentType<GanttProps> = ({
   const [failedTask, setFailedTask] = useState<BarTask | null>(null);
 
   const svgWidth = dateSetup.dates.length * columnWidth;
-  const ganttFullHeight = barTasks.length * rowHeight;
+  const ganttFullHeight = tasks.users.length * rowHeight;
 
   const scrollY = useSignal(0);
   const scrollX = useSignal(-1);
   const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
   useEffect(() => {
-    let filteredTasks: Task[];
-    if (onExpanderClick) {
-      filteredTasks = removeHiddenTasks(tasks);
-    } else {
-      filteredTasks = tasks;
-    }
-    filteredTasks = filteredTasks.sort(sortTasks);
+    /*
+    const filteredTasks = tasks.users.reduce(
+      (val: Task[], user: User) => [...val, ...user.tasks],
+      []
+    );
+   */
     const [startDate, endDate] = ganttDateRange(
-      filteredTasks,
+      // filteredTasks,
+      tasks.startDate,
+      tasks.endDate,
       viewMode,
       preStepsCount
     );
@@ -113,7 +123,8 @@ export const Gantt: ComponentType<GanttProps> = ({
     setDateSetup({ dates: newDates, viewMode });
     setBarTasks(
       convertToBarTasks(
-        filteredTasks,
+        // filteredTasks,
+        tasks,
         newDates,
         columnWidth,
         rowHeight,
@@ -242,7 +253,7 @@ export const Gantt: ComponentType<GanttProps> = ({
     if (ganttHeight) {
       svgContainerHeight.value = ganttHeight + headerHeight;
     } else {
-      svgContainerHeight.value = tasks.length * rowHeight + headerHeight;
+      svgContainerHeight.value = tasks.users.length * rowHeight + headerHeight;
     }
   }, [ganttHeight, tasks, headerHeight, rowHeight]);
 
@@ -424,13 +435,15 @@ export const Gantt: ComponentType<GanttProps> = ({
     onClick,
     onDelete,
   };
+  /*
+   */
 
   const tableProps: TaskListProps = {
     rowHeight,
     rowWidth: listCellWidth,
     fontFamily,
     fontSize,
-    tasks: barTasks,
+    tasks: tasks, // barTasks,
     locale,
     headerHeight,
     scrollY: scrollY.value,
@@ -457,7 +470,7 @@ export const Gantt: ComponentType<GanttProps> = ({
           gridProps={gridProps}
           calendarProps={calendarProps}
           barProps={barProps}
-          ganttHeight={ganttHeight}
+          ganttHeight={ganttFullHeight}
           scrollY={scrollY.value}
           scrollX={scrollX.value}
         />

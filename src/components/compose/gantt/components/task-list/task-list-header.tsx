@@ -43,7 +43,7 @@ export const TaskListHeaderDefault: ComponentType<TaskListHeaderProps> = ({
             minWidth: rowWidth,
           }}
         >
-          &nbsp;From
+          &nbsp;Phone
         </div>
         <div
           className={styles.ganttTable_HeaderSeparator}
@@ -58,7 +58,7 @@ export const TaskListHeaderDefault: ComponentType<TaskListHeaderProps> = ({
             minWidth: rowWidth,
           }}
         >
-          &nbsp;To
+          &nbsp;CardId
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
-import { useMemo } from 'preact/hooks';
+// import { useMemo } from 'preact/hooks';
 import { ComponentType } from 'preact';
 import styles from './task-list-table.module.css';
 import { type TaskListTableProps } from './task-list';
 
+/*
 interface DateStringCache {
   [key: string]: string;
 }
@@ -25,6 +26,7 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
   month: 'long',
   day: 'numeric',
 };
+*/
 
 export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
   rowHeight,
@@ -32,13 +34,15 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
   tasks,
   fontFamily,
   fontSize,
-  locale,
-  onExpanderClick,
+  // locale,
+  // onExpanderClick,
 }) => {
+  /*
   const toLocaleDateString = useMemo(
     () => toLocaleDateStringFactory(locale),
     [locale]
   );
+ */
 
   return (
     <div
@@ -48,13 +52,13 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
         fontSize: fontSize,
       }}
     >
-      {tasks.map((t) => {
-        let expanderSymbol = '';
-        if (t.hideChildren === false) {
-          expanderSymbol = '▼';
-        } else if (t.hideChildren === true) {
-          expanderSymbol = '▶';
-        }
+      {tasks.users.map((t) => {
+        // let expanderSymbol = '';
+        // if (t.hideChildren === false) {
+        //   expanderSymbol = '▼';
+        // } else if (t.hideChildren === true) {
+        //   expanderSymbol = '▶';
+        // }
 
         return (
           <div
@@ -71,6 +75,7 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
               title={t.name}
             >
               <div className={styles.taskListNameWrapper}>
+                {/*
                 <div
                   className={
                     expanderSymbol
@@ -81,6 +86,7 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
                 >
                   {expanderSymbol}
                 </div>
+                */}
                 <div>{t.name}</div>
               </div>
             </div>
@@ -91,7 +97,8 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
                 maxWidth: rowWidth,
               }}
             >
-              &nbsp;{toLocaleDateString(t.start, dateTimeOptions)}
+              {/*&nbsp;{toLocaleDateString(t.start, dateTimeOptions)}*/}
+              {t.phone}
             </div>
             <div
               className={styles.taskListCell}
@@ -100,7 +107,8 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
                 maxWidth: rowWidth,
               }}
             >
-              &nbsp;{toLocaleDateString(t.end, dateTimeOptions)}
+              {t.cardId}
+              {/*&nbsp;{toLocaleDateString(t.end, dateTimeOptions)}*/}
             </div>
           </div>
         );

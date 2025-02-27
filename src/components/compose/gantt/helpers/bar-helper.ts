@@ -1,9 +1,10 @@
-import { Task } from '../types/public-types';
+import { GeneralTask, Task, User } from '../types/public-types';
 import { BarTask, TaskTypeInternal } from '../types/bar-task';
 import { BarMoveAction } from '../types/gantt-task-actions';
 
 export const convertToBarTasks = (
-  tasks: Task[],
+  tasks: GeneralTask,
+  // Task[],
   dates: Date[],
   columnWidth: number,
   rowHeight: number,
@@ -22,7 +23,39 @@ export const convertToBarTasks = (
   milestoneBackgroundColor: string,
   milestoneBackgroundSelectedColor: string
 ) => {
-  let barTasks = tasks.map((t, i) => {
+  let index = 0;
+  let barTasks: BarTask[] = tasks.users.reduce((acc: BarTask[], user: User) => {
+    index++;
+    return [
+      ...acc,
+      ...user.tasks.map((task) =>
+        convertToBarTask(
+          task,
+          index,
+          dates,
+          columnWidth,
+          rowHeight,
+          taskHeight,
+          barCornerRadius,
+          handleWidth,
+          rtl,
+          barProgressColor,
+          barProgressSelectedColor,
+          barBackgroundColor,
+          barBackgroundSelectedColor,
+          projectProgressColor,
+          projectProgressSelectedColor,
+          projectBackgroundColor,
+          projectBackgroundSelectedColor,
+          milestoneBackgroundColor,
+          milestoneBackgroundSelectedColor
+        )
+      ),
+    ];
+  }, []);
+  /*
+  let barTasks = tasks.users.map((u, i) => {
+  	return [...u.tasks.map()]
     return convertToBarTask(
       t,
       i,
@@ -45,9 +78,10 @@ export const convertToBarTasks = (
       milestoneBackgroundSelectedColor
     );
   });
+ */
 
   // set dependencies
-  barTasks = barTasks.map((task) => {
+  barTasks = barTasks.map((task: any) => {
     const dependencies = task.dependencies || [];
     for (let j = 0; j < dependencies.length; j++) {
       const dependence = barTasks.findIndex(
@@ -255,6 +289,7 @@ const taskXCoordinate = (xDate: Date, dates: Date[], columnWidth: number) => {
   const x = index * columnWidth + percentOfInterval * columnWidth;
   return x;
 };
+
 const taskXCoordinateRTL = (
   xDate: Date,
   dates: Date[],
@@ -264,12 +299,13 @@ const taskXCoordinateRTL = (
   x += columnWidth;
   return x;
 };
+
 const taskYCoordinate = (
   index: number,
   rowHeight: number,
   taskHeight: number
 ) => {
-  const y = index * rowHeight + (rowHeight - taskHeight) / 2;
+  const y = (index - 1) * rowHeight + (rowHeight - taskHeight) / 2;
   return y;
 };
 
@@ -309,6 +345,7 @@ const progressByX = (x: number, task: BarTask) => {
     return progressPercent;
   }
 };
+
 const progressByXRTL = (x: number, task: BarTask) => {
   if (x >= task.x2) return 0;
   else if (x <= task.x1) return 100;
