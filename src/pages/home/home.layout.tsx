@@ -389,8 +389,8 @@ export const HomeLayout: FunctionComponent = () => {
             <div className='bg-[#26B6D4] rounded-lg'>
               <div class='bg-[#26B6D4] text-white p-6 rounded-lg'>
                 <ul class='space-y-3 text-lg'>
-                  <li class='flex items-start'>
-                    ✅{' '}
+                  <li class='flex items-start text-white'>
+                    <span className={`text-white left-0 px-1 size vox-icon vx-icon-030 rounded-full p-1`} />
                     <span class='ml-2 text-left'>
                       Gestión de operaciones limitada (hasta 5 usuarios).
                     </span>
