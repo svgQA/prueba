@@ -4,7 +4,6 @@ import { BarMoveAction } from '../types/gantt-task-actions';
 
 export const convertToBarTasks = (
   tasks: GeneralTask,
-  // Task[],
   dates: Date[],
   columnWidth: number,
   rowHeight: number,
@@ -53,32 +52,6 @@ export const convertToBarTasks = (
       ),
     ];
   }, []);
-  /*
-  let barTasks = tasks.users.map((u, i) => {
-  	return [...u.tasks.map()]
-    return convertToBarTask(
-      t,
-      i,
-      dates,
-      columnWidth,
-      rowHeight,
-      taskHeight,
-      barCornerRadius,
-      handleWidth,
-      rtl,
-      barProgressColor,
-      barProgressSelectedColor,
-      barBackgroundColor,
-      barBackgroundSelectedColor,
-      projectProgressColor,
-      projectProgressSelectedColor,
-      projectBackgroundColor,
-      projectBackgroundSelectedColor,
-      milestoneBackgroundColor,
-      milestoneBackgroundSelectedColor
-    );
-  });
- */
 
   // set dependencies
   barTasks = barTasks.map((task: any) => {
@@ -209,11 +182,28 @@ const convertToBar = (
   const y = taskYCoordinate(index, rowHeight, taskHeight);
   const hideChildren = task.type === 'project' ? task.hideChildren : undefined;
 
+  let progressBarColor = barProgressColor;
+  let progressSelectedBarColor = barProgressSelectedColor;
+
+  if (task.status === 'IN_PROGRESS') {
+    progressBarColor = '#CCE5FF'; // tone suave
+    progressSelectedBarColor = '#0066CC'; // azul
+  } else if (task.status === 'OPENED') {
+    progressBarColor = '#409D9F'; // m5
+    progressSelectedBarColor = '#00727B'; // ternary
+  } else if (task.status === 'COMPLETED') {
+    progressBarColor = '#AEFDC8'; // m6
+    progressSelectedBarColor = '#1DD75B'; // secondary
+  } else if (task.status === 'CLOSED') {
+    progressBarColor = '#FFA6A6'; // lighter error
+    progressSelectedBarColor = '#EF4444'; // error
+  }
+
   const styles = {
     backgroundColor: barBackgroundColor,
     backgroundSelectedColor: barBackgroundSelectedColor,
-    progressColor: barProgressColor,
-    progressSelectedColor: barProgressSelectedColor,
+    progressColor: progressBarColor,
+    progressSelectedColor: progressSelectedBarColor,
     ...task.styles,
   };
   return {

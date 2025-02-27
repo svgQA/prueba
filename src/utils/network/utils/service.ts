@@ -107,7 +107,6 @@ export class BaseService {
         prefix,
         tenance
       );
-      console.log('DATOS: ', model_request);
       const response = await fetch(model_request.url, {
         headers: model_request.header,
         body: model.data,
