@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import { FunctionComponent } from 'preact';
+import { ComponentType } from 'preact';
 import { TooltipPublicProps } from '../../types/public-types';
 import { BarTask } from '../../types/bar-task';
 import styles from './tooltip.module.css';
@@ -19,7 +19,7 @@ export type TooltipProps = {
   rowHeight: number;
   fontSize: string;
   fontFamily: string;
-  TooltipContent: FunctionComponent<TooltipPublicProps>;
+  TooltipContent: ComponentType<TooltipPublicProps>;
 };
 
 export const Tooltip = ({

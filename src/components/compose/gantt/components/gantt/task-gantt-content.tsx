@@ -2,7 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { VNode } from 'preact';
 import { EventOption } from '../../types/public-types';
 import { BarTask } from '../../types/bar-task';
-import { Arrow } from '../other/arrow';
+// import { Arrow } from '../other/arrow';
 import { handleTaskBySVGMouseEvent } from '../../helpers/bar-helper';
 import { isKeyboardEvent } from '../../helpers/other-helper';
 import { TaskItem } from '../task-item/task-item';
@@ -38,12 +38,12 @@ export const TaskGanttContent = ({
   dates,
   ganttEvent,
   selectedTask,
-  rowHeight,
+  // rowHeight,
   columnWidth,
   timeStep,
   svg,
   taskHeight,
-  arrowColor,
+  // arrowColor,
   arrowIndent,
   fontFamily,
   fontSize,
@@ -264,6 +264,7 @@ export const TaskGanttContent = ({
 
   return (
     <g className='content'>
+      {/*
       <g className='arrows' fill={arrowColor} stroke={arrowColor}>
         {tasks.map((task) => {
           return task.barChildren.map((child) => {
@@ -281,6 +282,7 @@ export const TaskGanttContent = ({
           });
         })}
       </g>
+      */}
       <g className='bar' fontFamily={fontFamily} fontSize={fontSize}>
         {tasks.map((task) => {
           return (

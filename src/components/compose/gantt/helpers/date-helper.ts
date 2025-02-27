@@ -1,4 +1,4 @@
-import { Task, ViewMode } from '../types/public-types';
+import { ViewMode } from '../types/public-types';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 import DateTimeFormat = Intl.DateTimeFormat;
 
@@ -75,20 +75,22 @@ export const startOfDate = (date: Date, scale: DateHelperScales): Date => {
 };
 
 export const ganttDateRange = (
-  tasks: Task[],
+  // tasks: Task[],
+  newStartDate: Date,
+  newEndDate: Date,
   viewMode: ViewMode,
   preStepsCount: number
 ): [Date, Date] => {
-  let newStartDate: Date = tasks[0].start;
-  let newEndDate: Date = tasks[0].start;
-  for (const task of tasks) {
-    if (task.start < newStartDate) {
-      newStartDate = task.start;
-    }
-    if (task.end > newEndDate) {
-      newEndDate = task.end;
-    }
-  }
+  // let newStartDate: Date = tasks[0].start;
+  // let newEndDate: Date = tasks[0].start;
+  // for (const task of tasks) {
+  //   if (task.start < newStartDate) {
+  //     newStartDate = task.start;
+  //   }
+  //   if (task.end > newEndDate) {
+  //     newEndDate = task.end;
+  //   }
+  // }
   switch (viewMode) {
     case ViewMode.Year:
       newStartDate = addToDate(newStartDate, -1, 'year');

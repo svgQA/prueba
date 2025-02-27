@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'preact';
+import { ComponentType } from 'preact';
 
 export enum ViewMode {
   Hour = 'Hour',
@@ -33,6 +33,20 @@ export interface Task {
   dependencies?: string[];
   hideChildren?: boolean;
   displayOrder?: number;
+}
+
+export interface User {
+  id: string | number;
+  name: string;
+  phone: string;
+  cardId: string;
+  tasks: Task[];
+}
+
+export interface GeneralTask {
+  startDate: Date;
+  endDate: Date;
+  users: User[];
 }
 
 export interface EventOption {
@@ -115,9 +129,9 @@ export interface StylingOption {
   arrowColor?: string;
   arrowIndent?: number;
   todayColor?: string;
-  TooltipContent?: FunctionComponent<TooltipPublicProps>;
-  TaskListHeader?: FunctionComponent<TaskListHeaderProps>;
-  TaskListTable?: FunctionComponent<TaskListTableProps>;
+  TooltipContent?: ComponentType<TooltipPublicProps>;
+  TaskListHeader?: ComponentType<TaskListHeaderProps>;
+  TaskListTable?: ComponentType<TaskListTableProps>;
 }
 
 export interface TaskListHeaderProps {
@@ -133,7 +147,7 @@ export interface TaskListTableProps {
   fontFamily: string;
   fontSize: string;
   locale: string;
-  tasks: Task[];
+  tasks: GeneralTask;
   selectedTaskId: string;
   /**
    * Sets selected task by id
@@ -156,5 +170,6 @@ export interface TooltipPublicProps {
 }
 
 export interface GanttProps extends EventOption, DisplayOption, StylingOption {
-  tasks: Task[];
+  // tasks: Task[];
+  tasks: GeneralTask;
 }
