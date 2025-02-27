@@ -100,14 +100,7 @@ export const Gantt: ComponentType<GanttProps> = ({
   const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
   useEffect(() => {
-    /*
-    const filteredTasks = tasks.users.reduce(
-      (val: Task[], user: User) => [...val, ...user.tasks],
-      []
-    );
-   */
     const [startDate, endDate] = ganttDateRange(
-      // filteredTasks,
       tasks.startDate,
       tasks.endDate,
       viewMode,
@@ -123,7 +116,6 @@ export const Gantt: ComponentType<GanttProps> = ({
     setDateSetup({ dates: newDates, viewMode });
     setBarTasks(
       convertToBarTasks(
-        // filteredTasks,
         tasks,
         newDates,
         columnWidth,
@@ -368,7 +360,7 @@ export const Gantt: ComponentType<GanttProps> = ({
     setIgnoreScrollEvent(true);
   };
 
-  const handleSelectedTask = (taskId: string) => {
+  const handleSelectedTask = (taskId: string | number) => {
     const newSelectedTask = barTasks.find((t) => t.id === taskId);
     const oldSelectedTask = barTasks.find(
       (t) => !!selectedTask && t.id === selectedTask.id
@@ -435,8 +427,6 @@ export const Gantt: ComponentType<GanttProps> = ({
     onClick,
     onDelete,
   };
-  /*
-   */
 
   const tableProps: TaskListProps = {
     rowHeight,

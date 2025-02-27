@@ -74,7 +74,9 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
               }}
               title={t.name}
             >
-              <div className={styles.taskListNameWrapper}>
+              <div
+                className={`${styles.taskListNameWrapper} flex justify-between items-center px-4`}
+              >
                 {/*
                 <div
                   className={
@@ -87,9 +89,15 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
                   {expanderSymbol}
                 </div>
                 */}
-                <div>{t.name}</div>
+                <img
+                  className='w-10 h-10 rounded-full object-cover mr-3'
+                  src={t.image}
+                  alt={`Profile photo of ${t.name}`}
+                />
+                <div className='text-lg font-medium'>{t.name}</div>
               </div>
             </div>
+            {/*
             <div
               className={styles.taskListCell}
               style={{
@@ -97,7 +105,7 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
                 maxWidth: rowWidth,
               }}
             >
-              {/*&nbsp;{toLocaleDateString(t.start, dateTimeOptions)}*/}
+              &nbsp;{toLocaleDateString(t.start, dateTimeOptions)}
               {t.phone}
             </div>
             <div
@@ -108,8 +116,9 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
               }}
             >
               {t.cardId}
-              {/*&nbsp;{toLocaleDateString(t.end, dateTimeOptions)}*/}
+              &nbsp;{toLocaleDateString(t.end, dateTimeOptions)}
             </div>
+              */}
           </div>
         );
       })}

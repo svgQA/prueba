@@ -29,6 +29,10 @@ import homeSolution4 from '../../assets/image/home-solution-4.svg';
 import homeWeCenter from '../../assets/image/home-we-center.png';
 import homeWithTryvooDesktop from '../../assets/image/home-desktop-with-tryvoo.png';
 
+import socialIcon1 from '../../assets/image/icon1.svg';
+import socialIcon2 from '../../assets/image/icon2.svg';
+import socialIcon3 from '../../assets/image/icon3.svg';
+
 export const HomeLayout: FunctionComponent = () => {
   useEffect(() => {
     document.title = 'Voxline';
@@ -43,7 +47,7 @@ export const HomeLayout: FunctionComponent = () => {
   const Main = () => {
     return (
       <div className='flex relative'>
-        <div className='md:w-2/5 flex flex-col items-center text-left pl-10 pr-7 mt-7'>
+        <div className='md:w-2/5 flex flex-col items-center text-left pl-10 pr-7 mt-7 mb-7'>
           <h1 className='text-4xl mb-3 mt-3'>
             Transforma la Gestión de Operaciones Con Tryvoo
           </h1>
@@ -56,7 +60,7 @@ export const HomeLayout: FunctionComponent = () => {
             type='button'
             id='schedule'
             name='schedule'
-            className='bg-[#43f876] text-[#393838] mb-4 mt-10 text-xl rounded-full !p-5'
+            className='bg-[#43f876] text-[#393838] mb-7 mt-10 text-xl rounded-full !p-5'
           />
         </div>
 
@@ -68,7 +72,7 @@ export const HomeLayout: FunctionComponent = () => {
           />
         </div>
 
-        <div class='absolute bottom-0 left-0 w-full h-[10vh] bg-white'> </div>
+        <div class='absolute bottom-0 left-0 w-full h-[5vh] bg-white'> </div>
       </div>
     );
   };
@@ -559,6 +563,33 @@ export const HomeLayout: FunctionComponent = () => {
     );
   };
 
+  const Footer = () => {
+    return (
+      <div className='bg-gray-800 flex justify-center gap-4 pt-10 pb-10'>
+        <div className='w-[30%]'>
+          <h2 className='text-xl font-bold'>Secciones Populares</h2>
+          <p className='text-sm pt-2'>Conoce más de tryvoo</p>
+        </div>
+
+        <div className='w-[30%]'>
+          <h3 className='text-xl font-bold'>Contáctanos</h3>
+          <p className='text-sm pt-2'>3157789022 - Popayán, Cauca</p>
+        </div>
+
+        <div className='w-[30%]'>
+          <div className='w-full block'>
+            <h3 className='text-xl font-bold'>Nuestra redes</h3>
+          </div>
+          <div className='w-full block flex justify-left pt-2'>
+            <img src={socialIcon1} alt='' className='mr-2' />
+            <img src={socialIcon2} alt='' className='mr-2' />
+            <img src={socialIcon3} alt='' className='mr-2' />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <section className='relative overflow-hidden text-t-dark'>
       <Navbar
@@ -598,6 +629,7 @@ export const HomeLayout: FunctionComponent = () => {
                 />
               </div>
             </div>
+            <Footer />
           </>
         )}
       </div>
