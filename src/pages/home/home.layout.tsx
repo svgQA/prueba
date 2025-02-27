@@ -565,31 +565,30 @@ export const HomeLayout: FunctionComponent = () => {
 
   const Footer = () => {
     return (
-      <div className="bg-gray-800 flex justify-center gap-4 pt-10 pb-10">
+      <div className='bg-gray-800 flex justify-center gap-4 pt-10 pb-10'>
         <div className='w-[30%]'>
-          <h2 className="text-xl font-bold">Secciones Populares</h2>
-          <p className="text-sm pt-2">Conoce más de tryvoo</p>
+          <h2 className='text-xl font-bold'>Secciones Populares</h2>
+          <p className='text-sm pt-2'>Conoce más de tryvoo</p>
         </div>
 
         <div className='w-[30%]'>
-          <h3 className="text-xl font-bold">Contáctanos</h3>
-          <p className="text-sm pt-2">3157789022 - Popayán, Cauca</p>
+          <h3 className='text-xl font-bold'>Contáctanos</h3>
+          <p className='text-sm pt-2'>3157789022 - Popayán, Cauca</p>
         </div>
 
         <div className='w-[30%]'>
-            <div className='w-full block'>
-              <h3 className="text-xl font-bold">Nuestra redes</h3>
-            </div>
-            <div className='w-full block flex justify-left pt-2'>
-              <img src={socialIcon1} alt="" className='mr-2'/>
-              <img src={socialIcon2} alt="" className='mr-2'/>
-              <img src={socialIcon3} alt="" className='mr-2'/>
-            </div>
-          
+          <div className='w-full block'>
+            <h3 className='text-xl font-bold'>Nuestra redes</h3>
+          </div>
+          <div className='w-full block flex justify-left pt-2'>
+            <img src={socialIcon1} alt='' className='mr-2' />
+            <img src={socialIcon2} alt='' className='mr-2' />
+            <img src={socialIcon3} alt='' className='mr-2' />
+          </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <section className='relative overflow-hidden text-t-dark'>
