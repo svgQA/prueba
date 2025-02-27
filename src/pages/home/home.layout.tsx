@@ -322,7 +322,7 @@ export const HomeLayout: FunctionComponent = () => {
 
   const We = () => {
     return (
-      <div className='flex flex-col items-center text-center bg-white pt-[70px]'>
+      <div className='flex flex-col items-center text-center !bg-[#f5cde0] !bg-opacity-75 pt-[70px] pb-4'>
         <span className='text-3xl font-bold text-[#20314F]'>Quienes somos</span>
         <span className='text-xl text-[#505050]'>
           En Tryvoo, entedemos las complejidades de operar fuera de la oficina.
