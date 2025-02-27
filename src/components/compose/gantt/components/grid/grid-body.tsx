@@ -1,10 +1,10 @@
 import { VNode } from 'preact';
-import { Task } from '../../types/public-types';
+import { GeneralTask } from '../../types/public-types';
 import { addToDate } from '../../helpers/date-helper';
 import styles from './grid.module.css';
 
 export type GridBodyProps = {
-  tasks: Task[];
+  tasks: GeneralTask;
   dates: Date[];
   svgWidth: number;
   rowHeight: number;
@@ -34,10 +34,10 @@ export const GridBody = ({
       className={styles.gridRowLine}
     />,
   ];
-  for (const task of tasks) {
+  for (const user of tasks.users) {
     gridRows.push(
       <rect
-        key={'Row' + task.id}
+        key={'Row' + user.id}
         x='0'
         y={y}
         width={svgWidth}
@@ -47,7 +47,7 @@ export const GridBody = ({
     );
     rowLines.push(
       <line
-        key={'RowLine' + task.id}
+        key={'RowLine' + user.id}
         x='0'
         y1={y + rowHeight}
         x2={svgWidth}
