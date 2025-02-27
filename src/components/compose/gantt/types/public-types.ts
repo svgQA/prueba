@@ -12,12 +12,15 @@ export enum ViewMode {
   Year = 'Year',
 }
 export type TaskType = 'task' | 'milestone' | 'project';
+export type TaskStatus = 'IN_PROGRESS' | 'OPENED' | 'COMPLETED' | 'CLOSED';
 export interface Task {
-  id: string;
+  userID: string | number;
+  id: string | number;
   type: TaskType;
   name: string;
   start: Date;
   end: Date;
+  status: TaskStatus;
   /**
    * From 0 to 100
    */
@@ -41,6 +44,7 @@ export interface User {
   phone: string;
   cardId: string;
   tasks: Task[];
+  image?: string;
 }
 
 export interface GeneralTask {

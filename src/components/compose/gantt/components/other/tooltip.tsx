@@ -4,6 +4,7 @@ import { ComponentType } from 'preact';
 import { TooltipPublicProps } from '../../types/public-types';
 import { BarTask } from '../../types/bar-task';
 import styles from './tooltip.module.css';
+import { Gauge } from '@/components/common/gauge/gauge';
 
 export type TooltipProps = {
   task: BarTask;
@@ -121,25 +122,69 @@ export const StandardTooltipContent = ({
     fontSize,
     fontFamily,
   };
-  return (
-    <div className={styles.tooltipDefaultContainer} style={style}>
-      <b style={{ fontSize: fontSize + 6 }}>{`${
-        task.name
-      }: ${task.start.getDate()}-${
-        task.start.getMonth() + 1
-      }-${task.start.getFullYear()} - ${task.end.getDate()}-${
-        task.end.getMonth() + 1
-      }-${task.end.getFullYear()}`}</b>
-      {task.end.getTime() - task.start.getTime() !== 0 && (
-        <p className={styles.tooltipDefaultContainerParagraph}>{`Duration: ${~~(
-          (task.end.getTime() - task.start.getTime()) /
-          (1000 * 60 * 60 * 24)
-        )} day(s)`}</p>
-      )}
 
-      <p className={styles.tooltipDefaultContainerParagraph}>
-        {!!task.progress && `Progress: ${task.progress} %`}
-      </p>
+  const statusColors = {
+    IN_PROGRESS: 'bg-blue-100 text-blue-800',
+    OPENED: 'bg-gray-100 text-gray-800',
+    COMPLETED: 'bg-green-100 text-green-800',
+    CLOSED: 'bg-red-100 text-red-800',
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  return (
+    <div className='bg-white rounded-lg shadow-lg p-2 max-w-3xl' style={style}>
+      <div className='flex'>
+        <div className='w-[70%]'>
+          <h3 className='font-bold text-lg text-gray-900 mb-4'>{task.name}</h3>
+
+          <div className='space-y-4 text-sm text-gray-600'>
+            <div className='flex gap-4'>
+              <div>
+                <p className='font-medium'>Start Date</p>
+                <p>{formatDate(task.start)}</p>
+              </div>
+
+              <div>
+                <p className='font-medium'>End Date</p>
+                <p>{formatDate(task.end)}</p>
+              </div>
+            </div>
+
+            <div>
+              <span
+                className={`px-2 py-1 text-xs font-medium rounded-full ${statusColors[task.status]}`}
+              >
+                {task.status}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className='w-[30%] flex items-center justify-around flex-col'>
+          {task.end.getTime() - task.start.getTime() !== 0 && (
+            <div>
+              <p className='font-medium'>Duration</p>
+              <p>
+                {
+                  ~~(
+                    (task.end.getTime() - task.start.getTime()) /
+                    (1000 * 60 * 60 * 24)
+                  )
+                }{' '}
+                days
+              </p>
+            </div>
+          )}
+          {task.progress > 0 && <Gauge progress={task.progress} />}
+        </div>
+      </div>
     </div>
   );
 };

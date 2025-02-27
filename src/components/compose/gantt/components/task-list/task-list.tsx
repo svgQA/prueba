@@ -73,7 +73,7 @@ export function TaskList({
     rowWidth,
   };
 
-  const selectedTaskId = selectedTask ? selectedTask.id : '';
+  const selectedTaskId = selectedTask ? String(selectedTask.id) : '';
   const tableProps = {
     rowHeight,
     rowWidth,

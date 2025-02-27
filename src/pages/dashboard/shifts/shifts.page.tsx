@@ -15,7 +15,10 @@ import '@/components/compose/gantt/index.css';
 import { ViewSwitcher } from './components/swicher.gantt';
 // import { getStartEndDateForProject } from './utils/gantt.data';
 import { groupByPerson } from './utils/gantt.shift';
-import { GeneralTask } from '@/components/compose/gantt/types/public-types';
+import {
+  GeneralTask,
+  Task,
+} from '@/components/compose/gantt/types/public-types';
 
 enum VIEW_NAME {
   TABLE,
@@ -26,6 +29,8 @@ enum VIEW_NAME {
 export const ShiftsPage: FunctionalComponent = () => {
   const reports = useSignal<IReportResponse[]>([]);
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
+  const showModal = useSignal<boolean>(false);
+  const selectedTask = useSignal<Task | null>(null);
 
   const [view, setView] = useState<ViewMode>(ViewMode.Day);
   const [tasks, _ /*setTasks*/] = useState<GeneralTask>(groupByPerson());
@@ -37,9 +42,10 @@ export const ShiftsPage: FunctionalComponent = () => {
     return 60;
   }, [view]);
 
-  /*
   const handleTaskChange = useCallback(
-    (task: any) => {
+    (task: Task) => {
+      console.log(task);
+      /*
       console.log('On date change Id:' + task.id);
       let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
       if (task.project) {
@@ -57,10 +63,10 @@ export const ShiftsPage: FunctionalComponent = () => {
         }
       }
       setTasks(newTasks);
+  */
     },
     [tasks]
   );
-  */
 
   const handleTaskDelete = useCallback((task: any) => {
     // const conf =
@@ -71,15 +77,18 @@ export const ShiftsPage: FunctionalComponent = () => {
     // return conf;
   }, []);
 
+  /*
   const handleProgressChange = useCallback(async (task: any) => {
     // setTasks((prevTasks) =>
     //   prevTasks.map((t) => (t.id === task.id ? task : t))
     // );
     console.log('On progress change Id:' + task.id);
   }, []);
+  */
 
   const handleDblClick = useCallback((task: any) => {
-    alert('On Double Click event Id:' + task.id);
+    selectedTask.value = task;
+    showModal.value = true;
   }, []);
 
   const handleSelect = useCallback((task: any, isSelected: any) => {
@@ -189,15 +198,82 @@ export const ShiftsPage: FunctionalComponent = () => {
           <Gantt
             tasks={tasks}
             viewMode={view}
-            // onDateChange={handleTaskChange}
+            onDateChange={handleTaskChange}
             onDelete={handleTaskDelete}
-            onProgressChange={handleProgressChange}
+            // onProgressChange={handleProgressChange}
             onDoubleClick={handleDblClick}
             onSelect={handleSelect}
             onExpanderClick={handleExpanderClick}
             listCellWidth={isChecked ? '155px' : ''}
             columnWidth={columnWidth}
           />
+        </div>
+      )}
+
+      {showModal.value && (
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
+          <div className='bg-white rounded-lg shadow-lg w-2/3 max-w-4xl'>
+            <div className='px-6 py-4 border-b border-gray-200'>
+              <h3 className='text-lg font-medium'>Editar Tarea</h3>
+            </div>
+            <div className='px-6 py-4'>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <label className='block text-sm font-medium text-gray-700'>
+                    Nombre
+                  </label>
+                  <input
+                    type='text'
+                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm'
+                    value={selectedTask.value?.name}
+                  />
+                </div>
+                <div>
+                  <label className='block text-sm font-medium text-gray-700'>
+                    Fecha Inicio
+                  </label>
+                  <input
+                    type='datetime-local'
+                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm'
+                    value={selectedTask.value?.start.toISOString().slice(0, 16)}
+                  />
+                </div>
+                <div>
+                  <label className='block text-sm font-medium text-gray-700'>
+                    Fecha Fin
+                  </label>
+                  <input
+                    type='datetime-local'
+                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm'
+                    value={selectedTask.value?.end.toISOString().slice(0, 16)}
+                  />
+                </div>
+                <div>
+                  <label className='block text-sm font-medium text-gray-700'>
+                    Progreso
+                  </label>
+                  <input
+                    type='number'
+                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm'
+                    value={selectedTask.value?.progress}
+                    min='0'
+                    max='100'
+                  />
+                </div>
+              </div>
+            </div>
+            <div className='px-6 py-4 border-t border-gray-200 flex justify-end gap-2'>
+              <button
+                className='px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300'
+                onClick={() => (showModal.value = false)}
+              >
+                Cancelar
+              </button>
+              <button className='px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark'>
+                Guardar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </Section>

@@ -17,19 +17,20 @@ export const TaskListHeaderDefault: ComponentType<TaskListHeaderProps> = ({
       }}
     >
       <div
-        className={styles.ganttTable_Header}
+        className='flex justify-center items-center bg-primary'
         style={{
           height: headerHeight - 2,
         }}
       >
         <div
-          className={styles.ganttTable_HeaderItem}
           style={{
             minWidth: rowWidth,
           }}
+          className='font-bold text-center'
         >
           &nbsp;Name
         </div>
+        {/*
         <div
           className={styles.ganttTable_HeaderSeparator}
           style={{
@@ -60,6 +61,7 @@ export const TaskListHeaderDefault: ComponentType<TaskListHeaderProps> = ({
         >
           &nbsp;CardId
         </div>
+        */}
       </div>
     </div>
   );

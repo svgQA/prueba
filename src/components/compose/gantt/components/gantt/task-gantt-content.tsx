@@ -30,7 +30,7 @@ export type TaskGanttContentProps = {
   rtl: boolean;
   setGanttEvent: (value: GanttEvent) => void;
   setFailedTask: (value: BarTask | null) => void;
-  setSelectedTask: (taskId: string) => void;
+  setSelectedTask: (taskId: string | number) => void;
 } & EventOption;
 
 export const TaskGanttContent = ({
