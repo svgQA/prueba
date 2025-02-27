@@ -217,7 +217,7 @@ export const HomeLayout: FunctionComponent = () => {
           {items.map((item: any, index: number) => (
             <div
               key={index}
-              class='flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200'
+              class='flex flex-col items-center text-center w-[40vh] max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200 hover:bg-[#20314F] text-[#349396] hover:text-white'
             >
               <img
                 class='w-auto h-48 object-cover rounded-lg'
@@ -225,10 +225,10 @@ export const HomeLayout: FunctionComponent = () => {
                 alt='Card Image'
               />
               <div class='mt-4'>
-                <h2 class='text-2xl font-semibold text-[#349396]'>
+                <h2 class='text-2xl font-semibold'>
                   {item.title}
                 </h2>
-                <p class='text-[#349396] mt-2'>{item.subtitle}</p>
+                <p class='mt-2 '>{item.subtitle}</p>
               </div>
             </div>
           ))}
