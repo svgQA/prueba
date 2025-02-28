@@ -65,8 +65,8 @@ export default defineConfig({
           // if (id.includes('chart')) {
           //   return '@chart-base';
           // }
-          if (id.includes('final-form')) {
-            return '@final-form-base'; // 30.90 kB
+          if (id.includes('@fullcalendar')) {
+            return '@calendar-base'; // 257.94 kB
           }
         },
       },
