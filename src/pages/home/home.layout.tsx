@@ -225,9 +225,7 @@ export const HomeLayout: FunctionComponent = () => {
                 alt='Card Image'
               />
               <div class='mt-4'>
-                <h2 class='text-2xl font-semibold'>
-                  {item.title}
-                </h2>
+                <h2 class='text-2xl font-semibold'>{item.title}</h2>
                 <p class='mt-2 '>{item.subtitle}</p>
               </div>
             </div>
@@ -372,7 +370,6 @@ export const HomeLayout: FunctionComponent = () => {
         </span>
 
         <div className='flex flex-wrap gap-6 justify-center mt-7 mb-10'>
-          
           <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[80vh]'>
             <div className='!h-[5vh]'>
               <div class='w-[40%] ml-auto rounded-bl-lg bg-[#26B6D4] text-white text-center text-xl py-2 font-semibold'>
@@ -391,33 +388,43 @@ export const HomeLayout: FunctionComponent = () => {
               <div class='bg-[#26B6D4] text-white p-6 rounded-lg !h-[80%]'>
                 <ul class='space-y-3 text-[14px]'>
                   <li class='flex items-start text-white'>
-                    <span className={`!text-[#26B6D4] !text-[14px] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full`} />
+                    <span
+                      className={`!text-[#26B6D4] !text-[14px] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full`}
+                    />
                     <span class='ml-2 text-left'>
                       Gestión de operaciones limitada (hasta 5 usuarios).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    <span className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Monitoreo en tiempo real para un máximo de 3 activos.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    <span className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Asistencia virtual limitada (soporte solo en horario
                       laboral).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    <span className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Integración con una herramienta externa. Duración: 30 días
                       de prueba gratuita. Plan Enterprise (Intermedio).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    <span className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Para empresas en crecimiento que necesitan mayor alcance.
                     </span>
@@ -446,38 +453,50 @@ export const HomeLayout: FunctionComponent = () => {
               <div class='bg-[#1D2B53] text-white p-6 rounded-lg !h-[80%]'>
                 <ul class='space-y-3 !text-[14px]'>
                   <li class='flex items-start'>
-                  <span className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Gestión de operaciones para hasta 50 usuarios.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Monitoreo en tiempo real sin límite de activos.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Funcionalidades offline completas (sincronización
                       automática de datos).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Asistencia con IA personalizada (soporte 24/7).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Integración con hasta 3 herramientas externas.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Panel de informes básicos para análisis de datos.
                     </span>
@@ -507,46 +526,60 @@ export const HomeLayout: FunctionComponent = () => {
               <div class='p-6 rounded-lg !h-[80%]'>
                 <ul class='space-y-3 !text-[14px] text-gray-700'>
                   <li class='flex items-start'>
-                  <span className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Usuarios ilimitados y operaciones escalables.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Monitoreo avanzado con reportes en tiempo real y análisis
                       predictivo.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
-                      Funcionalidades offline avanzadas (soporte para dispositivos
-                      múltiples).
+                      Funcionalidades offline avanzadas (soporte para
+                      dispositivos múltiples).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       IA avanzada con recomendaciones estratégicas y análisis de
                       riesgos.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Integración ilimitada con herramientas externas.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Panel de informes avanzado con personalización total.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                  <span className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`} />
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Soporte prioritario 24/7 con consultor dedicado.
                     </span>
@@ -559,7 +592,6 @@ export const HomeLayout: FunctionComponent = () => {
                   Iniciar plan
                 </button>
               </div>
-
             </div>
           </div>
         </div>
