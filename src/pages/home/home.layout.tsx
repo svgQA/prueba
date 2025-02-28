@@ -217,7 +217,7 @@ export const HomeLayout: FunctionComponent = () => {
           {items.map((item: any, index: number) => (
             <div
               key={index}
-              class='flex flex-col items-center text-center max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200'
+              class='flex flex-col items-center text-center w-[40vh] max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200 hover:bg-[#20314F] text-[#349396] hover:text-white'
             >
               <img
                 class='w-auto h-48 object-cover rounded-lg'
@@ -225,10 +225,8 @@ export const HomeLayout: FunctionComponent = () => {
                 alt='Card Image'
               />
               <div class='mt-4'>
-                <h2 class='text-2xl font-semibold text-[#349396]'>
-                  {item.title}
-                </h2>
-                <p class='text-[#349396] mt-2'>{item.subtitle}</p>
+                <h2 class='text-2xl font-semibold'>{item.title}</h2>
+                <p class='mt-2 '>{item.subtitle}</p>
               </div>
             </div>
           ))}
@@ -322,7 +320,7 @@ export const HomeLayout: FunctionComponent = () => {
 
   const We = () => {
     return (
-      <div className='flex flex-col items-center text-center bg-white pt-[70px]'>
+      <div className='flex flex-col items-center text-center !bg-[#f5cde0] !bg-opacity-75 pt-[70px] pb-4'>
         <span className='text-3xl font-bold text-[#20314F]'>Quienes somos</span>
         <span className='text-xl text-[#505050]'>
           En Tryvoo, entedemos las complejidades de operar fuera de la oficina.
@@ -372,51 +370,61 @@ export const HomeLayout: FunctionComponent = () => {
         </span>
 
         <div className='flex flex-wrap gap-6 justify-center mt-7 mb-10'>
-          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200'>
-            <div className=''>
+          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[80vh]'>
+            <div className='!h-[5vh]'>
               <div class='w-[40%] ml-auto rounded-bl-lg bg-[#26B6D4] text-white text-center text-xl py-2 font-semibold'>
                 7 Días free
               </div>
             </div>
 
-            <div class='p-6 text-center'>
+            <div class='p-6 text-center !h-[15vh]'>
               <h2 class='text-[#26B6D4] text-2xl font-bold'>Prueba Gratis</h2>
               <p class='text-gray-600 text-xl mt-1'>
                 Inicio 7 días y un plan básico
               </p>
             </div>
 
-            <div className='bg-[#26B6D4] rounded-lg'>
-              <div class='bg-[#26B6D4] text-white p-6 rounded-lg'>
-                <ul class='space-y-3 text-lg'>
-                  <li class='flex items-start'>
-                    ✅{' '}
+            <div className='bg-[#26B6D4] rounded-lg !h-[60vh]'>
+              <div class='bg-[#26B6D4] text-white p-6 rounded-lg !h-[80%]'>
+                <ul class='space-y-3 text-[14px]'>
+                  <li class='flex items-start text-white'>
+                    <span
+                      className={`!text-[#26B6D4] !text-[14px] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full`}
+                    />
                     <span class='ml-2 text-left'>
                       Gestión de operaciones limitada (hasta 5 usuarios).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    ✅{' '}
+                    <span
+                      className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Monitoreo en tiempo real para un máximo de 3 activos.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    ✅{' '}
+                    <span
+                      className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Asistencia virtual limitada (soporte solo en horario
                       laboral).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    ✅{' '}
+                    <span
+                      className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Integración con una herramienta externa. Duración: 30 días
                       de prueba gratuita. Plan Enterprise (Intermedio).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    ✅{' '}
+                    <span
+                      className={`!text-[#26B6D4] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Para empresas en crecimiento que necesitan mayor alcance.
                     </span>
@@ -431,52 +439,64 @@ export const HomeLayout: FunctionComponent = () => {
             </div>
           </div>
 
-          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200'>
-            <div class='w-[40%] ml-auto rounded-bl-lg bg-[#1D2B53] text-white text-center py-2 text-xl font-semibold'>
+          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[80vh]'>
+            <div class='w-[40%] ml-auto rounded-bl-lg bg-[#1D2B53] text-white text-center py-2 text-xl font-semibold !h-[5vh]'>
               $49 USD/mes
             </div>
 
-            <div class='p-6 text-center'>
+            <div class='p-6 text-center !h-[15vh]'>
               <h2 class='text-[#1D2B53] text-2xl font-bold'>Plan Enterprise</h2>
               <p class='text-gray-600 text-xl mt-1'>Obtén un mayor alcance.</p>
             </div>
 
-            <div className='bg-[#1D2B53] rounded-lg'>
-              <div class='bg-[#1D2B53] text-white p-6 rounded-lg'>
-                <ul class='space-y-3 text-lg'>
+            <div className='bg-[#1D2B53] rounded-lg !h-[60vh]'>
+              <div class='bg-[#1D2B53] text-white p-6 rounded-lg !h-[80%]'>
+                <ul class='space-y-3 !text-[14px]'>
                   <li class='flex items-start'>
-                    ✅{' '}
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Gestión de operaciones para hasta 50 usuarios.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    ✅{' '}
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Monitoreo en tiempo real sin límite de activos.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    ✅{' '}
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Funcionalidades offline completas (sincronización
                       automática de datos).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    ✅{' '}
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Asistencia con IA personalizada (soporte 24/7).
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    ✅{' '}
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Integración con hasta 3 herramientas externas.
                     </span>
                   </li>
                   <li class='flex items-start'>
-                    ✅{' '}
+                    <span
+                      className={`!text-[#1D2B53] bg-white left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
                     <span class='ml-2 text-left'>
                       Panel de informes básicos para análisis de datos.
                     </span>
@@ -492,70 +512,86 @@ export const HomeLayout: FunctionComponent = () => {
             </div>
           </div>
 
-          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200'>
-            <div class='w-[40%] ml-auto rounded-bl-lg bg-[#1D2B53] text-white text-center py-2 font-semibold text-xl'>
+          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[80vh]'>
+            <div class='w-[40%] ml-auto rounded-bl-lg bg-[#1D2B53] text-white text-center py-2 font-semibold text-xl !h-[5vh]'>
               $49 USD/mes
             </div>
 
-            <div class='p-6 text-center'>
+            <div class='p-6 text-center !h-[15vh]'>
               <h2 class='text-[#1D2B53] text-2xl font-bold'>Plan Premium</h2>
               <p class='text-gray-600 text-xl mt-1'>Empresas avanzadas</p>
             </div>
 
-            <div class='p-6'>
-              <ul class='space-y-3 text-lg text-gray-700'>
-                <li class='flex items-start'>
-                  ✅{' '}
-                  <span class='ml-2 text-left'>
-                    Usuarios ilimitados y operaciones escalables.
-                  </span>
-                </li>
-                <li class='flex items-start'>
-                  ✅{' '}
-                  <span class='ml-2 text-left'>
-                    Monitoreo avanzado con reportes en tiempo real y análisis
-                    predictivo.
-                  </span>
-                </li>
-                <li class='flex items-start'>
-                  ✅{' '}
-                  <span class='ml-2 text-left'>
-                    Funcionalidades offline avanzadas (soporte para dispositivos
-                    múltiples).
-                  </span>
-                </li>
-                <li class='flex items-start'>
-                  ✅{' '}
-                  <span class='ml-2 text-left'>
-                    IA avanzada con recomendaciones estratégicas y análisis de
-                    riesgos.
-                  </span>
-                </li>
-                <li class='flex items-start'>
-                  ✅{' '}
-                  <span class='ml-2 text-left'>
-                    Integración ilimitada con herramientas externas.
-                  </span>
-                </li>
-                <li class='flex items-start'>
-                  ✅{' '}
-                  <span class='ml-2 text-left'>
-                    Panel de informes avanzado con personalización total.
-                  </span>
-                </li>
-                <li class='flex items-start'>
-                  ✅{' '}
-                  <span class='ml-2 text-left'>
-                    Soporte prioritario 24/7 con consultor dedicado.
-                  </span>
-                </li>
-              </ul>
-            </div>
+            <div className='bg-white rounded-lg !h-[60vh]'>
+              <div class='p-6 rounded-lg !h-[80%]'>
+                <ul class='space-y-3 !text-[14px] text-gray-700'>
+                  <li class='flex items-start'>
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
+                    <span class='ml-2 text-left'>
+                      Usuarios ilimitados y operaciones escalables.
+                    </span>
+                  </li>
+                  <li class='flex items-start'>
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
+                    <span class='ml-2 text-left'>
+                      Monitoreo avanzado con reportes en tiempo real y análisis
+                      predictivo.
+                    </span>
+                  </li>
+                  <li class='flex items-start'>
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
+                    <span class='ml-2 text-left'>
+                      Funcionalidades offline avanzadas (soporte para
+                      dispositivos múltiples).
+                    </span>
+                  </li>
+                  <li class='flex items-start'>
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
+                    <span class='ml-2 text-left'>
+                      IA avanzada con recomendaciones estratégicas y análisis de
+                      riesgos.
+                    </span>
+                  </li>
+                  <li class='flex items-start'>
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
+                    <span class='ml-2 text-left'>
+                      Integración ilimitada con herramientas externas.
+                    </span>
+                  </li>
+                  <li class='flex items-start'>
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
+                    <span class='ml-2 text-left'>
+                      Panel de informes avanzado con personalización total.
+                    </span>
+                  </li>
+                  <li class='flex items-start'>
+                    <span
+                      className={`!text-white bg-[#1D2B53] left-0 px-1 size vox-icon vx-icon-030 rounded-full !text-[14px]`}
+                    />
+                    <span class='ml-2 text-left'>
+                      Soporte prioritario 24/7 con consultor dedicado.
+                    </span>
+                  </li>
+                </ul>
+              </div>
 
-            <div class='p-6 flex justify-center'>
-              <button class='bg-[#1D2B53] text-white font-semibold rounded-full px-6 py-2 hover:bg-[#16203E] transition'>
-                Iniciar plan
-              </button>
+              <div class='p-6 flex justify-center'>
+                <button class='bg-[#1D2B53] text-white font-semibold rounded-full px-6 py-2 hover:bg-[#16203E] transition'>
+                  Iniciar plan
+                </button>
+              </div>
             </div>
           </div>
         </div>

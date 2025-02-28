@@ -13,8 +13,12 @@ import { columns } from './components/shift.columns';
 import { Gantt, ViewMode } from '@/components/compose/gantt';
 import '@/components/compose/gantt/index.css';
 import { ViewSwitcher } from './components/swicher.gantt';
-// import { getStartEndDateForProject } from './utils/gantt.data';
 import { groupByPerson } from './utils/gantt.shift';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { Input } from '@/components/common/input/input';
 import {
   GeneralTask,
   Task,
@@ -26,15 +30,26 @@ enum VIEW_NAME {
   SCHEDULER,
 }
 
+interface ISingleTaskCalendar {
+  title: string;
+  start: Date;
+  end: Date; // Added end date
+  id?: string;
+  allDay?: boolean; // Added allDay flag
+}
+
 export const ShiftsPage: FunctionalComponent = () => {
   const reports = useSignal<IReportResponse[]>([]);
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const showModal = useSignal<boolean>(false);
   const selectedTask = useSignal<Task | null>(null);
+  const selectedTaskCalendar = useSignal<ISingleTaskCalendar | null>(null);
+  const [localEvents, setLocalEvents] = useState<ISingleTaskCalendar[]>([]);
 
   const [view, setView] = useState<ViewMode>(ViewMode.Day);
-  const [tasks, _ /*setTasks*/] = useState<GeneralTask>(groupByPerson());
+  const [tasks /*setTasks*/] = useState<GeneralTask>(groupByPerson());
   const [isChecked, setIsChecked] = useState(true);
+  const [calendarView /*setCalendarView*/] = useState<string>('timeGridWeek');
 
   const columnWidth = useMemo(() => {
     if (view === ViewMode.Month) return 300;
@@ -44,47 +59,16 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const handleTaskChange = useCallback(
     (task: Task) => {
-      console.log(task);
-      /*
-      console.log('On date change Id:' + task.id);
-      let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
-      if (task.project) {
-        const [start, end] = getStartEndDateForProject(newTasks, task.project);
-        const project =
-          newTasks[newTasks.findIndex((t) => t.id === task.project)];
-        if (
-          project.start.getTime() !== start.getTime() ||
-          project.end.getTime() !== end.getTime()
-        ) {
-          const changedProject = { ...project, start, end };
-          newTasks = newTasks.map((t) =>
-            t.id === task.project ? changedProject : t
-          );
-        }
+      if (selectedTask.value) {
+        selectedTask.value = { ...selectedTask.value, ...task };
       }
-      setTasks(newTasks);
-  */
     },
     [tasks]
   );
 
   const handleTaskDelete = useCallback((task: any) => {
-    // const conf =
     window.confirm('Are you sure about ' + task.name + ' ?');
-    // if (conf) {
-    //   setTasks((prevTasks) => prevTasks.filter((t) => t.id !== task.id));
-    // }
-    // return conf;
   }, []);
-
-  /*
-  const handleProgressChange = useCallback(async (task: any) => {
-    // setTasks((prevTasks) =>
-    //   prevTasks.map((t) => (t.id === task.id ? task : t))
-    // );
-    console.log('On progress change Id:' + task.id);
-  }, []);
-  */
 
   const handleDblClick = useCallback((task: any) => {
     selectedTask.value = task;
@@ -96,9 +80,6 @@ export const ShiftsPage: FunctionalComponent = () => {
   }, []);
 
   const handleExpanderClick = useCallback((task: any) => {
-    // setTasks((prevTasks) =>
-    //   prevTasks.map((t) => (t.id === task.id ? task : t))
-    // );
     console.log('On expander click Id:' + task.id);
   }, []);
 
@@ -116,6 +97,84 @@ export const ShiftsPage: FunctionalComponent = () => {
   const handleViewChange = useCallback((view: VIEW_NAME) => {
     currentView.value = view;
   }, []);
+
+  function renderEventContent(eventInfo: any) {
+    return (
+      <div className='w-full h-full bg-primary flex justify-center items-center'>
+        <div className='flex items-center gap-2'>
+          <span className='vox-icon vx-icon-025 text-primary'></span>
+          <div>
+            <p className='font-bold text-sm'>{eventInfo.event.title}</p>
+            <p className='text-xs text-gray-600'>{eventInfo.timeText}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handleDateClick = useCallback(() => {
+    showModal.value = true;
+  }, []);
+
+  const handleEventDrop = useCallback(
+    (info: any) => {
+      const { event } = info;
+      const updatedEvents = localEvents.map((e) => {
+        if (e.id === event.id) {
+          return {
+            ...e,
+            start: event.start,
+            end: event.end || event.start,
+          };
+        }
+        return e;
+      });
+      setLocalEvents(updatedEvents);
+    },
+    [localEvents]
+  );
+
+  const handleInputChange = useCallback((e: any) => {
+    const { name, value } = e.currentTarget;
+    if (selectedTaskCalendar.value) {
+      selectedTaskCalendar.value = {
+        ...selectedTaskCalendar.value,
+        title: name === 'title' ? value : selectedTaskCalendar.value.title,
+        start:
+          name === 'start' ? new Date(value) : selectedTaskCalendar.value.start,
+        end:
+          name === 'end'
+            ? new Date(value)
+            : selectedTaskCalendar.value.end ||
+              selectedTaskCalendar.value.start,
+      };
+    } else {
+      const start = new Date(value);
+      selectedTaskCalendar.value = {
+        title: name === 'title' ? value : '',
+        start: name === 'start' ? start : new Date(),
+        end: name === 'end' ? new Date(value) : start,
+        allDay: false,
+      };
+    }
+  }, []);
+
+  const handleSave = () => {
+    if (selectedTaskCalendar.value) {
+      setLocalEvents([
+        ...localEvents,
+        {
+          id: Math.random().toString(),
+          title: selectedTaskCalendar.value.title,
+          start: selectedTaskCalendar.value.start,
+          end:
+            selectedTaskCalendar.value.end || selectedTaskCalendar.value.start,
+          allDay: selectedTaskCalendar.value.allDay || false,
+        },
+      ]);
+    }
+    showModal.value = false;
+  };
 
   const cardDataMemo = useMemo(
     () => (
@@ -150,7 +209,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     <Section>
       {cardDataMemo}
 
-      <div className='flex flex-row gap-2'>
+      <div className='flex flex-row gap-2 justify-start px-0.5 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
         <button
           className='p-1 hover:bg-slate-100 rounded-lg'
           onClick={() => handleViewChange(VIEW_NAME.TABLE)}
@@ -186,7 +245,32 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
       )}
 
-      {currentView.value === VIEW_NAME.CALENDAR && <div>Calendar View</div>}
+      {currentView.value === VIEW_NAME.CALENDAR && (
+        <div className='w-full mt-3'>
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            initialView={calendarView}
+            headerToolbar={{
+              left: 'prev,next today',
+              center: 'title',
+              right: 'timeGridDay,timeGridWeek,dayGridMonth',
+            }}
+            weekends={false}
+            events={localEvents}
+            eventContent={renderEventContent}
+            dateClick={handleDateClick}
+            height={600}
+            editable={true}
+            droppable={true}
+            eventDrop={handleEventDrop}
+            slotMinTime='06:00:00'
+            slotMaxTime='22:00:00'
+            displayEventEnd={true}
+            forceEventDuration={true}
+            defaultTimedEventDuration='01:00:00'
+          />
+        </div>
+      )}
 
       {currentView.value === VIEW_NAME.SCHEDULER && (
         <div>
@@ -200,7 +284,6 @@ export const ShiftsPage: FunctionalComponent = () => {
             viewMode={view}
             onDateChange={handleTaskChange}
             onDelete={handleTaskDelete}
-            // onProgressChange={handleProgressChange}
             onDoubleClick={handleDblClick}
             onSelect={handleSelect}
             onExpanderClick={handleExpanderClick}
@@ -211,55 +294,57 @@ export const ShiftsPage: FunctionalComponent = () => {
       )}
 
       {showModal.value && (
-        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20'>
           <div className='bg-white rounded-lg shadow-lg w-2/3 max-w-4xl'>
             <div className='px-6 py-4 border-b border-gray-200'>
               <h3 className='text-lg font-medium'>Editar Tarea</h3>
             </div>
             <div className='px-6 py-4'>
               <div className='grid grid-cols-2 gap-4'>
-                <div>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    Nombre
-                  </label>
-                  <input
-                    type='text'
-                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm'
-                    value={selectedTask.value?.name}
-                  />
-                </div>
-                <div>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    Fecha Inicio
-                  </label>
-                  <input
-                    type='datetime-local'
-                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm'
-                    value={selectedTask.value?.start.toISOString().slice(0, 16)}
-                  />
-                </div>
-                <div>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    Fecha Fin
-                  </label>
-                  <input
-                    type='datetime-local'
-                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm'
-                    value={selectedTask.value?.end.toISOString().slice(0, 16)}
-                  />
-                </div>
-                <div>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    Progreso
-                  </label>
-                  <input
-                    type='number'
-                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm'
-                    value={selectedTask.value?.progress}
-                    min='0'
-                    max='100'
-                  />
-                </div>
+                <Input
+                  label='Nombre'
+                  name='title'
+                  value={selectedTask.value?.name}
+                  onChange={handleInputChange}
+                  icon='123'
+                  borderless
+                  thin
+                />
+
+                <Input
+                  label='Fecha Inicio'
+                  name='start'
+                  type='datetime-local'
+                  value={selectedTask.value?.start.toISOString().slice(0, 16)}
+                  onChange={handleInputChange}
+                  icon='025'
+                  borderless
+                  thin
+                />
+
+                <Input
+                  label='Fecha Fin'
+                  name='end'
+                  type='datetime-local'
+                  value={selectedTask.value?.end.toISOString().slice(0, 16)}
+                  onChange={handleInputChange}
+                  icon='025'
+                  borderless
+                  thin
+                />
+
+                <Input
+                  label='Progreso'
+                  name='progress'
+                  type='number'
+                  value={selectedTask.value?.progress}
+                  onChange={handleInputChange}
+                  min='0'
+                  max='100'
+                  icon='234'
+                  borderless
+                  thin
+                />
               </div>
             </div>
             <div className='px-6 py-4 border-t border-gray-200 flex justify-end gap-2'>
@@ -269,7 +354,10 @@ export const ShiftsPage: FunctionalComponent = () => {
               >
                 Cancelar
               </button>
-              <button className='px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark'>
+              <button
+                className='px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark'
+                onClick={handleSave}
+              >
                 Guardar
               </button>
             </div>
