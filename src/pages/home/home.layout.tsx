@@ -280,7 +280,7 @@ export const HomeLayout: FunctionComponent = () => {
     ];
 
     return (
-      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !h-[100vh]'>
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !md:h-[100vh] !h-auto'>
         <span className='text-3xl font-bold mb-5 text-[#28787B]'>
           Soluciones por industria
         </span>
@@ -288,20 +288,20 @@ export const HomeLayout: FunctionComponent = () => {
           Tryvoo esta optimizado para diferentes sectores.
         </span>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 mb-10'>
+        <div className='grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-6 mt-10 mb-10 ml-4'>
           {items.map((item: any, index: number) => (
             <div
               key={index}
-              class='flex items-center shadow-lg rounded-lg border border-gray-200 w-[90vh]'
+              class='flex items-center shadow-lg rounded-lg border border-gray-200 md:w-[90vh] w-[95%]'
             >
-              <div class='!bg-[#26B6D4] rounded-lg h-[20vh] !w-[20vh] flex items-center justify-center'>
+              <div class='!bg-[#26B6D4] rounded-lg h-[20vh] md:h-[25vh] !md:w-[20vh] w-[30%] flex items-center justify-center'>
                 <img
                   src={item.image}
                   alt=''
-                  className='h-auto w-[60%] margin-auto'
+                  className='h-auto md:w-[60%] w-[90%] margin-auto'
                 />
               </div>
-              <div class='text-left !w-[60vh] pl-4'>
+              <div class='text-left !md:w-[60vh] w-[70%] md:pl-4 p-2'>
                 <h2 class='text-2xl font-semibold text-[#505050]'>
                   {item.title}
                 </h2>
@@ -786,6 +786,7 @@ export const HomeLayout: FunctionComponent = () => {
           name='schedule'
           className='bg-[#20314F] text-[#FFFF] mb-4 mt-10 text-xl rounded-full !p-5 !w-[400px]'
         />
+
       </div>
     );
   }
@@ -831,10 +832,6 @@ export const HomeLayout: FunctionComponent = () => {
               </div>
             </div>
             <Footer />
-            <div className="flex justify-center items-center h-screen bg-gray-100">
-
-
-            </div>
           </>
         )}
       </div>
