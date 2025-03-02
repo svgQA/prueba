@@ -324,24 +324,28 @@ export const HomeLayout: FunctionComponent = () => {
 
   const We = () => {
     return (
-      <div className='flex flex-col items-center text-center !bg-[#f5cde0] !bg-opacity-75 pt-[70px] pb-4 !h-[100vh]'>
+      <div className='flex flex-col items-center text-center !bg-[#f5cde0] !bg-opacity-75 pt-[70px] md:pb-4 !md:h-[100vh] h-auto'>
         <span className='text-3xl font-bold text-[#20314F]'>Quienes somos</span>
         <span className='text-xl text-[#505050]'>
           En Tryvoo, entedemos las complejidades de operar fuera de la oficina.
         </span>
 
-        <div className='mt-7 flex items-center justify-center'>
-          <div className='w-[30%] shadow-xl bg-white rounded-lg p-[20px]'>
-            <span className='text-[#707070] text-[20px] ml-[20px]'>
-              En Tryvoo trabajamos para que tu equipo en campo tenga las
-              herramientas necesarias para lograr más, con seguridad y
-              eficiencia, en cualquier lugar.
-            </span>
+        <div className='mt-7 flex items-center justify-center md:flex-row flex-col'>
+
+          <div className='md:w-[50%] w-[90%] flex flex-row items-center justify-center'>
+            <div className='w-[60%] shadow-xl bg-white rounded-lg p-[20px] !md:h-[30vh] h-auto'>
+              <span className='text-[#707070] text-[20px] ml-[20px]'>
+                En Tryvoo trabajamos para que tu equipo en campo tenga las
+                herramientas necesarias para lograr más, con seguridad y
+                eficiencia, en cualquier lugar.
+              </span>
+            </div>
+
+            <img src={homeWeCenter} alt='' className='md:w-[40%] w-[50%] h-auto' />
           </div>
-          <img src={homeWeCenter} alt='' className='w-[20%] h-auto' />
 
           <div
-            className={`w-[30%] flex flex-col items-center justify-center bg-we text-white p-5 rounded-lg h-auto`}
+            className={`md:w-[30%] w-[100%] flex flex-col items-center justify-center bg-we text-white p-5 rounded-lg h-auto`}
           >
             <span className='text-[20px] font-bold mt-2'>Nuestros Valores</span>
             <span className='text-[18px]'>
