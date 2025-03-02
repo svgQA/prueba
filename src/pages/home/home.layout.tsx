@@ -46,12 +46,12 @@ export const HomeLayout: FunctionComponent = () => {
 
   const Main = () => {
     return (
-      <div className='flex relative !h-[100vh]'>
+      <div className='flex relative !h-[100vh] md:flex-row flex-col'>
         <div className='md:w-2/5 flex flex-col items-center text-left pl-10 pr-7 mt-7 mb-7'>
-          <h1 className='text-5xl mb-3 mt-3'>
+          <h1 className='md:text-5xl text-3xl mb-3 mt-3 text-center'>
             Transforma la Gestión de Operaciones Con Tryvoo
           </h1>
-          <span className='mb-5 text-3xl mt-5'>
+          <span className='mb-5 md:text-3xl text-2xl mt-5 text-center'>
             Optimiza la gestión de actividades, recursos y activos, incluso sin{' '}
             <span className='font-bold'>conectividad para tus negocios</span>
           </span>
@@ -60,19 +60,19 @@ export const HomeLayout: FunctionComponent = () => {
             type='button'
             id='schedule'
             name='schedule'
-            className='bg-[#43f876] text-[#393838] mb-7 mt-10 text-xl rounded-full !p-5'
+            className='bg-[#43f876] text-[#393838] mb-7 mt-10 text-xl rounded-full !p-5 object-contain z-[10]'
           />
         </div>
 
-        <div className='md:w-3/5 flex items-center overflow-hidden'>
+        <div className='md:w-3/5 flex items-center justify-center md:justify-left overflow-hidden'>
           <img
             src={homeMainDesktop}
             alt=''
-            className='!h-[70vh] w-auto object-contain z-[10]'
+            className='!md:h-[60vh] !md:w-auto w-[90%] h-auto object-contain z-[10] md:mr-7'
           />
         </div>
 
-        <div class='absolute bottom-0 left-0 w-full h-[30vh] bg-white'> </div>
+        <div class='absolute bottom-0 left-0 w-full md:h-[30vh] h-[30vh] bg-white'> </div>
       </div>
     );
   };
