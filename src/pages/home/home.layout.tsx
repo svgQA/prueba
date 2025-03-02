@@ -368,7 +368,7 @@ export const HomeLayout: FunctionComponent = () => {
 
   const Plans = () => {
     return (
-      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !h-[100vh]'>
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !md:h-[100vh] h-auto'>
         <span className='text-3xl font-bold text-[#20314F]'>
           Nuestros planes
         </span>
@@ -609,22 +609,22 @@ export const HomeLayout: FunctionComponent = () => {
 
   const Footer = () => {
     return (
-      <div className='bg-[#20314F] flex justify-center gap-4 pt-10 pb-10'>
-        <div className='w-[30%]'>
+      <div className='bg-[#20314F] flex justify-center gap-4 pt-10 pb-10 md:flex-row flex-col'>
+        <div className='md:w-[30%] w-[90%] md:ml-0 ml-5'>
           <h2 className='text-[20px] font-bold'>Secciones Populares</h2>
           <p className='text-[18px] pt-2'>Conoce más de tryvoo</p>
         </div>
 
-        <div className='w-[30%]'>
+        <div className='md:w-[30%] w-[90%] md:ml-0 ml-5'>
           <h3 className='text-[20px] font-bold'>Contáctanos</h3>
           <p className='text-[18px] pt-2'>3157789022 - Popayán, Cauca</p>
         </div>
 
-        <div className='w-[30%]'>
-          <div className='w-full block'>
+        <div className='md:w-[30%] w-[90%] md:ml-0 ml-5'>
+          <div className='w-[100%] block'>
             <h3 className='text-[20px] font-bold'>Nuestra redes</h3>
           </div>
-          <div className='w-full block flex justify-left pt-2'>
+          <div className='w-[100%] block flex justify-left pt-2'>
             <img src={socialIcon1} alt='' className='mr-3' />
             <img src={socialIcon2} alt='' className='mr-3' />
             <img src={socialIcon3} alt='' className='mr-3' />
@@ -815,17 +815,17 @@ export const HomeLayout: FunctionComponent = () => {
             <Solutions />
             <We />
             <Plans />
-            <div className='flex gap-4 w-full mt-7 mb-10'>
-              <div className='w-[25%] text-[26px] font-bold pl-12'>
+            <div className='flex gap-4 w-full mt-7 mb-10 md:flex-row flex-col items-center'>
+              <div className='md:w-[25%] w-[90%] text-[26px] font-bold pl-12 text-center md:text-left'>
                 <span className='mr-12'>¡Te brindamos asesoria gratuita!</span>
               </div>
-              <div className='w-[40%] text-xl'>
-                <span>
+              <div className='md:w-[40%] w-[90%] text-xl text-center md:text-left'>
+                <span className=''>
                   Para que comiences optimizar tu negocio con herramientas
                   ágiles y operables en cualquiers espacio y lugar
                 </span>
               </div>
-              <div className='w-[25%] text-center'>
+              <div className='md:w-[25%] w-[90%] text-center'>
                 <Button
                   label='Inicia ya y disfruta'
                   type='button'
