@@ -110,13 +110,13 @@ export const HomeLayout: FunctionComponent = () => {
     ];
 
     return (
-      <div className='bg-white text-center text-[#28787B] !h-[100vh]'>
+      <div className='bg-white text-center text-[#28787B] !md:h-[100vh] !h-auto'>
         <h2 className='text-[#28787B] text-3xl pt-5'>¿Por que Tryvoo?</h2>
         <span className='text-[#28787B] pb-5 text-xl'>
           Simplifica. Optimiza. Crece
         </span>
 
-        <div className='flex mt-7'>
+        <div className='flex mt-7 md:flex-row flex-col'>
           <div className='md:w-1/2 flex flex-col items-center'>
             <img
               src={homeWithTryvooDesktop}
@@ -135,14 +135,16 @@ export const HomeLayout: FunctionComponent = () => {
             </p>
           </div>
 
-          <div className='md:w-1/2 mt-7'>
+          <div className='md:w-1/2 mt-7 ml-5 mr-5'>
             <div className='shadow-xl bg-white rounded-lg'>
               {items.map((item: any, index: number) => (
                 <div key={index}>
-                  <div className='flex items-start space-x-4 p-5'>
-                    <img src={item.image} alt='Gestión' className='w-16 h-16' />
+                  <div className='flex items-start space-x-4 md:p-5 p-1'>
+                    <div className='h-[18vh] !w-[18vh] md:h-[10vh] !md:w-[10vh] flex items-center justify-center'>
+                      <img src={item.image} alt='Gestión' className='!h-auto w-[100%] margin-auto' />
+                    </div>
 
-                    <div className='text-left'>
+                    <div className='text-left h-[18vh] md:h-[10vh] flex items-center justify-center'>
                       <span>
                         <span className='font-bold text-[#505050] text-xl'>
                           {item.title}
