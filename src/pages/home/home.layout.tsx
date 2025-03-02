@@ -46,12 +46,12 @@ export const HomeLayout: FunctionComponent = () => {
 
   const Main = () => {
     return (
-      <div className='flex relative'>
+      <div className='flex relative !h-[100vh]'>
         <div className='md:w-2/5 flex flex-col items-center text-left pl-10 pr-7 mt-7 mb-7'>
-          <h1 className='text-4xl mb-3 mt-3'>
+          <h1 className='text-5xl mb-3 mt-3'>
             Transforma la Gestión de Operaciones Con Tryvoo
           </h1>
-          <span className='mb-5 text-2xl mt-5'>
+          <span className='mb-5 text-3xl mt-5'>
             Optimiza la gestión de actividades, recursos y activos, incluso sin{' '}
             <span className='font-bold'>conectividad para tus negocios</span>
           </span>
@@ -68,11 +68,11 @@ export const HomeLayout: FunctionComponent = () => {
           <img
             src={homeMainDesktop}
             alt=''
-            className='w-[95vh] max-w-full object-contain z-[10]'
+            className='!h-[70vh] w-auto object-contain z-[10]'
           />
         </div>
 
-        <div class='absolute bottom-0 left-0 w-full h-[5vh] bg-white'> </div>
+        <div class='absolute bottom-0 left-0 w-full h-[30vh] bg-white'> </div>
       </div>
     );
   };
@@ -110,7 +110,7 @@ export const HomeLayout: FunctionComponent = () => {
     ];
 
     return (
-      <div className='bg-white text-center text-[#28787B]'>
+      <div className='bg-white text-center text-[#28787B] !h-[100vh]'>
         <h2 className='text-[#28787B] text-3xl pt-5'>¿Por que Tryvoo?</h2>
         <span className='text-[#28787B] pb-5 text-xl'>
           Simplifica. Optimiza. Crece
@@ -144,10 +144,10 @@ export const HomeLayout: FunctionComponent = () => {
 
                     <div className='text-left'>
                       <span>
-                        <span className='font-bold text-gray-700 text-xl'>
+                        <span className='font-bold text-[#505050] text-xl'>
                           {item.title}
                         </span>
-                        <span className='text-gray-600 text-sm text-xl'>
+                        <span className='text-[#505050] text-sm text-xl'>
                           {item.subtitle}
                         </span>
                       </span>
@@ -205,7 +205,7 @@ export const HomeLayout: FunctionComponent = () => {
     ];
 
     return (
-      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px]'>
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !h-[100vh]'>
         <span className='text-3xl font-bold text-[#349396]'>
           Servicios destacados
         </span>
@@ -276,7 +276,7 @@ export const HomeLayout: FunctionComponent = () => {
     ];
 
     return (
-      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px]'>
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !h-[100vh]'>
         <span className='text-3xl font-bold mb-5 text-[#28787B]'>
           Soluciones por industria
         </span>
@@ -288,16 +288,16 @@ export const HomeLayout: FunctionComponent = () => {
           {items.map((item: any, index: number) => (
             <div
               key={index}
-              class='flex items-center bg-white shadow-lg rounded-lg border border-gray-200 max-w-lg'
+              class='flex items-center shadow-lg rounded-lg border border-gray-200 w-[90vh]'
             >
-              <div class='bg-[#26B6D4] p-4 rounded-lg h-full w-auto'>
+              <div class='!bg-[#26B6D4] rounded-lg h-[20vh] !w-[20vh] flex items-center justify-center'>
                 <img
                   src={item.image}
                   alt=''
-                  className='!h-[100%] w-auto ml-1 mr-7'
+                  className='h-auto w-[60%] margin-auto'
                 />
               </div>
-              <div class='text-left p-4'>
+              <div class='text-left !w-[60vh] pl-4'>
                 <h2 class='text-2xl font-semibold text-[#505050]'>
                   {item.title}
                 </h2>
@@ -320,15 +320,15 @@ export const HomeLayout: FunctionComponent = () => {
 
   const We = () => {
     return (
-      <div className='flex flex-col items-center text-center !bg-[#f5cde0] !bg-opacity-75 pt-[70px] pb-4'>
+      <div className='flex flex-col items-center text-center !bg-[#f5cde0] !bg-opacity-75 pt-[70px] pb-4 !h-[100vh]'>
         <span className='text-3xl font-bold text-[#20314F]'>Quienes somos</span>
         <span className='text-xl text-[#505050]'>
           En Tryvoo, entedemos las complejidades de operar fuera de la oficina.
         </span>
 
         <div className='mt-7 flex items-center justify-center'>
-          <div className='w-[25%] shadow-xl bg-white rounded-lg p-[20px]'>
-            <span className='text-[#707070] text-2xl ml-[20px]'>
+          <div className='w-[30%] shadow-xl bg-white rounded-lg p-[20px]'>
+            <span className='text-[#707070] text-[20px] ml-[20px]'>
               En Tryvoo trabajamos para que tu equipo en campo tenga las
               herramientas necesarias para lograr más, con seguridad y
               eficiencia, en cualquier lugar.
@@ -337,17 +337,17 @@ export const HomeLayout: FunctionComponent = () => {
           <img src={homeWeCenter} alt='' className='w-[20%] h-auto' />
 
           <div
-            className={`w-[25%] flex flex-col items-center justify-center bg-we text-white p-5 rounded-lg`}
+            className={`w-[30%] flex flex-col items-center justify-center bg-we text-white p-5 rounded-lg h-auto`}
           >
-            <span className='text-2xl font-bold mt-7'>Nuestros Valores</span>
-            <span className='text-lg'>
+            <span className='text-[20px] font-bold mt-2'>Nuestros Valores</span>
+            <span className='text-[18px]'>
               “Empoderar a las empresas con herramientas para gestionar de
               manera eficiente sus operaciones en campo, brindando un control
               total de actividades, recursos y activos, mientras se garantiza la
               seguridad y trazabilidad en todo momento.”
             </span>
-            <span className='text-2xl font-bold mt-7'>Nuestros Valores</span>
-            <span className='text-lg mb-7'>
+            <span className='text-[20px] font-bold mt-2'>Nuestros Valores</span>
+            <span className='text-[18px] mb-2'>
               Innovación y mejora continua Seguridad, trazabilidad y confianza
               Transparencia en la comunicación Compromiso con el cliente y
               colaboradores
@@ -360,7 +360,7 @@ export const HomeLayout: FunctionComponent = () => {
 
   const Plans = () => {
     return (
-      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px]'>
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !h-[100vh]'>
         <span className='text-3xl font-bold text-[#20314F]'>
           Nuestros planes
         </span>
@@ -370,21 +370,21 @@ export const HomeLayout: FunctionComponent = () => {
         </span>
 
         <div className='flex flex-wrap gap-6 justify-center mt-7 mb-10'>
-          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[80vh]'>
+          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[73vh]'>
             <div className='!h-[5vh]'>
-              <div class='w-[40%] ml-auto rounded-bl-lg bg-[#26B6D4] text-white text-center text-xl py-2 font-semibold'>
+              <div class='w-[40%] ml-auto rounded-bl-lg bg-[#26B6D4] text-white text-center text-[15px] py-2 font-semibold'>
                 7 Días free
               </div>
             </div>
 
-            <div class='p-6 text-center !h-[15vh]'>
-              <h2 class='text-[#26B6D4] text-2xl font-bold'>Prueba Gratis</h2>
-              <p class='text-gray-600 text-xl mt-1'>
+            <div class='p-6 text-center !h-[12vh]'>
+              <h2 class='text-[#26B6D4] text-[20px] font-bold'>Prueba Gratis</h2>
+              <p class='text-gray-600 text-[13px] mt-1'>
                 Inicio 7 días y un plan básico
               </p>
             </div>
 
-            <div className='bg-[#26B6D4] rounded-lg !h-[60vh]'>
+            <div className='bg-[#26B6D4] rounded-lg !h-[56vh]'>
               <div class='bg-[#26B6D4] text-white p-6 rounded-lg !h-[80%]'>
                 <ul class='space-y-3 text-[14px]'>
                   <li class='flex items-start text-white'>
@@ -439,17 +439,17 @@ export const HomeLayout: FunctionComponent = () => {
             </div>
           </div>
 
-          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[80vh]'>
-            <div class='w-[40%] ml-auto rounded-bl-lg bg-[#1D2B53] text-white text-center py-2 text-xl font-semibold !h-[5vh]'>
+          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[73vh]'>
+            <div class='w-[40%] ml-auto rounded-bl-lg bg-[#1D2B53] text-white text-center py-2 text-[15px] font-semibold !h-[5vh]'>
               $49 USD/mes
             </div>
 
-            <div class='p-6 text-center !h-[15vh]'>
-              <h2 class='text-[#1D2B53] text-2xl font-bold'>Plan Enterprise</h2>
-              <p class='text-gray-600 text-xl mt-1'>Obtén un mayor alcance.</p>
+            <div class='p-6 text-center !h-[12vh]'>
+              <h2 class='text-[#1D2B53] text-[20px] font-bold'>Plan Enterprise</h2>
+              <p class='text-gray-600 text-[13px] mt-1'>Obtén un mayor alcance.</p>
             </div>
 
-            <div className='bg-[#1D2B53] rounded-lg !h-[60vh]'>
+            <div className='bg-[#1D2B53] rounded-lg !h-[56vh]'>
               <div class='bg-[#1D2B53] text-white p-6 rounded-lg !h-[80%]'>
                 <ul class='space-y-3 !text-[14px]'>
                   <li class='flex items-start'>
@@ -512,17 +512,17 @@ export const HomeLayout: FunctionComponent = () => {
             </div>
           </div>
 
-          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[80vh]'>
-            <div class='w-[40%] ml-auto rounded-bl-lg bg-[#1D2B53] text-white text-center py-2 font-semibold text-xl !h-[5vh]'>
+          <div class='max-w-sm bg-[#1D2B53] shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[73vh]'>
+            <div class='w-[40%] ml-auto rounded-bl-lg bg-white text-[#1D2B53] text-center py-2 font-semibold text-[15px] !h-[5vh]'>
               $49 USD/mes
             </div>
 
-            <div class='p-6 text-center !h-[15vh]'>
-              <h2 class='text-[#1D2B53] text-2xl font-bold'>Plan Premium</h2>
-              <p class='text-gray-600 text-xl mt-1'>Empresas avanzadas</p>
+            <div class='p-6 text-center !h-[12vh]'>
+              <h2 class='text-white text-[20px] font-bold'>Plan Premium</h2>
+              <p class='text-white text-[13px] mt-1'>Empresas avanzadas</p>
             </div>
 
-            <div className='bg-white rounded-lg !h-[60vh]'>
+            <div className='bg-white rounded-lg !h-[56vh]'>
               <div class='p-6 rounded-lg !h-[80%]'>
                 <ul class='space-y-3 !text-[14px] text-gray-700'>
                   <li class='flex items-start'>
@@ -601,25 +601,25 @@ export const HomeLayout: FunctionComponent = () => {
 
   const Footer = () => {
     return (
-      <div className='bg-gray-800 flex justify-center gap-4 pt-10 pb-10'>
+      <div className='bg-[#20314F] flex justify-center gap-4 pt-10 pb-10'>
         <div className='w-[30%]'>
-          <h2 className='text-xl font-bold'>Secciones Populares</h2>
-          <p className='text-sm pt-2'>Conoce más de tryvoo</p>
+          <h2 className='text-[20px] font-bold'>Secciones Populares</h2>
+          <p className='text-[18px] pt-2'>Conoce más de tryvoo</p>
         </div>
 
         <div className='w-[30%]'>
-          <h3 className='text-xl font-bold'>Contáctanos</h3>
-          <p className='text-sm pt-2'>3157789022 - Popayán, Cauca</p>
+          <h3 className='text-[20px] font-bold'>Contáctanos</h3>
+          <p className='text-[18px] pt-2'>3157789022 - Popayán, Cauca</p>
         </div>
 
         <div className='w-[30%]'>
           <div className='w-full block'>
-            <h3 className='text-xl font-bold'>Nuestra redes</h3>
+            <h3 className='text-[20px] font-bold'>Nuestra redes</h3>
           </div>
           <div className='w-full block flex justify-left pt-2'>
-            <img src={socialIcon1} alt='' className='mr-2' />
-            <img src={socialIcon2} alt='' className='mr-2' />
-            <img src={socialIcon3} alt='' className='mr-2' />
+            <img src={socialIcon1} alt='' className='mr-3' />
+            <img src={socialIcon2} alt='' className='mr-3' />
+            <img src={socialIcon3} alt='' className='mr-3' />
           </div>
         </div>
       </div>
@@ -646,16 +646,16 @@ export const HomeLayout: FunctionComponent = () => {
             <We />
             <Plans />
             <div className='flex gap-4 w-full mt-7 mb-10'>
-              <div className='w-[30%] text-3xl text-center'>
-                <span>Te brindamos asesoria gratuita</span>
+              <div className='w-[25%] text-[26px] font-bold pl-12'>
+                <span className='mr-12'>¡Te brindamos asesoria gratuita!</span>
               </div>
-              <div className='w-[30%] text-xl'>
+              <div className='w-[40%] text-xl'>
                 <span>
                   Para que comiences optimizar tu negocio con herramientas
                   ágiles y operables en cualquiers espacio y lugar
                 </span>
               </div>
-              <div className='w-[30%] text-center'>
+              <div className='w-[25%] text-center'>
                 <Button
                   label='Inicia ya y disfruta'
                   type='button'
