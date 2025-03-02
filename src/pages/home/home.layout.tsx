@@ -1,7 +1,7 @@
 import './home.css';
 import { NAVBAR_MENUS } from '@/utils/menus';
 import { type FunctionComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { ModalServices } from './modal/modal.services';
 // import { VOX_SOCIAL_MEDIA } from './constants';
 // import { Waves } from '@/components/styles';
@@ -207,7 +207,7 @@ export const HomeLayout: FunctionComponent = () => {
     ];
 
     return (
-      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !h-[100vh]'>
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !md:h-[100vh] !h-auto'>
         <span className='text-3xl font-bold text-[#349396]'>
           Servicios destacados
         </span>
@@ -215,23 +215,25 @@ export const HomeLayout: FunctionComponent = () => {
           Todo lo que necesitas en una sola plataforma
         </span>
 
-        <div className='flex flex-wrap gap-6 justify-center mt-7'>
-          {items.map((item: any, index: number) => (
-            <div
-              key={index}
-              class='flex flex-col items-center text-center w-[40vh] max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200 hover:bg-[#20314F] text-[#349396] hover:text-white'
-            >
-              <img
-                class='w-auto h-48 object-cover rounded-lg'
-                src={item.image}
-                alt='Card Image'
-              />
-              <div class='mt-4'>
-                <h2 class='text-2xl font-semibold'>{item.title}</h2>
-                <p class='mt-2 '>{item.subtitle}</p>
+        <div className='hidden lg:block'>
+          <div className='flex flex-wrap gap-6 justify-center mt-7'>
+            {items.map((item: any, index: number) => (
+              <div
+                key={index}
+                class='flex flex-col items-center text-center w-[40vh] max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200 hover:bg-[#20314F] text-[#349396] hover:text-white'
+              >
+                <img
+                  class='w-auto h-48 object-cover rounded-lg'
+                  src={item.image}
+                  alt='Card Image'
+                />
+                <div class='mt-4'>
+                  <h2 class='text-2xl font-semibold'>{item.title}</h2>
+                  <p class='mt-2 '>{item.subtitle}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         <Button
@@ -239,7 +241,7 @@ export const HomeLayout: FunctionComponent = () => {
           type='button'
           id='schedule'
           name='schedule'
-          className='bg-[#20314F] text-[#FFFF] mb-4 mt-10 text-xl rounded-full !p-5 !w-[400px]'
+          className='bg-[#20314F] text-[#FFFF] mb-4 mt-10 text-xl rounded-full !p-5 !w-[400px] hidden lg:block'
         />
       </div>
     );
@@ -628,6 +630,166 @@ export const HomeLayout: FunctionComponent = () => {
     );
   };
 
+  const Carousel = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const carouselRef: any = useRef(null);
+    const isDraggingRef = useRef(false);
+    const startXRef = useRef(0);
+    const scrollLeftRef = useRef(0);
+
+    const items: any[] = [
+      {
+        id: 1,
+        title: 'Monitorio en Tiempo Real',
+        subtitle:
+          'Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real.',
+        image: homeService1,
+      },
+      {
+        id: 2,
+        title: 'Capacidades Offline',
+        subtitle:
+          'Los operarios pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando la conexión a Internet es restaurada.',
+        image: homeService2,
+      },
+      {
+        id: 3,
+        title: 'IA y Soporte Virtual',
+        subtitle:
+          'Tu asistente virtual para resolver problemas en campo, con recomendaciones basadas en los datos que se capturan durante las operaciones.',
+        image: homeService3,
+      },
+      {
+        id: 4,
+        title: 'Integración y Personalización',
+        subtitle:
+          'Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector.',
+        image: homeService4,
+      },
+    ];
+
+    // Función para actualizar el índice actual
+    const updateCurrentIndex = () => {
+      if (carouselRef.current) {
+        const cardWidth = carouselRef.current.clientWidth / 3; // Ancho de cada card
+        const newIndex = Math.round(carouselRef.current.scrollLeft / cardWidth);
+        setCurrentIndex(newIndex);
+      }
+    };
+
+    // Evento para iniciar el arrastre
+    const handleMouseDown = (e: any) => {
+      isDraggingRef.current = true;
+      startXRef.current = e.pageX - carouselRef.current.offsetLeft;
+      scrollLeftRef.current = carouselRef.current.scrollLeft;
+    };
+
+    // Evento para mover el carousel mientras se arrastra
+    const handleMouseMove = (e: any) => {
+      if (!isDraggingRef.current) return;
+      e.preventDefault();
+      const x = e.pageX - carouselRef.current.offsetLeft;
+      const walk = (x - startXRef.current) * 2; // Ajusta la sensibilidad del arrastre
+      carouselRef.current.scrollLeft = scrollLeftRef.current - walk;
+    };
+
+    // Evento para detener el arrastre
+    const handleMouseUp = () => {
+      isDraggingRef.current = false;
+      updateCurrentIndex();
+    };
+
+    // Evento para cambiar de slide al hacer clic en un indicador
+    const goToSlide = (index: number) => {
+      if (carouselRef.current) {
+        const cardWidth = carouselRef.current.clientWidth / 3; // Ancho de cada card
+        const containerWidth = carouselRef.current.clientWidth;
+        const scrollPosition = index * cardWidth - (containerWidth / 2 - cardWidth / 2); // Centrar la card
+        carouselRef.current.scrollTo({
+          left: scrollPosition,
+          behavior: "smooth",
+        });
+        setCurrentIndex(index);
+      }
+    };
+
+    // Efecto para agregar/eliminar event listeners
+    useEffect(() => {
+      const carousel: any = carouselRef.current;
+      if (carousel) {
+        carousel.addEventListener("scroll", updateCurrentIndex);
+        carousel.addEventListener("mousedown", handleMouseDown);
+        carousel.addEventListener("mousemove", handleMouseMove);
+        carousel.addEventListener("mouseup", handleMouseUp);
+        carousel.addEventListener("mouseleave", handleMouseUp);
+      }
+
+      return () => {
+        if (carousel) {
+          carousel.removeEventListener("scroll", updateCurrentIndex);
+          carousel.removeEventListener("mousedown", handleMouseDown);
+          carousel.removeEventListener("mousemove", handleMouseMove);
+          carousel.removeEventListener("mouseup", handleMouseUp);
+          carousel.removeEventListener("mouseleave", handleMouseUp);
+        }
+      };
+    }, []);
+
+    return (
+      <div className='bg-white block lg:hidden'>
+        <div className="relative w-full max-w-4xl mx-auto overflow-hidden">
+          <div
+            ref={carouselRef}
+            className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {items.map((card) => (
+              <div
+                key={card.id}
+                className="w-[90%] flex-shrink-0 p-4 snap-start"
+              >
+                <div className="bg-white h-[400px] rounded-lg shadow-lg overflow-hidden">
+                  <div className='flex items-center justify-center h-[200px]'>
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      className="w-auto h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4 text-[#349396]">
+                    <h3 className="text-xl font-bold text-center">{card.title}</h3>
+                    <p className="text-gray-600 text-center">{card.subtitle}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Indicadores circulares */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {items.map((card, index) => (
+              <div
+                key={card.id}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 bg-gray-600 rounded-full cursor-pointer ${index === currentIndex ? "opacity-100" : "opacity-50"
+                  }`}
+              ></div>
+            ))}
+          </div>
+
+        </div>
+
+        <Button
+          label='Ver detalle'
+          type='button'
+          id='schedule'
+          name='schedule'
+          className='bg-[#20314F] text-[#FFFF] mb-4 mt-10 text-xl rounded-full !p-5 !w-[400px]'
+        />
+      </div>
+    );
+  }
+
   return (
     <section className='relative overflow-hidden text-t-dark'>
       <Navbar
@@ -644,6 +806,7 @@ export const HomeLayout: FunctionComponent = () => {
             <Main />
             <WhyTryvoo />
             <Services />
+            <Carousel />
             <Solutions />
             <We />
             <Plans />
@@ -668,6 +831,10 @@ export const HomeLayout: FunctionComponent = () => {
               </div>
             </div>
             <Footer />
+            <div className="flex justify-center items-center h-screen bg-gray-100">
+
+
+            </div>
           </>
         )}
       </div>
