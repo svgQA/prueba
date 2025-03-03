@@ -1,7 +1,7 @@
 import './home.css';
 import { NAVBAR_MENUS } from '@/utils/menus';
 import { type FunctionComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { ModalServices } from './modal/modal.services';
 // import { VOX_SOCIAL_MEDIA } from './constants';
 // import { Waves } from '@/components/styles';
@@ -46,12 +46,12 @@ export const HomeLayout: FunctionComponent = () => {
 
   const Main = () => {
     return (
-      <div className='flex relative'>
+      <div className='flex relative !h-[100vh] md:flex-row flex-col'>
         <div className='md:w-2/5 flex flex-col items-center text-left pl-10 pr-7 mt-7 mb-7'>
-          <h1 className='text-4xl mb-3 mt-3'>
+          <h1 className='md:text-5xl text-3xl mb-3 mt-3 text-center'>
             Transforma la Gestión de Operaciones Con Tryvoo
           </h1>
-          <span className='mb-5 text-2xl mt-5'>
+          <span className='mb-5 md:text-3xl text-2xl mt-5 text-center'>
             Optimiza la gestión de actividades, recursos y activos, incluso sin{' '}
             <span className='font-bold'>conectividad para tus negocios</span>
           </span>
@@ -60,19 +60,19 @@ export const HomeLayout: FunctionComponent = () => {
             type='button'
             id='schedule'
             name='schedule'
-            className='bg-[#43f876] text-[#393838] mb-7 mt-10 text-xl rounded-full !p-5'
+            className='bg-[#43f876] text-[#393838] mb-7 mt-10 text-xl rounded-full !p-5 object-contain z-[10]'
           />
         </div>
 
-        <div className='md:w-3/5 flex items-center overflow-hidden'>
+        <div className='md:w-3/5 flex items-center justify-center md:justify-left overflow-hidden'>
           <img
             src={homeMainDesktop}
             alt=''
-            className='w-[95vh] max-w-full object-contain z-[10]'
+            className='!md:h-[60vh] !md:w-auto w-[90%] h-auto object-contain z-[10] md:mr-7'
           />
         </div>
 
-        <div class='absolute bottom-0 left-0 w-full h-[5vh] bg-white'> </div>
+        <div class='absolute bottom-0 left-0 w-full md:h-[30vh] h-[30vh] bg-white'> </div>
       </div>
     );
   };
@@ -110,13 +110,13 @@ export const HomeLayout: FunctionComponent = () => {
     ];
 
     return (
-      <div className='bg-white text-center text-[#28787B]'>
+      <div className='bg-white text-center text-[#28787B] !md:h-[100vh] !h-auto'>
         <h2 className='text-[#28787B] text-3xl pt-5'>¿Por que Tryvoo?</h2>
         <span className='text-[#28787B] pb-5 text-xl'>
           Simplifica. Optimiza. Crece
         </span>
 
-        <div className='flex mt-7'>
+        <div className='flex mt-7 md:flex-row flex-col'>
           <div className='md:w-1/2 flex flex-col items-center'>
             <img
               src={homeWithTryvooDesktop}
@@ -135,19 +135,21 @@ export const HomeLayout: FunctionComponent = () => {
             </p>
           </div>
 
-          <div className='md:w-1/2 mt-7'>
+          <div className='md:w-1/2 mt-7 ml-5 mr-5'>
             <div className='shadow-xl bg-white rounded-lg'>
               {items.map((item: any, index: number) => (
                 <div key={index}>
-                  <div className='flex items-start space-x-4 p-5'>
-                    <img src={item.image} alt='Gestión' className='w-16 h-16' />
+                  <div className='flex items-start space-x-4 md:p-5 p-1'>
+                    <div className='h-[18vh] !w-[18vh] md:h-[10vh] !md:w-[10vh] flex items-center justify-center'>
+                      <img src={item.image} alt='Gestión' className='!h-auto w-[100%] margin-auto' />
+                    </div>
 
-                    <div className='text-left'>
+                    <div className='text-left h-[18vh] md:h-[10vh] flex items-center justify-center'>
                       <span>
-                        <span className='font-bold text-gray-700 text-xl'>
+                        <span className='font-bold text-[#505050] text-xl'>
                           {item.title}
                         </span>
-                        <span className='text-gray-600 text-sm text-xl'>
+                        <span className='text-[#505050] text-sm text-xl'>
                           {item.subtitle}
                         </span>
                       </span>
@@ -205,7 +207,7 @@ export const HomeLayout: FunctionComponent = () => {
     ];
 
     return (
-      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px]'>
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !md:h-[100vh] !h-auto'>
         <span className='text-3xl font-bold text-[#349396]'>
           Servicios destacados
         </span>
@@ -213,23 +215,25 @@ export const HomeLayout: FunctionComponent = () => {
           Todo lo que necesitas en una sola plataforma
         </span>
 
-        <div className='flex flex-wrap gap-6 justify-center mt-7'>
-          {items.map((item: any, index: number) => (
-            <div
-              key={index}
-              class='flex flex-col items-center text-center w-[40vh] max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200 hover:bg-[#20314F] text-[#349396] hover:text-white'
-            >
-              <img
-                class='w-auto h-48 object-cover rounded-lg'
-                src={item.image}
-                alt='Card Image'
-              />
-              <div class='mt-4'>
-                <h2 class='text-2xl font-semibold'>{item.title}</h2>
-                <p class='mt-2 '>{item.subtitle}</p>
+        <div className='hidden lg:block'>
+          <div className='flex flex-wrap gap-6 justify-center mt-7'>
+            {items.map((item: any, index: number) => (
+              <div
+                key={index}
+                class='flex flex-col items-center text-center w-[40vh] max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-6 border border-gray-200 hover:bg-[#20314F] text-[#349396] hover:text-white'
+              >
+                <img
+                  class='w-auto h-48 object-cover rounded-lg'
+                  src={item.image}
+                  alt='Card Image'
+                />
+                <div class='mt-4'>
+                  <h2 class='text-2xl font-semibold'>{item.title}</h2>
+                  <p class='mt-2 '>{item.subtitle}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         <Button
@@ -237,7 +241,7 @@ export const HomeLayout: FunctionComponent = () => {
           type='button'
           id='schedule'
           name='schedule'
-          className='bg-[#20314F] text-[#FFFF] mb-4 mt-10 text-xl rounded-full !p-5 !w-[400px]'
+          className='bg-[#20314F] text-[#FFFF] mb-4 mt-10 text-xl rounded-full !p-5 !w-[400px] hidden lg:block'
         />
       </div>
     );
@@ -276,7 +280,7 @@ export const HomeLayout: FunctionComponent = () => {
     ];
 
     return (
-      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px]'>
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !md:h-[100vh] !h-auto'>
         <span className='text-3xl font-bold mb-5 text-[#28787B]'>
           Soluciones por industria
         </span>
@@ -284,20 +288,20 @@ export const HomeLayout: FunctionComponent = () => {
           Tryvoo esta optimizado para diferentes sectores.
         </span>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 mb-10'>
+        <div className='grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-6 mt-10 mb-10 ml-4'>
           {items.map((item: any, index: number) => (
             <div
               key={index}
-              class='flex items-center bg-white shadow-lg rounded-lg border border-gray-200 max-w-lg'
+              class='flex items-center shadow-lg rounded-lg border border-gray-200 md:w-[90vh] w-[95%]'
             >
-              <div class='bg-[#26B6D4] p-4 rounded-lg h-full w-auto'>
+              <div class='!bg-[#26B6D4] rounded-lg h-[20vh] md:h-[25vh] !md:w-[20vh] w-[30%] flex items-center justify-center'>
                 <img
                   src={item.image}
                   alt=''
-                  className='!h-[100%] w-auto ml-1 mr-7'
+                  className='h-auto md:w-[60%] w-[90%] margin-auto'
                 />
               </div>
-              <div class='text-left p-4'>
+              <div class='text-left !md:w-[60vh] w-[70%] md:pl-4 p-2'>
                 <h2 class='text-2xl font-semibold text-[#505050]'>
                   {item.title}
                 </h2>
@@ -320,34 +324,38 @@ export const HomeLayout: FunctionComponent = () => {
 
   const We = () => {
     return (
-      <div className='flex flex-col items-center text-center !bg-[#f5cde0] !bg-opacity-75 pt-[70px] pb-4'>
+      <div className='flex flex-col items-center text-center !bg-[#f5cde0] !bg-opacity-75 pt-[70px] md:pb-4 !md:h-[100vh] h-auto'>
         <span className='text-3xl font-bold text-[#20314F]'>Quienes somos</span>
         <span className='text-xl text-[#505050]'>
           En Tryvoo, entedemos las complejidades de operar fuera de la oficina.
         </span>
 
-        <div className='mt-7 flex items-center justify-center'>
-          <div className='w-[25%] shadow-xl bg-white rounded-lg p-[20px]'>
-            <span className='text-[#707070] text-2xl ml-[20px]'>
-              En Tryvoo trabajamos para que tu equipo en campo tenga las
-              herramientas necesarias para lograr más, con seguridad y
-              eficiencia, en cualquier lugar.
-            </span>
+        <div className='mt-7 flex items-center justify-center md:flex-row flex-col'>
+
+          <div className='md:w-[50%] w-[90%] flex flex-row items-center justify-center'>
+            <div className='w-[60%] shadow-xl bg-white rounded-lg p-[20px] !md:h-[30vh] h-auto'>
+              <span className='text-[#707070] text-[20px] ml-[20px]'>
+                En Tryvoo trabajamos para que tu equipo en campo tenga las
+                herramientas necesarias para lograr más, con seguridad y
+                eficiencia, en cualquier lugar.
+              </span>
+            </div>
+
+            <img src={homeWeCenter} alt='' className='md:w-[40%] w-[50%] h-auto' />
           </div>
-          <img src={homeWeCenter} alt='' className='w-[20%] h-auto' />
 
           <div
-            className={`w-[25%] flex flex-col items-center justify-center bg-we text-white p-5 rounded-lg`}
+            className={`md:w-[30%] w-[100%] flex flex-col items-center justify-center bg-we text-white p-5 rounded-lg h-auto`}
           >
-            <span className='text-2xl font-bold mt-7'>Nuestros Valores</span>
-            <span className='text-lg'>
+            <span className='text-[20px] font-bold mt-2'>Nuestros Valores</span>
+            <span className='text-[18px]'>
               “Empoderar a las empresas con herramientas para gestionar de
               manera eficiente sus operaciones en campo, brindando un control
               total de actividades, recursos y activos, mientras se garantiza la
               seguridad y trazabilidad en todo momento.”
             </span>
-            <span className='text-2xl font-bold mt-7'>Nuestros Valores</span>
-            <span className='text-lg mb-7'>
+            <span className='text-[20px] font-bold mt-2'>Nuestros Valores</span>
+            <span className='text-[18px] mb-2'>
               Innovación y mejora continua Seguridad, trazabilidad y confianza
               Transparencia en la comunicación Compromiso con el cliente y
               colaboradores
@@ -360,7 +368,7 @@ export const HomeLayout: FunctionComponent = () => {
 
   const Plans = () => {
     return (
-      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px]'>
+      <div className='flex flex-col items-center text-center bg-white text-[#28787B] pt-[70px] !md:h-[100vh] h-auto'>
         <span className='text-3xl font-bold text-[#20314F]'>
           Nuestros planes
         </span>
@@ -370,21 +378,21 @@ export const HomeLayout: FunctionComponent = () => {
         </span>
 
         <div className='flex flex-wrap gap-6 justify-center mt-7 mb-10'>
-          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[80vh]'>
+          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[73vh]'>
             <div className='!h-[5vh]'>
-              <div class='w-[40%] ml-auto rounded-bl-lg bg-[#26B6D4] text-white text-center text-xl py-2 font-semibold'>
+              <div class='w-[40%] ml-auto rounded-bl-lg bg-[#26B6D4] text-white text-center text-[15px] py-2 font-semibold'>
                 7 Días free
               </div>
             </div>
 
-            <div class='p-6 text-center !h-[15vh]'>
-              <h2 class='text-[#26B6D4] text-2xl font-bold'>Prueba Gratis</h2>
-              <p class='text-gray-600 text-xl mt-1'>
+            <div class='p-6 text-center !h-[12vh]'>
+              <h2 class='text-[#26B6D4] text-[20px] font-bold'>Prueba Gratis</h2>
+              <p class='text-gray-600 text-[13px] mt-1'>
                 Inicio 7 días y un plan básico
               </p>
             </div>
 
-            <div className='bg-[#26B6D4] rounded-lg !h-[60vh]'>
+            <div className='bg-[#26B6D4] rounded-lg !h-[56vh]'>
               <div class='bg-[#26B6D4] text-white p-6 rounded-lg !h-[80%]'>
                 <ul class='space-y-3 text-[14px]'>
                   <li class='flex items-start text-white'>
@@ -439,17 +447,17 @@ export const HomeLayout: FunctionComponent = () => {
             </div>
           </div>
 
-          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[80vh]'>
-            <div class='w-[40%] ml-auto rounded-bl-lg bg-[#1D2B53] text-white text-center py-2 text-xl font-semibold !h-[5vh]'>
+          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[73vh]'>
+            <div class='w-[40%] ml-auto rounded-bl-lg bg-[#1D2B53] text-white text-center py-2 text-[15px] font-semibold !h-[5vh]'>
               $49 USD/mes
             </div>
 
-            <div class='p-6 text-center !h-[15vh]'>
-              <h2 class='text-[#1D2B53] text-2xl font-bold'>Plan Enterprise</h2>
-              <p class='text-gray-600 text-xl mt-1'>Obtén un mayor alcance.</p>
+            <div class='p-6 text-center !h-[12vh]'>
+              <h2 class='text-[#1D2B53] text-[20px] font-bold'>Plan Enterprise</h2>
+              <p class='text-gray-600 text-[13px] mt-1'>Obtén un mayor alcance.</p>
             </div>
 
-            <div className='bg-[#1D2B53] rounded-lg !h-[60vh]'>
+            <div className='bg-[#1D2B53] rounded-lg !h-[56vh]'>
               <div class='bg-[#1D2B53] text-white p-6 rounded-lg !h-[80%]'>
                 <ul class='space-y-3 !text-[14px]'>
                   <li class='flex items-start'>
@@ -512,17 +520,17 @@ export const HomeLayout: FunctionComponent = () => {
             </div>
           </div>
 
-          <div class='max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[80vh]'>
-            <div class='w-[40%] ml-auto rounded-bl-lg bg-[#1D2B53] text-white text-center py-2 font-semibold text-xl !h-[5vh]'>
+          <div class='max-w-sm bg-[#1D2B53] shadow-lg rounded-lg overflow-hidden border border-gray-200 !h-[73vh]'>
+            <div class='w-[40%] ml-auto rounded-bl-lg bg-white text-[#1D2B53] text-center py-2 font-semibold text-[15px] !h-[5vh]'>
               $49 USD/mes
             </div>
 
-            <div class='p-6 text-center !h-[15vh]'>
-              <h2 class='text-[#1D2B53] text-2xl font-bold'>Plan Premium</h2>
-              <p class='text-gray-600 text-xl mt-1'>Empresas avanzadas</p>
+            <div class='p-6 text-center !h-[12vh]'>
+              <h2 class='text-white text-[20px] font-bold'>Plan Premium</h2>
+              <p class='text-white text-[13px] mt-1'>Empresas avanzadas</p>
             </div>
 
-            <div className='bg-white rounded-lg !h-[60vh]'>
+            <div className='bg-white rounded-lg !h-[56vh]'>
               <div class='p-6 rounded-lg !h-[80%]'>
                 <ul class='space-y-3 !text-[14px] text-gray-700'>
                   <li class='flex items-start'>
@@ -601,30 +609,191 @@ export const HomeLayout: FunctionComponent = () => {
 
   const Footer = () => {
     return (
-      <div className='bg-gray-800 flex justify-center gap-4 pt-10 pb-10'>
-        <div className='w-[30%]'>
-          <h2 className='text-xl font-bold'>Secciones Populares</h2>
-          <p className='text-sm pt-2'>Conoce más de tryvoo</p>
+      <div className='bg-[#20314F] flex justify-center gap-4 pt-10 pb-10 md:flex-row flex-col'>
+        <div className='md:w-[30%] w-[90%] md:ml-0 ml-5'>
+          <h2 className='text-[20px] font-bold'>Secciones Populares</h2>
+          <p className='text-[18px] pt-2'>Conoce más de tryvoo</p>
         </div>
 
-        <div className='w-[30%]'>
-          <h3 className='text-xl font-bold'>Contáctanos</h3>
-          <p className='text-sm pt-2'>3157789022 - Popayán, Cauca</p>
+        <div className='md:w-[30%] w-[90%] md:ml-0 ml-5'>
+          <h3 className='text-[20px] font-bold'>Contáctanos</h3>
+          <p className='text-[18px] pt-2'>3157789022 - Popayán, Cauca</p>
         </div>
 
-        <div className='w-[30%]'>
-          <div className='w-full block'>
-            <h3 className='text-xl font-bold'>Nuestra redes</h3>
+        <div className='md:w-[30%] w-[90%] md:ml-0 ml-5'>
+          <div className='w-[100%] block'>
+            <h3 className='text-[20px] font-bold'>Nuestra redes</h3>
           </div>
-          <div className='w-full block flex justify-left pt-2'>
-            <img src={socialIcon1} alt='' className='mr-2' />
-            <img src={socialIcon2} alt='' className='mr-2' />
-            <img src={socialIcon3} alt='' className='mr-2' />
+          <div className='w-[100%] block flex justify-left pt-2'>
+            <img src={socialIcon1} alt='' className='mr-3' />
+            <img src={socialIcon2} alt='' className='mr-3' />
+            <img src={socialIcon3} alt='' className='mr-3' />
           </div>
         </div>
       </div>
     );
   };
+
+  const Carousel = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const carouselRef: any = useRef(null);
+    const isDraggingRef = useRef(false);
+    const startXRef = useRef(0);
+    const scrollLeftRef = useRef(0);
+
+    const items: any[] = [
+      {
+        id: 1,
+        title: 'Monitorio en Tiempo Real',
+        subtitle:
+          'Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real.',
+        image: homeService1,
+      },
+      {
+        id: 2,
+        title: 'Capacidades Offline',
+        subtitle:
+          'Los operarios pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando la conexión a Internet es restaurada.',
+        image: homeService2,
+      },
+      {
+        id: 3,
+        title: 'IA y Soporte Virtual',
+        subtitle:
+          'Tu asistente virtual para resolver problemas en campo, con recomendaciones basadas en los datos que se capturan durante las operaciones.',
+        image: homeService3,
+      },
+      {
+        id: 4,
+        title: 'Integración y Personalización',
+        subtitle:
+          'Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector.',
+        image: homeService4,
+      },
+    ];
+
+    // Función para actualizar el índice actual
+    const updateCurrentIndex = () => {
+      if (carouselRef.current) {
+        const cardWidth = carouselRef.current.clientWidth / 3; // Ancho de cada card
+        const newIndex = Math.round(carouselRef.current.scrollLeft / cardWidth);
+        setCurrentIndex(newIndex);
+      }
+    };
+
+    // Evento para iniciar el arrastre
+    const handleMouseDown = (e: any) => {
+      isDraggingRef.current = true;
+      startXRef.current = e.pageX - carouselRef.current.offsetLeft;
+      scrollLeftRef.current = carouselRef.current.scrollLeft;
+    };
+
+    // Evento para mover el carousel mientras se arrastra
+    const handleMouseMove = (e: any) => {
+      if (!isDraggingRef.current) return;
+      e.preventDefault();
+      const x = e.pageX - carouselRef.current.offsetLeft;
+      const walk = (x - startXRef.current) * 2; // Ajusta la sensibilidad del arrastre
+      carouselRef.current.scrollLeft = scrollLeftRef.current - walk;
+    };
+
+    // Evento para detener el arrastre
+    const handleMouseUp = () => {
+      isDraggingRef.current = false;
+      updateCurrentIndex();
+    };
+
+    // Evento para cambiar de slide al hacer clic en un indicador
+    const goToSlide = (index: number) => {
+      if (carouselRef.current) {
+        const cardWidth = carouselRef.current.clientWidth / 3; // Ancho de cada card
+        const containerWidth = carouselRef.current.clientWidth;
+        const scrollPosition = index * cardWidth - (containerWidth / 2 - cardWidth / 2); // Centrar la card
+        carouselRef.current.scrollTo({
+          left: scrollPosition,
+          behavior: "smooth",
+        });
+        setCurrentIndex(index);
+      }
+    };
+
+    // Efecto para agregar/eliminar event listeners
+    useEffect(() => {
+      const carousel: any = carouselRef.current;
+      if (carousel) {
+        carousel.addEventListener("scroll", updateCurrentIndex);
+        carousel.addEventListener("mousedown", handleMouseDown);
+        carousel.addEventListener("mousemove", handleMouseMove);
+        carousel.addEventListener("mouseup", handleMouseUp);
+        carousel.addEventListener("mouseleave", handleMouseUp);
+      }
+
+      return () => {
+        if (carousel) {
+          carousel.removeEventListener("scroll", updateCurrentIndex);
+          carousel.removeEventListener("mousedown", handleMouseDown);
+          carousel.removeEventListener("mousemove", handleMouseMove);
+          carousel.removeEventListener("mouseup", handleMouseUp);
+          carousel.removeEventListener("mouseleave", handleMouseUp);
+        }
+      };
+    }, []);
+
+    return (
+      <div className='bg-white block lg:hidden'>
+        <div className="relative w-full max-w-4xl mx-auto overflow-hidden">
+          <div
+            ref={carouselRef}
+            className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {items.map((card) => (
+              <div
+                key={card.id}
+                className="w-[90%] flex-shrink-0 p-4 snap-start"
+              >
+                <div className="bg-white h-[400px] rounded-lg shadow-lg overflow-hidden">
+                  <div className='flex items-center justify-center h-[200px]'>
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      className="w-auto h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4 text-[#349396]">
+                    <h3 className="text-xl font-bold text-center">{card.title}</h3>
+                    <p className="text-gray-600 text-center">{card.subtitle}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Indicadores circulares */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {items.map((card, index) => (
+              <div
+                key={card.id}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 bg-gray-600 rounded-full cursor-pointer ${index === currentIndex ? "opacity-100" : "opacity-50"
+                  }`}
+              ></div>
+            ))}
+          </div>
+
+        </div>
+
+        <Button
+          label='Ver detalle'
+          type='button'
+          id='schedule'
+          name='schedule'
+          className='bg-[#20314F] text-[#FFFF] mb-4 mt-10 text-xl rounded-full !p-5 !w-[400px]'
+        />
+
+      </div>
+    );
+  }
 
   return (
     <section className='relative overflow-hidden text-t-dark'>
@@ -642,20 +811,21 @@ export const HomeLayout: FunctionComponent = () => {
             <Main />
             <WhyTryvoo />
             <Services />
+            <Carousel />
             <Solutions />
             <We />
             <Plans />
-            <div className='flex gap-4 w-full mt-7 mb-10'>
-              <div className='w-[30%] text-3xl text-center'>
-                <span>Te brindamos asesoria gratuita</span>
+            <div className='flex gap-4 w-full mt-7 mb-10 md:flex-row flex-col items-center'>
+              <div className='md:w-[25%] w-[90%] text-[26px] font-bold pl-12 text-center md:text-left'>
+                <span className='mr-12'>¡Te brindamos asesoria gratuita!</span>
               </div>
-              <div className='w-[30%] text-xl'>
-                <span>
+              <div className='md:w-[40%] w-[90%] text-xl text-center md:text-left'>
+                <span className=''>
                   Para que comiences optimizar tu negocio con herramientas
                   ágiles y operables en cualquiers espacio y lugar
                 </span>
               </div>
-              <div className='w-[30%] text-center'>
+              <div className='md:w-[25%] w-[90%] text-center'>
                 <Button
                   label='Inicia ya y disfruta'
                   type='button'
