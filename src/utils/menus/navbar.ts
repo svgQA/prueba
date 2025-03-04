@@ -3,15 +3,33 @@ import { PAGES_LIST_ROUTER } from '../routing';
 
 export const NAVBAR_MENUS: IMenu[] = [
   {
-    label: 'Signin',
+    label: 'Nuestros productos',
     description: '123',
     to: PAGES_LIST_ROUTER.dashboard.base,
-    id: 'signin',
+    id: 'products',
   },
   {
-    label: 'Signup',
+    label: 'Conocenos',
     description: '123',
     to: PAGES_LIST_ROUTER.dashboard.base,
-    id: 'signup',
+    id: 'about',
   },
+  {
+    label: 'Solicita una demo',
+    description: '123',
+    to: PAGES_LIST_ROUTER.dashboard.base,
+    id: 'demo',
+  },
+  // {
+  //   label: 'Signin',
+  //   description: '123',
+  //   to: PAGES_LIST_ROUTER.dashboard.base,
+  //   id: 'signin',
+  // },
+  // {
+  //   label: 'Signup',
+  //   description: '123',
+  //   to: PAGES_LIST_ROUTER.dashboard.base,
+  //   id: 'signup',
+  // },
 ];
