@@ -45,7 +45,7 @@ import { Loading } from '@/components/common/loading/loading';
 import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { OnBordingModal } from '../globals/onbording/onboarding';
 import { IconsModal } from '../globals/icons/icons';
-import { AuthAmplifyProps } from '../interface';
+import { AuthAmplifyProps } from '@/utils/types/auth.interface';
 import { useWebSocket } from '@/utils/socket';
 
 // const GENERAL_GROUP_MENU = 0,

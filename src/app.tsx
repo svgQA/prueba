@@ -9,7 +9,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 
 import '@aws-amplify/ui-react/styles.css';
 import { AWS_AMPLIFY_SETTINGS } from './aws-exports';
-import { AuthAmplifyProps } from './pages/interface';
+import { AuthAmplifyProps } from './utils/types/auth.interface';
 import { DashboardLayout } from './pages/dashboard/dashboard.layout';
 import { WebSocketProvider } from './utils/socket';
 Amplify.configure(AWS_AMPLIFY_SETTINGS);

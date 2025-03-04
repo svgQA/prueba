@@ -12,4 +12,8 @@ export interface IButtonProps extends IComponentProps {
   loading?: boolean;
   disabled?: boolean;
   end?: boolean;
+  border?: boolean;
+  padding?: string;
+  text?: string;
+  textColor?: string;
 }
