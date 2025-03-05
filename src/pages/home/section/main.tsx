@@ -22,7 +22,7 @@ export const HomeMain = () => {
           text='text-xl md:text-2xl'
           padding='px-6 py-4 my-2 md:my-4'
           className='bg-secondary rounded-full object-contain hover:bg-m6 transition-colors'
-          textColor='text-t-light-dark'
+          textColor='text-blue-dark'
         />
       </div>
 
