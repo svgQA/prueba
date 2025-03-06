@@ -140,7 +140,7 @@ export class BaseService {
         });
       }
     } catch (error: unknown) {
-      console.log('error consumiendo en BaseService =>', error);
+      // console.log('error consumiendo en BaseService =>', error);
       throw new Error('ERROR: processing response');
     } finally {
       this.closeLoading();

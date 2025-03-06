@@ -10,7 +10,7 @@ export interface IInputProps extends IComponentProps {
   label?: string;
   min?: string;
   max?: string;
-  value?: string | number;
+  value?: string | number | Date | undefined;
   step?: number;
   pattern?: string;
   required?: boolean;

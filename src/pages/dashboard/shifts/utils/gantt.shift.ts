@@ -4354,7 +4354,7 @@ export const groupByPerson = (): GeneralTask => {
     }
 
     const task: Task = {
-      userID: item.user.id,
+      // userID: item.user.id,
       id: item.id,
       type: 'task',
       name: item.service.description,

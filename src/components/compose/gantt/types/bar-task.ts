@@ -1,6 +1,8 @@
 import { Task, TaskType } from './public-types';
 
-export interface BarTask extends Task {
+export interface BarTask extends Omit<Task, 'start' | 'end'> {
+  end: Date;
+  start: Date;
   index: number;
   typeInternal: TaskTypeInternal;
   x1: number;

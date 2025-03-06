@@ -12,18 +12,15 @@ export enum ViewMode {
   Year = 'Year',
 }
 export type TaskType = 'task' | 'milestone' | 'project';
-export type TaskStatus = 'IN_PROGRESS' | 'OPENED' | 'COMPLETED' | 'CLOSED';
+export type TaskStatus = 'CREATED' | 'OPENED' | 'RESOLVED' | 'CLOSED';
 export interface Task {
-  userID: string | number;
+  // userID: string | number;
   id: string | number;
+  end: string | Date;
+  start: string | Date;
   type: TaskType;
   name: string;
-  start: Date;
-  end: Date;
   status: TaskStatus;
-  /**
-   * From 0 to 100
-   */
   progress: number;
   styles?: {
     backgroundColor?: string;
@@ -41,10 +38,11 @@ export interface Task {
 export interface User {
   id: string | number;
   name: string;
-  phone: string;
-  cardId: string;
-  tasks: Task[];
+  surname?: string;
+  phone?: string;
+  cardId?: string;
   image?: string;
+  tasks: Task[];
 }
 
 export interface GeneralTask {
@@ -92,6 +90,10 @@ export interface EventOption {
    * Invokes on expander on task list
    */
   onExpanderClick?: (task: Task) => void;
+  /**
+   * Invokes on task list row click
+   */
+  onUserClick?: (user: string | number) => void;
 }
 
 export interface DisplayOption {
