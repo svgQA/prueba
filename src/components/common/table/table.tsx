@@ -271,7 +271,7 @@ export const Table = <T,>({
   return (
     <>
       <div className='relative w-full my-2 flex items-center justify-end'>
-        <Group table={table} />
+        <Group<T> table={table} />
         {!unsearch && (
           <Search
             id='search-general'
