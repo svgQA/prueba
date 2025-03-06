@@ -8,7 +8,6 @@ import { columns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
 import { toast } from 'react-toastify';
 import { omitBy, isNull, pick } from 'lodash';
-
 import {
   GeneralTask,
   Task,
@@ -89,6 +88,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     const response = await ShiftService.get_all();
     if (!response.getStatus()) return;
     shifts.value = response.getMany();
+    console.log('shifts.value', shifts.value);
   };
 
   const columnWidth = useMemo(() => {
