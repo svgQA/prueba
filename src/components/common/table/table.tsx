@@ -270,7 +270,8 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className='relative w-full mb-2 flex flex-col items-end'>
+      <div className='relative w-full my-2 flex items-center justify-end'>
+        <Group<T> table={table} />
         {!unsearch && (
           <Search
             id='search-general'
@@ -279,7 +280,6 @@ export const Table = <T,>({
             onChange={setColumnFilters}
           />
         )}
-        <Group table={table} />
       </div>
       <DndContext
         collisionDetection={closestCenter}
