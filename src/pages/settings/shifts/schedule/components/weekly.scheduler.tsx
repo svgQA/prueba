@@ -92,10 +92,10 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
   };
 
   return (
-    <div className='p-4 bg-gray-900 text-white rounded-lg shadow-lg w-full overflow-auto'>
+    <div className='p-4  rounded-lg shadow-lg w-full overflow-auto'>
       {/* Contenedor del título y el botón de limpiar */}
       <div className='flex justify-between items-center mb-4'>
-        <h1 className='text-2xl text-center font-bold text-white'>{title}</h1>
+        <h1 className='text-2xl text-center '>{title}</h1>
         {/* Botón para limpiar la selección */}
         <button
           className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700'
@@ -115,7 +115,7 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
         {daysOfWeek.map((day, index) => (
           <div
             key={index}
-            className='border border-gray-700 p-3 text-center font-bold text-lg bg-gray-800 sticky top-0 z-10'
+            className='border border-gray-700 p-3 text-center font-bold text-lg sticky top-0 z-10'
           >
             {day}
           </div>
@@ -125,7 +125,7 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
         {hours.map((hour) => (
           <React.Fragment key={hour}>
             {/* Columna de las horas */}
-            <div className='border border-gray-700 p-3 text-center font-semibold bg-gray-900'>
+            <div className='border border-gray-700 p-3 text-center font-semibold '>
               {hour}:00
             </div>
 
@@ -152,10 +152,8 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
 
       {/* Mostrar las horas seleccionadas por día agrupadas en bloques */}
       <div className='mt-4'>
-        <h2 className='text-xl font-semibold text-white'>
-          Horas seleccionadas:
-        </h2>
-        <ul className='text-white'>
+        <h2 className='text-xl font-semibold '>Horas seleccionadas:</h2>
+        <ul>
           {getSelectedHoursByDay().map((daySelection) => (
             <li key={daySelection.day}>
               <strong>{daySelection.day}:</strong>{' '}
