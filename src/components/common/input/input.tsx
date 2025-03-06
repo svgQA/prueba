@@ -8,7 +8,7 @@ export const Input = ({
   max,
   value,
   step,
-  type,
+  type = 'text',
   label,
   icon,
   required,
@@ -51,7 +51,7 @@ export const Input = ({
           name={name}
           onKeyUp={onKeyUp}
           type={type}
-          value={value}
+          value={value instanceof Date ? value.toISOString() : value}
           step={step}
           min={min}
           max={max}

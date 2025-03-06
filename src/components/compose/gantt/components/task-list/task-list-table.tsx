@@ -30,10 +30,11 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 
 export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
   rowHeight,
-  rowWidth,
+  // rowWidth,
   tasks,
   fontFamily,
   fontSize,
+  onUserClick,
   // locale,
   // onExpanderClick,
 }) => {
@@ -66,7 +67,11 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
             style={{ height: rowHeight }}
             key={`${t.id}row`}
           >
-            <div className={styles.taskListCell} title={t.name}>
+            <div
+              className='hover:bg-m5 w-64 h-12 cursor-pointer items-center flex rounded-sm hover:text-white'
+              title={t.name}
+              onCut={() => onUserClick?.(t.id)}
+            >
               <div
                 className={`${styles.taskListNameWrapper} flex justify-start items-center px-4`}
               >

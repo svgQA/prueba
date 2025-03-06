@@ -6,7 +6,7 @@ export const TaskListHeaderDefault: ComponentType<TaskListHeaderProps> = ({
   headerHeight,
   fontFamily,
   fontSize,
-  rowWidth,
+  // rowWidth,
 }) => {
   return (
     <div

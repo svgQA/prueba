@@ -16,8 +16,8 @@ export type TaskStatus = 'CREATED' | 'OPENED' | 'RESOLVED' | 'CLOSED';
 export interface Task {
   // userID: string | number;
   id: string | number;
-  end: string;
-  start: string;
+  end: string | Date;
+  start: string | Date;
   type: TaskType;
   name: string;
   status: TaskStatus;
@@ -90,6 +90,10 @@ export interface EventOption {
    * Invokes on expander on task list
    */
   onExpanderClick?: (task: Task) => void;
+  /**
+   * Invokes on task list row click
+   */
+  onUserClick?: (user: string | number) => void;
 }
 
 export interface DisplayOption {

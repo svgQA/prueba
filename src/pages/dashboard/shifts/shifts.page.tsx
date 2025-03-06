@@ -14,11 +14,21 @@ import {
 import dayjs from 'dayjs';
 import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
+import { Input } from '@/components/common/input/input';
+// import { BarTask } from '@/components/compose/gantt/types/bar-task';
 
 enum VIEW_NAME {
   TABLE,
   CALENDAR,
   SCHEDULER,
+}
+
+interface ISingleTaskCalendar {
+  title: string;
+  start: Date;
+  end: Date; // Added end date
+  id?: string;
+  allDay?: boolean; // Added allDay flag
 }
 
 export const ShiftsPage: FunctionalComponent = () => {
@@ -27,6 +37,8 @@ export const ShiftsPage: FunctionalComponent = () => {
   const shifts = useSignal<IShiftResponse[]>([]);
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
+  const selectedTask = useSignal<Task | null>(null);
+  const selectedTaskCalendar = useSignal<ISingleTaskCalendar | null>(null);
   const startDate = dayjs().subtract(1, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
@@ -34,6 +46,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     endDate,
     users: [],
   });
+  const [localEvents, setLocalEvents] = useState<ISingleTaskCalendar[]>([]);
 
   const getShiftHandler = async () => {
     const response = await ShiftService.get_all();
@@ -99,16 +112,16 @@ export const ShiftsPage: FunctionalComponent = () => {
   );
 
   const handleTaskChange = useCallback(
-    (_: Task) => {
-      // if (selectedTask.value) {
-      //   selectedTask.value = { ...selectedTask.value, ...task };
-      // }
+    (task: Task) => {
+      if (selectedTask.value) {
+        selectedTask.value = { ...selectedTask.value, ...task };
+      }
     },
     [shifts]
   );
 
-  const handleDblClick = useCallback((_: Task) => {
-    // selectedTask.value = task;
+  const handleDblClick = useCallback((task: Task) => {
+    selectedTask.value = task;
     showModal.value = true;
   }, []);
 
@@ -123,6 +136,56 @@ export const ShiftsPage: FunctionalComponent = () => {
   const handleTaskDelete = useCallback((task: Task) => {
     window.confirm('Are you sure about ' + task.name + ' ?');
   }, []);
+
+  const handleInputChange = useCallback((e: any) => {
+    const { name, value } = e.currentTarget;
+    if (selectedTaskCalendar.value) {
+      selectedTaskCalendar.value = {
+        ...selectedTaskCalendar.value,
+        title: name === 'title' ? value : selectedTaskCalendar.value.title,
+        start:
+          name === 'start' ? new Date(value) : selectedTaskCalendar.value.start,
+        end:
+          name === 'end'
+            ? new Date(value)
+            : selectedTaskCalendar.value.end ||
+              selectedTaskCalendar.value.start,
+      };
+    } else {
+      const start = new Date(value);
+      selectedTaskCalendar.value = {
+        title: name === 'title' ? value : '',
+        start: name === 'start' ? start : new Date(),
+        end: name === 'end' ? new Date(value) : start,
+        allDay: false,
+      };
+    }
+  }, []);
+
+  const handleSave = () => {
+    if (selectedTaskCalendar.value) {
+      setLocalEvents([
+        ...localEvents,
+        {
+          id: Math.random().toString(),
+          title: selectedTaskCalendar.value.title,
+          start: selectedTaskCalendar.value.start,
+          end:
+            selectedTaskCalendar.value.end || selectedTaskCalendar.value.start,
+          allDay: selectedTaskCalendar.value.allDay || false,
+        },
+      ]);
+    }
+    showModal.value = false;
+  };
+
+  const handleCreacteNewShift = () => {
+    showModal.value = true;
+  };
+
+  const handleUserClick = (id: string | number) => {
+    console.log('SELECCIONADO: ', id);
+  };
 
   return (
     <Section>
@@ -177,17 +240,26 @@ export const ShiftsPage: FunctionalComponent = () => {
 
       {currentView.value === VIEW_NAME.SCHEDULER && (
         <div className='max-h-screen'>
-          <ViewSwitcher
-            onViewModeChange={(viewMode: ViewMode) => setView(viewMode)}
-            onViewListChange={setIsChecked}
-            isChecked={isChecked}
-          />
+          <div className='py-2 flex flex-row justify-between px-1'>
+            <button
+              className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              onClick={handleCreacteNewShift}
+            >
+              Create
+            </button>
+            <ViewSwitcher
+              onViewModeChange={(viewMode: ViewMode) => setView(viewMode)}
+              onViewListChange={setIsChecked}
+              isChecked={isChecked}
+            />
+          </div>
           <Gantt
             tasks={ganttShifts}
             viewMode={view}
             onDateChange={handleTaskChange}
             onDelete={handleTaskDelete}
             onDoubleClick={handleDblClick}
+            onUserClick={handleUserClick}
             onSelect={handleSelect}
             onExpanderClick={handleExpanderClick}
             listCellWidth={isChecked ? '155px' : ''}
@@ -198,7 +270,6 @@ export const ShiftsPage: FunctionalComponent = () => {
 
       {showModal.value && (
         <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20'>
-          {/*
           <div className='bg-white rounded-lg shadow-lg w-2/3 max-w-4xl'>
             <div className='px-6 py-4 border-b border-gray-200'>
               <h3 className='text-lg font-medium'>Editar Tarea</h3>
@@ -219,7 +290,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                   label='Fecha Inicio'
                   name='start'
                   type='datetime-local'
-                  value={selectedTask.value?.start.toISOString().slice(0, 16)}
+                  value={selectedTask.value?.start}
                   onChange={handleInputChange}
                   icon='025'
                   borderless
@@ -230,7 +301,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                   label='Fecha Fin'
                   name='end'
                   type='datetime-local'
-                  value={selectedTask.value?.end.toISOString().slice(0, 16)}
+                  value={selectedTask.value?.end}
                   onChange={handleInputChange}
                   icon='025'
                   borderless
@@ -266,7 +337,6 @@ export const ShiftsPage: FunctionalComponent = () => {
               </button>
             </div>
           </div>
-                  */}
         </div>
       )}
     </Section>
