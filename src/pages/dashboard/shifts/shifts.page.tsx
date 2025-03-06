@@ -141,6 +141,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     if (!request.getStatus()) return;
     toast.success(message, { position: 'top-right' });
     showModal.value = false;
+    getGanttHandler();
   };
 
   const setInitialValues = async () => {
