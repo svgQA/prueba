@@ -7,16 +7,10 @@ import dayjs from 'dayjs';
 
 export const columns: ColumnDef<IShiftResponse>[] = [
   {
-    id: 'id',
-    accessorKey: 'id',
-    size: 60,
-    header: 'ID',
-  },
-  {
     id: 'userName',
     accessorKey: 'user',
     size: 180,
-    header: 'Usuario',
+    header: 'Empleado',
     enableGrouping: true,
     cell: (info) => {
       const user = info.getValue() as IUser;
@@ -24,57 +18,46 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     },
   },
   {
-    id: 'userEmail',
-    accessorKey: 'user.email',
+    id: 'serviceId',
+    accessorKey: 'service.id',
     size: 180,
-    header: 'Email',
+    header: 'Servicio',
   },
   {
-    id: 'userPhone',
-    accessorKey: 'user.phone',
+    id: 'contractId',
+    accessorKey: 'service.contract.id',
     size: 120,
-    header: 'Teléfono',
-  },
-  {
-    id: 'serviceRound',
-    accessorKey: 'service.round.name',
-    size: 150,
-    header: 'Ronda',
-    enableGrouping: true,
-  },
-  {
-    id: 'servicePlaceName',
-    accessorKey: 'service.place.name',
-    size: 180,
-    header: 'Lugar',
-    enableGrouping: true,
-  },
-  {
-    id: 'servicePlaceAddress',
-    accessorKey: 'service.place.address',
-    size: 200,
-    header: 'Dirección',
-  },
-  {
-    id: 'contractName',
-    accessorKey: 'service.contract.name',
-    size: 180,
     header: 'Contrato',
-    enableGrouping: true,
+  },
+  {
+    id: 'date',
+    accessorKey: 'start',
+    size: 150,
+    header: 'fecha',
+    cell: (info) => {
+      const dateStr = info.getValue() as string;
+      return dayjs(dateStr).format('YYYY-MM-DD');
+    },
   },
   {
     id: 'start',
     accessorKey: 'start',
-    size: 140,
+    size: 150,
     header: 'Inicio',
-    cell: (info) => dayjs(info.getValue() as string).format('DD/MM/YYYY HH:mm'),
+    cell: (info) => {
+      const dateStr = info.getValue() as string;
+      return dayjs(dateStr).format('HH:mm');
+    },
   },
   {
     id: 'end',
     accessorKey: 'end',
-    size: 140,
-    header: 'Fin',
-    cell: (info) => dayjs(info.getValue() as string).format('DD/MM/YYYY HH:mm'),
+    size: 150,
+    header: 'Finalización',
+    cell: (info) => {
+      const dateStr = info.getValue() as string;
+      return dayjs(dateStr).format('HH:mm');
+    },
   },
   {
     id: 'status',
@@ -84,6 +67,17 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     cell: (info) => (
       <div className='flex flex-row justify-center'>
         <Badge label={String(info.getValue())} icon='123' color='bg-primary' />
+      </div>
+    ),
+  },
+  {
+    id: 'activitiesProgress',
+    accessorKey: 'activitiesProgress',
+    size: 50,
+    header: 'Reportes',
+    cell: () => (
+      <div className='flex flex-row justify-center'>
+        <Badge label='2' color='bg-primary' />
       </div>
     ),
   },

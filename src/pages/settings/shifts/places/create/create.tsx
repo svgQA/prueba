@@ -42,7 +42,7 @@ interface ILocation {
 }
 
 export const PlaceCreateSettingPage: FunctionComponent = () => {
-  const [green, setGreen] = useState(128);
+  const [green, setGreen] = useState(0);
   const municipalities: Signal<SelectOption[]> = useSignal([]);
   const departmentId = useSignal<number>();
   const municipalityLocation = useSignal<ILocation>();
@@ -362,15 +362,17 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               </div>
               <div className='flex items-center space-x-4 p-4'>
                 <input
+                  label={'ee'}
                   type='range'
                   min='0'
-                  max='255'
+                  max='2000'
                   step='1'
                   value={green}
                   onChange={(e) => setGreen(Number(e.currentTarget.value))}
                   className='w-full accent-green-500'
                 />
                 <input
+                  label='Radio'
                   type='number'
                   value={green}
                   onChange={(e) => setGreen(Number(e.currentTarget.value))}
@@ -391,6 +393,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 errorCondition=''
                 radialPoint={null}
                 errorRadialPoint=''
+                radius={green}
                 draggable={true}
                 width='100%'
                 clickPoint={() => {}}

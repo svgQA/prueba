@@ -7,7 +7,7 @@ import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
 import { toast } from 'react-toastify';
-// import { omitBy, isNull, pick } from 'lodash';
+import { omitBy, isNull, pick } from 'lodash';
 
 import {
   GeneralTask,
@@ -95,6 +95,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     const response = await ShiftService.get_all();
     if (!response.getStatus()) return;
     shifts.value = response.getMany();
+    console.log('shifts.value', shifts.value);
   };
 
   const columnWidth = useMemo(() => {
@@ -153,6 +154,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     if (!request.getStatus()) return;
     toast.success(message, { position: 'top-right' });
     showModal.value = false;
+    getGanttHandler();
   };
 
   /*
