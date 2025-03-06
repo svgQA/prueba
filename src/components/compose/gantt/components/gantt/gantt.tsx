@@ -367,10 +367,24 @@ export const Gantt: ComponentType<GanttProps> = ({
     );
     if (onSelect) {
       if (oldSelectedTask) {
-        onSelect(oldSelectedTask, false);
+        onSelect(
+          {
+            ...oldSelectedTask,
+            start: oldSelectedTask.start.toString(),
+            end: oldSelectedTask.end.toString(),
+          },
+          false
+        );
       }
       if (newSelectedTask) {
-        onSelect(newSelectedTask, true);
+        onSelect(
+          {
+            ...newSelectedTask,
+            start: newSelectedTask.start.toString(),
+            end: newSelectedTask.end.toString(),
+          },
+          true
+        );
       }
     }
     setSelectedTask(newSelectedTask);
@@ -450,7 +464,7 @@ export const Gantt: ComponentType<GanttProps> = ({
   return (
     <div>
       <div
-        className={styles.wrapper}
+        className={`${styles.wrapper} border rounded-xl`}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         ref={wrapperRef}

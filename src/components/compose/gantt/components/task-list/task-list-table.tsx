@@ -66,16 +66,9 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
             style={{ height: rowHeight }}
             key={`${t.id}row`}
           >
-            <div
-              className={styles.taskListCell}
-              style={{
-                minWidth: rowWidth,
-                maxWidth: rowWidth,
-              }}
-              title={t.name}
-            >
+            <div className={styles.taskListCell} title={t.name}>
               <div
-                className={`${styles.taskListNameWrapper} flex justify-between items-center px-4`}
+                className={`${styles.taskListNameWrapper} flex justify-start items-center px-4`}
               >
                 {/*
                 <div
@@ -94,7 +87,7 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
                   src={t.image}
                   alt={`Profile photo of ${t.name}`}
                 />
-                <div className='text-lg font-medium'>{t.name}</div>
+                <div className='text-lg font-medium'>{`${t.name} ${t.surname}`}</div>
               </div>
             </div>
             {/*

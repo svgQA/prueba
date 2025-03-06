@@ -1,28 +1,19 @@
 import { FunctionalComponent } from 'preact';
-import { useEffect, useState, useMemo, useCallback } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import { IReportResponse } from '@/types/form';
-import { FormService } from '@/services';
+import { ShiftService } from '@/services';
 import { Section } from '@/components/common/section/section';
-import { CardData } from '@/components/compose/cards';
 import { Table } from '@/components/common/table/table';
-import { ExpandableShift } from '@/components/compose/table';
-import { Shift } from './utils/shifts';
-import { shiftsData } from './utils/shifts.data';
 import { columns } from './components/shift.columns';
-import { Gantt, ViewMode } from '@/components/compose/gantt';
-import '@/components/compose/gantt/index.css';
-import { ViewSwitcher } from './components/swicher.gantt';
-import { groupByPerson } from './utils/gantt.shift';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import { Input } from '@/components/common/input/input';
+import { IShiftResponse } from '@/types/shift/activity';
 import {
   GeneralTask,
   Task,
+  ViewMode,
 } from '@/components/compose/gantt/types/public-types';
+import dayjs from 'dayjs';
+import { ViewSwitcher } from './components/swicher.gantt';
+import { Gantt } from '@/components/compose/gantt';
 
 enum VIEW_NAME {
   TABLE,
@@ -30,26 +21,25 @@ enum VIEW_NAME {
   SCHEDULER,
 }
 
-interface ISingleTaskCalendar {
-  title: string;
-  start: Date;
-  end: Date; // Added end date
-  id?: string;
-  allDay?: boolean; // Added allDay flag
-}
-
 export const ShiftsPage: FunctionalComponent = () => {
-  const reports = useSignal<IReportResponse[]>([]);
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const showModal = useSignal<boolean>(false);
-  const selectedTask = useSignal<Task | null>(null);
-  const selectedTaskCalendar = useSignal<ISingleTaskCalendar | null>(null);
-  const [localEvents, setLocalEvents] = useState<ISingleTaskCalendar[]>([]);
-
-  const [view, setView] = useState<ViewMode>(ViewMode.Day);
-  const [tasks /*setTasks*/] = useState<GeneralTask>(groupByPerson());
+  const shifts = useSignal<IShiftResponse[]>([]);
   const [isChecked, setIsChecked] = useState(true);
-  const [calendarView /*setCalendarView*/] = useState<string>('timeGridWeek');
+  const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
+  const startDate = dayjs().subtract(1, 'day').toDate();
+  const endDate = dayjs(startDate).add(1, 'week').toDate();
+  const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
+    startDate,
+    endDate,
+    users: [],
+  });
+
+  const getShiftHandler = async () => {
+    const response = await ShiftService.get_all();
+    if (!response.getStatus()) return;
+    shifts.value = response.getMany();
+  };
 
   const columnWidth = useMemo(() => {
     if (view === ViewMode.Month) return 300;
@@ -57,158 +47,33 @@ export const ShiftsPage: FunctionalComponent = () => {
     return 60;
   }, [view]);
 
-  const handleTaskChange = useCallback(
-    (task: Task) => {
-      if (selectedTask.value) {
-        selectedTask.value = { ...selectedTask.value, ...task };
-      }
-    },
-    [tasks]
-  );
-
-  const handleTaskDelete = useCallback((task: any) => {
-    window.confirm('Are you sure about ' + task.name + ' ?');
-  }, []);
-
-  const handleDblClick = useCallback((task: any) => {
-    selectedTask.value = task;
-    showModal.value = true;
-  }, []);
-
-  const handleSelect = useCallback((task: any, isSelected: any) => {
-    console.log(task.name + ' has ' + (isSelected ? 'selected' : 'unselected'));
-  }, []);
-
-  const handleExpanderClick = useCallback((task: any) => {
-    console.log('On expander click Id:' + task.id);
-  }, []);
-
-  const getReportHandler = useCallback(async () => {
-    const response = await FormService.get_report_all();
+  const getGanttHandler = async () => {
+    const response = await ShiftService.get_gantt();
     if (!response.getStatus()) return;
-    reports.value = response.getMany();
+
+    setGanttShifts((prev) => ({
+      ...prev,
+      users: response.getMany(),
+    }));
+  };
+
+  useEffect(() => {
+    document.title = 'VX - Shift Service';
+    getShiftHandler();
   }, []);
 
   useEffect(() => {
-    document.title = 'VX - Shifts Service';
-    getReportHandler();
-  }, [getReportHandler]);
+    if (currentView.value === VIEW_NAME.SCHEDULER) {
+      getGanttHandler();
+    }
+  }, [currentView.value]);
 
   const handleViewChange = useCallback((view: VIEW_NAME) => {
     currentView.value = view;
   }, []);
 
-  function renderEventContent(eventInfo: any) {
-    return (
-      <div className='w-full h-full bg-primary flex justify-center items-center'>
-        <div className='flex items-center gap-2'>
-          <span className='vox-icon vx-icon-025 text-primary'></span>
-          <div>
-            <p className='font-bold text-sm'>{eventInfo.event.title}</p>
-            <p className='text-xs text-gray-600'>{eventInfo.timeText}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const handleDateClick = useCallback(() => {
-    showModal.value = true;
-  }, []);
-
-  const handleEventDrop = useCallback(
-    (info: any) => {
-      const { event } = info;
-      const updatedEvents = localEvents.map((e) => {
-        if (e.id === event.id) {
-          return {
-            ...e,
-            start: event.start,
-            end: event.end || event.start,
-          };
-        }
-        return e;
-      });
-      setLocalEvents(updatedEvents);
-    },
-    [localEvents]
-  );
-
-  const handleInputChange = useCallback((e: any) => {
-    const { name, value } = e.currentTarget;
-    if (selectedTaskCalendar.value) {
-      selectedTaskCalendar.value = {
-        ...selectedTaskCalendar.value,
-        title: name === 'title' ? value : selectedTaskCalendar.value.title,
-        start:
-          name === 'start' ? new Date(value) : selectedTaskCalendar.value.start,
-        end:
-          name === 'end'
-            ? new Date(value)
-            : selectedTaskCalendar.value.end ||
-              selectedTaskCalendar.value.start,
-      };
-    } else {
-      const start = new Date(value);
-      selectedTaskCalendar.value = {
-        title: name === 'title' ? value : '',
-        start: name === 'start' ? start : new Date(),
-        end: name === 'end' ? new Date(value) : start,
-        allDay: false,
-      };
-    }
-  }, []);
-
-  const handleSave = () => {
-    if (selectedTaskCalendar.value) {
-      setLocalEvents([
-        ...localEvents,
-        {
-          id: Math.random().toString(),
-          title: selectedTaskCalendar.value.title,
-          start: selectedTaskCalendar.value.start,
-          end:
-            selectedTaskCalendar.value.end || selectedTaskCalendar.value.start,
-          allDay: selectedTaskCalendar.value.allDay || false,
-        },
-      ]);
-    }
-    showModal.value = false;
-  };
-
-  const cardDataMemo = useMemo(
+  const buttonMenu = useMemo(
     () => (
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title='Total de Turnos'
-          count={400}
-          subtitle='Turnos registrados'
-          color='text-secondary'
-          icon='171'
-        />
-        <CardData
-          title='Turnos Activos'
-          count={300}
-          subtitle='En este momento'
-          color='text-primary'
-          icon='020'
-        />
-        <CardData
-          title='Turnos Inactivos'
-          count={200}
-          subtitle='Fuera de servicio'
-          color='text-error'
-          icon='110'
-        />
-      </div>
-    ),
-    []
-  );
-
-  return (
-    <Section>
-      {cardDataMemo}
-
       <div className='flex flex-row gap-2 justify-start px-0.5 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
         <button
           className='p-1 hover:bg-slate-100 rounded-lg'
@@ -229,24 +94,61 @@ export const ShiftsPage: FunctionalComponent = () => {
           <span className='vox-icon vx-icon-094'></span>
         </button>
       </div>
+    ),
+    []
+  );
 
+  const handleTaskChange = useCallback(
+    (_: Task) => {
+      // if (selectedTask.value) {
+      //   selectedTask.value = { ...selectedTask.value, ...task };
+      // }
+    },
+    [shifts]
+  );
+
+  const handleDblClick = useCallback((_: Task) => {
+    // selectedTask.value = task;
+    showModal.value = true;
+  }, []);
+
+  const handleSelect = useCallback((task: Task, isSelected: any) => {
+    console.log(task.name + ' has ' + (isSelected ? 'selected' : 'unselected'));
+  }, []);
+
+  const handleExpanderClick = useCallback((task: Task) => {
+    console.log('On expander click Id:' + task.id);
+  }, []);
+
+  const handleTaskDelete = useCallback((task: Task) => {
+    window.confirm('Are you sure about ' + task.name + ' ?');
+  }, []);
+
+  return (
+    <Section>
+      {buttonMenu}
       {currentView.value === VIEW_NAME.TABLE && (
-        <Table<Shift>
-          data={shiftsData}
-          columns={columns}
-          expandable={(row: Shift) => <ExpandableShift row={row} />}
-          pageSize={20}
-          visibility={{
-            address: false,
-            city: false,
-            employeeId: false,
-            duration: false,
-          }}
-        />
+        <div>
+          <Table<IShiftResponse>
+            data={shifts.value}
+            columns={columns}
+            pageSize={20}
+            visibility={{
+              servicePlaceAddress: false,
+              city: false,
+              employeeId: false,
+              duration: false,
+              userEmail: false,
+              userPhone: false,
+              serviceRound: false,
+            }}
+          />
+        </div>
       )}
 
       {currentView.value === VIEW_NAME.CALENDAR && (
         <div className='w-full mt-3'>
+          {/*
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView={calendarView}
@@ -269,18 +171,19 @@ export const ShiftsPage: FunctionalComponent = () => {
             forceEventDuration={true}
             defaultTimedEventDuration='01:00:00'
           />
+          */}
         </div>
       )}
 
       {currentView.value === VIEW_NAME.SCHEDULER && (
-        <div>
+        <div className='max-h-screen'>
           <ViewSwitcher
             onViewModeChange={(viewMode: ViewMode) => setView(viewMode)}
             onViewListChange={setIsChecked}
             isChecked={isChecked}
           />
           <Gantt
-            tasks={tasks}
+            tasks={ganttShifts}
             viewMode={view}
             onDateChange={handleTaskChange}
             onDelete={handleTaskDelete}
@@ -295,6 +198,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
       {showModal.value && (
         <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20'>
+          {/*
           <div className='bg-white rounded-lg shadow-lg w-2/3 max-w-4xl'>
             <div className='px-6 py-4 border-b border-gray-200'>
               <h3 className='text-lg font-medium'>Editar Tarea</h3>
@@ -362,6 +266,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               </button>
             </div>
           </div>
+                  */}
         </div>
       )}
     </Section>

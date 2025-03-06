@@ -383,7 +383,8 @@ export const Calendar = ({
         y={0}
         width={columnWidth * dateSetup.dates.length}
         height={headerHeight}
-        className={styles.calendarHeader}
+        className='fill-b-light-dark dark:fill-b-dark-light stroke-0'
+        // className={styles.calendarHeader}
       />
       {bottomValues} {topValues}
     </g>

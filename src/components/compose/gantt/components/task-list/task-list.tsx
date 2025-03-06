@@ -87,7 +87,7 @@ export function TaskList({
   };
 
   return (
-    <div ref={taskListRef}>
+    <div ref={taskListRef} className='rounded-l-xl border-r'>
       <TaskListHeader {...headerProps} />
       <div
         ref={horizontalContainerRef}
