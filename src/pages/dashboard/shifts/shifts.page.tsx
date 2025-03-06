@@ -1,11 +1,14 @@
 import { FunctionalComponent } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { useSignal } from '@preact/signals';
+import { useSignal, Signal } from '@preact/signals';
 import { ShiftService } from '@/services';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
+import { toast } from 'react-toastify';
+import { omitBy, isNull, pick } from 'lodash';
+
 import {
   GeneralTask,
   Task,
@@ -16,11 +19,39 @@ import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
 import { Input } from '@/components/common/input/input';
 // import { BarTask } from '@/components/compose/gantt/types/bar-task';
+import { Form, Field } from 'react-final-form';
+import { required } from '@/utils/utilities';
+import { Select } from '@/components/common/select/select';
+import { UserService } from '@/services/user';
+import { Button } from '@/components/common/button/button';
+import arrayMutators from 'final-form-arrays';
+import { FieldArray } from 'react-final-form-arrays';
 
 enum VIEW_NAME {
   TABLE,
   CALENDAR,
   SCHEDULER,
+}
+
+interface FormData {
+  start: string;
+  end: string;
+  status: string;
+  type: string;
+  userId: string;
+  projectId: number;
+  placeId: number;
+  workstationId: number;
+  roundId: number;
+  externalId: string;
+  keywords: string[];
+  tasks: ITask[];
+}
+
+interface ITask {
+  start: string;
+  status: string;
+  description: string;
 }
 
 interface ISingleTaskCalendar {
@@ -35,6 +66,11 @@ export const ShiftsPage: FunctionalComponent = () => {
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const showModal = useSignal<boolean>(false);
   const shifts = useSignal<IShiftResponse[]>([]);
+  const services = useSignal([]);
+  const users = useSignal([]);
+  const id = useSignal();
+  const initialValues: Signal<Partial<FormData>> = useSignal({});
+
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
   const selectedTask = useSignal<Task | null>(null);
@@ -46,6 +82,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     endDate,
     users: [],
   });
+  const inputKeywords = useSignal('');
   const [localEvents, setLocalEvents] = useState<ISingleTaskCalendar[]>([]);
 
   const getShiftHandler = async () => {
@@ -69,10 +106,67 @@ export const ShiftsPage: FunctionalComponent = () => {
       users: response.getMany(),
     }));
   };
+  const getServices = async () => {
+    const request: any = await ShiftService.getServices();
+    services.value = request.data;
+  };
+
+  const getUsers = async () => {
+    const request: any = await UserService.get_all();
+    users.value = request.data.map((user: any) => {
+      return { ...user, fullname: `${user.name} ${user.surname}` };
+    });
+  };
+
+  const main = async () => {
+    await getServices();
+    await getUsers();
+  };
+  const onSubmit = async (model: FormData) => {
+    const { start, end } = model;
+    let request;
+    let message: string;
+
+    if (start) model.start = dayjs(start).toISOString();
+    if (end) model.end = dayjs(end).toISOString();
+
+    if (!id.value) {
+      request = await ShiftService.createActivity(model);
+      message = 'Turno creado exitosamente!';
+    } else {
+      request = await ShiftService.updateActivity(model, id.value);
+      message = 'Turno editado exitosamente!';
+    }
+
+    if (!request.getStatus()) return;
+    toast.success(message, { position: 'top-right' });
+    showModal.value = false;
+  };
+
+  const setInitialValues = async () => {
+    if (!id.value) return;
+
+    const userKeys = [
+      'start',
+      'end',
+      'status',
+      'type',
+      'userId',
+      'serviceId',
+      'employeedId',
+      'externalId',
+      'keywords',
+    ] as const;
+
+    const request: any = await ShiftService.getActivityById(id.value);
+    const model = pick(omitBy(request.model, isNull), userKeys);
+    initialValues.value = model;
+  };
 
   useEffect(() => {
     document.title = 'VX - Shift Service';
     getShiftHandler();
+    main();
   }, []);
 
   useEffect(() => {
@@ -272,69 +366,225 @@ export const ShiftsPage: FunctionalComponent = () => {
         <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20'>
           <div className='bg-white rounded-lg shadow-lg w-2/3 max-w-4xl'>
             <div className='px-6 py-4 border-b border-gray-200'>
-              <h3 className='text-lg font-medium'>Editar Tarea</h3>
-            </div>
-            <div className='px-6 py-4'>
-              <div className='grid grid-cols-2 gap-4'>
-                <Input
-                  label='Nombre'
-                  name='title'
-                  value={selectedTask.value?.name}
-                  onChange={handleInputChange}
-                  icon='123'
-                  borderless
-                  thin
-                />
+              <h3 className='text-lg font-medium'>
+                {id.value ? 'Editar Tarea' : 'Guardar Tarea'}
+              </h3>
+              <Form
+                onSubmit={onSubmit}
+                initialValues={initialValues.value}
+                mutators={{
+                  ...arrayMutators,
+                }}
+                render={({ handleSubmit, submitting, values }) => (
+                  <form onSubmit={handleSubmit} className='space-y-6'>
+                    {/** FORMULARIO PRINCIPAL */}
+                    <div className='grid grid-cols-2 gap-3'>
+                      <div class='col-span-1'>
+                        <Field<string>
+                          name='start'
+                          validate={required}
+                          parse={(value) =>
+                            value ? dayjs(value).toISOString() : ''
+                          }
+                          format={(value) =>
+                            value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
+                          }
+                        >
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              type='datetime-local'
+                              label='Fecha inicio'
+                              meta={meta}
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div class='col-span-1'>
+                        <Field<string>
+                          name='end'
+                          validate={required}
+                          parse={(value) =>
+                            value ? dayjs(value).toISOString() : ''
+                          }
+                          format={(value) =>
+                            value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
+                          }
+                        >
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              type='datetime-local'
+                              label='Fecha fin'
+                              meta={meta}
+                            />
+                          )}
+                        </Field>
+                      </div>
 
-                <Input
-                  label='Fecha Inicio'
-                  name='start'
-                  type='datetime-local'
-                  value={selectedTask.value?.start}
-                  onChange={handleInputChange}
-                  icon='025'
-                  borderless
-                  thin
-                />
+                      <div class='col-span-1'>
+                        <Field<string> name='status'>
+                          {({ input }) => (
+                            <Select
+                              {...input}
+                              placeholder='Selecione estado...'
+                              label='Estado'
+                              name='status'
+                              icon='252'
+                              options={[
+                                { value: 'CREATED', label: 'Creado' },
+                                { value: 'OPENED', label: 'Abierto' },
+                                { value: 'CLOSED', label: 'Cerrado' },
+                                { value: 'RESOLVED', label: 'Resuelto' },
+                              ]}
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div class='col-span-1'>
+                        <Field<string> name='type'>
+                          {({ input }) => (
+                            <Select
+                              {...input}
+                              placeholder='Selecione tipo...'
+                              label='Tipo'
+                              name='type'
+                              icon='252'
+                              options={[
+                                { value: 'EXTERNAL', label: 'Externo' },
+                                { value: 'INTERNAL', label: 'Interno' },
+                              ]}
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div class='col-span-1'>
+                        <Field<string> name='employeedId'>
+                          {({ input }) => (
+                            <Select
+                              {...input}
+                              placeholder='Selecione empleado...'
+                              label='Empleado'
+                              name='employeedId'
+                              icon='252'
+                              options={users.value}
+                              optionValue='id'
+                              optionLabel='fullname'
+                              onChange={(e) => {
+                                const id = parseInt(e.currentTarget.value);
+                                input.onChange(id);
+                              }}
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div class='col-span-1'>
+                        <Field name='serviceId'>
+                          {({ input }) => (
+                            <Select
+                              {...input}
+                              placeholder='Selecione Servicio...'
+                              label='Servicio'
+                              name='serviceId'
+                              icon='252'
+                              optionValue='id'
+                              optionLabel='description'
+                              options={services.value}
+                              onChange={(e) => {
+                                const id = parseInt(e.currentTarget.value);
+                                input.onChange(id);
+                              }}
+                            />
+                          )}
+                        </Field>
+                      </div>
 
-                <Input
-                  label='Fecha Fin'
-                  name='end'
-                  type='datetime-local'
-                  value={selectedTask.value?.end}
-                  onChange={handleInputChange}
-                  icon='025'
-                  borderless
-                  thin
-                />
+                      <div class='col-span-1'>
+                        <Field<string> name='externalId'>
+                          {({ input }) => (
+                            <Input
+                              {...input}
+                              type='text'
+                              label='Codigo externo'
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div class='col-span-1 mt-4'>
+                        <FieldArray<string> name='keywords'>
+                          {({ fields }) => (
+                            <div className='flex flex-col gap-2'>
+                              <div className='flex items-center border p-2 rounded-md'>
+                                <input
+                                  value={inputKeywords.value}
+                                  type='keywords'
+                                  onChange={(e) =>
+                                    (inputKeywords.value =
+                                      e.currentTarget.value)
+                                  }
+                                  placeholder='Escribe una palabra clave'
+                                  className='flex-grow p-2 border rounded-md'
+                                />
+                                <button
+                                  type='button'
+                                  className='ml-2 px-4 py-2 bg-blue-500 text-white rounded-md'
+                                  onClick={() => {
+                                    fields.push(inputKeywords.value);
+                                    inputKeywords.value = '';
+                                  }}
+                                >
+                                  Agregar
+                                </button>
+                              </div>
+                              <div className='flex flex-wrap gap-2'>
+                                {values.keywords?.map(
+                                  (keyword: string, index: number) => (
+                                    <span
+                                      key={index}
+                                      className='px-3 py-1 bg-gray-200 rounded-md flex items-center'
+                                    >
+                                      {keyword}
+                                      <button
+                                        type='button'
+                                        className='ml-2 text-red-500'
+                                        onClick={() => {
+                                          fields.remove(index);
+                                        }}
+                                      >
+                                        ×
+                                      </button>
+                                    </span>
+                                  )
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </FieldArray>
+                      </div>
+                    </div>
 
-                <Input
-                  label='Progreso'
-                  name='progress'
-                  type='number'
-                  value={selectedTask.value?.progress}
-                  onChange={handleInputChange}
-                  min='0'
-                  max='100'
-                  icon='234'
-                  borderless
-                  thin
-                />
-              </div>
-            </div>
-            <div className='px-6 py-4 border-t border-gray-200 flex justify-end gap-2'>
-              <button
-                className='px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300'
-                onClick={() => (showModal.value = false)}
-              >
-                Cancelar
-              </button>
-              <button
-                className='px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark'
-                onClick={handleSave}
-              >
-                Guardar
-              </button>
+                    {/* Botonera */}
+                    <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
+                      <Button
+                        id='btn-close'
+                        name='btn-close'
+                        type='button'
+                        label='Cancelar'
+                        onClick={() => (showModal.value = false)}
+                      />
+
+                      <Button
+                        id='btn-save'
+                        name='btn-save'
+                        type='submit'
+                        label={id.value ? 'Editar' : 'Guardar'}
+                        className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+                        disabled={submitting}
+                      />
+                    </div>
+                  </form>
+                )}
+              />
             </div>
           </div>
         </div>
