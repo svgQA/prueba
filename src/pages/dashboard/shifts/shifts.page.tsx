@@ -16,6 +16,10 @@ import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
 import { Input } from '@/components/common/input/input';
 // import { BarTask } from '@/components/compose/gantt/types/bar-task';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
 
 enum VIEW_NAME {
   TABLE,
@@ -37,6 +41,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const shifts = useSignal<IShiftResponse[]>([]);
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
+  const [calendarView /*setCalendarView*/] = useState<string>('timeGridWeek');
   const selectedTask = useSignal<Task | null>(null);
   const selectedTaskCalendar = useSignal<ISingleTaskCalendar | null>(null);
   const startDate = dayjs().subtract(1, 'day').toDate();
@@ -179,6 +184,42 @@ export const ShiftsPage: FunctionalComponent = () => {
     showModal.value = false;
   };
 
+  function renderEventContent(eventInfo: any) {
+    return (
+      <div className='w-full h-full bg-primary flex justify-center items-center'>
+        <div className='flex items-center gap-2'>
+          <span className='vox-icon vx-icon-025 text-primary'></span>
+          <div>
+            <p className='font-bold text-sm'>{eventInfo.event.title}</p>
+            <p className='text-xs text-gray-600'>{eventInfo.timeText}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handleDateClick = useCallback(() => {
+    showModal.value = true;
+  }, []);
+
+  const handleEventDrop = useCallback(
+    (info: any) => {
+      const { event } = info;
+      const updatedEvents = localEvents.map((e) => {
+        if (e.id === event.id) {
+          return {
+            ...e,
+            start: event.start,
+            end: event.end || event.start,
+          };
+        }
+        return e;
+      });
+      setLocalEvents(updatedEvents);
+    },
+    [localEvents]
+  );
+
   const handleCreacteNewShift = () => {
     showModal.value = true;
   };
@@ -211,7 +252,6 @@ export const ShiftsPage: FunctionalComponent = () => {
 
       {currentView.value === VIEW_NAME.CALENDAR && (
         <div className='w-full mt-3'>
-          {/*
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView={calendarView}
@@ -234,7 +274,6 @@ export const ShiftsPage: FunctionalComponent = () => {
             forceEventDuration={true}
             defaultTimedEventDuration='01:00:00'
           />
-          */}
         </div>
       )}
 
