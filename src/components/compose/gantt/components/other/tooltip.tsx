@@ -106,7 +106,7 @@ export const Tooltip = ({
           ? styles.tooltipDetailsContainer
           : styles.tooltipDetailsContainerHidden
       }
-      style={{ left: relatedX.value, top: relatedY.value }}
+      style={{ left: relatedX.value, top: relatedY.value - 70 }}
     >
       <TooltipContent task={task} fontSize={fontSize} fontFamily={fontFamily} />
     </div>
@@ -124,13 +124,16 @@ export const StandardTooltipContent = ({
   };
 
   const statusColors = {
-    IN_PROGRESS: 'bg-blue-100 text-blue-800',
+    CREATED: 'bg-blue-100 text-blue-800',
     OPENED: 'bg-gray-100 text-gray-800',
-    COMPLETED: 'bg-green-100 text-green-800',
+    RESOLVED: 'bg-green-100 text-green-800',
     CLOSED: 'bg-red-100 text-red-800',
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | string) => {
+    if (typeof date === 'string') {
+      return date;
+    }
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -138,11 +141,16 @@ export const StandardTooltipContent = ({
     });
   };
 
+  const startDate = new Date(task.start);
+  const endDate = new Date(task.end);
+  const range = endDate.getTime() - startDate.getTime();
   return (
     <div className='bg-white rounded-lg shadow-lg p-2 max-w-3xl' style={style}>
       <div className='flex'>
         <div className='w-[70%]'>
-          <h3 className='font-bold text-lg text-gray-900 mb-4'>{task.name}</h3>
+          <h3 className='font-bold text-lg text-gray-900 mb-4 max-w-72 line-clamp-2 break-words'>
+            {task.name}
+          </h3>
 
           <div className='space-y-4 text-sm text-gray-600'>
             <div className='flex gap-4'>
@@ -168,18 +176,10 @@ export const StandardTooltipContent = ({
         </div>
 
         <div className='w-[30%] flex items-center justify-around flex-col'>
-          {task.end.getTime() - task.start.getTime() !== 0 && (
+          {range !== 0 && (
             <div>
               <p className='font-medium'>Duration</p>
-              <p>
-                {
-                  ~~(
-                    (task.end.getTime() - task.start.getTime()) /
-                    (1000 * 60 * 60 * 24)
-                  )
-                }{' '}
-                days
-              </p>
+              <p>{~~(range / (1000 * 60 * 60 * 24))} days</p>
             </div>
           )}
           {task.progress > 0 && <Gauge progress={task.progress} />}

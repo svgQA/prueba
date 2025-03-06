@@ -1,28 +1,25 @@
 import { FunctionalComponent } from 'preact';
-import { useEffect, useState, useMemo, useCallback } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import { IReportResponse } from '@/types/form';
-import { FormService } from '@/services';
+import { ShiftService } from '@/services';
 import { Section } from '@/components/common/section/section';
-import { CardData } from '@/components/compose/cards';
 import { Table } from '@/components/common/table/table';
-import { ExpandableShift } from '@/components/compose/table';
-import { Shift } from './utils/shifts';
-import { shiftsData } from './utils/shifts.data';
 import { columns } from './components/shift.columns';
-import { Gantt, ViewMode } from '@/components/compose/gantt';
-import '@/components/compose/gantt/index.css';
+import { IShiftResponse } from '@/types/shift/activity';
+import {
+  GeneralTask,
+  Task,
+  ViewMode,
+} from '@/components/compose/gantt/types/public-types';
+import dayjs from 'dayjs';
 import { ViewSwitcher } from './components/swicher.gantt';
-import { groupByPerson } from './utils/gantt.shift';
+import { Gantt } from '@/components/compose/gantt';
+import { Input } from '@/components/common/input/input';
+// import { BarTask } from '@/components/compose/gantt/types/bar-task';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Input } from '@/components/common/input/input';
-import {
-  GeneralTask,
-  Task,
-} from '@/components/compose/gantt/types/public-types';
 
 enum VIEW_NAME {
   TABLE,
@@ -39,17 +36,28 @@ interface ISingleTaskCalendar {
 }
 
 export const ShiftsPage: FunctionalComponent = () => {
-  const reports = useSignal<IReportResponse[]>([]);
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const showModal = useSignal<boolean>(false);
+  const shifts = useSignal<IShiftResponse[]>([]);
+  const [isChecked, setIsChecked] = useState(true);
+  const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
+  const [calendarView /*setCalendarView*/] = useState<string>('timeGridWeek');
   const selectedTask = useSignal<Task | null>(null);
   const selectedTaskCalendar = useSignal<ISingleTaskCalendar | null>(null);
+  const startDate = dayjs().subtract(1, 'day').toDate();
+  const endDate = dayjs(startDate).add(1, 'week').toDate();
+  const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
+    startDate,
+    endDate,
+    users: [],
+  });
   const [localEvents, setLocalEvents] = useState<ISingleTaskCalendar[]>([]);
 
-  const [view, setView] = useState<ViewMode>(ViewMode.Day);
-  const [tasks /*setTasks*/] = useState<GeneralTask>(groupByPerson());
-  const [isChecked, setIsChecked] = useState(true);
-  const [calendarView /*setCalendarView*/] = useState<string>('timeGridWeek');
+  const getShiftHandler = async () => {
+    const response = await ShiftService.get_all();
+    if (!response.getStatus()) return;
+    shifts.value = response.getMany();
+  };
 
   const columnWidth = useMemo(() => {
     if (view === ViewMode.Month) return 300;
@@ -57,82 +65,82 @@ export const ShiftsPage: FunctionalComponent = () => {
     return 60;
   }, [view]);
 
+  const getGanttHandler = async () => {
+    const response = await ShiftService.get_gantt();
+    if (!response.getStatus()) return;
+
+    setGanttShifts((prev) => ({
+      ...prev,
+      users: response.getMany(),
+    }));
+  };
+
+  useEffect(() => {
+    document.title = 'VX - Shift Service';
+    getShiftHandler();
+  }, []);
+
+  useEffect(() => {
+    if (currentView.value === VIEW_NAME.SCHEDULER) {
+      getGanttHandler();
+    }
+  }, [currentView.value]);
+
+  const handleViewChange = useCallback((view: VIEW_NAME) => {
+    currentView.value = view;
+  }, []);
+
+  const buttonMenu = useMemo(
+    () => (
+      <div className='flex flex-row gap-2 justify-start px-0.5 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
+        <button
+          className='p-1 hover:bg-slate-100 rounded-lg'
+          onClick={() => handleViewChange(VIEW_NAME.TABLE)}
+        >
+          <span className='vox-icon vx-icon-011'></span>
+        </button>
+        <button
+          className='p-1 hover:bg-slate-100 rounded-lg'
+          onClick={() => handleViewChange(VIEW_NAME.CALENDAR)}
+        >
+          <span className='vox-icon vx-icon-025'></span>
+        </button>
+        <button
+          className='p-1 hover:bg-slate-100 rounded-lg'
+          onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
+        >
+          <span className='vox-icon vx-icon-094'></span>
+        </button>
+      </div>
+    ),
+    []
+  );
+
   const handleTaskChange = useCallback(
     (task: Task) => {
       if (selectedTask.value) {
         selectedTask.value = { ...selectedTask.value, ...task };
       }
     },
-    [tasks]
+    [shifts]
   );
 
-  const handleTaskDelete = useCallback((task: any) => {
-    window.confirm('Are you sure about ' + task.name + ' ?');
-  }, []);
-
-  const handleDblClick = useCallback((task: any) => {
+  const handleDblClick = useCallback((task: Task) => {
     selectedTask.value = task;
     showModal.value = true;
   }, []);
 
-  const handleSelect = useCallback((task: any, isSelected: any) => {
+  const handleSelect = useCallback((task: Task, isSelected: any) => {
     console.log(task.name + ' has ' + (isSelected ? 'selected' : 'unselected'));
   }, []);
 
-  const handleExpanderClick = useCallback((task: any) => {
+  const handleExpanderClick = useCallback((task: Task) => {
     console.log('On expander click Id:' + task.id);
   }, []);
 
-  const getReportHandler = useCallback(async () => {
-    const response = await FormService.get_report_all();
-    if (!response.getStatus()) return;
-    reports.value = response.getMany();
+  const handleTaskDelete = useCallback((task: Task) => {
+    window.confirm('Are you sure about ' + task.name + ' ?');
   }, []);
-
-  useEffect(() => {
-    document.title = 'VX - Shifts Service';
-    getReportHandler();
-  }, [getReportHandler]);
-
-  const handleViewChange = useCallback((view: VIEW_NAME) => {
-    currentView.value = view;
-  }, []);
-
-  function renderEventContent(eventInfo: any) {
-    return (
-      <div className='w-full h-full bg-primary flex justify-center items-center'>
-        <div className='flex items-center gap-2'>
-          <span className='vox-icon vx-icon-025 text-primary'></span>
-          <div>
-            <p className='font-bold text-sm'>{eventInfo.event.title}</p>
-            <p className='text-xs text-gray-600'>{eventInfo.timeText}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const handleDateClick = useCallback(() => {
-    showModal.value = true;
-  }, []);
-
-  const handleEventDrop = useCallback(
-    (info: any) => {
-      const { event } = info;
-      const updatedEvents = localEvents.map((e) => {
-        if (e.id === event.id) {
-          return {
-            ...e,
-            start: event.start,
-            end: event.end || event.start,
-          };
-        }
-        return e;
-      });
-      setLocalEvents(updatedEvents);
-    },
-    [localEvents]
-  );
 
   const handleInputChange = useCallback((e: any) => {
     const { name, value } = e.currentTarget;
@@ -176,73 +184,70 @@ export const ShiftsPage: FunctionalComponent = () => {
     showModal.value = false;
   };
 
-  const cardDataMemo = useMemo(
-    () => (
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title='Total de Turnos'
-          count={400}
-          subtitle='Turnos registrados'
-          color='text-secondary'
-          icon='171'
-        />
-        <CardData
-          title='Turnos Activos'
-          count={300}
-          subtitle='En este momento'
-          color='text-primary'
-          icon='020'
-        />
-        <CardData
-          title='Turnos Inactivos'
-          count={200}
-          subtitle='Fuera de servicio'
-          color='text-error'
-          icon='110'
-        />
+  function renderEventContent(eventInfo: any) {
+    return (
+      <div className='w-full h-full bg-primary flex justify-center items-center'>
+        <div className='flex items-center gap-2'>
+          <span className='vox-icon vx-icon-025 text-primary'></span>
+          <div>
+            <p className='font-bold text-sm'>{eventInfo.event.title}</p>
+            <p className='text-xs text-gray-600'>{eventInfo.timeText}</p>
+          </div>
+        </div>
       </div>
-    ),
-    []
+    );
+  }
+
+  const handleDateClick = useCallback(() => {
+    showModal.value = true;
+  }, []);
+
+  const handleEventDrop = useCallback(
+    (info: any) => {
+      const { event } = info;
+      const updatedEvents = localEvents.map((e) => {
+        if (e.id === event.id) {
+          return {
+            ...e,
+            start: event.start,
+            end: event.end || event.start,
+          };
+        }
+        return e;
+      });
+      setLocalEvents(updatedEvents);
+    },
+    [localEvents]
   );
+
+  const handleCreacteNewShift = () => {
+    showModal.value = true;
+  };
+
+  const handleUserClick = (id: string | number) => {
+    console.log('SELECCIONADO: ', id);
+  };
 
   return (
     <Section>
-      {cardDataMemo}
-
-      <div className='flex flex-row gap-2 justify-start px-0.5 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.TABLE)}
-        >
-          <span className='vox-icon vx-icon-011'></span>
-        </button>
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.CALENDAR)}
-        >
-          <span className='vox-icon vx-icon-025'></span>
-        </button>
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
-        >
-          <span className='vox-icon vx-icon-094'></span>
-        </button>
-      </div>
-
+      {buttonMenu}
       {currentView.value === VIEW_NAME.TABLE && (
-        <Table<Shift>
-          data={shiftsData}
-          columns={columns}
-          expandable={(row: Shift) => <ExpandableShift row={row} />}
-          pageSize={20}
-          visibility={{
-            address: false,
-            city: false,
-            employeeId: false,
-            duration: false,
-          }}
-        />
+        <div>
+          <Table<IShiftResponse>
+            data={shifts.value}
+            columns={columns}
+            pageSize={20}
+            visibility={{
+              servicePlaceAddress: false,
+              city: false,
+              employeeId: false,
+              duration: false,
+              userEmail: false,
+              userPhone: false,
+              serviceRound: false,
+            }}
+          />
+        </div>
       )}
 
       {currentView.value === VIEW_NAME.CALENDAR && (
@@ -273,18 +278,27 @@ export const ShiftsPage: FunctionalComponent = () => {
       )}
 
       {currentView.value === VIEW_NAME.SCHEDULER && (
-        <div>
-          <ViewSwitcher
-            onViewModeChange={(viewMode: ViewMode) => setView(viewMode)}
-            onViewListChange={setIsChecked}
-            isChecked={isChecked}
-          />
+        <div className='max-h-screen'>
+          <div className='py-2 flex flex-row justify-between px-1'>
+            <button
+              className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              onClick={handleCreacteNewShift}
+            >
+              Create
+            </button>
+            <ViewSwitcher
+              onViewModeChange={(viewMode: ViewMode) => setView(viewMode)}
+              onViewListChange={setIsChecked}
+              isChecked={isChecked}
+            />
+          </div>
           <Gantt
-            tasks={tasks}
+            tasks={ganttShifts}
             viewMode={view}
             onDateChange={handleTaskChange}
             onDelete={handleTaskDelete}
             onDoubleClick={handleDblClick}
+            onUserClick={handleUserClick}
             onSelect={handleSelect}
             onExpanderClick={handleExpanderClick}
             listCellWidth={isChecked ? '155px' : ''}
@@ -315,7 +329,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                   label='Fecha Inicio'
                   name='start'
                   type='datetime-local'
-                  value={selectedTask.value?.start.toISOString().slice(0, 16)}
+                  value={selectedTask.value?.start}
                   onChange={handleInputChange}
                   icon='025'
                   borderless
@@ -326,7 +340,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                   label='Fecha Fin'
                   name='end'
                   type='datetime-local'
-                  value={selectedTask.value?.end.toISOString().slice(0, 16)}
+                  value={selectedTask.value?.end}
                   onChange={handleInputChange}
                   icon='025'
                   borderless

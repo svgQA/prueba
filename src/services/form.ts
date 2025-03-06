@@ -10,6 +10,7 @@ import {
   IResponseResponse,
   UResponseRequest,
 } from '@/types/form';
+import { IShiftResponse } from '@/types/shift/activity';
 import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
@@ -25,7 +26,7 @@ export class FormService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.sname, model);
+    return await super.make_request<IShiftResponse>(this.sname, model);
   }
 
   static async update(data: IFormRequest, id: number) {

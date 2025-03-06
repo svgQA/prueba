@@ -3,7 +3,7 @@ import { PlandCard } from './component/plan.card';
 export const HomePlans = () => {
   return (
     <div className='flex flex-col items-center text-center bg-white text-gray-700 pt-[70px] !md:h-[100vh] h-auto'>
-      <span className='text-3xl font-bold text-blue-950'>Nuestros planes</span>
+      <span className='text-3xl font-bold text-blue-dark'>Nuestros planes</span>
       <span className='text-xl text-gray-700'>
         Elige el plan perfecto para tu negocio y transforma tus operaciones de
         campo. Comienza con Tryvoo hoy mismo!
@@ -28,7 +28,7 @@ export const HomePlans = () => {
 
         <PlandCard
           pricing='$49 USD/mes'
-          bgColor='blue-950'
+          bgColor='blue-dark'
           name='Plan Enterprise'
           action='Iniciar plan'
           subtitle='Obtén un mayor alcance.'
@@ -44,7 +44,7 @@ export const HomePlans = () => {
 
         <PlandCard
           pricing='$49 USD/mes'
-          bgColor='blue-950'
+          bgColor='blue-dark'
           name='Plan Premium'
           action='Iniciar plan'
           subtitle='Empresas avanzadas'

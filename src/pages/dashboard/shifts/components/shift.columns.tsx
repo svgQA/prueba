@@ -1,10 +1,11 @@
 import { Badge } from '@/components/common/badge/badge';
-import { Shift } from '../utils/shifts';
 import { ColumnDef } from '@tanstack/react-table';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { IShiftResponse, IUser } from '@/types/shift/activity';
+import dayjs from 'dayjs';
 
-export const columns: ColumnDef<Shift>[] = [
+export const columns: ColumnDef<IShiftResponse>[] = [
   {
     id: 'id',
     accessorKey: 'id',
@@ -12,57 +13,77 @@ export const columns: ColumnDef<Shift>[] = [
     header: 'ID',
   },
   {
-    id: 'employeeName',
-    accessorKey: 'employeeName',
+    id: 'userName',
+    accessorKey: 'user',
     size: 180,
-    header: 'Empleado',
-    enableGrouping: true, // AGREGADO para permitir agrupación por esta columna
+    header: 'Usuario',
+    enableGrouping: true,
+    cell: (info) => {
+      const user = info.getValue() as IUser;
+      return `${user.name} ${user.surname}`;
+    },
   },
   {
-    id: 'employeeId',
-    accessorKey: 'employeeId',
+    id: 'userEmail',
+    accessorKey: 'user.email',
     size: 180,
-    header: 'ID Empleado',
+    header: 'Email',
   },
   {
-    id: 'city',
-    accessorKey: 'city',
-    size: 180,
-    header: 'Ciudad',
-    enableGrouping: true, // AGREGADO para permitir agrupación por esta columna
+    id: 'userPhone',
+    accessorKey: 'user.phone',
+    size: 120,
+    header: 'Teléfono',
   },
   {
-    id: 'address',
-    accessorKey: 'address',
+    id: 'serviceRound',
+    accessorKey: 'service.round.name',
+    size: 150,
+    header: 'Ronda',
+    enableGrouping: true,
+  },
+  {
+    id: 'servicePlaceName',
+    accessorKey: 'service.place.name',
     size: 180,
+    header: 'Lugar',
+    enableGrouping: true,
+  },
+  {
+    id: 'servicePlaceAddress',
+    accessorKey: 'service.place.address',
+    size: 200,
     header: 'Dirección',
   },
   {
-    id: 'startTime',
-    accessorKey: 'startTime',
+    id: 'contractName',
+    accessorKey: 'service.contract.name',
     size: 180,
-    header: 'Hora inicio',
+    header: 'Contrato',
+    enableGrouping: true,
   },
   {
-    id: 'endTime',
-    accessorKey: 'endTime',
-    size: 180,
-    header: 'Hora fin',
+    id: 'start',
+    accessorKey: 'start',
+    size: 140,
+    header: 'Inicio',
+    cell: (info) => dayjs(info.getValue() as string).format('DD/MM/YYYY HH:mm'),
   },
   {
-    id: 'duration',
-    accessorKey: 'duration',
-    size: 180,
-    header: 'Duración',
+    id: 'end',
+    accessorKey: 'end',
+    size: 140,
+    header: 'Fin',
+    cell: (info) => dayjs(info.getValue() as string).format('DD/MM/YYYY HH:mm'),
   },
   {
-    id: 'notifications',
-    accessorKey: 'notifications',
-    size: 100,
-    header: 'Notificaciones',
-    cell: (info: any) => (
+    id: 'status',
+    accessorKey: 'status',
+    size: 120,
+    header: 'Estado',
+    cell: (info) => (
       <div className='flex flex-row justify-center'>
-        <Badge label={info.getValue()} icon='123' color='bg-primary' />
+        <Badge label={String(info.getValue())} icon='123' color='bg-primary' />
       </div>
     ),
   },
@@ -74,8 +95,7 @@ export const columns: ColumnDef<Shift>[] = [
     cell: (info: any) => {
       const progress = info.getValue() as number;
 
-      // Definir el color dinámico basado en el progreso
-      let progressColor = '#E05858'; // Rojo por defecto para progreso <= 30%
+      let progressColor = '#E05858';
 
       if (progress < 30) {
         progressColor = '#E05858';
@@ -87,7 +107,6 @@ export const columns: ColumnDef<Shift>[] = [
 
       return (
         <div className='flex flex-row justify-center'>
-          {/* Pasar el color dinámico al componente Gauge */}
           <Gauge progress={progress} color={progressColor} />
         </div>
       );

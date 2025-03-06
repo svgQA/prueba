@@ -18,6 +18,7 @@ export type TaskListTableProps = {
   locale: string;
   tasks: GeneralTask;
   selectedTaskId: string;
+  onUserClick?: (userId: string | number) => void;
   setSelectedTask: (taskId: string) => void;
   onExpanderClick: (task: Task) => void;
 };
@@ -37,6 +38,7 @@ export type TaskListProps = {
   selectedTask: BarTask | undefined;
   setSelectedTask: (task: string) => void;
   onExpanderClick: (task: Task) => void;
+  onUserClick: (user: string | number) => void;
   TaskListHeader: ComponentType<TaskListHeaderProps>;
   TaskListTable: ComponentType<TaskListTableProps>;
 };
@@ -58,6 +60,7 @@ export function TaskList({
   horizontalContainerClass,
   TaskListHeader,
   TaskListTable,
+  onUserClick,
 }: TaskListProps) {
   const horizontalContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -84,10 +87,11 @@ export function TaskList({
     selectedTaskId: selectedTaskId,
     setSelectedTask,
     onExpanderClick,
+    onUserClick,
   };
 
   return (
-    <div ref={taskListRef}>
+    <div ref={taskListRef} className='rounded-l-xl border-r'>
       <TaskListHeader {...headerProps} />
       <div
         ref={horizontalContainerRef}

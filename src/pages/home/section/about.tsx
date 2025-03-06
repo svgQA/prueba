@@ -4,7 +4,7 @@ import HomeAboutCenterImg from '@/assets/image/home-we-center.png';
 export const HomeAbout = () => {
   return (
     <div className='flex flex-col items-center text-center bg-primary-opacity py-12'>
-      <span className='text-2xl md:text-3xl font-bold px-4 text-blue-950'>
+      <span className='text-2xl md:text-3xl font-bold px-4 text-blue-dark'>
         {about_content.title}
       </span>
       <span className='text-lg md:text-xl px-4 mt-2 text-gray-700'>
