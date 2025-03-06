@@ -9,7 +9,7 @@ import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { Map } from '@/components/common/map/map';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
@@ -24,6 +24,9 @@ interface FormData {
   state?: string;
   type?: string;
   municipalityId: number;
+  zipCode: number;
+  countryId: number;
+  radius: number;
 }
 
 interface SelectOption {
@@ -39,11 +42,13 @@ interface ILocation {
 }
 
 export const PlaceCreateSettingPage: FunctionComponent = () => {
+  const [green, setGreen] = useState(128);
   const municipalities: Signal<SelectOption[]> = useSignal([]);
   const departmentId = useSignal<number>();
   const municipalityLocation = useSignal<ILocation>();
   const departments = useSignal<any>([]);
   const points = useSignal<any>([]);
+  const countries = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
 
   // const [points, setPoint] = useState<{ id: number; position: any }[]>([]);
@@ -72,6 +77,13 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
 
     departments.value = request.data;
     console.log('departments:', departments.value);
+  };
+
+  const getCountries = async () => {
+    const request: any = await ShiftService.getCountries();
+
+    countries.value = request.data;
+    console.log('countries:', countries.value);
   };
 
   const onSubmit = async (model: FormData) => {
@@ -123,6 +135,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       'longitude',
       'state',
       'type',
+      'countryId',
+      'zipCode',
       'municipalityId',
     ] as const;
 
@@ -140,6 +154,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   useEffect(() => {
     setInitialValues();
     fetchDepartments();
+    getCountries();
   }, []);
 
   return (
@@ -257,6 +272,40 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
                 <div class='col-span-2'>
+                  <Field<string> name='countryId' validate={required}>
+                    {({ input, meta }) => (
+                      <Select
+                        {...input}
+                        placeholder='Selecione país...'
+                        label='País'
+                        name='countryId'
+                        icon='252'
+                        optionValue='id'
+                        optionLabel='name'
+                        onChange={(e) => {
+                          const id = parseInt(e.currentTarget.value);
+                          input.onChange(id);
+                        }}
+                        options={countries.value}
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div class='col-span-2'>
+                  <Field name='zipCode'>
+                    {({ input }) => (
+                      <Input
+                        id='input-code'
+                        {...input}
+                        placeholder='Ingrese un código ZIP..'
+                        label='Código ZIP'
+                        type='number'
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div class='col-span-2'>
                   <Select
                     value={departmentId.value}
                     placeholder='Seleccione Departamento...'
@@ -296,7 +345,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                     )}
                   </Field>
                 </div>
-
                 <div class='col-span-2'>
                   <Field<string> name='latitude'>
                     {({ input }) => (
@@ -312,7 +360,23 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
               </div>
-
+              <div className='flex items-center space-x-4 p-4'>
+                <input
+                  type='range'
+                  min='0'
+                  max='255'
+                  step='1'
+                  value={green}
+                  onChange={(e) => setGreen(Number(e.currentTarget.value))}
+                  className='w-full accent-green-500'
+                />
+                <input
+                  type='number'
+                  value={green}
+                  onChange={(e) => setGreen(Number(e.currentTarget.value))}
+                  className='w-20 border border-gray-300 rounded p-1 text-center'
+                />
+              </div>
               <Map
                 name='Map'
                 pointsAmount={1}
