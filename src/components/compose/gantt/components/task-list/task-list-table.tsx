@@ -30,10 +30,11 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 
 export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
   rowHeight,
-  rowWidth,
+  // rowWidth,
   tasks,
   fontFamily,
   fontSize,
+  onUserClick,
   // locale,
   // onExpanderClick,
 }) => {
@@ -67,15 +68,12 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
             key={`${t.id}row`}
           >
             <div
-              className={styles.taskListCell}
-              style={{
-                minWidth: rowWidth,
-                maxWidth: rowWidth,
-              }}
+              className='hover:bg-m5 w-64 h-12 cursor-pointer items-center flex rounded-sm hover:text-white'
               title={t.name}
+              onCut={() => onUserClick?.(t.id)}
             >
               <div
-                className={`${styles.taskListNameWrapper} flex justify-between items-center px-4`}
+                className={`${styles.taskListNameWrapper} flex justify-start items-center px-4`}
               >
                 {/*
                 <div
@@ -94,7 +92,7 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
                   src={t.image}
                   alt={`Profile photo of ${t.name}`}
                 />
-                <div className='text-lg font-medium'>{t.name}</div>
+                <div className='text-lg font-medium'>{`${t.name} ${t.surname}`}</div>
               </div>
             </div>
             {/*

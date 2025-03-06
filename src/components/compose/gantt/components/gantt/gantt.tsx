@@ -1,11 +1,14 @@
 import { ComponentType } from 'preact';
 import { useSignal } from '@preact/signals';
-import { useState, useRef, useEffect } from 'preact/hooks';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'preact/hooks';
 import { ViewMode, GanttProps, Task } from '../../types/public-types';
-// import { GridProps } from '../grid/grid';
 import { ganttDateRange, seedDates } from '../../helpers/date-helper';
-// import { CalendarProps } from '../calendar/calendar';
-// import { TaskGanttContentProps } from './task-gantt-content';
 import { TaskListHeaderDefault } from '../task-list/task-list-header';
 import { TaskListTableDefault } from '../task-list/task-list-table';
 import { StandardTooltipContent, Tooltip } from '../other/tooltip';
@@ -17,14 +20,13 @@ import { convertToBarTasks } from '../../helpers/bar-helper';
 import { GanttEvent } from '../../types/gantt-task-actions';
 import { DateSetup } from '../../types/date-setup';
 import { HorizontalScroll } from '../other/horizontal-scroll';
-// import { removeHiddenTasks } from '../../helpers/other-helper';
 import styles from './gantt.module.css';
 import { TaskGanttContentProps } from './task-gantt-content';
 import { CalendarProps } from '../calendar/calendar';
 import { GridProps } from '../grid/grid';
-// import { StandardTooltipContent } from '../other/tooltip';
+import { memo } from 'preact/compat';
 
-export const Gantt: ComponentType<GanttProps> = ({
+const GanttComponent: ComponentType<GanttProps> = ({
   tasks,
   headerHeight = 50,
   columnWidth = 60,
@@ -65,6 +67,7 @@ export const Gantt: ComponentType<GanttProps> = ({
   onDelete,
   onSelect,
   onExpanderClick,
+  onUserClick,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
@@ -78,7 +81,6 @@ export const Gantt: ComponentType<GanttProps> = ({
     return { viewMode, dates: seedDates(startDate, endDate, viewMode) };
   });
   const currentViewDate = useSignal<Date | undefined>(undefined);
-
   const taskListWidth = useSignal(0);
   const svgContainerWidth = useSignal(0);
   const svgContainerHeight = useSignal(ganttHeight);
@@ -87,7 +89,10 @@ export const Gantt: ComponentType<GanttProps> = ({
     action: '',
   });
 
-  const taskHeight = (rowHeight * barFill) / 100;
+  const taskHeight = useMemo(
+    () => (rowHeight * barFill) / 100,
+    [rowHeight, barFill]
+  );
 
   const [selectedTask, setSelectedTask] = useState<BarTask>();
   const [failedTask, setFailedTask] = useState<BarTask | null>(null);
@@ -157,7 +162,6 @@ export const Gantt: ComponentType<GanttProps> = ({
     milestoneBackgroundSelectedColor,
     rtl,
     scrollX,
-    onExpanderClick,
   ]);
 
   useEffect(() => {
@@ -249,8 +253,8 @@ export const Gantt: ComponentType<GanttProps> = ({
     }
   }, [ganttHeight, tasks, headerHeight, rowHeight]);
 
-  useEffect(() => {
-    const handleWheel = (event: WheelEvent) => {
+  const handleWheel = useCallback(
+    (event: WheelEvent) => {
       if (event.shiftKey || event.deltaX) {
         const scrollMove = event.deltaX ? event.deltaX : event.deltaY;
         let newScrollX = scrollX.value + scrollMove;
@@ -275,182 +279,282 @@ export const Gantt: ComponentType<GanttProps> = ({
       }
 
       setIgnoreScrollEvent(true);
-    };
+    },
+    [scrollX, scrollY, svgWidth, ganttHeight, ganttFullHeight]
+  );
 
+  useEffect(() => {
     wrapperRef.current?.addEventListener('wheel', handleWheel, {
       passive: false,
     });
     return () => {
       wrapperRef.current?.removeEventListener('wheel', handleWheel);
     };
-  }, [
-    wrapperRef,
-    scrollY,
-    scrollX,
-    ganttHeight,
-    svgWidth,
-    rtl,
-    ganttFullHeight,
-  ]);
+  }, [handleWheel]);
 
-  const handleScrollY = (event: UIEvent) => {
-    if (
-      scrollY.value !== (event.target as HTMLElement).scrollTop &&
-      !ignoreScrollEvent
-    ) {
-      scrollY.value = (event.target as HTMLElement).scrollTop;
+  const handleScrollY = useCallback(
+    (event: UIEvent) => {
+      if (
+        scrollY.value !== (event.target as HTMLElement).scrollTop &&
+        !ignoreScrollEvent
+      ) {
+        scrollY.value = (event.target as HTMLElement).scrollTop;
+        setIgnoreScrollEvent(true);
+      } else {
+        setIgnoreScrollEvent(false);
+      }
+    },
+    [scrollY, ignoreScrollEvent]
+  );
+
+  const handleScrollX = useCallback(
+    (event: UIEvent) => {
+      if (
+        scrollX.value !== (event.target as HTMLElement).scrollLeft &&
+        !ignoreScrollEvent
+      ) {
+        scrollX.value = (event.target as HTMLElement).scrollLeft;
+        setIgnoreScrollEvent(true);
+      } else {
+        setIgnoreScrollEvent(false);
+      }
+    },
+    [scrollX, ignoreScrollEvent]
+  );
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      event.preventDefault();
+      let newScrollY = scrollY.value;
+      let newScrollX = scrollX.value;
+      let isX = true;
+      switch (event.key) {
+        case 'Down':
+        case 'ArrowDown':
+          newScrollY += rowHeight;
+          isX = false;
+          break;
+        case 'Up':
+        case 'ArrowUp':
+          newScrollY -= rowHeight;
+          isX = false;
+          break;
+        case 'Left':
+        case 'ArrowLeft':
+          newScrollX -= columnWidth;
+          break;
+        case 'Right':
+        case 'ArrowRight':
+          newScrollX += columnWidth;
+          break;
+      }
+      if (isX) {
+        if (newScrollX < 0) {
+          newScrollX = 0;
+        } else if (newScrollX > svgWidth) {
+          newScrollX = svgWidth;
+        }
+        scrollX.value = newScrollX;
+      } else {
+        if (newScrollY < 0) {
+          newScrollY = 0;
+        } else if (newScrollY > ganttFullHeight - ganttHeight) {
+          newScrollY = ganttFullHeight - ganttHeight;
+        }
+        scrollY.value = newScrollY;
+      }
       setIgnoreScrollEvent(true);
-    } else {
-      setIgnoreScrollEvent(false);
-    }
-  };
+    },
+    [
+      scrollY,
+      scrollX,
+      rowHeight,
+      columnWidth,
+      svgWidth,
+      ganttFullHeight,
+      ganttHeight,
+    ]
+  );
 
-  const handleScrollX = (event: UIEvent) => {
-    if (
-      scrollX.value !== (event.target as HTMLElement).scrollLeft &&
-      !ignoreScrollEvent
-    ) {
-      scrollX.value = (event.target as HTMLElement).scrollLeft;
-      setIgnoreScrollEvent(true);
-    } else {
-      setIgnoreScrollEvent(false);
-    }
-  };
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    event.preventDefault();
-    let newScrollY = scrollY.value;
-    let newScrollX = scrollX.value;
-    let isX = true;
-    switch (event.key) {
-      case 'Down':
-      case 'ArrowDown':
-        newScrollY += rowHeight;
-        isX = false;
-        break;
-      case 'Up':
-      case 'ArrowUp':
-        newScrollY -= rowHeight;
-        isX = false;
-        break;
-      case 'Left':
-      case 'ArrowLeft':
-        newScrollX -= columnWidth;
-        break;
-      case 'Right':
-      case 'ArrowRight':
-        newScrollX += columnWidth;
-        break;
-    }
-    if (isX) {
-      if (newScrollX < 0) {
-        newScrollX = 0;
-      } else if (newScrollX > svgWidth) {
-        newScrollX = svgWidth;
+  const handleSelectedTask = useCallback(
+    (taskId: string | number) => {
+      const newSelectedTask = barTasks.find((t) => t.id === taskId);
+      const oldSelectedTask = barTasks.find(
+        (t) => !!selectedTask && t.id === selectedTask.id
+      );
+      if (onSelect) {
+        if (oldSelectedTask) {
+          onSelect(
+            {
+              ...oldSelectedTask,
+              start: oldSelectedTask.start.toString(),
+              end: oldSelectedTask.end.toString(),
+            },
+            false
+          );
+        }
+        if (newSelectedTask) {
+          onSelect(
+            {
+              ...newSelectedTask,
+              start: newSelectedTask.start.toString(),
+              end: newSelectedTask.end.toString(),
+            },
+            true
+          );
+        }
       }
-      scrollX.value = newScrollX;
-    } else {
-      if (newScrollY < 0) {
-        newScrollY = 0;
-      } else if (newScrollY > ganttFullHeight - ganttHeight) {
-        newScrollY = ganttFullHeight - ganttHeight;
+      setSelectedTask(newSelectedTask);
+    },
+    [barTasks, selectedTask, onSelect]
+  );
+
+  const handleExpanderClick = useCallback(
+    (task: Task) => {
+      if (onExpanderClick && task.hideChildren !== undefined) {
+        onExpanderClick({ ...task, hideChildren: !task.hideChildren });
       }
-      scrollY.value = newScrollY;
-    }
-    setIgnoreScrollEvent(true);
-  };
+    },
+    [onExpanderClick]
+  );
 
-  const handleSelectedTask = (taskId: string | number) => {
-    const newSelectedTask = barTasks.find((t) => t.id === taskId);
-    const oldSelectedTask = barTasks.find(
-      (t) => !!selectedTask && t.id === selectedTask.id
-    );
-    if (onSelect) {
-      if (oldSelectedTask) {
-        onSelect(oldSelectedTask, false);
+  const handleUserClick = useCallback(
+    (user: string | number) => {
+      if (onUserClick) {
+        onUserClick(user);
       }
-      if (newSelectedTask) {
-        onSelect(newSelectedTask, true);
-      }
-    }
-    setSelectedTask(newSelectedTask);
-  };
+    },
+    [onUserClick]
+  );
 
-  const handleExpanderClick = (task: Task) => {
-    if (onExpanderClick && task.hideChildren !== undefined) {
-      onExpanderClick({ ...task, hideChildren: !task.hideChildren });
-    }
-  };
+  const gridProps = useMemo<GridProps>(
+    () => ({
+      columnWidth,
+      svgWidth,
+      tasks: tasks,
+      rowHeight,
+      dates: dateSetup.dates,
+      todayColor,
+      rtl,
+    }),
+    [columnWidth, svgWidth, tasks, rowHeight, dateSetup.dates, todayColor, rtl]
+  );
 
-  const gridProps: GridProps = {
-    columnWidth,
-    svgWidth,
-    tasks: tasks,
-    rowHeight,
-    dates: dateSetup.dates,
-    todayColor,
-    rtl,
-  };
+  const calendarProps = useMemo<CalendarProps>(
+    () => ({
+      dateSetup,
+      locale,
+      viewMode,
+      headerHeight,
+      columnWidth,
+      fontFamily,
+      fontSize,
+      rtl,
+    }),
+    [
+      dateSetup,
+      locale,
+      viewMode,
+      headerHeight,
+      columnWidth,
+      fontFamily,
+      fontSize,
+      rtl,
+    ]
+  );
 
-  const calendarProps: CalendarProps = {
-    dateSetup,
-    locale,
-    viewMode,
-    headerHeight,
-    columnWidth,
-    fontFamily,
-    fontSize,
-    rtl,
-  };
+  const barProps = useMemo<TaskGanttContentProps>(
+    () => ({
+      tasks: barTasks,
+      dates: dateSetup.dates,
+      ganttEvent,
+      selectedTask,
+      rowHeight,
+      taskHeight,
+      columnWidth,
+      arrowColor,
+      timeStep,
+      fontFamily,
+      fontSize,
+      arrowIndent,
+      svgWidth,
+      rtl,
+      setGanttEvent,
+      setFailedTask,
+      setSelectedTask: handleSelectedTask,
+      onDateChange,
+      onProgressChange,
+      onDoubleClick,
+      onClick,
+      onDelete,
+    }),
+    [
+      barTasks,
+      dateSetup.dates,
+      ganttEvent,
+      selectedTask,
+      rowHeight,
+      taskHeight,
+      columnWidth,
+      arrowColor,
+      timeStep,
+      fontFamily,
+      fontSize,
+      arrowIndent,
+      svgWidth,
+      rtl,
+      handleSelectedTask,
+      onDateChange,
+      onProgressChange,
+      onDoubleClick,
+      onClick,
+      onDelete,
+    ]
+  );
 
-  const barProps: TaskGanttContentProps = {
-    tasks: barTasks,
-    dates: dateSetup.dates,
-    ganttEvent,
-    selectedTask,
-    rowHeight,
-    taskHeight,
-    columnWidth,
-    arrowColor,
-    timeStep,
-    fontFamily,
-    fontSize,
-    arrowIndent,
-    svgWidth,
-    rtl,
-    setGanttEvent,
-    setFailedTask,
-    setSelectedTask: handleSelectedTask,
-    onDateChange,
-    onProgressChange,
-    onDoubleClick,
-    onClick,
-    onDelete,
-  };
-
-  const tableProps: TaskListProps = {
-    rowHeight,
-    rowWidth: listCellWidth,
-    fontFamily,
-    fontSize,
-    tasks: tasks, // barTasks,
-    locale,
-    headerHeight,
-    scrollY: scrollY.value,
-    ganttHeight,
-    horizontalContainerClass: styles.horizontalContainer,
-    selectedTask,
-    taskListRef,
-    setSelectedTask: handleSelectedTask,
-    onExpanderClick: handleExpanderClick,
-    TaskListHeader,
-    TaskListTable,
-  };
+  const tableProps = useMemo<TaskListProps>(
+    () => ({
+      rowHeight,
+      rowWidth: listCellWidth,
+      fontFamily,
+      fontSize,
+      tasks: tasks,
+      locale,
+      headerHeight,
+      scrollY: scrollY.value,
+      ganttHeight,
+      horizontalContainerClass: styles.horizontalContainer,
+      selectedTask,
+      taskListRef,
+      setSelectedTask: handleSelectedTask,
+      onExpanderClick: handleExpanderClick,
+      TaskListHeader,
+      TaskListTable,
+      onUserClick: handleUserClick,
+    }),
+    [
+      rowHeight,
+      listCellWidth,
+      fontFamily,
+      fontSize,
+      tasks,
+      locale,
+      headerHeight,
+      scrollY,
+      ganttHeight,
+      selectedTask,
+      handleSelectedTask,
+      handleExpanderClick,
+      TaskListHeader,
+      TaskListTable,
+      handleUserClick,
+    ]
+  );
 
   return (
     <div>
       <div
-        className={styles.wrapper}
+        className={`${styles.wrapper} border rounded-xl`}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         ref={wrapperRef}
@@ -501,3 +605,5 @@ export const Gantt: ComponentType<GanttProps> = ({
     </div>
   );
 };
+
+export const Gantt = memo(GanttComponent);

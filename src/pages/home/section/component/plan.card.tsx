@@ -22,46 +22,44 @@ export const PlandCard = ({
   options,
   inverse,
 }: IPlanCard) => {
-  const finalBgColor = inverse ? textColor : bgColor;
-  const finalTextColor = inverse ? bgColor : textColor;
+  const primaryColor = inverse ? textColor : bgColor;
+  const secondaryColor = inverse ? bgColor : textColor;
 
   return (
     <div
-      className={`text-${finalBgColor} bg-${finalTextColor} shadow-lg ${border} w-96 rounded-xl relative min-h-[60vh]`}
+      className={`text-${primaryColor} bg-${secondaryColor} shadow-lg ${border} w-96 rounded-xl relative min-h-[60vh]`}
     >
       <div>
         <div
-          className={`text-${finalTextColor} bg-${finalBgColor} max-w-[40%] ml-auto rounded-tr-md rounded-bl-xl text-center py-2 font-semibold`}
+          className={`text-${secondaryColor} bg-${primaryColor} max-w-[40%] ml-auto rounded-tr-md rounded-bl-xl text-center py-2 font-semibold`}
         >
           {pricing}
         </div>
       </div>
-      <div className={`p-6 text-center text-${finalBgColor}`}>
+      <div className={`p-6 text-center text-${primaryColor}`}>
         <h2 className='text-[20px] font-bold'>{name}</h2>
         <p className='text-gray-400 text-xs mt-1 font-bold'>{subtitle}</p>
       </div>
       <div
-        className={`bg-${finalBgColor} rounded-t-lg flex h-[45vh] mt-4 px-3 py-6`}
+        className={`bg-${primaryColor} rounded-lg flex h-[46vh] mt-4 px-3 py-6`}
       >
-        <ul className='space-y-4 text-[14px] border-b-l'>
+        <ul className='space-y-4 text-[14px]'>
           {options.map((option, index) => (
             <li
               key={index}
-              className={`flex items-start text-${finalTextColor}`}
+              className={`flex items-start text-${secondaryColor}`}
             >
               <span
-                className={`!text-${finalBgColor} !text-[14px] bg-${finalTextColor} left-0 px-1 size vox-icon vx-icon-030 rounded-full`}
+                className={`text-${primaryColor} bg-${secondaryColor} !text-[14px] left-0 px-1 size vx-icon vx-icon-030 rounded-full`}
               />
               <span className='ml-2 text-left'>{option}</span>
             </li>
           ))}
         </ul>
       </div>
-      <div
-        className={`bg-${finalBgColor} rounded-b-lg py-6 absolute w-full bottom-0`}
-      >
+      <div className='rounded-b-lg py-6 absolute w-full bottom-1'>
         <button
-          className={`bg-${finalTextColor} text-${finalBgColor} font-semibold rounded-full px-6 py-2 transition`}
+          className={`bg-${secondaryColor} text-${primaryColor} font-semibold rounded-full px-6 py-2 transition border-none`}
         >
           {action}
         </button>

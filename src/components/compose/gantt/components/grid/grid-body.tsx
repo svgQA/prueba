@@ -45,6 +45,7 @@ export const GridBody = ({
         className={styles.gridRow}
       />
     );
+
     rowLines.push(
       <line
         key={'RowLine' + user.id}
@@ -62,6 +63,7 @@ export const GridBody = ({
   let tickX = 0;
   const ticks: VNode[] = [];
   let today: VNode = <rect />;
+
   for (let i = 0; i < dates.length; i++) {
     const date = dates[i];
     ticks.push(
@@ -118,11 +120,11 @@ export const GridBody = ({
     tickX += columnWidth;
   }
   return (
-    <g className='gridBody'>
-      <g className='rows'>{gridRows}</g>
-      <g className='rowLines'>{rowLines}</g>
-      <g className='ticks'>{ticks}</g>
-      <g className='today'>{today}</g>
+    <g className=''>
+      <g className=''>{gridRows}</g>
+      <g className=''>{rowLines}</g>
+      <g className=''>{ticks}</g>
+      <g className=''>{today}</g>
     </g>
   );
 };

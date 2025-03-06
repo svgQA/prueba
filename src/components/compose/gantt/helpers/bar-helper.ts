@@ -160,12 +160,16 @@ const convertToBar = (
 ): BarTask => {
   let x1: number;
   let x2: number;
+
+  const taskStart = new Date(task.start);
+  const taskEnd = new Date(task.end);
+
   if (rtl) {
-    x2 = taskXCoordinateRTL(task.start, dates, columnWidth);
-    x1 = taskXCoordinateRTL(task.end, dates, columnWidth);
+    x2 = taskXCoordinateRTL(taskStart, dates, columnWidth);
+    x1 = taskXCoordinateRTL(taskEnd, dates, columnWidth);
   } else {
-    x1 = taskXCoordinate(task.start, dates, columnWidth);
-    x2 = taskXCoordinate(task.end, dates, columnWidth);
+    x1 = taskXCoordinate(taskStart, dates, columnWidth);
+    x2 = taskXCoordinate(taskEnd, dates, columnWidth);
   }
   let typeInternal: TaskTypeInternal = task.type;
   if (typeInternal === 'task' && x2 - x1 < handleWidth * 2) {
@@ -185,13 +189,13 @@ const convertToBar = (
   let progressBarColor = barProgressColor;
   let progressSelectedBarColor = barProgressSelectedColor;
 
-  if (task.status === 'IN_PROGRESS') {
+  if (task.status === 'CREATED') {
     progressBarColor = '#CCE5FF'; // tone suave
     progressSelectedBarColor = '#0066CC'; // azul
   } else if (task.status === 'OPENED') {
     progressBarColor = '#409D9F'; // m5
     progressSelectedBarColor = '#00727B'; // ternary
-  } else if (task.status === 'COMPLETED') {
+  } else if (task.status === 'RESOLVED') {
     progressBarColor = '#AEFDC8'; // m6
     progressSelectedBarColor = '#1DD75B'; // secondary
   } else if (task.status === 'CLOSED') {
@@ -208,6 +212,8 @@ const convertToBar = (
   };
   return {
     ...task,
+    start: taskStart,
+    end: taskEnd,
     typeInternal,
     x1,
     x2,
@@ -236,7 +242,9 @@ const convertToMilestone = (
   milestoneBackgroundColor: string,
   milestoneBackgroundSelectedColor: string
 ): BarTask => {
-  const x = taskXCoordinate(task.start, dates, columnWidth);
+  const taskStart = new Date(task.start);
+  const taskEnd = new Date(task.end);
+  const x = taskXCoordinate(taskStart, dates, columnWidth);
   const y = taskYCoordinate(index, rowHeight, taskHeight);
 
   const x1 = x - taskHeight * 0.5;
@@ -252,7 +260,8 @@ const convertToMilestone = (
   };
   return {
     ...task,
-    end: task.start,
+    end: taskEnd,
+    start: taskStart,
     x1,
     x2,
     y,

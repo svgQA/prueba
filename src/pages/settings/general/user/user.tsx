@@ -19,7 +19,7 @@ export const UserSettingPage: FunctionComponent = () => {
   }, []);
 
   const getUsersHandler = async () => {
-    const response = await UserService.get_all();
+    const response = await UserService.get_all({ items: 100, page: 1 });
     if (!response.getStatus()) return;
     users.value = response.getMany();
   };

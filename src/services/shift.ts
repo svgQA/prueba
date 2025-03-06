@@ -1,4 +1,6 @@
+import { User } from '@/components/compose/gantt/types/public-types';
 import { IPagination } from '@/types';
+import { IShiftResponse } from '@/types/shift/activity';
 // import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
 import { BaseService } from '@/utils/network';
 import {
@@ -16,13 +18,33 @@ interface IPaginationRound extends IPagination {
   placeId?: number;
 }
 
+interface IPagintationGantt extends IPagination {
+  start: string;
+  end?: string;
+}
+
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';
-  static async get_all() {
+  static async get_all(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
-      url: ['shifts'],
+      url: ['activity'],
+      params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<IShiftResponse>(this.name, model);
+  }
+
+  static async get_gantt(
+    params: IPagintationGantt = {
+      page: 1,
+      items: 10,
+      start: new Date().toISOString(),
+    }
+  ) {
+    const model: IMakeRequest = {
+      url: ['activity', 'gantt'],
+      params: params as any,
+    };
+    return await super.make_request<User>(this.name, model);
   }
 
   static async createPlace(data: any) {
@@ -68,6 +90,14 @@ export class ShiftService extends BaseService {
   static async getDepartments(params: IPagination = { page: 1, items: 50 }) {
     const model: IMakeRequest = {
       url: ['place/departments'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getCountries(params: IPagination = { page: 1, items: 50 }) {
+    const model: IMakeRequest = {
+      url: ['place/countries'],
       params: params as any,
     };
     return await super.make_request<any>(this.name, model);
