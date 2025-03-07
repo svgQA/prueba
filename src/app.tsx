@@ -6,7 +6,7 @@ import { HomeLayout } from '@/pages/home/home.layout';
 
 import { Amplify } from 'aws-amplify';
 import { Authenticator } from '@aws-amplify/ui-react';
-
+import { Logo } from '@/components/common/logo/logo';
 import '@aws-amplify/ui-react/styles.css';
 import { AWS_AMPLIFY_SETTINGS } from './aws-exports';
 import { AuthAmplifyProps } from './utils/types/auth.interface';
@@ -20,7 +20,11 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
       <Switch>
         <Route path={PAGES_LIST.HOME} component={HomeLayout} />
         <Router base={PAGES_LIST.DASHBOARD}>
-          <div className='w-full h-full flex justify-center items-center bg-b-light dark:bg-b-dark'>
+          <div className='w-full h-full flex flex-col justify-center items-center bg-gradient-to-r from-cyan-500 to-emerald-400 dark:bg-b-dark'>
+            <div className='fixed top-0 left-0 p-4 text-white'>
+              <Logo title='voxline' slogan='make your dreams' />
+            </div>
+
             <Authenticator
             // hideSignUp
             // socialProviders={['google']}
