@@ -4,9 +4,9 @@ import HomeMainDesktopImg from '@/assets/image/home-main-desktop.png';
 export const HomeMain = () => {
   return (
     <div className='flex relative min-h-[85vh] md:flex-row flex-col text-center md:text-left'>
-      <div className='w-full md:w-2/5 flex flex-col items-center px-4 md:px-10 py-6 md:py-7'>
+      <div className='w-full md:w-2/5 flex flex-col items-center px-4 md:px-10 py-6 md:py-1'>
         <div className='pb-1 md:pb-10'>
-          <h1 className='text-xl sm:text-1xl md:text-4xl lg:text-5xl mb-3 mt-8 sm:mt-14 md:mt-28'>
+          <h1 className='text-xl sm:text-1xl md:text-4xl lg:text-5xl mb-1 mt-1 sm:mt-14 md:mt-2'>
             Transforma la Gestión de Operaciones Con Tryvoo
           </h1>
           <span className='text-2xl sm:text-3xl px-2'>
@@ -21,7 +21,7 @@ export const HomeMain = () => {
           name='schedule'
           text='text-xl md:text-2xl'
           padding='px-6 py-4 my-2 md:my-4'
-          className='bg-secondary rounded-full object-contain hover:bg-m6 transition-colors'
+          className='bg-secondary rounded-full object-contain hover:bg-m6 transition-colors z-[10]'
           textColor='text-blue-dark'
         />
       </div>

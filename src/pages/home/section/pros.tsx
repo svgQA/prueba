@@ -44,12 +44,10 @@ export const HomePros = () => {
 
                   <div className='flex-1 flex items-center h-[15vh] md:h-[10vh]'>
                     <div>
-                      <div className='font-bold text-[#505050] text-lg md:text-xl'>
-                        {item.title}
-                      </div>
-                      <div className='text-[#505050] text-base md:text-lg'>
-                        {item.subtitle}
-                      </div>
+                      <p className='text-left justify-left'>
+                        <span className='font-bold text-[#505050] text-lg md:text-xl'>{item.title}</span>
+                        <span className='text-[#505050] text-base md:text-lg'>{item.subtitle}</span>
+                      </p>
                     </div>
                   </div>
                 </div>
