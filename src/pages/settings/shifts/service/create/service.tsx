@@ -158,7 +158,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                         label='Contrato'
                         id='contractId'
                         name='contractId'
-                        icon='252'
+                        icon='241'
                         optionValue='id'
                         optionLabel='name'
                         onChange={(e) => {
