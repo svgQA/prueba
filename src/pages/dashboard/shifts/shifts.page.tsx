@@ -7,7 +7,6 @@ import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
 import { toast } from 'react-toastify';
-import { omitBy, isNull, pick } from 'lodash';
 
 import {
   GeneralTask,

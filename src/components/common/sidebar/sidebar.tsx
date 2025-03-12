@@ -20,7 +20,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   onHomeHandler,
   isNavigation = false,
   onHandlerClick,
-  // onLogout,
+  onLogout,
 }: ISidebarProps) => {
   const [location, navigate] = useLocation();
   const menuSelected = useSignal<string | null>('');
@@ -128,13 +128,11 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
           <ButtonMenu name='vx-setting-button' label='setting' icon='169' />
         </span>
 
-        {/*
         {onLogout && (
           <a onClick={onLogout} className='cursor-pointer'>
             <ButtonMenu name='vx-logout-button' label='logout' icon='225' />
           </a>
         )}
-        */}
       </ul>
     </nav>
   );

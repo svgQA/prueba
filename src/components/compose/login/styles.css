@@ -1,0 +1,85 @@
+.amplify-input {
+  @apply border-none p-4 font-sans rounded-lg w-full;
+}
+
+.amplify-button {
+  @apply border-none px-8 py-4 font-medium tracking-wide uppercase bg-teal-500 text-white rounded-lg transition-all duration-200 hover:bg-teal-900 hover:-translate-y-0.5 text-center;
+}
+
+.amplify-heading {
+  @apply font-sans font-semibold leading-relaxed text-gray-800 text-center;
+}
+
+.amplify-text {
+  @apply font-sans leading-relaxed text-gray-600 text-center;
+}
+
+.amplify-field {
+  @apply w-full flex flex-row items-center rounded-lg gap-4;
+}
+
+.amplify-label {
+  @apply font-sans font-medium text-gray-700 text-left min-w-[120px] px-4 bg-primary-opacity rounded-tr-md;
+}
+
+.amplify-field-group__field-wrapper {
+  @apply flex-1 flex justify-end;
+}
+
+.amplify-tabs {
+  @apply border-b-2 border-gray-200 flex justify-center;
+}
+
+.amplify-tabs-item {
+  @apply font-sans font-medium px-8 py-4 border-none text-gray-500 transition-all duration-200 text-center;
+}
+
+.amplify-tabs-item[data-state='active'] {
+  @apply text-blue-600 border-b-2 border-blue-600;
+}
+
+.amplify-flex {
+  @apply flex gap-6;
+}
+
+.amplify-authenticator {
+  @apply border-none rounded-2xl p-10 max-w-lg mx-auto shadow-lg bg-white;
+}
+
+.amplify-alert {
+  @apply border-none rounded-lg p-5 font-sans my-5 bg-gray-100 text-center;
+}
+
+.amplify-divider {
+  @apply border-none h-px my-8 bg-gray-200;
+}
+
+.amplify-selectfield {
+  @apply border-none bg-gray-50 font-sans rounded-lg w-full;
+}
+
+.amplify-textfield {
+  @apply border-none bg-gray-50 rounded-lg w-full;
+}
+
+.amplify-checkbox .amplify-checkbox__button {
+  @apply w-[18px] !important;
+  @apply h-[18px] !important;
+  @apply rounded !important;
+  @apply border-2 border-blue-600 !important;
+}
+
+/*
+.amplify-button[data-variation='link'] {
+  @apply p-0 tracking-normal normal-case text-blue-600 font-normal hover:underline hover:bg-transparent !important;
+}
+*/
+
+.amplify-button[data-variation='primary'] {
+  @apply bg-primary hover:bg-blue-700 !important;
+}
+
+.amplify-visually-hidden {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0 !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
