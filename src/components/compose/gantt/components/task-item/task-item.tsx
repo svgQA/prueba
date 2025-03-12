@@ -7,7 +7,7 @@ import { Bar } from './bar/bar';
 import { BarSmall } from './bar/bar-small';
 import { Milestone } from './milestone/milestone';
 import { Project } from './project/project';
-import style from './task-list.module.css';
+// import style from './task-list.module.css';
 
 export type TaskItemProps = {
   task: BarTask;
@@ -27,12 +27,12 @@ export type TaskItemProps = {
 
 export const TaskItem = (props: TaskItemProps) => {
   const {
+    // arrowIndent,
+    // taskHeight,
+    // rtl,
     task,
-    arrowIndent,
     isDelete,
-    taskHeight,
     isSelected,
-    rtl,
     onEventStart,
   } = {
     ...props,
@@ -64,23 +64,23 @@ export const TaskItem = (props: TaskItemProps) => {
     }
   }, [textRef, task]);
 
-  const getX = () => {
-    const width = task.x2 - task.x1;
-    const hasChild = task.barChildren.length > 0;
-    if (isTextInside.value) {
-      return task.x1 + width * 0.5;
-    }
-    if (rtl && textRef.current) {
-      return (
-        task.x1 -
-        textRef.current.getBBox().width -
-        arrowIndent * +hasChild -
-        arrowIndent * 0.2
-      );
-    } else {
-      return task.x1 + width + arrowIndent * +hasChild + arrowIndent * 0.2;
-    }
-  };
+  // const getX = () => {
+  //   const width = task.x2 - task.x1;
+  //   const hasChild = task.barChildren.length > 0;
+  //   if (isTextInside.value) {
+  //     return task.x1 + width * 0.5;
+  //   }
+  //   if (rtl && textRef.current) {
+  //     return (
+  //       task.x1 -
+  //       textRef.current.getBBox().width -
+  //       arrowIndent * +hasChild -
+  //       arrowIndent * 0.2
+  //     );
+  //   } else {
+  //     return task.x1 + width + arrowIndent * +hasChild + arrowIndent * 0.2;
+  //   }
+  // };
 
   return (
     <g
@@ -110,6 +110,7 @@ export const TaskItem = (props: TaskItemProps) => {
       }}
     >
       {taskItem.value}
+      {/*
       <text
         x={getX()}
         y={task.y + taskHeight * 0.5}
@@ -120,8 +121,9 @@ export const TaskItem = (props: TaskItemProps) => {
         }
         ref={textRef}
       >
-        {/*{task.name}*/}
+        {task.name}
       </text>
+      */}
     </g>
   );
 };

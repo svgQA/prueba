@@ -54,7 +54,7 @@ export const BarDisplay: FunctionComponent<BarDisplayProps> = ({
       />
       <rect
         x={progressX}
-        width={progressWidth}
+        width={isNaN(progressWidth) ? 0 : progressWidth}
         y={y}
         height={height}
         ry={barCornerRadius}
