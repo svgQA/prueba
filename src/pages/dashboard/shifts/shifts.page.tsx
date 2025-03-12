@@ -7,6 +7,8 @@ import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
 import { toast } from 'react-toastify';
+import { CardData } from '@/components/compose/cards';
+
 // import { omitBy, isNull, pick } from 'lodash';
 
 import {
@@ -194,7 +196,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           className='p-1 hover:bg-slate-100 rounded-lg'
           onClick={() => handleViewChange(VIEW_NAME.TABLE)}
         >
-          <span className='vox-icon vx-icon-011'></span>
+          <span className='vox-icon vx-icon-109'></span>
         </button>
         <button
           className='p-1 hover:bg-slate-100 rounded-lg'
@@ -330,13 +332,39 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   return (
     <Section>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+        <CardData
+          title='Turnos Totales Hoy'
+          count={530}
+          subtitle=''
+          color='text-secondary'
+          icon='054'
+        />
+
+        <CardData
+          title='Turnos En Curso'
+          count={50}
+          subtitle=''
+          color='text-primary'
+          icon='052'
+        />
+
+        <CardData
+          title='Turnos Finalizados'
+          count={30}
+          subtitle=''
+          color='text-error'
+          icon='015'
+        />
+      </div>
+
       {buttonMenu}
       {currentView.value === VIEW_NAME.TABLE && (
         <div>
           <Table<IShiftResponse>
             data={shifts.value}
             columns={columns}
-            pageSize={20}
+            pageSize={8}
             visibility={{
               servicePlaceAddress: false,
               city: false,
@@ -564,8 +592,8 @@ export const ShiftsPage: FunctionalComponent = () => {
                                   value={inputKeywords.value}
                                   type='keywords'
                                   onChange={(e) =>
-                                    (inputKeywords.value =
-                                      e.currentTarget.value)
+                                  (inputKeywords.value =
+                                    e.currentTarget.value)
                                   }
                                   placeholder='Escribe una palabra clave'
                                   className='flex-grow p-2 border rounded-md'
