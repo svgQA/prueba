@@ -55,16 +55,10 @@ export const Table = <T,>({
 }: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: pageSize,
-  });
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: pageSize });
   const [expanded, setExpanded] = useState<ExpandedState>({});
   const [grouping, setGrouping] = useState<GroupingState>([]); // AGREGADO estado para agrupamiento
-
-  const [columnOrder, setColumnOrder] = useState(() =>
-    columnsData.map((c) => c.id as string)
-  );
+  const [columnOrder, setColumnOrder] = useState(() => columnsData.map((c) => c.id as string));
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
@@ -96,10 +90,7 @@ export const Table = <T,>({
 
   const memoizedLeafColumns = useMemo(() => {
     return table.getAllLeafColumns().map((column) => {
-      const columnHeader =
-        typeof column.columnDef.header !== 'string'
-          ? column.id
-          : (column.columnDef.header as string);
+      const columnHeader = typeof column.columnDef.header !== 'string' ? column.id : (column.columnDef.header as string);
       return { label: columnHeader, id: column.id };
     });
   }, []);
@@ -142,16 +133,15 @@ export const Table = <T,>({
             <div>
               {column.getCanPin() && (
                 <span
-                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${
-                    column.getIsPinned() ? 'text-error' : 'text-primary'
-                  }`}
+                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'
+                    }`}
                   onClick={() =>
                     column.pin(column.getIsPinned() ? false : 'left')
                   }
                 />
               )}
             </div>
-            {}
+            { }
             <Switch
               name={`ch-hidden-${column.id}`}
               id={`ch-hidden-${column.id}`}
@@ -190,9 +180,8 @@ export const Table = <T,>({
                     >
                       <span
                         onClick={() => row.toggleExpanded()}
-                        className={`vox-icon ${
-                          row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
-                        } cursor-pointer size-sm`}
+                        className={`vox-icon ${row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
+                          } cursor-pointer size-sm`}
                       />
                     </td>
                   )}
@@ -214,8 +203,8 @@ export const Table = <T,>({
                 </tr>
                 {
                   row.getIsExpanded() &&
-                    row.subRows.length > 0 &&
-                    renderRows(row.subRows) // Renderizamos subfilas recursivamente
+                  row.subRows.length > 0 &&
+                  renderRows(row.subRows) // Renderizamos subfilas recursivamente
                 }
               </Fragment>
             );
@@ -337,33 +326,68 @@ export const Table = <T,>({
             disabled={!table.getCanPreviousPage()}
             type='button'
             label='back'
-            icon='123'
+            icon='003'
             name='back'
+            className='mt-1'
           />
-          {table.getPageOptions().map((page, index) => (
-            <button
-              key={`${page}-${index}`}
-              onClick={() => table.setPageIndex(page)}
-              className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${
-                table.getState().pagination.pageIndex === page
-                  ? 'font-bold'
-                  : ''
+
+          {/* Primera página */}
+          <button
+            onClick={() => table.setPageIndex(0)}
+            className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${table.getState().pagination.pageIndex === 0 ? 'font-bold' : ''
               }`}
-            >
-              {page + 1}
-            </button>
-          ))}
-          {table.getPageCount() > 3 &&
-          table.getState().pagination.pageIndex < table.getPageCount() - 3 ? (
+          >
+            1
+          </button>
+
+          {/* Puntos suspensivos si estamos lejos del inicio */}
+          {table.getState().pagination.pageIndex > 2 && (
             <span className='px-3 py-1 rounded'>...</span>
-          ) : null}
+          )}
+
+          {/* Páginas cercanas a la actual */}
+          {Array.from({ length: table.getPageCount() }, (_, i) => i)
+            .filter(page =>
+              page > 0 &&
+              page < table.getPageCount() - 1 &&
+              Math.abs(page - table.getState().pagination.pageIndex) <= 1
+            )
+            .map(page => (
+              <button
+                key={page}
+                onClick={() => table.setPageIndex(page)}
+                className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${table.getState().pagination.pageIndex === page ? 'font-bold' : ''
+                  }`}
+              >
+                {page + 1}
+              </button>
+            ))}
+
+          {/* Puntos suspensivos si estamos lejos del final */}
+          {table.getState().pagination.pageIndex < table.getPageCount() - 3 && (
+            <span className='px-3 py-1 rounded'>...</span>
+          )}
+
+          {/* Última página (si hay más de una) */}
+          {table.getPageCount() > 1 && (
+            <button
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${table.getState().pagination.pageIndex === table.getPageCount() - 1 ? 'font-bold' : ''
+                }`}
+            >
+              {table.getPageCount()}
+            </button>
+          )}
+
           <Button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
             type='button'
             label='next'
-            icon='123'
+            icon='004'
             name='next'
+            className='mt-1'
+            end={true}
           />
         </div>
       )}

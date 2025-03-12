@@ -52,7 +52,7 @@ export const FormsPage: FunctionComponent = () => {
       <Table<IResponseResponse>
         data={responses.value}
         columns={columns}
-        pageSize={20}
+        pageSize={8}
       />
     </Section>
   );
