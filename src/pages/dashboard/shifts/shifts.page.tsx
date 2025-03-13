@@ -37,11 +37,11 @@ export const ShiftsPage: FunctionalComponent = () => {
   const initialValues: Signal<Partial<FormData>> = useSignal({});
 
   const [isChecked, setIsChecked] = useState(true);
-  const [view, setView] = useState<ViewMode>(ViewMode.Day);
+  const [view, setView] = useState<ViewMode>(ViewMode.HalfDay);
   // const [calendarView /*setCalendarView*/] = useState<string>('timeGridWeek');
   const selectedTask = useSignal<Task | null>(null);
   // const selectedTaskCalendar = useSignal<ISingleTaskCalendar | null>(null);
-  const startDate = dayjs().subtract(1, 'day').toDate();
+  const startDate = dayjs().subtract(4, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
     startDate,
@@ -64,9 +64,12 @@ export const ShiftsPage: FunctionalComponent = () => {
   }, [view]);
 
   const getGanttHandler = async () => {
-    const response = await ShiftService.get_gantt();
+    const response = await ShiftService.get_gantt({
+      page: 1,
+      items: 100,
+      start: startDate.toISOString(),
+    });
     if (!response.getStatus()) return;
-
     setGanttShifts((prev) => ({
       ...prev,
       users: response.getMany(),
@@ -94,6 +97,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     await getServices();
     await getUsers();
   };
+
   const onSubmit = async (model: FormData) => {
     const { start, end } = model;
     let request;
@@ -207,7 +211,11 @@ export const ShiftsPage: FunctionalComponent = () => {
           />
         </div>
       )}
-
+      {/*
+      	La fecha que se esta obteniendo es el rango de busqueda de inicio, pero claro las tareas tienen una fecha final
+       que puede ser superior al rango de startDate y endDate que es el caso que tengo de ejemplo, donde startDate y
+       endDate son: 2025-03-09 2025-03-16, pero la fecha final de una tarea es 2025-03-28
+       */}
       {currentView.value === VIEW_NAME.SCHEDULER && (
         <div className='max-h-screen'>
           <div className='py-2 flex flex-row justify-between px-1'>

@@ -73,8 +73,9 @@ const GanttComponent: ComponentType<GanttProps> = ({
   const taskListRef = useRef<HTMLDivElement>(null);
   const [dateSetup, setDateSetup] = useState<DateSetup>(() => {
     const [startDate, endDate] = ganttDateRange(
-      tasks.startDate,
-      tasks.endDate,
+      // tasks.startDate,
+      // tasks.endDate,
+      tasks,
       viewMode,
       preStepsCount
     );
@@ -105,12 +106,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
   useEffect(() => {
-    const [startDate, endDate] = ganttDateRange(
-      tasks.startDate,
-      tasks.endDate,
-      viewMode,
-      preStepsCount
-    );
+    const [startDate, endDate] = ganttDateRange(tasks, viewMode, preStepsCount);
     let newDates = seedDates(startDate, endDate, viewMode);
     if (rtl) {
       newDates = newDates.reverse();

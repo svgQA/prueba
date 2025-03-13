@@ -179,7 +179,7 @@ export const StandardTooltipContent = ({
           {range !== 0 && (
             <div>
               <p className='font-medium'>Duration</p>
-              <p>{~~(range / (1000 * 60 * 60 * 24))} days</p>
+              <p>{~~(range / (1000 * 60 * 60))} hours</p>
             </div>
           )}
           {task.progress > 0 && <Gauge progress={task.progress} />}
