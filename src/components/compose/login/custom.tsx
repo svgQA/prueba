@@ -7,8 +7,8 @@ import './styles.css';
 
 const CustomLoginContainer = ({ children }: any) => {
   return (
-    <div className='w-full h-screen flex'>
-      <div className='w-4/6 bg-gradient-to-r from-cyan-500 to-emerald-400 flex items-center justify-center'>
+    <div className='w-full h-screen flex bg-gradient-to-r from-cyan-500 to-emerald-400 items-center'>
+      <div className='flex items-center justify-center'>
         <div className='p-12 max-w-3xl text-white'>
           <Logo title='Tryvoo' slogan='' />
           <h1 className='text-4xl font-bold mb-6'>
@@ -21,7 +21,7 @@ const CustomLoginContainer = ({ children }: any) => {
         </div>
       </div>
 
-      <div className='w-2/6 flex items-center justify-center bg-white shadow-lg'>
+      <div className='bg-white flex items-center h-fit mr-44 px-4 py-6 rounded-lg'>
         <div className='w-full max-w-md'>{children}</div>
       </div>
     </div>
