@@ -30,7 +30,7 @@ const CustomLoginContainer = ({ children }: any) => {
         </div>
       </div>
 
-      <div className='bg-white flex items-center px-4 py-6 rounded-lg'>
+      <div className='bg-white flex items-center px-4 py-6 rounded-lg min-w-96 min-h-96'>
         <div className='w-full max-w-md'>{children}</div>
       </div>
     </div>

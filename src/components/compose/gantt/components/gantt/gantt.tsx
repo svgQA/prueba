@@ -72,13 +72,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
   const [dateSetup, setDateSetup] = useState<DateSetup>(() => {
-    const [startDate, endDate] = ganttDateRange(
-      // tasks.startDate,
-      // tasks.endDate,
-      tasks,
-      viewMode,
-      preStepsCount
-    );
+    const [startDate, endDate] = ganttDateRange(tasks, viewMode, preStepsCount);
     return { viewMode, dates: seedDates(startDate, endDate, viewMode) };
   });
   const currentViewDate = useSignal<Date | undefined>(undefined);
@@ -91,7 +85,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   });
 
   const taskHeight = useMemo(
-    () => (rowHeight * barFill) / 100,
+    () => (rowHeight * barFill) / 100 + 16,
     [rowHeight, barFill]
   );
 
@@ -374,6 +368,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   const handleSelectedTask = useCallback(
     (taskId: string | number) => {
+      console.log('CLICK: => selected');
       const newSelectedTask = barTasks.find((t) => t.id === taskId);
       const oldSelectedTask = barTasks.find(
         (t) => !!selectedTask && t.id === selectedTask.id
@@ -407,6 +402,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   const handleExpanderClick = useCallback(
     (task: Task) => {
+      console.log('CLICK: => expander');
       if (onExpanderClick && task.hideChildren !== undefined) {
         onExpanderClick({ ...task, hideChildren: !task.hideChildren });
       }
@@ -563,6 +559,9 @@ const GanttComponent: ComponentType<GanttProps> = ({
           ganttHeight={ganttFullHeight}
           scrollY={scrollY.value}
           scrollX={scrollX.value}
+          onScrollX={(value: number) => {
+            scrollX.value = value;
+          }}
         />
         {ganttEvent.changedTask && (
           <Tooltip

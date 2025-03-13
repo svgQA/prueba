@@ -1,5 +1,5 @@
 import './assets/index.css';
-import { useRef, useEffect, useCallback } from 'preact/hooks';
+import { useRef, useEffect, useCallback, useMemo } from 'preact/hooks';
 import { IOnboardingProps, DEFAULT_STEP, STEPS } from './utils';
 import { Form } from 'react-final-form';
 import { getUserId } from '@/store/slices';
@@ -49,40 +49,46 @@ export const OnBordingModal = ({ closed, children }: IOnboardingProps) => {
     }
   }, [step.value]);
 
-  const headerContent = (
-    <>
-      <ThemeButton />
-      <span
-        className={`text-sm px-3 ${step.value > 1 ? 'visibe' : 'invisible'}`}
-      >
-        Paso {step.value - 1} de {STEPS}
-      </span>
-    </>
+  const headerContent = useMemo(
+    () => (
+      <>
+        <ThemeButton />
+        <span
+          className={`text-sm px-3 ${step.value > 1 ? 'visibe' : 'invisible'}`}
+        >
+          Paso {step.value - 1} de {STEPS}
+        </span>
+      </>
+    ),
+    [step.value]
   );
 
-  const footerContent = (
-    <>
-      <button
-        className={`onboarding-buttons bg-primary ${step.value > 1 ? 'visible' : 'invisible'}`}
-        type='button'
-        onClick={handlePrev}
-      >
-        Anterior
-      </button>
-      <button
-        className={`onboarding-buttons bg-primary ${step.value === STEPS ? 'invisible' : 'visible'}`}
-        type='button'
-        onClick={handleNext}
-      >
-        Siguiente
-      </button>
-      <button
-        className={`onboarding-buttons bg-secondary ${step.value === STEPS ? 'visible' : 'invisible'}`}
-        type='submit'
-      >
-        Finalizar
-      </button>
-    </>
+  const footerContent = useMemo(
+    () => (
+      <div className='flex dark:bg-b-dark-light justify-end items-center gap-2 p-4 bg-gray-50'>
+        <button
+          className={`onboarding-buttons bg-primary ${step.value > 1 ? 'visible' : 'invisible'}`}
+          type='button'
+          onClick={handlePrev}
+        >
+          Anterior
+        </button>
+        <button
+          className={`onboarding-buttons bg-primary ${step.value === STEPS ? 'invisible' : 'visible'}`}
+          type='button'
+          onClick={handleNext}
+        >
+          Siguiente
+        </button>
+        <button
+          className={`onboarding-buttons bg-secondary ${step.value === STEPS ? 'visible' : 'invisible'}`}
+          type='submit'
+        >
+          Finalizar
+        </button>
+      </div>
+    ),
+    [step.value, handleNext, handlePrev]
   );
 
   return (
@@ -92,20 +98,15 @@ export const OnBordingModal = ({ closed, children }: IOnboardingProps) => {
       header={headerContent}
       footer={footerContent}
     >
-      {/* width='min-w-[500px] max-w-[800px]' */}
-      <div>
-        <Form
-          onSubmit={onCreateTenant}
-          subscription={{ submitting: true, pristine: true }}
-          render={({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              <OnBoardingSteps sliderRef={sliderRef}>
-                {children}
-              </OnBoardingSteps>
-            </form>
-          )}
-        ></Form>
-      </div>
+      <Form
+        onSubmit={onCreateTenant}
+        subscription={{ submitting: true, pristine: true }}
+        render={({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <OnBoardingSteps sliderRef={sliderRef}>{children}</OnBoardingSteps>
+          </form>
+        )}
+      ></Form>
     </Modal>
   );
 };

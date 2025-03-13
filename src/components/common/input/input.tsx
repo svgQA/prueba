@@ -29,6 +29,15 @@ export const Input = ({
   disabled,
   ...props
 }: IInputProps) => {
+  const handleKeyUp = (e: KeyboardEvent) => {
+    e.preventDefault();
+    if (e.key === 'Enter' && onClick) {
+      onClick?.(value);
+      return;
+    }
+    // onKeyUp?.(e);
+  };
+
   return (
     <div id={id} className='w-full my-1'>
       {label && (
@@ -49,7 +58,7 @@ export const Input = ({
           className={`${normal ? '' : 'capitalize'} px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'} [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
           onChange={onChange}
           name={name}
-          onKeyUp={onKeyUp}
+          onKeyUp={handleKeyUp}
           type={type}
           value={value instanceof Date ? value.toISOString() : value}
           step={step}

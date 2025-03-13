@@ -16,4 +16,5 @@ export interface IButtonProps extends IComponentProps {
   padding?: string;
   text?: string;
   textColor?: string;
+  form?: string;
 }

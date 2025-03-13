@@ -6,20 +6,19 @@ import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
-import { toast } from 'react-toastify';
 
 import {
   GeneralTask,
   Task,
+  User,
   ViewMode,
 } from '@/components/compose/gantt/types/public-types';
 import dayjs from 'dayjs';
 import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
 
-import { USER_TYPE, UserService } from '@/services/user';
-import { TaskForm } from './components/modal.upsert';
 import { FormData } from './interface';
+import { TaskForm } from './components/updaser.modal';
 
 enum VIEW_NAME {
   TABLE,
@@ -31,25 +30,20 @@ export const ShiftsPage: FunctionalComponent = () => {
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const showModal = useSignal<boolean>(false);
   const shifts = useSignal<IShiftResponse[]>([]);
-  const services = useSignal([]);
-  const users = useSignal([]);
   const id = useSignal();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
 
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.HalfDay);
-  // const [calendarView /*setCalendarView*/] = useState<string>('timeGridWeek');
   const selectedTask = useSignal<Task | null>(null);
-  // const selectedTaskCalendar = useSignal<ISingleTaskCalendar | null>(null);
   const startDate = dayjs().subtract(4, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
+  const userSelected = useSignal<User | undefined>(undefined);
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
     startDate,
     endDate,
     users: [],
   });
-  const inputKeywords = useSignal('');
-  // const [localEvents, setLocalEvents] = useState<ISingleTaskCalendar[]>([]);
 
   const getShiftHandler = async () => {
     const response = await ShiftService.get_all();
@@ -75,55 +69,10 @@ export const ShiftsPage: FunctionalComponent = () => {
       users: response.getMany(),
     }));
   };
-  const getServices = async () => {
-    const request: any = await ShiftService.getServices();
-    services.value = request.data;
-  };
-
-  const getUsers = async () => {
-    const request: any = await UserService.get_all({
-      items: 100,
-      page: 1,
-      userType: USER_TYPE.USER,
-    });
-    // Monster, en vez de hacer esto como un filter aqui, lo haces en las columnas
-    // o en la presentaciòn del expandes, porque te evita hacer un ciclo innecesario.
-    users.value = request.data.map((user: any) => {
-      return { ...user, fullname: `${user.name} ${user.surname}` };
-    });
-  };
-
-  const main = async () => {
-    await getServices();
-    await getUsers();
-  };
-
-  const onSubmit = async (model: FormData) => {
-    const { start, end } = model;
-    let request;
-    let message: string;
-
-    if (start) model.start = dayjs(start).toISOString();
-    if (end) model.end = dayjs(end).toISOString();
-
-    if (!id.value) {
-      request = await ShiftService.createActivity(model);
-      message = 'Turno creado exitosamente!';
-    } else {
-      request = await ShiftService.updateActivity(model, id.value);
-      message = 'Turno editado exitosamente!';
-    }
-
-    if (!request.getStatus()) return;
-    toast.success(message, { position: 'top-right' });
-    showModal.value = false;
-    getGanttHandler();
-  };
 
   useEffect(() => {
     document.title = 'VX - Shift Service';
     getShiftHandler();
-    main();
   }, []);
 
   useEffect(() => {
@@ -170,16 +119,9 @@ export const ShiftsPage: FunctionalComponent = () => {
     showModal.value = true;
   }, []);
 
-  const handleSelect = useCallback((task: Task, isSelected: any) => {
-    console.log(task.name + ' has ' + (isSelected ? 'selected' : 'unselected'));
-  }, []);
-
-  const handleExpanderClick = useCallback((task: Task) => {
-    console.log('On expander click Id:' + task.id);
-  }, []);
-
-  const handleTaskDelete = useCallback((task: Task) => {
-    window.confirm('Are you sure about ' + task.name + ' ?');
+  const handleClick = useCallback((task: Task) => {
+    selectedTask.value = task;
+    // showModal.value = true;
   }, []);
 
   const handleCreacteNewShift = () => {
@@ -187,35 +129,37 @@ export const ShiftsPage: FunctionalComponent = () => {
   };
 
   const handleUserClick = (id: string | number) => {
-    console.log('SELECCIONADO: ', id);
+    userSelected.value = ganttShifts.users.find((user) => user.id === id);
+    showModal.value = true;
   };
 
+  const handleTaskDelete = useCallback((task: Task) => {
+    window.confirm('Are you sure about ' + task.name + ' ?');
+  }, []);
+
+  const handlOnCloseModal = () => {
+    userSelected.value = undefined;
+    showModal.value = !showModal.value;
+  };
   return (
     <Section>
       {buttonMenu}
       {currentView.value === VIEW_NAME.TABLE && (
-        <div>
-          <Table<IShiftResponse>
-            data={shifts.value}
-            columns={columns}
-            pageSize={20}
-            visibility={{
-              servicePlaceAddress: false,
-              city: false,
-              employeeId: false,
-              duration: false,
-              userEmail: false,
-              userPhone: false,
-              serviceRound: false,
-            }}
-          />
-        </div>
+        <Table<IShiftResponse>
+          data={shifts.value}
+          columns={columns}
+          pageSize={20}
+          visibility={{
+            servicePlaceAddress: false,
+            city: false,
+            employeeId: false,
+            duration: false,
+            userEmail: false,
+            userPhone: false,
+            serviceRound: false,
+          }}
+        />
       )}
-      {/*
-      	La fecha que se esta obteniendo es el rango de busqueda de inicio, pero claro las tareas tienen una fecha final
-       que puede ser superior al rango de startDate y endDate que es el caso que tengo de ejemplo, donde startDate y
-       endDate son: 2025-03-09 2025-03-16, pero la fecha final de una tarea es 2025-03-28
-       */}
       {currentView.value === VIEW_NAME.SCHEDULER && (
         <div className='max-h-screen'>
           <div className='py-2 flex flex-row justify-between px-1'>
@@ -238,25 +182,22 @@ export const ShiftsPage: FunctionalComponent = () => {
             onDelete={handleTaskDelete}
             onDoubleClick={handleDblClick}
             onUserClick={handleUserClick}
-            onSelect={handleSelect}
-            onExpanderClick={handleExpanderClick}
+            onClick={handleClick}
+            // onSelect={handleSelect}
+            // onExpanderClick={handleExpanderClick}
             listCellWidth={isChecked ? '155px' : ''}
             columnWidth={columnWidth}
           />
         </div>
       )}
-
-      {showModal.value && (
-        <TaskForm
-          id={id}
-          showModal={() => (showModal.value = false)}
-          onSubmit={onSubmit}
-          users={users}
-          services={services}
-          inputKeywords={inputKeywords}
-          initialValues={initialValues}
-        />
-      )}
+      <TaskForm
+        id={id}
+        initialValues={initialValues}
+        closed={showModal.value}
+        onClose={handlOnCloseModal}
+        posSave={getGanttHandler}
+        userSelected={userSelected.value}
+      />
     </Section>
   );
 };

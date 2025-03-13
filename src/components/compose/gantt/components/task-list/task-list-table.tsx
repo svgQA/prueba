@@ -54,13 +54,6 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
       }}
     >
       {tasks.users.map((t) => {
-        // let expanderSymbol = '';
-        // if (t.hideChildren === false) {
-        //   expanderSymbol = '▼';
-        // } else if (t.hideChildren === true) {
-        //   expanderSymbol = '▶';
-        // }
-
         return (
           <div
             className={styles.taskListTableRow}
@@ -70,7 +63,7 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
             <div
               className='hover:bg-m5 w-64 h-12 cursor-pointer items-center flex rounded-sm hover:text-white'
               title={t.name}
-              onCut={() => onUserClick?.(t.id)}
+              onClick={() => onUserClick?.(t.id)}
             >
               <div
                 className={`${styles.taskListNameWrapper} flex justify-start items-center px-4`}

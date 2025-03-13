@@ -145,11 +145,14 @@ export const StandardTooltipContent = ({
   const endDate = new Date(task.end);
   const range = endDate.getTime() - startDate.getTime();
   return (
-    <div className='bg-white rounded-lg shadow-lg p-2 max-w-3xl' style={style}>
+    <div
+      className='bg-white rounded-lg shadow-lg p-2 max-w-3xl border-2 border-gray-400'
+      style={style}
+    >
       <div className='flex'>
         <div className='w-[70%]'>
           <h3 className='font-bold text-lg text-gray-900 mb-4 max-w-72 line-clamp-2 break-words'>
-            {task.name}
+            [{task.id}] {task.name}
           </h3>
 
           <div className='space-y-4 text-sm text-gray-600'>
@@ -182,7 +185,7 @@ export const StandardTooltipContent = ({
               <p>{~~(range / (1000 * 60 * 60))} hours</p>
             </div>
           )}
-          {task.progress > 0 && <Gauge progress={task.progress} />}
+          <Gauge progress={task.progress || 0} />
         </div>
       </div>
     </div>
