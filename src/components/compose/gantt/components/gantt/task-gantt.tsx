@@ -1,4 +1,5 @@
-import { useRef, useEffect, useState } from 'preact/hooks';
+import { useRef, useEffect } from 'preact/hooks';
+import { useSignal } from '@preact/signals';
 import type { VNode } from 'preact';
 import { GridProps, Grid } from '../grid/grid';
 import { CalendarProps, Calendar } from '../calendar/calendar';
@@ -29,9 +30,9 @@ export const TaskGantt = ({
   const verticalGanttContainerRef = useRef<HTMLDivElement>(null);
 
   const newBarProps = { ...barProps, svg: ganttSVGRef };
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
+  const isDragging = useSignal(false);
+  const startX = useSignal(0);
+  const scrollLeft = useSignal(0);
 
   useEffect(() => {
     if (horizontalContainerRef.current) {
@@ -51,25 +52,25 @@ export const TaskGantt = ({
       return;
     }
 
-    setIsDragging(true);
-    setStartX(e.pageX - verticalGanttContainerRef.current!.offsetLeft);
-    setScrollLeft(verticalGanttContainerRef.current!.scrollLeft);
+    isDragging.value = true;
+    startX.value = e.pageX - verticalGanttContainerRef.current!.offsetLeft;
+    scrollLeft.value = verticalGanttContainerRef.current!.scrollLeft;
   };
 
   const handleMouseLeave = () => {
-    setIsDragging(false);
+    isDragging.value = false;
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false);
+    isDragging.value = false;
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging) return;
+    if (!isDragging.value) return;
     e.preventDefault();
     const x = e.pageX - verticalGanttContainerRef.current!.offsetLeft;
-    const walk = (x - startX) * 2;
-    const newScrollLeft = scrollLeft - walk;
+    const walk = (x - startX.value) * 2;
+    const newScrollLeft = scrollLeft.value - walk;
     verticalGanttContainerRef.current!.scrollLeft = newScrollLeft;
     onScrollX?.(newScrollLeft);
   };
