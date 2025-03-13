@@ -4,7 +4,7 @@ import { memo } from 'preact/compat';
 
 type CardProps = {
   title: string;
-  count: number;
+  count: number | string;
   subtitle: string;
   color: string;
   icon: string;

@@ -343,7 +343,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
         <CardData
           title='Turnos En Curso'
-          count={50}
+          count='50%'
           subtitle=''
           color='text-primary'
           icon='052'
@@ -351,7 +351,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
         <CardData
           title='Turnos Finalizados'
-          count={30}
+          count='30%'
           subtitle=''
           color='text-error'
           icon='015'
