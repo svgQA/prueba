@@ -7,7 +7,7 @@ import { ColumnFiltersState } from '@tanstack/react-table';
 export const Search = ({
   id,
   keys = [],
-  lenThreshold = 3,
+  lenThreshold = 0,
   placeholder,
   value = [],
   onChange,
