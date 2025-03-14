@@ -5,7 +5,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   label,
   id,
   name,
-  type,
+  type = 'button',
   icon,
   onClick,
   rounded,

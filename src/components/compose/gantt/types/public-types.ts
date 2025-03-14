@@ -18,6 +18,8 @@ export interface Task {
   id: string | number;
   end: string | Date;
   start: string | Date;
+  serviceId: string | number;
+  userId: string | number;
   type: TaskType;
   name: string;
   status: TaskStatus;

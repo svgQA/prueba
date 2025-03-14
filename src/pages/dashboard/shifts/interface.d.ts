@@ -7,6 +7,8 @@ export interface FormData {
   projectId: number;
   placeId: number;
   workstationId: number;
+  serviceId: string | number;
+  employeedId: string | number;
   roundId: number;
   externalId: string;
   keywords: string[];

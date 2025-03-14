@@ -1,6 +1,6 @@
 import { FunctionalComponent } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { useSignal, Signal } from '@preact/signals';
+import { useSignal } from '@preact/signals';
 import { ShiftService } from '@/services';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
@@ -17,7 +17,7 @@ import dayjs from 'dayjs';
 import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
 
-import { FormData } from './interface';
+// import { FormData } from './interface';
 import { TaskForm } from './components/updaser.modal';
 
 enum VIEW_NAME {
@@ -30,15 +30,16 @@ export const ShiftsPage: FunctionalComponent = () => {
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const showModal = useSignal<boolean>(false);
   const shifts = useSignal<IShiftResponse[]>([]);
-  const id = useSignal();
-  const initialValues: Signal<Partial<FormData>> = useSignal({});
+  // const initialValues: Signal<Partial<FormData>> = useSignal({});
 
   const [isChecked, setIsChecked] = useState(true);
-  const [view, setView] = useState<ViewMode>(ViewMode.HalfDay);
-  const selectedTask = useSignal<Task | null>(null);
+  const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
+
+  const [taskSelected, setTaskSelected] = useState<Task>();
+  const [userSelected, setUserSelected] = useState<User>();
+
   const startDate = dayjs().subtract(4, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
-  const userSelected = useSignal<User | undefined>(undefined);
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
     startDate,
     endDate,
@@ -106,41 +107,62 @@ export const ShiftsPage: FunctionalComponent = () => {
   );
 
   const handleTaskChange = useCallback(
-    (task: Task) => {
-      if (selectedTask.value) {
-        selectedTask.value = { ...selectedTask.value, ...task };
+    (_: Task) => {
+      if (taskSelected) {
+        // setTaskSelected(() => ({ ...taskSelected, ...task }));
       }
     },
     [shifts]
   );
 
   const handleDblClick = useCallback((task: Task) => {
-    selectedTask.value = task;
+    // console.log('TASK SELECTED:', task);
+    setTaskSelected(() => task);
     showModal.value = true;
   }, []);
 
-  const handleClick = useCallback((task: Task) => {
-    selectedTask.value = task;
-    // showModal.value = true;
-  }, []);
+  const handleClick = useCallback(
+    (/* task: Task */) => {
+      // taskSelected.value = task;
+      // showModal.value = true;
+    },
+    []
+  );
 
   const handleCreacteNewShift = () => {
-    showModal.value = true;
+    cleanSelectedData();
+    toggleModal();
   };
 
-  const handleUserClick = (id: string | number) => {
-    userSelected.value = ganttShifts.users.find((user) => user.id === id);
-    showModal.value = true;
+  const toggleModal = () => {
+    showModal.value = !showModal.value;
   };
+
+  const handleUserClick = useCallback(
+    (id: string | number) => {
+      const selectedUser = ganttShifts.users.find((user) => user.id === id);
+      if (selectedUser) {
+        setUserSelected(selectedUser);
+        showModal.value = true;
+      }
+    },
+    [ganttShifts.users]
+  );
 
   const handleTaskDelete = useCallback((task: Task) => {
     window.confirm('Are you sure about ' + task.name + ' ?');
   }, []);
 
-  const handlOnCloseModal = () => {
-    userSelected.value = undefined;
-    showModal.value = !showModal.value;
-  };
+  const handlOnCloseModal = useCallback(() => {
+    cleanSelectedData();
+    toggleModal();
+  }, []);
+
+  const cleanSelectedData = useCallback(() => {
+    setUserSelected(undefined);
+    setTaskSelected(undefined);
+  }, []);
+
   return (
     <Section>
       {buttonMenu}
@@ -183,20 +205,19 @@ export const ShiftsPage: FunctionalComponent = () => {
             onDoubleClick={handleDblClick}
             onUserClick={handleUserClick}
             onClick={handleClick}
-            // onSelect={handleSelect}
-            // onExpanderClick={handleExpanderClick}
             listCellWidth={isChecked ? '155px' : ''}
             columnWidth={columnWidth}
           />
         </div>
       )}
+
       <TaskForm
-        id={id}
-        initialValues={initialValues}
+        // initialValues={initialValues}
         closed={showModal.value}
         onClose={handlOnCloseModal}
         posSave={getGanttHandler}
-        userSelected={userSelected.value}
+        userSelected={userSelected}
+        taskSelected={taskSelected}
       />
     </Section>
   );
