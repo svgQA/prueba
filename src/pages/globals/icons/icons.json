@@ -1523,5 +1523,135 @@
     "name": "vx-icon-305",
     "code": "\\0238",
     "number": "305"
+  },
+  {
+    "name": "vx-icon-306",
+    "code": "\\0239",
+    "number": "306"
+  },
+  {
+    "name": "vx-icon-307",
+    "code": "\\023A",
+    "number": "307"
+  },
+  {
+    "name": "vx-icon-308",
+    "code": "\\023B",
+    "number": "308"
+  },
+  {
+    "name": "vx-icon-309",
+    "code": "\\023C",
+    "number": "309"
+  },
+  {
+    "name": "vx-icon-310",
+    "code": "\\023D",
+    "number": "310"
+  },
+  {
+    "name": "vx-icon-311",
+    "code": "\\023E",
+    "number": "311"
+  },
+  {
+    "name": "vx-icon-312",
+    "code": "\\023F",
+    "number": "312"
+  },
+  {
+    "name": "vx-icon-313",
+    "code": "\\0240",
+    "number": "313"
+  },
+  {
+    "name": "vx-icon-314",
+    "code": "\\0241",
+    "number": "314"
+  },
+  {
+    "name": "vx-icon-315",
+    "code": "\\0242",
+    "number": "315"
+  },
+  {
+    "name": "vx-icon-316",
+    "code": "\\0243",
+    "number": "316"
+  },
+  {
+    "name": "vx-icon-317",
+    "code": "\\0244",
+    "number": "317"
+  },
+  {
+    "name": "vx-icon-318",
+    "code": "\\0245",
+    "number": "318"
+  },
+  {
+    "name": "vx-icon-319",
+    "code": "\\0246",
+    "number": "319"
+  },
+  {
+    "name": "vx-icon-320",
+    "code": "\\0247",
+    "number": "320"
+  },
+  {
+    "name": "vx-icon-321",
+    "code": "\\0248",
+    "number": "321"
+  },
+  {
+    "name": "vx-icon-322",
+    "code": "\\0249",
+    "number": "322"
+  },
+  {
+    "name": "vx-icon-323",
+    "code": "\\024A",
+    "number": "323"
+  },
+  {
+    "name": "vx-icon-324",
+    "code": "\\024B",
+    "number": "324"
+  },
+  {
+    "name": "vx-icon-325",
+    "code": "\\024C",
+    "number": "325"
+  },
+  {
+    "name": "vx-icon-326",
+    "code": "\\024D",
+    "number": "326"
+  },
+  {
+    "name": "vx-icon-327",
+    "code": "\\024E",
+    "number": "327"
+  },
+  {
+    "name": "vx-icon-328",
+    "code": "\\024F",
+    "number": "328"
+  },
+  {
+    "name": "vx-icon-329",
+    "code": "\\0250",
+    "number": "329"
+  },
+  {
+    "name": "vx-icon-330",
+    "code": "\\0251",
+    "number": "330"
+  },
+  {
+    "name": "vx-icon-331",
+    "code": "\\0252",
+    "number": "331"
   }
 ]
