@@ -172,7 +172,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
             if (!values.address) errors.address = 'Required';
             return errors;
           }}
-          render={({ handleSubmit, form, submitting, pristine, values }) => (
+          render={({ handleSubmit, form, submitting, pristine }) => (
             <form onSubmit={handleSubmit} className='space-y-6'>
               {/** FORMULARIO PRINCIPAL */}
               <div className='grid grid-cols-4 gap-3'>

@@ -114,7 +114,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     };
 
     return (
-      <section className='w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
+      <section className='bg-red w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
         <Loading />
         <Sidebar
           id='sidebar'
