@@ -306,8 +306,8 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className="relative w-full my-2 flex items-center justify-between">
-        {button && <div className="flex items-center">{button}</div>}
+      <div className="relative w-full my-2 flex items-center justify-end">
+        {button && <div className="mr-auto">{button}</div>}
         {!unsearch && (
           <Search
             id="search-general"
