@@ -16,7 +16,7 @@ import {
   GroupingState, // AGREGADO
   Row,
 } from '@tanstack/react-table';
-import { useMemo, useState } from 'preact/hooks';
+import { useCallback, useMemo, useState } from 'preact/hooks';
 import { ITableProps } from './interface';
 
 import { Search } from '../search/search';
@@ -40,8 +40,9 @@ import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
 import { Button } from '../button/button';
 import { Switch } from '../switch/switch';
-import { Group } from './components/group/group'; // Ya agregado antes
+// import { Group } from './components/group/group'; // Ya agregado antes
 import { ROW_ACTIONS } from './enum';
+import { Group } from './components/group';
 
 export const Table = <T,>({
   data,
@@ -52,6 +53,7 @@ export const Table = <T,>({
   visibility,
   onClickAction,
   unsearch,
+  button,
 }: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -60,8 +62,7 @@ export const Table = <T,>({
     pageSize: pageSize,
   });
   const [expanded, setExpanded] = useState<ExpandedState>({});
-  const [grouping, setGrouping] = useState<GroupingState>([]); // AGREGADO estado para agrupamiento
-
+  const [grouping, setGrouping] = useState<GroupingState>([]);
   const [columnOrder, setColumnOrder] = useState(() =>
     columnsData.map((c) => c.id as string)
   );
@@ -75,18 +76,18 @@ export const Table = <T,>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    getGroupedRowModel: getGroupedRowModel(), // AGREGADO para agrupamiento
+    getGroupedRowModel: getGroupedRowModel(),
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     onExpandedChange: setExpanded,
-    onGroupingChange: setGrouping, // AGREGADO
+    onGroupingChange: setGrouping,
     state: {
       sorting,
       pagination,
       expanded,
       columnOrder,
       columnFilters,
-      grouping, // AGREGADO
+      grouping,
     },
     onColumnOrderChange: setColumnOrder,
     initialState: {
@@ -171,113 +172,190 @@ export const Table = <T,>({
     useSensor(KeyboardSensor, {})
   );
 
-  // AGREGADO: Función recursiva para renderizar las filas con grupos
-  function renderRows(rows: Row<T>[]): VNode {
-    return (
-      <>
-        {rows.map((row) => {
-          if (row.getIsGrouped()) {
-            // Es una fila de grupo
-            // row.getValue(row.groupingColumnId) nos da el valor del grupo
-            // Mostramos una fila con el valor del grupo y un ícono para expandir/contraer
-            return (
-              <Fragment key={row.id}>
-                <tr>
-                  {!unsettings && (
-                    <td
-                      className='text-center left-0 min-w-[30px]'
-                      style={{ position: 'sticky', zIndex: 1 }}
-                    >
-                      <span
-                        onClick={() => row.toggleExpanded()}
-                        className={`vox-icon ${
-                          row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
-                        } cursor-pointer size-sm`}
-                      />
-                    </td>
-                  )}
-                  {/* Una sola celda que abarca todas las columnas visibles mostrando el nombre del grupo */}
-                  <td
-                    colSpan={
-                      row.getVisibleCells().length + (!unsettings ? 0 : 0)
-                    }
-                    className='p-2 bg-gray-200 font-semibold'
-                  >
-                    {row.groupingColumnId && (
-                      <span>
-                        {typeof row.columnFilters?.[0] === 'string' ? '' : ''}
-                        {row.getValue(row.groupingColumnId)} (
-                        {row.subRows.length})
-                      </span>
-                    )}
-                  </td>
-                </tr>
-                {
-                  row.getIsExpanded() &&
-                    row.subRows.length > 0 &&
-                    renderRows(row.subRows) // Renderizamos subfilas recursivamente
-                }
-              </Fragment>
-            );
-          } else {
-            // Es una fila normal
-            return (
-              <Fragment key={row.id}>
-                <tr>
-                  {!unsettings && (
-                    <td
-                      className='text-center left-0 min-w-[30px]'
-                      style={{ position: 'sticky', zIndex: 1 }}
-                    >
-                      {expandable && (
+  // Memoize the row rendering function to improve performance
+  const renderRows = useCallback(
+    (rows: Row<T>[]): VNode => {
+      return (
+        <>
+          {rows.map((row) => {
+            if (row.getIsGrouped()) {
+              return (
+                <Fragment key={row.id}>
+                  <tr>
+                    {!unsettings && (
+                      <td
+                        className='text-center left-0 min-w-[30px]'
+                        style={{ position: 'sticky', zIndex: 1 }}
+                      >
                         <span
                           onClick={() => row.toggleExpanded()}
-                          className='vox-icon vx-icon-001 cursor-pointer size-sm'
+                          className={`vox-icon ${
+                            row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
+                          } cursor-pointer size-sm`}
                         />
+                      </td>
+                    )}
+                    <td
+                      colSpan={
+                        row.getVisibleCells().length + (!unsettings ? 0 : 0)
+                      }
+                      className='p-2 bg-gray-200 font-semibold'
+                    >
+                      {row.groupingColumnId && (
+                        <span>
+                          {typeof row.columnFilters?.[0] === 'string' ? '' : ''}
+                          {row.getValue(row.groupingColumnId)} (
+                          {row.subRows.length})
+                        </span>
                       )}
                     </td>
-                  )}
-                  {row.getVisibleCells().map((cell, index) => (
-                    <SortableContext
-                      key={`${cell.id}-${index}`}
-                      items={columnOrder}
-                      strategy={horizontalListSortingStrategy}
-                    >
-                      <DraggableCell<T>
-                        key={`${cell.id}-${index}`}
-                        cell={cell}
-                      />
-                    </SortableContext>
-                  ))}
-                </tr>
-                {expandable && row.getIsExpanded() && (
-                  <tr className='border-b border-gray-200'>
-                    <td
-                      colSpan={row.getVisibleCells().length + 1}
-                      className='p-4'
-                    >
-                      {expandable(row.original)}
-                    </td>
                   </tr>
-                )}
-              </Fragment>
-            );
-          }
-        })}
-      </>
+                  {row.getIsExpanded() &&
+                    row.subRows.length > 0 &&
+                    renderRows(row.subRows)}
+                </Fragment>
+              );
+            } else {
+              return (
+                <Fragment key={row.id}>
+                  <tr>
+                    {!unsettings && (
+                      <td
+                        className='text-center left-0 min-w-[30px]'
+                        style={{ position: 'sticky', zIndex: 1 }}
+                      >
+                        {expandable && (
+                          <span
+                            onClick={() => row.toggleExpanded()}
+                            className='vox-icon vx-icon-001 cursor-pointer size-sm'
+                          />
+                        )}
+                      </td>
+                    )}
+                    {row.getVisibleCells().map((cell, index) => (
+                      <SortableContext
+                        key={`${cell.id}-${index}`}
+                        items={columnOrder}
+                        strategy={horizontalListSortingStrategy}
+                      >
+                        <DraggableCell<T>
+                          key={`${cell.id}-${index}`}
+                          cell={cell}
+                        />
+                      </SortableContext>
+                    ))}
+                  </tr>
+                  {expandable && row.getIsExpanded() && (
+                    <tr className='border-b border-gray-200'>
+                      <td
+                        colSpan={row.getVisibleCells().length + 1}
+                        className='p-4'
+                      >
+                        {expandable(row.original)}
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            }
+          })}
+        </>
+      );
+    },
+    [expandable, unsettings]
+  );
+
+  // Memoize pagination buttons to improve performance
+  const paginationButtons = useMemo(() => {
+    if (data.length <= pageSize) return null;
+
+    return (
+      <div className='flex flex-row items-center justify-center gap-2 p-3'>
+        <Button
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+          type='button'
+          name='prev'
+          className='min-w-[100px] h-10 rounded-md bg-white border border-[#E5E7EB] text-[#6B7280]'
+          label='PREV'
+        />
+
+        {Array.from(
+          { length: Math.min(2, table.getPageCount()) },
+          (_, i) => i
+        ).map((page) => (
+          <Button
+            key={page}
+            onClick={() => table.setPageIndex(page)}
+            type='button'
+            name={`page-${page + 1}`}
+            className={`w-10 h-10 flex items-center justify-center rounded-md ${
+              table.getState().pagination.pageIndex === page
+                ? 'bg-[#E5F6F8] text-[#6B7280]'
+                : 'bg-white border border-[#E5E7EB] text-[#6B7280]'
+            }`}
+            label={(page + 1).toString()}
+          />
+        ))}
+
+        {table.getPageCount() > 2 && (
+          <Button
+            onClick={() => {
+              const middlePage = Math.floor(table.getPageCount() / 2);
+              table.setPageIndex(middlePage);
+            }}
+            type='button'
+            name='ellipsis'
+            className='w-10 h-10 flex items-center justify-center rounded-md bg-white border border-[#E5E7EB] text-[#6B7280]'
+            label='...'
+          />
+        )}
+
+        {table.getPageCount() > 2 && (
+          <Button
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            type='button'
+            name={`page-${table.getPageCount()}`}
+            className={`w-10 h-10 flex items-center justify-center rounded-md ${
+              table.getState().pagination.pageIndex === table.getPageCount() - 1
+                ? 'bg-[#E5F6F8] text-[#6B7280]'
+                : 'bg-white border border-[#E5E7EB] text-[#6B7280]'
+            }`}
+            label={table.getPageCount().toString()}
+          />
+        )}
+
+        <Button
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+          type='button'
+          name='next'
+          className='min-w-[100px] h-10 rounded-md bg-white border border-[#E5E7EB] text-[#6B7280]'
+          label='NEXT'
+        />
+      </div>
     );
-  }
+  }, [
+    data.length,
+    pageSize,
+    table.getCanNextPage,
+    table.getCanPreviousPage,
+    table.getPageCount(),
+    table.getState().pagination.pageIndex,
+  ]);
 
   return (
     <>
       <div className='relative w-full my-2 flex items-center justify-end'>
-        <Group<T> table={table} />
+        {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (
           <Search
             id='search-general'
             name='search-general'
             keys={memoizedLeafColumns}
             onChange={setColumnFilters}
+            table={table}
+            group={<Group<T> table={table} />}
           />
         )}
       </div>
@@ -319,54 +397,12 @@ export const Table = <T,>({
                 </tr>
               ))}
             </thead>
-            <tbody>
-              {
-                renderRows(
-                  table.getRowModel().rows
-                ) /* Renderizamos las filas */
-              }
-            </tbody>
+            <tbody>{renderRows(table.getRowModel().rows)}</tbody>
           </table>
         </div>
       </DndContext>
 
-      {data.length > pageSize && (
-        <div className='flex flex-row gap-3 justify-end p-3'>
-          <Button
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            type='button'
-            label='back'
-            icon='123'
-            name='back'
-          />
-          {table.getPageOptions().map((page, index) => (
-            <button
-              key={`${page}-${index}`}
-              onClick={() => table.setPageIndex(page)}
-              className={`px-3 py-1 rounded text-t-light dark:text-t-dark ${
-                table.getState().pagination.pageIndex === page
-                  ? 'font-bold'
-                  : ''
-              }`}
-            >
-              {page + 1}
-            </button>
-          ))}
-          {table.getPageCount() > 3 &&
-          table.getState().pagination.pageIndex < table.getPageCount() - 3 ? (
-            <span className='px-3 py-1 rounded'>...</span>
-          ) : null}
-          <Button
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            type='button'
-            label='next'
-            icon='123'
-            name='next'
-          />
-        </div>
-      )}
+      {paginationButtons}
     </>
   );
 };

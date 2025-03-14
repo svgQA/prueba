@@ -21,7 +21,7 @@ export const Select = ({
   ...props
 }: ISelectProps) => {
   return (
-    <div id={id} className='w-full'>
+    <div id={id} className='w-full my-1'>
       {label && (
         <label
           for={`${id}-select`}

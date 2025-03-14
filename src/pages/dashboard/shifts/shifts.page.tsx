@@ -16,9 +16,8 @@ import {
 import dayjs from 'dayjs';
 import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
-
-// import { FormData } from './interface';
 import { TaskForm } from './components/updaser.modal';
+import { CardData } from '@/components/compose/cards';
 
 enum VIEW_NAME {
   TABLE,
@@ -30,7 +29,6 @@ export const ShiftsPage: FunctionalComponent = () => {
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const showModal = useSignal<boolean>(false);
   const shifts = useSignal<IShiftResponse[]>([]);
-  // const initialValues: Signal<Partial<FormData>> = useSignal({});
 
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
@@ -86,21 +84,80 @@ export const ShiftsPage: FunctionalComponent = () => {
     currentView.value = view;
   }, []);
 
+  const wrapperStyle = {
+    display: 'inline-block',
+    backgroundColor: 'transparent',
+    padding: 0,
+    margin: 0,
+    border: 'none',
+    overflow: 'hidden',
+  };
+
+  const innerStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    border: 'none',
+    padding: 0,
+  };
+
   const buttonMenu = useMemo(
     () => (
-      <div className='flex flex-row gap-2 justify-start px-0.5 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.TABLE)}
-        >
-          <span className='vox-icon vx-icon-011'></span>
-        </button>
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
-        >
-          <span className='vox-icon vx-icon-094'></span>
-        </button>
+      <div className='flex flex-row gap-4 justify-start'>
+        <div style={wrapperStyle}>
+          <button
+            className='focus:outline-none'
+            onClick={() => handleViewChange(VIEW_NAME.TABLE)}
+            style={innerStyle}
+          >
+            <div
+              style={{
+                position: 'relative',
+                width: '24px',
+                height: '24px',
+                overflow: 'hidden',
+              }}
+            >
+              <span
+                className='vox-icon vx-icon-109'
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              ></span>
+            </div>
+          </button>
+        </div>
+
+        <div style={wrapperStyle}>
+          <button
+            className='focus:outline-none'
+            onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
+            style={innerStyle}
+          >
+            <div
+              style={{
+                position: 'relative',
+                width: '24px',
+                height: '24px',
+                overflow: 'hidden',
+              }}
+            >
+              <span
+                className='vox-icon vx-icon-094'
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              ></span>
+            </div>
+          </button>
+        </div>
       </div>
     ),
     []
@@ -162,15 +219,133 @@ export const ShiftsPage: FunctionalComponent = () => {
     setUserSelected(undefined);
     setTaskSelected(undefined);
   }, []);
+  /*
+  const handleInputChange = useCallback((e: any) => {
+    const { name, value } = e.currentTarget;
+    if (selectedTaskCalendar.value) {
+      selectedTaskCalendar.value = {
+        ...selectedTaskCalendar.value,
+        title: name === 'title' ? value : selectedTaskCalendar.value.title,
+        start:
+          name === 'start' ? new Date(value) : selectedTaskCalendar.value.start,
+        end:
+          name === 'end'
+            ? new Date(value)
+            : selectedTaskCalendar.value.end ||
+              selectedTaskCalendar.value.start,
+      };
+    } else {
+      const start = new Date(value);
+      selectedTaskCalendar.value = {
+        title: name === 'title' ? value : '',
+        start: name === 'start' ? start : new Date(),
+        end: name === 'end' ? new Date(value) : start,
+        allDay: false,
+      };
+    }
+  }, []);
+  */
+  /*
+  const handleSave = () => {
+    if (selectedTaskCalendar.value) {
+      setLocalEvents([
+        ...localEvents,
+        {
+          id: Math.random().toString(),
+          title: selectedTaskCalendar.value.title,
+          start: selectedTaskCalendar.value.start,
+          end:
+            selectedTaskCalendar.value.end || selectedTaskCalendar.value.start,
+          allDay: selectedTaskCalendar.value.allDay || false,
+        },
+      ]);
+    }
+    showModal.value = false;
+  };
+  */
+
+  /*
+  function renderEventContent(eventInfo: any) {
+    return (
+      <div className="w-full h-full bg-primary flex justify-center items-center">
+        <div className="flex items-center gap-2">
+          <span className="vox-icon vx-icon-025 text-primary"></span>
+          <div>
+            <p className="font-bold text-sm">{eventInfo.event.title}</p>
+            <p className="text-xs text-gray-600">{eventInfo.timeText}</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const handleDateClick = useCallback(() => {
+    showModal.value = true
+  }, [])
+
+  */
+  /*
+  const handleEventDrop = useCallback(
+    (info: any) => {
+      const { event } = info
+      const updatedEvents = localEvents.map((e) => {
+        if (e.id === event.id) {
+          return {
+            ...e,
+            start: event.start,
+            end: event.end || event.start,
+          }
+        }
+        return e
+      })
+      setLocalEvents(updatedEvents)
+    },
+    [localEvents]
+  );
+  */
 
   return (
     <Section>
-      {buttonMenu}
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+        <CardData
+          title='Turnos Totales Hoy'
+          count={530}
+          subtitle=''
+          color='text-secondary'
+          icon='054'
+        />
+
+        <CardData
+          title='Turnos En Curso'
+          count='50%'
+          subtitle=''
+          color='text-primary'
+          icon='052'
+        />
+
+        <CardData
+          title='Turnos Finalizados'
+          count='30%'
+          subtitle=''
+          color='text-error'
+          icon='015'
+        />
+      </div>
+
+      {(currentView.value === VIEW_NAME.CALENDAR ||
+        currentView.value === VIEW_NAME.SCHEDULER ||
+        showModal.value) && (
+        <div className='flex items-center justify-between mb-4'>
+          <div className='flex items-center'>{buttonMenu}</div>
+        </div>
+      )}
+
       {currentView.value === VIEW_NAME.TABLE && (
         <Table<IShiftResponse>
           data={shifts.value}
           columns={columns}
           pageSize={20}
+          button={buttonMenu}
           visibility={{
             servicePlaceAddress: false,
             city: false,
