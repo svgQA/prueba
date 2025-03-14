@@ -173,7 +173,6 @@ export const ShiftsPage: FunctionalComponent = () => {
   );
 
   const handleDblClick = useCallback((task: Task) => {
-    // console.log('TASK SELECTED:', task);
     setTaskSelected(() => task);
     showModal.value = true;
   }, []);
@@ -219,90 +218,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     setUserSelected(undefined);
     setTaskSelected(undefined);
   }, []);
-  /*
-  const handleInputChange = useCallback((e: any) => {
-    const { name, value } = e.currentTarget;
-    if (selectedTaskCalendar.value) {
-      selectedTaskCalendar.value = {
-        ...selectedTaskCalendar.value,
-        title: name === 'title' ? value : selectedTaskCalendar.value.title,
-        start:
-          name === 'start' ? new Date(value) : selectedTaskCalendar.value.start,
-        end:
-          name === 'end'
-            ? new Date(value)
-            : selectedTaskCalendar.value.end ||
-              selectedTaskCalendar.value.start,
-      };
-    } else {
-      const start = new Date(value);
-      selectedTaskCalendar.value = {
-        title: name === 'title' ? value : '',
-        start: name === 'start' ? start : new Date(),
-        end: name === 'end' ? new Date(value) : start,
-        allDay: false,
-      };
-    }
-  }, []);
-  */
-  /*
-  const handleSave = () => {
-    if (selectedTaskCalendar.value) {
-      setLocalEvents([
-        ...localEvents,
-        {
-          id: Math.random().toString(),
-          title: selectedTaskCalendar.value.title,
-          start: selectedTaskCalendar.value.start,
-          end:
-            selectedTaskCalendar.value.end || selectedTaskCalendar.value.start,
-          allDay: selectedTaskCalendar.value.allDay || false,
-        },
-      ]);
-    }
-    showModal.value = false;
-  };
-  */
-
-  /*
-  function renderEventContent(eventInfo: any) {
-    return (
-      <div className="w-full h-full bg-primary flex justify-center items-center">
-        <div className="flex items-center gap-2">
-          <span className="vox-icon vx-icon-025 text-primary"></span>
-          <div>
-            <p className="font-bold text-sm">{eventInfo.event.title}</p>
-            <p className="text-xs text-gray-600">{eventInfo.timeText}</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const handleDateClick = useCallback(() => {
-    showModal.value = true
-  }, [])
-
-  */
-  /*
-  const handleEventDrop = useCallback(
-    (info: any) => {
-      const { event } = info
-      const updatedEvents = localEvents.map((e) => {
-        if (e.id === event.id) {
-          return {
-            ...e,
-            start: event.start,
-            end: event.end || event.start,
-          }
-        }
-        return e
-      })
-      setLocalEvents(updatedEvents)
-    },
-    [localEvents]
-  );
-  */
 
   return (
     <Section>
@@ -332,14 +247,6 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
       </div>
 
-      {(currentView.value === VIEW_NAME.CALENDAR ||
-        currentView.value === VIEW_NAME.SCHEDULER ||
-        showModal.value) && (
-        <div className='flex items-center justify-between mb-4'>
-          <div className='flex items-center'>{buttonMenu}</div>
-        </div>
-      )}
-
       {currentView.value === VIEW_NAME.TABLE && (
         <Table<IShiftResponse>
           data={shifts.value}
@@ -357,15 +264,19 @@ export const ShiftsPage: FunctionalComponent = () => {
           }}
         />
       )}
+
       {currentView.value === VIEW_NAME.SCHEDULER && (
         <div className='max-h-screen'>
-          <div className='py-2 flex flex-row justify-between px-1'>
-            <button
-              className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-              onClick={handleCreacteNewShift}
-            >
-              Create
-            </button>
+          <div className='py-2 flex flex-row justify-between px-1 items-center'>
+            <div className='flex flex-row items-center justify-between'>
+              {buttonMenu}
+              <button
+                className='mx-3 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                onClick={handleCreacteNewShift}
+              >
+                Create
+              </button>
+            </div>
             <ViewSwitcher
               onViewModeChange={(viewMode: ViewMode) => setView(viewMode)}
               onViewListChange={setIsChecked}
