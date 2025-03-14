@@ -11,6 +11,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     accessorKey: 'user.name',
     size: 180,
     header: 'Empleado',
+    enableGrouping: true,
     cell: (info) => {
       const { user } = info.row.original;
       return `${user.name} ${user.surname}`;
@@ -28,26 +29,6 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     accessorKey: 'service.contract.id',
     size: 120,
     header: 'Contrato',
-  },
-  {
-    id: 'date',
-    accessorKey: 'start',
-    size: 150,
-    header: 'fecha',
-    cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('YYYY-MM-DD');
-    },
-  },
-  {
-    id: 'date',
-    accessorKey: 'start',
-    size: 150,
-    header: 'fecha',
-    cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('YYYY-MM-DD');
-    },
   },
   {
     id: 'start',
@@ -81,8 +62,8 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     ),
   },
   {
-    id: 'activitiesProgress',
-    accessorKey: 'activitiesProgress',
+    id: 'report',
+    accessorKey: 'report',
     size: 50,
     header: 'Reportes',
     cell: () => (

@@ -18,6 +18,7 @@ import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/updaser.modal';
 import { CardData } from '@/components/compose/cards';
+import { Button } from '@/components/common/button/button';
 
 enum VIEW_NAME {
   TABLE,
@@ -45,7 +46,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   });
 
   const getShiftHandler = async () => {
-    const response = await ShiftService.get_all();
+    const response = await ShiftService.get_all({ page: 1, items: 1000 });
     if (!response.getStatus()) return;
     shifts.value = response.getMany();
   };
@@ -84,80 +85,28 @@ export const ShiftsPage: FunctionalComponent = () => {
     currentView.value = view;
   }, []);
 
-  const wrapperStyle = {
-    display: 'inline-block',
-    backgroundColor: 'transparent',
-    padding: 0,
-    margin: 0,
-    border: 'none',
-    overflow: 'hidden',
-  };
-
-  const innerStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    border: 'none',
-    padding: 0,
-  };
-
   const buttonMenu = useMemo(
     () => (
-      <div className='flex flex-row gap-4 justify-start'>
-        <div style={wrapperStyle}>
-          <button
-            className='focus:outline-none'
-            onClick={() => handleViewChange(VIEW_NAME.TABLE)}
-            style={innerStyle}
-          >
-            <div
-              style={{
-                position: 'relative',
-                width: '24px',
-                height: '24px',
-                overflow: 'hidden',
-              }}
-            >
-              <span
-                className='vox-icon vx-icon-109'
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              ></span>
-            </div>
-          </button>
-        </div>
-
-        <div style={wrapperStyle}>
-          <button
-            className='focus:outline-none'
-            onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
-            style={innerStyle}
-          >
-            <div
-              style={{
-                position: 'relative',
-                width: '24px',
-                height: '24px',
-                overflow: 'hidden',
-              }}
-            >
-              <span
-                className='vox-icon vx-icon-094'
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              ></span>
-            </div>
-          </button>
-        </div>
+      <div className=''>
+        <Button
+          name='button-change-table'
+          onClick={() => handleViewChange(VIEW_NAME.TABLE)}
+          rounded
+          icon='320'
+        />
+        <Button
+          name='button-change-table'
+          onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
+          rounded
+          icon='330'
+        />
+        <Button name='button-change-table' rounded icon='331' />
+        <Button name='button-change-table' rounded icon='314' />
+        <Button
+          name='button-change-table'
+          label='supervision remota'
+          className='bg-primary text-white py-1'
+        />
       </div>
     ),
     []
