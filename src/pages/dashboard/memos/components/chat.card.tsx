@@ -1,4 +1,5 @@
 import { FloatBadge } from '@/components/common/badge/float';
+import { IUserResponse } from '@/types/auth';
 
 interface ChatCardProps {
   id: string;
@@ -9,6 +10,7 @@ interface ChatCardProps {
   onClick: (id: string) => void;
   isSelected?: boolean;
   amount?: number;
+  user?: IUserResponse;
 }
 
 export const ChatCard = ({
@@ -20,6 +22,7 @@ export const ChatCard = ({
   onClick,
   isSelected,
   amount,
+  user,
 }: ChatCardProps) => (
   <FloatBadge
     label={amount}
@@ -35,7 +38,17 @@ export const ChatCard = ({
       <div
         className={`w-10 h-10 rounded-full ${isAI ? 'bg-gradient-to-r from-primary to-blue-500 text-white flex items-center justify-center' : 'bg-gray-300'}`}
       >
-        {isAI && <span className='left-0 px-1 vx-icon vx-icon-123' />}
+        {isAI ? (
+          <span className='left-0 px-1 vx-icon vx-icon-123' />
+        ) : user?.image ? (
+          <img
+            src={user.image}
+            alt={name}
+            className='w-full h-full rounded-full object-cover'
+          />
+        ) : (
+          <span className='left-0 px-1 vx-icon vx-icon-007' />
+        )}
       </div>
       <div className='flex-1 min-w-0'>
         <h3 className='font-semibold truncate pr-2'>{name}</h3>

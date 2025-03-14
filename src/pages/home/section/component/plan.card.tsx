@@ -27,7 +27,7 @@ export const PlandCard = ({
 
   return (
     <div
-      className={`text-${primaryColor} bg-${secondaryColor} shadow-lg ${border} w-96 rounded-xl relative min-h-[60vh]`}
+      className={`text-${primaryColor} bg-${secondaryColor} shadow-lg ${border} w-96 rounded-xl relative min-h-[70vh]`}
     >
       <div>
         <div
@@ -41,7 +41,7 @@ export const PlandCard = ({
         <p className='text-gray-400 text-xs mt-1 font-bold'>{subtitle}</p>
       </div>
       <div
-        className={`bg-${primaryColor} rounded-lg flex h-[46vh] mt-4 px-3 py-6`}
+        className={`bg-${primaryColor} rounded-lg flex h-[60vh] mt-4 px-3 py-6`}
       >
         <ul className='space-y-4 text-[14px]'>
           {options.map((option, index) => (

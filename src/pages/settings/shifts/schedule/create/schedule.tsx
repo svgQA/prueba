@@ -3,7 +3,6 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
@@ -11,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
-import dayjs from 'dayjs';
+import WeeklyScheduler from '../components/weekly.scheduler';
 
 interface FormData {
   name: string;
@@ -24,7 +23,6 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
-  const date = dayjs().format('YYYY-MM-DD');
 
   const onSubmit = async (model: FormData) => {
     let request;
@@ -74,7 +72,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
           render={({ handleSubmit, form, submitting, pristine }) => (
             <form onSubmit={handleSubmit} className='space-y-6'>
               {/** FORMULARIO PRINCIPAL */}
-              <div className='grid grid-cols-2 gap-3'>
+              <div className='grid grid-cols-1 gap-3'>
                 <div class='col-span-1'>
                   <Field<string> name='name' validate={required}>
                     {({ input, meta }) => (
@@ -89,74 +87,11 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
                 <div class='col-span-1'>
-                  <Field<string> validate={required} name='day'>
-                    {({ input, meta }) => {
-                      return (
-                        <div>
-                          <Select
-                            {...input}
-                            meta={meta}
-                            placeholder='Selecione dia...'
-                            label='Dia'
-                            name='day'
-                            icon='252'
-                            options={[
-                              { value: 'MONDAY', label: 'Lunes' },
-                              { value: 'TUESDAY', label: 'Martes' },
-                              { value: 'WEDNESDAY', label: 'Miercoles' },
-                              { value: 'THURSDAY', label: 'Jueves' },
-                              { value: 'FRIDAY', label: 'Viernes' },
-                              { value: 'SATURDAY', label: 'Sabado' },
-                              { value: 'SUNDAY', label: 'Domindo' },
-                            ]}
-                          />
-                        </div>
-                      );
-                    }}
-                  </Field>
-                </div>
-
-                <div class='col-span-1'>
-                  <Field<string>
-                    name='hourStart'
-                    required={required}
-                    parse={(value) =>
-                      value ? dayjs(`${date}T${value}:00`).toISOString() : ''
-                    }
-                    format={(value) =>
-                      value ? dayjs(value).format('HH:mm') : ''
-                    }
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        meta={meta}
-                        type='time'
-                        label='Hora inicio'
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field<string>
-                    name='hourEnd'
-                    required={required}
-                    parse={(value) =>
-                      value ? dayjs(`${date}T${value}:00`).toISOString() : ''
-                    }
-                    format={(value) =>
-                      value ? dayjs(value).format('HH:mm') : ''
-                    }
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        meta={meta}
-                        type='time'
-                        label='Hora fin'
-                      />
-                    )}
-                  </Field>
+                  <WeeklyScheduler
+                    startHour={0}
+                    endHour={24}
+                    title='Selecciona un horario'
+                  />
                 </div>
               </div>
 

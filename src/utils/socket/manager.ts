@@ -46,7 +46,7 @@ export class WebSocketManager implements IWebSocketManager {
       this.ws.onclose = () => {
         console.warn('WebSocket disconnected. Trying to connect.');
         this.ws = null;
-        setTimeout(() => this.connect(), 5000);
+        // setTimeout(() => this.connect(), 5000);
       };
 
       this.ws.onerror = (error) => {

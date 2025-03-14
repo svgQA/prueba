@@ -14,4 +14,5 @@ export interface ISearchProps extends IComponentProps {
   onChange?: (filters: ColumnFiltersState) => void;
   placeholder?: string;
   table?: any;
+  group?: VNode;
 }

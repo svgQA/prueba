@@ -8,6 +8,16 @@ import {
   VoxServices,
 } from '@/utils/network/types';
 
+export enum USER_TYPE {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+  CLIENT = 'CLIENT',
+}
+
+interface IPaginationUser extends IPagination {
+  userType?: USER_TYPE;
+}
+
 export class UserService extends BaseService {
   static sname: VoxServices = 'user';
   static async create(data: IUserRequest) {
@@ -43,7 +53,7 @@ export class UserService extends BaseService {
     return await super.make_request<IUserResponse>(this.sname, model);
   }
 
-  static async get_all(params: IPagination = { page: 1, items: 10 }) {
+  static async get_all(params: IPaginationUser = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
       url: ['user'],
       params: params as any,

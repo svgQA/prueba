@@ -7,7 +7,7 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-
+import data from './fakeJson.json';
 import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 
@@ -19,9 +19,8 @@ import {
 export interface ISchedule {
   id: number;
   name: string;
-  day: string;
-  hourStart: string;
-  hourEnd: string;
+  daysAllowed: string[];
+  days: any;
 }
 
 export interface IRowActionPlace {
@@ -41,7 +40,8 @@ export const ScheduleSettingPage: FunctionComponent = () => {
 
   const getSchedules = async () => {
     const request: any = await ShiftService.getSchedules();
-    schedules.value = request.data;
+    console.log(request);
+    schedules.value = data;
   };
 
   const redirect = () => {
@@ -86,6 +86,30 @@ export const ScheduleSettingPage: FunctionComponent = () => {
         <Table<ISchedule>
           data={schedules.value}
           columns={columns}
+          expandable={(row: any) => {
+            return (
+              <div className='grid grid-cols-1 gap-3'>
+                {row.days.map((dayInfo: any, index: any) => (
+                  <div
+                    class='col-span-1'
+                    key={index}
+                    style={{
+                      border: '1px solid #ccc',
+                      padding: '10px',
+                      minWidth: '120px',
+                    }}
+                  >
+                    <h4>{dayInfo.day}</h4>
+                    <ul>
+                      {dayInfo.hour.map((time: any, i: any) => (
+                        <li key={i}>{time}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            );
+          }}
           pageSize={20}
           visibility={{
             name: true,

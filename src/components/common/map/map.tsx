@@ -5,6 +5,7 @@ import { Button } from '@/components/common/button/button';
 import {
   GoogleMap,
   Polygon,
+  Circle,
   InfoWindow,
   Marker,
   useJsApiLoader,
@@ -29,6 +30,7 @@ export const Map: FunctionComponent<IMapProps> = ({
     lng: -74.08689346772478,
   },
   allowManualPoint,
+  radius,
 }) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [points, setPoint] = useState<
@@ -113,9 +115,13 @@ export const Map: FunctionComponent<IMapProps> = ({
     }
     if (pointsAmount === 1) {
       setPoint([]);
+      console.log('points.length', points);
+      console.log('pointsAmount', pointsAmount);
     }
 
-    const marker = { id: points.length + 1, position: { lat, lng } };
+    const markerId = pointsAmount === 1 ? 1 : points.length + 1;
+
+    const marker = { id: markerId, position: { lat, lng } };
 
     if (radialPoint) {
       const pointValidation = haversineDistance(radialPoint, marker);
@@ -298,6 +304,18 @@ export const Map: FunctionComponent<IMapProps> = ({
             fillColor: 'blue',
             fillOpacity: 0.2,
             strokeColor: 'blue',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+          }}
+        />
+
+        <Circle
+          center={center}
+          radius={radius}
+          options={{
+            fillColor: '#FF0000',
+            fillOpacity: 0.2,
+            strokeColor: '#FF0000',
             strokeOpacity: 0.8,
             strokeWeight: 2,
           }}
