@@ -18,6 +18,7 @@ import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
 import { Input } from '@/components/common/input/input';
 // import { BarTask } from '@/components/compose/gantt/types/bar-task';
+
 import { Form, Field } from 'react-final-form';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
@@ -25,6 +26,10 @@ import { UserService } from '@/services/user';
 import { Button } from '@/components/common/button/button';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
 
 enum VIEW_NAME {
   TABLE,
@@ -72,8 +77,9 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
+  const [calendarView /*setCalendarView*/] = useState<string>('timeGridWeek');
   const selectedTask = useSignal<Task | null>(null);
-  const selectedTaskCalendar = useSignal<ISingleTaskCalendar | null>(null);
+  // const selectedTaskCalendar = useSignal<ISingleTaskCalendar | null>(null);
   const startDate = dayjs().subtract(1, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
@@ -144,6 +150,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     getGanttHandler();
   };
 
+  /*
   const setInitialValues = async () => {
     if (!id.value) return;
 
@@ -163,6 +170,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     const model = pick(omitBy(request.model, isNull), userKeys);
     initialValues.value = model;
   };
+  */
 
   useEffect(() => {
     document.title = 'VX - Shift Service';
@@ -232,6 +240,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     window.confirm('Are you sure about ' + task.name + ' ?');
   }, []);
 
+  /*
   const handleInputChange = useCallback((e: any) => {
     const { name, value } = e.currentTarget;
     if (selectedTaskCalendar.value) {
@@ -256,7 +265,8 @@ export const ShiftsPage: FunctionalComponent = () => {
       };
     }
   }, []);
-
+  */
+  /*
   const handleSave = () => {
     if (selectedTaskCalendar.value) {
       setLocalEvents([
@@ -273,6 +283,43 @@ export const ShiftsPage: FunctionalComponent = () => {
     }
     showModal.value = false;
   };
+  */
+
+  function renderEventContent(eventInfo: any) {
+    return (
+      <div className='w-full h-full bg-primary flex justify-center items-center'>
+        <div className='flex items-center gap-2'>
+          <span className='vox-icon vx-icon-025 text-primary'></span>
+          <div>
+            <p className='font-bold text-sm'>{eventInfo.event.title}</p>
+            <p className='text-xs text-gray-600'>{eventInfo.timeText}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handleDateClick = useCallback(() => {
+    showModal.value = true;
+  }, []);
+
+  const handleEventDrop = useCallback(
+    (info: any) => {
+      const { event } = info;
+      const updatedEvents = localEvents.map((e) => {
+        if (e.id === event.id) {
+          return {
+            ...e,
+            start: event.start,
+            end: event.end || event.start,
+          };
+        }
+        return e;
+      });
+      setLocalEvents(updatedEvents);
+    },
+    [localEvents]
+  );
 
   const handleCreacteNewShift = () => {
     showModal.value = true;
@@ -306,7 +353,6 @@ export const ShiftsPage: FunctionalComponent = () => {
 
       {currentView.value === VIEW_NAME.CALENDAR && (
         <div className='w-full mt-3'>
-          {/*
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView={calendarView}
@@ -329,7 +375,6 @@ export const ShiftsPage: FunctionalComponent = () => {
             forceEventDuration={true}
             defaultTimedEventDuration='01:00:00'
           />
-          */}
         </div>
       )}
 
