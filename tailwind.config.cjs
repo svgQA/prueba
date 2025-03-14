@@ -5,6 +5,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        'bg-content-light': '#f8f8f8',
+        'bg-sidebar-light': '#f3f3f3',
+        'b-white': '#ffffff',
         'b-light': '#f7f7f7',
         'b-light-dark': '#dfdfdf',
         'b-dark': '#282828',

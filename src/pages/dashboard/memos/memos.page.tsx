@@ -5,7 +5,7 @@ import { ChatHeader } from './components/chat.header';
 import { ChatCard } from './components/chat.card';
 import { ChatMessage } from './components/chat.message';
 import { ChatInput } from './components/chat.input';
-import { UserService } from '@/services/user';
+import { USER_TYPE, UserService } from '@/services/user';
 import { IUserResponse } from '@/types/auth';
 import { useWebSocket } from '@/utils/socket';
 import { useUserStore } from '@/store/slices';
@@ -125,7 +125,11 @@ export const MemosPage: FunctionComponent = () => {
   };
 
   const getUsersHandler = async () => {
-    const response = await UserService.get_all();
+    const response = await UserService.get_all({
+      userType: USER_TYPE.USER,
+      items: 100,
+      page: 1,
+    });
     if (!response.getStatus()) return;
     users.value = response.getMany();
     iam.value = getCognito();
@@ -150,8 +154,9 @@ export const MemosPage: FunctionComponent = () => {
             onClick={handleChatSelect}
             isSelected={selectedChat.value === '0'}
           />
-          {users.value.map((user) => (
+          {users.value.map((user: IUserResponse) => (
             <ChatCard
+              user={user}
               key={`chat-card-${user.cognitoId}`}
               id={user.cognitoId}
               name={`${user.name} ${user.surname}`}

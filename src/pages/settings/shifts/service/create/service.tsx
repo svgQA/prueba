@@ -57,7 +57,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     navigate('/memo/novelty');
   };
 
-  const filteredOptions = schedules.value.filter((option) =>
+  const filteredOptions: any = schedules.value.filter((option) =>
     option.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -158,7 +158,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                         label='Contrato'
                         id='contractId'
                         name='contractId'
-                        icon='252'
+                        icon='241'
                         optionValue='id'
                         optionLabel='name'
                         onChange={(e) => {
@@ -257,7 +257,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                           className='block w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-32'
                           onChange={() => {}}
                         >
-                          {filteredOptions.map((option) => (
+                          {filteredOptions.map((option: any) => (
                             <option key={option.id} value={option.id}>
                               {`* Horario: ${option.name}(${option.day})  horas: ${dayjs(option.hourStart).format('HH:mm')} a ${dayjs(option.hourEnd).format('HH:mm')}`}
                             </option>

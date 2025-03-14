@@ -65,7 +65,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getPlaces(params: IPaginationPlace = { page: 1, items: 10 }) {
+  static async getPlaces(params: IPaginationPlace = { page: 1, items: 50 }) {
     const model: IMakeRequest = {
       url: ['place'],
       params: params as any,
@@ -264,10 +264,9 @@ export class ShiftService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
-
-  static async updateActivity(data: any, id: string) {
+  static async updateActivity(data: any, id: string | number) {
     const model: IMakeRequest = {
-      url: ['activity', id],
+      url: ['activity', String(id)],
       method: REQUEST_METHODS.PUT,
       data,
     };
@@ -408,7 +407,7 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getServices(params: IPagination = { page: 1, items: 20 }) {
+  static async getServices(params: IPagination = { page: 1, items: 100 }) {
     const model: IMakeRequest = {
       url: ['service'],
       params: params as any,

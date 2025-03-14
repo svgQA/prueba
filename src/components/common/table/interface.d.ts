@@ -22,4 +22,5 @@ export interface ITableProps<T> {
   unsearch?: boolean;
   visibility?: { [key: string]: boolean };
   onClickAction?: (action: IRowAction) => void;
+  button?: VNode;
 }
