@@ -190,7 +190,7 @@ const convertToBar = (
   let progressSelectedBarColor = barProgressSelectedColor;
 
   if (task.status === 'CREATED') {
-    progressBarColor = '#CCE5FF'; // tone suave
+    progressBarColor = '#AABBCC'; // tone suave
     progressSelectedBarColor = '#0066CC'; // azul
   } else if (task.status === 'OPENED') {
     progressBarColor = '#409D9F'; // m5

@@ -1,3 +1,4 @@
+import { Button } from '@/components/common/button/button';
 import { Switch } from '@/components/common/switch/switch';
 import { ViewMode } from '@/components/compose/gantt';
 
@@ -8,37 +9,41 @@ export const ViewSwitcher = ({
 }: any) => {
   return (
     <div className='flex items-center space-x-4 justify-end'>
-      <button
-        className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+      <Button
+        id='hour-button'
+        name='hour-button'
+        label='Hour'
+        icon='091'
+        onClick={() => onViewModeChange(ViewMode.Hour)}
+      />
+      <Button
+        id='quarter-day-button'
+        name='quarter-day-button'
+        label='Quarter of Day'
+        icon='092'
         onClick={() => onViewModeChange(ViewMode.QuarterDay)}
-      >
-        Quarter of Day
-      </button>
-      <button
-        className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+      />
+      <Button
+        id='half-day-button'
+        name='half-day-button'
+        label='Half of Day'
+        icon='093'
         onClick={() => onViewModeChange(ViewMode.HalfDay)}
-      >
-        Half of Day
-      </button>
-      <button
-        className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+      />
+      <Button
+        id='day-button'
+        name='day-button'
+        label='Day'
+        icon='094'
         onClick={() => onViewModeChange(ViewMode.Day)}
-      >
-        Day
-      </button>
-      <button
-        className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+      />
+      <Button
+        id='week-button'
+        name='week-button'
+        label='Week'
+        icon='095'
         onClick={() => onViewModeChange(ViewMode.Week)}
-      >
-        Week
-      </button>
-      <button
-        className='px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-        onClick={() => onViewModeChange(ViewMode.Month)}
-      >
-        Month
-      </button>
-
+      />
       <Switch
         id={`cb-shift-gantt-vals`}
         name='shift-gantt-vals'
