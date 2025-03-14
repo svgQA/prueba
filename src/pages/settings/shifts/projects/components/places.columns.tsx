@@ -40,6 +40,14 @@ export const columns: ColumnDef<IProject>[] = [
     accessorKey: 'description',
     size: 60,
     header: 'Descripción',
+    cell: (info) => {
+      const description = info.getValue() as string;
+      return (
+        <div className='w-full flex justify-center max-w-96 overflow-hidden text-ellipsis whitespace-nowrap'>
+          {description}
+        </div>
+      );
+    },
   },
   {
     id: 'startDate',
