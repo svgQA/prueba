@@ -28,7 +28,16 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     accessorKey: 'service.contract.id',
     size: 120,
     header: 'Contrato',
-    enableGrouping: true,
+  },
+  {
+    id: 'date',
+    accessorKey: 'start',
+    size: 150,
+    header: 'fecha',
+    cell: (info) => {
+      const dateStr = info.getValue() as string;
+      return dayjs(dateStr).format('YYYY-MM-DD');
+    },
   },
   {
     id: 'date',

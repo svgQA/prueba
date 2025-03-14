@@ -7,9 +7,6 @@ import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
 import { toast } from 'react-toastify';
-import { CardData } from '@/components/compose/cards';
-
-// import { omitBy, isNull, pick } from 'lodash';
 
 import {
   GeneralTask,
@@ -29,6 +26,7 @@ import { USER_TYPE, UserService } from '@/services/user';
 import { Button } from '@/components/common/button/button';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
+import { CardData } from '@/components/compose/cards';
 // import FullCalendar from '@fullcalendar/react';
 // import dayGridPlugin from '@fullcalendar/daygrid';
 // import timeGridPlugin from '@fullcalendar/timegrid';
@@ -244,6 +242,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           </button>
         </div>
 
+        {/*
         <div style={wrapperStyle}>
           <button
             className='focus:outline-none'
@@ -270,6 +269,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             </div>
           </button>
         </div>
+        */}
 
         <div style={wrapperStyle}>
           <button
