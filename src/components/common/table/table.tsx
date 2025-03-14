@@ -52,6 +52,7 @@ export const Table = <T,>({
   visibility,
   onClickAction,
   unsearch,
+  button,
 }: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, [])
   const [sorting, setSorting] = useState<SortingState>([])
@@ -305,9 +306,16 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className="relative w-full my-2 flex items-center justify-end">
+      <div className="relative w-full my-2 flex items-center justify-between">
+        {button && <div className="flex items-center">{button}</div>}
         {!unsearch && (
-          <Search id="search-general" name="search-general" keys={memoizedLeafColumns} onChange={setColumnFilters}  table={table}/>
+          <Search
+            id="search-general"
+            name="search-general"
+            keys={memoizedLeafColumns}
+            onChange={setColumnFilters}
+            table={table}
+          />
         )}
       </div>
       <DndContext
