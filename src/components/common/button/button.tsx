@@ -5,7 +5,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   label,
   id,
   name,
-  type,
+  type = 'button',
   icon,
   onClick,
   rounded,
@@ -18,6 +18,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   padding = 'px-2 md:px-4 mx-1',
   text = 'text-sm md:text-base',
   textColor = '',
+  form,
 }: IButtonProps) => {
   return (
     <button
@@ -26,6 +27,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={loading || disabled}
+      form={form}
       className={`${rounded ? 'rounded-full px-1 md:px-2' : 'rounded px-2 md:px-4'} ${
         full ? 'w-full' : ''
       } ${padding} ${text} h-fit items-center justify-center inline-flex font-bold ${className} ${

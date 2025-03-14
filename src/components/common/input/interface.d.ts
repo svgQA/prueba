@@ -24,7 +24,13 @@ export interface IInputProps extends IComponentProps {
     | 'email'
     | 'time'
     | 'date'
-    | 'datetime-local';
+    | 'datetime-local'
+    | 'search'
+    | 'url'
+    | 'file'
+    | 'color'
+    | 'range'
+    | 'keywords';
   meta?: FieldMetaState<string>;
   end?: boolean;
   borderless?: boolean;

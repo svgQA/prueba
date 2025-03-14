@@ -88,7 +88,7 @@ export const ListFormModal = ({ onSelected }: IListFormModalProps) => {
             </Field>
             <MultipleInput
               name='list'
-              id={`mt-form-new-list-options`}
+              id='mt-form-new-list-options'
               icon='123'
               value={listValues.value}
               onChange={onChange}

@@ -1,11 +1,4 @@
-.amplify-input {
-  @apply border-none p-4 font-sans rounded-lg w-full;
-}
-
-.amplify-button {
-  @apply border-none px-8 py-4 font-medium tracking-wide uppercase bg-teal-500 text-white rounded-lg transition-all duration-200 hover:bg-teal-900 hover:-translate-y-0.5 text-center;
-}
-
+/*
 .amplify-heading {
   @apply font-sans font-semibold leading-relaxed text-gray-800 text-center;
 }
@@ -14,12 +7,16 @@
   @apply font-sans leading-relaxed text-gray-600 text-center;
 }
 
-.amplify-field {
-  @apply w-full flex flex-row items-center rounded-lg gap-4;
+.amplify-label {
+  @apply font-sans font-medium text-gray-700 text-left rounded-tr-md;
 }
 
-.amplify-label {
-  @apply font-sans font-medium text-gray-700 text-left min-w-[120px] px-4 bg-primary-opacity rounded-tr-md;
+.amplify-button {
+  @apply border-none px-1 bg-rose-600;
+}
+
+.amplify-button.amplify-button--primary {
+  @apply border-none w-full px-8 py-2 font-medium tracking-wide uppercase bg-ternary text-white rounded-lg transition-all duration-200 hover:bg-teal-900 hover:-translate-y-0.5 text-center my-3;
 }
 
 .amplify-field-group__field-wrapper {
@@ -68,18 +65,43 @@
   @apply rounded !important;
   @apply border-2 border-blue-600 !important;
 }
+*/
 
 /*
 .amplify-button[data-variation='link'] {
   @apply p-0 tracking-normal normal-case text-blue-600 font-normal hover:underline hover:bg-transparent !important;
 }
-*/
 
 .amplify-button[data-variation='primary'] {
   @apply bg-primary hover:bg-blue-700 !important;
 }
+.amplify-field {
+  @apply items-center rounded-lg bg-yellow-200;
+}
+
+.amplify-input {
+  @apply border-none p-3 font-sans rounded-lg w-full;
+}
 
 .amplify-visually-hidden {
-  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0 !important;
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
   clip: rect(0, 0, 0, 0) !important;
+}
+
+.amplify-passwordfield
+  > .amplify-flex.amplify-field-group.amplify-field-group--horizontal {
+  @apply flex flex-row items-center;
+}
+
+.amplify-flex.amplify-field-group.amplify-field-group--horizontal {
+  @apply flex flex-row items-center !bg-red-300;
+}
+*/
+
+[data-amplify-authenticator] [data-amplify-router] {
+  @apply !shadow-none !border-none !max-w-96;
+}
+
+[data-amplify-authenticator] [data-amplify-container] {
+  @apply !w-auto;
 }
