@@ -24,20 +24,17 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const selectedColumnName = useMemo(
-    () =>
-      currentGroup
-        ? groupableColumns.find((col) => col.id === currentGroup)?.columnDef
-            .header
-        : '',
-    [currentGroup, groupableColumns]
-  );
+  const selectedColumnName = useMemo(() => {
+    if (!currentGroup) return '';
+    const column = groupableColumns.find((col) => col.id === currentGroup);
+    const header = column?.columnDef.header;
+    if (typeof header === 'string') return header;
+    if (typeof header === 'function') return column?.id;
+    return column?.id || '';
+  }, [currentGroup, groupableColumns]);
 
   const displayText = useMemo(
-    () =>
-      currentGroup && typeof selectedColumnName === 'string'
-        ? selectedColumnName
-        : '',
+    () => (currentGroup ? selectedColumnName : ''),
     [currentGroup, selectedColumnName]
   );
 

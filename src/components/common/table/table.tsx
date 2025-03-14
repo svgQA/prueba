@@ -344,6 +344,10 @@ export const Table = <T,>({
     table.getState().pagination.pageIndex,
   ]);
 
+  const filterColunsValue = (filter: any) => {
+    console.log('FILTER: ', filter);
+    setColumnFilters(filter);
+  };
   return (
     <>
       <div className='relative w-full my-2 flex items-center justify-end'>
@@ -353,7 +357,7 @@ export const Table = <T,>({
             id='search-general'
             name='search-general'
             keys={memoizedLeafColumns}
-            onChange={setColumnFilters}
+            onChange={filterColunsValue}
             table={table}
             group={<Group<T> table={table} />}
           />

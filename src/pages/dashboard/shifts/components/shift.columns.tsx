@@ -2,18 +2,17 @@ import { Badge } from '@/components/common/badge/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { IShiftResponse, IUser } from '@/types/shift/activity';
+import { IShiftResponse } from '@/types/shift/activity';
 import dayjs from 'dayjs';
 
 export const columns: ColumnDef<IShiftResponse>[] = [
   {
     id: 'userName',
-    accessorKey: 'user',
+    accessorKey: 'user.name',
     size: 180,
     header: 'Empleado',
-    enableGrouping: true,
     cell: (info) => {
-      const user = info.getValue() as IUser;
+      const { user } = info.row.original;
       return `${user.name} ${user.surname}`;
     },
   },
@@ -22,12 +21,14 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     accessorKey: 'service.id',
     size: 180,
     header: 'Servicio',
+    enableGrouping: true,
   },
   {
     id: 'contractId',
     accessorKey: 'service.contract.id',
     size: 120,
     header: 'Contrato',
+    enableGrouping: true,
   },
   {
     id: 'date',
