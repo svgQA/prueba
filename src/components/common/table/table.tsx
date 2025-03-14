@@ -306,9 +306,8 @@ export const Table = <T,>({
   return (
     <>
       <div className="relative w-full my-2 flex items-center justify-end">
-        <Group table={table} />
         {!unsearch && (
-          <Search id="search-general" name="search-general" keys={memoizedLeafColumns} onChange={setColumnFilters} />
+          <Search id="search-general" name="search-general" keys={memoizedLeafColumns} onChange={setColumnFilters}  table={table}/>
         )}
       </div>
       <DndContext

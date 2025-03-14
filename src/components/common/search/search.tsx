@@ -3,6 +3,7 @@ import { useSignal } from '@preact/signals';
 import { IKey, ISearchProps } from './interface';
 import { TargetedEvent } from 'preact/compat';
 import { ColumnFiltersState } from '@tanstack/react-table';
+import { Group } from '../table/components/group';
 
 export const Search = ({
   id,
@@ -11,6 +12,7 @@ export const Search = ({
   placeholder,
   value = [],
   onChange,
+  table
 }: ISearchProps) => {
   const inputState = useSignal<string>("")
   const searchArray = useSignal<ColumnFiltersState>(value)
@@ -28,7 +30,6 @@ export const Search = ({
         const { value } = event.target
         inputState.value = value
 
-        // Show dropdown when typing
         if (value.length > lenThreshold) {
           isDropdownOpen.value = true
         } else {
@@ -71,9 +72,8 @@ export const Search = ({
       setFilter(setSearch(searchArray.value))
       inputState.value = ""
       selectedKeyIndex.value = -1
-      isDropdownOpen.value = false // Close dropdown after selection
+      isDropdownOpen.value = false
 
-      // Focus back on input
       setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus()
@@ -108,7 +108,6 @@ export const Search = ({
         event.preventDefault()
         selectedKeyIndex.value = (selectedKeyIndex.value - 1 + keys.length) % keys.length
       } else if (event.key === "Escape") {
-        // Close dropdown on escape
         isDropdownOpen.value = false
         selectedKeyIndex.value = -1
       }
@@ -156,7 +155,7 @@ export const Search = ({
   const hideFilterDetails = useCallback(() => {
     filterTimeoutRef.current = window.setTimeout(() => {
       activeFilterId.value = null
-    }, 500) // 500ms delay before hiding the popup
+    }, 500)
   }, [])
 
   const keysList = useMemo(
@@ -165,8 +164,8 @@ export const Search = ({
         const keyName = `filter-key-${key.id}-${index}`
         return (
           <div
-            className={`px-2 py-0.5 cursor-pointer flex flex-row min-w-40 hover:bg-[#00BCD4] hover:text-white capitalize ${
-              index === selectedKeyIndex.value ? "bg-[#00BCD4] text-white" : ""
+            className={`px-2 py-1 cursor-pointer flex flex-row min-w-40 hover:bg-[#E1F5FE] hover:text-[#00BCD4] capitalize ${
+              index === selectedKeyIndex.value ? "bg-[#E1F5FE] text-[#00BCD4]" : ""
             }`}
             key={keyName}
             data-name={keyName}
@@ -202,13 +201,21 @@ export const Search = ({
           >
             <div
               data-name={keyName}
-              className="flex items-center h-8 px-3 bg-[#00BCD4] text-white rounded-md cursor-pointer"
+              className="flex items-center h-8 px-3 bg-[#00BCD4] text-white rounded-md cursor-pointer gap-1"
             >
               <span className="font-medium text-sm">{String(item.value)}</span>
-              {/* Removed the icon as requested */}
+              <span
+                className="ml-1 text-white hover:text-red-100 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setFilter(searchArray.value.filter((f) => f.id !== item.id))
+                }}
+              >
+                ×
+              </span>
             </div>
             {isActive && (
-              <div className="absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg p-2 z-40 min-w-[200px]">
+              <div className="absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg p-2 z-40 min-w-[200px] animate-in fade-in slide-in-from-top-2 duration-150">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium">{key?.label || item.id}</span>
                   <span
@@ -231,7 +238,6 @@ export const Search = ({
     [searchArray.value, keys, activeFilterId.value, showFilterDetails, hideFilterDetails],
   )
 
-  // Manejar clics fuera del componente
   const handleClickOutside = (e: MouseEvent) => {
     if (
       isDropdownOpen.value &&
@@ -245,7 +251,6 @@ export const Search = ({
     }
   }
 
-  // Agregar event listener para click outside
   if (typeof document !== "undefined") {
     document.addEventListener("click", handleClickOutside)
   }
@@ -253,10 +258,10 @@ export const Search = ({
   return (
     <div
       id={id}
-      className="flex flex-row items-center h-12 w-[600px] px-3 border rounded-lg relative border-gray-200 bg-white shadow-sm"
+      className="flex flex-row items-center h-12 max-w-[50%] px-3 border rounded-lg relative border-gray-200 bg-white shadow-sm"
     >
       <span className="vox-icon vx-icon-153 text-gray-500" />
-      <div className="flex flex-row items-center gap-2 ml-2" onClick={handleClickFilters}>
+      <div className="flex flex-row items-center gap-2 ml-2 flex-wrap" onClick={handleClickFilters}>
         {searchList}
       </div>
       <div className="flex-1 flex items-center">
@@ -274,25 +279,31 @@ export const Search = ({
           value={inputState.value}
         />
       </div>
+
+      {table && <div className="h-5 w-px bg-gray-200 mx-2" />}
+
+      {table && <Group table={table} />}
+
       <div
-        className="relative"
+        className="relative ml-2"
         onMouseEnter={() => (isIconHovered.value = true)}
         onMouseLeave={() => (isIconHovered.value = false)}
       >
         {searchArray.value.length > 0 && isIconHovered.value ? (
           <span
-            className="vox-icon vx-icon-271 text-gray-500 cursor-pointer hover:text-red-500"
+            className="vox-icon vx-icon-271 text-gray-500 cursor-pointer hover:text-red-500 transition-colors"
             onClick={() => setFilter([])}
-            title="Clear all filters"
+            title="Limpiar filtros"
           />
         ) : (
           <span className="vox-icon vx-icon-270 text-gray-500 cursor-pointer" />
         )}
       </div>
+
       {keys.length > 0 && isDropdownOpen.value && (
         <div
           ref={keysContainerRef}
-          className="absolute right-0 top-full mt-1 min-w-48 border py-2 z-30 bg-white rounded-md shadow-lg border-gray-200"
+          className="absolute right-0 top-full mt-1 min-w-48 border py-2 z-30 bg-white rounded-md shadow-lg border-gray-200 animate-in fade-in slide-in-from-top-5 duration-150"
           onClick={handleClickKeys}
         >
           {keysList}
