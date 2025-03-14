@@ -65,7 +65,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getPlaces(params: IPaginationPlace = { page: 1, items: 10 }) {
+  static async getPlaces(params: IPaginationPlace = { page: 1, items: 50 }) {
     const model: IMakeRequest = {
       url: ['place'],
       params: params as any,

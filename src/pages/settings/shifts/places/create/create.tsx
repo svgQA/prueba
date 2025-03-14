@@ -89,12 +89,12 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const onSubmit = async (model: FormData) => {
     let request;
     let message: string;
-
+    const data = { ...model, radius: green };
     if (!id) {
-      request = await ShiftService.createPlace(model);
+      request = await ShiftService.createPlace(data);
       message = 'Lugar creado exitosamente!';
     } else {
-      request = await ShiftService.updatePlace(model, id);
+      request = await ShiftService.updatePlace(data, id);
       message = 'Lugar editado exitosamente!';
     }
     if (!request.getStatus()) return;
@@ -137,6 +137,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       'type',
       'countryId',
       'zipCode',
+      'radius',
       'municipalityId',
     ] as const;
 
@@ -144,6 +145,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     departmentId.value = request.model.municipality.departmentId;
     await onChangeDeparment(`${departmentId}`);
     const model = pick(omitBy(request.model, isNull), userKeys);
+    setGreen(model.radius || 0);
     points.value = [
       { id: 1, position: { lat: model.latitude, lng: model.longitude } },
     ];
@@ -170,7 +172,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
             if (!values.address) errors.address = 'Required';
             return errors;
           }}
-          render={({ handleSubmit, form, submitting, pristine }) => (
+          render={({ handleSubmit, form, submitting, pristine, values }) => (
             <form onSubmit={handleSubmit} className='space-y-6'>
               {/** FORMULARIO PRINCIPAL */}
               <div className='grid grid-cols-4 gap-3'>
