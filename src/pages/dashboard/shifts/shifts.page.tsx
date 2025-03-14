@@ -189,31 +189,107 @@ export const ShiftsPage: FunctionalComponent = () => {
     currentView.value = view;
   }, []);
 
+  const wrapperStyle = {
+    display: "inline-block",
+    backgroundColor: "transparent",
+    padding: 0,
+    margin: 0,
+    border: "none",
+    overflow: "hidden",
+  }
+
+  const innerStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    border: "none",
+    padding: 0,
+  }
+
   const buttonMenu = useMemo(
     () => (
-      <div className='flex flex-row gap-2 justify-start px-0.5 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.TABLE)}
-        >
-          <span className='vox-icon vx-icon-109'></span>
-        </button>
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.CALENDAR)}
-        >
-          <span className='vox-icon vx-icon-025'></span>
-        </button>
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
-        >
-          <span className='vox-icon vx-icon-094'></span>
-        </button>
+      <div className="flex flex-row gap-4 justify-start">
+        <div style={wrapperStyle}>
+          <button className="focus:outline-none" onClick={() => handleViewChange(VIEW_NAME.TABLE)} style={innerStyle}>
+            <div
+              style={{
+                position: "relative",
+                width: "24px",
+                height: "24px",
+                overflow: "hidden",
+              }}
+            >
+              <span
+                className="vox-icon vx-icon-109"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              ></span>
+            </div>
+          </button>
+        </div>
+
+        <div style={wrapperStyle}>
+          <button
+            className="focus:outline-none"
+            onClick={() => handleViewChange(VIEW_NAME.CALENDAR)}
+            style={innerStyle}
+          >
+            <div
+              style={{
+                position: "relative",
+                width: "24px",
+                height: "24px",
+                overflow: "hidden",
+              }}
+            >
+              <span
+                className="vox-icon vx-icon-025"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              ></span>
+            </div>
+          </button>
+        </div>
+
+        <div style={wrapperStyle}>
+          <button
+            className="focus:outline-none"
+            onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
+            style={innerStyle}
+          >
+            <div
+              style={{
+                position: "relative",
+                width: "24px",
+                height: "24px",
+                overflow: "hidden",
+              }}
+            >
+              <span
+                className="vox-icon vx-icon-094"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              ></span>
+            </div>
+          </button>
+        </div>
       </div>
     ),
-    []
-  );
+    [],
+  )
 
   const handleTaskChange = useCallback(
     (task: Task) => {

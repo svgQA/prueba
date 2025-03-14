@@ -164,8 +164,10 @@ export const Search = ({
         const keyName = `filter-key-${key.id}-${index}`
         return (
           <div
-            className={`px-2 py-1 cursor-pointer flex flex-row min-w-40 hover:bg-[#E1F5FE] hover:text-[#00BCD4] capitalize ${
-              index === selectedKeyIndex.value ? "bg-[#E1F5FE] text-[#00BCD4]" : ""
+            className={`px-3 py-2 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${
+              index === selectedKeyIndex.value
+                ? "bg-[#E1F5FE] text-[#00BCD4]"
+                : "hover:bg-[#F5F9FA] hover:text-[#00BCD4]"
             }`}
             key={keyName}
             data-name={keyName}
@@ -177,8 +179,8 @@ export const Search = ({
               setFilterSelected(key)
             }}
           >
-            <span className="px-2 mr-1 min-w-8/12 rounded-md font-bold">{key.label}:</span>
-            {inputState.value}
+            <span className="px-2 mr-1 font-medium text-sm capitalize">{key.label}:</span>
+            <span className="text-sm font-normal">{inputState.value}</span>
           </div>
         )
       }),
@@ -201,11 +203,11 @@ export const Search = ({
           >
             <div
               data-name={keyName}
-              className="flex items-center h-8 px-3 bg-[#00BCD4] text-white rounded-md cursor-pointer gap-1"
+              className="flex items-center h-8 px-3 bg-[#00BCD4] text-white rounded-md cursor-pointer gap-1 transition-all hover:bg-[#00ACC1]"
             >
               <span className="font-medium text-sm">{String(item.value)}</span>
               <span
-                className="ml-1 text-white hover:text-red-100 cursor-pointer"
+                className="ml-1 text-white hover:text-red-100 cursor-pointer flex items-center justify-center w-5 h-5 rounded-full hover:bg-[#00ACC1]"
                 onClick={(e) => {
                   e.stopPropagation()
                   setFilter(searchArray.value.filter((f) => f.id !== item.id))
@@ -215,9 +217,9 @@ export const Search = ({
               </span>
             </div>
             {isActive && (
-              <div className="absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg p-2 z-40 min-w-[200px] animate-in fade-in slide-in-from-top-2 duration-150">
+              <div className="absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg p-3 z-40 min-w-[220px] animate-in fade-in slide-in-from-top-2 duration-150">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">{key?.label || item.id}</span>
+                  <span className="font-medium text-gray-800">{key?.label || item.id}</span>
                   <span
                     data-name={`filter-delete-${item.id}`}
                     className="vox-icon vx-icon-192 size-sm cursor-pointer hover:text-red-500"
@@ -258,7 +260,7 @@ export const Search = ({
   return (
     <div
       id={id}
-      className="flex flex-row items-center h-12 max-w-[50%] px-3 border rounded-lg relative border-gray-200 bg-white shadow-sm"
+      className="flex flex-row items-center h-12 max-w-[50%] px-3 border rounded-lg relative border-gray-200 bg-white shadow-sm focus-within:ring-2 focus-within:ring-[#E1F5FE] focus-within:border-[#00BCD4] transition-all duration-200"
     >
       <span className="vox-icon vx-icon-153 text-gray-500" />
       <div className="flex flex-row items-center gap-2 ml-2 flex-wrap" onClick={handleClickFilters}>
@@ -303,13 +305,13 @@ export const Search = ({
       {keys.length > 0 && isDropdownOpen.value && (
         <div
           ref={keysContainerRef}
-          className="absolute right-0 top-full mt-1 min-w-48 border py-2 z-30 bg-white rounded-md shadow-lg border-gray-200 animate-in fade-in slide-in-from-top-5 duration-150"
+          className="absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-white rounded-lg shadow-md border-gray-100 animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto"
           onClick={handleClickKeys}
         >
+          <div className="px-3 py-1 text-xs text-gray-500 font-medium uppercase">Filtrar por</div>
           {keysList}
         </div>
       )}
     </div>
   )
 }
-
