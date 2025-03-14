@@ -26,6 +26,7 @@ import { USER_TYPE, UserService } from '@/services/user';
 import { Button } from '@/components/common/button/button';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
+import { CardData } from '@/components/compose/cards';
 // import FullCalendar from '@fullcalendar/react';
 // import dayGridPlugin from '@fullcalendar/daygrid';
 // import timeGridPlugin from '@fullcalendar/timegrid';
@@ -94,7 +95,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     const response = await ShiftService.get_all();
     if (!response.getStatus()) return;
     shifts.value = response.getMany();
-    console.log('shifts.value', shifts.value);
   };
 
   const columnWidth = useMemo(() => {
@@ -194,29 +194,109 @@ export const ShiftsPage: FunctionalComponent = () => {
     currentView.value = view;
   }, []);
 
+  const wrapperStyle = {
+    display: 'inline-block',
+    backgroundColor: 'transparent',
+    padding: 0,
+    margin: 0,
+    border: 'none',
+    overflow: 'hidden',
+  };
+
+  const innerStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    border: 'none',
+    padding: 0,
+  };
+
   const buttonMenu = useMemo(
     () => (
-      <div className='flex flex-row gap-2 justify-start px-0.5 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.TABLE)}
-        >
-          <span className='vox-icon vx-icon-011'></span>
-        </button>
+      <div className='flex flex-row gap-4 justify-start'>
+        <div style={wrapperStyle}>
+          <button
+            className='focus:outline-none'
+            onClick={() => handleViewChange(VIEW_NAME.TABLE)}
+            style={innerStyle}
+          >
+            <div
+              style={{
+                position: 'relative',
+                width: '24px',
+                height: '24px',
+                overflow: 'hidden',
+              }}
+            >
+              <span
+                className='vox-icon vx-icon-109'
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              ></span>
+            </div>
+          </button>
+        </div>
+
         {/*
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.CALENDAR)}
-        >
-          <span className='vox-icon vx-icon-025'></span>
-        </button>
+        <div style={wrapperStyle}>
+          <button
+            className='focus:outline-none'
+            onClick={() => handleViewChange(VIEW_NAME.CALENDAR)}
+            style={innerStyle}
+          >
+            <div
+              style={{
+                position: 'relative',
+                width: '24px',
+                height: '24px',
+                overflow: 'hidden',
+              }}
+            >
+              <span
+                className='vox-icon vx-icon-025'
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              ></span>
+            </div>
+          </button>
+        </div>
         */}
-        <button
-          className='p-1 hover:bg-slate-100 rounded-lg'
-          onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
-        >
-          <span className='vox-icon vx-icon-094'></span>
-        </button>
+
+        <div style={wrapperStyle}>
+          <button
+            className='focus:outline-none'
+            onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
+            style={innerStyle}
+          >
+            <div
+              style={{
+                position: 'relative',
+                width: '24px',
+                height: '24px',
+                overflow: 'hidden',
+              }}
+            >
+              <span
+                className='vox-icon vx-icon-094'
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              ></span>
+            </div>
+          </button>
+        </div>
       </div>
     ),
     []
@@ -296,38 +376,38 @@ export const ShiftsPage: FunctionalComponent = () => {
   /*
   function renderEventContent(eventInfo: any) {
     return (
-      <div className='w-full h-full bg-primary flex justify-center items-center'>
-        <div className='flex items-center gap-2'>
-          <span className='vox-icon vx-icon-025 text-primary'></span>
+      <div className="w-full h-full bg-primary flex justify-center items-center">
+        <div className="flex items-center gap-2">
+          <span className="vox-icon vx-icon-025 text-primary"></span>
           <div>
-            <p className='font-bold text-sm'>{eventInfo.event.title}</p>
-            <p className='text-xs text-gray-600'>{eventInfo.timeText}</p>
+            <p className="font-bold text-sm">{eventInfo.event.title}</p>
+            <p className="text-xs text-gray-600">{eventInfo.timeText}</p>
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   const handleDateClick = useCallback(() => {
-    showModal.value = true;
-  }, []);
+    showModal.value = true
+  }, [])
 
   */
   /*
   const handleEventDrop = useCallback(
     (info: any) => {
-      const { event } = info;
+      const { event } = info
       const updatedEvents = localEvents.map((e) => {
         if (e.id === event.id) {
           return {
             ...e,
             start: event.start,
             end: event.end || event.start,
-          };
+          }
         }
-        return e;
-      });
-      setLocalEvents(updatedEvents);
+        return e
+      })
+      setLocalEvents(updatedEvents)
     },
     [localEvents]
   );
@@ -343,13 +423,47 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   return (
     <Section>
-      {buttonMenu}
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+        <CardData
+          title='Turnos Totales Hoy'
+          count={530}
+          subtitle=''
+          color='text-secondary'
+          icon='054'
+        />
+
+        <CardData
+          title='Turnos En Curso'
+          count='50%'
+          subtitle=''
+          color='text-primary'
+          icon='052'
+        />
+
+        <CardData
+          title='Turnos Finalizados'
+          count='30%'
+          subtitle=''
+          color='text-error'
+          icon='015'
+        />
+      </div>
+
+      {(currentView.value === VIEW_NAME.CALENDAR ||
+        currentView.value === VIEW_NAME.SCHEDULER ||
+        showModal.value) && (
+        <div className='flex items-center justify-between mb-4'>
+          <div className='flex items-center'>{buttonMenu}</div>
+        </div>
+      )}
+
       {currentView.value === VIEW_NAME.TABLE && (
         <div>
           <Table<IShiftResponse>
             data={shifts.value}
             columns={columns}
-            pageSize={20}
+            pageSize={8}
+            button={buttonMenu}
             visibility={{
               servicePlaceAddress: false,
               city: false,
@@ -369,9 +483,9 @@ export const ShiftsPage: FunctionalComponent = () => {
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView={calendarView}
             headerToolbar={{
-              left: 'prev,next today',
-              center: 'title',
-              right: 'timeGridDay,timeGridWeek,dayGridMonth',
+              left: "prev,next today",
+              center: "title",
+              right: "timeGridDay,timeGridWeek,dayGridMonth",
             }}
             weekends={false}
             events={localEvents}
@@ -381,11 +495,11 @@ export const ShiftsPage: FunctionalComponent = () => {
             editable={true}
             droppable={true}
             eventDrop={handleEventDrop}
-            slotMinTime='06:00:00'
-            slotMaxTime='22:00:00'
+            slotMinTime="06:00:00"
+            slotMaxTime="22:00:00"
             displayEventEnd={true}
             forceEventDuration={true}
-            defaultTimedEventDuration='01:00:00'
+            defaultTimedEventDuration="01:00:00"
           />
         </div>
       )} */}
@@ -529,7 +643,9 @@ export const ShiftsPage: FunctionalComponent = () => {
                               optionValue='id'
                               optionLabel='fullname'
                               onChange={(e) => {
-                                const id = parseInt(e.currentTarget.value);
+                                const id = Number.parseInt(
+                                  e.currentTarget.value
+                                );
                                 input.onChange(id);
                               }}
                             />
@@ -549,7 +665,9 @@ export const ShiftsPage: FunctionalComponent = () => {
                               optionLabel='description'
                               options={services.value}
                               onChange={(e) => {
-                                const id = parseInt(e.currentTarget.value);
+                                const id = Number.parseInt(
+                                  e.currentTarget.value
+                                );
                                 input.onChange(id);
                               }}
                             />
