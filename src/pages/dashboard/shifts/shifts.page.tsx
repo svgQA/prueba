@@ -98,13 +98,14 @@ export const ShiftsPage: FunctionalComponent = () => {
           rounded={false}
           className={
             selectedButton === VIEW_NAME.TABLE
-              ? "bg-primary-opacity border-2 border-primary p-2"
+              ? "bg-primary-opacity border-2 border-primary p-2 t-primary"
               : "border-2 border-primary p-2"
           }
           icon="320"
+          iconHexColor={selectedButton === VIEW_NAME.TABLE ? "#00BDD6" : ""}
         />
         <Button
-          name="button-change-table"
+          name="button-change-scheduler"
           onClick={() => {
             handleViewChange(VIEW_NAME.SCHEDULER)
             setSelectedButton(VIEW_NAME.SCHEDULER)
@@ -116,9 +117,10 @@ export const ShiftsPage: FunctionalComponent = () => {
               : "border-2 border-primary p-2"
           }
           icon="330"
+          iconHexColor={selectedButton === VIEW_NAME.SCHEDULER ? "#00BDD6" : ""}
         />
         <Button
-          name="button-change-table"
+          name="button-change-calendar"
           onClick={() => {
             handleViewChange(VIEW_NAME.CALENDAR)
             setSelectedButton(VIEW_NAME.CALENDAR)
@@ -130,17 +132,23 @@ export const ShiftsPage: FunctionalComponent = () => {
               : "border-2 border-primary p-2"
           }
           icon="331"
+          iconHexColor={selectedButton === VIEW_NAME.CALENDAR ? "#00BDD6" : ""}
         />
-        <Button name="button-change-table" rounded={false} className="border-2 border-primary p-2" icon="314" />
         <Button
-          name="button-change-table"
+          name="button-action"
+          rounded={false}
+          className="border-2 border-primary p-2"
+          icon="314"
+        />
+        <Button
+          name="button-supervision"
           label="Supervisión Remota"
           className="bg-primary text-white py-1 rounded-full px-4"
         />
       </div>
     ),
     [selectedButton],
-  )
+  );
 
   const handleTaskChange = useCallback(
     (_: Task) => {
