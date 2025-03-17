@@ -31,7 +31,8 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
-import {arrayMove,SortableContext,horizontalListSortingStrategy,} from '@dnd-kit/sortable';
+import {arrayMove,SortableContext,horizontalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
 import { Button } from '../button/button';
@@ -342,7 +343,7 @@ export const Table = <T,>({
                 : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
             }`}
           >
-            <span className="flex items-center justify-center w-full h-full leading-none">{"«"}</span>
+            <span>{"«"}</span>
           </button>
 
           <button
@@ -354,7 +355,7 @@ export const Table = <T,>({
                 : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
             }`}
           >
-            <span className="flex items-center justify-center w-full h-full leading-none">{"‹"}</span>
+            <span>{"‹"}</span>
           </button>
 
           {pageNumbers.map((pageIdx, i) =>
@@ -402,9 +403,7 @@ export const Table = <T,>({
                     : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
                 }`}
               >
-                <span className="flex items-center justify-center w-full h-full leading-none">
-                  {Number(pageIdx) + 1}
-                </span>
+                {Number(pageIdx) + 1}
               </button>
             ),
           )}
@@ -418,7 +417,7 @@ export const Table = <T,>({
                 : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
             }`}
           >
-            <span className="flex items-center justify-center w-full h-full leading-none">{"›"}</span>
+            <span>{"›"}</span>
           </button>
 
           <button
@@ -430,7 +429,7 @@ export const Table = <T,>({
                 : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
             }`}
           >
-            <span className="flex items-center justify-center w-full h-full leading-none">{"»"}</span>
+            <span>{"»"}</span>
           </button>
         </div>
 
