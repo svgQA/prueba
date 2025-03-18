@@ -194,11 +194,11 @@ export const Search = ({
           >
             <div
               data-name={keyName}
-              className='flex items-center h-10 px-4 bg-primary-opacity text-primary rounded-md cursor-pointer gap-1 transition-all hover:bg-primary-opacity-2'
+              className='flex items-center h-7 px-2 py-1 bg-primary-opacity text-primary rounded-xl cursor-pointer gap-1 transition-all hover:bg-primary-opacity-2 text-sm'
             >
-              <span className='font-medium text-sm'>{keyLabel}: {String(item.value)}</span>
+              <span className='font-medium'>{keyLabel}: {String(item.value)}</span>
               <span
-                className='ml-1 text-primary hover:text-ternary cursor-pointer flex items-center justify-center w-5 h-5 rounded-full hover:bg-primary-opacity-2'
+                className='ml-1 text-primary hover:text-ternary cursor-pointer flex items-center justify-center w-4 h-4 rounded-full hover:bg-primary-opacity-2'
                 onClick={(e) => {
                   e.stopPropagation();
                   setFilter(searchArray.value.filter((f) => f.id !== item.id));
@@ -236,11 +236,11 @@ export const Search = ({
   return (
     <div
       id={id}
-      className='flex flex-row items-center h-14 w-full max-w-[850px] px-4 border rounded-lg relative border-b-light-dark bg-b-white shadow-sm focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200'
+      className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative border-b-light-dark bg-b-white shadow-sm focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200'
     >
       <span className='vox-icon vx-icon-153 text-t-light-dark' />
       <div
-        className='flex flex-row items-center gap-2 ml-3 flex-wrap'
+        className='flex flex-row items-center gap-1 ml-2 flex-wrap'
         onClick={handleClickFilters}
       >
         {searchList}
@@ -248,7 +248,7 @@ export const Search = ({
       <div className='flex-1 flex items-center'>
         <input
           ref={inputRef}
-          className='w-full px-3 py-2 bg-transparent outline-none text-t-light placeholder-gray-400 text-base'
+          className='w-full px-2 py-1 bg-transparent outline-none text-t-light placeholder-gray-400 text-base'
           placeholder={placeholder || 'Buscar por columna...'}
           onChange={handleChangeInput}
           onKeyDown={handleKeyPress}
@@ -261,14 +261,14 @@ export const Search = ({
         />
       </div>
 
-      {table && <div className='h-6 w-px bg-b-light-dark mx-3' />}
+      {table && <div className='h-6 w-px bg-b-light-dark mx-2' />}
 
       {table && group && <>{group}</>}
 
       {keys.length > 0 && isDropdownOpen.value && (
         <div
           ref={keysContainerRef}
-          className='absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-b-white rounded-lg shadow-md border-b-light-dark animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto'
+          className='absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-b-white rounded-xl shadow-md border-b-light-dark animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto'
           onClick={handleClickKeys}
         >
           <div className='px-3 py-1 text-xs text-gray-500 font-medium uppercase'>
