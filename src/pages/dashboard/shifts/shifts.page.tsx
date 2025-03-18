@@ -206,11 +206,11 @@ export const ShiftsPage: FunctionalComponent = () => {
   return (
     <Section>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <CardData title="Turnos Totales Hoy" count={530} subtitle="" color="text-secondary" icon="054" />
+        <CardData title="Turnos Totales Hoy" count={530} subtitle="" color="t-dark" icon="054" />
 
-        <CardData title="Turnos En Curso" count="50%" subtitle="" color="text-primary" icon="052" />
+        <CardData title="Turnos En Curso" count="50%" subtitle="" color="t-dark" icon="052" />
 
-        <CardData title="Turnos Finalizados" count="30%" subtitle="" color="text-error" icon="015" />
+        <CardData title="Turnos Finalizados" count="30%" subtitle="" color="t-dark" icon="015" />
       </div>
 
       {currentView.value === VIEW_NAME.TABLE && (
