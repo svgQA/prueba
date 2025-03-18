@@ -52,7 +52,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   }, [location]);
 
   const getSelected = useMemo(
-    () => (to: string) => (to === location ? 'text-primary' : ''),
+    () => (to: string) => (to === location ? 'bg-primary-opacity border-primary p-2 text-primary' : ''),
     [location]
   );
 
