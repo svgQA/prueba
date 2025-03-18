@@ -1,4 +1,4 @@
-import { VNode } from 'preact'; 
+import { VNode } from 'preact';
 import './table.css';
 import {
   getCoreRowModel,
@@ -12,9 +12,10 @@ import {
   getExpandedRowModel,
   ColumnDef,
   ColumnFiltersState,
-  getGroupedRowModel, 
-  GroupingState, 
+  getGroupedRowModel,
+  GroupingState,
   Row,
+  flexRender,
 } from '@tanstack/react-table';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { ITableProps } from './interface';
@@ -31,7 +32,8 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
-import {arrayMove,SortableContext,horizontalListSortingStrategy,
+import {
+  arrayMove, SortableContext, horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
@@ -146,14 +148,13 @@ export const Table = <T,>({
             <div>
               {column.getCanPin() && (
                 <span
-                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${
-                    column.getIsPinned() ? "text-error" : "text-primary"
-                  }`}
+                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? "text-error" : "text-primary"
+                    }`}
                   onClick={() => column.pin(column.getIsPinned() ? false : "left")}
                 />
               )}
             </div>
-            {}
+            { }
             <Switch
               name={`ch-hidden-${column.id}`}
               id={`ch-hidden-${column.id}`}
@@ -169,13 +170,11 @@ export const Table = <T,>({
 
   const sensors = useSensors(useSensor(MouseSensor, {}), useSensor(TouchSensor, {}), useSensor(KeyboardSensor, {}))
 
-  // Modificar la función renderRows para que pueda identificar la última fila
   const renderRows = useCallback(
     (rows: Row<T>[]): VNode => {
       return (
         <>
           {rows.map((row, rowIndex) => {
-            // Determinar si esta es la última fila visible
             const isLastRow = rowIndex === rows.length - 1
 
             if (row.getIsGrouped()) {
@@ -186,9 +185,8 @@ export const Table = <T,>({
                       <td className="text-center left-0 min-w-[30px]" style={{ position: "sticky", zIndex: 1 }}>
                         <span
                           onClick={() => row.toggleExpanded()}
-                          className={`vox-icon ${
-                            row.getIsExpanded() ? "vx-icon-002" : "vx-icon-001"
-                          } cursor-pointer size-sm`}
+                          className={`vox-icon ${row.getIsExpanded() ? "vx-icon-002" : "vx-icon-001"
+                            } cursor-pointer size-sm`}
                         />
                       </td>
                     )}
@@ -221,15 +219,169 @@ export const Table = <T,>({
                         )}
                       </td>
                     )}
-                    {row.getVisibleCells().map((cell, index) => (
-                      <SortableContext
-                        key={`${cell.id}-${index}`}
-                        items={columnOrder}
-                        strategy={horizontalListSortingStrategy}
-                      >
-                        <DraggableCell<T> key={`${cell.id}-${index}`} cell={cell} />
-                      </SortableContext>
-                    ))}
+                    {row.getVisibleCells().map((cell, index) => {
+                      const isContratoColumn =
+                        cell.column.id === "Contrato" ||
+                        cell.column.id === "contrato" ||
+                        (typeof cell.column.columnDef.header === "string" &&
+                          cell.column.columnDef.header.toLowerCase() === "contrato")
+
+                      const isInicioColumn =
+                        cell.column.id === "Inicio" ||
+                        cell.column.id === "inicio" ||
+                        (typeof cell.column.columnDef.header === "string" &&
+                          cell.column.columnDef.header.toLowerCase() === "inicio")
+
+                      const isFinalizacionColumn =
+                        cell.column.id === "Finalización" ||
+                        cell.column.id === "finalizacion" ||
+                        cell.column.id === "finalización" ||
+                        (typeof cell.column.columnDef.header === "string" &&
+                          cell.column.columnDef.header.toLowerCase() === "finalización")
+
+                      const isFechaColumn =
+                        cell.column.id === "Fecha" ||
+                        cell.column.id === "fecha" ||
+                        (typeof cell.column.columnDef.header === "string" &&
+                          cell.column.columnDef.header.toLowerCase() === "fecha")
+
+                      const isDuracionColumn =
+                        cell.column.id === "Duración" ||
+                        cell.column.id === "duracion" ||
+                        cell.column.id === "duración" ||
+                        (typeof cell.column.columnDef.header === "string" &&
+                          cell.column.columnDef.header.toLowerCase() === "duración")
+
+                      return (
+                        <SortableContext
+                          key={`${cell.id}-${index}`}
+                          items={columnOrder}
+                          strategy={horizontalListSortingStrategy}
+                        >
+                          {isContratoColumn ? (
+                            <td key={`${cell.id}-${index}`} className="text-center">
+                              <span className="border-b border-gray-500 inline-block">
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </span>
+                            </td>
+                          ) : isInicioColumn || isFinalizacionColumn ? (
+                            <td key={`${cell.id}-${index}`} className="text-center">
+                              {(() => {
+                                const rowData = row.original as any
+                                const checkInData = isInicioColumn ? rowData.checkIn : null
+                                const checkOutData = isFinalizacionColumn ? rowData.checkOut : null
+                                const endDate = new Date(rowData.end)
+                                const now = new Date()
+
+                                let colorClass = "border-gray-500 text-gray-700"
+
+                                if (
+                                  (isInicioColumn && checkInData?.location) ||
+                                  (isFinalizacionColumn && checkOutData?.location)
+                                ) {
+                                  const twoDaysBefore = new Date(endDate)
+                                  twoDaysBefore.setDate(twoDaysBefore.getDate() - 2)
+
+                                  if (now < twoDaysBefore) {
+                                    colorClass = "border-blue-400 text-blue-700"
+                                  } else if (now <= endDate) {
+                                    colorClass = "border-green-400 text-green-700"
+                                  } else {
+                                    colorClass = "border-red-400 text-red-700"
+                                  }
+                                }
+
+                                const formatScheduledTime = (columnType: string) => {
+                                  if (columnType === "inicio") {
+                                    return "19:00"
+                                  } else {
+                                    return "07:00"
+                                  }
+                                }
+
+                                const formatActualTime = (data: any) => {
+                                  if (!data || !data.time) return "..."
+                                  const date = new Date(data.time)
+                                  return date.toLocaleTimeString("es-ES", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: false,
+                                  })
+                                }
+
+                                const scheduledTime = formatScheduledTime(isInicioColumn ? "inicio" : "finalizacion")
+                                const actualTime = isInicioColumn
+                                  ? formatActualTime(checkInData)
+                                  : formatActualTime(checkOutData)
+
+                                return (
+                                  <div
+                                    className={`inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}
+                                  >
+                                    <span>{scheduledTime}</span>
+                                    <span className="mx-1">→</span>
+                                    <span>{actualTime}</span>
+                                  </div>
+                                )
+                              })()}
+                            </td>
+                          ) : isFechaColumn ? (
+                            <td key={`${cell.id}-${index}`} className="text-center">
+                              {(() => {
+                                const rowData = row.original as any
+                                const startDate = rowData.start ? new Date(rowData.start) : null
+
+                                if (!startDate) return "-"
+
+                                return startDate.toLocaleDateString("es-ES", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                })
+                              })()}
+                            </td>
+                          ) : isDuracionColumn ? (
+                            <td key={`${cell.id}-${index}`} className="text-center">
+                              {(() => {
+                                const rowData = row.original as any
+                                const serviceId = rowData.serviceId
+                                const checkInData = rowData.checkIn
+                                const checkOutData = rowData.checkOut
+
+                                // Duración programada (siempre 12h en este ejemplo)
+                                const scheduledDuration = "12h"
+
+                                // Calcular duración real si hay checkIn y checkOut
+                                let actualDuration = "..."
+                                if (checkInData?.time && checkOutData?.time) {
+                                  const checkInTime = new Date(checkInData.time)
+                                  const checkOutTime = new Date(checkOutData.time)
+
+                                  // Calcular diferencia en milisegundos
+                                  const diffMs = checkOutTime.getTime() - checkInTime.getTime()
+
+                                  // Convertir a horas y minutos
+                                  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+                                  const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
+
+                                  actualDuration = `${diffHours}h ${diffMinutes}m`
+                                }
+
+                                return (
+                                  <div className="inline-flex items-center px-2 py-0.5 rounded-md border border-gray-500 text-gray-700 text-sm">
+                                    <span>{scheduledDuration}</span>
+                                    <span className="mx-1">→</span>
+                                    <span>{actualDuration}</span>
+                                  </div>
+                                )
+                              })()}
+                            </td>
+                          ) : (
+                            <DraggableCell<T> key={`${cell.id}-${index}`} cell={cell} />
+                          )}
+                        </SortableContext>
+                      )
+                    })}
                   </tr>
                   {expandable && row.getIsExpanded() && (
                     <tr className="border-b border-gray-200">
@@ -255,47 +407,37 @@ export const Table = <T,>({
     const currentPage = table.getState().pagination.pageIndex
     const currentPageSize = table.getState().pagination.pageSize
 
-    // Helper function to get intermediate pages
     const getIntermediatePages = (startIdx: number, endIdx: number) => {
       return Array.from({ length: endIdx - startIdx + 1 }, (_, i) => startIdx + i)
     }
 
-    // Generate page numbers to display
     let pageNumbers: (number | string)[] = []
 
     if (totalPages <= 5) {
-      // Show all pages if total pages are less than or equal to 5
       pageNumbers = Array.from({ length: totalPages }, (_, i) => i)
     } else {
-      // Always show first page
       pageNumbers = [0]
 
-      // Calculate pages for first ellipsis
       const firstEllipsisPages = getIntermediatePages(1, Math.min(currentPage - 1, totalPages - 2))
 
-      // If there's only one page between first page and current page, show it directly
       if (firstEllipsisPages.length === 1) {
         pageNumbers.push(firstEllipsisPages[0])
       } else if (firstEllipsisPages.length > 1) {
         pageNumbers.push("ellipsis-start")
       }
 
-      // Add current page if not already included
       if (currentPage > 0 && currentPage < totalPages - 1 && !pageNumbers.includes(currentPage)) {
         pageNumbers.push(currentPage)
       }
 
-      // Calculate pages for second ellipsis
       const secondEllipsisPages = getIntermediatePages(Math.max(currentPage + 1, 1), totalPages - 2)
 
-      // If there's only one page between current page and last page, show it directly
       if (secondEllipsisPages.length === 1) {
         pageNumbers.push(secondEllipsisPages[0])
       } else if (secondEllipsisPages.length > 1) {
         pageNumbers.push("ellipsis-end")
       }
 
-      // Always show last page
       if (totalPages > 1) {
         pageNumbers.push(totalPages - 1)
       }
@@ -337,11 +479,10 @@ export const Table = <T,>({
           <button
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            className={`flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanPreviousPage()
+            className={`flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanPreviousPage()
                 ? "border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
                 : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
-            }`}
+              }`}
           >
             <span>{"«"}</span>
           </button>
@@ -349,11 +490,10 @@ export const Table = <T,>({
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanPreviousPage()
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanPreviousPage()
                 ? "border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
                 : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
-            }`}
+              }`}
           >
             <span>{"‹"}</span>
           </button>
@@ -374,8 +514,8 @@ export const Table = <T,>({
                       {(pageIdx === "ellipsis-start"
                         ? getIntermediatePages(1, currentPage - 1).filter((num) => !pageNumbers.includes(num))
                         : getIntermediatePages(currentPage + 1, totalPages - 2).filter(
-                            (num) => !pageNumbers.includes(num),
-                          )
+                          (num) => !pageNumbers.includes(num),
+                        )
                       ).map((pageNum) => (
                         <button
                           key={`dropdown-page-${pageNum}`}
@@ -397,11 +537,10 @@ export const Table = <T,>({
               <button
                 key={`page-${pageIdx}`}
                 onClick={() => table.setPageIndex(Number(pageIdx))}
-                className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-                  currentPage === pageIdx
+                className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${currentPage === pageIdx
                     ? "border-[#00BCD4] bg-[#E0F7FA] text-[#00838F]"
                     : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 {Number(pageIdx) + 1}
               </button>
@@ -411,11 +550,10 @@ export const Table = <T,>({
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanNextPage()
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanNextPage()
                 ? "border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
                 : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
-            }`}
+              }`}
           >
             <span>{"›"}</span>
           </button>
@@ -423,11 +561,10 @@ export const Table = <T,>({
           <button
             onClick={() => table.setPageIndex(totalPages - 1)}
             disabled={!table.getCanNextPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanNextPage()
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanNextPage()
                 ? "border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
                 : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
-            }`}
+              }`}
           >
             <span>{"»"}</span>
           </button>
@@ -507,4 +644,3 @@ export const Table = <T,>({
     </>
   )
 }
-
