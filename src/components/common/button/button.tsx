@@ -51,7 +51,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
       {label && !rounded && (
         <div className='flex flex-row justify-between items-center w-full md:w-auto'>
           <p
-            className={`w-full capitalize text-center ${textColor} ${big ? '' : 'py-2'}`}
+            className={`w-full capitalize text-center ${textColor} ${big ? 'py-1' : ''}`}
           >
             {label}
           </p>

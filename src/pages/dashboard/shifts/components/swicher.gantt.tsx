@@ -16,7 +16,7 @@ export const ViewSwitcher = ({
   status,
 }: IViewSwitcherProps) => {
   return (
-    <div className='flex items-center space-x-4 justify-end py-4'>
+    <div className='flex items-center space-x-4 justify-end py-3 pr-4'>
       <Button
         id='hour-button'
         name='hour-button'
