@@ -1,4 +1,3 @@
-import { Badge } from '@/components/common/badge/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -184,11 +183,6 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     accessorKey: 'status',
     size: 120,
     header: 'Estado',
-    // cell: (info) => (
-    //   <div className='flex flex-row justify-center'>
-    //     <Badge label={String(info.getValue())} icon='123' color='bg-primary' />
-    //   </div>
-    // ),
   },
   {
     id: 'duracion',
