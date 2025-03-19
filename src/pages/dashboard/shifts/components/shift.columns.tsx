@@ -9,7 +9,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'employee',
     accessorKey: 'employee.name',
     size: 180,
-    header: 'Empleado',
+    header: 'Usuario',
     enableGrouping: true,
     cell: (info) => {
       const { employee } = info.row.original;
