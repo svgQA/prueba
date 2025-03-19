@@ -19,6 +19,8 @@ import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/updaser.modal';
 import { CardData } from '@/components/compose/cards';
 import { ExpandableMultiple } from './components/expandable.multiple';
+import { Button } from '@/components/common/button/button';
+import { SendForm } from './components/send.modal';
 
 enum VIEW_NAME {
   TABLE,
@@ -28,7 +30,8 @@ enum VIEW_NAME {
 
 export const ShiftsPage: FunctionalComponent = () => {
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
-  const showModal = useSignal<boolean>(false);
+  const showUpsertModal = useSignal<boolean>(false);
+  const showSendModal = useSignal<boolean>(false);
   const shifts = useSignal<IShiftResponse[]>([]);
   const defaultColumn = useSignal<string>('default');
 
@@ -46,8 +49,16 @@ export const ShiftsPage: FunctionalComponent = () => {
     users: [],
   });
 
+  const toggleSendModal = () => {
+    showSendModal.value = !showSendModal.value;
+  };
+
+  const toggleUpsertModal = () => {
+    showUpsertModal.value = !showUpsertModal.value;
+  };
+
   const getShiftHandler = async () => {
-    const response = await ShiftService.get_all();
+    const response = await ShiftService.get_all({ page: 1, items: 1000 });
     if (!response.getStatus()) return;
     console.log('response.getMany()', response.getMany());
     shifts.value = response.getMany();
@@ -66,10 +77,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       start: startDate.toISOString(),
     });
     if (!response.getStatus()) return;
-    setGanttShifts((prev) => ({
-      ...prev,
-      users: response.getMany(),
-    }));
+    setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
   };
 
   useEffect(() => {
@@ -87,89 +95,59 @@ export const ShiftsPage: FunctionalComponent = () => {
     currentView.value = view;
   }, []);
 
-  const wrapperStyle = {
-    display: 'inline-block',
-    backgroundColor: 'transparent',
-    padding: 0,
-    margin: 0,
-    border: 'none',
-    overflow: 'hidden',
-  };
-
-  const innerStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    border: 'none',
-    padding: 0,
-  };
-
   const buttonMenu = useMemo(
     () => (
-      <div className='flex flex-row gap-4 justify-start'>
-        <div style={wrapperStyle}>
-          <button
-            className='focus:outline-none'
-            onClick={() => handleViewChange(VIEW_NAME.TABLE)}
-            style={innerStyle}
-          >
-            <div
-              style={{
-                position: 'relative',
-                width: '24px',
-                height: '24px',
-                overflow: 'hidden',
-              }}
-            >
-              <span
-                className='vox-icon vx-icon-109'
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              ></span>
-            </div>
-          </button>
-        </div>
-
-        <div style={wrapperStyle}>
-          <button
-            className='focus:outline-none'
-            onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
-            style={innerStyle}
-          >
-            <div
-              style={{
-                position: 'relative',
-                width: '24px',
-                height: '24px',
-                overflow: 'hidden',
-              }}
-            >
-              <span
-                className='vox-icon vx-icon-094'
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              ></span>
-            </div>
-          </button>
-        </div>
+      <div className='flex items-center gap-2'>
+        <Button
+          name='button-change-table'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.TABLE);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.TABLE
+              ? 'bg-primary-opacity border-2 border-primary p-2 t-primary'
+              : 'border-2 border-primary p-2'
+          }
+          icon='320'
+          iconHexColor={currentView.value === VIEW_NAME.TABLE ? '#00BDD6' : ''}
+        />
+        <Button
+          name='button-change-scheduler'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.SCHEDULER);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.SCHEDULER
+              ? 'bg-primary-opacity border-2 border-primary p-2'
+              : 'border-2 border-primary p-2'
+          }
+          icon='330'
+          iconHexColor={
+            currentView.value === VIEW_NAME.SCHEDULER ? '#00BDD6' : ''
+          }
+        />
+        <Button
+          name='button-action'
+          rounded={false}
+          className='border-2 border-primary p-2'
+          icon='314'
+          onClick={toggleSendModal}
+        />
+        <Button
+          name='button-supervision'
+          label='Supervisión Remota'
+          className='bg-primary text-white py-1 rounded px-4'
+        />
       </div>
     ),
-    []
+    [currentView.value]
   );
 
   const handleTaskChange = useCallback(
     (_: Task) => {
       if (taskSelected) {
-        // setTaskSelected(() => ({ ...taskSelected, ...task }));
       }
     },
     [shifts]
@@ -177,24 +155,14 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const handleDblClick = useCallback((task: Task) => {
     setTaskSelected(() => task);
-    showModal.value = true;
+    showUpsertModal.value = true;
   }, []);
 
-  const handleClick = useCallback(
-    (/* task: Task */) => {
-      // taskSelected.value = task;
-      // showModal.value = true;
-    },
-    []
-  );
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleCreacteNewShift = () => {
     cleanSelectedData();
-    toggleModal();
-  };
-
-  const toggleModal = () => {
-    showModal.value = !showModal.value;
+    toggleUpsertModal();
   };
 
   const handleUserClick = useCallback(
@@ -202,7 +170,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       const selectedUser = ganttShifts.users.find((user) => user.id === id);
       if (selectedUser) {
         setUserSelected(selectedUser);
-        showModal.value = true;
+        showUpsertModal.value = true;
       }
     },
     [ganttShifts.users]
@@ -212,14 +180,27 @@ export const ShiftsPage: FunctionalComponent = () => {
     window.confirm('Are you sure about ' + task.name + ' ?');
   }, []);
 
-  const handlOnCloseModal = useCallback(() => {
+  const handleCloseUpsertModal = useCallback(() => {
     cleanSelectedData();
-    toggleModal();
+    toggleUpsertModal();
   }, []);
 
   const cleanSelectedData = useCallback(() => {
     setUserSelected(undefined);
     setTaskSelected(undefined);
+  }, []);
+
+  const handleCloseSendModal = useCallback(() => {
+    showSendModal.value = false;
+  }, []);
+
+  const handleSend = useCallback(async (data: any) => {
+    try {
+      console.log('Sending data:', data);
+      showSendModal.value = false;
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
   }, []);
 
   return (
@@ -229,7 +210,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           title='Turnos Totales Hoy'
           count={530}
           subtitle=''
-          color='text-secondary'
+          color='t-dark'
           icon='054'
         />
 
@@ -237,7 +218,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           title='Turnos En Curso'
           count='50%'
           subtitle=''
-          color='text-primary'
+          color='t-dark'
           icon='052'
         />
 
@@ -245,7 +226,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           title='Turnos Finalizados'
           count='30%'
           subtitle=''
-          color='text-error'
+          color='t-dark'
           icon='015'
         />
       </div>
@@ -308,12 +289,17 @@ export const ShiftsPage: FunctionalComponent = () => {
       )}
 
       <TaskForm
-        // initialValues={initialValues}
-        closed={showModal.value}
-        onClose={handlOnCloseModal}
+        closed={showUpsertModal.value}
+        onClose={handleCloseUpsertModal}
         posSave={getGanttHandler}
         userSelected={userSelected}
         taskSelected={taskSelected}
+      />
+
+      <SendForm
+        closed={showSendModal.value}
+        onClose={handleCloseSendModal}
+        onSend={handleSend}
       />
     </Section>
   );

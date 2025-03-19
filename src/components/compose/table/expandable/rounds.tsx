@@ -81,19 +81,23 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
         </div>
         <div className='text-center'>
           <h2>Ubicación de los punto en mapa</h2>
-          <Map
-            name='Map'
-            pointsAmount={100}
-            sendPoints={() => {}}
-            pointsRef={row.markers ?? []}
-            center={row.markers[0].position ?? []}
-            condition={true}
-            errorCondition='No tienes autorizado modificar puntos'
-            radialPoint={null}
-            errorRadialPoint=''
-            width='100%'
-            clickPoint={handlePoint}
-          />
+          {row.markers.length ? (
+            <Map
+              name='Map'
+              pointsAmount={100}
+              sendPoints={() => {}}
+              pointsRef={row.markers ?? []}
+              center={row.markers[0].position ?? []}
+              condition={true}
+              errorCondition='No tienes autorizado modificar puntos'
+              radialPoint={null}
+              errorRadialPoint=''
+              width='100%'
+              clickPoint={handlePoint}
+            />
+          ) : (
+            <p>No hay puntos en la ronda </p>
+          )}
         </div>
       </div>
     </div>

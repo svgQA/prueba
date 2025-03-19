@@ -17,10 +17,18 @@ export const columns: ColumnDef<Place>[] = [
     header: 'Nombre',
   },
   {
-    id: 'code',
-    accessorKey: 'code',
-    size: 60,
+    id: 'description',
+    accessorKey: 'description',
+    size: 20,
     header: 'Descripción',
+    cell: (info) => {
+      const description = info.getValue() as string;
+      return (
+        <div className='w-full flex justify-center max-w-96 overflow-hidden text-ellipsis whitespace-nowrap'>
+          {description}
+        </div>
+      );
+    },
   },
   {
     id: 'latitude',

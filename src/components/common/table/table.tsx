@@ -1,4 +1,4 @@
-import { VNode } from 'preact'; // AGREGADO
+import { VNode } from 'preact';
 import './table.css';
 import {
   getCoreRowModel,
@@ -12,11 +12,18 @@ import {
   getExpandedRowModel,
   ColumnDef,
   ColumnFiltersState,
-  getGroupedRowModel, // AGREGADO
-  GroupingState, // AGREGADO
+  getGroupedRowModel,
+  GroupingState,
   Row,
+  // flexRender,
 } from '@tanstack/react-table';
-import { useCallback, useMemo, useState } from 'preact/hooks';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'preact/hooks';
 import { ITableProps } from './interface';
 
 import { Search } from '../search/search';
@@ -38,7 +45,7 @@ import {
 } from '@dnd-kit/sortable';
 import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
-import { Button } from '../button/button';
+// import { Button } from '../button/button';
 import { Switch } from '../switch/switch';
 // import { Group } from './components/group/group'; // Ya agregado antes
 import { ROW_ACTIONS } from './enum';
@@ -71,6 +78,25 @@ export const Table = <T,>({
     columnsData.map((c) => c.id as string)
   );
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setActiveDropdown(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const table = useReactTable({
     data,
@@ -176,12 +202,13 @@ export const Table = <T,>({
     useSensor(KeyboardSensor, {})
   );
 
-  // Memoize the row rendering function to improve performance
   const renderRows = useCallback(
     (rows: Row<T>[]): VNode => {
       return (
         <>
-          {rows.map((row) => {
+          {rows.map((row, rowIndex) => {
+            const isLastRow = rowIndex === rows.length - 1;
+
             if (row.getIsGrouped()) {
               return (
                 <Fragment key={row.id}>
@@ -222,7 +249,13 @@ export const Table = <T,>({
             } else {
               return (
                 <Fragment key={row.id}>
-                  <tr>
+                  <tr
+                    className={
+                      data.length > pageSize && isLastRow
+                        ? 'no-bottom-border'
+                        : ''
+                    }
+                  >
                     {!unsettings && (
                       <td
                         className='text-center left-0 min-w-[30px]'
@@ -269,87 +302,221 @@ export const Table = <T,>({
         </>
       );
     },
-    [expandable, unsettings]
+    [expandable, unsettings, data.length, pageSize]
   );
 
-  // Memoize pagination buttons to improve performance
-  const paginationButtons = useMemo(() => {
+  const renderPagination = () => {
     if (data.length <= pageSize) return null;
 
+    const totalPages = table.getPageCount();
+    const currentPage = table.getState().pagination.pageIndex;
+    const currentPageSize = table.getState().pagination.pageSize;
+
+    const getIntermediatePages = (startIdx: number, endIdx: number) => {
+      return Array.from(
+        { length: endIdx - startIdx + 1 },
+        (_, i) => startIdx + i
+      );
+    };
+
+    let pageNumbers: (number | string)[] = [];
+
+    if (totalPages <= 5) {
+      pageNumbers = Array.from({ length: totalPages }, (_, i) => i);
+    } else {
+      pageNumbers = [0];
+
+      const firstEllipsisPages = getIntermediatePages(
+        1,
+        Math.min(currentPage - 1, totalPages - 2)
+      );
+
+      if (firstEllipsisPages.length === 1) {
+        pageNumbers.push(firstEllipsisPages[0]);
+      } else if (firstEllipsisPages.length > 1) {
+        pageNumbers.push('ellipsis-start');
+      }
+
+      if (
+        currentPage > 0 &&
+        currentPage < totalPages - 1 &&
+        !pageNumbers.includes(currentPage)
+      ) {
+        pageNumbers.push(currentPage);
+      }
+
+      const secondEllipsisPages = getIntermediatePages(
+        Math.max(currentPage + 1, 1),
+        totalPages - 2
+      );
+
+      if (secondEllipsisPages.length === 1) {
+        pageNumbers.push(secondEllipsisPages[0]);
+      } else if (secondEllipsisPages.length > 1) {
+        pageNumbers.push('ellipsis-end');
+      }
+
+      if (totalPages > 1) {
+        pageNumbers.push(totalPages - 1);
+      }
+    }
+
     return (
-      <div className='flex flex-row items-center justify-center gap-2 p-3'>
-        <Button
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-          type='button'
-          name='prev'
-          className='min-w-[100px] h-10 rounded-md bg-white border border-[#E5E7EB] text-[#6B7280]'
-          label='PREV'
-        />
+      <div className='flex items-center justify-between py-2 px-4'>
+        <div className='flex items-center gap-2'>
+          <span className='text-sm text-gray-600'>Filas por página:</span>
+          <div className='relative'>
+            <select
+              value={currentPageSize}
+              onChange={(e) => {
+                const target = e.target as HTMLSelectElement;
+                table.setPageSize(Number(target.value));
+              }}
+              className='h-8 appearance-none rounded border border-gray-300 bg-white pl-3 pr-8 text-sm'
+              style={{ minWidth: '60px' }}
+            >
+              {[10, 20, 30, 50, 100].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+            <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700'>
+              <svg
+                className='h-4 w-4 fill-current'
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 20 20'
+              >
+                <path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
+              </svg>
+            </div>
+          </div>
+          <span className='text-sm text-gray-600 ml-4'>
+            {currentPage * currentPageSize + 1}-
+            {Math.min((currentPage + 1) * currentPageSize, data.length)} de{' '}
+            {data.length} elementos
+          </span>
+        </div>
 
-        {Array.from(
-          { length: Math.min(2, table.getPageCount()) },
-          (_, i) => i
-        ).map((page) => (
-          <Button
-            key={page}
-            onClick={() => table.setPageIndex(page)}
-            type='button'
-            name={`page-${page + 1}`}
-            className={`w-10 h-10 flex items-center justify-center rounded-md ${
-              table.getState().pagination.pageIndex === page
-                ? 'bg-[#E5F6F8] text-[#6B7280]'
-                : 'bg-white border border-[#E5E7EB] text-[#6B7280]'
+        <div className='flex items-center'>
+          <button
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+            className={`flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanPreviousPage()
+                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
             }`}
-            label={(page + 1).toString()}
-          />
-        ))}
+          >
+            <span>{'«'}</span>
+          </button>
 
-        {table.getPageCount() > 2 && (
-          <Button
-            onClick={() => {
-              const middlePage = Math.floor(table.getPageCount() / 2);
-              table.setPageIndex(middlePage);
-            }}
-            type='button'
-            name='ellipsis'
-            className='w-10 h-10 flex items-center justify-center rounded-md bg-white border border-[#E5E7EB] text-[#6B7280]'
-            label='...'
-          />
-        )}
-
-        {table.getPageCount() > 2 && (
-          <Button
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            type='button'
-            name={`page-${table.getPageCount()}`}
-            className={`w-10 h-10 flex items-center justify-center rounded-md ${
-              table.getState().pagination.pageIndex === table.getPageCount() - 1
-                ? 'bg-[#E5F6F8] text-[#6B7280]'
-                : 'bg-white border border-[#E5E7EB] text-[#6B7280]'
+          <button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanPreviousPage()
+                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
             }`}
-            label={table.getPageCount().toString()}
-          />
-        )}
+          >
+            <span>{'‹'}</span>
+          </button>
 
-        <Button
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-          type='button'
-          name='next'
-          className='min-w-[100px] h-10 rounded-md bg-white border border-[#E5E7EB] text-[#6B7280]'
-          label='NEXT'
-        />
+          {pageNumbers.map((pageIdx, i) =>
+            pageIdx === 'ellipsis-start' || pageIdx === 'ellipsis-end' ? (
+              <div
+                key={`ellipsis-${i}`}
+                className='relative'
+                ref={activeDropdown === i ? dropdownRef : null}
+              >
+                <button
+                  className='mx-1 flex h-8 w-8 items-center justify-center text-gray-600 hover:bg-gray-100 rounded-sm border border-gray-300'
+                  onClick={() =>
+                    setActiveDropdown(activeDropdown === i ? null : i)
+                  }
+                >
+                  ...
+                </button>
+
+                {activeDropdown === i && (
+                  <div className='absolute bottom-full left-0 mb-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 py-2 px-2 min-w-[120px]'>
+                    <div className='grid grid-cols-3 gap-1'>
+                      {(pageIdx === 'ellipsis-start'
+                        ? getIntermediatePages(1, currentPage - 1).filter(
+                            (num) => !pageNumbers.includes(num)
+                          )
+                        : getIntermediatePages(
+                            currentPage + 1,
+                            totalPages - 2
+                          ).filter((num) => !pageNumbers.includes(num))
+                      ).map((pageNum) => (
+                        <button
+                          key={`dropdown-page-${pageNum}`}
+                          className='flex items-center justify-center h-8 w-8 rounded-sm hover:bg-gray-100 text-sm'
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            table.setPageIndex(pageNum);
+                            setActiveDropdown(null);
+                          }}
+                        >
+                          {pageNum + 1}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                key={`page-${pageIdx}`}
+                onClick={() => table.setPageIndex(Number(pageIdx))}
+                className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+                  currentPage === pageIdx
+                    ? 'border-[#00BCD4] bg-[#E0F7FA] text-[#00838F]'
+                    : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                {Number(pageIdx) + 1}
+              </button>
+            )
+          )}
+
+          <button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanNextPage()
+                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            <span>{'›'}</span>
+          </button>
+
+          <button
+            onClick={() => table.setPageIndex(totalPages - 1)}
+            disabled={!table.getCanNextPage()}
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanNextPage()
+                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            <span>{'»'}</span>
+          </button>
+        </div>
+
+        <div className='text-sm text-gray-600 flex items-center gap-2'>
+          <span>Página</span>
+          <div className='inline-block border border-gray-300 bg-white rounded-sm px-3 py-1 min-w-[40px] text-center'>
+            {currentPage + 1}
+          </div>
+          <span>de {totalPages}</span>
+        </div>
       </div>
     );
-  }, [
-    data.length,
-    pageSize,
-    table.getCanNextPage,
-    table.getCanPreviousPage,
-    table.getPageCount(),
-    table.getState().pagination.pageIndex,
-  ]);
+  };
 
   return (
     <>
@@ -404,12 +571,24 @@ export const Table = <T,>({
                 </tr>
               ))}
             </thead>
-            <tbody>{renderRows(table.getRowModel().rows)}</tbody>
+            <tbody>
+              {renderRows(table.getRowModel().rows)}
+              {data.length > pageSize && (
+                <tr className='pagination-row'>
+                  <td
+                    colSpan={
+                      table.getAllColumns().length + (!unsettings ? 1 : 0)
+                    }
+                    className='p-0 border-t border-gray-200'
+                  >
+                    {renderPagination()}
+                  </td>
+                </tr>
+              )}
+            </tbody>
           </table>
         </div>
       </DndContext>
-
-      {paginationButtons}
     </>
   );
 };
