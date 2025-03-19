@@ -35,6 +35,7 @@ interface IRound {
 interface IPlace {
   id: number;
   code: number;
+  radius: number;
   name: string;
   description: string;
   municipalityId: number;
@@ -46,6 +47,13 @@ interface IPlace {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  municipality: {
+    code: string;
+    name: string;
+  };
+  country: {
+    name: string;
+  };
 }
 
 interface IContract {
@@ -54,6 +62,7 @@ interface IContract {
   name: string;
   description: string;
   clientId: number;
+  client: IUser;
   startDate: string;
   endDate: string;
   state: string;
@@ -92,6 +101,7 @@ export interface IShiftResponse {
   start: string;
   end: string;
   employeedId: number;
+  employee: IUser;
   serviceId: number;
   status: string;
   type: string;

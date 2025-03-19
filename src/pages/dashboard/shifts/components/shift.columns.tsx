@@ -1,4 +1,3 @@
-// import { Badge } from '@/components/common/badge/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -7,22 +6,59 @@ import dayjs from 'dayjs';
 
 export const columns: ColumnDef<IShiftResponse>[] = [
   {
-    id: 'userName',
-    accessorKey: 'user.name',
+    id: 'employee',
+    accessorKey: 'employee.name',
     size: 180,
     header: 'Empleado',
     enableGrouping: true,
     cell: (info) => {
-      const { user } = info.row.original;
-      return `${user.name} ${user.surname}`;
+      const { employee } = info.row.original;
+      return (
+        <span
+          className=' p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        >
+          {employee.name} {employee.surname}
+        </span>
+      );
     },
   },
   {
-    id: 'serviceId',
+    id: 'service',
     accessorKey: 'service.id',
     size: 180,
     header: 'Servicio',
     enableGrouping: true,
+    meta: { expander: 'serviceId' },
+
+    cell: (info) => {
+      const serviceId = info.getValue() as number;
+      return (
+        <span
+          className=' p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        >
+          {serviceId}
+        </span>
+      );
+    },
+  },
+  {
+    id: 'contract',
+    accessorKey: 'service.contract.id',
+    size: 120,
+    header: 'Contrato',
+    cell: (info) => {
+      const contractId = info.getValue() as number;
+      return (
+        <span
+          className=' p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        >
+          {contractId}
+        </span>
+      );
+    },
   },
   {
     id: 'fecha',
@@ -43,13 +79,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     },
   },
   {
-    id: 'contractId',
-    accessorKey: 'service.contract.id',
-    size: 120,
-    header: 'Contrato',
-  },
-  {
-    id: 'start',
+    id: 'start-end',
     accessorKey: 'start',
     size: 150,
     header: 'Inicio',
@@ -88,7 +118,8 @@ export const columns: ColumnDef<IShiftResponse>[] = [
 
       return (
         <div
-          className={`inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}
+          onClick={() => info.row.toggleExpanded()}
+          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}
         >
           <span>{scheduledTime}</span>
           <span className='mx-1'>→</span>
@@ -98,7 +129,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     },
   },
   {
-    id: 'end',
+    id: 'start-end',
     accessorKey: 'end',
     size: 150,
     header: 'Finalización',
@@ -137,7 +168,8 @@ export const columns: ColumnDef<IShiftResponse>[] = [
 
       return (
         <div
-          className={`inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}
+          onClick={() => info.row.toggleExpanded()}
+          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}
         >
           <span>{scheduledTime}</span>
           <span className='mx-1'>→</span>
@@ -151,11 +183,6 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     accessorKey: 'status',
     size: 120,
     header: 'Estado',
-    // cell: (info) => (
-    //   <div className='flex flex-row justify-center'>
-    //     <Badge label={String(info.getValue())} icon='123' color='bg-primary' />
-    //   </div>
-    // ),
   },
   {
     id: 'duracion',
@@ -194,16 +221,19 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     accessorKey: 'report',
     size: 50,
     header: 'Reportes',
-    cell: () => (
+    cell: (info) => (
       <div className='flex flex-col items-center justify-center'>
-        <div className='w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600 font-medium'>
+        <div
+          onClick={() => info.row.toggleExpanded()}
+          className='p-1 size-sm cursor-pointer w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600 font-medium'
+        >
           2
         </div>
       </div>
     ),
   },
   {
-    id: 'activitiesProgress',
+    id: 'shift',
     accessorKey: 'activitiesProgress',
     size: 50,
     header: 'Actividades',
@@ -221,14 +251,17 @@ export const columns: ColumnDef<IShiftResponse>[] = [
       }
 
       return (
-        <div className='flex flex-row justify-center'>
+        <div
+          onClick={() => info.row.toggleExpanded()}
+          className=' p-1 size-sm cursor-pointer flex flex-row justify-center'
+        >
           <Gauge progress={progress} color={progressColor} />
         </div>
       );
     },
   },
   {
-    id: 'activitiesProgress',
+    id: 'round',
     accessorKey: 'activitiesProgress',
     size: 50,
     header: 'Rondas',
@@ -247,7 +280,12 @@ export const columns: ColumnDef<IShiftResponse>[] = [
 
       return (
         <div className='flex flex-row justify-center'>
-          <Gauge progress={progress} color={progressColor} />
+          <span
+            className=' p-1 size-sm cursor-pointer'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            <Gauge progress={progress} color={progressColor} />
+          </span>
         </div>
       );
     },
