@@ -7,36 +7,57 @@ import dayjs from 'dayjs';
 
 export const columns: ColumnDef<IShiftResponse>[] = [
   {
-    id: 'userName',
-    accessorKey: 'user.name',
+    id: 'employee',
+    accessorKey: 'employee.name',
     size: 180,
-    header: 'Empleado',
+    header: 'Usuario',
     cell: (info) => {
-      const { user } = info.row.original;
-      return `${user.name} ${user.surname}`;
+      const { employee } = info.row.original;
+      return (
+        <span
+          className=' p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        >
+          {employee.name} {employee.surname}
+        </span>
+      );
     },
   },
   {
-    id: 'serviceId',
+    id: 'service',
     accessorKey: 'service.id',
     size: 180,
     header: 'Servicio',
     enableGrouping: true,
+    meta: { expander: 'serviceId' },
+
+    cell: (info) => {
+      const serviceId = info.getValue() as number;
+      return (
+        <span
+          className=' p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        >
+          {serviceId}
+        </span>
+      );
+    },
   },
   {
-    id: 'contractId',
+    id: 'contract',
     accessorKey: 'service.contract.id',
     size: 120,
     header: 'Contrato',
-  },
-  {
-    id: 'date',
-    accessorKey: 'start',
-    size: 150,
-    header: 'fecha',
     cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('YYYY-MM-DD');
+      const contractId = info.getValue() as number;
+      return (
+        <span
+          className=' p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        >
+          {contractId}
+        </span>
+      );
     },
   },
   {
@@ -50,23 +71,38 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     },
   },
   {
-    id: 'start',
+    id: 'start-end',
     accessorKey: 'start',
     size: 150,
     header: 'Inicio',
     cell: (info) => {
       const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('HH:mm');
+      return (
+        <span
+          className=' p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        >
+          {dayjs(dateStr).format('HH:mm')}
+        </span>
+      );
     },
   },
   {
-    id: 'end',
+    id: 'start-end',
     accessorKey: 'end',
     size: 150,
     header: 'Finalización',
     cell: (info) => {
       const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('HH:mm');
+
+      return (
+        <span
+          className=' p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        >
+          {dayjs(dateStr).format('HH:mm')}
+        </span>
+      );
     },
   },
   {
@@ -81,21 +117,35 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     ),
   },
   {
-    id: 'activitiesProgress',
-    accessorKey: 'activitiesProgress',
-    size: 50,
-    header: 'Reportes',
+    id: 'status',
+    accessorKey: 'status',
+    size: 120,
+    header: 'Duración',
     cell: () => (
       <div className='flex flex-row justify-center'>
-        <Badge label='2' color='bg-primary' />
+        <Badge label='12' color='bg-primary' />
       </div>
     ),
   },
   {
-    id: 'activitiesProgress',
+    id: 'report',
+    accessorKey: 'report',
+    size: 50,
+    header: 'Reportes',
+    cell: (info) => (
+      <span
+        className=' p-1 size-sm cursor-pointer'
+        onClick={() => info.row.toggleExpanded()}
+      >
+        <Badge label='12' color='bg-primary' />
+      </span>
+    ),
+  },
+  {
+    id: 'shift',
     accessorKey: 'activitiesProgress',
     size: 50,
-    header: 'Progreso',
+    header: 'Actividades',
     cell: (info: any) => {
       const progress = info.getValue() as number;
 
@@ -111,7 +161,42 @@ export const columns: ColumnDef<IShiftResponse>[] = [
 
       return (
         <div className='flex flex-row justify-center'>
-          <Gauge progress={progress} color={progressColor} />
+          <span
+            className=' p-1 size-sm cursor-pointer'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            <Gauge progress={progress} color={progressColor} />
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    id: 'round',
+    accessorKey: 'activitiesProgress',
+    size: 50,
+    header: 'Rondas',
+    cell: (info: any) => {
+      const progress = info.getValue() as number;
+
+      let progressColor = '#E05858';
+
+      if (progress < 30) {
+        progressColor = '#E05858';
+      } else if (progress >= 30 && progress < 70) {
+        progressColor = '#FFC772';
+      } else if (progress >= 70) {
+        progressColor = '#00BDD6';
+      }
+
+      return (
+        <div className='flex flex-row justify-center'>
+          <span
+            className=' p-1 size-sm cursor-pointer'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            <Gauge progress={progress} color={progressColor} />
+          </span>
         </div>
       );
     },

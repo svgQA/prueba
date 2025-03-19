@@ -43,6 +43,7 @@ import { Switch } from '../switch/switch';
 // import { Group } from './components/group/group'; // Ya agregado antes
 import { ROW_ACTIONS } from './enum';
 import { Group } from './components/group';
+import { useSignal } from '@preact/signals';
 
 export const Table = <T,>({
   data,
@@ -54,6 +55,7 @@ export const Table = <T,>({
   onClickAction,
   unsearch,
   button,
+  showExpandableIcon = true,
 }: ITableProps<T>) => {
   const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -62,6 +64,8 @@ export const Table = <T,>({
     pageSize: pageSize,
   });
   const [expanded, setExpanded] = useState<ExpandedState>({});
+  const currentColumnName = useSignal<string>('');
+
   const [grouping, setGrouping] = useState<GroupingState>([]);
   const [columnOrder, setColumnOrder] = useState(() =>
     columnsData.map((c) => c.id as string)
@@ -224,7 +228,7 @@ export const Table = <T,>({
                         className='text-center left-0 min-w-[30px]'
                         style={{ position: 'sticky', zIndex: 1 }}
                       >
-                        {expandable && (
+                        {expandable && showExpandableIcon && (
                           <span
                             onClick={() => row.toggleExpanded()}
                             className='vox-icon vx-icon-001 cursor-pointer size-sm'
@@ -240,6 +244,9 @@ export const Table = <T,>({
                       >
                         <DraggableCell<T>
                           key={`${cell.id}-${index}`}
+                          onCurrentColumnName={(value) => {
+                            currentColumnName.value = value;
+                          }}
                           cell={cell}
                         />
                       </SortableContext>
@@ -251,7 +258,7 @@ export const Table = <T,>({
                         colSpan={row.getVisibleCells().length + 1}
                         className='p-4'
                       >
-                        {expandable(row.original)}
+                        {expandable(row.original, currentColumnName.value)}
                       </td>
                     </tr>
                   )}

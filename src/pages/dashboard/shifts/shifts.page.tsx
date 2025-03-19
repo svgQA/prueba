@@ -18,6 +18,7 @@ import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/updaser.modal';
 import { CardData } from '@/components/compose/cards';
+import { ExpandableMultiple } from './components/expandable.multiple';
 
 enum VIEW_NAME {
   TABLE,
@@ -29,6 +30,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const showModal = useSignal<boolean>(false);
   const shifts = useSignal<IShiftResponse[]>([]);
+  const defaultColumn = useSignal<string>('default');
 
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
@@ -47,6 +49,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const getShiftHandler = async () => {
     const response = await ShiftService.get_all();
     if (!response.getStatus()) return;
+    console.log('response.getMany()', response.getMany());
     shifts.value = response.getMany();
   };
 
@@ -251,6 +254,13 @@ export const ShiftsPage: FunctionalComponent = () => {
         <Table<IShiftResponse>
           data={shifts.value}
           columns={columns}
+          showExpandableIcon={false}
+          expandable={(row: IShiftResponse, currentColumnName?: string) => (
+            <ExpandableMultiple
+              type={currentColumnName || defaultColumn.value}
+              data={row}
+            />
+          )}
           pageSize={20}
           button={buttonMenu}
           visibility={{
