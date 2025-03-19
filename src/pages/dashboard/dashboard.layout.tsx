@@ -114,7 +114,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     };
 
     return (
-      <section className='bg-red w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
+      <section className=' bg-b-content bg-red w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
         <Loading />
         <Sidebar
           id='sidebar'
@@ -125,7 +125,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           isNavigation
           onLogout={signOut}
         />
-        <div className='flex flex-col pl-[4.5rem]'>
+        <div className='flex flex-col pl-[4.5rem] '>
           <Router>
             <Suspense fallback={<div>Loading...</div>}>
               <Route

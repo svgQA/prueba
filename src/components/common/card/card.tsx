@@ -4,7 +4,7 @@ import { type ICardProps } from './interface';
 export const Card: FunctionComponent<ICardProps> = ({
   id,
   children,
-  color = 'bg-opacity-40 bg-b-white border dark:bg-b-dark-light',
+  color = 'bg-b-white border dark:bg-b-dark-light',
   shadow = false,
   maxWidth,
 }: ICardProps) => {
