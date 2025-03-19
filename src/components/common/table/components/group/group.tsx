@@ -64,19 +64,7 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
         className='inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 bg-white rounded-md border border-gray-200 hover:bg-gray-50'
         onClick={() => setIsOpen(!isOpen)}
       >
-        <svg
-          className='w-4 h-4 text-gray-500'
-          viewBox='0 0 24 24'
-          fill='none'
-          stroke='currentColor'
-          strokeWidth='2'
-        >
-          <path
-            d='M3 4h18M3 12h12M3 20h6'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-        </svg>
+        <span className='vox-icon vx-icon-120 text-gray-500' />
         {displayText && <span>{displayText}</span>}
         <svg
           className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}

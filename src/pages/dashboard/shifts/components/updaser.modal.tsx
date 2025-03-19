@@ -108,7 +108,7 @@ export const TaskForm = ({
           name='btn-form-shift-close'
           type='button'
           label='Cancelar'
-          onClick={() => onClose?.()}
+          onClick={onClose}
         />
         <Button
           id='btn-form-shift-save'
