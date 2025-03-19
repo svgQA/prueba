@@ -9,7 +9,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'employee',
     accessorKey: 'employee.name',
     size: 180,
-    header: 'Empleado',
+    header: 'Usuario',
     enableGrouping: true,
     cell: (info) => {
       const { employee } = info.row.original;
@@ -18,7 +18,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
           className=' p-1 size-sm cursor-pointer'
           onClick={() => info.row.toggleExpanded()}
         >
-          {employee.name} {employee.surname}
+          {employee?.name} {employee?.surname}
         </span>
       );
     },
@@ -45,17 +45,17 @@ export const columns: ColumnDef<IShiftResponse>[] = [
   },
   {
     id: 'contract',
-    accessorKey: 'service.contract.id',
+    accessorKey: 'service.name',
     size: 120,
     header: 'Contrato',
     cell: (info) => {
-      const contractId = info.getValue() as number;
+      const contract = String(info.getValue());
       return (
         <span
-          className=' p-1 size-sm cursor-pointer'
+          className='p-1 size-sm cursor-pointer'
           onClick={() => info.row.toggleExpanded()}
         >
-          {contractId}
+          {contract}
         </span>
       );
     },
@@ -67,7 +67,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     header: 'Fecha',
     enableGrouping: false,
     cell: (info) => {
-      const dateStr = info.getValue() as string;
+      const dateStr = String(info.getValue());
       if (!dateStr) return '-';
 
       try {

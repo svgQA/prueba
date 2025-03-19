@@ -20,7 +20,7 @@ const EmployeeInfo = ({
               class='w-20 h-20 rounded-full mb-2'
             />
             <h3 class='text-lg font-semibold'>
-              {employee.name} {employee.surname}
+              {employee?.name} {employee?.surname}
             </h3>
             <p class='text-gray-500'>{'Operativo'}</p>
             <span class='mt-2 px-4 py-1 bg-green-100 text-green-600 rounded-full'>
