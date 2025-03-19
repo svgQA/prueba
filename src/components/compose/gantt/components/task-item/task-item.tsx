@@ -42,6 +42,12 @@ export const TaskItem = (props: TaskItemProps) => {
   const taskItem = useSignal<VNode>(<div />);
   const isTextInside = useSignal<boolean>(true);
 
+  const getProcessColor = () => {
+    return isSelected
+      ? task.styles.progressSelectedColor
+      : task.styles.progressColor;
+  };
+
   useEffect(() => {
     switch (task.typeInternal) {
       /*
@@ -140,7 +146,7 @@ export const TaskItem = (props: TaskItemProps) => {
           height={task.height}
           ry={task.barCornerRadius}
           rx={task.barCornerRadius}
-          fill={task.styles.backgroundSelectedColor}
+          fill={getProcessColor()}
         />
         <path
           d='M8 12C8 7.58 11.58 4 16 4C20.42 4 24 7.58 24 12C24 16.42 20.42 20 16 20C11.58 20 8 16.42 8 12ZM16 2C10.48 2 6 6.48 6 12C6 17.52 10.48 22 16 22C21.52 22 26 17.52 26 12C26 6.48 21.52 2 16 2ZM16.5 7V12.25L21 15L20.25 16.25L15 13V7H16.5Z'

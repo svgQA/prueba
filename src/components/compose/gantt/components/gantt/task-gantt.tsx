@@ -33,7 +33,12 @@ export const TaskGantt = ({
   const isDragging = useSignal(false);
   const startX = useSignal(0);
   const scrollLeft = useSignal(0);
-  const lastMouseX = useSignal(0); // Track last mouse position for smoother scrolling
+  const lastMouseX = useSignal(0);
+
+  // Detect Safari browser
+  const isSafari = useSignal(
+    /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+  );
 
   useEffect(() => {
     if (horizontalContainerRef.current) {
@@ -47,12 +52,13 @@ export const TaskGantt = ({
     }
   }, [scrollX]);
 
-  // Throttle scroll updates for better performance
   const throttledScroll = (newScrollLeft: number) => {
-    if (!window.requestAnimationFrame) {
+    if (isSafari.value || !window.requestAnimationFrame) {
+      // Safari implementation - direct scroll
       verticalGanttContainerRef.current!.scrollLeft = newScrollLeft;
       onScrollX?.(newScrollLeft);
     } else {
+      // Chrome implementation - use requestAnimationFrame
       requestAnimationFrame(() => {
         verticalGanttContainerRef.current!.scrollLeft = newScrollLeft;
         onScrollX?.(newScrollLeft);
@@ -61,17 +67,16 @@ export const TaskGantt = ({
   };
 
   const handleMouseDown = (e: MouseEvent) => {
-    // Don't initiate drag if we're interacting with a task bar
     if ((e.target as HTMLElement).closest('.bar')) {
       return;
     }
     e.preventDefault();
     isDragging.value = true;
-    startX.value = e.pageX - verticalGanttContainerRef.current!.offsetLeft;
+    startX.value = isSafari.value
+      ? e.pageX
+      : e.pageX - verticalGanttContainerRef.current!.offsetLeft;
     scrollLeft.value = verticalGanttContainerRef.current!.scrollLeft;
     lastMouseX.value = e.pageX;
-
-    // Add grabbing cursor
     document.body.style.cursor = 'grabbing';
   };
 
@@ -89,13 +94,19 @@ export const TaskGantt = ({
     if (!isDragging.value) return;
     e.preventDefault();
 
-    // Calculate scroll amount based on mouse movement delta
-    const mouseDelta = e.pageX - lastMouseX.value;
-    lastMouseX.value = e.pageX;
-
-    const newScrollLeft =
-      verticalGanttContainerRef.current!.scrollLeft - mouseDelta;
-    throttledScroll(newScrollLeft);
+    if (isSafari.value) {
+      // Safari implementation
+      const dx = e.pageX - startX.value;
+      const newScrollLeft = scrollLeft.value - dx;
+      throttledScroll(newScrollLeft);
+    } else {
+      // Chrome implementation
+      const mouseDelta = e.pageX - lastMouseX.value;
+      lastMouseX.value = e.pageX;
+      const newScrollLeft =
+        verticalGanttContainerRef.current!.scrollLeft - mouseDelta;
+      throttledScroll(newScrollLeft);
+    }
   };
 
   return (
