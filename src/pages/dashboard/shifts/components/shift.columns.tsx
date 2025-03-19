@@ -25,6 +25,24 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     enableGrouping: true,
   },
   {
+    id: 'fecha',
+    accessorKey: 'start',
+    size: 120,
+    header: 'Fecha',
+    enableGrouping: false,
+    cell: (info) => {
+      const dateStr = info.getValue() as string;
+      if (!dateStr) return "-";
+      
+      try {
+        return dayjs(dateStr).format('DD/MM/YYYY');
+      } catch (error) {
+        console.error("Error al formatear la fecha:", error);
+        return "-";
+      }
+    },
+  },
+  {
     id: 'contractId',
     accessorKey: 'service.contract.id',
     size: 120,
@@ -36,8 +54,45 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     size: 150,
     header: 'Inicio',
     cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('HH:mm');
+      const rowData = info.row.original
+      const checkInData = rowData.checkIn
+      const endDate = new Date(rowData.end)
+      const now = new Date()
+
+      let colorClass = "border-gray-500 text-gray-700"
+
+      if (checkInData?.location) {
+        const twoDaysBefore = new Date(endDate)
+        twoDaysBefore.setDate(twoDaysBefore.getDate() - 2)
+
+        if (now < twoDaysBefore) {
+          colorClass = "border-blue-400 text-blue-700"
+        } else if (now <= endDate) {
+          colorClass = "border-green-400 text-green-700"
+        } else {
+          colorClass = "border-red-400 text-red-700"
+        }
+      }
+
+      const scheduledTime = "19:00"
+      const formatActualTime = (data: any) => {
+        if (!data || !data.time) return "..."
+        const date = new Date(data.time)
+        return date.toLocaleTimeString("es-ES", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+      }
+      const actualTime = formatActualTime(checkInData)
+
+      return (
+        <div className={`inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}>
+          <span>{scheduledTime}</span>
+          <span className="mx-1">→</span>
+          <span>{actualTime}</span>
+        </div>
+      )
     },
   },
   {
@@ -46,8 +101,45 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     size: 150,
     header: 'Finalización',
     cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('HH:mm');
+      const rowData = info.row.original
+      const checkOutData = rowData.checkOut
+      const endDate = new Date(rowData.end)
+      const now = new Date()
+
+      let colorClass = "border-gray-500 text-gray-700"
+
+      if (checkOutData?.location) {
+        const twoDaysBefore = new Date(endDate)
+        twoDaysBefore.setDate(twoDaysBefore.getDate() - 2)
+
+        if (now < twoDaysBefore) {
+          colorClass = "border-blue-400 text-blue-700"
+        } else if (now <= endDate) {
+          colorClass = "border-green-400 text-green-700"
+        } else {
+          colorClass = "border-red-400 text-red-700"
+        }
+      }
+
+      const scheduledTime = "07:00"
+      const formatActualTime = (data: any) => {
+        if (!data || !data.time) return "..."
+        const date = new Date(data.time)
+        return date.toLocaleTimeString("es-ES", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+      }
+      const actualTime = formatActualTime(checkOutData)
+
+      return (
+        <div className={`inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}>
+          <span>{scheduledTime}</span>
+          <span className="mx-1">→</span>
+          <span>{actualTime}</span>
+        </div>
+      )
     },
   },
   {
@@ -55,20 +147,52 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     accessorKey: 'status',
     size: 120,
     header: 'Estado',
-    cell: (info) => (
-      <div className='flex flex-row justify-center'>
-        <Badge label={String(info.getValue())} icon='123' color='bg-primary' />
-      </div>
-    ),
+    // cell: (info) => (
+    //   <div className='flex flex-row justify-center'>
+    //     <Badge label={String(info.getValue())} icon='123' color='bg-primary' />
+    //   </div>
+    // ),
   },
   {
-    id: 'report',
-    accessorKey: 'report',
+    id: "duracion",
+    accessorKey: "duration",
+    size: 120,
+    header: "Duración",
+    cell: (info) => {
+      const rowData = info.row.original
+      const checkInData = rowData.checkIn
+      const checkOutData = rowData.checkOut
+      const scheduledDuration = "12h"
+
+      let actualDuration = "..."
+      if (checkInData?.time && checkOutData?.time) {
+        const checkInTime = new Date(checkInData.time)
+        const checkOutTime = new Date(checkOutData.time)
+        const diffMs = checkOutTime.getTime() - checkInTime.getTime()
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+        const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
+        actualDuration = `${diffHours}h ${diffMinutes}m`
+      }
+
+      return (
+        <div className="inline-flex items-center px-2 py-0.5 rounded-md border border-gray-500 text-gray-700 text-sm">
+          <span>{scheduledDuration}</span>
+          <span className="mx-1">→</span>
+          <span>{actualDuration}</span>
+        </div>
+      )
+    },
+  },
+  {
+    id: "report",
+    accessorKey: "report",
     size: 50,
-    header: 'Reportes',
+    header: "Reportes",
     cell: () => (
-      <div className='flex flex-row justify-center'>
-        <Badge label='2' color='bg-primary' />
+      <div className="flex flex-col items-center justify-center">
+        <div className="w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600 font-medium">
+          2
+        </div>
       </div>
     ),
   },
@@ -76,7 +200,32 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'activitiesProgress',
     accessorKey: 'activitiesProgress',
     size: 50,
-    header: 'Progreso',
+    header: 'Actividades',
+    cell: (info: any) => {
+      const progress = info.getValue() as number;
+
+      let progressColor = '#E05858';
+
+      if (progress < 30) {
+        progressColor = '#E05858';
+      } else if (progress >= 30 && progress < 70) {
+        progressColor = '#FFC772';
+      } else if (progress >= 70) {
+        progressColor = '#00BDD6';
+      }
+
+      return (
+        <div className='flex flex-row justify-center'>
+          <Gauge progress={progress} color={progressColor} />
+        </div>
+      );
+    },
+  },
+  {
+    id: 'activitiesProgress',
+    accessorKey: 'activitiesProgress',
+    size: 50,
+    header: 'Rondas',
     cell: (info: any) => {
       const progress = info.getValue() as number;
 

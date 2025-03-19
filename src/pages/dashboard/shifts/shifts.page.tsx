@@ -35,11 +35,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const startDate = dayjs().subtract(4, "day").toDate()
   const endDate = dayjs(startDate).add(1, "week").toDate()
-  const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
-    startDate,
-    endDate,
-    users: [],
-  })
+  const [ganttShifts, setGanttShifts] = useState<GeneralTask>({ startDate, endDate, users: [], })
 
   const getShiftHandler = async () => {
     const response = await ShiftService.get_all({ page: 1, items: 1000 })
@@ -54,16 +50,9 @@ export const ShiftsPage: FunctionalComponent = () => {
   }, [view])
 
   const getGanttHandler = async () => {
-    const response = await ShiftService.get_gantt({
-      page: 1,
-      items: 100,
-      start: startDate.toISOString(),
-    })
+    const response = await ShiftService.get_gantt({ page: 1, items: 100, start: startDate.toISOString() })
     if (!response.getStatus()) return
-    setGanttShifts((prev) => ({
-      ...prev,
-      users: response.getMany(),
-    }))
+    setGanttShifts((prev) => ({ ...prev, users: response.getMany(), }))
   }
 
   useEffect(() => {
@@ -143,7 +132,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         <Button
           name="button-supervision"
           label="Supervisión Remota"
-          className="bg-primary text-white py-1 rounded-full px-4"
+          className="bg-primary text-white py-1 rounded px-4"
         />
       </div>
     ),
