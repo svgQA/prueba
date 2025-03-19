@@ -18,9 +18,9 @@ import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/updaser.modal';
 import { CardData } from '@/components/compose/cards';
-// import { ExpandableMultiple } from './components/expandable.multiple';
 import { Button } from '@/components/common/button/button';
 import { SendForm } from './components/send.modal';
+import { ExpandableMultiple } from './components/expandable.multiple';
 
 enum VIEW_NAME {
   TABLE,
@@ -34,7 +34,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const showUpsertModal = useSignal<boolean>(false);
   const showSendModal = useSignal<boolean>(false);
   const shifts = useSignal<IShiftResponse[]>([]);
-  // const defaultColumn = useSignal<string>('default');
+  const defaultColumn = useSignal<string>('default');
 
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
@@ -111,7 +111,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               : 'border-2 border-primary p-2'
           }
           icon='320'
-          iconHexColor={currentView.value === VIEW_NAME.TABLE ? '#00BDD6' : ''}
+          // iconHexColor={currentView.value === VIEW_NAME.TABLE ? '#00BDD6' : ''}
         />
         <Button
           name='button-change-scheduler'
@@ -125,9 +125,9 @@ export const ShiftsPage: FunctionalComponent = () => {
               : 'border-2 border-primary p-2'
           }
           icon='330'
-          iconHexColor={
-            currentView.value === VIEW_NAME.SCHEDULER ? '#00BDD6' : ''
-          }
+          // iconHexColor={
+          //   currentView.value === VIEW_NAME.SCHEDULER ? '#00BDD6' : ''
+          // }
         />
         <Button
           name='button-action'
@@ -252,7 +252,14 @@ export const ShiftsPage: FunctionalComponent = () => {
           <Table<IShiftResponse>
             data={shifts.value}
             columns={columns}
+            showExpandableIcon={false}
             pageSize={20}
+            expandable={(row: IShiftResponse, currentColumnName?: string) => (
+              <ExpandableMultiple
+                type={currentColumnName || defaultColumn.value}
+                data={row}
+              />
+            )}
             visibility={{
               servicePlaceAddress: false,
               city: false,
