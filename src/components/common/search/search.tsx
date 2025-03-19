@@ -188,15 +188,14 @@ export const Search = ({
         const keyLabel = key?.label || item.id;
 
         return (
-          <div
-            key={keyName}
-            className='relative'
-          >
+          <div key={keyName} className='relative'>
             <div
               data-name={keyName}
               className='flex items-center h-7 px-2 py-1 bg-primary-opacity text-primary rounded-xl cursor-pointer gap-1 transition-all hover:bg-primary-opacity-2 text-sm'
             >
-              <span className='font-medium'>{keyLabel}: {String(item.value)}</span>
+              <span className='font-medium'>
+                {keyLabel}: {String(item.value)}
+              </span>
               <span
                 className='ml-1 text-primary hover:text-ternary cursor-pointer flex items-center justify-center w-4 h-4 rounded-full hover:bg-primary-opacity-2'
                 onClick={(e) => {
@@ -210,10 +209,7 @@ export const Search = ({
           </div>
         );
       }),
-    [
-      searchArray.value,
-      keys
-    ]
+    [searchArray.value, keys]
   );
 
   const handleClickOutside = (e: MouseEvent) => {

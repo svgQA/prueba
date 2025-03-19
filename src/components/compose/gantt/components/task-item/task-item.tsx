@@ -34,6 +34,7 @@ export const TaskItem = (props: TaskItemProps) => {
     isDelete,
     isSelected,
     onEventStart,
+    isDateChangeable,
   } = {
     ...props,
   };
@@ -88,36 +89,65 @@ export const TaskItem = (props: TaskItemProps) => {
 
   return (
     <g
-      onKeyDown={(e: KeyboardEvent) => {
-        switch (e.key) {
-          case 'Delete': {
-            if (isDelete) onEventStart('delete', task, e);
-            break;
-          }
-        }
-        e.stopPropagation();
-      }}
-      onMouseEnter={(e: MouseEvent) => {
-        onEventStart('mouseenter', task, e);
-      }}
-      onMouseLeave={(e: MouseEvent) => {
-        onEventStart('mouseleave', task, e);
-      }}
       onDblClick={(e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
         onEventStart('dblclick', task, e);
       }}
       onClick={(e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
         onEventStart('click', task, e);
-      }}
-      // onContextMenu={(e: MouseEvent) => {
-      //   e.preventDefault();
-      //   onEventStart('contextmenu', task, e);
-      // }}
-      onFocus={() => {
-        onEventStart('select', task);
       }}
     >
       {taskItem.value}
+      <g
+        className='cursor-move'
+        transform={`translate(${task.x1},${task.y})`}
+        onKeyDown={(e: KeyboardEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          switch (e.key) {
+            case 'Delete': {
+              if (isDelete) onEventStart('delete', task, e);
+              break;
+            }
+          }
+        }}
+        onMouseEnter={(e: MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onEventStart('mouseenter', task, e);
+        }}
+        onMouseDown={(e: MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          isDateChangeable && onEventStart('move', task, e);
+        }}
+        onMouseLeave={(e: MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onEventStart('mouseleave', task, e);
+        }}
+        onFocus={(e: FocusEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onEventStart('select', task);
+        }}
+      >
+        <rect
+          width={30}
+          height={task.height}
+          ry={task.barCornerRadius}
+          rx={task.barCornerRadius}
+          fill={task.styles.backgroundSelectedColor}
+        />
+        <path
+          d='M8 12C8 7.58 11.58 4 16 4C20.42 4 24 7.58 24 12C24 16.42 20.42 20 16 20C11.58 20 8 16.42 8 12ZM16 2C10.48 2 6 6.48 6 12C6 17.52 10.48 22 16 22C21.52 22 26 17.52 26 12C26 6.48 21.52 2 16 2ZM16.5 7V12.25L21 15L20.25 16.25L15 13V7H16.5Z'
+          fill='white'
+          transform='translate(-0.5,12)'
+        />
+      </g>
     </g>
   );
 };
