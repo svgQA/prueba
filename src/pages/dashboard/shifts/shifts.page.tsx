@@ -25,6 +25,7 @@ enum VIEW_NAME {
   TABLE,
   CALENDAR,
   SCHEDULER,
+  SUPERVISOR,
 }
 
 export const ShiftsPage: FunctionalComponent = () => {
@@ -136,6 +137,9 @@ export const ShiftsPage: FunctionalComponent = () => {
           name='button-supervision'
           label='Supervisión Remota'
           className='bg-primary text-white py-1 rounded px-4'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.SUPERVISOR);
+          }}
         />
       </div>
     ),
@@ -228,56 +232,60 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
       </div>
 
-      {currentView.value === VIEW_NAME.TABLE && (
-        <Table<IShiftResponse>
-          data={shifts.value}
-          columns={columns}
-          pageSize={20}
-          button={buttonMenu}
-          visibility={{
-            servicePlaceAddress: false,
-            city: false,
-            employeeId: false,
-            duration: false,
-            userEmail: false,
-            userPhone: false,
-            serviceRound: false,
-          }}
-        />
-      )}
+      <div className='max-h-screen relative'>
+        <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-10'>
+          <div className='flex flex-row items-center justify-between'>
+            {buttonMenu}
+            <Button
+              name='button-create-shift'
+              label='Create'
+              className='mx-3 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              onClick={handleCreacteNewShift}
+            />
+          </div>
+        </div>
 
-      {currentView.value === VIEW_NAME.SCHEDULER && (
-        <div className='max-h-screen'>
-          <div className='py-2 flex flex-row justify-between px-1 items-center'>
-            <div className='flex flex-row items-center justify-between'>
-              {buttonMenu}
-              <button
-                className='mx-3 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                onClick={handleCreacteNewShift}
-              >
-                Create
-              </button>
-            </div>
+        {currentView.value === VIEW_NAME.TABLE && (
+          <Table<IShiftResponse>
+            data={shifts.value}
+            columns={columns}
+            pageSize={20}
+            visibility={{
+              servicePlaceAddress: false,
+              city: false,
+              employeeId: false,
+              duration: false,
+              userEmail: false,
+              userPhone: false,
+              serviceRound: false,
+            }}
+          />
+        )}
+
+        {currentView.value === VIEW_NAME.SCHEDULER && (
+          <div>
             <ViewSwitcher
               onViewModeChange={(viewMode: ViewMode) => setView(viewMode)}
               onViewListChange={setIsChecked}
               isChecked={isChecked}
+              status={view}
+            />
+            <Gantt
+              tasks={ganttShifts}
+              viewMode={view}
+              onDateChange={handleTaskChange}
+              onDelete={handleTaskDelete}
+              onDoubleClick={handleDblClick}
+              onUserClick={handleUserClick}
+              onClick={handleClick}
+              listCellWidth={isChecked ? '155px' : ''}
+              columnWidth={columnWidth}
             />
           </div>
-          <Gantt
-            tasks={ganttShifts}
-            viewMode={view}
-            onDateChange={handleTaskChange}
-            onDelete={handleTaskDelete}
-            onDoubleClick={handleDblClick}
-            onUserClick={handleUserClick}
-            onClick={handleClick}
-            listCellWidth={isChecked ? '155px' : ''}
-            columnWidth={columnWidth}
-          />
-        </div>
-      )}
+        )}
 
+        {currentView.value === VIEW_NAME.SUPERVISOR && <div></div>}
+      </div>
       <TaskForm
         closed={showUpsertModal.value}
         onClose={handleCloseUpsertModal}
