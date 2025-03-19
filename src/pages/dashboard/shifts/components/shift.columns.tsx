@@ -15,7 +15,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
       const { employee } = info.row.original;
       return (
         <span
-          className=' p-1 size-sm cursor-pointer'
+          className='p-1 size-sm cursor-pointer'
           onClick={() => info.row.toggleExpanded()}
         >
           {employee?.name} {employee?.surname}
@@ -25,7 +25,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
   },
   {
     id: 'service',
-    accessorKey: 'service.id',
+    accessorKey: 'service.name',
     size: 180,
     header: 'Servicio',
     enableGrouping: true,
@@ -45,7 +45,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
   },
   {
     id: 'contract',
-    accessorKey: 'service.name',
+    accessorKey: 'service.contract.name',
     size: 120,
     header: 'Contrato',
     cell: (info) => {
