@@ -147,6 +147,7 @@ export const Table = <T,>({
   };
 
   const handleClick = (e: MouseEvent) => {
+    e.stopPropagation();
     const target = e.target as HTMLElement;
     if (target.tagName.toLowerCase() === 'span') {
       const id = target.dataset.id;

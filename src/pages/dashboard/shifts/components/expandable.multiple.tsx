@@ -22,8 +22,6 @@ type Props = {
   data: IShiftResponse;
 };
 
-const getUnknownInfo = () => <p>No hay mas información</p>;
-
 const getInfoContent = (type: string, data: IShiftResponse) => {
   const { service, employee } = data;
   console.log('service.contract ==>', service.contract);
@@ -43,8 +41,6 @@ const getInfoContent = (type: string, data: IShiftResponse) => {
       return <ShiftInfo data={data} />;
     case InfoType.ROUND:
       return <RoundInfo />;
-    default:
-      return getUnknownInfo();
   }
 };
 
