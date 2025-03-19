@@ -33,6 +33,7 @@ export const TaskGantt = ({
   const isDragging = useSignal(false);
   const startX = useSignal(0);
   const scrollLeft = useSignal(0);
+  const lastMouseX = useSignal(0); // Track last mouse position for smoother scrolling
 
   useEffect(() => {
     if (horizontalContainerRef.current) {
@@ -46,44 +47,62 @@ export const TaskGantt = ({
     }
   }, [scrollX]);
 
+  // Throttle scroll updates for better performance
+  const throttledScroll = (newScrollLeft: number) => {
+    if (!window.requestAnimationFrame) {
+      verticalGanttContainerRef.current!.scrollLeft = newScrollLeft;
+      onScrollX?.(newScrollLeft);
+    } else {
+      requestAnimationFrame(() => {
+        verticalGanttContainerRef.current!.scrollLeft = newScrollLeft;
+        onScrollX?.(newScrollLeft);
+      });
+    }
+  };
+
   const handleMouseDown = (e: MouseEvent) => {
     // Don't initiate drag if we're interacting with a task bar
     if ((e.target as HTMLElement).closest('.bar')) {
       return;
     }
-
+    e.preventDefault();
     isDragging.value = true;
     startX.value = e.pageX - verticalGanttContainerRef.current!.offsetLeft;
     scrollLeft.value = verticalGanttContainerRef.current!.scrollLeft;
+    lastMouseX.value = e.pageX;
+
+    // Add grabbing cursor
+    document.body.style.cursor = 'grabbing';
   };
 
   const handleMouseLeave = () => {
     isDragging.value = false;
+    document.body.style.cursor = 'auto';
   };
 
   const handleMouseUp = () => {
     isDragging.value = false;
+    document.body.style.cursor = 'auto';
   };
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging.value) return;
     e.preventDefault();
-    const x = e.pageX - verticalGanttContainerRef.current!.offsetLeft;
-    const walk = (x - startX.value) * 2;
-    const newScrollLeft = scrollLeft.value - walk;
-    verticalGanttContainerRef.current!.scrollLeft = newScrollLeft;
-    onScrollX?.(newScrollLeft);
+
+    // Calculate scroll amount based on mouse movement delta
+    const mouseDelta = e.pageX - lastMouseX.value;
+    lastMouseX.value = e.pageX;
+
+    const newScrollLeft =
+      verticalGanttContainerRef.current!.scrollLeft - mouseDelta;
+    throttledScroll(newScrollLeft);
   };
 
   return (
     <div
-      className={`${styles.ganttVerticalContainer} cursor-grab`}
+      className={styles.ganttVerticalContainer}
       ref={verticalGanttContainerRef}
       dir='ltr'
-      onMouseDown={handleMouseDown}
-      onMouseLeave={handleMouseLeave}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
     >
       <svg
         xmlns='http://www.w3.org/2000/svg'
@@ -95,12 +114,16 @@ export const TaskGantt = ({
       </svg>
       <div
         ref={horizontalContainerRef}
-        className={styles.horizontalContainer}
+        className={`${styles.horizontalContainer} cursor-grab`}
         style={
           ganttHeight
             ? { height: ganttHeight, width: gridProps.svgWidth }
             : { width: gridProps.svgWidth }
         }
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
       >
         <svg
           xmlns='http://www.w3.org/2000/svg'

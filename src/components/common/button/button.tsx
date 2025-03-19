@@ -40,7 +40,11 @@ export const Button: FunctionComponent<IButtonProps> = ({
       {icon && !end && (
         <span
           className={`left-0 px-1 size vox-icon vx-icon-${icon} hidden sm:inline`}
-          style={iconHexColor ? { fill: iconHexColor, color: iconHexColor } : undefined}
+          style={
+            iconHexColor
+              ? { fill: iconHexColor, color: iconHexColor }
+              : undefined
+          }
         />
       )}
       {label && !rounded && (
@@ -56,7 +60,11 @@ export const Button: FunctionComponent<IButtonProps> = ({
       {icon && end && (
         <span
           className={`left-0 px-1 size vox-icon vx-icon-${icon} hidden sm:inline`}
-          style={iconHexColor ? { fill: iconHexColor, color: iconHexColor } : undefined}
+          style={
+            iconHexColor
+              ? { fill: iconHexColor, color: iconHexColor }
+              : undefined
+          }
         />
       )}
     </button>

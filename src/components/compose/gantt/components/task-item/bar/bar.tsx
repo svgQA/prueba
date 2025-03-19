@@ -19,7 +19,7 @@ export const Bar: FunctionComponent<TaskItemProps> = ({
     task.y,
     task.height
   );
-  const handleHeight = task.height - 2;
+  // const handleHeight = task.height - 2;
   const displayWidth = task.x2 - task.x1;
 
   return (
@@ -35,32 +35,38 @@ export const Bar: FunctionComponent<TaskItemProps> = ({
         barCornerRadius={task.barCornerRadius}
         styles={task.styles}
         isSelected={isSelected}
-        onMouseDown={(e) => {
-          isDateChangeable && onEventStart('move', task, e);
-        }}
+        // onMouseDown={(e) => {
+        //   isDateChangeable && onEventStart('move', task, e);
+        // }}
       />
       <g className='handleGroup'>
         {isDateChangeable && (
           <g>
             {/* left */}
+            {/*
             <BarDateHandle
-              x={task.x1 - 1}
+              x={task.x1 - 10}
               y={task.y + 1}
               width={task.handleWidth}
               height={handleHeight}
               barCornerRadius={task.barCornerRadius}
               onMouseDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 onEventStart('start', task, e);
               }}
             />
+            */}
             {/* right */}
             <BarDateHandle
               x={task.x2 - task.handleWidth - 1}
               y={task.y + 1}
               width={task.handleWidth}
-              height={handleHeight}
+              height={task.height - 2}
               barCornerRadius={task.barCornerRadius}
               onMouseDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 onEventStart('end', task, e);
               }}
             />
@@ -70,6 +76,8 @@ export const Bar: FunctionComponent<TaskItemProps> = ({
           <BarProgressHandle
             progressPoint={progressPoint}
             onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               onEventStart('progress', task, e);
             }}
           />
