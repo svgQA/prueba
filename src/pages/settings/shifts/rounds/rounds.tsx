@@ -82,16 +82,15 @@ export const RoundsSettingPage: FunctionComponent = () => {
 
   return (
     <Section>
-      <div className='p-4 dark:bg-black bg-white rounde shado border-t-4 border-cyan-500  '>
-        <div className='flex flex-col gap-1 w-10/12'>
-          <div className='flex flex-row'>
+      <div className='max-h-screen relative p-0 dark:bg-black bg-white rounde shado'>
+        <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-20'>
+          <div className='flex flex-row items-center justify-between'>
             <Button
-              onClick={() => redirect()}
-              type='button'
+              name='button-create-shift'
+              label='Nueva Ronda'
               icon='039'
-              name='back'
-              rounded={true}
-              className='w-auto'
+              onClick={() => redirect()}
+              className='mx-3 px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
             />
           </div>
         </div>

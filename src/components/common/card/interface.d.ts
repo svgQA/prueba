@@ -6,4 +6,5 @@ export interface ICardProps extends IComponentProps, PropsWithChildren {
   name?: string;
   shadow?: boolean;
   maxWidth?: string;
+  rounded?: boolean;
 }

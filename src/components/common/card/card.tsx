@@ -7,11 +7,12 @@ export const Card: FunctionComponent<ICardProps> = ({
   color = 'bg-b-white border dark:bg-b-dark-light',
   shadow = false,
   maxWidth,
+  rounded = true,
 }: ICardProps) => {
   return (
     <div
       id={id}
-      className={`${color} ${shadow ? 'shadow-md' : ''} ${maxWidth} relative capitalize rounded-lg p-1 m-1 h-fit transition duration-300 hover:bg-neutral-100 focus:outline-2`}
+      className={`${color} ${shadow ? 'shadow-md' : ''} ${maxWidth} relative capitalize ${rounded ? 'rounded-lg' : ''} p-1 m-1 h-fit transition duration-300 hover:bg-neutral-100 focus:outline-2`}
     >
       {children}
     </div>

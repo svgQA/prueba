@@ -7,31 +7,23 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
   id,
   name,
   username,
-  // image,
+  image,
   company,
   rol,
 }: ICardSettingUserProps) => {
   return (
-    <Card id={id} name={name}>
-      <div className='flex flex-row justify-center items-center h-12'>
-        {/* <img
-          src={image}
-          alt={`sett-user-${id}`}
-          className='w-12 h-12 mr-2 rounded-full'
-        ></img> */}
-        <div className='w-full mx-1'>
-          <p className='text-sm h-5 font-thin max-w-40 overflow-hidden'>
-            {username}
-          </p>
-          <div className='flex flex-row justify-between mt-2'>
-            <p className='font-bold mr-1 text-xs'>{company}</p>
-            <Badge
-              label={rol}
-              icon='users'
-              color='poner color'
-              bgColor='poner color'
-            />
+    <Card id={id} name={name} color='p-0 m-0 border-r-2 border-b-2' rounded={false}>
+     <div className="flex gap-2 p-2 w-full">
+        <div className="flex flex-col items-center">
+          <div className="bg-primary-opacity rounded-full p-3">
+            <img src={image || "/placeholder.svg"} alt={`sett-user-${id}`} className="w-10 h-10 rounded-full" />
           </div>
+          <Badge label={rol} icon="users" color="primary" bgColor="bg-primary-opacity mt-2" textColor='text-primary' />
+        </div>
+
+        <div className="flex flex-col justify-center mb-5">
+          <p className="text-sm font-medium text-t-light">{username}</p>
+          <p className="text-xs text-t-light-dark">{company}</p>
         </div>
       </div>
     </Card>

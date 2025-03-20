@@ -31,10 +31,10 @@ export const Modal: FunctionComponent<IModalProps> = ({
     >
       {/*aria-hidden={true}*/}
       <div
-        className={`${expand ? 'h-full' : 'h-fit'} ${width ? width : 'w-full'} ${shadowed ? 'shadow-lg' : ''} overflow-hidden rounded-md modal-shadow p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
+        className={`${expand ? 'h-full' : 'h-fit'} ${width ? width : 'w-full'} ${shadowed ? 'shadow-lg' : ''} overflow-hidden rounded-md modal-shadow p-0 border-2 bg-b-white dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
       >
         {/* vox-scroll-design */}
-        <div className='flex flex-row w-full items-center pt-2'>
+        <div className='flex flex-row w-full items-center pt-2 p-3 border-2 border-b-light-dark dark:border-b-dark-light'>
           <div class='flex flex-row w-full items-center px-2.5'>
             <div className='flex flex-row w-10/12 items-center'>{header}</div>
             <div className='flex w-2/12 items-center justify-end'>
@@ -45,7 +45,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
                   onClick={toggleExpand}
                   type='button'
                   rounded
-                  icon='105'
+                  icon='058'
                 ></Button>
               )}
               {onClose && (
