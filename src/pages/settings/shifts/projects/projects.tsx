@@ -92,13 +92,8 @@ export const ProjectsSettingPage: FunctionComponent = () => {
         columns={columns}
         pageSize={20}
         visibility={{
-          name: true,
-          description: true,
-          startDate: true,
-          endDate: true,
-          state: true,
-          priority: true,
-          action: true,
+          id: false,
+          description: false,
         }}
         onClickAction={handleOnClick}
         unsearch={false}

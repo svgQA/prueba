@@ -99,10 +99,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
         expandable={(row: any) => <ExpandableRounds row={row} />}
         pageSize={20}
         visibility={{
-          address: false,
-          city: false,
-          employeeId: false,
-          duration: false,
+          id: false,
         }}
         onClickAction={handleOnClick}
         unsearch={false}

@@ -114,10 +114,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
         }}
         pageSize={20}
         visibility={{
-          name: true,
-          description: true,
-          priority: true,
-          action: true,
+          id: false,
         }}
         onClickAction={handleOnClick}
         unsearch={false}

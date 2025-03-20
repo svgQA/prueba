@@ -1,5 +1,5 @@
 table.elements {
-  @apply w-full;
+  @apply w-full overflow-x-auto;
   thead {
     th {
       @apply h-10 dark:bg-b-dark-light bg-b-content shadow-black;
@@ -14,11 +14,6 @@ table.elements {
   tbody {
     td {
       @apply h-12 border-t-2 border-gray-100 dark:border-b-dark-light;
-      tr {
-        &:last-child {
-          @apply bg-m5;
-        }
-      }
     }
   }
 }

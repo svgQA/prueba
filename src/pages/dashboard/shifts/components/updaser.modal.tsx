@@ -29,7 +29,6 @@ interface Props {
 export const TaskForm = ({
   closed,
   onClose,
-  posSave,
   userSelected,
   taskSelected,
 }: Props) => {
@@ -57,8 +56,8 @@ export const TaskForm = ({
         : 'Turno creado exitosamente!';
 
       toast.success(message, { position: 'top-right' });
-      onClose?.();
-      posSave?.();
+      // onClose?.();
+      // posSave?.();
     } catch (error) {
       toast.error('Error al procesar la solicitud');
     }

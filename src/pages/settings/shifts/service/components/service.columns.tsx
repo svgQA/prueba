@@ -25,19 +25,19 @@ export const columns: ColumnDef<IServicio>[] = [
   },
   {
     id: 'roundId',
-    accessorKey: 'roundId',
+    accessorKey: 'round.name',
     size: 60,
     header: 'Ronda',
   },
   {
     id: 'contractId',
-    accessorKey: 'contractId',
+    accessorKey: 'contract.name',
     size: 60,
     header: 'Contrato',
   },
   {
     id: 'placeId',
-    accessorKey: 'placeId',
+    accessorKey: 'place.name',
     size: 180,
     header: 'Place',
   },

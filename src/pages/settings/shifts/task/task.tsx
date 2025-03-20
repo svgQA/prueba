@@ -90,9 +90,7 @@ export const TaskSettingPage: FunctionComponent = () => {
         columns={columns}
         pageSize={20}
         visibility={{
-          description: true,
-          status: true,
-          action: true,
+          id: false,
         }}
         onClickAction={handleOnClick}
         unsearch={false}

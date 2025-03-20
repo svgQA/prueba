@@ -49,8 +49,6 @@ import { Switch } from '../switch/switch';
 import { ROW_ACTIONS } from './enum';
 import { Group } from './components/group';
 import { useSignal } from '@preact/signals';
-// import { Button } from '../button/button';
-// import { Group } from './components/group/group'; // Ya agregado antes
 
 export const Table = <T,>({
   data,
@@ -161,7 +159,7 @@ export const Table = <T,>({
 
   const buildSettings = () => (
     // bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light
-    <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-red-300'>
+    <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-b-content border-2 border-gray-100 dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column, index) => {
         const columnHeader =
           typeof column.columnDef.header !== 'string'
@@ -308,7 +306,7 @@ export const Table = <T,>({
   );
 
   const renderPagination = () => {
-    if (data.length <= pageSize) return null;
+    // if (data.length <= pageSize) return null;
 
     const totalPages = table.getPageCount();
     const currentPage = table.getState().pagination.pageIndex;
@@ -536,7 +534,7 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='border-2 border-gray-100 dark:border-b-dark-light rounded-lg'
+          className='min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg !overflow-x-auto vox-scroll-design'
         >
           <table className='elements'>
             <thead>
