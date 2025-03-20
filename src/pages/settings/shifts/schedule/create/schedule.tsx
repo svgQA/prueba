@@ -56,70 +56,68 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
     setInitialValues();
   }, []);
   return (
-    <Section className='pt-2'>
-      <div className='p-4 dark:bg-b-dark bg-white rounde shado border-t-4 border-cyan-500  '>
-        <Form
-          onSubmit={onSubmit}
-          initialValues={initialValues.value}
-          validate={(values) => {
-            const errors: Partial<FormData> = {};
+    <Section>
+      <Form
+        onSubmit={onSubmit}
+        initialValues={initialValues.value}
+        validate={(values) => {
+          const errors: Partial<FormData> = {};
 
-            if (!values.hourStart) errors.hourStart = 'Campo obligatorio';
-            if (!values.hourEnd) errors.hourEnd = 'Campo obligatorio';
+          if (!values.hourStart) errors.hourStart = 'Campo obligatorio';
+          if (!values.hourEnd) errors.hourEnd = 'Campo obligatorio';
 
-            return errors;
-          }}
-          render={({ handleSubmit, form, submitting, pristine }) => (
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              {/** FORMULARIO PRINCIPAL */}
-              <div className='grid grid-cols-1 gap-3'>
-                <div class='col-span-1'>
-                  <Field<string> name='name' validate={required}>
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        type='text'
-                        placeholder='Ingrese nombre...'
-                        label='Nombre'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <WeeklyScheduler
-                    startHour={0}
-                    endHour={24}
-                    title='Selecciona un horario'
-                  />
-                </div>
+          return errors;
+        }}
+        render={({ handleSubmit, form, submitting, pristine }) => (
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            {/** FORMULARIO PRINCIPAL */}
+            <div className='grid grid-cols-1 gap-3'>
+              <div class='col-span-1'>
+                <Field<string> name='name' validate={required}>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      type='text'
+                      placeholder='Ingrese nombre...'
+                      label='Nombre'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
               </div>
-
-              {/* Botonera */}
-              <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
-                <Button
-                  id='btn-clean'
-                  name='btn-clean'
-                  type='button'
-                  label='Limpiar'
-                  onClick={() => form.reset()}
-                  disabled={submitting || pristine}
-                />
-
-                <Button
-                  id='btn-save'
-                  name='btn-save'
-                  type='submit'
-                  label={id ? 'Editar' : 'Guardar'}
-                  className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-                  disabled={submitting}
+              <div class='col-span-1'>
+                <WeeklyScheduler
+                  startHour={0}
+                  endHour={24}
+                  title='Selecciona un horario'
                 />
               </div>
-              {/*<pre>{JSON.stringify(values, 0, 2)}</pre>*/}
-            </form>
-          )}
-        />
-      </div>
+            </div>
+
+            {/* Botonera */}
+            <div className='w-full flex-row flex justify-end items-center'>
+              <Button
+                id='btn-clean'
+                name='btn-clean'
+                type='button'
+                label='Limpiar'
+                onClick={() => form.reset()}
+                disabled={submitting || pristine}
+              />
+
+              <Button
+                id='btn-save'
+                name='btn-save'
+                type='submit'
+                label={id ? 'Editar' : 'Guardar'}
+                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+                disabled={submitting}
+              />
+            </div>
+            {/*<pre>{JSON.stringify(values, 0, 2)}</pre>*/}
+          </form>
+        )}
+      />
     </Section>
   );
 };

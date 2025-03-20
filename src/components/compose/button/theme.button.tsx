@@ -3,6 +3,7 @@ import { useCallback } from 'preact/hooks';
 
 export const ThemeButton = () => {
   const toggleTheme = useCallback((event: MouseEvent) => {
+    event.preventDefault();
     event.stopPropagation();
     document.body.classList.toggle('dark');
   }, []);

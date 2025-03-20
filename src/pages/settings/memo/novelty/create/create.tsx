@@ -57,104 +57,99 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section className='pt-2'>
-      <div className='p-4 dark:bg-b-dark bg-white rounded-lg shado border-t-4 border-cyan-500  '>
-        <Form
-          onSubmit={onSubmit}
-          initialValues={initialValues.value}
-          validate={(values) => {
-            const errors: Partial<FormData> = {};
-            if (!values.name) errors.name = 'Campo obligatorio';
-            if (!values.description) errors.description = 'Campo obligatorio';
-            if (!values.priority) errors.description = 'Campo obligatorio';
+    <Section>
+      <Form
+        onSubmit={onSubmit}
+        initialValues={initialValues.value}
+        validate={(values) => {
+          const errors: Partial<FormData> = {};
+          if (!values.name) errors.name = 'Campo obligatorio';
+          if (!values.description) errors.description = 'Campo obligatorio';
+          if (!values.priority) errors.description = 'Campo obligatorio';
 
-            return errors;
-          }}
-          render={({ handleSubmit, form, submitting, pristine }) => (
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              {/** FORMULARIO PRINCIPAL */}
-              <div className='grid grid-cols-4 gap-3'>
-                <div class='col-span-3'>
-                  <Field<string> name='name' validate={lengthSize(5, 30)}>
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        type='text'
-                        placeholder='Ingrese nombre...'
-                        label='Nombre'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field
-                    name='priority'
-                    parse={(value) => (value ? Number(value) : undefined)}
-                  >
-                    {({ input }) => {
-                      return (
-                        <div>
-                          <Select
-                            {...input}
-                            placeholder='Selecione prioridad...'
-                            label='Prioridad'
-                            name='priority'
-                            icon='252'
-                            options={Array.from({ length: 10 }, (_, i) => ({
-                              value: i + 1,
-                              label: i + 1,
-                            }))}
-                          />
-                        </div>
-                      );
-                    }}
-                  </Field>
-                </div>
-                <div class='col-span-4'>
-                  <Field<string>
-                    name='description'
-                    validate={lengthSize(5, 250)}
-                  >
-                    {({ input, meta }) => (
-                      <TextArea
-                        {...input}
-                        min='3'
-                        max='300'
-                        placeholder='Ingrese Descripción...'
-                        label='Descripción'
-                        type='text'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
+          return errors;
+        }}
+        render={({ handleSubmit, form, submitting, pristine }) => (
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            {/** FORMULARIO PRINCIPAL */}
+            <div className='grid grid-cols-4 gap-3'>
+              <div class='col-span-3'>
+                <Field<string> name='name' validate={lengthSize(5, 30)}>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      type='text'
+                      placeholder='Ingrese nombre...'
+                      label='Nombre'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
               </div>
-
-              {/* Botonera */}
-              <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
-                <Button
-                  id='btn-clean'
-                  name='btn-clean'
-                  type='button'
-                  label='Limpiar'
-                  onClick={() => form.reset()}
-                  disabled={submitting || pristine}
-                />
-
-                <Button
-                  id='btn-save'
-                  name='btn-save'
-                  type='submit'
-                  label={id ? 'Editar' : 'Guardar'}
-                  className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-                  disabled={submitting}
-                />
+              <div class='col-span-1'>
+                <Field
+                  name='priority'
+                  parse={(value) => (value ? Number(value) : undefined)}
+                >
+                  {({ input }) => {
+                    return (
+                      <div>
+                        <Select
+                          {...input}
+                          placeholder='Selecione prioridad...'
+                          label='Prioridad'
+                          name='priority'
+                          icon='252'
+                          options={Array.from({ length: 10 }, (_, i) => ({
+                            value: i + 1,
+                            label: i + 1,
+                          }))}
+                        />
+                      </div>
+                    );
+                  }}
+                </Field>
               </div>
-            </form>
-          )}
-        />
-      </div>
+              <div class='col-span-4'>
+                <Field<string> name='description' validate={lengthSize(5, 250)}>
+                  {({ input, meta }) => (
+                    <TextArea
+                      {...input}
+                      min='3'
+                      max='300'
+                      placeholder='Ingrese Descripción...'
+                      label='Descripción'
+                      type='text'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+            </div>
+
+            {/* Botonera */}
+            <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
+              <Button
+                id='btn-clean'
+                name='btn-clean'
+                type='button'
+                label='Limpiar'
+                onClick={() => form.reset()}
+                disabled={submitting || pristine}
+              />
+
+              <Button
+                id='btn-save'
+                name='btn-save'
+                type='submit'
+                label={id ? 'Editar' : 'Guardar'}
+                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+                disabled={submitting}
+              />
+            </div>
+          </form>
+        )}
+      />
     </Section>
   );
 };

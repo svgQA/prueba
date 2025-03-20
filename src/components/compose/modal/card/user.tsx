@@ -32,8 +32,10 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
         </div>
 
         <div className='flex flex-col justify-center mb-5'>
-          <p className='text-sm font-medium'>{username}</p>
-          <p className='text-xs'>{company}</p>
+          <p className='text-sm font-medium max-w-52 overflow-hidden'>
+            {username}
+          </p>
+          <p className='text-xs pt-2'>{company}</p>
         </div>
       </div>
     </Card>

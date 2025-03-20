@@ -132,68 +132,67 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section className='pt-2'>
-      <div className='p-4 dark:bg-b-dark bg-white rounde shado border-t-4 border-cyan-500  '>
-        <Form
-          onSubmit={onSubmit}
-          mutators={{
-            ...arrayMutators,
-          }}
-          initialValues={initialValues.value}
-          render={({ handleSubmit, form, submitting }) => (
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              {/** FORMULARIO PRINCIPAL */}
-              <div className='grid grid-cols-3 gap-3'>
-                <div class='col-span-2'>
-                  <Field<string> name='name' validate={required}>
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        type='text'
-                        placeholder='Ingrese nombre...'
-                        label='Nombre'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field
-                    name='frequency'
-                    parse={(value) => (value ? Number(value) : undefined)}
-                  >
-                    {({ input }) => (
-                      <Input
-                        id='input-code'
-                        {...input}
-                        placeholder='Ingrese frecuencia...'
-                        label='Frecuencia'
-                        type='number'
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-3'>
-                  <Map
-                    name='Map'
-                    pointsAmount={100}
-                    allowManualPoint={true}
-                    sendPoints={(data) => {
-                      sendPointsRef(data);
-                    }}
-                    pointsRef={points.value}
-                    center={currentLocation.value}
-                    condition={false}
-                    errorCondition=''
-                    radialPoint={null}
-                    errorRadialPoint=''
-                    draggable={true}
-                    width='100%'
-                    clickPoint={() => {}}
-                  />
-                </div>
+    <Section>
+      <Form
+        onSubmit={onSubmit}
+        mutators={{
+          ...arrayMutators,
+        }}
+        initialValues={initialValues.value}
+        render={({ handleSubmit, form, submitting }) => (
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            {/** FORMULARIO PRINCIPAL */}
+            <div className='grid grid-cols-3 gap-3'>
+              <div class='col-span-2'>
+                <Field<string> name='name' validate={required}>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      type='text'
+                      placeholder='Ingrese nombre...'
+                      label='Nombre'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field
+                  name='frequency'
+                  parse={(value) => (value ? Number(value) : undefined)}
+                >
+                  {({ input }) => (
+                    <Input
+                      id='input-code'
+                      {...input}
+                      placeholder='Ingrese frecuencia...'
+                      label='Frecuencia'
+                      type='number'
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-3'>
+                <Map
+                  name='Map'
+                  pointsAmount={100}
+                  allowManualPoint={true}
+                  sendPoints={(data) => {
+                    sendPointsRef(data);
+                  }}
+                  pointsRef={points.value}
+                  center={currentLocation.value}
+                  condition={false}
+                  errorCondition=''
+                  radialPoint={null}
+                  errorRadialPoint=''
+                  draggable={true}
+                  width='100%'
+                  clickPoint={() => {}}
+                />
+              </div>
 
-                {/* <div class='col-span-2'>
+              {/* <div class='col-span-2'>
                   <Field<string> name='placeId' validate={required}>
                     {({ input, meta }) => (
                       <Select
@@ -225,35 +224,34 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   <label for='lname'>Longitud: </label>
                   {currentLocation.value?.lng}
                 </div> */}
-              </div>
+            </div>
 
-              {/* Botonera */}
-              <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
-                <Button
-                  id='btn-clean'
-                  name='btn-clean'
-                  type='button'
-                  label='Limpiar'
-                  onClick={() => {
-                    form.reset();
-                    resertMarket();
-                  }}
-                />
+            {/* Botonera */}
+            <div className='w-full flex-row flex justify-end items-center'>
+              <Button
+                id='btn-clean'
+                name='btn-clean'
+                type='button'
+                label='Limpiar'
+                onClick={() => {
+                  form.reset();
+                  resertMarket();
+                }}
+              />
 
-                <Button
-                  id='btn-save'
-                  name='btn-save'
-                  type='submit'
-                  label={id ? 'Editar' : 'Guardar'}
-                  className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-                  disabled={submitting}
-                />
-              </div>
-              {/* {<pre>{JSON.stringify(values, 0, 2)}</pre>} */}
-            </form>
-          )}
-        />
-      </div>
+              <Button
+                id='btn-save'
+                name='btn-save'
+                type='submit'
+                label={id ? 'Editar' : 'Guardar'}
+                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+                disabled={submitting}
+              />
+            </div>
+            {/* {<pre>{JSON.stringify(values, 0, 2)}</pre>} */}
+          </form>
+        )}
+      />
     </Section>
   );
 };

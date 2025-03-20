@@ -536,7 +536,7 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='border-2 border-b-light-dark dark:border-b-dark-light rounded-lg'
+          className='border-2 border-gray-100 dark:border-b-dark-light rounded-lg'
         >
           <table className='elements'>
             <thead>
