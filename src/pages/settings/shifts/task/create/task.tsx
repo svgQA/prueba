@@ -68,118 +68,116 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     setInitialValues();
   }, []);
   return (
-    <Section className='pt-2'>
-      <div className='p-4 dark:bg-b-dark bg-white rounde shado border-t-4 border-cyan-500  '>
-        <Form
-          onSubmit={onSubmit}
-          initialValues={initialValues.value}
-          validate={(values) => {
-            const errors: Partial<FormData> = {};
-            if (!values.description) errors.description = 'Campo obligatorio';
+    <Section>
+      <Form
+        onSubmit={onSubmit}
+        initialValues={initialValues.value}
+        validate={(values) => {
+          const errors: Partial<FormData> = {};
+          if (!values.description) errors.description = 'Campo obligatorio';
 
-            return errors;
-          }}
-          render={({ handleSubmit, form, submitting, pristine }) => (
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              {/** FORMULARIO PRINCIPAL */}
-              <div className='grid grid-cols-3 gap-3'>
-                <div class='col-span-1'>
-                  <Field name='status'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione estado...'
-                        label='Estado'
-                        name='status'
-                        icon='252'
-                        options={[
-                          { value: 'CREATED', label: 'Creado' },
-                          { value: 'RESOLVED', label: 'Resuelto' },
-                          { value: 'CLOSED', label: 'Cerrado' },
-                        ]}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field name='formId'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione formulario...'
-                        label='Formulario'
-                        name='formId'
-                        icon='252'
-                        optionValue='id'
-                        optionLabel='title'
-                        options={forms.value}
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                        }}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div class='col-span-1'>
-                  <Field<string>
-                    name='start'
-                    parse={(value) => (value ? dayjs(value).toISOString() : '')}
-                    format={(value) =>
-                      value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
-                    }
-                  >
-                    {({ input }) => (
-                      <Input
-                        {...input}
-                        type='datetime-local'
-                        label='Fecha inicio'
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-4'>
-                  <Field<string> name='description' validate={required}>
-                    {({ input, meta }) => (
-                      <TextArea
-                        {...input}
-                        min='3'
-                        max='300'
-                        placeholder='Ingrese Descripción...'
-                        label='Descripción'
-                        type='text'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
+          return errors;
+        }}
+        render={({ handleSubmit, form, submitting, pristine }) => (
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            {/** FORMULARIO PRINCIPAL */}
+            <div className='grid grid-cols-3 gap-3'>
+              <div class='col-span-1'>
+                <Field name='status'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='Selecione estado...'
+                      label='Estado'
+                      name='status'
+                      icon='252'
+                      options={[
+                        { value: 'CREATED', label: 'Creado' },
+                        { value: 'RESOLVED', label: 'Resuelto' },
+                        { value: 'CLOSED', label: 'Cerrado' },
+                      ]}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field name='formId'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='Selecione formulario...'
+                      label='Formulario'
+                      name='formId'
+                      icon='252'
+                      optionValue='id'
+                      optionLabel='title'
+                      options={forms.value}
+                      onChange={(e) => {
+                        const id = parseInt(e.currentTarget.value);
+                        input.onChange(id);
+                      }}
+                    />
+                  )}
+                </Field>
               </div>
 
-              {/* Botonera */}
-              <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
-                <Button
-                  id='btn-clean'
-                  name='btn-clean'
-                  type='button'
-                  label='Limpiar'
-                  onClick={() => form.reset()}
-                  disabled={submitting || pristine}
-                />
-
-                <Button
-                  id='btn-save'
-                  name='btn-save'
-                  type='submit'
-                  label={id ? 'Editar' : 'Guardar'}
-                  className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-                  disabled={submitting}
-                />
+              <div class='col-span-1'>
+                <Field<string>
+                  name='start'
+                  parse={(value) => (value ? dayjs(value).toISOString() : '')}
+                  format={(value) =>
+                    value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
+                  }
+                >
+                  {({ input }) => (
+                    <Input
+                      {...input}
+                      type='datetime-local'
+                      label='Fecha inicio'
+                    />
+                  )}
+                </Field>
               </div>
-            </form>
-          )}
-        />
-      </div>
+              <div class='col-span-4'>
+                <Field<string> name='description' validate={required}>
+                  {({ input, meta }) => (
+                    <TextArea
+                      {...input}
+                      min='3'
+                      max='300'
+                      placeholder='Ingrese Descripción...'
+                      label='Descripción'
+                      type='text'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+            </div>
+
+            {/* Botonera */}
+            <div className='w-full flex-row flex justify-end items-center'>
+              <Button
+                id='btn-clean'
+                name='btn-clean'
+                type='button'
+                label='Limpiar'
+                onClick={() => form.reset()}
+                disabled={submitting || pristine}
+              />
+
+              <Button
+                id='btn-save'
+                name='btn-save'
+                type='submit'
+                label={id ? 'Editar' : 'Guardar'}
+                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+                disabled={submitting}
+              />
+            </div>
+          </form>
+        )}
+      />
     </Section>
   );
 };

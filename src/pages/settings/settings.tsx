@@ -86,17 +86,18 @@ export const SettingsModal = () => {
       name='setting-modal'
       id='setting-modal'
       expandable
+      theme
       header={
-        <>
+        <div className='flex flex-row w-full items-center justify-between'>
           <MenuButtons goBack={goBack} goForward={goForward} />
-          <div className='ml-5 flex flex-row w-full'>
+          <div className='ml-5 flex flex-row w-8/12'>
             <Search
               id='search-general'
               name='search-general'
               placeholder='Search'
             />
           </div>
-        </>
+        </div>
       }
     >
       <div

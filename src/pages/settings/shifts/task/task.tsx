@@ -74,14 +74,17 @@ export const TaskSettingPage: FunctionComponent = () => {
 
   return (
     <Section>
-      <Button
-        onClick={redirect}
-        type='button'
-        icon='039'
-        name='back'
-        rounded={true}
-        className='w-auto'
-      />
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Nueva Tarea'
+            icon='039'
+            onClick={redirect}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
+        </div>
+      </div>
       <Table<ITask>
         data={tasks.value}
         columns={columns}

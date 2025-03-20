@@ -2,6 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { type IModalProps } from './interface';
 import { useState } from 'preact/hooks';
 import { Button } from '../button/button';
+import { ThemeButton } from '@/components/compose/button';
 
 export const Modal: FunctionComponent<IModalProps> = ({
   id,
@@ -15,6 +16,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
   transparent,
   shadowed,
   position = 'absolute',
+  theme = false,
 }: IModalProps) => {
   const [expand, setExpand] = useState(false);
 
@@ -38,6 +40,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
           <div class='flex flex-row w-full items-center px-2.5'>
             <div className='flex flex-row w-10/12 items-center'>{header}</div>
             <div className='flex w-2/12 items-center justify-end'>
+              {theme && <ThemeButton />}
               {expandable && (
                 <Button
                   id='setting-expand'

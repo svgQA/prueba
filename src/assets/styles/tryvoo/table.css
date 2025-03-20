@@ -13,7 +13,7 @@ table.elements {
   }
   tbody {
     td {
-      @apply h-12 border-t-2 border-b-light-dark dark:border-b-dark-light;
+      @apply h-12 border-t-2 border-gray-100 dark:border-b-dark-light;
       tr {
         &:last-child {
           @apply bg-m5;
