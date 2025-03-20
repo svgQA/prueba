@@ -1,11 +1,11 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
-import { tenantData } from './utils/tenant.data';
-import { ITenantResponse } from '@/types/tenant';
 import { Section } from '@/components/common/section/section';
-import { CardData } from '@/components/compose/cards';
-import { Table } from '@/components/common/table/table';
-import { columns } from './components/tenant.columns';
+// import { tenantData } from './utils/tenant.data';
+// import { ITenantResponse } from '@/types/tenant';
+// import { CardData } from '@/components/compose/cards';
+// import { Table } from '@/components/common/table/table';
+// import { columns } from './components/tenant.columns';
 
 export const TenantSettingPage: FunctionComponent = () => {
   useEffect(() => {
@@ -17,6 +17,8 @@ export const TenantSettingPage: FunctionComponent = () => {
 
   return (
     <Section>
+      Tenants
+      {/*
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
           title='Total Marcas'
@@ -44,6 +46,7 @@ export const TenantSettingPage: FunctionComponent = () => {
       </div>
 
       <Table<ITenantResponse> data={tenantData} columns={columns} />
+      */}
     </Section>
   );
 };

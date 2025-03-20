@@ -14,7 +14,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
           {menus.map((menu: IMenu, index: number) => {
             const name = `setting-menu-${menu.id}-${index}`;
             const to = `${base}${menu.base}${menu.to}`;
-            return (
+            return menu.show ? (
               <Link
                 to={to}
                 key={name}
@@ -29,7 +29,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
                 />
                 {menu.label}
               </Link>
-            );
+            ) : null;
           })}
         </div>
       </Card>

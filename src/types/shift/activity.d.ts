@@ -94,9 +94,50 @@ interface IService {
   deletedAt: string | null;
 }
 
+interface IBreak {
+  // TODO: Define break interface based on requirements
+}
+
+interface IReport {
+  // TODO: Define report interface based on requirements
+}
+
+interface ICountry {
+  id: number;
+  name: string;
+  iso2Code: string;
+  iso3Code: string;
+  phoneCode: string;
+  officialLanguage: string[];
+  currency: string;
+  currencyCode: string;
+  timeZone: string;
+  flagUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  createdBy: string | null;
+  editBy: string | null;
+  deletedBy: string | null;
+}
+
+interface IMunicipality {
+  id: number;
+  code: string;
+  name: string;
+  latitude: string;
+  longitude: string;
+  departmentId: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  createdBy: string | null;
+  editBy: string | null;
+  deletedBy: string | null;
+}
+
 export interface IShiftResponse {
   id: number;
-  user: IUser;
   service: IService;
   start: string;
   end: string;
@@ -106,6 +147,8 @@ export interface IShiftResponse {
   status: string;
   type: string;
   assigned: boolean;
+  break: IBreak[];
+  report: IReport[];
   checkIn: {
     time: string;
     location: {
@@ -128,4 +171,7 @@ export interface IShiftResponse {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  createdBy: string | null;
+  editBy: string | null;
+  deletedBy: string | null;
 }
