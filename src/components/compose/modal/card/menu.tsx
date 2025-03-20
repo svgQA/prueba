@@ -8,13 +8,13 @@ import { Card } from '@/components/common/card/card';
 export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
   ({ id, name, menus, label, base, selected }: ICardSettingMenuProps) => {
     return (
-      <Card id={id} name={name}>
-        <div className=''>
-          <h2 className='capitalize text-sm font-semibold mb-2'>{label}</h2>
+      <Card id={id} name={name} borderless rounded={false}>
+        <div className='flex flex-col mt-2'>
+          <h2 className='capitalize text-sm font-semibold mb-1'>{label}</h2>
           {menus.map((menu: IMenu, index: number) => {
             const name = `setting-menu-${menu.id}-${index}`;
             const to = `${base}${menu.base}${menu.to}`;
-            return (
+            return menu.show ? (
               <Link
                 to={to}
                 key={name}
@@ -22,14 +22,12 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
                 data-label={menu.label}
                 data-description={menu.description}
                 id={menu.id}
-                className={`${selected.to === to ? 'bg-primary text-white' : ''} capitalize flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
+                className={`${selected.to === to ? 'bg-primary bg-opacity-30 !text-primary font-bold' : ''} capitalize flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
               >
-                <span
-                  className={`vox-icon vx-icon-${menu.icon} size-sm mr-2`}
-                />
+                <span className={`vx-icon vx-icon-${menu.icon} size-sm mr-2`} />
                 {menu.label}
               </Link>
-            );
+            ) : null;
           })}
         </div>
       </Card>

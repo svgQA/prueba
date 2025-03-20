@@ -10,9 +10,10 @@ import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { FORMAT_MODE_SERVICE, setFormat } from '../create/store/question';
-import { CardMenu } from '@/components/compose/cards';
 import { Table } from '@/components/common/table/table';
 import { appendHistory } from '../../store/settings';
+import { Section } from '@/components/common/section/section';
+import { Button } from '@/components/common/button/button';
 
 export const FormSettingPage = () => {
   const forms = useSignal<IFormResponse[]>([]);
@@ -48,6 +49,17 @@ export const FormSettingPage = () => {
     navigate(menu.to);
   };
 
+  const redirect = () => {
+    setFormat({ mode: FORMAT_MODE_SERVICE.CREATE });
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.forms.create.to,
+      label: 'create',
+      id: 'form-create',
+    };
+    appendHistory(menu);
+    navigate(menu.to);
+  };
+
   const handleOnClick = async (action: IRowAction) => {
     const format = forms.value.find((format) => format.id == action.id);
     if (!format?.structure) throw Error('ERROR: Not exist format in this form');
@@ -67,7 +79,9 @@ export const FormSettingPage = () => {
         break;
       }
       case ROW_ACTIONS.DELETE: {
-        console.log('ELIMINAR ESTO');
+        const response = await FormService.delete(format.id);
+        if (!response.getStatus()) return;
+        getFormsHandler();
         break;
       }
       case ROW_ACTIONS.RESPONSE: {
@@ -102,29 +116,24 @@ export const FormSettingPage = () => {
   };
 
   return (
-    <section className='pt-5'>
-      <div class='flex flex-col gap-2 justify-center mb-5 p-2 rounded bg-b-light-dark dark:bg-b-dark-light'>
-        <div className='flex flex-row justify-center space-x-3'>
-          <CardMenu
-            menu={{
-              to: PAGES_LIST_ROUTER.dashboard.setting.forms.create.to,
-              label: 'create',
-              id: 'form-create',
-            }}
-            title='Start from scratch'
-            description='Get started with a blank template'
-            icon='123'
-            event={() => setFormat({ mode: FORMAT_MODE_SERVICE.CREATE })}
+    <Section>
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-50'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Create Form'
+            icon='039'
+            onClick={redirect}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
           />
         </div>
       </div>
       <Table<IFormResponse>
         data={forms.value}
         columns={columns}
-        pageSize={20}
+        pageSize={10}
         onClickAction={handleOnClick}
-        unsearch
       />
-    </section>
+    </Section>
   );
 };

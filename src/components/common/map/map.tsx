@@ -36,6 +36,10 @@ export const Map: FunctionComponent<IMapProps> = ({
   const [points, setPoint] = useState<
     { id: number; position: google.maps.LatLngLiteral }[]
   >([]);
+  const [editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({
+    lat: '',
+    lng: '',
+  });
   const [activeMarker, setActiveMarker] = useState<number | null>(null);
   const [coords, setCoords] = useState<{ lat: string; lng: string }>({
     lat: '',
@@ -147,7 +151,6 @@ export const Map: FunctionComponent<IMapProps> = ({
     const lat = event.latLng?.lat() ?? 0;
     const lng = event.latLng?.lng() ?? 0;
     const pointsRef = JSON.parse(JSON.stringify(points));
-
     if (id === radialPoint?.id) {
       setPoint([]);
       setPoint(pointsRef);
@@ -157,9 +160,11 @@ export const Map: FunctionComponent<IMapProps> = ({
       return;
     }
 
+    let pointValidation;
     const marker = { id: points.length + 1, position: { lat, lng } };
-
-    const pointValidation = haversineDistance(radialPoint, marker);
+    if (radialPoint) {
+      pointValidation = haversineDistance(radialPoint, marker);
+    }
 
     if (pointValidation) {
       toast.error(`${errorRadialPoint}`, { position: 'top-right' });
@@ -184,9 +189,22 @@ export const Map: FunctionComponent<IMapProps> = ({
   };
 
   const handleMarkerClick = (id: number) => {
-    const marker = points.find((item: any) => item.id === id);
+    const marker = points.find((item) => item.id === id);
+    if (marker) {
+      setEditCoords({
+        lat: marker.position.lat.toString(),
+        lng: marker.position.lng.toString(),
+      });
+    }
     clickPoint?.(marker);
     setActiveMarker(id);
+  };
+
+  const handleEditChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: 'lat' | 'lng'
+  ) => {
+    setEditCoords((prev) => ({ ...prev, [type]: e.currentTarget.value }));
   };
 
   const removeMarkerById = (id: number): void => {
@@ -198,6 +216,27 @@ export const Map: FunctionComponent<IMapProps> = ({
           return { ...val, id: validateOrder(val.id, size, id) };
         })
     );
+  };
+
+  const editMarkerById = (id: number): void => {
+    const newLat = parseFloat(editCoords.lat);
+    const newLng = parseFloat(editCoords.lng);
+    if (isNaN(newLat) || isNaN(newLng)) {
+      toast.error('Por favor ingrese coordenadas válidas', {
+        position: 'top-right',
+      });
+      return;
+    }
+
+    setPoint((prevPoints) =>
+      prevPoints.map((point) =>
+        point.id === id
+          ? { ...point, position: { lat: newLat, lng: newLng } }
+          : point
+      )
+    );
+
+    setActiveMarker(null);
   };
 
   const validateOrder = (number: number, size: number, id: number) => {
@@ -274,23 +313,41 @@ export const Map: FunctionComponent<IMapProps> = ({
                 }}
                 onCloseClick={handleInfoWindowClose}
               >
-                <div>
-                  <h1>Punto: {marker.id}</h1>
-                  <p>
-                    <strong>Lat:</strong> {marker.position.lat}
-                  </p>
-                  <p>
-                    <strong>Lng:</strong> {marker.position.lng}
-                  </p>
+                <div className='w-full p-4'>
+                  <h1 className='text-xl mb-4'>Punto: {marker.id}</h1>
+                  <Input
+                    name='latitude'
+                    id='id-maker-latitude'
+                    label='Lat'
+                    type='text'
+                    value={editCoords.lat}
+                    onChange={(e) => handleEditChange(e, 'lat')}
+                  />
+                  <Input
+                    name='longitude'
+                    id='id-maker-longitude'
+                    label='Lng'
+                    type='text'
+                    value={editCoords.lng}
+                    onChange={(e) => handleEditChange(e, 'lng')}
+                  />
                   <Button
                     id='btn-delete-marker'
                     name='btn-delete-marker'
                     type='button'
+                    icon='008'
                     onClick={() => {
                       removeMarkerById(marker.id);
                     }}
-                    label='eliminar'
-                    className='rounded-md bg-red-800 text-white px-4'
+                  />
+                  <Button
+                    id='btn-edit-marker'
+                    name='btn-edit-marker'
+                    type='button'
+                    icon='354'
+                    onClick={() => {
+                      editMarkerById(marker.id);
+                    }}
                   />
                 </div>
               </InfoWindow>

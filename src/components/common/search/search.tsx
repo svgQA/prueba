@@ -232,7 +232,7 @@ export const Search = ({
   return (
     <div
       id={id}
-      className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative border-b-light-dark bg-b-white shadow-sm focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200'
+      className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative dark:border-b-dark-light border-gray-100 shadow-sm focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200'
     >
       <span className='vox-icon vx-icon-153 text-t-light-dark' />
       <div

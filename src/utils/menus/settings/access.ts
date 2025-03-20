@@ -13,6 +13,7 @@ export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.access.resource.base,
       id: 'resources',
+      show: true,
     },
     {
       icon: '096',
@@ -21,6 +22,7 @@ export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.access.sets.base,
       id: 'sets',
+      show: true,
     },
     {
       icon: '096',
@@ -29,6 +31,7 @@ export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.access.place.base,
       id: 'places',
+      show: true,
     },
     {
       icon: '096',
@@ -37,6 +40,7 @@ export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.access.information.base,
       id: 'information',
+      show: true,
     },
   ],
 };

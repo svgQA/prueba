@@ -3,10 +3,10 @@ import { memo } from 'preact/compat';
 
 export const MenuList = memo(
   ({ menuSettings, menuInformationSelected }: any) => (
-    <div className='vox-scroll-design max-h-[80vh] overflow-y-scroll'>
+    <div className='vox-scroll-design max-h-[68vh] overflow-y-scroll pl-4'>
       {menuSettings.value.map((menu: any) => {
         const name = `${menu.label}-menus`;
-        return (
+        return menu.show ? (
           <CardSettingMenu
             key={name}
             id={name}
@@ -16,7 +16,7 @@ export const MenuList = memo(
             menus={menu.menus}
             selected={menuInformationSelected}
           />
-        );
+        ) : null;
       })}
     </div>
   )

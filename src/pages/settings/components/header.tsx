@@ -1,5 +1,4 @@
 import { Button } from '@/components/common/button/button';
-import { ThemeButton } from '@/components/compose/button';
 import { memo } from 'preact/compat';
 
 export const MenuButtons = memo(({ goBack, goForward }: any) => (
@@ -10,7 +9,7 @@ export const MenuButtons = memo(({ goBack, goForward }: any) => (
       onClick={goBack}
       type='button'
       rounded
-      icon='210'
+      icon='003'
     />
     <Button
       id='setting-go-forward'
@@ -18,8 +17,7 @@ export const MenuButtons = memo(({ goBack, goForward }: any) => (
       onClick={goForward}
       type='button'
       rounded
-      icon='212'
+      icon='004'
     />
-    <ThemeButton />
   </div>
 ));

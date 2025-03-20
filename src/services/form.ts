@@ -38,6 +38,14 @@ export class FormService extends BaseService {
     return await super.make_request<IFormResponse>(this.sname, model);
   }
 
+  static async delete(id: number | string) {
+    const model: IMakeRequest = {
+      url: ['form', String(id)],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<IFormResponse>(this.sname, model);
+  }
+
   static async get_all(params: IPagination = { page: 1, items: 10 }) {
     const model: IMakeRequest = {
       url: ['form'],

@@ -1,9 +1,9 @@
-import { CreditCard, InvoiceCard } from '@/components/compose/cards';
+// import { CreditCard, InvoiceCard } from '@/components/compose/cards';
 import { type FunctionComponent } from 'preact';
-import { TargetedEvent } from 'preact/compat';
-import { useEffect, useState, useRef } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 
 export const CompanySettingPage: FunctionComponent = () => {
+  /*
   const [imagenPreview, setImagenPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -33,6 +33,7 @@ export const CompanySettingPage: FunctionComponent = () => {
   const handleClickSubir = () => {
     fileInputRef.current?.click();
   };
+  */
 
   useEffect(() => {
     document.title = 'Company Settings';
@@ -40,6 +41,8 @@ export const CompanySettingPage: FunctionComponent = () => {
 
   return (
     <div className='container h-full overflow-y-auto vox-scroll-design'>
+      Facturaciòn
+      {/*
       <div className='container flex flex-row justify-between p-8'>
         <div className='container-input w-1/2  space-y-6 pr-4 '>
           <form className='space-y-4'>
@@ -119,20 +122,6 @@ export const CompanySettingPage: FunctionComponent = () => {
         </div>
 
         <div className='container-card w-1/2  space-y-6 pl-4'>
-          {/* <InvoiceCard2
-            id='company-1'
-            name='Company-1'
-            total={20}
-            currency='EUR'
-            active
-          /> */}
-          {/* <InvoiceCard2
-            id='Company-2'
-            name='Company-2'
-            color='bg-[#D9D9D9]'
-            total={100}
-            currency='COP'
-          /> */}
         </div>
       </div>
 
@@ -276,6 +265,7 @@ export const CompanySettingPage: FunctionComponent = () => {
           </div>
         </div>
       </div>
+    */}
     </div>
   );
 };

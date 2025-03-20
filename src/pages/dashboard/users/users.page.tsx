@@ -13,7 +13,7 @@ export const UsersPage: FunctionalComponent = () => {
   }, []);
 
   return (
-    <Section>
+    <Section padding>
       {/* Ejemplo de 3 cards arriba, análogo a shifts */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
