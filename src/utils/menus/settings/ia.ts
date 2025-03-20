@@ -5,7 +5,6 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.ia.base;
 export const MODAL_SETTING_IA: IModalSidebarMenu = {
   label: 'IA',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
-  // show: true,
   menus: [
     {
       icon: '202',

@@ -14,6 +14,7 @@ export interface IModalProps extends IComponentProps, PropsWithChildren {
   transparent?: boolean;
   shadowed?: boolean;
   position?: 'absolute' | 'relative' | 'fixed';
+  theme?: boolean;
 }
 
 export interface Corner {

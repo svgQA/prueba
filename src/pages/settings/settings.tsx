@@ -86,24 +86,25 @@ export const SettingsModal = () => {
       name='setting-modal'
       id='setting-modal'
       expandable
+      theme
       header={
-        <>
+        <div className='flex flex-row w-full items-center justify-between'>
           <MenuButtons goBack={goBack} goForward={goForward} />
-          <div className='ml-5 flex flex-row w-full'>
+          <div className='ml-5 flex flex-row w-8/12'>
             <Search
               id='search-general'
               name='search-general'
               placeholder='Search'
             />
           </div>
-        </>
+        </div>
       }
     >
       <div
         onClick={selectMenu}
-        className='max-w-48 min-w-44 p-0.5 max-h-[90vh]'
+        className='max-w-80 min-w-44 max-h-[90vh] border-r-2 border-gray-50 dark:border-b-dark-light'
       >
-        <div className='mr-0.5'>
+        <div className='border-b-2 border-b-gray-50 dark:border-b-dark-light'>
           <CardSettingUser
             id='user-information'
             name='user-information'
@@ -118,14 +119,14 @@ export const SettingsModal = () => {
           menuInformationSelected={menuInformationSelected.value}
         />
       </div>
-      <div className='w-full mt-0.5 px-5'>
+      <div className='w-full'>
         <CardSettingHeader
           id='setting-header'
           name='setting-header'
           title={menuInformationSelected.value.label}
           description={menuInformationSelected.value.description}
         />
-        <div className='relative max-h-[79vh] min-h-[78vh] overflow-y-auto overflow-x-hidden vox-scroll-design w-full px-1'>
+        <div className='relative max-h-[72vh] min-h-[71.5vh] overflow-y-auto overflow-x-hidden vox-scroll-design w-full p-2'>
           <RoutingContent />
         </div>
       </div>

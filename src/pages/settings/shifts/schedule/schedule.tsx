@@ -74,53 +74,51 @@ export const ScheduleSettingPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-black bg-white rounde shado border-t-4 border-cyan-500  '>
-        <Button
-          onClick={redirect}
-          type='button'
-          icon='039'
-          name='back'
-          rounded={true}
-          className='w-auto'
-        />
-        <Table<ISchedule>
-          data={schedules.value}
-          columns={columns}
-          expandable={(row: any) => {
-            return (
-              <div className='grid grid-cols-1 gap-3'>
-                {row.days.map((dayInfo: any, index: any) => (
-                  <div
-                    class='col-span-1'
-                    key={index}
-                    style={{
-                      border: '1px solid #ccc',
-                      padding: '10px',
-                      minWidth: '120px',
-                    }}
-                  >
-                    <h4>{dayInfo.day}</h4>
-                    <ul>
-                      {dayInfo.hour.map((time: any, i: any) => (
-                        <li key={i}>{time}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            );
-          }}
-          pageSize={20}
-          visibility={{
-            name: true,
-            description: true,
-            priority: true,
-            action: true,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Nueva Horario'
+            icon='039'
+            onClick={redirect}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
+        </div>
       </div>
+      <Table<ISchedule>
+        data={schedules.value}
+        columns={columns}
+        expandable={(row: any) => {
+          return (
+            <div className='grid grid-cols-1 gap-3'>
+              {row.days.map((dayInfo: any, index: any) => (
+                <div
+                  class='col-span-1'
+                  key={index}
+                  style={{
+                    border: '1px solid #ccc',
+                    padding: '10px',
+                    minWidth: '120px',
+                  }}
+                >
+                  <h4>{dayInfo.day}</h4>
+                  <ul>
+                    {dayInfo.hour.map((time: any, i: any) => (
+                      <li key={i}>{time}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          );
+        }}
+        pageSize={20}
+        visibility={{
+          id: false,
+        }}
+        onClickAction={handleOnClick}
+        unsearch={false}
+      />
     </Section>
   );
 };

@@ -65,29 +65,28 @@ export const PlacesSettingPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-black bg-white rounde shado border-t-4 border-cyan-500  '>
-        <Button
-          onClick={redirect}
-          type='button'
-          icon='039'
-          name='back'
-          rounded={true}
-          className='w-auto'
-        />
-        <Table<Place>
-          data={places}
-          columns={columns}
-          pageSize={20}
-          visibility={{
-            address: true,
-            name: true,
-            description: true,
-            action: true,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Nueva Actividad'
+            icon='039'
+            onClick={redirect}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
+        </div>
       </div>
+      <Table<Place>
+        data={places}
+        columns={columns}
+        pageSize={20}
+        visibility={{
+          description: false,
+          id: false,
+        }}
+        onClickAction={handleOnClick}
+        unsearch={false}
+      />
     </Section>
   );
 };
