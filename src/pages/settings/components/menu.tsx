@@ -6,7 +6,7 @@ export const MenuList = memo(
     <div className='vox-scroll-design max-h-[80vh] overflow-y-scroll'>
       {menuSettings.value.map((menu: any) => {
         const name = `${menu.label}-menus`;
-        return (
+        return menu.show ? (
           <CardSettingMenu
             key={name}
             id={name}
@@ -16,7 +16,7 @@ export const MenuList = memo(
             menus={menu.menus}
             selected={menuInformationSelected}
           />
-        );
+        ) : null;
       })}
     </div>
   )

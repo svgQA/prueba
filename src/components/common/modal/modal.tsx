@@ -34,8 +34,8 @@ export const Modal: FunctionComponent<IModalProps> = ({
         className={`${expand ? 'h-full' : 'h-fit'} ${width ? width : 'w-full'} ${shadowed ? 'shadow-lg' : ''} overflow-hidden rounded-md modal-shadow p-1 border-2 bg-b-light dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light`}
       >
         {/* vox-scroll-design */}
-        <div className='flex flex-row w-full items-center pt-2'>
-          <div class='flex flex-row w-full items-center px-2.5'>
+        <div className='flex flex-row w-full px-2 py-3 border-b'>
+          <div class='flex flex-row w-full items-center px-1'>
             <div className='flex flex-row w-10/12 items-center'>{header}</div>
             <div className='flex w-2/12 items-center justify-end'>
               {expandable && (

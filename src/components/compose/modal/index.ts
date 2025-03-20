@@ -7,5 +7,7 @@ export * from './card/header';
 export interface IModalSidebarMenu {
   label: string;
   base: string;
+  show?: boolean;
+  new?: boolean;
   menus: IMenu[];
 }

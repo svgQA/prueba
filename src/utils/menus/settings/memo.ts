@@ -5,6 +5,7 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.memo.base;
 export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
   label: 'Memo',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  show: true,
   menus: [
     {
       icon: '067',
@@ -13,6 +14,7 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.base,
       id: 'novelty',
+      show: true,
     },
   ],
 };
