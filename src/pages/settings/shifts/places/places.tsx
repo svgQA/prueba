@@ -81,10 +81,8 @@ export const PlacesSettingPage: FunctionComponent = () => {
         columns={columns}
         pageSize={20}
         visibility={{
-          address: true,
-          name: true,
-          description: true,
-          action: true,
+          description: false,
+          id: false,
         }}
         onClickAction={handleOnClick}
         unsearch={false}

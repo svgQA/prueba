@@ -100,7 +100,6 @@ export const ActivitySettingPage: FunctionComponent = () => {
           type: true,
         }}
         onClickAction={handleOnClick}
-        unsearch={false}
       />
     </Section>
   );

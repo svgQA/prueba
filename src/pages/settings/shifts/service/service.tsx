@@ -89,10 +89,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
         columns={columns}
         pageSize={20}
         visibility={{
-          name: true,
-          description: true,
-          priority: true,
-          action: true,
+          id: false,
         }}
         onClickAction={handleOnClick}
         unsearch={false}

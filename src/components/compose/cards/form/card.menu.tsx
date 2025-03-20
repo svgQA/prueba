@@ -28,10 +28,17 @@ export const CardMenu: FunctionComponent<ICardMenuProps> = ({
   };
 
   return (
-    <div className='form-button-general cursor-pointer' onClick={handleOnClick}>
-      <span className={`vx-icon vx-icon-${icon} size-xl text-primary`} />
-      <h4>{title}</h4>
-      <p>{description}</p>
+    <div
+      className='form-button-general cursor-pointer flex items-center p-4 border-2 border-gray-100 dark:border-b-dark-light'
+      onClick={handleOnClick}
+    >
+      <div className='rounded-full bg-primary-opacity-2 flex w-12 text-center mr-4 justify-center'>
+        <span className={`vx-icon vx-icon-${icon} size-xl text-primary`} />
+      </div>
+      <div className='flex flex-col'>
+        <h4 className='mb-1'>{title}</h4>
+        <p className='text-sm text-gray-600'>{description}</p>
+      </div>
     </div>
   );
 };
