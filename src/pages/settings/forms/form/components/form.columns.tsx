@@ -18,7 +18,9 @@ export const columns: ColumnDef<IFormResponse>[] = [
           <span className='vox-icon vx-icon-152 mt-1 size-sm' />
           <div className='flex flex-col ml-3'>
             <div className='font-bold'>{String(title)}</div>
-            <div className='text-sm text-gray-500'>{String(description)}</div>
+            <div className='w-full flex justify-center max-w-96 overflow-hidden text-ellipsis whitespace-nowrap'>
+              {String(description)}
+            </div>
           </div>
         </div>
       );
