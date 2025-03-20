@@ -73,29 +73,27 @@ export const TaskSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='p-4 dark:bg-black bg-white rounde shado border-t-4 border-cyan-500  '>
-        <Button
-          onClick={redirect}
-          type='button'
-          icon='039'
-          name='back'
-          rounded={true}
-          className='w-auto'
-        />
-        <Table<ITask>
-          data={tasks.value}
-          columns={columns}
-          pageSize={20}
-          visibility={{
-            description: true,
-            status: true,
-            action: true,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
-      </div>
+    <Section>
+      <Button
+        onClick={redirect}
+        type='button'
+        icon='039'
+        name='back'
+        rounded={true}
+        className='w-auto'
+      />
+      <Table<ITask>
+        data={tasks.value}
+        columns={columns}
+        pageSize={20}
+        visibility={{
+          description: true,
+          status: true,
+          action: true,
+        }}
+        onClickAction={handleOnClick}
+        unsearch={false}
+      />
     </Section>
   );
 };

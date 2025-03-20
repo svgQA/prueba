@@ -82,33 +82,31 @@ export const RoundsSettingPage: FunctionComponent = () => {
 
   return (
     <Section>
-      <div className='max-h-screen relative p-0 dark:bg-black bg-white rounde shado'>
-        <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-20'>
-          <div className='flex flex-row items-center justify-between'>
-            <Button
-              name='button-create-shift'
-              label='Nueva Ronda'
-              icon='039'
-              onClick={() => redirect()}
-              className='mx-3 px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-            />
-          </div>
+      <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Nueva Ronda'
+            icon='039'
+            onClick={() => redirect()}
+            className='mx-3 px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
         </div>
-        <Table<Round>
-          data={rounds}
-          columns={columns}
-          expandable={(row: any) => <ExpandableRounds row={row} />}
-          pageSize={20}
-          visibility={{
-            address: false,
-            city: false,
-            employeeId: false,
-            duration: false,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
       </div>
+      <Table<Round>
+        data={rounds}
+        columns={columns}
+        expandable={(row: any) => <ExpandableRounds row={row} />}
+        pageSize={20}
+        visibility={{
+          address: false,
+          city: false,
+          employeeId: false,
+          duration: false,
+        }}
+        onClickAction={handleOnClick}
+        unsearch={false}
+      />
     </Section>
   );
 };

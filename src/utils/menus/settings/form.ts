@@ -5,6 +5,7 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.forms.base;
 export const MODAL_SETTING_FORM: IModalSidebarMenu = {
   label: 'formularios',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  show: true,
   menus: [
     {
       icon: '094',
@@ -13,6 +14,7 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.form.base,
       id: 'form-create',
+      show: true,
     },
     {
       icon: '033',
@@ -21,6 +23,7 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.base,
       id: 'form-inspect',
+      show: true,
     },
     // {
     //   icon: '028',

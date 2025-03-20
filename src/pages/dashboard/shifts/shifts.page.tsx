@@ -21,6 +21,7 @@ import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { SendForm } from './components/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
+import { ShiftForm } from './components/shift.modal';
 
 enum VIEW_NAME {
   TABLE,
@@ -30,9 +31,11 @@ enum VIEW_NAME {
 }
 
 export const ShiftsPage: FunctionalComponent = () => {
-  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const showUpsertModal = useSignal<boolean>(false);
   const showSendModal = useSignal<boolean>(false);
+  const showShiftModal = useSignal<boolean>(false);
+
+  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const shifts = useSignal<IShiftResponse[]>([]);
   const defaultColumn = useSignal<string>('default');
 
@@ -50,26 +53,14 @@ export const ShiftsPage: FunctionalComponent = () => {
     users: [],
   });
 
-  const toggleSendModal = () => {
-    showSendModal.value = !showSendModal.value;
-  };
-
-  const toggleUpsertModal = () => {
-    showUpsertModal.value = !showUpsertModal.value;
-  };
-
+  /**
+   * Handle Database query for shifts.
+   */
   const getShiftHandler = async () => {
     const response = await ShiftService.get_all({ page: 1, items: 1000 });
     if (!response.getStatus()) return;
-    console.log('response.getMany()', response.getMany());
     shifts.value = response.getMany();
   };
-
-  const columnWidth = useMemo(() => {
-    if (view === ViewMode.Month) return 300;
-    if (view === ViewMode.Week) return 250;
-    return 60;
-  }, [view]);
 
   const getGanttHandler = async () => {
     const response = await ShiftService.get_gantt({
@@ -81,6 +72,9 @@ export const ShiftsPage: FunctionalComponent = () => {
     setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
   };
 
+  /**
+   * Handle the useEffect hook for the document title and shift retrieval.
+   */
   useEffect(() => {
     document.title = 'VX - Shift Service';
     getShiftHandler();
@@ -92,9 +86,101 @@ export const ShiftsPage: FunctionalComponent = () => {
     }
   }, [currentView.value]);
 
+  const columnWidth = useMemo(() => {
+    if (view === ViewMode.Month) return 300;
+    if (view === ViewMode.Week) return 250;
+    return 60;
+  }, [view]);
+
+  /**
+   * Eventos de toggle para los modales
+   */
+  const toggleSendModal = () => {
+    showSendModal.value = !showSendModal.value;
+  };
+
+  const toggleUpsertModal = () => {
+    showUpsertModal.value = !showUpsertModal.value;
+  };
+
+  const toggleShiftModal = () => {
+    showShiftModal.value = !showShiftModal.value;
+  };
+
+  /**
+   * Eventos para cerrar los modales
+   */
+  const handleCloseUpsertModal = useCallback(() => {
+    cleanSelectedData();
+    toggleUpsertModal();
+  }, []);
+
+  const handleCloseSendModal = useCallback(() => {
+    toggleSendModal();
+  }, []);
+
+  const handleCloseShiftModal = useCallback(() => {
+    toggleShiftModal();
+  }, []);
+
+  /**
+   * Eventos del gantt
+   */
+  const handleDblClick = useCallback((task: Task) => {
+    setTaskSelected(task);
+    toggleShiftModal();
+  }, []);
+
+  const handleClick = useCallback((/* task: Task */) => {}, []);
+
+  const handleUserClick = useCallback(
+    (id: string | number) => {
+      const selectedUser = ganttShifts.users.find((user) => user.id === id);
+      if (selectedUser) {
+        setUserSelected(selectedUser);
+        showUpsertModal.value = true;
+      }
+    },
+    [ganttShifts.users]
+  );
+
+  const handleTaskDelete = useCallback((task: Task) => {
+    window.confirm('Are you sure about ' + task.name + ' ?');
+  }, []);
+
+  const cleanSelectedData = useCallback(() => {
+    setUserSelected(undefined);
+    setTaskSelected(undefined);
+  }, []);
+
+  const handleSend = useCallback(async (data: any) => {
+    try {
+      console.log('Sending data:', data);
+      showSendModal.value = false;
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
+  }, []);
+
+  /**
+   * Eventos de los botones superiores
+   */
   const handleViewChange = useCallback((view: VIEW_NAME) => {
     currentView.value = view;
   }, []);
+
+  const handleTaskChange = useCallback(
+    (_: Task) => {
+      if (taskSelected) {
+      }
+    },
+    [shifts]
+  );
+
+  const handleCreacteNewShift = () => {
+    cleanSelectedData();
+    toggleUpsertModal();
+  };
 
   const buttonMenu = useMemo(
     () => (
@@ -111,7 +197,6 @@ export const ShiftsPage: FunctionalComponent = () => {
               : 'border-2 border-primary p-2'
           }
           icon='320'
-          // iconHexColor={currentView.value === VIEW_NAME.TABLE ? '#00BDD6' : ''}
         />
         <Button
           name='button-change-scheduler'
@@ -125,9 +210,6 @@ export const ShiftsPage: FunctionalComponent = () => {
               : 'border-2 border-primary p-2'
           }
           icon='330'
-          // iconHexColor={
-          //   currentView.value === VIEW_NAME.SCHEDULER ? '#00BDD6' : ''
-          // }
         />
         <Button
           name='button-action'
@@ -148,64 +230,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     ),
     [currentView.value]
   );
-
-  const handleTaskChange = useCallback(
-    (_: Task) => {
-      if (taskSelected) {
-      }
-    },
-    [shifts]
-  );
-
-  const handleDblClick = useCallback((task: Task) => {
-    setTaskSelected(() => task);
-    showUpsertModal.value = true;
-  }, []);
-
-  const handleClick = useCallback((/* task: Task */) => {}, []);
-
-  const handleCreacteNewShift = () => {
-    cleanSelectedData();
-    toggleUpsertModal();
-  };
-
-  const handleUserClick = useCallback(
-    (id: string | number) => {
-      const selectedUser = ganttShifts.users.find((user) => user.id === id);
-      if (selectedUser) {
-        setUserSelected(selectedUser);
-        showUpsertModal.value = true;
-      }
-    },
-    [ganttShifts.users]
-  );
-
-  const handleTaskDelete = useCallback((task: Task) => {
-    window.confirm('Are you sure about ' + task.name + ' ?');
-  }, []);
-
-  const handleCloseUpsertModal = useCallback(() => {
-    cleanSelectedData();
-    toggleUpsertModal();
-  }, []);
-
-  const cleanSelectedData = useCallback(() => {
-    setUserSelected(undefined);
-    setTaskSelected(undefined);
-  }, []);
-
-  const handleCloseSendModal = useCallback(() => {
-    showSendModal.value = false;
-  }, []);
-
-  const handleSend = useCallback(async (data: any) => {
-    try {
-      console.log('Sending data:', data);
-      showSendModal.value = false;
-    } catch (error) {
-      console.error('Error sending data:', error);
-    }
-  }, []);
 
   return (
     <Section>
@@ -308,6 +332,12 @@ export const ShiftsPage: FunctionalComponent = () => {
         closed={showSendModal.value}
         onClose={handleCloseSendModal}
         onSend={handleSend}
+      />
+
+      <ShiftForm
+        closed={showShiftModal.value}
+        onClose={handleCloseShiftModal}
+        taskSelected={taskSelected}
       />
     </Section>
   );

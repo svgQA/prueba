@@ -33,6 +33,13 @@ export class ShiftService extends BaseService {
     return await super.make_request<IShiftResponse>(this.name, model);
   }
 
+  static async get_shift(id: string | number) {
+    const model: IMakeRequest = {
+      url: ['activity', String(id)],
+    };
+    return await super.make_request<IShiftResponse>(this.name, model);
+  }
+
   static async get_gantt(
     params: IPagintationGantt = {
       page: 1,

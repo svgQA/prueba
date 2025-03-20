@@ -5,6 +5,7 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.setting.base;
 export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
   label: 'general',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  show: true,
   menus: [
     {
       icon: '007',
@@ -13,6 +14,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.user.base,
       id: 'user',
+      show: true,
     },
     {
       icon: '088',
@@ -21,6 +23,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.company.base,
       id: 'company',
+      show: true,
     },
     {
       icon: '092',
