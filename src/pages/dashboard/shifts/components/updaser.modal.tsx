@@ -124,7 +124,7 @@ export const TaskForm = ({
   );
 
   const headerContent = useMemo(
-    () => <h3>{taskSelected ? 'Editar Tarea' : 'Crear Tarea'}</h3>,
+    () => <h3>{taskSelected ? 'Editar Turno' : 'Crear Turno'}</h3>,
     [taskSelected]
   );
 
@@ -352,8 +352,7 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
-
-                <div class='col-span-2 mt-4'>
+                <div class='col-span-1 '>
                   <FieldArray<string> name='keywords'>
                     {({ fields }) => {
                       const appendElement = () => {
@@ -374,6 +373,7 @@ export const TaskForm = ({
                               }
                               placeholder='Escribe una palabra clave'
                               button
+                              label='Palabras claves'
                               buttonIcon='044'
                               onKeyUp={appendElement}
                               onClick={appendElement}
@@ -394,6 +394,22 @@ export const TaskForm = ({
                       );
                     }}
                   </FieldArray>
+                </div>
+                <div class='col-span-1'>
+                  <Field
+                    name='timeBefore'
+                    parse={(value) => Number(value) || undefined}
+                  >
+                    {({ input }) => (
+                      <Input
+                        {...input}
+                        id='input-time-before'
+                        name='input-time-before'
+                        type='number'
+                        label='Tiempo antes'
+                      />
+                    )}
+                  </Field>
                 </div>
               </div>
             </form>
