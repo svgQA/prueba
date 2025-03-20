@@ -14,7 +14,7 @@ export const ThemeButton = () => {
       onClick={toggleTheme}
       type='button'
       rounded
-      icon='301'
+      icon='170'
     />
   );
 };
