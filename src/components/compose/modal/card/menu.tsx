@@ -15,7 +15,6 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
             {menus.map((menu: IMenu, index: number) => {
               const name = `setting-menu-${menu.id}-${index}`;
               const to = `${base}${menu.base}${menu.to}`;
-              const isActive = selected.to === to;
               
               return (
                 <Link
@@ -25,8 +24,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
                   data-label={menu.label}
                   data-description={menu.description}
                   id={menu.id}
-                  className={`flex items-center px-8 py-2 rounded-md text-sm font-medium transition-all duration-200 w-full 
-                    ${isActive ? 'bg-gray-100 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-100'}`}
+                  className={`flex items-center px-8 py-2 rounded-md text-sm font-medium transition-all duration-200 w-full text-gray-600 hover:bg-gray-100`}
                 >
                   <span className={`vox-icon vx-icon-${menu.icon} size-sm mr-2 text-gray-500`} />
                   {menu.label}
