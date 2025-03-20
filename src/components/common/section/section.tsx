@@ -3,7 +3,12 @@ import { ISectionProps } from './interface';
 
 export const Section: FunctionComponent<ISectionProps> = ({
   children,
-  className = 'mr-3 my-1 pt-7 relative px-7',
+  className = 'mr-3 my-1 relative',
+  padding = false,
 }: ISectionProps) => {
-  return <section className={`${className}`}>{children}</section>;
+  return (
+    <section className={`${padding ? 'px-7 pt-7' : 'p-0'} ${className}`}>
+      {children}
+    </section>
+  );
 };

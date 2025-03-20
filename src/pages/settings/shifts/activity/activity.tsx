@@ -76,31 +76,29 @@ export const ActivitySettingPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-black bg-white rounde shado border-t-4 border-cyan-500  '>
-        <Button
-          onClick={redirect}
-          type='button'
-          icon='039'
-          name='back'
-          rounded={true}
-          className='w-auto'
-        />
-        <Table<IActivity>
-          data={activity.value}
-          columns={columns}
-          pageSize={20}
-          visibility={{
-            start: true,
-            end: true,
-            roundId: true,
-            projectId: true,
-            status: true,
-            type: true,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
-      </div>
+      <Button
+        onClick={redirect}
+        type='button'
+        icon='039'
+        name='back'
+        rounded={true}
+        className='w-auto'
+      />
+      <Table<IActivity>
+        data={activity.value}
+        columns={columns}
+        pageSize={20}
+        visibility={{
+          start: true,
+          end: true,
+          roundId: true,
+          projectId: true,
+          status: true,
+          type: true,
+        }}
+        onClickAction={handleOnClick}
+        unsearch={false}
+      />
     </Section>
   );
 };
