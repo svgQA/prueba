@@ -45,12 +45,12 @@ import {
 } from '@dnd-kit/sortable';
 import { DraggableCell, DraggableTableHeader } from './components';
 import { Fragment } from 'preact/jsx-runtime';
-// import { Button } from '../button/button';
 import { Switch } from '../switch/switch';
-// import { Group } from './components/group/group'; // Ya agregado antes
 import { ROW_ACTIONS } from './enum';
 import { Group } from './components/group';
 import { useSignal } from '@preact/signals';
+// import { Button } from '../button/button';
+// import { Group } from './components/group/group'; // Ya agregado antes
 
 export const Table = <T,>({
   data,
@@ -160,7 +160,8 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
+    // bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light
+    <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-red-300'>
       {table.getAllLeafColumns().map((column, index) => {
         const columnHeader =
           typeof column.columnDef.header !== 'string'
@@ -363,9 +364,9 @@ export const Table = <T,>({
     }
 
     return (
-      <div className='flex items-center justify-between py-2 px-4'>
+      <div className='flex items-center justify-between py-2 px-4 rounded-lg'>
         <div className='flex items-center gap-2'>
-          <span className='text-sm text-gray-600'>Filas por página:</span>
+          <span>Filas por página:</span>
           <div className='relative'>
             <select
               value={currentPageSize}
@@ -373,8 +374,7 @@ export const Table = <T,>({
                 const target = e.target as HTMLSelectElement;
                 table.setPageSize(Number(target.value));
               }}
-              className='h-8 appearance-none rounded border border-gray-300 bg-white pl-3 pr-8 text-sm'
-              style={{ minWidth: '60px' }}
+              className='h-8 appearance-none rounded pl-3 pr-8 text-sm'
             >
               {[10, 20, 30, 50, 100].map((size) => (
                 <option key={size} value={size}>
@@ -382,17 +382,11 @@ export const Table = <T,>({
                 </option>
               ))}
             </select>
-            <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700'>
-              <svg
-                className='h-4 w-4 fill-current'
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 20 20'
-              >
-                <path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
-              </svg>
+            <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2'>
+              <span className='vox-icon vx-icon-001 !text-sm'></span>
             </div>
           </div>
-          <span className='text-sm text-gray-600 ml-4'>
+          <span>
             {currentPage * currentPageSize + 1}-
             {Math.min((currentPage + 1) * currentPageSize, data.length)} de{' '}
             {data.length} elementos
@@ -540,7 +534,10 @@ export const Table = <T,>({
         onDragEnd={handleDragEnd}
         sensors={sensors}
       >
-        <div onClick={handleClick} className=''>
+        <div
+          onClick={handleClick}
+          className='border-2 border-b-light-dark dark:border-b-dark-light rounded-lg'
+        >
           <table className='elements'>
             <thead>
               {table.getHeaderGroups().map((headerGroup, index) => (
@@ -575,12 +572,11 @@ export const Table = <T,>({
             <tbody>
               {renderRows(table.getRowModel().rows)}
               {data.length > pageSize && (
-                <tr className='pagination-row'>
+                <tr className=''>
                   <td
                     colSpan={
                       table.getAllColumns().length + (!unsettings ? 1 : 0)
                     }
-                    className='p-0 border-t border-gray-200'
                   >
                     {renderPagination()}
                   </td>

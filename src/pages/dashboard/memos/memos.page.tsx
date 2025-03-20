@@ -11,6 +11,7 @@ import { useWebSocket } from '@/utils/socket';
 import { useUserStore } from '@/store/slices';
 import { IMessage } from '@/utils/socket/interface';
 import { toast } from 'react-toastify';
+import { Section } from '@/components/common/section/section';
 
 interface FrequentQuestion {
   id: number;
@@ -141,7 +142,7 @@ export const MemosPage: FunctionComponent = () => {
   };
 
   return (
-    <section className='flex flex-row h-[99.5vh]'>
+    <Section className='flex flex-row h-[99.5vh]'>
       <div className='w-[30%] border-r dark:border-b-dark-light flex flex-col h-full'>
         <ChatHeader />
         <div className='flex-1 overflow-y-auto vox-scroll-design'>
@@ -183,6 +184,6 @@ export const MemosPage: FunctionComponent = () => {
         </div>
         <ChatInput onSend={handleSendMessage} />
       </div>
-    </section>
+    </Section>
   );
 };
