@@ -29,28 +29,24 @@ export const ShiftForm = ({
   const showReplicateForm = useSignal<boolean>(false);
   const replicateDate = useSignal<string>('');
 
-  const checkInPoints = useSignal<any>([
-    [
-      {
-        id: 1,
-        position: {
-          lat: shift.value?.checkIn?.location?.lat || 4.649251,
-          lng: shift.value?.checkIn?.location?.lng || -74.106992,
-        },
+  const checkInPoints = useSignal([
+    {
+      id: 1,
+      position: {
+        lat: shift.value?.checkIn?.location?.lat || 4.649251,
+        lng: shift.value?.checkIn?.location?.lng || -74.106992,
       },
-    ],
+    },
   ]);
 
-  const checkOutPoints = useSignal<any>([
-    [
-      {
-        id: 1,
-        position: {
-          lat: shift.value?.checkOut?.location?.lat || 4.649251,
-          lng: shift.value?.checkOut?.location?.lng || -74.106992,
-        },
+  const checkOutPoints = useSignal([
+    {
+      id: 1,
+      position: {
+        lat: shift.value?.checkOut?.location?.lat || 4.649251,
+        lng: shift.value?.checkOut?.location?.lng || -74.106992,
       },
-    ],
+    },
   ]);
 
   const getShiftHandler = async () => {
@@ -116,6 +112,8 @@ export const ShiftForm = ({
   const taskData = {
     employeeName: shift.value?.employee?.name || '',
     employeeSurname: shift.value?.employee?.surname || '',
+    locationLat: shift.value?.service?.place?.latitude || 2.43823,
+    locationLng: shift.value?.service?.place?.longitude || -76.61316,
     employeeImage: shift.value?.employee?.image || '',
     employeeEmail: shift.value?.employee?.email || '',
     employeePhone: shift.value?.employee?.phone || '',
@@ -323,7 +321,10 @@ export const ShiftForm = ({
                 <Map
                   sendPoints={() => {}}
                   name='CheckInMap'
-                  center={checkInPoints.value[0][0].position}
+                  center={{
+                    lat: taskData.locationLat,
+                    lng: taskData.locationLng,
+                  }}
                   pointsAmount={1}
                   pointsRef={checkInPoints.value}
                   condition={false}
@@ -349,7 +350,10 @@ export const ShiftForm = ({
                 <Map
                   sendPoints={() => {}}
                   name='CheckOutMap'
-                  center={checkOutPoints.value[0][0].position}
+                  center={{
+                    lat: taskData.locationLat,
+                    lng: taskData.locationLng,
+                  }}
                   pointsAmount={1}
                   pointsRef={checkOutPoints.value}
                   condition={false}
