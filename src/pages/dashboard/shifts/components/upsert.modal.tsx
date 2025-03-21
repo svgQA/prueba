@@ -31,6 +31,7 @@ export const TaskForm = ({
   onClose,
   userSelected,
   taskSelected,
+  posSave,
 }: Props) => {
   const inputKeywords = useSignal('');
   const users = useSignal<IUserResponse[]>([]);
@@ -56,8 +57,8 @@ export const TaskForm = ({
         : 'Turno creado exitosamente!';
 
       toast.success(message, { position: 'top-right' });
-      // onClose?.();
-      // posSave?.();
+      onClose?.();
+      posSave?.();
     } catch (error) {
       toast.error('Error al procesar la solicitud');
     }
@@ -180,6 +181,7 @@ export const TaskForm = ({
     if (taskSelected) {
       setSelectedEmployeeId(taskSelected.userId?.toString());
       setInitialValues({
+        employeedId: taskSelected.userId,
         start: taskSelected.start?.toString(),
         end: taskSelected.end?.toString(),
         serviceId: taskSelected.serviceId,
@@ -189,10 +191,18 @@ export const TaskForm = ({
     }
     if (userSelected) {
       setSelectedEmployeeId(userSelected.id?.toString());
+      setInitialValues({
+        employeedId: userSelected.id,
+        start: '',
+        end: '',
+        serviceId: '',
+        type: 'INTERNAL',
+      });
       return;
     }
     setSelectedEmployeeId('');
     setInitialValues({
+      employeedId: '',
       start: '',
       end: '',
       serviceId: '',
@@ -241,6 +251,7 @@ export const TaskForm = ({
                         onChange={(e) => {
                           const id = parseInt(e.currentTarget.value);
                           input.onChange(id);
+                          setSelectedEmployeeId(id.toString());
                         }}
                         value={selectedEmployeeId}
                         disabled={!!userSelected}

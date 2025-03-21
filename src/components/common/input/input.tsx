@@ -49,13 +49,13 @@ export const Input = ({
         </label>
       )}
       <div
-        className={`${borderless ? '' : 'border-b-light-dark dark:border-b-dark-light border'} rounded flex flex-row items-center`}
+        className={`${borderless ? '' : 'border-b-light-dark dark:border-b-dark-light border'} rounded flex flex-row items-center w-full`}
       >
         {!end && icon && (
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
         <input
-          className={`${normal ? '' : 'capitalize'} px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'} [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+          className={`${normal ? '' : 'capitalize'} w-full px-2 flex-1 mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'} [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
           onChange={onChange}
           name={name}
           onKeyUp={handleKeyUp}

@@ -86,38 +86,76 @@ export const Search = ({
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === 'Enter' && inputState.value.trim() !== '') {
-        const key =
-          selectedKeyIndex.value !== -1
-            ? keys[selectedKeyIndex.value]
-            : keys[0];
-        if (!key) return;
-        setFilterSelected(key);
+      if (isDropdownOpen.value && keys.length > 0) {
+        if (event.key === 'Enter' && inputState.value.trim() !== '') {
+          event.preventDefault();
+          const key =
+            selectedKeyIndex.value !== -1
+              ? keys[selectedKeyIndex.value]
+              : keys[0];
+          if (!key) return;
+          setFilterSelected(key);
+        } else if (event.key === 'Tab') {
+          event.preventDefault();
+          if (selectedKeyIndex.value === -1) {
+            selectedKeyIndex.value = 0;
+          } else {
+            selectedKeyIndex.value = (selectedKeyIndex.value + 1) % keys.length;
+          }
+          if (keysContainerRef.current) {
+            const selectedElement = keysContainerRef.current.children[
+              selectedKeyIndex.value + 1
+            ] as HTMLElement;
+            if (selectedElement) {
+              selectedElement.focus();
+              selectedElement.scrollIntoView({ block: 'nearest' });
+            }
+          }
+        } else if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          selectedKeyIndex.value =
+            selectedKeyIndex.value === -1
+              ? 0
+              : (selectedKeyIndex.value + 1) % keys.length;
+          if (keysContainerRef.current) {
+            const selectedElement = keysContainerRef.current.children[
+              selectedKeyIndex.value + 1
+            ] as HTMLElement;
+            if (selectedElement) {
+              selectedElement.focus();
+              selectedElement.scrollIntoView({ block: 'nearest' });
+            }
+          }
+        } else if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          selectedKeyIndex.value =
+            selectedKeyIndex.value === -1
+              ? keys.length - 1
+              : (selectedKeyIndex.value - 1 + keys.length) % keys.length;
+          if (keysContainerRef.current) {
+            const selectedElement = keysContainerRef.current.children[
+              selectedKeyIndex.value + 1
+            ] as HTMLElement;
+            if (selectedElement) {
+              selectedElement.focus();
+              selectedElement.scrollIntoView({ block: 'nearest' });
+            }
+          }
+        }
       } else if (event.key === 'Backspace' && inputState.value === '') {
         setFilter(searchArray.value.slice(0, -1));
-      } else if (event.key === 'Tab') {
-        event.preventDefault();
-        if (selectedKeyIndex.value === -1) {
-          selectedKeyIndex.value = 0;
-        } else {
-          selectedKeyIndex.value = (selectedKeyIndex.value + 1) % keys.length;
-        }
-        if (keysContainerRef.current) {
-          keysContainerRef.current.focus();
-        }
-      } else if (event.key === 'ArrowDown' && selectedKeyIndex.value !== -1) {
-        event.preventDefault();
-        selectedKeyIndex.value = (selectedKeyIndex.value + 1) % keys.length;
-      } else if (event.key === 'ArrowUp' && selectedKeyIndex.value !== -1) {
-        event.preventDefault();
-        selectedKeyIndex.value =
-          (selectedKeyIndex.value - 1 + keys.length) % keys.length;
       } else if (event.key === 'Escape') {
         isDropdownOpen.value = false;
         selectedKeyIndex.value = -1;
       }
     },
-    [inputState.value, keys, setFilterSelected, searchArray]
+    [
+      inputState.value,
+      keys,
+      setFilterSelected,
+      searchArray,
+      isDropdownOpen.value,
+    ]
   );
 
   const handleClickFilters = useCallback(
@@ -164,7 +202,8 @@ export const Search = ({
             data-name={keyName}
             data-id={key.id}
             data-label={key.label}
-            tabIndex={index}
+            tabIndex={0}
+            onKeyDown={handleKeyPress}
             onClick={(e) => {
               e.stopPropagation();
               setFilterSelected(key);
@@ -177,7 +216,13 @@ export const Search = ({
           </div>
         );
       }),
-    [keys, selectedKeyIndex.value, inputState.value, setFilterSelected]
+    [
+      keys,
+      selectedKeyIndex.value,
+      inputState.value,
+      setFilterSelected,
+      handleKeyPress,
+    ]
   );
 
   const searchList = useMemo(
@@ -264,12 +309,12 @@ export const Search = ({
       {keys.length > 0 && isDropdownOpen.value && (
         <div
           ref={keysContainerRef}
-          className='absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-b-white rounded-xl shadow-md border-b-light-dark animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto'
+          className='absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-b-white rounded-xl shadow-md border-b-light-dark animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto vox-scroll-design'
           onClick={handleClickKeys}
         >
-          <div className='px-3 py-1 text-xs text-gray-500 font-medium uppercase'>
+          <h6 className='px-3 py-1 text-xs text-gray-500 font-medium uppercase'>
             Filtrar por
-          </div>
+          </h6>
           {keysList}
         </div>
       )}

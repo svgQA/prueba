@@ -62,7 +62,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     shifts.value = response.getMany();
   };
 
-  const handleViewMode = (viewMode: ViewMode) => {
+  const handleViewMode = (viewMode: ViewMode = ViewMode.QuarterDay) => {
     setGanttShifts({ startDate, endDate, users: [] });
     setView(viewMode);
     getGanttHandler(viewMode);
@@ -272,7 +272,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             <Button
               name='button-create-shift'
               label='Create'
-              className='mx-3 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              className='mx-3 px-4 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
               onClick={handleCreacteNewShift}
             />
           </div>
@@ -329,7 +329,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       <TaskForm
         closed={showUpsertModal.value}
         onClose={handleCloseUpsertModal}
-        posSave={getGanttHandler}
+        posSave={handleViewMode}
         userSelected={userSelected}
         taskSelected={taskSelected}
       />
@@ -344,6 +344,11 @@ export const ShiftsPage: FunctionalComponent = () => {
         closed={showShiftModal.value}
         onClose={handleCloseShiftModal}
         taskSelected={taskSelected}
+        posAction={handleViewMode}
+        onSupervision={() => {
+          handleViewChange(VIEW_NAME.SUPERVISOR);
+          handleCloseShiftModal();
+        }}
       />
     </Section>
   );
