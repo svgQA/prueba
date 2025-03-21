@@ -16,7 +16,7 @@ import {
 import dayjs from 'dayjs';
 import { ViewSwitcher } from './components/swicher.gantt';
 import { Gantt } from '@/components/compose/gantt';
-import { TaskForm } from './components/updaser.modal';
+import { TaskForm } from './components/upsert.modal';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { SendForm } from './components/send.modal';
@@ -62,11 +62,16 @@ export const ShiftsPage: FunctionalComponent = () => {
     shifts.value = response.getMany();
   };
 
-  const getGanttHandler = async () => {
+  const handleViewMode = (viewMode: ViewMode) => {
+    setView(viewMode);
+    getGanttHandler(viewMode);
+  };
+
+  const getGanttHandler = async (viewMode?: ViewMode) => {
     const response = await ShiftService.get_gantt({
       page: 1,
       items: 100,
-      start: startDate.toISOString(),
+      mode: viewMode,
     });
     if (!response.getStatus()) return;
     setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
@@ -193,8 +198,8 @@ export const ShiftsPage: FunctionalComponent = () => {
           rounded={false}
           className={
             currentView.value === VIEW_NAME.TABLE
-              ? 'bg-primary-opacity border-2 border-primary p-2 t-primary'
-              : 'border-2 border-primary p-2'
+              ? 'bg-primary-opacity p-2'
+              : ''
           }
           icon='320'
         />
@@ -206,8 +211,8 @@ export const ShiftsPage: FunctionalComponent = () => {
           rounded={false}
           className={
             currentView.value === VIEW_NAME.SCHEDULER
-              ? 'bg-primary-opacity border-2 border-primary p-2'
-              : 'border-2 border-primary p-2'
+              ? 'bg-primary-opacity p-2'
+              : ''
           }
           icon='330'
         />
@@ -299,7 +304,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         {currentView.value === VIEW_NAME.SCHEDULER && (
           <div>
             <ViewSwitcher
-              onViewModeChange={(viewMode: ViewMode) => setView(viewMode)}
+              onViewModeChange={handleViewMode}
               onViewListChange={setIsChecked}
               isChecked={isChecked}
               status={view}

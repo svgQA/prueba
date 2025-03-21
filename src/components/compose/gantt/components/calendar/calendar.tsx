@@ -384,6 +384,7 @@ export const Calendar = ({
         width={columnWidth * dateSetup.dates.length}
         height={headerHeight}
         className='fill-transparent'
+        // className='fill-b-light-dark dark:fill-b-dark-light'
       />
       {bottomValues} {topValues}
     </g>

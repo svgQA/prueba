@@ -115,7 +115,7 @@ export const TaskGantt = ({
       ref={verticalGanttContainerRef}
       dir='ltr'
     >
-      <div className='rounded-tr-lg bg-b-light-dark dark:bg-b-dark-light'>
+      <div className='rounded-tr-lg bg-b-light-dark dark:bg-b-dark-light w-fit'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           width={gridProps.svgWidth}

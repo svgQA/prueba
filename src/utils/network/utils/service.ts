@@ -48,7 +48,9 @@ export class BaseService {
     if (model.params) {
       const queryParams = new URLSearchParams();
       Object.entries(model.params).forEach(([key, value]) => {
-        queryParams.append(key, String(value));
+        if (value && key) {
+          queryParams.append(key, String(value));
+        }
       });
       url = `${url}?${queryParams.toString()}`;
     }

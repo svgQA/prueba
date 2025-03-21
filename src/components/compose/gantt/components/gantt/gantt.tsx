@@ -368,7 +368,6 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   const handleSelectedTask = useCallback(
     (taskId: string | number) => {
-      console.log('CLICK: => selected');
       const newSelectedTask = barTasks.find((t) => t.id === taskId);
       const oldSelectedTask = barTasks.find(
         (t) => !!selectedTask && t.id === selectedTask.id
