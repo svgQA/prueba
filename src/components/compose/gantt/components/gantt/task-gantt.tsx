@@ -115,14 +115,16 @@ export const TaskGantt = ({
       ref={verticalGanttContainerRef}
       dir='ltr'
     >
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        width={gridProps.svgWidth}
-        height={calendarProps.headerHeight}
-        fontFamily={barProps.fontFamily}
-      >
-        <Calendar {...calendarProps} />
-      </svg>
+      <div className='rounded-tr-lg bg-b-light-dark dark:bg-b-dark-light'>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width={gridProps.svgWidth}
+          height={calendarProps.headerHeight}
+          fontFamily={barProps.fontFamily}
+        >
+          <Calendar {...calendarProps} />
+        </svg>
+      </div>
       <div
         ref={horizontalContainerRef}
         className={`${styles.horizontalContainer} cursor-grab`}

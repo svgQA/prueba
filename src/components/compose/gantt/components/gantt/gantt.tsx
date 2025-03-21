@@ -546,7 +546,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   return (
     <div>
       <div
-        className={`${styles.wrapper} border rounded-xl`}
+        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl min-h-[30vh]`}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         ref={wrapperRef}
