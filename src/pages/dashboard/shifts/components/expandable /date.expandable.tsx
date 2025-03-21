@@ -61,53 +61,87 @@ const ShiftCard = ({
       },
     ],
   ]);
+
   return (
-    <div class='w-full max-w-sm p-4 bg-white shadow-lg rounded-lg flex flex-col gap-4'>
-      <h2 class='text-lg font-semibold'>{title}</h2>
-      <div class='flex items-center gap-4'>
-        <Map
-          sendPoints={() => {}}
-          name='Map'
-          center={{
-            lat: 4.649251,
-            lng: -74.106992,
-          }}
-          pointsAmount={1}
-          pointsRef={points.value}
-          condition={false}
-          errorCondition=''
-          radialPoint={null}
-          errorRadialPoint=''
-          radius={50}
-          draggable={true}
-          width='100%'
-          clickPoint={() => {}}
-        />
-        <div>
-          <p class='font-semibold'>{name}</p>
-          <span class={`px-2 py-1 text-xs rounded-full ${statusColor}`}>
-            {status}
-          </span>
+    <div className="bg-b-white rounded-lg shadow-sm p-4 w-full">
+      {/* Título */}
+      <h2 className="text-t-light font-medium mb-4">{title}</h2>
+
+      <div className="flex">
+        {/* Columna izquierda - Foto y nombre */}
+        <div className="flex flex-col items-center mr-4 w-24">
+          {/* <div className="w-16 h-16 rounded-full overflow-hidden bg-b-light-dark mb-2">
+            <img src="/placeholder.svg" alt={name} className="w-full h-full object-cover" />
+          </div> */}
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-b-light mb-2">
+            <span className="!text-primary vox-icon size-lg vx-icon-308"></span>
+          </div>
+          <p className="text-t-light font-medium text-center">{name}</p>
+          <span className={`mt-1 inline-block px-3 py-0.5 rounded-full text-xs ${statusColor}`}>{status}</span>
         </div>
-      </div>
-      <div class='text-sm text-gray-600 space-y-2'>
-        <div class='flex items-center gap-2'>
-          <span class='w-4 h-4'>📅</span> <span>{date}</span>
+
+        {/* Columna central - Información */}
+        <div className="flex flex-col justify-center space-y-3 mr-4">
+        <div className="flex items-center">
+            <div className="flex-shrink-0 mr-2">
+              <span className="!text-primary vox-icon size-sm vx-icon-323"></span>
+            </div>
+            <div>
+              <p className="text-xs text-t-light-dark">Fecha</p>
+              <p className="text-sm text-t-light">{date}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <div className="flex-shrink-0 mr-2">
+              <span className="!text-primary vox-icon size-sm vx-icon-325"></span>
+            </div>
+            <div>
+              <p className="text-xs text-t-light-dark">Hora</p>
+              <p className="text-sm text-t-light">{time}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <div className="flex-shrink-0 mr-2">
+              <span className="!text-primary vox-icon size-sm vx-icon-326"></span>
+            </div>
+            <div>
+              <p className="text-xs text-t-light-dark">Fuente</p>
+              <p className="text-sm text-t-light">{source}</p>
+            </div>
+          </div>
         </div>
-        <div class='flex items-center gap-2'>
-          <span class='w-4 h-4'>⏰</span> <span>{time}</span>
+
+        {/* Columna derecha - Mapa */}
+        <div className="flex-1">
+          <div className="relative h-32 rounded-lg overflow-hidden">
+            <Map
+              sendPoints={() => {}}
+              name='Map'
+              center={{
+                lat: 4.649251,
+                lng: -74.106992,
+              }}
+              pointsAmount={1}
+              pointsRef={points.value}
+              condition={false}
+              errorCondition=''
+              radialPoint={null}
+              errorRadialPoint=''
+              radius={50}
+              draggable={true}
+              width='100%'
+              clickPoint={() => {}}
+            />
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-b-white px-2 py-1 rounded-full text-xs shadow-sm">
+              {distance}
+            </div>
+          </div>
         </div>
-        <div class='flex items-center gap-2'>
-          <span class='w-4 h-4'>🌍</span> <span>{source}</span>
-        </div>
-      </div>
-      <div class='relative w-full h-32 bg-gray-200 rounded-lg flex items-center justify-center'>
-        <span class='text-xs bg-white px-2 py-1 rounded shadow'>
-          {distance}
-        </span>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default DateInfo;
