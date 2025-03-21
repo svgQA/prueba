@@ -97,7 +97,6 @@ export const RoundsSettingPage: FunctionComponent = () => {
         data={rounds}
         columns={columns}
         expandable={(row: any) => <ExpandableRounds row={row} />}
-        pageSize={20}
         visibility={{
           id: false,
         }}

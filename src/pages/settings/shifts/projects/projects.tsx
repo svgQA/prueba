@@ -90,7 +90,6 @@ export const ProjectsSettingPage: FunctionComponent = () => {
       <Table<IProject>
         data={projects.value}
         columns={columns}
-        pageSize={20}
         visibility={{
           id: false,
           description: false,

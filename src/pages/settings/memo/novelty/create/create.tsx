@@ -128,7 +128,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
             </div>
 
             {/* Botonera */}
-            <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
+            <div className='w-full flex-row flex justify-end items-center'>
               <Button
                 id='btn-clean'
                 name='btn-clean'
