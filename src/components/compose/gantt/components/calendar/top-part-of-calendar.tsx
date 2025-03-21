@@ -32,7 +32,8 @@ export const TopPartOfCalendar = ({
         key={value + 'text'}
         y={yText}
         x={xText}
-        className={styles.calendarTopText}
+        className={`${styles.calendarTopText} fill-t-light-dark dark:fill-t-dark-light text-anchor-middle`}
+        // className={styles.calendarTopText}
       >
         {value}
       </text>

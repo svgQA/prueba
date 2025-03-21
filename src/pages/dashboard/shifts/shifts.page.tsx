@@ -14,9 +14,9 @@ import {
   ViewMode,
 } from '@/components/compose/gantt/types/public-types';
 import dayjs from 'dayjs';
-import { ViewSwitcher } from './components/swicher.gantt';
+import { ViewSwitcher } from './components/switcher.gantt';
 import { Gantt } from '@/components/compose/gantt';
-import { TaskForm } from './components/updaser.modal';
+import { TaskForm } from './components/upsert.modal';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { SendForm } from './components/send.modal';
@@ -45,7 +45,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [taskSelected, setTaskSelected] = useState<Task>();
   const [userSelected, setUserSelected] = useState<User>();
 
-  const startDate = dayjs().subtract(4, 'day').toDate();
+  const startDate = dayjs().subtract(1, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
     startDate,
@@ -62,11 +62,17 @@ export const ShiftsPage: FunctionalComponent = () => {
     shifts.value = response.getMany();
   };
 
-  const getGanttHandler = async () => {
+  const handleViewMode = (viewMode: ViewMode = ViewMode.QuarterDay) => {
+    setGanttShifts({ startDate, endDate, users: [] });
+    setView(viewMode);
+    getGanttHandler(viewMode);
+  };
+
+  const getGanttHandler = async (viewMode?: ViewMode) => {
     const response = await ShiftService.get_gantt({
       page: 1,
       items: 100,
-      start: startDate.toISOString(),
+      mode: viewMode,
     });
     if (!response.getStatus()) return;
     setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
@@ -82,7 +88,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   useEffect(() => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
-      getGanttHandler();
+      getGanttHandler(view);
     }
   }, [currentView.value]);
 
@@ -193,8 +199,8 @@ export const ShiftsPage: FunctionalComponent = () => {
           rounded={false}
           className={
             currentView.value === VIEW_NAME.TABLE
-              ? 'bg-primary-opacity border-2 border-primary p-2 t-primary'
-              : 'border-2 border-primary p-2'
+              ? 'bg-primary-opacity p-2'
+              : ''
           }
           icon='320'
         />
@@ -206,8 +212,8 @@ export const ShiftsPage: FunctionalComponent = () => {
           rounded={false}
           className={
             currentView.value === VIEW_NAME.SCHEDULER
-              ? 'bg-primary-opacity border-2 border-primary p-2'
-              : 'border-2 border-primary p-2'
+              ? 'bg-primary-opacity p-2'
+              : ''
           }
           icon='330'
         />
@@ -266,7 +272,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             <Button
               name='button-create-shift'
               label='Create'
-              className='mx-3 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              className='mx-3 px-4 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
               onClick={handleCreacteNewShift}
             />
           </div>
@@ -299,7 +305,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         {currentView.value === VIEW_NAME.SCHEDULER && (
           <div>
             <ViewSwitcher
-              onViewModeChange={(viewMode: ViewMode) => setView(viewMode)}
+              onViewModeChange={handleViewMode}
               onViewListChange={setIsChecked}
               isChecked={isChecked}
               status={view}
@@ -323,7 +329,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       <TaskForm
         closed={showUpsertModal.value}
         onClose={handleCloseUpsertModal}
-        posSave={getGanttHandler}
+        posSave={handleViewMode}
         userSelected={userSelected}
         taskSelected={taskSelected}
       />
@@ -338,6 +344,11 @@ export const ShiftsPage: FunctionalComponent = () => {
         closed={showShiftModal.value}
         onClose={handleCloseShiftModal}
         taskSelected={taskSelected}
+        posAction={handleViewMode}
+        onSupervision={() => {
+          handleViewChange(VIEW_NAME.SUPERVISOR);
+          handleCloseShiftModal();
+        }}
       />
     </Section>
   );

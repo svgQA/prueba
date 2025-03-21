@@ -88,7 +88,6 @@ export const TaskSettingPage: FunctionComponent = () => {
       <Table<ITask>
         data={tasks.value}
         columns={columns}
-        pageSize={20}
         visibility={{
           id: false,
         }}

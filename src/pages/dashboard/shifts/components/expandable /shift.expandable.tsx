@@ -28,34 +28,58 @@ const ShiftInfo = ({ data = {} }: any) => {
   ];
 
   return (
-    <div class='p-4 bg-white shadow-lg rounded-lg'>
-      <div class='flex items-center justify-between border-b pb-2 mb-4'>
-        <h2 class='text-lg font-semibold'>Actividades del Turno</h2>
-        <span class='text-sm text-green-600'>
-          Progreso: <strong>{data.progress ?? 75}%</strong>
+    <div className='bg-b-white rounded-lg shadow-sm p-4 max-w-3xl mx-auto'>
+      <div className='flex items-center justify-between mb-4'>
+        <h2 className='text-t-light font-medium'>Actividades del Turno</h2>
+        <span>
+          Progreso:{' '}
+          <strong className='text-secondary'>{data.progress ?? 75}%</strong>
         </span>
       </div>
-      <div class='space-y-2'>
-        {activities.map((activity: any, index: any) => (
-          <div
-            key={index}
-            class='flex items-center justify-between p-2 bg-gray-50 rounded-lg'
-          >
-            <div class='flex items-start gap-2'>
-              <span class={activity.statusColor}>{activity.status}</span>
-              <div>
-                <p class='font-semibold text-gray-800'>{activity.title}</p>
-                <p class='text-xs text-gray-500'>
-                  📅 Programación: {activity.schedule}
-                </p>
-                <p class='text-xs text-gray-500'>
-                  ⏳ Solución: {activity.solution}
-                </p>
+
+      <div className='space-y-6'>
+        {activities.map((activity: any, index: number) => (
+          <div key={index} className='flex items-start justify-between'>
+            {/* Lado izquierdo - Icono y detalles */}
+            <div className='flex items-start flex-1'>
+              {/* Icono de estado */}
+              <div className='mr-2 mt-1'>
+                {activity.status === '✔️' ? (
+                  <span className='vox-icon size-sm vx-icon-324 !text-secondary'></span>
+                ) : (
+                  <span className='vox-icon size-sm vx-icon-323 !text-error'></span>
+                )}
+              </div>
+
+              {/* Detalles de la actividad */}
+              <div className='flex-1'>
+                <p className='text-t-light text-sm mb-2'>{activity.title}</p>
+
+                {/* Programación y Solución en línea horizontal */}
+                <div className='flex items-center space-x-6'>
+                  <div className='flex items-center text-xs text-t-light-dark'>
+                    <span className='vox-icon size-sm vx-icon-325 mr-1'></span>
+                    <span>Programación: {activity.schedule}</span>
+                  </div>
+
+                  {activity.solution !== '...' && (
+                    <div className='flex items-center text-xs text-t-light-dark'>
+                      <span className='vox-icon size-sm vx-icon-325 mr-1'></span>
+                      <span>Solución: {activity.solution}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <a href='#' class='text-blue-500 text-xs flex items-center gap-1'>
-              📄 {activity.form} ➝
-            </a>
+
+            {/* Lado derecho - Enlace al formulario */}
+            <div className='ml-4 flex items-center'>
+              <a href='#' className='flex items-center text-primary text-sm'>
+                <span className='vox-icon size-sm vx-icon-306 !text-primary mr-1'></span>
+                {activity.form}
+                <span className='ml-1 vox-icon size-sm vx-icon-004 !text-primary'></span>
+              </a>
+            </div>
           </div>
         ))}
       </div>

@@ -88,7 +88,7 @@ export const Calendar = ({
           key={date.getTime()}
           y={headerHeight * 0.8}
           x={columnWidth * i + columnWidth * 0.5}
-          className={styles.calendarBottomText}
+          className='fill-t-light-dark dark:fill-t-dark-light'
         >
           {quarter}
         </text>
@@ -132,7 +132,7 @@ export const Calendar = ({
           key={bottomValue + date.getFullYear()}
           y={headerHeight * 0.8}
           x={columnWidth * i + columnWidth * 0.5}
-          className={styles.calendarBottomText}
+          className='fill-t-light-dark dark:fill-t-dark-light'
         >
           {bottomValue}
         </text>
@@ -183,7 +183,7 @@ export const Calendar = ({
           key={date.getTime()}
           y={headerHeight * 0.8}
           x={columnWidth * (i + +rtl)}
-          className={styles.calendarBottomText}
+          className='fill-t-light-dark dark:fill-t-dark-light'
         >
           {bottomValue}
         </text>
@@ -226,7 +226,7 @@ export const Calendar = ({
           key={date.getTime()}
           y={headerHeight * 0.8}
           x={columnWidth * i + columnWidth * 0.5}
-          className={styles.calendarBottomText}
+          className='fill-t-light-dark dark:fill-t-dark-light'
         >
           {bottomValue}
         </text>
@@ -275,7 +275,7 @@ export const Calendar = ({
           key={date.getTime()}
           y={headerHeight * 0.8}
           x={columnWidth * (i + +rtl)}
-          className={styles.calendarBottomText}
+          className='fill-t-light-dark dark:fill-t-dark-light'
           fontFamily={fontFamily}
         >
           {bottomValue}
@@ -320,7 +320,7 @@ export const Calendar = ({
           key={date.getTime()}
           y={headerHeight * 0.8}
           x={columnWidth * (i + +rtl)}
-          className={styles.calendarBottomText}
+          className='fill-t-light-dark dark:fill-t-dark-light'
           fontFamily={fontFamily}
         >
           {bottomValue}
@@ -376,15 +376,15 @@ export const Calendar = ({
     case ViewMode.Hour:
       [topValues, bottomValues] = getCalendarValuesForHour();
   }
+
   return (
-    <g className='calendar' fontSize={fontSize} fontFamily={fontFamily}>
+    <g fontSize={fontSize} fontFamily={fontFamily}>
       <rect
         x={0}
         y={0}
         width={columnWidth * dateSetup.dates.length}
         height={headerHeight}
-        className='fill-b-light-dark dark:fill-b-dark-light stroke-0'
-        // className={styles.calendarHeader}
+        className='fill-transparent'
       />
       {bottomValues} {topValues}
     </g>

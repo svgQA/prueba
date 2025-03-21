@@ -18,9 +18,9 @@ export const Button: FunctionComponent<IButtonProps> = ({
   padding = 'px-2 md:px-4 mx-1',
   text = 'text-sm md:text-base',
   textColor = '',
-  iconHexColor = '',
   form,
   big,
+  iconColor = '',
 }: IButtonProps) => {
   return (
     <button
@@ -40,12 +40,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
     >
       {icon && !end && (
         <span
-          className={`left-0 px-1 size vox-icon vx-icon-${icon} hidden sm:inline`}
-          style={
-            iconHexColor
-              ? { fill: iconHexColor, color: iconHexColor }
-              : undefined
-          }
+          className={`left-0 px-1 size vox-icon vx-icon-${icon} hidden sm:inline ${iconColor}`}
         />
       )}
       {label && !rounded && (
@@ -62,12 +57,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
       )}
       {icon && end && (
         <span
-          className={`left-0 px-1 size vox-icon vx-icon-${icon} hidden sm:inline`}
-          style={
-            iconHexColor
-              ? { fill: iconHexColor, color: iconHexColor }
-              : undefined
-          }
+          className={`left-0 px-1 size vox-icon vx-icon-${icon} hidden sm:inline ${iconColor}`}
         />
       )}
     </button>

@@ -79,7 +79,6 @@ export const PlacesSettingPage: FunctionComponent = () => {
       <Table<Place>
         data={places}
         columns={columns}
-        pageSize={20}
         visibility={{
           description: false,
           id: false,
