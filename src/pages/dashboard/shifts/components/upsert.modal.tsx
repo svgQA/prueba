@@ -9,7 +9,7 @@ import { FormData } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { USER_TYPE, UserService } from '@/services/user';
+import { UserService } from '@/services/user';
 import { ShiftService } from '@/services';
 import { IUserResponse } from '@/types/auth';
 import { IShiftResponse } from '@/types/shift/activity';
@@ -71,11 +71,7 @@ export const TaskForm = ({
   }, []);
 
   const getUsers = useCallback(async () => {
-    const request = await UserService.get_all({
-      items: 100,
-      page: 1,
-      userType: USER_TYPE.USER,
-    });
+    const request = await UserService.get_all_employee();
     if (request.getStatus()) {
       users.value = request.getMany().map((user: any) => ({
         ...user,

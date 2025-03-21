@@ -112,7 +112,6 @@ export const ScheduleSettingPage: FunctionComponent = () => {
             </div>
           );
         }}
-        pageSize={20}
         visibility={{
           id: false,
         }}

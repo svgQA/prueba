@@ -60,4 +60,22 @@ export class UserService extends BaseService {
     };
     return await super.make_request<IUserResponse>(this.sname, model);
   }
+
+  static async get_all_employee(
+    params: IPagination = { page: 1, items: 1000 }
+  ) {
+    const model: IMakeRequest = {
+      url: ['user', 'employee'],
+      params: params as any,
+    };
+    return await super.make_request<IUserResponse>(this.sname, model);
+  }
+
+  static async get_all_clients(params: IPagination = { page: 1, items: 1000 }) {
+    const model: IMakeRequest = {
+      url: ['user', 'client'],
+      params: params as any,
+    };
+    return await super.make_request<IUserResponse>(this.sname, model);
+  }
 }

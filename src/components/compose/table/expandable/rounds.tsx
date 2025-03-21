@@ -34,7 +34,7 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
       const qrImage = await toPng(qrRef.current);
       const pdf = new jsPDF();
 
-      pdf.addImage(qrImage, 'PNG', 1, 5, 230, 50);
+      pdf.addImage(qrImage, 'PNG', 1, 5, 230, 50); // Ajusta las coordenadas y tamaño según sea necesario
 
       pdf.save('qr-code.pdf');
     } catch (error) {
@@ -44,13 +44,11 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
 
   return (
     <div>
-      <div className='flex flex-row'>
-        <div className='text-center p-4 w-3/12'>
+      <div className='flex flex-col'>
+        <div className='text-center'>
           <div ref={qrRef}>
-            <h1 className='text-xl font-bold mb-4'>
-              QR de ubicación de los puntos
-            </h1>
-            <div className='grid grid-cols-1 gap-4'>
+            <h1>QR de ubicación de los punto</h1>
+            <div className='grid grid-flow-col auto-cols-[200px]  gap-1  justify-center '>
               {row.points.map((item: any, index: string) => (
                 <div class='p-1'>
                   <QRCode
@@ -70,7 +68,7 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
               ))}
             </div>
           </div>
-          <div className='mt-4'>
+          <div>
             <Button
               onClick={handleDownloadPDF}
               type='button'
@@ -81,10 +79,8 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
             />
           </div>
         </div>
-        <div className='text-center p-4 w-9/12'>
-          <h2 className='text-xl font-bold mb-4'>
-            Ubicación de los puntos en mapa
-          </h2>
+        <div className='text-center'>
+          <h2>Ubicación de los punto en mapa</h2>
           {row.markers.length ? (
             <Map
               name='Map'

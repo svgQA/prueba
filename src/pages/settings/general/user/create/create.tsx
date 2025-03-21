@@ -30,7 +30,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
       onSubmit={onSubmit}
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit} className='p-4'>
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-2 gap-4 py-3'>
             <Field<string> name='name' validate={required}>
               {({ input, meta }) => (
                 <Input
@@ -167,14 +167,23 @@ export const UserCreateSettingPage: FunctionComponent = () => {
             </Field>
             */}
           </div>
+          {/* Botonera */}
+          <div className='w-full flex-row flex justify-end items-center'>
+            <Button
+              id='btn-clean'
+              name='btn-clean'
+              type='button'
+              label='Limpiar'
+            />
 
-          <Button
-            type='submit'
-            id='btn-save-user'
-            name='btn-save-user'
-            icon='123'
-            label='Crear Usuario'
-          />
+            <Button
+              id='btn-save'
+              name='btn-save'
+              type='submit'
+              label='Crear Usuario'
+              className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+            />
+          </div>
         </form>
       )}
     />

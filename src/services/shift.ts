@@ -1,4 +1,4 @@
-import { User } from '@/components/compose/gantt/types/public-types';
+import { User, ViewMode } from '@/components/compose/gantt/types/public-types';
 import { IPagination } from '@/types';
 import { IShiftResponse } from '@/types/shift/activity';
 // import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
@@ -19,8 +19,9 @@ interface IPaginationRound extends IPagination {
 }
 
 interface IPagintationGantt extends IPagination {
-  start: string;
-  end?: string;
+  mode?: ViewMode;
+  // start: string;
+  // end?: string;
 }
 
 export class ShiftService extends BaseService {
@@ -44,7 +45,8 @@ export class ShiftService extends BaseService {
     params: IPagintationGantt = {
       page: 1,
       items: 10,
-      start: new Date().toISOString(),
+      mode: ViewMode.QuarterDay,
+      // start: new Date().toISOString(),
     }
   ) {
     const model: IMakeRequest = {

@@ -87,7 +87,6 @@ export const ServiceSettingPage: FunctionComponent = () => {
       <Table<IServicio>
         data={novelties.value}
         columns={columns}
-        pageSize={20}
         visibility={{
           id: false,
         }}

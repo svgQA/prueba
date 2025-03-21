@@ -32,8 +32,8 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
   rowHeight,
   // rowWidth,
   tasks,
-  fontFamily,
-  fontSize,
+  // fontFamily,
+  // fontSize,
   onUserClick,
   // locale,
   // onExpanderClick,
@@ -47,11 +47,11 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
 
   return (
     <div
-      className={styles.taskListWrapper}
-      style={{
-        fontFamily: fontFamily,
-        fontSize: fontSize,
-      }}
+    // className={styles.taskListWrapper}
+    // style={{
+    //   fontFamily: fontFamily,
+    //   fontSize: fontSize,
+    // }}
     >
       {tasks.users.map((t) => {
         return (
@@ -65,9 +65,7 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
               title={t.name}
               onClick={() => onUserClick?.(t.id)}
             >
-              <div
-                className={`${styles.taskListNameWrapper} flex justify-start items-center px-4`}
-              >
+              <div className='flex justify-start items-center px-4'>
                 {/*
                 <div
                   className={

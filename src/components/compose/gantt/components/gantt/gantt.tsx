@@ -368,7 +368,6 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   const handleSelectedTask = useCallback(
     (taskId: string | number) => {
-      console.log('CLICK: => selected');
       const newSelectedTask = barTasks.find((t) => t.id === taskId);
       const oldSelectedTask = barTasks.find(
         (t) => !!selectedTask && t.id === selectedTask.id
@@ -402,7 +401,6 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   const handleExpanderClick = useCallback(
     (task: Task) => {
-      console.log('CLICK: => expander');
       if (onExpanderClick && task.hideChildren !== undefined) {
         onExpanderClick({ ...task, hideChildren: !task.hideChildren });
       }
@@ -546,7 +544,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   return (
     <div>
       <div
-        className={`${styles.wrapper} border rounded-xl`}
+        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl min-h-[30vh]`}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         ref={wrapperRef}

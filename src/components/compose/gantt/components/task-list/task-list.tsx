@@ -55,9 +55,9 @@ export function TaskList({
   setSelectedTask,
   onExpanderClick,
   locale,
-  ganttHeight,
+  // ganttHeight,
   taskListRef,
-  horizontalContainerClass,
+  // horizontalContainerClass,
   TaskListHeader,
   TaskListTable,
   onUserClick,
@@ -91,12 +91,16 @@ export function TaskList({
   };
 
   return (
-    <div ref={taskListRef} className='rounded-l-xl border-r'>
+    <div
+      ref={taskListRef}
+      className='border-r-2 border-gray-100 dark:border-b-dark-light'
+    >
       <TaskListHeader {...headerProps} />
       <div
         ref={horizontalContainerRef}
-        className={horizontalContainerClass}
-        style={ganttHeight ? { height: ganttHeight } : {}}
+        // className={horizontalContainerClass}
+        // className='bg-red-400'
+        // style={ganttHeight ? { height: ganttHeight } : {}}
       >
         <TaskListTable {...tableProps} />
       </div>
