@@ -296,19 +296,22 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     cell: (info) => {
       const { id } = info.row.original;
       return (
-        <div className='w-full flex justify-center'>
-          <span
-            className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
-            data-id={id}
-            data-type='shift'
-            data-action={ROW_ACTIONS.UPDATE}
-          ></span>
-          <span
-            className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
-            data-id={id}
-            data-type='shift'
-            data-action={ROW_ACTIONS.DELETE}
-          ></span>
+        <div className='w-full flex justify-center group relative'>
+          <span className='vox-icon vx-icon-233 p-1 size-sm cursor-pointer' />
+          <div className='absolute left-full ml-2 hidden group-hover:flex bg-white shadow-lg rounded p-1'>
+            <span
+              className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
+              data-id={id}
+              data-type='shift'
+              data-action={ROW_ACTIONS.UPDATE}
+            ></span>
+            <span
+              className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
+              data-id={id}
+              data-type='shift'
+              data-action={ROW_ACTIONS.DELETE}
+            ></span>
+          </div>
         </div>
       );
     },

@@ -4,8 +4,8 @@ import styles from './horizontal-scroll.module.css';
 export const HorizontalScroll = ({
   scroll,
   svgWidth,
-  // taskListWidth,
-  // rtl,
+  taskListWidth,
+  rtl,
   onScroll,
 }: {
   scroll: number;
@@ -25,20 +25,16 @@ export const HorizontalScroll = ({
   return (
     <div
       dir='ltr'
-      style={
-        {
-          // margin: rtl
-          //   ? `0px ${taskListWidth}px 0px 0px`
-          //   : `0px 0px 0px ${taskListWidth}px`,
-        }
-      }
-      // className={styles.scrollWrapper}
+      style={{
+        margin: rtl
+          ? `0px ${taskListWidth}px 0px 0px`
+          : `0px 0px 0px ${taskListWidth}px`,
+      }}
       className={styles.scrollWrapper}
-      // className='vox-scroll-design my-2'
       onScroll={onScroll}
       ref={scrollRef}
     >
-      <div style={{ width: svgWidth }} className={styles.scroll} />
+      <div style={{ width: svgWidth }} className='bg-red-300' />
     </div>
   );
 };

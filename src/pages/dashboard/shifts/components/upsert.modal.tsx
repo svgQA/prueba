@@ -9,7 +9,7 @@ import { FormData } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { USER_TYPE, UserService } from '@/services/user';
+import { UserService } from '@/services/user';
 import { ShiftService } from '@/services';
 import { IUserResponse } from '@/types/auth';
 import { IShiftResponse } from '@/types/shift/activity';
@@ -31,6 +31,7 @@ export const TaskForm = ({
   onClose,
   userSelected,
   taskSelected,
+  posSave,
 }: Props) => {
   const inputKeywords = useSignal('');
   const users = useSignal<IUserResponse[]>([]);
@@ -56,8 +57,8 @@ export const TaskForm = ({
         : 'Turno creado exitosamente!';
 
       toast.success(message, { position: 'top-right' });
-      // onClose?.();
-      // posSave?.();
+      onClose?.();
+      posSave?.();
     } catch (error) {
       toast.error('Error al procesar la solicitud');
     }
@@ -71,11 +72,7 @@ export const TaskForm = ({
   }, []);
 
   const getUsers = useCallback(async () => {
-    const request = await UserService.get_all({
-      items: 100,
-      page: 1,
-      userType: USER_TYPE.USER,
-    });
+    const request = await UserService.get_all_employee();
     if (request.getStatus()) {
       users.value = request.getMany().map((user: any) => ({
         ...user,
@@ -184,6 +181,7 @@ export const TaskForm = ({
     if (taskSelected) {
       setSelectedEmployeeId(taskSelected.userId?.toString());
       setInitialValues({
+        employeedId: taskSelected.userId,
         start: taskSelected.start?.toString(),
         end: taskSelected.end?.toString(),
         serviceId: taskSelected.serviceId,
@@ -193,10 +191,18 @@ export const TaskForm = ({
     }
     if (userSelected) {
       setSelectedEmployeeId(userSelected.id?.toString());
+      setInitialValues({
+        employeedId: userSelected.id,
+        start: '',
+        end: '',
+        serviceId: '',
+        type: 'INTERNAL',
+      });
       return;
     }
     setSelectedEmployeeId('');
     setInitialValues({
+      employeedId: '',
       start: '',
       end: '',
       serviceId: '',
@@ -245,6 +251,7 @@ export const TaskForm = ({
                         onChange={(e) => {
                           const id = parseInt(e.currentTarget.value);
                           input.onChange(id);
+                          setSelectedEmployeeId(id.toString());
                         }}
                         value={selectedEmployeeId}
                         disabled={!!userSelected}

@@ -23,7 +23,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.company.base,
       id: 'company',
-      show: true,
+      show: false,
     },
     {
       icon: '092',

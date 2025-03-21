@@ -12,74 +12,92 @@ const ServiceInfo = ({ service }: { service: IService }) => {
       },
     },
   ]);
+
   return (
-    <div class='p-6 bg-gray-100 rounded-lg shadow-md'>
-      <div class='grid grid-cols-3 gap-4'>
+    <div className='bg-b-content p-4'>
+      <div className='flex flex-row gap-6'>
         {/* Detalles del Servicio */}
-        <div class='bg-white p-4 rounded-lg shadow'>
-          <h4 class='text-blue-600 font-semibold flex items-center gap-2'>
-            📄 Detalles del Servicio
+        <div className='bg-b-white rounded-lg p-4 flex-1 shadow-sm'>
+          <h4 className='text-sm font-medium mb-3 flex items-center text-t-light'>
+            <span className='!text-primary mr-2 vox-icon size-sm vx-icon-341'></span>
+            Detalles del Servicio
           </h4>
-          <p>
-            <strong>Nombre del Servicio:</strong> {service.description}
-          </p>
-          <p>
-            <strong>Estado:</strong>
-            <span class='px-3 py-1 bg-blue-100 text-blue-600 rounded-full'>
-              {service.state}
-            </span>
-          </p>
-          <p>
-            <strong>Contrato:</strong>
-            <a href='#' class='text-blue-500'>
-              {service.contract.name}
-            </a>
-          </p>
+          <div className='space-y-4 text-sm'>
+            <div>
+              <p className='text-t-light-dark mb-1'>Nombre del Servicio</p>
+              <p className='text-t-light'>{service.description}</p>
+            </div>
+            <div>
+              <p className='text-t-light-dark mb-1'>Estado</p>
+              <span className='inline-block px-3 py-0.5 bg-primary-opacity text-primary rounded-full text-xs'>
+                {service.state}
+              </span>
+            </div>
+            <div>
+              <p className='text-t-light-dark mb-1'>Contrato</p>
+              <a href='#' className='text-primary'>
+                {service.contract.name}
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* Ubicación y Descripción */}
-        <div class='bg-white p-4 rounded-lg shadow'>
-          <h4 class='text-blue-600 font-semibold flex items-center gap-2'>
-            📍 Ubicación y Descripción
+        <div className='bg-b-white rounded-lg p-4 flex-1 shadow-sm'>
+          <h4 className='text-sm font-medium mb-3 flex items-center text-t-light'>
+            <span className='!text-primary mr-2 vox-icon size-sm vx-icon-103'></span>
+            Ubicación y Descripción
           </h4>
-          <p>
-            <strong>Ubicación:</strong> 🏢 {service.place.name}
-          </p>
-          <p>
-            <strong>Descripción:</strong>
-            {service.place.description}
-          </p>
-          <p>
-            <strong>Ronda:</strong>{' '}
-            <a href='#' class='text-blue-500'>
-              {service.round.name}
-            </a>
-          </p>
+          <div className='space-y-4 text-sm'>
+            <div>
+              <p className='text-t-light-dark mb-1'>Ubicación</p>
+              <div className='flex items-center'>
+                <span className='!text-primary mr-2 vox-icon size-sm vx-icon-351'></span>
+                <p className='text-t-light'>{service.place.name}</p>
+              </div>
+            </div>
+            <div>
+              <p className='text-t-light-dark mb-1'>Descripción</p>
+              <p className='text-t-light'>{service.place.description}</p>
+            </div>
+            <div>
+              <p className='text-t-light-dark mb-1'>Ronda</p>
+              <a href='#' className='text-primary'>
+                {service.round.name}
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* Área de cobertura */}
-        <div class='bg-white p-4 rounded-lg shadow'>
-          <h4 class='text-blue-600 font-semibold'>Área de cobertura</h4>
-          <Map
-            sendPoints={() => {}}
-            name='Map'
-            center={{
-              lat: service.place.latitude,
-              lng: service.place.longitude,
-            }}
-            pointsAmount={1}
-            pointsRef={points.value}
-            condition={false}
-            errorCondition=''
-            radialPoint={null}
-            errorRadialPoint=''
-            radius={service.place.radius || 50}
-            draggable={true}
-            width='100%'
-            clickPoint={() => {}}
-          />
-          <p class='text-gray-500 text-sm'>
-            📍 Radio: {service.place.radius || 50}
+        <div className='bg-b-white rounded-lg p-4 flex-1 shadow-sm'>
+          <h4 className='text-sm font-medium mb-3 text-t-light'>
+            Área de cobertura
+          </h4>
+          <div className='relative w-full' style={{ height: '180px' }}>
+            <Map
+              sendPoints={() => {}}
+              name='Map'
+              center={{
+                lat: service.place.latitude,
+                lng: service.place.longitude,
+              }}
+              pointsAmount={1}
+              pointsRef={points.value}
+              condition={false}
+              errorCondition=''
+              radialPoint={null}
+              errorRadialPoint=''
+              radius={service.place.radius || 50}
+              draggable={true}
+              width='100%'
+              height='100%'
+              clickPoint={() => {}}
+            />
+          </div>
+          <p className='text-t-light-dark text-xs mt-2 flex items-center'>
+            <span className='!text-primary mr-2 vox-icon size-md vx-icon-103'></span>
+            Radio: {service.place.radius || 50}m
           </p>
         </div>
       </div>

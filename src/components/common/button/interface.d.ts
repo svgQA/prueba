@@ -17,7 +17,6 @@ export interface IButtonProps extends IComponentProps {
   text?: string;
   textColor?: string;
   iconColor?: string;
-  iconHexColor?: string;
   form?: string;
   big?: boolean;
 }

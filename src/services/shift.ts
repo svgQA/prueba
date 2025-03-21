@@ -1,4 +1,4 @@
-import { User } from '@/components/compose/gantt/types/public-types';
+import { User, ViewMode } from '@/components/compose/gantt/types/public-types';
 import { IPagination } from '@/types';
 import { IShiftResponse } from '@/types/shift/activity';
 // import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
@@ -19,8 +19,14 @@ interface IPaginationRound extends IPagination {
 }
 
 interface IPagintationGantt extends IPagination {
-  start: string;
-  end?: string;
+  mode?: ViewMode;
+  // start: string;
+  // end?: string;
+}
+
+interface IReplicateShift {
+  date: string;
+  id: number | string;
 }
 
 export class ShiftService extends BaseService {
@@ -40,11 +46,21 @@ export class ShiftService extends BaseService {
     return await super.make_request<IShiftResponse>(this.name, model);
   }
 
+  static async set_replicate(data: IReplicateShift) {
+    const model: IMakeRequest = {
+      url: ['activity', 'replicate'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
   static async get_gantt(
     params: IPagintationGantt = {
       page: 1,
       items: 10,
-      start: new Date().toISOString(),
+      mode: ViewMode.QuarterDay,
+      // start: new Date().toISOString(),
     }
   ) {
     const model: IMakeRequest = {
@@ -280,9 +296,9 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async deleteActivity(id: string) {
+  static async deleteActivity(id: string | number) {
     const model: IMakeRequest = {
-      url: ['activity', id],
+      url: ['activity', String(id)],
       method: REQUEST_METHODS.DELETE,
     };
     return await super.make_request(this.name, model);

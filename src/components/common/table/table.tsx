@@ -569,17 +569,13 @@ export const Table = <T,>({
             </thead>
             <tbody>
               {renderRows(table.getRowModel().rows)}
-              {data.length > pageSize && (
-                <tr className=''>
-                  <td
-                    colSpan={
-                      table.getAllColumns().length + (!unsettings ? 1 : 0)
-                    }
-                  >
-                    {renderPagination()}
-                  </td>
-                </tr>
-              )}
+              <tr>
+                <td
+                  colSpan={table.getAllColumns().length + (!unsettings ? 1 : 0)}
+                >
+                  {renderPagination()}
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
