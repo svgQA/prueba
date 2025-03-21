@@ -24,6 +24,11 @@ interface IPagintationGantt extends IPagination {
   // end?: string;
 }
 
+interface IReplicateShift {
+  date: string;
+  id: number | string;
+}
+
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';
   static async get_all(params: IPagination = { page: 1, items: 10 }) {
@@ -39,6 +44,15 @@ export class ShiftService extends BaseService {
       url: ['activity', String(id)],
     };
     return await super.make_request<IShiftResponse>(this.name, model);
+  }
+
+  static async set_replicate(data: IReplicateShift) {
+    const model: IMakeRequest = {
+      url: ['activity', 'replicate'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
   }
 
   static async get_gantt(
@@ -282,9 +296,9 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async deleteActivity(id: string) {
+  static async deleteActivity(id: string | number) {
     const model: IMakeRequest = {
-      url: ['activity', id],
+      url: ['activity', String(id)],
       method: REQUEST_METHODS.DELETE,
     };
     return await super.make_request(this.name, model);

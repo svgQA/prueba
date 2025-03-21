@@ -16,6 +16,7 @@ export interface IInputProps extends IComponentProps {
   required?: boolean;
   placeholder?: string;
   icon?: string;
+  labelLeft?: boolean;
   type?:
     | 'text'
     | 'password'

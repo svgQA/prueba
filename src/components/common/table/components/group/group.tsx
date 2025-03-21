@@ -61,34 +61,19 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
     <div ref={dropdownRef} className={`relative ${className}`}>
       <button
         type='button'
-        className='inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 bg-white rounded-md border border-gray-200 hover:bg-gray-50'
+        className='inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 bg-white rounded-md hover:bg-gray-50'
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className='vox-icon vx-icon-120 text-gray-500' />
         {displayText && <span>{displayText}</span>}
-        <svg
-          className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-          viewBox='0 0 24 24'
-          fill='none'
-          stroke='currentColor'
-          strokeWidth='2'
-        >
-          <path d='M6 9l6 6 6-6' strokeLinecap='round' strokeLinejoin='round' />
-        </svg>
+        <span className='vox-icon vx-icon-001 text-gray-500' />
       </button>
 
       {isOpen && (
-        <div
-          className='
-          absolute right-0 mt-1 w-48
-          bg-white rounded-lg shadow-lg
-          border border-gray-100
-          py-1 z-50
-        '
-        >
+        <div className='absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border-2 border-gray-100 py-1 z-50'>
           <button
             className={`
-              w-full px-4 py-2.5 text-sm text-left
+              w-full px-4 py-2.5 text-sm text-left border-none
               ${!currentGroup ? 'text-blue-600 bg-blue-50/50' : 'text-gray-600 hover:bg-gray-50'}
               transition-colors
             `}
@@ -104,7 +89,7 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
             <button
               key={col.id}
               className={`
-                w-full px-4 py-2.5 text-sm text-left
+                w-full px-4 py-2.5 text-sm text-left border-none
                 ${col.id === currentGroup ? 'text-blue-600 bg-blue-50/50' : 'text-gray-600 hover:bg-gray-50'}
                 transition-colors
               `}
