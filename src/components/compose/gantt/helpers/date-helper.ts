@@ -79,13 +79,19 @@ export const ganttDateRange = (
   viewMode: ViewMode,
   preStepsCount: number
 ): [Date, Date] => {
-  let newStartDate: Date = new Date(tasks.startDate);
-  let newEndDate: Date = new Date(tasks.endDate);
+  if (!tasks?.users || tasks?.users?.length === 0)
+    return [new Date(tasks.startDate), new Date(tasks.endDate)];
+
+  let newStartDate: Date = new Date(tasks.endDate);
+  let newEndDate: Date = new Date(tasks.startDate);
 
   for (const user of tasks.users) {
     for (const task of user.tasks) {
       if (new Date(task.end) > newEndDate) {
         newEndDate = new Date(task.end);
+      }
+      if (new Date(task.start) < newStartDate) {
+        newStartDate = new Date(task.start);
       }
     }
   }
@@ -109,15 +115,15 @@ export const ganttDateRange = (
       break;
     case ViewMode.Day:
       newStartDate = startOfDate(newStartDate, 'day');
-      newStartDate = addToDate(newStartDate, -1 * preStepsCount, 'day');
+      newStartDate = addToDate(newStartDate, -5 * preStepsCount, 'day');
       newEndDate = startOfDate(newEndDate, 'day');
-      newEndDate = addToDate(newEndDate, 19, 'day');
+      newEndDate = addToDate(newEndDate, 5, 'day');
       break;
     case ViewMode.QuarterDay:
       newStartDate = startOfDate(newStartDate, 'day');
-      newStartDate = addToDate(newStartDate, -1 * preStepsCount, 'day');
+      newStartDate = addToDate(newStartDate, -10 * preStepsCount, 'hour');
       newEndDate = startOfDate(newEndDate, 'day');
-      newEndDate = addToDate(newEndDate, 66, 'hour');
+      newEndDate = addToDate(newEndDate, 30, 'hour');
       break;
     case ViewMode.HalfDay:
       newStartDate = startOfDate(newStartDate, 'day');
@@ -139,12 +145,12 @@ export const ganttDateRange = (
       break;
     case ViewMode.Hour:
       newStartDate = startOfDate(newStartDate, 'hour');
-      newStartDate = addToDate(newStartDate, -1 * preStepsCount, 'hour');
+      newStartDate = addToDate(newStartDate, -6 * preStepsCount, 'hour');
       newEndDate = startOfDate(newEndDate, 'day');
-      newEndDate = addToDate(newEndDate, 1, 'day');
+      newEndDate = addToDate(newEndDate, 6, 'hour');
       break;
   }
-
+  console.log('OUTPUT: ', [newStartDate, newEndDate]);
   return [newStartDate, newEndDate];
 };
 
@@ -155,6 +161,7 @@ export const seedDates = (
 ): Date[] => {
   let currentDate: Date = new Date(startDate);
   const dates: Date[] = [currentDate];
+  console.log('START DATE: ', currentDate);
   while (currentDate < endDate) {
     switch (viewMode) {
       case ViewMode.Month:

@@ -401,7 +401,6 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   const handleExpanderClick = useCallback(
     (task: Task) => {
-      console.log('CLICK: => expander');
       if (onExpanderClick && task.hideChildren !== undefined) {
         onExpanderClick({ ...task, hideChildren: !task.hideChildren });
       }

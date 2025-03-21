@@ -14,7 +14,7 @@ import {
   ViewMode,
 } from '@/components/compose/gantt/types/public-types';
 import dayjs from 'dayjs';
-import { ViewSwitcher } from './components/swicher.gantt';
+import { ViewSwitcher } from './components/switcher.gantt';
 import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/upsert.modal';
 import { CardData } from '@/components/compose/cards';
@@ -45,7 +45,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [taskSelected, setTaskSelected] = useState<Task>();
   const [userSelected, setUserSelected] = useState<User>();
 
-  const startDate = dayjs().subtract(4, 'day').toDate();
+  const startDate = dayjs().subtract(1, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
     startDate,
@@ -63,6 +63,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   };
 
   const handleViewMode = (viewMode: ViewMode) => {
+    setGanttShifts({ startDate, endDate, users: [] });
     setView(viewMode);
     getGanttHandler(viewMode);
   };
@@ -87,7 +88,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   useEffect(() => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
-      getGanttHandler();
+      getGanttHandler(view);
     }
   }, [currentView.value]);
 
