@@ -31,7 +31,8 @@ export interface IInputProps extends IComponentProps {
     | 'file'
     | 'color'
     | 'range'
-    | 'keywords';
+    | 'keywords'
+    | 'checkbox';
   meta?: FieldMetaState<string>;
   end?: boolean;
   borderless?: boolean;

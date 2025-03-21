@@ -1,5 +1,6 @@
 import { Signal, useSignal } from '@preact/signals';
 import { Form, Field } from 'react-final-form';
+
 import { FunctionComponent } from 'preact';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
@@ -25,7 +26,9 @@ import { FormService } from '@/services';
 interface FormData {
   name: string;
   description: string;
-  priority: number;
+  hasRound: boolean;
+  roundId: number;
+  task: any;
 }
 
 export const ServiceCreateSettingPage: FunctionComponent = () => {
@@ -40,23 +43,57 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const { id } = useParams(); // Obtiene el id de la URL
   const date = dayjs().format('YYYY-MM-DD');
   const forms = useSignal<IFormResponse[]>([]);
+
   const onSubmit = async (model: FormData) => {
+    model.task = setTasks(model.task);
+    model.hasRound = !!model.roundId;
+
     let request;
     let message: string;
 
     if (id) {
-      request = await ShiftService.updateNovelty(model, id);
+      request = await ShiftService.createService(model);
       message = 'servicio editado exitosamente!';
     } else {
-      request = await ShiftService.createNovelty(model);
+      request = await ShiftService.createService(model);
       message = 'servicio creado exitosamente!';
     }
 
     if (!request.getStatus()) return;
     toast.success(message, { position: 'top-right' });
-    navigate('/memo/novelty');
+    navigate('/rounds/service/');
   };
 
+  const setTasks = (_tasks: any) => {
+    const data: any = [];
+
+    const mappedTasks = _tasks?.map((task: any) => {
+      const taskData = {
+        start: '',
+        status: '',
+        description: '',
+      };
+
+      if (!task.create && task.taskId) {
+        const matchingTask: any = tasks.value.find(
+          (val: any) => val.id === task.taskId
+        );
+        taskData.start = matchingTask.start;
+        taskData.status = matchingTask.status;
+        taskData.description = matchingTask.description;
+      } else {
+        taskData.start = task.start;
+        taskData.status = task.status;
+        taskData.description = task.description;
+      }
+
+      return taskData;
+    });
+
+    data.push(...(mappedTasks || []));
+
+    return data;
+  };
   const filteredOptions: any = schedules.value.filter((option) =>
     option.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -86,12 +123,12 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const getTaks = async () => {
     const request: any = await ShiftService.getTasks();
     tasks.value = request.data;
+    console.log('tasks ==>', tasks.value);
   };
 
   const getSchedules = async () => {
     const request: any = await ShiftService.getSchedules();
     schedules.value = request.data;
-    console.log(schedules.value);
   };
 
   const setInitialValues = async () => {
@@ -122,17 +159,23 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
         }}
         onSubmit={onSubmit}
         initialValues={initialValues.value}
-        validate={(values) => {
-          const errors: Partial<FormData> = {};
-          if (!values.description) errors.description = 'Campo obligatorio';
-          if (!values.priority) errors.description = 'Campo obligatorio';
-
-          return errors;
-        }}
-        render={({ handleSubmit, form, submitting, pristine }) => (
+        render={({ handleSubmit, form, submitting, pristine, values }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-2'>
+              <div class='col-span-4'>
+                <Field<string> name='name' validate={required}>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      placeholder='Ingrese nombre...'
+                      label='name'
+                      type='text'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
               <div class='col-span-4'>
                 <Field<string> name='description' validate={required}>
                   {({ input, meta }) => (
@@ -237,7 +280,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
               <div class='col-span-4'>
                 <h3>Horarios:</h3>
 
-                <Field name='schedules'>
+                <Field<number> name='schedules' validate={required}>
                   {({ input }) => (
                     <div className=' mr-5 ml-5'>
                       <label className='block mb-2 text-sm font-medium text-gray-700'>
@@ -253,8 +296,14 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       <select
                         {...input}
                         multiple
+                        onChange={(e) => {
+                          const selectedValues = Array.from(
+                            e.currentTarget.selectedOptions,
+                            (option) => Number(option.value)
+                          );
+                          input.onChange(selectedValues);
+                        }}
                         className='block w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-32'
-                        onChange={() => {}}
                       >
                         {filteredOptions.map((option: any) => (
                           <option key={option.id} value={option.id}>
@@ -316,7 +365,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                             </div>
                             <div class='col-span-1'>
                               <Field<string>
-                                name='hourStart'
+                                name={`${name}.hourStart`}
                                 required={required}
                                 parse={(value) =>
                                   value
@@ -339,7 +388,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                             </div>
                             <div class='col-span-1'>
                               <Field<string>
-                                name='hourEnd'
+                                name={`${name}.hourEnd`}
                                 required={required}
                                 parse={(value) =>
                                   value
@@ -375,8 +424,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                 </FieldArray>
               </div>
               <div class='col-span-4'>
-                <FieldArray name='tasks'>
-                  {({ fields }) => (
+                <FieldArray name='task'>
+                  {({ fields }: any) => (
                     <div>
                       <h3 className='text-lg dark:text-white font-medium text-gray-900 text-center p5'>
                         Añadir tareas al servicio
@@ -390,109 +439,179 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                           onClick={() => fields.push({})}
                         />
                       </h3>
-                      {fields.map((name, index) => (
-                        <div key={index} className='rounde shadow p-2 border-2'>
-                          <div className='bg-gray-100 dark:bg-b-dark-light p-3 text-center'>
-                            <h2 className='text-xl font-semibold '>
-                              Tarea {index + 1}
-                            </h2>
+                      {fields.map((name: any, index: any) => {
+                        return (
+                          <div key={index} className='rounde  p-2 border-2'>
+                            <div className='bg-gray-100 dark:bg-b-dark-light p-3 text-center'>
+                              <h2 className='text-xl font-semibold '>
+                                Tarea {index + 1}
+                              </h2>
+                            </div>
+                            <div className='grid grid-cols-6 gap-10'>
+                              {/* Accedemos al valor de "create" aquí */}
+                              <Field name={`${name}.create`}>
+                                {({ input: createInput }) => {
+                                  const isCreateChecked = createInput.value;
+
+                                  return (
+                                    <>
+                                      {/* Select de tarea (deshabilitado si está activado el checkbox) */}
+                                      <div className='col-span-5'>
+                                        <Field name={`${name}.taskId`}>
+                                          {({ input }) => (
+                                            <Select
+                                              {...input}
+                                              placeholder='Seleccione tarea...'
+                                              label='Tarea'
+                                              name='taskId'
+                                              icon='252'
+                                              optionValue='id'
+                                              optionLabel='description'
+                                              options={forms.value}
+                                              disabled={isCreateChecked}
+                                              onChange={(e) => {
+                                                const id = parseInt(
+                                                  e.currentTarget.value
+                                                );
+                                                input.onChange(id);
+                                              }}
+                                            />
+                                          )}
+                                        </Field>
+                                      </div>
+
+                                      {/* Checkbox */}
+                                      <div className='col-span-1 mt-10'>
+                                        <label className='inline-flex items-center space-x-2 cursor-pointer'>
+                                          <input
+                                            {...createInput}
+                                            type='checkbox'
+                                            className='form-checkbox h-5 w-5 text-blue-600 rounded'
+                                          />
+                                          <span className='text-gray-700'>
+                                            Crear tarea
+                                          </span>
+                                        </label>
+                                      </div>
+
+                                      {/* Select de formulario (oculto si está activado el checkbox) */}
+                                      {isCreateChecked && (
+                                        <>
+                                          <div className='col-span-2'>
+                                            <Field<string>
+                                              name={`${name}.start`}
+                                              validate={required}
+                                              parse={(value) =>
+                                                value
+                                                  ? dayjs(value).toISOString()
+                                                  : ''
+                                              }
+                                              format={(value) =>
+                                                value
+                                                  ? dayjs(value).format(
+                                                      'YYYY-MM-DD HH:mm'
+                                                    )
+                                                  : ''
+                                              }
+                                            >
+                                              {({ input, meta }) => (
+                                                <Input
+                                                  {...input}
+                                                  type='datetime-local'
+                                                  id='task-start'
+                                                  label='Fecha inicio'
+                                                  meta={meta}
+                                                />
+                                              )}
+                                            </Field>
+                                          </div>
+                                          <div class='col-span-2'>
+                                            <Field name='formId'>
+                                              {({ input }) => (
+                                                <Select
+                                                  {...input}
+                                                  placeholder='Selecione formulario...'
+                                                  label='Formulario'
+                                                  name='formId'
+                                                  icon='252'
+                                                  optionValue='id'
+                                                  optionLabel='title'
+                                                  options={forms.value}
+                                                  onChange={(e) => {
+                                                    const id = parseInt(
+                                                      e.currentTarget.value
+                                                    );
+                                                    input.onChange(id);
+                                                  }}
+                                                />
+                                              )}
+                                            </Field>
+                                          </div>
+                                          <div class='col-span-2'>
+                                            <Field<string>
+                                              name={`${name}.status`}
+                                            >
+                                              {({ input }) => (
+                                                <Select
+                                                  {...input}
+                                                  placeholder='Selecione tipo...'
+                                                  label='Tipo'
+                                                  id='task-status'
+                                                  name='type'
+                                                  icon='252'
+                                                  options={[
+                                                    {
+                                                      value: 'CREATED',
+                                                      label: 'Creado',
+                                                    },
+                                                    {
+                                                      value: 'RESOLVED',
+                                                      label: 'Resuelto',
+                                                    },
+                                                    {
+                                                      value: 'CLOSED',
+                                                      label: 'Cerrado',
+                                                    },
+                                                  ]}
+                                                />
+                                              )}
+                                            </Field>
+                                          </div>
+                                          <div className='col-span-6'>
+                                            <Field<string>
+                                              name={`${name}.description`}
+                                              validate={required}
+                                            >
+                                              {({ input, meta }) => (
+                                                <TextArea
+                                                  {...input}
+                                                  id='task-description'
+                                                  placeholder='Ingrese Descripción...'
+                                                  label='Descripción'
+                                                  type='text'
+                                                  meta={meta}
+                                                />
+                                              )}
+                                            </Field>
+                                          </div>
+                                        </>
+                                      )}
+                                    </>
+                                  );
+                                }}
+                              </Field>
+                            </div>
+
+                            <button
+                              type='button'
+                              onClick={() => fields.remove(index)}
+                              className='mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700'
+                            >
+                              Eliminar
+                            </button>
                           </div>
-                          <div className='grid grid-cols-3 gap-1'>
-                            <div className='col-span-1'>
-                              <Field<string>
-                                name={`${name}.start`}
-                                validate={required}
-                                parse={(value) =>
-                                  value ? dayjs(value).toISOString() : ''
-                                }
-                                format={(value) =>
-                                  value
-                                    ? dayjs(value).format('YYYY-MM-DD HH:mm')
-                                    : ''
-                                }
-                              >
-                                {({ input, meta }) => (
-                                  <Input
-                                    {...input}
-                                    type='datetime-local'
-                                    id='task-start'
-                                    label='Fecha inicio'
-                                    meta={meta}
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                            <div class='col-span-1'>
-                              <Field name='formId'>
-                                {({ input }) => (
-                                  <Select
-                                    {...input}
-                                    placeholder='Selecione formulario...'
-                                    label='Formulario'
-                                    name='formId'
-                                    icon='252'
-                                    optionValue='id'
-                                    optionLabel='title'
-                                    options={forms.value}
-                                    onChange={(e) => {
-                                      const id = parseInt(
-                                        e.currentTarget.value
-                                      );
-                                      input.onChange(id);
-                                    }}
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                            <div class='col-span-1'>
-                              <Field<string> name={`${name}.status`}>
-                                {({ input }) => (
-                                  <Select
-                                    {...input}
-                                    placeholder='Selecione tipo...'
-                                    label='Tipo'
-                                    id='task-status'
-                                    name='type'
-                                    icon='252'
-                                    options={[
-                                      { value: 'CREATED', label: 'Creado' },
-                                      {
-                                        value: 'RESOLVED',
-                                        label: 'Resuelto',
-                                      },
-                                      { value: 'CLOSED', label: 'Cerrado' },
-                                    ]}
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                            <div className='col-span-3'>
-                              <Field<string>
-                                name={`${name}.description`}
-                                validate={required}
-                              >
-                                {({ input, meta }) => (
-                                  <TextArea
-                                    {...input}
-                                    id='task-description'
-                                    placeholder='Ingrese Descripción...'
-                                    label='Descripción'
-                                    type='text'
-                                    meta={meta}
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                          </div>
-                          <button
-                            type='button'
-                            onClick={() => fields.remove(index)}
-                            className='mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700'
-                          >
-                            Eliminar
-                          </button>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </FieldArray>
@@ -519,7 +638,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                 disabled={submitting}
               />
             </div>
-            {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
+            {/* <pre>{JSON.stringify(values, 0, 2)}</pre>*/}
           </form>
         )}
       />
