@@ -14,12 +14,14 @@ export const columns: ColumnDef<Round>[] = [
     accessorKey: 'name',
     size: 180,
     header: 'Nombre',
+    enableGrouping: true,
   },
   {
     id: 'frequency',
     accessorKey: 'frequency',
     size: 180,
     header: 'Frecuencia',
+    enableGrouping: true,
   },
   {
     id: 'actions',

@@ -150,7 +150,6 @@ export const ganttDateRange = (
       newEndDate = addToDate(newEndDate, 6, 'hour');
       break;
   }
-  console.log('OUTPUT: ', [newStartDate, newEndDate]);
   return [newStartDate, newEndDate];
 };
 
@@ -161,7 +160,6 @@ export const seedDates = (
 ): Date[] => {
   let currentDate: Date = new Date(startDate);
   const dates: Date[] = [currentDate];
-  console.log('START DATE: ', currentDate);
   while (currentDate < endDate) {
     switch (viewMode) {
       case ViewMode.Month:
