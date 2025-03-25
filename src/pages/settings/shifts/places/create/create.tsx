@@ -228,7 +228,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       placeholder='Selecione tipo...'
                       label='Tipo'
                       name='type'
-                      icon='252'
+                      icon=''
                       options={[
                         { value: 'INDUSTRIAL', label: 'Industrial' },
                         { value: 'RESIDENTIAL', label: 'Residencial' },
@@ -238,7 +238,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-1'>
+              <div class='col-span-2'>
                 <Field name='state'>
                   {({ input }) => (
                     <Select
@@ -246,7 +246,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       placeholder='Selecione estado...'
                       label='Estado'
                       name='state'
-                      icon='252'
+                      icon=''
                       options={[
                         { value: 'ACTIVE', label: 'Activo' },
                         { value: 'INACTIVE', label: 'Inactivo' },
@@ -256,7 +256,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-2'>
+              <div class='col-span-1'>
                 <Field<string> name='address' validate={required}>
                   {({ input, meta }) => (
                     <Input
@@ -269,7 +269,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-2'>
+              <div class='col-span-3'>
                 <Field<string> name='countryId' validate={required}>
                   {({ input, meta }) => (
                     <Select
@@ -277,7 +277,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       placeholder='Selecione país...'
                       label='País'
                       name='countryId'
-                      icon='252'
+                      icon=''
                       optionValue='id'
                       optionLabel='name'
                       onChange={(e) => {
@@ -290,7 +290,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-2'>
+              <div class='col-span-1'>
                 <Field name='zipCode'>
                   {({ input }) => (
                     <Input
@@ -310,7 +310,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   id='departmentId'
                   label='Departamento'
                   name='departmentId'
-                  icon='252'
+                  icon=''
                   optionValue='id'
                   optionLabel='name'
                   options={departments.value}
@@ -329,7 +329,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       label='Municipio'
                       id='municipalityId'
                       name='municipalityId'
-                      icon='252'
+                      icon=''
                       optionValue='id'
                       optionLabel='name'
                       onChange={(e) => {
@@ -343,39 +343,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-2'>
-                <Field<string> name='latitude'>
-                  {({ input }) => (
-                    <Input {...input} label='Latitud' type='text' disabled />
-                  )}
-                </Field>
-              </div>
-              <div class='col-span-2'>
-                <Field<string> name='longitude'>
-                  {({ input }) => (
-                    <Input {...input} label='Longitud' type='text' disabled />
-                  )}
-                </Field>
-              </div>
-            </div>
-            <div className='flex items-center space-x-4 p-4'>
-              <input
-                label={'ee'}
-                type='range'
-                min='0'
-                max='2000'
-                step='1'
-                value={green}
-                onChange={(e) => setGreen(Number(e.currentTarget.value))}
-                className='w-full accent-green-500'
-              />
-              <input
-                label='Radio'
-                type='number'
-                value={green}
-                onChange={(e) => setGreen(Number(e.currentTarget.value))}
-                className='w-20 border border-gray-300 rounded p-1 text-center'
-              />
             </div>
             <Map
               name='Map'
@@ -394,10 +361,45 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               radius={green}
               draggable={true}
               width='100%'
-              clickPoint={() => {}}
+              clickPoint={() => { }}
             />
+            <div className='grid grid-cols-4 gap-3'>
+              <div class='col-span-2'>
+                <Field<string> name='latitude'>
+                  {({ input }) => (
+                    <Input {...input} label='Latitud' type='text' disabled />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-2'>
+                <Field<string> name='longitude'>
+                  {({ input }) => (
+                    <Input {...input} label='Longitud' type='text' disabled />
+                  )}
+                </Field>
+              </div>
+            </div>
+            <div className='flex items-center space-x-4 p-4'>
+              <div className="relative w-full h-2 bg-gray-200 rounded-full">
+                <div
+                  className="absolute h-full bg-cyan-500 rounded-full"
+                  style={{ width: `${(green / 2000) * 100}%` }}
+                />
+                <input
+                  label={'ee'}
+                  type='range'
+                  min='0'
+                  max='2000'
+                  step='1'
+                  value={green}
+                  onChange={(e) => setGreen(Number(e.currentTarget.value))}
+                  className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+                />
+              </div>
+              <span className='w-20 p-1 text-center'>{green} m</span>
+            </div>
             {/* Botonera Convertir esto en un componente */}
-            <div className='w-full flex-row flex justify-end items-center'>
+            <div className='w-full flex-row flex justify-between items-center'>
               <Button
                 id='btn-clean'
                 name='btn-clean'
@@ -405,6 +407,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 label='Limpiar'
                 onClick={form.reset}
                 disabled={submitting || pristine}
+                border={true}
+                className="rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary"
               />
 
               <Button
@@ -412,7 +416,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 name='btn-save'
                 type='submit'
                 label={id ? 'Editar' : 'Guardar'}
-                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+                className="rounded-md bg-primary text-white px-4 py-2 hover:bg-primary-opacity  hover:text-primary"
                 disabled={submitting}
               />
             </div>
