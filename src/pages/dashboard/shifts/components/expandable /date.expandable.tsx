@@ -73,8 +73,8 @@ const ShiftCard = ({
           {/* <div className="w-16 h-16 rounded-full overflow-hidden bg-b-light-dark mb-2">
             <img src="/placeholder.svg" alt={name} className="w-full h-full object-cover" />
           </div> */}
-          <div className='w-16 h-16 rounded-full flex items-center justify-center bg-b-light mb-2'>
-            <span className='!text-primary vox-icon size-lg vx-icon-308'></span>
+          <div className='w-16 h-16 rounded-full flex items-center justify-center bg-primary-opacity mb-2'>
+            <span className='!text-primary vox-icon size-lg vx-icon-063'></span>
           </div>
           <p className='text-t-light font-medium text-center'>{name}</p>
           <span

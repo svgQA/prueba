@@ -15,12 +15,14 @@ export const columns: ColumnDef<Place>[] = [
     accessorKey: 'name',
     size: 60,
     header: 'Nombre',
+    enableGrouping: true,
   },
   {
     id: 'description',
     accessorKey: 'description',
     size: 20,
     header: 'Descripción',
+    enableGrouping: true,
     cell: (info) => {
       const description = info.getValue() as string;
       return (

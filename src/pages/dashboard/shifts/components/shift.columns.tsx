@@ -96,11 +96,11 @@ export const columns: ColumnDef<IShiftResponse>[] = [
         twoDaysBefore.setDate(twoDaysBefore.getDate() - 2);
 
         if (now < twoDaysBefore) {
-          colorClass = 'border-blue-400 text-blue-700';
+          colorClass = 'border-primary text-primary';
         } else if (now <= endDate) {
-          colorClass = 'border-green-400 text-green-700';
+          colorClass = 'border-secondary text-secondary';
         } else {
-          colorClass = 'border-red-400 text-red-700';
+          colorClass = 'border-error text-error';
         }
       }
 
@@ -146,11 +146,11 @@ export const columns: ColumnDef<IShiftResponse>[] = [
         twoDaysBefore.setDate(twoDaysBefore.getDate() - 2);
 
         if (now < twoDaysBefore) {
-          colorClass = 'border-blue-400 text-blue-700';
+          colorClass = 'border-primary text-primary';
         } else if (now <= endDate) {
-          colorClass = 'border-green-400 text-green-700';
+          colorClass = 'border-secondary text-secondary';
         } else {
-          colorClass = 'border-red-400 text-red-700';
+          colorClass = 'border-error text-error';
         }
       }
 
@@ -208,7 +208,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
       }
 
       return (
-        <div className='inline-flex items-center px-2 py-0.5 rounded-md border border-gray-500 text-gray-700 text-sm'>
+        <div className='inline-flex items-center px-2 py-0.5 text-gray-700 text-sm'>
           <span>{scheduledDuration}</span>
           <span className='mx-1'>→</span>
           <span>{actualDuration}</span>
@@ -222,13 +222,12 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     size: 50,
     header: 'Reportes',
     cell: (info) => (
-      <div className='flex flex-col items-center justify-center'>
-        <div
-          onClick={() => info.row.toggleExpanded()}
-          className='p-1 size-sm cursor-pointer w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600 font-medium'
-        >
-          2
-        </div>
+      <div
+        className='inline-flex items-center px-2 py-0.5 text-gray-700 text-sm rounded-md border border-b-dark'
+        onClick={() => info.row.toggleExpanded()} >
+        <span>2</span>
+        <span className='mx-1'>→</span>
+        <span>12h</span>
       </div>
     ),
   },
