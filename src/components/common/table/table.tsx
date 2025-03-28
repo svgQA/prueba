@@ -541,7 +541,7 @@ export const Table = <T,>({
               {table.getHeaderGroups().map((headerGroup, index) => (
                 <tr
                   key={`${headerGroup.id}-${index}`}
-                  className='sticky top-0 z-20'
+                  className='sticky top-0' // z-20
                 >
                   {!unsettings && (
                     <th

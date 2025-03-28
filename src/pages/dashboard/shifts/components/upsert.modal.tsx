@@ -26,11 +26,11 @@ interface Props {
   taskSelected?: Task;
 }
 
-interface ITask {
-  start: string;
-  status: string;
-  description: string;
-}
+// interface ITask {
+//   start: string;
+//   status: string;
+//   description: string;
+// }
 
 export const TaskForm = ({
   closed,
@@ -44,12 +44,12 @@ export const TaskForm = ({
   const services = useSignal<IShiftResponse[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>();
-  const [search, setSearch] = useState('');
-  const tasks = useSignal<ITask[]>([]);
+  // const [search, _] = useState('');
+  // const tasks = useSignal<ITask[]>([]);
 
-  const filteredOptions: any = tasks.value.filter((option) =>
-    option.description.toLowerCase().includes(search.toLowerCase())
-  );
+  // const filteredOptions: any = tasks.value.filter((option) =>
+  //   option.description.toLowerCase().includes(search.toLowerCase())
+  // );
 
   const onSubmit = async (model: FormData) => {
     try {

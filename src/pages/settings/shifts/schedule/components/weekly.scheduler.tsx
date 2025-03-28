@@ -137,8 +137,11 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
               return (
                 <div
                   key={key}
-                  className={`border p-3 cursor-pointer transition-all ${isSelected ? 'bg-primary-opacity border-primary' : 'hover:bg-primary-opacity border-b-2'
-                    }`}
+                  className={`border p-3 cursor-pointer transition-all ${
+                    isSelected
+                      ? 'bg-primary-opacity border-primary'
+                      : 'hover:bg-primary-opacity border-b-2'
+                  }`}
                   onMouseDown={() => handleMouseDown(dayIndex, hour)}
                   onMouseEnter={() => handleMouseEnter(dayIndex, hour)}
                   style={{ userSelect: 'none' }} // Deshabilitar la selección de texto en las celdas
@@ -150,21 +153,28 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
       </div>
 
       {/* Mostrar las horas seleccionadas por día agrupadas en bloques */}
-      <div className="mt-6 bg-white rounded-lg shadow-sm p-4">
-        <h2 className="text-xl font-semibold mb-3">Horas seleccionadas:</h2>
-        <ul className="flex flex-wrap gap-3">
+      <div className='mt-6 bg-white rounded-lg shadow-sm p-4'>
+        <h2 className='text-xl font-semibold mb-3'>Horas seleccionadas:</h2>
+        <ul className='flex flex-wrap gap-3'>
           {getSelectedHoursByDay().map((daySelection) => (
             <li
               key={daySelection.day}
-              className={`p-3 rounded-md border ${daySelection.blocks.length > 0 ? "bg-muted/30" : ""} min-w-[150px]`}
+              className={`p-3 rounded-md border ${daySelection.blocks.length > 0 ? 'bg-muted/30' : ''} min-w-[150px]`}
             >
-              <strong className="text-primary block mb-1">{daySelection.day}:</strong>
+              <strong className='text-primary block mb-1'>
+                {daySelection.day}:
+              </strong>
               {daySelection.blocks.length === 0 ? (
-                <span className="text-muted-foreground text-sm italic">Sin horas</span>
+                <span className='text-muted-foreground text-sm italic'>
+                  Sin horas
+                </span>
               ) : (
-                <div className="space-y-1">
+                <div className='space-y-1'>
                   {daySelection.blocks.map((block: any) => (
-                    <span key={`${daySelection.day}-${block.start}-${block.end}`} className="block text-sm">
+                    <span
+                      key={`${daySelection.day}-${block.start}-${block.end}`}
+                      className='block text-sm'
+                    >
                       {block.start}:00 - {block.end}:00
                     </span>
                   ))}
@@ -174,7 +184,6 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
           ))}
         </ul>
       </div>
-
     </div>
   );
 };

@@ -361,7 +361,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               radius={green}
               draggable={true}
               width='100%'
-              clickPoint={() => { }}
+              clickPoint={() => {}}
             />
             <div className='grid grid-cols-4 gap-3'>
               <div class='col-span-2'>
@@ -380,9 +380,9 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               </div>
             </div>
             <div className='flex items-center space-x-4 p-4'>
-              <div className="relative w-full h-2 bg-gray-200 rounded-full">
+              <div className='relative w-full h-2 bg-gray-200 rounded-full'>
                 <div
-                  className="absolute h-full bg-cyan-500 rounded-full"
+                  className='absolute h-full bg-cyan-500 rounded-full'
                   style={{ width: `${(green / 2000) * 100}%` }}
                 />
                 <input
@@ -408,7 +408,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 onClick={form.reset}
                 disabled={submitting || pristine}
                 border={true}
-                className="rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary"
+                className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
               />
 
               <Button
@@ -416,7 +416,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 name='btn-save'
                 type='submit'
                 label={id ? 'Editar' : 'Guardar'}
-                className="rounded-md bg-primary text-white px-4 py-2 hover:bg-primary-opacity  hover:text-primary"
+                className='rounded-md bg-primary text-white px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
                 disabled={submitting}
               />
             </div>
