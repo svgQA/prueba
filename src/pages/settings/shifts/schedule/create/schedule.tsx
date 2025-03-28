@@ -24,6 +24,19 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
 
+  // Estado compartido para las celdas seleccionadas
+  const selectedCells = useSignal<{ [key: string]: boolean }>({})
+
+  // Función para limpiar la selección - EXACTAMENTE LA MISMA que usará el botón interno
+  const handleClearSelection = () => {
+    selectedCells.value = {}
+  }
+
+  // Función para actualizar las celdas seleccionadas
+  const handleCellChange = (newCells: { [key: string]: boolean }) => {
+    selectedCells.value = newCells
+  }
+
   const onSubmit = async (model: FormData) => {
     let request;
     let message: string;
@@ -55,6 +68,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   useEffect(() => {
     setInitialValues();
   }, []);
+
   return (
     <Section>
       <Form
@@ -90,27 +104,48 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                   startHour={0}
                   endHour={24}
                   title='Selecciona un horario'
+                  clearSelection={false}
+                  selectedCells={selectedCells.value}
+                  onClearSelection={handleClearSelection}
+                  onCellChange={handleCellChange}
                 />
               </div>
             </div>
 
             {/* Botonera */}
             <div className='w-full flex-row flex justify-end items-center'>
-              <Button
+              {/* Botón de prueba que SOLO llama a handleClearSelection */}
+              <button
+                type="button"
+                className="px-4 py-2 border border-b-1 rounded-md mr-4 text-primary"
+                onClick={() => {
+                  handleClearSelection()
+                  form.reset()
+                }}
+              >
+                Limpiar
+              </button>
+
+              {/* <Button
                 id='btn-clean'
                 name='btn-clean'
                 type='button'
                 label='Limpiar'
-                onClick={() => form.reset()}
+                onClick={() => {
+                  handleClearSelection()
+                  form.reset()
+                }}
                 disabled={submitting || pristine}
-              />
+                border={true}
+                className="rounded-md px-4 py-2"
+              /> */}
 
               <Button
                 id='btn-save'
                 name='btn-save'
                 type='submit'
                 label={id ? 'Editar' : 'Guardar'}
-                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+                className="rounded-md bg-primary text-white px-4 py-2"
                 disabled={submitting}
               />
             </div>
@@ -121,3 +156,4 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
     </Section>
   );
 };
+

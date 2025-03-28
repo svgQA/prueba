@@ -212,7 +212,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
               <div>
                 <Map
                   name='Map'
-                  pointsAmount={1}
+                  pointsAmount={100}
+                  allowManualPoint={true}
                   sendPoints={(data) => {
                     const result = sendPointsRef(data);
                     form.change('latitude', result?.lat);

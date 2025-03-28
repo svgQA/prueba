@@ -1,42 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState } from "react"
 
-const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
-  const [selectedCells, setSelectedCells] = useState<{
-    [key: string]: boolean;
-  }>({});
-  const [isSelecting, setIsSelecting] = useState(false);
-  const [startSelection, setStartSelection] = useState<{
-    day: number;
-    hour: number;
-  } | null>(null);
+// Props para pasar los datos y las funciones de actualización
+interface WeeklySchedulerProps {
+  startHour?: number
+  endHour?: number
+  title?: string
+  clearSelection?: boolean
+  selectedCells: { [key: string]: boolean }
+  onClearSelection: () => void
+  onCellChange: (newCells: { [key: string]: boolean }) => void
+}
 
+const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = "", clearSelection = true,selectedCells, onClearSelection, onCellChange }: WeeklySchedulerProps) => {
+  const [isSelecting, setIsSelecting] = useState(false)
+  const [startSelection, setStartSelection] = useState<{ day: number; hour: number; } | null>(null);
   const daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-  const hours = Array.from(
-    { length: endHour - startHour + 1 },
-    (_, i) => startHour + i
-  );
+  const hours = Array.from({ length: endHour - startHour + 1 }, (_, i) => startHour + i);
 
   const handleMouseDown = (day: number, hour: number) => {
-    setIsSelecting(true);
-    setStartSelection({ day, hour });
-    setSelectedCells((prev) => ({
-      ...prev,
-      [`${day}-${hour}`]: !prev[`${day}-${hour}`],
-    }));
-  };
+    setIsSelecting(true)
+    setStartSelection({ day, hour })
+    const newCells = { ...selectedCells, [`${day}-${hour}`]: !selectedCells[`${day}-${hour}`], };
+    onCellChange(newCells)
+  }
 
   const handleMouseEnter = (day: number, hour: number) => {
     if (isSelecting && startSelection) {
       const minHour = Math.min(startSelection.hour, hour);
       const maxHour = Math.max(startSelection.hour, hour);
-
       const newSelection: { [key: string]: boolean } = { ...selectedCells };
       for (let h = minHour; h <= maxHour; h++) {
         newSelection[`${day}-${h}`] = true;
       }
-      setSelectedCells(newSelection);
+      onCellChange(newSelection)
     }
-  };
+  }
 
   const handleMouseUp = () => {
     setIsSelecting(false);
@@ -76,6 +74,7 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
 
       return {
         day: daysOfWeek[dayIndex],
+        dayIndex,
         blocks: groupedBlocks.map((block: any) => ({
           start: block[0],
           end: block[block.length - 1],
@@ -84,12 +83,7 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
     });
 
     return selectedHoursByDay;
-  };
-
-  // Función para limpiar la selección
-  const handleClearSelection = () => {
-    setSelectedCells({});
-  };
+  }
 
   return (
     <div className='p-4 rounded-lg shadow-lg w-full overflow-auto'>
@@ -97,25 +91,27 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
       <div className='flex justify-between items-center mb-4'>
         <h1 className='text-2xl text-center '>{title}</h1>
         {/* Botón para limpiar la selección */}
-        <button
-          className='px-4 py-2 bg-primary text-white rounded-md hover:bg-primary'
-          onClick={handleClearSelection}
-        >
-          Limpiar selección
-        </button>
+        {clearSelection && (
+          <button
+            className='px-4 py-2 bg-primary text-white rounded-md hover:bg-primary'
+            onClick={() => onClearSelection()}
+          >
+            Limpiar selección
+          </button>
+        )}
       </div>
 
       <div
-        className='grid grid-cols-[80px_repeat(7,1fr)] border border-b-2 w-full'
+        className='grid grid-cols-[80px_repeat(7,1fr)] border border-b-1 w-full'
         onMouseUp={handleMouseUp}
         style={{ userSelect: 'none' }} // Deshabilitar la selección de texto en el contenedor
       >
         {/* Encabezado de los días (Sticky) */}
-        <div className='border border-b-2 p-2 text-center font-bold'></div>
+        <div className='border border-b-1 p-2 text-center font-bold'></div>
         {daysOfWeek.map((day, index) => (
           <div
             key={index}
-            className='border border-b-2 p-3 text-center font-bold text-lg sticky top-0 z-10'
+            className='border border-b-1 p-3 text-center font-bold text-lg sticky top-0 z-10'
           >
             {day}
           </div>
@@ -125,7 +121,7 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
         {hours.map((hour) => (
           <React.Fragment key={hour}>
             {/* Columna de las horas */}
-            <div className='border border-b-2 p-3 text-center font-semibold '>
+            <div className='border border-b-1 p-3 text-center font-semibold '>
               {hour}:00
             </div>
 
@@ -137,7 +133,7 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
               return (
                 <div
                   key={key}
-                  className={`border p-3 cursor-pointer transition-all ${isSelected ? 'bg-primary-opacity border-primary' : 'hover:bg-primary-opacity border-b-2'
+                  className={`border p-3 cursor-pointer transition-all ${isSelected ? 'bg-primary-opacity border-primary-opacity-2' : 'hover:bg-primary-opacity border-b-1'
                     }`}
                   onMouseDown={() => handleMouseDown(dayIndex, hour)}
                   onMouseEnter={() => handleMouseEnter(dayIndex, hour)}
@@ -174,9 +170,9 @@ const WeeklyScheduler = ({ startHour = 0, endHour = 23, title = '' }) => {
           ))}
         </ul>
       </div>
-
     </div>
   );
 };
 
 export default WeeklyScheduler;
+

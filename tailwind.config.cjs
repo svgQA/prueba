@@ -18,6 +18,7 @@ module.exports = {
         primary: '#00BDD6',
         secondary: '#1DD75B',
         ternary: '#00727B',
+        caution: '#FFC772',
         m4: '#ADF5FF',
         m5: '#409D9F',
         m6: '#AEFDC8',
