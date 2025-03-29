@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { User } from '../utils';
-import { Gauge } from '@/components/common/gauge/gauge';
+// import { Gauge } from '@/components/common/gauge/gauge';
 //import { Badge } from '@aws-amplify/ui-react';
 import { Badge } from '@/components/common/badge/badge';
 
@@ -70,9 +70,9 @@ export const userColumns: ColumnDef<User>[] = [
       return (
         <div className='flex justify-center'>
           {value === 'Activo' ? (
-            <Badge label='' icon='190' textColor='text-secondary' />
+            <Badge label='' icon='190' textColor='text-secondary' size='md' />
           ) : (
-            <Badge label='' icon='190' textColor='text-error' />
+            <Badge label='' icon='190' textColor='text-error' size='md' />
           )}
         </div>
       );
@@ -85,22 +85,48 @@ export const userColumns: ColumnDef<User>[] = [
     header: 'Progreso de tareas',
     cell: (info) => {
       const progress = info.getValue() as number;
-
       // Definir el color dinámico basado en el progreso
-      let progressColor = '#E05858'; // Rojo por defecto para progreso <= 30%
+      // let progressColor = 'bg-error'; // Rojo por defecto para progreso <= 30%
 
-      if (progress < 30) {
-        progressColor = '#E05858';
-      } else if (progress >= 30 && progress < 70) {
-        progressColor = '#FFC772';
+      // if (progress < 30) {
+      //   progressColor = 'bg-error';
+      // } else if (progress >= 30 && progress < 70) {
+      //   progressColor = 'bg-caution';
+      // } else if (progress >= 70) {
+      //   progressColor = 'bg-primary';
+      // }
+
+      // return (
+      //   <div className='flex flex-row justify-center'>
+      //     {/* Pasar el color dinámico al componente Gauge */}
+      //     <Gauge progress={progress} color={progressColor} />
+      //   </div>
+      // );
+
+      let progressColorClass = 'bg-error';
+      let textColorClass = 'text-error';
+
+      if (progress >= 30 && progress < 70) {
+        progressColorClass = 'bg-caution';
+        textColorClass = 'text-caution';
       } else if (progress >= 70) {
-        progressColor = '#00BDD6';
+        progressColorClass = 'bg-primary';
+        textColorClass = 'text-primary';
       }
 
       return (
         <div className='flex flex-row justify-center'>
-          {/* Pasar el color dinámico al componente Gauge */}
-          <Gauge progress={progress} color={progressColor} />
+          <div className='flex items-center w-full max-w-[120px]'>
+            <div className='relative flex-1 h-2 bg-gray-200 rounded-full mr-2'>
+              <div
+                className={`absolute top-0 left-0 h-2 rounded-full ${progressColorClass}`}
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <span className={`text-sm font-medium ${textColorClass}`}>
+              {progress}%
+            </span>
+          </div>
         </div>
       );
     },
