@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { User } from '../utils';
-import { Gauge } from '@/components/common/gauge/gauge';
+// import { Gauge } from '@/components/common/gauge/gauge';
 //import { Badge } from '@aws-amplify/ui-react';
 import { Badge } from '@/components/common/badge/badge';
 
@@ -103,7 +103,7 @@ export const userColumns: ColumnDef<User>[] = [
       //   </div>
       // );
 
-      let progressColorClass = 'bg-error'; 
+      let progressColorClass = 'bg-error';
       let textColorClass = 'text-error';
 
       if (progress >= 30 && progress < 70) {
@@ -116,8 +116,8 @@ export const userColumns: ColumnDef<User>[] = [
 
       return (
         <div className='flex flex-row justify-center'>
-          <div className="flex items-center w-full max-w-[120px]">
-            <div className="relative flex-1 h-2 bg-gray-200 rounded-full mr-2">
+          <div className='flex items-center w-full max-w-[120px]'>
+            <div className='relative flex-1 h-2 bg-gray-200 rounded-full mr-2'>
               <div
                 className={`absolute top-0 left-0 h-2 rounded-full ${progressColorClass}`}
                 style={{ width: `${progress}%` }}

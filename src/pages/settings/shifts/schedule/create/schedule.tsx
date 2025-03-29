@@ -25,17 +25,17 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const { id } = useParams(); // Obtiene el id de la URL
 
   // Estado compartido para las celdas seleccionadas
-  const selectedCells = useSignal<{ [key: string]: boolean }>({})
+  const selectedCells = useSignal<{ [key: string]: boolean }>({});
 
   // Función para limpiar la selección - EXACTAMENTE LA MISMA que usará el botón interno
   const handleClearSelection = () => {
-    selectedCells.value = {}
-  }
+    selectedCells.value = {};
+  };
 
   // Función para actualizar las celdas seleccionadas
   const handleCellChange = (newCells: { [key: string]: boolean }) => {
-    selectedCells.value = newCells
-  }
+    selectedCells.value = newCells;
+  };
 
   const onSubmit = async (model: FormData) => {
     let request;
@@ -82,11 +82,11 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
           return errors;
         }}
-        render={({ handleSubmit, form, submitting, pristine }) => (
+        render={({ handleSubmit, form, submitting }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-1 gap-3'>
-              <div class='col-span-1'>
+              <div class='col-span-1 px-5'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
@@ -103,7 +103,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                 <WeeklyScheduler
                   startHour={0}
                   endHour={24}
-                  title='Selecciona un horario'
+                  title=''
                   clearSelection={false}
                   selectedCells={selectedCells.value}
                   onClearSelection={handleClearSelection}
@@ -115,37 +115,27 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
             {/* Botonera */}
             <div className='w-full flex-row flex justify-end items-center'>
               {/* Botón de prueba que SOLO llama a handleClearSelection */}
-              <button
-                type="button"
-                className="px-4 py-2 border border-b-1 rounded-md mr-4 text-primary"
-                onClick={() => {
-                  handleClearSelection()
-                  form.reset()
-                }}
-              >
-                Limpiar
-              </button>
 
-              {/* <Button
+              <Button
                 id='btn-clean'
                 name='btn-clean'
                 type='button'
                 label='Limpiar'
                 onClick={() => {
-                  handleClearSelection()
-                  form.reset()
+                  handleClearSelection();
+                  form.reset();
                 }}
-                disabled={submitting || pristine}
+                disabled={submitting}
                 border={true}
-                className="rounded-md px-4 py-2"
-              /> */}
+                className='rounded-md px-4 py-2'
+              />
 
               <Button
                 id='btn-save'
                 name='btn-save'
                 type='submit'
                 label={id ? 'Editar' : 'Guardar'}
-                className="rounded-md bg-primary text-white px-4 py-2"
+                className='rounded-md bg-primary text-white px-4 py-2'
                 disabled={submitting}
               />
             </div>
@@ -156,4 +146,3 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
     </Section>
   );
 };
-

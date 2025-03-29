@@ -224,7 +224,8 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     cell: (info) => (
       <div
         className='inline-flex items-center px-2 py-0.5 text-gray-700 text-sm rounded-md border border-b-dark'
-        onClick={() => info.row.toggleExpanded()} >
+        onClick={() => info.row.toggleExpanded()}
+      >
         <span>2</span>
         <span className='mx-1'>→</span>
         <span>12h</span>

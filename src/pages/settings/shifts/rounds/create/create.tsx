@@ -147,64 +147,93 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         render={({ handleSubmit, form, submitting }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/** FORMULARIO PRINCIPAL */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-4">
+            <div className='grid md:grid-cols-2 gap-6'>
+              <div className='space-y-4'>
                 <div>
-                  <Field<string> name="name" validate={required}>
+                  <Field<string> name='name' validate={required}>
                     {({ input, meta }) => (
-                      <Input {...input} type="text" placeholder="Ingrese nombre..." label="Nombre" meta={meta} />
+                      <Input
+                        {...input}
+                        type='text'
+                        placeholder='Ingrese nombre...'
+                        label='Nombre'
+                        meta={meta}
+                      />
                     )}
                   </Field>
                 </div>
 
                 {/* Descripción - podría ser un textarea */}
                 <div>
-                  <Field<string> name="description">
+                  <Field<string> name='description'>
                     {({ input, meta }) => (
-                      <Input {...input} type="text" placeholder="Ingrese descripción..." label="Descripción" meta={meta} />
+                      <Input
+                        {...input}
+                        type='text'
+                        placeholder='Ingrese descripción...'
+                        label='Descripción'
+                        meta={meta}
+                      />
                     )}
                   </Field>
                 </div>
 
                 {/* Latitud y Longitud */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className='grid grid-cols-2 gap-4'>
                   <div>
                     <Field<string> name='latitude'>
                       {({ input }) => (
-                        <Input {...input} label='Latitud' type='text' disabled />
+                        <Input
+                          {...input}
+                          label='Latitud'
+                          type='text'
+                          disabled
+                        />
                       )}
                     </Field>
                   </div>
                   <div>
                     <Field<string> name='longitude'>
                       {({ input }) => (
-                        <Input {...input} label='Longitud' type='text' disabled />
+                        <Input
+                          {...input}
+                          label='Longitud'
+                          type='text'
+                          disabled
+                        />
                       )}
                     </Field>
                   </div>
                 </div>
 
                 <div>
-                  <Field name="frequency" parse={(value) => (value ? Number(value) : undefined)}>
+                  <Field
+                    name='frequency'
+                    parse={(value) => (value ? Number(value) : undefined)}
+                  >
                     {({ input }) => (
                       <Input
-                        id="input-code"
+                        id='input-code'
                         {...input}
-                        placeholder="Ingrese frecuencia..."
-                        label="Frecuencia"
-                        type="number"
+                        placeholder='Ingrese frecuencia...'
+                        label='Frecuencia'
+                        type='number'
                       />
                     )}
                   </Field>
                 </div>
 
                 {/* Instrucciones */}
-                <div className="mt-6 border rounded-md p-4 bg-primary-opacity">
-                  <h3 className="font-medium mb-2">Instrucciones</h3>
-                  <ul className="list-disc pl-5 space-y-2">
-                    <li>Haga clic en el mapa para comenzar a dibujar la ronda</li>
+                <div className='mt-6 border rounded-md p-4 bg-primary-opacity'>
+                  <h3 className='font-medium mb-2'>Instrucciones</h3>
+                  <ul className='list-disc pl-5 space-y-2'>
+                    <li>
+                      Haga clic en el mapa para comenzar a dibujar la ronda
+                    </li>
                     <li>Continúe haciendo clic para agregar más puntos.</li>
-                    <li>Haga clic en el botón de guardar para crear la ronda.</li>
+                    <li>
+                      Haga clic en el botón de guardar para crear la ronda.
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -227,8 +256,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   errorRadialPoint=''
                   draggable={true}
                   width='100%'
-                  height="500px"
-                  clickPoint={() => { }}
+                  height='500px'
+                  clickPoint={() => {}}
                 />
               </div>
             </div>
@@ -267,7 +296,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 </div> */}
 
             {/* Botonera */}
-            <div className='w-full flex justify-between items-center mt-6'>
+            <div className='w-full flex-row flex justify-end items-center'>
               <Button
                 id='btn-clean'
                 name='btn-clean'
@@ -278,7 +307,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   resertMarket();
                 }}
                 border={true}
-                className="rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary"
+                className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
               />
 
               <Button
@@ -286,7 +315,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 name='btn-save'
                 type='submit'
                 label={id ? 'Editar' : 'Guardar'}
-                className="rounded-md bg-primary text-white px-4 py-2 hover:bg-primary-opacity  hover:text-primary"
+                className='rounded-md bg-primary text-white px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
                 disabled={submitting}
               />
             </div>
