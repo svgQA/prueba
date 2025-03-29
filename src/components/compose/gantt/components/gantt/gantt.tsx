@@ -25,6 +25,7 @@ import { TaskGanttContentProps } from './task-gantt-content';
 import { CalendarProps } from '../calendar/calendar';
 import { GridProps } from '../grid/grid';
 import { memo } from 'preact/compat';
+import { Search } from '@/components/common/search/search';
 
 const GanttComponent: ComponentType<GanttProps> = ({
   tasks,
@@ -68,7 +69,8 @@ const GanttComponent: ComponentType<GanttProps> = ({
   onSelect,
   onExpanderClick,
   onUserClick,
-  // unsearch,
+  unsearch,
+  group,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
@@ -544,7 +546,18 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   return (
     <div>
-      <div>...</div>
+      <div className='relative w-full my-2 flex items-center justify-end'>
+        {!unsearch && (
+          <Search
+            id='search-general'
+            name='search-general'
+            keys={[{ label: 'ID', id: 'id' }]}
+            onChange={() => {}}
+            group={group}
+            grouping
+          />
+        )}
+      </div>
       <div
         className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl min-h-[30vh]`}
         onKeyDown={handleKeyDown}

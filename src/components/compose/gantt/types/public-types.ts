@@ -1,4 +1,4 @@
-import { ComponentType } from 'preact';
+import { ComponentType, VNode } from 'preact';
 
 export enum ViewMode {
   Hour = 'Hour',
@@ -181,4 +181,5 @@ export interface GanttProps extends EventOption, DisplayOption, StylingOption {
   // tasks: Task[];
   unsearch?: boolean;
   tasks: GeneralTask;
+  group?: VNode;
 }

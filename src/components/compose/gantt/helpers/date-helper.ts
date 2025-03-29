@@ -117,7 +117,7 @@ export const ganttDateRange = (
       newStartDate = startOfDate(newStartDate, 'day');
       newStartDate = addToDate(newStartDate, -1 * preStepsCount, 'day');
       newEndDate = startOfDate(newEndDate, 'day');
-      newEndDate = addToDate(newEndDate, 5, 'day');
+      newEndDate = addToDate(newEndDate, 10, 'day');
       break;
     case ViewMode.QuarterDay:
       newStartDate = startOfDate(newStartDate, 'day');
@@ -129,7 +129,7 @@ export const ganttDateRange = (
       newStartDate = startOfDate(newStartDate, 'day');
       newStartDate = addToDate(newStartDate, -1 * preStepsCount, 'day');
       newEndDate = startOfDate(newEndDate, 'day');
-      newEndDate = addToDate(newEndDate, 108, 'hour');
+      newEndDate = addToDate(newEndDate, 5, 'day');
       break;
     case ViewMode.Year:
       newStartDate = addToDate(newStartDate, -1, 'year');
