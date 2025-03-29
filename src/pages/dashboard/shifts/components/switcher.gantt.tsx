@@ -20,7 +20,7 @@ export const ViewSwitcher = ({
       <Button
         id='hour-button'
         name='hour-button'
-        label='Hour'
+        label='2 Dias'
         big
         className={status === ViewMode.Hour ? 'bg-primary-opacity-2' : ''}
         // icon='091'
@@ -29,7 +29,7 @@ export const ViewSwitcher = ({
       <Button
         id='quarter-day-button'
         name='quarter-day-button'
-        label='Week'
+        label='Semana'
         big
         className={status === ViewMode.QuarterDay ? 'bg-primary-opacity-2' : ''}
         // icon='092'
@@ -55,17 +55,16 @@ export const ViewSwitcher = ({
         onClick={() => onViewModeChange(ViewMode.Day)}
       />
       */}
-      {/*
+
       <Button
-        id='week-button'
-        name='week-button'
-        label='Week'
+        id='month-button'
+        name='month-button'
+        label='Mes'
         big
-        className={status === ViewMode.Week ? 'bg-primary-opacity-2' : ''}
+        className={status === ViewMode.Day ? 'bg-primary-opacity-2' : ''}
         // icon='095'
-        onClick={() => onViewModeChange(ViewMode.Week)}
+        onClick={() => onViewModeChange(ViewMode.Day)}
       />
-      */}
       <Switch
         id={`cb-shift-gantt-vals`}
         name='shift-gantt-vals'

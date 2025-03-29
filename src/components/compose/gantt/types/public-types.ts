@@ -179,5 +179,6 @@ export interface TooltipPublicProps {
 
 export interface GanttProps extends EventOption, DisplayOption, StylingOption {
   // tasks: Task[];
+  unsearch?: boolean;
   tasks: GeneralTask;
 }

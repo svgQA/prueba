@@ -115,7 +115,7 @@ export const ganttDateRange = (
       break;
     case ViewMode.Day:
       newStartDate = startOfDate(newStartDate, 'day');
-      newStartDate = addToDate(newStartDate, -5 * preStepsCount, 'day');
+      newStartDate = addToDate(newStartDate, -1 * preStepsCount, 'day');
       newEndDate = startOfDate(newEndDate, 'day');
       newEndDate = addToDate(newEndDate, 5, 'day');
       break;
@@ -145,7 +145,7 @@ export const ganttDateRange = (
       break;
     case ViewMode.Hour:
       newStartDate = startOfDate(newStartDate, 'hour');
-      newStartDate = addToDate(newStartDate, -6 * preStepsCount, 'hour');
+      newStartDate = addToDate(newStartDate, -2 * preStepsCount, 'hour');
       newEndDate = startOfDate(newEndDate, 'day');
       newEndDate = addToDate(newEndDate, 6, 'hour');
       break;

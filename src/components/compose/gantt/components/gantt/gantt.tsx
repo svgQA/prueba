@@ -68,6 +68,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   onSelect,
   onExpanderClick,
   onUserClick,
+  // unsearch,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
@@ -543,6 +544,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   return (
     <div>
+      <div>...</div>
       <div
         className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl min-h-[30vh]`}
         onKeyDown={handleKeyDown}
