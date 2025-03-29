@@ -241,7 +241,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
               <div>
                 <Map
                   name='Map'
-                  pointsAmount={1}
+                  pointsAmount={100}
+                  allowManualPoint={true}
                   sendPoints={(data) => {
                     const result = sendPointsRef(data);
                     form.change('latitude', result?.lat);
@@ -295,7 +296,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 </div> */}
 
             {/* Botonera */}
-            <div className='w-full flex justify-between items-center mt-6'>
+            <div className='w-full flex-row flex justify-end items-center'>
               <Button
                 id='btn-clean'
                 name='btn-clean'

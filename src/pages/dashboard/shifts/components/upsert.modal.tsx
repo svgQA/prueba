@@ -44,7 +44,7 @@ export const TaskForm = ({
   const services = useSignal<IShiftResponse[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>();
-  // const [search, _] = useState('');
+  // const [search, setSearch] = useState('');
   // const tasks = useSignal<ITask[]>([]);
 
   // const filteredOptions: any = tasks.value.filter((option) =>

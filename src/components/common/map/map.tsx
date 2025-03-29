@@ -254,37 +254,33 @@ export const Map: FunctionComponent<IMapProps> = ({
   return isLoaded ? (
     <>
       {allowManualPoint && (
-        <div className='grid grid-cols-5 gap-2'>
-          <div className='col-span-2'>
-            <Input
-              name='latitude'
-              placeholder='6.246631'
-              label='Latitud'
-              type='number'
-              value={coords.lat}
-              onChange={(e) => handleInputChange(e, 'lat')}
-            />
-          </div>
-          <div className='col-span-2'>
-            <Input
-              name='longitude'
-              placeholder='-75.581775'
-              label='Longitud'
-              type='number'
-              value={coords.lng}
-              onChange={(e) => handleInputChange(e, 'lng')}
-            />
-          </div>
-          <div className='col-span-1 mt-auto'>
-            <Button
-              id='btn-add'
-              name='btn-add'
-              type='button'
-              onClick={addManualPoint}
-              label='Añadir'
-              className='rounded-md bg-green-600 text-white px-4'
-            />
-          </div>
+        <div className='flex flex-row items-end justify-between gap-x-2 py-1'>
+          <Input
+            name='latitude'
+            placeholder='6.246631'
+            label='Latitud'
+            type='number'
+            value={coords.lat}
+            onChange={(e) => handleInputChange(e, 'lat')}
+          />
+
+          <Input
+            name='longitude'
+            placeholder='-75.581775'
+            label='Longitud'
+            type='number'
+            value={coords.lng}
+            onChange={(e) => handleInputChange(e, 'lng')}
+          />
+
+          <Button
+            id='btn-add'
+            name='btn-add'
+            type='button'
+            onClick={addManualPoint}
+            label='Añadir'
+            className='rounded-md bg-primary text-white px-4 py-2 my-1'
+          />
         </div>
       )}
 
@@ -312,43 +308,56 @@ export const Map: FunctionComponent<IMapProps> = ({
                   lng: marker.position.lng,
                 }}
                 onCloseClick={handleInfoWindowClose}
+                options={{
+                  pixelOffset: new window.google.maps.Size(0, -30),
+                  maxWidth: 240,
+                }}
               >
-                <div className='w-full p-4'>
-                  <h1 className='text-xl mb-4'>Punto: {marker.id}</h1>
-                  <Input
-                    name='latitude'
-                    id='id-maker-latitude'
-                    label='Lat'
-                    type='text'
-                    value={editCoords.lat}
-                    onChange={(e) => handleEditChange(e, 'lat')}
-                  />
-                  <Input
-                    name='longitude'
-                    id='id-maker-longitude'
-                    label='Lng'
-                    type='text'
-                    value={editCoords.lng}
-                    onChange={(e) => handleEditChange(e, 'lng')}
-                  />
-                  <Button
-                    id='btn-delete-marker'
-                    name='btn-delete-marker'
-                    type='button'
-                    icon='008'
-                    onClick={() => {
-                      removeMarkerById(marker.id);
-                    }}
-                  />
-                  <Button
-                    id='btn-edit-marker'
-                    name='btn-edit-marker'
-                    type='button'
-                    icon='354'
-                    onClick={() => {
-                      editMarkerById(marker.id);
-                    }}
-                  />
+                <div className='bg-white rounded-md shadow-sm overflow-hidden w-full'>
+                  {/* Content */}
+                  <div>
+                    <div className='flex flex-col'>
+                      <Input
+                        name='latitude'
+                        id='id-maker-latitude'
+                        type='text'
+                        label='latitude'
+                        value={editCoords.lat}
+                        onChange={(e) => handleEditChange(e, 'lat')}
+                        className='w-full text-sm p-1'
+                      />
+
+                      <Input
+                        name='longitude'
+                        id='id-maker-longitude'
+                        label='longitude'
+                        type='text'
+                        value={editCoords.lng}
+                        onChange={(e) => handleEditChange(e, 'lng')}
+                        className='w-full text-sm p-1'
+                      />
+                    </div>
+
+                    {/* Buttons */}
+                    <div className='flex justify-between mt-2'>
+                      <Button
+                        id='btn-delete-marker'
+                        name='btn-delete-marker'
+                        type='button'
+                        icon='008'
+                        onClick={() => removeMarkerById(marker.id)}
+                        className='hover:bg-red-600 !text-white text-xs py-1 px-2 rounded'
+                      ></Button>
+                      <Button
+                        id='btn-edit-marker'
+                        name='btn-edit-marker'
+                        type='button'
+                        icon='054'
+                        onClick={() => editMarkerById(marker.id)}
+                        className='bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded'
+                      ></Button>
+                    </div>
+                  </div>
                 </div>
               </InfoWindow>
             )}
