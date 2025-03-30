@@ -568,29 +568,78 @@ const GanttComponent: ComponentType<GanttProps> = ({
   );
 
   useEffect(() => {
-    console.log(columnFilters);
-  }, [columnFilters]);
-
-  useEffect(() => {
     if (columnFilters.length === 0) {
       setTasks(initialTasks);
+      // Actualizar barTasks con todas las tareas cuando no hay filtros
+      const [startDate, endDate] = ganttDateRange(
+        initialTasks,
+        viewMode,
+        preStepsCount
+      );
+      const newDates = rtl
+        ? seedDates(startDate, endDate, viewMode).reverse()
+        : seedDates(startDate, endDate, viewMode);
+      setBarTasks(
+        convertToBarTasks(
+          initialTasks,
+          newDates,
+          columnWidth,
+          rowHeight,
+          taskHeight,
+          barCornerRadius,
+          handleWidth,
+          rtl,
+          barProgressColor,
+          barProgressSelectedColor,
+          barBackgroundColor,
+          barBackgroundSelectedColor,
+          projectProgressColor,
+          projectProgressSelectedColor,
+          projectBackgroundColor,
+          projectBackgroundSelectedColor,
+          milestoneBackgroundColor,
+          milestoneBackgroundSelectedColor
+        )
+      );
       return;
     }
 
     const filteredUsers = initialTasks.users
-      .map((user) => {
-        const filteredTasks = user.tasks.filter((task) => {
-          return columnFilters.every((filter) => {
+      .filter((user) => {
+        // Filtrar a nivel de usuario primero
+        const userLevelFilters = columnFilters.filter(
+          (filter) => filter.id === 'name' || filter.id === 'cardId'
+        );
+
+        if (userLevelFilters.length > 0) {
+          return userLevelFilters.every((filter) => {
             const filterValue = filter.value as string;
             switch (filter.id) {
               case 'name':
-                return task.name
+                return user.name
                   .toLowerCase()
                   .includes(filterValue.toLowerCase());
               case 'cardId':
-                return task.cardId
-                  .toLowerCase()
+                return user.cardId
+                  ?.toLowerCase()
                   .includes(filterValue.toLowerCase());
+              default:
+                return true;
+            }
+          });
+        }
+        return true;
+      })
+      .map((user) => {
+        // Filtrar las tareas del usuario
+        const taskLevelFilters = columnFilters.filter(
+          (filter) => !['name', 'cardId'].includes(filter.id)
+        );
+
+        const filteredTasks = user.tasks.filter((task) => {
+          return taskLevelFilters.every((filter) => {
+            const filterValue = filter.value as string;
+            switch (filter.id) {
               case 'task.service':
                 return task.service
                   .toLowerCase()
@@ -601,6 +650,10 @@ const GanttComponent: ComponentType<GanttProps> = ({
                   .includes(filterValue.toLowerCase());
               case 'task.client':
                 return task.client
+                  .toLowerCase()
+                  .includes(filterValue.toLowerCase());
+              case 'task.status':
+                return task.status
                   .toLowerCase()
                   .includes(filterValue.toLowerCase());
               default:
@@ -614,13 +667,72 @@ const GanttComponent: ComponentType<GanttProps> = ({
           tasks: filteredTasks,
         };
       })
-      .filter((user) => user.tasks.length > 0);
+      .filter(
+        (user) =>
+          user.tasks.length > 0 ||
+          columnFilters.some((f) => f.id === 'name' || f.id === 'cardId')
+      );
 
-    setTasks({
+    const filteredTasks = {
       ...initialTasks,
       users: filteredUsers,
-    });
-  }, [columnFilters, initialTasks]);
+    };
+
+    setTasks(filteredTasks);
+
+    // Actualizar barTasks con las tareas filtradas
+    const [startDate, endDate] = ganttDateRange(
+      initialTasks,
+      viewMode,
+      preStepsCount
+    );
+    const newDates = rtl
+      ? seedDates(startDate, endDate, viewMode).reverse()
+      : seedDates(startDate, endDate, viewMode);
+    setBarTasks(
+      convertToBarTasks(
+        filteredTasks,
+        newDates,
+        columnWidth,
+        rowHeight,
+        taskHeight,
+        barCornerRadius,
+        handleWidth,
+        rtl,
+        barProgressColor,
+        barProgressSelectedColor,
+        barBackgroundColor,
+        barBackgroundSelectedColor,
+        projectProgressColor,
+        projectProgressSelectedColor,
+        projectBackgroundColor,
+        projectBackgroundSelectedColor,
+        milestoneBackgroundColor,
+        milestoneBackgroundSelectedColor
+      )
+    );
+  }, [
+    columnFilters,
+    initialTasks,
+    viewMode,
+    preStepsCount,
+    columnWidth,
+    rowHeight,
+    taskHeight,
+    barCornerRadius,
+    handleWidth,
+    rtl,
+    barProgressColor,
+    barProgressSelectedColor,
+    barBackgroundColor,
+    barBackgroundSelectedColor,
+    projectProgressColor,
+    projectProgressSelectedColor,
+    projectBackgroundColor,
+    projectBackgroundSelectedColor,
+    milestoneBackgroundColor,
+    milestoneBackgroundSelectedColor,
+  ]);
 
   return (
     <div>
@@ -631,6 +743,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
             name='search-general'
             keys={[
               { label: 'Nombre', id: 'name' },
+              { label: 'Estado', id: 'task.status' },
               { label: 'Identificador', id: 'cardId' },
               { label: 'Servicio', id: 'task.service' },
               { label: 'Contrato', id: 'task.contract' },
