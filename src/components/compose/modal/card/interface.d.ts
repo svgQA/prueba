@@ -6,6 +6,7 @@ export interface ICardSettingMenuProps extends IComponentProps {
   label: string;
   base: string;
   selected: IMenu;
+  settings?: string;
 }
 
 export interface ICardSettingUserProps extends IComponentProps {
