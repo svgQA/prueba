@@ -302,14 +302,6 @@ export const ShiftsPage: FunctionalComponent = () => {
           />
         )}
 
-        {/*
-        <ViewSwitcher
-          onViewModeChange={handleViewMode}
-          onViewListChange={setIsChecked}
-          isChecked={isChecked}
-          status={view}
-        />
-        */}
         {currentView.value === VIEW_NAME.SCHEDULER && (
           <Gantt
             tasks={ganttShifts}
