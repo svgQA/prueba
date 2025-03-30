@@ -19,7 +19,12 @@ export interface Task {
   end: string | Date;
   start: string | Date;
   serviceId: string | number;
+  service: string;
+  phone: string;
+  contract: string;
+  client: string;
   userId: string | number;
+  cardId: string;
   type: TaskType;
   name: string;
   status: TaskStatus;

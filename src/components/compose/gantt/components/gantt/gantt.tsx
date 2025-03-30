@@ -7,7 +7,12 @@ import {
   useMemo,
   useCallback,
 } from 'preact/hooks';
-import { ViewMode, GanttProps, Task } from '../../types/public-types';
+import {
+  ViewMode,
+  GanttProps,
+  Task,
+  GeneralTask,
+} from '../../types/public-types';
 import { ganttDateRange, seedDates } from '../../helpers/date-helper';
 import { TaskListHeaderDefault } from '../task-list/task-list-header';
 import { TaskListTableDefault } from '../task-list/task-list-table';
@@ -26,9 +31,15 @@ import { CalendarProps } from '../calendar/calendar';
 import { GridProps } from '../grid/grid';
 import { memo } from 'preact/compat';
 import { Search } from '@/components/common/search/search';
+import { ColumnFiltersState } from '@tanstack/react-table';
+
+// interface ColumnFilter {
+//   id: string;
+//   value: string;
+// }
 
 const GanttComponent: ComponentType<GanttProps> = ({
-  tasks,
+  tasks: initialTasks,
   headerHeight = 50,
   columnWidth = 60,
   listCellWidth = '155px',
@@ -75,9 +86,14 @@ const GanttComponent: ComponentType<GanttProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
   const [dateSetup, setDateSetup] = useState<DateSetup>(() => {
-    const [startDate, endDate] = ganttDateRange(tasks, viewMode, preStepsCount);
+    const [startDate, endDate] = ganttDateRange(
+      initialTasks,
+      viewMode,
+      preStepsCount
+    );
     return { viewMode, dates: seedDates(startDate, endDate, viewMode) };
   });
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const currentViewDate = useSignal<Date | undefined>(undefined);
   const taskListWidth = useSignal(0);
   const svgContainerWidth = useSignal(0);
@@ -96,14 +112,20 @@ const GanttComponent: ComponentType<GanttProps> = ({
   const [failedTask, setFailedTask] = useState<BarTask | null>(null);
 
   const svgWidth = dateSetup.dates.length * columnWidth;
-  const ganttFullHeight = tasks.users.length * rowHeight;
+  const ganttFullHeight = initialTasks.users.length * rowHeight;
 
   const scrollY = useSignal(0);
   const scrollX = useSignal(-1);
   const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
+  const [tasks, setTasks] = useState<GeneralTask>(initialTasks);
+
   useEffect(() => {
-    const [startDate, endDate] = ganttDateRange(tasks, viewMode, preStepsCount);
+    const [startDate, endDate] = ganttDateRange(
+      initialTasks,
+      viewMode,
+      preStepsCount
+    );
     let newDates = seedDates(startDate, endDate, viewMode);
     if (rtl) {
       newDates = newDates.reverse();
@@ -114,7 +136,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
     setDateSetup({ dates: newDates, viewMode });
     setBarTasks(
       convertToBarTasks(
-        tasks,
+        initialTasks,
         newDates,
         columnWidth,
         rowHeight,
@@ -135,7 +157,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
       )
     );
   }, [
-    tasks,
+    initialTasks,
     viewMode,
     preStepsCount,
     rowHeight,
@@ -242,9 +264,10 @@ const GanttComponent: ComponentType<GanttProps> = ({
     if (ganttHeight) {
       svgContainerHeight.value = ganttHeight + headerHeight;
     } else {
-      svgContainerHeight.value = tasks.users.length * rowHeight + headerHeight;
+      svgContainerHeight.value =
+        initialTasks.users.length * rowHeight + headerHeight;
     }
-  }, [ganttHeight, tasks, headerHeight, rowHeight]);
+  }, [ganttHeight, initialTasks, headerHeight, rowHeight]);
 
   const handleWheel = useCallback(
     (event: WheelEvent) => {
@@ -544,6 +567,61 @@ const GanttComponent: ComponentType<GanttProps> = ({
     ]
   );
 
+  useEffect(() => {
+    console.log(columnFilters);
+  }, [columnFilters]);
+
+  useEffect(() => {
+    if (columnFilters.length === 0) {
+      setTasks(initialTasks);
+      return;
+    }
+
+    const filteredUsers = initialTasks.users
+      .map((user) => {
+        const filteredTasks = user.tasks.filter((task) => {
+          return columnFilters.every((filter) => {
+            const filterValue = filter.value as string;
+            switch (filter.id) {
+              case 'name':
+                return task.name
+                  .toLowerCase()
+                  .includes(filterValue.toLowerCase());
+              case 'cardId':
+                return task.cardId
+                  .toLowerCase()
+                  .includes(filterValue.toLowerCase());
+              case 'task.service':
+                return task.service
+                  .toLowerCase()
+                  .includes(filterValue.toLowerCase());
+              case 'task.contract':
+                return task.contract
+                  .toLowerCase()
+                  .includes(filterValue.toLowerCase());
+              case 'task.client':
+                return task.client
+                  .toLowerCase()
+                  .includes(filterValue.toLowerCase());
+              default:
+                return true;
+            }
+          });
+        });
+
+        return {
+          ...user,
+          tasks: filteredTasks,
+        };
+      })
+      .filter((user) => user.tasks.length > 0);
+
+    setTasks({
+      ...initialTasks,
+      users: filteredUsers,
+    });
+  }, [columnFilters, initialTasks]);
+
   return (
     <div>
       <div className='relative w-full my-2 flex items-center justify-end'>
@@ -551,8 +629,14 @@ const GanttComponent: ComponentType<GanttProps> = ({
           <Search
             id='search-general'
             name='search-general'
-            keys={[{ label: 'ID', id: 'id' }]}
-            onChange={() => {}}
+            keys={[
+              { label: 'Nombre', id: 'name' },
+              { label: 'Identificador', id: 'cardId' },
+              { label: 'Servicio', id: 'task.service' },
+              { label: 'Contrato', id: 'task.contract' },
+              { label: 'Cliente', id: 'task.client' },
+            ]}
+            onChange={setColumnFilters}
             group={group}
             grouping
           />
