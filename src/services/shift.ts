@@ -452,7 +452,10 @@ export class ShiftService extends BaseService {
 
   static async getShiftSetting() {
     const model: IMakeRequest = {
-      url: ['module/shift'],
+      url: ['module'],
+      params: {
+        type: 'SHIFT',
+      },
     };
     return await super.make_request<IShiftSettingResponse>(this.name, model);
   }
