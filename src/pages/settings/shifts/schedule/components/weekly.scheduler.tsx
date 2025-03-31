@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './style.css';
+import { DataSchedule } from './data.schedule';
+
 // Props para pasar los datos y las funciones de actualización
 interface WeeklySchedulerProps {
   startHour?: number;
@@ -205,30 +207,7 @@ const WeeklyScheduler = ({
         <h2 className='text-xl font-semibold mb-3'>Horas seleccionadas:</h2>
         <ul className='flex flex-wrap gap-3'>
           {getSelectedHoursByDay().map((daySelection) => (
-            <li
-              key={daySelection.day}
-              className={`p-3 rounded-md border ${daySelection.blocks.length > 0 ? 'bg-muted/30' : ''} min-w-[150px]`}
-            >
-              <strong className='text-primary block mb-1'>
-                {daySelection.day}:
-              </strong>
-              {daySelection.blocks.length === 0 ? (
-                <span className='text-muted-foreground text-sm italic'>
-                  Sin horas
-                </span>
-              ) : (
-                <div className='space-y-1'>
-                  {daySelection.blocks.map((block: any) => (
-                    <span
-                      key={`${daySelection.day}-${block.start}-${block.end}`}
-                      className='block text-sm'
-                    >
-                      {block.start}:00 - {block.end}:00
-                    </span>
-                  ))}
-                </div>
-              )}
-            </li>
+            <DataSchedule daySelection={daySelection} />
           ))}
         </ul>
       </div>

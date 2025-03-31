@@ -309,6 +309,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             onDateChange={handleTaskChange}
             onDelete={handleTaskDelete}
             onDoubleClick={handleDblClick}
+            onUserDoubleClick={handleUserClick}
             onUserClick={handleUserClick}
             onClick={handleClick}
             listCellWidth={isChecked ? '155px' : ''}

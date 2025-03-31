@@ -85,6 +85,7 @@ interface IService {
   };
   state: string;
   description: string;
+  name: string;
   hasRound: boolean;
   extraData: {
     notes: string;
@@ -149,6 +150,7 @@ export interface IShiftResponse {
   assigned: boolean;
   break: IBreak[];
   report: IReport[];
+  bane;
   checkIn: {
     time: string;
     location: {

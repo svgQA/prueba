@@ -15,6 +15,7 @@ import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { DataSchedule, DaySelection } from './components/data.schedule';
 
 export interface ISchedule {
   id: number;
@@ -90,26 +91,11 @@ export const ScheduleSettingPage: FunctionComponent = () => {
         columns={columns}
         expandable={(row: any) => {
           return (
-            <div className='grid grid-cols-1 gap-3'>
-              {row.days.map((dayInfo: any, index: any) => (
-                <div
-                  class='col-span-1'
-                  key={index}
-                  style={{
-                    border: '1px solid #ccc',
-                    padding: '10px',
-                    minWidth: '120px',
-                  }}
-                >
-                  <h4>{dayInfo.day}</h4>
-                  <ul>
-                    {dayInfo.hour.map((time: any, i: any) => (
-                      <li key={i}>{time}</li>
-                    ))}
-                  </ul>
-                </div>
+            <ul className='flex flex-wrap justify-center gap-x-2'>
+              {row.days.map((dayInfo: DaySelection) => (
+                <DataSchedule daySelection={dayInfo} />
               ))}
-            </div>
+            </ul>
           );
         }}
         visibility={{

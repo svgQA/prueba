@@ -32,6 +32,7 @@ import { GridProps } from '../grid/grid';
 import { memo } from 'preact/compat';
 import { Search } from '@/components/common/search/search';
 import { ColumnFiltersState } from '@tanstack/react-table';
+import { DateSelector } from './replicate.modal';
 
 // interface ColumnFilter {
 //   id: string;
@@ -80,6 +81,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   onSelect,
   onExpanderClick,
   onUserClick,
+  onUserDoubleClick,
   unsearch,
   group,
 }) => {
@@ -119,6 +121,15 @@ const GanttComponent: ComponentType<GanttProps> = ({
   const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
   const [tasks, setTasks] = useState<GeneralTask>(initialTasks);
+  const [selectedUsers, setSelectedUsers] = useState<Set<string | number>>(
+    new Set()
+  );
+
+  const handleDateSubmit = (start: string, end: string) => {
+    // Aquí puedes manejar la lógica para las fechas seleccionadas
+    console.log('Start Date:', start);
+    console.log('End Date:', end);
+  };
 
   useEffect(() => {
     const [startDate, endDate] = ganttDateRange(
@@ -436,8 +447,27 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   const handleUserClick = useCallback(
     (user: string | number) => {
-      if (onUserClick) {
-        onUserClick(user);
+      setSelectedUsers((prev) => {
+        const newSelected = new Set(prev);
+        if (newSelected.has(user)) {
+          newSelected.delete(user);
+        } else {
+          newSelected.add(user);
+        }
+        return newSelected;
+      });
+
+      // if (onUserClick) {
+      //   onUserClick(user);
+      // }
+    },
+    [onUserClick]
+  );
+
+  const handleUserDblClick = useCallback(
+    (user: string | number) => {
+      if (onUserDoubleClick) {
+        onUserDoubleClick(user);
       }
     },
     [onUserClick]
@@ -547,6 +577,8 @@ const GanttComponent: ComponentType<GanttProps> = ({
       TaskListHeader,
       TaskListTable,
       onUserClick: handleUserClick,
+      onUserDoubleClick: handleUserDblClick,
+      selectedUsers,
     }),
     [
       rowHeight,
@@ -564,6 +596,8 @@ const GanttComponent: ComponentType<GanttProps> = ({
       TaskListHeader,
       TaskListTable,
       handleUserClick,
+      handleUserDblClick,
+      selectedUsers,
     ]
   );
 
@@ -641,7 +675,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
             const filterValue = filter.value as string;
             switch (filter.id) {
               case 'task.service':
-                return task.service
+                return task.name
                   .toLowerCase()
                   .includes(filterValue.toLowerCase());
               case 'task.contract':
@@ -736,7 +770,12 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   return (
     <div>
-      <div className='relative w-full my-2 flex items-center justify-end'>
+      <div className='relative w-full my-2 flex items-center justify-end gap-2'>
+        <DateSelector
+          selectedUsers={selectedUsers}
+          onDateSubmit={handleDateSubmit}
+        />
+
         {!unsearch && (
           <Search
             id='search-general'

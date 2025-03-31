@@ -101,6 +101,10 @@ export interface EventOption {
    * Invokes on task list row click
    */
   onUserClick?: (user: string | number) => void;
+  /**
+   * Invokes on task list row double click
+   */
+  onUserDoubleClick?: (user: string | number) => void;
 }
 
 export interface DisplayOption {
@@ -154,7 +158,7 @@ export interface TaskListHeaderProps {
   fontSize: string | number;
 }
 
-export interface TaskListTableProps {
+export type TaskListTableProps = {
   rowHeight: number;
   rowWidth: string;
   fontFamily: string;
@@ -162,12 +166,12 @@ export interface TaskListTableProps {
   locale: string;
   tasks: GeneralTask;
   selectedTaskId: string;
-  /**
-   * Sets selected task by id
-   */
+  onUserClick?: (userId: string | number) => void;
+  onUserDoubleClick?: (userId: string | number) => void;
   setSelectedTask: (taskId: string) => void;
   onExpanderClick: (task: Task) => void;
-}
+  selectedUsers: Set<string | number>;
+};
 
 export interface TaskListProps {
   headerHeight: number;

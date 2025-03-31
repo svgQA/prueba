@@ -69,7 +69,6 @@ export const SettingsModal = () => {
   const selectMenu = useCallback((event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (target.nodeName === 'A' || target.nodeName === 'SPAN') {
-      console.log('MALPARIDO EVENTO: ', target);
       const to = target.getAttribute('data-to');
       const label = target.getAttribute('data-label');
       const description = target.getAttribute('data-description');
