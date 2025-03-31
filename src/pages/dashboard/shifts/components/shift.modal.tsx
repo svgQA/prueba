@@ -114,6 +114,7 @@ export const ShiftForm = ({
     employeeSurname: shift.value?.employee?.surname || '',
     locationLat: shift.value?.service?.place?.latitude || 2.43823,
     locationLng: shift.value?.service?.place?.longitude || -76.61316,
+    serviveName: shift.value?.service?.name || '',
     employeeImage: shift.value?.employee?.image || '',
     employeeEmail: shift.value?.employee?.email || '',
     employeePhone: shift.value?.employee?.phone || '',
@@ -145,6 +146,10 @@ export const ShiftForm = ({
       header={<h3 className='text-xl font-medium'>Detalles del Turno</h3>}
     >
       <div className='w-full py-3'>
+        <div className='flex w-full p-3 justify-center'>
+          <h2>Service: {taskData.serviveName}</h2>
+        </div>
+
         <div className='flex items-center gap-4 mb-6 px-5 py-2 justify-between'>
           <div className='flex flex-row items-center justify-between w-4/12'>
             <div className='w-20 h-20 rounded-full flex items-center justify-center bg-b-light'>

@@ -1,26 +1,17 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { ComponentType } from 'preact';
 import { BarTask } from '../../types/bar-task';
-import { GeneralTask, Task } from '../../types/public-types';
+import {
+  GeneralTask,
+  Task,
+  TaskListTableProps,
+} from '../../types/public-types';
 
 export type TaskListHeaderProps = {
   headerHeight: number;
   rowWidth: string | number;
   fontFamily: string;
   fontSize: string | number;
-};
-
-export type TaskListTableProps = {
-  rowHeight: number;
-  rowWidth: string;
-  fontFamily: string;
-  fontSize: string;
-  locale: string;
-  tasks: GeneralTask;
-  selectedTaskId: string;
-  onUserClick?: (userId: string | number) => void;
-  setSelectedTask: (taskId: string) => void;
-  onExpanderClick: (task: Task) => void;
 };
 
 export type TaskListProps = {
@@ -39,8 +30,10 @@ export type TaskListProps = {
   setSelectedTask: (task: string) => void;
   onExpanderClick: (task: Task) => void;
   onUserClick: (user: string | number) => void;
+  onUserDoubleClick: (user: string | number) => void;
   TaskListHeader: ComponentType<TaskListHeaderProps>;
   TaskListTable: ComponentType<TaskListTableProps>;
+  selectedUsers: Set<string | number>;
 };
 
 export function TaskList({
@@ -61,6 +54,8 @@ export function TaskList({
   TaskListHeader,
   TaskListTable,
   onUserClick,
+  onUserDoubleClick,
+  selectedUsers,
 }: TaskListProps) {
   const horizontalContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -88,6 +83,8 @@ export function TaskList({
     setSelectedTask,
     onExpanderClick,
     onUserClick,
+    onUserDoubleClick,
+    selectedUsers,
   };
 
   return (
