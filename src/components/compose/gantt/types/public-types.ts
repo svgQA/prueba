@@ -1,4 +1,4 @@
-import { ComponentType } from 'preact';
+import { ComponentType, VNode } from 'preact';
 
 export enum ViewMode {
   Hour = 'Hour',
@@ -19,7 +19,12 @@ export interface Task {
   end: string | Date;
   start: string | Date;
   serviceId: string | number;
+  service: string;
+  phone: string;
+  contract: string;
+  client: string;
   userId: string | number;
+  cardId: string;
   type: TaskType;
   name: string;
   status: TaskStatus;
@@ -179,5 +184,7 @@ export interface TooltipPublicProps {
 
 export interface GanttProps extends EventOption, DisplayOption, StylingOption {
   // tasks: Task[];
+  unsearch?: boolean;
   tasks: GeneralTask;
+  group?: VNode;
 }

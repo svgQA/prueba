@@ -14,6 +14,7 @@ export const MenuList = memo(
             base={menu.base}
             label={menu.label}
             menus={menu.menus}
+            settings={menu.settings}
             selected={menuInformationSelected}
           />
         ) : null;

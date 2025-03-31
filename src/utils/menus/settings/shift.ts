@@ -5,10 +5,11 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.shifts.base;
 export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
   label: 'Shifts',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  settings: PAGES_LIST_ROUTER.dashboard.setting.shifts.settings,
   show: true,
   menus: [
     {
-      icon: '325',
+      icon: '142',
       label: 'Rounds',
       description: 'Rondas',
       base,
@@ -26,7 +27,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '306',
+      icon: '064',
       label: 'Contracts',
       description: 'Contratos',
       base,
@@ -35,7 +36,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '312',
+      icon: '092',
       label: 'Tasks',
       description: 'Tareas',
       base,
@@ -44,7 +45,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '342',
+      icon: '050',
       label: 'schedule',
       description: 'Horarios',
       base,
@@ -61,7 +62,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       id: 'shifts',
     },
     {
-      icon: '354',
+      icon: '090',
       label: 'Services',
       description: 'Servicios',
       base,

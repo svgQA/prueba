@@ -13,6 +13,7 @@ export const Search = ({
   onChange,
   table,
   group,
+  grouping,
 }: ISearchProps) => {
   const inputState = useSignal<string>('');
   const searchArray = useSignal<ColumnFiltersState>(value);
@@ -304,7 +305,7 @@ export const Search = ({
 
       {table && <div className='h-6 w-px bg-b-light-dark mx-2' />}
 
-      {table && group && <>{group}</>}
+      {(table || grouping) && group && <>{group}</>}
 
       {keys.length > 0 && isDropdownOpen.value && (
         <div

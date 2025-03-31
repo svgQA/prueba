@@ -55,6 +55,7 @@ import { TaskSettingPage } from './shifts/task/task';
 import { TaskCreateSettingPage } from './shifts/task/create/task';
 import { ScheduleSettingPage } from './shifts/schedule/schedule';
 import { ScheduleCreateSettingPage } from './shifts/schedule/create/schedule';
+import { ShiftSettingPage } from './shifts/setting/setting';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -214,6 +215,10 @@ export const RoutingContent = memo(() => {
           component={lazy(() => Promise.resolve({ default: IASettingPage }))}
         />
         {/* SHIFTS MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.settings}
+          component={lazy(() => Promise.resolve({ default: ShiftSettingPage }))}
+        />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.to}
           component={lazy(() =>
