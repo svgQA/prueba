@@ -22,6 +22,7 @@ import { SendForm } from './components/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
+import { MentionEditor } from '@/components/common/mention-editor';
 
 enum VIEW_NAME {
   TABLE,
@@ -239,6 +240,44 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   return (
     <Section padding>
+      {/* Ejemplo de MentionTextarea */}
+      <div className='mb-8'>
+        <div className='bg-white rounded-lg shadow p-6'>
+          <h3 className='text-lg font-medium text-gray-900 mb-4'>
+            Ejemplo de Menciones
+          </h3>
+          <div className='space-y-4'>
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-2'>
+                Comentarios del Turno
+              </label>
+              <MentionEditor
+                value=''
+                onChange={(value) => console.log('New value:', value)}
+                options={[
+                  { id: '1', label: 'Juan Pérez' },
+                  { id: '2', label: 'María García' },
+                  { id: '3', label: 'Carlos López' },
+                  { id: '4', label: 'Ana Martínez' },
+                  { id: '5', label: 'Pedro Sánchez' },
+                  { id: '6', label: 'Laura Torres' },
+                  { id: '7', label: 'Roberto Díaz' },
+                  { id: '8', label: 'Sofia Castro' },
+                ]}
+                placeholder='Escribe @ para mencionar a alguien en el turno...'
+                className='min-h-[120px]'
+              />
+            </div>
+            <div className='text-sm text-gray-500'>
+              <p>• Escribe @ seguido del nombre para mencionar a alguien</p>
+              <p>• Usa las flechas ↑↓ para navegar por las sugerencias</p>
+              <p>• Presiona Enter para seleccionar</p>
+              <p>• Presiona Escape para cerrar el menú</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
           title='Turnos Totales Hoy'
