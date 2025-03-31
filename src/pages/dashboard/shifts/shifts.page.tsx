@@ -14,7 +14,6 @@ import {
   ViewMode,
 } from '@/components/compose/gantt/types/public-types';
 import dayjs from 'dayjs';
-import { ViewSwitcher } from './components/switcher.gantt';
 import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/upsert.modal';
 import { CardData } from '@/components/compose/cards';
@@ -22,6 +21,7 @@ import { Button } from '@/components/common/button/button';
 import { SendForm } from './components/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
+import { Group } from '@/components/compose/gantt/components/gantt/group';
 
 enum VIEW_NAME {
   TABLE,
@@ -303,25 +303,26 @@ export const ShiftsPage: FunctionalComponent = () => {
         )}
 
         {currentView.value === VIEW_NAME.SCHEDULER && (
-          <div>
-            <ViewSwitcher
-              onViewModeChange={handleViewMode}
-              onViewListChange={setIsChecked}
-              isChecked={isChecked}
-              status={view}
-            />
-            <Gantt
-              tasks={ganttShifts}
-              viewMode={view}
-              onDateChange={handleTaskChange}
-              onDelete={handleTaskDelete}
-              onDoubleClick={handleDblClick}
-              onUserClick={handleUserClick}
-              onClick={handleClick}
-              listCellWidth={isChecked ? '155px' : ''}
-              columnWidth={columnWidth}
-            />
-          </div>
+          <Gantt
+            tasks={ganttShifts}
+            viewMode={view}
+            onDateChange={handleTaskChange}
+            onDelete={handleTaskDelete}
+            onDoubleClick={handleDblClick}
+            onUserDoubleClick={handleUserClick}
+            onUserClick={handleUserClick}
+            onClick={handleClick}
+            listCellWidth={isChecked ? '155px' : ''}
+            columnWidth={columnWidth}
+            group={
+              <Group
+                onViewModeChange={handleViewMode}
+                onViewListChange={setIsChecked}
+                isChecked={isChecked}
+                status={view}
+              />
+            }
+          />
         )}
 
         {currentView.value === VIEW_NAME.SUPERVISOR && <div></div>}

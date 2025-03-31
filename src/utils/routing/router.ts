@@ -45,6 +45,7 @@ export const PAGES_LIST_ROUTER = {
       },
       shifts: {
         base: '/rounds',
+        settings: '/rounds/settings',
         service: {
           base: '/service',
           to: '/rounds/service',

@@ -26,6 +26,12 @@ interface Props {
   taskSelected?: Task;
 }
 
+// interface ITask {
+//   start: string;
+//   status: string;
+//   description: string;
+// }
+
 export const TaskForm = ({
   closed,
   onClose,
@@ -38,6 +44,12 @@ export const TaskForm = ({
   const services = useSignal<IShiftResponse[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>();
+  // const [search, setSearch] = useState('');
+  // const tasks = useSignal<ITask[]>([]);
+
+  // const filteredOptions: any = tasks.value.filter((option) =>
+  //   option.description.toLowerCase().includes(search.toLowerCase())
+  // );
 
   const onSubmit = async (model: FormData) => {
     try {
@@ -417,6 +429,46 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
+                {/*
+                    <div class='col-span-4'>
+                      <h3>Tareas:</h3>
+
+                      <Field<number> name='schedules'>
+                        {({ input }) => (
+                          <div className=' mr-5 ml-5'>
+                            <label className='block mb-2 text-sm font-medium text-gray-700'>
+                              Buscar:
+                            </label>
+                            <input
+                              type='text'
+                              value={search}
+                              onChange={(e) => setSearch(e.currentTarget.value)}
+                              className='block w-full px-3 py-2 mb-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                              placeholder='Escribe para buscar...'
+                            />
+                            <select
+                              {...input}
+                              multiple
+                              onChange={(e) => {
+                                const selectedValues = Array.from(
+                                  e.currentTarget.selectedOptions,
+                                  (option) => Number(option.value)
+                                );
+                                input.onChange(selectedValues);
+                              }}
+                              className='block w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-32'
+                            >
+                              {filteredOptions.map((option: any) => (
+                                <option key={option.id} value={option.id}>
+                                  {`* Horario: ${option.name}(${option.day})  horas: ${dayjs(option.hourStart).format('HH:mm')} a ${dayjs(option.hourEnd).format('HH:mm')}`}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
+                      </Field>
+                    </div>
+                    */}
               </div>
             </form>
           )}

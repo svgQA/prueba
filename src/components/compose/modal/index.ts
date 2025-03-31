@@ -10,4 +10,5 @@ export interface IModalSidebarMenu {
   show?: boolean;
   new?: boolean;
   menus: IMenu[];
+  settings?: string;
 }

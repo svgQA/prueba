@@ -28,6 +28,8 @@ interface FormData {
   frequency: number;
   placeId: number;
   points?: IPoint[];
+  latitude: string;
+  longitude: string;
 }
 
 interface ILocation {
@@ -49,7 +51,10 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const sendPointsRef = (data: any) => {
     console.log('data ==>', data);
     if (!data.length) return;
+    const { lat, lng } = data[0].position;
     points.value = data;
+    currentLocation.value = { lat, lng };
+    return { lat, lng };
   };
 
   const onSubmit = async (model: FormData) => {
@@ -142,43 +147,106 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         render={({ handleSubmit, form, submitting }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/** FORMULARIO PRINCIPAL */}
-            <div className='grid grid-cols-3 gap-3'>
-              <div class='col-span-2'>
-                <Field<string> name='name' validate={required}>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      type='text'
-                      placeholder='Ingrese nombre...'
-                      label='Nombre'
-                      meta={meta}
-                    />
-                  )}
-                </Field>
+            <div className='grid md:grid-cols-2 gap-6'>
+              <div className='space-y-4'>
+                <div>
+                  <Field<string> name='name' validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='text'
+                        placeholder='Ingrese nombre...'
+                        label='Nombre'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* Descripción - podría ser un textarea */}
+                <div>
+                  <Field<string> name='description'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='text'
+                        placeholder='Ingrese descripción...'
+                        label='Descripción'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* Latitud y Longitud */}
+                <div className='grid grid-cols-2 gap-4'>
+                  <div>
+                    <Field<string> name='latitude'>
+                      {({ input }) => (
+                        <Input
+                          {...input}
+                          label='Latitud'
+                          type='text'
+                          disabled
+                        />
+                      )}
+                    </Field>
+                  </div>
+                  <div>
+                    <Field<string> name='longitude'>
+                      {({ input }) => (
+                        <Input
+                          {...input}
+                          label='Longitud'
+                          type='text'
+                          disabled
+                        />
+                      )}
+                    </Field>
+                  </div>
+                </div>
+
+                <div>
+                  <Field
+                    name='frequency'
+                    parse={(value) => (value ? Number(value) : undefined)}
+                  >
+                    {({ input }) => (
+                      <Input
+                        id='input-code'
+                        {...input}
+                        placeholder='Ingrese frecuencia...'
+                        label='Frecuencia'
+                        type='number'
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* Instrucciones */}
+                <div className='mt-6 border rounded-md p-4 bg-primary-opacity'>
+                  <h3 className='font-medium mb-2'>Instrucciones</h3>
+                  <ul className='list-disc pl-5 space-y-2'>
+                    <li>
+                      Haga clic en el mapa para comenzar a dibujar la ronda
+                    </li>
+                    <li>Continúe haciendo clic para agregar más puntos.</li>
+                    <li>
+                      Haga clic en el botón de guardar para crear la ronda.
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <div class='col-span-1'>
-                <Field
-                  name='frequency'
-                  parse={(value) => (value ? Number(value) : undefined)}
-                >
-                  {({ input }) => (
-                    <Input
-                      id='input-code'
-                      {...input}
-                      placeholder='Ingrese frecuencia...'
-                      label='Frecuencia'
-                      type='number'
-                    />
-                  )}
-                </Field>
-              </div>
-              <div class='col-span-3'>
+
+              <div>
                 <Map
                   name='Map'
                   pointsAmount={100}
                   allowManualPoint={true}
                   sendPoints={(data) => {
-                    sendPointsRef(data);
+                    const result = sendPointsRef(data);
+                    form.change('latitude', result?.lat);
+                    form.change('longitude', result?.lng);
                   }}
                   pointsRef={points.value}
                   center={currentLocation.value}
@@ -188,11 +256,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   errorRadialPoint=''
                   draggable={true}
                   width='100%'
+                  height='500px'
                   clickPoint={() => {}}
                 />
               </div>
+            </div>
 
-              {/* <div class='col-span-2'>
+            {/* <div class='col-span-2'>
                   <Field<string> name='placeId' validate={required}>
                     {({ input, meta }) => (
                       <Select
@@ -224,7 +294,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   <label for='lname'>Longitud: </label>
                   {currentLocation.value?.lng}
                 </div> */}
-            </div>
 
             {/* Botonera */}
             <div className='w-full flex-row flex justify-end items-center'>
@@ -237,6 +306,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   form.reset();
                   resertMarket();
                 }}
+                border={true}
+                className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
               />
 
               <Button
@@ -244,7 +315,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 name='btn-save'
                 type='submit'
                 label={id ? 'Editar' : 'Guardar'}
-                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+                className='rounded-md bg-primary text-white px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
                 disabled={submitting}
               />
             </div>

@@ -9,6 +9,7 @@ export interface IBadgeProps {
   textColor?: string;
   outlined?: boolean;
   borderColor?: string;
+  size?: string;
 }
 
 export interface IFloatBadgeProps extends PropsWithChildren {

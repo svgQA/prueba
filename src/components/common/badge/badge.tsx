@@ -9,10 +9,11 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   textColor,
   outlined,
   borderColor = 'border-primary',
+  size = 'xs',
 }: IBadgeProps) => {
   return (
     <span
-      className={`${color} ${textColor} ${bgColor} ${outlined ? 'border-2' : ''} ${borderColor} text-xs font-bold items-center capitalize pl-1 pr-2 flex justify-between rounded-md py-0.5`}
+      className={`${color} ${textColor} ${bgColor} ${outlined ? 'border-2' : ''} ${borderColor} text-${size} font-bold items-center capitalize pl-1 pr-2 flex justify-between rounded-md py-0.5`}
     >
       <span className={`vx-icon vx-icon-${icon} size-sm mx-1`}></span>
       {label}
