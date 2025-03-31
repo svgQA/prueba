@@ -15,4 +15,5 @@ export interface ISearchProps extends IComponentProps {
   placeholder?: string;
   table?: any;
   group?: VNode;
+  grouping?: boolean;
 }
