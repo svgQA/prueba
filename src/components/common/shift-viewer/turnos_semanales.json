@@ -1,0 +1,296 @@
+[
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio A",
+    "turno": "mañana",
+    "inicio": "2025-04-01T06:00:00",
+    "fin": "2025-04-01T14:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio B",
+    "turno": "mañana",
+    "inicio": "2025-04-01T06:00:00",
+    "fin": "2025-04-01T14:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio A",
+    "turno": "tarde",
+    "inicio": "2025-04-01T14:00:00",
+    "fin": "2025-04-01T22:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio B",
+    "turno": "tarde",
+    "inicio": "2025-04-01T14:00:00",
+    "fin": "2025-04-01T22:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio A",
+    "turno": "noche",
+    "inicio": "2025-04-01T22:00:00",
+    "fin": "2025-04-02T06:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio B",
+    "turno": "noche",
+    "inicio": "2025-04-01T22:00:00",
+    "fin": "2025-04-02T06:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio A",
+    "turno": "mañana",
+    "inicio": "2025-04-02T06:00:00",
+    "fin": "2025-04-02T14:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio B",
+    "turno": "mañana",
+    "inicio": "2025-04-02T06:00:00",
+    "fin": "2025-04-02T14:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio A",
+    "turno": "tarde",
+    "inicio": "2025-04-02T14:00:00",
+    "fin": "2025-04-02T22:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio B",
+    "turno": "tarde",
+    "inicio": "2025-04-02T14:00:00",
+    "fin": "2025-04-02T22:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio A",
+    "turno": "noche",
+    "inicio": "2025-04-02T22:00:00",
+    "fin": "2025-04-03T06:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio B",
+    "turno": "noche",
+    "inicio": "2025-04-02T22:00:00",
+    "fin": "2025-04-03T06:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio A",
+    "turno": "mañana",
+    "inicio": "2025-04-03T06:00:00",
+    "fin": "2025-04-03T14:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio B",
+    "turno": "mañana",
+    "inicio": "2025-04-03T06:00:00",
+    "fin": "2025-04-03T14:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio A",
+    "turno": "tarde",
+    "inicio": "2025-04-03T14:00:00",
+    "fin": "2025-04-03T22:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio B",
+    "turno": "tarde",
+    "inicio": "2025-04-03T14:00:00",
+    "fin": "2025-04-03T22:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio A",
+    "turno": "noche",
+    "inicio": "2025-04-03T22:00:00",
+    "fin": "2025-04-04T06:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio B",
+    "turno": "noche",
+    "inicio": "2025-04-03T22:00:00",
+    "fin": "2025-04-04T06:00:00"
+  },
+  {
+    "persona": "Reemplazo",
+    "servicio": "Servicio A",
+    "turno": "mañana",
+    "inicio": "2025-04-04T06:00:00",
+    "fin": "2025-04-04T14:00:00"
+  },
+  {
+    "persona": "Reemplazo",
+    "servicio": "Servicio B",
+    "turno": "mañana",
+    "inicio": "2025-04-04T06:00:00",
+    "fin": "2025-04-04T14:00:00"
+  },
+  {
+    "persona": "Reemplazo",
+    "servicio": "Servicio A",
+    "turno": "tarde",
+    "inicio": "2025-04-04T14:00:00",
+    "fin": "2025-04-04T22:00:00"
+  },
+  {
+    "persona": "Reemplazo",
+    "servicio": "Servicio B",
+    "turno": "tarde",
+    "inicio": "2025-04-04T14:00:00",
+    "fin": "2025-04-04T22:00:00"
+  },
+  {
+    "persona": "Reemplazo",
+    "servicio": "Servicio A",
+    "turno": "noche",
+    "inicio": "2025-04-04T22:00:00",
+    "fin": "2025-04-05T06:00:00"
+  },
+  {
+    "persona": "Reemplazo",
+    "servicio": "Servicio B",
+    "turno": "noche",
+    "inicio": "2025-04-04T22:00:00",
+    "fin": "2025-04-05T06:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio A",
+    "turno": "mañana",
+    "inicio": "2025-04-05T06:00:00",
+    "fin": "2025-04-05T14:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio B",
+    "turno": "mañana",
+    "inicio": "2025-04-05T06:00:00",
+    "fin": "2025-04-05T14:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio A",
+    "turno": "tarde",
+    "inicio": "2025-04-05T14:00:00",
+    "fin": "2025-04-05T22:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio B",
+    "turno": "tarde",
+    "inicio": "2025-04-05T14:00:00",
+    "fin": "2025-04-05T22:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio A",
+    "turno": "noche",
+    "inicio": "2025-04-05T22:00:00",
+    "fin": "2025-04-06T06:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio B",
+    "turno": "noche",
+    "inicio": "2025-04-05T22:00:00",
+    "fin": "2025-04-06T06:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio A",
+    "turno": "mañana",
+    "inicio": "2025-04-06T06:00:00",
+    "fin": "2025-04-06T14:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio B",
+    "turno": "mañana",
+    "inicio": "2025-04-06T06:00:00",
+    "fin": "2025-04-06T14:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio A",
+    "turno": "tarde",
+    "inicio": "2025-04-06T14:00:00",
+    "fin": "2025-04-06T22:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio B",
+    "turno": "tarde",
+    "inicio": "2025-04-06T14:00:00",
+    "fin": "2025-04-06T22:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio A",
+    "turno": "noche",
+    "inicio": "2025-04-06T22:00:00",
+    "fin": "2025-04-07T06:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio B",
+    "turno": "noche",
+    "inicio": "2025-04-06T22:00:00",
+    "fin": "2025-04-07T06:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio A",
+    "turno": "mañana",
+    "inicio": "2025-04-07T06:00:00",
+    "fin": "2025-04-07T14:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio B",
+    "turno": "mañana",
+    "inicio": "2025-04-07T06:00:00",
+    "fin": "2025-04-07T14:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio A",
+    "turno": "tarde",
+    "inicio": "2025-04-07T14:00:00",
+    "fin": "2025-04-07T22:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio B",
+    "turno": "tarde",
+    "inicio": "2025-04-07T14:00:00",
+    "fin": "2025-04-07T22:00:00"
+  },
+  {
+    "persona": "John Doe",
+    "servicio": "Servicio A",
+    "turno": "noche",
+    "inicio": "2025-04-07T22:00:00",
+    "fin": "2025-04-08T06:00:00"
+  },
+  {
+    "persona": "Jane Smith",
+    "servicio": "Servicio B",
+    "turno": "noche",
+    "inicio": "2025-04-07T22:00:00",
+    "fin": "2025-04-08T06:00:00"
+  }
+]

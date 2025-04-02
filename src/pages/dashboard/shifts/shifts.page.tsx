@@ -1,11 +1,16 @@
 import { FunctionalComponent } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import { ShiftService } from '@/services';
+import { ShiftService, IaService } from '@/services';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
+import turnos from '@/components/common/shift-viewer/turnos_semanales.json';
+import TurnosGanttViewer, {
+  Turno,
+} from '@/components/common/shift-viewer/shift.viewer';
+import { toast } from 'react-toastify';
 
 import {
   GeneralTask,
@@ -35,6 +40,8 @@ export const ShiftsPage: FunctionalComponent = () => {
   const showUpsertModal = useSignal<boolean>(false);
   const showSendModal = useSignal<boolean>(false);
   const showShiftModal = useSignal<boolean>(false);
+  const currentPrompt = useSignal<string>('');
+  const [streamingResponse, setStreamingResponse] = useState<string>('');
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const shifts = useSignal<IShiftResponse[]>([]);
@@ -238,44 +245,84 @@ export const ShiftsPage: FunctionalComponent = () => {
     [currentView.value]
   );
 
+  const handleTurnoUpdate = useCallback((turnoActualizado: Turno) => {
+    console.log('Turno actualizado:', turnoActualizado);
+  }, []);
+
+  const handleSendPrompt = useCallback(async () => {
+    if (!currentPrompt.value.trim()) return;
+
+    setStreamingResponse('');
+    try {
+      await IaService.streamQuery(
+        currentPrompt.value,
+        (chunk) => {
+          setStreamingResponse((prev) => prev + chunk);
+        },
+        () => {
+          toast.success('Stream completado');
+        },
+        (error) => {
+          toast.error(`Error en el stream: ${error.message}`);
+        }
+      );
+    } catch (error) {
+      toast.error(
+        `Error al enviar el prompt: ${error instanceof Error ? error.message : 'Error desconocido'}`
+      );
+    }
+  }, [currentPrompt.value]);
+
   return (
     <Section padding>
       {/* Ejemplo de MentionTextarea */}
       <div className='mb-8'>
-        <div className='bg-white rounded-lg shadow p-6'>
-          <h3 className='text-lg font-medium text-gray-900 mb-4'>
-            Ejemplo de Menciones
-          </h3>
-          <div className='space-y-4'>
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-2'>
-                Comentarios del Turno
-              </label>
-              <MentionEditor
-                value=''
-                onChange={(value) => console.log('New value:', value)}
-                options={[
-                  { id: '1', label: 'Juan Pérez' },
-                  { id: '2', label: 'María García' },
-                  { id: '3', label: 'Carlos López' },
-                  { id: '4', label: 'Ana Martínez' },
-                  { id: '5', label: 'Pedro Sánchez' },
-                  { id: '6', label: 'Laura Torres' },
-                  { id: '7', label: 'Roberto Díaz' },
-                  { id: '8', label: 'Sofia Castro' },
-                ]}
-                placeholder='Escribe @ para mencionar a alguien en el turno...'
-                className='min-h-[120px]'
-              />
-            </div>
-            <div className='text-sm text-gray-500'>
-              <p>• Escribe @ seguido del nombre para mencionar a alguien</p>
-              <p>• Usa las flechas ↑↓ para navegar por las sugerencias</p>
-              <p>• Presiona Enter para seleccionar</p>
-              <p>• Presiona Escape para cerrar el menú</p>
-            </div>
+        <div className='flex flex-col gap-4'>
+          <MentionEditor
+            value={currentPrompt.value}
+            onChange={(value) => {
+              currentPrompt.value = value;
+            }}
+            groups={[
+              {
+                name: 'Usuarios',
+                options: [
+                  { id: '1', label: 'John Doe', groupName: 'Usuarios' },
+                  { id: '2', label: 'Jane Smith', groupName: 'Usuarios' },
+                ],
+              },
+              {
+                name: 'Servicios',
+                options: [
+                  { id: 's1', label: 'Servicio A', groupName: 'Servicios' },
+                  { id: 's2', label: 'Servicio B', groupName: 'Servicios' },
+                ],
+              },
+            ]}
+            placeholder='Escribe @ para mencionar a alguien en el turno...'
+            className='min-h-[120px]'
+          />
+          <div className='flex justify-end'>
+            <button
+              onClick={handleSendPrompt}
+              disabled={!currentPrompt.value.trim()}
+              className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed'
+            >
+              Enviar
+            </button>
           </div>
+          {streamingResponse && (
+            <div className='mt-4 p-4 bg-gray-50 rounded-md'>
+              <div className='text-sm font-medium text-gray-700 mb-2'>
+                Respuesta:
+              </div>
+              <div className='text-sm whitespace-pre-wrap'>
+                {streamingResponse}
+              </div>
+            </div>
+          )}
         </div>
+        <TurnosGanttViewer turnos={turnos} onTurnoUpdate={handleTurnoUpdate} />
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
@@ -366,6 +413,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
         {currentView.value === VIEW_NAME.SUPERVISOR && <div></div>}
       </div>
+
       <TaskForm
         closed={showUpsertModal.value}
         onClose={handleCloseUpsertModal}
