@@ -294,6 +294,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               servicePlaceAddress: false,
               city: false,
               employeeId: false,
+              client: false,
               duration: false,
               userEmail: false,
               userPhone: false,

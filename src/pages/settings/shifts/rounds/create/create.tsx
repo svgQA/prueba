@@ -3,7 +3,6 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-// import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
@@ -13,10 +12,8 @@ import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
 import arrayMutators from 'final-form-arrays';
-// import { FieldArray } from 'react-final-form-arrays';
-// import { IFormResponse } from '@/types/form';
-// import { TextArea } from '@/components/common/text.area/text.area';
-// import dayjs from 'dayjs';
+import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
+import { IPointMap } from '../interface';
 
 interface IPoint {
   latitude: number;
@@ -29,7 +26,9 @@ interface FormData {
   placeId: number;
   points?: IPoint[];
   latitude: string;
+  radius: number;
   longitude: string;
+  description: string;
 }
 
 interface ILocation {
@@ -42,6 +41,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const points = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const places = useSignal<any>([]);
+  const showHelp = useSignal<boolean>(false);
 
   // const [points, setPoint] = useState<{ id: number; position: any }[]>([]);
   const { id } = useParams(); // Obtiene el id de la URL
@@ -66,10 +66,10 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       });
     } else {
       model.points = points.value.map(
-        (poin: { id: number; position: { lat: number; lng: number } }) => {
+        (point: { id: number; position: { lat: number; lng: number } }) => {
           return {
-            latitude: poin.position.lat,
-            longitude: poin.position.lng,
+            latitude: point.position.lat,
+            longitude: point.position.lng,
           };
         }
       );
@@ -99,7 +99,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const setInitialValues = async () => {
     if (!id) return;
     let count = 0;
-    const userKeys = ['name', 'frequency', 'placeId'] as const;
+    const userKeys = [
+      'name',
+      'frequency',
+      'placeId',
+      'radius',
+      'description',
+    ] as const;
     const request: any = await ShiftService.getRoundById(id);
     points.value =
       request.model.points.map((point: any) => {
@@ -122,8 +128,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     places.value = request.data;
   };
 
-  const resertMarket = async () => {
-    console.log('resertMarket');
+  const resetMarket = async () => {
     points.value = [];
   };
 
@@ -178,63 +183,80 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
 
-                {/* Latitud y Longitud */}
                 <div className='grid grid-cols-2 gap-4'>
                   <div>
-                    <Field<string> name='latitude'>
+                    <Field
+                      name='frequency'
+                      parse={(value) => (value ? Number(value) : undefined)}
+                    >
                       {({ input }) => (
                         <Input
+                          id='input-code'
                           {...input}
-                          label='Latitud'
-                          type='text'
-                          disabled
+                          placeholder='Ingrese frecuencia...'
+                          label='Frecuencia'
+                          type='number'
                         />
                       )}
                     </Field>
                   </div>
                   <div>
-                    <Field<string> name='longitude'>
+                    <Field
+                      name='radius'
+                      parse={(value) => (value ? Number(value) : undefined)}
+                    >
                       {({ input }) => (
                         <Input
+                          id='input-radius'
                           {...input}
-                          label='Longitud'
-                          type='text'
-                          disabled
+                          placeholder='Ingrese radio...'
+                          label='Radio'
+                          type='number'
                         />
                       )}
                     </Field>
                   </div>
                 </div>
-
-                <div>
-                  <Field
-                    name='frequency'
-                    parse={(value) => (value ? Number(value) : undefined)}
-                  >
-                    {({ input }) => (
-                      <Input
-                        id='input-code'
-                        {...input}
-                        placeholder='Ingrese frecuencia...'
-                        label='Frecuencia'
-                        type='number'
-                      />
-                    )}
-                  </Field>
-                </div>
+                <ExpansionPanel title='Tareas por punto'>
+                  {points.value.map((point: IPointMap, index: number) => (
+                    <ExpansionPanel
+                      name='ww'
+                      subtitle={`lat: ${point.position.lat}, lng: ${point.position.lng}`}
+                      className='mt-1'
+                      key={point.id}
+                      title={`📍 Punto ${index + 1} `}
+                    >
+                      <div className='p-4 mt-2'>
+                        {/* Aquí puedes agregar los campos específicos para cada punto */}
+                      </div>
+                    </ExpansionPanel>
+                  ))}
+                </ExpansionPanel>
 
                 {/* Instrucciones */}
-                <div className='mt-6 border rounded-md p-4 bg-primary-opacity'>
-                  <h3 className='font-medium mb-2'>Instrucciones</h3>
-                  <ul className='list-disc pl-5 space-y-2'>
-                    <li>
-                      Haga clic en el mapa para comenzar a dibujar la ronda
-                    </li>
-                    <li>Continúe haciendo clic para agregar más puntos.</li>
-                    <li>
-                      Haga clic en el botón de guardar para crear la ronda.
-                    </li>
-                  </ul>
+                <div>
+                  <Button
+                    id='btn-help'
+                    name='btn-help'
+                    type='button'
+                    label='💡 Instrucciones'
+                    onClick={() => (showHelp.value = !showHelp.value)}
+                  />
+
+                  {showHelp.value && (
+                    <div className='mt-2 border rounded-md p-4 bg-primary-opacity'>
+                      <h3 className='font-medium mb-2'>Instrucciones</h3>
+                      <ul className='list-disc pl-5 space-y-2'>
+                        <li>
+                          Haga clic en el mapa para comenzar a dibujar la ronda
+                        </li>
+                        <li>Continúe haciendo clic para agregar más puntos.</li>
+                        <li>
+                          Haga clic en el botón de guardar para crear la ronda.
+                        </li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -262,39 +284,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
               </div>
             </div>
 
-            {/* <div class='col-span-2'>
-                  <Field<string> name='placeId' validate={required}>
-                    {({ input, meta }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione lugar...'
-                        label='Lugar'
-                        id='placeId'
-                        name='placeId'
-                        icon='252'
-                        optionValue='id'
-                        optionLabel='name'
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                          setPosition(id);
-                        }}
-                        options={places.value}
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div class='col-span-1'>
-                  <h3>Cordenadas del lugar</h3>
-                  <label for='fname'>Latitud: </label>
-                  {currentLocation.value?.lat}
-                  <br />
-                  <label for='lname'>Longitud: </label>
-                  {currentLocation.value?.lng}
-                </div> */}
-
             {/* Botonera */}
             <div className='w-full flex-row flex justify-end items-center'>
               <Button
@@ -304,7 +293,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 label='Limpiar'
                 onClick={() => {
                   form.reset();
-                  resertMarket();
+                  resetMarket();
                 }}
                 border={true}
                 className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
