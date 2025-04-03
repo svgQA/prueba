@@ -22,6 +22,7 @@ import { Button } from '@/components/common/button/button';
 import { SendForm } from './components/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
+import LiveUserMap from './components/shift.LiveUserMap';
 
 enum VIEW_NAME {
   TABLE,
@@ -47,11 +48,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const startDate = dayjs().subtract(1, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
-  const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
-    startDate,
-    endDate,
-    users: [],
-  });
+  const [ganttShifts, setGanttShifts] = useState<GeneralTask>({ startDate, endDate, users: [], });
 
   /**
    * Handle Database query for shifts.
@@ -137,7 +134,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => {}, []);
+  const handleClick = useCallback((/* task: Task */) => { }, []);
 
   const handleUserClick = useCallback(
     (id: string | number) => {
@@ -239,31 +236,33 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   return (
     <Section padding>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title='Turnos Totales Hoy'
-          count={530}
-          subtitle=''
-          color='t-dark'
-          icon='054'
-        />
+      {currentView.value !== VIEW_NAME.SUPERVISOR && (
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+          <CardData
+            title='Turnos Totales Hoy'
+            count={530}
+            subtitle=''
+            color='t-dark'
+            icon='054'
+          />
 
-        <CardData
-          title='Turnos En Curso'
-          count='50%'
-          subtitle=''
-          color='t-dark'
-          icon='052'
-        />
+          <CardData
+            title='Turnos En Curso'
+            count='50%'
+            subtitle=''
+            color='t-dark'
+            icon='052'
+          />
 
-        <CardData
-          title='Turnos Finalizados'
-          count='30%'
-          subtitle=''
-          color='t-dark'
-          icon='015'
-        />
-      </div>
+          <CardData
+            title='Turnos Finalizados'
+            count='30%'
+            subtitle=''
+            color='t-dark'
+            icon='015'
+          />
+        </div>
+      )}
 
       <div className='max-h-screen relative'>
         <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-10'>
@@ -324,7 +323,12 @@ export const ShiftsPage: FunctionalComponent = () => {
           </div>
         )}
 
-        {currentView.value === VIEW_NAME.SUPERVISOR && <div></div>}
+        {currentView.value === VIEW_NAME.SUPERVISOR && (
+          <div>
+            <LiveUserMap></LiveUserMap>
+          </div>
+        )}
+
       </div>
       <TaskForm
         closed={showUpsertModal.value}
