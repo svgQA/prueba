@@ -14,6 +14,12 @@ import { omitBy, isNull, pick } from 'lodash';
 import arrayMutators from 'final-form-arrays';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 import { IPointMap } from '../interface';
+import { TextArea } from '@/components/common/text.area/text.area';
+import { Select } from '@/components/common/select/select';
+import dayjs from 'dayjs';
+import { Tooltip } from '@/components/common/tooltip/tooltip';
+import { ITask } from '@/types/shift/activity';
+import { FormService } from '@/services';
 
 interface IPoint {
   latitude: number;
@@ -29,6 +35,14 @@ interface FormData {
   radius: number;
   longitude: string;
   description: string;
+  tasks: {
+    [key: string]: {
+      start: string;
+      status: string;
+      description: string;
+      formId: number;
+    };
+  };
 }
 
 interface ILocation {
@@ -42,14 +56,18 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const places = useSignal<any>([]);
   const showHelp = useSignal<boolean>(false);
-
-  // const [points, setPoint] = useState<{ id: number; position: any }[]>([]);
+  const tasks = useSignal<ITask[]>([]);
   const { id } = useParams(); // Obtiene el id de la URL
-
   const [_, navigate] = useLocation();
+  const forms = useSignal<any[]>([]);
+
+  const getFormsHandler = async () => {
+    const response = await FormService.get_all();
+    if (!response.getStatus()) return;
+    forms.value = response.getMany();
+  };
 
   const sendPointsRef = (data: any) => {
-    console.log('data ==>', data);
     if (!data.length) return;
     const { lat, lng } = data[0].position;
     points.value = data;
@@ -66,10 +84,15 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       });
     } else {
       model.points = points.value.map(
-        (point: { id: number; position: { lat: number; lng: number } }) => {
+        (point: {
+          id: number;
+          position: { lat: number; lng: number };
+          tasks: any[];
+        }) => {
           return {
             latitude: point.position.lat,
             longitude: point.position.lng,
+            tasks: point.tasks,
           };
         }
       );
@@ -87,14 +110,11 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
     navigate('/rounds');
   };
-
-  // const setPosition = (placeId: number) => {
-  //   const place = places.value.find((val: any) => val.id === placeId);
-  //   currentLocation.value = {
-  //     lat: place.latitude,
-  //     lng: place.longitude,
-  //   };
-  // };
+  const getTasks = async () => {
+    const response = await ShiftService.getTasks();
+    if (!response.getStatus()) return;
+    tasks.value = response.getMany();
+  };
 
   const setInitialValues = async () => {
     if (!id) return;
@@ -116,8 +136,10 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
             lat: point.latitude,
             lng: point.longitude,
           },
+          tasks: point.task,
         };
       }) ?? [];
+    console.log('points ==>', points.value);
 
     const model = pick(omitBy(request.model, isNull), userKeys);
     initialValues.value = model;
@@ -135,10 +157,27 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const created = async () => {
     await getPlaces();
     await setInitialValues();
+    await getFormsHandler();
+  };
+
+  const selectTask = async (taskId: number, pointId: number) => {
+    const task = tasks.value.find((task: any) => task.id === taskId);
+
+    if (!task) {
+      throw new Error(`Task with id ${taskId} not found`);
+    }
+
+    points.value[pointId].tasks.push({
+      start: task.start,
+      status: task.status,
+      description: task.description,
+      formId: task.formId,
+    });
   };
 
   useEffect(() => {
     created();
+    getTasks();
   }, []);
 
   return (
@@ -149,7 +188,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
           ...arrayMutators,
         }}
         initialValues={initialValues.value}
-        render={({ handleSubmit, form, submitting }) => (
+        render={({ handleSubmit, form, submitting, values }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid md:grid-cols-2 gap-6'>
@@ -217,18 +256,228 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                     </Field>
                   </div>
                 </div>
+
                 <ExpansionPanel title='Tareas por punto'>
                   {points.value.map((point: IPointMap, index: number) => (
                     <ExpansionPanel
-                      name='ww'
                       subtitle={`lat: ${point.position.lat}, lng: ${point.position.lng}`}
                       className='mt-1'
                       key={point.id}
                       title={`📍 Punto ${index + 1} `}
                     >
-                      <div className='p-4 mt-2'>
-                        {/* Aquí puedes agregar los campos específicos para cada punto */}
-                      </div>
+                      <Field name={`tasks.${point.id}.create`}>
+                        {({ input: createInput }) => {
+                          const isCreateChecked = createInput.value;
+
+                          return (
+                            <div className='grid grid-cols-12 gap-4 items-start'>
+                              {/* Checkbox */}
+                              <div className='col-span-1'>
+                                <Tooltip text='Crear tarea'>
+                                  <input
+                                    {...createInput}
+                                    type='checkbox'
+                                    className='form-checkbox mt-9 h-5 w-5 text-blue-600 rounded'
+                                  />
+                                </Tooltip>
+                              </div>
+                              {isCreateChecked ? (
+                                <>
+                                  <div className='col-span-4'>
+                                    <Field<string>
+                                      name={`tasks.${point.id}.start`}
+                                      validate={required}
+                                      parse={(value) =>
+                                        value ? dayjs(value).toISOString() : ''
+                                      }
+                                      format={(value) =>
+                                        value
+                                          ? dayjs(value).format(
+                                              'YYYY-MM-DD HH:mm'
+                                            )
+                                          : ''
+                                      }
+                                    >
+                                      {({ input, meta }) => (
+                                        <Input
+                                          {...input}
+                                          type='datetime-local'
+                                          id='task-start'
+                                          label='Fecha inicio'
+                                          meta={meta}
+                                        />
+                                      )}
+                                    </Field>
+                                  </div>
+                                  <div className='col-span-6'>
+                                    <Field name={`tasks.${point.id}.formId`}>
+                                      {({ input }) => (
+                                        <Select
+                                          {...input}
+                                          placeholder='Seleccione...'
+                                          label='Formulario'
+                                          name='formId'
+                                          icon='252'
+                                          optionValue='id'
+                                          optionLabel='title'
+                                          options={forms.value}
+                                          onChange={(e) => {
+                                            const id = parseInt(
+                                              e.currentTarget.value
+                                            );
+                                            input.onChange(id);
+                                          }}
+                                        />
+                                      )}
+                                    </Field>
+                                  </div>
+
+                                  <div className='col-span-11'>
+                                    <Field<string>
+                                      name={`tasks.${point.id}.description`}
+                                      validate={required}
+                                    >
+                                      {({ input, meta }) => (
+                                        <TextArea
+                                          {...input}
+                                          id='task-description'
+                                          placeholder='Ingrese Descripción...'
+                                          label='Descripción'
+                                          type='text'
+                                          meta={meta}
+                                        />
+                                      )}
+                                    </Field>
+                                  </div>
+                                  <div className='col-span-1'>
+                                    <Button
+                                      id='btn-save'
+                                      name='btn-save'
+                                      icon='039'
+                                      type='button'
+                                      className='px-4 py-2 mt-8 '
+                                      onClick={() => {
+                                        const formState = form.getState();
+                                        const taskData =
+                                          formState.values.tasks[point.id];
+
+                                        // Create a new array with the updated tasks
+                                        const updatedPoints = [...points.value];
+                                        if (!updatedPoints[index].tasks) {
+                                          updatedPoints[index].tasks = [];
+                                        }
+                                        updatedPoints[index].tasks.push({
+                                          start: taskData.start,
+                                          description: taskData.description,
+                                          formId: taskData.formId,
+                                        });
+
+                                        // Update the signal to trigger re-render
+                                        points.value = updatedPoints;
+                                      }}
+                                    />
+                                  </div>
+                                </>
+                              ) : (
+                                <div className='col-span-11'>
+                                  <Field name={`tasks.${point.id}.taskId`}>
+                                    {({ input }) => (
+                                      <Select
+                                        {...input}
+                                        placeholder='Seleccione tarea...'
+                                        label='Tarea'
+                                        name='taskId'
+                                        icon='252'
+                                        optionValue='id'
+                                        optionLabel='description'
+                                        options={tasks.value}
+                                        disabled={isCreateChecked}
+                                        onChange={(e) => {
+                                          const id = parseInt(
+                                            e.currentTarget.value
+                                          );
+                                          input.onChange(id);
+                                          selectTask(id, index);
+                                        }}
+                                      />
+                                    )}
+                                  </Field>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        }}
+                      </Field>
+
+                      {point.tasks && point.tasks.length > 0 && (
+                        <div className='mt-4'>
+                          <table className='min-w-full divide-y divide-gray-200'>
+                            <thead className='bg-gray-50'>
+                              <tr>
+                                <th
+                                  scope='col'
+                                  className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                />
+                                <th
+                                  scope='col'
+                                  className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                >
+                                  Fecha Inicio
+                                </th>
+                                <th
+                                  scope='col'
+                                  className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                >
+                                  ID Formulario
+                                </th>
+                                <th
+                                  scope='col'
+                                  className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                >
+                                  Descripción
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className='bg-white divide-y divide-gray-200'>
+                              {point.tasks.map(
+                                (task: ITask, taskIndex: number) => (
+                                  <tr key={taskIndex}>
+                                    <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                      <Button
+                                        textColor='text-red-600'
+                                        id='btn-delete'
+                                        name='btn-delete'
+                                        icon='041'
+                                        type='button'
+                                        className='text-red-600 hover:text-red-800'
+                                        onClick={() => {
+                                          points.value[index].tasks.splice(
+                                            taskIndex,
+                                            1
+                                          );
+                                          points.value = [...points.value];
+                                        }}
+                                      />
+                                    </td>
+                                    <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                      {dayjs(task.start).format(
+                                        'DD/MM/YYYY HH:mm'
+                                      )}
+                                    </td>
+                                    <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                      {task.formId}
+                                    </td>
+
+                                    <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                      <p>{task.description}</p>
+                                    </td>
+                                  </tr>
+                                )
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
                     </ExpansionPanel>
                   ))}
                 </ExpansionPanel>
@@ -259,7 +508,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   )}
                 </div>
               </div>
-
               <div>
                 <Map
                   name='Map'
@@ -308,7 +556,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 disabled={submitting}
               />
             </div>
-            {/* {<pre>{JSON.stringify(values, 0, 2)}</pre>} */}
+            {<pre>{JSON.stringify(values, 0, 2)}</pre>}
           </form>
         )}
       />

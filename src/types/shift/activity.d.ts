@@ -177,3 +177,10 @@ export interface IShiftResponse {
   editBy: string | null;
   deletedBy: string | null;
 }
+
+export interface ITask {
+  start: string;
+  status: string;
+  description: string;
+  formId: number;
+}
