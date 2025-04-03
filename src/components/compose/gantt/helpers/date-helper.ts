@@ -85,6 +85,7 @@ export const ganttDateRange = (
   let newStartDate: Date = new Date(tasks.endDate);
   let newEndDate: Date = new Date(tasks.startDate);
 
+  // console.log("STEP: 1", newStartDate.toISOString(), newEndDate.toISOString(), viewMode);
   for (const user of tasks.users) {
     for (const task of user.tasks) {
       if (new Date(task.end) > newEndDate) {
@@ -95,6 +96,7 @@ export const ganttDateRange = (
       }
     }
   }
+  // console.log("STEP: 2", newStartDate.toISOString(), newEndDate.toISOString());
 
   switch (viewMode) {
     case ViewMode.Month:
@@ -115,9 +117,9 @@ export const ganttDateRange = (
       break;
     case ViewMode.Day:
       newStartDate = startOfDate(newStartDate, 'day');
-      newStartDate = addToDate(newStartDate, -5 * preStepsCount, 'day');
+      newStartDate = addToDate(newStartDate, -1 * preStepsCount, 'day');
       newEndDate = startOfDate(newEndDate, 'day');
-      newEndDate = addToDate(newEndDate, 5, 'day');
+      newEndDate = addToDate(newEndDate, 10, 'day');
       break;
     case ViewMode.QuarterDay:
       newStartDate = startOfDate(newStartDate, 'day');
@@ -129,7 +131,7 @@ export const ganttDateRange = (
       newStartDate = startOfDate(newStartDate, 'day');
       newStartDate = addToDate(newStartDate, -1 * preStepsCount, 'day');
       newEndDate = startOfDate(newEndDate, 'day');
-      newEndDate = addToDate(newEndDate, 108, 'hour');
+      newEndDate = addToDate(newEndDate, 5, 'day');
       break;
     case ViewMode.Year:
       newStartDate = addToDate(newStartDate, -1, 'year');
@@ -145,11 +147,13 @@ export const ganttDateRange = (
       break;
     case ViewMode.Hour:
       newStartDate = startOfDate(newStartDate, 'hour');
-      newStartDate = addToDate(newStartDate, -6 * preStepsCount, 'hour');
+      newStartDate = addToDate(newStartDate, -2 * preStepsCount, 'hour');
       newEndDate = startOfDate(newEndDate, 'day');
-      newEndDate = addToDate(newEndDate, 6, 'hour');
+      newEndDate = addToDate(newEndDate, 24, 'hour');
       break;
   }
+
+  // console.log("STEP: 3", newStartDate.toISOString(), newEndDate.toISOString());
   return [newStartDate, newEndDate];
 };
 

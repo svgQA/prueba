@@ -47,6 +47,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const onSubmit = async (model: FormData) => {
     model.task = setTasks(model.task);
     model.hasRound = !!model.roundId;
+    console.log('model', model);
 
     let request;
     let message: string;
@@ -136,7 +137,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
 
     const userKeys = ['name', 'description', 'priority'] as const;
 
-    const request: any = await ShiftService.getNoveltyById(id);
+    const request: any = await ShiftService.getServiceById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
 
     initialValues.value = model;
@@ -159,7 +160,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
         }}
         onSubmit={onSubmit}
         initialValues={initialValues.value}
-        render={({ handleSubmit, form, submitting, pristine }) => (
+        render={({ handleSubmit, form, submitting }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-2'>
@@ -626,7 +627,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                 type='button'
                 label='Limpiar'
                 onClick={() => form.reset()}
-                disabled={submitting || pristine}
+                disabled={submitting}
               />
 
               <Button

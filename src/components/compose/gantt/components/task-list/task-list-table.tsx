@@ -1,42 +1,14 @@
 // import { useMemo } from 'preact/hooks';
 import { ComponentType } from 'preact';
 import styles from './task-list-table.module.css';
-import { type TaskListTableProps } from './task-list';
-
-/*
-interface DateStringCache {
-  [key: string]: string;
-}
-
-const localeDateStringCache: DateStringCache = {};
-const toLocaleDateStringFactory =
-  (locale: string) =>
-  (date: Date, dateTimeOptions: Intl.DateTimeFormatOptions) => {
-    const key = date.toString();
-    let lds = localeDateStringCache[key];
-    if (!lds) {
-      lds = date.toLocaleDateString(locale, dateTimeOptions);
-      localeDateStringCache[key] = lds;
-    }
-    return lds;
-  };
-const dateTimeOptions: Intl.DateTimeFormatOptions = {
-  weekday: 'short',
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-};
-*/
+import { User, TaskListTableProps } from '../../types/public-types';
 
 export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
   rowHeight,
-  // rowWidth,
   tasks,
-  // fontFamily,
-  // fontSize,
   onUserClick,
-  // locale,
-  // onExpanderClick,
+  onUserDoubleClick,
+  selectedUsers,
 }) => {
   /*
   const toLocaleDateString = useMemo(
@@ -46,14 +18,9 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
  */
 
   return (
-    <div
-    // className={styles.taskListWrapper}
-    // style={{
-    //   fontFamily: fontFamily,
-    //   fontSize: fontSize,
-    // }}
-    >
-      {tasks.users.map((t) => {
+    <div>
+      {tasks.users.map((t: User) => {
+        const isSelected = selectedUsers.has(t.id);
         return (
           <div
             className={styles.taskListTableRow}
@@ -61,29 +28,20 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
             key={`${t.id}row`}
           >
             <div
-              className='hover:bg-m5 w-64 h-12 cursor-pointer items-center flex rounded-sm hover:text-white'
+              className={`hover:bg-m5 w-64 h-12 cursor-pointer items-center flex rounded-sm hover:text-white ${
+                isSelected ? 'bg-ternary text-white' : ''
+              }`}
               title={t.name}
               onClick={() => onUserClick?.(t.id)}
+              onDblClick={() => onUserDoubleClick?.(t.id)}
             >
               <div className='flex justify-start items-center px-4'>
-                {/*
-                <div
-                  className={
-                    expanderSymbol
-                      ? styles.taskListExpander
-                      : styles.taskListEmptyExpander
-                  }
-                  onClick={() => onExpanderClick(t)}
-                >
-                  {expanderSymbol}
-                </div>
-                */}
                 <img
                   className='w-10 h-10 rounded-full object-cover mr-3'
                   src={t.image}
                   alt={`Profile photo of ${t.name}`}
                 />
-                <div className='text-lg font-medium'>{`${t.name} ${t.surname}`}</div>
+                <div className='text-lg font-medium'>{`${t.name} ${t.surname || ''}`}</div>
               </div>
             </div>
             {/*

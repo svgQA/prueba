@@ -1,4 +1,8 @@
 import { User, ViewMode } from '@/components/compose/gantt/types/public-types';
+import {
+  IShiftSetting,
+  IShiftSettingResponse,
+} from '@/pages/settings/shifts/setting/interface';
 import { IPagination } from '@/types';
 import { IShiftResponse } from '@/types/shift/activity';
 // import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
@@ -444,5 +448,24 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<any>(this.name, model);
+  }
+
+  static async getShiftSetting() {
+    const model: IMakeRequest = {
+      url: ['module'],
+      params: {
+        type: 'SHIFT',
+      },
+    };
+    return await super.make_request<IShiftSettingResponse>(this.name, model);
+  }
+
+  static async setShiftSetting(data: IShiftSetting) {
+    const model: IMakeRequest = {
+      url: ['module/shift'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<IShiftSettingResponse>(this.name, model);
   }
 }

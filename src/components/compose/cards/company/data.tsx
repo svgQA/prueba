@@ -12,7 +12,7 @@ type CardProps = {
 
 export const CardData: FunctionalComponent<CardProps> = memo(
   ({ title, count, subtitle, color, icon = '071' }) => (
-    <Card name={`card-data-${title}`} shadow>
+    <Card name={`card-data-${title}`}>
       <div className='flex items-center gap-6 min-w-96'>
         <span
           className={`vox-icon vx-icon-${icon} w-20 h-20 flex items-center justify-center rounded-full bg-sky-100 shrink-0`}

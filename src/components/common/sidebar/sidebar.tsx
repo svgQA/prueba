@@ -12,6 +12,7 @@ import {
 import { useSignal } from '@preact/signals';
 import { CompanyItem } from './company';
 import { MenuItem } from './menu';
+import { AIAssistant } from '@/components/compose/aggent/aggent';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
   id,
@@ -80,16 +81,20 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
     [isNavigation, onHandlerClick]
   );
 
+  const onAssistant = () => {};
   return (
     <nav
       id={`${id}-nav`}
-      className='fixed left-0 top-0 transform px-1 flex flex-col justify-between h-screen border-r-2 border-gray-100 dark:border-b-dark-light z-20 bg-b-light dark:bg-b-dark-light'
+      className='fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen border-r-2 border-gray-100 dark:border-b-dark-light z-20 bg-b-light dark:bg-b-dark-light'
     >
       {onHomeHandler && (
-        <ul>
-          <a onClick={onHomeHandler} className='cursor-pointer'>
+        <ul className='flex flex-col items-center'>
+          <span onClick={onAssistant} className='cursor-pointer'>
+            <AIAssistant />
+          </span>
+          <span onClick={onHomeHandler} className='cursor-pointer'>
             <ButtonMenu name='vx-home-button' label='home' icon='023' />
-          </a>
+          </span>
         </ul>
       )}
       <ul
@@ -132,9 +137,9 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
         </span>
 
         {onLogout && (
-          <a onClick={onLogout} className='cursor-pointer'>
+          <span onClick={onLogout} className='cursor-pointer'>
             <ButtonMenu name='vx-logout-button' label='logout' icon='225' />
-          </a>
+          </span>
         )}
       </ul>
     </nav>

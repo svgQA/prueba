@@ -68,10 +68,11 @@ export const SettingsModal = () => {
 
   const selectMenu = useCallback((event: MouseEvent) => {
     const target = event.target as HTMLElement;
-    if (target.nodeName === 'A') {
+    if (target.nodeName === 'A' || target.nodeName === 'SPAN') {
       const to = target.getAttribute('data-to');
       const label = target.getAttribute('data-label');
       const description = target.getAttribute('data-description');
+
       const id = target.getAttribute('id');
       if (!to || !label || !description || !id) return;
       const menuSelected = { to, description, label, id };

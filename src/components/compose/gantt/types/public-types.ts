@@ -1,4 +1,4 @@
-import { ComponentType } from 'preact';
+import { ComponentType, VNode } from 'preact';
 
 export enum ViewMode {
   Hour = 'Hour',
@@ -19,7 +19,12 @@ export interface Task {
   end: string | Date;
   start: string | Date;
   serviceId: string | number;
+  service: string;
+  phone: string;
+  contract: string;
+  client: string;
   userId: string | number;
+  cardId: string;
   type: TaskType;
   name: string;
   status: TaskStatus;
@@ -96,6 +101,10 @@ export interface EventOption {
    * Invokes on task list row click
    */
   onUserClick?: (user: string | number) => void;
+  /**
+   * Invokes on task list row double click
+   */
+  onUserDoubleClick?: (user: string | number) => void;
 }
 
 export interface DisplayOption {
@@ -149,7 +158,7 @@ export interface TaskListHeaderProps {
   fontSize: string | number;
 }
 
-export interface TaskListTableProps {
+export type TaskListTableProps = {
   rowHeight: number;
   rowWidth: string;
   fontFamily: string;
@@ -157,12 +166,12 @@ export interface TaskListTableProps {
   locale: string;
   tasks: GeneralTask;
   selectedTaskId: string;
-  /**
-   * Sets selected task by id
-   */
+  onUserClick?: (userId: string | number) => void;
+  onUserDoubleClick?: (userId: string | number) => void;
   setSelectedTask: (taskId: string) => void;
   onExpanderClick: (task: Task) => void;
-}
+  selectedUsers: Set<string | number>;
+};
 
 export interface TaskListProps {
   headerHeight: number;
@@ -179,5 +188,7 @@ export interface TooltipPublicProps {
 
 export interface GanttProps extends EventOption, DisplayOption, StylingOption {
   // tasks: Task[];
+  unsearch?: boolean;
   tasks: GeneralTask;
+  group?: VNode;
 }
