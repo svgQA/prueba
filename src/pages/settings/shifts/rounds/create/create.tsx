@@ -139,7 +139,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
           tasks: point.task,
         };
       }) ?? [];
-    console.log('points ==>', points.value);
 
     const model = pick(omitBy(request.model, isNull), userKeys);
     initialValues.value = model;
@@ -556,7 +555,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 disabled={submitting}
               />
             </div>
-            {<pre>{JSON.stringify(values, 0, 2)}</pre>}
           </form>
         )}
       />
