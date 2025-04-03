@@ -7,8 +7,9 @@ import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
 import turnos from '@/components/common/shift-viewer/turnos_semanales.json';
-import TurnosGanttViewer, {
-  Turno,
+import {
+  ShiftsGanttViewer,
+  Shift,
 } from '@/components/common/shift-viewer/shift.viewer';
 import { toast } from 'react-toastify';
 
@@ -28,6 +29,7 @@ import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { MentionEditor } from '@/components/common/mention-editor';
+import { extractClaudeStreamContent } from '@/components/common/mention-editor/utils';
 
 enum VIEW_NAME {
   TABLE,
@@ -245,7 +247,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     [currentView.value]
   );
 
-  const handleTurnoUpdate = useCallback((turnoActualizado: Turno) => {
+  const handleShiftUpdate = useCallback((turnoActualizado: Shift) => {
     console.log('Turno actualizado:', turnoActualizado);
   }, []);
 
@@ -257,7 +259,8 @@ export const ShiftsPage: FunctionalComponent = () => {
       await IaService.streamQuery(
         currentPrompt.value,
         (chunk) => {
-          setStreamingResponse((prev) => prev + chunk);
+          const parsed = extractClaudeStreamContent(chunk);
+          setStreamingResponse((prev) => prev + parsed);
         },
         () => {
           toast.success('Stream completado');
@@ -278,6 +281,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       {/* Ejemplo de MentionTextarea */}
       <div className='mb-8'>
         <div className='flex flex-col gap-4'>
+          {currentPrompt.value}
           <MentionEditor
             value={currentPrompt.value}
             onChange={(value) => {
@@ -322,7 +326,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             </div>
           )}
         </div>
-        <TurnosGanttViewer turnos={turnos} onTurnoUpdate={handleTurnoUpdate} />
+        <ShiftsGanttViewer shifts={turnos} onShiftUpdate={handleShiftUpdate} />
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>

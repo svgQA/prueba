@@ -40,6 +40,8 @@ export const MentionEditor = ({
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
   const [hoveredGroup, setHoveredGroup] = useState<string | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>('');
   const debounceTimer = useRef<number>();
 
   // Memoize all options with group information
@@ -77,6 +79,13 @@ export const MentionEditor = ({
     return result;
   }, [groups, searchTerm]);
 
+  // Memoize total options count
+  const totalOptions = useMemo(() => {
+    return expandedGroup
+      ? filteredOptionsByGroup[expandedGroup]?.length || 0
+      : filteredOptions.length + Object.keys(filteredOptionsByGroup).length + 1; // +1 para la opción de fecha
+  }, [expandedGroup, filteredOptions.length, filteredOptionsByGroup]);
+
   useEffect(() => {
     if (editorRef.current && !editorRef.current.innerHTML) {
       editorRef.current.innerHTML = value;
@@ -104,20 +113,29 @@ export const MentionEditor = ({
   }, []);
 
   const insertMention = useCallback(
-    (option: MentionOption) => {
+    (option: MentionOption | { type: 'date'; value: string }) => {
       if (!editorRef.current) return;
 
       const span = document.createElement('span');
-      span.textContent = `@${option.label}`;
+      if ('type' in option && option.type === 'date') {
+        span.textContent = `@${option.value}`;
+        span.style.background = '#E6F4EA';
+        span.style.color = '#137333';
+        span.setAttribute('data-type', 'date');
+        span.setAttribute('data-value', option.value);
+      } else {
+        const mentionOption = option as MentionOption;
+        span.textContent = `@${mentionOption.label}`;
+        span.style.background = '#DAF3F7';
+        span.style.color = '#00BDD6';
+        span.setAttribute('data-id', mentionOption.id);
+        span.setAttribute('data-label', mentionOption.label);
+        span.setAttribute('data-group', mentionOption.groupName);
+      }
       span.contentEditable = 'false';
-      span.style.background = '#DAF3F7';
-      span.style.color = '#00BDD6';
       span.style.padding = '2px 6px';
       span.style.borderRadius = '9999px';
       span.style.marginRight = '4px';
-      span.setAttribute('data-id', option.id);
-      span.setAttribute('data-label', option.label);
-      span.setAttribute('data-group', option.groupName);
 
       const spaceNode = document.createTextNode('\u00A0');
 
@@ -154,6 +172,7 @@ export const MentionEditor = ({
       }
 
       setShowDropdown(false);
+      setShowDatePicker(false);
       setSearchTerm('');
       onChange(editorRef.current.innerHTML);
     },
@@ -180,11 +199,13 @@ export const MentionEditor = ({
         setSelectedIndex(0);
         setShowDropdown(true);
         setExpandedGroup(null);
+        setShowDatePicker(false);
 
         const coords = getCaretCoordinatesInContentEditable();
         if (coords) setDropdownPos(coords);
       } else {
         setShowDropdown(false);
+        setShowDatePicker(false);
       }
 
       onChange(editorRef.current?.innerHTML || '');
@@ -193,11 +214,41 @@ export const MentionEditor = ({
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (!showDropdown) return;
+      if (!showDropdown && !showDatePicker) return;
 
-      const totalOptions = expandedGroup
-        ? filteredOptionsByGroup[expandedGroup]?.length || 0
-        : filteredOptions.length + Object.keys(filteredOptionsByGroup).length;
+      if (showDatePicker) {
+        e.preventDefault();
+        const currentDate = selectedDate ? new Date(selectedDate) : new Date();
+
+        switch (e.key) {
+          case 'ArrowUp':
+            currentDate.setDate(currentDate.getDate() - 7); // Retrocede una semana
+            handleDateSelect(currentDate.toISOString().split('T')[0]);
+            break;
+          case 'ArrowDown':
+            currentDate.setDate(currentDate.getDate() + 7); // Avanza una semana
+            handleDateSelect(currentDate.toISOString().split('T')[0]);
+            break;
+          case 'ArrowLeft':
+            currentDate.setDate(currentDate.getDate() - 1); // Retrocede un día
+            handleDateSelect(currentDate.toISOString().split('T')[0]);
+            break;
+          case 'ArrowRight':
+            currentDate.setDate(currentDate.getDate() + 1); // Avanza un día
+            handleDateSelect(currentDate.toISOString().split('T')[0]);
+            break;
+          case 'Escape':
+            setShowDatePicker(false);
+            setShowDropdown(true);
+            break;
+          case 'Enter':
+            if (selectedDate) {
+              insertMention({ type: 'date', value: selectedDate });
+            }
+            break;
+        }
+        return;
+      }
 
       switch (e.key) {
         case 'ArrowDown':
@@ -218,14 +269,16 @@ export const MentionEditor = ({
           e.preventDefault();
           if (!expandedGroup) {
             if (selectedIndex < filteredOptions.length) {
-              // Si estamos en un resultado filtrado, expandir su grupo
               const option = filteredOptions[selectedIndex];
               if (option) {
                 setExpandedGroup(option.groupName);
                 setSelectedIndex(0);
               }
+            } else if (selectedIndex === totalOptions - 1) {
+              // Si está en la opción de fecha, abrir el selector
+              setShowDropdown(false);
+              setShowDatePicker(true);
             } else {
-              // Si estamos en un grupo, expandirlo
               const groupIndex = selectedIndex - filteredOptions.length;
               const groupName = Object.keys(filteredOptionsByGroup)[groupIndex];
               if (groupName) {
@@ -239,7 +292,6 @@ export const MentionEditor = ({
           e.preventDefault();
           if (expandedGroup) {
             setExpandedGroup(null);
-            // Restaurar el índice al grupo correspondiente
             const groupNames = Object.keys(filteredOptionsByGroup);
             const groupIndex = groupNames.indexOf(expandedGroup);
             if (groupIndex !== -1) {
@@ -256,14 +308,19 @@ export const MentionEditor = ({
               insertMention(option);
             }
           } else {
+            // Verificar si se seleccionó la opción de fecha
+            if (selectedIndex === totalOptions - 1) {
+              setShowDropdown(false);
+              setShowDatePicker(true);
+              return;
+            }
+
             if (selectedIndex < filteredOptions.length) {
-              // Seleccionar un resultado filtrado
               const option = filteredOptions[selectedIndex];
               if (option) {
                 insertMention(option);
               }
             } else {
-              // Expandir un grupo
               const groupIndex = selectedIndex - filteredOptions.length;
               const groupName = Object.keys(filteredOptionsByGroup)[groupIndex];
               if (groupName) {
@@ -277,7 +334,6 @@ export const MentionEditor = ({
           e.preventDefault();
           if (expandedGroup) {
             setExpandedGroup(null);
-            // Restaurar el índice al grupo correspondiente
             const groupNames = Object.keys(filteredOptionsByGroup);
             const groupIndex = groupNames.indexOf(expandedGroup);
             if (groupIndex !== -1) {
@@ -291,11 +347,13 @@ export const MentionEditor = ({
     },
     [
       showDropdown,
+      showDatePicker,
       filteredOptions,
       filteredOptionsByGroup,
       selectedIndex,
       expandedGroup,
       insertMention,
+      totalOptions,
     ]
   );
 
@@ -321,6 +379,11 @@ export const MentionEditor = ({
     [searchTerm]
   );
 
+  const handleDateSelect = (date: string) => {
+    setSelectedDate(date);
+    insertMention({ type: 'date', value: date });
+  };
+
   return (
     <div className='relative w-full'>
       <div
@@ -337,7 +400,7 @@ export const MentionEditor = ({
         }}
       ></div>
 
-      {showDropdown && (
+      {showDropdown && !showDatePicker && (
         <div
           ref={dropdownRef}
           className='fixed z-50 bg-white select:border-node rounded-md border rounded-md overflow-y-auto vox-scroll-design'
@@ -462,8 +525,59 @@ export const MentionEditor = ({
                   </div>
                 )
               )}
+
+              {/* Date picker option */}
+              <div className='border-t border-gray-200'>
+                <button
+                  className={`block w-full px-4 py-2 text-sm text-left border-none ${
+                    selectedIndex === totalOptions - 1
+                      ? 'bg-primary-opacity'
+                      : 'hover:bg-gray-100'
+                  }`}
+                  onClick={() => {
+                    setShowDropdown(false);
+                    setShowDatePicker(true);
+                  }}
+                >
+                  <div className='flex items-center justify-between'>
+                    <span>Seleccionar fecha</span>
+                    <span className='text-gray-400'>📅</span>
+                  </div>
+                </button>
+              </div>
             </>
           )}
+        </div>
+      )}
+
+      {showDatePicker && (
+        <div
+          className='fixed z-50 bg-white rounded-md border border-gray-200 shadow-lg p-4'
+          style={{
+            top: `${dropdownPos.top}px`,
+            left: `${dropdownPos.left}px`,
+          }}
+        >
+          <div className='flex justify-between items-center mb-2'>
+            <h3 className='text-sm font-medium text-gray-700'>
+              Seleccionar fecha
+            </h3>
+            <button
+              className='text-gray-500 hover:text-gray-700 border-none'
+              onClick={() => {
+                setShowDatePicker(false);
+                setShowDropdown(true);
+              }}
+            >
+              ×
+            </button>
+          </div>
+          <input
+            type='date'
+            className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+            value={selectedDate}
+            onChange={(e) => handleDateSelect(e.currentTarget.value)}
+          />
         </div>
       )}
     </div>

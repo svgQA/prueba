@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
 
-// Tipado del turno
-export interface Turno {
-  persona: string;
-  servicio: string;
-  turno: string;
-  inicio: string;
-  fin: string;
+// Tipado del shift
+export interface Shift {
+  person: string;
+  service: string;
+  serviceId: number;
+  employeeId: number;
+  shift?: string;
+  start: string;
+  end: string;
 }
 
 interface ShiftViewerProps {
-  turnos: Turno[];
+  shifts: Shift[];
   className?: string;
-  onTurnoUpdate?: (turno: Turno) => void;
+  onShiftUpdate?: (shift: Shift) => void;
 }
 
 const colors: Record<string, string> = {
@@ -23,18 +25,26 @@ const colors: Record<string, string> = {
   Reemplazo: 'bg-red-200 text-red-800',
 };
 
-const TurnosGanttViewer = ({
-  turnos,
+export const ShiftsGanttViewer = ({
+  shifts,
   className = '',
-  onTurnoUpdate,
+  onShiftUpdate,
 }: ShiftViewerProps) => {
-  const [editingTurno, setEditingTurno] = useState<Turno | null>(null);
-  const [editedValues, setEditedValues] = useState<Partial<Turno>>({});
+  const [editingshift, setEditingshift] = useState<Shift | null>(null);
+  const [editedValues, setEditedValues] = useState<Partial<Shift>>({});
 
-  // Obtener lista única de personas y días
-  const personas = Array.from(new Set(turnos.map((t) => t.persona)));
+  // Obtener lista única de people y días
+  const people = Array.from(new Set(shifts.map((t) => t.employeeId))).map(
+    (id) => {
+      const shift = shifts.find((s) => s.employeeId === id);
+      return {
+        id: id,
+        name: shift?.person || '',
+      };
+    }
+  );
   const dias = Array.from(
-    new Set(turnos.map((t) => dayjs(t.inicio).format('YYYY-MM-DD')))
+    new Set(shifts.map((t) => dayjs(t.start).format('YYYY-MM-DD')))
   );
 
   // Constantes para el diseño
@@ -45,40 +55,40 @@ const TurnosGanttViewer = ({
   const DAY_START_HOUR = 6; // 6 AM
   const HOURS_IN_VIEW = 24; // 24 horas
 
-  const handleEditTurno = (turno: Turno) => {
-    setEditingTurno(turno);
+  const handleEditshift = (shift: Shift) => {
+    setEditingshift(shift);
     setEditedValues({
-      inicio: turno.inicio,
-      fin: turno.fin,
+      start: shift.start,
+      end: shift.end,
     });
   };
 
   const handleSaveEdit = () => {
-    if (editingTurno && onTurnoUpdate) {
-      onTurnoUpdate({
-        ...editingTurno,
+    if (editingshift && onShiftUpdate) {
+      onShiftUpdate({
+        ...editingshift,
         ...editedValues,
       });
     }
-    setEditingTurno(null);
+    setEditingshift(null);
     setEditedValues({});
   };
 
   const handleCancelEdit = () => {
-    setEditingTurno(null);
+    setEditingshift(null);
     setEditedValues({});
   };
 
-  // Función para calcular la posición y altura de un turno
-  const calculateTurnoPosition = (inicio: string, fin: string) => {
-    const startTime = dayjs(inicio);
-    const endTime = dayjs(fin);
+  // Función para calcular la posición y altura de un shift
+  const calculateshiftPosition = (start: string, end: string) => {
+    const startTime = dayjs(start);
+    const endTime = dayjs(end);
 
-    // Convertir a horas desde el inicio del día
+    // Convertir a horas desde el start del día
     const startHour = startTime.hour() + startTime.minute() / 60;
     const endHour = endTime.hour() + endTime.minute() / 60;
 
-    // Si el turno termina al día siguiente, ajustar la hora final
+    // Si el shift termina al día siguiente, ajustar la hora endal
     const adjustedEndHour = endHour < startHour ? endHour + 24 : endHour;
 
     // Calcular posición y altura relativas
@@ -88,38 +98,38 @@ const TurnosGanttViewer = ({
     return { top, height };
   };
 
-  // Función para organizar los turnos que se solapan
-  const organizeTurnos = (turnosDia: Turno[]) => {
-    const columns: Turno[][] = [];
+  // Función para organizar los shifts que se solapan
+  const organizeshifts = (shiftsDia: Shift[]) => {
+    const columns: Shift[][] = [];
 
-    turnosDia.sort(
-      (a, b) => dayjs(a.inicio).valueOf() - dayjs(b.inicio).valueOf()
+    shiftsDia.sort(
+      (a, b) => dayjs(a.start).valueOf() - dayjs(b.start).valueOf()
     );
 
-    turnosDia.forEach((turno) => {
-      // Encontrar la primera columna donde el turno no se solapa
+    shiftsDia.forEach((shift) => {
+      // Encontrar la primera columna donde el shift no se solapa
       const columnIndex = columns.findIndex((column) => {
-        const lastTurno = column[column.length - 1];
-        return dayjs(turno.inicio).isAfter(dayjs(lastTurno.fin));
+        const lastshift = column[column.length - 1];
+        return dayjs(shift.start).isAfter(dayjs(lastshift.end));
       });
 
       if (columnIndex === -1) {
         // Si no hay columna disponible, crear una nueva
-        columns.push([turno]);
+        columns.push([shift]);
       } else {
-        // Agregar el turno a la columna existente
-        columns[columnIndex].push(turno);
+        // Agregar el shift a la columna existente
+        columns[columnIndex].push(shift);
       }
     });
 
     return columns;
   };
 
-  if (!turnos.length) {
+  if (!shifts.length) {
     return (
       <div className={`p-4 ${className}`}>
         <div className='text-center text-gray-500 py-8'>
-          No hay turnos para mostrar
+          No hay shifts para mostrar
         </div>
       </div>
     );
@@ -127,13 +137,13 @@ const TurnosGanttViewer = ({
 
   return (
     <div className={`p-4 ${className}`}>
-      <h1 className='text-xl font-bold mb-4'>Gantt de Turnos Semanales</h1>
+      <h1 className='text-xl font-bold mb-4'>Gantt de shifts Semanales</h1>
       <div className='overflow-x-auto vox-scroll-design border rounded-md'>
         <div
           className='relative'
           style={{
             width: LEFT_AXIS_WIDTH + dias.length * CELL_WIDTH,
-            height: HEADER_HEIGHT + personas.length * CELL_HEIGHT,
+            height: HEADER_HEIGHT + people.length * CELL_HEIGHT,
           }}
         >
           {/* Eje Y (Empleados) */}
@@ -144,13 +154,13 @@ const TurnosGanttViewer = ({
             <div className='h-[60px] bg-gray-100 border-r border-gray-300 flex items-center justify-center font-medium'>
               Empleados
             </div>
-            {personas.map((persona) => (
+            {people.map((person) => (
               <div
-                key={persona}
+                key={person.id}
                 className='border-t border-r border-gray-300 flex items-center px-4 font-medium'
                 style={{ height: CELL_HEIGHT }}
               >
-                {persona}
+                {person.name}
               </div>
             ))}
           </div>
@@ -182,7 +192,7 @@ const TurnosGanttViewer = ({
                 />
               ))}
               {/* Líneas horizontales */}
-              {personas.map((_, index) => (
+              {people.map((_, index) => (
                 <div
                   key={index}
                   className='absolute left-0 right-0 border-b border-dashed border-gray-300'
@@ -194,31 +204,31 @@ const TurnosGanttViewer = ({
 
           {/* Contenedor de las tareas */}
           <div className='absolute left-[150px] top-[60px]'>
-            {personas.map((persona, personaIndex) => (
-              <div key={persona} style={{ height: CELL_HEIGHT }}>
+            {people.map((person, personIndex) => (
+              <div key={person.id} style={{ height: CELL_HEIGHT }}>
                 {dias.map((dia, diaIndex) => {
-                  const turnosDia = turnos.filter(
+                  const shiftsDia = shifts.filter(
                     (t) =>
-                      t.persona === persona &&
-                      dayjs(t.inicio).format('YYYY-MM-DD') === dia
+                      t.employeeId === person.id &&
+                      dayjs(t.start).format('YYYY-MM-DD') === dia
                   );
 
-                  const turnosColumns = organizeTurnos(turnosDia);
+                  const shiftsColumns = organizeshifts(shiftsDia);
                   const columnWidth =
-                    CELL_WIDTH / Math.max(turnosColumns.length, 1);
+                    CELL_WIDTH / Math.max(shiftsColumns.length, 1);
 
                   return (
                     <div
-                      key={`${persona}-${dia}`}
+                      key={`${person.id}-${dia}`}
                       className='absolute'
                       style={{
                         left: diaIndex * CELL_WIDTH,
-                        top: personaIndex * CELL_HEIGHT,
+                        top: personIndex * CELL_HEIGHT,
                         width: CELL_WIDTH,
                         height: CELL_HEIGHT,
                       }}
                     >
-                      {turnosColumns.map((column, columnIndex) => (
+                      {shiftsColumns.map((column, columnIndex) => (
                         <div
                           key={columnIndex}
                           className='absolute top-0 bottom-0'
@@ -227,30 +237,30 @@ const TurnosGanttViewer = ({
                             width: columnWidth,
                           }}
                         >
-                          {column.map((turno, i) => {
-                            const { top, height } = calculateTurnoPosition(
-                              turno.inicio,
-                              turno.fin
+                          {column.map((shift, i) => {
+                            const { top, height } = calculateshiftPosition(
+                              shift.start,
+                              shift.end
                             );
                             return (
                               <div
                                 key={i}
-                                className={`absolute rounded-sm shadow-sm ${colors[turno.turno] || colors[turno.persona] || 'bg-gray-200'} cursor-pointer hover:shadow-md transition-shadow`}
+                                className={`absolute rounded-sm shadow-sm ${colors[shift.service] || 'bg-gray-200'} cursor-pointer hover:shadow-md transition-shadow`}
                                 style={{
                                   top: `${top}%`,
                                   height: `${height}%`,
                                   left: '2px',
                                   right: '2px',
                                 }}
-                                onClick={() => handleEditTurno(turno)}
+                                onClick={() => handleEditshift(shift)}
                               >
                                 <div className='p-1 text-xs overflow-hidden h-full'>
                                   <div className='font-medium truncate'>
-                                    {turno.servicio}
+                                    {shift.service}
                                   </div>
                                   <div className='opacity-75 truncate'>
-                                    {dayjs(turno.inicio).format('HH:mm')} -{' '}
-                                    {dayjs(turno.fin).format('HH:mm')}
+                                    {dayjs(shift.start).format('HH:mm')} -{' '}
+                                    {dayjs(shift.end).format('HH:mm')}
                                   </div>
                                 </div>
                               </div>
@@ -268,43 +278,41 @@ const TurnosGanttViewer = ({
       </div>
 
       {/* Modal de edición */}
-      {editingTurno && (
+      {editingshift && (
         <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
           <div className='bg-white rounded-lg p-6 w-full max-w-md'>
-            <h2 className='text-xl font-bold mb-4'>Editar Turno</h2>
+            <h2 className='text-xl font-bold mb-4'>Editar shift</h2>
 
             <div className='grid grid-cols-2 gap-4'>
               <div className='col-span-2 bg-gray-50 p-3 rounded-md'>
                 <div className='text-sm font-medium text-gray-500'>
                   Empleado
                 </div>
-                <div className='text-sm'>{editingTurno.persona}</div>
+                <div className='text-sm'>{editingshift.person}</div>
               </div>
 
               <div className='bg-gray-50 p-3 rounded-md'>
-                <div className='text-sm font-medium text-gray-500'>
-                  Servicio
-                </div>
-                <div className='text-sm'>{editingTurno.servicio}</div>
+                <div className='text-sm font-medium text-gray-500'>service</div>
+                <div className='text-sm'>{editingshift.service}</div>
               </div>
 
               <div className='bg-gray-50 p-3 rounded-md'>
-                <div className='text-sm font-medium text-gray-500'>Turno</div>
-                <div className='text-sm'>{editingTurno.turno}</div>
+                <div className='text-sm font-medium text-gray-500'>shift</div>
+                <div className='text-sm'>{editingshift.shift}</div>
               </div>
 
               <div className='col-span-2'>
                 <div className='text-sm font-medium text-gray-700 mb-1'>
-                  Fecha y hora de inicio
+                  Fecha y hora de start
                 </div>
                 <input
                   type='datetime-local'
-                  value={dayjs(editedValues.inicio).format('YYYY-MM-DDTHH:mm')}
+                  value={dayjs(editedValues.start).format('YYYY-MM-DDTHH:mm')}
                   onChange={(e) => {
                     const target = e.target as HTMLInputElement;
                     setEditedValues({
                       ...editedValues,
-                      inicio: target.value + ':00',
+                      start: target.value + ':00',
                     });
                   }}
                   className='w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
@@ -313,16 +321,16 @@ const TurnosGanttViewer = ({
 
               <div className='col-span-2'>
                 <div className='text-sm font-medium text-gray-700 mb-1'>
-                  Fecha y hora de fin
+                  Fecha y hora de end
                 </div>
                 <input
                   type='datetime-local'
-                  value={dayjs(editedValues.fin).format('YYYY-MM-DDTHH:mm')}
+                  value={dayjs(editedValues.end).format('YYYY-MM-DDTHH:mm')}
                   onChange={(e) => {
                     const target = e.target as HTMLInputElement;
                     setEditedValues({
                       ...editedValues,
-                      fin: target.value + ':00',
+                      end: target.value + ':00',
                     });
                   }}
                   className='w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
@@ -350,5 +358,3 @@ const TurnosGanttViewer = ({
     </div>
   );
 };
-
-export default TurnosGanttViewer;
