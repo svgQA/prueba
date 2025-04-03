@@ -283,6 +283,23 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
+  /**
+   * Gets a summary of shifts including total count, in progress and completed
+   * @returns Summary object with total, progress and completed counts
+   */
+  static async getShiftSummary() {
+    const model: IMakeRequest = {
+      url: ['activity/summary'],
+      method: REQUEST_METHODS.GET
+    };
+    
+    return await super.make_request<{
+      total: number;
+      inProgress: number;
+      completed: number;
+    }>(this.name, model);
+  }
+
   static async createActivity(data: any) {
     const model: IMakeRequest = {
       url: ['activity'],
