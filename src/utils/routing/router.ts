@@ -133,6 +133,7 @@ export const PAGES_LIST_ROUTER = {
       },
       setting: {
         base: '/setting',
+        settings: '/setting/settings',
         user: {
           base: '/',
           to: '/setting',

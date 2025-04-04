@@ -155,4 +155,14 @@ export class FormService extends BaseService {
     };
     return await super.make_request<IFormResponse>(this.sname, model);
   }
+  static async getBasicForms() {
+    const model: IMakeRequest = {
+      url: ['form', 'basic'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<{ id: number; title: string }[]>(
+      this.sname,
+      model
+    );
+  }
 }

@@ -1,9 +1,8 @@
+import { IOption } from '@/components/common/multi/interface';
+import { FormValues } from '@/components/compose/gantt/components/gantt/replicate.modal';
 import { User, ViewMode } from '@/components/compose/gantt/types/public-types';
-import {
-  IShiftSetting,
-  IShiftSettingResponse,
-} from '@/pages/settings/shifts/setting/interface';
 import { IPagination } from '@/types';
+import { IShiftSetting, IShiftSettingResponse } from '@/types/settings';
 import { IShiftResponse } from '@/types/shift/activity';
 // import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
 import { BaseService } from '@/utils/network';
@@ -467,5 +466,21 @@ export class ShiftService extends BaseService {
       data,
     };
     return await super.make_request<IShiftSettingResponse>(this.name, model);
+  }
+
+  static async getListService() {
+    const model: IMakeRequest = {
+      url: ['service', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
+  static async setReplicateV2(data: FormValues) {
+    const model: IMakeRequest = {
+      url: ['activity', 'replicate', 'v2'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
   }
 }

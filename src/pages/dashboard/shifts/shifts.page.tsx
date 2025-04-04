@@ -18,16 +18,21 @@ import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/upsert.modal';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
-import { SendForm } from './components/send.modal';
+import { SendForm } from './components/send/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
+import LiveUserMap from './components/shift.map';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
+import { PlannerView } from './components/planner.view';
+import { UserService } from '@/services/user';
+import { MentionOption } from '@/components/common/mention-editor';
 
 enum VIEW_NAME {
   TABLE,
   CALENDAR,
   SCHEDULER,
   SUPERVISOR,
+  PLANNER,
 }
 
 export const ShiftsPage: FunctionalComponent = () => {
@@ -45,6 +50,13 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [taskSelected, setTaskSelected] = useState<Task>();
   const [userSelected, setUserSelected] = useState<User>();
 
+  const [services, setServices] = useState<MentionOption[]>([]);
+  const [users, setUsers] = useState<MentionOption[]>([]);
+
+  // Memoizar los servicios y usuarios para evitar re-renders innecesarios
+  const memoizedServices = useMemo(() => services, [services]);
+  const memoizedUsers = useMemo(() => users, [users]);
+
   const startDate = dayjs().subtract(1, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
@@ -52,15 +64,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     endDate,
     users: [],
   });
-
-  /**
-   * Handle Database query for shifts.
-   */
-  const getShiftHandler = async () => {
-    const response = await ShiftService.get_all({ page: 1, items: 1000 });
-    if (!response.getStatus()) return;
-    shifts.value = response.getMany();
-  };
 
   const handleViewMode = (viewMode: ViewMode = ViewMode.QuarterDay) => {
     setGanttShifts({ startDate, endDate, users: [] });
@@ -83,8 +86,39 @@ export const ShiftsPage: FunctionalComponent = () => {
    */
   useEffect(() => {
     document.title = 'VX - Shift Service';
-    getShiftHandler();
+    fetchInitialData();
   }, []);
+
+  // const fetchShifts = async () => {
+  //   const response = await ShiftService.get_all({ page: 1, items: 1000 });
+  //   if (!response.getStatus()) return;
+  //   hifts.value(response.getMany());
+  // };
+
+  const fetchInitialData = async () => {
+    try {
+      const [shiftsResponse, servicesResponse, usersResponse] =
+        await Promise.all([
+          ShiftService.get_all({ page: 1, items: 1000 }),
+          ShiftService.getListService(),
+          UserService.getListUsers(),
+        ]);
+
+      if (shiftsResponse && shiftsResponse.getStatus()) {
+        shifts.value = shiftsResponse.getMany();
+      }
+
+      if (servicesResponse.getStatus()) {
+        setServices(servicesResponse.getMany());
+      }
+
+      if (usersResponse.getStatus()) {
+        setUsers(usersResponse.getMany());
+      }
+    } catch (error) {
+      console.error('Error fetching initial data:', error);
+    }
+  };
 
   useEffect(() => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -218,6 +252,19 @@ export const ShiftsPage: FunctionalComponent = () => {
           icon='330'
         />
         <Button
+          name='button-change-planner'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.PLANNER);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.PLANNER
+              ? 'bg-primary-opacity p-2'
+              : ''
+          }
+          icon='331'
+        />
+        <Button
           name='button-action'
           rounded={false}
           className='border-2 border-primary p-2'
@@ -239,31 +286,33 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   return (
     <Section padding>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title='Turnos Totales Hoy'
-          count={530}
-          subtitle=''
-          color='t-dark'
-          icon='054'
-        />
+      {currentView.value !== VIEW_NAME.SUPERVISOR && (
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+          <CardData
+            title='Turnos Totales Hoy'
+            count={530}
+            subtitle=''
+            color='t-dark'
+            icon='054'
+          />
 
-        <CardData
-          title='Turnos En Curso'
-          count='50%'
-          subtitle=''
-          color='t-dark'
-          icon='052'
-        />
+          <CardData
+            title='Turnos En Curso'
+            count='50%'
+            subtitle=''
+            color='t-dark'
+            icon='052'
+          />
 
-        <CardData
-          title='Turnos Finalizados'
-          count='30%'
-          subtitle=''
-          color='t-dark'
-          icon='015'
-        />
-      </div>
+          <CardData
+            title='Turnos Finalizados'
+            count='30%'
+            subtitle=''
+            color='t-dark'
+            icon='015'
+          />
+        </div>
+      )}
 
       <div className='max-h-screen relative'>
         <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-10'>
@@ -314,6 +363,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             onClick={handleClick}
             listCellWidth={isChecked ? '155px' : ''}
             columnWidth={columnWidth}
+            users={users}
             group={
               <Group
                 onViewModeChange={handleViewMode}
@@ -325,8 +375,12 @@ export const ShiftsPage: FunctionalComponent = () => {
           />
         )}
 
-        {currentView.value === VIEW_NAME.SUPERVISOR && <div></div>}
+        {currentView.value === VIEW_NAME.PLANNER && (
+          <PlannerView services={memoizedServices} users={memoizedUsers} />
+        )}
+        {currentView.value === VIEW_NAME.SUPERVISOR && <LiveUserMap />}
       </div>
+
       <TaskForm
         closed={showUpsertModal.value}
         onClose={handleCloseUpsertModal}

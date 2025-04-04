@@ -1,3 +1,4 @@
+import { IOption } from '@/components/common/multi/interface';
 import { ComponentType, VNode } from 'preact';
 
 export enum ViewMode {
@@ -191,4 +192,5 @@ export interface GanttProps extends EventOption, DisplayOption, StylingOption {
   unsearch?: boolean;
   tasks: GeneralTask;
   group?: VNode;
+  users?: IOption[];
 }

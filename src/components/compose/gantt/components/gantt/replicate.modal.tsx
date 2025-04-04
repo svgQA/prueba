@@ -1,16 +1,19 @@
 import { ComponentType } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useRef } from 'preact/hooks';
 import { Form, Field } from 'react-final-form';
+import { FieldArray } from 'react-final-form-arrays';
+import arrayMutators from 'final-form-arrays';
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
 import { UserSelector } from '@/components/common/user-selector/user-selector';
 import { required } from '@/utils/utilities';
-import { UserService, USER_TYPE } from '@/services/user';
-import { IUserResponse } from '@/types/auth';
 import { IOption } from '@/components/common/multi/interface';
+import { ShiftService } from '@/services';
+import { toast } from 'react-toastify';
 
 interface DateSelectorProps {
   selectedUsers: Set<string | number>;
+  users?: IOption[];
   onDateSubmit: (
     startDate: string,
     endDate: string,
@@ -18,57 +21,68 @@ interface DateSelectorProps {
   ) => void;
 }
 
-interface FormValues {
+export interface FormValues {
   startDate: string;
   endDate: string;
-  users: IOption[];
+  replacements: {
+    originalUserId: string | number;
+    replacementUserId: IOption[];
+  }[];
+  iterations: string;
 }
 
 interface FormErrors {
   startDate?: string;
   endDate?: string;
-  users?: string;
+  replacements?: string;
+  iterations?: string;
 }
 
 const initialValues: FormValues = {
   startDate: '',
   endDate: '',
-  users: [],
+  replacements: [],
+  iterations: '1',
 };
 
 export const DateSelector: ComponentType<DateSelectorProps> = ({
   selectedUsers,
+  users,
 }) => {
   const [showDateForm, setShowDateForm] = useState(false);
-  const [users, setUsers] = useState<IUserResponse[]>([]);
-  const hasFetchedUsers = useRef(false);
   const formRef = useRef<any>(null);
 
-  useEffect(() => {
-    if (!hasFetchedUsers.current) {
-      getUsers();
-    }
-  }, []);
+  // const hasFetchedUsers = useRef(false);
+  // useEffect(() => {
+  //   if (!hasFetchedUsers.current) {
+  //     getUsers();
+  //   }
+  // }, []);
 
-  const getUsers = async () => {
-    const response = await UserService.get_all({
-      userType: USER_TYPE.USER,
-      items: 1000,
-      page: 1,
-    });
-    if (!response.getStatus()) return;
-
-    const fetchedUsers = response.getMany();
-    setUsers(fetchedUsers);
-    hasFetchedUsers.current = true;
-  };
+  // const getUsers = async () => {
+  //   const response = await UserService.get_all({
+  //     userType: USER_TYPE.USER,
+  //     items: 1000,
+  //     page: 1,
+  //   });
+  //   if (!response.getStatus()) return;
+  //   // const fetchedUsers = response.getMany();
+  //   // setUsers(fetchedUsers);
+  //   hasFetchedUsers.current = true;
+  // };
 
   if (selectedUsers.size === 0) return null;
 
-  const onSubmit = (/*values: FormValues*/) => {
+  const onSubmit = async (values: FormValues) => {
     // const selectedUserIds = values.users.map(user => user.value);
     // onDateSubmit(values.startDate, values.endDate, selectedUserIds);
-    setShowDateForm(false);
+    const response = await ShiftService.setReplicateV2(values);
+    if (!response.getStatus()) {
+      toast.error('Error replicating shifts');
+      return;
+    }
+    toast.success('Shifts replicated successfully');
+    setShowDateForm((prev) => !prev);
   };
 
   // const handleMouseLeave = (e: MouseEvent) => {
@@ -92,20 +106,20 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
 
       {showDateForm && (
         <div
-          className='absolute right-0 w-96 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200'
+          className='my-3 absolute right-0 w-96 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[500px]'
           // onMouseLeave={handleMouseLeave}
         >
           <Form<FormValues>
             ref={formRef}
             onSubmit={onSubmit}
             initialValues={initialValues}
+            mutators={{
+              ...arrayMutators,
+            }}
             validate={(values) => {
               const errors: FormErrors = {};
               if (!values.startDate) errors.startDate = 'Campo obligatorio';
               if (!values.endDate) errors.endDate = 'Campo obligatorio';
-              if (!values.users || values.users.length === 0) {
-                errors.users = 'Debe seleccionar al menos un usuario';
-              }
 
               if (values.startDate && values.endDate) {
                 const start = new Date(values.startDate);
@@ -118,65 +132,142 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
 
               return errors;
             }}
-            render={({ handleSubmit, submitting, pristine }) => (
-              <form onSubmit={handleSubmit} className='space-y-4'>
-                <div className='text-sm text-gray-600 mb-2'>
-                  Usuarios seleccionados: {selectedUsers.size}
-                </div>
+            render={({ handleSubmit, submitting, pristine, form }) => {
+              // Inicializar el array de reemplazos si es necesario
+              if (
+                selectedUsers.size > 0 &&
+                (!form.getState().values.replacements ||
+                  form.getState().values.replacements.length === 0)
+              ) {
+                // Usar un efecto de una sola vez para inicializar
+                const initialReplacements = Array.from(selectedUsers).map(
+                  (userId) => ({
+                    originalUserId: userId,
+                    replacementUserId: [],
+                  })
+                );
 
-                <Field<IOption[]> name='users' validate={required}>
-                  {({ input, meta }) => (
-                    <UserSelector
-                      {...input}
-                      meta={meta}
-                      name='users'
-                      users={users}
+                // Inicializar de inmediato sin setTimeout
+                form.change('replacements', initialReplacements);
+              }
+
+              return (
+                <form onSubmit={handleSubmit} className='space-y-4'>
+                  <div className='grid grid-cols-2 gap-4'>
+                    <Field<string> name='startDate' validate={required}>
+                      {({ input, meta }) => (
+                        <Input
+                          {...input}
+                          label='Fecha de Inicio'
+                          type='date'
+                          meta={meta}
+                        />
+                      )}
+                    </Field>
+
+                    <Field<string> name='endDate' validate={required}>
+                      {({ input, meta }) => (
+                        <Input
+                          {...input}
+                          label='Fecha Final'
+                          type='date'
+                          meta={meta}
+                        />
+                      )}
+                    </Field>
+                  </div>
+
+                  <Field<string> name='iterations' validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        label='Iteraciones'
+                        type='number'
+                        min='1'
+                        max='100'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+
+                  <div className='pt-4 border-t border-gray-100'>
+                    <div className='space-y-4'>
+                      <div className='grid grid-cols-2 gap-4 font-medium text-sm text-gray-500 uppercase tracking-wider bg-gray-50 p-2 rounded-md'>
+                        <div>Usuario Original</div>
+                        <div>Usuario de Reemplazo</div>
+                      </div>
+
+                      <FieldArray name='replacements'>
+                        {({ fields }) => (
+                          <div>
+                            {fields.map((name, index) => {
+                              // Obtener el ID del usuario original del valor actual
+                              const fieldValue = fields.value[index];
+                              const originalUserId = fieldValue
+                                ? fieldValue.originalUserId
+                                : null;
+                              const originalUser = users?.find(
+                                (u) => u.value === originalUserId
+                              );
+
+                              if (!originalUser) return null;
+
+                              return (
+                                <div
+                                  key={originalUserId}
+                                  className='grid grid-cols-2 items-center'
+                                >
+                                  <div className='text-sm text-gray-900'>
+                                    {originalUser.label}
+                                  </div>
+                                  <div>
+                                    <Field<IOption[]>
+                                      name={`${name}.replacementUserId`}
+                                      validate={required}
+                                    >
+                                      {({ input, meta }) => {
+                                        return (
+                                          <UserSelector
+                                            {...input}
+                                            meta={meta}
+                                            name={`${name}.replacementUserId`}
+                                            options={users || []}
+                                            multiple={true}
+                                          />
+                                        );
+                                      }}
+                                    </Field>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </FieldArray>
+                    </div>
+                  </div>
+
+                  <div className='flex justify-end gap-2 items-center'>
+                    <Button
+                      id='btn-cancel'
+                      name='btn-cancel'
+                      type='button'
+                      label='Cancelar'
+                      onClick={() => setShowDateForm(false)}
+                      disabled={submitting}
                     />
-                  )}
-                </Field>
-
-                <Field<string> name='startDate' validate={required}>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      label='Fecha de Inicio'
-                      type='date'
-                      meta={meta}
+                    <Button
+                      id='btn-submit'
+                      name='btn-submit'
+                      type='submit'
+                      label='Crear'
+                      className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
+                      disabled={submitting || pristine}
                     />
-                  )}
-                </Field>
-
-                <Field<string> name='endDate' validate={required}>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      label='Fecha Final'
-                      type='date'
-                      meta={meta}
-                    />
-                  )}
-                </Field>
-
-                <div className='flex justify-end gap-2 items-center'>
-                  <Button
-                    id='btn-cancel'
-                    name='btn-cancel'
-                    type='button'
-                    label='Cancelar'
-                    onClick={() => setShowDateForm(false)}
-                    disabled={submitting}
-                  />
-                  <Button
-                    id='btn-submit'
-                    name='btn-submit'
-                    type='submit'
-                    label='Crear'
-                    className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
-                    disabled={submitting || pristine}
-                  />
-                </div>
-              </form>
-            )}
+                  </div>
+                </form>
+              );
+            }}
           />
         </div>
       )}

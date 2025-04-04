@@ -41,6 +41,7 @@ import { DateSelector } from './replicate.modal';
 
 const GanttComponent: ComponentType<GanttProps> = ({
   tasks: initialTasks,
+  users,
   headerHeight = 50,
   columnWidth = 60,
   listCellWidth = '155px',
@@ -773,6 +774,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
       <div className='relative w-full my-2 flex items-center justify-end gap-2'>
         <DateSelector
           selectedUsers={selectedUsers}
+          users={users}
           onDateSubmit={handleDateSubmit}
         />
 
