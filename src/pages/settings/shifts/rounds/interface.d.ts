@@ -1,4 +1,4 @@
-import { ITask } from "@/types/shift/activity";
+import { ITask } from '@/types/shift/activity';
 
 export interface IPointMap {
   id: number;
