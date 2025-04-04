@@ -18,7 +18,7 @@ import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/upsert.modal';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
-import { SendForm } from './components/send.modal';
+import { SendForm } from './components/send/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
