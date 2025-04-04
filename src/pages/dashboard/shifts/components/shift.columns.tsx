@@ -291,6 +291,24 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     },
   },
   {
+    id: 'client',
+    accessorKey: 'service.contract.client.name',
+    size: 120,
+    header: 'Cliente',
+    enableGrouping: true,
+    cell: (info) => {
+      const contract = String(info.getValue());
+      return (
+        <span
+          className='p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        >
+          {contract}
+        </span>
+      );
+    },
+  },
+  {
     id: 'actions',
     size: 20,
     cell: (info) => {

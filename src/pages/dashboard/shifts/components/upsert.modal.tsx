@@ -12,11 +12,11 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { UserService } from '@/services/user';
 import { ShiftService } from '@/services';
 import { IUserResponse } from '@/types/auth';
-import { IShiftResponse } from '@/types/shift/activity';
 import { Chip } from '@/components/common/chip/chip';
 import { toast } from 'react-toastify';
 import { Task, User } from '@/components/compose/gantt/types/public-types';
 import { Badge } from '@/components/common/badge/badge';
+import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 
 interface Props {
   closed?: boolean;
@@ -26,11 +26,12 @@ interface Props {
   taskSelected?: Task;
 }
 
-// interface ITask {
-//   start: string;
-//   status: string;
-//   description: string;
-// }
+interface ITask {
+  start: string;
+  date: string;
+  status: string;
+  description: string;
+}
 
 export const TaskForm = ({
   closed,
@@ -41,15 +42,17 @@ export const TaskForm = ({
 }: Props) => {
   const inputKeywords = useSignal('');
   const users = useSignal<IUserResponse[]>([]);
-  const services = useSignal<IShiftResponse[]>([]);
+  const services = useSignal<any[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>();
-  // const [search, setSearch] = useState('');
-  // const tasks = useSignal<ITask[]>([]);
+  const tasks = useSignal<ITask[]>([]);
 
-  // const filteredOptions: any = tasks.value.filter((option) =>
-  //   option.description.toLowerCase().includes(search.toLowerCase())
-  // );
+  const setTasks = (serviceId: number) => {
+    const service = services.value.find((service) => service.id === serviceId);
+    console.log(service);
+    tasks.value = service?.task || [];
+    console.log(tasks.value);
+  };
 
   const onSubmit = async (model: FormData) => {
     try {
@@ -342,7 +345,7 @@ export const TaskForm = ({
                         {...input}
                         id='select-service'
                         name='select-service'
-                        placeholder='Selecione Servicio...'
+                        placeholder='Seleccione Servicio...'
                         label='Servicio'
                         icon='252'
                         optionValue='id'
@@ -351,6 +354,7 @@ export const TaskForm = ({
                         onChange={(e) => {
                           const id = parseInt(e.currentTarget.value);
                           input.onChange(id);
+                          setTasks(id);
                         }}
                       />
                     )}
@@ -429,46 +433,99 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
-                {/*
-                    <div class='col-span-4'>
-                      <h3>Tareas:</h3>
 
-                      <Field<number> name='schedules'>
-                        {({ input }) => (
-                          <div className=' mr-5 ml-5'>
-                            <label className='block mb-2 text-sm font-medium text-gray-700'>
-                              Buscar:
-                            </label>
-                            <input
-                              type='text'
-                              value={search}
-                              onChange={(e) => setSearch(e.currentTarget.value)}
-                              className='block w-full px-3 py-2 mb-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-                              placeholder='Escribe para buscar...'
-                            />
-                            <select
-                              {...input}
-                              multiple
-                              onChange={(e) => {
-                                const selectedValues = Array.from(
-                                  e.currentTarget.selectedOptions,
-                                  (option) => Number(option.value)
-                                );
-                                input.onChange(selectedValues);
-                              }}
-                              className='block w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-32'
-                            >
-                              {filteredOptions.map((option: any) => (
-                                <option key={option.id} value={option.id}>
-                                  {`* Horario: ${option.name}(${option.day})  horas: ${dayjs(option.hourStart).format('HH:mm')} a ${dayjs(option.hourEnd).format('HH:mm')}`}
-                                </option>
-                              ))}
-                            </select>
+                <div className='col-span-2'>
+                  <ExpansionPanel title='Tareas del turno'>
+                    <FieldArray name='tasks'>
+                      {({ fields }) => (
+                        <div>
+                          <Select
+                            placeholder='Seleccione tarea...'
+                            label='Tarea'
+                            name='taskId'
+                            icon='252'
+                            optionValue='description'
+                            optionLabel='description'
+                            options={tasks.value}
+                            onChange={(e) => {
+                              const description = e.currentTarget.value;
+                              console.log(description);
+                              const task = tasks.value.find(
+                                (task: any) => task.description === description
+                              );
+                              console.log(task);
+                              fields.push(task);
+                            }}
+                          />
+                          <div className='mt-4'>
+                            <table className='min-w-full divide-y divide-gray-200'>
+                              <thead className='bg-gray-50'>
+                                <tr>
+                                  <th
+                                    scope='col'
+                                    className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                  />
+                                  <th
+                                    scope='col'
+                                    className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                  >
+                                    Fecha Inicio
+                                  </th>
+                                  <th
+                                    scope='col'
+                                    className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                  >
+                                    ID Formulario
+                                  </th>
+                                  <th
+                                    scope='col'
+                                    className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                  >
+                                    Descripción
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody className='bg-white divide-y divide-gray-200'>
+                                {fields.value &&
+                                  fields.value.map(
+                                    (task: any, taskIndex: number) => (
+                                      <tr key={taskIndex}>
+                                        <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                          <Button
+                                            textColor='text-red-600'
+                                            id='btn-delete'
+                                            name='btn-delete'
+                                            icon='041'
+                                            type='button'
+                                            className='text-red-600 hover:text-red-800'
+                                            onClick={() =>
+                                              fields.remove(taskIndex)
+                                            }
+                                          />
+                                        </td>
+                                        <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                          {dayjs(task.start).format(
+                                            'DD/MM/YYYY HH:mm'
+                                          )}
+                                        </td>
+                                        <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                          {task.formId}
+                                        </td>
+
+                                        <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                          <p>{task.description}</p>
+                                        </td>
+                                      </tr>
+                                    )
+                                  )}
+                              </tbody>
+                            </table>
                           </div>
-                        )}
-                      </Field>
-                    </div>
-                    */}
+                        </div>
+                      )}
+                    </FieldArray>
+                  </ExpansionPanel>
+                </div>
               </div>
             </form>
           )}
