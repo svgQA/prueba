@@ -33,12 +33,32 @@ export async function streamIAResponse(
       const chunk = decoder.decode(value, { stream: true });
       const lines = chunk.split('\n\n');
 
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const content = line.replace('data: ', '').trim();
-          onData(content);
-        }
+      const content = lines[0] || '';
+
+      if (content.startsWith('data: 0:')) {
+        const output = content
+          .replace('data: ', '')
+          .trim()
+          .replace(/^0:\s*/, '')
+          .replace(/^"/, '')
+          .replace(/"$/, '');
+        console.log('output', output);
+        onData(output);
       }
+
+      // console.log('lines', lines);
+      // for (const line of lines) {
+      //   if (line.startsWith('data: ')) {
+      //     const content = line
+      //       .replace('data: ', '')
+      //       .trim()
+      //       .replace(/^f:/, '')
+      //       .replace(/^0:\s*/, '')
+      //       .replace(/^"/, '')
+      //       .replace(/"$/, '');
+      //     onData(content);
+      //   }
+      // }
     }
     onDone?.();
   } catch (err) {

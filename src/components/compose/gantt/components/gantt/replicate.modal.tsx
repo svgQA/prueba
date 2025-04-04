@@ -6,7 +6,6 @@ import { Button } from '@/components/common/button/button';
 import { UserSelector } from '@/components/common/user-selector/user-selector';
 import { required } from '@/utils/utilities';
 import { UserService, USER_TYPE } from '@/services/user';
-import { IUserResponse } from '@/types/auth';
 import { IOption } from '@/components/common/multi/interface';
 
 interface DateSelectorProps {
@@ -40,7 +39,16 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
   selectedUsers,
 }) => {
   const [showDateForm, setShowDateForm] = useState(false);
-  const [users, setUsers] = useState<IUserResponse[]>([]);
+  const [users, _] = useState<IOption[]>([
+    {
+      value: 1,
+      label: 'John Doe',
+    },
+    {
+      value: 2,
+      label: 'Jo Doe',
+    },
+  ]);
   const hasFetchedUsers = useRef(false);
   const formRef = useRef<any>(null);
 
@@ -58,8 +66,8 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
     });
     if (!response.getStatus()) return;
 
-    const fetchedUsers = response.getMany();
-    setUsers(fetchedUsers);
+    // const fetchedUsers = response.getMany();
+    // setUsers(fetchedUsers);
     hasFetchedUsers.current = true;
   };
 
@@ -92,7 +100,7 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
 
       {showDateForm && (
         <div
-          className='absolute right-0 w-96 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200'
+          className='my-1 absolute right-0 w-96 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200'
           // onMouseLeave={handleMouseLeave}
         >
           <Form<FormValues>
@@ -130,7 +138,8 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
                       {...input}
                       meta={meta}
                       name='users'
-                      users={users}
+                      options={users}
+                      multiple
                     />
                   )}
                 </Field>

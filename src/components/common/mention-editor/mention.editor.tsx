@@ -5,11 +5,10 @@ import {
   useCallback,
   useMemo,
 } from 'preact/hooks';
+import { IOption } from '@/components/common/multi/interface';
 
-interface MentionOption {
-  label: string;
-  id: string;
-  groupName: string;
+export interface MentionOption extends IOption {
+  groupName?: string;
 }
 
 interface MentionGroup {
@@ -128,9 +127,9 @@ export const MentionEditor = ({
         span.textContent = `@${mentionOption.label}`;
         span.style.background = '#DAF3F7';
         span.style.color = '#00BDD6';
-        span.setAttribute('data-id', mentionOption.id);
+        span.setAttribute('data-id', String(mentionOption.value));
         span.setAttribute('data-label', mentionOption.label);
-        span.setAttribute('data-group', mentionOption.groupName);
+        span.setAttribute('data-group', mentionOption.groupName || '');
       }
       span.contentEditable = 'false';
       span.style.padding = '2px 6px';
@@ -424,7 +423,7 @@ export const MentionEditor = ({
               </div>
               {filteredOptionsByGroup[expandedGroup]?.map((option, index) => (
                 <button
-                  key={option.id}
+                  key={option.value}
                   className={`block w-full px-4 py-2 text-sm text-left border-none ${
                     index === selectedIndex
                       ? 'bg-primary-opacity'
@@ -447,7 +446,7 @@ export const MentionEditor = ({
                   </div>
                   {filteredOptions.map((option, index) => (
                     <button
-                      key={option.id}
+                      key={option.value}
                       className={`block w-full px-4 py-2 text-sm text-left border-none ${
                         index === selectedIndex
                           ? 'bg-primary-opacity'
@@ -512,7 +511,7 @@ export const MentionEditor = ({
                         </div>
                         {options.map((option) => (
                           <button
-                            key={option.id}
+                            key={option.value}
                             className={`block w-full px-4 py-2 text-sm text-left border-none hover:bg-gray-100`}
                             onClick={() => insertMention(option)}
                             dangerouslySetInnerHTML={{

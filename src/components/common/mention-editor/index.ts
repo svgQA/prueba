@@ -1,1 +1,1 @@
-export { MentionEditor } from './mention.editor';
+export * from './mention.editor';
