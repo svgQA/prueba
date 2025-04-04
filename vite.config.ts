@@ -68,6 +68,12 @@ export default defineConfig({
           if (id.includes('@fullcalendar')) {
             return '@calendar-base'; // 257.94 kB
           }
+          if (id.includes('maplibre-gl')) {
+            return '@maplibre-gl-base'; // 148.81 kB
+          }
+          if (id.includes('socket.io-client')) {
+            return '@socket-io-client-base'; // 148.81 kB
+          }
         },
       },
     },
