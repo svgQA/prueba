@@ -290,9 +290,9 @@ export class ShiftService extends BaseService {
   static async getShiftSummary() {
     const model: IMakeRequest = {
       url: ['activity/summary'],
-      method: REQUEST_METHODS.GET
+      method: REQUEST_METHODS.GET,
     };
-    
+
     return await super.make_request<{
       total: number;
       inProgress: number;

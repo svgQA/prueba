@@ -4,7 +4,6 @@ import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
 import {
   GoogleMap,
-  Polygon,
   Circle,
   InfoWindow,
   Marker,
@@ -362,17 +361,6 @@ export const Map: FunctionComponent<IMapProps> = ({
             )}
           </Marker>
         ))}
-
-        <Polygon
-          paths={points.map((point) => point.position)}
-          options={{
-            fillColor: 'blue',
-            fillOpacity: 0.2,
-            strokeColor: 'blue',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-          }}
-        />
 
         <Circle
           center={center}
