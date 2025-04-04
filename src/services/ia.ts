@@ -5,12 +5,13 @@ import {
   IQueryResponse,
   ITenantModelStatus,
 } from '@/types/ia';
-import { BaseService } from '@/utils/network';
+import { BaseService, IRequestModelOutput } from '@/utils/network';
 import {
   IMakeRequest,
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
+import { streamIAResponse } from '@/utils/network/sse.post';
 
 export class IaService extends BaseService {
   static name: VoxServices = 'ia';
@@ -69,5 +70,27 @@ export class IaService extends BaseService {
       uncontent: true,
     };
     return await super.make_request(this.name, model);
+  }
+
+  static async streamQuery(
+    prompt: string,
+    onData: (chunk: string) => void,
+    onDone?: () => void,
+    onError?: (err: any) => void
+  ) {
+    const model: IRequestModelOutput = this.make_request_model(
+      'shift',
+      {
+        url: ['ia', 'stream'],
+        method: REQUEST_METHODS.POST,
+        data: { prompt },
+      },
+      false
+    );
+    try {
+      await streamIAResponse(model, onData, onDone, onError);
+    } catch (error) {
+      onError?.(error);
+    }
   }
 }

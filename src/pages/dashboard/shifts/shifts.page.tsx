@@ -21,14 +21,16 @@ import { Button } from '@/components/common/button/button';
 import { SendForm } from './components/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
-import LiveUserMap from './components/shift.LiveUserMap';
+import LiveUserMap from './components/shift.map';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
+import { PlannerView } from './components/planner.view';
 
 enum VIEW_NAME {
   TABLE,
   CALENDAR,
   SCHEDULER,
   SUPERVISOR,
+  PLANNER,
 }
 
 export const ShiftsPage: FunctionalComponent = () => {
@@ -48,7 +50,11 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const startDate = dayjs().subtract(1, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
-  const [ganttShifts, setGanttShifts] = useState<GeneralTask>({ startDate, endDate, users: [], });
+  const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
+    startDate,
+    endDate,
+    users: [],
+  });
 
   /**
    * Handle Database query for shifts.
@@ -134,7 +140,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserClick = useCallback(
     (id: string | number) => {
@@ -213,6 +219,19 @@ export const ShiftsPage: FunctionalComponent = () => {
               : ''
           }
           icon='330'
+        />
+        <Button
+          name='button-change-planner'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.PLANNER);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.PLANNER
+              ? 'bg-primary-opacity p-2'
+              : ''
+          }
+          icon='331'
         />
         <Button
           name='button-action'
@@ -324,13 +343,10 @@ export const ShiftsPage: FunctionalComponent = () => {
           />
         )}
 
-        {currentView.value === VIEW_NAME.SUPERVISOR && (
-          <div>
-            <LiveUserMap></LiveUserMap>
-          </div>
-        )}
-
+        {currentView.value === VIEW_NAME.PLANNER && <PlannerView />}
+        {currentView.value === VIEW_NAME.SUPERVISOR && <LiveUserMap />}
       </div>
+
       <TaskForm
         closed={showUpsertModal.value}
         onClose={handleCloseUpsertModal}

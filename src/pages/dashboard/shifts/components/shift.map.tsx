@@ -1,6 +1,7 @@
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
+import { tracking_service_url } from '@/env.config';
 import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
-import MapLibrePointsMap from '../../../../components/common/map/MapLibrePointsMap';
 
 type User = {
   id: string;
@@ -11,15 +12,18 @@ type User = {
 
 const LiveUserMap: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [connectionStatus, setConnectionStatus] = useState<string>('Connecting...');
+  const [connectionStatus, setConnectionStatus] =
+    useState<string>('Connecting...');
   const socketRef = useRef<any>(null);
 
   useEffect(() => {
-    const socket = io('http://localhost:3005');
+    const socket = io(tracking_service_url);
     socketRef.current = socket;
     socket.on('connect', () => setConnectionStatus('Connected'));
     socket.on('disconnect', () => setConnectionStatus('Disconnected'));
-    socket.on('connect_error', (error: any) => setConnectionStatus('Connection Error'));
+    socket.on('connect_error', (_: any) =>
+      setConnectionStatus('Connection Error')
+    );
     socket.on('location-update', (user: User) => {
       setUsers((prevUsers) => {
         const index = prevUsers.findIndex((u) => u.id === user.id);
@@ -43,25 +47,31 @@ const LiveUserMap: React.FC = () => {
   }, [users]);
 
   return (
-    <div className="w-full h-full pt-12">
-      <h2 className="text-2xl font-bold text-gray-800">🛰️ Usuarios en tiempo real</h2>
-      <p className="text-sm text-gray-600 mb-2">
-        Estado: <span className={connectionStatus === 'Connected' ? 'text-green-500' : 'text-red-500'}>
-          {connectionStatus}
-        </span>
-      </p>
-      <p className="text-sm text-gray-600 mb-4">
-        {users.length > 0
-          ? `Mostrando ${users.length} usuarios en el mapa`
-          : 'Esperando datos de ubicación...'}
-      </p>
+    <div className='px-4'>
+      <div className='flex justify-end py-1'>
+        <p className='text-sm text-gray-600'>
+          Estado:{' '}
+          <span
+            className={
+              connectionStatus === 'Connected'
+                ? 'text-green-500'
+                : 'text-red-500'
+            }
+          >
+            {connectionStatus}
+          </span>
+          <h2 className='text-2xl font-bold text-gray-800'>
+            🛰️ Usuarios en tiempo real
+          </h2>
+        </p>
+      </div>
 
       <MapLibrePointsMap
         points={users}
-        mapHeight="700px"
-        markerColor="bg-blue-600"
-        pointsLabel="ubicaciones"
-        initialZoom={13}
+        mapHeight='88vh'
+        markerColor='bg-blue-600'
+        pointsLabel='ubicaciones'
+        initialZoom={3}
         useUserLocation={true}
       />
     </div>
