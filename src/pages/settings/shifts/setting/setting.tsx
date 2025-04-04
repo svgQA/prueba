@@ -10,8 +10,8 @@ import { toast } from 'react-toastify';
 import { useLocation } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import { FormValues, IShiftSetting } from './interface';
 import { ShiftService } from '@/services/shift';
+import { FormValues, IShiftSetting } from '@/types/settings';
 
 export const ShiftSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();

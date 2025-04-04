@@ -5,6 +5,7 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.setting.base;
 export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
   label: 'general',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  settings: PAGES_LIST_ROUTER.dashboard.setting.setting.settings,
   show: true,
   menus: [
     {
