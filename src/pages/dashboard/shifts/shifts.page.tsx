@@ -21,6 +21,7 @@ import { Button } from '@/components/common/button/button';
 import { SendForm } from './components/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
+import LiveUserMap from './components/shift.map';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
 
@@ -254,31 +255,33 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   return (
     <Section padding>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title='Turnos Totales Hoy'
-          count={530}
-          subtitle=''
-          color='t-dark'
-          icon='054'
-        />
+      {currentView.value !== VIEW_NAME.SUPERVISOR && (
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+          <CardData
+            title='Turnos Totales Hoy'
+            count={530}
+            subtitle=''
+            color='t-dark'
+            icon='054'
+          />
 
-        <CardData
-          title='Turnos En Curso'
-          count='50%'
-          subtitle=''
-          color='t-dark'
-          icon='052'
-        />
+          <CardData
+            title='Turnos En Curso'
+            count='50%'
+            subtitle=''
+            color='t-dark'
+            icon='052'
+          />
 
-        <CardData
-          title='Turnos Finalizados'
-          count='30%'
-          subtitle=''
-          color='t-dark'
-          icon='015'
-        />
-      </div>
+          <CardData
+            title='Turnos Finalizados'
+            count='30%'
+            subtitle=''
+            color='t-dark'
+            icon='015'
+          />
+        </div>
+      )}
 
       <div className='max-h-screen relative'>
         <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-10'>
@@ -341,8 +344,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         )}
 
         {currentView.value === VIEW_NAME.PLANNER && <PlannerView />}
-
-        {currentView.value === VIEW_NAME.SUPERVISOR && <div></div>}
+        {currentView.value === VIEW_NAME.SUPERVISOR && <LiveUserMap />}
       </div>
 
       <TaskForm
