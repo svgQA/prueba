@@ -1,3 +1,4 @@
+import { IOption } from '@/components/common/multi/interface';
 import { IPagination } from '@/types';
 import { IUserRequest, IUserResponse } from '@/types/auth';
 import { BaseService } from '@/utils/network';
@@ -78,14 +79,27 @@ export class UserService extends BaseService {
     };
     return await super.make_request<IUserResponse>(this.sname, model);
   }
+
   static async getMinimalUsers() {
     const model: IMakeRequest = {
       url: ['user', 'minimal'],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<
-      { id: number; name: string; email: string; cognitoId: string; playerId: string | null }[]
+      {
+        id: number;
+        name: string;
+        email: string;
+        cognitoId: string;
+        playerId: string | null;
+      }[]
     >(this.sname, model);
   }
 
+  static async getListUsers() {
+    const model: IMakeRequest = {
+      url: ['user', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.sname, model);
+  }
 }

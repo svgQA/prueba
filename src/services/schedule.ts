@@ -1,5 +1,9 @@
 import { BaseService } from '@/utils/network';
-import { IMakeRequest, REQUEST_METHODS, VoxServices } from '@/utils/network/types';
+import {
+  IMakeRequest,
+  REQUEST_METHODS,
+  VoxServices,
+} from '@/utils/network/types';
 import { IScheduleNotificationDto } from '@/types/notification/IScheduleNotificationDto';
 
 export class SchedulerServiceFront extends BaseService {

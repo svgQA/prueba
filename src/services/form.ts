@@ -160,7 +160,9 @@ export class FormService extends BaseService {
       url: ['form', 'basic'],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<{ id: number; title: string }[]>(this.sname, model);
+    return await super.make_request<{ id: number; title: string }[]>(
+      this.sname,
+      model
+    );
   }
-
 }

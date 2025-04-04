@@ -14,12 +14,9 @@ export const TemplateManager = () => {
   }, []);
 
   const fetchTemplates = async () => {
-    try {
-      const res = await TemplateServiceFront.getTemplates();
-      setTemplates(res.data || []);
-    } catch (err) {
-      console.error('Error cargando plantillas:', err);
-    }
+    const res = await TemplateServiceFront.getTemplates();
+    if (!res.getStatus()) return;
+    setTemplates(res.getMany());
   };
 
   const handleCreate = async () => {
@@ -56,7 +53,9 @@ export const TemplateManager = () => {
           <div key={tpl.id} className='p-4'>
             <h5 className='font-semibold'>{tpl.title}</h5>
             <p className='text-sm text-gray-600'>{tpl.description}</p>
-            <pre className='text-xs text-gray-400 mt-1'>{JSON.stringify(tpl.data, null, 2)}</pre>
+            <pre className='text-xs text-gray-400 mt-1'>
+              {JSON.stringify(tpl.data, null, 2)}
+            </pre>
           </div>
         ))}
       </div>

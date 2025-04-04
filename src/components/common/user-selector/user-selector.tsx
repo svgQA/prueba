@@ -18,7 +18,7 @@ interface UserSelectorProps {
 export const UserSelector: ComponentType<UserSelectorProps> = ({
   value = [],
   onChange,
-  label = 'Seleccionar Usuarios',
+  label,
   placeholder = 'Buscar usuarios...',
   meta,
   name,
@@ -139,13 +139,15 @@ export const UserSelector: ComponentType<UserSelectorProps> = ({
 
   return (
     <div className='relative' ref={dropdownRef}>
-      <div className='mb-2'>
+      <div className='mb-2 relative'>
         <label className='block text-sm font-medium text-gray-700'>
           {label}
         </label>
 
         {value.length > 0 && (
-          <div className='flex flex-wrap gap-1 mb-2'>
+          <div
+            className={`flex flex-wrap gap-1 mb-2 ${!multiple ? 'absolute bottom-0 right-0 w-full' : ''}`}
+          >
             {isAllSelected ? (
               <span className='inline-flex items-center px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-800'>
                 Todos
@@ -164,7 +166,7 @@ export const UserSelector: ComponentType<UserSelectorProps> = ({
               value.map((option) => (
                 <span
                   key={option.value}
-                  className='inline-flex items-center px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-800'
+                  className='inline-flex items-center justify-between px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-800 w-full h-full'
                 >
                   {option.label}
                   <button

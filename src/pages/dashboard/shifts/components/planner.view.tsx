@@ -14,37 +14,14 @@ import {
 import { fixTruncatedJSONArray } from '@/components/common/mention-editor/utils';
 // import turnos from '@/components/common/shift-viewer/turnos_semanales.json';
 
-export const PlannerView: FunctionalComponent = () => {
+export const PlannerView: FunctionalComponent<{
+  services: MentionOption[];
+  users: MentionOption[];
+}> = ({ services, users }) => {
   const currentPrompt = useSignal<string>('');
   //const [streamingResponse, setStreamingResponse] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [shifts, setShifts] = useState<Shift[]>([]);
-
-  const userOptions: MentionOption[] = [
-    {
-      value: 1,
-      label: 'John Doe',
-      groupName: 'Usuarios',
-    },
-    {
-      value: 2,
-      label: 'Jane Smith',
-      groupName: 'Usuarios',
-    },
-  ];
-
-  const serviceOptions: MentionOption[] = [
-    {
-      value: 1,
-      label: 'Servicio A',
-      groupName: 'Servicios',
-    },
-    {
-      value: 2,
-      label: 'Servicio B',
-      groupName: 'Servicios',
-    },
-  ];
 
   const handleShiftUpdate = useCallback((turnoActualizado: Shift) => {
     console.log('Turno actualizado:', turnoActualizado);
@@ -100,14 +77,8 @@ export const PlannerView: FunctionalComponent = () => {
             currentPrompt.value = value;
           }}
           groups={[
-            {
-              name: 'User',
-              options: userOptions,
-            },
-            {
-              name: 'Service',
-              options: serviceOptions,
-            },
+            { name: 'User', options: users },
+            { name: 'Service', options: services },
           ]}
           placeholder='Escribe @ para mencionar a alguien en el turno...'
           className='min-h-[120px]'
@@ -129,7 +100,7 @@ export const PlannerView: FunctionalComponent = () => {
         <ShiftsGanttViewer
           shifts={shifts}
           onShiftUpdate={handleShiftUpdate}
-          userOptions={userOptions}
+          userOptions={users}
           loading={isStreaming}
         />
       </div>

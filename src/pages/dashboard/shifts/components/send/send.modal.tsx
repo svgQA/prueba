@@ -1,6 +1,5 @@
 import { Modal } from '@/components/common/modal/modal';
-import { Button } from '@/components/common/button/button';
-import { useMemo, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { ManualNotificationForm } from './tabs/manual-notification-form';
 import { TemplateManager } from './tabs/template-manager';
 import { ScheduledNotifications } from './tabs/scheduled-notifications';
@@ -17,9 +16,10 @@ const TABS = [
   { key: 'scheduled', label: 'Notificaciones programadas' },
 ];
 
-export const SendForm = ({ closed, onClose, onSend }: Props) => {
-  const [activeTab, setActiveTab] = useState<'manual' | 'template' | 'scheduled'>('manual');
-
+export const SendForm = ({ closed, onClose }: Props) => {
+  const [activeTab, setActiveTab] = useState<
+    'manual' | 'template' | 'scheduled'
+  >('manual');
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -41,17 +41,20 @@ export const SendForm = ({ closed, onClose, onSend }: Props) => {
       name='modal-shift-updsert'
       width='w-3/4'
       position='fixed'
-      header={<h3 className='text-lg font-semibold'>Centro de notificaciones</h3>}
+      header={
+        <h3 className='text-lg font-semibold'>Centro de notificaciones</h3>
+      }
     >
-      <div className='px-4 py-4 space-y-4'>
+      <div className='px-4 py-4 space-y-4 w-full'>
         <div className='flex gap-2 border-b pb-2'>
           {TABS.map((tab) => (
             <button
               key={tab.key}
-              className={`px-4 py-2 rounded-t font-medium ${activeTab === tab.key
+              className={`px-4 py-2 rounded-t font-medium ${
+                activeTab === tab.key
                   ? 'bg-cyan-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
+              }`}
               onClick={() => setActiveTab(tab.key as any)}
             >
               {tab.label}

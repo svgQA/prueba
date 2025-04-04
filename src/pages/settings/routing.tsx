@@ -56,6 +56,7 @@ import { TaskCreateSettingPage } from './shifts/task/create/task';
 import { ScheduleSettingPage } from './shifts/schedule/schedule';
 import { ScheduleCreateSettingPage } from './shifts/schedule/create/schedule';
 import { ShiftSettingPage } from './shifts/setting/setting';
+import { GeneralSettingPage } from './general/setting/setting';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -81,6 +82,12 @@ export const RoutingContent = memo(() => {
           )}
         />
         {/* GENERAL MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: GeneralSettingPage })
+          )}
+        />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.setting.user.to}
           component={lazy(() => Promise.resolve({ default: UserSettingPage }))}

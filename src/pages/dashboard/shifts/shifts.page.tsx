@@ -24,6 +24,8 @@ import { ShiftForm } from './components/shift.modal';
 import LiveUserMap from './components/shift.map';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
+import { UserService } from '@/services/user';
+import { MentionOption } from '@/components/common/mention-editor';
 
 enum VIEW_NAME {
   TABLE,
@@ -48,6 +50,13 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [taskSelected, setTaskSelected] = useState<Task>();
   const [userSelected, setUserSelected] = useState<User>();
 
+  const [services, setServices] = useState<MentionOption[]>([]);
+  const [users, setUsers] = useState<MentionOption[]>([]);
+
+  // Memoizar los servicios y usuarios para evitar re-renders innecesarios
+  const memoizedServices = useMemo(() => services, [services]);
+  const memoizedUsers = useMemo(() => users, [users]);
+
   const startDate = dayjs().subtract(1, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
@@ -55,15 +64,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     endDate,
     users: [],
   });
-
-  /**
-   * Handle Database query for shifts.
-   */
-  const getShiftHandler = async () => {
-    const response = await ShiftService.get_all({ page: 1, items: 1000 });
-    if (!response.getStatus()) return;
-    shifts.value = response.getMany();
-  };
 
   const handleViewMode = (viewMode: ViewMode = ViewMode.QuarterDay) => {
     setGanttShifts({ startDate, endDate, users: [] });
@@ -86,8 +86,36 @@ export const ShiftsPage: FunctionalComponent = () => {
    */
   useEffect(() => {
     document.title = 'VX - Shift Service';
-    getShiftHandler();
+
+    // Ejecutar todas las peticiones en paralelo
+
+    fetchInitialData();
   }, []);
+
+  const fetchInitialData = async () => {
+    try {
+      const [shiftsResponse, servicesResponse, usersResponse] =
+        await Promise.all([
+          ShiftService.get_all({ page: 1, items: 1000 }),
+          ShiftService.getListService(),
+          UserService.getListUsers(),
+        ]);
+
+      if (!shiftsResponse.getStatus()) {
+        shifts.value = shiftsResponse.getMany();
+      }
+
+      if (servicesResponse.getStatus()) {
+        setServices(servicesResponse.getMany());
+      }
+
+      if (usersResponse.getStatus()) {
+        setUsers(usersResponse.getMany());
+      }
+    } catch (error) {
+      console.error('Error fetching initial data:', error);
+    }
+  };
 
   useEffect(() => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -332,6 +360,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             onClick={handleClick}
             listCellWidth={isChecked ? '155px' : ''}
             columnWidth={columnWidth}
+            users={users}
             group={
               <Group
                 onViewModeChange={handleViewMode}
@@ -343,7 +372,9 @@ export const ShiftsPage: FunctionalComponent = () => {
           />
         )}
 
-        {currentView.value === VIEW_NAME.PLANNER && <PlannerView />}
+        {currentView.value === VIEW_NAME.PLANNER && (
+          <PlannerView services={memoizedServices} users={memoizedUsers} />
+        )}
         {currentView.value === VIEW_NAME.SUPERVISOR && <LiveUserMap />}
       </div>
 

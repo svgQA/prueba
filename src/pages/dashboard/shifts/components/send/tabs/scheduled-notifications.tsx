@@ -27,18 +27,33 @@ export const ScheduledNotifications = () => {
           <div key={item.id} className='p-4 flex flex-col gap-1'>
             <div className='font-semibold'>{item.title}</div>
             <div className='text-sm text-gray-600'>{item.description}</div>
-            <div className='text-xs text-gray-400'>Envío: {new Date(item.sendAt).toLocaleString()}</div>
-            <div className='text-xs'>Estado: <span className='font-medium'>{item.status}</span></div>
+            <div className='text-xs text-gray-400'>
+              Envío: {new Date(item.sendAt).toLocaleString()}
+            </div>
+            <div className='text-xs'>
+              Estado: <span className='font-medium'>{item.status}</span>
+            </div>
           </div>
         ))}
       </div>
 
       <div className='border-t pt-4'>
-        <h5 className='text-sm font-semibold mb-2'>Programar nueva notificación (visual)</h5>
+        <h5 className='text-sm font-semibold mb-2'>
+          Programar nueva notificación (visual)
+        </h5>
         <div className='space-y-2'>
-          <input type='text' placeholder='Título override' className='w-full border px-3 py-2 rounded text-sm' />
-          <input type='datetime-local' className='w-full border px-3 py-2 rounded text-sm' />
-          <button className='px-4 py-2 bg-cyan-600 text-white text-sm rounded hover:bg-cyan-700'>Programar</button>
+          <input
+            type='text'
+            placeholder='Título override'
+            className='w-full border px-3 py-2 rounded text-sm'
+          />
+          <input
+            type='datetime-local'
+            className='w-full border px-3 py-2 rounded text-sm'
+          />
+          <button className='px-4 py-2 bg-cyan-600 text-white text-sm rounded hover:bg-cyan-700'>
+            Programar
+          </button>
         </div>
       </div>
     </div>
