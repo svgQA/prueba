@@ -24,3 +24,12 @@ export interface Marker {
   id: number;
   position: any;
 }
+
+export interface IPointMap {
+  id: number;
+  position: {
+    lat: number;
+    lng: number;
+  };
+  tasks: ITask[];
+}

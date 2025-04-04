@@ -4,7 +4,6 @@ import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
 import {
   GoogleMap,
-  Polygon,
   Circle,
   InfoWindow,
   Marker,
@@ -12,6 +11,7 @@ import {
 } from '@react-google-maps/api';
 import React, { useState, useEffect } from 'preact/compat';
 import { toast } from 'react-toastify';
+import { ITask } from '@/types/shift/activity';
 
 export const Map: FunctionComponent<IMapProps> = ({
   pointsAmount,
@@ -34,7 +34,7 @@ export const Map: FunctionComponent<IMapProps> = ({
 }) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [points, setPoint] = useState<
-    { id: number; position: google.maps.LatLngLiteral }[]
+    { id: number; position: google.maps.LatLngLiteral; tasks: ITask[] }[]
   >([]);
   const [editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({
     lat: '',
@@ -119,13 +119,11 @@ export const Map: FunctionComponent<IMapProps> = ({
     }
     if (pointsAmount === 1) {
       setPoint([]);
-      console.log('points.length', points);
-      console.log('pointsAmount', pointsAmount);
     }
 
     const markerId = pointsAmount === 1 ? 1 : points.length + 1;
 
-    const marker = { id: markerId, position: { lat, lng } };
+    const marker = { id: markerId, position: { lat, lng }, tasks: [] };
 
     if (radialPoint) {
       const pointValidation = haversineDistance(radialPoint, marker);
@@ -363,17 +361,6 @@ export const Map: FunctionComponent<IMapProps> = ({
             )}
           </Marker>
         ))}
-
-        <Polygon
-          paths={points.map((point) => point.position)}
-          options={{
-            fillColor: 'blue',
-            fillOpacity: 0.2,
-            strokeColor: 'blue',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-          }}
-        />
 
         <Circle
           center={center}
