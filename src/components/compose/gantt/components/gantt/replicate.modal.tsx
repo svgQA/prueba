@@ -8,6 +8,8 @@ import { Button } from '@/components/common/button/button';
 import { UserSelector } from '@/components/common/user-selector/user-selector';
 import { required } from '@/utils/utilities';
 import { IOption } from '@/components/common/multi/interface';
+import { ShiftService } from '@/services';
+import { toast } from 'react-toastify';
 
 interface DateSelectorProps {
   selectedUsers: Set<string | number>;
@@ -19,7 +21,7 @@ interface DateSelectorProps {
   ) => void;
 }
 
-interface FormValues {
+export interface FormValues {
   startDate: string;
   endDate: string;
   replacements: {
@@ -71,11 +73,16 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
 
   if (selectedUsers.size === 0) return null;
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
     // const selectedUserIds = values.users.map(user => user.value);
     // onDateSubmit(values.startDate, values.endDate, selectedUserIds);
-    console.log('VALUES: ', values);
-    setShowDateForm(false);
+    const response = await ShiftService.setReplicateV2(values);
+    if (!response.getStatus()) {
+      toast.error('Error replicating shifts');
+      return;
+    }
+    toast.success('Shifts replicated successfully');
+    setShowDateForm((prev) => !prev);
   };
 
   // const handleMouseLeave = (e: MouseEvent) => {

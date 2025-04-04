@@ -86,11 +86,14 @@ export const ShiftsPage: FunctionalComponent = () => {
    */
   useEffect(() => {
     document.title = 'VX - Shift Service';
-
-    // Ejecutar todas las peticiones en paralelo
-
     fetchInitialData();
   }, []);
+
+  // const fetchShifts = async () => {
+  //   const response = await ShiftService.get_all({ page: 1, items: 1000 });
+  //   if (!response.getStatus()) return;
+  //   hifts.value(response.getMany());
+  // };
 
   const fetchInitialData = async () => {
     try {
@@ -101,7 +104,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           UserService.getListUsers(),
         ]);
 
-      if (!shiftsResponse.getStatus()) {
+      if (shiftsResponse && shiftsResponse.getStatus()) {
         shifts.value = shiftsResponse.getMany();
       }
 
