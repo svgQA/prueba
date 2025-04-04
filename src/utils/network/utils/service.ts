@@ -6,6 +6,13 @@ import { ICompany } from '@/store/slices/interface';
 import { tenant_header } from '@/env.config';
 import { toast } from 'react-toastify';
 
+export interface IRequestModelOutput {
+  header: Record<string, string>;
+  data: string | FormData | null;
+  url: string;
+  method: REQUEST_METHODS;
+}
+
 export class BaseService {
   protected static prefix: string = 'api';
   protected static openLoading: () => void = () => {};
@@ -43,7 +50,7 @@ export class BaseService {
     model: IMakeRequest,
     prefix?: boolean,
     tenance: boolean = true
-  ) {
+  ): IRequestModelOutput {
     let url = this.make_url(model.url, instance, prefix);
     if (model.params) {
       const queryParams = new URLSearchParams();
@@ -74,8 +81,8 @@ export class BaseService {
     }
     model.headers = { ...model.headers, Authorization: this.getToken() };
 
-    const output = {
-      header: model.headers as any,
+    const output: IRequestModelOutput = {
+      header: model.headers as Record<string, string>,
       data: model.data,
       url,
       method,
@@ -116,7 +123,7 @@ export class BaseService {
       });
       if (!response.ok) {
         const result = await response.json();
-        console.log('response error ==>', result);
+        // console.log('response error ==>', result);
         toast.error(result.error, { position: 'top-right' });
         return new GenericResponse<T>({
           code: response?.status,

@@ -1,18 +1,18 @@
 import { ComponentType } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { Input } from '@/components/common/input/input';
-import { IUserResponse } from '@/types/auth';
 import { IOption } from '@/components/common/multi/interface';
 import { FieldMetaState } from 'react-final-form';
 
 interface UserSelectorProps {
-  value: IOption[];
+  value?: IOption[];
   onChange: (value: IOption[]) => void;
   label?: string;
   placeholder?: string;
   meta?: FieldMetaState<IOption[]>;
   name: string;
-  users: IUserResponse[];
+  options: IOption[];
+  multiple?: boolean;
 }
 
 export const UserSelector: ComponentType<UserSelectorProps> = ({
@@ -22,47 +22,78 @@ export const UserSelector: ComponentType<UserSelectorProps> = ({
   placeholder = 'Buscar usuarios...',
   meta,
   name,
-  users,
+  options,
+  multiple = false,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredOptions, setFilteredOptions] = useState<IOption[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = users
-        .filter((user) =>
-          `${user.name} ${user.surname}`
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-        )
-        .map((user) => ({
-          label: `${user.name} ${user.surname}`,
-          value: Number(user.id),
-        }));
+      const filtered = options.filter((option) =>
+        option.label.toLowerCase().includes(searchTerm.toLowerCase())
+      );
       setFilteredOptions(filtered);
+      setSelectedIndex(0); // Resetear el índice cuando se filtra
     } else {
       setFilteredOptions([]);
     }
-  }, [searchTerm, users]);
+  }, [searchTerm, options]);
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!showDropdown) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex((prev) => {
+          const nextIndex = prev < filteredOptions.length - 1 ? prev + 1 : 0;
+          return nextIndex;
+        });
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex((prev) => {
+          const nextIndex = prev > 0 ? prev - 1 : filteredOptions.length - 1;
+          return nextIndex;
+        });
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (filteredOptions[selectedIndex]) {
+          handleSelect(filteredOptions[selectedIndex]);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setShowDropdown(false);
+        break;
+    }
+  };
 
   const handleSelect = (option: IOption) => {
-    const optionValue = Number(option.value);
-    const isSelected = value.some((v) => Number(v.value) === optionValue);
-
-    if (isSelected) {
-      onChange(value.filter((v) => Number(v.value) !== optionValue));
+    if (multiple) {
+      const isSelected = value.some((v) => v.value === option.value);
+      if (isSelected) {
+        onChange(value.filter((v) => v.value !== option.value));
+      } else {
+        onChange([...value, option]);
+      }
     } else {
-      onChange([...value, { ...option, value: optionValue }]);
+      onChange([option]);
+      setShowDropdown(false);
     }
     setSearchTerm('');
     setFilteredOptions([]);
-    setShowDropdown(false);
   };
 
   const handleSelectAll = () => {
-    if (value.length === users.length) {
+    if (!multiple) return;
+
+    if (value.length === options.length) {
       onChange([]);
     } else {
       onChange([
@@ -76,10 +107,11 @@ export const UserSelector: ComponentType<UserSelectorProps> = ({
   };
 
   const handleRemoveUser = (optionToRemove: IOption) => {
-    const removeValue = Number(optionToRemove.value);
-    const newValue = value.filter(
-      (v) => Number(v.value) !== Number(removeValue)
-    );
+    if (!multiple) {
+      onChange([]);
+      return;
+    }
+    const newValue = value.filter((v) => v.value !== optionToRemove.value);
     onChange(newValue);
   };
 
@@ -94,13 +126,16 @@ export const UserSelector: ComponentType<UserSelectorProps> = ({
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [showDropdown, filteredOptions, selectedIndex]);
 
   // Función auxiliar para determinar si todos están seleccionados
-  const isAllSelected = value.length === 1 && value[0]?.value === -1;
+  const isAllSelected =
+    multiple && value.length === 1 && value[0]?.value === -1;
 
   return (
     <div className='relative' ref={dropdownRef}>
@@ -167,28 +202,32 @@ export const UserSelector: ComponentType<UserSelectorProps> = ({
 
       {showDropdown && searchTerm && (
         <div className='absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200 max-h-60 overflow-auto'>
-          <div className='p-2 border-b border-gray-200'>
-            <button
-              type='button'
-              className='w-full text-left px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded'
-              onClick={handleSelectAll}
-            >
-              {value.length === users.length
-                ? 'Deseleccionar todos'
-                : 'Seleccionar todos'}
-            </button>
-          </div>
+          {multiple && (
+            <div className='p-2 border-b border-gray-200'>
+              <button
+                type='button'
+                className='w-full text-left px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded'
+                onClick={handleSelectAll}
+              >
+                {value.length === options.length
+                  ? 'Deseleccionar todos'
+                  : 'Seleccionar todos'}
+              </button>
+            </div>
+          )}
 
           {filteredOptions.length > 0 && (
             <div className='p-2'>
-              {filteredOptions.map((option) => (
+              {filteredOptions.map((option, index) => (
                 <button
                   key={option.value}
                   type='button'
                   className={`w-full text-left px-2 py-1 text-sm rounded border-none ${
-                    value.some((v) => Number(v.value) === Number(option.value))
-                      ? 'bg-blue-50 text-blue-800'
-                      : 'text-gray-700 hover:bg-gray-100'
+                    index === selectedIndex
+                      ? 'bg-blue-100 text-blue-800'
+                      : value.some((v) => v.value === option.value)
+                        ? 'bg-blue-50 text-blue-800'
+                        : 'text-gray-700 hover:bg-gray-100'
                   }`}
                   onClick={() => handleSelect(option)}
                 >

@@ -22,12 +22,14 @@ import { SendForm } from './components/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
+import { PlannerView } from './components/planner.view';
 
 enum VIEW_NAME {
   TABLE,
   CALENDAR,
   SCHEDULER,
   SUPERVISOR,
+  PLANNER,
 }
 
 export const ShiftsPage: FunctionalComponent = () => {
@@ -218,6 +220,19 @@ export const ShiftsPage: FunctionalComponent = () => {
           icon='330'
         />
         <Button
+          name='button-change-planner'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.PLANNER);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.PLANNER
+              ? 'bg-primary-opacity p-2'
+              : ''
+          }
+          icon='331'
+        />
+        <Button
           name='button-action'
           rounded={false}
           className='border-2 border-primary p-2'
@@ -325,8 +340,11 @@ export const ShiftsPage: FunctionalComponent = () => {
           />
         )}
 
+        {currentView.value === VIEW_NAME.PLANNER && <PlannerView />}
+
         {currentView.value === VIEW_NAME.SUPERVISOR && <div></div>}
       </div>
+
       <TaskForm
         closed={showUpsertModal.value}
         onClose={handleCloseUpsertModal}
