@@ -7,4 +7,4 @@ export interface IExpansionPanelProps {
   className?: string;
   children: React.ReactNode;
   onAdd?: () => void;
-} 
+}
