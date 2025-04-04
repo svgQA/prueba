@@ -1,13 +1,17 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { tracking_service_url } from '@/env.config';
 import React, { useEffect, useState, useRef } from 'react';
+import { hasUserTenant, useUserStore } from '@/store/slices';
 import io from 'socket.io-client';
 
 type User = {
   id: string;
-  name: string;
   lat: number;
   lng: number;
+  name: string;
+  token: string;
+  type: 'provider' | 'client';
+  tenantId: number;
 };
 
 const LiveUserMap: React.FC = () => {
@@ -15,9 +19,12 @@ const LiveUserMap: React.FC = () => {
   const [connectionStatus, setConnectionStatus] =
     useState<string>('Connecting...');
   const socketRef = useRef<any>(null);
+  const { getToken, getSelected } = useUserStore();
 
   useEffect(() => {
-    const socket = io(tracking_service_url);
+    const socket = io(tracking_service_url, {
+      query: { token: getToken(), tenantId: getSelected()?.tenant_id },
+    });
     socketRef.current = socket;
     socket.on('connect', () => setConnectionStatus('Connected'));
     socket.on('disconnect', () => setConnectionStatus('Disconnected'));
