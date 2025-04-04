@@ -12,7 +12,6 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { UserService } from '@/services/user';
 import { ShiftService } from '@/services';
 import { IUserResponse } from '@/types/auth';
-import { IShiftResponse } from '@/types/shift/activity';
 import { Chip } from '@/components/common/chip/chip';
 import { toast } from 'react-toastify';
 import { Task, User } from '@/components/compose/gantt/types/public-types';

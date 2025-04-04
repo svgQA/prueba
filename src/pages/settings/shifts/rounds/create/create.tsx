@@ -187,7 +187,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
           ...arrayMutators,
         }}
         initialValues={initialValues.value}
-        render={({ handleSubmit, form, submitting, values }) => (
+        render={({ handleSubmit, form, submitting }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid md:grid-cols-2 gap-6'>
