@@ -78,4 +78,14 @@ export class UserService extends BaseService {
     };
     return await super.make_request<IUserResponse>(this.sname, model);
   }
+  static async getMinimalUsers() {
+    const model: IMakeRequest = {
+      url: ['user', 'minimal'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<
+      { id: number; name: string; email: string; cognitoId: string; playerId: string | null }[]
+    >(this.sname, model);
+  }
+
 }
