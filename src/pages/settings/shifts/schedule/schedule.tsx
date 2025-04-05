@@ -7,7 +7,6 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import data from './fakeJson.json';
 import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 
@@ -41,8 +40,8 @@ export const ScheduleSettingPage: FunctionComponent = () => {
 
   const getSchedules = async () => {
     const request: any = await ShiftService.getSchedules();
-    console.log(request);
-    schedules.value = data;
+    if (!request.getStatus()) return;
+    schedules.value = request.getMany();
   };
 
   const redirect = () => {
