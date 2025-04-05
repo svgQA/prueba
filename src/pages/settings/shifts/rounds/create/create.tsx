@@ -3,7 +3,6 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-// import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
@@ -13,10 +12,14 @@ import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
 import arrayMutators from 'final-form-arrays';
-// import { FieldArray } from 'react-final-form-arrays';
-// import { IFormResponse } from '@/types/form';
-// import { TextArea } from '@/components/common/text.area/text.area';
-// import dayjs from 'dayjs';
+import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
+import { IPointMap } from '../interface';
+import { TextArea } from '@/components/common/text.area/text.area';
+import { Select } from '@/components/common/select/select';
+import dayjs from 'dayjs';
+import { Tooltip } from '@/components/common/tooltip/tooltip';
+import { ITask } from '@/types/shift/activity';
+import { FormService } from '@/services';
 
 interface IPoint {
   latitude: number;
@@ -29,7 +32,17 @@ interface FormData {
   placeId: number;
   points?: IPoint[];
   latitude: string;
+  radius: number;
   longitude: string;
+  description: string;
+  tasks: {
+    [key: string]: {
+      start: string;
+      status: string;
+      description: string;
+      formId: number;
+    };
+  };
 }
 
 interface ILocation {
@@ -42,14 +55,19 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const points = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const places = useSignal<any>([]);
-
-  // const [points, setPoint] = useState<{ id: number; position: any }[]>([]);
+  const showHelp = useSignal<boolean>(false);
+  const tasks = useSignal<ITask[]>([]);
   const { id } = useParams(); // Obtiene el id de la URL
-
   const [_, navigate] = useLocation();
+  const forms = useSignal<any[]>([]);
+
+  const getFormsHandler = async () => {
+    const response = await FormService.get_all();
+    if (!response.getStatus()) return;
+    forms.value = response.getMany();
+  };
 
   const sendPointsRef = (data: any) => {
-    console.log('data ==>', data);
     if (!data.length) return;
     const { lat, lng } = data[0].position;
     points.value = data;
@@ -66,10 +84,15 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       });
     } else {
       model.points = points.value.map(
-        (poin: { id: number; position: { lat: number; lng: number } }) => {
+        (point: {
+          id: number;
+          position: { lat: number; lng: number };
+          tasks: any[];
+        }) => {
           return {
-            latitude: poin.position.lat,
-            longitude: poin.position.lng,
+            latitude: point.position.lat,
+            longitude: point.position.lng,
+            tasks: point.tasks,
           };
         }
       );
@@ -87,19 +110,22 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
     navigate('/rounds');
   };
-
-  // const setPosition = (placeId: number) => {
-  //   const place = places.value.find((val: any) => val.id === placeId);
-  //   currentLocation.value = {
-  //     lat: place.latitude,
-  //     lng: place.longitude,
-  //   };
-  // };
+  const getTasks = async () => {
+    const response = await ShiftService.getTasks();
+    if (!response.getStatus()) return;
+    tasks.value = response.getMany();
+  };
 
   const setInitialValues = async () => {
     if (!id) return;
     let count = 0;
-    const userKeys = ['name', 'frequency', 'placeId'] as const;
+    const userKeys = [
+      'name',
+      'frequency',
+      'placeId',
+      'radius',
+      'description',
+    ] as const;
     const request: any = await ShiftService.getRoundById(id);
     points.value =
       request.model.points.map((point: any) => {
@@ -110,6 +136,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
             lat: point.latitude,
             lng: point.longitude,
           },
+          tasks: point.task,
         };
       }) ?? [];
 
@@ -122,18 +149,34 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     places.value = request.data;
   };
 
-  const resertMarket = async () => {
-    console.log('resertMarket');
+  const resetMarket = async () => {
     points.value = [];
   };
 
   const created = async () => {
     await getPlaces();
     await setInitialValues();
+    await getFormsHandler();
+  };
+
+  const selectTask = async (taskId: number, pointId: number) => {
+    const task = tasks.value.find((task: any) => task.id === taskId);
+
+    if (!task) {
+      throw new Error(`Task with id ${taskId} not found`);
+    }
+
+    points.value[pointId].tasks.push({
+      start: task.start,
+      status: task.status,
+      description: task.description,
+      formId: task.formId,
+    });
   };
 
   useEffect(() => {
     created();
+    getTasks();
   }, []);
 
   return (
@@ -178,66 +221,292 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
 
-                {/* Latitud y Longitud */}
                 <div className='grid grid-cols-2 gap-4'>
                   <div>
-                    <Field<string> name='latitude'>
+                    <Field
+                      name='frequency'
+                      parse={(value) => (value ? Number(value) : undefined)}
+                    >
                       {({ input }) => (
                         <Input
+                          id='input-code'
                           {...input}
-                          label='Latitud'
-                          type='text'
-                          disabled
+                          placeholder='Ingrese frecuencia...'
+                          label='Frecuencia'
+                          type='number'
                         />
                       )}
                     </Field>
                   </div>
                   <div>
-                    <Field<string> name='longitude'>
+                    <Field
+                      name='radius'
+                      parse={(value) => (value ? Number(value) : undefined)}
+                    >
                       {({ input }) => (
                         <Input
+                          id='input-radius'
                           {...input}
-                          label='Longitud'
-                          type='text'
-                          disabled
+                          placeholder='Ingrese radio...'
+                          label='Radio'
+                          type='number'
                         />
                       )}
                     </Field>
                   </div>
                 </div>
 
-                <div>
-                  <Field
-                    name='frequency'
-                    parse={(value) => (value ? Number(value) : undefined)}
-                  >
-                    {({ input }) => (
-                      <Input
-                        id='input-code'
-                        {...input}
-                        placeholder='Ingrese frecuencia...'
-                        label='Frecuencia'
-                        type='number'
-                      />
-                    )}
-                  </Field>
-                </div>
+                <ExpansionPanel title='Tareas por punto'>
+                  {points.value.map((point: IPointMap, index: number) => (
+                    <ExpansionPanel
+                      subtitle={`lat: ${point.position.lat}, lng: ${point.position.lng}`}
+                      className='mt-1'
+                      key={point.id}
+                      title={`📍 Punto ${index + 1} `}
+                    >
+                      <Field name={`tasks.${point.id}.create`}>
+                        {({ input: createInput }) => {
+                          const isCreateChecked = createInput.value;
+
+                          return (
+                            <div className='grid grid-cols-12 gap-4 items-start'>
+                              {/* Checkbox */}
+                              <div className='col-span-1'>
+                                <Tooltip text='Crear tarea'>
+                                  <input
+                                    {...createInput}
+                                    type='checkbox'
+                                    className='form-checkbox mt-9 h-5 w-5 text-blue-600 rounded'
+                                  />
+                                </Tooltip>
+                              </div>
+                              {isCreateChecked ? (
+                                <>
+                                  <div className='col-span-4'>
+                                    <Field<string>
+                                      name={`tasks.${point.id}.start`}
+                                      validate={required}
+                                      parse={(value) =>
+                                        value ? dayjs(value).toISOString() : ''
+                                      }
+                                      format={(value) =>
+                                        value
+                                          ? dayjs(value).format(
+                                              'YYYY-MM-DD HH:mm'
+                                            )
+                                          : ''
+                                      }
+                                    >
+                                      {({ input, meta }) => (
+                                        <Input
+                                          {...input}
+                                          type='datetime-local'
+                                          id='task-start'
+                                          label='Fecha inicio'
+                                          meta={meta}
+                                        />
+                                      )}
+                                    </Field>
+                                  </div>
+                                  <div className='col-span-6'>
+                                    <Field name={`tasks.${point.id}.formId`}>
+                                      {({ input }) => (
+                                        <Select
+                                          {...input}
+                                          placeholder='Seleccione...'
+                                          label='Formulario'
+                                          name='formId'
+                                          icon='252'
+                                          optionValue='id'
+                                          optionLabel='title'
+                                          options={forms.value}
+                                          onChange={(e) => {
+                                            const id = parseInt(
+                                              e.currentTarget.value
+                                            );
+                                            input.onChange(id);
+                                          }}
+                                        />
+                                      )}
+                                    </Field>
+                                  </div>
+
+                                  <div className='col-span-11'>
+                                    <Field<string>
+                                      name={`tasks.${point.id}.description`}
+                                      validate={required}
+                                    >
+                                      {({ input, meta }) => (
+                                        <TextArea
+                                          {...input}
+                                          id='task-description'
+                                          placeholder='Ingrese Descripción...'
+                                          label='Descripción'
+                                          type='text'
+                                          meta={meta}
+                                        />
+                                      )}
+                                    </Field>
+                                  </div>
+                                  <div className='col-span-1'>
+                                    <Button
+                                      id='btn-save'
+                                      name='btn-save'
+                                      icon='039'
+                                      type='button'
+                                      className='px-4 py-2 mt-8 '
+                                      onClick={() => {
+                                        const formState = form.getState();
+                                        const taskData =
+                                          formState.values.tasks[point.id];
+
+                                        // Create a new array with the updated tasks
+                                        const updatedPoints = [...points.value];
+                                        if (!updatedPoints[index].tasks) {
+                                          updatedPoints[index].tasks = [];
+                                        }
+                                        updatedPoints[index].tasks.push({
+                                          start: taskData.start,
+                                          description: taskData.description,
+                                          formId: taskData.formId,
+                                        });
+
+                                        // Update the signal to trigger re-render
+                                        points.value = updatedPoints;
+                                      }}
+                                    />
+                                  </div>
+                                </>
+                              ) : (
+                                <div className='col-span-11'>
+                                  <Field name={`tasks.${point.id}.taskId`}>
+                                    {({ input }) => (
+                                      <Select
+                                        {...input}
+                                        placeholder='Seleccione tarea...'
+                                        label='Tarea'
+                                        name='taskId'
+                                        icon='252'
+                                        optionValue='id'
+                                        optionLabel='description'
+                                        options={tasks.value}
+                                        disabled={isCreateChecked}
+                                        onChange={(e) => {
+                                          const id = parseInt(
+                                            e.currentTarget.value
+                                          );
+                                          input.onChange(id);
+                                          selectTask(id, index);
+                                        }}
+                                      />
+                                    )}
+                                  </Field>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        }}
+                      </Field>
+
+                      {point.tasks && point.tasks.length > 0 && (
+                        <div className='mt-4'>
+                          <table className='min-w-full divide-y divide-gray-200'>
+                            <thead className='bg-gray-50'>
+                              <tr>
+                                <th
+                                  scope='col'
+                                  className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                />
+                                <th
+                                  scope='col'
+                                  className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                >
+                                  Fecha Inicio
+                                </th>
+                                <th
+                                  scope='col'
+                                  className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                >
+                                  ID Formulario
+                                </th>
+                                <th
+                                  scope='col'
+                                  className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                                >
+                                  Descripción
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className='bg-white divide-y divide-gray-200'>
+                              {point.tasks.map(
+                                (task: ITask, taskIndex: number) => (
+                                  <tr key={taskIndex}>
+                                    <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                      <Button
+                                        textColor='text-red-600'
+                                        id='btn-delete'
+                                        name='btn-delete'
+                                        icon='041'
+                                        type='button'
+                                        className='text-red-600 hover:text-red-800'
+                                        onClick={() => {
+                                          points.value[index].tasks.splice(
+                                            taskIndex,
+                                            1
+                                          );
+                                          points.value = [...points.value];
+                                        }}
+                                      />
+                                    </td>
+                                    <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                      {dayjs(task.start).format(
+                                        'DD/MM/YYYY HH:mm'
+                                      )}
+                                    </td>
+                                    <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                      {task.formId}
+                                    </td>
+
+                                    <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
+                                      <p>{task.description}</p>
+                                    </td>
+                                  </tr>
+                                )
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </ExpansionPanel>
+                  ))}
+                </ExpansionPanel>
 
                 {/* Instrucciones */}
-                <div className='mt-6 border rounded-md p-4 bg-primary-opacity'>
-                  <h3 className='font-medium mb-2'>Instrucciones</h3>
-                  <ul className='list-disc pl-5 space-y-2'>
-                    <li>
-                      Haga clic en el mapa para comenzar a dibujar la ronda
-                    </li>
-                    <li>Continúe haciendo clic para agregar más puntos.</li>
-                    <li>
-                      Haga clic en el botón de guardar para crear la ronda.
-                    </li>
-                  </ul>
+                <div>
+                  <Button
+                    id='btn-help'
+                    name='btn-help'
+                    type='button'
+                    label='💡 Instrucciones'
+                    onClick={() => (showHelp.value = !showHelp.value)}
+                  />
+
+                  {showHelp.value && (
+                    <div className='mt-2 border rounded-md p-4 bg-primary-opacity'>
+                      <h3 className='font-medium mb-2'>Instrucciones</h3>
+                      <ul className='list-disc pl-5 space-y-2'>
+                        <li>
+                          Haga clic en el mapa para comenzar a dibujar la ronda
+                        </li>
+                        <li>Continúe haciendo clic para agregar más puntos.</li>
+                        <li>
+                          Haga clic en el botón de guardar para crear la ronda.
+                        </li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
-
               <div>
                 <Map
                   name='Map'
@@ -262,39 +531,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
               </div>
             </div>
 
-            {/* <div class='col-span-2'>
-                  <Field<string> name='placeId' validate={required}>
-                    {({ input, meta }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione lugar...'
-                        label='Lugar'
-                        id='placeId'
-                        name='placeId'
-                        icon='252'
-                        optionValue='id'
-                        optionLabel='name'
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                          setPosition(id);
-                        }}
-                        options={places.value}
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div class='col-span-1'>
-                  <h3>Cordenadas del lugar</h3>
-                  <label for='fname'>Latitud: </label>
-                  {currentLocation.value?.lat}
-                  <br />
-                  <label for='lname'>Longitud: </label>
-                  {currentLocation.value?.lng}
-                </div> */}
-
             {/* Botonera */}
             <div className='w-full flex-row flex justify-end items-center'>
               <Button
@@ -304,7 +540,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 label='Limpiar'
                 onClick={() => {
                   form.reset();
-                  resertMarket();
+                  resetMarket();
                 }}
                 border={true}
                 className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
@@ -319,7 +555,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 disabled={submitting}
               />
             </div>
-            {/* {<pre>{JSON.stringify(values, 0, 2)}</pre>} */}
           </form>
         )}
       />

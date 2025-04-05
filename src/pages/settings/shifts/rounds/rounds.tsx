@@ -21,7 +21,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   const [rounds, setRounds] = useState([]);
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de ronda' });
+    setMenu({ ...infoMenu.value, label: 'Creación de ronda' });
     navigate('/round/create');
   };
 
@@ -65,7 +65,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   };
 
   const editProject = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar proyecto' });
+    setMenu({ ...infoMenu.value, label: 'Editar ronda' });
     navigate(`/round/update/${id}`);
   };
 

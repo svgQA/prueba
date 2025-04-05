@@ -35,10 +35,21 @@ enum VIEW_NAME {
   PLANNER,
 }
 
+interface IShiftSummary {
+  total: number;
+  inProgress: number;
+  completed: number;
+}
+
 export const ShiftsPage: FunctionalComponent = () => {
   const showUpsertModal = useSignal<boolean>(false);
   const showSendModal = useSignal<boolean>(false);
   const showShiftModal = useSignal<boolean>(false);
+  const shiftSummary = useSignal<IShiftSummary>({
+    total: 0,
+    inProgress: 0,
+    completed: 0,
+  });
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const shifts = useSignal<IShiftResponse[]>([]);
@@ -86,6 +97,7 @@ export const ShiftsPage: FunctionalComponent = () => {
    */
   useEffect(() => {
     document.title = 'VX - Shift Service';
+    handleGetShiftSummary();
     fetchInitialData();
   }, []);
 
@@ -217,6 +229,20 @@ export const ShiftsPage: FunctionalComponent = () => {
     [shifts]
   );
 
+  const handleGetShiftSummary = async () => {
+    try {
+      const summary = await ShiftService.getShiftSummary();
+      shiftSummary.value = summary.getOne() as IShiftSummary;
+    } catch (error) {
+      console.error('Error getting shift summary:', error);
+    }
+  };
+
+  const calculatePercentage = (value: number): string => {
+    if (shiftSummary.value.total === 0) return '0%';
+    return `${Math.round((value / shiftSummary.value.total) * 100)}%`;
+  };
+
   const handleCreacteNewShift = () => {
     cleanSelectedData();
     toggleUpsertModal();
@@ -290,7 +316,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
             title='Turnos Totales Hoy'
-            count={530}
+            count={shiftSummary.value.total}
             subtitle=''
             color='t-dark'
             icon='054'
@@ -298,7 +324,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
           <CardData
             title='Turnos En Curso'
-            count='50%'
+            count={calculatePercentage(shiftSummary.value.inProgress)}
             subtitle=''
             color='t-dark'
             icon='052'
@@ -306,7 +332,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
           <CardData
             title='Turnos Finalizados'
-            count='30%'
+            count={calculatePercentage(shiftSummary.value.completed)}
             subtitle=''
             color='t-dark'
             icon='015'
@@ -343,6 +369,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               servicePlaceAddress: false,
               city: false,
               employeeId: false,
+              client: false,
               duration: false,
               userEmail: false,
               userPhone: false,

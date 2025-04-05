@@ -22,6 +22,7 @@ import dayjs from 'dayjs';
 import { Input } from '@/components/common/input/input';
 import { IFormResponse } from '@/types/form';
 import { FormService } from '@/services';
+import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 
 interface FormData {
   name: string;
@@ -53,7 +54,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     let message: string;
 
     if (id) {
-      request = await ShiftService.createService(model);
+      request = await ShiftService.updateService(model, id);
       message = 'servicio editado exitosamente!';
     } else {
       request = await ShiftService.createService(model);
@@ -117,14 +118,12 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const getFormsHandler = async () => {
     const response = await FormService.get_all();
     if (!response.getStatus()) return;
-    console.log('reponse', response);
     forms.value = response.getMany();
   };
 
   const getTaks = async () => {
     const request: any = await ShiftService.getTasks();
     tasks.value = request.data;
-    console.log('tasks ==>', tasks.value);
   };
 
   const getSchedules = async () => {
@@ -135,7 +134,17 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const setInitialValues = async () => {
     if (!id) return;
 
-    const userKeys = ['name', 'description', 'priority'] as const;
+    const userKeys = [
+      'name',
+      'contractId',
+      'placeId',
+      'roundId',
+      'description',
+      'priority',
+      'schedules',
+      'overtimes',
+      'task',
+    ] as const;
 
     const request: any = await ShiftService.getServiceById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
@@ -164,7 +173,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-2'>
-              <div class='col-span-4'>
+              <div class='col-span-2'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
@@ -177,27 +186,13 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-4'>
-                <Field<string> name='description' validate={required}>
-                  {({ input, meta }) => (
-                    <TextArea
-                      {...input}
-                      min='3'
-                      max='300'
-                      placeholder='Ingrese Descripción...'
-                      label='Descripción'
-                      type='text'
-                      meta={meta}
-                    />
-                  )}
-                </Field>
-              </div>
+
               <div class='col-span-2'>
                 <Field<string> name='contractId' validate={required}>
                   {({ input, meta }) => (
                     <Select
                       {...input}
-                      placeholder='Selecione Contrato...'
+                      placeholder='Seleccione Contrato...'
                       label='Contrato'
                       id='contractId'
                       name='contractId'
@@ -219,7 +214,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Select
                       {...input}
-                      placeholder='Selecione lugar...'
+                      placeholder='Seleccione lugar...'
                       label='Lugar'
                       id='placeId'
                       name='placeId'
@@ -241,7 +236,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   {({ input }) => (
                     <Select
                       {...input}
-                      placeholder='Selecione ronda...'
+                      placeholder='Seleccione ronda...'
                       label='Ronda'
                       id='roundId'
                       name='roundId'
@@ -257,43 +252,45 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-2'>
-                <Field name='state'>
-                  {({ input }) => (
-                    <Select
+              <div class='col-span-4'>
+                <Field<string> name='description' validate={required}>
+                  {({ input, meta }) => (
+                    <TextArea
                       {...input}
-                      placeholder='Selecione estado...'
-                      label='Estado'
-                      name='state'
-                      icon='252'
-                      options={[
-                        { value: 'ACTIVE', label: 'Activo' },
-                        { value: 'INACTIVE', label: 'Inactivo' },
-                        { value: 'PENDING', label: 'Pendiente' },
-                        { value: 'COMPLETED', label: 'Completado' },
-                        { value: 'CANCELED', label: 'Cancelado' },
-                      ]}
+                      min='3'
+                      max='300'
+                      placeholder='Ingrese Descripción...'
+                      label='Descripción'
+                      type='text'
+                      meta={meta}
                     />
                   )}
                 </Field>
               </div>
 
               <div class='col-span-4'>
-                <h3>Horarios:</h3>
+                <h3 className='text-lg font-medium text-gray-900 mb-4'>
+                  Horarios:
+                </h3>
 
                 <Field<number> name='schedules' validate={required}>
                   {({ input }) => (
-                    <div className=' mr-5 ml-5'>
-                      <label className='block mb-2 text-sm font-medium text-gray-700'>
-                        Buscar:
-                      </label>
-                      <input
-                        type='text'
-                        value={search}
-                        onChange={(e) => setSearch(e.currentTarget.value)}
-                        className='block w-full px-3 py-2 mb-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-                        placeholder='Escribe para buscar...'
-                      />
+                    <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-4'>
+                      <div className='flex items-center gap-4 mb-3'>
+                        <div className='flex-1'>
+                          <label className='text-sm font-medium text-gray-700'>
+                            Buscar:
+                          </label>
+                          <input
+                            type='text'
+                            value={search}
+                            onChange={(e) => setSearch(e.currentTarget.value)}
+                            className='mt-1 block w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                            placeholder='Escribe para buscar...'
+                          />
+                        </div>
+                      </div>
+
                       <select
                         {...input}
                         multiple
@@ -304,11 +301,15 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                           );
                           input.onChange(selectedValues);
                         }}
-                        className='block w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-32'
+                        className='block w-full px-3 py-2 text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-28'
                       >
                         {filteredOptions.map((option: any) => (
-                          <option key={option.id} value={option.id}>
-                            {`* Horario: ${option.name}(${option.day})  horas: ${dayjs(option.hourStart).format('HH:mm')} a ${dayjs(option.hourEnd).format('HH:mm')}`}
+                          <option
+                            key={option.id}
+                            value={option.id}
+                            className='py-1 px-2'
+                          >
+                            {`* Horario: ${option.name}  [ ${option.daysAllowed} ]`}
                           </option>
                         ))}
                       </select>
@@ -316,188 +317,220 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-4'>
-                <FieldArray name='overtimes'>
-                  {({ fields }) => (
-                    <div>
-                      <h3 className='text-lg dark:text-white font-medium text-gray-900 text-center p5'>
-                        Añadir extra turnos
-                        <Button
-                          icon='044'
-                          rounded
-                          id='menu-btn'
-                          name='menu'
-                          type='button'
-                          color='text-primary'
-                          onClick={() => fields.push({})}
-                        />
-                      </h3>
-                      {fields.map((name, index) => (
-                        <div key={index} className='rounde shadow p-2 border-2'>
-                          <div className='bg-gray-100 dark:bg-b-dark-light p-3 text-center'>
-                            <h2 className='text-xl font-semibold '>
-                              {index + 1}) Turno extra
-                            </h2>
-                          </div>
-                          <div className='grid grid-cols-3 gap-1'>
-                            <div className='col-span-1'>
-                              <Field<string>
-                                name={`${name}.start`}
-                                validate={required}
-                                parse={(value) =>
-                                  value ? dayjs(value).toISOString() : ''
-                                }
-                                format={(value) =>
-                                  value
-                                    ? dayjs(value).format('YYYY-MM-DD HH:mm')
-                                    : ''
-                                }
-                              >
-                                {({ input, meta }) => (
-                                  <Input
-                                    {...input}
-                                    type='datetime-local'
-                                    id='task-start'
-                                    label='Fecha'
-                                    meta={meta}
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                            <div class='col-span-1'>
-                              <Field<string>
-                                name={`${name}.hourStart`}
-                                required={required}
-                                parse={(value) =>
-                                  value
-                                    ? dayjs(`${date}T${value}:00`).toISOString()
-                                    : ''
-                                }
-                                format={(value) =>
-                                  value ? dayjs(value).format('HH:mm') : ''
-                                }
-                              >
-                                {({ input, meta }) => (
-                                  <Input
-                                    {...input}
-                                    meta={meta}
-                                    type='time'
-                                    label='Hora inicio'
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                            <div class='col-span-1'>
-                              <Field<string>
-                                name={`${name}.hourEnd`}
-                                required={required}
-                                parse={(value) =>
-                                  value
-                                    ? dayjs(`${date}T${value}:00`).toISOString()
-                                    : ''
-                                }
-                                format={(value) =>
-                                  value ? dayjs(value).format('HH:mm') : ''
-                                }
-                              >
-                                {({ input, meta }) => (
-                                  <Input
-                                    {...input}
-                                    meta={meta}
-                                    type='time'
-                                    label='Hora fin'
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                          </div>
-                          <button
+              <div class='col-span-2'>
+                <ExpansionPanel title='Turnos extra'>
+                  <FieldArray name='overtimes'>
+                    {({ fields }) => (
+                      <div>
+                        <div className='flex items-center justify-between mb-4'>
+                          <h3 className='text-lg font-medium text-gray-900 dark:text-white'>
+                            Añadir turnos extra
+                          </h3>
+                          <Button
+                            icon='044'
+                            rounded
+                            id='menu-btn'
+                            name='menu'
                             type='button'
-                            onClick={() => fields.remove(index)}
-                            className='mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700'
-                          >
-                            Eliminar
-                          </button>
+                            color='text-primary'
+                            onClick={() => fields.push({})}
+                          />
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </FieldArray>
+
+                        <div className='space-y-4'>
+                          {fields.map((name, index) => (
+                            <div
+                              key={index}
+                              className='bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden'
+                            >
+                              <div className='bg-gray-50 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600'>
+                                <h2 className='text-lg font-medium text-gray-900 dark:text-white'>
+                                  Turno extra #{index + 1}
+                                </h2>
+                              </div>
+
+                              <div className='p-4'>
+                                <div className='grid grid-cols-3 gap-4'>
+                                  <div>
+                                    <Field<string>
+                                      name={`${name}.start`}
+                                      validate={required}
+                                      parse={(value) =>
+                                        value ? dayjs(value).toISOString() : ''
+                                      }
+                                      format={(value) =>
+                                        value
+                                          ? dayjs(value).format(
+                                              'YYYY-MM-DD HH:mm'
+                                            )
+                                          : ''
+                                      }
+                                    >
+                                      {({ input, meta }) => (
+                                        <Input
+                                          {...input}
+                                          type='datetime-local'
+                                          id='task-start'
+                                          label='Fecha'
+                                          meta={meta}
+                                        />
+                                      )}
+                                    </Field>
+                                  </div>
+
+                                  <div>
+                                    <Field<string>
+                                      name={`${name}.hourStart`}
+                                      required={required}
+                                      parse={(value) =>
+                                        value
+                                          ? dayjs(
+                                              `${date}T${value}:00`
+                                            ).toISOString()
+                                          : ''
+                                      }
+                                      format={(value) =>
+                                        value
+                                          ? dayjs(value).format('HH:mm')
+                                          : ''
+                                      }
+                                    >
+                                      {({ input, meta }) => (
+                                        <Input
+                                          {...input}
+                                          meta={meta}
+                                          type='time'
+                                          label='Hora inicio'
+                                        />
+                                      )}
+                                    </Field>
+                                  </div>
+
+                                  <div>
+                                    <Field<string>
+                                      name={`${name}.hourEnd`}
+                                      required={required}
+                                      parse={(value) =>
+                                        value
+                                          ? dayjs(
+                                              `${date}T${value}:00`
+                                            ).toISOString()
+                                          : ''
+                                      }
+                                      format={(value) =>
+                                        value
+                                          ? dayjs(value).format('HH:mm')
+                                          : ''
+                                      }
+                                    >
+                                      {({ input, meta }) => (
+                                        <Input
+                                          {...input}
+                                          meta={meta}
+                                          type='time'
+                                          label='Hora fin'
+                                        />
+                                      )}
+                                    </Field>
+                                  </div>
+                                </div>
+
+                                <div className='mt-4 flex justify-end'>
+                                  <button
+                                    type='button'
+                                    onClick={() => fields.remove(index)}
+                                    className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 '
+                                  >
+                                    Eliminar
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </FieldArray>
+                </ExpansionPanel>
               </div>
-              <div class='col-span-4'>
-                <FieldArray name='task'>
-                  {({ fields }: any) => (
-                    <div>
-                      <h3 className='text-lg dark:text-white font-medium text-gray-900 text-center p5'>
-                        Añadir tareas al servicio
-                        <Button
-                          icon='044'
-                          rounded
-                          id='menu-btn'
-                          name='menu'
-                          type='button'
-                          color='text-primary'
-                          onClick={() => fields.push({})}
-                        />
-                      </h3>
-                      {fields.map((name: any, index: any) => {
-                        return (
-                          <div key={index} className='rounde  p-2 border-2'>
-                            <div className='bg-gray-100 dark:bg-b-dark-light p-3 text-center'>
-                              <h2 className='text-xl font-semibold '>
+              <div class='col-span-2'>
+                <ExpansionPanel title='Tareas del servicio'>
+                  <FieldArray name='task'>
+                    {({ fields }: any) => (
+                      <div className='space-y-6'>
+                        <div className='flex items-center justify-between'>
+                          <h3 className='text-lg font-medium text-gray-900 dark:text-white'>
+                            Añadir tareas al servicio
+                          </h3>
+                          <Button
+                            icon='044'
+                            rounded
+                            id='menu-btn'
+                            name='menu'
+                            type='button'
+                            color='text-primary'
+                            onClick={() => fields.push({})}
+                          />
+                        </div>
+
+                        {fields.map((name: any, index: any) => (
+                          <div
+                            key={index}
+                            className='bg-white dark:bg-b-dark rounded-lg border border-gray-200 shadow-sm'
+                          >
+                            <div className='bg-gray-50 dark:bg-b-dark-light px-4 py-3 border-b border-gray-200 rounded-t-lg'>
+                              <h2 className='text-lg font-medium text-gray-900 dark:text-white'>
                                 Tarea {index + 1}
                               </h2>
                             </div>
-                            <div className='grid grid-cols-6 gap-10'>
-                              {/* Accedemos al valor de "create" aquí */}
+
+                            <div className='p-4 space-y-4'>
                               <Field name={`${name}.create`}>
                                 {({ input: createInput }) => {
                                   const isCreateChecked = createInput.value;
-
                                   return (
-                                    <>
-                                      {/* Select de tarea (deshabilitado si está activado el checkbox) */}
-                                      <div className='col-span-5'>
-                                        <Field name={`${name}.taskId`}>
-                                          {({ input }) => (
-                                            <Select
-                                              {...input}
-                                              placeholder='Seleccione tarea...'
-                                              label='Tarea'
-                                              name='taskId'
-                                              icon='252'
-                                              optionValue='id'
-                                              optionLabel='description'
-                                              options={forms.value}
-                                              disabled={isCreateChecked}
-                                              onChange={(e) => {
-                                                const id = parseInt(
-                                                  e.currentTarget.value
-                                                );
-                                                input.onChange(id);
-                                              }}
+                                    <div className='space-y-4'>
+                                      <div className='grid grid-cols-6 gap-4'>
+                                        <div className='col-span-5'>
+                                          <Field name={`${name}.taskId`}>
+                                            {({ input }) => (
+                                              <Select
+                                                {...input}
+                                                placeholder='Seleccione tarea...'
+                                                label='Tarea'
+                                                name='taskId'
+                                                icon='252'
+                                                optionValue='id'
+                                                optionLabel='description'
+                                                options={forms.value}
+                                                disabled={isCreateChecked}
+                                                onChange={(e) => {
+                                                  const id = parseInt(
+                                                    e.currentTarget.value
+                                                  );
+                                                  input.onChange(id);
+                                                }}
+                                              />
+                                            )}
+                                          </Field>
+                                        </div>
+
+                                        <div className='col-span-1 flex items-center pt-6'>
+                                          <label className='inline-flex items-center cursor-pointer'>
+                                            <input
+                                              {...createInput}
+                                              type='checkbox'
+                                              className='form-checkbox h-5 w-5 text-blue-600 rounded'
                                             />
-                                          )}
-                                        </Field>
+                                            <span className='ml-2 text-gray-700 dark:text-gray-300'>
+                                              Crear tarea
+                                            </span>
+                                          </label>
+                                        </div>
                                       </div>
 
-                                      {/* Checkbox */}
-                                      <div className='col-span-1 mt-10'>
-                                        <label className='inline-flex items-center space-x-2 cursor-pointer'>
-                                          <input
-                                            {...createInput}
-                                            type='checkbox'
-                                            className='form-checkbox h-5 w-5 text-blue-600 rounded'
-                                          />
-                                          <span className='text-gray-700'>
-                                            Crear tarea
-                                          </span>
-                                        </label>
-                                      </div>
-
-                                      {/* Select de formulario (oculto si está activado el checkbox) */}
                                       {isCreateChecked && (
-                                        <>
+                                        <div className='grid grid-cols-6 gap-4'>
                                           <div className='col-span-2'>
                                             <Field<string>
                                               name={`${name}.start`}
@@ -526,7 +559,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                               )}
                                             </Field>
                                           </div>
-                                          <div class='col-span-2'>
+
+                                          <div className='col-span-2'>
                                             <Field name='formId'>
                                               {({ input }) => (
                                                 <Select
@@ -548,7 +582,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                               )}
                                             </Field>
                                           </div>
-                                          <div class='col-span-2'>
+
+                                          <div className='col-span-2'>
                                             <Field<string>
                                               name={`${name}.status`}
                                             >
@@ -578,6 +613,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                               )}
                                             </Field>
                                           </div>
+
                                           <div className='col-span-6'>
                                             <Field<string>
                                               name={`${name}.description`}
@@ -595,27 +631,29 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                               )}
                                             </Field>
                                           </div>
-                                        </>
+                                        </div>
                                       )}
-                                    </>
+                                    </div>
                                   );
                                 }}
                               </Field>
-                            </div>
 
-                            <button
-                              type='button'
-                              onClick={() => fields.remove(index)}
-                              className='mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700'
-                            >
-                              Eliminar
-                            </button>
+                              <div className='flex justify-end'>
+                                <button
+                                  type='button'
+                                  onClick={() => fields.remove(index)}
+                                  className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:ring-2 focus:ring-offset-2'
+                                >
+                                  Eliminar
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </FieldArray>
+                        ))}
+                      </div>
+                    )}
+                  </FieldArray>
+                </ExpansionPanel>
               </div>
             </div>
 
