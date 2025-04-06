@@ -103,7 +103,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         }
       );
     }
-    console.log('MODELO A ENVIAR: ', model);
+
     if (id) {
       request = await ShiftService.updateRound(model, id);
       message = 'Ronda editada exitosamente!';
