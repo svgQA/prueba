@@ -19,7 +19,7 @@ export const PlannerView: FunctionalComponent<{
   users: MentionOption[];
 }> = ({ services, users }) => {
   const currentPrompt = useSignal<string>('');
-  //const [streamingResponse, setStreamingResponse] = useState<string>('');
+  const [streamingResponse, setStreamingResponse] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [shifts, setShifts] = useState<Shift[]>([]);
 
@@ -30,7 +30,7 @@ export const PlannerView: FunctionalComponent<{
   const handleSendPrompt = useCallback(async () => {
     if (!currentPrompt.value.trim()) return;
 
-    // setStreamingResponse('');
+    setStreamingResponse('');
     setIsStreaming(true);
     let accumulatedResponse = '';
     try {
@@ -38,7 +38,7 @@ export const PlannerView: FunctionalComponent<{
         currentPrompt.value,
         (chunk) => {
           accumulatedResponse += chunk;
-          // setStreamingResponse(accumulatedResponse);
+          setStreamingResponse(accumulatedResponse);
         },
         () => {
           const parsedShifts = fixTruncatedJSONArray(accumulatedResponse);
@@ -83,7 +83,6 @@ export const PlannerView: FunctionalComponent<{
           placeholder='Escribe @ para mencionar a alguien en el turno...'
           className='min-h-[120px]'
         />
-        {/*
         {streamingResponse && (
           <div className='mt-4 p-4 bg-gray-50 rounded-md'>
             <div className='text-sm font-medium text-gray-700 mb-2'>
@@ -94,7 +93,6 @@ export const PlannerView: FunctionalComponent<{
             </div>
           </div>
         )}
-      */}
       </div>
       <div className='mt-8'>
         <ShiftsGanttViewer
