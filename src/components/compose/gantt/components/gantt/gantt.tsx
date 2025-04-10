@@ -725,7 +725,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
     };
 
     setTasks(filteredTasks);
-    setGanttFullHeight(filteredUsers.length * rowHeight + 60);
+    setGanttFullHeight(filteredUsers.length * rowHeight + 10);
 
     // Actualizar barTasks con las tareas filtradas
     const [startDate, endDate] = ganttDateRange(
@@ -783,6 +783,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   return (
     <div>
+      {}
       <div className='relative w-full my-2 flex items-center justify-end gap-2'>
         <DateSelector
           selectedUsers={selectedUsers}
@@ -810,12 +811,9 @@ const GanttComponent: ComponentType<GanttProps> = ({
         )}
       </div>
       <div
-        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl`}
+        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl h-full`}
         onKeyDown={handleKeyDown}
         tabIndex={0}
-        style={{
-          height: `${ganttFullHeight}px`,
-        }}
         ref={wrapperRef}
       >
         {listCellWidth && <TaskList {...tableProps} />}
