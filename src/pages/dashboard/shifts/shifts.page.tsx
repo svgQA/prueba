@@ -32,6 +32,7 @@ enum VIEW_NAME {
   CALENDAR,
   SCHEDULER,
   SUPERVISOR,
+  MAP,
   PLANNER,
 }
 
@@ -313,6 +314,14 @@ export const ShiftsPage: FunctionalComponent = () => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
         />
+        <Button
+          name='button-supervision'
+          label='Mapa de Ubicaciones'
+          className='bg-primary text-white py-1 rounded px-4'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.MAP);
+          }}
+        />
       </div>
     ),
     [currentView.value]
@@ -324,7 +333,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   return (
     <Section padding>
-      {currentView.value !== VIEW_NAME.SUPERVISOR && (
+      {currentView.value !== VIEW_NAME.MAP && (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
             title='Turnos Totales Hoy'
@@ -418,7 +427,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         {currentView.value === VIEW_NAME.PLANNER && (
           <PlannerView services={memoizedServices} users={memoizedUsers} />
         )}
-        {currentView.value === VIEW_NAME.SUPERVISOR && <LiveUserMap />}
+        {currentView.value === VIEW_NAME.MAP && <LiveUserMap />}
       </div>
 
       <TaskForm

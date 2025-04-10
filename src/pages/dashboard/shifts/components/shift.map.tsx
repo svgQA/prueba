@@ -1,23 +1,34 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { tracking_service_url } from '@/env.config';
 import React, { useEffect, useState, useRef } from 'react';
+import { hasUserTenant, useUserStore } from '@/store/slices';
 import io from 'socket.io-client';
+import { VNode } from 'preact';
+import { Search } from '@/components/common/search/search';
+import { ColumnFilter } from '@tanstack/react-table';
 
 type User = {
   id: string;
-  name: string;
   lat: number;
   lng: number;
+  name: string;
+  token: string;
+  type: 'provider' | 'client';
+  tenantId: number;
 };
 
-const LiveUserMap: React.FC = () => {
+const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({ button, unsearch }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [connectionStatus, setConnectionStatus] =
     useState<string>('Connecting...');
   const socketRef = useRef<any>(null);
+  const { getToken, getSelected } = useUserStore();
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   useEffect(() => {
-    const socket = io(tracking_service_url);
+    const socket = io(tracking_service_url, {
+      query: { token: getToken(), tenantId: getSelected()?.tenant_id },
+    });
     socketRef.current = socket;
     socket.on('connect', () => setConnectionStatus('Connected'));
     socket.on('disconnect', () => setConnectionStatus('Disconnected'));
@@ -37,37 +48,45 @@ const LiveUserMap: React.FC = () => {
       });
     });
 
-    socket.on('all-locations', (allUsers: User[]) => setUsers(allUsers));
-    return () => socket.disconnect();
+    socket.on('all-locations', (allUsers: User[]) => {
+      try {
+        setUsers(allUsers)
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    });
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.removeAllListeners();
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
   }, []);
 
-  // For debugging - log when users change
-  useEffect(() => {
-    console.log('Users updated:', users.length);
-  }, [users]);
+  const filteredUsers = users.filter(user =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
+    
     <div className='px-4'>
-      <div className='flex justify-end py-1'>
-        <p className='text-sm text-gray-600'>
-          Estado:{' '}
-          <span
-            className={
-              connectionStatus === 'Connected'
-                ? 'text-green-500'
-                : 'text-red-500'
-            }
-          >
-            {connectionStatus}
-          </span>
-          <h2 className='text-2xl font-bold text-gray-800'>
-            🛰️ Usuarios en tiempo real
-          </h2>
-        </p>
+       <div className='relative w-full my-2 flex items-center justify-end'>
+        {!unsearch && (
+          <Search
+            id='search-map'
+            name='search-map'
+            onChange={(filters: ColumnFilter[]) => {
+              const searchFilter = filters.find((filter: ColumnFilter) => filter.id === 'name');
+              setSearchTerm(searchFilter ? String(searchFilter.value) : '');
+            }}
+          />
+        )}
       </div>
 
       <MapLibrePointsMap
-        points={users}
+        points={filteredUsers}
         mapHeight='88vh'
         markerColor='bg-blue-600'
         pointsLabel='ubicaciones'
