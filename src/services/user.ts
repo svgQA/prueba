@@ -1,7 +1,11 @@
 import { IOption } from '@/components/common/multi/interface';
 import { IPagination } from '@/types';
 import { IUserRequest, IUserResponse } from '@/types/auth';
-import { IDocumentType } from '@/types/user/reponse';
+import { USER_TYPE } from '@/types/user/user.enum';
+import {
+  IDocumentTypeResponse,
+  IDeleteUserResponse,
+} from '@/types/user/user.response';
 import { BaseService } from '@/utils/network';
 
 import {
@@ -9,12 +13,6 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
-
-export enum USER_TYPE {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-  CLIENT = 'CLIENT',
-}
 
 interface IPaginationUser extends IPagination {
   userType?: USER_TYPE;
@@ -63,6 +61,14 @@ export class UserService extends BaseService {
     return await super.make_request<IUserResponse>(this.name, model);
   }
 
+  static async delete(id: number) {
+    const model: IMakeRequest = {
+      url: ['user', `${id}`],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<IDeleteUserResponse>(this.name, model);
+  }
+
   static async get_all_employee(
     params: IPagination = { page: 1, items: 1000 }
   ) {
@@ -108,6 +114,6 @@ export class UserService extends BaseService {
     const model: IMakeRequest = {
       url: ['user', 'documenttypes'],
     };
-    return await super.make_request<IDocumentType[]>(this.name, model);
+    return await super.make_request<IDocumentTypeResponse[]>(this.name, model);
   }
 }

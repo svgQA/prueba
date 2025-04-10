@@ -12,6 +12,7 @@ import { Button } from '@/components/common/button/button';
 export const UserCreateSettingPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = 'User Create Settings';
+    getDocumentTypes();
   }, []);
 
   const onSubmit = async (values: IUserRequest) => {
@@ -26,7 +27,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
   };
 
   const getDocumentTypes = async (): Promise<void> => {
-    const documentTypes = await UserService.getDocumentTypes();
+    await UserService.getDocumentTypes();
   };
 
   return (
@@ -117,7 +118,6 @@ export const UserCreateSettingPage: FunctionComponent = () => {
                   label='Tipo de Usuario'
                   type='text'
                   meta={meta}
-                  list='userTypes'
                 />
               )}
             </Field>
