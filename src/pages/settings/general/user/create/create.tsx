@@ -25,6 +25,10 @@ export const UserCreateSettingPage: FunctionComponent = () => {
     navigate('/dashboard/setting/setting');
   };
 
+  const getDocumentTypes = async (): Promise<void> => {
+    const documentTypes = await UserService.getDocumentTypes();
+  };
+
   return (
     <Form
       onSubmit={onSubmit}
@@ -81,7 +85,84 @@ export const UserCreateSettingPage: FunctionComponent = () => {
               )}
             </Field>
 
-            {/*
+            <Field<string> name='cardId'>
+              {({ input, meta }) => (
+                <Input
+                  {...input}
+                  placeholder='ID de Tarjeta'
+                  label='ID de Tarjeta'
+                  type='text'
+                  meta={meta}
+                />
+              )}
+            </Field>
+
+            <Field<string> name='address' validate={required}>
+              {({ input, meta }) => (
+                <Input
+                  {...input}
+                  placeholder='Dirección'
+                  label='Dirección'
+                  type='text'
+                  meta={meta}
+                />
+              )}
+            </Field>
+
+            <Field<string> name='userType' validate={required}>
+              {({ input, meta }) => (
+                <Input
+                  {...input}
+                  placeholder='Tipo de Usuario'
+                  label='Tipo de Usuario'
+                  type='text'
+                  meta={meta}
+                  list='userTypes'
+                />
+              )}
+            </Field>
+            <datalist id='userTypes'>
+              <option value='USER'>Usuario</option>
+              <option value='ADMIN'>Administrador</option>
+              <option value='CLIENT'>Cliente</option>
+            </datalist>
+
+            <Field<string> name='cardType'>
+              {({ input, meta }) => (
+                <Input
+                  {...input}
+                  placeholder='Tipo de Documento'
+                  label='Tipo de Documento'
+                  type='text'
+                  meta={meta}
+                />
+              )}
+            </Field>
+          </div>
+          {/* Botonera */}
+          <div className='w-full flex-row flex justify-end items-center'>
+            <Button
+              id='btn-clean'
+              name='btn-clean'
+              type='button'
+              label='Limpiar'
+            />
+
+            <Button
+              id='btn-save'
+              name='btn-save'
+              type='submit'
+              label='Crear Usuario'
+              className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+            />
+          </div>
+        </form>
+      )}
+    />
+  );
+};
+{
+  /*
             <Field<string> name='cardId'>
               {({ input, meta }) => (
                 <Input
@@ -165,27 +246,5 @@ export const UserCreateSettingPage: FunctionComponent = () => {
                 />
               )}
             </Field>
-            */}
-          </div>
-          {/* Botonera */}
-          <div className='w-full flex-row flex justify-end items-center'>
-            <Button
-              id='btn-clean'
-              name='btn-clean'
-              type='button'
-              label='Limpiar'
-            />
-
-            <Button
-              id='btn-save'
-              name='btn-save'
-              type='submit'
-              label='Crear Usuario'
-              className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-            />
-          </div>
-        </form>
-      )}
-    />
-  );
-};
+            */
+}
