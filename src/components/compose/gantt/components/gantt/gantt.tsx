@@ -85,6 +85,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   onUserDoubleClick,
   unsearch,
   group,
+  onReloadSignal,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
@@ -787,6 +788,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
           selectedUsers={selectedUsers}
           users={users}
           onDateSubmit={handleDateSubmit}
+          onReloadSignal={onReloadSignal}
         />
 
         {!unsearch && (

@@ -310,6 +310,10 @@ export const ShiftsPage: FunctionalComponent = () => {
     [currentView.value]
   );
 
+  const handleReloadSignal = () => {
+    getGanttHandler(view);
+  };
+
   return (
     <Section padding>
       {currentView.value !== VIEW_NAME.SUPERVISOR && (
@@ -391,6 +395,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             listCellWidth={isChecked ? '155px' : ''}
             columnWidth={columnWidth}
             users={users}
+            onReloadSignal={handleReloadSignal}
             group={
               <Group
                 onViewModeChange={handleViewMode}
