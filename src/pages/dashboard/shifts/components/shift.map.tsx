@@ -44,8 +44,22 @@ const LiveUserMap: React.FC = () => {
       });
     });
 
-    socket.on('all-locations', (allUsers: User[]) => setUsers(allUsers));
-    return () => socket.disconnect();
+    socket.on('all-locations', (allUsers: User[]) => {
+      try {
+        setUsers(allUsers)
+        console.log("allUsers: ", allUsers);
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    });
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.removeAllListeners();
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
   }, []);
 
   // For debugging - log when users change
