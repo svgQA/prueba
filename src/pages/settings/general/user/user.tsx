@@ -13,6 +13,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { Button } from '@/components/common/button/button';
 import { useLocation } from 'wouter';
 import { appendHistory } from '../../store/settings';
+import { toast } from 'react-toastify';
 
 export const UserSettingPage: FunctionComponent = () => {
   const users = useSignal<IUserResponse[]>([]);
@@ -29,6 +30,13 @@ export const UserSettingPage: FunctionComponent = () => {
     users.value = response.getMany();
   };
 
+  const deletePlace = async (id: number) => {
+    const request = await UserService.delete(id);
+    if (!request.getStatus()) return;
+    toast.success('Usuario eliminado', { position: 'top-right' });
+    getUsersHandler();
+  };
+
   const handleOnClick = async (action: IRowAction) => {
     switch (action.action) {
       case ROW_ACTIONS.CREATE: {
@@ -37,6 +45,10 @@ export const UserSettingPage: FunctionComponent = () => {
           return;
         }
         return await getUsersHandler();
+      }
+      case ROW_ACTIONS.DELETE: {
+        await deletePlace(Number(action.id));
+        break;
       }
       default:
         break;

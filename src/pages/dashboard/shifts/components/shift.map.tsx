@@ -1,13 +1,17 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { tracking_service_url } from '@/env.config';
 import React, { useEffect, useState, useRef } from 'react';
+import { hasUserTenant, useUserStore } from '@/store/slices';
 import io from 'socket.io-client';
 
 type User = {
   id: string;
-  name: string;
   lat: number;
   lng: number;
+  name: string;
+  token: string;
+  type: 'provider' | 'client';
+  tenantId: number;
 };
 
 const LiveUserMap: React.FC = () => {
@@ -15,9 +19,12 @@ const LiveUserMap: React.FC = () => {
   const [connectionStatus, setConnectionStatus] =
     useState<string>('Connecting...');
   const socketRef = useRef<any>(null);
+  const { getToken, getSelected } = useUserStore();
 
   useEffect(() => {
-    const socket = io(tracking_service_url);
+    const socket = io(tracking_service_url, {
+      query: { token: getToken(), tenantId: getSelected()?.tenant_id },
+    });
     socketRef.current = socket;
     socket.on('connect', () => setConnectionStatus('Connected'));
     socket.on('disconnect', () => setConnectionStatus('Disconnected'));
@@ -37,14 +44,22 @@ const LiveUserMap: React.FC = () => {
       });
     });
 
-    socket.on('all-locations', (allUsers: User[]) => setUsers(allUsers));
-    return () => socket.disconnect();
-  }, []);
+    socket.on('all-locations', (allUsers: User[]) => {
+      try {
+        setUsers(allUsers)
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    });
 
-  // For debugging - log when users change
-  useEffect(() => {
-    console.log('Users updated:', users.length);
-  }, [users]);
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.removeAllListeners();
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div className='px-4'>
@@ -63,6 +78,9 @@ const LiveUserMap: React.FC = () => {
           <h2 className='text-2xl font-bold text-gray-800'>
             🛰️ Usuarios en tiempo real
           </h2>
+          <p className='text-sm text-gray-600'>
+            {users.length} usuarios
+          </p>
         </p>
       </div>
 

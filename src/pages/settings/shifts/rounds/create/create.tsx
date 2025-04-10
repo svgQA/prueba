@@ -89,14 +89,21 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
           position: { lat: number; lng: number };
           tasks: any[];
         }) => {
-          return {
-            latitude: point.position.lat,
-            longitude: point.position.lng,
-            tasks: point.tasks,
-          };
+          const model = point.tasks
+            ? {
+                latitude: point.position.lat,
+                longitude: point.position.lng,
+                task: point.tasks,
+              }
+            : {
+                latitude: point.position.lat,
+                longitude: point.position.lng,
+              };
+          return model;
         }
       );
     }
+
     if (id) {
       request = await ShiftService.updateRound(model, id);
       message = 'Ronda editada exitosamente!';
@@ -528,32 +535,31 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   height='500px'
                   clickPoint={() => {}}
                 />
+                {/* Botonera */}
+                <div className='w-full flex-row flex justify-end items-center mt-2'>
+                  <Button
+                    id='btn-clean'
+                    name='btn-clean'
+                    type='button'
+                    label='Limpiar'
+                    onClick={() => {
+                      form.reset();
+                      resetMarket();
+                    }}
+                    border={true}
+                    className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
+                  />
+
+                  <Button
+                    id='btn-save'
+                    name='btn-save'
+                    type='submit'
+                    label={id ? 'Editar' : 'Guardar'}
+                    className='rounded-md bg-primary text-white px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
+                    disabled={submitting}
+                  />
+                </div>
               </div>
-            </div>
-
-            {/* Botonera */}
-            <div className='w-full flex-row flex justify-end items-center'>
-              <Button
-                id='btn-clean'
-                name='btn-clean'
-                type='button'
-                label='Limpiar'
-                onClick={() => {
-                  form.reset();
-                  resetMarket();
-                }}
-                border={true}
-                className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
-              />
-
-              <Button
-                id='btn-save'
-                name='btn-save'
-                type='submit'
-                label={id ? 'Editar' : 'Guardar'}
-                className='rounded-md bg-primary text-white px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
-                disabled={submitting}
-              />
             </div>
           </form>
         )}

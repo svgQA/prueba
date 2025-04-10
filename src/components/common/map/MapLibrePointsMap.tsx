@@ -189,6 +189,15 @@ function MapLibrePointsMap<T extends Point>({
     <div class="text-xs">Lng: ${point.lng.toFixed(6)}</div>
   `;
 
+  // Function to add small random offset to coordinates when points are too close
+  const addRandomOffset = (lat: number, lng: number, index: number): [number, number] => {
+    const offset = 0.0001; // Approximately 11 meters
+    const angle = (index * 72) * (Math.PI / 180); // Distribute points in a circle
+    const newLat = lat + (Math.sin(angle) * offset);
+    const newLng = lng + (Math.cos(angle) * offset);
+    return [newLat, newLng];
+  };
+
   useEffect(() => {
     if (!mapRef.current) return;
     if (points.length === 0) return;
@@ -201,6 +210,16 @@ function MapLibrePointsMap<T extends Point>({
     if (!positionsChanged) return;
     const currentPointIds = new Set(points.map((point) => point.id));
 
+    // Group points by location to handle overlapping points
+    const locationGroups = new Map<string, T[]>();
+    points.forEach(point => {
+      const key = `${point.lat.toFixed(6)},${point.lng.toFixed(6)}`;
+      if (!locationGroups.has(key)) {
+        locationGroups.set(key, []);
+      }
+      locationGroups.get(key)!.push(point);
+    });
+
     markersRef.current.forEach((marker, pointId) => {
       if (!currentPointIds.has(pointId)) {
         marker.remove();
@@ -212,70 +231,77 @@ function MapLibrePointsMap<T extends Point>({
       }
     });
 
-    points.forEach((point) => {
-      const existingMarker = markersRef.current.get(point.id);
-      const popupContent = renderPopupContent
-        ? renderPopupContent(point)
-        : defaultRenderPopupContent(point);
+    locationGroups.forEach((group, locationKey) => {
+      group.forEach((point, index) => {
+        const existingMarker = markersRef.current.get(point.id);
+        const popupContent = renderPopupContent
+          ? renderPopupContent(point)
+          : defaultRenderPopupContent(point);
 
-      if (existingMarker) {
-        existingMarker.setLngLat([point.lng, point.lat]);
-      } else {
-        // Create marker container
-        const markerContainer = document.createElement('div');
-        markerContainer.className = 'relative flex flex-col items-center';
+        // Add offset for overlapping points
+        const [offsetLat, offsetLng] = group.length > 1 
+          ? addRandomOffset(point.lat, point.lng, index)
+          : [point.lat, point.lng];
 
-        // Create tooltip element (hidden by default)
-        const tooltip = document.createElement('div');
-        tooltip.className =
-          'absolute bottom-full mb-1 px-2 py-1 bg-white text-black text-xs font-medium rounded shadow-md whitespace-nowrap opacity-0 transition-opacity duration-200 pointer-events-none';
-        tooltip.textContent = point.name;
-        tooltipsRef.current.set(point.id, tooltip);
+        if (existingMarker) {
+          existingMarker.setLngLat([offsetLng, offsetLat]);
+        } else {
+          // Create marker container
+          const markerContainer = document.createElement('div');
+          markerContainer.className = 'relative flex flex-col items-center';
 
-        // Create marker element (Google Maps style pin)
-        const markerEl = document.createElement('div');
-        markerEl.title = point.name;
-        markerEl.className = `w-6 h-6 ${markerColor} rounded-full shadow-md border-2 border-white flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer`;
+          // Create tooltip element (hidden by default)
+          const tooltip = document.createElement('div');
+          tooltip.className =
+            'absolute bottom-full mb-1 px-2 py-1 bg-white text-black text-xs font-medium rounded shadow-md whitespace-nowrap opacity-0 transition-opacity duration-200 pointer-events-none';
+          tooltip.textContent = point.name;
+          tooltipsRef.current.set(point.id, tooltip);
 
-        // Add tooltip and marker to container
-        markerContainer.appendChild(tooltip);
-        markerContainer.appendChild(markerEl);
+          // Create marker element (Google Maps style pin)
+          const markerEl = document.createElement('div');
+          markerEl.title = point.name;
+          markerEl.className = `w-6 h-6 ${markerColor} rounded-full shadow-md border-2 border-white flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer`;
 
-        // Create popup (Google Maps style)
-        const popup = new maplibregl.Popup({
-          offset: 25,
-          closeButton: false,
-          className: 'shadow-lg',
-        }).setHTML(popupContent);
+          // Add tooltip and marker to container
+          markerContainer.appendChild(tooltip);
+          markerContainer.appendChild(markerEl);
 
-        // Create marker
-        const marker = new maplibregl.Marker({
-          element: markerContainer,
-          draggable: false,
-          anchor: 'center',
-        })
-          .setLngLat([point.lng, point.lat])
-          .setPopup(popup)
-          .addTo(mapRef.current!);
+          // Create popup (Google Maps style)
+          const popup = new maplibregl.Popup({
+            offset: 25,
+            closeButton: false,
+            className: 'shadow-lg',
+          }).setHTML(popupContent);
 
-        // Show tooltip on hover
-        markerEl.addEventListener('mouseenter', () => {
-          tooltip.style.opacity = '1';
-        });
+          // Create marker
+          const marker = new maplibregl.Marker({
+            element: markerContainer,
+            draggable: false,
+            anchor: 'center',
+          })
+            .setLngLat([offsetLng, offsetLat])
+            .setPopup(popup)
+            .addTo(mapRef.current!);
 
-        // Hide tooltip on mouse leave
-        markerEl.addEventListener('mouseleave', () => {
-          tooltip.style.opacity = '0';
-        });
+          // Show tooltip on hover
+          markerEl.addEventListener('mouseenter', () => {
+            tooltip.style.opacity = '1';
+          });
 
-        // Handle click
-        markerEl.addEventListener('click', () => {
-          popup.addTo(mapRef.current!);
-          if (onMarkerClick) onMarkerClick(point);
-        });
+          // Hide tooltip on mouse leave
+          markerEl.addEventListener('mouseleave', () => {
+            tooltip.style.opacity = '0';
+          });
 
-        markersRef.current.set(point.id, marker);
-      }
+          // Handle click
+          markerEl.addEventListener('click', () => {
+            popup.addTo(mapRef.current!);
+            if (onMarkerClick) onMarkerClick(point);
+          });
+
+          markersRef.current.set(point.id, marker);
+        }
+      });
     });
 
     if (
