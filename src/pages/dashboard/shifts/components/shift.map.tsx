@@ -47,9 +47,8 @@ const LiveUserMap: React.FC = () => {
     socket.on('all-locations', (allUsers: User[]) => {
       try {
         setUsers(allUsers)
-        console.log("allUsers: ", allUsers);
       } catch (error) {
-        console.log("Error: ", error);
+        console.error("Error: ", error);
       }
     });
 
@@ -61,11 +60,6 @@ const LiveUserMap: React.FC = () => {
       }
     };
   }, []);
-
-  // For debugging - log when users change
-  useEffect(() => {
-    console.log('Users updated:', users.length);
-  }, [users]);
 
   return (
     <div className='px-4'>
@@ -84,6 +78,9 @@ const LiveUserMap: React.FC = () => {
           <h2 className='text-2xl font-bold text-gray-800'>
             🛰️ Usuarios en tiempo real
           </h2>
+          <p className='text-sm text-gray-600'>
+            {users.length} usuarios
+          </p>
         </p>
       </div>
 
