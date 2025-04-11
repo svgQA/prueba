@@ -292,6 +292,19 @@ export const ShiftsPage: FunctionalComponent = () => {
           icon='331'
         />
         <Button
+          name='button-change-table'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.MAP);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.MAP
+              ? 'bg-primary-opacity p-2'
+              : ''
+          }
+          icon='321'
+        />
+        <Button
           name='button-action'
           rounded={false}
           className='border-2 border-primary p-2'
@@ -304,14 +317,6 @@ export const ShiftsPage: FunctionalComponent = () => {
           className='bg-primary text-white py-1 rounded px-4'
           onClick={() => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
-          }}
-        />
-        <Button
-          name='button-supervision'
-          label='Mapa de Ubicaciones'
-          className='bg-primary text-white py-1 rounded px-4'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.MAP);
           }}
         />
       </div>
