@@ -1,0 +1,13 @@
+{
+  "navbar": {
+    "products": "Our Products",
+    "about": "About Us",
+    "demo": "Request a Demo",
+    "signin": "Sign In"
+  },
+  "home": {
+    "title": "Transform Operations Management With Tryvoo",
+    "subtitle": "Optimize the management of activities, resources and assets, even without connectivity for your business",
+    "demoButton": "Schedule a Free Demo"
+  }
+}

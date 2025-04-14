@@ -17,7 +17,10 @@ type User = {
   tenantId: number;
 };
 
-const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({ button, unsearch }) => {
+const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({
+  button,
+  unsearch,
+}) => {
   const [users, setUsers] = useState<User[]>([]);
   const [connectionStatus, setConnectionStatus] =
     useState<string>('Connecting...');
@@ -50,9 +53,9 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({ button,
 
     socket.on('all-locations', (allUsers: User[]) => {
       try {
-        setUsers(allUsers)
+        setUsers(allUsers);
       } catch (error) {
-        console.error("Error: ", error);
+        console.error('Error: ', error);
       }
     });
 
@@ -65,20 +68,21 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({ button,
     };
   }, []);
 
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    
     <div className='px-4'>
-       <div className='relative w-full my-2 flex items-center justify-end'>
+      <div className='relative w-full my-2 flex items-center justify-end'>
         {!unsearch && (
           <Search
             id='search-map'
             name='search-map'
             onChange={(filters: ColumnFilter[]) => {
-              const searchFilter = filters.find((filter: ColumnFilter) => filter.id === 'name');
+              const searchFilter = filters.find(
+                (filter: ColumnFilter) => filter.id === 'name'
+              );
               setSearchTerm(searchFilter ? String(searchFilter.value) : '');
             }}
           />

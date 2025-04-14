@@ -298,9 +298,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           }}
           rounded={false}
           className={
-            currentView.value === VIEW_NAME.MAP
-              ? 'bg-primary-opacity p-2'
-              : ''
+            currentView.value === VIEW_NAME.MAP ? 'bg-primary-opacity p-2' : ''
           }
           icon='321'
         />
