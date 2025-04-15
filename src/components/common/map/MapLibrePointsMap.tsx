@@ -235,7 +235,7 @@ function MapLibrePointsMap<T extends Point>({
       }
     });
 
-    locationGroups.forEach((group, locationKey) => {
+    locationGroups.forEach((group) => {
       group.forEach((point, index) => {
         const existingMarker = markersRef.current.get(point.id);
         const popupContent = renderPopupContent

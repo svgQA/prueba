@@ -1,9 +1,8 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { tracking_service_url } from '@/env.config';
 import React, { useEffect, useState, useRef } from 'react';
-import { hasUserTenant, useUserStore } from '@/store/slices';
+import { useUserStore } from '@/store/slices';
 import io from 'socket.io-client';
-import { VNode } from 'preact';
 import { Search } from '@/components/common/search/search';
 import { ColumnFilter } from '@tanstack/react-table';
 
@@ -17,13 +16,8 @@ type User = {
   tenantId: number;
 };
 
-const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({
-  button,
-  unsearch,
-}) => {
+const LiveUserMap: React.FC<{ unsearch?: boolean }> = ({ unsearch }) => {
   const [users, setUsers] = useState<User[]>([]);
-  const [connectionStatus, setConnectionStatus] =
-    useState<string>('Connecting...');
   const socketRef = useRef<any>(null);
   const { getToken, getSelected } = useUserStore();
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -33,11 +27,9 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({
       query: { token: getToken(), tenantId: getSelected()?.tenant_id },
     });
     socketRef.current = socket;
-    socket.on('connect', () => setConnectionStatus('Connected'));
-    socket.on('disconnect', () => setConnectionStatus('Disconnected'));
-    socket.on('connect_error', (_: any) =>
-      setConnectionStatus('Connection Error')
-    );
+    socket.on('connect', () => {});
+    socket.on('disconnect', () => {});
+    socket.on('connect_error', (_: any) => {});
     socket.on('location-update', (user: User) => {
       setUsers((prevUsers) => {
         const index = prevUsers.findIndex((u) => u.id === user.id);
