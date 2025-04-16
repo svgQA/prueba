@@ -4,18 +4,21 @@ import { PAGES_LIST } from '@/utils/routing';
 import { Logo } from '@/components/common/logo/logo';
 import '@aws-amplify/ui-react/styles.css';
 import './styles.css';
+import { useTranslation } from 'react-i18next';
 
 const CustomLoginContainer = ({ children }: any) => {
+  const { t } = useTranslation();
+
   return (
     <div className='w-full h-screen flex bg-gradient-to-r from-cyan-500 to-emerald-400 items-center'>
       <div className='flex items-start w-7/12 flex-col p-5 pl-14'>
         <div className='max-w-3xl text-white !text-left w-full'>
           <Logo title='' slogan='' />
           <h1 className='text-4xl font-bold mb-3 w-full'>
-            Bienvenido a Tryvoo
+            {t('login.welcome')}
           </h1>
           <h4 className='text-lg leading-relaxed opacity-90 font-semibold'>
-            Simplifica. Optimiza. Crece.
+            {t('login.slogan')}
           </h4>
         </div>
         <div className='flex items-center justify-center gap-3 mt-6 bg-white p-5 rounded-tr-3xl rounded-bl-3xl bg-opacity-10'>
@@ -39,10 +42,11 @@ const CustomLoginContainer = ({ children }: any) => {
 
 const components = {
   Header() {
+    const { t } = useTranslation();
     return (
       <div className='text-center flex flex-col items-center'>
         <Logo title='Tryvoo' slogan='' color='text-primary' />
-        <h3 class='mb-5 text-2xl my-3'>Iniciar sesión</h3>
+        <h3 className='mb-5 text-2xl my-3'>{t('login.signIn')}</h3>
       </div>
     );
   },
@@ -58,13 +62,14 @@ const components = {
       return null;
     },
     Footer() {
+      const { t } = useTranslation();
       return (
         <div className='text-center'>
           <button
-            onClick={() => console.log('¿Olvidó su contraseña?')}
+            onClick={() => console.log(t('login.forgotPassword'))}
             className='text-sm font-normal border-0 outline-none focus:outline-none hover:border-0 active:border-0'
           >
-            ¿Olvidó su contraseña?
+            {t('login.forgotPassword')}
           </button>
         </div>
       );

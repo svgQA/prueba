@@ -22,7 +22,7 @@ export const HomeService = () => {
               className='flex flex-col items-center text-center w-full sm:w-[45%] lg:w-[45vh] max-w-sm h-[60vh] rounded-2xl overflow-hidden shadow-lg bg-white p-4 md:p-6 border border-gray-200 hover:bg-[#20314F] text-[#349396] hover:text-white'
             >
               <img
-                className='w-full md:w-auto h-36 md:h-48 object-cover rounded-lg'
+                className='w-full md:w-auto h-30 md:h-38 object-cover rounded-lg'
                 src={item.image}
                 alt={item.titleKey ? t(item.titleKey) : ''}
               />

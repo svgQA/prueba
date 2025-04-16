@@ -103,6 +103,31 @@ const resources = {
         },
         button: 'View details',
       },
+      carousel: {
+        viewDetails: 'View details',
+        items: {
+          monitoring: {
+            title: 'Real-Time Monitoring',
+            subtitle:
+              'Visualize task progress and asset status with automatic updates based on real-time data.',
+          },
+          offline: {
+            title: 'Offline Capabilities',
+            subtitle:
+              'Operators can continue working without connection, and all data syncs when internet connection is restored.',
+          },
+          ai: {
+            title: 'AI and Virtual Support',
+            subtitle:
+              'Your virtual assistant to solve field problems, with recommendations based on data captured during operations.',
+          },
+          integration: {
+            title: 'Integration and Customization',
+            subtitle:
+              'Easy integration with existing tools and a platform that adapts to the needs of each sector.',
+          },
+        },
+      },
       about: {
         title: 'About Us',
         subtitle:
@@ -180,6 +205,29 @@ const resources = {
           'To help you start optimizing your business with agile tools that operate in any space and place',
         startButton: 'Start now and enjoy',
       },
+      login: {
+        welcome: 'Welcome to Tryvoo',
+        slogan: 'Simplify. Optimize. Grow.',
+        signIn: 'Sign In',
+        forgotPassword: 'Forgot your password?',
+      },
+      memos: {
+        title: 'VX - Chat',
+        frequentQuestions: {
+          title: 'Frequent Questions',
+          question1: 'How can I start a new project?',
+          question2: 'What are the best coding practices?',
+          question3: 'How can I optimize my application?',
+        },
+        chat: {
+          aiAssistant: 'AI Assistant',
+          aiDefaultMessage: 'I can help with that',
+          itsMe: "IT'S ME",
+          other: 'OTHER',
+          time: '10:15',
+          errorMessage: 'The message has a bad structure',
+        },
+      },
     },
   },
   es: {
@@ -255,31 +303,56 @@ const resources = {
         button: 'Inicia tu prueba gratis!',
       },
       services: {
-        title: 'Servicios Destacados',
-        subtitle: 'Todo lo que necesitas en una sola plataforma',
+        title: 'Nuestros Servicios',
+        subtitle: 'Soluciones para cada necesidad',
         items: {
           monitoring: {
-            title: 'Monitoreo en Tiempo Real',
+            title: 'Monitorio en Tiempo Real',
             subtitle:
-              'Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas basadas en datos en tiempo real.',
+              'Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real.',
           },
           offline: {
-            title: 'Capacidades sin Conexión',
+            title: 'Capacidades Offline',
             subtitle:
-              'Los operadores pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando se restaura la conexión a internet.',
+              'Los operarios pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando la conexión a Internet es restaurada.',
           },
           ai: {
-            title: 'Asistencia con IA y Soporte Virtual',
+            title: 'IA y Soporte Virtual',
             subtitle:
-              'Tu asistente virtual para resolver problemas en el campo, con recomendaciones basadas en los datos capturados durante las operaciones.',
+              'Tu asistente virtual para resolver problemas en campo, con recomendaciones basadas en los datos que se capturan durante las operaciones.',
           },
           integration: {
             title: 'Integración y Personalización',
             subtitle:
-              'Integración sencilla con herramientas existentes y una plataforma que se adapta a las necesidades de cada sector.',
+              'Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector.',
           },
         },
-        button: 'Ver detalles',
+        button: 'Ver más servicios',
+      },
+      carousel: {
+        viewDetails: 'Ver detalle',
+        items: {
+          monitoring: {
+            title: 'Monitorio en Tiempo Real',
+            subtitle:
+              'Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real.',
+          },
+          offline: {
+            title: 'Capacidades Offline',
+            subtitle:
+              'Los operarios pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando la conexión a Internet es restaurada.',
+          },
+          ai: {
+            title: 'IA y Soporte Virtual',
+            subtitle:
+              'Tu asistente virtual para resolver problemas en campo, con recomendaciones basadas en los datos que se capturan durante las operaciones.',
+          },
+          integration: {
+            title: 'Integración y Personalización',
+            subtitle:
+              'Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector.',
+          },
+        },
       },
       about: {
         title: 'Conócenos',
@@ -358,6 +431,29 @@ const resources = {
         optimizeMessage:
           'Para ayudarte a empezar a optimizar tu negocio con herramientas ágiles que operan en cualquier espacio y lugar',
         startButton: 'Comienza ahora y disfruta',
+      },
+      login: {
+        welcome: 'Bienvenido a Tryvoo',
+        slogan: 'Simplifica. Optimiza. Crece.',
+        signIn: 'Iniciar sesión',
+        forgotPassword: '¿Olvidó su contraseña?',
+      },
+      memos: {
+        title: 'VX - Chat',
+        frequentQuestions: {
+          title: 'Preguntas Frecuentes',
+          question1: '¿Cómo puedo empezar un nuevo proyecto?',
+          question2: '¿Cuáles son las mejores prácticas de código?',
+          question3: '¿Cómo puedo optimizar mi aplicación?',
+        },
+        chat: {
+          aiAssistant: 'Asistente IA',
+          aiDefaultMessage: 'Puedo ayudar con eso',
+          itsMe: 'SOY YO',
+          other: 'OTRO',
+          time: '10:15',
+          errorMessage: 'El mensaje tiene mala estructura',
+        },
       },
     },
   },

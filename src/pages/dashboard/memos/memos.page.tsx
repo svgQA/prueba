@@ -13,6 +13,7 @@ import { useUserStore } from '@/store/slices';
 import { IMessage } from '@/utils/socket/interface';
 import { toast } from 'react-toastify';
 import { Section } from '@/components/common/section/section';
+import { useTranslation } from 'react-i18next';
 
 interface FrequentQuestion {
   id: number;
@@ -34,10 +35,12 @@ type Chats = {
 };
 
 const FrequentQuestions = () => {
+  const { t } = useTranslation();
+
   const questions: FrequentQuestion[] = [
-    { id: 1, question: '¿Cómo puedo empezar un nuevo proyecto?' },
-    { id: 2, question: '¿Cuáles son las mejores prácticas de código?' },
-    { id: 3, question: '¿Cómo puedo optimizar mi aplicación?' },
+    { id: 1, question: t('memos.frequentQuestions.question1') },
+    { id: 2, question: t('memos.frequentQuestions.question2') },
+    { id: 3, question: t('memos.frequentQuestions.question3') },
   ];
 
   return (
@@ -55,6 +58,7 @@ const FrequentQuestions = () => {
 };
 
 export const MemosPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const wsManager = useWebSocket();
   const selectedChat = useSignal<string>('0');
   const users = useSignal<IUserResponse[]>([]);
@@ -65,14 +69,14 @@ export const MemosPage: FunctionComponent = () => {
   const chats = useSignal<Chats>({});
 
   useEffect(() => {
-    document.title = 'VX - Chat';
+    document.title = t('memos.title');
     getUsersHandler();
     wsManager.addListener('memos', handleReceiveMessage);
   }, []);
 
   const handleSendMessage = (message: string) => {
     if (!iam.value || !userSelected.value?.cognitoId) {
-      toast.error('El mensaje tiene mala estructura');
+      toast.error(t('memos.chat.errorMessage'));
       return;
     }
     const objMessage: IMessage = {
@@ -149,9 +153,9 @@ export const MemosPage: FunctionComponent = () => {
         <div className='flex-1 overflow-y-auto vox-scroll-design'>
           <ChatCard
             id={'0'}
-            name='AI Assistant'
-            lastMessage='I can help with that'
-            time='10:15'
+            name={t('memos.chat.aiAssistant')}
+            lastMessage={t('memos.chat.aiDefaultMessage')}
+            time={t('memos.chat.time')}
             isAI
             onClick={handleChatSelect}
             isSelected={selectedChat.value === '0'}
@@ -162,8 +166,8 @@ export const MemosPage: FunctionComponent = () => {
               key={`chat-card-${user.cognitoId}`}
               id={user.cognitoId}
               name={`${user.name} ${user.surname}`}
-              lastMessage={`${iam.value === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
-              time='10:15'
+              lastMessage={`${iam.value === user.cognitoId ? t('memos.chat.itsMe') : t('memos.chat.other')}`}
+              time={t('memos.chat.time')}
               amount={chats.value[user.cognitoId]?.new}
               onClick={handleChatSelect}
               isSelected={selectedChat.value === user.cognitoId}
