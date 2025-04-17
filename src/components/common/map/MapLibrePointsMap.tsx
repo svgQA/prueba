@@ -41,15 +41,21 @@ function MapLibrePointsMap<T extends Point>({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MaplibreMap | null>(null);
   const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
-  const [prevPointsLength, setPrevPointsLength] = useState<number>(points.length);
+  const [prevPointsLength, setPrevPointsLength] = useState<number>(
+    points.length
+  );
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
   const [userModifiedView, setUserModifiedView] = useState<boolean>(false);
-  const [lastFitBounds, setLastFitBounds] = useState<{ zoom: number, center: [number, number] }>({
+  const [lastFitBounds, setLastFitBounds] = useState<{
+    zoom: number;
+    center: [number, number];
+  }>({
     zoom: initialZoom,
-    center: defaultCenter
+    center: defaultCenter,
   });
   const prevPointsRef = useRef<T[]>([]);
-  const [hasPointsOutsideView, setHasPointsOutsideView] = useState<boolean>(false);
+  const [hasPointsOutsideView, setHasPointsOutsideView] =
+    useState<boolean>(false);
 
   const mapStyle: string | maplibregl.StyleSpecification = {
     version: 8 as const,
@@ -91,12 +97,12 @@ function MapLibrePointsMap<T extends Point>({
       map.flyTo({
         center: [point.lng, point.lat],
         zoom: singlePointZoomLevel,
-        ...fitBoundsOptions
+        ...fitBoundsOptions,
       });
 
       setLastFitBounds({
         zoom: singlePointZoomLevel,
-        center: [point.lng, point.lat]
+        center: [point.lng, point.lat],
       });
     } else if (pointsToFit.length === 2) {
       const bounds = new maplibregl.LngLatBounds();
@@ -104,11 +110,14 @@ function MapLibrePointsMap<T extends Point>({
         bounds.extend([point.lng, point.lat]);
       });
 
-      const twoPadding = Math.max(150, ((fitBoundsOptions?.padding as number) || 50) * 2);
+      const twoPadding = Math.max(
+        150,
+        ((fitBoundsOptions?.padding as number) || 50) * 2
+      );
       const twoPointOptions = {
         ...fitBoundsOptions,
         padding: twoPadding,
-        maxZoom: Math.min(11, fitBoundsOptions?.maxZoom || 14)
+        maxZoom: Math.min(11, fitBoundsOptions?.maxZoom || 14),
       };
 
       map.fitBounds(bounds, twoPointOptions);
@@ -117,7 +126,7 @@ function MapLibrePointsMap<T extends Point>({
         if (map) {
           setLastFitBounds({
             zoom: map.getZoom(),
-            center: [map.getCenter().lng, map.getCenter().lat]
+            center: [map.getCenter().lng, map.getCenter().lat],
           });
         }
       }, 300);
@@ -132,7 +141,7 @@ function MapLibrePointsMap<T extends Point>({
         if (map) {
           setLastFitBounds({
             zoom: map.getZoom(),
-            center: [map.getCenter().lng, map.getCenter().lat]
+            center: [map.getCenter().lng, map.getCenter().lat],
           });
         }
       }, 300);
@@ -148,18 +157,23 @@ function MapLibrePointsMap<T extends Point>({
     const zoomTolerance = 0.1;
     const centerTolerance = 0.01;
 
-    const zoomMatches = Math.abs(currentZoom - lastFitBounds.zoom) <= zoomTolerance;
+    const zoomMatches =
+      Math.abs(currentZoom - lastFitBounds.zoom) <= zoomTolerance;
     const centerMatches =
-      Math.abs(currentCenter.lng - lastFitBounds.center[0]) <= centerTolerance &&
+      Math.abs(currentCenter.lng - lastFitBounds.center[0]) <=
+        centerTolerance &&
       Math.abs(currentCenter.lat - lastFitBounds.center[1]) <= centerTolerance;
 
     return zoomMatches && centerMatches;
   };
 
-  const hasPointDisconnected = (currentPoints: T[], previousPoints: T[]): boolean => {
+  const hasPointDisconnected = (
+    currentPoints: T[],
+    previousPoints: T[]
+  ): boolean => {
     if (currentPoints.length < previousPoints.length) {
-      const currentIds = new Set(currentPoints.map(p => p.id));
-      return previousPoints.some(prevPoint => !currentIds.has(prevPoint.id));
+      const currentIds = new Set(currentPoints.map((p) => p.id));
+      return previousPoints.some((prevPoint) => !currentIds.has(prevPoint.id));
     }
     return false;
   };
@@ -199,11 +213,14 @@ function MapLibrePointsMap<T extends Point>({
   useEffect(() => {
     if (!mapRef.current) return;
 
-    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current.forEach((marker) => marker.remove());
     markersRef.current.clear();
 
     const pointsAdded = points.length > prevPointsLength;
-    const pointDisconnected = hasPointDisconnected(points, prevPointsRef.current);
+    const pointDisconnected = hasPointDisconnected(
+      points,
+      prevPointsRef.current
+    );
 
     const checkAllPointsOutsideView = () => {
       if (!mapRef.current || points.length === 0) {
@@ -212,14 +229,15 @@ function MapLibrePointsMap<T extends Point>({
       }
 
       const currentBounds = mapRef.current.getBounds();
-      const anyPointOutside = points.some(point => {
+      const anyPointOutside = points.some((point) => {
         return !currentBounds.contains([point.lng, point.lat]);
       });
 
       setHasPointsOutsideView(anyPointOutside);
     };
 
-    const shouldUpdateView = initialLoad ||
+    const shouldUpdateView =
+      initialLoad ||
       autoFitBounds ||
       (pointsAdded && !userModifiedView) ||
       pointDisconnected;
@@ -229,7 +247,7 @@ function MapLibrePointsMap<T extends Point>({
     } else if (points.length > 0) {
       points.forEach((point, index) => {
         const markerEl = createMarkerElement(index);
-        
+
         const popupContent = renderPopupContent
           ? renderPopupContent(point)
           : `
@@ -256,7 +274,7 @@ function MapLibrePointsMap<T extends Point>({
             if (onMarkerClick) {
               onMarkerClick(point);
             }
-            
+
             if (mapRef.current) {
               popup.setLngLat([point.lng, point.lat]).addTo(mapRef.current);
             }
@@ -270,7 +288,7 @@ function MapLibrePointsMap<T extends Point>({
         setTimeout(() => {
           if (mapRef.current) {
             fitMapToPoints(mapRef.current, points);
-            
+
             if (initialLoad) {
               setInitialLoad(false);
             }
@@ -295,7 +313,18 @@ function MapLibrePointsMap<T extends Point>({
         mapRef.current.off('zoomend', checkAllPointsOutsideView);
       }
     };
-  }, [points, renderPopupContent, onMarkerClick, fitBoundsOptions, singlePointZoomLevel, initialZoom, defaultCenter, autoFitBounds, initialLoad, userModifiedView]);
+  }, [
+    points,
+    renderPopupContent,
+    onMarkerClick,
+    fitBoundsOptions,
+    singlePointZoomLevel,
+    initialZoom,
+    defaultCenter,
+    autoFitBounds,
+    initialLoad,
+    userModifiedView,
+  ]);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -310,9 +339,14 @@ function MapLibrePointsMap<T extends Point>({
     });
 
     if (mapRef.current) {
-      const userInteractionEvents = ['dragend', 'zoomend', 'pitchend', 'rotateend'];
+      const userInteractionEvents = [
+        'dragend',
+        'zoomend',
+        'pitchend',
+        'rotateend',
+      ];
 
-      userInteractionEvents.forEach(event => {
+      userInteractionEvents.forEach((event) => {
         mapRef.current!.on(event, () => {
           if (mapRef.current && !isInFittedView(mapRef.current)) {
             setUserModifiedView(true);
@@ -321,9 +355,11 @@ function MapLibrePointsMap<T extends Point>({
       });
     }
 
-    mapRef.current.addControl(new maplibregl.NavigationControl({
-      showCompass: false,
-    }));
+    mapRef.current.addControl(
+      new maplibregl.NavigationControl({
+        showCompass: false,
+      })
+    );
 
     mapRef.current.on('load', () => {
       if (points.length > 0 && mapRef.current) {
@@ -352,8 +388,17 @@ function MapLibrePointsMap<T extends Point>({
             onClick={handleFitBounds}
             title='Ajustar mapa para mostrar todos los puntos'
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              className='w-4 h-4'
+            >
+              <path d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'></path>
             </svg>
             ¡Hay puntos fuera de la vista!
           </button>

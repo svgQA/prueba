@@ -1,0 +1,13 @@
+{
+  "navbar": {
+    "products": "Nuestros productos",
+    "about": "Conócenos",
+    "demo": "Solicita una demo",
+    "signin": "Iniciar sesión"
+  },
+  "home": {
+    "title": "Transforma la Gestión de Operaciones Con Tryvoo",
+    "subtitle": "Optimiza la gestión de actividades, recursos y activos, incluso sin conectividad para tus negocios",
+    "demoButton": "Agenda Una Demo Gratis"
+  }
+}
