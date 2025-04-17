@@ -1,13 +1,16 @@
 import HomeTryvooDesktopImg from '@/assets/image/home-desktop-with-tryvoo.png';
 import { tryvoo_pros } from '../utils/data/pros';
 import { Button } from '@/components/common/button/button';
+import { useTranslation } from 'react-i18next';
 
 export const HomePros = () => {
+  const { t } = useTranslation();
+
   return (
     <div className='bg-white text-center text-gray-500'>
-      <h2 className='text-ternary text-2xl md:text-3xl'>¿Por que Tryvoo?</h2>
+      <h2 className='text-ternary text-2xl md:text-3xl'>{t('pros.title')}</h2>
       <span className='text- pb-5 text-lg md:text-xl block'>
-        Simplifica. Optimiza. Crece
+        {t('pros.subtitle')}
       </span>
 
       <div className='flex flex-col md:flex-row mt-7 px-4 md:px-0'>
@@ -18,14 +21,10 @@ export const HomePros = () => {
             className='w-[80%] md:w-[50%] h-auto'
           />
           <span className='font-bold text-xl md:text-2xl px-4 md:px-10 text-left mt-4'>
-            El 60% de las empresas en LATAM buscan herramientas que mejoren la
-            trazabilidad y reduzcan costos operativos
+            {t('pros.stats')}
           </span>
           <p className='text-lg md:text-xl px-4 md:px-10 mt-5 text-left'>
-            Tryvoo está liderando esta transformación, gracias a la
-            Digitalización y automatización completa de las actividades en
-            campo, llegando a soluciones intuitivas, accesibles incluso sin
-            conexión.
+            {t('pros.description')}
           </p>
         </div>
 
@@ -46,10 +45,10 @@ export const HomePros = () => {
                     <div>
                       <p className='text-left justify-left'>
                         <span className='font-bold text-[#505050] text-lg md:text-xl'>
-                          {item.title}
+                          {t(item.titleKey)}
                         </span>
                         <span className='text-[#505050] text-base md:text-lg'>
-                          {item.subtitle}
+                          {t(item.subtitleKey)}
                         </span>
                       </p>
                     </div>
@@ -66,7 +65,7 @@ export const HomePros = () => {
       </div>
 
       <Button
-        label='Conoce todas las posibilidades'
+        label={t('pros.button')}
         type='button'
         id='schedule'
         name='schedule'

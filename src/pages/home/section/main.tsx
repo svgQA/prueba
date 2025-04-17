@@ -1,21 +1,28 @@
 import { Button } from '@/components/common/button/button';
 import HomeMainDesktopImg from '@/assets/image/home-main-desktop.png';
+import { useTranslation } from 'react-i18next';
 
 export const HomeMain = () => {
+  const { t } = useTranslation();
+
   return (
-    <div className='flex relative min-h-[85vh] md:flex-row flex-col text-center md:text-left'>
+    <div className='flex relative mt-16 min-h-[85vh] md:flex-row flex-col text-center md:text-left'>
       <div className='w-full md:w-2/5 flex flex-col items-center px-4 md:px-10 py-6 md:py-1'>
         <div className='pb-1 md:pb-10'>
           <h1 className='text-xl sm:text-1xl md:text-4xl lg:text-5xl mb-1 mt-1 sm:mt-14 md:mt-2'>
-            Transforma la Gestión de Operaciones Con Tryvoo
+            {t('home.title')}
           </h1>
           <span className='text-2xl sm:text-3xl px-2'>
-            Optimiza la gestión de actividades, recursos y activos, incluso sin{' '}
-            <span className='font-bold'>conectividad para tus negocios</span>
+            {t('home.subtitle').split('conectividad para tus negocios')[0]}{' '}
+            <span className='font-bold'>
+              {t('home.subtitle').includes('conectividad para tus negocios')
+                ? 'conectividad para tus negocios'
+                : 'connectivity for your business'}
+            </span>
           </span>
         </div>
         <Button
-          label='Agenda una Demo gratis'
+          label={t('home.demoButton')}
           type='button'
           id='schedule'
           name='schedule'
