@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import maplibregl from 'maplibre-gl';
+import maplibregl, { Map as MaplibreMap } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 export type Point = {
@@ -14,34 +14,48 @@ type MapLibrePointsMapProps<T extends Point> = {
   points: T[];
   mapHeight?: string;
   initialZoom?: number;
-  markerColor?: string;
-  pointsLabel?: string;
+  minZoom?: number;
+  maxZoom?: number;
   renderPopupContent?: (point: T) => string;
   onMarkerClick?: (point: T) => void;
   fitBoundsOptions?: maplibregl.FitBoundsOptions;
-  useUserLocation?: boolean;
+  singlePointZoomLevel?: number;
+  defaultCenter?: [number, number];
+  autoFitBounds?: boolean;
+  fitButtonLabel?: string;
 };
 
 function MapLibrePointsMap<T extends Point>({
   points,
   mapHeight = '500px',
-  initialZoom = 5,
-  markerColor = 'bg-red-500',
-  pointsLabel = 'puntos',
+  initialZoom = 6,
+  minZoom = 3,
+  maxZoom = 18,
   renderPopupContent,
   onMarkerClick,
-  fitBoundsOptions = { padding: 50, maxZoom: 10 },
-  useUserLocation = true,
+  fitBoundsOptions = { padding: 50, maxZoom: 14 },
+  singlePointZoomLevel = 10,
+  defaultCenter = [-74.5, 4.0],
+  autoFitBounds = false,
 }: MapLibrePointsMapProps<T>) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<maplibregl.Map | null>(null);
+  const mapRef = useRef<MaplibreMap | null>(null);
   const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
-  const tooltipsRef = useRef<Map<string, HTMLDivElement>>(new Map());
-  const prevPointsRef = useRef<T[]>([]);
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(
-    null
+  const [prevPointsLength, setPrevPointsLength] = useState<number>(
+    points.length
   );
-  const [locationError, setLocationError] = useState<string | null>(null);
+  const [initialLoad, setInitialLoad] = useState<boolean>(true);
+  const [userModifiedView, setUserModifiedView] = useState<boolean>(false);
+  const [lastFitBounds, setLastFitBounds] = useState<{
+    zoom: number;
+    center: [number, number];
+  }>({
+    zoom: initialZoom,
+    center: defaultCenter,
+  });
+  const prevPointsRef = useRef<T[]>([]);
+  const [hasPointsOutsideView, setHasPointsOutsideView] =
+    useState<boolean>(false);
 
   const mapStyle: string | maplibregl.StyleSpecification = {
     version: 8 as const,
@@ -66,268 +80,300 @@ function MapLibrePointsMap<T extends Point>({
     ],
   };
 
-  // Get user's location
-  useEffect(() => {
-    if (!useUserLocation || points.length > 0) return;
-
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { longitude, latitude } = position.coords;
-          setUserLocation([longitude, latitude]);
-          setLocationError(null);
-        },
-        (error) => {
-          console.error('Error getting user location:', error.message);
-          setLocationError(error.message);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        }
-      );
-    } else {
-      setLocationError('Geolocation is not supported by this browser');
-    }
-  }, [useUserLocation, points.length]);
-
-  // Initialize map
-  useEffect(() => {
-    if (!mapContainerRef.current) return;
-    let center: [number, number] = [0, 0];
-
-    if (points.length > 0) {
-      center = [points[0].lng, points[0].lat];
-    } else if (userLocation) {
-      center = userLocation;
-    }
-
-    mapRef.current = new maplibregl.Map({
-      container: mapContainerRef.current,
-      style: mapStyle,
+  const resetMapToDefault = (map: MaplibreMap) => {
+    map.flyTo({
+      center: defaultCenter,
       zoom: initialZoom,
-      center: center,
-      pitchWithRotate: false,
-      dragRotate: false,
-      touchZoomRotate: true,
+      duration: 1000,
     });
+    setUserModifiedView(false);
+  };
 
-    mapRef.current.addControl(new maplibregl.NavigationControl());
+  const fitMapToPoints = (map: MaplibreMap, pointsToFit: T[]) => {
+    if (pointsToFit.length === 0) return;
 
-    // Add user location marker if available and no points
-    if (userLocation && points.length === 0) {
-      // Create user location marker
-      const userMarkerEl = document.createElement('div');
-      userMarkerEl.className =
-        'w-6 h-6 bg-blue-500 rounded-full border-2 border-white shadow-md flex items-center justify-center';
-
-      // Add pulsing effect
-      const pulseEl = document.createElement('div');
-      pulseEl.className =
-        'absolute w-12 h-12 bg-blue-400 rounded-full opacity-30 animate-ping';
-
-      const markerContainer = document.createElement('div');
-      markerContainer.className = 'relative flex items-center justify-center';
-      markerContainer.appendChild(pulseEl);
-      markerContainer.appendChild(userMarkerEl);
-
-      new maplibregl.Marker({
-        element: markerContainer,
-        anchor: 'center',
-      })
-        .setLngLat(userLocation)
-        .addTo(mapRef.current);
-
-      // Add popup for user location
-      const popup = new maplibregl.Popup({
-        closeButton: false,
-        className: 'shadow-lg',
-      }).setHTML(`
-        <div class="font-bold">Tu ubicación</div>
-        <div class="text-xs">Lat: ${userLocation[1].toFixed(6)}</div>
-        <div class="text-xs">Lng: ${userLocation[0].toFixed(6)}</div>
-      `);
-
-      userMarkerEl.addEventListener('click', () => {
-        popup.setLngLat(userLocation).addTo(mapRef.current!);
+    if (pointsToFit.length === 1) {
+      const point = pointsToFit[0];
+      map.flyTo({
+        center: [point.lng, point.lat],
+        zoom: singlePointZoomLevel,
+        ...fitBoundsOptions,
       });
+
+      setLastFitBounds({
+        zoom: singlePointZoomLevel,
+        center: [point.lng, point.lat],
+      });
+    } else if (pointsToFit.length === 2) {
+      const bounds = new maplibregl.LngLatBounds();
+      pointsToFit.forEach((point) => {
+        bounds.extend([point.lng, point.lat]);
+      });
+
+      const twoPadding = Math.max(
+        150,
+        ((fitBoundsOptions?.padding as number) || 50) * 2
+      );
+      const twoPointOptions = {
+        ...fitBoundsOptions,
+        padding: twoPadding,
+        maxZoom: Math.min(11, fitBoundsOptions?.maxZoom || 14),
+      };
+
+      map.fitBounds(bounds, twoPointOptions);
+
+      setTimeout(() => {
+        if (map) {
+          setLastFitBounds({
+            zoom: map.getZoom(),
+            center: [map.getCenter().lng, map.getCenter().lat],
+          });
+        }
+      }, 300);
+    } else {
+      const bounds = new maplibregl.LngLatBounds();
+      pointsToFit.forEach((point) => {
+        bounds.extend([point.lng, point.lat]);
+      });
+      map.fitBounds(bounds, fitBoundsOptions);
+
+      setTimeout(() => {
+        if (map) {
+          setLastFitBounds({
+            zoom: map.getZoom(),
+            center: [map.getCenter().lng, map.getCenter().lat],
+          });
+        }
+      }, 300);
     }
 
-    return () => {
-      // Clean up markers
-      markersRef.current.forEach((marker) => marker.remove());
+    setUserModifiedView(false);
+  };
 
-      // Remove map
-      mapRef.current?.remove();
-      markersRef.current.clear();
-      tooltipsRef.current.clear();
-    };
-  }, [initialZoom, points, userLocation]);
+  const isInFittedView = (map: MaplibreMap): boolean => {
+    const currentZoom = map.getZoom();
+    const currentCenter = map.getCenter();
 
-  // Check if point positions have changed
-  const havePositionsChanged = (
-    prevPoints: T[],
-    currentPoints: T[]
+    const zoomTolerance = 0.1;
+    const centerTolerance = 0.01;
+
+    const zoomMatches =
+      Math.abs(currentZoom - lastFitBounds.zoom) <= zoomTolerance;
+    const centerMatches =
+      Math.abs(currentCenter.lng - lastFitBounds.center[0]) <=
+        centerTolerance &&
+      Math.abs(currentCenter.lat - lastFitBounds.center[1]) <= centerTolerance;
+
+    return zoomMatches && centerMatches;
+  };
+
+  const hasPointDisconnected = (
+    currentPoints: T[],
+    previousPoints: T[]
   ): boolean => {
-    if (prevPoints.length !== currentPoints.length) return true;
-
-    for (let i = 0; i < currentPoints.length; i++) {
-      const current = currentPoints[i];
-      const prev = prevPoints.find((p) => p.id === current.id);
-      if (!prev) return true;
-      if (prev.lat !== current.lat || prev.lng !== current.lng) return true;
+    if (currentPoints.length < previousPoints.length) {
+      const currentIds = new Set(currentPoints.map((p) => p.id));
+      return previousPoints.some((prevPoint) => !currentIds.has(prevPoint.id));
     }
-
     return false;
   };
 
-  // Default popup content renderer
-  const defaultRenderPopupContent = (point: T) => `
-    <div class="font-bold">${point.name}</div>
-    <div class="text-xs">Lat: ${point.lat.toFixed(6)}</div>
-    <div class="text-xs">Lng: ${point.lng.toFixed(6)}</div>
-  `;
+  const createMarkerElement = (index: number) => {
+    const el = document.createElement('div');
+    el.innerHTML = `
+      <div style="
+        position: relative;
+        width: 24px;
+        height: 38px;
+      ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="38" viewBox="0 0 24 38">
+          <path fill="#EA4335" d="M12 0C5.4 0 0 5.4 0 12c0 6.5 12 25 12 25s12-18.5 12-25c0-6.6-5.4-12-12-12z" />
+          <circle fill="#FFFFFF" cx="12" cy="12" r="8" />
+          <text 
+            fill="#EA4335" 
+            x="12" 
+            y="16" 
+            font-family="Arial, sans-serif" 
+            font-size="11" 
+            font-weight="bold" 
+            text-anchor="middle"
+          >${index + 1}</text>
+        </svg>
+      </div>
+    `;
+    return el;
+  };
 
-  // Function to add small random offset to coordinates when points are too close
-  const addRandomOffset = (
-    lat: number,
-    lng: number,
-    index: number
-  ): [number, number] => {
-    const offset = 0.0001; // Approximately 11 meters
-    const angle = index * 72 * (Math.PI / 180); // Distribute points in a circle
-    const newLat = lat + Math.sin(angle) * offset;
-    const newLng = lng + Math.cos(angle) * offset;
-    return [newLat, newLng];
+  const handleFitBounds = () => {
+    if (mapRef.current && points.length > 0) {
+      fitMapToPoints(mapRef.current, points);
+    }
   };
 
   useEffect(() => {
     if (!mapRef.current) return;
-    if (points.length === 0) return;
 
-    const positionsChanged = havePositionsChanged(
-      prevPointsRef.current,
-      points
+    markersRef.current.forEach((marker) => marker.remove());
+    markersRef.current.clear();
+
+    const pointsAdded = points.length > prevPointsLength;
+    const pointDisconnected = hasPointDisconnected(
+      points,
+      prevPointsRef.current
     );
-    prevPointsRef.current = [...points];
-    if (!positionsChanged) return;
-    const currentPointIds = new Set(points.map((point) => point.id));
 
-    // Group points by location to handle overlapping points
-    const locationGroups = new Map<string, T[]>();
-    points.forEach((point) => {
-      const key = `${point.lat.toFixed(6)},${point.lng.toFixed(6)}`;
-      if (!locationGroups.has(key)) {
-        locationGroups.set(key, []);
+    const checkAllPointsOutsideView = () => {
+      if (!mapRef.current || points.length === 0) {
+        setHasPointsOutsideView(false);
+        return;
       }
-      locationGroups.get(key)!.push(point);
-    });
 
-    markersRef.current.forEach((marker, pointId) => {
-      if (!currentPointIds.has(pointId)) {
-        marker.remove();
-        markersRef.current.delete(pointId);
+      const currentBounds = mapRef.current.getBounds();
+      const anyPointOutside = points.some((point) => {
+        return !currentBounds.contains([point.lng, point.lat]);
+      });
 
-        if (tooltipsRef.current.has(pointId)) {
-          tooltipsRef.current.delete(pointId);
-        }
-      }
-    });
+      setHasPointsOutsideView(anyPointOutside);
+    };
 
-    locationGroups.forEach((group) => {
-      group.forEach((point, index) => {
-        const existingMarker = markersRef.current.get(point.id);
+    const shouldUpdateView =
+      initialLoad ||
+      autoFitBounds ||
+      (pointsAdded && !userModifiedView) ||
+      pointDisconnected;
+
+    if (prevPointsLength > 0 && points.length === 0) {
+      resetMapToDefault(mapRef.current);
+    } else if (points.length > 0) {
+      points.forEach((point, index) => {
+        const markerEl = createMarkerElement(index);
+
         const popupContent = renderPopupContent
           ? renderPopupContent(point)
-          : defaultRenderPopupContent(point);
+          : `
+            <div style="font-weight: bold;">${point.name}</div>
+            <div style="font-size: 12px;">Lat: ${point.lat.toFixed(6)}</div>
+            <div style="font-size: 12px;">Lng: ${point.lng.toFixed(6)}</div>
+          `;
 
-        // Add offset for overlapping points
-        const [offsetLat, offsetLng] =
-          group.length > 1
-            ? addRandomOffset(point.lat, point.lng, index)
-            : [point.lat, point.lng];
+        const popup = new maplibregl.Popup({
+          closeButton: false,
+          offset: [0, -20],
+          className: 'map-popup-custom',
+        }).setHTML(popupContent);
 
-        if (existingMarker) {
-          existingMarker.setLngLat([offsetLng, offsetLat]);
-        } else {
-          // Create marker container
-          const markerContainer = document.createElement('div');
-          markerContainer.className = 'relative flex flex-col items-center';
-
-          // Create tooltip element (hidden by default)
-          const tooltip = document.createElement('div');
-          tooltip.className =
-            'absolute bottom-full mb-1 px-2 py-1 bg-white text-black text-xs font-medium rounded shadow-md whitespace-nowrap opacity-0 transition-opacity duration-200 pointer-events-none';
-          tooltip.textContent = point.name;
-          tooltipsRef.current.set(point.id, tooltip);
-
-          // Create marker element (Google Maps style pin)
-          const markerEl = document.createElement('div');
-          markerEl.title = point.name;
-          markerEl.className = `w-6 h-6 ${markerColor} rounded-full shadow-md border-2 border-white flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer`;
-
-          // Add tooltip and marker to container
-          markerContainer.appendChild(tooltip);
-          markerContainer.appendChild(markerEl);
-
-          // Create popup (Google Maps style)
-          const popup = new maplibregl.Popup({
-            offset: 25,
-            closeButton: false,
-            className: 'shadow-lg',
-          }).setHTML(popupContent);
-
-          // Create marker
+        if (mapRef.current) {
           const marker = new maplibregl.Marker({
-            element: markerContainer,
-            draggable: false,
-            anchor: 'center',
+            element: markerEl,
           })
-            .setLngLat([offsetLng, offsetLat])
-            .setPopup(popup)
-            .addTo(mapRef.current!);
+            .setLngLat([point.lng, point.lat])
+            .addTo(mapRef.current);
 
-          // Show tooltip on hover
-          markerEl.addEventListener('mouseenter', () => {
-            tooltip.style.opacity = '1';
-          });
+          marker.getElement().addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (onMarkerClick) {
+              onMarkerClick(point);
+            }
 
-          // Hide tooltip on mouse leave
-          markerEl.addEventListener('mouseleave', () => {
-            tooltip.style.opacity = '0';
-          });
-
-          // Handle click
-          markerEl.addEventListener('click', () => {
-            popup.addTo(mapRef.current!);
-            if (onMarkerClick) onMarkerClick(point);
+            if (mapRef.current) {
+              popup.setLngLat([point.lng, point.lat]).addTo(mapRef.current);
+            }
           });
 
           markersRef.current.set(point.id, marker);
         }
       });
-    });
 
-    if (
-      markersRef.current.size === points.length &&
-      points.length > 0 &&
-      markersRef.current.size <= 5
-    ) {
-      const bounds = new maplibregl.LngLatBounds();
-      points.forEach((point) => {
-        bounds.extend([point.lng, point.lat]);
-      });
+      if (shouldUpdateView) {
+        setTimeout(() => {
+          if (mapRef.current) {
+            fitMapToPoints(mapRef.current, points);
 
-      mapRef.current.fitBounds(bounds, fitBoundsOptions);
+            if (initialLoad) {
+              setInitialLoad(false);
+            }
+          }
+        }, 100);
+      } else {
+        checkAllPointsOutsideView();
+      }
     }
+
+    if (mapRef.current) {
+      mapRef.current.on('moveend', checkAllPointsOutsideView);
+      mapRef.current.on('zoomend', checkAllPointsOutsideView);
+    }
+
+    setPrevPointsLength(points.length);
+    prevPointsRef.current = [...points];
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.off('moveend', checkAllPointsOutsideView);
+        mapRef.current.off('zoomend', checkAllPointsOutsideView);
+      }
+    };
   }, [
     points,
-    markerColor,
     renderPopupContent,
     onMarkerClick,
     fitBoundsOptions,
+    singlePointZoomLevel,
+    initialZoom,
+    defaultCenter,
+    autoFitBounds,
+    initialLoad,
+    userModifiedView,
   ]);
+
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    mapRef.current = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: mapStyle,
+      zoom: initialZoom,
+      center: defaultCenter,
+      minZoom: minZoom,
+      maxZoom: maxZoom,
+    });
+
+    if (mapRef.current) {
+      const userInteractionEvents = [
+        'dragend',
+        'zoomend',
+        'pitchend',
+        'rotateend',
+      ];
+
+      userInteractionEvents.forEach((event) => {
+        mapRef.current!.on(event, () => {
+          if (mapRef.current && !isInFittedView(mapRef.current)) {
+            setUserModifiedView(true);
+          }
+        });
+      });
+    }
+
+    mapRef.current.addControl(
+      new maplibregl.NavigationControl({
+        showCompass: false,
+      })
+    );
+
+    mapRef.current.on('load', () => {
+      if (points.length > 0 && mapRef.current) {
+        fitMapToPoints(mapRef.current, points);
+        setInitialLoad(false);
+      }
+    });
+
+    return () => {
+      markersRef.current.forEach((marker) => marker.remove());
+      markersRef.current.clear();
+      mapRef.current?.remove();
+    };
+  }, []);
 
   return (
     <div className='relative w-full'>
@@ -335,12 +381,27 @@ function MapLibrePointsMap<T extends Point>({
         ref={mapContainerRef}
         className='w-full rounded-lg overflow-hidden shadow-md'
         style={{ height: mapHeight }}
-      />
-      <div className='absolute bottom-2 right-2 bg-white px-3 py-1.5 rounded shadow-sm text-xs font-medium text-gray-700 flex items-center gap-1.5'>
-        <span className='inline-block w-2 h-2 rounded-full bg-red-500'></span>
-        {points.length} {pointsLabel} activos
-        {locationError && points.length === 0 && (
-          <span className='ml-2 text-red-500'>Error de ubicación</span>
+      >
+        {points.length > 0 && hasPointsOutsideView && (
+          <button
+            className='absolute top-2.5 left-2.5 z-10 border border-red-500 bg-red-50 text-red-700 hover:bg-red-100 rounded px-3 py-2 shadow-md font-sans text-sm cursor-pointer transition-colors flex items-center gap-1.5'
+            onClick={handleFitBounds}
+            title='Ajustar mapa para mostrar todos los puntos'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              className='w-4 h-4'
+            >
+              <path d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'></path>
+            </svg>
+            ¡Hay puntos fuera de la vista!
+          </button>
         )}
       </div>
     </div>

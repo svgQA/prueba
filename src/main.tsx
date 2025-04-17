@@ -3,6 +3,7 @@ if (tryvoo_environment) {
 }
 
 import './assets/styles/index.css';
+import './i18n'; // Importar configuración de i18n
 import { render } from 'preact';
 import { App } from './app.tsx';
 import { tryvoo_environment } from './env.config.ts';

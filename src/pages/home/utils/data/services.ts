@@ -8,30 +8,26 @@ import HomeService4 from '@/assets/image/home-service-4.svg';
 export const tryvoo_services: ISectionProps[] = [
   {
     id: 1,
-    title: 'Monitorio en Tiempo Real',
-    subtitle:
-      'Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real.',
+    titleKey: 'services.items.monitoring.title',
+    subtitleKey: 'services.items.monitoring.subtitle',
     image: HomeService1,
   },
   {
     id: 2,
-    title: 'Capacidades Offline',
-    subtitle:
-      'Los operarios pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando la conexión a Internet es restaurada.',
+    titleKey: 'services.items.offline.title',
+    subtitleKey: 'services.items.offline.subtitle',
     image: HomeService2,
   },
   {
     id: 3,
-    title: 'IA y Soporte Virtual',
-    subtitle:
-      'Tu asistente virtual para resolver problemas en campo, con recomendaciones basadas en los datos que se capturan durante las operaciones.',
+    titleKey: 'services.items.ai.title',
+    subtitleKey: 'services.items.ai.subtitle',
     image: HomeService3,
   },
   {
     id: 4,
-    title: 'Integración y Personalización',
-    subtitle:
-      'Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector.',
+    titleKey: 'services.items.integration.title',
+    subtitleKey: 'services.items.integration.subtitle',
     image: HomeService4,
   },
 ];
