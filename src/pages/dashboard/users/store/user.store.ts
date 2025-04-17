@@ -13,6 +13,7 @@ const buildInitUser = (): IUserRequest => ({
   name: '',
   surname: '',
   email: '',
+  address: '',
   externalId: '',
   externalPlatformId: '',
   image: '',

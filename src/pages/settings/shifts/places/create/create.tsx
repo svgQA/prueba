@@ -319,7 +319,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   options={departments.value}
                   onChange={(e) => {
                     const id = e.currentTarget.value;
-                    onChangeDeparment(id);
+                    onChangeDeparment(parseInt(id));
                   }}
                 />
               </div>
