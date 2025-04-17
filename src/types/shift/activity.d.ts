@@ -118,7 +118,7 @@ interface ICountry {
   updatedAt: string;
   deletedAt: string | null;
   createdBy: string | null;
-  editBy: string | null;
+  editedBy: string | null;
   deletedBy: string | null;
 }
 
@@ -133,7 +133,7 @@ interface IMunicipality {
   updatedAt: string;
   deletedAt: string | null;
   createdBy: string | null;
-  editBy: string | null;
+  editedBy: string | null;
   deletedBy: string | null;
 }
 
@@ -174,7 +174,7 @@ export interface IShiftResponse {
   updatedAt: string;
   deletedAt: string | null;
   createdBy: string | null;
-  editBy: string | null;
+  editedBy: string | null;
   deletedBy: string | null;
 }
 

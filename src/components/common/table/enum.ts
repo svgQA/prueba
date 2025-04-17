@@ -5,4 +5,5 @@ export enum ROW_ACTIONS {
   REPORT,
   RESPONSE,
   MESSAGE,
+  PROFILE,
 }

@@ -4,6 +4,11 @@ import { User, ViewMode } from '@/components/compose/gantt/types/public-types';
 import { IPagination } from '@/types';
 import { IShiftSetting, IShiftSettingResponse } from '@/types/settings';
 import { IShiftResponse } from '@/types/shift/activity';
+import {
+  IDepartmentResponse,
+  IMunicipalityResponse,
+} from '@/types/shift/shift.response';
+import { ICountryResponse } from '@/types/user/user.response';
 // import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
 import { BaseService } from '@/utils/network';
 import {
@@ -113,31 +118,31 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getDepartments(params: IPagination = { page: 1, items: 50 }) {
+  static async getDepartments(params: IPagination = { page: 1, items: 200 }) {
     const model: IMakeRequest = {
       url: ['place/departments'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<IDepartmentResponse>(this.name, model);
   }
 
-  static async getCountries(params: IPagination = { page: 1, items: 50 }) {
+  static async getCountries(params: IPagination = { page: 1, items: 200 }) {
     const model: IMakeRequest = {
       url: ['place/countries'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<ICountryResponse>(this.name, model);
   }
 
   static async getMunicipalities(
-    id: string,
-    params: IPagination = { page: 1, items: 50 }
+    id: number,
+    params: IPagination = { page: 1, items: 200 }
   ) {
     const model: IMakeRequest = {
-      url: ['place/municipalities', id],
+      url: ['place/municipalities', `${id}`],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<IMunicipalityResponse>(this.name, model);
   }
 
   static async createRound(data: any) {

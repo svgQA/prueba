@@ -13,6 +13,30 @@ export const PAGES_LIST_ROUTER = {
     devices: '/devices',
     setting: {
       base: '/setting',
+      users: {
+        base: '/users',
+        to: '/setting/users',
+        password: {
+          base: '/password',
+          to: '/setting/users/password',
+        },
+        areas: {
+          base: '/areas',
+          to: '/setting/users/areas',
+        },
+        roles: {
+          base: '/roles',
+          to: '/setting/users/roles',
+        },
+        groups: {
+          base: '/groups',
+          to: '/setting/users/groups',
+        },
+        settings: {
+          base: '/settings',
+          to: '/setting/users/settings',
+        },
+      },
       admin: {
         base: '/admin',
         analytic: {

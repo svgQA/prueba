@@ -9,6 +9,7 @@ interface IColumnButtonProps {
   icon?: string;
   label?: string;
   plain?: boolean;
+  color?: string;
 }
 
 export const ButtonAction: FunctionComponent<IColumnButtonProps> = ({
@@ -16,6 +17,7 @@ export const ButtonAction: FunctionComponent<IColumnButtonProps> = ({
   type,
   action,
   icon = '151',
+  color = 'primary',
   label,
 }: IColumnButtonProps) => {
   return (
@@ -23,7 +25,7 @@ export const ButtonAction: FunctionComponent<IColumnButtonProps> = ({
       className={
         label
           ? `hover:opacity-50 border text-primary border-b-light-dark dark:border-b-dark-light rounded px-2 py-1 text-sm cursor-pointer mr-3`
-          : `hover:opacity-50 vox-icon vx-icon-${icon} p-1 size-sm cursor-pointer`
+          : `hover:opacity-50 vox-icon  ${color} vx-icon-${icon} p-1 size-sm cursor-pointer`
       }
       data-id={id}
       data-type={type}
