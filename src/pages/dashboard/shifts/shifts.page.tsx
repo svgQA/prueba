@@ -186,13 +186,21 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const handleClick = useCallback((/* task: Task */) => {}, []);
 
-  const handleUserClick = useCallback(
+  const handleUserDoubleClick = useCallback(
     (id: string | number) => {
       const selectedUser = ganttShifts.users.find((user) => user.id === id);
-      if (selectedUser) {
-        setUserSelected(selectedUser);
-        showUpsertModal.value = true;
-      }
+      setUserSelected(selectedUser);
+      toggleUpsertModal();
+    },
+    [ganttShifts.users]
+  );
+
+  const handleUserClick = useCallback(
+    (_: string | number) => {
+      // const selectedUser = ganttShifts.users.find((user) => user.id === id);
+      // if (selectedUser) {
+      //   setUserSelected(selectedUser);
+      // }
     },
     [ganttShifts.users]
   );
@@ -324,6 +332,10 @@ export const ShiftsPage: FunctionalComponent = () => {
     [currentView.value]
   );
 
+  const handleReloadSignal = () => {
+    getGanttHandler(view);
+  };
+
   return (
     <Section padding>
       {currentView.value !== VIEW_NAME.MAP && (
@@ -399,12 +411,13 @@ export const ShiftsPage: FunctionalComponent = () => {
             onDateChange={handleTaskChange}
             onDelete={handleTaskDelete}
             onDoubleClick={handleDblClick}
-            onUserDoubleClick={handleUserClick}
+            onUserDoubleClick={handleUserDoubleClick}
             onUserClick={handleUserClick}
             onClick={handleClick}
             listCellWidth={isChecked ? '155px' : ''}
             columnWidth={columnWidth}
             users={users}
+            onReloadSignal={handleReloadSignal}
             group={
               <Group
                 onViewModeChange={handleViewMode}

@@ -1,11 +1,11 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { tracking_service_url } from '@/env.config';
-import React, { useEffect, useState, useRef } from 'react';
-import { hasUserTenant, useUserStore } from '@/store/slices';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
+import { useUserStore } from '@/store/slices';
 import io from 'socket.io-client';
 import { VNode } from 'preact';
 import { Search } from '@/components/common/search/search';
-import { ColumnFilter } from '@tanstack/react-table';
+import { ColumnFiltersState, ColumnFilter } from '@tanstack/react-table';
 
 type User = {
   id: string;
@@ -15,15 +15,38 @@ type User = {
   token: string;
   type: 'provider' | 'client';
   tenantId: number;
+  userShifts?: any[];
 };
 
-const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({ button, unsearch }) => {
+type Shift = {
+  service?: {
+    name?: string;
+    contract?: {
+      name?: string;
+      client?: {
+        name?: string;
+      };
+    };
+    place?: {
+      address?: string;
+    };
+  };
+  status?: string;
+};
+
+const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({ unsearch }) => {
   const [users, setUsers] = useState<User[]>([]);
-  const [connectionStatus, setConnectionStatus] =
-    useState<string>('Connecting...');
+  const [_, setConnectionStatus] = useState<string>('Connecting...');
   const socketRef = useRef<any>(null);
   const { getToken, getSelected } = useUserStore();
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchFilters, setSearchFilters] = useState<ColumnFiltersState>([]);
+
+  const searchKeys = useMemo(() => [
+    { id: 'name', label: 'Nombre' },
+    { id: 'service', label: 'Servicio' },
+    { id: 'contract', label: 'Contrato' },
+    { id: 'client', label: 'Cliente' }
+  ], []);
 
   useEffect(() => {
     const socket = io(tracking_service_url, {
@@ -32,9 +55,12 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({ button,
     socketRef.current = socket;
     socket.on('connect', () => setConnectionStatus('Connected'));
     socket.on('disconnect', () => setConnectionStatus('Disconnected'));
-    socket.on('connect_error', (_: any) =>
-      setConnectionStatus('Connection Error')
-    );
+    socket.on('connect_error', (_: any) => setConnectionStatus('Connection Error'));
+
+    socket.on('location-create', (user: User) => {
+      setUsers((prevUsers) => [...prevUsers, user]);
+    });
+    
     socket.on('location-update', (user: User) => {
       setUsers((prevUsers) => {
         const index = prevUsers.findIndex((u) => u.id === user.id);
@@ -42,17 +68,20 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({ button,
           const updated = [...prevUsers];
           updated[index] = user;
           return updated;
-        } else {
-          return [...prevUsers, user];
         }
+        return [...prevUsers, user];
       });
+    });
+    
+    socket.on('user-disconnected', (user: { id: string }) => {
+      setUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
     });
 
     socket.on('all-locations', (allUsers: User[]) => {
       try {
-        setUsers(allUsers)
+        setUsers(allUsers);
       } catch (error) {
-        console.error("Error: ", error);
+        console.error('Error: ', error);
       }
     });
 
@@ -65,22 +94,54 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({ button,
     };
   }, []);
 
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = useMemo(() => {
+    const usersWithShifts = users.filter(user => user.userShifts && user.userShifts.length > 0);
+    if (!searchFilters.length) return usersWithShifts;
+   
+    const matchesFilterValue = (value: string | undefined, filterValue: unknown): boolean => {
+      if (!value) return false;
+      const values = Array.isArray(filterValue) ? filterValue : [filterValue];
+      return values.some(v => value.toLowerCase().includes(String(v).toLowerCase()));
+    };
+
+    const propertyGetters: Record<string, (shift: Shift) => string | undefined> = {
+      service: (shift) => shift.service?.name,
+      contract: (shift) => shift.service?.place?.address,
+      client: (shift) => shift.service?.contract?.name
+    };
+
+    return usersWithShifts.filter(user => {
+      const nameFilter = searchFilters.find(filter => filter.id === 'name');
+      if (nameFilter?.value) {
+        if (!matchesFilterValue(user.name, nameFilter.value)) {
+          return false;
+        }
+      }
+      
+      const shiftRelatedFilters = searchFilters.filter(filter => ['service', 'contract', 'client'].includes(filter.id));
+      if (shiftRelatedFilters.length === 0) return true;
+      const firstShift = user.userShifts![0];
+      
+      return shiftRelatedFilters.every(filter => {
+        if (filter.id === 'name') return true;
+        const getter = propertyGetters[filter.id];
+        if (!getter) return true;
+        return matchesFilterValue(getter(firstShift), filter.value);
+      });
+    });
+  }, [users, searchFilters]);
 
   return (
-    
     <div className='px-4'>
-       <div className='relative w-full my-2 flex items-center justify-end'>
+      <div className='relative w-full my-2 flex items-center justify-end'>
         {!unsearch && (
           <Search
             id='search-map'
             name='search-map'
-            onChange={(filters: ColumnFilter[]) => {
-              const searchFilter = filters.find((filter: ColumnFilter) => filter.id === 'name');
-              setSearchTerm(searchFilter ? String(searchFilter.value) : '');
-            }}
+            onChange={setSearchFilters}
+            keys={searchKeys}
+            value={searchFilters}
+            placeholder="Buscar por nombre, servicio, contrato..."
           />
         )}
       </div>
@@ -88,10 +149,7 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({ button,
       <MapLibrePointsMap
         points={filteredUsers}
         mapHeight='88vh'
-        markerColor='bg-blue-600'
-        pointsLabel='ubicaciones'
         initialZoom={3}
-        useUserLocation={true}
       />
     </div>
   );
