@@ -190,11 +190,15 @@ function MapLibrePointsMap<T extends Point>({
   `;
 
   // Function to add small random offset to coordinates when points are too close
-  const addRandomOffset = (lat: number, lng: number, index: number): [number, number] => {
+  const addRandomOffset = (
+    lat: number,
+    lng: number,
+    index: number
+  ): [number, number] => {
     const offset = 0.0001; // Approximately 11 meters
-    const angle = (index * 72) * (Math.PI / 180); // Distribute points in a circle
-    const newLat = lat + (Math.sin(angle) * offset);
-    const newLng = lng + (Math.cos(angle) * offset);
+    const angle = index * 72 * (Math.PI / 180); // Distribute points in a circle
+    const newLat = lat + Math.sin(angle) * offset;
+    const newLng = lng + Math.cos(angle) * offset;
     return [newLat, newLng];
   };
 
@@ -212,7 +216,7 @@ function MapLibrePointsMap<T extends Point>({
 
     // Group points by location to handle overlapping points
     const locationGroups = new Map<string, T[]>();
-    points.forEach(point => {
+    points.forEach((point) => {
       const key = `${point.lat.toFixed(6)},${point.lng.toFixed(6)}`;
       if (!locationGroups.has(key)) {
         locationGroups.set(key, []);
@@ -231,7 +235,7 @@ function MapLibrePointsMap<T extends Point>({
       }
     });
 
-    locationGroups.forEach((group, locationKey) => {
+    locationGroups.forEach((group) => {
       group.forEach((point, index) => {
         const existingMarker = markersRef.current.get(point.id);
         const popupContent = renderPopupContent
@@ -239,9 +243,10 @@ function MapLibrePointsMap<T extends Point>({
           : defaultRenderPopupContent(point);
 
         // Add offset for overlapping points
-        const [offsetLat, offsetLng] = group.length > 1 
-          ? addRandomOffset(point.lat, point.lng, index)
-          : [point.lat, point.lng];
+        const [offsetLat, offsetLng] =
+          group.length > 1
+            ? addRandomOffset(point.lat, point.lng, index)
+            : [point.lat, point.lng];
 
         if (existingMarker) {
           existingMarker.setLngLat([offsetLng, offsetLat]);
