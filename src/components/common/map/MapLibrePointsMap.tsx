@@ -26,7 +26,7 @@ function MapLibrePointsMap<T extends Point>({
   points,
   mapHeight = '500px',
   initialZoom = 5,
-  // markerColor = 'bg-red-500',
+  markerColor = 'bg-red-500',
   // pointsLabel = 'puntos',
   // renderPopupContent,
   // onMarkerClick,
@@ -86,7 +86,8 @@ function MapLibrePointsMap<T extends Point>({
 
         const markerEl = document.createElement('div');
         markerEl.className =
-          'w-6 h-6 bg-teal-500 rounded-full border-2 border-white shadow-md relative z-10';
+          'w-6 h-6 rounded-full border-2 border-white shadow-md relative z-10 ' +
+          markerColor;
 
         markerContainer.appendChild(pulseEl);
         markerContainer.appendChild(markerEl);

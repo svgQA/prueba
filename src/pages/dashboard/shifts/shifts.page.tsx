@@ -287,28 +287,13 @@ export const ShiftsPage: FunctionalComponent = () => {
           icon='330'
         />
         <Button
-          name='button-change-planner'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.PLANNER);
-          }}
-          rounded={false}
-          className={
-            currentView.value === VIEW_NAME.PLANNER
-              ? 'bg-primary-opacity p-2'
-              : ''
-          }
-          icon='331'
-        />
-        <Button
           name='button-change-table'
           onClick={() => {
             handleViewChange(VIEW_NAME.MAP);
           }}
           rounded={false}
           className={
-            currentView.value === VIEW_NAME.MAP
-              ? 'bg-primary-opacity p-2'
-              : ''
+            currentView.value === VIEW_NAME.MAP ? 'bg-primary-opacity p-2' : ''
           }
           icon='321'
         />
@@ -327,6 +312,19 @@ export const ShiftsPage: FunctionalComponent = () => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
         />
+        <Button
+          name='button-change-planner'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.PLANNER);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.PLANNER
+              ? 'bg-primary-opacity p-2'
+              : ''
+          }
+          icon='331'
+        />
       </div>
     ),
     [currentView.value]
@@ -338,33 +336,31 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   return (
     <Section padding>
-      {currentView.value !== VIEW_NAME.MAP && (
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-          <CardData
-            title='Turnos Totales Hoy'
-            count={shiftSummary.value.total}
-            subtitle=''
-            color='t-dark'
-            icon='054'
-          />
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+        <CardData
+          title='Turnos Totales Hoy'
+          count={shiftSummary.value.total}
+          subtitle=''
+          color='t-dark'
+          icon='054'
+        />
 
-          <CardData
-            title='Turnos En Curso'
-            count={calculatePercentage(shiftSummary.value.inProgress)}
-            subtitle=''
-            color='t-dark'
-            icon='052'
-          />
+        <CardData
+          title='Turnos En Curso'
+          count={calculatePercentage(shiftSummary.value.inProgress)}
+          subtitle=''
+          color='t-dark'
+          icon='052'
+        />
 
-          <CardData
-            title='Turnos Finalizados'
-            count={calculatePercentage(shiftSummary.value.completed)}
-            subtitle=''
-            color='t-dark'
-            icon='015'
-          />
-        </div>
-      )}
+        <CardData
+          title='Turnos Finalizados'
+          count={calculatePercentage(shiftSummary.value.completed)}
+          subtitle=''
+          color='t-dark'
+          icon='015'
+        />
+      </div>
 
       <div className='max-h-screen relative'>
         <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-10'>

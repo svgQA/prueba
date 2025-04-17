@@ -20,7 +20,10 @@ export class GeneralService extends BaseService {
 
   static async getAppSetting() {
     const model: IMakeRequest = {
-      url: ['module', 'app'],
+      url: ['module'],
+      params: {
+        type: 'APP',
+      },
     };
     return await super.make_request<IAppSetting>(this.sname, model);
   }

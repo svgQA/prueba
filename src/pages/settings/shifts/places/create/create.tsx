@@ -386,7 +386,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   style={{ width: `${(green / 2000) * 100}%` }}
                 />
                 <input
-                  label={'ee'}
+                  // label={'ee'}
                   type='range'
                   min='0'
                   max='2000'
