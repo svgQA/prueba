@@ -19,6 +19,7 @@ interface DateSelectorProps {
     endDate: string,
     selectedUserIds: number[]
   ) => void;
+  onReloadSignal?: () => void;
 }
 
 export interface FormValues {
@@ -48,6 +49,7 @@ const initialValues: FormValues = {
 export const DateSelector: ComponentType<DateSelectorProps> = ({
   selectedUsers,
   users,
+  onReloadSignal,
 }) => {
   const [showDateForm, setShowDateForm] = useState(false);
   const formRef = useRef<any>(null);
@@ -83,6 +85,7 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
     }
     toast.success('Shifts replicated successfully');
     setShowDateForm((prev) => !prev);
+    onReloadSignal?.();
   };
 
   // const handleMouseLeave = (e: MouseEvent) => {
@@ -106,7 +109,7 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
 
       {showDateForm && (
         <div
-          className='my-3 absolute right-0 w-96 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[500px]'
+          className='my-3 absolute right-0 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[500px]'
           // onMouseLeave={handleMouseLeave}
         >
           <Form<FormValues>

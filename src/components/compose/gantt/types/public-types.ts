@@ -193,4 +193,5 @@ export interface GanttProps extends EventOption, DisplayOption, StylingOption {
   tasks: GeneralTask;
   group?: VNode;
   users?: IOption[];
+  onReloadSignal?: () => void;
 }
