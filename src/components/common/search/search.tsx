@@ -53,7 +53,7 @@ export const Search = ({
         if (existingIndex !== -1) {
           const updatedItem = {
             ...prev[existingIndex],
-            value,
+            value: [...(prev[existingIndex].value as string[]), value],
           };
           return [
             ...prev.slice(0, existingIndex),
@@ -61,7 +61,7 @@ export const Search = ({
             ...prev.slice(existingIndex + 1),
           ];
         } else {
-          return [...prev, { id, value }];
+          return [...prev, { id, value: [value] }];
         }
       };
     },

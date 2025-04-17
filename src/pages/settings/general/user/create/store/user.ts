@@ -19,8 +19,10 @@ const buildInitUser = (): IUserRequest => ({
   phone: '',
   cardId: '',
   cardType: undefined,
+  address: '',
   extraData: {
     country: '',
+    company: '',
     state: '',
     city: '',
     job: '',

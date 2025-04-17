@@ -32,6 +32,7 @@ enum VIEW_NAME {
   CALENDAR,
   SCHEDULER,
   SUPERVISOR,
+  MAP,
   PLANNER,
 }
 
@@ -185,13 +186,21 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const handleClick = useCallback((/* task: Task */) => {}, []);
 
-  const handleUserClick = useCallback(
+  const handleUserDoubleClick = useCallback(
     (id: string | number) => {
       const selectedUser = ganttShifts.users.find((user) => user.id === id);
-      if (selectedUser) {
-        setUserSelected(selectedUser);
-        showUpsertModal.value = true;
-      }
+      setUserSelected(selectedUser);
+      toggleUpsertModal();
+    },
+    [ganttShifts.users]
+  );
+
+  const handleUserClick = useCallback(
+    (_: string | number) => {
+      // const selectedUser = ganttShifts.users.find((user) => user.id === id);
+      // if (selectedUser) {
+      //   setUserSelected(selectedUser);
+      // }
     },
     [ganttShifts.users]
   );
@@ -291,6 +300,17 @@ export const ShiftsPage: FunctionalComponent = () => {
           icon='331'
         />
         <Button
+          name='button-change-table'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.MAP);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.MAP ? 'bg-primary-opacity p-2' : ''
+          }
+          icon='321'
+        />
+        <Button
           name='button-action'
           rounded={false}
           className='border-2 border-primary p-2'
@@ -310,9 +330,13 @@ export const ShiftsPage: FunctionalComponent = () => {
     [currentView.value]
   );
 
+  const handleReloadSignal = () => {
+    getGanttHandler(view);
+  };
+
   return (
     <Section padding>
-      {currentView.value !== VIEW_NAME.SUPERVISOR && (
+      {currentView.value !== VIEW_NAME.MAP && (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
             title='Turnos Totales Hoy'
@@ -385,12 +409,13 @@ export const ShiftsPage: FunctionalComponent = () => {
             onDateChange={handleTaskChange}
             onDelete={handleTaskDelete}
             onDoubleClick={handleDblClick}
-            onUserDoubleClick={handleUserClick}
+            onUserDoubleClick={handleUserDoubleClick}
             onUserClick={handleUserClick}
             onClick={handleClick}
             listCellWidth={isChecked ? '155px' : ''}
             columnWidth={columnWidth}
             users={users}
+            onReloadSignal={handleReloadSignal}
             group={
               <Group
                 onViewModeChange={handleViewMode}
@@ -405,7 +430,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         {currentView.value === VIEW_NAME.PLANNER && (
           <PlannerView services={memoizedServices} users={memoizedUsers} />
         )}
-        {currentView.value === VIEW_NAME.SUPERVISOR && <LiveUserMap />}
+        {currentView.value === VIEW_NAME.MAP && <LiveUserMap />}
       </div>
 
       <TaskForm

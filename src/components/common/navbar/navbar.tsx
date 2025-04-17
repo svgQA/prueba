@@ -4,6 +4,8 @@ import { Link } from 'wouter';
 import { ModalServices } from '@/pages/home/modal/modal.services';
 import { useSignal } from '@preact/signals';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { LanguageSwitcher } from '../LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 export const Navbar: FunctionComponent<INavbarProps> = ({
   id,
@@ -12,6 +14,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
   onActionHandler,
 }: INavbarProps) => {
   const isOpen = useSignal(false);
+  const { t } = useTranslation();
 
   const toggleMenu = () => {
     isOpen.value = !isOpen.value;
@@ -60,7 +63,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
                   onClick={() => onActionHandler(menu.to)}
                   className='px-3 py-2 rounded hover:bg-opacity-20 transition-colors duration-200 whitespace-nowrap'
                 >
-                  {menu.label}
+                  {t(menu.label)}
                 </button>
               ) : menu.label === 'Services' ? (
                 <ModalServices label={menu.label} />
@@ -69,7 +72,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
                   to={menu.to}
                   className='px-3 py-2 rounded hover:bg-opacity-20 transition-colors duration-200 whitespace-nowrap'
                 >
-                  {menu.label}
+                  {t(menu.label)}
                 </Link>
               )}
             </li>
@@ -77,6 +80,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
         </ul>
 
         <div className='ml-2 flex justify-end items-center gap-2 mr-1 md:mr-1 lg:mr-4 xl:mr-6'>
+          <LanguageSwitcher />
           <div className='w-11 h-11 bg-white rounded-full flex items-center justify-center'>
             <span className='vox-icon vx-icon-007 size-md !text-ternary flex items-center justify-center' />
           </div>
@@ -84,7 +88,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
             to={PAGES_LIST_ROUTER.dashboard.base}
             className='px-6 py-2 rounded-full bg-white text-ternary hover:bg-opacity-90 transition-colors duration-200 whitespace-nowrap'
           >
-            Signin
+            {t('navbar.signin')}
           </Link>
         </div>
       </div>
