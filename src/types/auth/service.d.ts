@@ -5,13 +5,14 @@ interface IUser {
 }
 
 export interface IUserRequest extends IUser {
+  readonly id?: number;
   readonly externalId?: string;
   readonly externalPlatformId?: string;
-
+  readonly userType?: string;
   readonly name: string;
   readonly surname: string;
   readonly email: string;
-
+  readonly address: string;
   readonly image?: string;
   readonly phone?: string;
 
@@ -27,6 +28,7 @@ export interface IExtraData {
   job: string;
   area: string;
   sucursal: string;
+  company: string;
 }
 
 export interface IUserResponse extends IUserRequest {

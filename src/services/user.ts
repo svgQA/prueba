@@ -5,6 +5,7 @@ import { USER_TYPE } from '@/types/user/user.enum';
 import {
   IDocumentTypeResponse,
   IDeleteUserResponse,
+  ICountryResponse,
 } from '@/types/user/user.response';
 import { BaseService } from '@/utils/network';
 
@@ -53,12 +54,31 @@ export class UserService extends BaseService {
     return await super.make_request<IUserResponse>(this.name, model);
   }
 
-  static async get_all(params: IPaginationUser = { page: 1, items: 10 }) {
+  static async get_all(params: IPaginationUser = { page: 1, items: 250 }) {
     const model: IMakeRequest = {
       url: ['user'],
       params: params as any,
     };
     return await super.make_request<IUserResponse>(this.name, model);
+  }
+
+  static async setProfile(id: number, companyId: string) {
+    const model: IMakeRequest = {
+      url: ['user', 'setprofile'],
+      data: {
+        userId: id,
+        companyId: companyId,
+      },
+      method: REQUEST_METHODS.POST,
+    };
+    return await super.make_request<IUserResponse>(this.name, model);
+  }
+
+  static async getCountries() {
+    const model: IMakeRequest = {
+      url: ['user', 'countries'],
+    };
+    return await super.make_request<ICountryResponse>(this.name, model);
   }
 
   static async delete(id: number) {
@@ -114,6 +134,6 @@ export class UserService extends BaseService {
     const model: IMakeRequest = {
       url: ['user', 'documenttypes'],
     };
-    return await super.make_request<IDocumentTypeResponse[]>(this.name, model);
+    return await super.make_request<IDocumentTypeResponse>(this.name, model);
   }
 }
