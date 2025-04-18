@@ -381,6 +381,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             columns={columns}
             showExpandableIcon={false}
             pageSize={20}
+            selectable={true}
             expandable={(row: IShiftResponse, currentColumnName?: string) => (
               <ExpandableMultiple
                 type={currentColumnName || defaultColumn.value}
@@ -443,6 +444,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         closed={showSendModal.value}
         onClose={handleCloseSendModal}
         onSend={handleSend}
+        viewMode='dash'
       />
 
       <ShiftForm

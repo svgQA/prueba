@@ -53,4 +53,11 @@ export const SIDEBAR_MENUS: IMenu[] = [
     icon: '307',
     id: 'device',
   },
+  {
+    label: 'history',
+    to: PAGES_LIST_ROUTER.dashboard.history,
+    description: 'este es',
+    icon: '325',
+    id: 'history',
+  },
 ];

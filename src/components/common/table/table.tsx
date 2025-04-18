@@ -359,12 +359,12 @@ export const Table = <T,>({
                     )}
                     {row.getVisibleCells().map((cell, index) => (
                       <SortableContext
-                        key={`${cell.id}-${index}`}
+                        key={`sortable-${row.id}-${cell.id}`}
                         items={columnOrder}
                         strategy={horizontalListSortingStrategy}
                       >
                         <DraggableCell<T>
-                          key={`${cell.id}-${index}`}
+                          key={`cell-${row.id}-${cell.id}`}
                           onCurrentColumnName={(value) => {
                             currentColumnName.value = value;
                           }}
