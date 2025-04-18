@@ -13,21 +13,21 @@ const buildInitUser = (): IUserRequest => ({
   name: '',
   surname: '',
   email: '',
+  address: '',
   externalId: '',
   externalPlatformId: '',
   image: '',
   phone: '',
   cardId: '',
   cardType: undefined,
-  address: '',
   extraData: {
     country: '',
-    company: '',
     state: '',
     city: '',
     job: '',
     area: '',
     sucursal: '',
+    company: '',
   },
 });
 
