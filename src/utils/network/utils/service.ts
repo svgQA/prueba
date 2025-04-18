@@ -77,7 +77,7 @@ export class BaseService {
       if (!tenant_header || !tenant?.tenant_id) {
         throw new Error('ERROR: not include header');
       }
-      model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
+      model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id, 'voxline-company': 1 };
     }
     model.headers = { ...model.headers, Authorization: this.getToken() };
 
