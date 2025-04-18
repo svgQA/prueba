@@ -6,3 +6,7 @@
 @import url('./tryvoo/table.css');
 @import url('./tryvoo/forms.css');
 @import url('./tryvoo/button.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

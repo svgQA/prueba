@@ -60,23 +60,56 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({
     socketRef.current = socket;
     socket.on('connect', () => setConnectionStatus('Connected'));
     socket.on('disconnect', () => setConnectionStatus('Disconnected'));
+
     socket.on('connect_error', (_: any) =>
       setConnectionStatus('Connection Error')
     );
 
-    socket.on('location-create', (user: User) => {
-      setUsers((prevUsers) => [...prevUsers, user]);
+    socket.on('location-update', (user: User | User[]) => {
+      setUsers((prevUsers) => {
+        if (Array.isArray(user)) {
+          // Handle array of users
+          return user.reduce(
+            (acc, currentUser) => {
+              const index = acc.findIndex((u) => u.id === currentUser.id);
+              if (index !== -1) {
+                acc[index] = currentUser;
+              } else {
+                acc.push(currentUser);
+              }
+              return acc;
+            },
+            [...prevUsers]
+          );
+        } else {
+          // Handle single user
+          const index = prevUsers.findIndex((u) => u.id === user.id);
+          if (index !== -1) {
+            const updated = [...prevUsers];
+            updated[index] = user;
+            return updated;
+          } else {
+            return [...prevUsers, user];
+          }
+        }
+      });
     });
 
-    socket.on('location-update', (user: User) => {
+    socket.on('location-remove', (user: User | User[]) => {
       setUsers((prevUsers) => {
-        const index = prevUsers.findIndex((u) => u.id === user.id);
-        if (index !== -1) {
-          const updated = [...prevUsers];
-          updated[index] = user;
-          return updated;
+        if (Array.isArray(user)) {
+          // Handle array of users to remove
+          return prevUsers.filter(
+            (existingUser) =>
+              !user.some((userToRemove) => userToRemove.id === existingUser.id)
+          );
+        } else {
+          // Handle single user to remove
+          return prevUsers.filter(
+            (existingUser) => existingUser.id !== user.id
+          );
         }
-        return [...prevUsers, user];
+        // return [...prevUsers, user];
       });
     });
 
@@ -167,7 +200,7 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({
 
       <MapLibrePointsMap
         points={filteredUsers}
-        mapHeight='88vh'
+        mapHeight='79vh'
         initialZoom={3}
       />
     </div>

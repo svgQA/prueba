@@ -16,7 +16,7 @@ export const HomeAbout = () => {
 
       <div className='mt-7 flex items-center justify-center flex-col md:flex-row gap-0 px-4 gap-y-3'>
         <div
-          name='about'
+          // name='about'
           className='w-full md:w-[30%] flex flex-col md:flex-row items-center h-[50%] justify-center'
         >
           <div className='w-full bg-white rounded-md p-5 hover:border-gray-200 transition-all shadow-md'>
@@ -29,7 +29,7 @@ export const HomeAbout = () => {
         <img src={HomeAboutCenterImg} alt='cellphone' className='w-80' />
 
         <div
-          name='mission'
+          // name='mission'
           className='w-full md:w-[30%] flex flex-col items-center h-[66.67%] justify-center bg-we text-white p-5 rounded-e-md hover:bg-opacity-90 transition-all'
         >
           <span className='text-lg md:text-[20px] font-bold mt-2'>
