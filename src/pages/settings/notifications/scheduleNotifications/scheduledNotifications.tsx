@@ -50,8 +50,11 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
     try {
       await SchedulerServiceFront.scheduleNotification({
         templateId: 'template-id-placeholder', // Reemplaza con lógica real
-        sendAt: new Date(sendAt),
-        filters: {},
+        sendAt: new Date(sendAt).toString(),
+        filters: {
+          userIds: [],
+          shiftToday: false
+        },
         sentTo: [1], // Reemplaza con IDs de usuarios reales
         overrideTitle,
         overrideDescription,

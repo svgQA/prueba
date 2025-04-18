@@ -31,7 +31,7 @@ export class SchedulerServiceFront extends BaseService {
       params: status ? { status } : undefined,
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<INotificationScheduledItem[]>(this.name, model);
+    return await super.make_request<INotificationScheduledItem>(this.name, model);
   }
 
 

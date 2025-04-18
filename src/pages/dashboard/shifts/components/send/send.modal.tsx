@@ -12,7 +12,7 @@ interface Props {
   users?: IShiftResponse[];
 }
 
-export const SendForm = ({ closed, onClose, onSend, viewMode, users }: Props) => {
+export const SendForm = ({ closed, onClose, viewMode, users }: Props) => {
   const [activeTab, setActiveTab] = useState<'template' | 'scheduled'>('template');
   const ref = useRef<HTMLDivElement>(null);
 
