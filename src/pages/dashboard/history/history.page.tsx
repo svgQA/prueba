@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { Button } from '@/components/common/button/button';

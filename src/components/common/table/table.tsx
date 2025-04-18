@@ -45,7 +45,7 @@ import {
   SortableContext,
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { DraggableCell, DraggableTableHeader } from './components';
+import { DraggableCell } from './components';
 import { Fragment } from 'preact/jsx-runtime';
 import { Switch } from '../switch/switch';
 import { ROW_ACTIONS } from './enum';
@@ -153,7 +153,7 @@ export const Table = <T,>({
         },
 
         cell: ({ row }: { row: Row<T> }) => {
-          const id = (row.original as any).id;
+          /* const id = (row.original as any).id; */
           return (
             <input
               type="checkbox"
@@ -357,7 +357,7 @@ export const Table = <T,>({
                         )}
                       </td>
                     )}
-                    {row.getVisibleCells().map((cell, index) => (
+                    {row.getVisibleCells().map((cell) => (
                       <SortableContext
                         key={`sortable-${row.id}-${cell.id}`}
                         items={columnOrder}
