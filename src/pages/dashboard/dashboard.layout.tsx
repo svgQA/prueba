@@ -26,7 +26,7 @@ import { UsersPage } from './users/users.page';
  * STORE SIGNALS
  ** ***********************************************************************/
 import {
-  getStatusOnBoardingModal,
+  // getStatusOnBoardingModal,
   toggleSettingModal,
   closeOnBoardingModal,
   openOnBoardingModal,
@@ -43,10 +43,11 @@ import { SettingsModal } from '../settings/settings';
 import { ToastContainer } from 'react-toastify';
 import { Loading } from '@/components/common/loading/loading';
 import { Sidebar } from '@/components/common/sidebar/sidebar';
-import { OnBordingModal } from '../globals/onbording/onboarding';
-import { IconsModal } from '../globals/icons/icons';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
-import { useWebSocket } from '@/utils/socket';
+// import { useWebSocket } from '@/utils/socket';
+
+// import { IconsModal } from '../globals/icons/icons';
+// import { OnBordingModal } from '../globals/onbording/onboarding';
 
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
@@ -56,25 +57,25 @@ import { useWebSocket } from '@/utils/socket';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    const wsManager = useWebSocket();
+    // const wsManager = useWebSocket();
 
     const {
+      // companies,
+      // getUrlSocket,
       setSelected,
-      companies,
       setCompanies,
       getSelected,
       setToken,
       getToken,
-      getUrlSocket,
       setCognito,
     } = useUserStore();
 
-    const setCompanySelected = (company: string) => {
-      setSelected(company);
-      closeOnBoardingModal();
-      // getProfile();
-      initSocket();
-    };
+    // const setCompanySelected = (company: string) => {
+    //   setSelected(company);
+    //   closeOnBoardingModal();
+    //   // getProfile();
+    //   initSocket();
+    // };
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
@@ -109,9 +110,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     //   });
     // };
 
-    const initSocket = () => {
-      wsManager.connect(getUrlSocket());
-    };
+    // const initSocket = () => {
+    //   wsManager.connect(getUrlSocket());
+    // };
 
     return (
       <section className='bg-b-content dark:bg-b-dark w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
@@ -164,6 +165,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           </Router>
         </div>
         <SettingsModal />
+        {/*
         <OnBordingModal
           closed={getStatusOnBoardingModal.value}
           onLogout={signOut || (() => {})}
@@ -195,6 +197,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           ))}
         </OnBordingModal>
         <IconsModal />
+        */}
         <ToastContainer />
       </section>
     );

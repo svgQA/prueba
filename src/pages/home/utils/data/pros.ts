@@ -8,30 +8,26 @@ import HomeWhyTryvooIconScalar from '@/assets/image/home-icon-scalar.jpg';
 export const tryvoo_pros: ISectionProps[] = [
   {
     id: 1,
-    title: 'Fácil Gestión y Trazabilidad:',
-    subtitle:
-      '"Control total sobre las operaciones en campo, con visibilidad y seguimiento en tiempo real."',
+    titleKey: 'pros.items.management.title',
+    subtitleKey: 'pros.items.management.subtitle',
     image: HomeWhyTryvooIconAnalitics,
   },
   {
     id: 2,
-    title: 'Asistencia con IA:',
-    subtitle:
-      '"Recibe recomendaciones automáticas y soporte para tus operativos directamente en el terreno."',
+    titleKey: 'pros.items.ai.title',
+    subtitleKey: 'pros.items.ai.subtitle',
     image: HomeWhyTryvooIconReason,
   },
   {
     id: 3,
-    title: 'Sincronización Offline:',
-    subtitle:
-      '"Sigue gestionando incluso sin internet, y los datos se sincronizan al restaurar la conexión."',
+    titleKey: 'pros.items.offline.title',
+    subtitleKey: 'pros.items.offline.subtitle',
     image: HomeWhyTryvooIconPlace,
   },
   {
     id: 4,
-    title: 'Escalabilidad:',
-    subtitle:
-      '"Adaptable a cualquier tamaño de empresa o industria, desde la vigilancia hasta la logística."',
+    titleKey: 'pros.items.scalability.title',
+    subtitleKey: 'pros.items.scalability.subtitle',
     image: HomeWhyTryvooIconScalar,
   },
 ];

@@ -85,6 +85,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   onUserDoubleClick,
   unsearch,
   group,
+  onReloadSignal,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
@@ -115,7 +116,9 @@ const GanttComponent: ComponentType<GanttProps> = ({
   const [failedTask, setFailedTask] = useState<BarTask | null>(null);
 
   const svgWidth = dateSetup.dates.length * columnWidth;
-  const ganttFullHeight = initialTasks.users.length * rowHeight;
+  const [ganttFullHeight, setGanttFullHeight] = useState(
+    initialTasks.users.length * rowHeight
+  );
 
   const scrollY = useSignal(0);
   const scrollX = useSignal(-1);
@@ -168,6 +171,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         milestoneBackgroundSelectedColor
       )
     );
+    setGanttFullHeight(initialTasks.users.length * rowHeight);
   }, [
     initialTasks,
     viewMode,
@@ -605,6 +609,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   useEffect(() => {
     if (columnFilters.length === 0) {
       setTasks(initialTasks);
+      setGanttFullHeight(initialTasks.users.length * rowHeight);
       // Actualizar barTasks con todas las tareas cuando no hay filtros
       const [startDate, endDate] = ganttDateRange(
         initialTasks,
@@ -639,81 +644,88 @@ const GanttComponent: ComponentType<GanttProps> = ({
       return;
     }
 
-    const filteredUsers = initialTasks.users
-      .filter((user) => {
-        // Filtrar a nivel de usuario primero
-        const userLevelFilters = columnFilters.filter(
-          (filter) => filter.id === 'name' || filter.id === 'cardId'
-        );
+    const userLevelFilters = columnFilters.filter((filter) =>
+      ['name', 'cardId'].includes(filter.id)
+    );
 
-        if (userLevelFilters.length > 0) {
-          return userLevelFilters.every((filter) => {
-            const filterValue = filter.value as string;
-            switch (filter.id) {
-              case 'name':
-                return user.name
-                  .toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              case 'cardId':
-                return user.cardId
-                  ?.toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              default:
-                return true;
-            }
-          });
-        }
-        return true;
-      })
-      .map((user) => {
-        // Filtrar las tareas del usuario
-        const taskLevelFilters = columnFilters.filter(
-          (filter) => !['name', 'cardId'].includes(filter.id)
-        );
+    const taskLevelFilters = columnFilters.filter(
+      (filter) => !['name', 'cardId'].includes(filter.id)
+    );
 
-        const filteredTasks = user.tasks.filter((task) => {
-          return taskLevelFilters.every((filter) => {
-            const filterValue = filter.value as string;
-            switch (filter.id) {
-              case 'task.service':
-                return task.name
-                  .toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              case 'task.contract':
-                return task.contract
-                  .toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              case 'task.client':
-                return task.client
-                  .toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              case 'task.status':
-                return task.status
-                  .toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              default:
-                return true;
-            }
-          });
-        });
+    let filteredUsers =
+      userLevelFilters.length > 0
+        ? initialTasks.users.filter((user) => {
+            return userLevelFilters.every((filter) => {
+              const filterValue = filter.value as string[];
+              const userValue = filter.id === 'name' ? user.name : user.cardId;
 
-        return {
-          ...user,
-          tasks: filteredTasks,
-        };
-      })
-      .filter(
-        (user) =>
-          user.tasks.length > 0 ||
-          columnFilters.some((f) => f.id === 'name' || f.id === 'cardId')
-      );
+              if (Array.isArray(filterValue)) {
+                return filterValue.some((val) =>
+                  String(userValue)
+                    .toLowerCase()
+                    .includes(String(val).toLowerCase())
+                );
+              }
+              return String(userValue)
+                .toLowerCase()
+                .includes(String(filterValue).toLowerCase());
+            });
+          })
+        : initialTasks.users;
 
+    filteredUsers =
+      taskLevelFilters.length > 0
+        ? filteredUsers.map((user) => {
+            const filteredTasks = user.tasks.filter((task) => {
+              return taskLevelFilters.every((filter) => {
+                const filterValue = filter.value as string[];
+                let taskValue = '';
+
+                switch (filter.id) {
+                  case 'task.service':
+                    taskValue = task.name;
+                    break;
+                  case 'task.contract':
+                    taskValue = task.contract;
+                    break;
+                  case 'task.client':
+                    taskValue = task.client;
+                    break;
+                  case 'task.status':
+                    taskValue = task.status;
+                    break;
+                  default:
+                    return true;
+                }
+
+                if (Array.isArray(filterValue)) {
+                  return filterValue.some((val) =>
+                    String(taskValue)
+                      .toLowerCase()
+                      .includes(String(val).toLowerCase())
+                  );
+                }
+                return String(taskValue)
+                  .toLowerCase()
+                  .includes(String(filterValue).toLowerCase());
+              });
+            });
+
+            return {
+              ...user,
+              tasks: filteredTasks,
+            };
+          })
+        : filteredUsers;
+
+    filteredUsers = filteredUsers.filter((user) => user.tasks.length);
     const filteredTasks = {
       ...initialTasks,
       users: filteredUsers,
     };
 
     setTasks(filteredTasks);
+    setGanttFullHeight(filteredUsers.length * rowHeight + 10);
 
     // Actualizar barTasks con las tareas filtradas
     const [startDate, endDate] = ganttDateRange(
@@ -771,11 +783,13 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   return (
     <div>
+      {}
       <div className='relative w-full my-2 flex items-center justify-end gap-2'>
         <DateSelector
           selectedUsers={selectedUsers}
           users={users}
           onDateSubmit={handleDateSubmit}
+          onReloadSignal={onReloadSignal}
         />
 
         {!unsearch && (
@@ -797,7 +811,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         )}
       </div>
       <div
-        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl min-h-[30vh]`}
+        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl h-full`}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         ref={wrapperRef}

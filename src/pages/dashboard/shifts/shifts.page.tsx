@@ -21,19 +21,36 @@ import { Button } from '@/components/common/button/button';
 import { SendForm } from './components/send/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
+import LiveUserMap from './components/shift.map';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
+import { PlannerView } from './components/planner.view';
+import { UserService } from '@/services/user';
+import { MentionOption } from '@/components/common/mention-editor';
 
 enum VIEW_NAME {
   TABLE,
   CALENDAR,
   SCHEDULER,
   SUPERVISOR,
+  MAP,
+  PLANNER,
+}
+
+interface IShiftSummary {
+  total: number;
+  inProgress: number;
+  completed: number;
 }
 
 export const ShiftsPage: FunctionalComponent = () => {
   const showUpsertModal = useSignal<boolean>(false);
   const showSendModal = useSignal<boolean>(false);
   const showShiftModal = useSignal<boolean>(false);
+  const shiftSummary = useSignal<IShiftSummary>({
+    total: 0,
+    inProgress: 0,
+    completed: 0,
+  });
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const shifts = useSignal<IShiftResponse[]>([]);
@@ -45,6 +62,13 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [taskSelected, setTaskSelected] = useState<Task>();
   const [userSelected, setUserSelected] = useState<User>();
 
+  const [services, setServices] = useState<MentionOption[]>([]);
+  const [users, setUsers] = useState<MentionOption[]>([]);
+
+  // Memoizar los servicios y usuarios para evitar re-renders innecesarios
+  const memoizedServices = useMemo(() => services, [services]);
+  const memoizedUsers = useMemo(() => users, [users]);
+
   const startDate = dayjs().subtract(1, 'day').toDate();
   const endDate = dayjs(startDate).add(1, 'week').toDate();
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
@@ -52,16 +76,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     endDate,
     users: [],
   });
-  const [selectedUsers, setSelectedUsers] = useState<IShiftResponse[]>([]);
-  const [modalUsers, setModalUsers] = useState<IShiftResponse[]>([]);
-  /**
-   * Handle Database query for shifts.
-   */
-  const getShiftHandler = async () => {
-    const response = await ShiftService.get_all({ page: 1, items: 1000 });
-    if (!response.getStatus()) return;
-    shifts.value = response.getMany();
-  };
 
   const handleViewMode = (viewMode: ViewMode = ViewMode.QuarterDay) => {
     setGanttShifts({ startDate, endDate, users: [] });
@@ -84,8 +98,40 @@ export const ShiftsPage: FunctionalComponent = () => {
    */
   useEffect(() => {
     document.title = 'VX - Shift Service';
-    getShiftHandler();
+    handleGetShiftSummary();
+    fetchInitialData();
   }, []);
+
+  // const fetchShifts = async () => {
+  //   const response = await ShiftService.get_all({ page: 1, items: 1000 });
+  //   if (!response.getStatus()) return;
+  //   hifts.value(response.getMany());
+  // };
+
+  const fetchInitialData = async () => {
+    try {
+      const [shiftsResponse, servicesResponse, usersResponse] =
+        await Promise.all([
+          ShiftService.get_all({ page: 1, items: 1000 }),
+          ShiftService.getListService(),
+          UserService.getListUsers(),
+        ]);
+
+      if (shiftsResponse && shiftsResponse.getStatus()) {
+        shifts.value = shiftsResponse.getMany();
+      }
+
+      if (servicesResponse.getStatus()) {
+        setServices(servicesResponse.getMany());
+      }
+
+      if (usersResponse.getStatus()) {
+        setUsers(usersResponse.getMany());
+      }
+    } catch (error) {
+      console.error('Error fetching initial data:', error);
+    }
+  };
 
   useEffect(() => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -103,16 +149,9 @@ export const ShiftsPage: FunctionalComponent = () => {
    * Eventos de toggle para los modales
    */
   const toggleSendModal = () => {
-    console.log('selectedUsers', selectedUsers);
-    if (selectedUsers.length === 0) {
-      alert('Selecciona al menos un usuario para notificar');
-      return;
-    }
-  
-    setModalUsers(selectedUsers.filter(shift => shift.employee.id === shift.employee.id)); // Pass only unique shifts by employee
-    showSendModal.value = true;
+    showSendModal.value = !showSendModal.value;
   };
-  
+
   const toggleUpsertModal = () => {
     showUpsertModal.value = !showUpsertModal.value;
   };
@@ -145,15 +184,23 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
-  const handleUserClick = useCallback(
+  const handleUserDoubleClick = useCallback(
     (id: string | number) => {
       const selectedUser = ganttShifts.users.find((user) => user.id === id);
-      if (selectedUser) {
-        setUserSelected(selectedUser);
-        showUpsertModal.value = true;
-      }
+      setUserSelected(selectedUser);
+      toggleUpsertModal();
+    },
+    [ganttShifts.users]
+  );
+
+  const handleUserClick = useCallback(
+    (_: string | number) => {
+      // const selectedUser = ganttShifts.users.find((user) => user.id === id);
+      // if (selectedUser) {
+      //   setUserSelected(selectedUser);
+      // }
     },
     [ganttShifts.users]
   );
@@ -191,6 +238,20 @@ export const ShiftsPage: FunctionalComponent = () => {
     [shifts]
   );
 
+  const handleGetShiftSummary = async () => {
+    try {
+      const summary = await ShiftService.getShiftSummary();
+      shiftSummary.value = summary.getOne() as IShiftSummary;
+    } catch (error) {
+      console.error('Error getting shift summary:', error);
+    }
+  };
+
+  const calculatePercentage = (value: number): string => {
+    if (shiftSummary.value.total === 0) return '0%';
+    return `${Math.round((value / shiftSummary.value.total) * 100)}%`;
+  };
+
   const handleCreacteNewShift = () => {
     cleanSelectedData();
     toggleUpsertModal();
@@ -226,6 +287,17 @@ export const ShiftsPage: FunctionalComponent = () => {
           icon='330'
         />
         <Button
+          name='button-change-table'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.MAP);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.MAP ? 'bg-primary-opacity p-2' : ''
+          }
+          icon='321'
+        />
+        <Button
           name='button-action'
           rounded={false}
           className='border-2 border-primary p-2'
@@ -240,17 +312,34 @@ export const ShiftsPage: FunctionalComponent = () => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
         />
+        <Button
+          name='button-change-planner'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.PLANNER);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.PLANNER
+              ? 'bg-primary-opacity p-2'
+              : ''
+          }
+          icon='331'
+        />
       </div>
     ),
     [currentView.value]
   );
+
+  const handleReloadSignal = () => {
+    getGanttHandler(view);
+  };
 
   return (
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
           title='Turnos Totales Hoy'
-          count={530}
+          count={shiftSummary.value.total}
           subtitle=''
           color='t-dark'
           icon='054'
@@ -258,7 +347,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
         <CardData
           title='Turnos En Curso'
-          count='50%'
+          count={calculatePercentage(shiftSummary.value.inProgress)}
           subtitle=''
           color='t-dark'
           icon='052'
@@ -266,7 +355,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
         <CardData
           title='Turnos Finalizados'
-          count='30%'
+          count={calculatePercentage(shiftSummary.value.completed)}
           subtitle=''
           color='t-dark'
           icon='015'
@@ -302,13 +391,12 @@ export const ShiftsPage: FunctionalComponent = () => {
               servicePlaceAddress: false,
               city: false,
               employeeId: false,
+              client: false,
               duration: false,
               userEmail: false,
               userPhone: false,
               serviceRound: false,
             }}
-            selectable={true} // 👈 habilita checkboxes
-            onSelectionChange={setSelectedUsers} // 👈 guarda seleccionados
           />
         )}
 
@@ -319,11 +407,13 @@ export const ShiftsPage: FunctionalComponent = () => {
             onDateChange={handleTaskChange}
             onDelete={handleTaskDelete}
             onDoubleClick={handleDblClick}
-            onUserDoubleClick={handleUserClick}
+            onUserDoubleClick={handleUserDoubleClick}
             onUserClick={handleUserClick}
             onClick={handleClick}
             listCellWidth={isChecked ? '155px' : ''}
             columnWidth={columnWidth}
+            users={users}
+            onReloadSignal={handleReloadSignal}
             group={
               <Group
                 onViewModeChange={handleViewMode}
@@ -335,8 +425,12 @@ export const ShiftsPage: FunctionalComponent = () => {
           />
         )}
 
-        {currentView.value === VIEW_NAME.SUPERVISOR && <div></div>}
+        {currentView.value === VIEW_NAME.PLANNER && (
+          <PlannerView services={memoizedServices} users={memoizedUsers} />
+        )}
+        {currentView.value === VIEW_NAME.MAP && <LiveUserMap />}
       </div>
+
       <TaskForm
         closed={showUpsertModal.value}
         onClose={handleCloseUpsertModal}
@@ -346,11 +440,9 @@ export const ShiftsPage: FunctionalComponent = () => {
       />
 
       <SendForm
-        closed={!showSendModal.value}
+        closed={showSendModal.value}
         onClose={handleCloseSendModal}
         onSend={handleSend}
-        viewMode="dash"
-        users={modalUsers}
       />
 
       <ShiftForm

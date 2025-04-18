@@ -15,6 +15,7 @@ import {
   getGroupedRowModel,
   GroupingState,
   Row,
+  FilterFn,
   flexRender,
   // flexRender,
 } from '@tanstack/react-table';
@@ -53,7 +54,7 @@ import { useSignal } from '@preact/signals';
 
 export const Table = <T,>({
   data,
-  columns,
+  columns = [],
   pageSize = 10,
   expandable,
   unsettings,
@@ -65,7 +66,25 @@ export const Table = <T,>({
   selectable,
   onSelectionChange,
 }: ITableProps<T>) => {
-  const columnsData = useMemo<ColumnDef<T>[]>(() => columns, []);
+  const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
+    const rowValue = row.getValue(columnId);
+
+    if (Array.isArray(filterValue)) {
+      return filterValue.some((val) =>
+        String(rowValue).toLowerCase().includes(String(val).toLowerCase())
+      );
+    }
+    return String(rowValue)
+      .toLowerCase()
+      .includes(String(filterValue).toLowerCase());
+  };
+
+  const columnsData = useMemo<ColumnDef<T>[]>(() => {
+    return columns.map((column) => ({
+      ...column,
+      filterFn: defaultOrFilterFn,
+    }));
+  }, []);
   const [selectedRows, setSelectedRows] = useState<Record<string, T>>({});
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -173,6 +192,10 @@ export const Table = <T,>({
     getExpandedRowModel: getExpandedRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
     onSortingChange: setSorting,
+    filterFns: {
+      defaultOrFilterFn,
+    },
+    globalFilterFn: defaultOrFilterFn,
     onPaginationChange: setPagination,
     onExpandedChange: setExpanded,
     onGroupingChange: setGrouping,

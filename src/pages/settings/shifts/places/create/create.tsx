@@ -66,8 +66,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     return { lat, lng };
   };
 
-  const fetchMunicipalities = async (deparmentId: string) => {
-    const request: any = await ShiftService.getMunicipalities(deparmentId);
+  const fetchMunicipalities = async (departmentId: number) => {
+    const request: any = await ShiftService.getMunicipalities(departmentId);
     municipalities.value = request.data;
     console.log('departments:', municipalities.value);
   };
@@ -106,8 +106,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     navigate('/rounds/places');
   };
 
-  const onChangeDeparment = async (deparmentId: string) => {
-    await fetchMunicipalities(deparmentId + '');
+  const onChangeDeparment = async (departmentId: number) => {
+    await fetchMunicipalities(departmentId);
   };
 
   const setPosition = (municipalityId: number) => {
@@ -143,7 +143,10 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
 
     const request: any = await ShiftService.getPlaceById(id);
     departmentId.value = request.model.municipality.departmentId;
-    await onChangeDeparment(`${departmentId}`);
+
+    if (departmentId.value) {
+      await onChangeDeparment(departmentId.value);
+    }
     const model = pick(omitBy(request.model, isNull), userKeys);
     setGreen(model.radius || 0);
     points.value = [
@@ -316,7 +319,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   options={departments.value}
                   onChange={(e) => {
                     const id = e.currentTarget.value;
-                    onChangeDeparment(id);
+                    onChangeDeparment(parseInt(id));
                   }}
                 />
               </div>
@@ -386,7 +389,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   style={{ width: `${(green / 2000) * 100}%` }}
                 />
                 <input
-                  label={'ee'}
+                  // label={'ee'}
                   type='range'
                   min='0'
                   max='2000'

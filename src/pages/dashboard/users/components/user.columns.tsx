@@ -1,43 +1,25 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { User } from '../utils';
-// import { Gauge } from '@/components/common/gauge/gauge';
-//import { Badge } from '@aws-amplify/ui-react';
 import { Badge } from '@/components/common/badge/badge';
+import { IUserResponse } from '@/types/auth/service';
+import { ButtonAction } from '@/components/common/button/column';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
-export const userColumns: ColumnDef<User>[] = [
-  {
-    id: 'id',
-    accessorKey: 'id',
-    size: 50,
-    header: 'ID',
-  },
+export const userColumns: ColumnDef<IUserResponse>[] = [
   {
     id: 'name',
     accessorKey: 'name',
     size: 180,
     header: 'Nombre',
-    enableGrouping: true, // habilitar agrupación si deseas
-  },
-  {
-    id: 'notificar',
-    //accessorKey: 'notificar',
-    header: 'Notificar',
-    size: 100,
     cell: (info) => {
-      return (
-        <span
-          className='vox-icon vx-icon-155 p-1 size-sm cursor-pointer'
-          onClick={() => info.row.toggleExpanded()}
-        />
-      );
+      const { name, surname } = info.row.original;
+      return <div className='flex justify-center'>{`${name} ${surname}`}</div>;
     },
   },
   {
-    id: 'identification',
-    accessorKey: 'identification',
+    id: 'cardId',
+    accessorKey: 'cardId',
     size: 180,
     header: 'Identificación',
-    enableGrouping: true,
   },
   {
     id: 'email',
@@ -47,17 +29,39 @@ export const userColumns: ColumnDef<User>[] = [
   },
   {
     id: 'company',
-    accessorKey: 'company',
+    accessorKey: 'extraData.company',
     size: 180,
     header: 'Compañía',
     enableGrouping: true,
+    cell: (info) => {
+      const { extraData } = info.row.original;
+      const value = extraData?.company || 'N/A';
+      return <div className='flex justify-center'>{value}</div>;
+    },
   },
   {
     id: 'department',
-    accessorKey: 'department',
+    accessorKey: 'extraData.area',
     size: 180,
     header: 'Departamento',
     enableGrouping: true,
+    cell: (info) => {
+      const { extraData } = info.row.original;
+      const value = extraData?.area || 'N/A';
+      return <div className='flex justify-center'>{value}</div>;
+    },
+  },
+  {
+    id: 'ciudad',
+    accessorKey: 'extraData.city',
+    size: 180,
+    header: 'Ciudad',
+    enableGrouping: true,
+    cell: (info) => {
+      const { extraData } = info.row.original;
+      const value = extraData?.city || 'N/A';
+      return <div className='flex justify-center'>{value}</div>;
+    },
   },
   {
     id: 'connection',
@@ -127,6 +131,37 @@ export const userColumns: ColumnDef<User>[] = [
               {progress}%
             </span>
           </div>
+        </div>
+      );
+    },
+  },
+  {
+    id: 'actions',
+
+    size: 20,
+    cell: (info) => {
+      const { id } = info.row.original;
+      return (
+        <div className='w-full flex justify-center'>
+          <ButtonAction
+            id={id}
+            type='form'
+            action={ROW_ACTIONS.PROFILE}
+            icon='229'
+          />
+          <ButtonAction
+            id={id}
+            type='shift'
+            action={ROW_ACTIONS.UPDATE}
+            icon='123'
+          />
+          <ButtonAction
+            id={id}
+            type='shift'
+            action={ROW_ACTIONS.DELETE}
+            icon='053'
+            color='!text-red-500'
+          />
         </div>
       );
     },

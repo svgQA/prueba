@@ -8,30 +8,26 @@ import HomeSolution4 from '@/assets/image/home-solution-4.svg';
 export const tryvoo_solutions: ISectionProps[] = [
   {
     id: 1,
-    title: 'Seguridad',
-    subtitle:
-      'Gestiona rondas de vigilancia, genera reportes de incidentes y asegura un control completo sobre las actividades de los operarios.',
+    titleKey: 'solutions.items.security.title',
+    subtitleKey: 'solutions.items.security.subtitle',
     image: HomeSolution1,
   },
   {
     id: 2,
-    title: 'Logística',
-    subtitle:
-      'Rastrea vehículos, monitorea entregas y optimiza la asignación de rutas para maximizar la eficiencia.',
+    titleKey: 'solutions.items.logistics.title',
+    subtitleKey: 'solutions.items.logistics.subtitle',
     image: HomeSolution2,
   },
   {
     id: 3,
-    title: 'Construcción',
-    subtitle:
-      'Coordina las tareas de los trabajadores en campo, controla los recursos y realiza un seguimiento de los avances del proyecto.',
+    titleKey: 'solutions.items.construction.title',
+    subtitleKey: 'solutions.items.construction.subtitle',
     image: HomeSolution3,
   },
   {
     id: 4,
-    title: 'Salud',
-    subtitle:
-      'Gestiona a los técnicos de salud, realiza un seguimiento de las visitas domiciliarias y administra las solicitudes en tiempo real.',
+    titleKey: 'solutions.items.health.title',
+    subtitleKey: 'solutions.items.health.subtitle',
     image: HomeSolution4,
   },
 ];

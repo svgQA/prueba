@@ -2,31 +2,36 @@ import { Button } from '@/components/common/button/button';
 import socialIcon1 from '@/assets/image/icon1.svg';
 import socialIcon2 from '@/assets/image/icon2.svg';
 import socialIcon3 from '@/assets/image/icon3.svg';
+import { useTranslation } from 'react-i18next';
 
 export const HomeFooter = () => {
+  const { t } = useTranslation();
+
   return (
     <>
       <div className='bg-[#20314F] flex justify-center gap-4 pt-10 pb-10 flex-col sm:flex-row'>
         <div className='w-[90%] sm:w-[30%] mx-4 sm:mx-0'>
           <h2 className='text-[18px] sm:text-[20px] font-bold'>
-            Secciones Populares
+            {t('footer.popularSections')}
           </h2>
           <p className='text-[16px] sm:text-[18px] pt-2'>
-            Conoce más de tryvoo
+            {t('footer.learnMore')}
           </p>
         </div>
 
         <div className='w-[90%] sm:w-[30%] mx-4 sm:mx-0'>
-          <h3 className='text-[18px] sm:text-[20px] font-bold'>Contáctanos</h3>
+          <h3 className='text-[18px] sm:text-[20px] font-bold'>
+            {t('footer.contactUs')}
+          </h3>
           <p className='text-[16px] sm:text-[18px] pt-2'>
-            3157789022 - Popayán, Cauca
+            {t('footer.contactInfo')}
           </p>
         </div>
 
         <div className='w-[90%] sm:w-[30%] mx-4 sm:mx-0'>
           <div className='w-full'>
             <h3 className='text-[18px] sm:text-[20px] font-bold'>
-              Nuestra redes
+              {t('footer.ourNetworks')}
             </h3>
           </div>
           <div className='w-full flex pt-2'>
@@ -38,17 +43,14 @@ export const HomeFooter = () => {
       </div>
       <div className='flex flex-col sm:flex-row gap-4 w-full mt-7 mb-10 items-center px-4 sm:px-8'>
         <div className='w-full sm:w-[25%] text-[20px] sm:text-[26px] font-bold text-center sm:text-left'>
-          <span className='sm:mr-12'>¡Te brindamos asesoria gratuita!</span>
+          <span className='sm:mr-12'>{t('footer.freeAdvice')}</span>
         </div>
         <div className='w-full sm:w-[40%] text-lg sm:text-xl text-center sm:text-left my-4 sm:my-0'>
-          <span>
-            Para que comiences optimizar tu negocio con herramientas ágiles y
-            operables en cualquiers espacio y lugar
-          </span>
+          <span>{t('footer.optimizeMessage')}</span>
         </div>
         <div className='w-full sm:w-[25%] text-center'>
           <Button
-            label='Inicia ya y disfruta'
+            label={t('footer.startButton')}
             type='button'
             id='schedule'
             name='schedule'

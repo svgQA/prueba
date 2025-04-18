@@ -28,7 +28,7 @@ export const MentionEditor = ({
   value,
   onChange,
   groups,
-  placeholder = '',
+  // placeholder = '',
   className = '',
 }: MentionEditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
@@ -390,7 +390,7 @@ export const MentionEditor = ({
         contentEditable
         onInput={handleInput}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder}
+        // placeholder={placeholder}
         className={`w-full min-h-[100px] p-3 text-sm border border-gray-300 rounded-md focus:outline-none resize-y ${className}`}
         style={{
           whiteSpace: 'pre-wrap',
