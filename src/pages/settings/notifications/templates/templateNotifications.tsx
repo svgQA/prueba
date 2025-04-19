@@ -52,48 +52,48 @@ export const TemplateNotificationPage: FunctionComponent = () => {
 
   return (
     <Section padding>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Plantillas de Notificación</h2>
+      <div className='flex justify-between items-center mb-4'>
+        <h2 className='text-xl font-semibold'>Plantillas de Notificación</h2>
         <Button
-          name="create-template"
+          name='create-template'
           label={showForm ? 'Cancelar' : '+ Nueva Plantilla'}
-          icon="122"
+          icon='122'
           onClick={() => setShowForm((prev) => !prev)}
         />
       </div>
 
       {showForm && (
-        <div className="border p-4 mb-6 rounded bg-gray-50 space-y-2">
-          <h4 className="text-md font-medium">Nueva Plantilla</h4>
+        <div className='border p-4 mb-6 rounded bg-gray-50 space-y-2'>
+          <h4 className='text-md font-medium'>Nueva Plantilla</h4>
 
           <input
-            type="text"
-            placeholder="Título"
+            type='text'
+            placeholder='Título'
             value={title}
             onInput={(e) => setTitle(e.currentTarget.value)}
-            className="w-full border px-3 py-2 rounded text-sm"
+            className='w-full border px-3 py-2 rounded text-sm'
           />
           <textarea
-            placeholder="Descripción"
+            placeholder='Descripción'
             rows={2}
             value={description}
             onInput={(e) => setDescription(e.currentTarget.value)}
-            className="w-full border px-3 py-2 rounded text-sm"
+            className='w-full border px-3 py-2 rounded text-sm'
           ></textarea>
           <textarea
-            placeholder="Data JSON"
+            placeholder='Data JSON'
             rows={3}
             value={dataJson}
             onInput={(e) => setDataJson(e.currentTarget.value)}
-            className="w-full border px-3 py-2 rounded text-sm font-mono"
+            className='w-full border px-3 py-2 rounded text-sm font-mono'
           ></textarea>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className='text-sm text-red-600'>{error}</p>}
 
           <Button
-            name="submit-template"
-            label="Guardar Plantilla"
-            className="bg-cyan-600 text-white hover:bg-cyan-700 px-4 py-2 text-sm rounded"
+            name='submit-template'
+            label='Guardar Plantilla'
+            className='bg-cyan-600 text-white hover:bg-cyan-700 px-4 py-2 text-sm rounded'
             onClick={handleCreate}
           />
         </div>

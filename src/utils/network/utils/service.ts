@@ -134,7 +134,6 @@ export class BaseService {
       });
       if (!response.ok) {
         const result = await response.json();
-        // console.log('response error ==>', result);
         toast.error(result.error, { position: 'top-right' });
         return new GenericResponse<T>({
           code: response?.status,

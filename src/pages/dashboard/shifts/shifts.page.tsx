@@ -18,7 +18,6 @@ import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/upsert.modal';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
-import { SendForm } from './components/send/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
 import LiveUserMap from './components/shift.map';
@@ -168,9 +167,9 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleUpsertModal();
   }, []);
 
-  const handleCloseSendModal = useCallback(() => {
-    toggleSendModal();
-  }, []);
+  // const handleCloseSendModal = useCallback(() => {
+  //   toggleSendModal();
+  // }, []);
 
   const handleCloseShiftModal = useCallback(() => {
     toggleShiftModal();
@@ -214,14 +213,14 @@ export const ShiftsPage: FunctionalComponent = () => {
     setTaskSelected(undefined);
   }, []);
 
-  const handleSend = useCallback(async (data: any) => {
-    try {
-      console.log('Sending data:', data);
-      showSendModal.value = false;
-    } catch (error) {
-      console.error('Error sending data:', error);
-    }
-  }, []);
+  // const handleSend = useCallback(async (data: any) => {
+  //   try {
+  //     console.log('Sending data:', data);
+  //     showSendModal.value = false;
+  //   } catch (error) {
+  //     console.error('Error sending data:', error);
+  //   }
+  // }, []);
 
   /**
    * Eventos de los botones superiores
@@ -363,7 +362,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       </div>
 
       <div className='max-h-screen relative'>
-        <div className='py-2 flex flex-row justify-center xl:justify-between px-1 items-center overflow-visible xl:absolute relative z-10 w-full'>
+        <div className='py-2 flex flex-row justify-center xl:justify-between px-1 items-center overflow-visible xl:absolute relative z-10 w-full xl:w-fit bg-b-content'>
           <div className='flex flex-row items-center !w-full xl:!w-fit md:w-auto justify-between'>
             {buttonMenu}
             <Button
@@ -440,12 +439,14 @@ export const ShiftsPage: FunctionalComponent = () => {
         taskSelected={taskSelected}
       />
 
+      {/*
       <SendForm
         closed={showSendModal.value}
         onClose={handleCloseSendModal}
         onSend={handleSend}
         viewMode='dash'
       />
+      */}
 
       <ShiftForm
         closed={showShiftModal.value}
