@@ -44,6 +44,7 @@ import { ToastContainer } from 'react-toastify';
 import { Loading } from '@/components/common/loading/loading';
 import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
+import { HistoryNotificationsPage } from './history/history.page';
 // import { useWebSocket } from '@/utils/socket';
 
 // import { IconsModal } from '../globals/icons/icons';
@@ -144,6 +145,12 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 path={PAGES_LIST.DEVICES}
                 component={lazy(() =>
                   Promise.resolve({ default: DevicesPage })
+                )}
+              />
+              <Route
+                path={PAGES_LIST.HISTORY}
+                component={lazy(() =>
+                  Promise.resolve({ default: HistoryNotificationsPage })
                 )}
               />
             </Suspense>

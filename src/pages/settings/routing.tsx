@@ -57,6 +57,8 @@ import { ScheduleSettingPage } from './shifts/schedule/schedule';
 import { ScheduleCreateSettingPage } from './shifts/schedule/create/schedule';
 import { ShiftSettingPage } from './shifts/setting/setting';
 import { GeneralSettingPage } from './general/setting/setting';
+import { ScheduledNotificationsPage } from './notifications/scheduleNotifications/scheduledNotifications';
+import { TemplateNotificationPage } from './notifications/templates/templateNotifications';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -427,6 +429,15 @@ export const RoutingContent = memo(() => {
           component={lazy(() =>
             Promise.resolve({ default: CreateInformationSettingPage })
           )}
+        />
+        {/* NOTIFICATIONS MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.to}
+          component={lazy(() => Promise.resolve({ default: ScheduledNotificationsPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.to}
+          component={lazy(() => Promise.resolve({ default: TemplateNotificationPage  }))}
         />
       </Suspense>
     </Router>

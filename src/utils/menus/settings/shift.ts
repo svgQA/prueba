@@ -69,6 +69,6 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.base,
       id: 'services',
       show: true,
-    },
+    }
   ],
 };
