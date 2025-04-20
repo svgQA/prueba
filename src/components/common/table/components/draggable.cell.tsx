@@ -17,7 +17,7 @@ export const DraggableCell = <T,>({
     <td
       ref={setNodeRef}
       style={getCommonPinningStyles<T>(cell.column, isDragging, transform)}
-      className='text-center'
+      className='text-left w-full px-1'
       onClick={() => {
         const columnName = cell.id.split('_')[1];
         onCurrentColumnName(columnName);

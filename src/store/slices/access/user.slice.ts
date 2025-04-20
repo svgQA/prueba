@@ -8,6 +8,8 @@ type State = {
   token: string;
   socket: string;
   cognito: string;
+  tenant: string;
+  user_id: string;
 };
 
 type Actions = {
@@ -21,6 +23,11 @@ type Actions = {
   getUrlSocket: () => string;
   setCognito: (uuid: string) => void;
   getCognito: () => string;
+  setTenant: (uuid: string) => void;
+  getTenant: () => string;
+  setUserId: (uuid: string) => void;
+  getUserId: () => string;
+  getCompany: () => string;
 };
 
 export const useUserStore = create<State & Actions>((set, get) => ({
@@ -29,6 +36,19 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   companies: [],
   socket: '',
   cognito: '',
+  tenant: '',
+  user_id: '',
+  getCompany: () => '1',
+  setUserId: (uuid: string) => set({ user_id: uuid }),
+  getUserId: () => {
+    const { user_id } = get();
+    return user_id;
+  },
+  setTenant: (uuid: string) => set({ tenant: uuid }),
+  getTenant: () => {
+    const { tenant } = get();
+    return tenant;
+  },
   getCognito: () => {
     const { cognito } = get();
     return cognito;

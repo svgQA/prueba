@@ -91,7 +91,8 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
         ]);
 
         if (formsResponse.getStatus()) setForms(formsResponse.getMany());
-        if (templatesResponse.getStatus()) setTemplates(templatesResponse.getMany());
+        if (templatesResponse.getStatus())
+          setTemplates(templatesResponse.getMany());
       } catch (err) {
         console.error('Error cargando formularios o plantillas:', err);
       }
@@ -110,15 +111,18 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
 
   if (usersWithPlayerId.length === 0) {
     return (
-      <div className="p-4 text-red-600 font-medium">
-        No hay usuarios disponibles que cumplan con las condiciones para enviar notificaciones (playerId requerido).
+      <div className='p-4 text-red-600 font-medium'>
+        No hay usuarios disponibles que cumplan con las condiciones para enviar
+        notificaciones (playerId requerido).
       </div>
     );
   }
 
   return (
     <div className='space-y-6 w-full max-w-5xl mx-auto'>
-      <h4 className='text-xl font-semibold text-gray-800'>Enviar notificación manual</h4>
+      <h4 className='text-xl font-semibold text-gray-800'>
+        Enviar notificación manual
+      </h4>
 
       <div className='space-y-2'>
         <label className='block text-sm font-medium mb-1'>Usuarios</label>
@@ -174,7 +178,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
 
         {selectedUsersFull.length > 0 && (
           <div className='mt-2'>
-            <h5 className='text-sm font-medium text-gray-700 mb-1'>Usuarios seleccionados con Player ID:</h5>
+            <h5 className='text-sm font-medium text-gray-700 mb-1'>
+              Usuarios seleccionados con Player ID:
+            </h5>
             <ul className='text-sm text-gray-800 list-disc list-inside space-y-1'>
               {selectedUsersFull.map((u) => (
                 <li key={u.id}>
@@ -200,7 +206,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
           >
             <option value=''>Selecciona una plantilla</option>
             {templates.map((tpl: any) => (
-              <option key={tpl.id} value={tpl.id}>{tpl.title}</option>
+              <option key={tpl.id} value={tpl.id}>
+                {tpl.title}
+              </option>
             ))}
           </select>
         </div>
@@ -217,7 +225,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
           >
             <option value=''>Selecciona un formulario</option>
             {forms.map((form: any) => (
-              <option key={form.id} value={form.id}>{form.title}</option>
+              <option key={form.id} value={form.id}>
+                {form.title}
+              </option>
             ))}
           </select>
         </div>
@@ -226,7 +236,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
       {!templateId && (
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           <div>
-            <label className='block text-sm font-medium mb-1'>Título personalizado</label>
+            <label className='block text-sm font-medium mb-1'>
+              Título personalizado
+            </label>
             <input
               className='w-full border border-gray-300 rounded px-3 py-2'
               value={overrideTitle}
@@ -234,7 +246,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
             />
           </div>
           <div>
-            <label className='block text-sm font-medium mb-1'>Descripción personalizada</label>
+            <label className='block text-sm font-medium mb-1'>
+              Descripción personalizada
+            </label>
             <textarea
               className='w-full border border-gray-300 rounded px-3 py-2'
               rows={3}
