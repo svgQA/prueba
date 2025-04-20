@@ -10,7 +10,7 @@ interface Props {
 
 export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => {
 
-  console.log('📦 externalUsers:', externalUsers);
+  /* console.log('📦 externalUsers:', externalUsers); */
 
   const [templateId, setTemplateId] = useState<string>('');
   const [templates, setTemplates] = useState<any[]>([]);
@@ -179,7 +179,7 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
         {selectedUsersFull.length > 0 && (
           <div className='mt-2'>
             <h5 className='text-sm font-medium text-gray-700 mb-1'>
-              Usuarios seleccionados con Player ID:
+              Usuarios seleccionados con registro de notificaciones:
             </h5>
             <ul className='text-sm text-gray-800 list-disc list-inside space-y-1'>
               {selectedUsersFull.map((u) => (

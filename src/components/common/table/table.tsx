@@ -64,7 +64,7 @@ export const Table = <T,>({
   button,
   showExpandableIcon = true,
   selectable,
-  // onSelectionChange,
+  onSelectionChange,
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -263,16 +263,15 @@ export const Table = <T,>({
             <div>
               {column.getCanPin() && (
                 <span
-                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${
-                    column.getIsPinned() ? 'text-error' : 'text-primary'
-                  }`}
+                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'
+                    }`}
                   onClick={() =>
                     column.pin(column.getIsPinned() ? false : 'left')
                   }
                 />
               )}
             </div>
-            {}
+            { }
             <Switch
               name={`ch-hidden-${column.id}`}
               id={`ch-hidden-${column.id}`}
@@ -306,13 +305,12 @@ export const Table = <T,>({
                     {!unsettings && (
                       <td
                         className='text-center left-0 min-w-[30px]'
-                        // style={{ position: 'sticky', zIndex: 1 }}
+                      // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         <span
                           onClick={() => row.toggleExpanded()}
-                          className={`vox-icon ${
-                            row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
-                          } cursor-pointer size-sm`}
+                          className={`vox-icon ${row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
+                            } cursor-pointer size-sm`}
                         />
                       </td>
                     )}
@@ -340,16 +338,15 @@ export const Table = <T,>({
               return (
                 <Fragment key={row.id}>
                   <tr
-                    className={`odd:bg-gray-100 ${
-                      data.length > pageSize && isLastRow
+                    className={`odd:bg-gray-100 ${data.length > pageSize && isLastRow
                         ? 'no-bottom-border'
                         : ''
-                    }`}
+                      }`}
                   >
                     {!unsettings && (
                       <td
                         className='left-0 min-w-[30px] bg-gray-200'
-                        // style={{ position: 'sticky', zIndex: 1 }}
+                      // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
                           <span
@@ -378,7 +375,7 @@ export const Table = <T,>({
                                   delete updated[id];
                                 }
                                 setSelectedRows(updated);
-                                // onSelectionChange?.(Object.values(updated));
+                                onSelectionChange?.(Object.values(updated));
                               }}
                             />
                           </div>
@@ -511,11 +508,10 @@ export const Table = <T,>({
           <button
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            className={`flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanPreviousPage()
+            className={`flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanPreviousPage()
                 ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
                 : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-            }`}
+              }`}
           >
             <span>{'«'}</span>
           </button>
@@ -523,11 +519,10 @@ export const Table = <T,>({
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanPreviousPage()
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanPreviousPage()
                 ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
                 : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-            }`}
+              }`}
           >
             <span>{'‹'}</span>
           </button>
@@ -553,12 +548,12 @@ export const Table = <T,>({
                     <div className='grid grid-cols-3 gap-1'>
                       {(pageIdx === 'ellipsis-start'
                         ? getIntermediatePages(1, currentPage - 1).filter(
-                            (num) => !pageNumbers.includes(num)
-                          )
+                          (num) => !pageNumbers.includes(num)
+                        )
                         : getIntermediatePages(
-                            currentPage + 1,
-                            totalPages - 2
-                          ).filter((num) => !pageNumbers.includes(num))
+                          currentPage + 1,
+                          totalPages - 2
+                        ).filter((num) => !pageNumbers.includes(num))
                       ).map((pageNum) => (
                         <button
                           key={`dropdown-page-${pageNum}`}
@@ -580,11 +575,10 @@ export const Table = <T,>({
               <button
                 key={`page-${pageIdx}`}
                 onClick={() => table.setPageIndex(Number(pageIdx))}
-                className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-                  currentPage === pageIdx
+                className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${currentPage === pageIdx
                     ? 'border-[#00BCD4] bg-[#E0F7FA] text-[#00838F]'
                     : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 {Number(pageIdx) + 1}
               </button>
@@ -594,11 +588,10 @@ export const Table = <T,>({
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanNextPage()
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanNextPage()
                 ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
                 : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-            }`}
+              }`}
           >
             <span>{'›'}</span>
           </button>
@@ -606,11 +599,10 @@ export const Table = <T,>({
           <button
             onClick={() => table.setPageIndex(totalPages - 1)}
             disabled={!table.getCanNextPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanNextPage()
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanNextPage()
                 ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
                 : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-            }`}
+              }`}
           >
             <span>{'»'}</span>
           </button>
@@ -682,9 +674,9 @@ export const Table = <T,>({
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </th>
                     ))}
                   </SortableContext>
