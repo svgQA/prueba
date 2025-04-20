@@ -1,19 +1,13 @@
 import { useRef, useEffect, useState } from 'preact/hooks';
 import { ManualNotificationForm } from './tabs/manual-notification-form';
-import { TemplateManager } from './tabs/template-manager';
-import { ScheduledNotifications } from './tabs/scheduled-notifications';
-import { IShiftResponse } from '@/types/shift/activity';
-
 interface Props {
   closed?: boolean;
   onClose?: () => void;
   onSend?: (data: any) => void;
-  viewMode?: 'setting' | 'dash';
-  users?: IShiftResponse[];
+  users?: [];
 }
 
-export const SendForm = ({ closed, onClose, viewMode, users }: Props) => {
-  const [activeTab, setActiveTab] = useState<'template' | 'scheduled'>('template');
+export const SendForm = ({ closed, onClose, users }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
   // Cerrar si se hace click por fuera
@@ -27,20 +21,10 @@ export const SendForm = ({ closed, onClose, viewMode, users }: Props) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [ref]);
 
-  const renderTabContent = () => {
-    if (viewMode === 'dash') return <ManualNotificationForm users={users} />;
-
-    switch (activeTab) {
-      case 'template':
-        return <TemplateManager />;
-      case 'scheduled':
-        return <ScheduledNotifications />;
-      default:
-        return null;
-    }
-  };
 
   if (closed) return null;
+
+  console.log(users); 
 
   return (
     <div
@@ -53,29 +37,7 @@ export const SendForm = ({ closed, onClose, viewMode, users }: Props) => {
       </div>
 
       <div className="px-4 pt-3">
-        {viewMode !== 'dash' && (
-          <div className="flex gap-2 border-b pb-2 mb-2">
-            <button
-              className={`px-3 py-1 text-sm rounded font-medium ${activeTab === 'template'
-                  ? 'bg-cyan-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              onClick={() => setActiveTab('template')}
-            >
-              Gestionar plantillas
-            </button>
-            <button
-              className={`px-3 py-1 text-sm rounded font-medium ${activeTab === 'scheduled'
-                  ? 'bg-cyan-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              onClick={() => setActiveTab('scheduled')}
-            >
-              Notificaciones programadas
-            </button>
-          </div>
-        )}
-        <div className="pb-4">{renderTabContent()}</div>
+        <ManualNotificationForm users={users} />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
 import { SchedulerServiceFront } from '@/services/schedule';
+import { TemplateServiceFront } from '@/services/template';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
 import { Table } from '@/components/common/table/table';
 import { columns } from './components/scheduled.columns';
@@ -11,9 +12,11 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
   const isLoading = useSignal(false);
   const [statusFilter, setStatusFilter] = useState<'pending' | 'sent' | 'failed' | 'all'>('all');
+  const [templates, setTemplates] = useState<any[]>([]);
 
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
+    templateId: '',
     overrideTitle: '',
     overrideDescription: '',
     sendAt: '',
@@ -26,6 +29,18 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
     document.title = 'VX - Scheduled Notifications';
     fetchNotifications();
   }, [statusFilter]);
+
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        const response = await TemplateServiceFront.getTemplates();
+        if (response.getStatus()) setTemplates(response.getMany());
+      } catch (error) {
+        console.error('❌ Error al obtener plantillas:', error);
+      }
+    };
+    fetchTemplates();
+  }, []);
 
   const fetchNotifications = async () => {
     isLoading.value = true;
@@ -40,24 +55,32 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
   };
 
   const handleCreateNotification = async () => {
-    const { overrideTitle, overrideDescription, sendAt, repeatEveryMinutes, maxRepeats, repeatUntil } = formData;
+    const {
+      templateId,
+      overrideTitle,
+      overrideDescription,
+      sendAt,
+      repeatEveryMinutes,
+      maxRepeats,
+      repeatUntil
+    } = formData;
 
-    if (!overrideTitle || !overrideDescription || !sendAt) {
-      alert('Todos los campos obligatorios deben ser completados.');
+    if (!sendAt || (!templateId && (!overrideTitle || !overrideDescription))) {
+      alert('Debes completar los campos obligatorios o seleccionar una plantilla.');
       return;
     }
 
     try {
       await SchedulerServiceFront.scheduleNotification({
-        templateId: 'template-id-placeholder', // Reemplaza con lógica real
-        sendAt: new Date(sendAt).toString(),
+        templateId: templateId,
+        sendAt: new Date(sendAt),
         filters: {
           userIds: [],
           shiftToday: false
         },
-        sentTo: [1], // Reemplaza con IDs de usuarios reales
-        overrideTitle,
-        overrideDescription,
+        sentTo: [1], // reemplaza por lógica real
+        overrideTitle: overrideTitle || undefined,
+        overrideDescription: overrideDescription || undefined,
         attachmentUrl: undefined,
         repeatEveryMinutes: repeatEveryMinutes ? parseInt(repeatEveryMinutes) : undefined,
         maxRepeats: maxRepeats ? parseInt(maxRepeats) : undefined,
@@ -65,6 +88,7 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
       });
 
       setFormData({
+        templateId: '',
         overrideTitle: '',
         overrideDescription: '',
         sendAt: '',
@@ -108,19 +132,35 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
       {showForm && (
         <div className="border p-4 mb-6 rounded bg-gray-50 space-y-2">
           <h4 className="text-md font-medium">Nueva Notificación Programada</h4>
+
+          <label className="block text-sm font-medium">Plantilla (opcional)</label>
+          <select
+            className="w-full border px-3 py-2 rounded text-sm"
+            value={formData.templateId}
+            onChange={(e) => setFormData({ ...formData, templateId: e.currentTarget.value })}
+          >
+            <option value="">-- Sin plantilla --</option>
+            {templates.map((tpl) => (
+              <option key={tpl.id} value={tpl.id}>
+                {tpl.title}
+              </option>
+            ))}
+          </select>
+
           <input
             type="text"
-            placeholder="Título override"
+            placeholder="Título override (opcional)"
             className="w-full border px-3 py-2 rounded text-sm"
             value={formData.overrideTitle}
             onChange={(e) => setFormData({ ...formData, overrideTitle: e.currentTarget.value })}
           />
           <textarea
-            placeholder="Descripción override"
+            placeholder="Descripción override (opcional)"
             className="w-full border px-3 py-2 rounded text-sm"
             value={formData.overrideDescription}
             onChange={(e) => setFormData({ ...formData, overrideDescription: e.currentTarget.value })}
           />
+
           <input
             type="datetime-local"
             className="w-full border px-3 py-2 rounded text-sm"

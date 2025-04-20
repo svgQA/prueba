@@ -26,6 +26,7 @@ import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
 import { UserService } from '@/services/user';
 import { MentionOption } from '@/components/common/mention-editor';
+import { IUser } from '@/types/auth';
 
 enum VIEW_NAME {
   TABLE,
@@ -64,6 +65,8 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const [services, setServices] = useState<MentionOption[]>([]);
   const [users, setUsers] = useState<MentionOption[]>([]);
+
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
   const memoizedServices = useMemo(() => services, [services]);
@@ -184,7 +187,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => {}, []);
+  const handleClick = useCallback((/* task: Task */) => { }, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -382,6 +385,18 @@ export const ShiftsPage: FunctionalComponent = () => {
             showExpandableIcon={false}
             pageSize={20}
             selectable={true}
+            onSelectionChange={(rows) => {
+              const validUsers = rows
+                .map((row: any) => ({
+                  id: row.employee.id,
+                  name: row.employee.name,
+                  email: row.employee.email,
+                  playerId: row.employee.playerId,
+                }));
+
+              setSelectedUsers(validUsers as []);
+            }}
+
             expandable={(row: IShiftResponse, currentColumnName?: string) => (
               <ExpandableMultiple
                 type={currentColumnName || defaultColumn.value}
@@ -444,7 +459,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         closed={showSendModal.value}
         onClose={handleCloseSendModal}
         onSend={handleSend}
-        viewMode='dash'
+        users={selectedUsers as []}
       />
 
       <ShiftForm

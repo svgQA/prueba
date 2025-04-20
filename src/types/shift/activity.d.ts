@@ -1,6 +1,7 @@
 interface IUser {
   id: number;
   cognitoId: string;
+  playerId: string;
   externalId: string;
   externalPlatformId: string;
   name: string;
