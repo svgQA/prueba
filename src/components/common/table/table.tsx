@@ -359,7 +359,6 @@ export const Table = <T,>({
                         )}
                         {selectable && (
                           <div className='flex items-center justify-center'>
-                            {/* Agregar algo para validar si tiene el appId */}
                             <input
                               type='checkbox'
                               className='w-4 h-4'

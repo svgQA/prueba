@@ -60,8 +60,15 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
     // const wsManager = useWebSocket();
 
-    const { getTenant, getToken, getCompany, setToken, setUserId, setTenant } =
-      useUserStore();
+    const {
+      getTenant,
+      getToken,
+      getCompany,
+      setToken,
+      setUserId,
+      setTenant,
+      setUser,
+    } = useUserStore();
 
     // const setCompanySelected = (company: string) => {
     //   setSelected(company);
@@ -77,8 +84,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     }, []);
 
     const validateUser = async () => {
-      const existTenant = await hasUserTenant(setToken, setUserId, setTenant);
-      console.log('existTenant', existTenant);
+      await hasUserTenant(setToken, setUserId, setTenant, setUser);
+      // console.log('existTenant', existTenant);
       // if (!existTenant) openOnBoardingModal();
       // else closeOnBoardingModal();
     };

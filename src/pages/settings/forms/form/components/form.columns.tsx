@@ -10,11 +10,11 @@ export const columns: ColumnDef<IFormResponse>[] = [
     accessorKey: 'title',
     id: 'title',
     header: 'Título',
-    size: 180,
+    size: 80,
     cell: (info) => {
       const { title, description } = info.row.original;
       return (
-        <div className='flex items-center'>
+        <div className='flex items-center !max-w-96'>
           <span className='vox-icon vx-icon-152 mt-1 size-sm' />
           <div className='flex flex-col ml-3'>
             <div className='font-bold'>{String(title)}</div>
