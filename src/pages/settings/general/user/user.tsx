@@ -84,33 +84,35 @@ export const UserSettingPage: FunctionComponent = () => {
           icon='110'
         />
       </div>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='Nueva Usuario'
-            icon='039'
-            onClick={redirect}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
+      <div className='max-h-screen relative'>
+        <div className='py-2 flex flex-row justify-center xl:justify-between px-1 items-center overflow-visible xl:absolute relative z-10 w-full xl:w-fit'>
+          <div className='flex flex-row items-center !w-full xl:!w-fit md:w-auto justify-between'>
+            <Button
+              name='button-create-shift'
+              label='Nueva Usuario'
+              icon='039'
+              onClick={redirect}
+              className='px-6 py-1 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+            />
+          </div>
         </div>
+        <Table<IUserResponse>
+          data={users.value}
+          columns={columns}
+          onClickAction={handleOnClick}
+          visibility={{
+            id: false,
+            createdAt: false,
+            sucursal: false,
+            area: false,
+            job: false,
+            // city: false,
+            // state: false,
+            // country: false,
+            // cardId: false,
+          }}
+        />
       </div>
-      <Table<IUserResponse>
-        data={users.value}
-        columns={columns}
-        onClickAction={handleOnClick}
-        visibility={{
-          id: false,
-          createdAt: false,
-          sucursal: false,
-          area: false,
-          job: false,
-          city: false,
-          state: false,
-          country: false,
-          cardId: false,
-        }}
-      />
     </section>
   );
 };
