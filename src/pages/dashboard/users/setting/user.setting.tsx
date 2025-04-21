@@ -56,7 +56,7 @@ export const UserSettingsPage: FunctionComponent = () => {
       <Form<ISettingModuleUser>
         onSubmit={onSubmit}
         initialValues={initialValues.value}
-        render={({ handleSubmit, form, submitting, pristine, values }) => (
+        render={({ handleSubmit, form, submitting, pristine }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
             <div className='mb-4'>
               <h1 className='text-2xl font-bold text-primary'>
