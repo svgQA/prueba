@@ -379,7 +379,7 @@ function MapLibrePointsMap<T extends Point>({
     <div className='relative w-full'>
       <div
         ref={mapContainerRef}
-        className='w-full rounded-lg overflow-hidden shadow-md'
+        className='w-full rounded-lg overflow-hidden'
         style={{ height: mapHeight }}
       >
         {points.length > 0 && hasPointsOutsideView && (

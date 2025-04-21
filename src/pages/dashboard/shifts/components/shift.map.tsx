@@ -189,7 +189,7 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
           />
         )}
       </div>
-      <MapLibrePointsMap points={users} mapHeight='79vh' initialZoom={3} />
+      <MapLibrePointsMap points={users} mapHeight='76vh' initialZoom={3} />
     </div>
   );
 };

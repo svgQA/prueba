@@ -44,7 +44,6 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
 
   const handleOnClick = async (action: IRowAction) => {
     const user = findUser(Number(action.id));
-    console.log(user);
     switch (action.action) {
       case ROW_ACTIONS.DELETE: {
         showAlert({
@@ -116,7 +115,7 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
     <Table<IUserResponse>
       data={users.value}
       columns={userColumns}
-      pageSize={10}
+      pageSize={20}
       onClickAction={handleOnClick}
       visibility={{
         id: false,
