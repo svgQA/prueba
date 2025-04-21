@@ -339,8 +339,8 @@ export const Table = <T,>({
                 <Fragment key={row.id}>
                   <tr
                     className={`odd:bg-gray-100 ${data.length > pageSize && isLastRow
-                        ? 'no-bottom-border'
-                        : ''
+                      ? 'no-bottom-border'
+                      : ''
                       }`}
                   >
                     {!unsettings && (
@@ -509,8 +509,8 @@ export const Table = <T,>({
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
             className={`flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanPreviousPage()
-                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
               }`}
           >
             <span>{'«'}</span>
@@ -520,8 +520,8 @@ export const Table = <T,>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
             className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanPreviousPage()
-                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
               }`}
           >
             <span>{'‹'}</span>
@@ -576,8 +576,8 @@ export const Table = <T,>({
                 key={`page-${pageIdx}`}
                 onClick={() => table.setPageIndex(Number(pageIdx))}
                 className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${currentPage === pageIdx
-                    ? 'border-[#00BCD4] bg-[#E0F7FA] text-[#00838F]'
-                    : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+                  ? 'border-[#00BCD4] bg-[#E0F7FA] text-[#00838F]'
+                  : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
                   }`}
               >
                 {Number(pageIdx) + 1}
@@ -589,8 +589,8 @@ export const Table = <T,>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
             className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanNextPage()
-                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
               }`}
           >
             <span>{'›'}</span>
@@ -600,8 +600,8 @@ export const Table = <T,>({
             onClick={() => table.setPageIndex(totalPages - 1)}
             disabled={!table.getCanNextPage()}
             className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanNextPage()
-                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
               }`}
           >
             <span>{'»'}</span>
@@ -651,16 +651,42 @@ export const Table = <T,>({
                   key={`${headerGroup.id}-${index}`}
                   className='sticky top-0 z-10'
                 >
+
                   {!unsettings && (
                     <th
                       colSpan={1}
-                      className='table-setting-button left-0 min-w-[30px]'
+                      className='table-setting-button left-0 min-w-[30px] bg-white px-2'
                       style={{ position: 'sticky', zIndex: 1 }}
                     >
-                      <span className='vox-icon vx-icon-168 size-sm' />
-                      {buildSettings()}
+                      <div className='flex items-center gap-2'>
+                        {selectable && (
+                          <input
+                            type='checkbox'
+                            className='w-4 h-4'
+                            checked={Object.keys(selectedRows).length === data.length}
+                            ref={(el) => {
+                              if (el) {
+                                const all = data.length > 0 && Object.keys(selectedRows).length === data.length;
+                                const none = Object.keys(selectedRows).length === 0;
+                                el.indeterminate = !all && !none;
+                              }
+                            }}
+                            onChange={(e) => {
+                              const checked = e.currentTarget.checked;
+                              const newSelection = checked
+                                ? Object.fromEntries(data.map((row: any) => [row.id, row]))
+                                : {};
+                              setSelectedRows(newSelection);
+                              onSelectionChange?.(Object.values(newSelection));
+                            }}
+                          />
+                        )}
+                      </div>
                     </th>
                   )}
+                  <span className='vox-icon vx-icon-168 size-sm' />
+                  {buildSettings()}
+
                   <SortableContext
                     items={columnOrder}
                     strategy={horizontalListSortingStrategy}
