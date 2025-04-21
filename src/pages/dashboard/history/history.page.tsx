@@ -7,6 +7,7 @@ import { NotificationHistoryServiceFront } from '@/services/historyNotification'
 import { INotificationHistoryItem } from '@/types/notification/INotificationTypes';
 import { columns } from './components/history.columns';
 import { useSignal } from '@preact/signals';
+import { CardData } from '@/components/compose/cards';
 
 type ViewStatus = 'all' | 'read' | 'unread';
 
@@ -98,6 +99,32 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
       <div className='flex justify-between items-center mb-4'>
         <h2 className='text-xl font-semibold'>Historial de notificaciones</h2>
         {buttonMenu}
+      </div>
+
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+        <CardData
+          title='Turnos de notificaciones'
+          count={0}
+          subtitle=''
+          color='t-dark'
+          icon='054'
+        />
+
+        <CardData
+          title='Tasa de apertura'
+          count={0}
+          subtitle=''
+          color='t-dark'
+          icon='052'
+        />
+
+        <CardData
+          title='Notificaciones del mes'
+          count={0}
+          subtitle=''
+          color='t-dark'
+          icon='015'
+        />
       </div>
 
       <Table<INotificationHistoryItem>

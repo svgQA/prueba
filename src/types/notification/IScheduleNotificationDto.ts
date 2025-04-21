@@ -1,6 +1,6 @@
 export interface IScheduleNotificationDto {
   templateId: string;
-  sendAt: string; // formato ISO (ej. new Date().toISOString())
+  sendAt: Date; // formato ISO (ej. new Date().toISOString())
   sentTo: number[];
   filters: {
     userIds: string[];

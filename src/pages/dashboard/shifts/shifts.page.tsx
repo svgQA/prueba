@@ -18,6 +18,7 @@ import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/upsert.modal';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
+import { SendForm } from './components/send/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
 import LiveUserMap from './components/shift.map';
@@ -25,6 +26,7 @@ import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
 import { UserService } from '@/services/user';
 import { MentionOption } from '@/components/common/mention-editor';
+import { IUser } from '@/types/auth';
 
 enum VIEW_NAME {
   TABLE,
@@ -63,6 +65,8 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const [services, setServices] = useState<MentionOption[]>([]);
   const [users, setUsers] = useState<MentionOption[]>([]);
+
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
   const memoizedServices = useMemo(() => services, [services]);
@@ -167,9 +171,9 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleUpsertModal();
   }, []);
 
-  // const handleCloseSendModal = useCallback(() => {
-  //   toggleSendModal();
-  // }, []);
+  const handleCloseSendModal = useCallback(() => {
+    toggleSendModal();
+  }, []);
 
   const handleCloseShiftModal = useCallback(() => {
     toggleShiftModal();
@@ -183,7 +187,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => {}, []);
+  const handleClick = useCallback((/* task: Task */) => { }, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -213,14 +217,14 @@ export const ShiftsPage: FunctionalComponent = () => {
     setTaskSelected(undefined);
   }, []);
 
-  // const handleSend = useCallback(async (data: any) => {
-  //   try {
-  //     console.log('Sending data:', data);
-  //     showSendModal.value = false;
-  //   } catch (error) {
-  //     console.error('Error sending data:', error);
-  //   }
-  // }, []);
+  const handleSend = useCallback(async (data: any) => {
+    try {
+      console.log('Sending data:', data);
+      showSendModal.value = false;
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
+  }, []);
 
   /**
    * Eventos de los botones superiores
@@ -362,8 +366,8 @@ export const ShiftsPage: FunctionalComponent = () => {
       </div>
 
       <div className='max-h-screen relative'>
-        <div className='py-2 flex flex-row justify-center xl:justify-between px-1 items-center overflow-visible xl:absolute relative z-10 w-full xl:w-fit bg-b-content'>
-          <div className='flex flex-row items-center !w-full xl:!w-fit md:w-auto justify-between'>
+        <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-10'>
+          <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
             <Button
               name='button-create-shift'
@@ -381,6 +385,19 @@ export const ShiftsPage: FunctionalComponent = () => {
             showExpandableIcon={false}
             pageSize={20}
             selectable={true}
+            onSelectionChange={(rows) => {
+              console.log('rows', rows);
+              const validUsers = rows
+                .map((row: any) => ({
+                  id: row.employee.id,
+                  name: row.employee.name,
+                  email: row.employee.email,
+                  playerId: row.employee.playerId,
+                }));
+
+              setSelectedUsers(validUsers);
+            }}
+
             expandable={(row: IShiftResponse, currentColumnName?: string) => (
               <ExpandableMultiple
                 type={currentColumnName || defaultColumn.value}
@@ -439,14 +456,12 @@ export const ShiftsPage: FunctionalComponent = () => {
         taskSelected={taskSelected}
       />
 
-      {/*
       <SendForm
         closed={showSendModal.value}
         onClose={handleCloseSendModal}
         onSend={handleSend}
-        viewMode='dash'
+        users={selectedUsers}
       />
-      */}
 
       <ShiftForm
         closed={showShiftModal.value}

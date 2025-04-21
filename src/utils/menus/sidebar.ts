@@ -54,10 +54,10 @@ export const SIDEBAR_MENUS: IMenu[] = [
     id: 'device',
   },
   {
-    label: 'history',
+    label: 'notifications',
     to: PAGES_LIST_ROUTER.dashboard.history,
     description: 'este es',
-    icon: '325',
+    icon: '314',
     id: 'history',
   },
 ];
