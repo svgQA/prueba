@@ -10,7 +10,9 @@ import { useSignal } from '@preact/signals';
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
   const isLoading = useSignal(false);
-  const [statusFilter, setStatusFilter] = useState<'pending' | 'sent' | 'failed' | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<
+    'pending' | 'sent' | 'failed' | 'all'
+  >('all');
 
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -40,7 +42,14 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
   };
 
   const handleCreateNotification = async () => {
-    const { overrideTitle, overrideDescription, sendAt, repeatEveryMinutes, maxRepeats, repeatUntil } = formData;
+    const {
+      overrideTitle,
+      overrideDescription,
+      sendAt,
+      repeatEveryMinutes,
+      maxRepeats,
+      repeatUntil,
+    } = formData;
 
     if (!overrideTitle || !overrideDescription || !sendAt) {
       alert('Todos los campos obligatorios deben ser completados.');
@@ -53,13 +62,15 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
         sendAt: new Date(sendAt).toString(),
         filters: {
           userIds: [],
-          shiftToday: false
+          shiftToday: false,
         },
         sentTo: [1], // Reemplaza con IDs de usuarios reales
         overrideTitle,
         overrideDescription,
         attachmentUrl: undefined,
-        repeatEveryMinutes: repeatEveryMinutes ? parseInt(repeatEveryMinutes) : undefined,
+        repeatEveryMinutes: repeatEveryMinutes
+          ? parseInt(repeatEveryMinutes)
+          : undefined,
         maxRepeats: maxRepeats ? parseInt(maxRepeats) : undefined,
         repeatUntil: repeatUntil ? new Date(repeatUntil) : undefined,
       });
@@ -81,7 +92,7 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
   const buttonMenu = useMemo(
     () => (
-      <div className="flex gap-2">
+      <div className='flex gap-2'>
         {['all', 'pending', 'sent', 'failed'].map((type) => (
           <Button
             name={type}
@@ -91,8 +102,18 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
             className={statusFilter === type ? 'bg-primary-opacity p-2' : ''}
           />
         ))}
-        <Button name="reload" label="Recargar" icon="316" onClick={fetchNotifications} />
-        <Button name="new-scheduled" label={showForm ? 'Cancelar' : '+ Nueva'} icon="122" onClick={() => setShowForm((prev) => !prev)} />
+        <Button
+          name='reload'
+          label='Recargar'
+          icon='316'
+          onClick={fetchNotifications}
+        />
+        <Button
+          name='new-scheduled'
+          label={showForm ? 'Cancelar' : '+ Nueva'}
+          icon='122'
+          onClick={() => setShowForm((prev) => !prev)}
+        />
       </div>
     ),
     [statusFilter, showForm]
@@ -100,62 +121,80 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
   return (
     <Section padding>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Notificaciones Programadas</h2>
+      <div className='flex justify-between items-center mb-4'>
+        <h2 className='text-xl font-semibold'>Notificaciones Programadas</h2>
         {buttonMenu}
       </div>
 
       {showForm && (
-        <div className="border p-4 mb-6 rounded bg-gray-50 space-y-2">
-          <h4 className="text-md font-medium">Nueva Notificación Programada</h4>
+        <div className='border p-4 mb-6 rounded bg-gray-50 space-y-2'>
+          <h4 className='text-md font-medium'>Nueva Notificación Programada</h4>
           <input
-            type="text"
-            placeholder="Título override"
-            className="w-full border px-3 py-2 rounded text-sm"
+            type='text'
+            placeholder='Título override'
+            className='w-full border px-3 py-2 rounded text-sm'
             value={formData.overrideTitle}
-            onChange={(e) => setFormData({ ...formData, overrideTitle: e.currentTarget.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, overrideTitle: e.currentTarget.value })
+            }
           />
           <textarea
-            placeholder="Descripción override"
-            className="w-full border px-3 py-2 rounded text-sm"
+            placeholder='Descripción override'
+            className='w-full border px-3 py-2 rounded text-sm'
             value={formData.overrideDescription}
-            onChange={(e) => setFormData({ ...formData, overrideDescription: e.currentTarget.value })}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                overrideDescription: e.currentTarget.value,
+              })
+            }
           />
           <input
-            type="datetime-local"
-            className="w-full border px-3 py-2 rounded text-sm"
+            type='datetime-local'
+            className='w-full border px-3 py-2 rounded text-sm'
             value={formData.sendAt}
-            onChange={(e) => setFormData({ ...formData, sendAt: e.currentTarget.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, sendAt: e.currentTarget.value })
+            }
           />
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className='grid grid-cols-3 gap-2'>
             <input
-              type="number"
-              placeholder="Repetir cada X minutos"
-              className="w-full border px-3 py-2 rounded text-sm"
+              type='number'
+              placeholder='Repetir cada X minutos'
+              className='w-full border px-3 py-2 rounded text-sm'
               value={formData.repeatEveryMinutes}
-              onChange={(e) => setFormData({ ...formData, repeatEveryMinutes: e.currentTarget.value })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  repeatEveryMinutes: e.currentTarget.value,
+                })
+              }
             />
             <input
-              type="number"
-              placeholder="Máx. repeticiones"
-              className="w-full border px-3 py-2 rounded text-sm"
+              type='number'
+              placeholder='Máx. repeticiones'
+              className='w-full border px-3 py-2 rounded text-sm'
               value={formData.maxRepeats}
-              onChange={(e) => setFormData({ ...formData, maxRepeats: e.currentTarget.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, maxRepeats: e.currentTarget.value })
+              }
             />
             <input
-              type="datetime-local"
-              placeholder="Repetir hasta"
-              className="w-full border px-3 py-2 rounded text-sm"
+              type='datetime-local'
+              placeholder='Repetir hasta'
+              className='w-full border px-3 py-2 rounded text-sm'
               value={formData.repeatUntil}
-              onChange={(e) => setFormData({ ...formData, repeatUntil: e.currentTarget.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, repeatUntil: e.currentTarget.value })
+              }
             />
           </div>
 
           <Button
-            name="schedule-submit"
-            label="Programar Notificación"
-            className="bg-cyan-600 text-white hover:bg-cyan-700 px-4 py-2 text-sm rounded"
+            name='schedule-submit'
+            label='Programar Notificación'
+            className='bg-cyan-600 text-white hover:bg-cyan-700 px-4 py-2 text-sm rounded'
             onClick={handleCreateNotification}
           />
         </div>

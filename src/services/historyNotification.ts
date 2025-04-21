@@ -28,7 +28,11 @@ export class NotificationHistoryServiceFront extends BaseService {
     };
 
     const raw = await super.make_request(this.name, model);
-    const res = new GenericResponse<INotificationHistoryItem>({ code: 200, message: 'Success', data: raw });
+    const res = new GenericResponse<INotificationHistoryItem>({
+      code: 200,
+      message: 'Success',
+      data: raw,
+    });
     return res.getMany();
   }
 
@@ -44,7 +48,11 @@ export class NotificationHistoryServiceFront extends BaseService {
     };
 
     const raw = await super.make_request(this.name, model);
-    const res = new GenericResponse<INotificationHistoryByScheduled>({ code: 200, message: 'Success', data: raw });
+    const res = new GenericResponse<INotificationHistoryByScheduled>({
+      code: 200,
+      message: 'Success',
+      data: raw,
+    });
     return res.getMany();
   }
 
@@ -56,7 +64,13 @@ export class NotificationHistoryServiceFront extends BaseService {
     scheduledNotificationId: string
   ): Promise<void> {
     const model: IMakeRequest = {
-      url: ['notifications', 'history', userId.toString(), scheduledNotificationId, 'read'],
+      url: [
+        'notifications',
+        'history',
+        userId.toString(),
+        scheduledNotificationId,
+        'read',
+      ],
       method: REQUEST_METHODS.PACTH,
     };
 

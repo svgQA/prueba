@@ -13,7 +13,9 @@ interface Props {
 }
 
 export const SendForm = ({ closed, onClose, viewMode, users }: Props) => {
-  const [activeTab, setActiveTab] = useState<'template' | 'scheduled'>('template');
+  const [activeTab, setActiveTab] = useState<'template' | 'scheduled'>(
+    'template'
+  );
   const ref = useRef<HTMLDivElement>(null);
 
   // Cerrar si se hace click por fuera
@@ -45,37 +47,44 @@ export const SendForm = ({ closed, onClose, viewMode, users }: Props) => {
   return (
     <div
       ref={ref}
-      className="absolute mt-2 w-[400px] max-w-[90vw] bg-white rounded shadow-lg z-50 border"
+      className='absolute mt-2 w-[400px] max-w-[90vw] bg-white rounded shadow-lg z-50 border'
     >
-      <div className="px-4 py-3 border-b flex justify-between items-center">
-        <h3 className="text-base font-semibold">Centro de notificaciones</h3>
-        <button onClick={onClose} className="text-sm text-gray-500 hover:text-gray-700">✕</button>
+      <div className='px-4 py-3 border-b flex justify-between items-center'>
+        <h3 className='text-base font-semibold'>Centro de notificaciones</h3>
+        <button
+          onClick={onClose}
+          className='text-sm text-gray-500 hover:text-gray-700'
+        >
+          ✕
+        </button>
       </div>
 
-      <div className="px-4 pt-3">
+      <div className='px-4 pt-3'>
         {viewMode !== 'dash' && (
-          <div className="flex gap-2 border-b pb-2 mb-2">
+          <div className='flex gap-2 border-b pb-2 mb-2'>
             <button
-              className={`px-3 py-1 text-sm rounded font-medium ${activeTab === 'template'
+              className={`px-3 py-1 text-sm rounded font-medium ${
+                activeTab === 'template'
                   ? 'bg-cyan-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+              }`}
               onClick={() => setActiveTab('template')}
             >
               Gestionar plantillas
             </button>
             <button
-              className={`px-3 py-1 text-sm rounded font-medium ${activeTab === 'scheduled'
+              className={`px-3 py-1 text-sm rounded font-medium ${
+                activeTab === 'scheduled'
                   ? 'bg-cyan-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+              }`}
               onClick={() => setActiveTab('scheduled')}
             >
               Notificaciones programadas
             </button>
           </div>
         )}
-        <div className="pb-4">{renderTabContent()}</div>
+        <div className='pb-4'>{renderTabContent()}</div>
       </div>
     </div>
   );

@@ -17,14 +17,14 @@ import { ganttDateRange, seedDates } from '../../helpers/date-helper';
 import { TaskListHeaderDefault } from '../task-list/task-list-header';
 import { TaskListTableDefault } from '../task-list/task-list-table';
 import { StandardTooltipContent, Tooltip } from '../other/tooltip';
-import { VerticalScroll } from '../other/vertical-scroll';
+// import { VerticalScroll } from '../other/vertical-scroll';
+// import { HorizontalScroll } from '../other/horizontal-scroll';
 import { TaskListProps, TaskList } from '../task-list/task-list';
 import { TaskGantt } from './task-gantt';
 import { BarTask } from '../../types/bar-task';
 import { convertToBarTasks } from '../../helpers/bar-helper';
 import { GanttEvent } from '../../types/gantt-task-actions';
 import { DateSetup } from '../../types/date-setup';
-import { HorizontalScroll } from '../other/horizontal-scroll';
 import styles from './gantt.module.css';
 import { TaskGanttContentProps } from './task-gantt-content';
 import { CalendarProps } from '../calendar/calendar';
@@ -32,7 +32,7 @@ import { GridProps } from '../grid/grid';
 import { memo } from 'preact/compat';
 import { Search } from '@/components/common/search/search';
 import { ColumnFiltersState } from '@tanstack/react-table';
-import { DateSelector } from './replicate.modal';
+import { ReplicateModal } from './replicate.modal';
 
 // interface ColumnFilter {
 //   id: string;
@@ -122,7 +122,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   const scrollY = useSignal(0);
   const scrollX = useSignal(-1);
-  const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
+  // const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
   const [tasks, setTasks] = useState<GeneralTask>(initialTasks);
   const [selectedUsers, setSelectedUsers] = useState<Set<string | number>>(
@@ -310,7 +310,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         }
       }
 
-      setIgnoreScrollEvent(true);
+      // setIgnoreScrollEvent(true);
     },
     [scrollX, scrollY, svgWidth, ganttHeight, ganttFullHeight]
   );
@@ -323,36 +323,6 @@ const GanttComponent: ComponentType<GanttProps> = ({
       wrapperRef.current?.removeEventListener('wheel', handleWheel);
     };
   }, [handleWheel]);
-
-  const handleScrollY = useCallback(
-    (event: UIEvent) => {
-      if (
-        scrollY.value !== (event.target as HTMLElement).scrollTop &&
-        !ignoreScrollEvent
-      ) {
-        scrollY.value = (event.target as HTMLElement).scrollTop;
-        setIgnoreScrollEvent(true);
-      } else {
-        setIgnoreScrollEvent(false);
-      }
-    },
-    [scrollY, ignoreScrollEvent]
-  );
-
-  const handleScrollX = useCallback(
-    (event: UIEvent) => {
-      if (
-        scrollX.value !== (event.target as HTMLElement).scrollLeft &&
-        !ignoreScrollEvent
-      ) {
-        scrollX.value = (event.target as HTMLElement).scrollLeft;
-        setIgnoreScrollEvent(true);
-      } else {
-        setIgnoreScrollEvent(false);
-      }
-    },
-    [scrollX, ignoreScrollEvent]
-  );
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -395,7 +365,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         }
         scrollY.value = newScrollY;
       }
-      setIgnoreScrollEvent(true);
+      // setIgnoreScrollEvent(true);
     },
     [
       scrollY,
@@ -781,11 +751,18 @@ const GanttComponent: ComponentType<GanttProps> = ({
     milestoneBackgroundSelectedColor,
   ]);
 
+  // const handleScrollY = useCallback((event: number) => {
+  //   scrollY.value = event;
+  // }, []);
+
+  const handleScrollX = useCallback((event: number) => {
+    scrollX.value = event;
+  }, []);
+
   return (
     <div>
-      {}
       <div className='relative w-full my-2 flex items-center justify-end gap-2'>
-        <DateSelector
+        <ReplicateModal
           selectedUsers={selectedUsers}
           users={users}
           onDateSubmit={handleDateSubmit}
@@ -811,7 +788,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         )}
       </div>
       <div
-        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl h-full`}
+        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl`}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         ref={wrapperRef}
@@ -824,9 +801,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
           ganttHeight={ganttFullHeight}
           scrollY={scrollY.value}
           scrollX={scrollX.value}
-          onScrollX={(value: number) => {
-            scrollX.value = value;
-          }}
+          onScrollX={handleScrollX}
         />
         {ganttEvent.changedTask && (
           <Tooltip
@@ -846,15 +821,18 @@ const GanttComponent: ComponentType<GanttProps> = ({
             svgWidth={svgWidth}
           />
         )}
-        <VerticalScroll
-          ganttFullHeight={ganttFullHeight}
-          ganttHeight={ganttHeight}
-          headerHeight={headerHeight}
-          scroll={scrollY.value}
-          onScroll={handleScrollY}
-          rtl={rtl}
-        />
+        {/*
+          <VerticalScroll
+            ganttFullHeight={ganttFullHeight}
+            ganttHeight={ganttHeight}
+            headerHeight={headerHeight}
+            scroll={scrollY.value}
+            onScroll={handleScrollY}
+            rtl={rtl}
+          />
+          */}
       </div>
+      {/*
       <HorizontalScroll
         svgWidth={svgWidth}
         taskListWidth={taskListWidth.value}
@@ -862,6 +840,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         rtl={rtl}
         onScroll={handleScrollX}
       />
+      */}
     </div>
   );
 };

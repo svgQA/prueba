@@ -14,6 +14,7 @@ export type TaskGanttProps = {
   scrollY: number;
   scrollX: number;
   onScrollX?: (scrollX: number) => void;
+  onScrollY?: (scrollY: number) => void;
 };
 
 export const TaskGantt = ({
@@ -21,13 +22,14 @@ export const TaskGantt = ({
   calendarProps,
   barProps,
   ganttHeight,
-  scrollY,
+  // scrollY,
   scrollX,
   onScrollX,
+  // onScrollY,
 }: TaskGanttProps): VNode => {
   const ganttSVGRef = useRef<SVGSVGElement>(null);
-  const horizontalContainerRef = useRef<HTMLDivElement>(null);
-  const verticalGanttContainerRef = useRef<HTMLDivElement>(null);
+  // const horizontalContainerRef = useRef<HTMLDivElement>(null);
+  const horizontalGanttContainerRef = useRef<HTMLDivElement>(null);
 
   const newBarProps = { ...barProps, svg: ganttSVGRef };
   const isDragging = useSignal(false);
@@ -40,27 +42,27 @@ export const TaskGantt = ({
     /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
   );
 
-  useEffect(() => {
-    if (horizontalContainerRef.current) {
-      horizontalContainerRef.current.scrollTop = scrollY;
-    }
-  }, [scrollY]);
+  // useEffect(() => {
+  //   if (horizontalContainerRef.current) {
+  //     horizontalContainerRef.current.scrollTop = scrollY;
+  //   }
+  // }, [scrollY]);
 
   useEffect(() => {
-    if (verticalGanttContainerRef.current) {
-      verticalGanttContainerRef.current.scrollLeft = scrollX;
+    if (horizontalGanttContainerRef.current) {
+      horizontalGanttContainerRef.current.scrollLeft = scrollX;
     }
   }, [scrollX]);
 
   const throttledScroll = (newScrollLeft: number) => {
     if (isSafari.value || !window.requestAnimationFrame) {
       // Safari implementation - direct scroll
-      verticalGanttContainerRef.current!.scrollLeft = newScrollLeft;
+      horizontalGanttContainerRef.current!.scrollLeft = newScrollLeft;
       onScrollX?.(newScrollLeft);
     } else {
       // Chrome implementation - use requestAnimationFrame
       requestAnimationFrame(() => {
-        verticalGanttContainerRef.current!.scrollLeft = newScrollLeft;
+        horizontalGanttContainerRef.current!.scrollLeft = newScrollLeft;
         onScrollX?.(newScrollLeft);
       });
     }
@@ -74,8 +76,8 @@ export const TaskGantt = ({
     isDragging.value = true;
     startX.value = isSafari.value
       ? e.pageX
-      : e.pageX - verticalGanttContainerRef.current!.offsetLeft;
-    scrollLeft.value = verticalGanttContainerRef.current!.scrollLeft;
+      : e.pageX - horizontalGanttContainerRef.current!.offsetLeft;
+    scrollLeft.value = horizontalGanttContainerRef.current!.scrollLeft;
     lastMouseX.value = e.pageX;
     document.body.style.cursor = 'grabbing';
   };
@@ -104,7 +106,7 @@ export const TaskGantt = ({
       const mouseDelta = e.pageX - lastMouseX.value;
       lastMouseX.value = e.pageX;
       const newScrollLeft =
-        verticalGanttContainerRef.current!.scrollLeft - mouseDelta;
+        horizontalGanttContainerRef.current!.scrollLeft - mouseDelta;
       throttledScroll(newScrollLeft);
     }
   };
@@ -112,7 +114,7 @@ export const TaskGantt = ({
   return (
     <div
       className={styles.ganttVerticalContainer}
-      ref={verticalGanttContainerRef}
+      ref={horizontalGanttContainerRef}
       dir='ltr'
     >
       <div className='rounded-tr-lg bg-b-light-dark dark:bg-b-dark-light w-fit'>
@@ -126,7 +128,7 @@ export const TaskGantt = ({
         </svg>
       </div>
       <div
-        ref={horizontalContainerRef}
+        // ref={horizontalContainerRef}
         className={`${styles.horizontalContainer} cursor-grab`}
         style={
           ganttHeight

@@ -64,7 +64,7 @@ export const Table = <T,>({
   button,
   showExpandableIcon = true,
   selectable,
-  onSelectionChange,
+  // onSelectionChange,
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -119,6 +119,7 @@ export const Table = <T,>({
     };
   }, []);
 
+  /*
   const extendedColumns = useMemo(() => {
     if (!selectable) return columnsData;
 
@@ -153,7 +154,7 @@ export const Table = <T,>({
         },
 
         cell: ({ row }: { row: Row<T> }) => {
-          /* const id = (row.original as any).id; */
+          // const id = (row.original as any).id;
           return (
             <input
               type="checkbox"
@@ -179,12 +180,11 @@ export const Table = <T,>({
       ...columnsData, // ← columnas originales van después del checkbox
     ];
   }, [selectable, data, selectedRows]);
-
-
+  */
 
   const table = useReactTable({
     data,
-    columns: extendedColumns,
+    columns: columnsData,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -263,15 +263,16 @@ export const Table = <T,>({
             <div>
               {column.getCanPin() && (
                 <span
-                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'
-                    }`}
+                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${
+                    column.getIsPinned() ? 'text-error' : 'text-primary'
+                  }`}
                   onClick={() =>
                     column.pin(column.getIsPinned() ? false : 'left')
                   }
                 />
               )}
             </div>
-            { }
+            {}
             <Switch
               name={`ch-hidden-${column.id}`}
               id={`ch-hidden-${column.id}`}
@@ -301,16 +302,17 @@ export const Table = <T,>({
             if (row.getIsGrouped()) {
               return (
                 <Fragment key={row.id}>
-                  <tr>
+                  <tr className='odd:bg-gray-100'>
                     {!unsettings && (
                       <td
                         className='text-center left-0 min-w-[30px]'
-                        style={{ position: 'sticky', zIndex: 1 }}
+                        // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         <span
                           onClick={() => row.toggleExpanded()}
-                          className={`vox-icon ${row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
-                            } cursor-pointer size-sm`}
+                          className={`vox-icon ${
+                            row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
+                          } cursor-pointer size-sm`}
                         />
                       </td>
                     )}
@@ -318,7 +320,7 @@ export const Table = <T,>({
                       colSpan={
                         row.getVisibleCells().length + (!unsettings ? 0 : 0)
                       }
-                      className='p-2 bg-gray-200 font-semibold'
+                      className='p-2 font-semibold'
                     >
                       {row.groupingColumnId && (
                         <span>
@@ -338,22 +340,47 @@ export const Table = <T,>({
               return (
                 <Fragment key={row.id}>
                   <tr
-                    className={
+                    className={`odd:bg-gray-100 ${
                       data.length > pageSize && isLastRow
                         ? 'no-bottom-border'
                         : ''
-                    }
+                    }`}
                   >
                     {!unsettings && (
                       <td
-                        className='text-center left-0 min-w-[30px]'
-                        style={{ position: 'sticky', zIndex: 1 }}
+                        className='left-0 min-w-[30px] bg-gray-200'
+                        // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
                           <span
                             onClick={() => row.toggleExpanded()}
                             className='vox-icon vx-icon-001 cursor-pointer size-sm'
                           />
+                        )}
+                        {selectable && (
+                          <div className='flex items-center justify-center'>
+                            <input
+                              type='checkbox'
+                              className='w-4 h-4'
+                              checked={!!selectedRows[(row.original as any).id]}
+                              onChange={(e) => {
+                                e.preventDefault();
+                                const id = (
+                                  row.original as unknown as {
+                                    id: string | number;
+                                  }
+                                ).id;
+                                const updated = { ...selectedRows };
+                                if (e.currentTarget.checked) {
+                                  updated[id] = row.original;
+                                } else {
+                                  delete updated[id];
+                                }
+                                setSelectedRows(updated);
+                                // onSelectionChange?.(Object.values(updated));
+                              }}
+                            />
+                          </div>
                         )}
                       </td>
                     )}
@@ -390,7 +417,7 @@ export const Table = <T,>({
         </>
       );
     },
-    [expandable, unsettings, data.length, pageSize]
+    [expandable, unsettings, data.length, pageSize, selectedRows]
   );
 
   const renderPagination = () => {
@@ -483,10 +510,11 @@ export const Table = <T,>({
           <button
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            className={`flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanPreviousPage()
-              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
+            className={`flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanPreviousPage()
+                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+            }`}
           >
             <span>{'«'}</span>
           </button>
@@ -494,10 +522,11 @@ export const Table = <T,>({
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanPreviousPage()
-              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanPreviousPage()
+                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+            }`}
           >
             <span>{'‹'}</span>
           </button>
@@ -523,12 +552,12 @@ export const Table = <T,>({
                     <div className='grid grid-cols-3 gap-1'>
                       {(pageIdx === 'ellipsis-start'
                         ? getIntermediatePages(1, currentPage - 1).filter(
-                          (num) => !pageNumbers.includes(num)
-                        )
+                            (num) => !pageNumbers.includes(num)
+                          )
                         : getIntermediatePages(
-                          currentPage + 1,
-                          totalPages - 2
-                        ).filter((num) => !pageNumbers.includes(num))
+                            currentPage + 1,
+                            totalPages - 2
+                          ).filter((num) => !pageNumbers.includes(num))
                       ).map((pageNum) => (
                         <button
                           key={`dropdown-page-${pageNum}`}
@@ -550,10 +579,11 @@ export const Table = <T,>({
               <button
                 key={`page-${pageIdx}`}
                 onClick={() => table.setPageIndex(Number(pageIdx))}
-                className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${currentPage === pageIdx
-                  ? 'border-[#00BCD4] bg-[#E0F7FA] text-[#00838F]'
-                  : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-                  }`}
+                className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+                  currentPage === pageIdx
+                    ? 'border-[#00BCD4] bg-[#E0F7FA] text-[#00838F]'
+                    : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+                }`}
               >
                 {Number(pageIdx) + 1}
               </button>
@@ -563,10 +593,11 @@ export const Table = <T,>({
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanNextPage()
-              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanNextPage()
+                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+            }`}
           >
             <span>{'›'}</span>
           </button>
@@ -574,10 +605,11 @@ export const Table = <T,>({
           <button
             onClick={() => table.setPageIndex(totalPages - 1)}
             disabled={!table.getCanNextPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanNextPage()
-              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanNextPage()
+                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
+                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+            }`}
           >
             <span>{'»'}</span>
           </button>
@@ -644,15 +676,16 @@ export const Table = <T,>({
                       <th
                         key={header.id}
                         colSpan={header.colSpan}
-                        className="px-2 py-1 text-left bg-white sticky top-0 z-10"
+                        className='px-2 py-1 text-left bg-white sticky top-0 z-10'
                       >
-                        {header.isPlaceholder ? null : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </th>
                     ))}
-
                   </SortableContext>
                 </tr>
               ))}

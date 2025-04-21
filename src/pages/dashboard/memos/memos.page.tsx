@@ -6,7 +6,6 @@ import { ChatCard } from './components/chat.card';
 import { ChatMessage } from './components/chat.message';
 import { ChatInput } from './components/chat.input';
 import { UserService } from '@/services/user';
-import { USER_TYPE } from '@/types/user/user.enum';
 import { IUserResponse } from '@/types/auth';
 import { useWebSocket } from '@/utils/socket';
 import { useUserStore } from '@/store/slices';
@@ -61,6 +60,9 @@ export const MemosPage: FunctionComponent = () => {
   const userSelected = useSignal<IUserResponse | undefined>();
   const iam = useSignal<string | undefined>();
   const { getCognito } = useUserStore();
+  const currentPage = useSignal<number>(1);
+  const totalPages = useSignal<number>(3); // Por defecto 3 páginas
+  const isLoading = useSignal<boolean>(false);
 
   const chats = useSignal<Chats>({});
 
@@ -126,15 +128,34 @@ export const MemosPage: FunctionComponent = () => {
     chats.value = addMessageArray(message.from, message);
   };
 
-  const getUsersHandler = async () => {
-    const response = await UserService.get_all({
-      userType: USER_TYPE.USER,
-      items: 100,
-      page: 1,
-    });
-    if (!response.getStatus()) return;
-    users.value = response.getMany();
-    iam.value = getCognito();
+  const getUsersHandler = async (page: number = 1) => {
+    isLoading.value = true;
+    try {
+      const response = await UserService.get_all_employee({
+        items: 20,
+        page: page,
+      });
+      if (!response.getStatus()) return;
+
+      users.value = response.getMany();
+      iam.value = getCognito();
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage.value < totalPages.value) {
+      currentPage.value += 1;
+      getUsersHandler(currentPage.value);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage.value > 1) {
+      currentPage.value -= 1;
+      getUsersHandler(currentPage.value);
+    }
   };
 
   const handleChatSelect = (chatId: string) => {
@@ -146,16 +167,16 @@ export const MemosPage: FunctionComponent = () => {
     <Section className='flex flex-row h-[99.5vh]'>
       <div className='w-[30%] border-r dark:border-b-dark-light flex flex-col h-full'>
         <ChatHeader />
-        <div className='flex-1 overflow-y-auto vox-scroll-design'>
-          <ChatCard
-            id={'0'}
-            name='AI Assistant'
-            lastMessage='I can help with that'
-            time='10:15'
-            isAI
-            onClick={handleChatSelect}
-            isSelected={selectedChat.value === '0'}
-          />
+        <ChatCard
+          id={'0'}
+          name='AI Assistant'
+          lastMessage='I can help with that'
+          time='10:15'
+          isAI
+          onClick={handleChatSelect}
+          isSelected={selectedChat.value === '0'}
+        />
+        <div className='flex-1 overflow-y-auto vox-scroll-design border-t dark:border-t-dark-light'>
           {users.value.map((user: IUserResponse) => (
             <ChatCard
               user={user}
@@ -169,6 +190,33 @@ export const MemosPage: FunctionComponent = () => {
               isSelected={selectedChat.value === user.cognitoId}
             />
           ))}
+        </div>
+        <div className='flex justify-between items-center p-4 border-t dark:border-t-dark-light'>
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage.value === 1}
+            className={`px-4 py-2 rounded-md ${
+              currentPage.value === 1
+                ? 'bg-gray-300 cursor-not-allowed'
+                : 'bg-blue-500 hover:bg-blue-600'
+            } text-white`}
+          >
+            Anterior
+          </button>
+          <span className='text-sm text-gray-500'>
+            Página {currentPage.value} de {totalPages.value}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage.value >= totalPages.value}
+            className={`px-4 py-2 rounded-md ${
+              currentPage.value >= totalPages.value
+                ? 'bg-gray-300 cursor-not-allowed'
+                : 'bg-blue-500 hover:bg-blue-600'
+            } text-white`}
+          >
+            Siguiente
+          </button>
         </div>
       </div>
 
