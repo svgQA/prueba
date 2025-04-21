@@ -4,7 +4,6 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
-import { IScheduleNotificationDto } from '@/types/notification/IScheduleNotificationDto';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
 
 export class SchedulerServiceFront extends BaseService {
@@ -13,7 +12,7 @@ export class SchedulerServiceFront extends BaseService {
   /**
    * Crear una notificación programada
    */
-  static async scheduleNotification(data: IScheduleNotificationDto) {
+  static async scheduleNotification(data: any) {
     const model: IMakeRequest = {
       url: ['notifications', 'schedule'],
       method: REQUEST_METHODS.POST,

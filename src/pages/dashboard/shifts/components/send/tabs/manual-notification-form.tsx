@@ -8,9 +8,10 @@ interface Props {
   users?: any[];
 }
 
-export const ManualNotificationForm = ({
-  users: externalUsers = [],
-}: Props) => {
+export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => {
+
+  /* console.log('📦 externalUsers:', externalUsers); */
+
   const [templateId, setTemplateId] = useState<string>('');
   const [templates, setTemplates] = useState<any[]>([]);
 
@@ -23,33 +24,38 @@ export const ManualNotificationForm = ({
 
   const [search, setSearch] = useState<string>('');
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+  const [selectedUsersFull, setSelectedUsersFull] = useState<
+    { id: number; name: string; email: string; playerId: string }[]
+  >([]);
   const [forms, setForms] = useState<any[]>([]);
 
-  // Filtrar usuarios con playerId
-  const usersWithPlayerId = externalUsers.filter((u) => !!u.employee.playerId);
+  const usersWithPlayerId = externalUsers.filter((u) => !!u.playerId);
 
-  // Filtrado por búsqueda y turno
   const filteredUsers = usersWithPlayerId.filter((u) => {
-    const match = `${u.employee.name} ${u.employee.email}`
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const match = `${u.name} ${u.email}`.toLowerCase().includes(search.toLowerCase());
     return sendToShiftToday ? match && u.hasShiftToday : match;
   });
 
   useEffect(() => {
-    // Marcar por defecto todos los que pasen el filtro inicial
-    setSelectedUserIds(usersWithPlayerId.map((u) => u.employee.id));
+    setSelectedUserIds(usersWithPlayerId.map((u) => u.id));
   }, [externalUsers]);
 
-  const handleSubmit = async () => {
-    const finalUsers = usersWithPlayerId.filter((u) =>
-      selectedUserIds.includes(u.employee.id)
-    );
+  useEffect(() => {
+    const finalUsers = usersWithPlayerId
+      .filter((u) => selectedUserIds.includes(u.id))
+      .map((u) => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        playerId: u.playerId,
+      }));
 
-    if (finalUsers.length === 0) {
-      alert(
-        'Ninguno de los usuarios seleccionados cumple con las condiciones para recibir notificaciones.'
-      );
+    setSelectedUsersFull(finalUsers);
+  }, [selectedUserIds, usersWithPlayerId]);
+
+  const handleSubmit = async () => {
+    if (selectedUsersFull.length === 0) {
+      alert('Ninguno de los usuarios seleccionados cumple con las condiciones para recibir notificaciones.');
       return;
     }
 
@@ -59,7 +65,7 @@ export const ManualNotificationForm = ({
       ...(overrideTitle && { overrideTitle }),
       ...(overrideDescription && { overrideDescription }),
       filters: {
-        userIds: finalUsers.map((u) => u.employee.id),
+        userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
       ...(formStructure && { data: { formId, formStructure } }),
@@ -103,7 +109,6 @@ export const ManualNotificationForm = ({
     getFormStructure();
   }, [formId]);
 
-  // Si no hay usuarios con playerId
   if (usersWithPlayerId.length === 0) {
     return (
       <div className='p-4 text-red-600 font-medium'>
@@ -131,25 +136,22 @@ export const ManualNotificationForm = ({
 
         <div className='max-h-48 overflow-y-auto border border-gray-200 rounded p-2 bg-white'>
           {filteredUsers.map((user: any) => (
-            <label
-              key={user.employee.id}
-              className='flex items-center gap-2 py-1'
-            >
+            <label key={user.id} className='flex items-center gap-2 py-1'>
               <input
                 type='checkbox'
-                value={user.employee.id}
-                checked={selectedUserIds.includes(user.employee.id)}
+                value={user.id}
+                checked={selectedUserIds.includes(user.id)}
                 onChange={() =>
                   setSelectedUserIds((prev) =>
-                    prev.includes(user.employee.id)
-                      ? prev.filter((id) => id !== user.employee.id)
-                      : [...prev, user.employee.id]
+                    prev.includes(user.id)
+                      ? prev.filter((id) => id !== user.id)
+                      : [...prev, user.id]
                   )
                 }
                 className='accent-cyan-600'
               />
               <span className='text-sm'>
-                {user.employee.name} ({user.employee.email})
+                {user.name} ({user.email})
               </span>
             </label>
           ))}
@@ -174,19 +176,17 @@ export const ManualNotificationForm = ({
           </button>
         )}
 
-        {selectedUserIds.length > 0 && (
+        {selectedUsersFull.length > 0 && (
           <div className='mt-2'>
             <h5 className='text-sm font-medium text-gray-700 mb-1'>
-              Usuarios seleccionados con Player ID:
+              Usuarios seleccionados con registro de notificaciones:
             </h5>
             <ul className='text-sm text-gray-800 list-disc list-inside space-y-1'>
-              {usersWithPlayerId
-                .filter((u: any) => selectedUserIds.includes(u.employee.id))
-                .map((u: any) => (
-                  <li key={u.employee.id}>
-                    {u.employee.name} ({u.employee.email})
-                  </li>
-                ))}
+              {selectedUsersFull.map((u) => (
+                <li key={u.id}>
+                  {u.name} ({u.email})
+                </li>
+              ))}
             </ul>
           </div>
         )}
