@@ -9,7 +9,7 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
     header: 'Título',
     size: 200,
     cell: (info) => (
-      <span className="p-1 size-sm">{info.getValue() as string}</span>
+      <span className='p-1 size-sm'>{info.getValue() as string}</span>
     ),
   },
   {
@@ -18,7 +18,10 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
     header: 'Descripción',
     size: 250,
     cell: (info) => (
-      <span className="line-clamp-2 max-w-[250px]" title={info.getValue() as string}>
+      <span
+        className='line-clamp-2 max-w-[250px]'
+        title={info.getValue() as string}
+      >
         {info.getValue() as string}
       </span>
     ),
@@ -31,7 +34,7 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
     cell: (info) => {
       const date = new Date(info.getValue() as string);
       return (
-        <time dateTime={date.toISOString()} className="p-1 size-sm">
+        <time dateTime={date.toISOString()} className='p-1 size-sm'>
           {dayjs(date).format('DD/MM/YYYY HH:mm')}
         </time>
       );
@@ -45,9 +48,11 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
     cell: (info) => {
       const value = info.getValue() as string;
       const color =
-        value === 'pending' ? 'text-yellow-600' :
-        value === 'sent' ? 'text-green-600' :
-        'text-red-600';
+        value === 'pending'
+          ? 'text-yellow-600'
+          : value === 'sent'
+            ? 'text-green-600'
+            : 'text-red-600';
       return <span className={color}>{value.toUpperCase()}</span>;
     },
   },

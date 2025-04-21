@@ -142,7 +142,7 @@ export interface IShiftResponse {
   service: IService;
   start: string;
   end: string;
-  employeedId: number;
+  employeeId: number;
   employee: IUser;
   serviceId: number;
   status: string;

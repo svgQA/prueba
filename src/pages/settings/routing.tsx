@@ -432,12 +432,22 @@ export const RoutingContent = memo(() => {
         />
         {/* NOTIFICATIONS MENU */}
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.to}
-          component={lazy(() => Promise.resolve({ default: ScheduledNotificationsPage }))}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .scheduledNotification.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduledNotificationsPage })
+          )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.to}
-          component={lazy(() => Promise.resolve({ default: TemplateNotificationPage  }))}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .templateNotification.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: TemplateNotificationPage })
+          )}
         />
       </Suspense>
     </Router>

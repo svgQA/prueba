@@ -27,9 +27,9 @@ import { UsersPage } from './users/users.page';
  ** ***********************************************************************/
 import {
   // getStatusOnBoardingModal,
+  // closeOnBoardingModal,
+  // openOnBoardingModal,
   toggleSettingModal,
-  closeOnBoardingModal,
-  openOnBoardingModal,
   openLoading,
   closeLoading,
 } from '@/store/signals/modals';
@@ -61,14 +61,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     // const wsManager = useWebSocket();
 
     const {
-      // companies,
-      // getUrlSocket,
-      setSelected,
-      setCompanies,
-      getSelected,
-      setToken,
+      getTenant,
       getToken,
-      setCognito,
+      getCompany,
+      setToken,
+      setUserId,
+      setTenant,
+      setUser,
     } = useUserStore();
 
     // const setCompanySelected = (company: string) => {
@@ -80,22 +79,15 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
-      BaseService.setUser(getSelected, getToken);
+      BaseService.setUser(getTenant, getToken, getCompany);
       validateUser();
     }, []);
 
     const validateUser = async () => {
-      /* [TODO]: Bad code */
-      // closeOnBoardingModal();
-      /* [TODO]: Correct code */
-      const existTenant = await hasUserTenant(
-        setCompanies,
-        setSelected,
-        setToken,
-        setCognito
-      );
-      if (!existTenant) openOnBoardingModal();
-      else closeOnBoardingModal();
+      await hasUserTenant(setToken, setUserId, setTenant, setUser);
+      // console.log('existTenant', existTenant);
+      // if (!existTenant) openOnBoardingModal();
+      // else closeOnBoardingModal();
     };
 
     // const getProfile = async () => {

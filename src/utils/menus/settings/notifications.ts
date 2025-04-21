@@ -12,7 +12,8 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
       label: 'Scheduled Notifications',
       description: 'Notificaciones programadas',
       base,
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
+        .scheduledNotification.base,
       id: 'scheduled-notifications',
       show: true,
     },
@@ -21,7 +22,8 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
       label: 'Template Notifications',
       description: 'Notificaciones Plantillas',
       base,
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
+        .base,
       id: 'template-notifications',
       show: true,
     },

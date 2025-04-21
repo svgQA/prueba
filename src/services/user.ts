@@ -1,7 +1,7 @@
 import { IOption } from '@/components/common/multi/interface';
 import { IPagination } from '@/types';
 import { IUserRequest, IUserResponse } from '@/types/auth';
-import { USER_TYPE } from '@/types/user/user.enum';
+
 import {
   IDocumentTypeResponse,
   IDeleteUserResponse,
@@ -14,10 +14,7 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
-
-interface IPaginationUser extends IPagination {
-  userType?: USER_TYPE;
-}
+import { IPaginationUser } from '@/utils/types/user.interface';
 
 export class UserService extends BaseService {
   static name: VoxServices = 'user';
