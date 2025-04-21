@@ -9,7 +9,6 @@ import {
   getStatusSettingModal,
   toggleSettingModal,
 } from '@/store/signals/modals';
-import { authModel } from '@/store/signals/access';
 
 import { useSignal } from '@preact/signals';
 import { useCallback } from 'preact/hooks';
@@ -27,8 +26,9 @@ import {
   menuInformationSelected,
   setMenu,
 } from './store/settings';
-
+import { useUserStore } from '@/store/slices';
 export const SettingsModal = () => {
+  const { user } = useUserStore();
   const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
   const [_, navigate] = useLocation();
 
@@ -109,10 +109,10 @@ export const SettingsModal = () => {
           <CardSettingUser
             id='user-information'
             name='user-information'
-            company={authModel.value.company}
-            username={authModel.value.username}
-            image={authModel.value.image}
-            rol={authModel.value.rol}
+            company={'Inndico'}
+            username={user?.name + ' ' + user?.surname}
+            image={user?.image || ''}
+            rol={user?.userType || ''}
           />
         </div>
         <MenuList

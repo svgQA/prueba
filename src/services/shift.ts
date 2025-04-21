@@ -9,33 +9,18 @@ import {
   IMunicipalityResponse,
 } from '@/types/shift/shift.response';
 import { ICountryResponse } from '@/types/user/user.response';
-// import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
 import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
   VoxServices,
   REQUEST_METHODS,
 } from '@/utils/network/types';
-
-interface IPaginationPlace extends IPagination {
-  contractId?: number;
-  projectId?: number;
-}
-
-interface IPaginationRound extends IPagination {
-  placeId?: number;
-}
-
-interface IPagintationGantt extends IPagination {
-  mode?: ViewMode;
-  // start: string;
-  // end?: string;
-}
-
-interface IReplicateShift {
-  date: string;
-  id: number | string;
-}
+import {
+  IPaginationPlace,
+  IPaginationRound,
+  IPagintationGantt,
+  IReplicateShift,
+} from '@/utils/types/shift.interface';
 
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';
@@ -103,6 +88,7 @@ export class ShiftService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
+
   static async getWorkPointsByPlaceId(placeId: number) {
     const model: IMakeRequest = {
       url: ['place/workstation', `${placeId}`],

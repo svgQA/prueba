@@ -1,46 +1,17 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { tracking_service_url } from '@/env.config';
-import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useUserStore } from '@/store/slices';
 import io from 'socket.io-client';
 import { Search } from '@/components/common/search/search';
 import { ColumnFiltersState } from '@tanstack/react-table';
-import { VNode } from 'preact';
+import { User } from './types';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
-type User = {
-  id: string;
-  lat: number;
-  lng: number;
-  name: string;
-  token: string;
-  type: 'provider' | 'client';
-  tenantId: number;
-  userShifts?: any[];
-};
-
-type Shift = {
-  service?: {
-    name?: string;
-    contract?: {
-      name?: string;
-      client?: {
-        name?: string;
-      };
-    };
-    place?: {
-      address?: string;
-    };
-  };
-  status?: string;
-};
-
-const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({
-  unsearch,
-}) => {
+const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [_, setConnectionStatus] = useState<string>('Connecting...');
   const socketRef = useRef<any>(null);
-  const { getToken, getSelected } = useUserStore();
+  const { getToken, tenant, getUser } = useUserStore();
   const [searchFilters, setSearchFilters] = useState<ColumnFiltersState>([]);
 
   const searchKeys = useMemo(
@@ -53,54 +24,107 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({
     []
   );
 
-  useEffect(() => {
+  const connect_socket = () => {
     const socket = io(tracking_service_url, {
-      query: { token: getToken(), tenantId: getSelected()?.tenant_id },
+      query: { token: getToken(), tenantId: tenant, type: getUser()?.userType },
     });
     socketRef.current = socket;
     socket.on('connect', () => setConnectionStatus('Connected'));
-    socket.on('disconnect', () => setConnectionStatus('Disconnected'));
-    socket.on('connect_error', (_: any) =>
-      setConnectionStatus('Connection Error')
-    );
+    socket.on('disconnect', disconnect_socket);
+    socket.on('connect_error', disconnect_socket);
 
-    socket.on('location-create', (user: User) => {
-      setUsers((prevUsers) => [...prevUsers, user]);
-    });
+    socket.on('location-update', handle_location_update);
+    socket.on('location-remove', handle_location_remove);
+    // socket.on('user-disconnected', handle_user_disconnected);
+    // socket.on('all-locations', handle_all_locations);
+  };
 
-    socket.on('location-update', (user: User) => {
-      setUsers((prevUsers) => {
+  const disconnect_socket = () => {
+    if (socketRef.current) {
+      socketRef.current.removeAllListeners();
+      socketRef.current.disconnect();
+      socketRef.current = null;
+    }
+    setConnectionStatus('Disconnected');
+  };
+
+  const handle_location_remove = (user: User | User[]) => {
+    setUsers((prevUsers) => {
+      if (Array.isArray(user)) {
+        // Handle array of users
+        return user.reduce(
+          (acc, currentUser) => {
+            const index = acc.findIndex((u) => u.id === currentUser.id);
+            if (index !== -1) {
+              acc[index] = currentUser;
+            } else {
+              acc.push(currentUser);
+            }
+            return acc;
+          },
+          [...prevUsers]
+        );
+      } else {
+        // Handle single user
         const index = prevUsers.findIndex((u) => u.id === user.id);
         if (index !== -1) {
           const updated = [...prevUsers];
           updated[index] = user;
           return updated;
+        } else {
+          return [...prevUsers, user];
         }
-        return [...prevUsers, user];
-      });
-    });
-
-    socket.on('user-disconnected', (user: { id: string }) => {
-      setUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
-    });
-
-    socket.on('all-locations', (allUsers: User[]) => {
-      try {
-        setUsers(allUsers);
-      } catch (error) {
-        console.error('Error: ', error);
       }
     });
+  };
 
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.removeAllListeners();
-        socketRef.current.disconnect();
-        socketRef.current = null;
+  const handle_location_update = (user: User | User[]) => {
+    // console.log('handle_location_update', user);
+    setUsers((prevUsers) => {
+      if (Array.isArray(user)) {
+        // Handle array of users
+        return user.reduce(
+          (acc, currentUser) => {
+            const index = acc.findIndex((u) => u.id === currentUser.id);
+            if (index !== -1) {
+              acc[index] = currentUser;
+            } else {
+              acc.push(currentUser);
+            }
+            return acc;
+          },
+          [...prevUsers]
+        );
+      } else {
+        // Handle single user
+        const index = prevUsers.findIndex((u) => u.id === user.id);
+        if (index !== -1) {
+          const updated = [...prevUsers];
+          updated[index] = user;
+          return updated;
+        } else {
+          return [...prevUsers, user];
+        }
       }
-    };
+    });
+  };
+
+  /*
+  const handle_user_disconnected = (user: { id: string }) => {
+    setUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
+  }
+
+  const handle_all_locations = (allUsers: User[]) => {
+    setUsers(allUsers);
+  }
+  */
+
+  useEffect(() => {
+    connect_socket();
+    return () => disconnect_socket();
   }, []);
 
+  /*
   const filteredUsers = useMemo(() => {
     const usersWithShifts = users.filter(
       (user) => user.userShifts && user.userShifts.length > 0
@@ -149,6 +173,7 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({
       });
     });
   }, [users, searchFilters]);
+  */
 
   return (
     <div className='px-4'>
@@ -164,12 +189,7 @@ const LiveUserMap: React.FC<{ button?: VNode; unsearch?: boolean }> = ({
           />
         )}
       </div>
-
-      <MapLibrePointsMap
-        points={filteredUsers}
-        mapHeight='88vh'
-        initialZoom={3}
-      />
+      <MapLibrePointsMap points={users} mapHeight='79vh' initialZoom={3} />
     </div>
   );
 };

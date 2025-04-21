@@ -15,11 +15,11 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
     <Card id={id} name={name} borderless rounded={false}>
       <div className='flex gap-2 p-2 w-full'>
         <div className='flex flex-col items-center'>
-          <div className='bg-primary-opacity rounded-full p-3'>
+          <div className='border-2 border-bg-primary-opacity rounded-full'>
             <img
               src={image || '/placeholder.svg'}
               alt={`sett-user-${id}`}
-              className='w-10 h-10 rounded-full'
+              className='w-14 h-14 rounded-full'
             />
           </div>
           <Badge

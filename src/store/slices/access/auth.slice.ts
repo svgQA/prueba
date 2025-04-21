@@ -1,15 +1,18 @@
-import { TenantService } from '@/services';
+// import { TenantService } from '@/services';
+import { UserService } from '@/services/user';
+import { IJwtPayload, IUserResponse } from '@/types/auth';
 import { fetchAuthSession } from 'aws-amplify/auth';
-import { parsingCompanies } from './user.slice';
-import { ICompany } from './interface/user.interface';
+// import { parsingCompanies } from './user.slice';
+// import { ICompany } from './interface/user.interface';
 
+/* 
 const getTenancies = async (
   setCompanies: (companies: ICompany[]) => void,
   setSelected: (uuid: string) => void
 ): Promise<boolean> => {
   const response = await TenantService.get_my_tenants();
-  /* Corregir toda esta mierda porque tenant esta respondiendo como true
-     a los errores (corregir tenant Service) */
+  // Corregir toda esta mierda porque tenant esta respondiendo como true
+  //    a los errores (corregir tenant Service)
   if (!response.getStatus()) {
     setCompanies([]);
     return false;
@@ -29,31 +32,52 @@ const getTenancies = async (
 
   return userTenants.length < 2;
 };
-
+*/
 export const getUserId = async (
   setToken?: (token: string) => void
 ): Promise<string | undefined> => {
-  const user = await getUser(setToken);
-  return user.sub;
+  const session = await getUser(setToken);
+  return session?.sub;
 };
 
 export const hasUserTenant = async (
-  setCompanies: (companies: ICompany[]) => void,
-  setSelected: (uuid: string) => void,
   setToken: (token: string) => void,
-  setCognito: (uuid: string) => void
+  setUserId: (uuid: string) => void,
+  setTenant: (uuid: string) => void,
+  setUser: (user: IUserResponse) => void
 ): Promise<boolean> => {
-  const user = await getUserId(setToken);
-  if (!user) return false;
-  setCognito(user);
-  return getTenancies(setCompanies, setSelected);
+  const user = await getUser(setToken);
+  setUserId(user?.sub || '');
+  setTenant(user?.['custom:tenant'] || '');
+
+  const profile = await UserService.profile();
+  if (!profile.getStatus()) return false;
+  setUser(profile.getOne());
+  return true;
+};
+
+export const updateToken = async (
+  setToken: (token: string) => void
+): Promise<void> => {
+  const session = await fetchAuthSession();
+  if (!session?.tokens?.accessToken) return;
+  const token = session.tokens.accessToken.toString();
+  setToken(token);
 };
 
 export const getUser = async (
   setToken?: (token: string) => void
-): Promise<any /* JwtPayload */ | undefined> => {
-  const user = await fetchAuthSession();
-  const token = user.tokens?.accessToken.toString() || '';
-  setToken?.(token);
-  return user.tokens?.accessToken?.payload;
+): Promise<IJwtPayload | undefined> => {
+  try {
+    const session = await fetchAuthSession();
+    if (!session?.tokens?.accessToken?.payload) return undefined;
+
+    const token = session.tokens.accessToken.toString();
+    const payload = session.tokens.accessToken
+      .payload as unknown as IJwtPayload;
+    setToken?.(token);
+    return payload;
+  } catch (error) {
+    return undefined;
+  }
 };

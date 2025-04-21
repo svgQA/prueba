@@ -16,6 +16,7 @@ import {
   GroupingState,
   Row,
   FilterFn,
+  flexRender,
   // flexRender,
 } from '@tanstack/react-table';
 import {
@@ -44,7 +45,7 @@ import {
   SortableContext,
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { DraggableCell, DraggableTableHeader } from './components';
+import { DraggableCell } from './components';
 import { Fragment } from 'preact/jsx-runtime';
 import { Switch } from '../switch/switch';
 import { ROW_ACTIONS } from './enum';
@@ -62,6 +63,8 @@ export const Table = <T,>({
   unsearch,
   button,
   showExpandableIcon = true,
+  selectable,
+  // onSelectionChange,
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -82,6 +85,7 @@ export const Table = <T,>({
       filterFn: defaultOrFilterFn,
     }));
   }, []);
+  const [selectedRows, setSelectedRows] = useState<Record<string, T>>({});
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -114,6 +118,69 @@ export const Table = <T,>({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  /*
+  const extendedColumns = useMemo(() => {
+    if (!selectable) return columnsData;
+
+    return [
+      {
+        id: 'select',
+        header: () => {
+          const allSelected = data.length > 0 && Object.keys(selectedRows).length === data.length;
+          const noneSelected = Object.keys(selectedRows).length === 0;
+
+          return (
+            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                className="w-4 h-4"
+                checked={allSelected}
+                indeterminate={!noneSelected && !allSelected} // esto lo maneja nativo si usas React, aquí no aplica directamente
+                onChange={(e) => {
+                  const checked = e.currentTarget.checked;
+                  const newSelection = checked
+                    ? Object.fromEntries(data.map((row: any) => [row.id, row]))
+                    : {};
+                  setSelectedRows(newSelection);
+                  onSelectionChange?.(Object.values(newSelection));
+                }}
+              />
+              <span className="text-sm font-medium text-gray-700">
+                {allSelected ? 'Limpiar selección' : 'Notificar'}
+              </span>
+            </label>
+          );
+        },
+
+        cell: ({ row }: { row: Row<T> }) => {
+          // const id = (row.original as any).id;
+          return (
+            <input
+              type="checkbox"
+              className="w-4 h-4"
+              checked={!!selectedRows[(row.original as any).id]}
+              onChange={(e) => {
+                const id = (row.original as any).id;
+                const updated = { ...selectedRows };
+                if (e.currentTarget.checked) {
+                  updated[id] = row.original;
+                } else {
+                  delete updated[id];
+                }
+                setSelectedRows(updated);
+                onSelectionChange?.(Object.values(updated));
+              }}
+            />
+          );
+        },
+        enableSorting: false,
+        enableHiding: false,
+      },
+      ...columnsData, // ← columnas originales van después del checkbox
+    ];
+  }, [selectable, data, selectedRows]);
+  */
 
   const table = useReactTable({
     data,
@@ -235,11 +302,11 @@ export const Table = <T,>({
             if (row.getIsGrouped()) {
               return (
                 <Fragment key={row.id}>
-                  <tr>
+                  <tr className='odd:bg-gray-100'>
                     {!unsettings && (
                       <td
                         className='text-center left-0 min-w-[30px]'
-                        style={{ position: 'sticky', zIndex: 1 }}
+                        // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         <span
                           onClick={() => row.toggleExpanded()}
@@ -253,7 +320,7 @@ export const Table = <T,>({
                       colSpan={
                         row.getVisibleCells().length + (!unsettings ? 0 : 0)
                       }
-                      className='p-2 bg-gray-200 font-semibold'
+                      className='p-2 font-semibold'
                     >
                       {row.groupingColumnId && (
                         <span>
@@ -273,16 +340,16 @@ export const Table = <T,>({
               return (
                 <Fragment key={row.id}>
                   <tr
-                    className={
+                    className={`odd:bg-gray-100 ${
                       data.length > pageSize && isLastRow
                         ? 'no-bottom-border'
                         : ''
-                    }
+                    }`}
                   >
                     {!unsettings && (
                       <td
-                        className='text-center left-0 min-w-[30px]'
-                        style={{ position: 'sticky', zIndex: 1 }}
+                        className='left-0 min-w-[30px] bg-gray-200'
+                        // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
                           <span
@@ -290,16 +357,41 @@ export const Table = <T,>({
                             className='vox-icon vx-icon-001 cursor-pointer size-sm'
                           />
                         )}
+                        {selectable && (
+                          <div className='flex items-center justify-center'>
+                            <input
+                              type='checkbox'
+                              className='w-4 h-4'
+                              checked={!!selectedRows[(row.original as any).id]}
+                              onChange={(e) => {
+                                e.preventDefault();
+                                const id = (
+                                  row.original as unknown as {
+                                    id: string | number;
+                                  }
+                                ).id;
+                                const updated = { ...selectedRows };
+                                if (e.currentTarget.checked) {
+                                  updated[id] = row.original;
+                                } else {
+                                  delete updated[id];
+                                }
+                                setSelectedRows(updated);
+                                // onSelectionChange?.(Object.values(updated));
+                              }}
+                            />
+                          </div>
+                        )}
                       </td>
                     )}
-                    {row.getVisibleCells().map((cell, index) => (
+                    {row.getVisibleCells().map((cell) => (
                       <SortableContext
-                        key={`${cell.id}-${index}`}
+                        key={`sortable-${row.id}-${cell.id}`}
                         items={columnOrder}
                         strategy={horizontalListSortingStrategy}
                       >
                         <DraggableCell<T>
-                          key={`${cell.id}-${index}`}
+                          key={`cell-${row.id}-${cell.id}`}
                           onCurrentColumnName={(value) => {
                             currentColumnName.value = value;
                           }}
@@ -325,7 +417,7 @@ export const Table = <T,>({
         </>
       );
     },
-    [expandable, unsettings, data.length, pageSize]
+    [expandable, unsettings, data.length, pageSize, selectedRows]
   );
 
   const renderPagination = () => {
@@ -580,11 +672,19 @@ export const Table = <T,>({
                     items={columnOrder}
                     strategy={horizontalListSortingStrategy}
                   >
-                    {headerGroup.headers.map((header, index) => (
-                      <DraggableTableHeader<T>
-                        key={`${header.id}-${index}`}
-                        header={header}
-                      />
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        className='px-2 py-1 text-left bg-white sticky top-0 z-10'
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
                     ))}
                   </SortableContext>
                 </tr>

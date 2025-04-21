@@ -4,7 +4,7 @@ import { IExpansionPanelProps } from './interface';
 
 export const ExpansionPanel: FunctionComponent<IExpansionPanelProps> = ({
   id,
-  name,
+  // name,
   title,
   subtitle,
   disabled = false,
@@ -30,7 +30,7 @@ export const ExpansionPanel: FunctionComponent<IExpansionPanelProps> = ({
   return (
     <div
       id={id}
-      name={name}
+      // name={name}
       className={`border rounded-md overflow-hidden ${className} ${
         disabled ? 'opacity-50 cursor-not-allowed' : ''
       }`}

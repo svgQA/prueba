@@ -11,6 +11,7 @@ export const PAGES_LIST_ROUTER = {
     correspondence: '/correspondence',
     users: '/users',
     devices: '/devices',
+    history: '/history',
     setting: {
       base: '/setting',
       users: {
@@ -152,6 +153,36 @@ export const PAGES_LIST_ROUTER = {
         projectUpdate: {
           base: '/project/edit',
           to: '/rounds/project/edit/:id',
+        },
+      },
+      notifications: {
+        scheduledNotification: {
+          base: '/scheduledNotifications',
+          to: '/rounds/scheduledNotifications',
+
+          create: {
+            base: '/notifications/scheduledNotifications/create',
+            to: '/rounds/notifications/scheduledNotifications/create',
+          },
+
+          update: {
+            base: '/notifications/scheduledNotifications/update',
+            to: '/rounds/notifications/scheduledNotifications/update/:id',
+          },
+
+          view: {
+            base: '/notifications/scheduledNotifications/view',
+            to: '/rounds/notifications/scheduledNotifications/view/:id',
+          },
+
+          history: {
+            base: '/notifications/scheduledNotifications/history',
+            to: '/rounds/notifications/scheduledNotifications/history/:id',
+          },
+        },
+        templateNotification: {
+          base: '/templateNotifications',
+          to: '/rounds/templateNotifications',
         },
       },
       setting: {

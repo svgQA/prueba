@@ -12,7 +12,6 @@ import {
 import { useSignal } from '@preact/signals';
 import { CompanyItem } from './company';
 import { MenuItem } from './menu';
-// import { AIAssistant } from '@/components/compose/aggent/aggent';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
   id,
@@ -89,11 +88,6 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
     >
       {onHomeHandler && (
         <ul className='flex flex-col items-center'>
-          {/*
-          <span onClick={onAssistant} className='cursor-pointer'>
-          <AIAssistant />
-          </span>
-          */}
           <span onClick={onHomeHandler} className='cursor-pointer'>
             <ButtonMenu name='vx-home-button' label='home' icon='023' />
           </span>

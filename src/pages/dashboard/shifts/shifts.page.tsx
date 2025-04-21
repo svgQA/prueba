@@ -18,7 +18,6 @@ import { Gantt } from '@/components/compose/gantt';
 import { TaskForm } from './components/upsert.modal';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
-import { SendForm } from './components/send/send.modal';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ShiftForm } from './components/shift.modal';
 import LiveUserMap from './components/shift.map';
@@ -168,9 +167,9 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleUpsertModal();
   }, []);
 
-  const handleCloseSendModal = useCallback(() => {
-    toggleSendModal();
-  }, []);
+  // const handleCloseSendModal = useCallback(() => {
+  //   toggleSendModal();
+  // }, []);
 
   const handleCloseShiftModal = useCallback(() => {
     toggleShiftModal();
@@ -214,14 +213,14 @@ export const ShiftsPage: FunctionalComponent = () => {
     setTaskSelected(undefined);
   }, []);
 
-  const handleSend = useCallback(async (data: any) => {
-    try {
-      console.log('Sending data:', data);
-      showSendModal.value = false;
-    } catch (error) {
-      console.error('Error sending data:', error);
-    }
-  }, []);
+  // const handleSend = useCallback(async (data: any) => {
+  //   try {
+  //     console.log('Sending data:', data);
+  //     showSendModal.value = false;
+  //   } catch (error) {
+  //     console.error('Error sending data:', error);
+  //   }
+  // }, []);
 
   /**
    * Eventos de los botones superiores
@@ -287,19 +286,6 @@ export const ShiftsPage: FunctionalComponent = () => {
           icon='330'
         />
         <Button
-          name='button-change-planner'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.PLANNER);
-          }}
-          rounded={false}
-          className={
-            currentView.value === VIEW_NAME.PLANNER
-              ? 'bg-primary-opacity p-2'
-              : ''
-          }
-          icon='331'
-        />
-        <Button
           name='button-change-table'
           onClick={() => {
             handleViewChange(VIEW_NAME.MAP);
@@ -325,6 +311,19 @@ export const ShiftsPage: FunctionalComponent = () => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
         />
+        <Button
+          name='button-change-planner'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.PLANNER);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.PLANNER
+              ? 'bg-primary-opacity p-2'
+              : ''
+          }
+          icon='331'
+        />
       </div>
     ),
     [currentView.value]
@@ -336,37 +335,35 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   return (
     <Section padding>
-      {currentView.value !== VIEW_NAME.MAP && (
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-          <CardData
-            title='Turnos Totales Hoy'
-            count={shiftSummary.value.total}
-            subtitle=''
-            color='t-dark'
-            icon='054'
-          />
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+        <CardData
+          title='Turnos Totales Hoy'
+          count={shiftSummary.value.total}
+          subtitle=''
+          color='t-dark'
+          icon='054'
+        />
 
-          <CardData
-            title='Turnos En Curso'
-            count={calculatePercentage(shiftSummary.value.inProgress)}
-            subtitle=''
-            color='t-dark'
-            icon='052'
-          />
+        <CardData
+          title='Turnos En Curso'
+          count={calculatePercentage(shiftSummary.value.inProgress)}
+          subtitle=''
+          color='t-dark'
+          icon='052'
+        />
 
-          <CardData
-            title='Turnos Finalizados'
-            count={calculatePercentage(shiftSummary.value.completed)}
-            subtitle=''
-            color='t-dark'
-            icon='015'
-          />
-        </div>
-      )}
+        <CardData
+          title='Turnos Finalizados'
+          count={calculatePercentage(shiftSummary.value.completed)}
+          subtitle=''
+          color='t-dark'
+          icon='015'
+        />
+      </div>
 
       <div className='max-h-screen relative'>
-        <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-10'>
-          <div className='flex flex-row items-center justify-between'>
+        <div className='py-2 flex flex-row justify-center xl:justify-between px-1 items-center overflow-visible xl:absolute relative z-10 w-full xl:w-fit bg-b-content'>
+          <div className='flex flex-row items-center !w-full xl:!w-fit md:w-auto justify-between'>
             {buttonMenu}
             <Button
               name='button-create-shift'
@@ -383,6 +380,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             columns={columns}
             showExpandableIcon={false}
             pageSize={20}
+            selectable={true}
             expandable={(row: IShiftResponse, currentColumnName?: string) => (
               <ExpandableMultiple
                 type={currentColumnName || defaultColumn.value}
@@ -441,11 +439,14 @@ export const ShiftsPage: FunctionalComponent = () => {
         taskSelected={taskSelected}
       />
 
+      {/*
       <SendForm
         closed={showSendModal.value}
         onClose={handleCloseSendModal}
         onSend={handleSend}
+        viewMode='dash'
       />
+      */}
 
       <ShiftForm
         closed={showShiftModal.value}

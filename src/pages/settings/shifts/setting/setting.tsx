@@ -39,6 +39,7 @@ export const ShiftSettingPage: FunctionComponent = () => {
       const response = await ShiftService.getShiftSetting();
       if (!response.getStatus()) return;
       const shiftResponse = response.getOne();
+      if (!shiftResponse.settings.max_check_range) return;
 
       initialValues.value = {
         ...shiftResponse.settings,

@@ -14,6 +14,7 @@ export const {
   VITE_AWS_COGNITO_IDENTITY_POOL: aws_cognito_identity_pool,
   VITE_AWS_OAUTH_DOMAIN: aws_oauth_domain,
   VITE_TRACKING_SERVICE_URL: tracking_service_url,
+  VITE_COMPANY_HEADER: company_header,
 
   DEV: tryvoo_environment = false,
 } = import.meta.env;

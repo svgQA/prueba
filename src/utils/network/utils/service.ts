@@ -2,8 +2,7 @@ import { VOX_DEFAULT_PATH, VOS_SERVICES } from './constants';
 import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
-import { ICompany } from '@/store/slices/interface';
-import { tenant_header } from '@/env.config';
+import { company_header, tenant_header } from '@/env.config';
 import { toast } from 'react-toastify';
 
 export interface IRequestModelOutput {
@@ -17,8 +16,9 @@ export class BaseService {
   protected static prefix: string = 'api';
   protected static openLoading: () => void = () => {};
   protected static closeLoading: () => void = () => {};
-  protected static getSelected: () => ICompany | undefined = () => undefined;
+  protected static getTenant: () => string = () => '';
   protected static getToken: () => string = () => 'Bearer';
+  protected static getCompany: () => string = () => '';
 
   public static setLoading(onOpen: () => void, onClose: () => void) {
     this.openLoading = onOpen;
@@ -26,11 +26,13 @@ export class BaseService {
   }
 
   public static setUser(
-    getSelected: () => ICompany | undefined,
-    getToken: () => string
+    getTenant: () => string,
+    getToken: () => string,
+    getCompany: () => string
   ) {
-    this.getSelected = getSelected;
+    this.getTenant = getTenant;
     this.getToken = getToken;
+    this.getCompany = getCompany;
   }
 
   private static make_url(
@@ -73,13 +75,22 @@ export class BaseService {
     }
 
     if (tenance) {
-      const tenant = this.getSelected();
-      if (!tenant_header || !tenant?.tenant_id) {
-        throw new Error('ERROR: not include header');
+      const tenant = this.getTenant();
+      const company = this.getCompany();
+
+      if (!tenant_header || !tenant || !company_header || !company) {
+        throw new Error('ERROR: not include headers to request');
       }
-      model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
+      model.headers = {
+        ...model.headers,
+        [tenant_header]: tenant,
+        [company_header]: company,
+      };
     }
-    model.headers = { ...model.headers, Authorization: this.getToken() };
+    model.headers = {
+      ...model.headers,
+      Authorization: this.getToken(),
+    };
 
     const output: IRequestModelOutput = {
       header: model.headers as Record<string, string>,
@@ -123,7 +134,6 @@ export class BaseService {
       });
       if (!response.ok) {
         const result = await response.json();
-        // console.log('response error ==>', result);
         toast.error(result.error, { position: 'top-right' });
         return new GenericResponse<T>({
           code: response?.status,
