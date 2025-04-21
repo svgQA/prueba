@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'preact/hooks';
+import { useRef, useEffect } from 'preact/hooks';
 import { ManualNotificationForm } from './tabs/manual-notification-form';
 interface Props {
   closed?: boolean;

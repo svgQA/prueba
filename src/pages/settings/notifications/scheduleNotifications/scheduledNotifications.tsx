@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
 import { SchedulerServiceFront } from '@/services/schedule';
@@ -11,7 +11,7 @@ import { useSignal } from '@preact/signals';
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
   const isLoading = useSignal(false);
-  const [statusFilter, setStatusFilter] = useState<'pending' | 'sent' | 'failed' | 'all'>('all');
+  const [statusFilter, _] = useState<'pending' | 'sent' | 'failed' | 'all'>('all');
   const [templates, setTemplates] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
 

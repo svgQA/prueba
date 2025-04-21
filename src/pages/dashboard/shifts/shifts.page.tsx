@@ -26,7 +26,6 @@ import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
 import { UserService } from '@/services/user';
 import { MentionOption } from '@/components/common/mention-editor';
-import { IUser } from '@/types/auth';
 
 enum VIEW_NAME {
   TABLE,
@@ -395,7 +394,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                   playerId: row.employee.playerId,
                 }));
 
-              setSelectedUsers(validUsers);
+              setSelectedUsers(validUsers as any);
             }}
 
             expandable={(row: IShiftResponse, currentColumnName?: string) => (
@@ -460,7 +459,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         closed={showSendModal.value}
         onClose={handleCloseSendModal}
         onSend={handleSend}
-        users={selectedUsers}
+        users={selectedUsers as []}
       />
 
       <ShiftForm
