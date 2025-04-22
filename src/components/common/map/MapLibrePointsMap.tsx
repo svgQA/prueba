@@ -1,411 +1,507 @@
-import { useEffect, useRef, useState } from 'react';
-import maplibregl, { Map as MaplibreMap } from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import type React from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
+import maplibregl, { type Map as MaplibreMap } from "maplibre-gl"
+import "maplibre-gl/dist/maplibre-gl.css"
+import { Input } from "@/components/common/input/input"
+import { Button } from "@/components/common/button/button"
+import { toast } from "react-toastify"
+import { IMapProps, MapPoint } from "./interface"
 
-export type Point = {
-  id: string;
-  name: string;
-  lat: number;
-  lng: number;
-  [key: string]: any;
-};
+export const MapLibrePointsMap = ({
+  pointsAmount = 100,
+  allowManualPoint = false,
+  sendPoints,
+  pointsRef = [],
+  center = {
+    lat: 4.670355108326989,
+    lng: -74.08689346772478,
+  },
+  condition = false,
+  errorCondition = "",
+  radialPoint = null,
+  errorRadialPoint = "",
+  draggable = true,
+  width = "100%",
+  height = "500px",
+  clickPoint = () => { },
+  radius,
+  disablePointSelection = false,
+}: IMapProps) => {
+  const mapContainerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<MaplibreMap | null>(null)
+  const markersRef = useRef<maplibregl.Marker[]>([])
+  const nextIdRef = useRef<number>(1)
+  const [points, setPoints] = useState<MapPoint[]>([])
+  const [coords, setCoords] = useState<{ lat: string; lng: string }>({ lat: "", lng: "" })
+  const [editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({ lat: "", lng: "" })
+  const [activeMarker, setActiveMarker] = useState<number | null>(null)
+  const [activePopup, setActivePopup] = useState<maplibregl.Popup | null>(null)
+  const [isMarkerClick, setIsMarkerClick] = useState<boolean>(false)
 
-type MapLibrePointsMapProps<T extends Point> = {
-  points: T[];
-  mapHeight?: string;
-  initialZoom?: number;
-  minZoom?: number;
-  maxZoom?: number;
-  renderPopupContent?: (point: T) => string;
-  onMarkerClick?: (point: T) => void;
-  fitBoundsOptions?: maplibregl.FitBoundsOptions;
-  singlePointZoomLevel?: number;
-  defaultCenter?: [number, number];
-  autoFitBounds?: boolean;
-  fitButtonLabel?: string;
-};
-
-function MapLibrePointsMap<T extends Point>({
-  points,
-  mapHeight = '500px',
-  initialZoom = 6,
-  minZoom = 3,
-  maxZoom = 18,
-  renderPopupContent,
-  onMarkerClick,
-  fitBoundsOptions = { padding: 50, maxZoom: 14 },
-  singlePointZoomLevel = 10,
-  defaultCenter = [-74.5, 4.0],
-  autoFitBounds = false,
-}: MapLibrePointsMapProps<T>) {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<MaplibreMap | null>(null);
-  const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
-  const [prevPointsLength, setPrevPointsLength] = useState<number>(
-    points.length
-  );
-  const [initialLoad, setInitialLoad] = useState<boolean>(true);
-  const [userModifiedView, setUserModifiedView] = useState<boolean>(false);
-  const [lastFitBounds, setLastFitBounds] = useState<{
-    zoom: number;
-    center: [number, number];
-  }>({
-    zoom: initialZoom,
-    center: defaultCenter,
-  });
-  const prevPointsRef = useRef<T[]>([]);
-  const [hasPointsOutsideView, setHasPointsOutsideView] =
-    useState<boolean>(false);
-
-  const mapStyle: string | maplibregl.StyleSpecification = {
-    version: 8 as const,
+  // Map style configuration
+  const mapStyle: maplibregl.StyleSpecification = {
+    version: 8,
     sources: {
       carto: {
-        type: 'raster',
-        tiles: [
-          'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-        ],
+        type: "raster",
+        tiles: ["https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"],
         tileSize: 256,
         attribution: '© <a href="https://carto.com/">CARTO</a>',
       },
     },
     layers: [
       {
-        id: 'carto-voyager',
-        type: 'raster',
-        source: 'carto',
+        id: "carto-voyager",
+        type: "raster",
+        source: "carto",
         minzoom: 0,
         maxzoom: 19,
       },
     ],
-  };
+  }
 
-  const resetMapToDefault = (map: MaplibreMap) => {
-    map.flyTo({
-      center: defaultCenter,
-      zoom: initialZoom,
-      duration: 1000,
-    });
-    setUserModifiedView(false);
-  };
+  // Initialize map
+  useEffect(() => {
+    if (!mapContainerRef.current) return
+    mapRef.current = new maplibregl.Map({ container: mapContainerRef.current, style: mapStyle, center: [center.lng, center.lat], zoom: 12 })
+    const map = mapRef.current
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }))
+    map.on("click", handleMapClick)
+    return () => { cleanupMap() }
+  }, [])
 
-  const fitMapToPoints = (map: MaplibreMap, pointsToFit: T[]) => {
-    if (pointsToFit.length === 0) return;
-
-    if (pointsToFit.length === 1) {
-      const point = pointsToFit[0];
-      map.flyTo({
-        center: [point.lng, point.lat],
-        zoom: singlePointZoomLevel,
-        ...fitBoundsOptions,
-      });
-
-      setLastFitBounds({
-        zoom: singlePointZoomLevel,
-        center: [point.lng, point.lat],
-      });
-    } else if (pointsToFit.length === 2) {
-      const bounds = new maplibregl.LngLatBounds();
-      pointsToFit.forEach((point) => {
-        bounds.extend([point.lng, point.lat]);
-      });
-
-      const twoPadding = Math.max(
-        150,
-        ((fitBoundsOptions?.padding as number) || 50) * 2
-      );
-      const twoPointOptions = {
-        ...fitBoundsOptions,
-        padding: twoPadding,
-        maxZoom: Math.min(11, fitBoundsOptions?.maxZoom || 14),
-      };
-
-      map.fitBounds(bounds, twoPointOptions);
-
-      setTimeout(() => {
-        if (map) {
-          setLastFitBounds({
-            zoom: map.getZoom(),
-            center: [map.getCenter().lng, map.getCenter().lat],
-          });
-        }
-      }, 300);
+  // Load initial points
+  useEffect(() => {
+    if (pointsRef && pointsRef.length > 0) {
+      const highestId = Math.max(...pointsRef.map((point: MapPoint) => point.id), 0)
+      nextIdRef.current = highestId + 1
+      setPoints(pointsRef)
     } else {
-      const bounds = new maplibregl.LngLatBounds();
-      pointsToFit.forEach((point) => {
-        bounds.extend([point.lng, point.lat]);
-      });
-      map.fitBounds(bounds, fitBoundsOptions);
+      setPoints([])
+    }
+  }, [pointsRef])
 
-      setTimeout(() => {
-        if (map) {
-          setLastFitBounds({
-            zoom: map.getZoom(),
-            center: [map.getCenter().lng, map.getCenter().lat],
-          });
-        }
-      }, 300);
+  // Update markers and send points to parent
+  useEffect(() => {
+    updateMarkers()
+    sendPoints(points)
+  }, [points])
+
+  // Update circle when radius changes
+  useEffect(() => { updateRadiusCircle() }, [radius, center])
+
+  // Clean up map resources
+  const cleanupMap = useCallback(() => {
+    markersRef.current.forEach((marker) => marker.remove())
+    markersRef.current = []
+
+    if (activePopup) {
+      activePopup.remove()
     }
 
-    setUserModifiedView(false);
-  };
-
-  const isInFittedView = (map: MaplibreMap): boolean => {
-    const currentZoom = map.getZoom();
-    const currentCenter = map.getCenter();
-
-    const zoomTolerance = 0.1;
-    const centerTolerance = 0.01;
-
-    const zoomMatches =
-      Math.abs(currentZoom - lastFitBounds.zoom) <= zoomTolerance;
-    const centerMatches =
-      Math.abs(currentCenter.lng - lastFitBounds.center[0]) <=
-        centerTolerance &&
-      Math.abs(currentCenter.lat - lastFitBounds.center[1]) <= centerTolerance;
-
-    return zoomMatches && centerMatches;
-  };
-
-  const hasPointDisconnected = (
-    currentPoints: T[],
-    previousPoints: T[]
-  ): boolean => {
-    if (currentPoints.length < previousPoints.length) {
-      const currentIds = new Set(currentPoints.map((p) => p.id));
-      return previousPoints.some((prevPoint) => !currentIds.has(prevPoint.id));
+    if (mapRef.current) {
+      mapRef.current.off("click", handleMapClick)
+      mapRef.current.remove()
     }
-    return false;
-  };
+  }, [activePopup])
 
-  const createMarkerElement = (index: number) => {
-    const el = document.createElement('div');
+  // Calculate distance between two points (Haversine formula)
+  const haversineDistance = (point1: any, point2: any) => {
+    const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180
+    const earthRadius = 6371000;
+    const lat1Rad = degreesToRadians(point1.position.lat)
+    const lat2Rad = degreesToRadians(point2.position.lat)
+    const latDiffRad = degreesToRadians(point2.position.lat - point1.position.lat)
+    const lngDiffRad = degreesToRadians(point2.position.lng - point1.position.lng)
+    const a = Math.sin(latDiffRad / 2) * Math.sin(latDiffRad / 2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(lngDiffRad / 2) * Math.sin(lngDiffRad / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = earthRadius * c;
+    return distance > 1000;
+  }
+
+  // Handle map click event
+  const handleMapClick = (e: maplibregl.MapMouseEvent) => {
+    if (isMarkerClick) {
+      setIsMarkerClick(false)
+      return
+    }
+
+    if (disablePointSelection) {
+      return
+    }
+
+    const { lng, lat } = e.lngLat
+    setMarkerOnMap(lat, lng)
+  }
+
+  // Add a marker to the map
+  const setMarkerOnMap = (lat: number, lng: number) => {
+    if (condition) {
+      toast.error(`${errorCondition}`, { position: "top-right" })
+      return
+    }
+
+    if (pointsAmount === 1) setPoints([])
+    const newPoint: MapPoint = { id: nextIdRef.current++, position: { lat, lng }}
+
+    if (radialPoint) {
+      const pointValidation = haversineDistance(radialPoint, newPoint)
+      if (pointValidation) {
+        toast.error(`${errorRadialPoint}`, { position: "top-right" })
+        return
+      }
+    }
+
+    setPoints((prevPoints) => [...prevPoints, newPoint])
+  }
+
+  // Create marker element with number
+  const createMarkerElement = (point: MapPoint, index: number) => {
+    const el = document.createElement("div")
+    el.className = "marker-container"
+    el.setAttribute("data-id", point.id.toString())
+    el.setAttribute("data-index", (index + 1).toString())
+
     el.innerHTML = `
-      <div style="
-        position: relative;
-        width: 24px;
-        height: 38px;
-      ">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="38" viewBox="0 0 24 38">
-          <path fill="#EA4335" d="M12 0C5.4 0 0 5.4 0 12c0 6.5 12 25 12 25s12-18.5 12-25c0-6.6-5.4-12-12-12z" />
-          <circle fill="#FFFFFF" cx="12" cy="12" r="8" />
-          <text 
-            fill="#EA4335" 
-            x="12" 
-            y="16" 
-            font-family="Arial, sans-serif" 
-            font-size="11" 
-            font-weight="bold" 
-            text-anchor="middle"
-          >${index + 1}</text>
-        </svg>
-      </div>
-    `;
-    return el;
-  };
+    <div style="
+      position: relative;
+      width: 24px;
+      height: 38px;
+      cursor: pointer;
+    ">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="38" viewBox="0 0 24 38">
+        <path fill="${radialPoint && point.id === radialPoint.id ? "#2563EB" : "#EA4335"}" 
+              d="M12 0C5.4 0 0 5.4 0 12c0 6.5 12 25 12 25s12-18.5 12-25c0-6.6-5.4-12-12-12z" />
+        <circle fill="#FFFFFF" cx="12" cy="12" r="8" />
+        <text 
+          fill="${radialPoint && point.id === radialPoint.id ? "#2563EB" : "#EA4335"}" 
+          x="12" 
+          y="16" 
+          fontFamily="Arial, sans-serif" 
+          fontSize="11" 
+          fontWeight="bold" 
+          textAnchor="middle"
+        >${index + 1}</text>
+      </svg>
+    </div>
+  `
+    return el
+  }
 
-  const handleFitBounds = () => {
-    if (mapRef.current && points.length > 0) {
-      fitMapToPoints(mapRef.current, points);
+  // Close active popup
+  const closeActivePopup = useCallback(() => {
+    if (activePopup) {
+      activePopup.remove()
+      setActivePopup(null)
     }
-  };
+    setActiveMarker(null)
+  }, [activePopup])
 
-  useEffect(() => {
-    if (!mapRef.current) return;
+  // Update all markers on the map
+  const updateMarkers = () => {
+    if (!mapRef.current) return
 
-    markersRef.current.forEach((marker) => marker.remove());
-    markersRef.current.clear();
+    // Remove existing markers
+    markersRef.current.forEach((marker) => marker.remove())
+    markersRef.current = []
 
-    const pointsAdded = points.length > prevPointsLength;
-    const pointDisconnected = hasPointDisconnected(
-      points,
-      prevPointsRef.current
-    );
+    // Add new markers
+    points.forEach((point, index) => {
+      const markerEl = createMarkerElement(point, index)
+      const isRadialPoint = radialPoint && point.id === radialPoint.id
 
-    const checkAllPointsOutsideView = () => {
-      if (!mapRef.current || points.length === 0) {
-        setHasPointsOutsideView(false);
-        return;
-      }
+      const marker = new maplibregl.Marker({ element: markerEl, draggable: draggable && !isRadialPoint })
+        .setLngLat([point.position.lng, point.position.lat])
+        .addTo(mapRef.current!)
 
-      const currentBounds = mapRef.current.getBounds();
-      const anyPointOutside = points.some((point) => {
-        return !currentBounds.contains([point.lng, point.lat]);
-      });
-
-      setHasPointsOutsideView(anyPointOutside);
-    };
-
-    const shouldUpdateView =
-      initialLoad ||
-      autoFitBounds ||
-      (pointsAdded && !userModifiedView) ||
-      pointDisconnected;
-
-    if (prevPointsLength > 0 && points.length === 0) {
-      resetMapToDefault(mapRef.current);
-    } else if (points.length > 0) {
-      points.forEach((point, index) => {
-        const markerEl = createMarkerElement(index);
-
-        const popupContent = renderPopupContent
-          ? renderPopupContent(point)
-          : `
-            <div style="font-weight: bold;">${point.name}</div>
-            <div style="font-size: 12px;">Lat: ${point.lat.toFixed(6)}</div>
-            <div style="font-size: 12px;">Lng: ${point.lng.toFixed(6)}</div>
-          `;
-
-        const popup = new maplibregl.Popup({
-          closeButton: false,
-          offset: [0, -20],
-          className: 'map-popup-custom',
-        }).setHTML(popupContent);
-
-        if (mapRef.current) {
-          const marker = new maplibregl.Marker({
-            element: markerEl,
-          })
-            .setLngLat([point.lng, point.lat])
-            .addTo(mapRef.current);
-
-          marker.getElement().addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (onMarkerClick) {
-              onMarkerClick(point);
-            }
-
-            if (mapRef.current) {
-              popup.setLngLat([point.lng, point.lat]).addTo(mapRef.current);
-            }
-          });
-
-          markersRef.current.set(point.id, marker);
-        }
-      });
-
-      if (shouldUpdateView) {
-        setTimeout(() => {
-          if (mapRef.current) {
-            fitMapToPoints(mapRef.current, points);
-
-            if (initialLoad) {
-              setInitialLoad(false);
-            }
-          }
-        }, 100);
-      } else {
-        checkAllPointsOutsideView();
-      }
-    }
-
-    if (mapRef.current) {
-      mapRef.current.on('moveend', checkAllPointsOutsideView);
-      mapRef.current.on('zoomend', checkAllPointsOutsideView);
-    }
-
-    setPrevPointsLength(points.length);
-    prevPointsRef.current = [...points];
-
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.off('moveend', checkAllPointsOutsideView);
-        mapRef.current.off('zoomend', checkAllPointsOutsideView);
-      }
-    };
-  }, [
-    points,
-    renderPopupContent,
-    onMarkerClick,
-    fitBoundsOptions,
-    singlePointZoomLevel,
-    initialZoom,
-    defaultCenter,
-    autoFitBounds,
-    initialLoad,
-    userModifiedView,
-  ]);
-
-  useEffect(() => {
-    if (!mapContainerRef.current) return;
-
-    mapRef.current = new maplibregl.Map({
-      container: mapContainerRef.current,
-      style: mapStyle,
-      zoom: initialZoom,
-      center: defaultCenter,
-      minZoom: minZoom,
-      maxZoom: maxZoom,
-    });
-
-    if (mapRef.current) {
-      const userInteractionEvents = [
-        'dragend',
-        'zoomend',
-        'pitchend',
-        'rotateend',
-      ];
-
-      userInteractionEvents.forEach((event) => {
-        mapRef.current!.on(event, () => {
-          if (mapRef.current && !isInFittedView(mapRef.current)) {
-            setUserModifiedView(true);
-          }
-        });
-      });
-    }
-
-    mapRef.current.addControl(
-      new maplibregl.NavigationControl({
-        showCompass: false,
+      marker.on("dragend", () => {
+        const lngLat = marker.getLngLat()
+        handleMarkerDragEnd(point.id, lngLat.lat, lngLat.lng)
       })
-    );
 
-    mapRef.current.on('load', () => {
-      if (points.length > 0 && mapRef.current) {
-        fitMapToPoints(mapRef.current, points);
-        setInitialLoad(false);
+      markerEl.addEventListener("click", (e) => {
+        e.stopPropagation()
+        setIsMarkerClick(true)
+        closeActivePopup()
+        setTimeout(() => {
+          handleMarkerClick(point.id)
+        }, 10)
+      })
+
+      markersRef.current.push(marker)
+    })
+
+    updateRadiusCircle()
+  }
+
+  // Create GeoJSON for circle
+  const createCircleGeoJSON = (center: { lat: number; lng: number }, radiusInMeters: number) => {
+    const points = 64
+    const coords: number[][] = []
+    const lat = center.lat
+    const lng = center.lng
+
+    for (let i = 0; i <= points; i++) {
+      const angle = (i * 360) / points
+      const radians = (angle * Math.PI) / 180
+      const latOffset = (radiusInMeters / 111320) * Math.cos(radians)
+      const lngOffset = (radiusInMeters / (111320 * Math.cos((lat * Math.PI) / 180))) * Math.sin(radians)
+      coords.push([lng + lngOffset, lat + latOffset])
+    }
+
+    return {
+      type: "Feature" as const,
+      geometry: {
+        type: "Polygon" as const,
+        coordinates: [coords],
+      },
+      properties: {},
+    }
+  }
+
+  // Update radius circle on map
+  const updateRadiusCircle = () => {
+    if (!mapRef.current) return
+
+    if (radius && radius > 0 && center) {
+      const circleData = createCircleGeoJSON(center, radius)
+
+      if (mapRef.current.getSource("radius-circle")) {
+        ; (mapRef.current.getSource("radius-circle") as maplibregl.GeoJSONSource).setData(circleData)
+      } else {
+        mapRef.current.addSource("radius-circle", {
+          type: "geojson",
+          data: circleData,
+        })
+
+        mapRef.current.addLayer({
+          id: "radius-circle-fill",
+          type: "fill",
+          source: "radius-circle",
+          paint: {
+            "fill-color": "#FF0000",
+            "fill-opacity": 0.2,
+          },
+        })
+
+        mapRef.current.addLayer({
+          id: "radius-circle-line",
+          type: "line",
+          source: "radius-circle",
+          paint: {
+            "line-color": "#FF0000",
+            "line-opacity": 0.8,
+            "line-width": 2,
+          },
+        })
       }
-    });
+    } else {
+      // Remove circle if no radius specified
+      if (mapRef.current.getSource("radius-circle")) {
+        if (mapRef.current.getLayer("radius-circle-fill")) {
+          mapRef.current.removeLayer("radius-circle-fill")
+        }
+        if (mapRef.current.getLayer("radius-circle-line")) {
+          mapRef.current.removeLayer("radius-circle-line")
+        }
+        mapRef.current.removeSource("radius-circle")
+      }
+    }
+  }
 
-    return () => {
-      markersRef.current.forEach((marker) => marker.remove());
-      markersRef.current.clear();
-      mapRef.current?.remove();
-    };
-  }, []);
+  // Handle marker drag end
+  const handleMarkerDragEnd = (id: number, lat: number, lng: number) => {
+    if (radialPoint?.id === id) {
+      toast.error("Punto del lugar no se debe mover", { position: "top-right" })
+      updateMarkers()
+      return
+    }
+
+    if (radialPoint) {
+      const testPoint = { position: { lat, lng } }
+      const pointValidation = haversineDistance(radialPoint, testPoint)
+      if (pointValidation) {
+        toast.error(`${errorRadialPoint}`, { position: "top-right" })
+        updateMarkers()
+        return
+      }
+    }
+
+    setPoints((prevPoints) =>
+      prevPoints.map((point) => (point.id === id ? { ...point, position: { lat, lng } } : point)),
+    )
+  }
+
+  // Handle marker click
+  const handleMarkerClick = (id: number) => {
+    const point = points.find((p) => p.id === id)
+    if (!point || !mapRef.current) return
+
+    setActiveMarker(id)
+    setEditCoords({ lat: point.position.lat.toString(), lng: point.position.lng.toString() })
+    clickPoint?.(point)
+
+    const popupNode = document.createElement("div")
+    popupNode.className = "bg-white rounded-md shadow-sm overflow-hidden w-full p-2"
+    popupNode.innerHTML = `
+      <div>
+        <div class="flex flex-col mb-2">
+          <label class="text-sm mb-1">Latitude</label>
+          <input id="edit-lat" type="text" value="${point.position.lat}" class="w-full text-sm p-1 border rounded" />
+          
+          <label class="text-sm mb-1 mt-2">Longitude</label>
+          <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" />
+        </div>
+        
+        <div class="flex justify-between mt-2">
+          <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
+            Delete
+          </button>
+          <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
+            Update
+          </button>
+        </div>
+      </div>
+    `
+
+    const popup = new maplibregl.Popup({
+      closeButton: true,
+      closeOnClick: false,
+      offset: [0, -30],
+      maxWidth: "240px",
+    })
+      .setLngLat([point.position.lng, point.position.lat])
+      .setDOMContent(popupNode)
+      .addTo(mapRef.current)
+
+    setActivePopup(popup)
+
+    const editLatInput = popupNode.querySelector("#edit-lat") as HTMLInputElement
+    const editLngInput = popupNode.querySelector("#edit-lng") as HTMLInputElement
+    const deleteButton = popupNode.querySelector("#btn-delete")
+    const editButton = popupNode.querySelector("#btn-edit")
+
+    editLatInput.addEventListener("input", (e) => {
+      setEditCoords((prev) => ({ ...prev, lat: (e.target as HTMLInputElement).value }))
+    })
+
+    editLngInput.addEventListener("input", (e) => {
+      setEditCoords((prev) => ({ ...prev, lng: (e.target as HTMLInputElement).value }))
+    })
+
+    if (deleteButton) {
+      deleteButton.addEventListener("click", () => {
+        removeMarkerById(id)
+        popup.remove()
+      })
+    }
+
+    if (editButton) {
+      editButton.addEventListener("click", () => {
+        editMarkerById(id)
+        popup.remove()
+      })
+    }
+
+    popup.on("close", () => {
+      setActiveMarker(null)
+      setActivePopup(null)
+    })
+  }
+
+  // Handle input change for manual coordinates
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, type: "lat" | "lng") => {
+    const value = e.currentTarget.value
+    setCoords((prev) => ({ ...prev, [type]: value }))
+  }
+
+  // Add point manually from coordinates
+  const addManualPoint = () => {
+    const lat = Number.parseFloat(coords.lat)
+    const lng = Number.parseFloat(coords.lng)
+
+    if (!isNaN(lat) && !isNaN(lng)) {
+      setMarkerOnMap(lat, lng)
+      setCoords({ lat: "", lng: "" })
+    } else {
+      toast.error("Por favor ingrese coordenadas válidas", { position: "top-right" })
+    }
+  }
+
+  // Remove marker by ID
+  const removeMarkerById = (id: number): void => {
+    const pointExists = points.some((p) => p.id === id)
+
+    if (!pointExists) {
+      toast.error("No se pudo encontrar el punto para eliminar", { position: "top-right" })
+      return
+    }
+
+    setPoints((prevPoints) => {
+      const newPoints = prevPoints.filter((p) => p.id !== id)
+      toast.success("Punto eliminado correctamente", { position: "top-right" })
+      return newPoints
+    })
+
+    closeActivePopup()
+  }
+
+  // Edit marker coordinates by ID
+  const editMarkerById = (id: number): void => {
+    const newLat = Number.parseFloat(editCoords.lat)
+    const newLng = Number.parseFloat(editCoords.lng)
+
+    if (isNaN(newLat) || isNaN(newLng)) {
+      toast.error("Por favor ingrese coordenadas válidas", {
+        position: "top-right",
+      })
+      return
+    }
+
+    setPoints((prevPoints) =>
+      prevPoints.map((point) => (point.id === id ? { ...point, position: { lat: newLat, lng: newLng } } : point)),
+    )
+
+    closeActivePopup()
+    toast.success("Punto actualizado correctamente", { position: "top-right" })
+  }
 
   return (
-    <div className='relative w-full'>
-      <div
-        ref={mapContainerRef}
-        className='w-full rounded-lg overflow-hidden shadow-md'
-        style={{ height: mapHeight }}
-      >
-        {points.length > 0 && hasPointsOutsideView && (
-          <button
-            className='absolute top-2.5 left-2.5 z-10 border border-red-500 bg-red-50 text-red-700 hover:bg-red-100 rounded px-3 py-2 shadow-md font-sans text-sm cursor-pointer transition-colors flex items-center gap-1.5'
-            onClick={handleFitBounds}
-            title='Ajustar mapa para mostrar todos los puntos'
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              className='w-4 h-4'
-            >
-              <path d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'></path>
-            </svg>
-            ¡Hay puntos fuera de la vista!
-          </button>
-        )}
-      </div>
-    </div>
-  );
+    <>
+      {allowManualPoint && (
+        <div className="flex flex-row items-end justify-between gap-x-2 py-1">
+          <Input
+            name="latitude"
+            placeholder="6.246631"
+            label="Latitud"
+            type="number"
+            value={coords.lat}
+            onChange={(e) => handleInputChange(e, "lat")}
+          />
+
+          <Input
+            name="longitude"
+            placeholder="-75.581775"
+            label="Longitud"
+            type="number"
+            value={coords.lng}
+            onChange={(e) => handleInputChange(e, "lng")}
+          />
+
+          <Button
+            id="btn-add"
+            name="btn-add"
+            type="button"
+            onClick={addManualPoint}
+            label="Añadir"
+            className="rounded-md bg-primary text-white px-4 py-2 my-1"
+          />
+        </div>
+      )}
+
+      <div ref={mapContainerRef} style={{ width, height }} className="rounded-lg overflow-hidden shadow-md" />
+    </>
+  )
 }
 
-export default MapLibrePointsMap;
+export default MapLibrePointsMap
