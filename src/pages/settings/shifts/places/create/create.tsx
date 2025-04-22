@@ -8,11 +8,11 @@ import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { Map } from '@/components/common/map/map';
 import { useEffect, useState } from 'preact/hooks';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 
 interface FormData {
   code?: number;
@@ -347,8 +347,28 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
             </div>
-            <Map
+            {/* <Map
               name='Map'
+              pointsAmount={1}
+              sendPoints={(data) => {
+                const result = sendPointsRef(data);
+                form.change('latitude', result?.lat);
+                form.change('longitude', result?.lng);
+              }}
+              pointsRef={points.value}
+              center={municipalityLocation.value}
+              condition={false}
+              errorCondition=''
+              radialPoint={null}
+              errorRadialPoint=''
+              radius={green}
+              draggable={true}
+              width='100%'
+              clickPoint={() => { }}
+            /> */}
+
+            <MapLibrePointsMap
+              name='map-points'
               pointsAmount={1}
               sendPoints={(data) => {
                 const result = sendPointsRef(data);
@@ -366,6 +386,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               width='100%'
               clickPoint={() => {}}
             />
+
             <div className='grid grid-cols-4 gap-3'>
               <div class='col-span-2'>
                 <Field<string> name='latitude'>

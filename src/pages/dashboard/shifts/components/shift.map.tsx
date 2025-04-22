@@ -175,6 +175,13 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   }, [users, searchFilters]);
   */
 
+  const mapPoints = useMemo(() => {
+    return users.map((user, index) => ({
+      id: index + 1,
+      position: { lat: user.lat, lng: user.lng },
+    }));
+  }, [users]);
+
   return (
     <div className='px-4'>
       <div className='relative w-full my-2 flex items-center justify-end'>
@@ -189,7 +196,14 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
           />
         )}
       </div>
-      <MapLibrePointsMap points={users} mapHeight='76vh' initialZoom={3} />
+
+      <MapLibrePointsMap
+        name='map-points'
+        pointsRef={mapPoints}
+        sendPoints={() => {}}
+        height='79vh'
+        disablePointSelection={true}
+      />
     </div>
   );
 };

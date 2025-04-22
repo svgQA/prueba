@@ -16,26 +16,25 @@ export const PAGES_LIST_ROUTER = {
       base: '/setting',
       users: {
         base: '/users',
-        to: '/setting/users',
         password: {
           base: '/password',
-          to: '/setting/users/password',
+          to: '/users/password',
         },
         areas: {
           base: '/areas',
-          to: '/setting/users/areas',
+          to: '/users/areas',
         },
         roles: {
           base: '/roles',
-          to: '/setting/users/roles',
+          to: '/users/roles',
         },
         groups: {
           base: '/groups',
-          to: '/setting/users/groups',
+          to: '/users/groups',
         },
         settings: {
           base: '/settings',
-          to: '/setting/users/settings',
+          to: '/users/settings',
         },
       },
       admin: {

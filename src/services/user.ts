@@ -133,4 +133,60 @@ export class UserService extends BaseService {
     };
     return await super.make_request<IDocumentTypeResponse>(this.name, model);
   }
+
+  static async changePassword(
+    userId: number,
+    newPassword: string,
+    confirmPassword: string
+  ) {
+    const model: IMakeRequest = {
+      url: ['auth', 'changepassword'],
+      data: { userId, newPassword, confirmPassword },
+      method: REQUEST_METHODS.POST,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async createArea(data: { name: string; description?: string }) {
+    const model: IMakeRequest = {
+      url: ['user', 'area'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getAreas() {
+    const model: IMakeRequest = {
+      url: ['user', 'area'],
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getArea(id: number) {
+    const model: IMakeRequest = {
+      url: ['user', 'area', `${id}`],
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateArea(
+    id: number,
+    data: { name: string; description?: string }
+  ) {
+    const model: IMakeRequest = {
+      url: ['user', 'area', `${id}`],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteArea(id: number) {
+    const model: IMakeRequest = {
+      url: ['user', 'area', `${id}`],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
 }

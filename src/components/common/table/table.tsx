@@ -64,7 +64,7 @@ export const Table = <T,>({
   button,
   showExpandableIcon = true,
   selectable,
-  // onSelectionChange,
+  onSelectionChange,
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -377,7 +377,7 @@ export const Table = <T,>({
                                   delete updated[id];
                                 }
                                 setSelectedRows(updated);
-                                // onSelectionChange?.(Object.values(updated));
+                                onSelectionChange?.(Object.values(updated));
                               }}
                             />
                           </div>
@@ -661,13 +661,46 @@ export const Table = <T,>({
                   {!unsettings && (
                     <th
                       colSpan={1}
-                      className='table-setting-button left-0 min-w-[30px]'
+                      className='table-setting-button left-0 min-w-[30px] bg-white px-2'
                       style={{ position: 'sticky', zIndex: 1 }}
                     >
-                      <span className='vox-icon vx-icon-168 size-sm' />
-                      {buildSettings()}
+                      <div className='flex items-center gap-2'>
+                        {selectable && (
+                          <input
+                            type='checkbox'
+                            className='w-4 h-4'
+                            checked={
+                              Object.keys(selectedRows).length === data.length
+                            }
+                            ref={(el) => {
+                              if (el) {
+                                const all =
+                                  data.length > 0 &&
+                                  Object.keys(selectedRows).length ===
+                                    data.length;
+                                const none =
+                                  Object.keys(selectedRows).length === 0;
+                                el.indeterminate = !all && !none;
+                              }
+                            }}
+                            onChange={(e) => {
+                              const checked = e.currentTarget.checked;
+                              const newSelection = checked
+                                ? Object.fromEntries(
+                                    data.map((row: any) => [row.id, row])
+                                  )
+                                : {};
+                              setSelectedRows(newSelection);
+                              onSelectionChange?.(Object.values(newSelection));
+                            }}
+                          />
+                        )}
+                      </div>
                     </th>
                   )}
+                  <span className='vox-icon vx-icon-168 size-sm' />
+                  {buildSettings()}
+
                   <SortableContext
                     items={columnOrder}
                     strategy={horizontalListSortingStrategy}
