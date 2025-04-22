@@ -243,7 +243,9 @@ export const ShiftsPage: FunctionalComponent = () => {
   const handleGetShiftSummary = async () => {
     try {
       const summary = await ShiftService.getShiftSummary();
-      shiftSummary.value = summary.getOne() as IShiftSummary;
+      if (summary.getStatus()) {
+        shiftSummary.value = summary.getOne() as IShiftSummary;
+      }
     } catch (error) {
       console.error('Error getting shift summary:', error);
     }
