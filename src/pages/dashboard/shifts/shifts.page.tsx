@@ -186,7 +186,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -386,17 +386,15 @@ export const ShiftsPage: FunctionalComponent = () => {
             selectable={true}
             onSelectionChange={(rows) => {
               console.log('rows', rows);
-              const validUsers = rows
-                .map((row: any) => ({
-                  id: row.employee.id,
-                  name: row.employee.name,
-                  email: row.employee.email,
-                  playerId: row.employee.playerId,
-                }));
+              const validUsers = rows.map((row: any) => ({
+                id: row.employee.id,
+                name: row.employee.name,
+                email: row.employee.email,
+                playerId: row.employee.playerId,
+              }));
 
               setSelectedUsers(validUsers as any);
             }}
-
             expandable={(row: IShiftResponse, currentColumnName?: string) => (
               <ExpandableMultiple
                 type={currentColumnName || defaultColumn.value}

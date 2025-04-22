@@ -176,7 +176,10 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   */
 
   const mapPoints = useMemo(() => {
-    return users.map((user, index) => ({ id: index + 1, position: { lat: user.lat, lng: user.lng } }));
+    return users.map((user, index) => ({
+      id: index + 1,
+      position: { lat: user.lat, lng: user.lng },
+    }));
   }, [users]);
 
   return (
@@ -197,7 +200,7 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
       <MapLibrePointsMap
         name='map-points'
         pointsRef={mapPoints}
-        sendPoints={() => { }}
+        sendPoints={() => {}}
         height='79vh'
         disablePointSelection={true}
       />

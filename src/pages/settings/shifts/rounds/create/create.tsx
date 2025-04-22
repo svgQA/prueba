@@ -6,7 +6,6 @@ import { required } from '@/utils/utilities';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { Map } from '@/components/common/map/map';
 import { useEffect } from 'preact/hooks';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
@@ -555,7 +554,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   draggable={true}
                   width='100%'
                   height='500px'
-                  clickPoint={() => { }}
+                  clickPoint={() => {}}
                 />
                 {/* Botonera */}
                 <div className='w-full flex-row flex justify-end items-center mt-2'>

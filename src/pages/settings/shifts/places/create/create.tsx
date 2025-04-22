@@ -8,7 +8,6 @@ import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { Map } from '@/components/common/map/map';
 import { useEffect, useState } from 'preact/hooks';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
@@ -385,7 +384,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               radius={green}
               draggable={true}
               width='100%'
-              clickPoint={() => { }}
+              clickPoint={() => {}}
             />
 
             <div className='grid grid-cols-4 gap-3'>
