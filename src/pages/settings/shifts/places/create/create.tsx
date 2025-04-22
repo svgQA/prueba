@@ -57,7 +57,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
 
   const sendPointsRef = (data: any) => {
-    console.log('data', data);
     if (!data.length) return;
     const { lat, lng } = data[0].position;
     points.value = data;
@@ -69,21 +68,16 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const fetchMunicipalities = async (departmentId: number) => {
     const request: any = await ShiftService.getMunicipalities(departmentId);
     municipalities.value = request.data;
-    console.log('departments:', municipalities.value);
   };
 
   const fetchDepartments = async () => {
     const request: any = await ShiftService.getDepartments();
-
     departments.value = request.data;
-    console.log('departments:', departments.value);
   };
 
   const getCountries = async () => {
     const request: any = await ShiftService.getCountries();
-
     countries.value = request.data;
-    console.log('countries:', countries.value);
   };
 
   const onSubmit = async (model: FormData) => {
@@ -114,7 +108,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     const municipality = municipalities.value.find(
       (item) => item.id === municipalityId
     );
-    console.log(municipality);
 
     if (!municipality?.latitude) return;
     const lat = parseFloat(municipality.latitude.replace(',', '.'));
