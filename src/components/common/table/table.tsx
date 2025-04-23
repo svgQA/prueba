@@ -65,6 +65,7 @@ export const Table = <T,>({
   showExpandableIcon = true,
   selectable,
   onSelectionChange,
+  onNotifications
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -345,7 +346,7 @@ export const Table = <T,>({
                   >
                     {!unsettings && (
                       <td
-                        className='left-0 min-w-[30px] bg-gray-200'
+                        className='left-0 min-w-[30px] bg-gray-100'
                       // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
@@ -354,7 +355,7 @@ export const Table = <T,>({
                             className='vox-icon vx-icon-001 cursor-pointer size-sm'
                           />
                         )}
-                        {selectable && (
+                        {selectable && onNotifications && (
                           <div className='flex items-center justify-center'>
                             {/* Agregar algo para validar si tiene el appId */}
                             <input
@@ -651,15 +652,14 @@ export const Table = <T,>({
                   key={`${headerGroup.id}-${index}`}
                   className='sticky top-0 z-10'
                 >
-
                   {!unsettings && (
                     <th
                       colSpan={1}
                       className='table-setting-button left-0 min-w-[30px] bg-white px-2'
                       style={{ position: 'sticky', zIndex: 1 }}
                     >
-                      <div className='flex items-center gap-2'>
-                        {selectable && (
+                      <div className='flex items-center gap-2 relative'>
+                        {selectable && onNotifications && (
                           <input
                             type='checkbox'
                             className='w-4 h-4'
@@ -681,11 +681,26 @@ export const Table = <T,>({
                             }}
                           />
                         )}
+                        <div className='relative'>
+                          <span
+                            className='vox-icon vx-icon-168 size-sm cursor-pointer'
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveDropdown(activeDropdown === -1 ? null : -1);
+                            }}
+                          />
+                          {activeDropdown === -1 && (
+                            <div
+                              ref={dropdownRef}
+                              className='absolute top-full left-0 mt-1 z-50'
+                            >
+                              {buildSettings()}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </th>
                   )}
-                  <span className='vox-icon vx-icon-168 size-sm' />
-                  {buildSettings()}
 
                   <SortableContext
                     items={columnOrder}
@@ -709,6 +724,7 @@ export const Table = <T,>({
                 </tr>
               ))}
             </thead>
+
             <tbody>
               {renderRows(table.getRowModel().rows)}
               <tr>

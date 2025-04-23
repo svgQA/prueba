@@ -24,8 +24,6 @@ export const SendForm = ({ closed, onClose, users }: Props) => {
 
   if (closed) return null;
 
-  console.log(users); 
-
   return (
     <div
       ref={ref}
@@ -41,7 +39,7 @@ export const SendForm = ({ closed, onClose, users }: Props) => {
         </button>
       </div>
 
-      <div className="px-4 pt-3">
+      <div className="p-4">
         <ManualNotificationForm users={users} />
       </div>
     </div>

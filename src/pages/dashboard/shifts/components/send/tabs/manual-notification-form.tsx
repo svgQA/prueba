@@ -10,8 +10,6 @@ interface Props {
 
 export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => {
 
-  /* console.log('📦 externalUsers:', externalUsers); */
-
   const [templateId, setTemplateId] = useState<string>('');
   const [templates, setTemplates] = useState<any[]>([]);
 

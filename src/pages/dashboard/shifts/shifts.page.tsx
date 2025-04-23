@@ -66,6 +66,8 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [users, setUsers] = useState<MentionOption[]>([]);
 
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [onNotifications, setOmNotifications] = useState(false);
+  const [hasValidPlayer, setHasValidPlayer] = useState(false);
 
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
   const memoizedServices = useMemo(() => services, [services]);
@@ -94,6 +96,17 @@ export const ShiftsPage: FunctionalComponent = () => {
     if (!response.getStatus()) return;
     setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
   };
+
+  // Efecto que observa shifts.value
+  useEffect(() => {
+    console.log("rrealizando useffect")
+    const result = shifts.value.some(
+      (shift: any) =>
+        typeof shift?.employee?.playerId === 'string' &&
+        shift.employee.playerId.trim() !== ''
+    );
+    setHasValidPlayer(result);
+  }, [shifts.value]);
 
   /**
    * Handle the useEffect hook for the document title and shift retrieval.
@@ -151,7 +164,15 @@ export const ShiftsPage: FunctionalComponent = () => {
    * Eventos de toggle para los modales
    */
   const toggleSendModal = () => {
-    showSendModal.value = !showSendModal.value;
+    if (!onNotifications && hasValidPlayer) {
+      // Primera vez: activa notificaciones y abre el modal
+      setOmNotifications(true);
+    } else if (onNotifications && hasValidPlayer) {
+      // Siguientes veces: solo abre o cierra el modal
+      showSendModal.value = !showSendModal.value;
+    } else {
+      console.warn('⚠️ Ningún empleado tiene playerId válido.');
+    }
   };
 
   const toggleUpsertModal = () => {
@@ -216,14 +237,15 @@ export const ShiftsPage: FunctionalComponent = () => {
     setTaskSelected(undefined);
   }, []);
 
-  const handleSend = useCallback(async (data: any) => {
-    try {
-      console.log('Sending data:', data);
-      showSendModal.value = false;
-    } catch (error) {
-      console.error('Error sending data:', error);
+  const handleSend = () => {
+    if (onNotifications === true) {
+      try {
+        showSendModal.value = false;
+      } catch (error) {
+        console.error('Error sending data:', error);
+      }
     }
-  }, []);
+  };
 
   /**
    * Eventos de los botones superiores
@@ -299,14 +321,31 @@ export const ShiftsPage: FunctionalComponent = () => {
           }
           icon='321'
         />
-        <Button
-          name='button-action'
-          rounded={false}
-          className='border-2 border-primary p-2'
-          icon='314'
-          onClick={toggleSendModal}
-        />
-        <Button
+        <div className='relative'>
+          <Button
+            name='button-action'
+            rounded={false}
+            icon='314'
+            onClick={toggleSendModal}
+            className={`border-2 p-2 ${!hasValidPlayer
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : onNotifications
+                  ? 'bg-primary-opacity'
+                  : 'border-primary'
+              }`}
+          />
+
+            <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
+              <SendForm
+                closed={false}
+                onClose={handleCloseSendModal}
+                onSend={handleSend}
+                users={selectedUsers as []}
+              />
+            </div>
+        </div>
+
+        <Button 
           name='button-supervision'
           label='Supervisión Remota'
           className='bg-primary text-white py-1 rounded px-4'
@@ -384,8 +423,8 @@ export const ShiftsPage: FunctionalComponent = () => {
             showExpandableIcon={false}
             pageSize={20}
             selectable={true}
+            onNotifications={onNotifications}
             onSelectionChange={(rows) => {
-              console.log('rows', rows);
               const validUsers = rows
                 .map((row: any) => ({
                   id: row.employee.id,
@@ -453,13 +492,6 @@ export const ShiftsPage: FunctionalComponent = () => {
         posSave={handleViewMode}
         userSelected={userSelected}
         taskSelected={taskSelected}
-      />
-
-      <SendForm
-        closed={showSendModal.value}
-        onClose={handleCloseSendModal}
-        onSend={handleSend}
-        users={selectedUsers as []}
       />
 
       <ShiftForm
