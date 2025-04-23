@@ -4,8 +4,10 @@ import { ISendManualNotificationDto } from '@/types/notification/ISendManualNoti
 import { FormService } from '@/services/form';
 import { UserService } from '@/services/user';
 import { TemplateServiceFront } from '@/services/template';
+import { useTranslation } from 'react-i18next';
 
 export const ManualNotificationForm = () => {
+  const { t } = useTranslation();
   const [templateId, setTemplateId] = useState<string>('');
   const [templates, setTemplates] = useState<any[]>([]);
 
@@ -77,10 +79,10 @@ export const ManualNotificationForm = () => {
 
     try {
       await NotificationServiceFront.sendManualNotification(payload);
-      alert('Notificación enviada con éxito');
+      alert(t('shifts.notifications.successMessage'));
     } catch (err) {
       console.error('Error al enviar notificación:', err);
-      alert('Error al enviar notificación');
+      alert(t('shifts.notifications.errorMessage'));
     }
   };
 
@@ -89,16 +91,18 @@ export const ManualNotificationForm = () => {
   return (
     <div className='space-y-6 w-full max-w-5xl mx-auto'>
       <h4 className='text-xl font-semibold text-gray-800'>
-        Enviar notificación manual
+        {t('shifts.notifications.sendManual')}
       </h4>
 
       {/* Filtro de usuarios */}
       <div className='space-y-2'>
-        <label className='block text-sm font-medium mb-1'>Usuarios</label>
+        <label className='block text-sm font-medium mb-1'>
+          {t('shifts.notifications.users')}
+        </label>
         <input
           type='text'
           className='w-full border border-gray-300 rounded px-3 py-2'
-          placeholder='Buscar por nombre o email...'
+          placeholder={t('shifts.notifications.searchPlaceholder')}
           value={search}
           onInput={(e) => setSearch(e.currentTarget.value)}
         />
@@ -139,7 +143,9 @@ export const ManualNotificationForm = () => {
             onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
             className='accent-cyan-600'
           />
-          <span className='text-sm'>Solo con turno activo</span>
+          <span className='text-sm'>
+            {t('shifts.notifications.onlyWithActiveShift')}
+          </span>
         </div>
 
         {selectedUserIds.length > 0 && (
@@ -147,20 +153,21 @@ export const ManualNotificationForm = () => {
             className='text-sm text-cyan-700 hover:underline mt-1'
             onClick={clearUserSelection}
           >
-            Limpiar selección de usuarios
+            {t('shifts.notifications.clearUserSelection')}
           </button>
         )}
 
         <p className='text-xs text-gray-500 italic'>
-          Si no seleccionas usuarios, se enviará a todos los que cumplan el
-          filtro.
+          {t('shifts.notifications.noSelectionWarning')}
         </p>
       </div>
 
       {/* Plantilla y formulario */}
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         <div>
-          <label className='block text-sm font-medium mb-1'>Plantilla</label>
+          <label className='block text-sm font-medium mb-1'>
+            {t('shifts.notifications.template')}
+          </label>
           <select
             className='w-full border border-gray-300 rounded px-3 py-2'
             value={templateId}
@@ -170,7 +177,7 @@ export const ManualNotificationForm = () => {
               setFormStructure(null);
             }}
           >
-            <option value=''>Selecciona una plantilla</option>
+            <option value=''>{t('shifts.notifications.selectTemplate')}</option>
             {templates.map((tpl: any) => (
               <option key={tpl.id} value={tpl.id}>
                 {tpl.title}
@@ -180,7 +187,9 @@ export const ManualNotificationForm = () => {
         </div>
 
         <div>
-          <label className='block text-sm font-medium mb-1'>Formulario</label>
+          <label className='block text-sm font-medium mb-1'>
+            {t('shifts.notifications.form')}
+          </label>
           <select
             className='w-full border border-gray-300 rounded px-3 py-2'
             value={formId}
@@ -189,7 +198,7 @@ export const ManualNotificationForm = () => {
               setTemplateId('');
             }}
           >
-            <option value=''>Selecciona un formulario</option>
+            <option value=''>{t('shifts.notifications.selectForm')}</option>
             {forms.map((form: any) => (
               <option key={form.id} value={form.id}>
                 {form.title}
@@ -204,7 +213,7 @@ export const ManualNotificationForm = () => {
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           <div>
             <label className='block text-sm font-medium mb-1'>
-              Título personalizado
+              {t('shifts.notifications.customTitle')}
             </label>
             <input
               className='w-full border border-gray-300 rounded px-3 py-2'
@@ -214,7 +223,7 @@ export const ManualNotificationForm = () => {
           </div>
           <div>
             <label className='block text-sm font-medium mb-1'>
-              Descripción personalizada
+              {t('shifts.notifications.customDescription')}
             </label>
             <textarea
               className='w-full border border-gray-300 rounded px-3 py-2'
@@ -232,7 +241,7 @@ export const ManualNotificationForm = () => {
           className='bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded'
           onClick={handleSubmit}
         >
-          Enviar notificación
+          {t('shifts.notifications.sendButton')}
         </button>
       </div>
     </div>

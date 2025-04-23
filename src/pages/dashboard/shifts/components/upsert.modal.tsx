@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import { Task, User } from '@/components/compose/gantt/types/public-types';
 import { Badge } from '@/components/common/badge/badge';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   closed?: boolean;
@@ -40,6 +41,7 @@ export const TaskForm = ({
   taskSelected,
   posSave,
 }: Props) => {
+  const { t } = useTranslation();
   const inputKeywords = useSignal('');
   const users = useSignal<IUserResponse[]>([]);
   const services = useSignal<any[]>([]);
@@ -68,14 +70,14 @@ export const TaskForm = ({
       if (!request.getStatus()) return;
 
       const message = taskSelected?.id
-        ? 'Turno editado exitosamente!'
-        : 'Turno creado exitosamente!';
+        ? t('shifts.upsert.successEdit')
+        : t('shifts.upsert.successCreate');
 
       toast.success(message, { position: 'top-right' });
       onClose?.();
       posSave?.();
     } catch (error) {
-      toast.error('Error al procesar la solicitud');
+      toast.error(t('shifts.upsert.errorProcessing'));
     }
   };
 
@@ -101,8 +103,8 @@ export const TaskForm = ({
   }, [getUsers, getServices]);
 
   const required = useCallback(
-    (value: any) => (value ? undefined : 'Required'),
-    []
+    (value: any) => (value ? undefined : t('shifts.upsert.required')),
+    [t]
   );
 
   const preventKeyDown = useCallback((e: KeyboardEvent) => {
@@ -118,25 +120,35 @@ export const TaskForm = ({
           id='btn-form-shift-close'
           name='btn-form-shift-close'
           type='button'
-          label='Cancelar'
+          label={t('shifts.upsert.buttons.cancel')}
           onClick={onClose}
         />
         <Button
           id='btn-form-shift-save'
           name='btn-form-shift-save'
           type='submit'
-          label={taskSelected ? 'Editar' : 'Guardar'}
+          label={
+            taskSelected
+              ? t('shifts.upsert.buttons.edit')
+              : t('shifts.upsert.buttons.save')
+          }
           className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
           form='form-shift-update'
         />
       </div>
     ),
-    [taskSelected, onClose]
+    [taskSelected, onClose, t]
   );
 
   const headerContent = useMemo(
-    () => <h3>{taskSelected ? 'Editar Turno' : 'Crear Turno'}</h3>,
-    [taskSelected]
+    () => (
+      <h3>
+        {taskSelected
+          ? t('shifts.upsert.editShift')
+          : t('shifts.upsert.createShift')}
+      </h3>
+    ),
+    [taskSelected, t]
   );
 
   const renderTaskCard = useCallback(
@@ -163,7 +175,7 @@ export const TaskForm = ({
 
         <div className='space-y-2'>
           <div className='flex justify-between text-sm text-gray-500 dark:text-gray-400'>
-            <span>Progress</span>
+            <span>{t('shifts.upsert.taskCard.progress')}</span>
             <span>{task.progress | 0}%</span>
           </div>
 
@@ -257,8 +269,10 @@ export const TaskForm = ({
                         {...input}
                         id='select-employee'
                         name='select-employee'
-                        placeholder='Selecione empleado...'
-                        label='Empleado'
+                        placeholder={t(
+                          'shifts.upsert.form.employeePlaceholder'
+                        )}
+                        label={t('shifts.upsert.form.employee')}
                         icon='252'
                         options={users.value}
                         optionValue='id'
@@ -282,12 +296,18 @@ export const TaskForm = ({
                         {...input}
                         id='select-type'
                         name='select-type'
-                        placeholder='Selecione tipo...'
-                        label='Tipo'
+                        placeholder={t('shifts.upsert.form.typePlaceholder')}
+                        label={t('shifts.upsert.form.type')}
                         icon='252'
                         options={[
-                          { value: 'EXTERNAL', label: 'Externo' },
-                          { value: 'INTERNAL', label: 'Interno' },
+                          {
+                            value: 'EXTERNAL',
+                            label: t('shifts.upsert.form.typeOptions.external'),
+                          },
+                          {
+                            value: 'INTERNAL',
+                            label: t('shifts.upsert.form.typeOptions.internal'),
+                          },
                         ]}
                       />
                     )}
@@ -309,7 +329,7 @@ export const TaskForm = ({
                         id='input-start-date'
                         name='input-start-date'
                         type='datetime-local'
-                        label='Fecha inicio'
+                        label={t('shifts.upsert.form.startDate')}
                         meta={meta}
                       />
                     )}
@@ -331,7 +351,7 @@ export const TaskForm = ({
                         id='input-end-date'
                         name='input-end-date'
                         type='datetime-local'
-                        label='Fecha fin'
+                        label={t('shifts.upsert.form.endDate')}
                         meta={meta}
                       />
                     )}
@@ -345,8 +365,8 @@ export const TaskForm = ({
                         {...input}
                         id='select-service'
                         name='select-service'
-                        placeholder='Seleccione Servicio...'
-                        label='Servicio'
+                        placeholder={t('shifts.upsert.form.servicePlaceholder')}
+                        label={t('shifts.upsert.form.service')}
                         icon='252'
                         optionValue='id'
                         optionLabel='description'
@@ -369,7 +389,7 @@ export const TaskForm = ({
                         id='input-external-id'
                         name='input-external-id'
                         type='text'
-                        label='Codigo externo'
+                        label={t('shifts.upsert.form.externalCode')}
                       />
                     )}
                   </Field>
@@ -393,9 +413,11 @@ export const TaskForm = ({
                               onChange={(e) =>
                                 (inputKeywords.value = e.currentTarget.value)
                               }
-                              placeholder='Escribe una palabra clave'
+                              placeholder={t(
+                                'shifts.upsert.form.keywordPlaceholder'
+                              )}
                               button
-                              label='Palabras claves'
+                              label={t('shifts.upsert.form.keywords')}
                               buttonIcon='044'
                               onKeyUp={appendElement}
                               onClick={appendElement}
@@ -428,20 +450,24 @@ export const TaskForm = ({
                         id='input-time-before'
                         name='input-time-before'
                         type='number'
-                        label='Tiempo antes'
+                        label={t('shifts.upsert.form.timeBefore')}
                       />
                     )}
                   </Field>
                 </div>
 
                 <div className='col-span-2'>
-                  <ExpansionPanel title='Tareas del turno'>
+                  <ExpansionPanel
+                    title={t('shifts.upsert.form.taskPanel.title')}
+                  >
                     <FieldArray name='tasks'>
                       {({ fields }) => (
                         <div>
                           <Select
-                            placeholder='Seleccione tarea...'
-                            label='Tarea'
+                            placeholder={t(
+                              'shifts.upsert.form.taskPanel.selectTaskPlaceholder'
+                            )}
+                            label={t('shifts.upsert.form.taskPanel.task')}
                             name='taskId'
                             icon='252'
                             optionValue='description'
@@ -469,19 +495,23 @@ export const TaskForm = ({
                                     scope='col'
                                     className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
                                   >
-                                    Fecha Inicio
+                                    {t(
+                                      'shifts.upsert.form.taskPanel.startDate'
+                                    )}
                                   </th>
                                   <th
                                     scope='col'
                                     className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
                                   >
-                                    ID Formulario
+                                    {t('shifts.upsert.form.taskPanel.formId')}
                                   </th>
                                   <th
                                     scope='col'
                                     className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
                                   >
-                                    Descripción
+                                    {t(
+                                      'shifts.upsert.form.taskPanel.description'
+                                    )}
                                   </th>
                                 </tr>
                               </thead>

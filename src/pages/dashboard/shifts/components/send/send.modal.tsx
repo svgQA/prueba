@@ -3,6 +3,7 @@ import { useState } from 'preact/hooks';
 import { ManualNotificationForm } from './tabs/manual-notification-form';
 import { TemplateManager } from './tabs/template-manager';
 import { ScheduledNotifications } from './tabs/scheduled-notifications';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   closed?: boolean;
@@ -10,16 +11,19 @@ interface Props {
   onSend?: (data: any) => void;
 }
 
-const TABS = [
-  { key: 'manual', label: 'Enviar manual' },
-  { key: 'template', label: 'Gestionar plantillas' },
-  { key: 'scheduled', label: 'Notificaciones programadas' },
+const getTabs = (t: any) => [
+  { key: 'manual', label: t('shifts.notifications.tabs.manual') },
+  { key: 'template', label: t('shifts.notifications.tabs.templates') },
+  { key: 'scheduled', label: t('shifts.notifications.tabs.scheduled') },
 ];
 
 export const SendForm = ({ closed, onClose }: Props) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<
     'manual' | 'template' | 'scheduled'
   >('manual');
+
+  const TABS = getTabs(t);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -42,7 +46,9 @@ export const SendForm = ({ closed, onClose }: Props) => {
       width='w-3/4'
       position='fixed'
       header={
-        <h3 className='text-lg font-semibold'>Centro de notificaciones</h3>
+        <h3 className='text-lg font-semibold'>
+          {t('shifts.notifications.center')}
+        </h3>
       }
     >
       <div className='px-4 py-4 space-y-4 w-full'>
