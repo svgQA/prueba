@@ -4,6 +4,7 @@ import { User, ViewMode } from '@/components/compose/gantt/types/public-types';
 import { IPagination } from '@/types';
 import { IShiftSetting, IShiftSettingResponse } from '@/types/settings';
 import { IShiftResponse } from '@/types/shift/activity';
+import { ICScheduleRequest } from '@/types/shift/shift.request';
 import {
   IDepartmentResponse,
   IMunicipalityResponse,
@@ -373,7 +374,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async createSchedule(data: any) {
+  static async createSchedule(data: ICScheduleRequest) {
     const model: IMakeRequest = {
       url: ['schedule'],
       method: REQUEST_METHODS.POST,
@@ -409,10 +410,10 @@ export class ShiftService extends BaseService {
 
   static async getScheduleById(id: string) {
     const model: IMakeRequest = {
-      url: ['service', id],
+      url: ['schedule', id],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<ICScheduleRequest>(this.name, model);
   }
 
   static async createService(data: any) {
