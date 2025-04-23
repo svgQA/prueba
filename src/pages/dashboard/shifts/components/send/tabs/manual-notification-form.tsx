@@ -30,7 +30,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
   const usersWithPlayerId = externalUsers.filter((u) => !!u.playerId);
 
   const filteredUsers = usersWithPlayerId.filter((u) => {
-    const match = `${u.name} ${u.email}`.toLowerCase().includes(search.toLowerCase());
+    const match = `${u.name} ${u.email}`
+      .toLowerCase()
+      .includes(search.toLowerCase());
     return sendToShiftToday ? match && u.hasShiftToday : match;
   });
 
@@ -53,7 +55,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
 
   const handleSubmit = async () => {
     if (selectedUsersFull.length === 0) {
-      alert('Ninguno de los usuarios seleccionados cumple con las condiciones para recibir notificaciones.');
+      alert(
+        'Ninguno de los usuarios seleccionados cumple con las condiciones para recibir notificaciones.'
+      );
       return;
     }
 

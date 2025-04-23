@@ -8,11 +8,11 @@ import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { Map } from '@/components/common/map/map';
 import { useEffect, useState } from 'preact/hooks';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 
 interface FormData {
   code?: number;
@@ -57,7 +57,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
 
   const sendPointsRef = (data: any) => {
-    console.log('data', data);
     if (!data.length) return;
     const { lat, lng } = data[0].position;
     points.value = data;
@@ -69,21 +68,16 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const fetchMunicipalities = async (departmentId: number) => {
     const request: any = await ShiftService.getMunicipalities(departmentId);
     municipalities.value = request.data;
-    console.log('departments:', municipalities.value);
   };
 
   const fetchDepartments = async () => {
     const request: any = await ShiftService.getDepartments();
-
     departments.value = request.data;
-    console.log('departments:', departments.value);
   };
 
   const getCountries = async () => {
     const request: any = await ShiftService.getCountries();
-
     countries.value = request.data;
-    console.log('countries:', countries.value);
   };
 
   const onSubmit = async (model: FormData) => {
@@ -114,7 +108,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     const municipality = municipalities.value.find(
       (item) => item.id === municipalityId
     );
-    console.log(municipality);
 
     if (!municipality?.latitude) return;
     const lat = parseFloat(municipality.latitude.replace(',', '.'));
@@ -347,8 +340,28 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
             </div>
-            <Map
+            {/* <Map
               name='Map'
+              pointsAmount={1}
+              sendPoints={(data) => {
+                const result = sendPointsRef(data);
+                form.change('latitude', result?.lat);
+                form.change('longitude', result?.lng);
+              }}
+              pointsRef={points.value}
+              center={municipalityLocation.value}
+              condition={false}
+              errorCondition=''
+              radialPoint={null}
+              errorRadialPoint=''
+              radius={green}
+              draggable={true}
+              width='100%'
+              clickPoint={() => { }}
+            /> */}
+
+            <MapLibrePointsMap
+              name='map-points'
               pointsAmount={1}
               sendPoints={(data) => {
                 const result = sendPointsRef(data);
@@ -366,6 +379,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               width='100%'
               clickPoint={() => {}}
             />
+
             <div className='grid grid-cols-4 gap-3'>
               <div class='col-span-2'>
                 <Field<string> name='latitude'>

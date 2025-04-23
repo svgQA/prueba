@@ -45,7 +45,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de horarios' });
+    setMenu({ ...infoMenu.value, label: 'Creación de horarios' });
     navigate('/rounds/schedule/create');
   };
 
@@ -99,6 +99,8 @@ export const ScheduleSettingPage: FunctionComponent = () => {
         }}
         visibility={{
           id: false,
+          name: true,
+          daysAllowed: true,
         }}
         onClickAction={handleOnClick}
         unsearch={false}

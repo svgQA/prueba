@@ -5,7 +5,7 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.users.base;
 export const MODAL_SETTING_USER: IModalSidebarMenu = {
   label: 'Usuarios',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
-  settings: PAGES_LIST_ROUTER.dashboard.setting.users.settings.base,
+  settings: PAGES_LIST_ROUTER.dashboard.setting.users.settings.to,
   show: true,
   menus: [
     {
@@ -24,7 +24,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.users.roles.base,
       id: 'roles',
-      show: true,
+      show: false,
     },
     {
       icon: '064',
@@ -33,7 +33,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.users.groups.base,
       id: 'groups',
-      show: true,
+      show: false,
     },
     {
       icon: '092',

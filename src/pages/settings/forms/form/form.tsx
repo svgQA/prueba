@@ -124,7 +124,7 @@ export const FormSettingPage = () => {
             label='Create Form'
             icon='039'
             onClick={redirect}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+            className='px-6 py-1 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
           />
         </div>
       </div>
