@@ -48,7 +48,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const onSubmit = async (model: FormData) => {
     model.task = setTasks(model.task);
     model.hasRound = !!model.roundId;
-    console.log('model', model);
+    // console.log('model', model);
 
     let request;
     let message: string;

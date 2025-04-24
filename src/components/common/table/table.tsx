@@ -65,7 +65,7 @@ export const Table = <T,>({
   showExpandableIcon = true,
   selectable,
   onSelectionChange,
-  onNotifications
+  onNotifications,
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -303,7 +303,7 @@ export const Table = <T,>({
             if (row.getIsGrouped()) {
               return (
                 <Fragment key={row.id}>
-                  <tr className='odd:bg-gray-100'>
+                  <tr className='odd:bg-gray-100 dark:odd:bg-gray-800'>
                     {!unsettings && (
                       <td
                         className='text-center left-0 min-w-[30px]'
@@ -341,7 +341,7 @@ export const Table = <T,>({
               return (
                 <Fragment key={row.id}>
                   <tr
-                    className={`odd:bg-gray-100 ${
+                    className={`odd:bg-gray-100 dark:odd:bg-gray-800 ${
                       data.length > pageSize && isLastRow
                         ? 'no-bottom-border'
                         : ''
@@ -349,7 +349,7 @@ export const Table = <T,>({
                   >
                     {!unsettings && (
                       <td
-                        className='left-0 min-w-[30px] bg-gray-200'
+                        className='left-0 min-w-[30px] bg-gray-200 dark:bg-gray-700'
                         // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
@@ -513,8 +513,8 @@ export const Table = <T,>({
             disabled={!table.getCanPreviousPage()}
             className={`flex h-8 w-8 items-center justify-center rounded-sm border ${
               !table.getCanPreviousPage()
-                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             <span>{'«'}</span>
@@ -525,8 +525,8 @@ export const Table = <T,>({
             disabled={!table.getCanPreviousPage()}
             className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
               !table.getCanPreviousPage()
-                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             <span>{'‹'}</span>
@@ -540,7 +540,7 @@ export const Table = <T,>({
                 ref={activeDropdown === i ? dropdownRef : null}
               >
                 <button
-                  className='mx-1 flex h-8 w-8 items-center justify-center text-gray-600 hover:bg-gray-100 rounded-sm border border-gray-300'
+                  className='mx-1 flex h-8 w-8 items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
                   onClick={() =>
                     setActiveDropdown(activeDropdown === i ? null : i)
                   }
@@ -549,7 +549,7 @@ export const Table = <T,>({
                 </button>
 
                 {activeDropdown === i && (
-                  <div className='absolute bottom-full left-0 mb-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 py-2 px-2 min-w-[120px]'>
+                  <div className='absolute bottom-full left-0 mb-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 py-2 px-2 min-w-[120px]'>
                     <div className='grid grid-cols-3 gap-1'>
                       {(pageIdx === 'ellipsis-start'
                         ? getIntermediatePages(1, currentPage - 1).filter(
@@ -562,7 +562,7 @@ export const Table = <T,>({
                       ).map((pageNum) => (
                         <button
                           key={`dropdown-page-${pageNum}`}
-                          className='flex items-center justify-center h-8 w-8 rounded-sm hover:bg-gray-100 text-sm'
+                          className='flex items-center justify-center h-8 w-8 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-600 dark:text-gray-300'
                           onClick={(e) => {
                             e.stopPropagation();
                             table.setPageIndex(pageNum);
@@ -582,8 +582,8 @@ export const Table = <T,>({
                 onClick={() => table.setPageIndex(Number(pageIdx))}
                 className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
                   currentPage === pageIdx
-                    ? 'border-[#00BCD4] bg-[#E0F7FA] text-[#00838F]'
-                    : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+                    ? 'border-[#00BCD4] dark:border-[#006064] bg-[#E0F7FA] dark:bg-[#006064] text-[#00838F] dark:text-[#B2EBF2]'
+                    : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
                 {Number(pageIdx) + 1}
@@ -596,8 +596,8 @@ export const Table = <T,>({
             disabled={!table.getCanNextPage()}
             className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
               !table.getCanNextPage()
-                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             <span>{'›'}</span>
@@ -608,8 +608,8 @@ export const Table = <T,>({
             disabled={!table.getCanNextPage()}
             className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
               !table.getCanNextPage()
-                ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-                : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             <span>{'»'}</span>
@@ -618,7 +618,7 @@ export const Table = <T,>({
 
         <div className='text-sm text-gray-600 flex items-center gap-2'>
           <span>Página</span>
-          <div className='inline-block border border-gray-300 bg-white rounded-sm px-3 py-1 min-w-[40px] text-center'>
+          <div className='inline-block border border-gray-300 bg-white dark:border-gray-700 dark:text-white dark:bg-gray-800 rounded-sm px-3 py-1 min-w-[40px] text-center'>
             {currentPage + 1}
           </div>
           <span>de {totalPages}</span>
@@ -701,7 +701,9 @@ export const Table = <T,>({
                             className='vox-icon vx-icon-168 size-sm cursor-pointer'
                             onClick={(e) => {
                               e.stopPropagation();
-                              setActiveDropdown(activeDropdown === -1 ? null : -1);
+                              setActiveDropdown(
+                                activeDropdown === -1 ? null : -1
+                              );
                             }}
                           />
                           {activeDropdown === -1 && (

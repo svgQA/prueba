@@ -27,6 +27,7 @@ import {
   setMenu,
 } from './store/settings';
 import { useUserStore } from '@/store/slices';
+import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 export const SettingsModal = () => {
   const { user } = useUserStore();
   const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
@@ -91,7 +92,8 @@ export const SettingsModal = () => {
       header={
         <div className='flex flex-row w-full items-center justify-between'>
           <MenuButtons goBack={goBack} goForward={goForward} />
-          <div className='ml-5 flex flex-row w-8/12'>
+          <LanguageSwitcher />
+          <div className='ml-5 flex flex-row w-9/12'>
             <Search
               id='search-general'
               name='search-general'

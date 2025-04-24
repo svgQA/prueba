@@ -3,13 +3,15 @@ import { NotificationServiceFront } from '@/services/notification';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
 import { FormService } from '@/services/form';
 import { TemplateServiceFront } from '@/services/template';
+import { IOption } from '@/components/common/multi/interface';
 
 interface Props {
   users?: any[];
 }
 
-export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => {
-
+export const ManualNotificationForm = ({
+  users: externalUsers = [],
+}: Props) => {
   const [templateId, setTemplateId] = useState<string>('');
   const [templates, setTemplates] = useState<any[]>([]);
 
@@ -25,7 +27,7 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
   const [selectedUsersFull, setSelectedUsersFull] = useState<
     { id: number; name: string; email: string; playerId: string }[]
   >([]);
-  const [forms, setForms] = useState<any[]>([]);
+  const [forms, setForms] = useState<IOption[]>([]);
 
   const usersWithPlayerId = externalUsers.filter((u) => !!u.playerId);
 
@@ -226,9 +228,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
             }}
           >
             <option value=''>Selecciona un formulario</option>
-            {forms.map((form: any) => (
-              <option key={form.id} value={form.id}>
-                {form.title}
+            {forms.map((form) => (
+              <option key={form.value} value={form.value}>
+                {form.label}
               </option>
             ))}
           </select>
