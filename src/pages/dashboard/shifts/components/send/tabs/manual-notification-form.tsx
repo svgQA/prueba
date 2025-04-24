@@ -7,10 +7,12 @@ import { IOption } from '@/components/common/multi/interface';
 
 interface Props {
   users?: any[];
+  hasplayers?: boolean;
 }
 
 export const ManualNotificationForm = ({
   users: externalUsers = [],
+  hasplayers,
 }: Props) => {
   const [templateId, setTemplateId] = useState<string>('');
   const [templates, setTemplates] = useState<any[]>([]);
@@ -56,31 +58,26 @@ export const ManualNotificationForm = ({
   }, [selectedUserIds, usersWithPlayerId]);
 
   const handleSubmit = async () => {
-    if (selectedUsersFull.length === 0) {
-      alert(
-        'Ninguno de los usuarios seleccionados cumple con las condiciones para recibir notificaciones.'
-      );
-      return;
-    }
+    if (hasplayers) {
+      const payload: ISendManualNotificationDto = {
+        ...(templateId && { templateId }),
+        ...(formId && { formId }),
+        ...(overrideTitle && { overrideTitle }),
+        ...(overrideDescription && { overrideDescription }),
+        filters: {
+          userIds: selectedUsersFull.map((u) => String(u.id)),
+          ...(sendToShiftToday && { shiftToday: true }),
+        },
+        ...(formStructure && { data: { formId, formStructure } }),
+      };
 
-    const payload: ISendManualNotificationDto = {
-      ...(templateId && { templateId }),
-      ...(formId && { formId }),
-      ...(overrideTitle && { overrideTitle }),
-      ...(overrideDescription && { overrideDescription }),
-      filters: {
-        userIds: selectedUsersFull.map((u) => String(u.id)),
-        ...(sendToShiftToday && { shiftToday: true }),
-      },
-      ...(formStructure && { data: { formId, formStructure } }),
-    };
-
-    try {
-      await NotificationServiceFront.sendManualNotification(payload);
-      alert('Notificación enviada con éxito');
-    } catch (err) {
-      console.error('Error al enviar notificación:', err);
-      alert('Error al enviar notificación');
+      try {
+        await NotificationServiceFront.sendManualNotification(payload);
+        alert('Notificación enviada con éxito');
+      } catch (err) {
+        console.error('Error al enviar notificación:', err);
+        alert('Error al enviar notificación');
+      }
     }
   };
 
@@ -112,15 +109,6 @@ export const ManualNotificationForm = ({
     };
     getFormStructure();
   }, [formId]);
-
-  if (usersWithPlayerId.length === 0) {
-    return (
-      <div className='p-4 text-red-600 font-medium'>
-        No hay usuarios disponibles que cumplan con las condiciones para enviar
-        notificaciones (playerId requerido).
-      </div>
-    );
-  }
 
   return (
     <div className='space-y-6 w-full max-w-5xl mx-auto'>

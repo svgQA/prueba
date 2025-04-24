@@ -301,14 +301,20 @@ export const Table = <T,>({
             const isLastRow = rowIndex === rows.length - 1;
 
             if (row.getIsGrouped()) {
+              const groupRowIds = row.subRows.map(
+                (r) => (r.original as any).id
+              );
+              const allGroupSelected = groupRowIds.every(
+                (id) => selectedRows[id]
+              );
+              const someGroupSelected =
+                groupRowIds.some((id) => selectedRows[id]) && !allGroupSelected;
+
               return (
                 <Fragment key={row.id}>
                   <tr className='odd:bg-gray-100 dark:odd:bg-gray-800'>
                     {!unsettings && (
-                      <td
-                        className='text-center left-0 min-w-[30px]'
-                        // style={{ position: 'sticky', zIndex: 1 }}
-                      >
+                      <td className='text-center left-0 min-w-[30px]'>
                         <span
                           onClick={() => row.toggleExpanded()}
                           className={`vox-icon ${
@@ -319,19 +325,64 @@ export const Table = <T,>({
                     )}
                     <td
                       colSpan={
-                        row.getVisibleCells().length + (!unsettings ? 0 : 0)
+                        row.getVisibleCells().length + (!unsettings ? 1 : 0)
                       }
                       className='p-2 font-semibold'
                     >
-                      {row.groupingColumnId && (
+                      <div className='flex justify-between items-center w-full'>
                         <span>
-                          {typeof row.columnFilters?.[0] === 'string' ? '' : ''}
-                          {row.getValue(row.groupingColumnId)} (
-                          {row.subRows.length})
+                          {row.groupingColumnId && (
+                            <>
+                              {row.getValue(row.groupingColumnId)} (
+                              {row.subRows.length})
+                            </>
+                          )}
                         </span>
-                      )}
+
+                        {selectable &&
+                          onNotifications &&
+                          row.subRows.some(
+                            (sub) => !!(sub.original as any).employee?.playerId
+                          ) && (
+                            <label className='inline-flex items-center gap-2'>
+                              <input
+                                type='checkbox'
+                                className='w-4 h-4'
+                                checked={allGroupSelected}
+                                ref={(el) => {
+                                  if (el) el.indeterminate = someGroupSelected;
+                                }}
+                                onChange={(e) => {
+                                  const isChecked = e.currentTarget.checked;
+                                  const updated = { ...selectedRows };
+
+                                  row.subRows.forEach((subRow) => {
+                                    const data = subRow.original as any;
+                                    if (data.playerId) {
+                                      const id = data.id;
+                                      if (isChecked) {
+                                        updated[id] = data;
+                                      } else {
+                                        delete updated[id];
+                                      }
+                                    }
+                                  });
+
+                                  setSelectedRows(updated);
+                                  onSelectionChange?.(Object.values(updated));
+                                }}
+                              />
+                              <span className='text-sm text-gray-700'>
+                                {allGroupSelected
+                                  ? 'Deseleccionar'
+                                  : 'Seleccionar todas'}
+                              </span>
+                            </label>
+                          )}
+                      </div>
                     </td>
                   </tr>
+
                   {row.getIsExpanded() &&
                     row.subRows.length > 0 &&
                     renderRows(row.subRows)}
@@ -358,31 +409,34 @@ export const Table = <T,>({
                             className='vox-icon vx-icon-001 cursor-pointer size-sm'
                           />
                         )}
-                        {selectable && onNotifications && (
-                          <div className='flex items-center justify-center'>
-                            <input
-                              type='checkbox'
-                              className='w-4 h-4'
-                              checked={!!selectedRows[(row.original as any).id]}
-                              onChange={(e) => {
-                                e.preventDefault();
-                                const id = (
-                                  row.original as unknown as {
-                                    id: string | number;
-                                  }
-                                ).id;
-                                const updated = { ...selectedRows };
-                                if (e.currentTarget.checked) {
-                                  updated[id] = row.original;
-                                } else {
-                                  delete updated[id];
+                        {selectable &&
+                          onNotifications &&
+                          (row.original as any).employee?.playerId && (
+                            <div className='flex items-center justify-center'>
+                              <input
+                                type='checkbox'
+                                className='w-4 h-4'
+                                checked={
+                                  !!selectedRows[(row.original as any).id]
                                 }
-                                setSelectedRows(updated);
-                                onSelectionChange?.(Object.values(updated));
-                              }}
-                            />
-                          </div>
-                        )}
+                                onChange={(e) => {
+                                  e.preventDefault();
+                                  const data = row.original as any;
+                                  const id = data.id;
+                                  const updated = { ...selectedRows };
+
+                                  if (e.currentTarget.checked) {
+                                    updated[id] = data;
+                                  } else {
+                                    delete updated[id];
+                                  }
+
+                                  setSelectedRows(updated);
+                                  onSelectionChange?.(Object.values(updated));
+                                }}
+                              />
+                            </div>
+                          )}
                       </td>
                     )}
                     {row.getVisibleCells().map((cell) => (
@@ -666,36 +720,40 @@ export const Table = <T,>({
                       style={{ position: 'sticky', zIndex: 1 }}
                     >
                       <div className='flex items-center gap-2 relative'>
-                        {selectable && onNotifications && (
-                          <input
-                            type='checkbox'
-                            className='w-4 h-4'
-                            checked={
-                              Object.keys(selectedRows).length === data.length
-                            }
-                            ref={(el) => {
-                              if (el) {
-                                const all =
-                                  data.length > 0 &&
-                                  Object.keys(selectedRows).length ===
-                                    data.length;
-                                const none =
-                                  Object.keys(selectedRows).length === 0;
-                                el.indeterminate = !all && !none;
+                        {selectable &&
+                          onNotifications &&
+                          data.some((row: any) => !!row.employee?.playerId) && (
+                            <input
+                              type='checkbox'
+                              className='w-4 h-4'
+                              checked={
+                                Object.keys(selectedRows).length === data.length
                               }
-                            }}
-                            onChange={(e) => {
-                              const checked = e.currentTarget.checked;
-                              const newSelection = checked
-                                ? Object.fromEntries(
-                                    data.map((row: any) => [row.id, row])
-                                  )
-                                : {};
-                              setSelectedRows(newSelection);
-                              onSelectionChange?.(Object.values(newSelection));
-                            }}
-                          />
-                        )}
+                              ref={(el) => {
+                                if (el) {
+                                  const all =
+                                    data.length > 0 &&
+                                    Object.keys(selectedRows).length ===
+                                      data.length;
+                                  const none =
+                                    Object.keys(selectedRows).length === 0;
+                                  el.indeterminate = !all && !none;
+                                }
+                              }}
+                              onChange={(e) => {
+                                const checked = e.currentTarget.checked;
+                                const newSelection = checked
+                                  ? Object.fromEntries(
+                                      data.map((row: any) => [row.id, row])
+                                    )
+                                  : {};
+                                setSelectedRows(newSelection);
+                                onSelectionChange?.(
+                                  Object.values(newSelection)
+                                );
+                              }}
+                            />
+                          )}
                         <div className='relative'>
                           <span
                             className='vox-icon vx-icon-168 size-sm cursor-pointer'

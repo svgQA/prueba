@@ -26,7 +26,7 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
 
   const connect_socket = () => {
     const socket = io(tracking_service_url, {
-      query: { token: getToken(), tenantId: tenant, using: "web" },
+      query: { token: getToken(), tenantId: tenant, using: 'web' },
     });
     socketRef.current = socket;
     socket.on('connect', () => setConnectionStatus('Connected'));
@@ -114,7 +114,9 @@ const handle_user_disconnected = (user: { id: string }) => {
     });
   };
 
-  const handle_all_locations = (allUsers: User[]) => { setUsers(allUsers) }
+  const handle_all_locations = (allUsers: User[]) => {
+    setUsers(allUsers);
+  };
 
   useEffect(() => {
     connect_socket();
@@ -124,18 +126,16 @@ const handle_user_disconnected = (user: { id: string }) => {
   const mapPoints = useMemo(() => {
     const usersWithShifts = users.filter(
       (user) =>
-        user.userShifts &&
-        user.lat !== undefined &&
-        user.lng !== undefined
+        user.userShifts && user.lat !== undefined && user.lng !== undefined
     );
-  
+
     if (!searchFilters.length) {
       return usersWithShifts.map((user, index) => ({
         id: index + 1,
         position: { lat: user.lat!, lng: user.lng! },
       }));
     }
-  
+
     const matchesFilterValue = (
       value: string | undefined,
       filterValue: unknown
@@ -146,13 +146,16 @@ const handle_user_disconnected = (user: { id: string }) => {
         value.toLowerCase().includes(String(v).toLowerCase())
       );
     };
-  
-    const propertyGetters: Record<string, (shift: Shift) => string | undefined> = {
+
+    const propertyGetters: Record<
+      string,
+      (shift: Shift) => string | undefined
+    > = {
       service: (shift) => shift.service?.name,
       contract: (shift) => shift.service?.place?.address,
       client: (shift) => shift.service?.contract?.name,
     };
-  
+
     const points = usersWithShifts.filter((user) => {
       const nameFilter = searchFilters.find((filter) => filter.id === 'name');
       if (nameFilter?.value) {
@@ -160,13 +163,13 @@ const handle_user_disconnected = (user: { id: string }) => {
           return false;
         }
       }
-  
+
       const shiftRelatedFilters = searchFilters.filter((filter) =>
         ['service', 'contract', 'client'].includes(filter.id)
       );
       if (shiftRelatedFilters.length === 0) return true;
       const firstShift = user.userShifts![0];
-  
+
       return shiftRelatedFilters.every((filter) => {
         if (filter.id === 'name') return true;
         const getter = propertyGetters[filter.id];
@@ -174,7 +177,7 @@ const handle_user_disconnected = (user: { id: string }) => {
         return matchesFilterValue(getter(firstShift), filter.value);
       });
     });
-  
+
     return points.map((user, index) => ({
       id: index + 1,
       position: { lat: user.lat!, lng: user.lng! },
@@ -199,7 +202,7 @@ const handle_user_disconnected = (user: { id: string }) => {
       <MapLibrePointsMap
         name='map-points'
         pointsRef={mapPoints}
-        sendPoints={() => { }}
+        sendPoints={() => {}}
         height='79vh'
         disablePointSelection={true}
       />

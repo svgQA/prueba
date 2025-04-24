@@ -1,22 +1,35 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+
 import { general_en } from './general.en';
 import { general_es } from './general.es';
-import { error_en } from './error.en';
-import { error_es } from './error.es';
+
+import { notification_en, notification_es } from './notification';
+import { form_en, form_es } from './form';
+import { error_en, error_es } from './error';
+import { shift_en, shift_es } from './shift';
+import { home_en, home_es } from './home';
 
 const resources = {
   en: {
     translation: {
       ...general_en,
       ...error_en,
+      ...notification_en,
+      ...form_en,
+      ...shift_en,
+      ...home_en,
     },
   },
   es: {
     translation: {
       ...general_es,
       ...error_es,
+      ...notification_es,
+      ...form_es,
+      ...shift_es,
+      ...home_es,
     },
   },
 };
