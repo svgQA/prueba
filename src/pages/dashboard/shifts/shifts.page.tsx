@@ -33,6 +33,7 @@ import { PlannerView } from './components/planner.view';
 import { UserService } from '@/services/user';
 import { MentionOption } from '@/components/common/mention-editor';
 import { toast } from 'react-toastify';
+import i18n from '@/i18n';
 
 enum VIEW_NAME {
   TABLE,
@@ -195,7 +196,7 @@ export const ShiftsPage: FunctionalComponent = () => {
    */
   const toggleSendModal = () => {
     if (!hasValidPlayerRef.current) {
-      toast.warn('notification.nobody_have_player_id');
+      toast.warn(i18n.t('notification.nobody_have_player_id'));
       return;
     }
 
@@ -208,7 +209,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
     // ✅ Siguientes veces: solo abre el modal (sin toggle)
     if (selectedUsers.length === 0) {
-      toast.warn('notification.select_at_least_one_employee');
+      toast.warn(i18n.t('notification.select_at_least_one_employee'));
       return;
     } else {
       showSendModal.value = true;
@@ -249,7 +250,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => {}, []);
+  const handleClick = useCallback((/* task: Task */) => { }, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -361,22 +362,24 @@ export const ShiftsPage: FunctionalComponent = () => {
             rounded={false}
             icon='314'
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${
-              !hasValidPlayer
+            className={`border-2 p-2 ${!hasValidPlayer
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : onNotifications
                   ? 'bg-primary-opacity'
                   : 'border-primary'
-            }`}
+              }`}
           />
+          {showSendModal.value &&
+            (
+              <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
+                <SendForm
+                  onClose={handleCloseSendModal}
+                  hasplayers={hasValidPlayer}
+                  users={selectedUsers as []}
+                />
+              </div>
+            )}
 
-          <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
-            <SendForm
-              onClose={handleCloseSendModal}
-              hasplayers={hasValidPlayer}
-              users={selectedUsers as []}
-            />
-          </div>
         </div>
 
         <Button
