@@ -26,4 +26,5 @@ export interface ITableProps<T> {
   showExpandableIcon?: Boolean;
   selectable?: boolean;
   onSelectionChange?: (selected: T[]) => void;
+  onNotifications?: boolean;
 }

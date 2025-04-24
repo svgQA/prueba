@@ -11,7 +11,7 @@ import shortUUID from 'short-uuid';
 export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
   row,
 }: IExpandableProps) => {
-  const [qr, setQr] = useState('');
+  const [_qr, setQr] = useState('');
   const qrRef = useRef(null);
 
   useEffect(() => {

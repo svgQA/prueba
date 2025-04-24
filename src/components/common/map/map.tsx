@@ -32,7 +32,7 @@ export const Map: FunctionComponent<IMapProps> = ({
   allowManualPoint,
   radius,
 }) => {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [_map, setMap] = useState<google.maps.Map | null>(null);
   const [points, setPoint] = useState<
     { id: number; position: google.maps.LatLngLiteral; tasks: ITask[] }[]
   >([]);
