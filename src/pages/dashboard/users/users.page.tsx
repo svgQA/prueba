@@ -92,25 +92,31 @@ export const UsersPage: FunctionalComponent = () => {
         />
       </div>
       {/* Menu de botones */}
-      {buttonMenu}
-      {/* Renderer el componente de creación de usuario */}
-      {currentView.value === VIEW_NAME.CREATE && (
-        <CreateUser
-          onUserCreated={() => handleViewChange(VIEW_NAME.TABLE)}
-          user={user.value}
-        />
-      )}
-      {/* Renderer el componente de mensaje */}
-      {currentView.value === VIEW_NAME.MESSAGE && <UserMessage />}
-      {/* Renderer la tabla de usuarios */}
-      {currentView.value === VIEW_NAME.TABLE && (
-        <UserTable
-          onUserEdit={(value) => {
-            user.value = value;
-            handleViewChange(VIEW_NAME.CREATE);
-          }}
-        />
-      )}
+      <div className='max-h-screen relative'>
+        <div className='py-2 flex flex-row justify-center xl:justify-between px-1 items-center overflow-visible xl:absolute relative z-10 w-full xl:w-fit bg-b-content'>
+          <div className='flex flex-row items-center !w-full xl:!w-fit md:w-auto justify-between'>
+            {buttonMenu}
+          </div>
+        </div>
+        {/* Renderer el componente de creación de usuario */}
+        {currentView.value === VIEW_NAME.CREATE && (
+          <CreateUser
+            onUserCreated={() => handleViewChange(VIEW_NAME.TABLE)}
+            user={user.value}
+          />
+        )}
+        {/* Renderer el componente de mensaje */}
+        {currentView.value === VIEW_NAME.MESSAGE && <UserMessage />}
+        {/* Renderer la tabla de usuarios */}
+        {currentView.value === VIEW_NAME.TABLE && (
+          <UserTable
+            onUserEdit={(value) => {
+              user.value = value;
+              handleViewChange(VIEW_NAME.CREATE);
+            }}
+          />
+        )}
+      </div>
     </Section>
   );
 };

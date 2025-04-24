@@ -9,20 +9,31 @@ import { Section } from '@/components/common/section/section';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
-import { omitBy, isNull, pick } from 'lodash';
 import WeeklyScheduler from '../components/weekly.scheduler';
-
-interface FormData {
-  name: string;
-  day: string;
-  hourEnd: string;
-  hourStart: string;
-}
+import { getSelectedHoursByDay } from '../utils';
+import { ICScheduleRequest } from '@/types/shift/shift.request';
+const START_HOUR = 0;
+const END_HOUR = 24;
 
 export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const initialValues: Signal<Partial<FormData>> = useSignal({});
+  const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
+
+  const daysOfWeek = [
+    'Domingo',
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+  ];
+
+  const hours = Array.from(
+    { length: END_HOUR - START_HOUR + 1 },
+    (_, i) => START_HOUR + i
+  );
 
   // Estado compartido para las celdas seleccionadas
   const selectedCells = useSignal<{ [key: string]: boolean }>({});
@@ -37,16 +48,24 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
     selectedCells.value = newCells;
   };
 
-  const onSubmit = async (model: FormData) => {
+  const onSubmit = async (model: ICScheduleRequest) => {
+    const hoursByDay = getSelectedHoursByDay(
+      daysOfWeek,
+      hours,
+      selectedCells.value
+    ).filter((day) => day.blocks.length > 0);
+    model.daysAllowed = hoursByDay.map((day) => day.day);
+    model.days = hoursByDay;
+
     let request;
-    let message: string;
+    let message: string = id
+      ? 'Horario editado exitosamente!'
+      : 'Horario creado exitosamente!';
 
     if (id) {
       request = await ShiftService.updateSchedule(model, id);
-      message = 'Horario editado exitosamente!';
     } else {
       request = await ShiftService.createSchedule(model);
-      message = 'Horario creado exitosamente!';
     }
 
     if (!request.getStatus()) return;
@@ -57,12 +76,31 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const setInitialValues = async () => {
     if (!id) return;
 
-    const userKeys = ['name', 'day', 'hourStart', 'hourEnd'] as const;
+    const request = await ShiftService.getScheduleById(id);
+    if (!request.getStatus()) return;
+    const model = request.getOne();
 
-    const request: any = await ShiftService.getScheduleById(id);
-    const model = pick(omitBy(request.model, isNull), userKeys);
-
-    initialValues.value = model;
+    initialValues.value = {
+      name: model.name,
+      daysAllowed: model.daysAllowed,
+      days: model.days,
+    };
+    console.log('model', model);
+    selectedCells.value = (model.days || []).reduce(
+      (acc, day) => {
+        day.blocks.forEach((block: any) => {
+          // Iterate through each hour in the block
+          let position = 0;
+          for (let hour = block.start; hour < block.end; hour++) {
+            // Create key in format "day:hour:true"
+            acc[`${position}:${hour}`] = true;
+            position++;
+          }
+        });
+        return acc;
+      },
+      {} as { [key: string]: boolean }
+    );
   };
 
   useEffect(() => {
@@ -71,17 +109,9 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
   return (
     <Section>
-      <Form
+      <Form<ICScheduleRequest>
         onSubmit={onSubmit}
         initialValues={initialValues.value}
-        validate={(values) => {
-          const errors: Partial<FormData> = {};
-
-          if (!values.hourStart) errors.hourStart = 'Campo obligatorio';
-          if (!values.hourEnd) errors.hourEnd = 'Campo obligatorio';
-
-          return errors;
-        }}
         render={({ handleSubmit, form, submitting }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/** FORMULARIO PRINCIPAL */}
@@ -108,6 +138,8 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                   selectedCells={selectedCells.value}
                   onClearSelection={handleClearSelection}
                   onCellChange={handleCellChange}
+                  daysOfWeek={daysOfWeek}
+                  hours={hours}
                 />
               </div>
             </div>

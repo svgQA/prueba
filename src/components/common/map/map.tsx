@@ -24,7 +24,7 @@ export const Map: FunctionComponent<IMapProps> = ({
   draggable,
   width,
   height,
-  clickPoint,
+  // clickPoint,
   center = {
     lat: 4.670355108326989,
     lng: -74.08689346772478,
@@ -194,7 +194,7 @@ export const Map: FunctionComponent<IMapProps> = ({
         lng: marker.position.lng.toString(),
       });
     }
-    clickPoint?.(marker);
+    // clickPoint?.(marker);
     setActiveMarker(id);
   };
 

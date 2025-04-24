@@ -37,6 +37,7 @@ export const SendForm = ({ onClose, users, hasplayers }: Props) => {
 
       <div className="p-4">
         <ManualNotificationForm users={users} hasplayers={hasplayers} />
+
       </div>
     </div>
   );

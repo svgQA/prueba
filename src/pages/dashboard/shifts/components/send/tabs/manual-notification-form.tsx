@@ -32,7 +32,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [], hasplayers }
   const usersWithPlayerId = externalUsers.filter((u) => !!u.playerId);
 
   const filteredUsers = usersWithPlayerId.filter((u) => {
-    const match = `${u.name} ${u.email}`.toLowerCase().includes(search.toLowerCase());
+    const match = `${u.name} ${u.email}`
+      .toLowerCase()
+      .includes(search.toLowerCase());
     return sendToShiftToday ? match && u.hasShiftToday : match;
   });
 
@@ -66,6 +68,7 @@ export const ManualNotificationForm = ({ users: externalUsers = [], hasplayers }
         },
         ...(formStructure && { data: { formId, formStructure } }),
       };
+
 
       try {
         await NotificationServiceFront.sendManualNotification(payload);

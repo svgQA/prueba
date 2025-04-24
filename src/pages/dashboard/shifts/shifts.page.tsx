@@ -234,7 +234,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -282,7 +282,9 @@ export const ShiftsPage: FunctionalComponent = () => {
   const handleGetShiftSummary = async () => {
     try {
       const summary = await ShiftService.getShiftSummary();
-      shiftSummary.value = summary.getOne() as IShiftSummary;
+      if (summary.getStatus()) {
+        shiftSummary.value = summary.getOne() as IShiftSummary;
+      }
     } catch (error) {
       console.error('Error getting shift summary:', error);
     }
@@ -453,7 +455,6 @@ export const ShiftsPage: FunctionalComponent = () => {
 
               setSelectedUsers(validUsers as any);
             }}
-
             expandable={(row: IShiftResponse, currentColumnName?: string) => (
               <ExpandableMultiple
                 type={currentColumnName || defaultColumn.value}

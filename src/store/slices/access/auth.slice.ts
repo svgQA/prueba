@@ -1,4 +1,6 @@
 // import { TenantService } from '@/services';
+import { UserService } from '@/services/user';
+import { IJwtPayload, IUserResponse } from '@/types/auth';
 import { fetchAuthSession } from 'aws-amplify/auth';
 // import { parsingCompanies } from './user.slice';
 // import { ICompany } from './interface/user.interface';
@@ -41,36 +43,18 @@ export const getUserId = async (
 export const hasUserTenant = async (
   setToken: (token: string) => void,
   setUserId: (uuid: string) => void,
-  setTenant: (uuid: string) => void
-  // setCompanies: (companies: ICompany[]) => void,
-  // setSelected: (uuid: string) => void,
-  // setCognito: (uuid: string) => void
+  setTenant: (uuid: string) => void,
+  setUser: (user: IUserResponse) => void
 ): Promise<boolean> => {
   const user = await getUser(setToken);
   setUserId(user?.sub || '');
   setTenant(user?.['custom:tenant'] || '');
-  return true;
-  // const user = await getUserId(setToken);
-  // if (!user) return false;
-  // setCognito(user);
-  // return getTenancies(setCompanies, setSelected);
-};
 
-interface JwtPayload {
-  auth_time: number;
-  client_id: string;
-  'custom:tenant': string;
-  event_id: string;
-  exp: number;
-  iat: number;
-  iss: string;
-  jti: string;
-  origin_jti: string;
-  scope: string;
-  sub: string;
-  token_use: string;
-  username: string;
-}
+  const profile = await UserService.profile();
+  if (!profile.getStatus()) return false;
+  setUser(profile.getOne());
+  return true;
+};
 
 export const updateToken = async (
   setToken: (token: string) => void
@@ -83,13 +67,14 @@ export const updateToken = async (
 
 export const getUser = async (
   setToken?: (token: string) => void
-): Promise<JwtPayload | undefined> => {
+): Promise<IJwtPayload | undefined> => {
   try {
     const session = await fetchAuthSession();
     if (!session?.tokens?.accessToken?.payload) return undefined;
 
     const token = session.tokens.accessToken.toString();
-    const payload = session.tokens.accessToken.payload as unknown as JwtPayload;
+    const payload = session.tokens.accessToken
+      .payload as unknown as IJwtPayload;
     setToken?.(token);
     return payload;
   } catch (error) {
