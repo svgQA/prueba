@@ -120,6 +120,7 @@ export const Table = <T,>({
     };
   }, []);
 
+
   /*
   const extendedColumns = useMemo(() => {
     if (!selectable) return columnsData;
@@ -300,14 +301,16 @@ export const Table = <T,>({
             const isLastRow = rowIndex === rows.length - 1;
 
             if (row.getIsGrouped()) {
+              const groupRowIds = row.subRows.map((r) => (r.original as any).id);
+              const allGroupSelected = groupRowIds.every((id) => selectedRows[id]);
+              const someGroupSelected =
+                groupRowIds.some((id) => selectedRows[id]) && !allGroupSelected;
+
               return (
                 <Fragment key={row.id}>
-                  <tr className='odd:bg-gray-100'>
+                  <tr className="odd:bg-gray-100">
                     {!unsettings && (
-                      <td
-                        className='text-center left-0 min-w-[30px]'
-                      // style={{ position: 'sticky', zIndex: 1 }}
-                      >
+                      <td className="text-center left-0 min-w-[30px]">
                         <span
                           onClick={() => row.toggleExpanded()}
                           className={`vox-icon ${row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
@@ -317,25 +320,66 @@ export const Table = <T,>({
                     )}
                     <td
                       colSpan={
-                        row.getVisibleCells().length + (!unsettings ? 0 : 0)
+                        row.getVisibleCells().length + (!unsettings ? 1 : 0)
                       }
-                      className='p-2 font-semibold'
+                      className="p-2 font-semibold"
                     >
-                      {row.groupingColumnId && (
+                      <div className="flex justify-between items-center w-full">
                         <span>
-                          {typeof row.columnFilters?.[0] === 'string' ? '' : ''}
-                          {row.getValue(row.groupingColumnId)} (
-                          {row.subRows.length})
+                          {row.groupingColumnId && (
+                            <>
+                              {row.getValue(row.groupingColumnId)} ({row.subRows.length})
+                            </>
+                          )}
                         </span>
-                      )}
+
+                        {selectable && onNotifications && row.subRows.some((sub) => !!(sub.original as any).employee?.playerId) && (
+                          <label className="inline-flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              className="w-4 h-4"
+                              checked={allGroupSelected}
+                              ref={(el) => {
+                                if (el) el.indeterminate = someGroupSelected;
+                              }}
+                              onChange={(e) => {
+                                const isChecked = e.currentTarget.checked;
+                                const updated = { ...selectedRows };
+
+                                row.subRows.forEach((subRow) => {
+                                  const data = subRow.original as any;
+                                  if (data.playerId) {
+                                    const id = data.id;
+                                    if (isChecked) {
+                                      updated[id] = data;
+                                    } else {
+                                      delete updated[id];
+                                    }
+                                  }
+                                });
+
+                                setSelectedRows(updated);
+                                onSelectionChange?.(Object.values(updated));
+                              }}
+                            />
+                            <span className="text-sm text-gray-700">
+                              {allGroupSelected ? 'Deseleccionar' : 'Seleccionar todas'}
+                            </span>
+                          </label>
+                        )}
+
+                      </div>
                     </td>
+
                   </tr>
+
                   {row.getIsExpanded() &&
                     row.subRows.length > 0 &&
                     renderRows(row.subRows)}
                 </Fragment>
               );
-            } else {
+            }
+            else {
               return (
                 <Fragment key={row.id}>
                   <tr
@@ -355,32 +399,31 @@ export const Table = <T,>({
                             className='vox-icon vx-icon-001 cursor-pointer size-sm'
                           />
                         )}
-                        {selectable && onNotifications && (
+                        {selectable && onNotifications && (row.original as any).employee?.playerId && (
                           <div className='flex items-center justify-center'>
-                            {/* Agregar algo para validar si tiene el appId */}
                             <input
                               type='checkbox'
                               className='w-4 h-4'
                               checked={!!selectedRows[(row.original as any).id]}
                               onChange={(e) => {
                                 e.preventDefault();
-                                const id = (
-                                  row.original as unknown as {
-                                    id: string | number;
-                                  }
-                                ).id;
+                                const data = row.original as any;
+                                const id = data.id;
                                 const updated = { ...selectedRows };
+
                                 if (e.currentTarget.checked) {
-                                  updated[id] = row.original;
+                                  updated[id] = data;
                                 } else {
                                   delete updated[id];
                                 }
+
                                 setSelectedRows(updated);
                                 onSelectionChange?.(Object.values(updated));
                               }}
                             />
                           </div>
                         )}
+
                       </td>
                     )}
                     {row.getVisibleCells().map((cell) => (
@@ -659,7 +702,7 @@ export const Table = <T,>({
                       style={{ position: 'sticky', zIndex: 1 }}
                     >
                       <div className='flex items-center gap-2 relative'>
-                        {selectable && onNotifications && (
+                        {selectable && onNotifications && data.some((row: any) => !!row.employee?.playerId) && (
                           <input
                             type='checkbox'
                             className='w-4 h-4'
