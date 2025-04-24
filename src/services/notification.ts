@@ -8,11 +8,21 @@ export class NotificationServiceFront extends BaseService {
 
   static async sendManualNotification(data: ISendManualNotificationDto) {
     const model: IMakeRequest = {
-      url: ['notifications', 'send'], // ✅ endpoint correcto
+      url: ['notifications', 'send'],
       method: REQUEST_METHODS.POST,
-      data, // ✅ puede incluir: templateId, overrideTitle, overrideDescription, filters, data
+      data,
     };
 
     return await super.make_request<any>(this.name, model);
+  }
+
+  // ✅ Nuevo método: verificar si hay usuarios con playerId
+  static async hasUsersWithPlayerId() {
+    const model: IMakeRequest = {
+      url: ['notifications', 'has-player-users'],
+      method: REQUEST_METHODS.GET,
+    };
+
+    return await super.make_request<{ hasUsers: boolean }>(this.name, model);
   }
 }

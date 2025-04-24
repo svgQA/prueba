@@ -1,7 +1,7 @@
 import { FunctionalComponent } from 'preact';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import { ShiftService } from '@/services';
+import { NotificationServiceFront, ShiftService } from '@/services';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
@@ -26,6 +26,7 @@ import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
 import { UserService } from '@/services/user';
 import { MentionOption } from '@/components/common/mention-editor';
+import { toast } from 'react-toastify';
 
 enum VIEW_NAME {
   TABLE,
@@ -66,7 +67,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [users, setUsers] = useState<MentionOption[]>([]);
 
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [onNotifications, setOmNotifications] = useState(false);
+  const [onNotifications, setOnNotifications] = useState(false);
   const [hasValidPlayer, setHasValidPlayer] = useState(false);
 
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
@@ -97,17 +98,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
   };
 
-  // Efecto que observa shifts.value
-  useEffect(() => {
-    console.log("rrealizando useffect")
-    const result = shifts.value.some(
-      (shift: any) =>
-        typeof shift?.employee?.playerId === 'string' &&
-        shift.employee.playerId.trim() !== ''
-    );
-    setHasValidPlayer(result);
-  }, [shifts.value]);
-
   /**
    * Handle the useEffect hook for the document title and shift retrieval.
    */
@@ -125,11 +115,12 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const fetchInitialData = async () => {
     try {
-      const [shiftsResponse, servicesResponse, usersResponse] =
+      const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
         await Promise.all([
           ShiftService.get_all({ page: 1, items: 1000 }),
           ShiftService.getListService(),
           UserService.getListUsers(),
+          NotificationServiceFront.hasUsersWithPlayerId()
         ]);
 
       if (shiftsResponse && shiftsResponse.getStatus()) {
@@ -143,10 +134,15 @@ export const ShiftsPage: FunctionalComponent = () => {
       if (usersResponse.getStatus()) {
         setUsers(usersResponse.getMany());
       }
+
+      const { hasUsers } = hasValidResponse.getOne();
+      setHasValidPlayer(hasUsers);
+      hasValidPlayerRef.current = hasUsers;
     } catch (error) {
       console.error('Error fetching initial data:', error);
     }
   };
+
 
   useEffect(() => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -160,20 +156,47 @@ export const ShiftsPage: FunctionalComponent = () => {
     return 60;
   }, [view]);
 
+  const hasValidPlayerRef = useRef(false);
+  const onNotificationsRef = useRef(false);
+
+  // sincroniza ambos:
+  useEffect(() => {
+    hasValidPlayerRef.current = hasValidPlayer;
+    setHasValidPlayer(hasValidPlayerRef.current)
+  }, [hasValidPlayer]);
+
+  useEffect(() => {
+    onNotificationsRef.current = onNotifications;
+    setOnNotifications(onNotificationsRef.current)
+  }, [onNotifications]);
+
+
   /**
    * Eventos de toggle para los modales
    */
   const toggleSendModal = () => {
-    if (!onNotifications && hasValidPlayer) {
-      // Primera vez: activa notificaciones y abre el modal
-      setOmNotifications(true);
-    } else if (onNotifications && hasValidPlayer) {
-      // Siguientes veces: solo abre o cierra el modal
-      showSendModal.value = !showSendModal.value;
-    } else {
+    if (!hasValidPlayerRef.current) {
       console.warn('⚠️ Ningún empleado tiene playerId válido.');
+      return;
+    }
+
+    if (!onNotificationsRef.current) {
+      // 🟡 Primera vez: solo activa notificaciones
+      setOnNotifications(true);
+      onNotificationsRef.current = true;
+      return;
+    }
+
+    // ✅ Siguientes veces: solo abre el modal (sin toggle)
+    if (selectedUsers.length === 0) {
+      toast.warn('Selecciona al menos un empleado.');
+      return;
+    } else {
+      showSendModal.value = true;
     }
   };
+
+
 
   const toggleUpsertModal = () => {
     showUpsertModal.value = !showUpsertModal.value;
@@ -192,8 +215,12 @@ export const ShiftsPage: FunctionalComponent = () => {
   }, []);
 
   const handleCloseSendModal = useCallback(() => {
-    toggleSendModal();
+    console.log('cieere de modal', showSendModal.value)
+    showSendModal.value = false;
+    setOnNotifications(false);
+    onNotificationsRef.current = false;
   }, []);
+
 
   const handleCloseShiftModal = useCallback(() => {
     toggleShiftModal();
@@ -236,16 +263,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     setUserSelected(undefined);
     setTaskSelected(undefined);
   }, []);
-
-  const handleSend = () => {
-    if (onNotifications === true) {
-      try {
-        showSendModal.value = false;
-      } catch (error) {
-        console.error('Error sending data:', error);
-      }
-    }
-  };
 
   /**
    * Eventos de los botones superiores
@@ -328,24 +345,25 @@ export const ShiftsPage: FunctionalComponent = () => {
             icon='314'
             onClick={toggleSendModal}
             className={`border-2 p-2 ${!hasValidPlayer
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : onNotifications
-                  ? 'bg-primary-opacity'
-                  : 'border-primary'
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : onNotifications
+                ? 'bg-primary-opacity'
+                : 'border-primary'
               }`}
           />
 
+          {showSendModal.value && (
             <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
               <SendForm
-                closed={false}
                 onClose={handleCloseSendModal}
-                onSend={handleSend}
+                hasplayers={hasValidPlayer}
                 users={selectedUsers as []}
               />
             </div>
+          )}
         </div>
 
-        <Button 
+        <Button
           name='button-supervision'
           label='Supervisión Remota'
           className='bg-primary text-white py-1 rounded px-4'
@@ -368,7 +386,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
       </div>
     ),
-    [currentView.value]
+    [currentView.value, hasValidPlayer, onNotifications, showSendModal.value, selectedUsers]
   );
 
   const handleReloadSignal = () => {

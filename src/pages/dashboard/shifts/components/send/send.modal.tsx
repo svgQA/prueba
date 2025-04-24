@@ -1,13 +1,12 @@
 import { useRef, useEffect } from 'preact/hooks';
 import { ManualNotificationForm } from './tabs/manual-notification-form';
 interface Props {
-  closed?: boolean;
+  hasplayers?: boolean;
   onClose?: () => void;
-  onSend?: (data: any) => void;
   users?: [];
 }
 
-export const SendForm = ({ closed, onClose, users }: Props) => {
+export const SendForm = ({ onClose, users, hasplayers }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
   // Cerrar si se hace click por fuera
@@ -20,9 +19,6 @@ export const SendForm = ({ closed, onClose, users }: Props) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [ref]);
-
-
-  if (closed) return null;
 
   return (
     <div
@@ -40,7 +36,7 @@ export const SendForm = ({ closed, onClose, users }: Props) => {
       </div>
 
       <div className="p-4">
-        <ManualNotificationForm users={users} />
+        <ManualNotificationForm users={users} hasplayers={hasplayers} />
       </div>
     </div>
   );
