@@ -52,3 +52,11 @@ type ValidationError = {
 };
 
 export type Error = CustomError | TypiaError | ValidationError;
+
+export type VoxError = {
+  timestamp: string;
+  url: string;
+  message: string;
+  code: string;
+  data: Error;
+};

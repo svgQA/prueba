@@ -90,5 +90,6 @@ export const error_en = {
     user_confirm_success: 'User confirmed successfully',
     player_id_update_failed: 'Failed to update player ID',
     player_id_update_success: 'Player ID updated successfully',
+    processing_response: 'Error processing response',
   },
 };

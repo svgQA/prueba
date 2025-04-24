@@ -6,6 +6,7 @@ import { company_header, tenant_header } from '@/env.config';
 import { toast } from 'react-toastify';
 import i18n from '@/i18n';
 import { CustomToast } from '@/components/compose/toast/CustomToast';
+import { VoxError } from '../error';
 
 export interface IRequestModelOutput {
   header: Record<string, string>;
@@ -66,10 +67,20 @@ export class BaseService {
       url = `${url}?${queryParams.toString()}`;
     }
     const method = model?.method || REQUEST_METHODS.GET;
+
+    // Obtener el idioma actual de i18n
+    const currentLanguage = i18n.language;
+
+    // Configurar headers básicos incluyendo el idioma
+    model.headers = {
+      ...model?.headers,
+      'Accept-Language': currentLanguage,
+    };
+
     if (method === REQUEST_METHODS.POST || method === REQUEST_METHODS.PUT) {
       if (!model.uncontent) {
         model.headers = {
-          ...model?.headers,
+          ...model.headers,
           'Content-Type': 'application/json',
         };
         model.data = JSON.stringify(model.data || {});
@@ -144,17 +155,13 @@ export class BaseService {
       });
 
       if (!response.ok) {
-        const result = await response.json();
+        const result = (await response.json()) as VoxError;
         toast.error(CustomToast, {
-          data: {
-            title: i18n.t(`error.${result?.error}`),
-            text: result?.text,
-            error: result?.data,
-          },
+          data: result,
         });
         return new GenericResponse<T>({
           code: response?.status,
-          message: result?.text,
+          message: result?.message,
           data: {},
         });
       }

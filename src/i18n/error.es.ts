@@ -92,5 +92,6 @@ export const error_es = {
     user_confirm_success: 'Usuario confirmado exitosamente',
     player_id_update_failed: 'Error al actualizar el ID del jugador',
     player_id_update_success: 'ID del jugador actualizado exitosamente',
+    processing_response: 'Error al procesar la respuesta',
   },
 };
