@@ -4,6 +4,8 @@ import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
 import { company_header, tenant_header } from '@/env.config';
 import { toast } from 'react-toastify';
+import i18n from '@/i18n';
+import { CustomToast } from '@/components/compose/toast/CustomToast';
 
 export interface IRequestModelOutput {
   header: Record<string, string>;
@@ -78,9 +80,16 @@ export class BaseService {
       const tenant = this.getTenant();
       const company = this.getCompany();
 
-      if (!tenant_header || !tenant || !company_header || !company) {
-        throw new Error('ERROR: not include headers to request');
+      if (!tenant_header || !tenant) {
+        toast.error(i18n.t('error.not_found_tenant'));
+        throw new Error('ERROR: not include tenant header');
       }
+
+      if (!company_header || !company) {
+        toast.error(i18n.t('error.not_found_company'));
+        throw new Error('ERROR: not include company header');
+      }
+
       model.headers = {
         ...model.headers,
         [tenant_header]: tenant,
@@ -127,14 +136,22 @@ export class BaseService {
         prefix,
         tenance
       );
+
       const response = await fetch(model_request.url, {
         headers: model_request.header,
         body: model.data,
         method: model.method,
       });
+
       if (!response.ok) {
         const result = await response.json();
-        toast.error(result.error, { position: 'top-right' });
+        toast.error(CustomToast, {
+          data: {
+            title: i18n.t(`error.${result?.error}`),
+            text: result?.text,
+            error: result?.data,
+          },
+        });
         return new GenericResponse<T>({
           code: response?.status,
           message: result?.text,
@@ -159,7 +176,7 @@ export class BaseService {
         });
       }
     } catch (error: unknown) {
-      // console.log('error consumiendo en BaseService =>', error);
+      toast.error(i18n.t('error.processing_response'));
       throw new Error('ERROR: processing response');
     } finally {
       this.closeLoading();

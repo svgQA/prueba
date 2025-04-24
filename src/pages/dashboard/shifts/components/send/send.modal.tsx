@@ -23,7 +23,7 @@ export const SendForm = ({ closed, onClose, users }: Props) => {
 
   if (closed) return null;
 
-  console.log(users);
+  // console.log(users);
 
   return (
     <div

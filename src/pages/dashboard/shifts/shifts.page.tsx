@@ -216,9 +216,9 @@ export const ShiftsPage: FunctionalComponent = () => {
     setTaskSelected(undefined);
   }, []);
 
-  const handleSend = useCallback(async (data: any) => {
+  const handleSend = useCallback(async (_: any) => {
     try {
-      console.log('Sending data:', data);
+      // console.log('Sending data:', data);
       showSendModal.value = false;
     } catch (error) {
       console.error('Error sending data:', error);
@@ -385,7 +385,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             pageSize={20}
             selectable={true}
             onSelectionChange={(rows) => {
-              console.log('rows', rows);
+              // console.log('rows', rows);
               const validUsers = rows.map((row: any) => ({
                 id: row.employee.id,
                 name: row.employee.name,

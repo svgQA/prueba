@@ -39,7 +39,7 @@ export const UserSettingsPage: FunctionComponent = () => {
   const getModules = async () => {
     const modules = await GeneralService.getModules('USER');
     const module = modules.getOne();
-    console.log(module);
+    // console.log(module);
     if (modules.getStatus() && module) {
       initialValues.value = {
         id: module.id,

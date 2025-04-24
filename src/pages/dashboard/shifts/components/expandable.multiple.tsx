@@ -24,7 +24,7 @@ type Props = {
 
 const getInfoContent = (type: string, data: IShiftResponse) => {
   const { service, employee } = data;
-  console.log('service.contract ==>', service.contract);
+  // console.log('service.contract ==>', service.contract);
 
   switch (type) {
     case InfoType.SERVICE:

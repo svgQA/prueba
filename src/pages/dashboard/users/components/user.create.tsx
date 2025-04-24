@@ -62,7 +62,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     const response = await ShiftService.getDepartments();
     if (!response.getStatus()) return;
     departments.value = response.getMany();
-    console.log(departments.value);
+    // console.log(departments.value);
   };
 
   const onChangeDepartment = async (departmentId: number) => {

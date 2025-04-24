@@ -449,11 +449,11 @@ export const TaskForm = ({
                             options={tasks.value}
                             onChange={(e) => {
                               const description = e.currentTarget.value;
-                              console.log(description);
+                              // console.log(description);
                               const task = tasks.value.find(
                                 (task: any) => task.description === description
                               );
-                              console.log(task);
+                              // console.log(task);
                               fields.push(task);
                             }}
                           />

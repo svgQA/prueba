@@ -131,8 +131,8 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   const handleDateSubmit = (start: string, end: string) => {
     // Aquí puedes manejar la lógica para las fechas seleccionadas
-    console.log('Start Date:', start);
-    console.log('End Date:', end);
+    // console.log('Start Date:', start);
+    // console.log('End Date:', end);
   };
 
   useEffect(() => {
