@@ -3,15 +3,17 @@ import { NotificationServiceFront } from '@/services/notification';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
 import { FormService } from '@/services/form';
 import { TemplateServiceFront } from '@/services/template';
-import { toast } from 'react-toastify';
+import { IOption } from '@/components/common/multi/interface';
 
 interface Props {
   users?: any[];
   hasplayers?: boolean;
 }
 
-export const ManualNotificationForm = ({ users: externalUsers = [], hasplayers }: Props) => {
-
+export const ManualNotificationForm = ({
+  users: externalUsers = [],
+  hasplayers,
+}: Props) => {
   const [templateId, setTemplateId] = useState<string>('');
   const [templates, setTemplates] = useState<any[]>([]);
 
@@ -27,7 +29,7 @@ export const ManualNotificationForm = ({ users: externalUsers = [], hasplayers }
   const [selectedUsersFull, setSelectedUsersFull] = useState<
     { id: number; name: string; email: string; playerId: string }[]
   >([]);
-  const [forms, setForms] = useState<any[]>([]);
+  const [forms, setForms] = useState<IOption[]>([]);
 
   const usersWithPlayerId = externalUsers.filter((u) => !!u.playerId);
 
@@ -68,7 +70,6 @@ export const ManualNotificationForm = ({ users: externalUsers = [], hasplayers }
         },
         ...(formStructure && { data: { formId, formStructure } }),
       };
-
 
       try {
         await NotificationServiceFront.sendManualNotification(payload);
@@ -215,9 +216,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [], hasplayers }
             }}
           >
             <option value=''>Selecciona un formulario</option>
-            {forms.map((form: any) => (
-              <option key={form.id} value={form.id}>
-                {form.title}
+            {forms.map((form) => (
+              <option key={form.value} value={form.value}>
+                {form.label}
               </option>
             ))}
           </select>

@@ -20,6 +20,8 @@ export const SendForm = ({ onClose, users, hasplayers }: Props) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [ref]);
 
+  if (closed) return null;
+
   return (
     <div
       ref={ref}
@@ -35,9 +37,8 @@ export const SendForm = ({ onClose, users, hasplayers }: Props) => {
         </button>
       </div>
 
-      <div className="p-4">
+      <div className='p-4'>
         <ManualNotificationForm users={users} hasplayers={hasplayers} />
-
       </div>
     </div>
   );

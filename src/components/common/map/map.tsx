@@ -32,7 +32,7 @@ export const Map: FunctionComponent<IMapProps> = ({
   allowManualPoint,
   radius,
 }) => {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [_map, setMap] = useState<google.maps.Map | null>(null);
   const [points, setPoint] = useState<
     { id: number; position: google.maps.LatLngLiteral; tasks: ITask[] }[]
   >([]);
@@ -70,7 +70,7 @@ export const Map: FunctionComponent<IMapProps> = ({
   }, []);
 
   const onUnmount = React.useCallback(() => {
-    console.log(map);
+    // console.log(map);
 
     setMap(null);
   }, []);

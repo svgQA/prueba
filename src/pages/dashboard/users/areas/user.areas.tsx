@@ -24,7 +24,7 @@ export const UserAreasPage: FunctionComponent = () => {
     if (response.getStatus()) {
       areas.value = response.getMany();
     }
-    console.log(areas.value);
+    // console.log(areas.value);
   };
 
   useEffect(() => {

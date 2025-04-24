@@ -1,5 +1,11 @@
 import { FunctionalComponent } from 'preact';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import { NotificationServiceFront, ShiftService } from '@/services';
 import { Section } from '@/components/common/section/section';
@@ -98,6 +104,17 @@ export const ShiftsPage: FunctionalComponent = () => {
     setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
   };
 
+  // Efecto que observa shifts.value
+  // Ineficiente a morir.
+  useEffect(() => {
+    const result = shifts.value.some(
+      (shift: any) =>
+        typeof shift?.employee?.playerId === 'string' &&
+        shift.employee.playerId.trim() !== ''
+    );
+    setHasValidPlayer(result);
+  }, [shifts.value]);
+
   /**
    * Handle the useEffect hook for the document title and shift retrieval.
    */
@@ -115,13 +132,17 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const fetchInitialData = async () => {
     try {
-      const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
-        await Promise.all([
-          ShiftService.get_all({ page: 1, items: 1000 }),
-          ShiftService.getListService(),
-          UserService.getListUsers(),
-          NotificationServiceFront.hasUsersWithPlayerId()
-        ]);
+      const [
+        shiftsResponse,
+        servicesResponse,
+        usersResponse,
+        hasValidResponse,
+      ] = await Promise.all([
+        ShiftService.get_all({ page: 1, items: 1000 }),
+        ShiftService.getListService(),
+        UserService.getListUsers(),
+        NotificationServiceFront.hasUsersWithPlayerId(),
+      ]);
 
       if (shiftsResponse && shiftsResponse.getStatus()) {
         shifts.value = shiftsResponse.getMany();
@@ -139,10 +160,9 @@ export const ShiftsPage: FunctionalComponent = () => {
       setHasValidPlayer(hasUsers);
       hasValidPlayerRef.current = hasUsers;
     } catch (error) {
-      console.error('Error fetching initial data:', error);
+      toast.error('notification.error_fetching_initial_data');
     }
   };
-
 
   useEffect(() => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -162,21 +182,20 @@ export const ShiftsPage: FunctionalComponent = () => {
   // sincroniza ambos:
   useEffect(() => {
     hasValidPlayerRef.current = hasValidPlayer;
-    setHasValidPlayer(hasValidPlayerRef.current)
+    setHasValidPlayer(hasValidPlayerRef.current);
   }, [hasValidPlayer]);
 
   useEffect(() => {
     onNotificationsRef.current = onNotifications;
-    setOnNotifications(onNotificationsRef.current)
+    setOnNotifications(onNotificationsRef.current);
   }, [onNotifications]);
-
 
   /**
    * Eventos de toggle para los modales
    */
   const toggleSendModal = () => {
     if (!hasValidPlayerRef.current) {
-      console.warn('⚠️ Ningún empleado tiene playerId válido.');
+      toast.warn('notification.nobody_have_player_id');
       return;
     }
 
@@ -189,14 +208,12 @@ export const ShiftsPage: FunctionalComponent = () => {
 
     // ✅ Siguientes veces: solo abre el modal (sin toggle)
     if (selectedUsers.length === 0) {
-      toast.warn('Selecciona al menos un empleado.');
+      toast.warn('notification.select_at_least_one_employee');
       return;
     } else {
       showSendModal.value = true;
     }
   };
-
-
 
   const toggleUpsertModal = () => {
     showUpsertModal.value = !showUpsertModal.value;
@@ -215,12 +232,10 @@ export const ShiftsPage: FunctionalComponent = () => {
   }, []);
 
   const handleCloseSendModal = useCallback(() => {
-    console.log('cieere de modal', showSendModal.value)
     showSendModal.value = false;
     setOnNotifications(false);
     onNotificationsRef.current = false;
   }, []);
-
 
   const handleCloseShiftModal = useCallback(() => {
     toggleShiftModal();
@@ -346,23 +361,22 @@ export const ShiftsPage: FunctionalComponent = () => {
             rounded={false}
             icon='314'
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${!hasValidPlayer
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : onNotifications
-                ? 'bg-primary-opacity'
-                : 'border-primary'
-              }`}
+            className={`border-2 p-2 ${
+              !hasValidPlayer
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : onNotifications
+                  ? 'bg-primary-opacity'
+                  : 'border-primary'
+            }`}
           />
 
-          {showSendModal.value && (
-            <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
-              <SendForm
-                onClose={handleCloseSendModal}
-                hasplayers={hasValidPlayer}
-                users={selectedUsers as []}
-              />
-            </div>
-          )}
+          <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
+            <SendForm
+              onClose={handleCloseSendModal}
+              hasplayers={hasValidPlayer}
+              users={selectedUsers as []}
+            />
+          </div>
         </div>
 
         <Button
@@ -388,7 +402,13 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
       </div>
     ),
-    [currentView.value, hasValidPlayer, onNotifications, showSendModal.value, selectedUsers]
+    [
+      currentView.value,
+      hasValidPlayer,
+      onNotifications,
+      showSendModal.value,
+      selectedUsers,
+    ]
   );
 
   const handleReloadSignal = () => {
@@ -445,13 +465,12 @@ export const ShiftsPage: FunctionalComponent = () => {
             selectable={true}
             onNotifications={onNotifications}
             onSelectionChange={(rows) => {
-              const validUsers = rows
-                .map((row: any) => ({
-                  id: row.employee.id,
-                  name: row.employee.name,
-                  email: row.employee.email,
-                  playerId: row.employee.playerId,
-                }));
+              const validUsers = rows.map((row: any) => ({
+                id: row.employee.id,
+                name: row.employee.name,
+                email: row.employee.email,
+                playerId: row.employee.playerId,
+              }));
 
               setSelectedUsers(validUsers as any);
             }}

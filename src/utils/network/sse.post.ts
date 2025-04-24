@@ -42,7 +42,7 @@ export async function streamIAResponse(
           .replace(/^0:\s*/, '')
           .replace(/^"/, '')
           .replace(/"$/, '');
-        console.log('output', output);
+        // console.log('output', output);
         onData(output);
       }
 
