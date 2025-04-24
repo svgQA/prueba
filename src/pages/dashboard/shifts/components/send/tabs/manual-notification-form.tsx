@@ -9,8 +9,9 @@ interface Props {
   users?: any[];
 }
 
-export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => {
-
+export const ManualNotificationForm = ({
+  users: externalUsers = [],
+}: Props) => {
   const [templateId, setTemplateId] = useState<string>('');
   const [templates, setTemplates] = useState<any[]>([]);
 

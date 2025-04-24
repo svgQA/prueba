@@ -65,7 +65,7 @@ export const Table = <T,>({
   showExpandableIcon = true,
   selectable,
   onSelectionChange,
-  onNotifications
+  onNotifications,
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -701,7 +701,9 @@ export const Table = <T,>({
                             className='vox-icon vx-icon-168 size-sm cursor-pointer'
                             onClick={(e) => {
                               e.stopPropagation();
-                              setActiveDropdown(activeDropdown === -1 ? null : -1);
+                              setActiveDropdown(
+                                activeDropdown === -1 ? null : -1
+                              );
                             }}
                           />
                           {activeDropdown === -1 && (

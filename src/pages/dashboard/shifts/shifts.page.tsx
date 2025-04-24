@@ -99,7 +99,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   // Efecto que observa shifts.value
   useEffect(() => {
-    console.log("rrealizando useffect")
+    console.log('rrealizando useffect');
     const result = shifts.value.some(
       (shift: any) =>
         typeof shift?.employee?.playerId === 'string' &&
@@ -329,25 +329,26 @@ export const ShiftsPage: FunctionalComponent = () => {
             rounded={false}
             icon='314'
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${!hasValidPlayer
+            className={`border-2 p-2 ${
+              !hasValidPlayer
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : onNotifications
                   ? 'bg-primary-opacity'
                   : 'border-primary'
-              }`}
+            }`}
           />
 
-            <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
-              <SendForm
-                closed={false}
-                onClose={handleCloseSendModal}
-                onSend={handleSend}
-                users={selectedUsers as []}
-              />
-            </div>
+          <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
+            <SendForm
+              closed={false}
+              onClose={handleCloseSendModal}
+              onSend={handleSend}
+              users={selectedUsers as []}
+            />
+          </div>
         </div>
 
-        <Button 
+        <Button
           name='button-supervision'
           label='Supervisión Remota'
           className='bg-primary text-white py-1 rounded px-4'

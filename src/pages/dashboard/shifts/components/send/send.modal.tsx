@@ -22,7 +22,7 @@ export const SendForm = ({ closed, onClose, users }: Props) => {
   }, [ref]);
 
   if (closed) return null;
-  
+
   return (
     <div
       ref={ref}
