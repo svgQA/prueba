@@ -5,9 +5,9 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { general_en } from './general.en';
 import { general_es } from './general.es';
 import { error_en, error_es } from './error';
+import { form_en, form_es } from './form';
 
 // import { notification_en, notification_es } from './notification';
-// import { form_en, form_es } from './form';
 // import { shift_en, shift_es } from './shift';
 // import { home_en, home_es } from './home';
 
@@ -16,8 +16,8 @@ const resources = {
     translation: {
       ...general_en,
       ...error_en,
+      ...form_en,
       // ...notification_en,
-      // ...form_en,
       // ...shift_en,
       // ...home_en,
     },
@@ -26,8 +26,8 @@ const resources = {
     translation: {
       ...general_es,
       ...error_es,
+      ...form_es,
       // ...notification_es,
-      // ...form_es,
       // ...shift_es,
       // ...home_es,
     },

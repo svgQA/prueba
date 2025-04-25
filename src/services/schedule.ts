@@ -54,7 +54,7 @@ export class SchedulerServiceFront extends BaseService {
   static async markAsSent(id: string) {
     const model: IMakeRequest = {
       url: ['notifications', 'mark-sent', id],
-      method: REQUEST_METHODS.PACTH, // ✅ PATCH corregido
+      method: REQUEST_METHODS.PACTH,
     };
     return await super.make_request<any>(this.name, model);
   }
@@ -65,7 +65,7 @@ export class SchedulerServiceFront extends BaseService {
   static async markAsFailed(id: string) {
     const model: IMakeRequest = {
       url: ['notifications', 'mark-failed', id],
-      method: REQUEST_METHODS.PACTH, // ✅ PATCH corregido
+      method: REQUEST_METHODS.PACTH,
     };
     return await super.make_request<any>(this.name, model);
   }
