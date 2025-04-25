@@ -152,8 +152,8 @@ const handle_user_disconnected = (user: { id: string }) => {
       (shift: Shift) => string | undefined
     > = {
       service: (shift) => shift.service?.name,
-      contract: (shift) => shift.service?.place?.address,
-      client: (shift) => shift.service?.contract?.name,
+      contract: (shift) => shift.service?.contract?.name,
+      client: (shift) => shift.service?.contract?.client?.name,
     };
 
     const points = usersWithShifts.filter((user) => {
