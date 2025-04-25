@@ -358,6 +358,14 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
+  static async getBasicTasks() {
+    const model: IMakeRequest = {
+      url: ['task', 'simple', 'list'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
   static async getTasks(params: IPagination = { page: 1, items: 20 }) {
     const model: IMakeRequest = {
       url: ['task'],
@@ -492,4 +500,6 @@ export class ShiftService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
+
+
 }

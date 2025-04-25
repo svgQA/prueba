@@ -19,11 +19,11 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
     },
     {
       icon: '040',
-      label: 'Template Notifications',
-      description: 'Notificaciones Plantillas',
+      label: 'Plantillas de notificaciones',
+      description: 'Gestionar plantillas de notificaciones',
       base,
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
-        .base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
+        .templateNotification.base,
       id: 'template-notifications',
       show: true,
     },

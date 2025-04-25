@@ -183,6 +183,11 @@ export const PAGES_LIST_ROUTER = {
         templateNotification: {
           base: '/templateNotifications',
           to: '/rounds/templateNotifications',
+
+          create: {
+            base: '/notifications/templateNotifications/create',
+            to: '/rounds/notifications/templateNotifications/create',
+          },
         },
       },
       setting: {

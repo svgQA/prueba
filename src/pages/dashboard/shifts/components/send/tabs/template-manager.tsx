@@ -61,7 +61,7 @@ export const TemplateManager = () => {
       </div>
 
       <div className='border-t pt-4'>
-        <h5 className='text-sm font-semibold mb-2'>Crear nueva plantilla</h5>
+        <h5 className='text-sm font-semibold mb-2'>Nueva plantilla</h5>
         <div className='space-y-2'>
           <input
             type='text'

@@ -63,7 +63,8 @@ import { UserRolesPage } from '../dashboard/users/roles/roles';
 import { UserPasswordPage } from '../dashboard/users/password/user.password';
 import { UserSettingsPage } from '../dashboard/users/setting/user.setting';
 import { ScheduledNotificationsPage } from './notifications/scheduleNotifications/scheduledNotifications';
-import { TemplateNotificationPage } from './notifications/templates/templateNotifications';
+import { TemplateNotificationPage } from './notifications/templateNotifications/templateNotifications';
+import { TemplateCreateForm } from './notifications/templateNotifications/create/create';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -475,6 +476,15 @@ export const RoutingContent = memo(() => {
           }
           component={lazy(() =>
             Promise.resolve({ default: TemplateNotificationPage })
+          )}
+        />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .templateNotification.create.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: TemplateCreateForm })
           )}
         />
       </Suspense>
