@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { ButtonAction } from '@/components/common/button/column';
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -46,22 +47,20 @@ export const columns: ColumnDef<any>[] = [
     cell: (info) => {
       const { id } = info.row.original;
       return (
-        <div className='w-full flex justify-center group relative'>
-          <span className='vox-icon vx-icon-233 p-1 size-sm cursor-pointer' />
-          <div className='absolute left-full ml-2 hidden group-hover:flex bg-white shadow-lg rounded p-1'>
-            <span
-              className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
-              data-id={id}
-              data-type='shift'
-              data-action={ROW_ACTIONS.UPDATE}
-            ></span>
-            <span
-              className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
-              data-id={id}
-              data-type='shift'
-              data-action={ROW_ACTIONS.DELETE}
-            ></span>
-          </div>
+        <div className='w-full flex justify-center'>
+          <ButtonAction
+            id={id}
+            type='shift'
+            action={ROW_ACTIONS.UPDATE}
+            icon='123'
+          />
+          <ButtonAction
+            id={id}
+            type='shift'
+            action={ROW_ACTIONS.DELETE}
+            icon='053'
+            color='!text-red-500'
+          />
         </div>
       );
     },
