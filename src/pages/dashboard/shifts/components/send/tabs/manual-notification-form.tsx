@@ -4,6 +4,7 @@ import { ISendManualNotificationDto } from '@/types/notification/ISendManualNoti
 import { FormService } from '@/services/form';
 import { TemplateServiceFront } from '@/services/template';
 import { IOption } from '@/components/common/multi/interface';
+import { toast } from 'react-toastify';
 
 interface Props {
   users?: any[];
@@ -58,28 +59,29 @@ export const ManualNotificationForm = ({
   }, [selectedUserIds, usersWithPlayerId]);
 
   const handleSubmit = async () => {
-    if (hasplayers) {
-      const payload: ISendManualNotificationDto = {
-        ...(templateId && { templateId }),
-        ...(formId && { formId }),
-        ...(overrideTitle && { overrideTitle }),
-        ...(overrideDescription && { overrideDescription }),
-        filters: {
-          userIds: selectedUsersFull.map((u) => String(u.id)),
-          ...(sendToShiftToday && { shiftToday: true }),
-        },
-        ...(formStructure && { data: { formId, formStructure } }),
-      };
+    if (!hasplayers) return;
 
-      try {
-        await NotificationServiceFront.sendManualNotification(payload);
-        alert('Notificación enviada con éxito');
-      } catch (err) {
-        console.error('Error al enviar notificación:', err);
-        alert('Error al enviar notificación');
-      }
+    const payload: ISendManualNotificationDto = {
+      ...(templateId && { templateId }),
+      ...(formId && { formId }),
+      ...(overrideTitle && { overrideTitle }),
+      ...(overrideDescription && { overrideDescription }),
+      filters: {
+        userIds: selectedUsersFull.map((u) => String(u.id)),
+        ...(sendToShiftToday && { shiftToday: true }),
+      },
+      ...(formStructure && { data: { formId, formStructure } }),
+    };
+
+    try {
+      await NotificationServiceFront.sendManualNotification(payload);
+      toast.success('Notificaciones enviadas correctamente');
+    } catch (err) {
+      console.error('❌ Error al enviar notificaciones:', err);
+      toast.error('❌ Ocurrió un error al enviar las notificaciones');
     }
   };
+
 
   const clearUserSelection = () => setSelectedUserIds([]);
 
@@ -111,13 +113,8 @@ export const ManualNotificationForm = ({
   }, [formId]);
 
   return (
-    <div className='space-y-6 w-full max-w-5xl mx-auto'>
-      <h4 className='text-xl font-semibold text-gray-800'>
-        Enviar notificación manual
-      </h4>
-
+    <div className='space-y-6 w-full max-w-5xl mx-auto p-4'>
       <div className='space-y-2'>
-        <label className='block text-sm font-medium mb-1'>Usuarios</label>
         <input
           type='text'
           className='w-full border border-gray-300 rounded px-3 py-2'
@@ -126,47 +123,49 @@ export const ManualNotificationForm = ({
           onInput={(e) => setSearch(e.currentTarget.value)}
         />
 
-        <div className='max-h-48 overflow-y-auto border border-gray-200 rounded p-2 bg-white'>
-          {filteredUsers.map((user: any) => (
-            <label key={user.id} className='flex items-center gap-2 py-1'>
+        <div className="max-h-48 overflow-y-auto border border-gray-200 rounded p-2 bg-white">
+          {[...new Map(filteredUsers.map(u => [u.id, u])).values()].map((user: any) => (
+            <label key={user.id} className="flex items-center gap-2 py-1">
               <input
-                type='checkbox'
+                type="checkbox"
                 value={user.id}
                 checked={selectedUserIds.includes(user.id)}
                 onChange={() =>
                   setSelectedUserIds((prev) =>
                     prev.includes(user.id)
                       ? prev.filter((id) => id !== user.id)
-                      : [...prev, user.id]
+                      : [...new Set([...prev, user.id])] // <--- asegura no duplicar
                   )
                 }
-                className='accent-cyan-600'
+                className="accent-cyan-600"
               />
-              <span className='text-sm'>
+              <span className="text-sm">
                 {user.name} ({user.email})
               </span>
             </label>
           ))}
         </div>
 
-        <div className='flex items-center gap-2 mt-2'>
-          <input
-            type='checkbox'
-            checked={sendToShiftToday}
-            onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
-            className='accent-cyan-600'
-          />
-          <span className='text-sm'>Solo con turno activo</span>
-        </div>
+        <div className='flex items-center justify-between mt-2'>
+          <div className='flex items-center gap-2'>
+            <input
+              type='checkbox'
+              checked={sendToShiftToday}
+              onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
+              className='accent-cyan-600'
+            />
+            <span className='text-sm'>Solo con turno activo</span>
+          </div>
 
-        {selectedUserIds.length > 0 && (
-          <button
-            className='text-sm text-cyan-700 hover:underline mt-1'
-            onClick={clearUserSelection}
-          >
-            Limpiar selección de usuarios
-          </button>
-        )}
+          {selectedUserIds.length > 0 && (
+            <button
+              className='text-sm text-cyan-700 hover:underline'
+              onClick={clearUserSelection}
+            >
+              Limpiar selección de usuarios
+            </button>
+          )}
+        </div>
 
         {selectedUsersFull.length > 0 && (
           <div className='mt-2'>
@@ -174,12 +173,13 @@ export const ManualNotificationForm = ({
               Usuarios seleccionados con registro de notificaciones:
             </h5>
             <ul className='text-sm text-gray-800 list-disc list-inside space-y-1'>
-              {selectedUsersFull.map((u) => (
+              {[...new Map(selectedUsersFull.map(u => [u.id, u])).values()].map((u) => (
                 <li key={u.id}>
                   {u.name} ({u.email})
                 </li>
               ))}
             </ul>
+
           </div>
         )}
       </div>
@@ -251,14 +251,13 @@ export const ManualNotificationForm = ({
         </div>
       )}
 
-      <div className='pt-4'>
-        <button
-          className='bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded'
-          onClick={handleSubmit}
-        >
-          Enviar notificación
-        </button>
-      </div>
+      <button
+        className='bg-primary hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded'
+        onClick={handleSubmit}
+      >
+        Enviar notificación
+      </button>
+
     </div>
   );
 };

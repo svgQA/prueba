@@ -363,21 +363,19 @@ export const ShiftsPage: FunctionalComponent = () => {
             icon='314'
             onClick={toggleSendModal}
             className={`border-2 p-2 ${!hasValidPlayer
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : onNotifications
-                  ? 'bg-primary-opacity'
-                  : 'border-primary'
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : onNotifications
+                ? 'bg-primary-opacity'
+                : 'border-primary'
               }`}
           />
           {showSendModal.value &&
             (
-              <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
-                <SendForm
-                  onClose={handleCloseSendModal}
-                  hasplayers={hasValidPlayer}
-                  users={selectedUsers as []}
-                />
-              </div>
+              <SendForm
+                onClose={handleCloseSendModal}
+                hasplayers={hasValidPlayer}
+                users={selectedUsers as []}
+              />
             )}
 
         </div>
