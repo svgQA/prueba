@@ -203,7 +203,7 @@ const handle_user_disconnected = (user: { id: string }) => {
         name='map-points'
         pointsRef={mapPoints}
         sendPoints={() => {}}
-        height='79vh'
+        height='78vh'
         disablePointSelection={true}
       />
     </div>
