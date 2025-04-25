@@ -301,14 +301,21 @@ export const Table = <T,>({
             const isLastRow = rowIndex === rows.length - 1;
 
             if (row.getIsGrouped()) {
-              const groupRowIds = row.subRows.map(
-                (r) => (r.original as any).id
+              const selectableGroupItems = row.subRows
+                .map((r) => r.original as any)
+                .filter((item) => item?.employee?.playerId);
+
+              const selectableGroupIds = selectableGroupItems.map(
+                (item) => item.id
               );
-              const allGroupSelected = groupRowIds.every(
-                (id) => selectedRows[id]
-              );
+
+              const allGroupSelected =
+                selectableGroupIds.length > 0 &&
+                selectableGroupIds.every((id) => selectedRows[id]);
+
               const someGroupSelected =
-                groupRowIds.some((id) => selectedRows[id]) && !allGroupSelected;
+                selectableGroupIds.some((id) => selectedRows[id]) &&
+                !allGroupSelected;
 
               return (
                 <Fragment key={row.id}>
@@ -358,7 +365,7 @@ export const Table = <T,>({
 
                                   row.subRows.forEach((subRow) => {
                                     const data = subRow.original as any;
-                                    if (data.playerId) {
+                                    if (data.employee?.playerId) {
                                       const id = data.id;
                                       if (isChecked) {
                                         updated[id] = data;
@@ -400,7 +407,7 @@ export const Table = <T,>({
                   >
                     {!unsettings && (
                       <td
-                        className='left-0 min-w-[30px] bg-gray-200 dark:bg-gray-700'
+                        className='left-0 min-w-[30px] bg-gray-100 dark:bg-gray-700'
                         // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
@@ -767,7 +774,7 @@ export const Table = <T,>({
                           {activeDropdown === -1 && (
                             <div
                               ref={dropdownRef}
-                              className='absolute top-full left-0 mt-1 z-50'
+                              className='absolute -left-3 -mt-10 z-50'
                             >
                               {buildSettings()}
                             </div>

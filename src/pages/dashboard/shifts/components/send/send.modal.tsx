@@ -25,7 +25,7 @@ export const SendForm = ({ onClose, users, hasplayers }: Props) => {
   return (
     <div
       ref={ref}
-      className='absolute mt-2 w-[400px] max-w-[90vw] bg-white rounded shadow-lg z-50 border'
+      className='absolute w-[800px] max-w-[90vw] bg-white rounded absolute z-50 p-4 mt-8'
     >
       <div className='px-4 py-3 border-b flex justify-between items-center'>
         <h3 className='text-base font-semibold'>Centro de notificaciones</h3>
@@ -37,9 +37,7 @@ export const SendForm = ({ onClose, users, hasplayers }: Props) => {
         </button>
       </div>
 
-      <div className='p-4'>
-        <ManualNotificationForm users={users} hasplayers={hasplayers} />
-      </div>
+      <ManualNotificationForm users={users} hasplayers={hasplayers} />
     </div>
   );
 };
