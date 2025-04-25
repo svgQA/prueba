@@ -683,7 +683,7 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className='relative w-full my-2 flex items-center justify-end'>
+      <div className='relative w-full py-1 flex items-center justify-end'>
         {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (
           <Search

@@ -6,6 +6,7 @@ import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
 import { toast } from 'react-toastify';
 import { IMapProps, MapPoint } from './interface';
+import { themeSignal } from '@/components/compose/button/signal.theme';
 
 export const MapLibrePointsMap = ({
   pointsAmount = 100,
@@ -45,6 +46,7 @@ export const MapLibrePointsMap = ({
   const [isMarkerClick, setIsMarkerClick] = useState<boolean>(false);
 
   // Map style configuration
+  /*
   const mapStyle: maplibregl.StyleSpecification = {
     version: 8,
     sources: {
@@ -67,23 +69,37 @@ export const MapLibrePointsMap = ({
       },
     ],
   };
+  */
 
+  const getMapStyle = () => {
+    return themeSignal.value
+      ? 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
+      : 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+  };
   // Initialize map
   useEffect(() => {
     if (!mapContainerRef.current) return;
     mapRef.current = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: mapStyle,
+      style: getMapStyle(),
       center: [center.lng, center.lat],
       zoom: 12,
     });
+
     const map = mapRef.current;
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
     map.on('click', handleMapClick);
+
     return () => {
       cleanupMap();
     };
   }, []);
+
+  // Update map style when theme changes
+  useEffect(() => {
+    if (!mapRef.current) return;
+    mapRef.current.setStyle(getMapStyle());
+  }, [themeSignal.value]);
 
   // Load initial points
   useEffect(() => {
@@ -569,7 +585,6 @@ export const MapLibrePointsMap = ({
           />
         </div>
       )}
-
       <div
         ref={mapContainerRef}
         style={{ width, height }}

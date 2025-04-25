@@ -1,10 +1,12 @@
 import { Button } from '@/components/common/button/button';
 import { useCallback } from 'preact/hooks';
+import { themeSignal } from './signal.theme';
 
 export const ThemeButton = () => {
   const toggleTheme = useCallback((event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
+    themeSignal.value = !themeSignal.value;
     document.body.classList.toggle('dark');
   }, []);
 
