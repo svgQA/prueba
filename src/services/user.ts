@@ -1,11 +1,13 @@
 import { IOption } from '@/components/common/multi/interface';
 import { IPagination } from '@/types';
 import { IUserRequest, IUserResponse } from '@/types/auth';
+import { IUserAreaRequest } from '@/types/user/user.request';
 
 import {
   IDocumentTypeResponse,
   IDeleteUserResponse,
   ICountryResponse,
+  IUserAreaResponse,
 } from '@/types/user/user.response';
 import { BaseService } from '@/utils/network';
 
@@ -147,7 +149,7 @@ export class UserService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async createArea(data: { name: string; description?: string }) {
+  static async createArea(data: IUserAreaRequest) {
     const model: IMakeRequest = {
       url: ['user', 'area'],
       method: REQUEST_METHODS.POST,
@@ -156,26 +158,24 @@ export class UserService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getAreas() {
+  static async getAreas(params: IPagination = { page: 1, items: 1000 }) {
     const model: IMakeRequest = {
-      url: ['user', 'area'],
+      url: ['user', 'areas'],
+      params: params as any,
+    };
+    return await super.make_request<IUserAreaResponse>(this.name, model);
+  }
+
+  static async getArea(id: string) {
+    const model: IMakeRequest = {
+      url: ['user', 'area', id],
     };
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getArea(id: number) {
+  static async updateArea(id: string, data: IUserAreaRequest) {
     const model: IMakeRequest = {
-      url: ['user', 'area', `${id}`],
-    };
-    return await super.make_request<any>(this.name, model);
-  }
-
-  static async updateArea(
-    id: number,
-    data: { name: string; description?: string }
-  ) {
-    const model: IMakeRequest = {
-      url: ['user', 'area', `${id}`],
+      url: ['user', 'area', id],
       method: REQUEST_METHODS.PUT,
       data,
     };
