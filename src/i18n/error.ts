@@ -91,6 +91,7 @@ export const error_en = {
     player_id_update_failed: 'Failed to update player ID',
     player_id_update_success: 'Player ID updated successfully',
     processing_response: 'Error processing response',
+    custom_toast_refresh_page: 'Refresh page',
   },
 };
 
@@ -189,5 +190,6 @@ export const error_es = {
     player_id_update_failed: 'Error al actualizar el ID del jugador',
     player_id_update_success: 'ID del jugador actualizado exitosamente',
     processing_response: 'Error al procesar la respuesta',
+    custom_toast_refresh_page: 'Refrescar página',
   },
 };

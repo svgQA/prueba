@@ -23,6 +23,14 @@ export const PAGES_LIST_ROUTER = {
         areas: {
           base: '/areas',
           to: '/users/areas',
+          create: {
+            base: '/create',
+            to: '/users/areas/create',
+          },
+          update: {
+            base: '/update',
+            to: '/users/areas/update/:id',
+          },
         },
         roles: {
           base: '/roles',

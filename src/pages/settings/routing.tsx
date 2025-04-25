@@ -65,6 +65,7 @@ import { UserSettingsPage } from '../dashboard/users/setting/user.setting';
 import { ScheduledNotificationsPage } from './notifications/scheduleNotifications/scheduledNotifications';
 import { TemplateNotificationPage } from './notifications/templateNotifications/templateNotifications';
 import { TemplateCreateForm } from './notifications/templateNotifications/create/create';
+import { AreaCreatePage } from '../dashboard/users/areas/area.create';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -391,6 +392,14 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.users.roles.to}
           component={lazy(() => Promise.resolve({ default: UserRolesPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.create.to}
+          component={lazy(() => Promise.resolve({ default: AreaCreatePage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.update.to}
+          component={lazy(() => Promise.resolve({ default: AreaCreatePage }))}
         />
 
         <Route

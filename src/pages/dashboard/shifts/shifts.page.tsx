@@ -250,7 +250,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -362,22 +362,23 @@ export const ShiftsPage: FunctionalComponent = () => {
             rounded={false}
             icon='314'
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${!hasValidPlayer
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : onNotifications
-                ? 'bg-primary-opacity'
-                : 'border-primary'
-              }`}
+            className={`border-2 p-2 ${
+              !hasValidPlayer
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : onNotifications
+                  ? 'bg-primary-opacity'
+                  : 'border-primary'
+            }`}
           />
-          {showSendModal.value &&
-            (
+          {showSendModal.value && (
+            <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
               <SendForm
                 onClose={handleCloseSendModal}
                 hasplayers={hasValidPlayer}
                 users={selectedUsers as []}
               />
-            )}
-
+            </div>
+          )}
         </div>
 
         <Button
@@ -445,7 +446,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       </div>
 
       <div className='max-h-screen relative'>
-        <div className='py-2 flex flex-row justify-between px-1 items-center overflow-visible xl:absolute relative z-10'>
+        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
           <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
             <Button

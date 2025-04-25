@@ -82,7 +82,6 @@ export const ManualNotificationForm = ({
     }
   };
 
-
   const clearUserSelection = () => setSelectedUserIds([]);
 
   useEffect(() => {
@@ -123,27 +122,30 @@ export const ManualNotificationForm = ({
           onInput={(e) => setSearch(e.currentTarget.value)}
         />
 
-        <div className="max-h-48 overflow-y-auto border border-gray-200 rounded p-2 bg-white">
-          {[...new Map(filteredUsers.map(u => [u.id, u])).values()].map((user: any) => (
-            <label key={user.id} className="flex items-center gap-2 py-1">
-              <input
-                type="checkbox"
-                value={user.id}
-                checked={selectedUserIds.includes(user.id)}
-                onChange={() =>
-                  setSelectedUserIds((prev) =>
-                    prev.includes(user.id)
-                      ? prev.filter((id) => id !== user.id)
-                      : [...new Set([...prev, user.id])] // <--- asegura no duplicar
-                  )
-                }
-                className="accent-cyan-600"
-              />
-              <span className="text-sm">
-                {user.name} ({user.email})
-              </span>
-            </label>
-          ))}
+        <div className='max-h-48 overflow-y-auto border border-gray-200 rounded p-2 bg-white'>
+          {[...new Map(filteredUsers.map((u) => [u.id, u])).values()].map(
+            (user: any) => (
+              <label key={user.id} className='flex items-center gap-2 py-1'>
+                <input
+                  type='checkbox'
+                  value={user.id}
+                  checked={selectedUserIds.includes(user.id)}
+                  onChange={() =>
+                    setSelectedUserIds(
+                      (prev) =>
+                        prev.includes(user.id)
+                          ? prev.filter((id) => id !== user.id)
+                          : [...new Set([...prev, user.id])] // <--- asegura no duplicar
+                    )
+                  }
+                  className='accent-cyan-600'
+                />
+                <span className='text-sm'>
+                  {user.name} ({user.email})
+                </span>
+              </label>
+            )
+          )}
         </div>
 
         <div className='flex items-center justify-between mt-2'>
@@ -173,13 +175,14 @@ export const ManualNotificationForm = ({
               Usuarios seleccionados con registro de notificaciones:
             </h5>
             <ul className='text-sm text-gray-800 list-disc list-inside space-y-1'>
-              {[...new Map(selectedUsersFull.map(u => [u.id, u])).values()].map((u) => (
+              {[
+                ...new Map(selectedUsersFull.map((u) => [u.id, u])).values(),
+              ].map((u) => (
                 <li key={u.id}>
                   {u.name} ({u.email})
                 </li>
               ))}
             </ul>
-
           </div>
         )}
       </div>
@@ -257,7 +260,6 @@ export const ManualNotificationForm = ({
       >
         Enviar notificación
       </button>
-
     </div>
   );
 };
