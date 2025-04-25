@@ -1,6 +1,5 @@
 // import { useMemo } from 'preact/hooks';
 import { ComponentType } from 'preact';
-import styles from './task-list-table.module.css';
 import { User, TaskListTableProps } from '../../types/public-types';
 
 export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
@@ -18,12 +17,12 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
  */
 
   return (
-    <div>
+    <div className='w-full'>
       {tasks.users.map((t: User) => {
         const isSelected = selectedUsers.has(t.id);
         return (
           <div
-            className={styles.taskListTableRow}
+            className='hover:bg-m5 w-64 h-12 cursor-pointer items-center flex rounded-sm odd:bg-gray-200 dark:odd:bg-b-dark-light last:rounded-bl-xl'
             style={{ height: rowHeight }}
             key={`${t.id}row`}
           >
@@ -31,17 +30,21 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
               className={`hover:bg-m5 w-64 h-12 cursor-pointer items-center flex rounded-sm hover:text-white ${
                 isSelected ? 'bg-ternary text-white' : ''
               }`}
-              title={t.name}
+              title={`${t.name} ${t.surname || ''}`}
               onClick={() => onUserClick?.(t.id)}
               onDblClick={() => onUserDoubleClick?.(t.id)}
             >
-              <div className='flex justify-start items-center px-4'>
+              <div className='flex justify-start items-center px-4 w-full'>
                 <img
-                  className='w-10 h-10 rounded-full object-cover mr-3'
+                  className='w-10 h-10 rounded-full object-cover mr-3 flex-shrink-0'
                   src={t.image}
                   alt={`Profile photo of ${t.name}`}
                 />
-                <div className='text-lg font-medium'>{`${t.name} ${t.surname || ''}`}</div>
+                <div className='overflow-hidden'>
+                  <div className='text-lg font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[160px]'>
+                    {`${t.name} ${t.surname || ''}`}
+                  </div>
+                </div>
               </div>
             </div>
             {/*

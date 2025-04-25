@@ -1,7 +1,6 @@
 import { VNode } from 'preact';
 import { GeneralTask } from '../../types/public-types';
 import { addToDate } from '../../helpers/date-helper';
-import styles from './grid.module.css';
 
 export type GridBodyProps = {
   tasks: GeneralTask;
@@ -31,9 +30,10 @@ export const GridBody = ({
       y1={0}
       x2={svgWidth}
       y2={0}
-      className={styles.gridRowLine}
+      className='stroke-gray-300 dark:stroke-gray-900'
     />,
   ];
+
   for (const user of tasks.users) {
     gridRows.push(
       <rect
@@ -42,7 +42,7 @@ export const GridBody = ({
         y={y}
         width={svgWidth}
         height={rowHeight}
-        className={styles.gridRow}
+        className='odd:fill-gray-200 even:fill-gray-100 dark:odd:fill-gray-600 dark:even:fill-gray-700'
       />
     );
 
@@ -53,7 +53,7 @@ export const GridBody = ({
         y1={y + rowHeight}
         x2={svgWidth}
         y2={y + rowHeight}
-        className={styles.gridRowLine}
+        className='stroke-gray-300 dark:stroke-gray-900'
       />
     );
     y += rowHeight;
@@ -73,7 +73,7 @@ export const GridBody = ({
         y1={0}
         x2={tickX}
         y2={y}
-        className={styles.gridTick}
+        className='stroke-gray-300 dark:stroke-gray-900'
       />
     );
     if (
@@ -119,6 +119,7 @@ export const GridBody = ({
     }
     tickX += columnWidth;
   }
+
   return (
     <g className=''>
       <g className=''>{gridRows}</g>
