@@ -1,11 +1,11 @@
 // src/pages/dashboard/history/components/history.columns.ts
 
 import { ColumnDef } from '@tanstack/react-table';
-import { INotificationHistoryItem } from '@/types/notification/INotificationTypes';
+import { INotificationListItem } from '@/types/notification/INotificationTypes';
 import dayjs from 'dayjs';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 
-export const columns = (): ColumnDef<INotificationHistoryItem>[] => [
+export const columns = (): ColumnDef<INotificationListItem>[] => [
   {
     id: 'title',
     accessorKey: 'title',
@@ -63,13 +63,13 @@ export const columns = (): ColumnDef<INotificationHistoryItem>[] => [
     },
   },
   {
-    id: 'recipientCount',
-    accessorKey: 'recipientCount',
+    id: 'recipients',
+    accessorKey: 'recipients',
     header: 'Destinatarios',
     size: 100,
     cell: (info) => (
       <div className="flex items-center gap-2 text-gray-700">
-        <span className="vox-icon vx-icon-009 text-lg" />
+        <span className="vox-icon vx-icon-314 text-lg" />
         <span className="text-sm">{info.getValue() as number}</span>
       </div>
     ),

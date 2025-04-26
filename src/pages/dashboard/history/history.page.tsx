@@ -7,13 +7,13 @@ import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button'; // 🔥 importamos el botón
 import { columns } from './components/history.columns';
 import { NotificationHistoryServiceFront } from '@/services/historyNotification';
-import { INotificationHistoryItem } from '@/types/notification/INotificationTypes';
+import { INotificationHistoryItem, INotificationListItem } from '@/types/notification/INotificationTypes';
 import { toast } from 'react-toastify';
 
 const userId = 1; // ⚡ TODO: reemplazar por el usuario autenticado real
 
 export const HistoryNotificationsPage: FunctionComponent = () => {
-  const notifications = useSignal<INotificationHistoryItem[]>([]);
+  const notifications = useSignal<INotificationListItem[]>([]);
   const totalNotifications = useSignal<number>(0);
   const openRate = useSignal<number>(0);
   const notificationsThisMonth = useSignal<number>(0);
@@ -29,7 +29,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
 
   const fetchNotifications = async () => {
     try {
-      const res = await NotificationHistoryServiceFront.getByUser(userId, 'all');
+      const res = await NotificationHistoryServiceFront.getNotificationList();
       notifications.value = res;
     } catch (error) {
       toast.error('Error al cargar historial');
@@ -59,16 +59,6 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
 
   return (
     <Section padding>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold">Historial de Notificaciones</h2>
-        {/* 🔥 Botón para ejecutar el cron */}
-        <Button
-          name="run-cron-button"
-          label="Ejecutar revisión"
-          className="bg-primary text-white hover:bg-primary-opacity p-2"
-          onClick={handleRunCron}
-        />
-      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <CardData
@@ -93,8 +83,15 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
           icon="015"
         />
       </div>
-
-      <Table<INotificationHistoryItem>
+      <div className="py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20">
+        <Button
+          name="run-cron-button"
+          label="Ejecutar revisión"
+          className="bg-primary text-white hover:bg-primary-opacity p-2"
+          onClick={handleRunCron}
+        />
+      </div>
+      <Table<INotificationListItem>
         data={notifications.value}
         columns={columns()}
         pageSize={10}
