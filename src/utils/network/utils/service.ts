@@ -121,7 +121,7 @@ export class BaseService {
     return output;
   }
 
-  static async make_request<T>(
+  static async make_request<T = any>(
     instance: VoxServices,
     /* FIX:
      Pasar a usar unicamente el nombre del micro, porque esto va a
@@ -140,14 +140,14 @@ export class BaseService {
     prefix: boolean = false
   ): Promise<GenericResponse<T>> {
     this.openLoading();
-    try {
-      const model_request = this.make_request_model(
-        instance,
-        model,
-        prefix,
-        tenance
-      );
+    const model_request = this.make_request_model(
+      instance,
+      model,
+      prefix,
+      tenance
+    );
 
+    try {
       const response = await fetch(model_request.url, {
         headers: model_request.header,
         body: model.data,

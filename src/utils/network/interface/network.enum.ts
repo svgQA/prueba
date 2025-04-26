@@ -16,4 +16,4 @@ export declare enum HttpStatus {
   INTERNAL_SERVER_ERROR = 500,
 }
 
-export const UNAUTHORIZED = 'Unauthorized';
+export const UNAUTHORIZED = 'general.common.unauthorized';
