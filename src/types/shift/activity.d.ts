@@ -1,6 +1,7 @@
 interface IUser {
   id: number;
   cognitoId: string;
+  playerId: string;
   externalId: string;
   externalPlatformId: string;
   name: string;
@@ -118,7 +119,7 @@ interface ICountry {
   updatedAt: string;
   deletedAt: string | null;
   createdBy: string | null;
-  editBy: string | null;
+  editedBy: string | null;
   deletedBy: string | null;
 }
 
@@ -133,7 +134,7 @@ interface IMunicipality {
   updatedAt: string;
   deletedAt: string | null;
   createdBy: string | null;
-  editBy: string | null;
+  editedBy: string | null;
   deletedBy: string | null;
 }
 
@@ -142,7 +143,7 @@ export interface IShiftResponse {
   service: IService;
   start: string;
   end: string;
-  employeedId: number;
+  employeeId: number;
   employee: IUser;
   serviceId: number;
   status: string;
@@ -174,7 +175,7 @@ export interface IShiftResponse {
   updatedAt: string;
   deletedAt: string | null;
   createdBy: string | null;
-  editBy: string | null;
+  editedBy: string | null;
   deletedBy: string | null;
 }
 

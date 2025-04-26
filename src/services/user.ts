@@ -1,10 +1,13 @@
 import { IOption } from '@/components/common/multi/interface';
 import { IPagination } from '@/types';
 import { IUserRequest, IUserResponse } from '@/types/auth';
-import { USER_TYPE } from '@/types/user/user.enum';
+import { IUserAreaRequest } from '@/types/user/user.request';
+
 import {
   IDocumentTypeResponse,
   IDeleteUserResponse,
+  ICountryResponse,
+  IUserAreaResponse,
 } from '@/types/user/user.response';
 import { BaseService } from '@/utils/network';
 
@@ -13,10 +16,7 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
-
-interface IPaginationUser extends IPagination {
-  userType?: USER_TYPE;
-}
+import { IPaginationUser } from '@/utils/types/user.interface';
 
 export class UserService extends BaseService {
   static name: VoxServices = 'user';
@@ -53,12 +53,31 @@ export class UserService extends BaseService {
     return await super.make_request<IUserResponse>(this.name, model);
   }
 
-  static async get_all(params: IPaginationUser = { page: 1, items: 10 }) {
+  static async get_all(params: IPaginationUser = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['user'],
       params: params as any,
     };
     return await super.make_request<IUserResponse>(this.name, model);
+  }
+
+  static async setProfile(id: number, companyId: string) {
+    const model: IMakeRequest = {
+      url: ['user', 'setprofile'],
+      data: {
+        userId: id,
+        companyId: companyId,
+      },
+      method: REQUEST_METHODS.POST,
+    };
+    return await super.make_request<IUserResponse>(this.name, model);
+  }
+
+  static async getCountries() {
+    const model: IMakeRequest = {
+      url: ['user', 'countries'],
+    };
+    return await super.make_request<ICountryResponse>(this.name, model);
   }
 
   static async delete(id: number) {
@@ -114,6 +133,60 @@ export class UserService extends BaseService {
     const model: IMakeRequest = {
       url: ['user', 'documenttypes'],
     };
-    return await super.make_request<IDocumentTypeResponse[]>(this.name, model);
+    return await super.make_request<IDocumentTypeResponse>(this.name, model);
+  }
+
+  static async changePassword(
+    userId: number,
+    newPassword: string,
+    confirmPassword: string
+  ) {
+    const model: IMakeRequest = {
+      url: ['auth', 'changepassword'],
+      data: { userId, newPassword, confirmPassword },
+      method: REQUEST_METHODS.POST,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async createArea(data: IUserAreaRequest) {
+    const model: IMakeRequest = {
+      url: ['user', 'area'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getAreas(params: IPagination = { page: 1, items: 1000 }) {
+    const model: IMakeRequest = {
+      url: ['user', 'areas'],
+      params: params as any,
+    };
+    return await super.make_request<IUserAreaResponse>(this.name, model);
+  }
+
+  static async getArea(id: string) {
+    const model: IMakeRequest = {
+      url: ['user', 'area', id],
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateArea(id: string, data: IUserAreaRequest) {
+    const model: IMakeRequest = {
+      url: ['user', 'area', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteArea(id: number) {
+    const model: IMakeRequest = {
+      url: ['user', 'area', `${id}`],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<any>(this.name, model);
   }
 }

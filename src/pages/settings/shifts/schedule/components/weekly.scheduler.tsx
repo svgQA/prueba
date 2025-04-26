@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './style.css';
 import { DataSchedule } from './data.schedule';
+import { getSelectedHoursByDay } from '../utils';
 
 // Props para pasar los datos y las funciones de actualización
 interface WeeklySchedulerProps {
@@ -11,35 +12,24 @@ interface WeeklySchedulerProps {
   selectedCells: { [key: string]: boolean };
   onClearSelection: () => void;
   onCellChange: (newCells: { [key: string]: boolean }) => void;
+  daysOfWeek: string[];
+  hours: number[];
 }
 
 const WeeklyScheduler = ({
-  startHour = 0,
-  endHour = 23,
   title = '',
   clearSelection = true,
   selectedCells,
   onClearSelection,
   onCellChange,
+  daysOfWeek,
+  hours,
 }: WeeklySchedulerProps) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [startSelection, setStartSelection] = useState<{
     day: number;
     hour: number;
   } | null>(null);
-  const daysOfWeek = [
-    'Domingo',
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-  ];
-  const hours = Array.from(
-    { length: endHour - startHour + 1 },
-    (_, i) => startHour + i
-  );
 
   const handleMouseDown = (day: number, hour: number) => {
     setIsSelecting(true);
@@ -66,50 +56,6 @@ const WeeklyScheduler = ({
   const handleMouseUp = () => {
     setIsSelecting(false);
     setStartSelection(null);
-  };
-
-  // Agrupar las horas seleccionadas por día en bloques
-  const getSelectedHoursByDay = () => {
-    const selectedHoursByDay = daysOfWeek.map((_, dayIndex) => {
-      // Obtener todas las horas seleccionadas para el día
-      const selectedHours = hours.filter((hour) => {
-        const key = `${dayIndex}-${hour}`;
-        return selectedCells[key]; // Verifica si esta celda está seleccionada
-      });
-
-      // Agrupar las horas consecutivas en bloques
-      const groupedBlocks: any = [];
-      let currentBlock: any = [];
-
-      selectedHours.forEach((hour, index) => {
-        if (currentBlock.length === 0) {
-          currentBlock.push(hour); // Iniciar un nuevo bloque
-        } else if (hour === currentBlock[currentBlock.length - 1] + 1) {
-          // Si la hora es consecutiva, agregar al bloque actual
-          currentBlock.push(hour);
-        } else {
-          // Si no es consecutiva, guardar el bloque y empezar uno nuevo
-          groupedBlocks.push(currentBlock);
-          currentBlock = [hour];
-        }
-
-        // Asegurarse de agregar el último bloque después de iterar
-        if (index === selectedHours.length - 1) {
-          groupedBlocks.push(currentBlock);
-        }
-      });
-
-      return {
-        day: daysOfWeek[dayIndex],
-        dayIndex,
-        blocks: groupedBlocks.map((block: any) => ({
-          start: block[0],
-          end: block[block.length - 1],
-        })),
-      };
-    });
-
-    return selectedHoursByDay;
   };
 
   // Función para determinar si una celda debe tener borde superior o inferior grueso
@@ -206,9 +152,18 @@ const WeeklyScheduler = ({
       <div className='mt-6 bg-white rounded-lg p-4'>
         <h2 className='text-xl font-semibold mb-3'>Horas seleccionadas:</h2>
         <ul className='flex flex-wrap gap-3'>
-          {getSelectedHoursByDay().map((daySelection) => (
-            <DataSchedule daySelection={daySelection} />
-          ))}
+          {getSelectedHoursByDay(daysOfWeek, hours, selectedCells).map(
+            (daySelection) => (
+              <DataSchedule daySelection={daySelection} />
+            )
+          )}
+          {/*<pre>
+            {JSON.stringify(
+              getSelectedHoursByDay(daysOfWeek, hours, selectedCells),
+              null,
+              2
+            )}
+          </pre>*/}
         </ul>
       </div>
     </div>

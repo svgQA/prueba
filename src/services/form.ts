@@ -1,3 +1,4 @@
+import { IOption } from '@/components/common/multi/interface';
 import { IPagination } from '@/types';
 import {
   IFormRequest,
@@ -157,12 +158,9 @@ export class FormService extends BaseService {
   }
   static async getBasicForms() {
     const model: IMakeRequest = {
-      url: ['form', 'basic'],
+      url: ['form', 'simple', 'list'],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<{ id: number; title: string }[]>(
-      this.sname,
-      model
-    );
+    return await super.make_request<IOption>(this.sname, model);
   }
 }

@@ -19,7 +19,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
       const { employee } = info.row.original;
       return (
         <span
-          className='p-1 size-sm cursor-pointer'
+          className='p-1 size-sm cursor-pointer text-left'
           onClick={() => info.row.toggleExpanded()}
         >
           {employee?.name} {employee?.surname}
@@ -83,7 +83,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     },
   },
   {
-    id: 'start-end',
+    id: 'start-time',
     accessorKey: 'start',
     size: 150,
     header: t('shifts.columns.start'),

@@ -12,7 +12,7 @@ export class TemplateServiceFront extends BaseService {
 
   static async getTemplates() {
     const model: IMakeRequest = {
-      url: ['notifications', 'templates'], // ✅ /notifications/templates
+      url: ['notifications', 'templates'],
     };
     return await super.make_request<any>(this.name, model);
   }
@@ -26,7 +26,7 @@ export class TemplateServiceFront extends BaseService {
 
   static async createTemplate(data: ICreateNotificationTemplateDto) {
     const model: IMakeRequest = {
-      url: ['notifications', 'template'], // ✅ /notifications/template
+      url: ['notifications', 'template'],
       method: REQUEST_METHODS.POST,
       data,
     };

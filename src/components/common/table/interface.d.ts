@@ -24,4 +24,7 @@ export interface ITableProps<T> {
   onClickAction?: (action: IRowAction) => void;
   button?: VNode;
   showExpandableIcon?: Boolean;
+  selectable?: boolean;
+  onSelectionChange?: (selected: T[]) => void;
+  onNotifications?: boolean;
 }

@@ -6,7 +6,6 @@ import { required } from '@/utils/utilities';
 import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { Map } from '@/components/common/map/map';
 import { useEffect } from 'preact/hooks';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
@@ -20,6 +19,7 @@ import dayjs from 'dayjs';
 import { Tooltip } from '@/components/common/tooltip/tooltip';
 import { ITask } from '@/types/shift/activity';
 import { FormService } from '@/services';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 
 interface IPoint {
   latitude: number;
@@ -515,8 +515,29 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 </div>
               </div>
               <div>
-                <Map
+                {/* <Map
                   name='Map'
+                  pointsAmount={100}
+                  allowManualPoint={true}
+                  sendPoints={(data) => {
+                    const result = sendPointsRef(data);
+                    form.change('latitude', result?.lat);
+                    form.change('longitude', result?.lng);
+                  }}
+                  pointsRef={points.value}
+                  center={currentLocation.value}
+                  condition={false}
+                  errorCondition=''
+                  radialPoint={null}
+                  errorRadialPoint=''
+                  draggable={true}
+                  width='100%'
+                  height='500px'
+                  clickPoint={() => {}}
+                /> */}
+
+                <MapLibrePointsMap
+                  name='map-points'
                   pointsAmount={100}
                   allowManualPoint={true}
                   sendPoints={(data) => {

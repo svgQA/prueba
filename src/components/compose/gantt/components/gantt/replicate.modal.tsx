@@ -11,7 +11,7 @@ import { IOption } from '@/components/common/multi/interface';
 import { ShiftService } from '@/services';
 import { toast } from 'react-toastify';
 
-interface DateSelectorProps {
+interface ReplicateModalProps {
   selectedUsers: Set<string | number>;
   users?: IOption[];
   onDateSubmit: (
@@ -19,6 +19,7 @@ interface DateSelectorProps {
     endDate: string,
     selectedUserIds: number[]
   ) => void;
+  onReloadSignal?: () => void;
 }
 
 export interface FormValues {
@@ -45,9 +46,10 @@ const initialValues: FormValues = {
   iterations: '1',
 };
 
-export const DateSelector: ComponentType<DateSelectorProps> = ({
+export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
   selectedUsers,
   users,
+  onReloadSignal,
 }) => {
   const [showDateForm, setShowDateForm] = useState(false);
   const formRef = useRef<any>(null);
@@ -83,6 +85,7 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
     }
     toast.success('Shifts replicated successfully');
     setShowDateForm((prev) => !prev);
+    onReloadSignal?.();
   };
 
   // const handleMouseLeave = (e: MouseEvent) => {
@@ -106,7 +109,7 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
 
       {showDateForm && (
         <div
-          className='my-3 absolute right-0 w-96 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[500px]'
+          className='my-3 absolute right-0 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[500px]'
           // onMouseLeave={handleMouseLeave}
         >
           <Form<FormValues>
@@ -190,13 +193,12 @@ export const DateSelector: ComponentType<DateSelectorProps> = ({
                     )}
                   </Field>
 
-                  <div className='pt-4 border-t border-gray-100'>
-                    <div className='space-y-4'>
+                  <div className='py-3 border-y border-gray-100 border-dashed'>
+                    <div className='space-y-4 max-h-96 overflow-y-auto vox-scroll-design'>
                       <div className='grid grid-cols-2 gap-4 font-medium text-sm text-gray-500 uppercase tracking-wider bg-gray-50 p-2 rounded-md'>
                         <div>Usuario Original</div>
                         <div>Usuario de Reemplazo</div>
                       </div>
-
                       <FieldArray name='replacements'>
                         {({ fields }) => (
                           <div>

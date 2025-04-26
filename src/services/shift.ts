@@ -4,37 +4,28 @@ import { User, ViewMode } from '@/components/compose/gantt/types/public-types';
 import { IPagination } from '@/types';
 import { IShiftSetting, IShiftSettingResponse } from '@/types/settings';
 import { IShiftResponse } from '@/types/shift/activity';
-// import { IPlaceRequest, IRoundRequest, IShiftRequest } from '@/types/shift';
+import { ICScheduleRequest } from '@/types/shift/shift.request';
+import {
+  IDepartmentResponse,
+  IMunicipalityResponse,
+} from '@/types/shift/shift.response';
+import { ICountryResponse } from '@/types/user/user.response';
 import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
   VoxServices,
   REQUEST_METHODS,
 } from '@/utils/network/types';
-
-interface IPaginationPlace extends IPagination {
-  contractId?: number;
-  projectId?: number;
-}
-
-interface IPaginationRound extends IPagination {
-  placeId?: number;
-}
-
-interface IPagintationGantt extends IPagination {
-  mode?: ViewMode;
-  // start: string;
-  // end?: string;
-}
-
-interface IReplicateShift {
-  date: string;
-  id: number | string;
-}
+import {
+  IPaginationPlace,
+  IPaginationRound,
+  IPagintationGantt,
+  IReplicateShift,
+} from '@/utils/types/shift.interface';
 
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';
-  static async get_all(params: IPagination = { page: 1, items: 10 }) {
+  static async get_all(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['activity'],
       params: params as any,
@@ -91,13 +82,14 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getPlaces(params: IPaginationPlace = { page: 1, items: 50 }) {
+  static async getPlaces(params: IPaginationPlace = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['place'],
       params: params as any,
     };
     return await super.make_request<any>(this.name, model);
   }
+
   static async getWorkPointsByPlaceId(placeId: number) {
     const model: IMakeRequest = {
       url: ['place/workstation', `${placeId}`],
@@ -105,7 +97,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getProjects(params: IPagination = { page: 1, items: 10 }) {
+  static async getProjects(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['contract'],
       params: params as any,
@@ -113,31 +105,31 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getDepartments(params: IPagination = { page: 1, items: 50 }) {
+  static async getDepartments(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['place/departments'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<IDepartmentResponse>(this.name, model);
   }
 
-  static async getCountries(params: IPagination = { page: 1, items: 50 }) {
+  static async getCountries(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['place/countries'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<ICountryResponse>(this.name, model);
   }
 
   static async getMunicipalities(
-    id: string,
-    params: IPagination = { page: 1, items: 50 }
+    id: number,
+    params: IPagination = { page: 1, items: 400 }
   ) {
     const model: IMakeRequest = {
-      url: ['place/municipalities', id],
+      url: ['place/municipalities', `${id}`],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<IMunicipalityResponse>(this.name, model);
   }
 
   static async createRound(data: any) {
@@ -149,7 +141,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getRounds(params: IPaginationRound = { page: 1, items: 20 }) {
+  static async getRounds(params: IPaginationRound = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['round'],
       params: params as any,
@@ -233,7 +225,7 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getNovelty(params: IPagination = { page: 1, items: 20 }) {
+  static async getNovelty(params: IPagination = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['novelty'],
       params: params as any,
@@ -324,7 +316,7 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getActivities(params: IPagination = { page: 1, items: 20 }) {
+  static async getActivities(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['activity'],
       params: params as any,
@@ -366,7 +358,15 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getTasks(params: IPagination = { page: 1, items: 20 }) {
+  static async getBasicTasks() {
+    const model: IMakeRequest = {
+      url: ['task', 'simple', 'list'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
+  static async getTasks(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['task'],
       params: params as any,
@@ -382,7 +382,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async createSchedule(data: any) {
+  static async createSchedule(data: ICScheduleRequest) {
     const model: IMakeRequest = {
       url: ['schedule'],
       method: REQUEST_METHODS.POST,
@@ -408,7 +408,7 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getSchedules(params: IPagination = { page: 1, items: 20 }) {
+  static async getSchedules(params: IPagination = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['schedule'],
       params: params as any,
@@ -418,10 +418,10 @@ export class ShiftService extends BaseService {
 
   static async getScheduleById(id: string) {
     const model: IMakeRequest = {
-      url: ['service', id],
+      url: ['schedule', id],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<ICScheduleRequest>(this.name, model);
   }
 
   static async createService(data: any) {
@@ -450,7 +450,7 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getServices(params: IPagination = { page: 1, items: 100 }) {
+  static async getServices(params: IPagination = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['service'],
       params: params as any,

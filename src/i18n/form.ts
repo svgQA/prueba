@@ -1,0 +1,89 @@
+export const form_es = {
+  form: {
+    btn: {
+      create: 'Crear',
+      update: 'Actualizar',
+    },
+    placeholder: {
+      title: 'Título de la página',
+      description: 'Descripción de la página',
+      title_page: 'Ingrese el título de la página',
+      element_title: 'Ingrese el título del elemento',
+      section_title: 'Ingrese el título de la sección',
+      type_element: 'Seleccione el tipo de elemento',
+      default_value: 'Ingrese el valor por defecto',
+      list_url: 'Ingrese la URL de la lista',
+      regex_patters: 'Ingrese el patrón de regex',
+      min_length: 'Ingrese la longitud mínima',
+      max_length: 'Ingrese la longitud máxima',
+      size: 'Ingrese el tamaño',
+      number_files: 'Ingrese el número de archivos',
+      element_description: 'Ingrese la descripción',
+    },
+    label: {
+      required: 'Requerido',
+      invisible: 'Invisible',
+      administrator: 'Administrador',
+      disable: 'Deshabilitado',
+      default: 'Por defecto',
+      regex: 'Regex',
+      maximum: 'Máximo',
+      minimum: 'Mínimo',
+    },
+    new: 'Crear formulario',
+    error: {
+      description: 'La descripción debe tener al menos 5 caracteres',
+      title: 'El título debe tener al menos 5 caracteres',
+      structure: 'Debe tener al menos una sección',
+    },
+    field: {
+      question: 'Pregunta',
+      type: 'Tipo de respuesta',
+    },
+  },
+};
+
+export const form_en = {
+  form: {
+    btn: {
+      create: 'Create',
+      update: 'Update',
+    },
+    placeholder: {
+      title: 'Enter title page',
+      description: 'Enter description',
+      title_page: 'Enter title page',
+      element_title: 'Enter element title',
+      section_title: 'Enter section title',
+      type_element: 'Select type element',
+      default_value: 'Enter default value',
+      list_url: 'Enter list URL',
+      regex_patters: 'Enter regex patters',
+      min_length: 'Enter min length',
+      max_length: 'Enter max length',
+      size: 'Enter size',
+      number_files: 'Enter number files',
+      element_description: 'Enter description',
+    },
+    label: {
+      required: 'Required',
+      invisible: 'Invisible',
+      administrator: 'Administrator',
+      disable: 'Disable',
+      default: 'Default',
+      regex: 'Regex',
+      maximum: 'Maximum',
+      minimum: 'Minimum',
+    },
+    new: 'Create form',
+    error: {
+      description: 'The description must be at least 5 characters long',
+      title: 'The title must be at least 5 characters long',
+      structure: 'The form must have at least one section',
+    },
+    field: {
+      question: 'Question',
+      type: 'Type of response',
+    },
+  },
+};

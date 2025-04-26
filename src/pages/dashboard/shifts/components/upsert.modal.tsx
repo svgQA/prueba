@@ -51,9 +51,9 @@ export const TaskForm = ({
 
   const setTasks = (serviceId: number) => {
     const service = services.value.find((service) => service.id === serviceId);
-    console.log(service);
     tasks.value = service?.task || [];
-    console.log(tasks.value);
+    // console.log(service);
+    // console.log(tasks.value);
   };
 
   const onSubmit = async (model: FormData) => {
@@ -115,7 +115,7 @@ export const TaskForm = ({
 
   const footerContent = useMemo(
     () => (
-      <div className='flex dark:bg-b-dark-light justify-end items-center gap-2 p-4 bg-gray-50'>
+      <div className='flex justify-end items-center gap-2 p-4'>
         <Button
           id='btn-form-shift-close'
           name='btn-form-shift-close'
@@ -155,7 +155,7 @@ export const TaskForm = ({
     (task: Task) => (
       <div
         key={task.id}
-        className='bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 w-64'
+        className='dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 w-64'
       >
         <div className='flex justify-between items-center mb-3'>
           <h3 className='font-medium text-gray-900 dark:text-white truncate'>
@@ -247,7 +247,7 @@ export const TaskForm = ({
       header={headerContent}
       footer={footerContent}
     >
-      <div className='px-4 py-6 flex flex-col'>
+      <div className='px-4 py-6 flex flex-col w-full'>
         <Form
           onSubmit={onSubmit}
           initialValues={initialValues}
@@ -475,11 +475,11 @@ export const TaskForm = ({
                             options={tasks.value}
                             onChange={(e) => {
                               const description = e.currentTarget.value;
-                              console.log(description);
+                              // console.log(description);
                               const task = tasks.value.find(
                                 (task: any) => task.description === description
                               );
-                              console.log(task);
+                              // console.log(task);
                               fields.push(task);
                             }}
                           />
@@ -560,7 +560,7 @@ export const TaskForm = ({
             </form>
           )}
         />
-        <div className='flex flex-row flex-wrap gap-4 w-full justify-center p-4'>
+        <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
           {userSelected?.tasks.map(renderTaskCard)}
         </div>
         {/*

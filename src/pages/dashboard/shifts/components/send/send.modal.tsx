@@ -1,74 +1,43 @@
-import { Modal } from '@/components/common/modal/modal';
-import { useState } from 'preact/hooks';
+import { useRef, useEffect } from 'preact/hooks';
 import { ManualNotificationForm } from './tabs/manual-notification-form';
-import { TemplateManager } from './tabs/template-manager';
-import { ScheduledNotifications } from './tabs/scheduled-notifications';
-import { useTranslation } from 'react-i18next';
-
 interface Props {
-  closed?: boolean;
+  hasplayers?: boolean;
   onClose?: () => void;
-  onSend?: (data: any) => void;
+  users?: [];
 }
 
-const getTabs = (t: any) => [
-  { key: 'manual', label: t('shifts.notifications.tabs.manual') },
-  { key: 'template', label: t('shifts.notifications.tabs.templates') },
-  { key: 'scheduled', label: t('shifts.notifications.tabs.scheduled') },
-];
+export const SendForm = ({ onClose, users, hasplayers }: Props) => {
+  const ref = useRef<HTMLDivElement>(null);
 
-export const SendForm = ({ closed, onClose }: Props) => {
-  const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<
-    'manual' | 'template' | 'scheduled'
-  >('manual');
+  // Cerrar si se hace click por fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        onClose?.();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [ref]);
 
-  const TABS = getTabs(t);
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'manual':
-        return <ManualNotificationForm />;
-      case 'template':
-        return <TemplateManager />;
-      case 'scheduled':
-        return <ScheduledNotifications />;
-      default:
-        return null;
-    }
-  };
+  if (closed) return null;
 
   return (
-    <Modal
-      open={!!closed}
-      onClose={onClose}
-      name='modal-shift-updsert'
-      width='w-3/4'
-      position='fixed'
-      header={
-        <h3 className='text-lg font-semibold'>
-          {t('shifts.notifications.center')}
-        </h3>
-      }
+    <div
+      ref={ref}
+      className='min-w-[800px] max-w-[90vw] bg-white rounded absolute z-50 p-4 mt-8'
     >
-      <div className='px-4 py-4 space-y-4 w-full'>
-        <div className='flex gap-2 border-b pb-2'>
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              className={`px-4 py-2 rounded-t font-medium ${
-                activeTab === tab.key
-                  ? 'bg-cyan-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-              onClick={() => setActiveTab(tab.key as any)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-        <div>{renderTabContent()}</div>
+      <div className='px-4 py-3 border-b flex justify-between items-center'>
+        <h3 className='text-base font-semibold'>Centro de notificaciones</h3>
+        <button
+          onClick={onClose}
+          className='text-sm text-gray-500 hover:text-gray-700'
+        >
+          ✕
+        </button>
       </div>
-    </Modal>
+
+      <ManualNotificationForm users={users} hasplayers={hasplayers} />
+    </div>
   );
 };

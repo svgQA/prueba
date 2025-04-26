@@ -17,14 +17,14 @@ import { ganttDateRange, seedDates } from '../../helpers/date-helper';
 import { TaskListHeaderDefault } from '../task-list/task-list-header';
 import { TaskListTableDefault } from '../task-list/task-list-table';
 import { StandardTooltipContent, Tooltip } from '../other/tooltip';
-import { VerticalScroll } from '../other/vertical-scroll';
+// import { VerticalScroll } from '../other/vertical-scroll';
+// import { HorizontalScroll } from '../other/horizontal-scroll';
 import { TaskListProps, TaskList } from '../task-list/task-list';
 import { TaskGantt } from './task-gantt';
 import { BarTask } from '../../types/bar-task';
 import { convertToBarTasks } from '../../helpers/bar-helper';
 import { GanttEvent } from '../../types/gantt-task-actions';
 import { DateSetup } from '../../types/date-setup';
-import { HorizontalScroll } from '../other/horizontal-scroll';
 import styles from './gantt.module.css';
 import { TaskGanttContentProps } from './task-gantt-content';
 import { CalendarProps } from '../calendar/calendar';
@@ -32,7 +32,7 @@ import { GridProps } from '../grid/grid';
 import { memo } from 'preact/compat';
 import { Search } from '@/components/common/search/search';
 import { ColumnFiltersState } from '@tanstack/react-table';
-import { DateSelector } from './replicate.modal';
+import { ReplicateModal } from './replicate.modal';
 
 // interface ColumnFilter {
 //   id: string;
@@ -85,6 +85,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   onUserDoubleClick,
   unsearch,
   group,
+  onReloadSignal,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
@@ -115,21 +116,23 @@ const GanttComponent: ComponentType<GanttProps> = ({
   const [failedTask, setFailedTask] = useState<BarTask | null>(null);
 
   const svgWidth = dateSetup.dates.length * columnWidth;
-  const ganttFullHeight = initialTasks.users.length * rowHeight;
+  const [ganttFullHeight, setGanttFullHeight] = useState(
+    initialTasks.users.length * rowHeight
+  );
 
   const scrollY = useSignal(0);
   const scrollX = useSignal(-1);
-  const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
+  // const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
 
   const [tasks, setTasks] = useState<GeneralTask>(initialTasks);
   const [selectedUsers, setSelectedUsers] = useState<Set<string | number>>(
     new Set()
   );
 
-  const handleDateSubmit = (start: string, end: string) => {
+  const handleDateSubmit = (_start: string, _end: string) => {
     // Aquí puedes manejar la lógica para las fechas seleccionadas
-    console.log('Start Date:', start);
-    console.log('End Date:', end);
+    // console.log('Start Date:', start);
+    // console.log('End Date:', end);
   };
 
   useEffect(() => {
@@ -168,6 +171,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         milestoneBackgroundSelectedColor
       )
     );
+    setGanttFullHeight(initialTasks.users.length * rowHeight);
   }, [
     initialTasks,
     viewMode,
@@ -306,7 +310,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         }
       }
 
-      setIgnoreScrollEvent(true);
+      // setIgnoreScrollEvent(true);
     },
     [scrollX, scrollY, svgWidth, ganttHeight, ganttFullHeight]
   );
@@ -319,36 +323,6 @@ const GanttComponent: ComponentType<GanttProps> = ({
       wrapperRef.current?.removeEventListener('wheel', handleWheel);
     };
   }, [handleWheel]);
-
-  const handleScrollY = useCallback(
-    (event: UIEvent) => {
-      if (
-        scrollY.value !== (event.target as HTMLElement).scrollTop &&
-        !ignoreScrollEvent
-      ) {
-        scrollY.value = (event.target as HTMLElement).scrollTop;
-        setIgnoreScrollEvent(true);
-      } else {
-        setIgnoreScrollEvent(false);
-      }
-    },
-    [scrollY, ignoreScrollEvent]
-  );
-
-  const handleScrollX = useCallback(
-    (event: UIEvent) => {
-      if (
-        scrollX.value !== (event.target as HTMLElement).scrollLeft &&
-        !ignoreScrollEvent
-      ) {
-        scrollX.value = (event.target as HTMLElement).scrollLeft;
-        setIgnoreScrollEvent(true);
-      } else {
-        setIgnoreScrollEvent(false);
-      }
-    },
-    [scrollX, ignoreScrollEvent]
-  );
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -391,7 +365,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         }
         scrollY.value = newScrollY;
       }
-      setIgnoreScrollEvent(true);
+      // setIgnoreScrollEvent(true);
     },
     [
       scrollY,
@@ -605,6 +579,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   useEffect(() => {
     if (columnFilters.length === 0) {
       setTasks(initialTasks);
+      setGanttFullHeight(initialTasks.users.length * rowHeight);
       // Actualizar barTasks con todas las tareas cuando no hay filtros
       const [startDate, endDate] = ganttDateRange(
         initialTasks,
@@ -639,81 +614,88 @@ const GanttComponent: ComponentType<GanttProps> = ({
       return;
     }
 
-    const filteredUsers = initialTasks.users
-      .filter((user) => {
-        // Filtrar a nivel de usuario primero
-        const userLevelFilters = columnFilters.filter(
-          (filter) => filter.id === 'name' || filter.id === 'cardId'
-        );
+    const userLevelFilters = columnFilters.filter((filter) =>
+      ['name', 'cardId'].includes(filter.id)
+    );
 
-        if (userLevelFilters.length > 0) {
-          return userLevelFilters.every((filter) => {
-            const filterValue = filter.value as string;
-            switch (filter.id) {
-              case 'name':
-                return user.name
-                  .toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              case 'cardId':
-                return user.cardId
-                  ?.toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              default:
-                return true;
-            }
-          });
-        }
-        return true;
-      })
-      .map((user) => {
-        // Filtrar las tareas del usuario
-        const taskLevelFilters = columnFilters.filter(
-          (filter) => !['name', 'cardId'].includes(filter.id)
-        );
+    const taskLevelFilters = columnFilters.filter(
+      (filter) => !['name', 'cardId'].includes(filter.id)
+    );
 
-        const filteredTasks = user.tasks.filter((task) => {
-          return taskLevelFilters.every((filter) => {
-            const filterValue = filter.value as string;
-            switch (filter.id) {
-              case 'task.service':
-                return task.name
-                  .toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              case 'task.contract':
-                return task.contract
-                  .toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              case 'task.client':
-                return task.client
-                  .toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              case 'task.status':
-                return task.status
-                  .toLowerCase()
-                  .includes(filterValue.toLowerCase());
-              default:
-                return true;
-            }
-          });
-        });
+    let filteredUsers =
+      userLevelFilters.length > 0
+        ? initialTasks.users.filter((user) => {
+            return userLevelFilters.every((filter) => {
+              const filterValue = filter.value as string[];
+              const userValue = filter.id === 'name' ? user.name : user.cardId;
 
-        return {
-          ...user,
-          tasks: filteredTasks,
-        };
-      })
-      .filter(
-        (user) =>
-          user.tasks.length > 0 ||
-          columnFilters.some((f) => f.id === 'name' || f.id === 'cardId')
-      );
+              if (Array.isArray(filterValue)) {
+                return filterValue.some((val) =>
+                  String(userValue)
+                    .toLowerCase()
+                    .includes(String(val).toLowerCase())
+                );
+              }
+              return String(userValue)
+                .toLowerCase()
+                .includes(String(filterValue).toLowerCase());
+            });
+          })
+        : initialTasks.users;
 
+    filteredUsers =
+      taskLevelFilters.length > 0
+        ? filteredUsers.map((user) => {
+            const filteredTasks = user.tasks.filter((task) => {
+              return taskLevelFilters.every((filter) => {
+                const filterValue = filter.value as string[];
+                let taskValue = '';
+
+                switch (filter.id) {
+                  case 'task.service':
+                    taskValue = task.name;
+                    break;
+                  case 'task.contract':
+                    taskValue = task.contract;
+                    break;
+                  case 'task.client':
+                    taskValue = task.client;
+                    break;
+                  case 'task.status':
+                    taskValue = task.status;
+                    break;
+                  default:
+                    return true;
+                }
+
+                if (Array.isArray(filterValue)) {
+                  return filterValue.some((val) =>
+                    String(taskValue)
+                      .toLowerCase()
+                      .includes(String(val).toLowerCase())
+                  );
+                }
+                return String(taskValue)
+                  .toLowerCase()
+                  .includes(String(filterValue).toLowerCase());
+              });
+            });
+
+            return {
+              ...user,
+              tasks: filteredTasks,
+            };
+          })
+        : filteredUsers;
+
+    filteredUsers = filteredUsers.filter((user) => user.tasks.length);
     const filteredTasks = {
       ...initialTasks,
       users: filteredUsers,
     };
 
     setTasks(filteredTasks);
+    setGanttFullHeight(filteredUsers.length * rowHeight + 10);
 
     // Actualizar barTasks con las tareas filtradas
     const [startDate, endDate] = ganttDateRange(
@@ -769,13 +751,22 @@ const GanttComponent: ComponentType<GanttProps> = ({
     milestoneBackgroundSelectedColor,
   ]);
 
+  // const handleScrollY = useCallback((event: number) => {
+  //   scrollY.value = event;
+  // }, []);
+
+  const handleScrollX = useCallback((event: number) => {
+    scrollX.value = event;
+  }, []);
+
   return (
     <div>
-      <div className='relative w-full my-2 flex items-center justify-end gap-2'>
-        <DateSelector
+      <div className='relative w-full py-1 flex items-center justify-end gap-2'>
+        <ReplicateModal
           selectedUsers={selectedUsers}
           users={users}
           onDateSubmit={handleDateSubmit}
+          onReloadSignal={onReloadSignal}
         />
 
         {!unsearch && (
@@ -797,7 +788,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         )}
       </div>
       <div
-        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl min-h-[30vh]`}
+        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl`}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         ref={wrapperRef}
@@ -810,9 +801,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
           ganttHeight={ganttFullHeight}
           scrollY={scrollY.value}
           scrollX={scrollX.value}
-          onScrollX={(value: number) => {
-            scrollX.value = value;
-          }}
+          onScrollX={handleScrollX}
         />
         {ganttEvent.changedTask && (
           <Tooltip
@@ -832,15 +821,18 @@ const GanttComponent: ComponentType<GanttProps> = ({
             svgWidth={svgWidth}
           />
         )}
-        <VerticalScroll
-          ganttFullHeight={ganttFullHeight}
-          ganttHeight={ganttHeight}
-          headerHeight={headerHeight}
-          scroll={scrollY.value}
-          onScroll={handleScrollY}
-          rtl={rtl}
-        />
+        {/*
+          <VerticalScroll
+            ganttFullHeight={ganttFullHeight}
+            ganttHeight={ganttHeight}
+            headerHeight={headerHeight}
+            scroll={scrollY.value}
+            onScroll={handleScrollY}
+            rtl={rtl}
+          />
+          */}
       </div>
+      {/*
       <HorizontalScroll
         svgWidth={svgWidth}
         taskListWidth={taskListWidth.value}
@@ -848,6 +840,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
         rtl={rtl}
         onScroll={handleScrollX}
       />
+      */}
     </div>
   );
 };

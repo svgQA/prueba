@@ -13,3 +13,22 @@ interface IDeleteUserResponse {
     email: string;
   };
 }
+
+export interface ICountryResponse {
+  id: number;
+  name: string;
+  iso2Code: string;
+  iso3Code: string;
+}
+
+export interface IUserAreaResponse {
+  id: number;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  createdBy: string;
+  editedBy: string;
+  deletedBy: string;
+}

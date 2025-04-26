@@ -9,7 +9,6 @@ import {
   getStatusSettingModal,
   toggleSettingModal,
 } from '@/store/signals/modals';
-import { authModel } from '@/store/signals/access';
 
 import { useSignal } from '@preact/signals';
 import { useCallback } from 'preact/hooks';
@@ -27,8 +26,10 @@ import {
   menuInformationSelected,
   setMenu,
 } from './store/settings';
-
+import { useUserStore } from '@/store/slices';
+import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 export const SettingsModal = () => {
+  const { user } = useUserStore();
   const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
   const [_, navigate] = useLocation();
 
@@ -91,7 +92,8 @@ export const SettingsModal = () => {
       header={
         <div className='flex flex-row w-full items-center justify-between'>
           <MenuButtons goBack={goBack} goForward={goForward} />
-          <div className='ml-5 flex flex-row w-8/12'>
+          <LanguageSwitcher />
+          <div className='ml-5 flex flex-row w-9/12'>
             <Search
               id='search-general'
               name='search-general'
@@ -109,10 +111,10 @@ export const SettingsModal = () => {
           <CardSettingUser
             id='user-information'
             name='user-information'
-            company={authModel.value.company}
-            username={authModel.value.username}
-            image={authModel.value.image}
-            rol={authModel.value.rol}
+            company={'Inndico'}
+            username={user?.name + ' ' + user?.surname}
+            image={user?.image || ''}
+            rol={user?.userType || ''}
           />
         </div>
         <MenuList

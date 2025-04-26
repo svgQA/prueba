@@ -2,9 +2,11 @@ import { VOX_DEFAULT_PATH, VOS_SERVICES } from './constants';
 import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
-import { ICompany } from '@/store/slices/interface';
-import { tenant_header } from '@/env.config';
+import { company_header, tenant_header } from '@/env.config';
 import { toast } from 'react-toastify';
+import i18n from '@/i18n';
+import { CustomToast } from '@/components/compose/toast/CustomToast';
+import { VoxError } from '../error';
 
 export interface IRequestModelOutput {
   header: Record<string, string>;
@@ -17,8 +19,9 @@ export class BaseService {
   protected static prefix: string = 'api';
   protected static openLoading: () => void = () => {};
   protected static closeLoading: () => void = () => {};
-  protected static getSelected: () => ICompany | undefined = () => undefined;
+  protected static getTenant: () => string = () => '';
   protected static getToken: () => string = () => 'Bearer';
+  protected static getCompany: () => string = () => '';
 
   public static setLoading(onOpen: () => void, onClose: () => void) {
     this.openLoading = onOpen;
@@ -26,11 +29,13 @@ export class BaseService {
   }
 
   public static setUser(
-    getSelected: () => ICompany | undefined,
-    getToken: () => string
+    getTenant: () => string,
+    getToken: () => string,
+    getCompany: () => string
   ) {
-    this.getSelected = getSelected;
+    this.getTenant = getTenant;
     this.getToken = getToken;
+    this.getCompany = getCompany;
   }
 
   private static make_url(
@@ -62,10 +67,20 @@ export class BaseService {
       url = `${url}?${queryParams.toString()}`;
     }
     const method = model?.method || REQUEST_METHODS.GET;
+
+    // Obtener el idioma actual de i18n
+    const currentLanguage = i18n.language;
+
+    // Configurar headers básicos incluyendo el idioma
+    model.headers = {
+      ...model?.headers,
+      'Accept-Language': currentLanguage,
+    };
+
     if (method === REQUEST_METHODS.POST || method === REQUEST_METHODS.PUT) {
       if (!model.uncontent) {
         model.headers = {
-          ...model?.headers,
+          ...model.headers,
           'Content-Type': 'application/json',
         };
         model.data = JSON.stringify(model.data || {});
@@ -73,13 +88,29 @@ export class BaseService {
     }
 
     if (tenance) {
-      const tenant = this.getSelected();
-      if (!tenant_header || !tenant?.tenant_id) {
-        throw new Error('ERROR: not include header');
+      const tenant = this.getTenant();
+      const company = this.getCompany();
+
+      if (!tenant_header || !tenant) {
+        toast.error(i18n.t('error.not_found_tenant'));
+        throw new Error('ERROR: not include tenant header');
       }
-      model.headers = { ...model.headers, [tenant_header]: tenant.tenant_id };
+
+      if (!company_header || !company) {
+        toast.error(i18n.t('error.not_found_company'));
+        throw new Error('ERROR: not include company header');
+      }
+
+      model.headers = {
+        ...model.headers,
+        [tenant_header]: tenant,
+        [company_header]: company,
+      };
     }
-    model.headers = { ...model.headers, Authorization: this.getToken() };
+    model.headers = {
+      ...model.headers,
+      Authorization: this.getToken(),
+    };
 
     const output: IRequestModelOutput = {
       header: model.headers as Record<string, string>,
@@ -116,18 +147,21 @@ export class BaseService {
         prefix,
         tenance
       );
+
       const response = await fetch(model_request.url, {
         headers: model_request.header,
         body: model.data,
         method: model.method,
       });
+
       if (!response.ok) {
-        const result = await response.json();
-        // console.log('response error ==>', result);
-        toast.error(result.error, { position: 'top-right' });
+        const result = (await response.json()) as VoxError;
+        toast.error(CustomToast, {
+          data: result,
+        });
         return new GenericResponse<T>({
           code: response?.status,
-          message: result?.text,
+          message: result?.message,
           data: {},
         });
       }
@@ -149,7 +183,7 @@ export class BaseService {
         });
       }
     } catch (error: unknown) {
-      // console.log('error consumiendo en BaseService =>', error);
+      toast.error(i18n.t('error.processing_response'));
       throw new Error('ERROR: processing response');
     } finally {
       this.closeLoading();

@@ -5,13 +5,14 @@ interface IUser {
 }
 
 export interface IUserRequest extends IUser {
+  readonly id?: number;
   readonly externalId?: string;
   readonly externalPlatformId?: string;
-
+  readonly userType?: string;
   readonly name: string;
   readonly surname: string;
   readonly email: string;
-
+  readonly address: string;
   readonly image?: string;
   readonly phone?: string;
 
@@ -27,6 +28,7 @@ export interface IExtraData {
   job: string;
   area: string;
   sucursal: string;
+  company: string;
 }
 
 export interface IUserResponse extends IUserRequest {
@@ -35,4 +37,20 @@ export interface IUserResponse extends IUserRequest {
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
+}
+
+export interface IJwtPayload {
+  auth_time: number;
+  client_id: string;
+  'custom:tenant': string;
+  event_id: string;
+  exp: number;
+  iat: number;
+  iss: string;
+  jti: string;
+  origin_jti: string;
+  scope: string;
+  sub: string;
+  token_use: string;
+  username: string;
 }

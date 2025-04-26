@@ -1,26 +1,34 @@
 import { create } from 'zustand';
-import { type ICompany, type IUser } from './interface/user.interface';
+import { type ICompany } from './interface/user.interface';
 import { message_service_url } from '@/env.config';
+import { IUserResponse } from '@/types/auth';
 
 type State = {
-  user: IUser | null;
+  user: IUserResponse | null;
   companies: ICompany[];
   token: string;
   socket: string;
   cognito: string;
+  tenant: string;
+  user_id: string;
 };
 
 type Actions = {
-  setUser: (user: IUser | null) => void;
+  setUser: (user?: IUserResponse) => void;
   setToken: (token: string) => void;
   setCompanies: (companies: ICompany[]) => void;
   setSelected: (company_id: string) => void;
   getSelected: () => ICompany | undefined;
-  getUser: () => IUser | null;
+  getUser: () => IUserResponse | null;
   getToken: () => string;
   getUrlSocket: () => string;
   setCognito: (uuid: string) => void;
   getCognito: () => string;
+  setTenant: (uuid: string) => void;
+  getTenant: () => string;
+  setUserId: (uuid: string) => void;
+  getUserId: () => string;
+  getCompany: () => string;
 };
 
 export const useUserStore = create<State & Actions>((set, get) => ({
@@ -29,6 +37,19 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   companies: [],
   socket: '',
   cognito: '',
+  tenant: '',
+  user_id: '',
+  getCompany: () => '1',
+  setUserId: (uuid: string) => set({ user_id: uuid }),
+  getUserId: () => {
+    const { user_id } = get();
+    return user_id;
+  },
+  setTenant: (uuid: string) => set({ tenant: uuid }),
+  getTenant: () => {
+    const { tenant } = get();
+    return tenant;
+  },
   getCognito: () => {
     const { cognito } = get();
     return cognito;

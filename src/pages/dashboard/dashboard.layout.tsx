@@ -26,10 +26,10 @@ import { UsersPage } from './users/users.page';
  * STORE SIGNALS
  ** ***********************************************************************/
 import {
-  getStatusOnBoardingModal,
+  // getStatusOnBoardingModal,
+  // closeOnBoardingModal,
+  // openOnBoardingModal,
   toggleSettingModal,
-  closeOnBoardingModal,
-  openOnBoardingModal,
   openLoading,
   closeLoading,
 } from '@/store/signals/modals';
@@ -43,10 +43,12 @@ import { SettingsModal } from '../settings/settings';
 import { ToastContainer } from 'react-toastify';
 import { Loading } from '@/components/common/loading/loading';
 import { Sidebar } from '@/components/common/sidebar/sidebar';
-import { OnBordingModal } from '../globals/onbording/onboarding';
-import { IconsModal } from '../globals/icons/icons';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
-import { useWebSocket } from '@/utils/socket';
+import { HistoryNotificationsPage } from './history/history.page';
+// import { useWebSocket } from '@/utils/socket';
+
+// import { IconsModal } from '../globals/icons/icons';
+// import { OnBordingModal } from '../globals/onbording/onboarding';
 
 // const GENERAL_GROUP_MENU = 0,
 //   SETTING_USER_MENU = 0;
@@ -56,44 +58,36 @@ import { useWebSocket } from '@/utils/socket';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    const wsManager = useWebSocket();
+    // const wsManager = useWebSocket();
 
     const {
-      setSelected,
-      companies,
-      setCompanies,
-      getSelected,
-      setToken,
+      getTenant,
       getToken,
-      getUrlSocket,
-      setCognito,
+      getCompany,
+      setToken,
+      setUserId,
+      setTenant,
+      setUser,
     } = useUserStore();
 
-    const setCompanySelected = (company: string) => {
-      setSelected(company);
-      closeOnBoardingModal();
-      // getProfile();
-      initSocket();
-    };
+    // const setCompanySelected = (company: string) => {
+    //   setSelected(company);
+    //   closeOnBoardingModal();
+    //   // getProfile();
+    //   initSocket();
+    // };
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
-      BaseService.setUser(getSelected, getToken);
+      BaseService.setUser(getTenant, getToken, getCompany);
       validateUser();
     }, []);
 
     const validateUser = async () => {
-      /* [TODO]: Bad code */
-      // closeOnBoardingModal();
-      /* [TODO]: Correct code */
-      const existTenant = await hasUserTenant(
-        setCompanies,
-        setSelected,
-        setToken,
-        setCognito
-      );
-      if (!existTenant) openOnBoardingModal();
-      else closeOnBoardingModal();
+      await hasUserTenant(setToken, setUserId, setTenant, setUser);
+      // console.log('existTenant', existTenant);
+      // if (!existTenant) openOnBoardingModal();
+      // else closeOnBoardingModal();
     };
 
     // const getProfile = async () => {
@@ -109,9 +103,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     //   });
     // };
 
-    const initSocket = () => {
-      wsManager.connect(getUrlSocket());
-    };
+    // const initSocket = () => {
+    //   wsManager.connect(getUrlSocket());
+    // };
 
     return (
       <section className='bg-b-content dark:bg-b-dark w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
@@ -160,10 +154,17 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                   Promise.resolve({ default: DevicesPage })
                 )}
               />
+              <Route
+                path={PAGES_LIST.HISTORY}
+                component={lazy(() =>
+                  Promise.resolve({ default: HistoryNotificationsPage })
+                )}
+              />
             </Suspense>
           </Router>
         </div>
         <SettingsModal />
+        {/*
         <OnBordingModal
           closed={getStatusOnBoardingModal.value}
           onLogout={signOut || (() => {})}
@@ -195,6 +196,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           ))}
         </OnBordingModal>
         <IconsModal />
+        */}
         <ToastContainer />
       </section>
     );

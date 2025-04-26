@@ -91,7 +91,14 @@ export const CustomLoginPage = () => {
       <Authenticator
         hideSignUp={true}
         components={components}
-        // socialProviders={['google']}
+        initialState='signIn'
+        loginMechanisms={['email']}
+        signUpAttributes={[]}
+        services={{
+          async validateCustomSignUp(): Promise<{ errors: string[] }> {
+            return { errors: [] };
+          },
+        }}
       >
         {(_) => null}
       </Authenticator>

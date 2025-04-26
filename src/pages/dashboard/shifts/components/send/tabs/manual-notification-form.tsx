@@ -2,11 +2,20 @@ import { useState, useEffect } from 'preact/hooks';
 import { NotificationServiceFront } from '@/services/notification';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
 import { FormService } from '@/services/form';
-import { UserService } from '@/services/user';
 import { TemplateServiceFront } from '@/services/template';
+import { IOption } from '@/components/common/multi/interface';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
-export const ManualNotificationForm = () => {
+interface Props {
+  users?: any[];
+  hasplayers?: boolean;
+}
+
+export const ManualNotificationForm = ({
+  users: externalUsers = [],
+  hasplayers,
+}: Props) => {
   const { t } = useTranslation();
   const [templateId, setTemplateId] = useState<string>('');
   const [templates, setTemplates] = useState<any[]>([]);
@@ -19,51 +28,40 @@ export const ManualNotificationForm = () => {
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
 
   const [search, setSearch] = useState<string>('');
-  const [users, setUsers] = useState<any[]>([]);
-  const [selectedUserIds, setSelectedUserIds] = useState<any[]>([]);
-  const [forms, setForms] = useState<any[]>([]);
+  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+  const [selectedUsersFull, setSelectedUsersFull] = useState<
+    { id: number; name: string; email: string; playerId: string }[]
+  >([]);
+  const [forms, setForms] = useState<IOption[]>([]);
 
-  const fetchInitialData = async () => {
-    try {
-      const [usersResponse, formsResponse, templatesResponse] =
-        await Promise.all([
-          UserService.getMinimalUsers(),
-          FormService.getBasicForms(),
-          TemplateServiceFront.getTemplates(),
-        ]);
+  const usersWithPlayerId = externalUsers.filter((u) => !!u.playerId);
 
-      if (usersResponse.getStatus()) {
-        setUsers(usersResponse.getMany());
-      }
-
-      if (formsResponse.getStatus()) {
-        setForms(formsResponse.getMany());
-      }
-
-      if (templatesResponse.getStatus()) {
-        setTemplates(templatesResponse.getMany());
-      }
-    } catch (error) {
-      console.error('Error fetching initial data:', error);
-    }
-  };
+  const filteredUsers = usersWithPlayerId.filter((u) => {
+    const match = `${u.name} ${u.email}`
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    return sendToShiftToday ? match && u.hasShiftToday : match;
+  });
 
   useEffect(() => {
-    fetchInitialData();
-  }, []);
+    setSelectedUserIds(usersWithPlayerId.map((u) => u.id));
+  }, [externalUsers]);
 
   useEffect(() => {
-    getFormStructure();
-  }, [formId]);
+    const finalUsers = usersWithPlayerId
+      .filter((u) => selectedUserIds.includes(u.id))
+      .map((u) => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        playerId: u.playerId,
+      }));
 
-  const getFormStructure = async () => {
-    const response = await FormService.get_one(formId);
-    if (!response.getStatus()) return;
-    setFormStructure(response.getOne());
-  };
+    setSelectedUsersFull(finalUsers);
+  }, [selectedUserIds, usersWithPlayerId]);
 
   const handleSubmit = async () => {
-    const safeUserIds = selectedUserIds.map(String);
+    if (!hasplayers) return;
 
     const payload: ISendManualNotificationDto = {
       ...(templateId && { templateId }),
@@ -71,7 +69,7 @@ export const ManualNotificationForm = () => {
       ...(overrideTitle && { overrideTitle }),
       ...(overrideDescription && { overrideDescription }),
       filters: {
-        ...(safeUserIds.length > 0 && { userIds: safeUserIds }),
+        userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
       ...(formStructure && { data: { formId, formStructure } }),
@@ -79,26 +77,45 @@ export const ManualNotificationForm = () => {
 
     try {
       await NotificationServiceFront.sendManualNotification(payload);
-      alert(t('shifts.notifications.successMessage'));
+      toast.success('Notificaciones enviadas correctamente');
     } catch (err) {
-      console.error('Error al enviar notificación:', err);
-      alert(t('shifts.notifications.errorMessage'));
+      console.error('❌ Error al enviar notificaciones:', err);
+      toast.error('❌ Ocurrió un error al enviar las notificaciones');
     }
   };
 
   const clearUserSelection = () => setSelectedUserIds([]);
 
-  return (
-    <div className='space-y-6 w-full max-w-5xl mx-auto'>
-      <h4 className='text-xl font-semibold text-gray-800'>
-        {t('shifts.notifications.sendManual')}
-      </h4>
+  useEffect(() => {
+    const fetchFormsAndTemplates = async () => {
+      try {
+        const [formsResponse, templatesResponse] = await Promise.all([
+          FormService.getBasicForms(),
+          TemplateServiceFront.getTemplates(),
+        ]);
 
-      {/* Filtro de usuarios */}
+        if (formsResponse.getStatus()) setForms(formsResponse.getMany());
+        if (templatesResponse.getStatus())
+          setTemplates(templatesResponse.getMany());
+      } catch (err) {
+        console.error('Error cargando formularios o plantillas:', err);
+      }
+    };
+    fetchFormsAndTemplates();
+  }, []);
+
+  useEffect(() => {
+    const getFormStructure = async () => {
+      if (!formId) return;
+      const response = await FormService.get_one(formId);
+      if (response.getStatus()) setFormStructure(response.getOne());
+    };
+    getFormStructure();
+  }, [formId]);
+
+  return (
+    <div className='space-y-6 w-full max-w-5xl mx-auto p-4'>
       <div className='space-y-2'>
-        <label className='block text-sm font-medium mb-1'>
-          {t('shifts.notifications.users')}
-        </label>
         <input
           type='text'
           className='w-full border border-gray-300 rounded px-3 py-2'
@@ -106,25 +123,21 @@ export const ManualNotificationForm = () => {
           value={search}
           onInput={(e) => setSearch(e.currentTarget.value)}
         />
+
         <div className='max-h-48 overflow-y-auto border border-gray-200 rounded p-2 bg-white'>
-          {users
-            .filter((u: any) => {
-              const match = `${u.name} ${u.email}`
-                .toLowerCase()
-                .includes(search.toLowerCase());
-              return sendToShiftToday ? match && u.hasShiftToday : match;
-            })
-            .map((user: any) => (
+          {[...new Map(filteredUsers.map((u) => [u.id, u])).values()].map(
+            (user: any) => (
               <label key={user.id} className='flex items-center gap-2 py-1'>
                 <input
                   type='checkbox'
                   value={user.id}
                   checked={selectedUserIds.includes(user.id)}
                   onChange={() =>
-                    setSelectedUserIds((prev) =>
-                      prev.includes(user.id)
-                        ? prev.filter((id) => id !== user.id)
-                        : [...prev, user.id]
+                    setSelectedUserIds(
+                      (prev) =>
+                        prev.includes(user.id)
+                          ? prev.filter((id) => id !== user.id)
+                          : [...new Set([...prev, user.id])] // <--- asegura no duplicar
                     )
                   }
                   className='accent-cyan-600'
@@ -133,36 +146,49 @@ export const ManualNotificationForm = () => {
                   {user.name} ({user.email})
                 </span>
               </label>
-            ))}
+            )
+          )}
         </div>
 
-        <div className='flex items-center gap-2 mt-2'>
-          <input
-            type='checkbox'
-            checked={sendToShiftToday}
-            onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
-            className='accent-cyan-600'
-          />
-          <span className='text-sm'>
-            {t('shifts.notifications.onlyWithActiveShift')}
-          </span>
+        <div className='flex items-center justify-between mt-2'>
+          <div className='flex items-center gap-2'>
+            <input
+              type='checkbox'
+              checked={sendToShiftToday}
+              onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
+              className='accent-cyan-600'
+            />
+            <span className='text-sm'>Solo con turno activo</span>
+          </div>
+
+          {selectedUserIds.length > 0 && (
+            <button
+              className='text-sm text-cyan-700 hover:underline'
+              onClick={clearUserSelection}
+            >
+              Limpiar selección de usuarios
+            </button>
+          )}
         </div>
 
-        {selectedUserIds.length > 0 && (
-          <button
-            className='text-sm text-cyan-700 hover:underline mt-1'
-            onClick={clearUserSelection}
-          >
-            {t('shifts.notifications.clearUserSelection')}
-          </button>
+        {selectedUsersFull.length > 0 && (
+          <div className='mt-2'>
+            <h5 className='text-sm font-medium text-gray-700 mb-1'>
+              Usuarios seleccionados con registro de notificaciones:
+            </h5>
+            <ul className='text-sm text-gray-800 list-disc list-inside space-y-1'>
+              {[
+                ...new Map(selectedUsersFull.map((u) => [u.id, u])).values(),
+              ].map((u) => (
+                <li key={u.id}>
+                  {u.name} ({u.email})
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
-
-        <p className='text-xs text-gray-500 italic'>
-          {t('shifts.notifications.noSelectionWarning')}
-        </p>
       </div>
 
-      {/* Plantilla y formulario */}
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         <div>
           <label className='block text-sm font-medium mb-1'>
@@ -198,17 +224,16 @@ export const ManualNotificationForm = () => {
               setTemplateId('');
             }}
           >
-            <option value=''>{t('shifts.notifications.selectForm')}</option>
-            {forms.map((form: any) => (
-              <option key={form.id} value={form.id}>
-                {form.title}
+            <option value=''>Selecciona un formulario</option>
+            {forms.map((form) => (
+              <option key={form.value} value={form.value}>
+                {form.label}
               </option>
             ))}
           </select>
         </div>
       </div>
 
-      {/* Campos personalizados (solo si no hay plantilla seleccionada) */}
       {!templateId && (
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           <div>
@@ -235,15 +260,12 @@ export const ManualNotificationForm = () => {
         </div>
       )}
 
-      {/* Botón de envío */}
-      <div className='pt-4'>
-        <button
-          className='bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded'
-          onClick={handleSubmit}
-        >
-          {t('shifts.notifications.sendButton')}
-        </button>
-      </div>
+      <button
+        className='bg-primary hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded'
+        onClick={handleSubmit}
+      >
+        Enviar notificación
+      </button>
     </div>
   );
 };
