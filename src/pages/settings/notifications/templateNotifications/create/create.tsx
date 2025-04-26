@@ -22,7 +22,8 @@ export const TemplateCreateForm = () => {
 
   const redirectToList = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
+        .to,
       label: 'notificaciones',
       id: 'template-notifications',
     };
@@ -80,59 +81,59 @@ export const TemplateCreateForm = () => {
   }, [useTasks]);
 
   return (
-    <div className="w-full px-4 sm:px-6">
-      <form className="space-y-6 w-full">
+    <div className='w-full px-4 sm:px-6'>
+      <form className='space-y-6 w-full'>
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Título <span className="text-red-500">*</span>
+          <label className='block text-sm font-medium text-gray-700'>
+            Título <span className='text-red-500'>*</span>
           </label>
           <input
-            type="text"
+            type='text'
             value={title}
             onInput={(e) => setTitle(e.currentTarget.value)}
-            className="mt-1 w-full border rounded px-3 py-2"
-            placeholder="Ingrese el título de la plantilla..."
+            className='mt-1 w-full border rounded px-3 py-2'
+            placeholder='Ingrese el título de la plantilla...'
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Descripción <span className="text-red-500">*</span>
+          <label className='block text-sm font-medium text-gray-700'>
+            Descripción <span className='text-red-500'>*</span>
           </label>
           <textarea
             value={description}
             onInput={(e) => setDescription(e.currentTarget.value)}
-            className="mt-1 w-full border rounded px-3 py-2"
-            placeholder="Ingrese una descripción..."
+            className='mt-1 w-full border rounded px-3 py-2'
+            placeholder='Ingrese una descripción...'
             rows={4}
             required
           />
         </div>
 
         <div>
-          <h3 className="text-md font-semibold mb-2">Contenido</h3>
+          <h3 className='text-md font-semibold mb-2'>Contenido</h3>
 
-          <div className="border rounded p-4 mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-medium flex items-center gap-2">
-                <span className="vox-icon vx-icon-168 text-base" />
+          <div className='border rounded p-4 mb-4'>
+            <div className='flex items-center justify-between mb-2'>
+              <span className='font-medium flex items-center gap-2'>
+                <span className='vox-icon vx-icon-168 text-base' />
                 Agregar Formulario
               </span>
               <input
-                type="checkbox"
+                type='checkbox'
                 checked={useForm}
                 onChange={() => setUseForm(!useForm)}
-                className="toggle"
+                className='toggle'
               />
             </div>
             <select
               disabled={!useForm}
-              className="w-full border rounded px-3 py-2"
+              className='w-full border rounded px-3 py-2'
               value={formId}
               onChange={(e) => setFormId(e.currentTarget.value)}
             >
-              <option value="">Seleccione un formulario...</option>
+              <option value=''>Seleccione un formulario...</option>
               {forms.map((form) => (
                 <option key={form.value} value={form.value}>
                   {form.label}
@@ -141,27 +142,27 @@ export const TemplateCreateForm = () => {
             </select>
           </div>
 
-          <div className="border rounded p-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-medium flex items-center gap-2">
-                <span className="vox-icon vx-icon-169 text-base" />
+          <div className='border rounded p-4'>
+            <div className='flex items-center justify-between mb-2'>
+              <span className='font-medium flex items-center gap-2'>
+                <span className='vox-icon vx-icon-169 text-base' />
                 Agregar Tareas
               </span>
               <input
-                type="checkbox"
+                type='checkbox'
                 checked={useTasks}
                 onChange={() => setUseTasks(!useTasks)}
-                className="toggle"
+                className='toggle'
               />
             </div>
-            <div className="flex gap-2">
+            <div className='flex gap-2'>
               <select
                 disabled={!useTasks}
-                className="w-full border rounded px-3 py-2"
+                className='w-full border rounded px-3 py-2'
                 value={taskId}
                 onChange={(e) => setTaskId(e.currentTarget.value)}
               >
-                <option value="">Seleccione una tarea...</option>
+                <option value=''>Seleccione una tarea...</option>
                 {tasks.map((task) => (
                   <option key={task.id} value={task.id}>
                     {task.description}
@@ -170,10 +171,10 @@ export const TemplateCreateForm = () => {
               </select>
 
               <button
-                type="button"
+                type='button'
                 disabled={!useTasks}
-                className="bg-gray-200 px-3 rounded text-xl"
-                title="Agregar tarea"
+                className='bg-gray-200 px-3 rounded text-xl'
+                title='Agregar tarea'
               >
                 +
               </button>
@@ -181,17 +182,17 @@ export const TemplateCreateForm = () => {
           </div>
         </div>
 
-        <div className="flex justify-end gap-4 pt-4">
+        <div className='flex justify-end gap-4 pt-4'>
           <Button
-            name="cancel-template"
+            name='cancel-template'
             label={'Cancelar'}
-            className="bg-white text-grey p-2"
+            className='bg-white text-grey p-2'
             onClick={redirectToList}
           />
           <Button
-            name="create-template"
+            name='create-template'
             label={loading ? 'Creando...' : 'Crear Plantilla'}
-            className="bg-primary text-white p-2"
+            className='bg-primary text-white p-2'
             onClick={handleSubmit}
           />
         </div>

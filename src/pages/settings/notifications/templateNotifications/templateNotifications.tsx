@@ -25,7 +25,8 @@ export const TemplateNotificationPage = () => {
 
   const redirect = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.create.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
+        .create.to,
       label: 'create',
       id: 'template-create',
     };
@@ -35,12 +36,12 @@ export const TemplateNotificationPage = () => {
 
   return (
     <Section padding>
-      <div className="flex justify-between items-center mb-4">
-        <div className="absolute mt-12 z-50">
+      <div className='flex justify-between items-center mb-4'>
+        <div className='absolute mt-12 z-50'>
           <Button
-            name="create-template"
-            label="+ Nueva Plantilla"
-            className="bg-primary text-white p-2 mt-10"
+            name='create-template'
+            label='+ Nueva Plantilla'
+            className='bg-primary text-white p-2 mt-10'
             onClick={redirect}
           />
         </div>

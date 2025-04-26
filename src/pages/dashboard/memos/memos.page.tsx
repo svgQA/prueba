@@ -226,10 +226,11 @@ export const MemosPage: FunctionComponent = () => {
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage.value === 1}
-                  className={`px-4 py-2 rounded-md ${currentPage.value === 1
+                  className={`px-4 py-2 rounded-md ${
+                    currentPage.value === 1
                       ? 'bg-gray-300 cursor-not-allowed'
                       : 'bg-blue-500 hover:bg-blue-600'
-                    } text-white`}
+                  } text-white`}
                 >
                   Anterior
                 </button>
@@ -239,10 +240,11 @@ export const MemosPage: FunctionComponent = () => {
                 <button
                   onClick={handleNextPage}
                   disabled={currentPage.value >= totalPages.value}
-                  className={`px-4 py-2 rounded-md ${currentPage.value >= totalPages.value
+                  className={`px-4 py-2 rounded-md ${
+                    currentPage.value >= totalPages.value
                       ? 'bg-gray-300 cursor-not-allowed'
                       : 'bg-blue-500 hover:bg-blue-600'
-                    } text-white`}
+                  } text-white`}
                 >
                   Siguiente
                 </button>
@@ -266,7 +268,7 @@ export const MemosPage: FunctionComponent = () => {
         </div>
       </>
     );
-  }
+  };
 
   const calculatePercentage = (value: number): string => {
     if (memoSummary.value.total === 0) return '0%';
@@ -277,49 +279,47 @@ export const MemosPage: FunctionComponent = () => {
     currentView.value = view;
   }, []);
 
-  const buttonMenu = useMemo(() => (
-    <div className='flex items-center gap-2'>
-      <Button
-        name='button-change-table'
-        onClick={() => {
-          handleViewChange(VIEW_NAME.TABLE);
-        }}
-        rounded={false}
-        className={
-          currentView.value === VIEW_NAME.TABLE
-            ? 'bg-primary-opacity p-2'
-            : ''
-        }
-        icon='320'
-      />
-      <Button
-        name='button-change-scheduler'
-        onClick={() => {
-          handleViewChange(VIEW_NAME.CHAT);
-        }}
-        rounded={false}
-        className={
-          currentView.value === VIEW_NAME.CHAT
-            ? 'bg-primary-opacity p-2'
-            : ''
-        }
-        icon='418'
-      />
-      <Button
-        name='button-change-scheduler'
-        rounded={false}
-        icon='331'
-      />
-      <Button
-        name='button-change-scheduler'
-        rounded={false}
-        icon='314'
-      />
-    </div>
-  ), [currentView.value]);
+  const buttonMenu = useMemo(
+    () => (
+      <div className='flex items-center gap-2'>
+        <Button
+          name='button-change-table'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.TABLE);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.TABLE
+              ? 'bg-primary-opacity p-2'
+              : ''
+          }
+          icon='320'
+        />
+        <Button
+          name='button-change-scheduler'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.CHAT);
+          }}
+          rounded={false}
+          className={
+            currentView.value === VIEW_NAME.CHAT ? 'bg-primary-opacity p-2' : ''
+          }
+          icon='418'
+        />
+        <Button name='button-change-scheduler' rounded={false} icon='331' />
+        <Button name='button-change-scheduler' rounded={false} icon='314' />
+      </div>
+    ),
+    [currentView.value]
+  );
 
   return (
-    <Section className={currentView.value === VIEW_NAME.CHAT ? 'flex flex-row h-[99.5vh]' : ''} padding={currentView.value === VIEW_NAME.TABLE}>
+    <Section
+      className={
+        currentView.value === VIEW_NAME.CHAT ? 'flex flex-row h-[99.5vh]' : ''
+      }
+      padding={currentView.value === VIEW_NAME.TABLE}
+    >
       {currentView.value === VIEW_NAME.TABLE && (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
@@ -351,7 +351,9 @@ export const MemosPage: FunctionComponent = () => {
       <div className='max-h-screen relative'>
         {currentView.value !== VIEW_NAME.CHAT && (
           <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
-            <div className='flex flex-row items-center justify-between'>{buttonMenu}</div>
+            <div className='flex flex-row items-center justify-between'>
+              {buttonMenu}
+            </div>
           </div>
         )}
 
@@ -367,7 +369,6 @@ export const MemosPage: FunctionComponent = () => {
             }}
           />
         )}
-
       </div>
 
       {currentView.value === VIEW_NAME.CHAT && chatView()}
