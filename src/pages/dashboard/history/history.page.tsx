@@ -7,10 +7,8 @@ import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button'; // 🔥 importamos el botón
 import { columns } from './components/history.columns';
 import { NotificationHistoryServiceFront } from '@/services/historyNotification';
-import { INotificationHistoryItem, INotificationListItem } from '@/types/notification/INotificationTypes';
+import { INotificationListItem } from '@/types/notification/INotificationTypes';
 import { toast } from 'react-toastify';
-
-const userId = 1; // ⚡ TODO: reemplazar por el usuario autenticado real
 
 export const HistoryNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationListItem[]>([]);
