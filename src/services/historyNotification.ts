@@ -4,18 +4,20 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
+import { GenericResponse } from '@/utils/network/utils/rest-factory';
 
 import {
   INotificationHistoryItem,
   INotificationHistoryByScheduled,
+  INotificationDashboardData,
+  INotificationListItem,
 } from '@/types/notification/INotificationTypes';
-import { GenericResponse } from '@/utils/network/utils/rest-factory';
 
 export class NotificationHistoryServiceFront extends BaseService {
   static name: VoxServices = 'notification';
 
   /**
-   * Obtener historial de notificaciones de un usuario
+   * 📋 Obtener historial de notificaciones de un usuario
    */
   static async getByUser(
     userId: number,
@@ -37,7 +39,7 @@ export class NotificationHistoryServiceFront extends BaseService {
   }
 
   /**
-   * Obtener historial de una notificación programada
+   * 📄 Obtener historial de una notificación programada
    */
   static async getByScheduledNotification(
     scheduledNotificationId: string
@@ -57,7 +59,7 @@ export class NotificationHistoryServiceFront extends BaseService {
   }
 
   /**
-   * Marcar como leída una notificación
+   * ✅ Marcar notificación como leída
    */
   static async markAsRead(
     userId: number,
@@ -72,6 +74,50 @@ export class NotificationHistoryServiceFront extends BaseService {
         'read',
       ],
       method: REQUEST_METHODS.PACTH,
+    };
+
+    await super.make_request(this.name, model);
+  }
+
+  /**
+   * 📊 Obtener datos para dashboard (cards superiores)
+   */
+  static async getDashboardData(): Promise<INotificationDashboardData> {
+    const model: IMakeRequest = {
+      url: ['notifications', 'dashboard'],
+      method: REQUEST_METHODS.GET,
+    };
+
+    const res = await super.make_request<INotificationDashboardData>(this.name, model);
+
+    return res.getOne();
+  }
+
+  /**
+   * 🗂 Obtener listado completo de notificaciones enviadas
+   */
+  static async getNotificationList(): Promise<INotificationListItem[]> {
+    const model: IMakeRequest = {
+      url: ['notifications', 'list'],
+      method: REQUEST_METHODS.GET,
+    };
+
+    const raw = await super.make_request(this.name, model);
+    const res = new GenericResponse<INotificationListItem>({
+      code: 200,
+      message: 'Success',
+      data: raw,
+    });
+    return res.getMany();
+  }
+
+  /**
+   * 🚀 Ejecutar manualmente el cron para revisar notificaciones
+   */
+  static async runSchedulerTask(): Promise<void> {
+    const model: IMakeRequest = {
+      url: ['notifications', 'scheduled', 'run'],
+      method: REQUEST_METHODS.POST,
     };
 
     await super.make_request(this.name, model);

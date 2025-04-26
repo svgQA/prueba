@@ -1,138 +1,107 @@
 import { FunctionComponent } from 'preact';
-import { useEffect, useMemo } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
+import { useSignal } from '@preact/signals';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
-import { Button } from '@/components/common/button/button';
+import { CardData } from '@/components/compose/cards';
+import { Button } from '@/components/common/button/button'; // 🔥 importamos el botón
+import { columns } from './components/history.columns';
 import { NotificationHistoryServiceFront } from '@/services/historyNotification';
 import { INotificationHistoryItem } from '@/types/notification/INotificationTypes';
-import { columns } from './components/history.columns';
-import { useSignal } from '@preact/signals';
-import { CardData } from '@/components/compose/cards';
+import { toast } from 'react-toastify';
 
-type ViewStatus = 'all' | 'read' | 'unread';
+const userId = 1; // ⚡ TODO: reemplazar por el usuario autenticado real
 
 export const HistoryNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationHistoryItem[]>([]);
-  const viewStatus = useSignal<ViewStatus>('all');
-  const isLoading = useSignal<boolean>(false);
+  const totalNotifications = useSignal<number>(0);
+  const openRate = useSignal<number>(0);
+  const notificationsThisMonth = useSignal<number>(0);
 
   useEffect(() => {
-    document.title = 'VX - History Notifications Service';
-    fetchNotifications();
-  }, [viewStatus.value]);
+    document.title = 'VX - Historial de Notificaciones';
+    fetchAll();
+  }, []);
+
+  const fetchAll = async () => {
+    await Promise.all([fetchNotifications(), fetchDashboardStats()]);
+  };
 
   const fetchNotifications = async () => {
-    isLoading.value = true;
     try {
-      const userId = 1; // Esto debe venir de tu auth o estado global
-      const response = await NotificationHistoryServiceFront.getByUser(
-        userId,
-        viewStatus.value
-      );
-      notifications.value = response;
+      const res = await NotificationHistoryServiceFront.getByUser(userId, 'all');
+      notifications.value = res;
     } catch (error) {
-      console.error('Error al cargar historial:', error);
-    } finally {
-      isLoading.value = false;
+      toast.error('Error al cargar historial');
     }
   };
 
-  const handleMarkAsRead = async (notification: INotificationHistoryItem) => {
+  const fetchDashboardStats = async () => {
     try {
-      // Validate required notification ID
-      if (!notification?.scheduledNotificationId) {
-        console.warn('Cannot mark as read: Missing scheduledNotificationId');
-        return;
-      }
-
-      // Mark notification as read
-      await NotificationHistoryServiceFront.markAsRead(
-        notification.userId,
-        notification.scheduledNotificationId
-      );
-
-      // Refresh notifications list
-      await fetchNotifications();
+      const stats = await NotificationHistoryServiceFront.getDashboardData();
+      totalNotifications.value = stats.totalNotifications;
+      openRate.value = stats.openRate;
+      notificationsThisMonth.value = stats.notificationsOfMonth;
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      toast.error('Error al cargar estadísticas');
     }
   };
 
-  const buttonMenu = useMemo(
-    () => (
-      <div className='flex gap-2'>
-        <Button
-          name='all-notifications'
-          label='Todas'
-          className={viewStatus.value === 'all' ? 'bg-primary-opacity p-2' : ''}
-          onClick={() => (viewStatus.value = 'all')}
-        />
-        <Button
-          name='read-notifications'
-          label='Leídas'
-          className={
-            viewStatus.value === 'read' ? 'bg-primary-opacity p-2' : ''
-          }
-          onClick={() => (viewStatus.value = 'read')}
-        />
-        <Button
-          name='unread-notifications'
-          label='No Leídas'
-          className={
-            viewStatus.value === 'unread' ? 'bg-primary-opacity p-2' : ''
-          }
-          onClick={() => (viewStatus.value = 'unread')}
-        />
-        <Button
-          name='reload-notifications'
-          label='Recargar'
-          icon='316'
-          onClick={fetchNotifications}
-        />
-      </div>
-    ),
-    [viewStatus.value]
-  );
+  const handleRunCron = async () => {
+    try {
+      await NotificationHistoryServiceFront.runSchedulerTask();
+      toast.success('Cron ejecutado manualmente 🚀');
+      await fetchAll();
+    } catch (error) {
+      toast.error('Error al ejecutar el cron manualmente');
+    }
+  };
 
   return (
     <Section padding>
-      <div className='flex justify-between items-center mb-4'>
-        <h2 className='text-xl font-semibold'>Historial de notificaciones</h2>
-        {buttonMenu}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold">Historial de Notificaciones</h2>
+        {/* 🔥 Botón para ejecutar el cron */}
+        <Button
+          name="run-cron-button"
+          label="Ejecutar revisión"
+          className="bg-primary text-white hover:bg-primary-opacity p-2"
+          onClick={handleRunCron}
+        />
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <CardData
-          title='Turnos de notificaciones'
-          count={0}
-          subtitle=''
-          color='t-dark'
-          icon='054'
+          title="Turnos de notificaciones"
+          count={totalNotifications.value}
+          subtitle=""
+          color="t-dark"
+          icon="054"
         />
-
         <CardData
-          title='Tasa de apertura'
-          count={0}
-          subtitle=''
-          color='t-dark'
-          icon='052'
+          title="Tasa de apertura"
+          count={openRate.value}
+          subtitle="%"
+          color="t-dark"
+          icon="052"
         />
-
         <CardData
-          title='Notificaciones del mes'
-          count={0}
-          subtitle=''
-          color='t-dark'
-          icon='015'
+          title="Notificaciones del mes"
+          count={notificationsThisMonth.value}
+          subtitle=""
+          color="t-dark"
+          icon="015"
         />
       </div>
 
       <Table<INotificationHistoryItem>
         data={notifications.value}
-        columns={columns({ onMarkAsRead: handleMarkAsRead })}
+        columns={columns()}
         pageSize={10}
         showExpandableIcon={false}
       />
     </Section>
   );
 };
+
+export default HistoryNotificationsPage;

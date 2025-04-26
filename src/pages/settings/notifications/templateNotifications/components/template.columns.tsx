@@ -1,11 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ROW_ACTIONS } from '@/components/common/table/enum'; // Opcional si quieres manejar acciones
-import { useLocation } from 'wouter';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useState } from 'preact/hooks';
 
 export const useTemplateColumns = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [_, navigate] = useLocation();
 
   const columns: ColumnDef<any>[] = [
     {

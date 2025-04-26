@@ -66,6 +66,7 @@ import { ScheduledNotificationsPage } from './notifications/scheduleNotification
 import { TemplateNotificationPage } from './notifications/templateNotifications/templateNotifications';
 import { TemplateCreateForm } from './notifications/templateNotifications/create/create';
 import { AreaCreatePage } from '../dashboard/users/areas/area.create';
+import ScheduledNotificationForm from './notifications/scheduleNotifications/create/create';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -469,6 +470,7 @@ export const RoutingContent = memo(() => {
           )}
         />
         {/* NOTIFICATIONS MENU */}
+        {/* SCHEDULED OPTIONS */}
         <Route
           path={
             PAGES_LIST_ROUTER.dashboard.setting.notifications
@@ -478,6 +480,16 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: ScheduledNotificationsPage })
           )}
         />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .scheduledNotification.create.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduledNotificationForm })
+          )}
+        />
+        {/* TEMPLATE OPTIONS */}
         <Route
           path={
             PAGES_LIST_ROUTER.dashboard.setting.notifications
