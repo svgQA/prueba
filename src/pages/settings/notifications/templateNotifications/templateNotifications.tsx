@@ -29,7 +29,9 @@ export const TemplateNotificationPage = () => {
       accessorKey: 'title',
       minSize: 150,
       maxSize: 250,
-      cell: ({ getValue }) => <span className='text-sm'>{getValue() as string}</span>,
+      cell: ({ getValue }) => (
+        <span className='text-sm'>{getValue() as string}</span>
+      ),
     },
     {
       header: 'Descripción',
@@ -68,7 +70,9 @@ export const TemplateNotificationPage = () => {
           <div className='relative z-50'>
             <span
               className='vox-icon vx-icon-147 text-lg cursor-pointer'
-              onClick={() => setActiveDropdown(activeDropdown === id ? null : id)}
+              onClick={() =>
+                setActiveDropdown(activeDropdown === id ? null : id)
+              }
             ></span>
             {activeDropdown === id && (
               <div className='absolute right-0 mt-2 w-32 bg-white border rounded shadow z-10'>
@@ -100,7 +104,8 @@ export const TemplateNotificationPage = () => {
 
   const redirect = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.create.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
+        .create.to,
       label: 'create',
       id: 'template-create',
     };

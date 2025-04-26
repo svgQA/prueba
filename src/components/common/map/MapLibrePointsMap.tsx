@@ -223,7 +223,7 @@ export const MapLibrePointsMap = ({
         <circle fill="#FFFFFF" cx="12" cy="12" r="9" />
         <text 
           fill="${radialPoint && point.id === radialPoint.id ? '#2563EB' : '#EA4335'}" 
-          x="${(index + 1) >= 10 ? 5 : 10}" 
+          x="${index + 1 >= 10 ? 5 : 10}" 
           y="12.5" 
           fontFamily="Arial, sans-serif" 
           fontSize="10" 
