@@ -220,15 +220,16 @@ export const MapLibrePointsMap = ({
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="38" viewBox="0 0 24 38">
         <path fill="${radialPoint && point.id === radialPoint.id ? '#2563EB' : '#EA4335'}" 
               d="M12 0C5.4 0 0 5.4 0 12c0 6.5 12 25 12 25s12-18.5 12-25c0-6.6-5.4-12-12-12z" />
-        <circle fill="#FFFFFF" cx="12" cy="12" r="8" />
+        <circle fill="#FFFFFF" cx="12" cy="12" r="9" />
         <text 
           fill="${radialPoint && point.id === radialPoint.id ? '#2563EB' : '#EA4335'}" 
-          x="12" 
-          y="16" 
+          x="${(index + 1) >= 10 ? 5 : 10}" 
+          y="12.5" 
           fontFamily="Arial, sans-serif" 
-          fontSize="11" 
+          fontSize="10" 
           fontWeight="bold" 
-          textAnchor="middle"
+          textAnchor="middle" 
+          dy=".3em"
         >${index + 1}</text>
       </svg>
     </div>

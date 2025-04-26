@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useCallback, useEffect, useMemo } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import { ChatHeader } from './components/chat.header';
 import { ChatCard } from './components/chat.card';
@@ -12,6 +12,11 @@ import { useUserStore } from '@/store/slices';
 import { IMessage } from '@/utils/socket/interface';
 import { toast } from 'react-toastify';
 import { Section } from '@/components/common/section/section';
+import { Table } from '@/components/common/table/table';
+import { columns } from './components/memos.columns';
+import { Memo } from './utils/memos';
+import { CardData } from '@/components/compose/cards';
+import { Button } from '@/components/common/button/button';
 
 interface FrequentQuestion {
   id: number;
@@ -53,6 +58,17 @@ const FrequentQuestions = () => {
   );
 };
 
+enum VIEW_NAME {
+  TABLE,
+  CHAT,
+}
+
+interface IMemoSummary {
+  total: number;
+  inProgress: number;
+  completed: number;
+}
+
 export const MemosPage: FunctionComponent = () => {
   const wsManager = useWebSocket();
   const selectedChat = useSignal<string>('0');
@@ -63,8 +79,16 @@ export const MemosPage: FunctionComponent = () => {
   const currentPage = useSignal<number>(1);
   const totalPages = useSignal<number>(3); // Por defecto 3 páginas
   const isLoading = useSignal<boolean>(false);
+  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
+  const memos = useSignal<Memo[]>([]);
 
   const chats = useSignal<Chats>({});
+
+  const memoSummary = useSignal<IMemoSummary>({
+    total: 0,
+    inProgress: 0,
+    completed: 0,
+  });
 
   useEffect(() => {
     document.title = 'VX - Chat';
@@ -163,76 +187,190 @@ export const MemosPage: FunctionComponent = () => {
     userSelected.value = users.value.find((user) => user.cognitoId === chatId);
   };
 
+  const chatView = () => {
+    return (
+      <>
+        <div className='w-full flex flex-col h-full'>
+          <div className='w-full p-1 border-b dark:border-b-dark-light'>
+            {buttonMenu}
+          </div>
+
+          <div className='flex flex-1 overflow-y-auto'>
+            <div className='w-[30%] border-r dark:border-b-dark-light flex flex-col h-full'>
+              <ChatHeader />
+              <ChatCard
+                id={'0'}
+                name='AI Assistant'
+                lastMessage='I can help with that'
+                time='10:15'
+                isAI
+                onClick={handleChatSelect}
+                isSelected={selectedChat.value === '0'}
+              />
+              <div className='flex-1 overflow-y-auto vox-scroll-design border-t dark:border-t-dark-light'>
+                {users.value.map((user: IUserResponse) => (
+                  <ChatCard
+                    user={user}
+                    key={`chat-card-${user.cognitoId}`}
+                    id={user.cognitoId}
+                    name={`${user.name} ${user.surname}`}
+                    lastMessage={`${iam.value === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
+                    time='10:15'
+                    amount={chats.value[user.cognitoId]?.new}
+                    onClick={handleChatSelect}
+                    isSelected={selectedChat.value === user.cognitoId}
+                  />
+                ))}
+              </div>
+              <div className='flex justify-between items-center p-4 border-t dark:border-t-dark-light'>
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentPage.value === 1}
+                  className={`px-4 py-2 rounded-md ${currentPage.value === 1
+                      ? 'bg-gray-300 cursor-not-allowed'
+                      : 'bg-blue-500 hover:bg-blue-600'
+                    } text-white`}
+                >
+                  Anterior
+                </button>
+                <span className='text-sm text-gray-500'>
+                  Página {currentPage.value} de {totalPages.value}
+                </span>
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage.value >= totalPages.value}
+                  className={`px-4 py-2 rounded-md ${currentPage.value >= totalPages.value
+                      ? 'bg-gray-300 cursor-not-allowed'
+                      : 'bg-blue-500 hover:bg-blue-600'
+                    } text-white`}
+                >
+                  Siguiente
+                </button>
+              </div>
+            </div>
+
+            <div className='w-[70%] flex flex-col'>
+              <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
+                {selectedChat.value === '0' && <FrequentQuestions />}
+                {chats.value[selectedChat.value]?.messages.map((msg, index) => (
+                  <ChatMessage
+                    key={index}
+                    message={msg.message}
+                    isSender={msg.isSender}
+                  />
+                ))}
+              </div>
+              <ChatInput onSend={handleSendMessage} />
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  const calculatePercentage = (value: number): string => {
+    if (memoSummary.value.total === 0) return '0%';
+    return `${Math.round((value / memoSummary.value.total) * 100)}%`;
+  };
+
+  const handleViewChange = useCallback((view: VIEW_NAME) => {
+    currentView.value = view;
+  }, []);
+
+  const buttonMenu = useMemo(() => (
+    <div className='flex items-center gap-2'>
+      <Button
+        name='button-change-table'
+        onClick={() => {
+          handleViewChange(VIEW_NAME.TABLE);
+        }}
+        rounded={false}
+        className={
+          currentView.value === VIEW_NAME.TABLE
+            ? 'bg-primary-opacity p-2'
+            : ''
+        }
+        icon='320'
+      />
+      <Button
+        name='button-change-scheduler'
+        onClick={() => {
+          handleViewChange(VIEW_NAME.CHAT);
+        }}
+        rounded={false}
+        className={
+          currentView.value === VIEW_NAME.CHAT
+            ? 'bg-primary-opacity p-2'
+            : ''
+        }
+        icon='418'
+      />
+      <Button
+        name='button-change-scheduler'
+        rounded={false}
+        icon='331'
+      />
+      <Button
+        name='button-change-scheduler'
+        rounded={false}
+        icon='314'
+      />
+    </div>
+  ), [currentView.value]);
+
   return (
-    <Section className='flex flex-row h-[99.5vh]'>
-      <div className='w-[30%] border-r dark:border-b-dark-light flex flex-col h-full'>
-        <ChatHeader />
-        <ChatCard
-          id={'0'}
-          name='AI Assistant'
-          lastMessage='I can help with that'
-          time='10:15'
-          isAI
-          onClick={handleChatSelect}
-          isSelected={selectedChat.value === '0'}
-        />
-        <div className='flex-1 overflow-y-auto vox-scroll-design border-t dark:border-t-dark-light'>
-          {users.value.map((user: IUserResponse) => (
-            <ChatCard
-              user={user}
-              key={`chat-card-${user.cognitoId}`}
-              id={user.cognitoId}
-              name={`${user.name} ${user.surname}`}
-              lastMessage={`${iam.value === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
-              time='10:15'
-              amount={chats.value[user.cognitoId]?.new}
-              onClick={handleChatSelect}
-              isSelected={selectedChat.value === user.cognitoId}
-            />
-          ))}
+    <Section className={currentView.value === VIEW_NAME.CHAT ? 'flex flex-row h-[99.5vh]' : ''} padding={currentView.value === VIEW_NAME.TABLE}>
+      {currentView.value === VIEW_NAME.TABLE && (
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+          <CardData
+            title='Memorandos Totales Hoy'
+            count={memoSummary.value.total}
+            subtitle=''
+            color='t-dark'
+            icon='054' // 328
+          />
+
+          <CardData
+            title='Memorandos sin resolver'
+            count={calculatePercentage(memoSummary.value.inProgress)}
+            subtitle=''
+            color='t-dark'
+            icon='052' // 311
+          />
+
+          <CardData
+            title='Memorandos Resueltos'
+            count={calculatePercentage(memoSummary.value.completed)}
+            subtitle=''
+            color='t-dark'
+            icon='015' // 312
+          />
         </div>
-        <div className='flex justify-between items-center p-4 border-t dark:border-t-dark-light'>
-          <button
-            onClick={handlePrevPage}
-            disabled={currentPage.value === 1}
-            className={`px-4 py-2 rounded-md ${
-              currentPage.value === 1
-                ? 'bg-gray-300 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600'
-            } text-white`}
-          >
-            Anterior
-          </button>
-          <span className='text-sm text-gray-500'>
-            Página {currentPage.value} de {totalPages.value}
-          </span>
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage.value >= totalPages.value}
-            className={`px-4 py-2 rounded-md ${
-              currentPage.value >= totalPages.value
-                ? 'bg-gray-300 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600'
-            } text-white`}
-          >
-            Siguiente
-          </button>
-        </div>
+      )}
+
+      <div className='max-h-screen relative'>
+        {currentView.value !== VIEW_NAME.CHAT && (
+          <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
+            <div className='flex flex-row items-center justify-between'>{buttonMenu}</div>
+          </div>
+        )}
+
+        {currentView.value === VIEW_NAME.TABLE && (
+          <Table
+            data={memos.value}
+            columns={columns}
+            showExpandableIcon={false}
+            pageSize={20}
+            selectable={true}
+            visibility={{
+              id: false,
+            }}
+          />
+        )}
+
       </div>
 
-      <div className='w-[70%] flex flex-col'>
-        <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
-          {selectedChat.value === '0' && <FrequentQuestions />}
-          {chats.value[selectedChat.value]?.messages.map((msg, index) => (
-            <ChatMessage
-              key={index}
-              message={msg.message}
-              isSender={msg.isSender}
-            />
-          ))}
-        </div>
-        <ChatInput onSend={handleSendMessage} />
-      </div>
+      {currentView.value === VIEW_NAME.CHAT && chatView()}
     </Section>
   );
 };

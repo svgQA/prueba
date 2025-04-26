@@ -14,7 +14,7 @@ import { Table } from '@/components/common/table/table';
 import { appendHistory } from '../../store/settings';
 import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
-
+import i18n from '@/i18n';
 export const FormSettingPage = () => {
   const forms = useSignal<IFormResponse[]>([]);
   const [_, navigate] = useLocation();
@@ -121,7 +121,7 @@ export const FormSettingPage = () => {
         <div className='flex flex-row items-center justify-between'>
           <Button
             name='button-create-shift'
-            label='Create Form'
+            label={i18n.t('form.new')}
             icon='039'
             onClick={redirect}
             className='px-6 py-1 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
