@@ -49,5 +49,5 @@ export interface INotificationListItem {
   type: string; // Ej: "Usuarios", "Programada", "Manual"
   sentAt: string;
   recipients: number; // Número de destinatarios
-  openRate: number;   // porcentaje 0-100
+  openRate: number; // porcentaje 0-100
 }

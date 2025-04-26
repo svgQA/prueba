@@ -88,7 +88,10 @@ export class NotificationHistoryServiceFront extends BaseService {
       method: REQUEST_METHODS.GET,
     };
 
-    const res = await super.make_request<INotificationDashboardData>(this.name, model);
+    const res = await super.make_request<INotificationDashboardData>(
+      this.name,
+      model
+    );
 
     return res.getOne();
   }

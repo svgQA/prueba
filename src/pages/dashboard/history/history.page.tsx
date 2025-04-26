@@ -57,35 +57,34 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
 
   return (
     <Section padding>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title="Turnos de notificaciones"
+          title='Turnos de notificaciones'
           count={totalNotifications.value}
-          subtitle=""
-          color="t-dark"
-          icon="054"
+          subtitle=''
+          color='t-dark'
+          icon='054'
         />
         <CardData
-          title="Tasa de apertura"
+          title='Tasa de apertura'
           count={openRate.value}
-          subtitle="%"
-          color="t-dark"
-          icon="052"
+          subtitle='%'
+          color='t-dark'
+          icon='052'
         />
         <CardData
-          title="Notificaciones del mes"
+          title='Notificaciones del mes'
           count={notificationsThisMonth.value}
-          subtitle=""
-          color="t-dark"
-          icon="015"
+          subtitle=''
+          color='t-dark'
+          icon='015'
         />
       </div>
-      <div className="py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20">
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
         <Button
-          name="run-cron-button"
-          label="Ejecutar revisión"
-          className="bg-primary text-white hover:bg-primary-opacity p-2"
+          name='run-cron-button'
+          label='Ejecutar revisión'
+          className='bg-primary text-white hover:bg-primary-opacity p-2'
           onClick={handleRunCron}
         />
       </div>

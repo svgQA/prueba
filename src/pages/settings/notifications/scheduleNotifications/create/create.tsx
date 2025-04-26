@@ -64,7 +64,9 @@ export const ScheduledNotificationForm = () => {
         sentTo: [1],
         overrideTitle: overrideTitle || undefined,
         overrideDescription: overrideDescription || undefined,
-        repeatEveryMinutes: repeatEveryMinutes ? parseInt(repeatEveryMinutes) : undefined,
+        repeatEveryMinutes: repeatEveryMinutes
+          ? parseInt(repeatEveryMinutes)
+          : undefined,
         maxRepeats: maxRepeats ? parseInt(maxRepeats) : undefined,
         repeatUntil: repeatUntil ? new Date(repeatUntil) : undefined,
       });
@@ -76,10 +78,10 @@ export const ScheduledNotificationForm = () => {
     }
   };
 
-
   const redirectToList = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
+        .scheduledNotification.to,
       label: 'notificaciones',
       id: 'template-notifications',
     };
@@ -89,94 +91,116 @@ export const ScheduledNotificationForm = () => {
 
   return (
     <Section padding>
-      <h2 className="text-xl font-semibold mb-6">Detalles de la Notificación</h2>
+      <h2 className='text-xl font-semibold mb-6'>
+        Detalles de la Notificación
+      </h2>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className='grid grid-cols-2 gap-4'>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className='block text-sm font-medium text-gray-700 mb-1'>
             Título *
           </label>
           <input
-            type="text"
-            placeholder="Ingrese el título de la notificación..."
-            className="w-full border px-3 py-2 rounded text-sm"
+            type='text'
+            placeholder='Ingrese el título de la notificación...'
+            className='w-full border px-3 py-2 rounded text-sm'
             value={formData.overrideTitle}
-            onChange={(e) => setFormData({ ...formData, overrideTitle: e.currentTarget.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, overrideTitle: e.currentTarget.value })
+            }
           />
         </div>
 
-        <div className="col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className='col-span-2'>
+          <label className='block text-sm font-medium text-gray-700 mb-1'>
             Descripción *
           </label>
           <textarea
-            placeholder="Ingrese una descripción..."
-            className="w-full border px-3 py-2 rounded text-sm"
+            placeholder='Ingrese una descripción...'
+            className='w-full border px-3 py-2 rounded text-sm'
             value={formData.overrideDescription}
-            onChange={(e) => setFormData({ ...formData, overrideDescription: e.currentTarget.value })}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                overrideDescription: e.currentTarget.value,
+              })
+            }
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className='block text-sm font-medium text-gray-700 mb-1'>
             Fecha de Inicio *
           </label>
           <input
-            type="datetime-local"
-            className="w-full border px-3 py-2 rounded text-sm"
+            type='datetime-local'
+            className='w-full border px-3 py-2 rounded text-sm'
             value={formData.sendAt}
-            onChange={(e) => setFormData({ ...formData, sendAt: e.currentTarget.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, sendAt: e.currentTarget.value })
+            }
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className='block text-sm font-medium text-gray-700 mb-1'>
             Fecha de Finalización *
           </label>
           <input
-            type="datetime-local"
-            className="w-full border px-3 py-2 rounded text-sm"
+            type='datetime-local'
+            className='w-full border px-3 py-2 rounded text-sm'
             value={formData.repeatUntil}
-            onChange={(e) => setFormData({ ...formData, repeatUntil: e.currentTarget.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, repeatUntil: e.currentTarget.value })
+            }
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className='block text-sm font-medium text-gray-700 mb-1'>
             Intervalo de Repetición
           </label>
           <input
-            type="number"
-            placeholder="Ej: 30"
-            className="w-full border px-3 py-2 rounded text-sm"
+            type='number'
+            placeholder='Ej: 30'
+            className='w-full border px-3 py-2 rounded text-sm'
             value={formData.repeatEveryMinutes}
-            onChange={(e) => setFormData({ ...formData, repeatEveryMinutes: e.currentTarget.value })}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                repeatEveryMinutes: e.currentTarget.value,
+              })
+            }
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className='block text-sm font-medium text-gray-700 mb-1'>
             Máximo de Repeticiones
           </label>
           <input
-            type="number"
-            placeholder="Ej: 5"
-            className="w-full border px-3 py-2 rounded text-sm"
+            type='number'
+            placeholder='Ej: 5'
+            className='w-full border px-3 py-2 rounded text-sm'
             value={formData.maxRepeats}
-            onChange={(e) => setFormData({ ...formData, maxRepeats: e.currentTarget.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, maxRepeats: e.currentTarget.value })
+            }
           />
         </div>
 
-        <div className="col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className='col-span-2'>
+          <label className='block text-sm font-medium text-gray-700 mb-1'>
             Plantilla de notificación *
           </label>
           <select
-            className="w-full border px-3 py-2 rounded text-sm"
+            className='w-full border px-3 py-2 rounded text-sm'
             value={formData.templateId}
-            onChange={(e) => setFormData({ ...formData, templateId: e.currentTarget.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, templateId: e.currentTarget.value })
+            }
           >
-            <option value="">Seleccione grupos...</option>
+            <option value=''>Seleccione grupos...</option>
             {templates.map((tpl) => (
               <option key={tpl.id} value={tpl.id}>
                 {tpl.title}
@@ -186,17 +210,17 @@ export const ScheduledNotificationForm = () => {
         </div>
       </div>
 
-      <div className="flex justify-end mt-6 gap-2">
+      <div className='flex justify-end mt-6 gap-2'>
         <Button
-          name="cancel-create-scheduled"
-          label="Cancelar"
-          className="border border-gray-300 text-gray-700 bg-white p-2"
+          name='cancel-create-scheduled'
+          label='Cancelar'
+          className='border border-gray-300 text-gray-700 bg-white p-2'
           onClick={redirectToList}
         />
         <Button
-          name="submit-create-scheduled"
-          label="Programar Notificación"
-          className="bg-primary text-white hover:bg-primary-opacity p-2"
+          name='submit-create-scheduled'
+          label='Programar Notificación'
+          className='bg-primary text-white hover:bg-primary-opacity p-2'
           onClick={handleSubmit}
         />
       </div>
