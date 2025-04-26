@@ -394,20 +394,30 @@ export const Table = <T,>({
                     row.subRows.length > 0 &&
                     renderRows(row.subRows)} */}
 
-                  {row.getIsExpanded() && !row.parentId && row.subRows.map((subRow) => (
-                    <tr key={subRow.id} className='odd:bg-gray-100 dark:odd:bg-gray-800'>
-                      {!unsettings && <td className='left-0 min-w-[30px]'></td>}
-                      {subRow.getVisibleCells().map((cell) => (
-                        <td key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                  {row.getIsExpanded() &&
+                    !row.parentId &&
+                    row.subRows.map((subRow) => (
+                      <tr
+                        key={subRow.id}
+                        className='odd:bg-gray-100 dark:odd:bg-gray-800'
+                      >
+                        {!unsettings && (
+                          <td className='left-0 min-w-[30px]'></td>
+                        )}
+                        {subRow.getVisibleCells().map((cell) => (
+                          <td key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
                 </Fragment>
               );
             } else if (!row.parentId) {
-            // } else {
+              // } else {
               return (
                 <Fragment key={row.id}>
                   <tr
