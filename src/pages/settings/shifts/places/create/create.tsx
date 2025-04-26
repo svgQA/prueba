@@ -422,7 +422,12 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 name='btn-clean'
                 type='button'
                 label='Limpiar'
-                onClick={form.reset}
+                onClick={() => {
+                  form.reset();
+                  setGreen(0);
+                  points.value = [];
+                  municipalityLocation.value = undefined;
+                }}
                 disabled={submitting || pristine}
                 border={true}
                 className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
