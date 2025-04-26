@@ -6,7 +6,7 @@ import { Table } from '@/components/common/table/table';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
-import { useTemplateColumns } from './template.columns';
+import { useTemplateColumns } from './components/template.columns';
 
 export const TemplateNotificationPage = () => {
   const [templates, setTemplates] = useState<any[]>([]);
