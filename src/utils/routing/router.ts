@@ -172,21 +172,6 @@ export const PAGES_LIST_ROUTER = {
             base: '/notifications/scheduledNotifications/create',
             to: '/rounds/notifications/scheduledNotifications/create',
           },
-
-          update: {
-            base: '/notifications/scheduledNotifications/update',
-            to: '/rounds/notifications/scheduledNotifications/update/:id',
-          },
-
-          view: {
-            base: '/notifications/scheduledNotifications/view',
-            to: '/rounds/notifications/scheduledNotifications/view/:id',
-          },
-
-          history: {
-            base: '/notifications/scheduledNotifications/history',
-            to: '/rounds/notifications/scheduledNotifications/history/:id',
-          },
         },
         templateNotification: {
           base: '/templateNotifications',
