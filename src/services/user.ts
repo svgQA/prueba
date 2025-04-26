@@ -53,7 +53,7 @@ export class UserService extends BaseService {
     return await super.make_request<IUserResponse>(this.name, model);
   }
 
-  static async get_all(params: IPaginationUser = { page: 1, items: 250 }) {
+  static async get_all(params: IPaginationUser = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['user'],
       params: params as any,

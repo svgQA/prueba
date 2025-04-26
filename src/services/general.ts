@@ -92,7 +92,7 @@ export class GeneralService extends BaseService {
     return await super.make_request(this.sname, model);
   }
 
-  static async getCompanies(params: IPagination = { page: 1, items: 100 }) {
+  static async getCompanies(params: IPagination = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['company'],
       params: params as any,

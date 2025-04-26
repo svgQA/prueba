@@ -25,7 +25,7 @@ import {
 
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';
-  static async get_all(params: IPagination = { page: 1, items: 10 }) {
+  static async get_all(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['activity'],
       params: params as any,
@@ -82,7 +82,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getPlaces(params: IPaginationPlace = { page: 1, items: 50 }) {
+  static async getPlaces(params: IPaginationPlace = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['place'],
       params: params as any,
@@ -97,7 +97,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getProjects(params: IPagination = { page: 1, items: 10 }) {
+  static async getProjects(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['contract'],
       params: params as any,
@@ -105,7 +105,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getDepartments(params: IPagination = { page: 1, items: 200 }) {
+  static async getDepartments(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['place/departments'],
       params: params as any,
@@ -113,7 +113,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<IDepartmentResponse>(this.name, model);
   }
 
-  static async getCountries(params: IPagination = { page: 1, items: 200 }) {
+  static async getCountries(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['place/countries'],
       params: params as any,
@@ -123,7 +123,7 @@ export class ShiftService extends BaseService {
 
   static async getMunicipalities(
     id: number,
-    params: IPagination = { page: 1, items: 200 }
+    params: IPagination = { page: 1, items: 400 }
   ) {
     const model: IMakeRequest = {
       url: ['place/municipalities', `${id}`],
@@ -141,7 +141,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async getRounds(params: IPaginationRound = { page: 1, items: 20 }) {
+  static async getRounds(params: IPaginationRound = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['round'],
       params: params as any,
@@ -225,7 +225,7 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getNovelty(params: IPagination = { page: 1, items: 20 }) {
+  static async getNovelty(params: IPagination = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['novelty'],
       params: params as any,
@@ -316,7 +316,7 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getActivities(params: IPagination = { page: 1, items: 20 }) {
+  static async getActivities(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['activity'],
       params: params as any,
@@ -366,7 +366,7 @@ export class ShiftService extends BaseService {
     return await super.make_request<IOption>(this.name, model);
   }
 
-  static async getTasks(params: IPagination = { page: 1, items: 20 }) {
+  static async getTasks(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['task'],
       params: params as any,
@@ -408,7 +408,7 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getSchedules(params: IPagination = { page: 1, items: 20 }) {
+  static async getSchedules(params: IPagination = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['schedule'],
       params: params as any,
@@ -450,7 +450,7 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getServices(params: IPagination = { page: 1, items: 100 }) {
+  static async getServices(params: IPagination = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['service'],
       params: params as any,
@@ -500,6 +500,4 @@ export class ShiftService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
-
-
 }
