@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ROW_ACTIONS } from '@/components/common/table/enum'; // Opcional si quieres manejar acciones
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useState } from 'preact/hooks';
 
 export const useTemplateColumns = () => {

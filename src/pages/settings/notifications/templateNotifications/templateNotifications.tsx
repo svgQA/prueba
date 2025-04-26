@@ -35,16 +35,14 @@ export const TemplateNotificationPage = () => {
   };
 
   return (
-    <Section padding>
-      <div className='flex justify-between items-center mb-4'>
-        <div className='absolute mt-12 z-50'>
-          <Button
-            name='create-template'
-            label='+ Nueva Plantilla'
-            className='bg-primary text-white p-2 mt-10'
-            onClick={redirect}
-          />
-        </div>
+    <Section>
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <Button
+          name='create-template'
+          label='+ Nueva Plantilla'
+          className='bg-primary text-white p-2'
+          onClick={redirect}
+        />
       </div>
 
       <Table<any>

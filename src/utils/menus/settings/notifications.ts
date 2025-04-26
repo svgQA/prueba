@@ -9,13 +9,13 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
   menus: [
     {
       icon: '050',
-      label: 'Scheduled',
-      description: 'Notificaciones programadas',
+      label: 'Notificaciones programadas',
+      description: 'Gestiona las notificaciones programadas',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.notifications
         .scheduledNotification.base,
-      id: 'scheduled-notifications',
       show: true,
+      id: 'scheduled-notifications',
     },
     {
       icon: '040',
