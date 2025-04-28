@@ -163,7 +163,7 @@ export const ManualNotificationForm = ({
 
           {selectedUserIds.length > 0 && (
             <button
-              className='text-sm text-cyan-700 hover:underline'
+              className='text-sm text-cyan-700 hover:underline border-none'
               onClick={clearUserSelection}
             >
               Limpiar selección de usuarios

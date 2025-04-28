@@ -42,7 +42,7 @@ export const CustomToast: FunctionComponent<{ data: VoxError }> = ({
 
         {/* Data Section */}
         {data.data && Object.keys(data.data).length > 0 && (
-          <div className='bg-gray-50 dark:bg-gray-900 rounded p-1.5'>
+          <div className='bg-gray-50 dark:bg-gray-900 rounded p-1.5 min-w-64'>
             <p className='text-[11px] text-gray-600 dark:text-gray-400 max-h-[200px] overflow-y-auto whitespace-pre-wrap break-words vox-scroll-design font-mono'>
               {JSON.stringify(data.data, null, 2)}
             </p>
@@ -52,7 +52,7 @@ export const CustomToast: FunctionComponent<{ data: VoxError }> = ({
         {/* Timestamp */}
         <div className='flex justify-end w-full pr-7'>
           <h5 className='text-[10px] text-gray-400 dark:text-gray-500 truncate overflow-hidden text-ellipsis max-w-full'>
-            {data.code}
+            {/* {data.code} */}
             {data.timestamp}
           </h5>
         </div>

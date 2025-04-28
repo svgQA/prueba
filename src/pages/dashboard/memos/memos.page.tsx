@@ -74,20 +74,18 @@ interface IMemoSummary {
 
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
+  const { cognito } = useUserStore();
+
   const wsManager = useWebSocket();
   const selectedChat = useSignal<string>('0');
   const users = useSignal<IUserResponse[]>([]);
   const userSelected = useSignal<IUserResponse | undefined>();
-  const iam = useSignal<string | undefined>();
-  const { getCognito } = useUserStore();
   const currentPage = useSignal<number>(1);
-  const totalPages = useSignal<number>(3); // Por defecto 3 páginas
-  const isLoading = useSignal<boolean>(false);
+  const totalPages = useSignal<number>(3);
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
 
   const chats = useSignal<Chats>({});
-
   const memoSummary = useSignal<IMemoSummary>({
     total: 0,
     inProgress: 0,
@@ -95,18 +93,21 @@ export const MemosPage: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    document.title = t('memos.pageTitle');
-    getUsersHandler();
+    document.title = 'VX - Chat';
     wsManager.addListener('memos', handleReceiveMessage);
+    getUsersHandler();
+    return () => {
+      wsManager.removeListener('memos');
+    };
   }, []);
 
   const handleSendMessage = (message: string) => {
-    if (!iam.value || !userSelected.value?.cognitoId) {
-      toast.error(t('memos.chat.errorMessage'));
+    if (!cognito || !userSelected.value?.cognitoId) {
+      toast.error('El mensaje tiene mala estructura');
       return;
     }
     const objMessage: IMessage = {
-      from: iam.value,
+      from: cognito,
       to: userSelected.value?.cognitoId,
       message,
     };
@@ -157,19 +158,13 @@ export const MemosPage: FunctionComponent = () => {
   };
 
   const getUsersHandler = async (page: number = 1) => {
-    isLoading.value = true;
-    try {
-      const response = await UserService.get_all_employee({
-        items: 20,
-        page: page,
-      });
-      if (!response.getStatus()) return;
+    const response = await UserService.get_all_employee({
+      items: 20,
+      page: page,
+    });
+    if (!response.getStatus()) return;
 
-      users.value = response.getMany();
-      iam.value = getCognito();
-    } finally {
-      isLoading.value = false;
-    }
+    users.value = response.getMany();
   };
 
   const handleNextPage = () => {
@@ -218,7 +213,7 @@ export const MemosPage: FunctionComponent = () => {
                     key={`chat-card-${user.cognitoId}`}
                     id={user.cognitoId}
                     name={`${user.name} ${user.surname}`}
-                    lastMessage={`${iam.value === user.cognitoId ? t('memos.chat.itsMe') : t('memos.chat.other')}`}
+                    lastMessage={`${cognito === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
                     time='10:15'
                     amount={chats.value[user.cognitoId]?.new}
                     onClick={handleChatSelect}
@@ -352,7 +347,6 @@ export const MemosPage: FunctionComponent = () => {
           />
         </div>
       )}
-
       <div className='max-h-screen relative'>
         {currentView.value !== VIEW_NAME.CHAT && (
           <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
@@ -375,7 +369,6 @@ export const MemosPage: FunctionComponent = () => {
           />
         )}
       </div>
-
       {currentView.value === VIEW_NAME.CHAT && chatView()}
     </Section>
   );

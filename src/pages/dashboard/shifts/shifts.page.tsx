@@ -7,7 +7,11 @@ import {
   useState,
 } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import { NotificationServiceFront, ShiftService } from '@/services';
+import {
+  NotificationServiceFront,
+  ShiftService,
+  ShiftSummary,
+} from '@/services';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
@@ -45,20 +49,14 @@ enum VIEW_NAME {
   PLANNER,
 }
 
-interface IShiftSummary {
-  total: number;
-  inProgress: number;
-  completed: number;
-}
-
 export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
   const showUpsertModal = useSignal<boolean>(false);
   const showSendModal = useSignal<boolean>(false);
   const showShiftModal = useSignal<boolean>(false);
-  const shiftSummary = useSignal<IShiftSummary>({
+  const shiftSummary = useSignal<ShiftSummary>({
     total: 0,
-    inProgress: 0,
+    in_progress: 0,
     completed: 0,
   });
 
@@ -212,6 +210,8 @@ export const ShiftsPage: FunctionalComponent = () => {
     // ✅ Siguientes veces: solo abre el modal (sin toggle)
     if (selectedUsers.length === 0) {
       toast.warn(i18n.t('notification.select_at_least_one_employee'));
+      setOnNotifications(false);
+      onNotificationsRef.current = false;
       return;
     } else {
       showSendModal.value = true;
@@ -298,14 +298,9 @@ export const ShiftsPage: FunctionalComponent = () => {
   );
 
   const handleGetShiftSummary = async () => {
-    try {
-      const summary = await ShiftService.getShiftSummary();
-      if (summary.getStatus()) {
-        shiftSummary.value = summary.getOne() as IShiftSummary;
-      }
-    } catch (error) {
-      console.error('Error getting shift summary:', error);
-    }
+    const summary = await ShiftService.getShiftSummary();
+    if (!summary.getStatus()) return;
+    shiftSummary.value = summary.getOne();
   };
 
   const calculatePercentage = (value: number): string => {
@@ -373,7 +368,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             }`}
           />
           {showSendModal.value && (
-            <div className='absolute mt-4 mr-12 z-50 rounded shadow-lg p-4'>
+            <div className='absolute mt-4 mr-12 z-50 rounded p-4'>
               <SendForm
                 onClose={handleCloseSendModal}
                 hasplayers={hasValidPlayer}
@@ -431,8 +426,8 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <CardData
-          title={t('shifts.cards.inProgress')}
-          count={calculatePercentage(shiftSummary.value.inProgress)}
+          title='Turnos En Curso'
+          count={calculatePercentage(shiftSummary.value.in_progress)}
           subtitle=''
           color='t-dark'
           icon='052'
@@ -466,7 +461,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             columns={columns}
             showExpandableIcon={false}
             pageSize={20}
-            selectable={true}
+            selectable
             onNotifications={onNotifications}
             onSelectionChange={(rows) => {
               const validUsers = rows.map((row: any) => ({
