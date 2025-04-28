@@ -8,16 +8,18 @@ import { INotificationHistoryItem } from '@/types/notification/INotificationType
 import { columns } from './components/history.columns';
 import { useSignal } from '@preact/signals';
 import { CardData } from '@/components/compose/cards';
+import { useTranslation } from 'react-i18next';
 
 type ViewStatus = 'all' | 'read' | 'unread';
 
 export const HistoryNotificationsPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const notifications = useSignal<INotificationHistoryItem[]>([]);
   const viewStatus = useSignal<ViewStatus>('all');
   const isLoading = useSignal<boolean>(false);
 
   useEffect(() => {
-    document.title = 'VX - History Notifications Service';
+    document.title = t('history.pageTitle');
     fetchNotifications();
   }, [viewStatus.value]);
 
@@ -63,13 +65,13 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
       <div className='flex gap-2'>
         <Button
           name='all-notifications'
-          label='Todas'
+          label={t('history.buttons.all')}
           className={viewStatus.value === 'all' ? 'bg-primary-opacity p-2' : ''}
           onClick={() => (viewStatus.value = 'all')}
         />
         <Button
           name='read-notifications'
-          label='Leídas'
+          label={t('history.buttons.read')}
           className={
             viewStatus.value === 'read' ? 'bg-primary-opacity p-2' : ''
           }
@@ -77,7 +79,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
         />
         <Button
           name='unread-notifications'
-          label='No Leídas'
+          label={t('history.buttons.unread')}
           className={
             viewStatus.value === 'unread' ? 'bg-primary-opacity p-2' : ''
           }
@@ -85,7 +87,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
         />
         <Button
           name='reload-notifications'
-          label='Recargar'
+          label={t('history.buttons.reload')}
           icon='316'
           onClick={fetchNotifications}
         />
@@ -97,13 +99,13 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
   return (
     <Section padding>
       <div className='flex justify-between items-center mb-4'>
-        <h2 className='text-xl font-semibold'>Historial de notificaciones</h2>
+        <h2 className='text-xl font-semibold'>{t('history.title')}</h2>
         {buttonMenu}
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='Turnos de notificaciones'
+          title={t('history.cards.notificationShifts')}
           count={0}
           subtitle=''
           color='t-dark'
@@ -111,7 +113,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
         />
 
         <CardData
-          title='Tasa de apertura'
+          title={t('history.cards.openRate')}
           count={0}
           subtitle=''
           color='t-dark'
@@ -119,7 +121,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
         />
 
         <CardData
-          title='Notificaciones del mes'
+          title={t('history.cards.monthlyNotifications')}
           count={0}
           subtitle=''
           color='t-dark'

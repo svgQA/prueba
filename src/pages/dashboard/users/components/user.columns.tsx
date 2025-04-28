@@ -3,13 +3,17 @@ import { Badge } from '@/components/common/badge/badge';
 import { IUserResponse } from '@/types/auth/service';
 import { ButtonAction } from '@/components/common/button/column';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import i18next from 'i18next';
+
+// Función para obtener traducciones
+const t = (key: string) => i18next.t(key);
 
 export const userColumns: ColumnDef<IUserResponse>[] = [
   {
     id: 'name',
     accessorKey: 'name',
     size: 180,
-    header: 'Nombre',
+    header: t('users.columns.name'),
     cell: (info) => {
       const { name, surname } = info.row.original;
       return <div className='flex justify-center'>{`${name} ${surname}`}</div>;
@@ -19,19 +23,19 @@ export const userColumns: ColumnDef<IUserResponse>[] = [
     id: 'cardId',
     accessorKey: 'cardId',
     size: 180,
-    header: 'Identificación',
+    header: t('users.columns.id'),
   },
   {
     id: 'email',
     accessorKey: 'email',
     size: 180,
-    header: 'E-mail',
+    header: t('users.columns.email'),
   },
   {
     id: 'company',
     accessorKey: 'extraData.company',
     size: 180,
-    header: 'Compañía',
+    header: t('users.columns.company'),
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
@@ -43,7 +47,7 @@ export const userColumns: ColumnDef<IUserResponse>[] = [
     id: 'department',
     accessorKey: 'extraData.area',
     size: 180,
-    header: 'Departamento',
+    header: t('users.columns.department'),
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
@@ -55,7 +59,7 @@ export const userColumns: ColumnDef<IUserResponse>[] = [
     id: 'ciudad',
     accessorKey: 'extraData.city',
     size: 180,
-    header: 'Ciudad',
+    header: t('users.columns.city'),
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
@@ -67,7 +71,7 @@ export const userColumns: ColumnDef<IUserResponse>[] = [
     id: 'connection',
     accessorKey: 'connection',
     size: 100,
-    header: 'Conexión',
+    header: t('users.columns.connection'),
     cell: (info) => {
       const value = info.getValue() as string; // 'Activo' | 'Inactivo'
       // Podrías usar un badge distinto para "Activo" (verde) / "Inactivo" (rojo)
@@ -86,7 +90,7 @@ export const userColumns: ColumnDef<IUserResponse>[] = [
     id: 'taskProgress',
     accessorKey: 'taskProgress',
     size: 180,
-    header: 'Progreso de tareas',
+    header: t('users.columns.taskProgress'),
     cell: (info) => {
       const progress = info.getValue() as number;
       // Definir el color dinámico basado en el progreso

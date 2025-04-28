@@ -2,6 +2,10 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { INotificationHistoryItem } from '@/types/notification/INotificationTypes';
 import dayjs from 'dayjs';
+import i18next from 'i18next';
+
+// Función para obtener traducciones
+const t = (key: string) => i18next.t(key);
 
 export const columns = ({
   onMarkAsRead,
@@ -11,7 +15,7 @@ export const columns = ({
   {
     id: 'title',
     accessorKey: 'title',
-    header: 'Título',
+    header: t('history.columns.title'),
     size: 200,
     cell: (info) => (
       <span className='p-1 size-sm'>{info.getValue() as string}</span>
@@ -20,7 +24,7 @@ export const columns = ({
   {
     id: 'description',
     accessorKey: 'description',
-    header: 'Descripción',
+    header: t('history.columns.description'),
     size: 250,
     cell: (info) => (
       <span
@@ -34,7 +38,7 @@ export const columns = ({
   {
     id: 'sentAt',
     accessorKey: 'sentAt',
-    header: 'Fecha de envío',
+    header: t('history.columns.sentAt'),
     size: 180,
     cell: (info) => {
       const date = new Date(info.getValue() as string);
@@ -48,13 +52,13 @@ export const columns = ({
   {
     id: 'hasViewed',
     accessorKey: 'hasViewed',
-    header: 'Estado',
+    header: t('history.columns.status'),
     size: 100,
     cell: (info) => {
       const viewed = info.getValue() as boolean;
       return (
         <span className={viewed ? 'text-green-600' : 'text-red-500'}>
-          {viewed ? 'Leída' : 'No leída'}
+          {viewed ? t('history.columns.read') : t('history.columns.unread')}
         </span>
       );
     },
@@ -62,17 +66,19 @@ export const columns = ({
   {
     id: 'type',
     accessorKey: 'type',
-    header: 'Origen',
+    header: t('history.columns.origin'),
     size: 100,
     cell: (info) => (
       <span className='capitalize p-1 size-sm'>
-        {info.getValue() === 'manual' ? 'Manual' : 'Programada'}
+        {info.getValue() === 'manual'
+          ? t('history.columns.manual')
+          : t('history.columns.scheduled')}
       </span>
     ),
   },
   {
     id: 'actions',
-    header: 'Acción',
+    header: t('history.columns.action'),
     size: 120,
     cell: (info) => {
       const item = info.row.original;
@@ -82,7 +88,7 @@ export const columns = ({
             className='text-blue-500 hover:text-blue-700 underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded'
             onClick={() => onMarkAsRead(item)}
           >
-            Marcar como leída
+            {t('history.columns.markAsRead')}
           </button>
         );
       }

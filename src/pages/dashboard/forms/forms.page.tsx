@@ -9,12 +9,15 @@ import { Table } from '@/components/common/table/table';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { columns } from './components/inspect.columns';
+import { useTranslation } from 'react-i18next';
 
 export const FormsPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const responses = useSignal<IResponseResponse[]>([]);
   // const [_, navigate] = useLocation();
 
   useEffect(() => {
+    document.title = t('forms.pageTitle');
     getResponseHandler();
   }, []);
 
@@ -72,25 +75,25 @@ export const FormsPage: FunctionComponent = () => {
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='Total Formularios'
+          title={t('forms.cards.total')}
           count={150}
-          subtitle='Formularios creados'
+          subtitle={t('forms.cards.subtitle')}
           color='t-dark'
           icon='123'
         />
 
         <CardData
-          title='Formularios Activos'
+          title={t('forms.cards.active')}
           count={100}
-          subtitle='En uso'
+          subtitle={t('forms.cards.activeSubtitle')}
           color='t-dark'
           icon='089'
         />
 
         <CardData
-          title='Formularios Archivados'
+          title={t('forms.cards.archived')}
           count={50}
-          subtitle='No disponibles'
+          subtitle={t('forms.cards.archivedSubtitle')}
           color='t-dark'
           icon='098'
         />

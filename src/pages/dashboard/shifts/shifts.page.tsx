@@ -385,7 +385,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
         <Button
           name='button-supervision'
-          label='Supervisión Remota'
+          label={t('shifts.remoteSupervision')}
           className='bg-primary text-white py-1 rounded px-4'
           onClick={() => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
@@ -423,7 +423,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='Turnos Totales Hoy'
+          title={t('shifts.cards.totalToday')}
           count={shiftSummary.value.total}
           subtitle=''
           color='t-dark'
@@ -431,7 +431,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <CardData
-          title='Turnos En Curso'
+          title={t('shifts.cards.inProgress')}
           count={calculatePercentage(shiftSummary.value.inProgress)}
           subtitle=''
           color='t-dark'
@@ -439,7 +439,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <CardData
-          title='Turnos Finalizados'
+          title={t('shifts.cards.completed')}
           count={calculatePercentage(shiftSummary.value.completed)}
           subtitle=''
           color='t-dark'

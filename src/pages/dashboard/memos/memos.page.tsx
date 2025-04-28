@@ -95,7 +95,7 @@ export const MemosPage: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    document.title = t('memos.title');
+    document.title = t('memos.pageTitle');
     getUsersHandler();
     wsManager.addListener('memos', handleReceiveMessage);
   }, []);
@@ -204,9 +204,9 @@ export const MemosPage: FunctionComponent = () => {
               <ChatHeader />
               <ChatCard
                 id={'0'}
-                name='AI Assistant'
-                lastMessage='I can help with that'
-                time='10:15'
+                name={t('memos.chat.aiAssistant')}
+                lastMessage={t('memos.chat.aiDefaultMessage')}
+                time={t('memos.chat.time')}
                 isAI
                 onClick={handleChatSelect}
                 isSelected={selectedChat.value === '0'}
@@ -218,7 +218,7 @@ export const MemosPage: FunctionComponent = () => {
                     key={`chat-card-${user.cognitoId}`}
                     id={user.cognitoId}
                     name={`${user.name} ${user.surname}`}
-                    lastMessage={`${iam.value === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
+                    lastMessage={`${iam.value === user.cognitoId ? t('memos.chat.itsMe') : t('memos.chat.other')}`}
                     time='10:15'
                     amount={chats.value[user.cognitoId]?.new}
                     onClick={handleChatSelect}
@@ -236,10 +236,11 @@ export const MemosPage: FunctionComponent = () => {
                       : 'bg-blue-500 hover:bg-blue-600'
                   } text-white`}
                 >
-                  Anterior
+                  {t('memos.pagination.previous')}
                 </button>
                 <span className='text-sm text-gray-500'>
-                  Página {currentPage.value} de {totalPages.value}
+                  {t('memos.pagination.page')} {currentPage.value}{' '}
+                  {t('memos.pagination.of')} {totalPages.value}
                 </span>
                 <button
                   onClick={handleNextPage}
@@ -250,7 +251,7 @@ export const MemosPage: FunctionComponent = () => {
                       : 'bg-blue-500 hover:bg-blue-600'
                   } text-white`}
                 >
-                  Siguiente
+                  {t('memos.pagination.next')}
                 </button>
               </div>
             </div>
@@ -327,7 +328,7 @@ export const MemosPage: FunctionComponent = () => {
       {currentView.value === VIEW_NAME.TABLE && (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
-            title='Memorandos Totales Hoy'
+            title={t('memos.cards.totalToday')}
             count={memoSummary.value.total}
             subtitle=''
             color='t-dark'
@@ -335,7 +336,7 @@ export const MemosPage: FunctionComponent = () => {
           />
 
           <CardData
-            title='Memorandos sin resolver'
+            title={t('memos.cards.unresolved')}
             count={calculatePercentage(memoSummary.value.inProgress)}
             subtitle=''
             color='t-dark'
@@ -343,7 +344,7 @@ export const MemosPage: FunctionComponent = () => {
           />
 
           <CardData
-            title='Memorandos Resueltos'
+            title={t('memos.cards.resolved')}
             count={calculatePercentage(memoSummary.value.completed)}
             subtitle=''
             color='t-dark'
