@@ -23,7 +23,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
   return (
     <nav
       id={id}
-      className='flex font-bold px-5 py-4 flex-row w-full content-center items-center absolute top-0 z-50'
+      className='flex font-bold px-2 sm:px-4 md:px-5 py-3 md:py-4 flex-row w-full content-center items-center absolute top-0 z-50'
     >
       <div className='flex w-2/5 md:w-1/5'>
         <span className='text-xl'>{logo}</span>
@@ -79,14 +79,16 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
           ))}
         </ul>
 
-        <div className='ml-2 flex justify-end items-center gap-2 mr-1 md:mr-1 lg:mr-4 xl:mr-6'>
-          <LanguageSwitcher />
-          <div className='w-11 h-11 bg-white rounded-full flex items-center justify-center'>
-            <span className='vox-icon vx-icon-007 size-md !text-ternary flex items-center justify-center' />
+        <div className='ml-2 flex justify-end items-center gap-1 sm:gap-2 md:gap-3'>
+          <div className='hidden sm:block'>
+            <LanguageSwitcher />
+          </div>
+          <div className='w-8 h-8 sm:w-9 sm:h-9 md:w-11 md:h-11 bg-white rounded-full flex items-center justify-center'>
+            <span className='vox-icon vx-icon-007 size-sm md:size-md !text-ternary flex items-center justify-center' />
           </div>
           <Link
             to={PAGES_LIST_ROUTER.dashboard.base}
-            className='px-6 py-2 rounded-full bg-white text-ternary hover:bg-opacity-90 transition-colors duration-200 whitespace-nowrap'
+            className='px-2 sm:px-3 md:px-4 lg:px-6 py-1 sm:py-1.5 md:py-2 rounded-full bg-white text-ternary hover:bg-opacity-90 transition-colors duration-200 whitespace-nowrap text-xs sm:text-sm md:text-base flex items-center justify-center min-w-[60px] sm:min-w-[70px] md:min-w-[80px]'
           >
             {t('navbar.signin')}
           </Link>

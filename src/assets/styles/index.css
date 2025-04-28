@@ -7,6 +7,24 @@
 @import url('./tryvoo/forms.css');
 @import url('./tryvoo/button.css');
 
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.33%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 25s linear infinite;
+  width: fit-content;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
