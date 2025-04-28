@@ -273,13 +273,33 @@ export const Table = <T,>({
                       className='p-2 font-semibold'
                     >
                       <div className='flex justify-between items-center w-full'>
-                        <span>
+                         {/* <span>
                           {row.groupingColumnId && (
                             <>
                               {row.getValue(row.groupingColumnId)} (
                               {row.subRows.length})
                             </>
                           )}
+                        </span> */}
+
+                        <span>
+                          {(() => {
+                            const groupingColumn = table.getAllLeafColumns().find((col) => col.id === row.groupingColumnId);
+                            const getIconGroup = (groupingColumn?.columnDef as any).getIconGroup;
+                            const iconData = getIconGroup ? getIconGroup(row.original) : undefined;
+                            const iconGroup = iconData?.icon;
+                            const colorIconGroup = iconData?.color;
+                            return iconGroup ? (
+                              <span
+                                className={`vx-icon vx-icon-${iconGroup} size-md mt-3 ${colorIconGroup ?? ''}`}
+                              />
+                            ) : null;
+                          })()}
+                          <span className='ml-2'>
+                            {row.groupingColumnId
+                              ? `${row.getValue(row.groupingColumnId)} (${row.subRows.length})`
+                              : `(${row.subRows.length})`}
+                          </span>
                         </span>
 
                         {selectable &&

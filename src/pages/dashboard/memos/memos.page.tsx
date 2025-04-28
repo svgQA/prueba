@@ -17,11 +17,8 @@ import { columns } from './components/memos.columns';
 import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
-
-interface FrequentQuestion {
-  id: number;
-  question: string;
-}
+import { MemoService, MemosSummary } from '@/services';
+import {  Chats, FrequentQuestion } from './interface';
 
 interface ChatMessage {
   message: string;
@@ -29,13 +26,6 @@ interface ChatMessage {
   from: string;
   to: string;
 }
-
-type Chats = {
-  [key: string]: {
-    new: number;
-    messages: ChatMessage[];
-  };
-};
 
 const FrequentQuestions = () => {
   const questions: FrequentQuestion[] = [
@@ -63,12 +53,6 @@ enum VIEW_NAME {
   CHAT,
 }
 
-interface IMemoSummary {
-  total: number;
-  inProgress: number;
-  completed: number;
-}
-
 export const MemosPage: FunctionComponent = () => {
   const { cognito } = useUserStore();
 
@@ -82,9 +66,9 @@ export const MemosPage: FunctionComponent = () => {
   const memos = useSignal<Memo[]>([]);
 
   const chats = useSignal<Chats>({});
-  const memoSummary = useSignal<IMemoSummary>({
+  const memoSummary = useSignal<MemosSummary>({
     total: 0,
-    inProgress: 0,
+    in_progress: 0,
     completed: 0,
   });
 
@@ -92,10 +76,27 @@ export const MemosPage: FunctionComponent = () => {
     document.title = 'VX - Chat';
     wsManager.addListener('memos', handleReceiveMessage);
     getUsersHandler();
+    fetchInitialData();
+    handleGetMemosSummary();
     return () => {
       wsManager.removeListener('memos');
     };
   }, []);
+
+  const fetchInitialData = async () => {
+    try {
+      const [memosResponse] = await Promise.all([MemoService.get_all({ page: 1, items: 1000 })]);
+      if (memosResponse && memosResponse.getStatus()) memos.value = memosResponse.getMany();
+    } catch (error) {
+      toast.error('memos.error_fetching_initial_data');
+    }
+  };
+
+  const handleGetMemosSummary = async () => {
+    // const summary = await MemoService.getMemosSummary();
+    // if (!summary.getStatus()) return;
+    // memoSummary.value = summary.getOne();
+  };
 
   const handleSendMessage = (message: string) => {
     if (!cognito || !userSelected.value?.cognitoId) {
@@ -221,11 +222,10 @@ export const MemosPage: FunctionComponent = () => {
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage.value === 1}
-                  className={`px-4 py-2 rounded-md ${
-                    currentPage.value === 1
-                      ? 'bg-gray-300 cursor-not-allowed'
-                      : 'bg-blue-500 hover:bg-blue-600'
-                  } text-white`}
+                  className={`px-4 py-2 rounded-md ${currentPage.value === 1
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-blue-500 hover:bg-blue-600'
+                    } text-white`}
                 >
                   Anterior
                 </button>
@@ -235,11 +235,10 @@ export const MemosPage: FunctionComponent = () => {
                 <button
                   onClick={handleNextPage}
                   disabled={currentPage.value >= totalPages.value}
-                  className={`px-4 py-2 rounded-md ${
-                    currentPage.value >= totalPages.value
-                      ? 'bg-gray-300 cursor-not-allowed'
-                      : 'bg-blue-500 hover:bg-blue-600'
-                  } text-white`}
+                  className={`px-4 py-2 rounded-md ${currentPage.value >= totalPages.value
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-blue-500 hover:bg-blue-600'
+                    } text-white`}
                 >
                   Siguiente
                 </button>
@@ -327,7 +326,7 @@ export const MemosPage: FunctionComponent = () => {
 
           <CardData
             title='Memorandos sin resolver'
-            count={calculatePercentage(memoSummary.value.inProgress)}
+            count={calculatePercentage(memoSummary.value.in_progress)}
             subtitle=''
             color='t-dark'
             icon='052' // 311
@@ -360,6 +359,10 @@ export const MemosPage: FunctionComponent = () => {
             selectable={true}
             visibility={{
               id: false,
+              city: false,
+              address: false,
+              noveltyDate: false,
+              contact: false,
             }}
           />
         )}
