@@ -388,6 +388,15 @@ export const general_es = {
       read: 'Leídas',
       unread: 'No Leídas',
       reload: 'Recargar',
+      executeReview: 'Ejecutar revisión',
+    },
+    errors: {
+      loadHistory: 'Error al cargar historial',
+      loadStats: 'Error al cargar estadísticas',
+      cronExecution: 'Error al ejecutar el cron manualmente',
+    },
+    success: {
+      cronExecuted: 'Cron ejecutado manualmente 🚀',
     },
     cards: {
       notificationShifts: 'Turnos de notificaciones',
@@ -397,15 +406,18 @@ export const general_es = {
     columns: {
       title: 'Título',
       description: 'Descripción',
+      type: 'Tipo',
       sentAt: 'Fecha de envío',
       status: 'Estado',
       origin: 'Origen',
       action: 'Acción',
       read: 'Leída',
       unread: 'No leída',
-      manual: 'Manual',
+      manual: 'Usuarios',
       scheduled: 'Programada',
       markAsRead: 'Marcar como leída',
+      recipients: 'Destinatarios',
+      openRate: 'Tasa de apertura',
     },
   },
   users: {
