@@ -1,6 +1,7 @@
 import { IService } from '@/types/shift/activity';
 import { Map } from '@/components/common/map/map';
 import { useSignal } from '@preact/signals';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 
 const ServiceInfo = ({ service }: { service: IService }) => {
   const points = useSignal<any>([
@@ -75,7 +76,7 @@ const ServiceInfo = ({ service }: { service: IService }) => {
             Área de cobertura
           </h4>
           <div className='relative w-full' style={{ height: '180px' }}>
-            <Map
+            {/* <Map
               sendPoints={() => {}}
               name='Map'
               center={{
@@ -93,6 +94,26 @@ const ServiceInfo = ({ service }: { service: IService }) => {
               width='100%'
               height='100%'
               clickPoint={() => {}}
+            /> */}
+            <MapLibrePointsMap
+              sendPoints={() => {}}
+              name='Map'
+              center={{
+                lat: service.place.latitude,
+                lng: service.place.longitude,
+              }}
+              pointsAmount={1}
+              pointsRef={points.value}
+              condition={false}
+              errorCondition=''
+              radialPoint={null}
+              errorRadialPoint=''
+              radius={service.place.radius || 50}
+              draggable={true}
+              width='100%'
+              height='100%'
+              clickPoint={() => {}}
+              disablePointSelection={true}
             />
           </div>
           <p className='text-t-light-dark text-xs mt-2 flex items-center'>
