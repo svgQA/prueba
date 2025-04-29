@@ -761,7 +761,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   return (
     <div>
-      <div className='relative w-full py-1 flex items-center justify-end gap-2'>
+      <div className='w-full py-1 flex items-center justify-end gap-2 sticky top-[3.4rem] z-[8] bg-b-content dark:bg-gray-800'>
         <ReplicateModal
           selectedUsers={selectedUsers}
           users={users}

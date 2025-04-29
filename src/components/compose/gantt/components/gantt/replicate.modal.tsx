@@ -5,11 +5,11 @@ import { FieldArray } from 'react-final-form-arrays';
 import arrayMutators from 'final-form-arrays';
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
-import { UserSelector } from '@/components/common/user-selector/user-selector';
 import { required } from '@/utils/utilities';
 import { IOption } from '@/components/common/multi/interface';
 import { ShiftService } from '@/services';
 import { toast } from 'react-toastify';
+import { CustomSelector } from '@/components/common/custom-selector/custom-selector';
 
 interface ReplicateModalProps {
   selectedUsers: Set<string | number>;
@@ -53,7 +53,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
 }) => {
   const [showDateForm, setShowDateForm] = useState(false);
   const formRef = useRef<any>(null);
-
+  const containerRef = useRef<HTMLDivElement>(null);
   // const hasFetchedUsers = useRef(false);
   // useEffect(() => {
   //   if (!hasFetchedUsers.current) {
@@ -99,7 +99,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
   // };
 
   return (
-    <div className='relative'>
+    <div className='relative' ref={containerRef}>
       <button
         className='px-2 py-1 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors'
         onClick={() => setShowDateForm((prev) => !prev)}
@@ -109,7 +109,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
 
       {showDateForm && (
         <div
-          className='my-3 absolute right-0 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[600px]'
+          className='my-3 absolute right-0 bg-b-content rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[600px]'
           // onMouseLeave={handleMouseLeave}
         >
           <Form<FormValues>
@@ -196,7 +196,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                   </Field>
 
                   <div className='py-3 border-y border-gray-100 border-dashed'>
-                    <div className='space-y-4 max-h-96 overflow-y-auto vox-scroll-design px-1 overflow-x-hidden'>
+                    <div className='space-y-4 max-h-[500px] overflow-y-auto vox-scroll-design px-1 overflow-x-hidden'>
                       <div className='grid grid-cols-2 gap-4 font-medium text-sm text-gray-500 uppercase tracking-wider bg-gray-50 p-2 rounded-md'>
                         <div>Usuario Original</div>
                         <div>Usuario de Reemplazo</div>
@@ -231,7 +231,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                                     >
                                       {({ input, meta }) => {
                                         return (
-                                          <UserSelector
+                                          <CustomSelector
                                             {...input}
                                             meta={meta}
                                             name={`${name}.replacementUserId`}

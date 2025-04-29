@@ -648,7 +648,7 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className='relative w-full py-1 flex items-center justify-end'>
+      <div className='w-full py-1 flex items-center justify-end sticky top-[3.4rem] z-[8] bg-b-content dark:bg-gray-800'>
         {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (
           <Search
