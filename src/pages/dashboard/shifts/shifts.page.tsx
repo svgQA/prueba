@@ -384,7 +384,6 @@ export const ShiftsPage: FunctionalComponent = () => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
         />
-        {/*
         <Button
           name='button-change-planner'
           onClick={() => {
@@ -398,7 +397,6 @@ export const ShiftsPage: FunctionalComponent = () => {
           }
           icon='331'
         />
-        */}
       </div>
     ),
     [
@@ -442,9 +440,8 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
       </div>
 
-      <div className='max-h-screen'>
-        {/* sticky top-[3.4rem] z-[8] */}
-        <div className='py-2 flex flex-row justify-between items-center overflow-visible bg-b-content dark:bg-b-dark absolute w-fit'>
+      <div className='max-h-screen relative'>
+        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
           <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
             <Button
@@ -530,6 +527,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         posSave={handleViewMode}
         userSelected={userSelected}
         taskSelected={taskSelected}
+        users={users}
       />
 
       <ShiftForm

@@ -9,29 +9,36 @@ import { FormData } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { UserService } from '@/services/user';
 import { ShiftService } from '@/services';
-import { IUserResponse } from '@/types/auth';
 import { Chip } from '@/components/common/chip/chip';
-import { toast } from 'react-toastify';
 import { Task, User } from '@/components/compose/gantt/types/public-types';
 import { Badge } from '@/components/common/badge/badge';
-import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
+import { IOption } from '@/components/common/multi/interface';
+import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { toast } from 'react-toastify';
+interface FormErrors {
+  employeedId?: string;
+  serviceId?: string;
+  start?: string;
+  end?: string;
+  type?: string;
+}
 
-interface Props {
+interface ITaskFormProps {
   closed?: boolean;
   onClose?: () => void;
   posSave?: () => void;
   userSelected?: User;
   taskSelected?: Task;
+  users?: IOption[];
 }
 
-interface ITask {
-  start: string;
-  date: string;
-  status: string;
-  description: string;
-}
+// interface ITask {
+//   start: string;
+//   date: string;
+//   status: string;
+//   description: string;
+// }
 
 export const TaskForm = ({
   closed,
@@ -39,71 +46,74 @@ export const TaskForm = ({
   userSelected,
   taskSelected,
   posSave,
-}: Props) => {
+  users,
+}: ITaskFormProps) => {
   const inputKeywords = useSignal('');
-  const users = useSignal<IUserResponse[]>([]);
-  const services = useSignal<any[]>([]);
+  // const services = useSignal<any[]>([]);
+  const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>();
-  const tasks = useSignal<ITask[]>([]);
+  // const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>();
+  // const tasks = useSignal<ITask[]>([]);
 
-  const setTasks = (serviceId: number) => {
-    const service = services.value.find((service) => service.id === serviceId);
-    tasks.value = service?.task || [];
-    // console.log(service);
-    // console.log(tasks.value);
-  };
+  // const setTasks = (serviceId: number) => {
+  //   // const service = services.value.find((service) => service.id === serviceId);
+  //   // tasks.value = service?.task || [];
+  //   // console.log(service);
+  //   // console.log(tasks.value);
+  // };
+
+  // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
 
   const onSubmit = async (model: FormData) => {
     try {
       const { start, end } = model;
+      console.log('model: ', start, end);
 
-      if (start) model.start = dayjs(start).toISOString();
-      if (end) model.end = dayjs(end).toISOString();
+      //   if (start) model.start = dayjs(start).toISOString();
+      //   if (end) model.end = dayjs(end).toISOString();
 
-      const request = taskSelected?.id
-        ? await ShiftService.updateActivity(model, taskSelected.id)
-        : await ShiftService.createActivity(model);
+      //   const request = taskSelected?.id
+      //     ? await ShiftService.updateActivity(model, taskSelected.id)
+      //     : await ShiftService.createActivity(model);
 
-      if (!request.getStatus()) return;
+      //   if (!request.getStatus()) return;
 
-      const message = taskSelected?.id
-        ? 'Turno editado exitosamente!'
-        : 'Turno creado exitosamente!';
+      //   const message = taskSelected?.id
+      //     ? 'Turno editado exitosamente!'
+      //     : 'Turno creado exitosamente!';
 
-      toast.success(message, { position: 'top-right' });
+      toast.success('shift.success.action', { position: 'top-right' });
       onClose?.();
       posSave?.();
     } catch (error) {
-      toast.error('Error al procesar la solicitud');
+      toast.error('shift.error.action', { position: 'top-right' });
     }
   };
 
   const getServices = useCallback(async () => {
-    const request = await ShiftService.getServices();
+    const request = await ShiftService.getServicesSimpleList();
     if (request.getStatus()) {
       services.value = request.getMany();
     }
   }, []);
 
-  const getUsers = useCallback(async () => {
-    const request = await UserService.get_all_employee();
-    if (request.getStatus()) {
-      users.value = request.getMany().map((user: any) => ({
-        ...user,
-        fullname: `${user.name} ${user.surname}`,
-      }));
-    }
-  }, []);
+  // const getUsers = useCallback(async () => {
+  //   const request = await UserService.get_all_employee();
+  //   if (request.getStatus()) {
+  //     users.value = request.getMany().map((user: any) => ({
+  //       ...user,
+  //       fullname: `${user.name} ${user.surname}`,
+  //     }));
+  //   }
+  // }, []);
 
   useEffect(() => {
-    Promise.all([getUsers(), getServices()]);
-  }, [getUsers, getServices]);
+    Promise.all([getServices()]);
+  }, [getServices]);
 
-  const required = useCallback(
-    (value: any) => (value ? undefined : 'Required'),
-    []
-  );
+  const required = useCallback((value: any) => {
+    return value ? undefined : 'Required';
+  }, []);
 
   const preventKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -194,7 +204,7 @@ export const TaskForm = ({
 
   useEffect(() => {
     if (taskSelected) {
-      setSelectedEmployeeId(taskSelected.userId?.toString());
+      // setSelectedEmployeeId(taskSelected.userId?.toString());
       setInitialValues({
         employeedId: taskSelected.userId,
         start: taskSelected.start?.toString(),
@@ -205,7 +215,7 @@ export const TaskForm = ({
       return;
     }
     if (userSelected) {
-      setSelectedEmployeeId(userSelected.id?.toString());
+      // setSelectedEmployeeId(userSelected.id?.toString());
       setInitialValues({
         employeedId: userSelected.id,
         start: '',
@@ -215,7 +225,7 @@ export const TaskForm = ({
       });
       return;
     }
-    setSelectedEmployeeId('');
+    // setSelectedEmployeeId('');
     setInitialValues({
       employeedId: '',
       start: '',
@@ -242,6 +252,16 @@ export const TaskForm = ({
           mutators={{
             ...arrayMutators,
           }}
+          validate={(values) => {
+            const errors: FormErrors = {};
+            if (!values.employeedId) errors.employeedId = 'Campo obligatorio';
+            if (!values.serviceId) errors.serviceId = 'Campo obligatorio';
+            if (!values.start) errors.start = 'Campo obligatorio';
+            if (!values.end) errors.end = 'Campo obligatorio';
+            if (!values.type) errors.type = 'Campo obligatorio';
+
+            return errors;
+          }}
           render={({ handleSubmit, values }) => (
             <form
               onSubmit={handleSubmit}
@@ -249,42 +269,36 @@ export const TaskForm = ({
               id='form-shift-update'
               onKeyDown={preventKeyDown}
             >
-              <div className='grid grid-cols-2 gap-3'>
+              <div className='grid grid-cols-2 gap-3 z-50'>
                 <div class='col-span-1'>
-                  <Field<string> name='employeedId'>
-                    {({ input }) => (
-                      <Select
+                  <Field<IOption> name='employeedId' validate={required}>
+                    {({ input, meta }) => (
+                      <SmartSelector
                         {...input}
-                        id='select-employee'
-                        name='select-employee'
-                        placeholder='Selecione empleado...'
+                        meta={meta}
+                        name='employeedId'
+                        id='select-employeed'
                         label='Empleado'
-                        icon='252'
-                        options={users.value}
-                        optionValue='id'
-                        optionLabel='fullname'
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                          setSelectedEmployeeId(id.toString());
-                        }}
-                        value={selectedEmployeeId}
-                        disabled={!!userSelected}
+                        options={users || []}
+                        multiple={false}
+                        allowAll={false}
+                        menuPortalTarget={document.body}
+                        placeholder='Selecciona usuarios de reemplazo'
                       />
                     )}
                   </Field>
                 </div>
 
                 <div class='col-span-1'>
-                  <Field<string> name='type'>
-                    {({ input }) => (
+                  <Field<string> name='type' validate={required}>
+                    {({ input, meta }) => (
                       <Select
                         {...input}
+                        meta={meta}
                         id='select-type'
                         name='select-type'
                         placeholder='Selecione tipo...'
                         label='Tipo'
-                        icon='252'
                         options={[
                           { value: 'EXTERNAL', label: 'Externo' },
                           { value: 'INTERNAL', label: 'Interno' },
@@ -339,23 +353,17 @@ export const TaskForm = ({
                 </div>
 
                 <div class='col-span-1'>
-                  <Field name='serviceId'>
-                    {({ input }) => (
-                      <Select
+                  <Field<IOption> name='serviceId' validate={required}>
+                    {({ input, meta }) => (
+                      <SmartSelector
                         {...input}
+                        meta={meta}
+                        name='serviceId'
                         id='select-service'
-                        name='select-service'
-                        placeholder='Seleccione Servicio...'
                         label='Servicio'
-                        icon='252'
-                        optionValue='id'
-                        optionLabel='description'
                         options={services.value}
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                          setTasks(id);
-                        }}
+                        menuPortalTarget={document.body}
+                        placeholder='Selecciona usuarios de reemplazo'
                       />
                     )}
                   </Field>
@@ -374,6 +382,7 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
+
                 <div class='col-span-1 '>
                   <FieldArray<string> name='keywords'>
                     {({ fields }) => {
@@ -417,6 +426,7 @@ export const TaskForm = ({
                     }}
                   </FieldArray>
                 </div>
+
                 <div class='col-span-1'>
                   <Field
                     name='timeBefore'
@@ -434,12 +444,13 @@ export const TaskForm = ({
                   </Field>
                 </div>
 
+                {/*
                 <div className='col-span-2'>
                   <ExpansionPanel title='Tareas del turno'>
                     <FieldArray name='tasks'>
                       {({ fields }) => (
                         <div>
-                          <Select
+                          <TSelect
                             placeholder='Seleccione tarea...'
                             label='Tarea'
                             name='taskId'
@@ -526,6 +537,7 @@ export const TaskForm = ({
                     </FieldArray>
                   </ExpansionPanel>
                 </div>
+                */}
               </div>
             </form>
           )}

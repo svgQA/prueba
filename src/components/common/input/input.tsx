@@ -27,6 +27,11 @@ export const Input = ({
   buttonIcon = '123',
   buttonType = 'button',
   disabled,
+  ref,
+  onInput,
+  onKeyDown,
+  onFocus,
+  onBlur,
   ...props
 }: IInputProps) => {
   const handleKeyUp = (e: KeyboardEvent) => {
@@ -37,7 +42,8 @@ export const Input = ({
     }
   };
 
-  const isDateTimeInput = type === 'date' || type === 'time';
+  const isDateTimeInput =
+    type === 'date' || type === 'time' || type === 'datetime-local';
 
   const handleInputClick = (e: MouseEvent) => {
     if (isDateTimeInput && !disabled) {
@@ -66,11 +72,12 @@ export const Input = ({
         )}
         <div className='relative flex-1'>
           <input
-            className={`${normal ? '' : 'ccapitalize'} w-full px-2 flex-1 mr-2 bg-transparent rounded-md ${
-              thin ? '' : 'py-2'
-            } [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-              isDateTimeInput ? 'cursor-pointer' : ''
-            }`}
+            ref={ref}
+            className={`w-full px-3 py-2 rounded ${
+              meta?.touched && meta?.error
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-blue-500'
+            } appearance-none`}
             onChange={onChange}
             name={name}
             onKeyUp={handleKeyUp}

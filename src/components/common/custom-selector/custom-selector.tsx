@@ -22,6 +22,12 @@ export interface CustomSelectorProps {
   menuPortalTarget?: HTMLElement | null;
 }
 
+type PositionDropdown = {
+  top: number;
+  left: number;
+  width: number;
+};
+
 export const CustomSelector: ComponentType<CustomSelectorProps> = ({
   value = [],
   onChange,
@@ -44,19 +50,19 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const [dropdownStyles, setDropdownStyles] = useState<{
-    top: number;
-    left: number;
-    width: number;
-  }>({ top: 0, left: 0, width: 0 });
+  const generalRef = useRef<HTMLDivElement>(null);
+  const [dropdownStyles, setDropdownStyles] = useState<PositionDropdown>({
+    top: 0,
+    left: 0,
+    width: 0,
+  });
 
   const updateDropdownPosition = () => {
     if (inputRef.current) {
       const rect = inputRef.current.getBoundingClientRect();
       setDropdownStyles({
-        top: rect.bottom + window.scrollY,
-        left: rect.left + window.scrollX,
+        top: rect.bottom,
+        left: rect.left,
         width: rect.width,
       });
     }
@@ -138,7 +144,7 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
       setFilteredOptions(filtered);
       setSelectedIndex(0);
     } else {
-      setFilteredOptions([]);
+      setFilteredOptions(options);
     }
   }, [searchTerm, options]);
 
@@ -155,7 +161,7 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
       setShowDropdown(false);
     }
     setSearchTerm('');
-    setFilteredOptions([]);
+    setFilteredOptions(options);
   };
 
   const handleSelectAll = () => {
@@ -180,8 +186,62 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
   const isAllSelected =
     multiple && value.length === 1 && value[0]?.value === -1;
 
+  const dropdown = () => (
+    <div
+      ref={dropdownRef}
+      style={{
+        position: 'absolute',
+        top: dropdownStyles.top,
+        left: dropdownStyles.left - 1,
+        width: dropdownStyles.width,
+        zIndex: 99,
+      }}
+      className={`bg-white rounded-md shadow-lg border border-gray-200 ${maxHeight} overflow-auto ${dropdownClassName} vox-scroll-design`}
+    >
+      {showSelectAll && (
+        <div className='p-2 border-b border-gray-200'>
+          <button
+            type='button'
+            className='w-full text-left px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded'
+            onMouseDown={(e) => {
+              e.preventDefault();
+              handleSelectAll();
+            }}
+          >
+            {value.length === options.length
+              ? 'Deseleccionar todos'
+              : 'Seleccionar todos'}
+          </button>
+        </div>
+      )}
+
+      {filteredOptions.length > 0 && (
+        <div className='p-2'>
+          {filteredOptions.map((option, index) => (
+            <button
+              key={option.value}
+              type='button'
+              className={`w-full text-left px-2 py-1 text-sm rounded border-none ${
+                index === selectedIndex
+                  ? 'bg-blue-100 text-blue-800'
+                  : value.some((v) => v.value === option.value)
+                    ? 'bg-blue-50 text-blue-800'
+                    : 'text-gray-700 hover:bg-gray-100'
+              } ${optionClassName}`}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                handleSelect(option);
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} ref={generalRef}>
       <div className='mb-2 relative'>
         {label && (
           <label className='block text-sm font-medium text-gray-700'>
@@ -253,59 +313,8 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
       {showDropdown &&
         searchTerm &&
         createPortal(
-          <div
-            ref={dropdownRef}
-            style={{
-              position: 'absolute',
-              top: dropdownStyles.top,
-              left: dropdownStyles.left - 1,
-              width: dropdownStyles.width,
-              zIndex: 9999,
-            }}
-            className={`bg-white rounded-md shadow-lg border border-gray-200 ${maxHeight} overflow-auto ${dropdownClassName} vox-scroll-design`}
-          >
-            {multiple && showSelectAll && (
-              <div className='p-2 border-b border-gray-200'>
-                <button
-                  type='button'
-                  className='w-full text-left px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded'
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    handleSelectAll();
-                  }}
-                >
-                  {value.length === options.length
-                    ? 'Deseleccionar todos'
-                    : 'Seleccionar todos'}
-                </button>
-              </div>
-            )}
-
-            {filteredOptions.length > 0 && (
-              <div className='p-2'>
-                {filteredOptions.map((option, index) => (
-                  <button
-                    key={option.value}
-                    type='button'
-                    className={`w-full text-left px-2 py-1 text-sm rounded border-none ${
-                      index === selectedIndex
-                        ? 'bg-blue-100 text-blue-800'
-                        : value.some((v) => v.value === option.value)
-                          ? 'bg-blue-50 text-blue-800'
-                          : 'text-gray-700 hover:bg-gray-100'
-                    } ${optionClassName}`}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleSelect(option);
-                    }}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>,
-          menuPortalTarget || inputRef.current?.parentElement || document.body
+          dropdown(),
+          menuPortalTarget || generalRef.current || document.body
         )}
     </div>
   );

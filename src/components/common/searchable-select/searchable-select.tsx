@@ -1,45 +1,35 @@
 import { ComponentType } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { Input } from '@/components/common/input/input';
-
-interface Option {
-  label: string;
-  value: string | number;
-}
+import { IOption } from '@/components/common/multi/interface';
+import { FieldMetaState } from 'react-final-form';
 
 interface SearchableSelectProps {
-  value?: Option[];
-  onChange: (value: Option[]) => void;
+  value?: IOption[];
+  onChange: (value: IOption[]) => void;
   label?: string;
   placeholder?: string;
+  meta?: FieldMetaState<IOption[]>;
   name: string;
-  options: Option[];
+  options: IOption[];
   multiple?: boolean;
-  className?: string;
-  dropdownClassName?: string;
-  optionClassName?: string;
-  maxHeight?: string;
-  meta: any;
 }
 
 export const SearchableSelect: ComponentType<SearchableSelectProps> = ({
   value = [],
   onChange,
   label,
-  placeholder = 'Buscar...',
+  placeholder = 'Buscar usuarios...',
+  meta,
   name,
   options,
   multiple = false,
-  className = '',
-  dropdownClassName = '',
-  optionClassName = '',
-  maxHeight = 'max-h-60',
-  meta,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
+  const [filteredOptions, setFilteredOptions] = useState<IOption[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (searchTerm) {
@@ -47,12 +37,44 @@ export const SearchableSelect: ComponentType<SearchableSelectProps> = ({
         option.label.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredOptions(filtered);
+      setSelectedIndex(0); // Resetear el índice cuando se filtra
     } else {
       setFilteredOptions([]);
     }
   }, [searchTerm, options]);
 
-  const handleSelect = (option: Option) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!showDropdown) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex((prev) => {
+          const nextIndex = prev < filteredOptions.length - 1 ? prev + 1 : 0;
+          return nextIndex;
+        });
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex((prev) => {
+          const nextIndex = prev > 0 ? prev - 1 : filteredOptions.length - 1;
+          return nextIndex;
+        });
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (filteredOptions[selectedIndex]) {
+          handleSelect(filteredOptions[selectedIndex]);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setShowDropdown(false);
+        break;
+    }
+  };
+
+  const handleSelect = (option: IOption) => {
     if (multiple) {
       const isSelected = value.some((v) => v.value === option.value);
       if (isSelected) {
@@ -68,7 +90,23 @@ export const SearchableSelect: ComponentType<SearchableSelectProps> = ({
     setFilteredOptions([]);
   };
 
-  const handleRemoveOption = (optionToRemove: Option) => {
+  const handleSelectAll = () => {
+    if (!multiple) return;
+
+    if (value.length === options.length) {
+      onChange([]);
+    } else {
+      onChange([
+        {
+          label: 'Todos',
+          value: -1, // Usamos -1 como valor especial para indicar "todos"
+        },
+      ]);
+    }
+    setShowDropdown(false);
+  };
+
+  const handleRemoveUser = (optionToRemove: IOption) => {
     if (!multiple) {
       onChange([]);
       return;
@@ -79,8 +117,8 @@ export const SearchableSelect: ComponentType<SearchableSelectProps> = ({
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
-      containerRef.current &&
-      !containerRef.current.contains(event.target as Node)
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
     ) {
       setShowDropdown(false);
     }
@@ -88,40 +126,62 @@ export const SearchableSelect: ComponentType<SearchableSelectProps> = ({
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [showDropdown, filteredOptions, selectedIndex]);
+
+  // Función auxiliar para determinar si todos están seleccionados
+  const isAllSelected =
+    multiple && value.length === 1 && value[0]?.value === -1;
 
   return (
-    <div className={`relative ${className}`} ref={containerRef}>
+    <div className='relative' ref={dropdownRef}>
       <div className='mb-2 relative'>
-        {label && (
-          <label className='block text-sm font-medium text-gray-700'>
-            {label}
-          </label>
-        )}
+        <label className='block text-sm font-medium text-gray-700'>
+          {label}
+        </label>
 
         {value.length > 0 && (
-          <div className='flex flex-wrap gap-1 mb-2'>
-            {value.map((option) => (
-              <span
-                key={option.value}
-                className='inline-flex items-center justify-between px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-800'
-              >
-                {option.label}
+          <div
+            className={`flex flex-wrap gap-1 mb-2 ${!multiple ? 'absolute bottom-0 right-0 w-full' : ''}`}
+          >
+            {isAllSelected ? (
+              <span className='inline-flex items-center px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-800'>
+                Todos
                 <button
                   type='button'
                   className='ml-1 text-blue-600 hover:text-blue-800 border-none'
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleRemoveOption(option);
+                    onChange([]);
                   }}
                 >
                   ×
                 </button>
               </span>
-            ))}
+            ) : (
+              value.map((option) => (
+                <span
+                  key={option.value}
+                  className='inline-flex items-center justify-between px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-800 w-full h-full'
+                >
+                  {option.label}
+                  <button
+                    type='button'
+                    className='ml-1 text-blue-600 hover:text-blue-800 border-none'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveUser(option);
+                    }}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))
+            )}
           </div>
         )}
 
@@ -133,39 +193,51 @@ export const SearchableSelect: ComponentType<SearchableSelectProps> = ({
               setSearchTerm(e.currentTarget.value);
               setShowDropdown(true);
             }}
-            onClick={() => setShowDropdown(true)}
             placeholder={placeholder}
             name={name}
-            {...meta}
           />
         </div>
+        {meta && meta.touched && meta.error && (
+          <span className='text-red-500 text-sm'>{meta.error}</span>
+        )}
       </div>
 
-      {showDropdown && (
-        <div
-          className={`absolute z-50 w-full max-w-80 bg-white rounded-md shadow-lg border border-gray-200 ${maxHeight} overflow-auto ${dropdownClassName} vox-scroll-design`}
-          style={{
-            top: '100%',
-            left: 0,
-            marginTop: '5px',
-          }}
-        >
-          <div className='p-2'>
-            {(searchTerm ? filteredOptions : options).map((option) => (
+      {showDropdown && searchTerm && (
+        <div className='absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200 max-h-60 overflow-auto'>
+          {multiple && (
+            <div className='p-2 border-b border-gray-200'>
               <button
-                key={option.value}
                 type='button'
-                className={`w-full text-left px-2 py-1 text-sm rounded border-none ${
-                  value.some((v) => v.value === option.value)
-                    ? 'bg-blue-50 text-blue-800'
-                    : 'text-gray-700 hover:bg-gray-100'
-                } ${optionClassName}`}
-                onClick={() => handleSelect(option)}
+                className='w-full text-left px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded'
+                onClick={handleSelectAll}
               >
-                {option.label}
+                {value.length === options.length
+                  ? 'Deseleccionar todos'
+                  : 'Seleccionar todos'}
               </button>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {filteredOptions.length > 0 && (
+            <div className='p-2'>
+              {filteredOptions.map((option, index) => (
+                <button
+                  key={option.value}
+                  type='button'
+                  className={`w-full text-left px-2 py-1 text-sm rounded border-none ${
+                    index === selectedIndex
+                      ? 'bg-blue-100 text-blue-800'
+                      : value.some((v) => v.value === option.value)
+                        ? 'bg-blue-50 text-blue-800'
+                        : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                  onClick={() => handleSelect(option)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

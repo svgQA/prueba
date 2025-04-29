@@ -37,7 +37,11 @@ export const Select = ({
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
         <select
-          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md appearance-none ${thin ? '' : 'py-2'}`}
+          className={`w-full px-3 py-2 rounded ${
+            meta?.touched && meta?.error
+              ? 'border-red-500 focus:ring-red-500'
+              : 'border-gray-300 focus:ring-blue-500'
+          } appearance-none`}
           onChange={onChange}
           value={value}
           name={name}
