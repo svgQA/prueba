@@ -18,11 +18,9 @@ import { columns } from './components/memos.columns';
 import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
-
-interface FrequentQuestion {
-  id: number;
-  question: string;
-}
+import { MemoService, MemosSummary } from '@/services';
+import { Chats, FrequentQuestion } from './interface';
+import { ExpandableMultiple } from './components/expandable.multiple';
 
 interface ChatMessage {
   message: string;
@@ -30,13 +28,6 @@ interface ChatMessage {
   from: string;
   to: string;
 }
-
-type Chats = {
-  [key: string]: {
-    new: number;
-    messages: ChatMessage[];
-  };
-};
 
 const FrequentQuestions = () => {
   const { t } = useTranslation();
@@ -66,12 +57,6 @@ enum VIEW_NAME {
   CHAT,
 }
 
-interface IMemoSummary {
-  total: number;
-  inProgress: number;
-  completed: number;
-}
-
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { cognito } = useUserStore();
@@ -84,11 +69,12 @@ export const MemosPage: FunctionComponent = () => {
   const totalPages = useSignal<number>(3);
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
+  const defaultColumn = useSignal<string>('default');
 
   const chats = useSignal<Chats>({});
-  const memoSummary = useSignal<IMemoSummary>({
+  const memoSummary = useSignal<MemosSummary>({
     total: 0,
-    inProgress: 0,
+    in_progress: 0,
     completed: 0,
   });
 
@@ -96,10 +82,30 @@ export const MemosPage: FunctionComponent = () => {
     document.title = 'VX - Chat';
     wsManager.addListener('memos', handleReceiveMessage);
     getUsersHandler();
+    fetchInitialData();
+    handleGetMemosSummary();
     return () => {
       wsManager.removeListener('memos');
     };
   }, []);
+
+  const fetchInitialData = async () => {
+    try {
+      const [memosResponse] = await Promise.all([
+        MemoService.get_all({ page: 1, items: 1000 }),
+      ]);
+      if (memosResponse && memosResponse.getStatus())
+        memos.value = memosResponse.getMany();
+    } catch (error) {
+      toast.error('memos.error_fetching_initial_data');
+    }
+  };
+
+  const handleGetMemosSummary = async () => {
+    const summary = await MemoService.getMemosSummary();
+    if (!summary.getStatus()) return;
+    memoSummary.value = summary.getOne();
+  };
 
   const handleSendMessage = (message: string) => {
     if (!cognito || !userSelected.value?.cognitoId) {
@@ -332,7 +338,7 @@ export const MemosPage: FunctionComponent = () => {
 
           <CardData
             title={t('memos.cards.unresolved')}
-            count={calculatePercentage(memoSummary.value.inProgress)}
+            count={calculatePercentage(memoSummary.value.in_progress)}
             subtitle=''
             color='t-dark'
             icon='052' // 311
@@ -362,9 +368,19 @@ export const MemosPage: FunctionComponent = () => {
             columns={columns}
             showExpandableIcon={false}
             pageSize={20}
-            selectable={true}
+            selectable
+            expandable={(row: Memo, currentColumnName?: string) => (
+              <ExpandableMultiple
+                type={currentColumnName || defaultColumn.value}
+                data={row}
+              />
+            )}
             visibility={{
               id: false,
+              city: false,
+              address: false,
+              noveltyDate: false,
+              contact: false,
             }}
           />
         )}
