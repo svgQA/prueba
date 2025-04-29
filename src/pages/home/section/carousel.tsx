@@ -1,7 +1,10 @@
 import { tryvoo_carousel } from '../utils/data/carousel';
 import { Button } from '@/components/common/button/button';
+import { useTranslation } from 'react-i18next';
 
 export const HomeCarousel = () => {
+  const { t } = useTranslation();
+
   return (
     <div className='bg-white w-full flex flex-col items-center py-5'>
       <div className='mx-auto px-4 sm:px-6 lg:px-8 xl:px-16'>
@@ -14,16 +17,16 @@ export const HomeCarousel = () => {
               <div className='flex items-center justify-center h-[25vh]'>
                 <img
                   src={card.image}
-                  alt={card.title}
+                  alt={card.titleKey ? t(card.titleKey) : ''}
                   className='object-cover'
                 />
               </div>
               <div className='p-6 space-y-3'>
                 <h3 className='text-xl font-bold text-center leading-tight text-ternary hover:text-white'>
-                  {card.title}
+                  {card.titleKey && t(card.titleKey)}
                 </h3>
                 <p className='text-base text-center leading-relaxed'>
-                  {card.subtitle}
+                  {card.subtitleKey && t(card.subtitleKey)}
                 </p>
               </div>
             </div>
@@ -32,7 +35,7 @@ export const HomeCarousel = () => {
       </div>
 
       <Button
-        label='Ver detalle'
+        label={t('carousel.viewDetails')}
         type='button'
         id='schedule'
         name='schedule'

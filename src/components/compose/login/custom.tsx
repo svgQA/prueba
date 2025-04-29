@@ -4,8 +4,11 @@ import { PAGES_LIST } from '@/utils/routing';
 import { Logo } from '@/components/common/logo/logo';
 import '@aws-amplify/ui-react/styles.css';
 import './styles.css';
+import { useTranslation } from 'react-i18next';
 
 const CustomLoginContainer = ({ children }: any) => {
+  const { t } = useTranslation();
+
   return (
     <div className='w-full min-h-screen flex flex-col md:flex-row bg-gradient-to-r from-cyan-500 to-emerald-400 items-center justify-center p-3 sm:p-4 md:p-8 overflow-x-hidden'>
       <div className='flex items-center md:items-start w-full md:w-7/12 flex-col p-2 md:p-5 md:pl-14 mb-4 md:mb-0 text-center md:text-left'>
@@ -14,10 +17,10 @@ const CustomLoginContainer = ({ children }: any) => {
             <Logo title='' slogan='' />
           </div>
           <h1 className='text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 w-full leading-tight'>
-            Bienvenido a Tryvoo
+            {t('login.signIn')}
           </h1>
           <h4 className='text-base sm:text-lg md:text-2xl lg:text-3xl leading-relaxed opacity-90 font-semibold max-w-2xl mx-auto md:mx-0'>
-            Simplifica. Optimiza. Crece.
+            {t('login.slogan')}
           </h4>
         </div>
         <div className='flex items-center justify-center gap-2 sm:gap-3 mt-4 md:mt-8 bg-white p-2 sm:p-4 md:p-5 rounded-tr-3xl rounded-bl-3xl bg-opacity-10 w-full max-w-md mx-auto md:mx-0'>
@@ -43,11 +46,12 @@ const CustomLoginContainer = ({ children }: any) => {
 
 const components = {
   Header() {
+    const { t } = useTranslation();
     return (
       <div className='text-center flex flex-col items-center'>
         <Logo title='Tryvoo' slogan='' color='text-primary' />
         <h3 className='mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl my-2 sm:my-3'>
-          Iniciar sesión
+          {t('login.signIn')}
         </h3>
       </div>
     );
@@ -66,13 +70,14 @@ const components = {
       return null;
     },
     Footer() {
+      const { t } = useTranslation();
       return (
         <div className='text-center'>
           <button
-            onClick={() => console.log('¿Olvidó su contraseña?')}
+            onClick={() => console.log(t('login.forgotPassword'))}
             className='text-xs sm:text-sm font-normal border-0 outline-none focus:outline-none hover:border-0 active:border-0'
           >
-            ¿Olvidó su contraseña?
+            {t('login.forgotPassword')}
           </button>
         </div>
       );
