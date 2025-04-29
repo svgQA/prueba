@@ -1,5 +1,4 @@
 import { IService } from '@/types/shift/activity';
-import { Map } from '@/components/common/map/map';
 import { useSignal } from '@preact/signals';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 

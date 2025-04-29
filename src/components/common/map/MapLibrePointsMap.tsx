@@ -115,7 +115,7 @@ export const MapLibrePointsMap = ({
     // Only update if pointsRef is different from current points
     const currentPointsStr = JSON.stringify(points);
     const newPointsStr = JSON.stringify(pointsRef);
-    
+
     if (currentPointsStr !== newPointsStr) {
       if (pointsRef && pointsRef.length > 0) {
         const highestId = Math.max(
@@ -123,14 +123,14 @@ export const MapLibrePointsMap = ({
           0
         );
         nextIdRef.current = highestId + 1;
-        
+
         // Force state update with a new array
         const newPoints = JSON.parse(JSON.stringify(pointsRef));
         setPoints(newPoints);
       } else {
         // Clear all points and markers when pointsRef is empty
         setPoints([]);
-        markersRef.current.forEach(marker => marker.remove());
+        markersRef.current.forEach((marker) => marker.remove());
         markersRef.current = [];
         nextIdRef.current = 1;
       }
@@ -140,11 +140,11 @@ export const MapLibrePointsMap = ({
   // Update markers and send points to parent
   useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
-    
+
     // Only update markers if points have changed
     const currentMarkersCount = markersRef.current.length;
     const currentPointsCount = points.length;
-    
+
     if (currentMarkersCount !== currentPointsCount) {
       updateMarkers();
       sendPoints(points);
@@ -154,16 +154,16 @@ export const MapLibrePointsMap = ({
   // Update circle when radius changes
   useEffect(() => {
     if (!mapRef.current || !mapRef.current.isStyleLoaded()) return;
-    
+
     updateRadiusCircle();
   }, [radius, center]);
 
   // Update map style when theme changes
   useEffect(() => {
     if (!mapRef.current) return;
-    
+
     mapRef.current.setStyle(getMapStyle());
-    
+
     mapRef.current.on('style.load', () => {
       if (pointsRef && pointsRef.length > 0) {
         const newPoints = JSON.parse(JSON.stringify(pointsRef));
@@ -250,7 +250,7 @@ export const MapLibrePointsMap = ({
       }
     }
 
-    setPoints(prevPoints => [...prevPoints, newPoint]); // Use functional update
+    setPoints((prevPoints) => [...prevPoints, newPoint]); // Use functional update
   };
 
   // Create marker element with number
@@ -307,7 +307,12 @@ export const MapLibrePointsMap = ({
     // Add new markers
     points.forEach((point, index) => {
       // Skip invalid points
-      if (!point || !point.position || typeof point.position.lat !== 'number' || typeof point.position.lng !== 'number') {
+      if (
+        !point ||
+        !point.position ||
+        typeof point.position.lat !== 'number' ||
+        typeof point.position.lng !== 'number'
+      ) {
         console.warn('Invalid point structure:', point);
         return;
       }

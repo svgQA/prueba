@@ -1,4 +1,3 @@
-import { Map } from '@/components/common/map/map';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { useSignal } from '@preact/signals';
 
@@ -140,23 +139,23 @@ const ShiftCard = ({
               clickPoint={() => {}}
             /> */}
             <MapLibrePointsMap
-               sendPoints={() => {}}
-               name='Map'
-               center={{
-                 lat: 4.649251,
-                 lng: -74.106992,
-               }}
-               pointsAmount={1}
-               pointsRef={points.value}
-               condition={false}
-               errorCondition=''
-               radialPoint={null}
-               errorRadialPoint=''
-               radius={50}
-               draggable={true}
-               width='100%'
-               clickPoint={() => {}}
-             />
+              sendPoints={() => {}}
+              name='Map'
+              center={{
+                lat: 4.649251,
+                lng: -74.106992,
+              }}
+              pointsAmount={1}
+              pointsRef={points.value}
+              condition={false}
+              errorCondition=''
+              radialPoint={null}
+              errorRadialPoint=''
+              radius={50}
+              draggable={true}
+              width='100%'
+              clickPoint={() => {}}
+            />
             <div className='absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-b-white px-2 py-1 rounded-full text-xs shadow-sm'>
               {distance}
             </div>
