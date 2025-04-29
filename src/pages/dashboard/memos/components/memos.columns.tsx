@@ -55,49 +55,49 @@ export const FormattedDate: FunctionComponent<{ date: string }> = ({
 };
 
 export const columns: CustomColumnDef<Memo>[] = [
-  {
-    id: 'id',
-    accessorKey: 'id',
-    header: 'ID',
-    cell: (info) => (
-      <div className='flex items-center'>
-        <span>{String(info.getValue())}</span>
-      </div>
-    ),
-  },
-  {
-    id: 'city',
-    accessorKey: 'city',
-    header: 'Ciudad',
-  },
-  {
-    id: 'address',
-    accessorKey: 'address',
-    header: 'Dirección',
-    cell: (info) => <span>{String(info.getValue())}</span>,
-  },
-  {
-    id: 'noveltyDate',
-    accessorKey: 'noveltyDate',
-    header: 'Fecha Novedad',
-    cell: (info) => <FormattedDate date={info.getValue() as string} />,
-  },
-  {
-    id: 'contact',
-    accessorKey: 'contact',
-    header: 'Contacto',
-  },
+  // {
+  //   id: 'id',
+  //   accessorKey: 'id',
+  //   header: 'ID',
+  //   cell: (info) => (
+  //     <div className='flex items-center'>
+  //       <span>{String(info.getValue())}</span>
+  //     </div>
+  //   ),
+  // },
+  // {
+  //   id: 'city',
+  //   accessorKey: 'city',
+  //   header: 'Ciudad',
+  // },
+  // {
+  //   id: 'address',
+  //   accessorKey: 'address',
+  //   header: 'Dirección',
+  //   cell: (info) => <span>{String(info.getValue())}</span>,
+  // },
+  // {
+  //   id: 'noveltyDate',
+  //   accessorKey: 'noveltyDate',
+  //   header: 'Fecha Novedad',
+  //   cell: (info) => <FormattedDate date={info.getValue() as string} />,
+  // },
+  // {
+  //   id: 'contact',
+  //   accessorKey: 'contact',
+  //   header: 'Contacto',
+  // },
   {
     id: 'noveltyType',
-    accessorKey: 'noveltyType',
+    accessorKey: 'novelty.name',
     header: 'Novedad',
     enableGrouping: true,
     getIconGroup: (row: Memo) => {
-      if (row.priority === 'Alta') {
+      if (row.priority === 5) {
         return { icon: '165', color: 'text-error' };
       }
 
-      if (row.priority === 'Media') {
+      if (row.priority === 4) {
         return { icon: '182', color: 'text-caution' };
       }
 
@@ -112,13 +112,13 @@ export const columns: CustomColumnDef<Memo>[] = [
   },
   {
     id: 'name',
-    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+    accessorFn: (row) => `${row?.extraData?.client.name}`,
     header: 'Usuario',
     enableGrouping: true,
   },
   {
     id: 'status',
-    accessorKey: 'status',
+    accessorKey: 'state',
     header: 'Estado',
     enableGrouping: true,
     cell: (info: any) => {
@@ -150,14 +150,14 @@ export const columns: CustomColumnDef<Memo>[] = [
     header: 'Prioridad',
     enableGrouping: true,
     cell: (info: any) => {
-      const priority = info.getValue() as string;
+      const priority = info.getValue() as number;
       let bgColor = "bg-primary-opacity";
       let textColor = "text-primary";
 
-      if (priority === "Alta") {
+      if (priority === 5) {
         bgColor = "bg-error-opacity"
         textColor = "text-error"
-      } else if (priority === "Media") {
+      } else if (priority === 4) {
         bgColor = "bg-caution-opacity"
         textColor = "text-caution"
       }
@@ -167,7 +167,9 @@ export const columns: CustomColumnDef<Memo>[] = [
         <div className='flex flex-row justify-start'>
           <span className='p-1 size-sm cursor-pointer'>
             <div className={`px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}>
-              {priority}
+              {priority === 5 ? 'Alta': ''}
+              {priority === 4 ? 'Media': ''}
+              {(priority !== 5 && priority !== 4) ? 'Baja': ''}
             </div>
           </span>
         </div>
@@ -176,9 +178,20 @@ export const columns: CustomColumnDef<Memo>[] = [
   },
   {
     id: 'supervisor',
-    accessorKey: 'supervisor',
+    accessorKey: 'extraData.company.name',
     header: 'supervisor',
     enableGrouping: true,
+    meta: { expander: 'extraData' },
+    cell: (info) => {
+      return (
+        <span
+          className=' p-1 size-sm cursor-pointer'
+          onClick={() => info.row.toggleExpanded()}
+        >
+          {info.getValue() as string}
+        </span>
+      );
+    },
   },
   {
     id: 'actions',

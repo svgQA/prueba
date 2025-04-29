@@ -19,6 +19,7 @@ import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
 import {  Chats, FrequentQuestion } from './interface';
+import { ExpandableMultiple } from './components/expandable.multiple';
 
 interface ChatMessage {
   message: string;
@@ -64,6 +65,7 @@ export const MemosPage: FunctionComponent = () => {
   const totalPages = useSignal<number>(3);
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
+  const defaultColumn = useSignal<string>('default');
 
   const chats = useSignal<Chats>({});
   const memoSummary = useSignal<MemosSummary>({
@@ -93,9 +95,9 @@ export const MemosPage: FunctionComponent = () => {
   };
 
   const handleGetMemosSummary = async () => {
-    // const summary = await MemoService.getMemosSummary();
-    // if (!summary.getStatus()) return;
-    // memoSummary.value = summary.getOne();
+    const summary = await MemoService.getMemosSummary();
+    if (!summary.getStatus()) return;
+    memoSummary.value = summary.getOne();
   };
 
   const handleSendMessage = (message: string) => {
@@ -356,7 +358,13 @@ export const MemosPage: FunctionComponent = () => {
             columns={columns}
             showExpandableIcon={false}
             pageSize={20}
-            selectable={true}
+            selectable
+            expandable={(row: Memo, currentColumnName?: string) => (
+              <ExpandableMultiple
+                type={currentColumnName || defaultColumn.value}
+                data={row}
+              />
+            )}
             visibility={{
               id: false,
               city: false,

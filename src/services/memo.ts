@@ -25,7 +25,7 @@ export class MemoService extends BaseService {
    */
    static async getMemosSummary() {
     const model: IMakeRequest = {
-      url: ['memo/summary'],
+      url: ['memo/summary/stats'],
       method: REQUEST_METHODS.GET,
     };
 
