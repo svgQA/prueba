@@ -8,6 +8,7 @@ import { CreateUser } from './components/user.create';
 import { UserMessage } from './components/user.message';
 import { UserTable } from './components/user.table';
 import { IUserResponse } from '@/types/auth';
+import { useTranslation } from 'react-i18next';
 
 enum VIEW_NAME {
   TABLE,
@@ -16,10 +17,11 @@ enum VIEW_NAME {
 }
 
 export const UsersPage: FunctionalComponent = () => {
+  const { t } = useTranslation();
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const user = useSignal<IUserResponse>();
   useEffect(() => {
-    document.title = 'VX - Users Service';
+    document.title = t('users.pageTitle');
   }, []);
 
   const handleViewChange = useCallback((view: VIEW_NAME) => {
@@ -70,23 +72,23 @@ export const UsersPage: FunctionalComponent = () => {
       {/* Ejemplo de 3 cards arriba, análogo a shifts */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='Total de Usuarios'
+          title={t('users.cards.total')}
           count={0}
-          subtitle='Registrados'
+          subtitle={t('users.cards.totalSubtitle')}
           color='text-secondary'
           icon='189'
         />
         <CardData
-          title='Conexión Activa'
+          title={t('users.cards.activeConnection')}
           count={0}
-          subtitle='Usuarios conectados'
+          subtitle={t('users.cards.activeSubtitle')}
           color='text-primary'
           icon='020'
         />
         <CardData
-          title='Conexión Inactiva'
+          title={t('users.cards.inactiveConnection')}
           count={0}
-          subtitle='Usuarios desconectados'
+          subtitle={t('users.cards.inactiveSubtitle')}
           color='text-error'
           icon='110'
         />
