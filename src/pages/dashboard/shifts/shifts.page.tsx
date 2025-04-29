@@ -16,6 +16,7 @@ import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { columns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
+import { useTranslation } from 'react-i18next';
 
 import {
   GeneralTask,
@@ -49,6 +50,7 @@ enum VIEW_NAME {
 }
 
 export const ShiftsPage: FunctionalComponent = () => {
+  const { t } = useTranslation();
   const showUpsertModal = useSignal<boolean>(false);
   const showSendModal = useSignal<boolean>(false);
   const showShiftModal = useSignal<boolean>(false);
@@ -118,7 +120,7 @@ export const ShiftsPage: FunctionalComponent = () => {
    * Handle the useEffect hook for the document title and shift retrieval.
    */
   useEffect(() => {
-    document.title = 'VX - Shift Service';
+    document.title = t('shifts.pageTitle');
     handleGetShiftSummary();
     fetchInitialData();
   }, []);
@@ -272,7 +274,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   );
 
   const handleTaskDelete = useCallback((task: Task) => {
-    window.confirm('Are you sure about ' + task.name + ' ?');
+    window.confirm(t('shifts.confirmDelete', { name: task.name }));
   }, []);
 
   const cleanSelectedData = useCallback(() => {
@@ -378,7 +380,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
         <Button
           name='button-supervision'
-          label='Supervisión Remota'
+          label={t('shifts.remoteSupervision')}
           className='bg-primary text-white py-1 rounded px-4'
           onClick={() => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
@@ -416,7 +418,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='Turnos Totales Hoy'
+          title={t('shifts.cards.totalToday')}
           count={shiftSummary.value.total}
           subtitle=''
           color='t-dark'
@@ -432,7 +434,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <CardData
-          title='Turnos Finalizados'
+          title={t('shifts.cards.completed')}
           count={calculatePercentage(shiftSummary.value.completed)}
           subtitle=''
           color='t-dark'
@@ -446,7 +448,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             {buttonMenu}
             <Button
               name='button-create-shift'
-              label='Create'
+              label={t('shifts.buttons.create')}
               className='mx-3 px-4 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
               onClick={handleCreacteNewShift}
             />

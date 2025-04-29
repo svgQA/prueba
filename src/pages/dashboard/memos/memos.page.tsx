@@ -12,13 +12,14 @@ import { useUserStore } from '@/store/slices';
 import { IMessage } from '@/utils/socket/interface';
 import { toast } from 'react-toastify';
 import { Section } from '@/components/common/section/section';
+import { useTranslation } from 'react-i18next';
 import { Table } from '@/components/common/table/table';
 import { columns } from './components/memos.columns';
 import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
-import {  Chats, FrequentQuestion } from './interface';
+import { Chats, FrequentQuestion } from './interface';
 import { ExpandableMultiple } from './components/expandable.multiple';
 
 interface ChatMessage {
@@ -29,10 +30,12 @@ interface ChatMessage {
 }
 
 const FrequentQuestions = () => {
+  const { t } = useTranslation();
+
   const questions: FrequentQuestion[] = [
-    { id: 1, question: '¿Cómo puedo empezar un nuevo proyecto?' },
-    { id: 2, question: '¿Cuáles son las mejores prácticas de código?' },
-    { id: 3, question: '¿Cómo puedo optimizar mi aplicación?' },
+    { id: 1, question: t('memos.frequentQuestions.question1') },
+    { id: 2, question: t('memos.frequentQuestions.question2') },
+    { id: 3, question: t('memos.frequentQuestions.question3') },
   ];
 
   return (
@@ -55,6 +58,7 @@ enum VIEW_NAME {
 }
 
 export const MemosPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const { cognito } = useUserStore();
 
   const wsManager = useWebSocket();
@@ -87,8 +91,11 @@ export const MemosPage: FunctionComponent = () => {
 
   const fetchInitialData = async () => {
     try {
-      const [memosResponse] = await Promise.all([MemoService.get_all({ page: 1, items: 1000 })]);
-      if (memosResponse && memosResponse.getStatus()) memos.value = memosResponse.getMany();
+      const [memosResponse] = await Promise.all([
+        MemoService.get_all({ page: 1, items: 1000 }),
+      ]);
+      if (memosResponse && memosResponse.getStatus())
+        memos.value = memosResponse.getMany();
     } catch (error) {
       toast.error('memos.error_fetching_initial_data');
     }
@@ -198,9 +205,9 @@ export const MemosPage: FunctionComponent = () => {
               <ChatHeader />
               <ChatCard
                 id={'0'}
-                name='AI Assistant'
-                lastMessage='I can help with that'
-                time='10:15'
+                name={t('memos.chat.aiAssistant')}
+                lastMessage={t('memos.chat.aiDefaultMessage')}
+                time={t('memos.chat.time')}
                 isAI
                 onClick={handleChatSelect}
                 isSelected={selectedChat.value === '0'}
@@ -224,25 +231,28 @@ export const MemosPage: FunctionComponent = () => {
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage.value === 1}
-                  className={`px-4 py-2 rounded-md ${currentPage.value === 1
-                    ? 'bg-gray-300 cursor-not-allowed'
-                    : 'bg-blue-500 hover:bg-blue-600'
-                    } text-white`}
+                  className={`px-4 py-2 rounded-md ${
+                    currentPage.value === 1
+                      ? 'bg-gray-300 cursor-not-allowed'
+                      : 'bg-blue-500 hover:bg-blue-600'
+                  } text-white`}
                 >
-                  Anterior
+                  {t('memos.pagination.previous')}
                 </button>
                 <span className='text-sm text-gray-500'>
-                  Página {currentPage.value} de {totalPages.value}
+                  {t('memos.pagination.page')} {currentPage.value}{' '}
+                  {t('memos.pagination.of')} {totalPages.value}
                 </span>
                 <button
                   onClick={handleNextPage}
                   disabled={currentPage.value >= totalPages.value}
-                  className={`px-4 py-2 rounded-md ${currentPage.value >= totalPages.value
-                    ? 'bg-gray-300 cursor-not-allowed'
-                    : 'bg-blue-500 hover:bg-blue-600'
-                    } text-white`}
+                  className={`px-4 py-2 rounded-md ${
+                    currentPage.value >= totalPages.value
+                      ? 'bg-gray-300 cursor-not-allowed'
+                      : 'bg-blue-500 hover:bg-blue-600'
+                  } text-white`}
                 >
-                  Siguiente
+                  {t('memos.pagination.next')}
                 </button>
               </div>
             </div>
@@ -319,7 +329,7 @@ export const MemosPage: FunctionComponent = () => {
       {currentView.value === VIEW_NAME.TABLE && (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
-            title='Memorandos Totales Hoy'
+            title={t('memos.cards.totalToday')}
             count={memoSummary.value.total}
             subtitle=''
             color='t-dark'
@@ -327,7 +337,7 @@ export const MemosPage: FunctionComponent = () => {
           />
 
           <CardData
-            title='Memorandos sin resolver'
+            title={t('memos.cards.unresolved')}
             count={calculatePercentage(memoSummary.value.in_progress)}
             subtitle=''
             color='t-dark'
@@ -335,7 +345,7 @@ export const MemosPage: FunctionComponent = () => {
           />
 
           <CardData
-            title='Memorandos Resueltos'
+            title={t('memos.cards.resolved')}
             count={calculatePercentage(memoSummary.value.completed)}
             subtitle=''
             color='t-dark'

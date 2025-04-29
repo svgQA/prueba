@@ -3,13 +3,17 @@ import { Gauge } from '@/components/common/gauge/gauge';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IShiftResponse } from '@/types/shift/activity';
 import dayjs from 'dayjs';
+import i18next from 'i18next';
+
+// Función para obtener traducciones
+const t = (key: string) => i18next.t(key);
 
 export const columns: ColumnDef<IShiftResponse>[] = [
   {
     id: 'employee',
     accessorKey: 'employee.name',
     size: 180,
-    header: 'Usuario',
+    header: t('shifts.columns.user'),
     enableGrouping: true,
     cell: (info) => {
       const { employee } = info.row.original;
@@ -27,7 +31,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'service',
     accessorKey: 'service.name',
     size: 180,
-    header: 'Servicio',
+    header: t('shifts.columns.service'),
     enableGrouping: true,
     meta: { expander: 'serviceId' },
 
@@ -47,7 +51,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'contract',
     accessorKey: 'service.contract.name',
     size: 120,
-    header: 'Contrato',
+    header: t('shifts.columns.contract'),
     cell: (info) => {
       const contract = String(info.getValue());
       return (
@@ -64,7 +68,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'fecha',
     accessorKey: 'start',
     size: 120,
-    header: 'Fecha',
+    header: t('shifts.columns.date'),
     enableGrouping: false,
     cell: (info) => {
       const dateStr = String(info.getValue());
@@ -82,7 +86,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'start-time',
     accessorKey: 'start',
     size: 150,
-    header: 'Inicio',
+    header: t('shifts.columns.start'),
     cell: (info) => {
       const rowData = info.row.original;
       const checkInData = rowData.checkIn;
@@ -132,7 +136,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'start-end',
     accessorKey: 'end',
     size: 150,
-    header: 'Finalización',
+    header: t('shifts.columns.end'),
     cell: (info) => {
       const rowData = info.row.original;
       const checkOutData = rowData.checkOut;
@@ -182,13 +186,13 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'status',
     accessorKey: 'status',
     size: 120,
-    header: 'Estado',
+    header: t('shifts.columns.status'),
   },
   {
     id: 'duracion',
     accessorKey: 'duration',
     size: 120,
-    header: 'Duración',
+    header: t('shifts.columns.duration'),
     cell: (info) => {
       const rowData = info.row.original;
       const checkInData = rowData.checkIn;
@@ -220,7 +224,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'report',
     accessorKey: 'report',
     size: 50,
-    header: 'Reportes',
+    header: t('shifts.columns.report'),
     cell: (info) => (
       <div
         className='inline-flex items-center px-2 py-0.5 text-gray-700 text-sm rounded-md border border-b-dark'
@@ -236,7 +240,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'shift',
     accessorKey: 'activitiesProgress',
     size: 50,
-    header: 'Actividades',
+    header: t('shifts.columns.shift'),
     cell: (info: any) => {
       const progress = info.getValue() as number;
 
@@ -264,7 +268,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'round',
     accessorKey: 'activitiesProgress',
     size: 50,
-    header: 'Rondas',
+    header: t('shifts.columns.round'),
     cell: (info: any) => {
       const progress = info.getValue() as number;
 
@@ -294,7 +298,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'client',
     accessorKey: 'service.contract.client.name',
     size: 120,
-    header: 'Cliente',
+    header: t('shifts.columns.client'),
     enableGrouping: true,
     cell: (info) => {
       const contract = String(info.getValue());

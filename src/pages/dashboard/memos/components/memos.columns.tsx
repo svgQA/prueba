@@ -14,6 +14,10 @@ type CustomColumnProps = {
 
 // Create a type that combines ColumnDef with our custom properties
 type CustomColumnDef<TData> = ColumnDef<TData> & CustomColumnProps;
+// import i18next from 'i18next';
+
+// Función para obtener traducciones
+// const t = (key: string) => i18next.t(key);
 
 export const ProgressBar: FunctionComponent<{ progress: number }> = ({
   progress,
@@ -124,25 +128,27 @@ export const columns: CustomColumnDef<Memo>[] = [
     cell: (info: any) => {
       const status = info.getValue() as string;
       let statusText = status;
-      let bgColor = "bg-primary-opacity";
-      let textColor = "text-primary";
+      let bgColor = 'bg-primary-opacity';
+      let textColor = 'text-primary';
 
-      if (status === "OPENED") {
-        statusText = "En Revisión"
-        bgColor = "bg-secondary-opacity"
-        textColor = "text-secondary"
+      if (status === 'OPENED') {
+        statusText = 'En Revisión';
+        bgColor = 'bg-secondary-opacity';
+        textColor = 'text-secondary';
       }
 
       return (
         <div className='flex flex-row justify-start'>
           <span className='p-1 size-sm cursor-pointer'>
-            <div className={`px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}>
+            <div
+              className={`px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}
+            >
               {statusText}
             </div>
           </span>
         </div>
       );
-    }
+    },
   },
   {
     id: 'priority',
@@ -151,30 +157,32 @@ export const columns: CustomColumnDef<Memo>[] = [
     enableGrouping: true,
     cell: (info: any) => {
       const priority = info.getValue() as number;
-      let bgColor = "bg-primary-opacity";
-      let textColor = "text-primary";
+      let bgColor = 'bg-primary-opacity';
+      let textColor = 'text-primary';
 
       if (priority === 5) {
-        bgColor = "bg-error-opacity"
-        textColor = "text-error"
+        bgColor = 'bg-error-opacity';
+        textColor = 'text-error';
       } else if (priority === 4) {
-        bgColor = "bg-caution-opacity"
-        textColor = "text-caution"
+        bgColor = 'bg-caution-opacity';
+        textColor = 'text-caution';
       }
 
       return (
         //   <PBadge priority={info.getValue() as 'Alta' | 'Media' | 'Baja'} />
         <div className='flex flex-row justify-start'>
           <span className='p-1 size-sm cursor-pointer'>
-            <div className={`px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}>
-              {priority === 5 ? 'Alta': ''}
-              {priority === 4 ? 'Media': ''}
-              {(priority !== 5 && priority !== 4) ? 'Baja': ''}
+            <div
+              className={`px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}
+            >
+              {priority === 5 ? 'Alta' : ''}
+              {priority === 4 ? 'Media' : ''}
+              {priority !== 5 && priority !== 4 ? 'Baja' : ''}
             </div>
           </span>
         </div>
       );
-    }
+    },
   },
   {
     id: 'supervisor',
