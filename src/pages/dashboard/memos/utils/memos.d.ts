@@ -95,4 +95,6 @@ export interface ExtraData {
 export interface Resource {
   files: string;
   images: string;
+  // files: string[];
+  // images: string[];
 }
