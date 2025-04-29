@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'preact/hooks';
 import { TemplateServiceFront } from '@/services/template';
 import { ICreateNotificationTemplateDto } from '@/types/notification/ICreateNotificationTemplateDto';
+import { useTranslation } from 'react-i18next';
 
 export const TemplateManager = () => {
+  const { t } = useTranslation();
   const [templates, setTemplates] = useState<any[]>([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -40,13 +42,15 @@ export const TemplateManager = () => {
       fetchTemplates();
     } catch (err: any) {
       console.error('Error creando plantilla:', err);
-      setError('Error al crear plantilla. Asegúrate de que el JSON es válido.');
+      setError(t('shifts.notifications.templates.errorInvalid'));
     }
   };
 
   return (
     <div className='space-y-4'>
-      <h4 className='text-md font-medium'>Gestión de plantillas</h4>
+      <h4 className='text-md font-medium'>
+        {t('shifts.notifications.templates.management')}
+      </h4>
 
       <div className='border rounded border-gray-200 bg-white shadow-sm divide-y'>
         {templates.map((tpl) => (
@@ -65,20 +69,24 @@ export const TemplateManager = () => {
         <div className='space-y-2'>
           <input
             type='text'
-            placeholder='Título'
+            placeholder={t('shifts.notifications.templates.titlePlaceholder')}
             value={title}
             onInput={(e) => setTitle(e.currentTarget.value)}
             className='w-full border px-3 py-2 rounded text-sm'
           />
           <textarea
-            placeholder='Descripción'
+            placeholder={t(
+              'shifts.notifications.templates.descriptionPlaceholder'
+            )}
             rows={2}
             value={description}
             onInput={(e) => setDescription(e.currentTarget.value)}
             className='w-full border px-3 py-2 rounded text-sm'
           ></textarea>
           <textarea
-            placeholder='Data JSON'
+            placeholder={t(
+              'shifts.notifications.templates.dataJsonPlaceholder'
+            )}
             rows={3}
             value={dataJson}
             onInput={(e) => setDataJson(e.currentTarget.value)}
@@ -91,7 +99,7 @@ export const TemplateManager = () => {
             onClick={handleCreate}
             className='px-4 py-2 bg-cyan-600 text-white text-sm rounded hover:bg-cyan-700'
           >
-            Guardar plantilla
+            {t('shifts.notifications.templates.saveButton')}
           </button>
         </div>
       </div>

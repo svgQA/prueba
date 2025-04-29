@@ -12,6 +12,7 @@ import { useUserStore } from '@/store/slices';
 import { IMessage } from '@/utils/socket/interface';
 import { toast } from 'react-toastify';
 import { Section } from '@/components/common/section/section';
+import { useTranslation } from 'react-i18next';
 import { Table } from '@/components/common/table/table';
 import { columns } from './components/memos.columns';
 import { Memo } from './utils/memos';
@@ -38,10 +39,12 @@ type Chats = {
 };
 
 const FrequentQuestions = () => {
+  const { t } = useTranslation();
+
   const questions: FrequentQuestion[] = [
-    { id: 1, question: '¿Cómo puedo empezar un nuevo proyecto?' },
-    { id: 2, question: '¿Cuáles son las mejores prácticas de código?' },
-    { id: 3, question: '¿Cómo puedo optimizar mi aplicación?' },
+    { id: 1, question: t('memos.frequentQuestions.question1') },
+    { id: 2, question: t('memos.frequentQuestions.question2') },
+    { id: 3, question: t('memos.frequentQuestions.question3') },
   ];
 
   return (
@@ -70,6 +73,7 @@ interface IMemoSummary {
 }
 
 export const MemosPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const { cognito } = useUserStore();
 
   const wsManager = useWebSocket();
@@ -195,9 +199,9 @@ export const MemosPage: FunctionComponent = () => {
               <ChatHeader />
               <ChatCard
                 id={'0'}
-                name='AI Assistant'
-                lastMessage='I can help with that'
-                time='10:15'
+                name={t('memos.chat.aiAssistant')}
+                lastMessage={t('memos.chat.aiDefaultMessage')}
+                time={t('memos.chat.time')}
                 isAI
                 onClick={handleChatSelect}
                 isSelected={selectedChat.value === '0'}
@@ -227,10 +231,11 @@ export const MemosPage: FunctionComponent = () => {
                       : 'bg-blue-500 hover:bg-blue-600'
                   } text-white`}
                 >
-                  Anterior
+                  {t('memos.pagination.previous')}
                 </button>
                 <span className='text-sm text-gray-500'>
-                  Página {currentPage.value} de {totalPages.value}
+                  {t('memos.pagination.page')} {currentPage.value}{' '}
+                  {t('memos.pagination.of')} {totalPages.value}
                 </span>
                 <button
                   onClick={handleNextPage}
@@ -241,7 +246,7 @@ export const MemosPage: FunctionComponent = () => {
                       : 'bg-blue-500 hover:bg-blue-600'
                   } text-white`}
                 >
-                  Siguiente
+                  {t('memos.pagination.next')}
                 </button>
               </div>
             </div>
@@ -318,7 +323,7 @@ export const MemosPage: FunctionComponent = () => {
       {currentView.value === VIEW_NAME.TABLE && (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
-            title='Memorandos Totales Hoy'
+            title={t('memos.cards.totalToday')}
             count={memoSummary.value.total}
             subtitle=''
             color='t-dark'
@@ -326,7 +331,7 @@ export const MemosPage: FunctionComponent = () => {
           />
 
           <CardData
-            title='Memorandos sin resolver'
+            title={t('memos.cards.unresolved')}
             count={calculatePercentage(memoSummary.value.inProgress)}
             subtitle=''
             color='t-dark'
@@ -334,7 +339,7 @@ export const MemosPage: FunctionComponent = () => {
           />
 
           <CardData
-            title='Memorandos Resueltos'
+            title={t('memos.cards.resolved')}
             count={calculatePercentage(memoSummary.value.completed)}
             subtitle=''
             color='t-dark'

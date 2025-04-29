@@ -4,6 +4,10 @@ import { Memo } from '../utils/memos';
 
 import dayjs from 'dayjs';
 import { PBadge } from '@/components/common/priority/priority';
+import i18next from 'i18next';
+
+// Función para obtener traducciones
+const t = (key: string) => i18next.t(key);
 
 export const ProgressBar: FunctionComponent<{ progress: number }> = ({
   progress,
@@ -48,7 +52,7 @@ export const columns: ColumnDef<Memo>[] = [
   {
     id: 'id',
     accessorKey: 'id',
-    header: 'ID',
+    header: t('memos.columns.id'),
     cell: (info) => (
       <div className='flex items-center'>
         <span>{String(info.getValue())}</span>
@@ -58,39 +62,39 @@ export const columns: ColumnDef<Memo>[] = [
   {
     id: 'name',
     accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-    header: 'Nombre',
+    header: t('memos.columns.name'),
   },
   {
     id: 'city',
     accessorKey: 'city',
-    header: 'Ciudad',
+    header: t('memos.columns.city'),
   },
   {
     id: 'address',
     accessorKey: 'address',
-    header: 'Dirección',
+    header: t('memos.columns.address'),
     cell: (info) => <span>{String(info.getValue())}</span>,
   },
   {
     id: 'noveltyType',
     accessorKey: 'noveltyType',
-    header: 'Tipo Novedad',
+    header: t('memos.columns.noveltyType'),
   },
   {
     id: 'noveltyDate',
     accessorKey: 'noveltyDate',
-    header: 'Fecha Novedad',
+    header: t('memos.columns.noveltyDate'),
     cell: (info) => <FormattedDate date={info.getValue() as string} />,
   },
   {
     id: 'contact',
     accessorKey: 'contact',
-    header: 'Contacto',
+    header: t('memos.columns.contact'),
   },
   {
     id: 'priority',
     accessorKey: 'priority',
-    header: 'Prioridad',
+    header: t('memos.columns.priority'),
     cell: (info) => (
       <PBadge priority={info.getValue() as 'Alta' | 'Media' | 'Baja'} />
     ),

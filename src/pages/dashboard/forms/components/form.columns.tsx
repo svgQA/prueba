@@ -2,24 +2,28 @@ import { ColumnDef } from '@tanstack/react-table';
 import { IResponseResponse } from '@/types/form';
 import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import i18next from 'i18next';
+
+// Función para obtener traducciones
+const t = (key: string) => i18next.t(key);
 
 export const columns: ColumnDef<IResponseResponse>[] = [
   {
     id: 'id',
     accessorKey: 'id',
     size: 60,
-    header: 'ID',
+    header: t('forms.columns.id'),
   },
   {
     accessorKey: 'createdAt',
     id: 'createdAt',
-    header: 'Fecha de creación',
+    header: t('forms.columns.createdAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
-    header: 'Última actualización',
+    header: t('forms.columns.updatedAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {

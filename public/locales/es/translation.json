@@ -9,5 +9,49 @@
     "title": "Transforma la Gestión de Operaciones Con Tryvoo",
     "subtitle": "Optimiza la gestión de actividades, recursos y activos, incluso sin conectividad para tus negocios",
     "demoButton": "Agenda Una Demo Gratis"
+  },
+  "services": {
+    "title": "Nuestros Servicios",
+    "subtitle": "Soluciones para cada necesidad",
+    "button": "Ver más servicios",
+    "items": {
+      "monitoring": {
+        "title": "Monitorio en Tiempo Real",
+        "subtitle": "Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real."
+      },
+      "offline": {
+        "title": "Capacidades Offline",
+        "subtitle": "Los operarios pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando la conexión a Internet es restaurada."
+      },
+      "ai": {
+        "title": "IA y Soporte Virtual",
+        "subtitle": "Tu asistente virtual para resolver problemas en campo, con recomendaciones basadas en los datos que se capturan durante las operaciones."
+      },
+      "integration": {
+        "title": "Integración y Personalización",
+        "subtitle": "Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector."
+      }
+    }
+  },
+  "carousel": {
+    "viewDetails": "Ver detalle",
+    "items": {
+      "monitoring": {
+        "title": "Monitorio en Tiempo Real",
+        "subtitle": "Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real."
+      },
+      "offline": {
+        "title": "Capacidades Offline",
+        "subtitle": "Los operarios pueden seguir trabajando sin conexión, y todos los datos se sincronizan cuando la conexión a Internet es restaurada."
+      },
+      "ai": {
+        "title": "IA y Soporte Virtual",
+        "subtitle": "Tu asistente virtual para resolver problemas en campo, con recomendaciones basadas en los datos que se capturan durante las operaciones."
+      },
+      "integration": {
+        "title": "Integración y Personalización",
+        "subtitle": "Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector."
+      }
+    }
   }
 }
