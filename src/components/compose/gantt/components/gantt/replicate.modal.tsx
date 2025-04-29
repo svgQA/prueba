@@ -1,15 +1,15 @@
 import { ComponentType } from 'preact';
-import { useState, useRef } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { Form, Field } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 import arrayMutators from 'final-form-arrays';
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
-import { UserSelector } from '@/components/common/user-selector/user-selector';
 import { required } from '@/utils/utilities';
 import { IOption } from '@/components/common/multi/interface';
 import { ShiftService } from '@/services';
 import { toast } from 'react-toastify';
+import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 
 interface ReplicateModalProps {
   selectedUsers: Set<string | number>;
@@ -52,32 +52,9 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
   onReloadSignal,
 }) => {
   const [showDateForm, setShowDateForm] = useState(false);
-  const formRef = useRef<any>(null);
-
-  // const hasFetchedUsers = useRef(false);
-  // useEffect(() => {
-  //   if (!hasFetchedUsers.current) {
-  //     getUsers();
-  //   }
-  // }, []);
-
-  // const getUsers = async () => {
-  //   const response = await UserService.get_all({
-  //     userType: USER_TYPE.USER,
-  //     items: 1000,
-  //     page: 1,
-  //   });
-  //   if (!response.getStatus()) return;
-  //   // const fetchedUsers = response.getMany();
-  //   // setUsers(fetchedUsers);
-  //   hasFetchedUsers.current = true;
-  // };
-
   if (selectedUsers.size === 0) return null;
 
   const onSubmit = async (values: FormValues) => {
-    // const selectedUserIds = values.users.map(user => user.value);
-    // onDateSubmit(values.startDate, values.endDate, selectedUserIds);
     const response = await ShiftService.setReplicateV2(values);
     if (!response.getStatus()) {
       toast.error('Error replicating shifts');
@@ -87,16 +64,6 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
     setShowDateForm((prev) => !prev);
     onReloadSignal?.();
   };
-
-  // const handleMouseLeave = (e: MouseEvent) => {
-  //   const target = e.target as HTMLElement;
-  //   const relatedTarget = e.relatedTarget as HTMLElement;
-  //
-  //   // Solo cerrar si el mouse sale completamente del modal y no entra en ningún elemento hijo
-  //   if (!target.contains(relatedTarget)) {
-  //     setShowDateForm(false);
-  //   }
-  // };
 
   return (
     <div className='relative'>
@@ -109,11 +76,10 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
 
       {showDateForm && (
         <div
-          className='my-3 absolute right-0 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[500px]'
+          className='my-3 absolute right-0 bg-b-content rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[600px]'
           // onMouseLeave={handleMouseLeave}
         >
           <Form<FormValues>
-            ref={formRef}
             onSubmit={onSubmit}
             initialValues={initialValues}
             mutators={{
@@ -140,7 +106,9 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
               if (
                 selectedUsers.size > 0 &&
                 (!form.getState().values.replacements ||
-                  form.getState().values.replacements.length === 0)
+                  form.getState().values.replacements.length === 0 ||
+                  form.getState().values.replacements.length !==
+                    selectedUsers.size)
               ) {
                 // Usar un efecto de una sola vez para inicializar
                 const initialReplacements = Array.from(selectedUsers).map(
@@ -155,7 +123,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
               }
 
               return (
-                <form onSubmit={handleSubmit} className='space-y-4'>
+                <form onSubmit={handleSubmit} className='space-y-4 relative'>
                   <div className='grid grid-cols-2 gap-4'>
                     <Field<string> name='startDate' validate={required}>
                       {({ input, meta }) => (
@@ -194,14 +162,14 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                   </Field>
 
                   <div className='py-3 border-y border-gray-100 border-dashed'>
-                    <div className='space-y-4 max-h-96 overflow-y-auto vox-scroll-design'>
+                    <div className='space-y-4 max-h-[400px] overflow-y-auto vox-scroll-design px-1 overflow-x-hidden py-2'>
                       <div className='grid grid-cols-2 gap-4 font-medium text-sm text-gray-500 uppercase tracking-wider bg-gray-50 p-2 rounded-md'>
                         <div>Usuario Original</div>
                         <div>Usuario de Reemplazo</div>
                       </div>
                       <FieldArray name='replacements'>
                         {({ fields }) => (
-                          <div>
+                          <div className='space-y-4'>
                             {fields.map((name, index) => {
                               // Obtener el ID del usuario original del valor actual
                               const fieldValue = fields.value[index];
@@ -222,20 +190,33 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                                   <div className='text-sm text-gray-900'>
                                     {originalUser.label}
                                   </div>
-                                  <div>
+                                  <div className='relative'>
                                     <Field<IOption[]>
                                       name={`${name}.replacementUserId`}
                                       validate={required}
                                     >
                                       {({ input, meta }) => {
                                         return (
-                                          <UserSelector
+                                          <SmartSelector
                                             {...input}
                                             meta={meta}
                                             name={`${name}.replacementUserId`}
                                             options={users || []}
                                             multiple={true}
+                                            allowAll={true}
+                                            menuPortalTarget={document.body}
+                                            placeholder='Selecciona usuarios de reemplazo'
                                           />
+                                          /*
+                                          <CustomSelector
+                                            {...input}
+                                            meta={meta}
+                                            menuPortalTarget={document.body}
+                                            name={`${name}.replacementUserId`}
+                                            options={users || []}
+                                            multiple={true}
+                                          />
+                                          */
                                         );
                                       }}
                                     </Field>

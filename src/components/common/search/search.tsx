@@ -310,7 +310,7 @@ export const Search = ({
       {keys.length > 0 && isDropdownOpen.value && (
         <div
           ref={keysContainerRef}
-          className='absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-b-white rounded-xl shadow-md border-b-light-dark animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto vox-scroll-design'
+          className='absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-b-content rounded-xl shadow-md border-b-light-dark animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto vox-scroll-design'
           onClick={handleClickKeys}
         >
           <h6 className='px-3 py-1 text-xs text-gray-500 font-medium uppercase'>

@@ -529,6 +529,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         posSave={handleViewMode}
         userSelected={userSelected}
         taskSelected={taskSelected}
+        users={users}
       />
 
       <ShiftForm

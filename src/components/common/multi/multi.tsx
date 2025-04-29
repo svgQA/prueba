@@ -19,6 +19,7 @@ export const MultipleInput = ({
   getElement,
   ellipse,
   scrollable,
+  meta,
   ...options
 }: IMultiProps) => {
   const [inputValue, setInputValue] = useState<string>('');
@@ -27,9 +28,13 @@ export const MultipleInput = ({
     (e: KeyboardEvent) => {
       if (e.key === 'Enter' && inputValue) {
         e.preventDefault(); // Prevent form submission
+        const lastValue = value[value.length - 1].value;
+        const index_value = value.length + 1;
         const index =
           value && Array.isArray(value) && value.length > 1
-            ? value[value.length - 1].value + 1
+            ? typeof lastValue === 'number'
+              ? lastValue + 1
+              : `${lastValue}-${index_value}`
             : value.length;
 
         const newValue = [...value, { value: index, label: inputValue }];
@@ -97,6 +102,7 @@ export const MultipleInput = ({
           type='text'
           label={label}
           name={name}
+          meta={meta}
           id={id}
           icon={icon}
           value={inputValue}
