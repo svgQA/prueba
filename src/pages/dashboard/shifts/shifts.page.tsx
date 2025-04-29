@@ -384,6 +384,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
         />
+        {/*
         <Button
           name='button-change-planner'
           onClick={() => {
@@ -397,6 +398,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           }
           icon='331'
         />
+        */}
       </div>
     ),
     [

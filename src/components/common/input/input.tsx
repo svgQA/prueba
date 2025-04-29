@@ -35,7 +35,15 @@ export const Input = ({
       onClick?.(value);
       return;
     }
-    // onKeyUp?.(e);
+  };
+
+  const isDateTimeInput = type === 'date' || type === 'time';
+
+  const handleInputClick = (e: MouseEvent) => {
+    if (isDateTimeInput && !disabled) {
+      const input = e.currentTarget as HTMLInputElement;
+      input.showPicker();
+    }
   };
 
   return (
@@ -49,29 +57,55 @@ export const Input = ({
         </label>
       )}
       <div
-        className={`${borderless ? '' : 'border-b-light-dark dark:border-b-dark-light border'} rounded flex flex-row items-center w-full`}
+        className={`${borderless ? '' : 'border-b-light-dark dark:border-b-dark-light border'} rounded flex flex-row items-center w-full ${
+          isDateTimeInput ? 'cursor-pointer' : ''
+        }`}
       >
         {!end && icon && (
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
-        <input
-          className={`${normal ? '' : 'capitalize'} w-full px-2 flex-1 mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'} [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
-          onChange={onChange}
-          name={name}
-          onKeyUp={handleKeyUp}
-          type={type}
-          value={value instanceof Date ? value.toISOString() : value}
-          step={step}
-          min={min}
-          max={max}
-          id={`${id}-input`}
-          placeholder={placeholder}
-          pattern={pattern}
-          required={required}
-          tabIndex={tabIndex}
-          disabled={disabled}
-          {...props}
-        />
+        <div className='relative flex-1'>
+          <input
+            className={`${normal ? '' : 'ccapitalize'} w-full px-2 flex-1 mr-2 bg-transparent rounded-md ${
+              thin ? '' : 'py-2'
+            } [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+              isDateTimeInput ? 'cursor-pointer' : ''
+            }`}
+            onChange={onChange}
+            name={name}
+            onKeyUp={handleKeyUp}
+            onClick={handleInputClick}
+            type={type}
+            value={value instanceof Date ? value.toISOString() : value}
+            step={step}
+            min={min}
+            max={max}
+            id={`${id}-input`}
+            placeholder={placeholder}
+            pattern={pattern}
+            required={required}
+            tabIndex={tabIndex}
+            disabled={disabled}
+            {...props}
+          />
+          {isDateTimeInput && (
+            <div className='absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none'>
+              <svg
+                className='w-5 h-5 text-gray-400'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
+                />
+              </svg>
+            </div>
+          )}
+        </div>
         {button && (
           <Button
             onClick={() => onClick?.(value)}

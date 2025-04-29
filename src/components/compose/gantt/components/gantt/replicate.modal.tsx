@@ -10,6 +10,7 @@ import { required } from '@/utils/utilities';
 import { IOption } from '@/components/common/multi/interface';
 import { ShiftService } from '@/services';
 import { toast } from 'react-toastify';
+import { Select } from '@/components/common/select/select';
 
 interface ReplicateModalProps {
   selectedUsers: Set<string | number>;
@@ -109,7 +110,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
 
       {showDateForm && (
         <div
-          className='my-3 absolute right-0 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[500px]'
+          className='my-3 absolute right-0 bg-white rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[600px]'
           // onMouseLeave={handleMouseLeave}
         >
           <Form<FormValues>
@@ -140,7 +141,9 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
               if (
                 selectedUsers.size > 0 &&
                 (!form.getState().values.replacements ||
-                  form.getState().values.replacements.length === 0)
+                  form.getState().values.replacements.length === 0 ||
+                  form.getState().values.replacements.length !==
+                    selectedUsers.size)
               ) {
                 // Usar un efecto de una sola vez para inicializar
                 const initialReplacements = Array.from(selectedUsers).map(
@@ -155,7 +158,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
               }
 
               return (
-                <form onSubmit={handleSubmit} className='space-y-4'>
+                <form onSubmit={handleSubmit} className='space-y-4 relative'>
                   <div className='grid grid-cols-2 gap-4'>
                     <Field<string> name='startDate' validate={required}>
                       {({ input, meta }) => (
@@ -194,14 +197,14 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                   </Field>
 
                   <div className='py-3 border-y border-gray-100 border-dashed'>
-                    <div className='space-y-4 max-h-96 overflow-y-auto vox-scroll-design'>
+                    <div className='space-y-4 max-h-96 overflow-y-auto vox-scroll-design px-1 overflow-x-hidden'>
                       <div className='grid grid-cols-2 gap-4 font-medium text-sm text-gray-500 uppercase tracking-wider bg-gray-50 p-2 rounded-md'>
                         <div>Usuario Original</div>
                         <div>Usuario de Reemplazo</div>
                       </div>
                       <FieldArray name='replacements'>
                         {({ fields }) => (
-                          <div>
+                          <div className='space-y-4'>
                             {fields.map((name, index) => {
                               // Obtener el ID del usuario original del valor actual
                               const fieldValue = fields.value[index];
@@ -222,21 +225,34 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                                   <div className='text-sm text-gray-900'>
                                     {originalUser.label}
                                   </div>
-                                  <div>
+                                  <div className='relative'>
                                     <Field<IOption[]>
                                       name={`${name}.replacementUserId`}
                                       validate={required}
                                     >
                                       {({ input, meta }) => {
                                         return (
-                                          <UserSelector
+                                          <Select
                                             {...input}
-                                            meta={meta}
+                                            id={`${name}-select`}
                                             name={`${name}.replacementUserId`}
+                                            value={1}
+                                            // meta={meta}
+                                            // name={`${name}.replacementUserId`}
                                             options={users || []}
-                                            multiple={true}
+                                            // multiple={true}
                                           />
                                         );
+
+                                        // return (
+                                        //   <UserSelector
+                                        //     {...input}
+                                        //     meta={meta}
+                                        //     name={`${name}.replacementUserId`}
+                                        //     options={users || []}
+                                        //     multiple={true}
+                                        //   />
+                                        // );
                                       }}
                                     </Field>
                                   </div>

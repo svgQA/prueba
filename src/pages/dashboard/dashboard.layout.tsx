@@ -35,6 +35,9 @@ import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
 import { HistoryNotificationsPage } from './history/history.page';
 import { WebSocketProvider } from '@/utils/socket';
+import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
+import { CustomSwitcher } from '@/components/common/CustomSwitcher';
+import { Loading } from '@/components/common/loading/loading';
 
 // import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
@@ -46,7 +49,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
     return (
       <section className='bg-b-content dark:bg-b-dark w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
-        {/* <Loading /> */}
+        <Loading />
         <Sidebar
           id='sidebar'
           name='sidebar'
@@ -56,7 +59,33 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           isNavigation
           onLogout={signOut}
         />
-        <div className='flex flex-col pl-[4.5rem] '>
+        <div className='flex flex-col pl-[4.5rem]'>
+          <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
+            <div className='flex flex-row px-6 gap-4 justify-between items-center'>
+              <CustomSwitcher
+                options={[
+                  { id: '123', label: 'inndico', icon: '' },
+                  { id: '1231', label: 'inndico 2', icon: '' },
+                  { id: '1232', label: 'inndico 3', icon: '' },
+                  { id: '1233', label: 'inndico 4', icon: '' },
+                  { id: '1234', label: 'inndico 5', icon: '' },
+                  { id: '1235', label: 'inndico 6', icon: '' },
+                  { id: '1236', label: 'inndico 7', icon: '' },
+                ]}
+                value='123'
+                onChange={() => {}}
+                icon='1232'
+                borderless
+              />
+              <button className='cursor-pointer border-none mx-2'>
+                <span className='vx-icon vx-icon-101 text-gray-400' />
+              </button>
+              <LanguageSwitcher borderless />
+              <button className='cursor-pointer border-none mx-2'>
+                <span className='vx-icon vx-icon-103 text-gray-400' />
+              </button>
+            </div>
+          </header>
           <WebSocketProvider>
             <Router>
               <Suspense fallback={<div>Loading...</div>}>

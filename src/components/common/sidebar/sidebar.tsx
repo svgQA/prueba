@@ -107,6 +107,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
         ))}
       </ul>
       <ul className='flex flex-col justify-between capitalize'>
+        {/*
         <div className='relative group'>
           <a className='cursor-pointer'>
             <ButtonMenu name='vx-company-button' label='company' icon='281' />
@@ -125,6 +126,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
             </div>
           )}
         </div>
+        */}
         <span
           onClick={onSettingHandler}
           className='cursor-pointer p-1 mt-1 hover:disabled rounded-sm'
@@ -132,11 +134,13 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
           <ButtonMenu name='vx-setting-button' label='setting' icon='169' />
         </span>
 
+        {/*
         {onLogout && (
           <span onClick={onLogout} className='cursor-pointer'>
             <ButtonMenu name='vx-logout-button' label='logout' icon='225' />
           </span>
         )}
+        */}
       </ul>
     </nav>
   );
