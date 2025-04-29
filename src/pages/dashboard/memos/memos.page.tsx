@@ -186,9 +186,11 @@ export const MemosPage: FunctionComponent = () => {
     return (
       <>
         <div className='w-full flex flex-col h-full'>
+          {/*
           <div className='w-full p-1 border-b dark:border-b-dark-light'>
             {buttonMenu}
           </div>
+          */}
 
           <div className='flex flex-1 overflow-y-auto'>
             <div className='w-[30%] border-r dark:border-b-dark-light flex flex-col h-full'>
@@ -311,7 +313,7 @@ export const MemosPage: FunctionComponent = () => {
   return (
     <Section
       className={
-        currentView.value === VIEW_NAME.CHAT ? 'flex flex-row h-[99.5vh]' : ''
+        currentView.value === VIEW_NAME.CHAT ? 'flex flex-row h-[94.5vh]' : ''
       }
       padding={currentView.value === VIEW_NAME.TABLE}
     >
@@ -342,14 +344,13 @@ export const MemosPage: FunctionComponent = () => {
           />
         </div>
       )}
+
       <div className='max-h-screen relative'>
-        {currentView.value !== VIEW_NAME.CHAT && (
-          <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
-            <div className='flex flex-row items-center justify-between'>
-              {buttonMenu}
-            </div>
+        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark top-0'>
+          <div className='flex flex-row items-center justify-between'>
+            {buttonMenu}
           </div>
-        )}
+        </div>
 
         {currentView.value === VIEW_NAME.TABLE && (
           <Table
