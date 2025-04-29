@@ -443,7 +443,8 @@ export const ShiftsPage: FunctionalComponent = () => {
       </div>
 
       <div className='max-h-screen'>
-        <div className='py-2 flex flex-row justify-between items-center overflow-visible z-10 bg-b-content dark:bg-b-dark sticky top-[3.4rem] w-fit'>
+        {/* sticky top-[3.4rem] z-[8] */}
+        <div className='py-2 flex flex-row justify-between items-center overflow-visible bg-b-content dark:bg-b-dark absolute w-fit'>
           <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
             <Button

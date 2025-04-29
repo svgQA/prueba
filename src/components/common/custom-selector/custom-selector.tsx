@@ -305,7 +305,7 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
               </div>
             )}
           </div>,
-          menuPortalTarget || document.body
+          menuPortalTarget || inputRef.current?.parentElement || document.body
         )}
     </div>
   );
