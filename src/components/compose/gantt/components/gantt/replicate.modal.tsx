@@ -10,7 +10,6 @@ import { required } from '@/utils/utilities';
 import { IOption } from '@/components/common/multi/interface';
 import { ShiftService } from '@/services';
 import { toast } from 'react-toastify';
-import { Select } from '@/components/common/select/select';
 
 interface ReplicateModalProps {
   selectedUsers: Set<string | number>;
@@ -142,8 +141,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                 selectedUsers.size > 0 &&
                 (!form.getState().values.replacements ||
                   form.getState().values.replacements.length === 0 ||
-                  form.getState().values.replacements.length !==
-                    selectedUsers.size)
+                  form.getState().values.replacements.length !== selectedUsers.size)
               ) {
                 // Usar un efecto de una sola vez para inicializar
                 const initialReplacements = Array.from(selectedUsers).map(
@@ -232,27 +230,14 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                                     >
                                       {({ input, meta }) => {
                                         return (
-                                          <Select
+                                          <UserSelector
                                             {...input}
-                                            id={`${name}-select`}
+                                            meta={meta}
                                             name={`${name}.replacementUserId`}
-                                            value={1}
-                                            // meta={meta}
-                                            // name={`${name}.replacementUserId`}
                                             options={users || []}
-                                            // multiple={true}
+                                            multiple={true}
                                           />
                                         );
-
-                                        // return (
-                                        //   <UserSelector
-                                        //     {...input}
-                                        //     meta={meta}
-                                        //     name={`${name}.replacementUserId`}
-                                        //     options={users || []}
-                                        //     multiple={true}
-                                        //   />
-                                        // );
                                       }}
                                     </Field>
                                   </div>

@@ -40,6 +40,7 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (searchTerm) {
@@ -147,11 +148,10 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
     };
   }, [showDropdown, filteredOptions, selectedIndex]);
 
-  const isAllSelected =
-    multiple && value.length === 1 && value[0]?.value === -1;
+  const isAllSelected = multiple && value.length === 1 && value[0]?.value === -1;
 
   return (
-    <div className={`${className}`} ref={dropdownRef}>
+    <div className={`relative ${className}`} ref={dropdownRef}>
       <div className='mb-2 relative'>
         {label && (
           <label className='block text-sm font-medium text-gray-700'>
@@ -219,8 +219,12 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
       </div>
 
       {showDropdown && searchTerm && (
-        <div
+        <div 
           className={`absolute z-10 w-full max-w-80 bg-white rounded-md shadow-lg border border-gray-200 ${maxHeight} overflow-auto ${dropdownClassName} vox-scroll-design`}
+          // style={{
+          //   top: inputRef.current ? inputRef.current.getBoundingClientRect().bottom : 'auto',
+          //   left: inputRef.current ? inputRef.current.getBoundingClientRect().left : 'auto',
+          // }}
         >
           {multiple && showSelectAll && (
             <div className='p-2 border-b border-gray-200'>
