@@ -466,6 +466,13 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
+  static async getServicesSimpleList() {
+    const model: IMakeRequest = {
+      url: ['service', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
   static async getServiceById(id: string) {
     const model: IMakeRequest = {
       url: ['service', id],

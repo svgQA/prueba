@@ -8,8 +8,8 @@ import { IOption } from '../multi/interface';
 export interface Shift {
   person: string;
   service: string;
-  serviceId: number;
-  employeeId: number;
+  serviceId: number | string;
+  employeeId: number | string;
   shift?: string;
   start: string;
   end: string;
@@ -51,7 +51,7 @@ export const ShiftsGanttViewer = ({
   const [editingshift, setEditingshift] = useState<Shift | null>(null);
   const [editedValues, setEditedValues] = useState<Partial<Shift>>({});
   const [editingPerson, setEditingPerson] = useState<{
-    id: number;
+    id: number | string;
     name: string;
   } | null>(null);
   // const [newPersonName, setNewPersonName] = useState('');
@@ -122,7 +122,7 @@ export const ShiftsGanttViewer = ({
     setEditedValues({});
   };
 
-  const handlePersonClick = (person: { id: number; name: string }) => {
+  const handlePersonClick = (person: { id: number | string; name: string }) => {
     setEditingPerson(person);
     //setNewPersonName(person.name);
   };
@@ -138,7 +138,7 @@ export const ShiftsGanttViewer = ({
     if (!userOption) return;
 
     // Actualizar todos los turnos de esa persona
-    const updatedShifts = shifts.map((shift) => {
+    const updatedShifts = shifts.map((shift: Shift) => {
       if (shift.employeeId === editingPerson.id) {
         const updatedShift = {
           ...shift,

@@ -403,7 +403,7 @@ export const Table = <T,>({
                           onNotifications &&
                           (row.original as IShiftResponse)?.employee
                             ?.playerId && (
-                            <div className='flex items-center justify-center'>
+                            <div className='flex items-center justify-center h-full'>
                               <input
                                 type='checkbox'
                                 className='w-4 h-4'
@@ -674,7 +674,8 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className='relative w-full py-1 flex items-center justify-end'>
+      {/* sticky top-[3.4rem] z-[8] */}
+      <div className='w-full py-1 flex items-center justify-end bg-b-content dark:bg-gray-800'>
         {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (
           <Search
@@ -702,15 +703,16 @@ export const Table = <T,>({
               {table.getHeaderGroups().map((headerGroup, index) => (
                 <tr
                   key={`${headerGroup.id}-${index}`}
-                  className='sticky top-0 z-10'
+                  className='sticky top-0 z-[5]'
                 >
                   <th
                     colSpan={1}
-                    className='table-setting-button w-[40px] max-w-[40px] flex items-center justify-center'
+                    className='table-setting-button flex items-center justify-center'
                     style={{ position: 'sticky', zIndex: 1 }}
                   >
                     {selectable &&
                       onNotifications &&
+                      // TODO: esto se puede buscar y validar del ciclo que pinta las filas
                       data.some((row: any) => !!row.employee?.playerId) && (
                         <input
                           type='checkbox'

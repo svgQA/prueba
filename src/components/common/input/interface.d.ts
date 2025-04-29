@@ -44,4 +44,8 @@ export interface IInputProps extends IComponentProps {
   normal?: boolean;
   disabled?: boolean;
   className?: string;
+  ref?: React.RefObject<HTMLInputElement>;
+  onInput?: (event: TargetedEvent<HTMLInputElement>) => void;
+  onFocus?: (event: FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
 }
