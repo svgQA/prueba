@@ -141,7 +141,8 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                 selectedUsers.size > 0 &&
                 (!form.getState().values.replacements ||
                   form.getState().values.replacements.length === 0 ||
-                  form.getState().values.replacements.length !== selectedUsers.size)
+                  form.getState().values.replacements.length !==
+                    selectedUsers.size)
               ) {
                 // Usar un efecto de una sola vez para inicializar
                 const initialReplacements = Array.from(selectedUsers).map(

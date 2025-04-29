@@ -148,7 +148,8 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
     };
   }, [showDropdown, filteredOptions, selectedIndex]);
 
-  const isAllSelected = multiple && value.length === 1 && value[0]?.value === -1;
+  const isAllSelected =
+    multiple && value.length === 1 && value[0]?.value === -1;
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
@@ -219,7 +220,7 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
       </div>
 
       {showDropdown && searchTerm && (
-        <div 
+        <div
           className={`absolute z-10 w-full max-w-80 bg-white rounded-md shadow-lg border border-gray-200 ${maxHeight} overflow-auto ${dropdownClassName} vox-scroll-design`}
           // style={{
           //   top: inputRef.current ? inputRef.current.getBoundingClientRect().bottom : 'auto',

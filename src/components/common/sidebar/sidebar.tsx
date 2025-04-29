@@ -4,13 +4,13 @@ import { type ISidebarProps } from './interface';
 import { useEffect, useMemo } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { ButtonMenu } from '../button/menu/button';
-import { useUserStore } from '@/store/slices';
+// import { useUserStore } from '@/store/slices';
 import {
-  closeOnBoardingModal,
+  // closeOnBoardingModal,
   getStatusSettingModal,
 } from '@/store/signals/modals';
 import { useSignal } from '@preact/signals';
-import { CompanyItem } from './company';
+// import { CompanyItem } from './company';
 import { MenuItem } from './menu';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
@@ -20,19 +20,19 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   onHomeHandler,
   isNavigation = false,
   onHandlerClick,
-  onLogout,
+  // onLogout,
 }: ISidebarProps) => {
   const [location, navigate] = useLocation();
   const menuSelected = useSignal<string | null>('');
-  const { companies, setSelected } = useUserStore();
+  // const { companies, setSelected } = useUserStore();
 
-  const setCompanySelected = useMemo(
-    () => (company: string) => {
-      setSelected(company);
-      closeOnBoardingModal();
-    },
-    [setSelected]
-  );
+  // const setCompanySelected = useMemo(
+  //   () => (company: string) => {
+  //     setSelected(company);
+  //     closeOnBoardingModal();
+  //   },
+  //   [setSelected]
+  // );
 
   useEffect(() => {
     if (!getStatusSettingModal.value) {
