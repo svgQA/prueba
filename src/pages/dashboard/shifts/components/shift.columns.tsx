@@ -221,7 +221,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
       }
 
       return (
-        <div className='inline-flex items-center px-2 py-0.5 text-gray-700 text-sm'>
+        <div className='inline-flex items-center px-2 py-0.5 text-sm'>
           <span>{scheduledDuration}</span>
           <span className='mx-1'>→</span>
           <span>{actualDuration}</span>
@@ -236,7 +236,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     header: t('shifts.columns.report'),
     cell: (info) => (
       <div
-        className='inline-flex items-center px-2 py-0.5 text-gray-700 text-sm rounded-md border border-b-dark'
+        className='inline-flex items-center px-2 py-0.5 text-sm rounded-md border'
         onClick={() => info.row.toggleExpanded()}
       >
         <span>2</span>

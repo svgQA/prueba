@@ -30,7 +30,7 @@ export const columns: ColumnDef<IResponseResponse>[] = [
     },
   },
   {
-    accessorKey: 'structure',
+    accessorKey: 'title',
     id: 'title',
     header: t('forms.columns.title'),
     cell: (info) => {

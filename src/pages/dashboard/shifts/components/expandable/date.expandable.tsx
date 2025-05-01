@@ -1,3 +1,5 @@
+import { Avatar } from '@/components/common/Avatar';
+import { Chip } from '@/components/common/chip/chip';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { useSignal } from '@preact/signals';
 
@@ -39,7 +41,6 @@ const ShiftCard = ({
   source,
   status,
   statusColor,
-  distance,
 }: {
   title: string;
   name: string;
@@ -63,104 +64,73 @@ const ShiftCard = ({
   ]);
 
   return (
-    <div className='bg-b-white rounded-lg shadow-sm p-4 w-full'>
+    <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm p-4 w-full text-t-light dark:text-t-dark flex flex-row gap-4'>
       {/* Título */}
-      <h2 className='text-t-light font-medium mb-4'>{title}</h2>
-
-      <div className='flex'>
-        {/* Columna izquierda - Foto y nombre */}
-        <div className='flex flex-col items-center mr-4 w-24'>
-          {/* <div className="w-16 h-16 rounded-full overflow-hidden bg-b-light-dark mb-2">
-            <img src="/placeholder.svg" alt={name} className="w-full h-full object-cover" />
-          </div> */}
-          <div className='w-16 h-16 rounded-full flex items-center justify-center bg-primary-opacity mb-2'>
-            <span className='!text-primary vox-icon size-lg vx-icon-063'></span>
-          </div>
-          <p className='text-t-light font-medium text-center'>{name}</p>
-          <span
-            className={`mt-1 inline-block px-3 py-0.5 rounded-full text-xs ${statusColor}`}
-          >
-            {status}
-          </span>
-        </div>
-
-        {/* Columna central - Información */}
-        <div className='flex flex-col justify-center space-y-3 mr-4'>
-          <div className='flex items-center'>
-            <div className='flex-shrink-0 mr-2'>
-              <span className='!text-primary vox-icon size-sm vx-icon-323'></span>
-            </div>
-            <div>
-              <p className='text-xs text-t-light-dark'>Fecha</p>
-              <p className='text-sm text-t-light'>{date}</p>
-            </div>
+      <div>
+        <h2 className='font-medium mb-4'>{title}</h2>
+        <div className='flex flex-col gap-4'>
+          {/* Columna izquierda - Foto y nombre */}
+          <div className='flex flex-col items-center mr-4 w-full'>
+            <Avatar icon='023' />
+            <p className='font-medium text-center'>{name}</p>
+            <Chip label={status} color={statusColor} />
           </div>
 
-          <div className='flex items-center'>
-            <div className='flex-shrink-0 mr-2'>
-              <span className='!text-primary vox-icon size-sm vx-icon-325'></span>
+          {/* Columna central - Información */}
+          <div className='flex flex-col justify-center space-y-3 mr-4'>
+            <div className='flex items-center'>
+              <div className='flex-shrink-0 mr-2'>
+                <span className='!text-primary vox-icon size-sm vx-icon-323'></span>
+              </div>
+              <div>
+                <p className='font-semibold'>Fecha</p>
+                <p className='text-sm'>{date}</p>
+              </div>
             </div>
-            <div>
-              <p className='text-xs text-t-light-dark'>Hora</p>
-              <p className='text-sm text-t-light'>{time}</p>
-            </div>
-          </div>
 
-          <div className='flex items-center'>
-            <div className='flex-shrink-0 mr-2'>
-              <span className='!text-primary vox-icon size-sm vx-icon-326'></span>
+            <div className='flex items-center'>
+              <div className='flex-shrink-0 mr-2'>
+                <span className='!text-primary vox-icon size-sm vx-icon-325'></span>
+              </div>
+              <div>
+                <p className='font-semibold'>Hora</p>
+                <p className='text-sm'>{time}</p>
+              </div>
             </div>
-            <div>
-              <p className='text-xs text-t-light-dark'>Fuente</p>
-              <p className='text-sm text-t-light'>{source}</p>
+
+            <div className='flex items-center'>
+              <div className='flex-shrink-0 mr-2'>
+                <span className='!text-primary vox-icon size-sm vx-icon-326'></span>
+              </div>
+              <div>
+                <p className='font-semibold'>Fuente</p>
+                <p className='text-sm'>{source}</p>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Columna derecha - Mapa */}
-        <div className='flex-1'>
-          <div className='relative h-32 rounded-lg overflow-hidden'>
-            {/* <Map
-              sendPoints={() => {}}
-              name='Map'
-              center={{
-                lat: 4.649251,
-                lng: -74.106992,
-              }}
-              pointsAmount={1}
-              pointsRef={points.value}
-              condition={false}
-              errorCondition=''
-              radialPoint={null}
-              errorRadialPoint=''
-              radius={50}
-              draggable={true}
-              width='100%'
-              clickPoint={() => {}}
-            /> */}
-            <MapLibrePointsMap
-              sendPoints={() => {}}
-              name='Map'
-              center={{
-                lat: 4.649251,
-                lng: -74.106992,
-              }}
-              pointsAmount={1}
-              pointsRef={points.value}
-              condition={false}
-              errorCondition=''
-              radialPoint={null}
-              errorRadialPoint=''
-              radius={50}
-              draggable={true}
-              width='100%'
-              clickPoint={() => {}}
-            />
-            <div className='absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-b-white px-2 py-1 rounded-full text-xs shadow-sm'>
-              {distance}
-            </div>
-          </div>
-        </div>
+      {/* Columna derecha - Mapa */}
+      <div className='flex-1 w-full max-h-96 overflow-hidden'>
+        <MapLibrePointsMap
+          sendPoints={() => {}}
+          name='Map'
+          center={{
+            lat: 4.649251,
+            lng: -74.106992,
+          }}
+          pointsAmount={1}
+          pointsRef={points.value}
+          condition={false}
+          errorCondition=''
+          radialPoint={null}
+          errorRadialPoint=''
+          radius={50}
+          draggable={true}
+          width='100%'
+          clickPoint={() => {}}
+        />
       </div>
     </div>
   );
