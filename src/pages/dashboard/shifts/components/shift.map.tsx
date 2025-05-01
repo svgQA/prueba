@@ -186,7 +186,7 @@ const handle_user_disconnected = (user: { id: string }) => {
 
   return (
     <div>
-      <div className='relative w-full my-2 flex items-center justify-end'>
+      <div className='w-full py-1 pb-3 flex items-center justify-end'>
         {!unsearch && (
           <Search
             id='search-map'

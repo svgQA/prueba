@@ -15,6 +15,7 @@ import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
 import { ChatView } from './page/chat.page';
 import SupervisorInfo from './components/expandable/supervisor.expandable';
+import { useUserStore } from '@/store/slices';
 
 enum VIEW_NAME {
   TABLE,
@@ -29,13 +30,13 @@ const defaultSummary = {
 
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
+  const { selectedCompany } = useUserStore();
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
-
   const summary = useSignal<MemosSummary>(defaultSummary);
 
   useEffect(() => {
@@ -45,6 +46,10 @@ export const MemosPage: FunctionComponent = () => {
       wsManager.removeListener('memos');
     };
   }, []);
+
+  useEffect(() => {
+    fetchInitialData();
+  }, [selectedCompany]);
 
   const fetchInitialData = async () => {
     const [responseMemos, responseUsers, responseSummary] = await Promise.all([

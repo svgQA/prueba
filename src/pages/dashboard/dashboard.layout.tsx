@@ -85,6 +85,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     };
 
     const handleUserAction = (value: string | number) => {
+      console.log('value', value);
       if (value === 1) {
         toggleSettingModal();
       } else if (value === 2) {

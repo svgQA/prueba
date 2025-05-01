@@ -33,7 +33,7 @@ export const ChatCard = ({
     <div
       className={`flex items-center gap-3 p-3 cursor-pointer transition-colors duration-200 dark:border-b-dark-light border-b-light-dark
         ${isSelected ? 'bg-primary text-white' : 'hover:bg-blue-50 dark:hover:bg-b-dark-light'}
-        ${isAI ? 'border-b' : 'border-t'}`}
+        ${isAI ? 'shadow-lg' : 'border-t'}`}
       onClick={() => onClick(id)}
     >
       <div
@@ -45,7 +45,7 @@ export const ChatCard = ({
           <Avatar src={user?.image} name={name} square />
         )}
       </div>
-      <div className='flex-1 min-w-0 text-white'>
+      <div className='flex-1 min-w-0'>
         <h3 className='font-semibold truncate pr-2'>{name}</h3>
         <p className='text-sm truncate'>{lastMessage}</p>
       </div>

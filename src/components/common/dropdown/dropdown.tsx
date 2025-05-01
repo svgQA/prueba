@@ -12,10 +12,10 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
     labelTag = 'label',
     icon,
     iconSize = 'sm',
-    // onChange,
+    onChange,
   }: IDropdownProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [selected, _] = useState<IDropdownOptions | undefined>();
+    const [selected, setSelected] = useState<IDropdownOptions | undefined>();
     const [dropdownPosition, setDropdownPosition] = useState<'left' | 'right'>(
       'right'
     );
@@ -30,7 +30,6 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
      * Selecciona un elemento del dropdown
      * @param event
      */
-    /*
     const selectElement = useCallback(
       (event: MouseEvent) => {
         const target = event.target as HTMLElement;
@@ -49,7 +48,6 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
       },
       [options, labelTag, toggleDropdown, onChange]
     );
-    */
 
     const elementsList = useCallback(
       () =>
@@ -143,7 +141,9 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
             border border-gray-200 dark:border-gray-700
             ${dropdownPosition === 'left' ? 'right-0' : 'left-0'}`}
         >
-          <ul className='py-2 text-sm'>{elementsList()}</ul>
+          <ul className='py-2 text-sm' onClick={selectElement}>
+            {elementsList()}
+          </ul>
         </div>
       </div>
     );
