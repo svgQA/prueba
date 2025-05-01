@@ -1,15 +1,15 @@
 import { useState, useRef, useEffect } from 'preact/hooks';
+import { IOption } from './multi/interface';
 
-interface SwitcherOption {
-  id: string;
-  label: string;
+interface SwitcherOption extends IOption {
   icon?: string;
+  sIcon?: string;
 }
 
 interface CustomSwitcherProps {
-  options: SwitcherOption[];
-  value: string;
-  onChange: (value: string) => void;
+  options?: SwitcherOption[];
+  value?: string | number;
+  onChange?: (value: string | number) => void;
   placeholder?: string;
   icon?: string;
   className?: string;
@@ -31,17 +31,21 @@ export const CustomSwitcher = ({
   optionClassName = '',
   borderless = false,
 }: CustomSwitcherProps) => {
+  if (!options || options.length === 0) {
+    return null;
+  }
+
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Get current selected option
-  const currentOption = options.find((option) => option.id === value) || {
+  const currentOption = options.find((option) => option.value === value) || {
     label: placeholder,
   };
 
   // Handle option change
-  const handleOptionChange = (optionId: string) => {
-    onChange(optionId);
+  const handleOptionChange = (optionId: string | number) => {
+    onChange?.(optionId);
     setIsOpen(false);
   };
 
@@ -70,7 +74,7 @@ export const CustomSwitcher = ({
           borderless ? 'border-none' : ''
         }`}
       >
-        <span className='text-lg'>{icon}</span>
+        {icon && <span className={`vx-icon vx-icon-${icon} size-sm`}></span>}
         <span>{currentOption.label}</span>
         <svg
           className={`w-4 h-4 transition-transform duration-200 ${
@@ -95,15 +99,20 @@ export const CustomSwitcher = ({
         >
           {options.map((option) => (
             <button
-              key={option.id}
-              onClick={() => handleOptionChange(option.id)}
+              key={option.value}
+              onClick={() => handleOptionChange(option.value)}
               className={`flex items-center w-full px-4 py-2.5 text-sm transition-colors duration-200 border-none ${
-                option.id === value
+                option.value === value
                   ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                   : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
               } ${optionClassName}`}
             >
-              {option.icon && <span className='mr-2'>{option.icon}</span>}
+              {option.sIcon && <span className='mr-2'>{option.sIcon}</span>}
+              {option.icon && (
+                <span
+                  className={`mr-2 vx-icon vx-icon-${option.icon} size-sm`}
+                ></span>
+              )}
               {option.label}
             </button>
           ))}
