@@ -22,7 +22,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   big,
   iconColor = '',
   textAlign = 'center',
-  bold = true, 
+  bold = true,
 }: IButtonProps) => {
   const getJustify = () => {
     switch (textAlign) {
@@ -58,7 +58,9 @@ export const Button: FunctionComponent<IButtonProps> = ({
       )}
 
       {label && !rounded && (
-        <div className={`flex flex-row ${getJustify()} items-center w-full md:w-auto`}>
+        <div
+          className={`flex flex-row ${getJustify()} items-center w-full md:w-auto`}
+        >
           <p
             className={`capitalize text-${textAlign} ${textColor} ${big ? 'py-1' : ''}`}
           >

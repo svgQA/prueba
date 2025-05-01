@@ -253,7 +253,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -360,12 +360,13 @@ export const ShiftsPage: FunctionalComponent = () => {
             rounded={false}
             icon='314'
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${!hasValidPlayer
+            className={`border-2 p-2 ${
+              !hasValidPlayer
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : onNotifications
                   ? 'bg-primary-opacity'
                   : 'border-primary'
-              }`}
+            }`}
           />
           {showSendModal.value && (
             <div className='absolute mt-4 mr-12 z-50 rounded p-4'>
@@ -414,11 +415,14 @@ export const ShiftsPage: FunctionalComponent = () => {
     getGanttHandler(view);
   };
 
-  const onClickAction = (params: { id: string; type: string; action: ROW_ACTIONS }) => {
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
     console.log('Acción seleccionada:', params);
     // Aquí abres modales, haces navigations, etc.
   };
-
 
   return (
     <Section padding>

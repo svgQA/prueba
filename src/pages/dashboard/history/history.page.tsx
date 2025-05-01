@@ -58,7 +58,11 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
     }
   };
 
-  const onClickAction = (params: { id: string; type: string; action: ROW_ACTIONS }) => {
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
     console.log('Acción seleccionada:', params);
     // Aquí abres modales, haces navigations, etc.
   };
@@ -69,23 +73,23 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
         <CardData
           title={t('history.cards.notificationShifts')}
           count={totalNotifications.value}
-          subtitle=""
-          color="t-dark"
-          icon="019"
+          subtitle=''
+          color='t-dark'
+          icon='019'
         />
         <CardData
           title={t('history.cards.openRate')}
           count={openRate.value}
-          subtitle="%"
-          color="t-dark"
-          icon="101"
+          subtitle='%'
+          color='t-dark'
+          icon='101'
         />
         <CardData
           title={t('history.cards.monthlyNotifications')}
           count={notificationsThisMonth.value}
-          subtitle=""
-          color="t-dark"
-          icon="322"
+          subtitle=''
+          color='t-dark'
+          icon='322'
         />
       </div>
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
