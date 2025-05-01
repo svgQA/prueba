@@ -41,6 +41,7 @@ export const MapLibrePointsMap = ({
     lat: '',
     lng: '',
   });
+  const [isMapReady, setIsMapReady] = useState(false);
   // const [activeMarker, setActiveMarker] = useState<number | null>(null);
   const [activePopup, setActivePopup] = useState<maplibregl.Popup | null>(null);
   const [isMarkerClick, setIsMarkerClick] = useState<boolean>(false);
@@ -79,6 +80,12 @@ export const MapLibrePointsMap = ({
   // Initialize map
   useEffect(() => {
     if (!mapContainerRef.current) return;
+
+    // Clean up any existing map instance
+    if (mapRef.current) {
+      cleanupMap();
+    }
+
     mapRef.current = new maplibregl.Map({
       container: mapContainerRef.current,
       style: getMapStyle(),
@@ -87,49 +94,91 @@ export const MapLibrePointsMap = ({
     });
 
     const map = mapRef.current;
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
-    map.on('click', handleMapClick);
+
+    // Wait for the map to be fully loaded
+    map.on('load', () => {
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
+      map.on('click', handleMapClick);
+      setIsMapReady(true);
+    });
 
     return () => {
       cleanupMap();
+      setIsMapReady(false);
     };
-  }, []);
+  }, [center.lat, center.lng]);
+
+  // Handle points updates
+  useEffect(() => {
+    if (!isMapReady || !mapRef.current) return;
+
+    // Only update if pointsRef is different from current points
+    const currentPointsStr = JSON.stringify(points);
+    const newPointsStr = JSON.stringify(pointsRef);
+
+    if (currentPointsStr !== newPointsStr) {
+      if (pointsRef && pointsRef.length > 0) {
+        const highestId = Math.max(
+          ...pointsRef.map((point: MapPoint) => point.id),
+          0
+        );
+        nextIdRef.current = highestId + 1;
+
+        // Force state update with a new array
+        const newPoints = JSON.parse(JSON.stringify(pointsRef));
+        setPoints(newPoints);
+      } else {
+        // Clear all points and markers when pointsRef is empty
+        setPoints([]);
+        markersRef.current.forEach((marker) => marker.remove());
+        markersRef.current = [];
+        nextIdRef.current = 1;
+      }
+    }
+  }, [pointsRef, isMapReady]);
+
+  // Update markers and send points to parent
+  useEffect(() => {
+    if (!isMapReady || !mapRef.current) return;
+
+    // Only update markers if points have changed
+    const currentMarkersCount = markersRef.current.length;
+    const currentPointsCount = points.length;
+
+    if (currentMarkersCount !== currentPointsCount) {
+      updateMarkers();
+      sendPoints(points);
+    }
+  }, [points, isMapReady]);
+
+  // Update circle when radius changes
+  useEffect(() => {
+    if (!mapRef.current || !mapRef.current.isStyleLoaded()) return;
+
+    updateRadiusCircle();
+  }, [radius, center]);
 
   // Update map style when theme changes
   useEffect(() => {
     if (!mapRef.current) return;
+
     mapRef.current.setStyle(getMapStyle());
+
+    mapRef.current.on('style.load', () => {
+      if (pointsRef && pointsRef.length > 0) {
+        const newPoints = JSON.parse(JSON.stringify(pointsRef));
+        setPoints(newPoints);
+        updateMarkers();
+      }
+    });
   }, [themeSignal.value]);
-
-  // Load initial points
-  useEffect(() => {
-    if (pointsRef && pointsRef.length > 0) {
-      const highestId = Math.max(
-        ...pointsRef.map((point: MapPoint) => point.id),
-        0
-      );
-      nextIdRef.current = highestId + 1;
-      setPoints(pointsRef);
-    } else {
-      setPoints([]);
-    }
-  }, [pointsRef]);
-
-  // Update markers and send points to parent
-  useEffect(() => {
-    updateMarkers();
-    sendPoints(points);
-  }, [points]);
-
-  // Update circle when radius changes
-  useEffect(() => {
-    updateRadiusCircle();
-  }, [radius, center]);
 
   // Clean up map resources
   const cleanupMap = useCallback(() => {
-    markersRef.current.forEach((marker) => marker.remove());
-    markersRef.current = [];
+    if (markersRef.current) {
+      markersRef.current.forEach((marker) => marker.remove());
+      markersRef.current = [];
+    }
 
     if (activePopup) {
       activePopup.remove();
@@ -138,6 +187,7 @@ export const MapLibrePointsMap = ({
     if (mapRef.current) {
       mapRef.current.off('click', handleMapClick);
       mapRef.current.remove();
+      mapRef.current = null;
     }
   }, [activePopup]);
 
@@ -200,14 +250,14 @@ export const MapLibrePointsMap = ({
       }
     }
 
-    setPoints((prevPoints) => [...prevPoints, newPoint]);
+    setPoints((prevPoints) => [...prevPoints, newPoint]); // Use functional update
   };
 
   // Create marker element with number
   const createMarkerElement = (point: MapPoint, index: number) => {
     const el = document.createElement('div');
     el.className = 'marker-container';
-    el.setAttribute('data-id', point.id.toString());
+    el.setAttribute('data-id', point?.id?.toString() || '');
     el.setAttribute('data-index', (index + 1).toString());
 
     el.innerHTML = `
@@ -218,12 +268,12 @@ export const MapLibrePointsMap = ({
       cursor: pointer;
     ">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="38" viewBox="0 0 24 38">
-        <path fill="${radialPoint && point.id === radialPoint.id ? '#2563EB' : '#EA4335'}" 
+        <path fill="${radialPoint && point?.id === radialPoint?.id ? '#2563EB' : '#EA4335'}" 
               d="M12 0C5.4 0 0 5.4 0 12c0 6.5 12 25 12 25s12-18.5 12-25c0-6.6-5.4-12-12-12z" />
         <circle fill="#FFFFFF" cx="12" cy="12" r="9" />
         <text 
-          fill="${radialPoint && point.id === radialPoint.id ? '#2563EB' : '#EA4335'}" 
-          x="${(index + 1) >= 10 ? 5 : 10}" 
+          fill="${radialPoint && point?.id === radialPoint?.id ? '#2563EB' : '#EA4335'}" 
+          x="${index + 1 >= 10 ? 5 : 10}" 
           y="12.5" 
           fontFamily="Arial, sans-serif" 
           fontSize="10" 
@@ -248,7 +298,7 @@ export const MapLibrePointsMap = ({
 
   // Update all markers on the map
   const updateMarkers = () => {
-    if (!mapRef.current) return;
+    if (!mapRef.current || !isMapReady) return;
 
     // Remove existing markers
     markersRef.current.forEach((marker) => marker.remove());
@@ -256,8 +306,19 @@ export const MapLibrePointsMap = ({
 
     // Add new markers
     points.forEach((point, index) => {
+      // Skip invalid points
+      if (
+        !point ||
+        !point.position ||
+        typeof point.position.lat !== 'number' ||
+        typeof point.position.lng !== 'number'
+      ) {
+        console.warn('Invalid point structure:', point);
+        return;
+      }
+
       const markerEl = createMarkerElement(point, index);
-      const isRadialPoint = radialPoint && point.id === radialPoint.id;
+      const isRadialPoint = radialPoint && point?.id === radialPoint?.id;
 
       const marker = new maplibregl.Marker({
         element: markerEl,
@@ -318,7 +379,7 @@ export const MapLibrePointsMap = ({
 
   // Update radius circle on map
   const updateRadiusCircle = () => {
-    if (!mapRef.current) return;
+    if (!mapRef.current || !mapRef.current.isStyleLoaded()) return;
 
     if (radius && radius > 0 && center) {
       const circleData = createCircleGeoJSON(center, radius);

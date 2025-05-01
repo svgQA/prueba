@@ -11,7 +11,7 @@ import { HomeFooter } from './section/footer';
 import { HomeCarousel } from './section/carousel';
 import { HomeSolutions } from './section/solutions';
 import { HomePlans } from './section/plan';
-import { HomeService } from './section/services';
+// import { HomeService } from './section/services';
 
 export const HomeLayout: FunctionComponent = () => {
   useEffect(() => {
@@ -38,7 +38,7 @@ export const HomeLayout: FunctionComponent = () => {
           <section>
             <HomeMain />
             <HomePros />
-            <HomeService />
+            {/* <HomeService /> */}
             <HomeCarousel />
             <HomeSolutions />
             <HomeAbout />

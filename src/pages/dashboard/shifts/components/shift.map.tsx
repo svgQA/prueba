@@ -185,7 +185,7 @@ const handle_user_disconnected = (user: { id: string }) => {
   }, [users, searchFilters]);
 
   return (
-    <div className='px-4'>
+    <div>
       <div className='relative w-full my-2 flex items-center justify-end'>
         {!unsearch && (
           <Search

@@ -10,17 +10,19 @@ import { INotificationListItem } from '@/types/notification/INotificationTypes';
 import { toast } from 'react-toastify';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { getColumns } from './components/history.columns';
+import { useTranslation } from 'react-i18next';
 
 export const HistoryNotificationsPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const notifications = useSignal<INotificationListItem[]>([]);
   const totalNotifications = useSignal<number>(0);
   const openRate = useSignal<number>(0);
   const notificationsThisMonth = useSignal<number>(0);
 
   useEffect(() => {
-    document.title = 'VX - Historial de Notificaciones';
+    document.title = t('history.pageTitle');
     fetchAll();
-  }, []);
+  }, [t]);
 
   const fetchAll = async () => {
     await Promise.all([fetchNotifications(), fetchDashboardStats()]);
@@ -31,7 +33,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
       const res = await NotificationHistoryServiceFront.getNotificationList();
       notifications.value = res;
     } catch (error) {
-      toast.error('Error al cargar historial');
+      toast.error(t('history.errors.loadHistory'));
     }
   };
 
@@ -42,17 +44,17 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
       openRate.value = stats.openRate;
       notificationsThisMonth.value = stats.notificationsOfMonth;
     } catch (error) {
-      toast.error('Error al cargar estadísticas');
+      toast.error(t('history.errors.loadStats'));
     }
   };
 
   const handleRunCron = async () => {
     try {
       await NotificationHistoryServiceFront.runSchedulerTask();
-      toast.success('Cron ejecutado manualmente 🚀');
+      toast.success(t('history.success.cronExecuted'));
       await fetchAll();
     } catch (error) {
-      toast.error('Error al ejecutar el cron manualmente');
+      toast.error(t('history.errors.cronExecution'));
     }
   };
 
@@ -63,35 +65,34 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
 
   return (
     <Section padding>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title="Turnos de notificaciones"
+          title={t('history.cards.notificationShifts')}
           count={totalNotifications.value}
           subtitle=""
           color="t-dark"
           icon="019"
         />
         <CardData
-          title="Tasa de apertura"
+          title={t('history.cards.openRate')}
           count={openRate.value}
           subtitle="%"
           color="t-dark"
           icon="101"
         />
         <CardData
-          title="Notificaciones del mes"
+          title={t('history.cards.monthlyNotifications')}
           count={notificationsThisMonth.value}
           subtitle=""
           color="t-dark"
           icon="322"
         />
       </div>
-      <div className="py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20">
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
         <Button
-          name="run-cron-button"
-          label="Ejecutar revisión"
-          className="bg-primary text-white hover:bg-primary-opacity p-2"
+          name='run-cron-button'
+          label={t('history.buttons.executeReview')}
+          className='bg-primary text-white hover:bg-primary-opacity p-2'
           onClick={handleRunCron}
         />
       </div>

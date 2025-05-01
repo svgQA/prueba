@@ -1,9 +1,10 @@
 import { ITask } from '@/types/shift';
 import { VNode } from 'preact';
 import { PropsWithChildren } from 'preact/compat';
+import { FieldMetaState } from 'react-final-form';
 
 export interface IOption {
-  value: number;
+  value: number | string;
   label: string;
 }
 
@@ -23,4 +24,5 @@ export interface IMultiProps {
   button?: boolean;
   ellipse?: number;
   scrollable?: boolean;
+  meta?: FieldMetaState<any>;
 }

@@ -4,8 +4,6 @@ import { FieldMetaState } from 'react-final-form';
 import { IOption } from '../multi/interface';
 
 export interface ISelectedOptions extends IOption {
-  value: number | string;
-  name?: string;
   id?: string;
 }
 

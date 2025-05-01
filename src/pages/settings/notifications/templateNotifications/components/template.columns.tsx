@@ -16,7 +16,7 @@ export const useTemplateColumns = () => {
         const value = info.getValue() as string;
         return (
           <span
-            className="p-1 size-sm cursor-pointer text-left"
+            className='p-1 size-sm cursor-pointer text-left'
             onClick={() => info.row.toggleExpanded()}
           >
             {value}
@@ -33,7 +33,7 @@ export const useTemplateColumns = () => {
       cell: (info) => {
         const value = info.getValue() as string;
         return (
-          <span className="p-1 size-sm text-gray-700 block whitespace-nowrap overflow-hidden text-ellipsis">
+          <span className='p-1 size-sm text-gray-700 block whitespace-nowrap overflow-hidden text-ellipsis'>
             {value}
           </span>
         );
@@ -49,7 +49,7 @@ export const useTemplateColumns = () => {
         const value = info.getValue() as Record<string, any>;
         const parsed = `{formId: ${value?.formId ?? 'Ninguna'}, taskId: ${value?.taskId ?? 'Ninguna'}}`;
         return (
-          <span className="p-1 size-xs text-gray-500 block whitespace-nowrap overflow-hidden text-ellipsis">
+          <span className='p-1 size-xs text-gray-500 block whitespace-nowrap overflow-hidden text-ellipsis'>
             {parsed}
           </span>
         );

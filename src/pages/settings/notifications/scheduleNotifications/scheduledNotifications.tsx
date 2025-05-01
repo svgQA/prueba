@@ -34,7 +34,8 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
   const redirect = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.create.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
+        .scheduledNotification.create.to,
       label: 'create',
       id: 'scheduled-create',
     };
@@ -44,11 +45,11 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
   return (
     <Section>
-      <div className="py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20">
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
         <Button
-          name="new-scheduled-notification"
-          label="+ Nueva Programación"
-          className="bg-primary text-white p-2"
+          name='new-scheduled-notification'
+          label='+ Nueva Programación'
+          className='bg-primary text-white p-2'
           onClick={redirect}
         />
       </div>

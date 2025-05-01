@@ -1,27 +1,39 @@
-import { IOption } from '@/components/common/multi/interface';
+import { type IOption } from '@/components/common/multi/interface';
 import { FormValues } from '@/components/compose/gantt/components/gantt/replicate.modal';
-import { User, ViewMode } from '@/components/compose/gantt/types/public-types';
-import { IPagination } from '@/types';
-import { IShiftSetting, IShiftSettingResponse } from '@/types/settings';
-import { IShiftResponse } from '@/types/shift/activity';
-import { ICScheduleRequest } from '@/types/shift/shift.request';
 import {
-  IDepartmentResponse,
-  IMunicipalityResponse,
+  type User,
+  ViewMode,
+} from '@/components/compose/gantt/types/public-types';
+import { type IPagination } from '@/types';
+import {
+  type IShiftSetting,
+  type IShiftSettingResponse,
+} from '@/types/settings';
+import { type IShiftResponse } from '@/types/shift/activity';
+import { type ICScheduleRequest } from '@/types/shift/shift.request';
+import {
+  type IDepartmentResponse,
+  type IMunicipalityResponse,
 } from '@/types/shift/shift.response';
-import { ICountryResponse } from '@/types/user/user.response';
+import { type ICountryResponse } from '@/types/user/user.response';
 import { BaseService } from '@/utils/network';
 import {
-  IMakeRequest,
+  type IMakeRequest,
   VoxServices,
   REQUEST_METHODS,
 } from '@/utils/network/types';
 import {
-  IPaginationPlace,
-  IPaginationRound,
-  IPagintationGantt,
-  IReplicateShift,
+  type IPaginationPlace,
+  type IPaginationRound,
+  type IPagintationGantt,
+  type IReplicateShift,
 } from '@/utils/types/shift.interface';
+
+export type ShiftSummary = {
+  total: number;
+  in_progress: number;
+  completed: number;
+};
 
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';
@@ -46,7 +58,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async get_gantt(
@@ -70,7 +82,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async updatePlace(data: any, id: string) {
@@ -79,7 +91,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.PUT,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getPlaces(params: IPaginationPlace = { page: 1, items: 400 }) {
@@ -87,14 +99,14 @@ export class ShiftService extends BaseService {
       url: ['place'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getWorkPointsByPlaceId(placeId: number) {
     const model: IMakeRequest = {
       url: ['place/workstation', `${placeId}`],
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getProjects(params: IPagination = { page: 1, items: 400 }) {
@@ -102,7 +114,7 @@ export class ShiftService extends BaseService {
       url: ['contract'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getDepartments(params: IPagination = { page: 1, items: 400 }) {
@@ -138,7 +150,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getRounds(params: IPaginationRound = { page: 1, items: 500 }) {
@@ -146,7 +158,7 @@ export class ShiftService extends BaseService {
       url: ['round'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async deletePlace(id: string) {
@@ -171,7 +183,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async updateProject(data: any, id: string) {
@@ -180,7 +192,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.PUT,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getProject(id: string) {
@@ -188,7 +200,7 @@ export class ShiftService extends BaseService {
       url: ['contract', id],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getPlaceById(id: string) {
@@ -196,7 +208,7 @@ export class ShiftService extends BaseService {
       url: ['place', id],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async createNovelty(data: any) {
@@ -205,7 +217,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async updateNovelty(data: any, id: string) {
@@ -214,7 +226,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.PUT,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async deleteNovelty(id: string) {
@@ -230,7 +242,7 @@ export class ShiftService extends BaseService {
       url: ['novelty'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getNoveltyById(id: string) {
@@ -238,7 +250,7 @@ export class ShiftService extends BaseService {
       url: ['novelty', id],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async updateRound(data: any, id: string) {
@@ -247,7 +259,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.PUT,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async deleteRound(id: string) {
@@ -263,7 +275,7 @@ export class ShiftService extends BaseService {
       url: ['round', id],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getWorkPointById(id: number) {
@@ -271,7 +283,7 @@ export class ShiftService extends BaseService {
       url: ['place/workstationid', `${id}`],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   /**
@@ -284,11 +296,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.GET,
     };
 
-    return await super.make_request<{
-      total: number;
-      inProgress: number;
-      completed: number;
-    }>(this.name, model);
+    return await super.make_request<ShiftSummary>(this.name, model);
   }
 
   static async createActivity(data: any) {
@@ -297,7 +305,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
   static async updateActivity(data: any, id: string | number) {
     const model: IMakeRequest = {
@@ -305,7 +313,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.PUT,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async deleteActivity(id: string | number) {
@@ -321,7 +329,7 @@ export class ShiftService extends BaseService {
       url: ['activity'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getActivityById(id: string) {
@@ -329,7 +337,7 @@ export class ShiftService extends BaseService {
       url: ['activity', id],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async createTask(data: any) {
@@ -338,7 +346,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async updateTask(data: any, id: string) {
@@ -347,7 +355,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.PUT,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async deleteTask(id: string) {
@@ -371,7 +379,7 @@ export class ShiftService extends BaseService {
       url: ['task'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getTaskById(id: string) {
@@ -379,7 +387,7 @@ export class ShiftService extends BaseService {
       url: ['task', id],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async createSchedule(data: ICScheduleRequest) {
@@ -388,7 +396,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async updateSchedule(data: any, id: string) {
@@ -397,7 +405,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.PUT,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async deleteSchedule(id: string) {
@@ -413,7 +421,7 @@ export class ShiftService extends BaseService {
       url: ['schedule'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getScheduleById(id: string) {
@@ -430,7 +438,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async updateService(data: any, id: string) {
@@ -439,7 +447,7 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.PUT,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async deleteService(id: string) {
@@ -455,7 +463,14 @@ export class ShiftService extends BaseService {
       url: ['service'],
       params: params as any,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
+  }
+
+  static async getServicesSimpleList() {
+    const model: IMakeRequest = {
+      url: ['service', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.name, model);
   }
 
   static async getServiceById(id: string) {
@@ -463,7 +478,7 @@ export class ShiftService extends BaseService {
       url: ['service', id],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   static async getShiftSetting() {
@@ -498,6 +513,6 @@ export class ShiftService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 }

@@ -1,7 +1,6 @@
 import { type FunctionComponent } from 'preact';
-import { useEffect } from 'preact/hooks';
 import { Route, Router } from 'wouter';
-import { Suspense, lazy } from 'preact/compat';
+import { lazy, Suspense } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,88 +24,29 @@ import { UsersPage } from './users/users.page';
 /** ***********************************************************************
  * STORE SIGNALS
  ** ***********************************************************************/
-import {
-  // getStatusOnBoardingModal,
-  // closeOnBoardingModal,
-  // openOnBoardingModal,
-  toggleSettingModal,
-  openLoading,
-  closeLoading,
-} from '@/store/signals/modals';
+import { toggleSettingModal } from '@/store/signals/modals';
 
 /** ***********************************************************************
  * COMMENTS
  ** ***********************************************************************/
-import { hasUserTenant, useUserStore } from '@/store/slices';
-import { BaseService } from '@/utils/network';
 import { SettingsModal } from '../settings/settings';
 import { ToastContainer } from 'react-toastify';
-import { Loading } from '@/components/common/loading/loading';
 import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
 import { HistoryNotificationsPage } from './history/history.page';
-// import { useWebSocket } from '@/utils/socket';
+import { WebSocketProvider } from '@/utils/socket';
+import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
+import { CustomSwitcher } from '@/components/common/CustomSwitcher';
+import { Loading } from '@/components/common/loading/loading';
 
  import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
-
-// const GENERAL_GROUP_MENU = 0,
-//   SETTING_USER_MENU = 0;
 
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    // const wsManager = useWebSocket();
-
-    const {
-      getTenant,
-      getToken,
-      getCompany,
-      setToken,
-      setUserId,
-      setTenant,
-      setUser,
-    } = useUserStore();
-
-    // const setCompanySelected = (company: string) => {
-    //   setSelected(company);
-    //   closeOnBoardingModal();
-    //   // getProfile();
-    //   initSocket();
-    // };
-
-    useEffect(() => {
-      BaseService.setLoading(openLoading, closeLoading);
-      BaseService.setUser(getTenant, getToken, getCompany);
-      validateUser();
-    }, []);
-
-    const validateUser = async () => {
-      await hasUserTenant(setToken, setUserId, setTenant, setUser);
-      // console.log('existTenant', existTenant);
-      // if (!existTenant) openOnBoardingModal();
-      // else closeOnBoardingModal();
-    };
-
-    // const getProfile = async () => {
-    //   const response = await UserService.profile();
-    //   if (!response.getStatus()) return;
-    //   const user = response.getOne();
-    //   setUser({
-    //     id: user.id,
-    //     name: user.name,
-    //     phone: user.phone,
-    //     address: user.email,
-    //     cognito: user.cognitoId,
-    //   });
-    // };
-
-    // const initSocket = () => {
-    //   wsManager.connect(getUrlSocket());
-    // };
-
     return (
       <section className='bg-b-content dark:bg-b-dark w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
         <Loading />
@@ -119,49 +59,86 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           isNavigation
           onLogout={signOut}
         />
-        <div className='flex flex-col pl-[4.5rem] '>
-          <Router>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Route
-                path={PAGES_LIST.HOME}
-                component={lazy(() => Promise.resolve({ default: MemosPage }))}
+        <div className='flex flex-col pl-[4.5rem]'>
+          <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
+            <div className='flex flex-row px-6 gap-4 justify-between items-center'>
+              <CustomSwitcher
+                options={[
+                  { id: '123', label: 'inndico', icon: '' },
+                  { id: '1231', label: 'inndico 2', icon: '' },
+                  { id: '1232', label: 'inndico 3', icon: '' },
+                  { id: '1233', label: 'inndico 4', icon: '' },
+                  { id: '1234', label: 'inndico 5', icon: '' },
+                  { id: '1235', label: 'inndico 6', icon: '' },
+                  { id: '1236', label: 'inndico 7', icon: '' },
+                ]}
+                value='123'
+                onChange={() => {}}
+                icon='1232'
+                borderless
               />
-              <Route
-                path={PAGES_LIST.SHIFTS}
-                component={lazy(() => Promise.resolve({ default: ShiftsPage }))}
-              />
-              <Route
-                path={PAGES_LIST.ACCESS}
-                component={lazy(() => Promise.resolve({ default: AccesPage }))}
-              />
-              <Route
-                path={PAGES_LIST.CORRESPONDENCE}
-                component={lazy(() =>
-                  Promise.resolve({ default: CorrespondencePage })
-                )}
-              />
-              <Route
-                path={PAGES_LIST.USERS}
-                component={lazy(() => Promise.resolve({ default: UsersPage }))}
-              />
-              <Route
-                path={PAGES_LIST.FORMS}
-                component={lazy(() => Promise.resolve({ default: FormsPage }))}
-              />
-              <Route
-                path={PAGES_LIST.DEVICES}
-                component={lazy(() =>
-                  Promise.resolve({ default: DevicesPage })
-                )}
-              />
-              <Route
-                path={PAGES_LIST.HISTORY}
-                component={lazy(() =>
-                  Promise.resolve({ default: HistoryNotificationsPage })
-                )}
-              />
-            </Suspense>
-          </Router>
+              <button className='cursor-pointer border-none mx-2'>
+                <span className='vx-icon vx-icon-101 text-gray-400' />
+              </button>
+              <LanguageSwitcher borderless />
+              <button className='cursor-pointer border-none mx-2'>
+                <span className='vx-icon vx-icon-103 text-gray-400' />
+              </button>
+            </div>
+          </header>
+          <WebSocketProvider>
+            <Router>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Route
+                  path={PAGES_LIST.HOME}
+                  component={MemosPage}
+                  key='memos-page'
+                />
+                <Route
+                  path={PAGES_LIST.SHIFTS}
+                  component={lazy(() =>
+                    Promise.resolve({ default: ShiftsPage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.ACCESS}
+                  component={lazy(() =>
+                    Promise.resolve({ default: AccesPage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.CORRESPONDENCE}
+                  component={lazy(() =>
+                    Promise.resolve({ default: CorrespondencePage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.USERS}
+                  component={lazy(() =>
+                    Promise.resolve({ default: UsersPage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.FORMS}
+                  component={lazy(() =>
+                    Promise.resolve({ default: FormsPage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.DEVICES}
+                  component={lazy(() =>
+                    Promise.resolve({ default: DevicesPage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.HISTORY}
+                  component={lazy(() =>
+                    Promise.resolve({ default: HistoryNotificationsPage })
+                  )}
+                />
+              </Suspense>
+            </Router>
+          </WebSocketProvider>
         </div>
         <SettingsModal />
         {/*

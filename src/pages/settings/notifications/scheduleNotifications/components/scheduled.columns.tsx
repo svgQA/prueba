@@ -10,7 +10,7 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
     header: 'Título',
     size: 200,
     cell: (info) => (
-      <span className="p-1 size-sm font-medium text-gray-text-light">
+      <span className='p-1 size-sm font-medium text-gray-text-light'>
         {info.getValue() as string}
       </span>
     ),
@@ -22,7 +22,7 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
     size: 300,
     cell: (info) => (
       <span
-        className="line-clamp-2 max-w-[300px] text-sm text-gray-text-light"
+        className='line-clamp-2 max-w-[300px] text-sm text-gray-text-light'
         title={info.getValue() as string}
       >
         {info.getValue() as string}
@@ -38,8 +38,10 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
       const value = info.getValue() as string;
       let colorClass = 'bg-gray-border text-gray-text-dark';
 
-      if (value === 'sent') colorClass = 'bg-secondary text-white'; // Enviada -> Verde
-      else if (value === 'pending') colorClass = 'bg-primary text-white'; // Pendiente -> Azul
+      if (value === 'sent')
+        colorClass = 'bg-secondary text-white'; // Enviada -> Verde
+      else if (value === 'pending')
+        colorClass = 'bg-primary text-white'; // Pendiente -> Azul
       else if (value === 'failed') colorClass = 'bg-error text-white'; // Fallida -> Rojo
 
       return (
@@ -62,7 +64,7 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
       return (
         <time
           dateTime={new Date(value).toISOString()}
-          className="p-1 size-sm text-sm text-gray-text-light"
+          className='p-1 size-sm text-sm text-gray-text-light'
         >
           {dayjs(value).format('DD/MM/YYYY HH:mm')}
         </time>
@@ -80,7 +82,7 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
       return (
         <time
           dateTime={new Date(value).toISOString()}
-          className="p-1 size-sm text-sm text-gray-text-light"
+          className='p-1 size-sm text-sm text-gray-text-light'
         >
           {dayjs(value).format('DD/MM/YYYY HH:mm')}
         </time>
@@ -94,19 +96,19 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
     cell: (info) => {
       const { id } = info.row.original;
       return (
-        <div className="w-full flex justify-center group relative">
-          <span className="vox-icon vx-icon-233 p-1 size-sm cursor-pointer" />
-          <div className="absolute left-full ml-2 hidden group-hover:flex bg-white shadow-lg rounded p-1">
+        <div className='w-full flex justify-center group relative'>
+          <span className='vox-icon vx-icon-233 p-1 size-sm cursor-pointer' />
+          <div className='absolute left-full ml-2 hidden group-hover:flex bg-white shadow-lg rounded p-1'>
             <span
-              className="vox-icon vx-icon-123 p-1 size-sm cursor-pointer"
+              className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
               data-id={id}
-              data-type="scheduledNotification"
+              data-type='scheduledNotification'
               data-action={ROW_ACTIONS.UPDATE}
             />
             <span
-              className="vox-icon vx-icon-053 p-1 size-sm cursor-pointer"
+              className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
               data-id={id}
-              data-type="scheduledNotification"
+              data-type='scheduledNotification'
               data-action={ROW_ACTIONS.DELETE}
             />
           </div>

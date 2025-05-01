@@ -1,5 +1,3 @@
-// src/pages/dashboard/history/components/history.columns.ts
-
 import { ColumnDef } from '@tanstack/react-table';
 import { INotificationListItem } from '@/types/notification/INotificationTypes';
 import dayjs from 'dayjs';

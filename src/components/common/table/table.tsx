@@ -26,8 +26,7 @@ import {
   useRef,
   useState,
 } from 'preact/hooks';
-import { ITableProps } from './interface';
-
+import { type ITableProps } from './interface';
 import { Search } from '../search/search';
 import {
   DndContext,
@@ -51,6 +50,7 @@ import { Switch } from '../switch/switch';
 import { ROW_ACTIONS } from './enum';
 import { Group } from './components/group';
 import { useSignal } from '@preact/signals';
+import { IShiftResponse } from '@/types/shift/activity';
 
 export const Table = <T,>({
   data,
@@ -62,7 +62,7 @@ export const Table = <T,>({
   onClickAction,
   unsearch,
   button,
-  showExpandableIcon = true,
+  // showExpandableIcon = true,
   selectable,
   onSelectionChange,
   onNotifications,
@@ -119,7 +119,6 @@ export const Table = <T,>({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
 
   const table = useReactTable({
     data,
@@ -187,7 +186,6 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    // bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light
     <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-b-content border-2 border-gray-100 dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column, index) => {
         const columnHeader =
@@ -257,7 +255,7 @@ export const Table = <T,>({
 
               return (
                 <Fragment key={row.id}>
-                  <tr className='odd:bg-gray-100 dark:odd:bg-gray-800'>
+                  <tr>
                     {!unsettings && (
                       <td className='text-center left-0 min-w-[30px]'>
                         <span
@@ -275,13 +273,39 @@ export const Table = <T,>({
                       className='p-2 font-semibold'
                     >
                       <div className='flex justify-between items-center w-full'>
-                        <span>
+                        {/* <span>
                           {row.groupingColumnId && (
                             <>
                               {row.getValue(row.groupingColumnId)} (
                               {row.subRows.length})
                             </>
                           )}
+                        </span> */}
+
+                        <span>
+                          {(() => {
+                            const groupingColumn = table
+                              .getAllLeafColumns()
+                              .find((col) => col.id === row.groupingColumnId);
+                            const getIconGroup = (
+                              groupingColumn?.columnDef as any
+                            ).getIconGroup;
+                            const iconData = getIconGroup
+                              ? getIconGroup(row.original)
+                              : undefined;
+                            const iconGroup = iconData?.icon;
+                            const colorIconGroup = iconData?.color;
+                            return iconGroup ? (
+                              <span
+                                className={`vx-icon vx-icon-${iconGroup} size-md mt-3 ${colorIconGroup ?? ''}`}
+                              />
+                            ) : null;
+                          })()}
+                          <span className='ml-2'>
+                            {row.groupingColumnId
+                              ? `${row.getValue(row.groupingColumnId)} (${row.subRows.length})`
+                              : `(${row.subRows.length})`}
+                          </span>
                         </span>
 
                         {selectable &&
@@ -332,24 +356,31 @@ export const Table = <T,>({
                     row.subRows.length > 0 &&
                     renderRows(row.subRows)} */}
 
-                  {row.getIsExpanded() && !row.parentId && row.subRows.map((subRow) => (
-                    <tr key={subRow.id} className='odd:bg-gray-100 dark:odd:bg-gray-800'>
-                      {!unsettings && <td className='left-0 min-w-[30px]'></td>}
-                      {subRow.getVisibleCells().map((cell) => (
-                        <td key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                  {row.getIsExpanded() &&
+                    !row.parentId &&
+                    row.subRows.map((subRow) => (
+                      <tr key={subRow.id}>
+                        {!unsettings && (
+                          <td className='left-0 min-w-[30px]'></td>
+                        )}
+                        {subRow.getVisibleCells().map((cell) => (
+                          <td key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
                 </Fragment>
               );
             } else if (!row.parentId) {
-            // } else {
+              // } else {
               return (
                 <Fragment key={row.id}>
                   <tr
-                    className={`odd:bg-gray-100 dark:odd:bg-gray-800 ${
+                    className={`${
                       data.length > pageSize && isLastRow
                         ? 'no-bottom-border'
                         : ''
@@ -357,19 +388,22 @@ export const Table = <T,>({
                   >
                     {!unsettings && (
                       <td
-                        className='left-0 min-w-[30px] bg-gray-100 dark:bg-gray-700'
+                        className='left-0 min-w-[30px]'
                         // style={{ position: 'sticky', zIndex: 1 }}
                       >
+                        {/*
                         {expandable && showExpandableIcon && (
                           <span
                             onClick={() => row.toggleExpanded()}
                             className='vox-icon vx-icon-001 cursor-pointer size-sm'
                           />
                         )}
+                        */}
                         {selectable &&
                           onNotifications &&
-                          (row.original as any).employee?.playerId && (
-                            <div className='flex items-center justify-center'>
+                          (row.original as IShiftResponse)?.employee
+                            ?.playerId && (
+                            <div className='flex items-center justify-center h-full'>
                               <input
                                 type='checkbox'
                                 className='w-4 h-4'
@@ -640,7 +674,8 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className='relative w-full py-1 flex items-center justify-end'>
+      {/* sticky top-[3.4rem] z-[8] */}
+      <div className='w-full py-1 flex items-center justify-end bg-b-content dark:bg-gray-800'>
         {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (
           <Search
@@ -668,49 +703,48 @@ export const Table = <T,>({
               {table.getHeaderGroups().map((headerGroup, index) => (
                 <tr
                   key={`${headerGroup.id}-${index}`}
-                  className='sticky top-0 z-10'
+                  className='sticky top-0 z-[5]'
                 >
-                  {!unsettings && (
-                    <th
-                      colSpan={1}
-                      className='table-setting-button left-0 min-w-[30px] bg-white px-2'
-                      style={{ position: 'sticky', zIndex: 1 }}
-                    >
+                  <th
+                    colSpan={1}
+                    className='table-setting-button flex items-center justify-center'
+                    style={{ position: 'sticky', zIndex: 1 }}
+                  >
+                    {selectable &&
+                      onNotifications &&
+                      // TODO: esto se puede buscar y validar del ciclo que pinta las filas
+                      data.some((row: any) => !!row.employee?.playerId) && (
+                        <input
+                          type='checkbox'
+                          className='w-4 h-4'
+                          checked={
+                            Object.keys(selectedRows).length === data.length
+                          }
+                          ref={(el) => {
+                            if (el) {
+                              const all =
+                                data.length > 0 &&
+                                Object.keys(selectedRows).length ===
+                                  data.length;
+                              const none =
+                                Object.keys(selectedRows).length === 0;
+                              el.indeterminate = !all && !none;
+                            }
+                          }}
+                          onChange={(e) => {
+                            const checked = e.currentTarget.checked;
+                            const newSelection = checked
+                              ? Object.fromEntries(
+                                  data.map((row: any) => [row.id, row])
+                                )
+                              : {};
+                            setSelectedRows(newSelection);
+                            onSelectionChange?.(Object.values(newSelection));
+                          }}
+                        />
+                      )}
+                    {!unsettings && !onNotifications && (
                       <div className='flex items-center gap-2 relative'>
-                        {selectable &&
-                          onNotifications &&
-                          data.some((row: any) => !!row.employee?.playerId) && (
-                            <input
-                              type='checkbox'
-                              className='w-4 h-4'
-                              checked={
-                                Object.keys(selectedRows).length === data.length
-                              }
-                              ref={(el) => {
-                                if (el) {
-                                  const all =
-                                    data.length > 0 &&
-                                    Object.keys(selectedRows).length ===
-                                      data.length;
-                                  const none =
-                                    Object.keys(selectedRows).length === 0;
-                                  el.indeterminate = !all && !none;
-                                }
-                              }}
-                              onChange={(e) => {
-                                const checked = e.currentTarget.checked;
-                                const newSelection = checked
-                                  ? Object.fromEntries(
-                                      data.map((row: any) => [row.id, row])
-                                    )
-                                  : {};
-                                setSelectedRows(newSelection);
-                                onSelectionChange?.(
-                                  Object.values(newSelection)
-                                );
-                              }}
-                            />
-                          )}
                         <div className='relative'>
                           <span
                             className='vox-icon vx-icon-168 size-sm cursor-pointer'
@@ -731,9 +765,8 @@ export const Table = <T,>({
                           )}
                         </div>
                       </div>
-                    </th>
-                  )}
-
+                    )}
+                  </th>
                   <SortableContext
                     items={columnOrder}
                     strategy={horizontalListSortingStrategy}
@@ -757,17 +790,11 @@ export const Table = <T,>({
               ))}
             </thead>
 
-            <tbody>
-              {renderRows(table.getRowModel().rows)}
-              <tr>
-                <td
-                  colSpan={table.getAllColumns().length + (!unsettings ? 1 : 0)}
-                >
-                  {renderPagination()}
-                </td>
-              </tr>
-            </tbody>
+            <tbody>{renderRows(table.getRowModel().rows)}</tbody>
           </table>
+          <div className='bottom-2 left-0 right-0 bg-b-content dark:bg-b-dark absolute'>
+            {renderPagination()}
+          </div>
         </div>
       </DndContext>
     </>

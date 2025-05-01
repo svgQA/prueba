@@ -3,12 +3,16 @@ import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IFormat, IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
+import i18next from 'i18next';
+
+// Función para obtener traducciones
+const t = (key: string) => i18next.t(key);
 
 export const columns: ColumnDef<IResponseResponse>[] = [
   {
     accessorKey: 'structure',
     id: 'title',
-    header: 'Título',
+    header: t('forms.columns.id'),
     cell: (info) => {
       const value = info.getValue() as IFormat;
       return (
@@ -27,13 +31,13 @@ export const columns: ColumnDef<IResponseResponse>[] = [
   {
     accessorKey: 'createdAt',
     id: 'createdAt',
-    header: 'Fecha de creación',
+    header: t('forms.columns.createdAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
-    header: 'Última actualización',
+    header: t('forms.columns.updatedAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
@@ -48,7 +52,7 @@ export const columns: ColumnDef<IResponseResponse>[] = [
               id={id}
               type='response'
               action={ROW_ACTIONS.RESPONSE}
-              label='Continue'
+              label={t('forms.buttons.continue') || 'Continue'}
             />
           ) : (
             <ButtonAction id={id} type='response' action={ROW_ACTIONS.REPORT} />

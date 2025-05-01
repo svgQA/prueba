@@ -15,7 +15,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
   width,
   transparent,
   shadowed,
-  position = 'absolute',
+  position = 'fixed',
   theme = false,
 }: IModalProps) => {
   const [expand, setExpand] = useState(false);
