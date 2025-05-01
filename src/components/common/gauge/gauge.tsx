@@ -37,7 +37,7 @@ export const Gauge: FunctionComponent<IGaugeProps> = ({
         <text
           x='50'
           y='50'
-          className='font-medium'
+          className='fill-gray-700 dark:fill-gray-200'
           dominantBaseline='middle'
           textAnchor='middle'
           style={{ fontSize: '26px' }}

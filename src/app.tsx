@@ -33,7 +33,7 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
   const {
     getTenant,
     getToken,
-    getCompany,
+    getCompanyId,
     setToken,
     setCognito,
     setTenant,
@@ -42,7 +42,7 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
 
   useEffect(() => {
     BaseService.setLoading(openLoading, closeLoading);
-    BaseService.setUser(getTenant, getToken, getCompany);
+    BaseService.setUser(getTenant, getToken, getCompanyId);
     validateUser();
   }, []);
 

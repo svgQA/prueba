@@ -74,7 +74,7 @@ export const DropdownActionsMenu = ({
               left: position.left,
               zIndex: 9999,
             }}
-            className='w-56 bg-white rounded-lg shadow-lg py-2'
+            className='w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 border border-gray-200 dark:border-gray-700'
           >
             <div className='flex flex-col gap-1 px-2'>
               {actions.map((action, idx) => (
@@ -87,28 +87,30 @@ export const DropdownActionsMenu = ({
                     action.onClick();
                     setIsDropdownOpen(false);
                   }}
-                  textColor={action.color || 'text-gray'}
+                  textColor={action.color || 'text-gray-700 dark:text-gray-200'}
                   icon={action.icon.replace('vox-icon vx-icon-', '')}
                   padding='px-2 py-2'
                   text='text-sm'
-                  border={false}
+                  borderless
                   bold={false}
                   textAlign='left'
+                  className='w-full justify-start hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
                 />
               ))}
             </div>
-            <div className='border-t border-gray-200 my-2'></div>
+            <div className='border-t border-gray-200 dark:border-gray-700 my-2'></div>
             <div className='px-2'>
               <Button
                 id='dropdown-cancel'
                 name='dropdown-cancel'
                 label='Cancelar'
                 onClick={() => setIsDropdownOpen(false)}
-                textColor='text-gray-500'
+                textColor='text-gray-500 dark:text-gray-400'
                 padding='px-2 py-2'
                 text='text-sm'
-                border={false}
+                borderless
                 bold={true}
+                className='w-full justify-start hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
               />
             </div>
           </div>,

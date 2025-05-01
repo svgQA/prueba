@@ -39,32 +39,33 @@ export const Group = ({
       </div>
 
       {isOpen && (
-        <div className='absolute right-0 w-48 bg-white dark:bg-b-dark-light rounded-lg shadow-lg border-2 border-gray-100 py-1 z-50'>
-          <div className='flex flex-col items-center space-y-4 justify-end px-1 pb-4'>
+        <div className='absolute right-0 w-48 py-3 z-50'>
+          <div className='bg-white dark:bg-b-dark-light py-2 rounded-lg border-2 border-gray-100 flex flex-col items-center space-y-2 justify-end px-1 pb-4'>
             <Button
               id='hour-button'
               name='hour-button'
               label='2 Dias'
-              big
-              className={`${status === ViewMode.Hour ? 'bg-primary-opacity-2 dark:bg-primary' : ''} w-full`}
+              full
+              selected={status === ViewMode.Hour}
               onClick={() => onViewModeChange(ViewMode.Hour)}
             />
             <Button
               id='quarter-day-button'
               name='quarter-day-button'
               label='Semana'
-              big
-              className={`${status === ViewMode.QuarterDay ? 'bg-primary-opacity-2 dark:bg-primary' : ''} w-full`}
+              full
+              selected={status === ViewMode.QuarterDay}
               onClick={() => onViewModeChange(ViewMode.QuarterDay)}
             />
             <Button
               id='month-button'
               name='month-button'
               label='Mes'
-              big
-              className={`${status === ViewMode.HalfDay ? 'bg-primary-opacity-2 dark:bg-primary' : ''} w-full`}
+              full
+              selected={status === ViewMode.HalfDay}
               onClick={() => onViewModeChange(ViewMode.HalfDay)}
             />
+
             <Switch
               id={`cb-shift-gantt-vals`}
               name='shift-gantt-vals'

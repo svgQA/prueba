@@ -567,7 +567,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       form.reset();
                       resetMarket();
                     }}
-                    border={true}
                     className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
                   />
 

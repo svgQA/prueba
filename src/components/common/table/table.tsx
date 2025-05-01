@@ -62,7 +62,7 @@ export const Table = <T,>({
   onClickAction,
   unsearch,
   button,
-  // showExpandableIcon = true,
+  showExpandableIcon = false,
   selectable,
   onSelectionChange,
   onNotifications,
@@ -186,7 +186,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-b-content border-2 border-gray-100 dark:border-b-dark-light'>
+    <div className='min-w-80 invisible absolute left-0 top-12 rounded-md p-4 bg-gray-200 dark:bg-gray-800 border-2 border-gray-100 dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column, index) => {
         const columnHeader =
           typeof column.columnDef.header !== 'string'
@@ -380,7 +380,7 @@ export const Table = <T,>({
               return (
                 <Fragment key={row.id}>
                   <tr
-                    className={`${
+                    className={`text-t-light dark:text-t-dark ${
                       data.length > pageSize && isLastRow
                         ? 'no-bottom-border'
                         : ''
@@ -391,14 +391,14 @@ export const Table = <T,>({
                         className='left-0 min-w-[30px]'
                         // style={{ position: 'sticky', zIndex: 1 }}
                       >
-                        {/*
                         {expandable && showExpandableIcon && (
-                          <span
-                            onClick={() => row.toggleExpanded()}
-                            className='vox-icon vx-icon-001 cursor-pointer size-sm'
-                          />
+                          <div className='flex items-center justify-center h-full'>
+                            <span
+                              onClick={() => row.toggleExpanded()}
+                              className='vox-icon vx-icon-001 cursor-pointer size-sm'
+                            />
+                          </div>
                         )}
-                        */}
                         {selectable &&
                           onNotifications &&
                           (row.original as IShiftResponse)?.employee
@@ -445,7 +445,7 @@ export const Table = <T,>({
                           className={
                             row.getIsExpanded() &&
                             currentColumnName.value === cell.column.id
-                              ? 'bg-primary-opacity'
+                              ? 'bg-primary-opacity dark:bg-b-dark-light'
                               : ''
                           }
                         />
@@ -681,7 +681,7 @@ export const Table = <T,>({
   return (
     <>
       {/* sticky top-[3.4rem] z-[8] */}
-      <div className='w-full py-1 flex items-center justify-end bg-b-content dark:bg-gray-800'>
+      <div className='w-full py-1 pb-3 flex items-center justify-end'>
         {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (
           <Search
@@ -702,7 +702,7 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg !overflow-x-auto vox-scroll-design z-50'
+          className='pb-16 min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg vox-scroll-design relative overflow-x-auto'
         >
           <table className='elements'>
             <thead>
@@ -781,7 +781,7 @@ export const Table = <T,>({
                       <th
                         key={header.id}
                         colSpan={header.colSpan}
-                        className='px-2 py-1 text-left bg-white sticky top-0 z-10'
+                        className='px-2 py-1 text-left sticky top-0 z-10'
                       >
                         {header.isPlaceholder
                           ? null

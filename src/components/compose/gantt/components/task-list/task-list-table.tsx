@@ -1,6 +1,7 @@
 // import { useMemo } from 'preact/hooks';
 import { ComponentType } from 'preact';
 import { User, TaskListTableProps } from '../../types/public-types';
+import { Avatar } from '@/components/common/Avatar';
 
 export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
   rowHeight,
@@ -35,12 +36,8 @@ export const TaskListTableDefault: ComponentType<TaskListTableProps> = ({
               onDblClick={() => onUserDoubleClick?.(t.id)}
             >
               <div className='flex justify-start items-center px-4 w-full'>
-                <img
-                  className='w-10 h-10 rounded-full object-cover mr-3 flex-shrink-0'
-                  src={t.image}
-                  alt={`Profile photo of ${t.name}`}
-                />
-                <div className='overflow-hidden'>
+                <Avatar src={t.image} name={t.name} size='sm' square />
+                <div className='overflow-hidden ml-2'>
                   <div className='text-lg font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[160px]'>
                     {`${t.name} ${t.surname || ''}`}
                   </div>

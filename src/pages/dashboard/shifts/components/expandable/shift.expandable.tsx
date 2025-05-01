@@ -1,3 +1,5 @@
+import { Chip } from '@/components/common/chip/chip';
+
 const ShiftInfo = ({ data = {} }: any) => {
   const activities = data.activities || [
     {
@@ -28,13 +30,10 @@ const ShiftInfo = ({ data = {} }: any) => {
   ];
 
   return (
-    <div className='bg-b-white rounded-lg shadow-sm p-4 max-w-3xl mx-auto'>
+    <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm p-4 w-full text-t-light dark:text-t-dark'>
       <div className='flex items-center justify-between mb-4'>
-        <h2 className='text-t-light font-medium'>Actividades del Turno</h2>
-        <span>
-          Progreso:{' '}
-          <strong className='text-secondary'>{data.progress ?? 75}%</strong>
-        </span>
+        <h2 className='font-medium'>Actividades del Turno</h2>
+        <Chip label={`Progreso: ${data.progress ?? 75}%`} color='primary' />
       </div>
 
       <div className='space-y-6'>
@@ -45,26 +44,26 @@ const ShiftInfo = ({ data = {} }: any) => {
               {/* Icono de estado */}
               <div className='mr-2 mt-1'>
                 {activity.status === '✔️' ? (
-                  <span className='vox-icon size-sm vx-icon-324 !text-secondary'></span>
+                  <span className='vox-icon vx-icon-324 !text-secondary'></span>
                 ) : (
-                  <span className='vox-icon size-sm vx-icon-323 !text-error'></span>
+                  <span className='vox-icon vx-icon-323 !text-error'></span>
                 )}
               </div>
 
               {/* Detalles de la actividad */}
               <div className='flex-1'>
-                <p className='text-t-light text-sm mb-2'>{activity.title}</p>
+                <p className='mb-2'>{activity.title}</p>
 
                 {/* Programación y Solución en línea horizontal */}
                 <div className='flex items-center space-x-6'>
-                  <div className='flex items-center text-xs text-t-light-dark'>
-                    <span className='vox-icon size-sm vx-icon-325 mr-1'></span>
+                  <div className='flex items-center'>
+                    <span className='vox-icon vx-icon-325 mr-1'></span>
                     <span>Programación: {activity.schedule}</span>
                   </div>
 
                   {activity.solution !== '...' && (
-                    <div className='flex items-center text-xs text-t-light-dark'>
-                      <span className='vox-icon size-sm vx-icon-325 mr-1'></span>
+                    <div className='flex items-center'>
+                      <span className='vox-icon vx-icon-325 mr-1'></span>
                       <span>Solución: {activity.solution}</span>
                     </div>
                   )}
@@ -75,9 +74,9 @@ const ShiftInfo = ({ data = {} }: any) => {
             {/* Lado derecho - Enlace al formulario */}
             <div className='ml-4 flex items-center'>
               <a href='#' className='flex items-center text-primary text-sm'>
-                <span className='vox-icon size-sm vx-icon-306 !text-primary mr-1'></span>
+                <span className='vox-icon vx-icon-306 !text-primary mr-1'></span>
                 {activity.form}
-                <span className='ml-1 vox-icon size-sm vx-icon-004 !text-primary'></span>
+                <span className='ml-1 vox-icon vx-icon-004 !text-primary'></span>
               </a>
             </div>
           </div>

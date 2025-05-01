@@ -46,6 +46,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     icon: '308',
     id: 'users-dashoboar-externo',
   },
+  /*
   {
     label: 'devices',
     to: PAGES_LIST_ROUTER.dashboard.devices,
@@ -53,6 +54,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     icon: '307',
     id: 'device',
   },
+  */
   {
     label: 'notifications',
     to: PAGES_LIST_ROUTER.dashboard.history,

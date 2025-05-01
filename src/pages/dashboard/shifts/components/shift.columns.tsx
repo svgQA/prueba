@@ -3,6 +3,7 @@ import { Gauge } from '@/components/common/gauge/gauge';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IShiftResponse } from '@/types/shift/activity';
 import dayjs from 'dayjs';
+import { Avatar } from '@/components/common/Avatar';
 import {
   IDropdownAction,
   DropdownActionsMenu,
@@ -24,12 +25,20 @@ export const getColumns = (
     cell: (info) => {
       const { employee } = info.row.original;
       return (
-        <span
-          className='p-1 size-sm cursor-pointer text-left'
-          onClick={() => info.row.toggleExpanded()}
-        >
-          {employee?.name} {employee?.surname}
-        </span>
+        <div className='flex items-center'>
+          <Avatar
+            name={employee?.name}
+            src={employee?.image}
+            size='sm'
+            square
+          />
+          <span
+            className='p-1 size-sm cursor-pointer text-left'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            {employee?.name} {employee?.surname}
+          </span>
+        </div>
       );
     },
   },
@@ -83,7 +92,6 @@ export const getColumns = (
       try {
         return dayjs(dateStr).format('DD/MM/YYYY');
       } catch (error) {
-        console.error('Error al formatear la fecha:', error);
         return '-';
       }
     },
@@ -129,7 +137,7 @@ export const getColumns = (
       return (
         <div
           onClick={() => info.row.toggleExpanded()}
-          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}
+          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm w-full justify-center`}
         >
           <span>{scheduledTime}</span>
           <span className='mx-1'>→</span>
@@ -179,7 +187,7 @@ export const getColumns = (
       return (
         <div
           onClick={() => info.row.toggleExpanded()}
-          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}
+          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm w-full justify-center`}
         >
           <span>{scheduledTime}</span>
           <span className='mx-1'>→</span>
@@ -218,7 +226,7 @@ export const getColumns = (
       }
 
       return (
-        <div className='inline-flex items-center px-2 py-0.5 text-gray-700 text-sm'>
+        <div className='inline-flex items-center px-2 py-0.5 text-sm'>
           <span>{scheduledDuration}</span>
           <span className='mx-1'>→</span>
           <span>{actualDuration}</span>
@@ -233,7 +241,7 @@ export const getColumns = (
     header: 'Reportes',
     cell: (info) => (
       <div
-        className='inline-flex items-center px-2 py-0.5 text-gray-700 text-sm rounded-md border border-b-dark'
+        className='inline-flex items-center px-2 py-0.5 text-sm rounded-md border'
         onClick={() => info.row.toggleExpanded()}
       >
         <span>2</span>
@@ -248,13 +256,11 @@ export const getColumns = (
     size: 50,
     header: 'Actividades',
     cell: (info: any) => {
-      const progress = info.getValue() as number;
+      const progress = (info.getValue() as number) ?? 0;
 
       let progressColor = '#E05858';
 
-      if (progress < 30) {
-        progressColor = '#E05858';
-      } else if (progress >= 30 && progress < 70) {
+      if (progress >= 30 && progress < 70) {
         progressColor = '#FFC772';
       } else if (progress >= 70) {
         progressColor = '#00BDD6';
@@ -276,13 +282,11 @@ export const getColumns = (
     size: 50,
     header: 'Rondas',
     cell: (info: any) => {
-      const progress = info.getValue() as number;
+      const progress = (info.getValue() as number) ?? 0;
 
       let progressColor = '#E05858';
 
-      if (progress < 30) {
-        progressColor = '#E05858';
-      } else if (progress >= 30 && progress < 70) {
+      if (progress >= 30 && progress < 70) {
         progressColor = '#FFC772';
       } else if (progress >= 70) {
         progressColor = '#00BDD6';

@@ -429,7 +429,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   municipalityLocation.value = undefined;
                 }}
                 disabled={submitting || pristine}
-                border={true}
                 className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
               />
 
