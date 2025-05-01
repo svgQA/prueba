@@ -1,5 +1,9 @@
 export const shift_es = {
   shift: {
+    upsert: {
+      success: 'Turno creado exitosamente!',
+      error: 'Error al crear el turno',
+    },
     expandable: {
       date: {
         location: {
@@ -21,6 +25,10 @@ export const shift_es = {
 
 export const shift_en = {
   shift: {
+    upsert: {
+      success: 'Shift created successfully!',
+      error: 'Error creating shift',
+    },
     expandable: {
       date: {
         location: {
