@@ -47,7 +47,7 @@ import { AuthAmplifyProps } from '@/utils/types/auth.interface';
 import { HistoryNotificationsPage } from './history/history.page';
 // import { useWebSocket } from '@/utils/socket';
 
-// import { IconsModal } from '../globals/icons/icons';
+ import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
 
 // const GENERAL_GROUP_MENU = 0,
@@ -195,8 +195,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ))}
         </OnBordingModal>
-        <IconsModal />
+        
         */}
+        <IconsModal />
         <ToastContainer />
       </section>
     );

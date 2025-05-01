@@ -120,68 +120,6 @@ export const Table = <T,>({
     };
   }, []);
 
-  /*
-  const extendedColumns = useMemo(() => {
-    if (!selectable) return columnsData;
-
-    return [
-      {
-        id: 'select',
-        header: () => {
-          const allSelected = data.length > 0 && Object.keys(selectedRows).length === data.length;
-          const noneSelected = Object.keys(selectedRows).length === 0;
-
-          return (
-            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                className="w-4 h-4"
-                checked={allSelected}
-                indeterminate={!noneSelected && !allSelected} // esto lo maneja nativo si usas React, aquí no aplica directamente
-                onChange={(e) => {
-                  const checked = e.currentTarget.checked;
-                  const newSelection = checked
-                    ? Object.fromEntries(data.map((row: any) => [row.id, row]))
-                    : {};
-                  setSelectedRows(newSelection);
-                  onSelectionChange?.(Object.values(newSelection));
-                }}
-              />
-              <span className="text-sm font-medium text-gray-700">
-                {allSelected ? 'Limpiar selección' : 'Notificar'}
-              </span>
-            </label>
-          );
-        },
-
-        cell: ({ row }: { row: Row<T> }) => {
-          // const id = (row.original as any).id;
-          return (
-            <input
-              type="checkbox"
-              className="w-4 h-4"
-              checked={!!selectedRows[(row.original as any).id]}
-              onChange={(e) => {
-                const id = (row.original as any).id;
-                const updated = { ...selectedRows };
-                if (e.currentTarget.checked) {
-                  updated[id] = row.original;
-                } else {
-                  delete updated[id];
-                }
-                setSelectedRows(updated);
-                onSelectionChange?.(Object.values(updated));
-              }}
-            />
-          );
-        },
-        enableSorting: false,
-        enableHiding: false,
-      },
-      ...columnsData, // ← columnas originales van después del checkbox
-    ];
-  }, [selectable, data, selectedRows]);
-  */
 
   const table = useReactTable({
     data,
@@ -723,7 +661,7 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg !overflow-x-auto vox-scroll-design'
+          className='min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg !overflow-x-auto vox-scroll-design z-50'
         >
           <table className='elements'>
             <thead>
