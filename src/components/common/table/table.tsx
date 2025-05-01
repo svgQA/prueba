@@ -696,7 +696,7 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='pb-16 min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg relative !overflow-x-auto vox-scroll-design'
+          className='min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg !overflow-x-auto vox-scroll-design z-50'
         >
           <table className='elements'>
             <thead>
