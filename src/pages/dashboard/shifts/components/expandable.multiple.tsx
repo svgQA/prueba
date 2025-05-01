@@ -35,8 +35,8 @@ const getInfoContent = (type: string, data: IShiftResponse) => {
       return <ContractInfo contract={service.contract} />;
     case InfoType.DATE:
       return <DateInfo data={data} />;
-    case InfoType.REPORT:
-      return <ReportInfo data={data} />;
+    // case InfoType.REPORT:
+    //   return <ReportInfo data={data} />;
     case InfoType.SHIFT:
       return <ShiftInfo data={data} />;
     case InfoType.ROUND:

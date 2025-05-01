@@ -2,6 +2,8 @@ import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { useSignal } from '@preact/signals';
 
 const DateInfo = ({ data = {} }: any) => {
+  console.log('data ==>', data);
+
   return (
     <div class='flex gap-6 justify-center p-4'>
       {/* Inicio del Turno */}
@@ -14,6 +16,8 @@ const DateInfo = ({ data = {} }: any) => {
         status={data.startStatus || 'Temprano'}
         statusColor='bg-blue-200 text-blue-700'
         distance={data.startDistance || '8 metros'}
+        latitude={data.checkIn.location.lat || 4.649251}
+        longitude={data.checkIn.location.lng || -74.106992}
       />
 
       {/* Finalización del Turno */}
@@ -26,6 +30,8 @@ const DateInfo = ({ data = {} }: any) => {
         status={data.endStatus || 'A Tiempo'}
         statusColor='bg-green-200 text-green-700'
         distance={data.endDistance || '6 metros'}
+        latitude={data.checkOut.location.lat || 4.649251}
+        longitude={data.checkOut.location.lng || -74.106992}
       />
     </div>
   );
@@ -40,6 +46,8 @@ const ShiftCard = ({
   status,
   statusColor,
   distance,
+  latitude,
+  longitude,
 }: {
   title: string;
   name: string;
@@ -49,18 +57,20 @@ const ShiftCard = ({
   status: string;
   statusColor: string;
   distance: string;
+  latitude: number;
+  longitude: number;
 }) => {
-  const points = useSignal<any>([
-    [
-      {
-        id: 1,
-        position: {
-          lat: 4.649251,
-          lng: -74.106992,
-        },
-      },
-    ],
-  ]);
+  // const points = useSignal<any>([
+  //   [
+  //     {
+  //       id: 1,
+  //       position: {
+  //         lat: latitude || 4.649251,
+  //         lng: longitude || -74.106992,
+  //       },
+  //     },
+  //   ],
+  // ]);
 
   return (
     <div className='bg-b-white rounded-lg shadow-sm p-4 w-full'>
@@ -139,14 +149,23 @@ const ShiftCard = ({
               clickPoint={() => {}}
             /> */}
             <MapLibrePointsMap
-              sendPoints={() => {}}
+              sendPoints={() => { }}
               name='Map'
               center={{
-                lat: 4.649251,
-                lng: -74.106992,
+                lat: latitude,
+                lng: longitude,
               }}
               pointsAmount={1}
-              pointsRef={points.value}
+              // pointsRef={points.value}
+              pointsRef={[
+                {
+                  id: 1,
+                  position: {
+                    lat: latitude,
+                    lng: longitude,
+                  },
+                },
+              ]}
               condition={false}
               errorCondition=''
               radialPoint={null}
@@ -154,7 +173,7 @@ const ShiftCard = ({
               radius={50}
               draggable={true}
               width='100%'
-              clickPoint={() => {}}
+              clickPoint={() => { }}
             />
             <div className='absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-b-white px-2 py-1 rounded-full text-xs shadow-sm'>
               {distance}

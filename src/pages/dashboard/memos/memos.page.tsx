@@ -94,8 +94,15 @@ export const MemosPage: FunctionComponent = () => {
       const [memosResponse] = await Promise.all([
         MemoService.get_all({ page: 1, items: 1000 }),
       ]);
-      if (memosResponse && memosResponse.getStatus())
-        memos.value = memosResponse.getMany();
+      if (memosResponse && memosResponse.getStatus()) {
+        const memosData = memosResponse.getMany();
+        memos.value = memosData.map(memo => ({
+          ...memo,
+          priority: memo.priority === 5 ? 'Alta' : 
+                   memo.priority === 4 ? 'Media' : 
+                   'Baja'
+        }));
+      }
     } catch (error) {
       toast.error('memos.error_fetching_initial_data');
     }

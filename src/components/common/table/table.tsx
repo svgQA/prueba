@@ -442,6 +442,7 @@ export const Table = <T,>({
                             currentColumnName.value = value;
                           }}
                           cell={cell}
+                          className={row.getIsExpanded() && currentColumnName.value === cell.column.id ? 'bg-primary-opacity' : ''}
                         />
                       </SortableContext>
                     ))}

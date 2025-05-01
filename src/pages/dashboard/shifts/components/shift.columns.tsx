@@ -228,7 +228,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     cell: (info) => (
       <div
         className='inline-flex items-center px-2 py-0.5 text-gray-700 text-sm rounded-md border border-b-dark'
-        onClick={() => info.row.toggleExpanded()}
+        // onClick={() => info.row.toggleExpanded()}
       >
         <span>2</span>
         <span className='mx-1'>→</span>
@@ -238,48 +238,45 @@ export const columns: ColumnDef<IShiftResponse>[] = [
   },
   {
     id: 'shift',
-    accessorKey: 'activitiesProgress',
+    accessorKey: 'service.round.frequency',
     size: 50,
-    header: t('shifts.columns.shift'),
+    // header: t('shifts.columns.shift'),
+    header: 'Activity',
     cell: (info: any) => {
-      const progress = info.getValue() as number;
-
-      let progressColor = '#E05858';
+      const progress = parseInt(info.getValue() as string);
+      let progressColor = '#00BDD6'; // Primary
 
       if (progress < 30) {
-        progressColor = '#E05858';
+        progressColor = '#E05858'; // Error
       } else if (progress >= 30 && progress < 70) {
-        progressColor = '#FFC772';
-      } else if (progress >= 70) {
-        progressColor = '#00BDD6';
+        progressColor = '#FFC772'; // Caution
       }
 
       return (
-        <div
-          onClick={() => info.row.toggleExpanded()}
-          className=' p-1 size-sm cursor-pointer flex flex-row justify-center'
-        >
-          <Gauge progress={progress} color={progressColor} />
+        <div className='flex flex-row justify-center'>
+          <span
+            className=' p-1 size-sm cursor-pointer'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            <Gauge progress={progress} color={progressColor} />
+          </span>
         </div>
       );
     },
   },
   {
     id: 'round',
-    accessorKey: 'activitiesProgress',
+    accessorKey: 'service.round.percentage',
     size: 50,
     header: t('shifts.columns.round'),
     cell: (info: any) => {
-      const progress = info.getValue() as number;
-
-      let progressColor = '#E05858';
+      const progress = parseInt(info.getValue() as string);
+      let progressColor = '#00BDD6'; // Primary
 
       if (progress < 30) {
-        progressColor = '#E05858';
+        progressColor = '#E05858'; // Error
       } else if (progress >= 30 && progress < 70) {
-        progressColor = '#FFC772';
-      } else if (progress >= 70) {
-        progressColor = '#00BDD6';
+        progressColor = '#FFC772'; // Caution
       }
 
       return (

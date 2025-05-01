@@ -9,6 +9,7 @@ import { Map } from '@/components/common/map/map';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { toast } from 'react-toastify';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 
 interface IShiftFormProps {
   closed?: boolean;
@@ -298,13 +299,12 @@ export const ShiftForm = ({
               <div>
                 <p className='text-sm text-t-light-dark mb-1'>Prioridad</p>
                 <span
-                  className={`px-4 py-1 rounded-full text-sm font-medium ${
-                    taskData.priority === 'HIGH'
+                  className={`px-4 py-1 rounded-full text-sm font-medium ${taskData.priority === 'HIGH'
                       ? 'bg-red-100 text-red-700'
                       : taskData.priority === 'MEDIUM'
                         ? 'bg-yellow-100 text-yellow-700'
                         : 'bg-green-100 text-green-700'
-                  }`}
+                    }`}
                 >
                   {taskData.priority}
                 </span>
@@ -323,7 +323,7 @@ export const ShiftForm = ({
                 </span>
               </div>
               <div className='h-48 rounded-lg overflow-hidden'>
-                <Map
+                {/* <Map
                   sendPoints={() => {}}
                   name='CheckInMap'
                   center={{
@@ -340,6 +340,32 @@ export const ShiftForm = ({
                   draggable={false}
                   width='100%'
                   clickPoint={() => {}}
+                /> */}
+                <MapLibrePointsMap
+                  sendPoints={() => { }}
+                  name='CheckInMap'
+                  center={{
+                    lat: shift.value?.checkIn?.location?.lat || 4.649251,
+                    lng: shift.value?.checkIn?.location?.lng || -74.106992,
+                  }}
+                  pointsAmount={1}
+                  pointsRef={[
+                    {
+                      id: 1,
+                      position: {
+                        lat: shift.value?.checkIn?.location?.lat || 4.649251,
+                        lng: shift.value?.checkIn?.location?.lng || -74.106992,
+                      },
+                    },
+                  ]}
+                  condition={false}
+                  errorCondition=''
+                  radialPoint={null}
+                  errorRadialPoint=''
+                  radius={50}
+                  draggable={false}
+                  width='100%'
+                  clickPoint={() => { }}
                 />
               </div>
             </div>
@@ -352,7 +378,7 @@ export const ShiftForm = ({
                 </span>
               </div>
               <div className='h-48 rounded-lg overflow-hidden'>
-                <Map
+                {/* <Map
                   sendPoints={() => {}}
                   name='CheckOutMap'
                   center={{
@@ -369,6 +395,32 @@ export const ShiftForm = ({
                   draggable={false}
                   width='100%'
                   clickPoint={() => {}}
+                /> */}
+                <MapLibrePointsMap
+                  sendPoints={() => { }}
+                  name='CheckOutMap'
+                  center={{
+                    lat: shift.value?.checkOut?.location?.lat || 4.649251,
+                    lng: shift.value?.checkOut?.location?.lng || -74.106992,
+                  }}
+                  pointsAmount={1}
+                  pointsRef={[
+                    {
+                      id: 1,
+                      position: {
+                        lat: shift.value?.checkOut?.location?.lat || 4.649251,
+                        lng: shift.value?.checkOut?.location?.lng || -74.106992,
+                      },
+                    },
+                  ]}
+                  condition={false}
+                  errorCondition=''
+                  radialPoint={null}
+                  errorRadialPoint=''
+                  radius={50}
+                  draggable={false}
+                  width='100%'
+                  clickPoint={() => { }}
                 />
               </div>
             </div>
