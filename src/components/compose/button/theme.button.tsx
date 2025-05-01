@@ -1,6 +1,7 @@
 import { Button } from '@/components/common/button/button';
-import { useCallback } from 'preact/hooks';
-import { themeSignal } from './signal.theme';
+import { useCallback, useEffect } from 'preact/hooks';
+import { getTheme, setTheme, toggleTheme } from './signal.theme';
+import { localStorage } from '@/utils/storage';
 interface IThemeButtonProps {
   unpadded?: boolean;
   borderless?: boolean;
@@ -12,18 +13,39 @@ export const ThemeButton = ({
   borderless = false,
   rounded = false,
 }: IThemeButtonProps) => {
-  const toggleTheme = useCallback((event: MouseEvent) => {
+  useEffect(() => {
+    initTheme();
+  }, []);
+
+  const initTheme = () => {
+    const theme = localStorage.get('theme');
+    if (theme && typeof theme === 'boolean') {
+      setTheme(theme);
+      setBodyTheme(theme);
+    }
+  };
+
+  const setBodyTheme = (mode: boolean) => {
+    document.body.classList.add(mode ? 'dark' : 'light');
+  };
+
+  const toogleBodyTheme = () => {
+    document.body.classList.toggle('dark');
+  };
+
+  const onClickTheme = useCallback((event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    themeSignal.value = !themeSignal.value;
-    document.body.classList.toggle('dark');
+    toggleTheme();
+    toogleBodyTheme();
+    localStorage.set('theme', getTheme.value);
   }, []);
 
   return (
     <Button
       id='setting-min-menu'
       name='setting-min-menu'
-      onClick={toggleTheme}
+      onClick={onClickTheme}
       type='button'
       rounded={rounded}
       icon='301'
