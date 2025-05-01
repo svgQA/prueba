@@ -20,6 +20,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   iconSize = 'sm',
   full = false,
   unpadded = false,
+  selected = false,
 }: IButtonProps) => {
   return (
     <button
@@ -38,6 +39,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
         transition-colors duration-150
         ${borderless ? 'border-none' : 'border border-gray-200 dark:border-gray-700'}
         ${full ? 'w-full' : ''}
+        ${selected ? '!bg-primary-opacity dark:!bg-primary' : ''}
         flex items-center justify-center text-center
       `}
       // {`

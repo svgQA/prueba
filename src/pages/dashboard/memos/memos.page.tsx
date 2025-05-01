@@ -14,7 +14,7 @@ import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
 import { ChatView } from './page/chat.page';
-import SupervisorInfo from './components/expandable/supervisor.expandable ';
+import SupervisorInfo from './components/expandable/supervisor.expandable';
 
 enum VIEW_NAME {
   TABLE,
@@ -36,7 +36,7 @@ export const MemosPage: FunctionComponent = () => {
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
 
-  const memoSummary = useSignal<MemosSummary>(defaultSummary);
+  const summary = useSignal<MemosSummary>(defaultSummary);
 
   useEffect(() => {
     document.title = 'VX - Chat';
@@ -54,9 +54,7 @@ export const MemosPage: FunctionComponent = () => {
     ]);
 
     if (responseMemos.getStatus()) {
-      const memosData = responseMemos.getMany();
-      console.log('MEMOS: ', memosData);
-      memos.value = memosData;
+      memos.value = responseMemos.getMany();
     }
 
     if (responseUsers.getStatus()) {
@@ -64,7 +62,7 @@ export const MemosPage: FunctionComponent = () => {
     }
 
     if (responseSummary.getStatus()) {
-      memoSummary.value = responseSummary.getOne();
+      summary.value = responseSummary.getOne();
     }
   };
 
@@ -80,8 +78,8 @@ export const MemosPage: FunctionComponent = () => {
   };
 
   const calculatePercentage = (value: number): string => {
-    if (memoSummary.value.total === 0) return '0%';
-    return `${Math.round((value / memoSummary.value.total) * 100)}%`;
+    if (summary.value.total === 0) return '0%';
+    return `${Math.round((value / summary.value.total) * 100)}%`;
   };
 
   const handleViewChange = useCallback((view: VIEW_NAME) => {
@@ -133,7 +131,7 @@ export const MemosPage: FunctionComponent = () => {
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
             title={t('memos.cards.totalToday')}
-            count={memoSummary.value.total}
+            count={summary.value.total}
             subtitle=''
             color='t-dark'
             icon='054' // 328
@@ -141,7 +139,7 @@ export const MemosPage: FunctionComponent = () => {
 
           <CardData
             title={t('memos.cards.unresolved')}
-            count={calculatePercentage(memoSummary.value.in_progress)}
+            count={calculatePercentage(summary.value.in_progress)}
             subtitle=''
             color='t-dark'
             icon='052' // 311
@@ -149,7 +147,7 @@ export const MemosPage: FunctionComponent = () => {
 
           <CardData
             title={t('memos.cards.resolved')}
-            count={calculatePercentage(memoSummary.value.completed)}
+            count={calculatePercentage(summary.value.completed)}
             subtitle=''
             color='t-dark'
             icon='015' // 312

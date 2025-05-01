@@ -25,7 +25,6 @@ export const FormsPage: FunctionComponent = () => {
     const response = await FormService.get_response_all();
     if (!response.getStatus()) return;
     const data = response.getMany();
-    console.log('FORMS: ', data);
     responses.value = data;
   };
 

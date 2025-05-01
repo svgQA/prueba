@@ -1,5 +1,5 @@
 import { Memo } from '../utils/memos';
-import SupervisorInfo from './expandable/supervisor.expandable ';
+import SupervisorInfo from './expandable/supervisor.expandable';
 
 enum InfoType {
   SUPERVISOR = 'supervisor',

@@ -21,4 +21,5 @@ export interface IButtonProps extends IComponentProps {
   big?: boolean;
   iconSize?: 'sm' | 'xsm' | 'xs' | 'xxs';
   unpadded?: boolean;
+  selected?: boolean;
 }
