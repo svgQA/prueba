@@ -5,11 +5,12 @@ import { IShiftResponse } from '@/types/shift/activity';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import dayjs from 'dayjs';
-import { Map } from '@/components/common/map/map';
+// import { Map } from '@/components/common/map/map';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { toast } from 'react-toastify';
 import { Avatar } from '@/components/common/Avatar';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 
 interface IShiftFormProps {
   closed?: boolean;
@@ -30,6 +31,7 @@ export const ShiftForm = ({
   const showReplicateForm = useSignal<boolean>(false);
   const replicateDate = useSignal<string>('');
 
+  /*
   const checkInPoints = useSignal([
     {
       id: 1,
@@ -49,6 +51,7 @@ export const ShiftForm = ({
       },
     },
   ]);
+  */
 
   const getShiftHandler = async () => {
     if (!taskSelected) return;
@@ -325,7 +328,7 @@ export const ShiftForm = ({
                 </span>
               </div>
               <div className='h-48 rounded-lg overflow-hidden'>
-                <Map
+                {/* <Map
                   sendPoints={() => {}}
                   name='CheckInMap'
                   center={{
@@ -334,6 +337,32 @@ export const ShiftForm = ({
                   }}
                   pointsAmount={1}
                   pointsRef={checkInPoints.value}
+                  condition={false}
+                  errorCondition=''
+                  radialPoint={null}
+                  errorRadialPoint=''
+                  radius={50}
+                  draggable={false}
+                  width='100%'
+                  clickPoint={() => {}}
+                /> */}
+                <MapLibrePointsMap
+                  sendPoints={() => {}}
+                  name='CheckInMap'
+                  center={{
+                    lat: shift.value?.checkIn?.location?.lat || 4.649251,
+                    lng: shift.value?.checkIn?.location?.lng || -74.106992,
+                  }}
+                  pointsAmount={1}
+                  pointsRef={[
+                    {
+                      id: 1,
+                      position: {
+                        lat: shift.value?.checkIn?.location?.lat || 4.649251,
+                        lng: shift.value?.checkIn?.location?.lng || -74.106992,
+                      },
+                    },
+                  ]}
                   condition={false}
                   errorCondition=''
                   radialPoint={null}
@@ -354,7 +383,7 @@ export const ShiftForm = ({
                 </span>
               </div>
               <div className='h-48 rounded-lg overflow-hidden'>
-                <Map
+                {/* <Map
                   sendPoints={() => {}}
                   name='CheckOutMap'
                   center={{
@@ -363,6 +392,32 @@ export const ShiftForm = ({
                   }}
                   pointsAmount={1}
                   pointsRef={checkOutPoints.value}
+                  condition={false}
+                  errorCondition=''
+                  radialPoint={null}
+                  errorRadialPoint=''
+                  radius={50}
+                  draggable={false}
+                  width='100%'
+                  clickPoint={() => {}}
+                /> */}
+                <MapLibrePointsMap
+                  sendPoints={() => {}}
+                  name='CheckOutMap'
+                  center={{
+                    lat: shift.value?.checkOut?.location?.lat || 4.649251,
+                    lng: shift.value?.checkOut?.location?.lng || -74.106992,
+                  }}
+                  pointsAmount={1}
+                  pointsRef={[
+                    {
+                      id: 1,
+                      position: {
+                        lat: shift.value?.checkOut?.location?.lat || 4.649251,
+                        lng: shift.value?.checkOut?.location?.lng || -74.106992,
+                      },
+                    },
+                  ]}
                   condition={false}
                   errorCondition=''
                   radialPoint={null}

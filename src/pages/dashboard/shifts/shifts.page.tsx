@@ -14,7 +14,7 @@ import {
 } from '@/services';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
-import { columns } from './components/shift.columns';
+import { getColumns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
 import { useTranslation } from 'react-i18next';
 
@@ -39,6 +39,7 @@ import { UserService } from '@/services/user';
 import { MentionOption } from '@/components/common/mention-editor';
 import { toast } from 'react-toastify';
 import i18n from '@/i18n';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 enum VIEW_NAME {
   TABLE,
@@ -408,6 +409,15 @@ export const ShiftsPage: FunctionalComponent = () => {
     getGanttHandler(view);
   };
 
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
+  };
+
   return (
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
@@ -453,7 +463,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         {currentView.value === VIEW_NAME.TABLE && (
           <Table<IShiftResponse>
             data={shifts.value}
-            columns={columns}
+            columns={getColumns(onClickAction)}
             showExpandableIcon={false}
             pageSize={20}
             selectable

@@ -54,9 +54,14 @@ export const MemosPage: FunctionComponent = () => {
     ]);
 
     if (responseMemos.getStatus()) {
-      memos.value = responseMemos.getMany();
+      const memosData = responseMemos.getMany();
+      // TODO: Cambiar esto, porque desde back se puede tener
+      memos.value = memosData.map((memo) => ({
+        ...memo,
+        priority:
+          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+      }));
     }
-
     if (responseUsers.getStatus()) {
       users.value = responseUsers.getMany();
     }

@@ -45,6 +45,9 @@ import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
 import { Button } from '@/components/common/button/button';
 
+// import { IconsModal } from '../globals/icons/icons';
+// import { OnBordingModal } from '../globals/onbording/onboarding';
+
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/

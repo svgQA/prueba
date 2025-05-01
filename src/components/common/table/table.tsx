@@ -186,7 +186,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-b-content border-2 border-gray-100 dark:border-b-dark-light'>
+    <div className='min-w-80 invisible absolute left-0 top-12 rounded-md p-4 bg-gray-200 dark:bg-gray-800 border-2 border-gray-100 dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column, index) => {
         const columnHeader =
           typeof column.columnDef.header !== 'string'
@@ -442,6 +442,12 @@ export const Table = <T,>({
                             currentColumnName.value = value;
                           }}
                           cell={cell}
+                          className={
+                            row.getIsExpanded() &&
+                            currentColumnName.value === cell.column.id
+                              ? 'bg-primary-opacity dark:bg-b-dark-light'
+                              : ''
+                          }
                         />
                       </SortableContext>
                     ))}
@@ -696,7 +702,7 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='pb-16 min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg relative !overflow-x-auto vox-scroll-design'
+          className='pb-16 min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg vox-scroll-design relative overflow-x-auto'
         >
           <table className='elements'>
             <thead>
@@ -775,7 +781,7 @@ export const Table = <T,>({
                       <th
                         key={header.id}
                         colSpan={header.colSpan}
-                        className='px-2 py-1 text-left bg-white sticky top-0 z-10'
+                        className='px-2 py-1 text-left sticky top-0 z-10'
                       >
                         {header.isPlaceholder
                           ? null

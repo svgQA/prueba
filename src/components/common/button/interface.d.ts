@@ -22,4 +22,6 @@ export interface IButtonProps extends IComponentProps {
   iconSize?: 'sm' | 'xsm' | 'xs' | 'xxs';
   unpadded?: boolean;
   selected?: boolean;
+  textAlign?: 'left' | 'center' | 'right';
+  bold?: boolean;
 }

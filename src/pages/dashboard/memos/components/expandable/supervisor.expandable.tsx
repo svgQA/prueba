@@ -164,6 +164,10 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
                     },
                   },
                 ]}
+                center={{
+                  lat: memo?.extraData?.place?.latitude || 0,
+                  lng: memo?.extraData?.place?.longitude || 0,
+                }}
                 sendPoints={() => {}}
                 height='100%'
                 disablePointSelection={true}

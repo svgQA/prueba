@@ -3,18 +3,24 @@ import { Gauge } from '@/components/common/gauge/gauge';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IShiftResponse } from '@/types/shift/activity';
 import dayjs from 'dayjs';
-import i18next from 'i18next';
 import { Avatar } from '@/components/common/Avatar';
+import {
+  IDropdownAction,
+  DropdownActionsMenu,
+} from '@/components/common/table/components/dropdown.actions.menu';
 
-// Función para obtener traducciones
-const t = (key: string) => i18next.t(key);
-
-export const columns: ColumnDef<IShiftResponse>[] = [
+export const getColumns = (
+  onClickAction: (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => void
+): ColumnDef<IShiftResponse>[] => [
   {
     id: 'employee',
     accessorKey: 'employee.name',
     size: 180,
-    header: t('shifts.columns.user'),
+    header: 'Usuario',
     enableGrouping: true,
     cell: (info) => {
       const { employee } = info.row.original;
@@ -40,7 +46,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'service',
     accessorKey: 'service.name',
     size: 180,
-    header: t('shifts.columns.service'),
+    header: 'Servicio',
     enableGrouping: true,
     meta: { expander: 'serviceId' },
 
@@ -60,7 +66,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'contract',
     accessorKey: 'service.contract.name',
     size: 120,
-    header: t('shifts.columns.contract'),
+    header: 'Contrato',
     cell: (info) => {
       const contract = String(info.getValue());
       return (
@@ -77,7 +83,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'fecha',
     accessorKey: 'start',
     size: 120,
-    header: t('shifts.columns.date'),
+    header: 'Fecha',
     enableGrouping: false,
     cell: (info) => {
       const dateStr = String(info.getValue());
@@ -86,7 +92,6 @@ export const columns: ColumnDef<IShiftResponse>[] = [
       try {
         return dayjs(dateStr).format('DD/MM/YYYY');
       } catch (error) {
-        console.error('Error al formatear la fecha:', error);
         return '-';
       }
     },
@@ -95,7 +100,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'start-time',
     accessorKey: 'start',
     size: 150,
-    header: t('shifts.columns.start'),
+    header: 'Inicio',
     cell: (info) => {
       const rowData = info.row.original;
       const checkInData = rowData.checkIn;
@@ -132,7 +137,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
       return (
         <div
           onClick={() => info.row.toggleExpanded()}
-          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}
+          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm w-full justify-center`}
         >
           <span>{scheduledTime}</span>
           <span className='mx-1'>→</span>
@@ -145,7 +150,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'start-end',
     accessorKey: 'end',
     size: 150,
-    header: t('shifts.columns.end'),
+    header: 'Finalización',
     cell: (info) => {
       const rowData = info.row.original;
       const checkOutData = rowData.checkOut;
@@ -182,7 +187,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
       return (
         <div
           onClick={() => info.row.toggleExpanded()}
-          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm`}
+          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm w-full justify-center`}
         >
           <span>{scheduledTime}</span>
           <span className='mx-1'>→</span>
@@ -195,13 +200,13 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'status',
     accessorKey: 'status',
     size: 120,
-    header: t('shifts.columns.status'),
+    header: 'Estado',
   },
   {
     id: 'duracion',
     accessorKey: 'duration',
     size: 120,
-    header: t('shifts.columns.duration'),
+    header: 'Duración',
     cell: (info) => {
       const rowData = info.row.original;
       const checkInData = rowData.checkIn;
@@ -233,7 +238,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'report',
     accessorKey: 'report',
     size: 50,
-    header: t('shifts.columns.report'),
+    header: 'Reportes',
     cell: (info) => (
       <div
         className='inline-flex items-center px-2 py-0.5 text-sm rounded-md border'
@@ -249,15 +254,13 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'shift',
     accessorKey: 'activitiesProgress',
     size: 50,
-    header: t('shifts.columns.shift'),
+    header: 'Actividades',
     cell: (info: any) => {
-      const progress = info.getValue() as number;
+      const progress = (info.getValue() as number) ?? 0;
 
       let progressColor = '#E05858';
 
-      if (progress < 30) {
-        progressColor = '#E05858';
-      } else if (progress >= 30 && progress < 70) {
+      if (progress >= 30 && progress < 70) {
         progressColor = '#FFC772';
       } else if (progress >= 70) {
         progressColor = '#00BDD6';
@@ -277,15 +280,13 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'round',
     accessorKey: 'activitiesProgress',
     size: 50,
-    header: t('shifts.columns.round'),
+    header: 'Rondas',
     cell: (info: any) => {
-      const progress = info.getValue() as number;
+      const progress = (info.getValue() as number) ?? 0;
 
       let progressColor = '#E05858';
 
-      if (progress < 30) {
-        progressColor = '#E05858';
-      } else if (progress >= 30 && progress < 70) {
+      if (progress >= 30 && progress < 70) {
         progressColor = '#FFC772';
       } else if (progress >= 70) {
         progressColor = '#00BDD6';
@@ -307,7 +308,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     id: 'client',
     accessorKey: 'service.contract.client.name',
     size: 120,
-    header: t('shifts.columns.client'),
+    header: 'Cliente',
     enableGrouping: true,
     cell: (info) => {
       const contract = String(info.getValue());
@@ -326,25 +327,34 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     size: 20,
     cell: (info) => {
       const { id } = info.row.original;
-      return (
-        <div className='w-full flex justify-center group relative'>
-          <span className='vox-icon vx-icon-233 p-1 size-sm cursor-pointer' />
-          <div className='absolute left-full ml-2 hidden group-hover:flex bg-white shadow-lg rounded p-1'>
-            <span
-              className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
-              data-id={id}
-              data-type='shift'
-              data-action={ROW_ACTIONS.UPDATE}
-            ></span>
-            <span
-              className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
-              data-id={id}
-              data-type='shift'
-              data-action={ROW_ACTIONS.DELETE}
-            ></span>
-          </div>
-        </div>
-      );
+
+      const actions: IDropdownAction[] = [
+        {
+          label: 'Editar usuario',
+          icon: 'vox-icon vx-icon-123 text-primary',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'shift',
+              action: ROW_ACTIONS.UPDATE,
+            });
+          },
+        },
+        {
+          label: 'Eliminar usuario',
+          icon: 'vox-icon vx-icon-053 text-red-500',
+          color: 'text-red-600',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'shift',
+              action: ROW_ACTIONS.DELETE,
+            });
+          },
+        },
+      ];
+
+      return <DropdownActionsMenu actions={actions} />;
     },
   },
 ];
