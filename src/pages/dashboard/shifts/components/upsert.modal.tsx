@@ -17,15 +17,6 @@ import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { toast } from 'react-toastify';
 import i18n from '@/i18n';
-
-interface FormErrors {
-  employeedId?: string;
-  serviceId?: string;
-  start?: string;
-  end?: string;
-  type?: string;
-}
-// import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 import { useTranslation } from 'react-i18next';
 
 interface ITaskFormProps {
@@ -36,13 +27,6 @@ interface ITaskFormProps {
   taskSelected?: Task;
   users?: IOption[];
 }
-
-// interface ITask {
-//   start: string;
-//   date: string;
-//   status: string;
-//   description: string;
-// }
 
 export const TaskForm = ({
   closed,
