@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'preact/hooks';
-import { NotificationServiceFront } from '@/services/notification';
+import { NotificationServiceFront } from '@/services/notification/notification';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { FormService } from '@/services/form';
-import { TemplateServiceFront } from '@/services/template';
+import { FormService } from '@/services/form/form';
+import { TemplateServiceFront } from '@/services/notification/template';
 import { IOption } from '@/components/common/multi/interface';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';

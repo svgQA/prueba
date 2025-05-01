@@ -2,7 +2,7 @@ import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { FunctionComponent } from 'preact';
 import { columns } from './area.columns';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { IUserAreaResponse } from '@/types/user/user.response';

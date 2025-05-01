@@ -4,7 +4,7 @@ import { Section } from '@/components/common/section/section';
 import { Select } from '@/components/common/select/select';
 import { IUserResponse } from '@/types/auth';
 import { useSignal } from '@preact/signals';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { Field } from 'react-final-form';

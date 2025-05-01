@@ -9,6 +9,7 @@ import {
 import { useSignal } from '@preact/signals';
 import {
   NotificationServiceFront,
+  ServiceService,
   ShiftService,
   ShiftSummary,
 } from '@/services';
@@ -35,7 +36,7 @@ import { ShiftForm } from './components/shift.modal';
 import LiveUserMap from './components/shift.map';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { MentionOption } from '@/components/common/mention-editor';
 import { toast } from 'react-toastify';
 import i18n from '@/i18n';
@@ -141,7 +142,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         hasValidResponse,
       ] = await Promise.all([
         ShiftService.get_all({ page: 1, items: 1000 }),
-        ShiftService.getListService(),
+        ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),
         NotificationServiceFront.hasUsersWithPlayerId(),
       ]);

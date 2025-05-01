@@ -5,7 +5,6 @@ import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { required, lengthSize } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { useEffect, useState } from 'preact/hooks';
@@ -13,6 +12,7 @@ import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
+import { PlaceService } from '@/services';
 
 interface FormData {
   code?: number;
@@ -66,17 +66,17 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   };
 
   const fetchMunicipalities = async (departmentId: number) => {
-    const request: any = await ShiftService.getMunicipalities(departmentId);
+    const request: any = await PlaceService.getMunicipalities(departmentId);
     municipalities.value = request.data;
   };
 
   const fetchDepartments = async () => {
-    const request: any = await ShiftService.getDepartments();
+    const request: any = await PlaceService.getDepartments();
     departments.value = request.data;
   };
 
   const getCountries = async () => {
-    const request: any = await ShiftService.getCountries();
+    const request: any = await PlaceService.getCountries();
     countries.value = request.data;
   };
 
@@ -85,10 +85,10 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     let message: string;
     const data = { ...model, radius: green };
     if (!id) {
-      request = await ShiftService.createPlace(data);
+      request = await PlaceService.createPlace(data);
       message = 'Lugar creado exitosamente!';
     } else {
-      request = await ShiftService.updatePlace(data, id);
+      request = await PlaceService.updatePlace(data, id);
       message = 'Lugar editado exitosamente!';
     }
     if (!request.getStatus()) return;
@@ -134,7 +134,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       'municipalityId',
     ] as const;
 
-    const request: any = await ShiftService.getPlaceById(id);
+    const request: any = await PlaceService.getPlaceById(id);
     departmentId.value = request.model.municipality.departmentId;
 
     if (departmentId.value) {

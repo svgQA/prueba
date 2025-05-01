@@ -4,7 +4,7 @@ import { FunctionalComponent } from 'preact';
 import { useSignal } from '@preact/signals';
 import { IUserResponse } from '@/types/auth';
 import { useEffect } from 'preact/hooks';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IRowAction } from '@/components/common/table/interface';
 import { showAlert } from '@/components/common/show-alert/show-alert';

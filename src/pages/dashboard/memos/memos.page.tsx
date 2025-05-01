@@ -2,7 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { useCallback, useEffect, useMemo } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { IUserResponse } from '@/types/auth';
 import { useWebSocket } from '@/utils/socket';
 import { Section } from '@/components/common/section/section';

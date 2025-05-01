@@ -5,12 +5,12 @@ import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
-import { NotificationHistoryServiceFront } from '@/services/historyNotification';
 import { INotificationListItem } from '@/types/notification/INotificationTypes';
 import { toast } from 'react-toastify';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { getColumns } from './components/history.columns';
 import { useTranslation } from 'react-i18next';
+import { NotificationHistoryService } from '@/services';
 
 export const HistoryNotificationsPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
 
   const fetchNotifications = async () => {
     try {
-      const res = await NotificationHistoryServiceFront.getNotificationList();
+      const res = await NotificationHistoryService.getNotificationList();
       notifications.value = res;
     } catch (error) {
       toast.error(t('history.errors.loadHistory'));
@@ -39,7 +39,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
 
   const fetchDashboardStats = async () => {
     try {
-      const stats = await NotificationHistoryServiceFront.getDashboardData();
+      const stats = await NotificationHistoryService.getDashboardData();
       totalNotifications.value = stats.totalNotifications;
       openRate.value = stats.openRate;
       notificationsThisMonth.value = stats.notificationsOfMonth;
@@ -50,7 +50,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
 
   const handleRunCron = async () => {
     try {
-      await NotificationHistoryServiceFront.runSchedulerTask();
+      await NotificationHistoryService.runSchedulerTask();
       toast.success(t('history.success.cronExecuted'));
       await fetchAll();
     } catch (error) {

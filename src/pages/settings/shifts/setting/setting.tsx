@@ -10,8 +10,8 @@ import { toast } from 'react-toastify';
 import { useLocation } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import { ShiftService } from '@/services/shift';
 import { FormValues, IShiftSetting } from '@/types/settings';
+import { ModuleService } from '@/services';
 
 export const ShiftSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -36,7 +36,7 @@ export const ShiftSettingPage: FunctionComponent = () => {
 
   const getSettings = async () => {
     try {
-      const response = await ShiftService.getShiftSetting();
+      const response = await ModuleService.getShiftSetting();
       if (!response.getStatus()) return;
       const shiftResponse = response.getOne();
       if (!shiftResponse.settings.max_check_range) return;
@@ -65,7 +65,7 @@ export const ShiftSettingPage: FunctionComponent = () => {
         min_check_time: parseInt(values.min_check_time, 10),
       };
 
-      await ShiftService.setShiftSetting(model);
+      await ModuleService.setShiftSetting(model);
       toast.success('Configuración actualizada exitosamente!', {
         position: 'top-right',
       });

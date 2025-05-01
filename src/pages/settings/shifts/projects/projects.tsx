@@ -8,13 +8,13 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 
-import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { ContractService } from '@/services';
 
 export interface IProject {
   id: number;
@@ -42,7 +42,7 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   }, []);
 
   const getProjects = async () => {
-    const request: any = await ShiftService.getProjects();
+    const request: any = await ContractService.getProjects();
     projects.value = request.data;
   };
 
@@ -57,7 +57,7 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   };
 
   const deleteProject = async (id: string) => {
-    const request = await ShiftService.deleteProject(id);
+    const request = await ContractService.deleteProject(id);
     if (!request.getStatus()) return;
     toast.success('Lugar contrato', { position: 'top-right' });
     getProjects();

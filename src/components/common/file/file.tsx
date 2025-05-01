@@ -2,7 +2,7 @@ import { type IFileProps } from './interface';
 import { useSignal } from '@preact/signals';
 import { IPresignedRequest } from '@/types/file';
 import { handleFileChangeWrapper } from './utils';
-import { GeneralService } from '@/services/general';
+import { GeneralService } from '@/services/general/general';
 
 export const File = ({
   id,

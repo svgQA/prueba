@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'preact/hooks';
-import { TemplateServiceFront } from '@/services/template';
+import { TemplateServiceFront } from '@/services/notification/template';
 import { ICreateNotificationTemplateDto } from '@/types/notification/ICreateNotificationTemplateDto';
 import { useTranslation } from 'react-i18next';
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
-import { TemplateServiceFront } from '@/services/template';
+import { TemplateServiceFront } from '@/services/notification/template';
 import { Table } from '@/components/common/table/table';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';

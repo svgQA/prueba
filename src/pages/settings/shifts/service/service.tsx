@@ -8,13 +8,13 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 
-import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { ServiceService } from '@/services';
 
 export interface IServicio {
   id: number;
@@ -39,7 +39,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
   }, []);
 
   const getServices = async () => {
-    const request: any = await ShiftService.getServices();
+    const request: any = await ServiceService.getServices();
     novelties.value = request.data;
   };
 
@@ -54,7 +54,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
   };
 
   const deleteNovelty = async (id: string) => {
-    const request = await ShiftService.deleteService(id);
+    const request = await ServiceService.deleteService(id);
     if (!request.getStatus()) return;
     toast.success('Servicio eliminado', { position: 'top-right' });
     getServices();

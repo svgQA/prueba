@@ -1,4 +1,4 @@
-import { GeneralService } from '@/services/general';
+import { GeneralService } from '@/services/general/general';
 import {
   AllowedAreaTypes,
   AllowedAudioTypes,

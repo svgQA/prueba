@@ -1,7 +1,7 @@
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { Switch } from '@/components/common/switch/switch';
-import { GeneralService } from '@/services/general';
+import { ModuleService } from '@/services';
 import { ISettingModuleUser } from '@/types/user/user.request';
 import { useSignal } from '@preact/signals';
 import { Signal } from '@preact/signals';
@@ -25,7 +25,7 @@ export const UserSettingsPage: FunctionComponent = () => {
 
   const onSubmit = async (values: ISettingModuleUser) => {
     try {
-      await GeneralService.setModule(values);
+      await ModuleService.setModule(values);
       toast.success('Configuración actualizada exitosamente!', {
         position: 'top-right',
       });
@@ -37,7 +37,7 @@ export const UserSettingsPage: FunctionComponent = () => {
   };
 
   const getModules = async () => {
-    const modules = await GeneralService.getModules('USER');
+    const modules = await ModuleService.getModules('USER');
     const module = modules.getOne();
     // console.log(module);
     if (modules.getStatus() && module) {

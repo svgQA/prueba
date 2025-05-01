@@ -10,7 +10,7 @@ import { useLocation } from 'wouter';
 import { useEffect, useState } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { IAppSetting } from '@/types/settings';
-import { GeneralService } from '@/services/general';
+import { ModuleService } from '@/services';
 
 export const GeneralSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -31,23 +31,17 @@ export const GeneralSettingPage: FunctionComponent = () => {
   }, []);
 
   const getSettings = async () => {
-    try {
-      const response = await GeneralService.getAppSetting();
-      if (!response.getStatus()) return;
-      const settingsResponse = response.getOne();
-      if (!settingsResponse.primaryColor) return;
-
-      initialValues.value = {
-        ...settingsResponse,
-      };
-      if (settingsResponse.iconApp) setIconPreview(settingsResponse.iconApp);
-      if (settingsResponse.logo) setLogoPreview(settingsResponse.logo);
-    } catch (error) {
-      console.error('Error fetching settings:', error);
-      toast.error('Error al cargar la configuración', {
-        position: 'top-right',
-      });
-    }
+    const response = await ModuleService.getAppSetting();
+    if (!response.getStatus()) return;
+    const settingsResponse = response.getOne();
+    if (!settingsResponse.settings.primaryColor) return;
+    initialValues.value = {
+      ...settingsResponse.settings,
+    };
+    if (settingsResponse.settings.iconApp)
+      setIconPreview(settingsResponse.settings.iconApp);
+    if (settingsResponse.settings.logo)
+      setLogoPreview(settingsResponse.settings.logo);
   };
 
   const handleFileChange = (
@@ -70,7 +64,7 @@ export const GeneralSettingPage: FunctionComponent = () => {
 
   const onSubmit = async (values: IAppSetting) => {
     try {
-      await GeneralService.setAppSetting(values);
+      await ModuleService.setAppSetting(values);
       toast.success('Configuración actualizada exitosamente!', {
         position: 'top-right',
       });

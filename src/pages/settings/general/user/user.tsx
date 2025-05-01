@@ -5,7 +5,7 @@ import { setUser, USER_MODE_SERVICE } from './create/store/user';
 import { CardData } from '@/components/compose/cards';
 import { Table } from '@/components/common/table/table';
 import { columns } from './components/users.columns';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { useSignal } from '@preact/signals';
 import { IUserResponse } from '@/types/auth';
 import { ROW_ACTIONS } from '@/components/common/table/enum';

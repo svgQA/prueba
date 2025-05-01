@@ -6,7 +6,7 @@ import { useSignal } from '@preact/signals';
 import { Table } from '@/components/common/table/table';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
 import { columns } from './components/scheduled.columns';
-import { SchedulerServiceFront } from '@/services/schedule';
+import { SchedulerServiceFront } from '@/services/notification/schedule';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
 

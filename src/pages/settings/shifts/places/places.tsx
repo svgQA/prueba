@@ -7,13 +7,13 @@ import { columns } from './components/places.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect, useState } from 'preact/hooks';
-import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { PlaceService } from '@/services';
 
 export interface IRowActionPlace {
   id: string;
@@ -31,7 +31,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
   }, []);
 
   const getPlaces = async () => {
-    const request: any = await ShiftService.getPlaces();
+    const request: any = await PlaceService.getPlaces();
     setPlaces(request.data);
   };
 
@@ -41,7 +41,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
   };
 
   const deletePlace = async (id: string) => {
-    const request = await ShiftService.deletePlace(id);
+    const request = await PlaceService.deletePlace(id);
     if (!request.getStatus()) return;
     toast.success('Lugar eliminado', { position: 'top-right' });
     getPlaces();

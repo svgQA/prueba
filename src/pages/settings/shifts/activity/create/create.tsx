@@ -4,8 +4,8 @@ import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { ShiftService } from '@/services/shift';
-import { UserService } from '@/services/user';
+import { ShiftService } from '@/services/shift/shift';
+import { UserService } from '@/services/general/user';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { toast } from 'react-toastify';
@@ -15,6 +15,7 @@ import { omitBy, isNull, pick } from 'lodash';
 import dayjs from 'dayjs';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
+import { ServiceService } from '@/services';
 
 interface ITask {
   start: string;
@@ -88,7 +89,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
   };
 
   const getServices = async () => {
-    const request: any = await ShiftService.getServices();
+    const request: any = await ServiceService.getServices();
     services.value = request.data;
   };
 
