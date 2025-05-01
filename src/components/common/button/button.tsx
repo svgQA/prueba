@@ -21,7 +21,20 @@ export const Button: FunctionComponent<IButtonProps> = ({
   form,
   big,
   iconColor = '',
+  textAlign = 'center',
+  bold = true,
 }: IButtonProps) => {
+  const getJustify = () => {
+    switch (textAlign) {
+      case 'left':
+        return 'justify-start';
+      case 'right':
+        return 'justify-end';
+      default:
+        return 'justify-center';
+    }
+  };
+
   return (
     <button
       id={`${id}-button`}
@@ -32,7 +45,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
       form={form}
       className={`${rounded ? 'rounded-full px-1 md:px-2' : 'rounded px-2 md:px-4'} ${
         full ? 'w-full' : ''
-      } ${padding} ${text} h-fit items-center justify-center inline-flex font-bold ${className} ${
+      } ${padding} ${text} h-fit items-center inline-flex ${bold ? 'font-bold' : 'font-normal'} ${className} ${
         border
           ? 'border border-b-light-dark dark:border-b-dark-light'
           : 'border-none'
@@ -43,10 +56,13 @@ export const Button: FunctionComponent<IButtonProps> = ({
           className={`left-0 px-1 size vox-icon vx-icon-${icon} hidden sm:inline ${iconColor}`}
         />
       )}
+
       {label && !rounded && (
-        <div className='flex flex-row justify-between items-center w-full md:w-auto'>
+        <div
+          className={`flex flex-row ${getJustify()} items-center w-full md:w-auto`}
+        >
           <p
-            className={`w-full capitalize text-center ${textColor} ${big ? 'py-1' : ''}`}
+            className={`capitalize text-${textAlign} ${textColor} ${big ? 'py-1' : ''}`}
           >
             {label}
           </p>
@@ -55,6 +71,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
           />
         </div>
       )}
+
       {icon && end && (
         <span
           className={`left-0 px-1 size vox-icon vx-icon-${icon} hidden sm:inline ${iconColor}`}

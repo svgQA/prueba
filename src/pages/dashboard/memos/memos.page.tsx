@@ -96,11 +96,14 @@ export const MemosPage: FunctionComponent = () => {
       ]);
       if (memosResponse && memosResponse.getStatus()) {
         const memosData = memosResponse.getMany();
-        memos.value = memosData.map(memo => ({
+        memos.value = memosData.map((memo) => ({
           ...memo,
-          priority: memo.priority === 5 ? 'Alta' : 
-                   memo.priority === 4 ? 'Media' : 
-                   'Baja'
+          priority:
+            memo.priority === 5
+              ? 'Alta'
+              : memo.priority === 4
+                ? 'Media'
+                : 'Baja',
         }));
       }
     } catch (error) {

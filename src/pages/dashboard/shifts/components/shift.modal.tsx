@@ -5,7 +5,7 @@ import { IShiftResponse } from '@/types/shift/activity';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import dayjs from 'dayjs';
-import { Map } from '@/components/common/map/map';
+// import { Map } from '@/components/common/map/map';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { toast } from 'react-toastify';
@@ -30,6 +30,7 @@ export const ShiftForm = ({
   const showReplicateForm = useSignal<boolean>(false);
   const replicateDate = useSignal<string>('');
 
+  /*
   const checkInPoints = useSignal([
     {
       id: 1,
@@ -49,6 +50,7 @@ export const ShiftForm = ({
       },
     },
   ]);
+  */
 
   const getShiftHandler = async () => {
     if (!taskSelected) return;
@@ -299,12 +301,13 @@ export const ShiftForm = ({
               <div>
                 <p className='text-sm text-t-light-dark mb-1'>Prioridad</p>
                 <span
-                  className={`px-4 py-1 rounded-full text-sm font-medium ${taskData.priority === 'HIGH'
+                  className={`px-4 py-1 rounded-full text-sm font-medium ${
+                    taskData.priority === 'HIGH'
                       ? 'bg-red-100 text-red-700'
                       : taskData.priority === 'MEDIUM'
                         ? 'bg-yellow-100 text-yellow-700'
                         : 'bg-green-100 text-green-700'
-                    }`}
+                  }`}
                 >
                   {taskData.priority}
                 </span>
@@ -342,7 +345,7 @@ export const ShiftForm = ({
                   clickPoint={() => {}}
                 /> */}
                 <MapLibrePointsMap
-                  sendPoints={() => { }}
+                  sendPoints={() => {}}
                   name='CheckInMap'
                   center={{
                     lat: shift.value?.checkIn?.location?.lat || 4.649251,
@@ -365,7 +368,7 @@ export const ShiftForm = ({
                   radius={50}
                   draggable={false}
                   width='100%'
-                  clickPoint={() => { }}
+                  clickPoint={() => {}}
                 />
               </div>
             </div>
@@ -397,7 +400,7 @@ export const ShiftForm = ({
                   clickPoint={() => {}}
                 /> */}
                 <MapLibrePointsMap
-                  sendPoints={() => { }}
+                  sendPoints={() => {}}
                   name='CheckOutMap'
                   center={{
                     lat: shift.value?.checkOut?.location?.lat || 4.649251,
@@ -420,7 +423,7 @@ export const ShiftForm = ({
                   radius={50}
                   draggable={false}
                   width='100%'
-                  clickPoint={() => { }}
+                  clickPoint={() => {}}
                 />
               </div>
             </div>

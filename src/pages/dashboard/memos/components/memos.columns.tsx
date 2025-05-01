@@ -160,10 +160,10 @@ export const columns: CustomColumnDef<Memo>[] = [
       let bgColor = 'bg-primary-opacity';
       let textColor = 'text-primary';
 
-      if (priority === "Alta") {
+      if (priority === 'Alta') {
         bgColor = 'bg-error-opacity';
         textColor = 'text-error';
-      } else if (priority === "Media") {
+      } else if (priority === 'Media') {
         bgColor = 'bg-caution-opacity';
         textColor = 'text-caution';
       }

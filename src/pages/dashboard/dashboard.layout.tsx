@@ -39,7 +39,7 @@ import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
 import { Loading } from '@/components/common/loading/loading';
 
-// import { IconsModal } from '../globals/icons/icons';
+import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
 
 /** ***********************************************************************
@@ -172,8 +172,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ))}
         </OnBordingModal>
-        <IconsModal />
+        
         */}
+        <IconsModal />
         <ToastContainer />
       </section>
     );

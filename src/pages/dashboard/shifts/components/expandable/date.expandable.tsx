@@ -1,5 +1,4 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
-import { useSignal } from '@preact/signals';
 
 const DateInfo = ({ data = {} }: any) => {
   console.log('data ==>', data);
@@ -149,7 +148,7 @@ const ShiftCard = ({
               clickPoint={() => {}}
             /> */}
             <MapLibrePointsMap
-              sendPoints={() => { }}
+              sendPoints={() => {}}
               name='Map'
               center={{
                 lat: latitude,
@@ -173,7 +172,7 @@ const ShiftCard = ({
               radius={50}
               draggable={true}
               width='100%'
-              clickPoint={() => { }}
+              clickPoint={() => {}}
             />
             <div className='absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-b-white px-2 py-1 rounded-full text-xs shadow-sm'>
               {distance}

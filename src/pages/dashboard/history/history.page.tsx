@@ -4,11 +4,12 @@ import { useSignal } from '@preact/signals';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { CardData } from '@/components/compose/cards';
-import { Button } from '@/components/common/button/button'; // 🔥 importamos el botón
-import { columns } from './components/history.columns';
+import { Button } from '@/components/common/button/button';
 import { NotificationHistoryServiceFront } from '@/services/historyNotification';
 import { INotificationListItem } from '@/types/notification/INotificationTypes';
 import { toast } from 'react-toastify';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { getColumns } from './components/history.columns';
 import { useTranslation } from 'react-i18next';
 
 export const HistoryNotificationsPage: FunctionComponent = () => {
@@ -57,6 +58,15 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
     }
   };
 
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
+  };
+
   return (
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
@@ -65,21 +75,21 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
           count={totalNotifications.value}
           subtitle=''
           color='t-dark'
-          icon='054'
+          icon='019'
         />
         <CardData
           title={t('history.cards.openRate')}
           count={openRate.value}
           subtitle='%'
           color='t-dark'
-          icon='052'
+          icon='101'
         />
         <CardData
           title={t('history.cards.monthlyNotifications')}
           count={notificationsThisMonth.value}
           subtitle=''
           color='t-dark'
-          icon='015'
+          icon='322'
         />
       </div>
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
@@ -92,7 +102,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
       </div>
       <Table<INotificationListItem>
         data={notifications.value}
-        columns={columns()}
+        columns={getColumns(onClickAction)}
         pageSize={10}
         showExpandableIcon={false}
       />

@@ -19,4 +19,6 @@ export interface IButtonProps extends IComponentProps {
   iconColor?: string;
   form?: string;
   big?: boolean;
+  textAlign?: 'left' | 'center' | 'right';
+  bold?: boolean;
 }
