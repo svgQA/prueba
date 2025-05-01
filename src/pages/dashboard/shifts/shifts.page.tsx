@@ -438,7 +438,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
       <div className='max-h-screen'>
         <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
-          <div className='flex flex-row items-center justify-between sticky top-10'>
+          <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
             <Button
               name='button-create-shift'

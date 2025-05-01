@@ -4,6 +4,7 @@ import { IUserResponse } from '@/types/auth/service';
 import { ButtonAction } from '@/components/common/button/column';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import i18next from 'i18next';
+import { Avatar } from '@/components/common/Avatar';
 
 // Función para obtener traducciones
 const t = (key: string) => i18next.t(key);
@@ -15,8 +16,18 @@ export const userColumns: ColumnDef<IUserResponse>[] = [
     size: 180,
     header: t('users.columns.name'),
     cell: (info) => {
-      const { name, surname } = info.row.original;
-      return <div className='flex justify-center'>{`${name} ${surname}`}</div>;
+      const { name, surname, image } = info.row.original;
+      return (
+        <div className='flex items-center'>
+          <Avatar name={name} src={image} size='sm' square />
+          <span
+            className='p-1 size-sm cursor-pointer text-left'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            {`${name} ${surname}`}
+          </span>
+        </div>
+      );
     },
   },
   {

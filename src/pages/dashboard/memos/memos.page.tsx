@@ -13,8 +13,8 @@ import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
-import { ExpandableMultiple } from './components/expandable.multiple';
 import { ChatView } from './page/chat.page';
+import SupervisorInfo from './components/expandable/supervisor.expandable ';
 
 enum VIEW_NAME {
   TABLE,
@@ -35,39 +35,47 @@ export const MemosPage: FunctionComponent = () => {
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
-  const defaultColumn = useSignal<string>('default');
 
   const memoSummary = useSignal<MemosSummary>(defaultSummary);
 
   useEffect(() => {
     document.title = 'VX - Chat';
-    getUsersHandler();
     fetchInitialData();
-    handleGetMemosSummary();
     return () => {
       wsManager.removeListener('memos');
     };
   }, []);
 
   const fetchInitialData = async () => {
-    const response = await MemoService.get_all({ page: 1, items: 1000 });
-    if (!response.getStatus()) return;
-    memos.value = response.getMany();
+    const [responseMemos, responseUsers, responseSummary] = await Promise.all([
+      MemoService.get_all({ page: 1, items: 1000 }),
+      UserService.get_all_employee({ items: 20, page: 1 }),
+      MemoService.getMemosSummary(),
+    ]);
+
+    if (responseMemos.getStatus()) {
+      const memosData = responseMemos.getMany();
+      console.log('MEMOS: ', memosData);
+      memos.value = memosData;
+    }
+
+    if (responseUsers.getStatus()) {
+      users.value = responseUsers.getMany();
+    }
+
+    if (responseSummary.getStatus()) {
+      memoSummary.value = responseSummary.getOne();
+    }
   };
 
-  const handleGetMemosSummary = async () => {
-    const summary = await MemoService.getMemosSummary();
-    if (!summary.getStatus()) return;
-    memoSummary.value = summary.getOne();
-  };
-
+  // TODO: COrregir esta parte para que solo sea desde un chat list
+  // Que adapte unicamente a lo que necesita.
   const getUsersHandler = async (page: number = 1) => {
     const response = await UserService.get_all_employee({
       items: 20,
       page: page,
     });
     if (!response.getStatus()) return;
-
     users.value = response.getMany();
   };
 
@@ -162,15 +170,10 @@ export const MemosPage: FunctionComponent = () => {
           <Table
             data={memos.value}
             columns={columns}
-            showExpandableIcon={false}
+            showExpandableIcon
             pageSize={20}
             selectable
-            expandable={(row: Memo, currentColumnName?: string) => (
-              <ExpandableMultiple
-                type={currentColumnName || defaultColumn.value}
-                data={row}
-              />
-            )}
+            expandable={(row: Memo) => <SupervisorInfo memo={row} />}
             visibility={{
               id: false,
               city: false,

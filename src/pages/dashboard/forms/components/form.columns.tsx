@@ -15,10 +15,16 @@ export const columns: ColumnDef<IResponseResponse>[] = [
     header: t('forms.columns.id'),
   },
   {
-    accessorKey: 'createdAt',
-    id: 'createdAt',
-    header: t('forms.columns.createdAt'),
-    cell: (info) => <RelativeTime date={info.getValue() as string} />,
+    id: 'title',
+    accessorKey: 'form.title',
+    size: 60,
+    header: t('forms.columns.title'),
+  },
+  {
+    id: 'description',
+    accessorKey: 'form.description',
+    size: 60,
+    header: t('forms.columns.description'),
   },
   {
     accessorKey: 'updatedAt',

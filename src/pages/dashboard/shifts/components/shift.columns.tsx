@@ -4,6 +4,7 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IShiftResponse } from '@/types/shift/activity';
 import dayjs from 'dayjs';
 import i18next from 'i18next';
+import { Avatar } from '@/components/common/Avatar';
 
 // Función para obtener traducciones
 const t = (key: string) => i18next.t(key);
@@ -18,12 +19,20 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     cell: (info) => {
       const { employee } = info.row.original;
       return (
-        <span
-          className='p-1 size-sm cursor-pointer text-left'
-          onClick={() => info.row.toggleExpanded()}
-        >
-          {employee?.name} {employee?.surname}
-        </span>
+        <div className='flex items-center'>
+          <Avatar
+            name={employee?.name}
+            src={employee?.image}
+            size='sm'
+            square
+          />
+          <span
+            className='p-1 size-sm cursor-pointer text-left'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            {employee?.name} {employee?.surname}
+          </span>
+        </div>
       );
     },
   },

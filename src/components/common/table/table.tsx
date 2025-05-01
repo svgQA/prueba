@@ -62,7 +62,7 @@ export const Table = <T,>({
   onClickAction,
   unsearch,
   button,
-  // showExpandableIcon = true,
+  showExpandableIcon = false,
   selectable,
   onSelectionChange,
   onNotifications,
@@ -391,14 +391,14 @@ export const Table = <T,>({
                         className='left-0 min-w-[30px]'
                         // style={{ position: 'sticky', zIndex: 1 }}
                       >
-                        {/*
                         {expandable && showExpandableIcon && (
-                          <span
-                            onClick={() => row.toggleExpanded()}
-                            className='vox-icon vx-icon-001 cursor-pointer size-sm'
-                          />
+                          <div className='flex items-center justify-center h-full'>
+                            <span
+                              onClick={() => row.toggleExpanded()}
+                              className='vox-icon vx-icon-001 cursor-pointer size-sm'
+                            />
+                          </div>
                         )}
-                        */}
                         {selectable &&
                           onNotifications &&
                           (row.original as IShiftResponse)?.employee

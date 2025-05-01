@@ -192,10 +192,7 @@ export const columns: CustomColumnDef<Memo>[] = [
     meta: { expander: 'extraData' },
     cell: (info) => {
       return (
-        <span
-          className=' p-1 size-sm cursor-pointer'
-          onClick={() => info.row.toggleExpanded()}
-        >
+        <span className=' p-1 size-sm cursor-pointer'>
           {info.getValue() as string}
         </span>
       );

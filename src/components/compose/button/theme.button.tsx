@@ -4,11 +4,13 @@ import { themeSignal } from './signal.theme';
 interface IThemeButtonProps {
   unpadded?: boolean;
   borderless?: boolean;
+  rounded?: boolean;
 }
 
 export const ThemeButton = ({
   unpadded = false,
   borderless = false,
+  rounded = false,
 }: IThemeButtonProps) => {
   const toggleTheme = useCallback((event: MouseEvent) => {
     event.preventDefault();
@@ -23,7 +25,7 @@ export const ThemeButton = ({
       name='setting-min-menu'
       onClick={toggleTheme}
       type='button'
-      rounded
+      rounded={rounded}
       icon='301'
       padding='px-1'
       borderless={borderless}

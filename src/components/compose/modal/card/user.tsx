@@ -2,6 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { type ICardSettingUserProps } from './interface';
 import { Card } from '@/components/common/card/card';
 import { Badge } from '@/components/common/badge/badge';
+import { Avatar } from '@/components/common/Avatar';
 
 export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
   id,
@@ -15,13 +16,7 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
     <Card id={id} name={name} borderless rounded={false} transparent>
       <div className='flex gap-2 p-2 w-full'>
         <div className='flex flex-col items-center'>
-          <div className='border-2 border-bg-primary-opacity rounded-full'>
-            <img
-              src={image || '/placeholder.svg'}
-              alt={`sett-user-${id}`}
-              className='w-14 h-14 rounded-full'
-            />
-          </div>
+          <Avatar name={username} src={image} size='lg' />
           <Badge
             label={rol}
             icon='users'
