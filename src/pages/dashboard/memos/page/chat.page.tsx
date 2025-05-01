@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { ChatHeader } from '../components/chat.header';
+// import { ChatHeader } from '../components/chat.header';
 import { ChatCard } from '../components/chat.card';
 import { ChatMessage } from '../components/chat.message';
 import { ChatInput } from '../components/chat.input';
@@ -149,11 +149,13 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           <div className='w-full p-1 border-b dark:border-b-dark-light'>
             {buttonMenu}
           </div>
-          */}
+        */}
 
-        <div className='flex flex-1 overflow-y-auto'>
+        <div className='flex flex-1 overflow-y-auto border-t'>
           <div className='w-[30%] border-r dark:border-b-dark-light flex flex-col h-full'>
+            {/*
             <ChatHeader />
+            */}
             <ChatCard
               id={'0'}
               name={t('memos.chat.aiAssistant')}

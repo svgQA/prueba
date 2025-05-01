@@ -149,8 +149,10 @@ export const MemosPage: FunctionComponent = () => {
         </div>
       )}
 
-      <div className='max-h-screen relative'>
-        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark top-0'>
+      <div
+        className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}
+      >
+        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 top-0 pl-1'>
           <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
           </div>
