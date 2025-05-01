@@ -12,10 +12,10 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
     labelTag = 'label',
     icon,
     iconSize = 'sm',
-    onChange,
+    // onChange,
   }: IDropdownProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [selected, setSelected] = useState<IDropdownOptions | undefined>();
+    const [selected, _] = useState<IDropdownOptions | undefined>();
     const [dropdownPosition, setDropdownPosition] = useState<'left' | 'right'>(
       'right'
     );
@@ -26,6 +26,11 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
       setIsOpen((prev) => !prev);
     }, []);
 
+    /**
+     * Selecciona un elemento del dropdown
+     * @param event
+     */
+    /*
     const selectElement = useCallback(
       (event: MouseEvent) => {
         const target = event.target as HTMLElement;
@@ -44,25 +49,30 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
       },
       [options, labelTag, toggleDropdown, onChange]
     );
+    */
 
     const elementsList = useCallback(
       () =>
-        options.map((element) => (
-          <li
-            key={`${element[labelTag]}-dropdown-element`}
-            id={`${element[labelTag]}-dropdown-element`}
-            data-name={`${element[labelTag]}`}
-            class='block px-4 py-2 whitespace-nowrap hover:bg-gray-100 cursor-pointer transition-colors duration-150'
-          >
-            {icon && (
-              <span
-                className={`vox-icon vx-icon-${element.icon} size-sm mr-2`}
-              />
-            )}
-            {element[labelTag]}
-          </li>
-        )),
-      [options, labelTag]
+        options.map((element) => {
+          const isSelected = selected?.value === element.value;
+          return (
+            <li
+              key={`${element[labelTag]}-dropdown-element`}
+              id={`${element[labelTag]}-dropdown-element`}
+              data-name={`${element[labelTag]}`}
+              class={`flex items-center px-4 py-2.5 text-sm transition-colors duration-200 border-none cursor-pointer whitespace-nowrap
+                ${isSelected ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+            >
+              {element.icon && (
+                <span
+                  className={`vox-icon vx-icon-${element.icon} size-sm mr-2`}
+                />
+              )}
+              {element[labelTag]}
+            </li>
+          );
+        }),
+      [options, labelTag, selected]
     );
 
     useEffect(() => {
@@ -111,11 +121,11 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
           ref={buttonRef}
           id={`${id}-dropdown-button`}
           name={name}
-          class={`focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center transition-colors duration-150 ${
-            isIconOnly
-              ? 'border-none justify-center hover:bg-gray-100'
-              : 'w-full border focus:ring-blue-300 hover:bg-gray-50'
-          }`}
+          class={`focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center transition-colors duration-150
+            bg-white dark:bg-gray-800
+            text-gray-700 dark:text-gray-200
+            border border-gray-200 dark:border-gray-700
+            ${isIconOnly ? 'border-none justify-center hover:bg-gray-100 dark:hover:bg-gray-700' : 'w-full focus:ring-blue-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
           type='button'
           onClick={toggleDropdown}
         >
@@ -128,13 +138,12 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
         </button>
         <div
           id={`${id}-dropdown`}
-          className={`${isIconOnly ? 'w-fit' : 'w-full'} z-10 ${isOpen ? '' : 'hidden'} absolute divide-y rounded-lg shadow bg-white ${
-            dropdownPosition === 'left' ? 'right-0' : 'left-0'
-          }`}
+          className={`${isIconOnly ? 'w-fit' : 'w-full'} z-10 ${isOpen ? '' : 'hidden'} absolute rounded-lg shadow-lg
+            bg-white dark:bg-gray-800
+            border border-gray-200 dark:border-gray-700
+            ${dropdownPosition === 'left' ? 'right-0' : 'left-0'}`}
         >
-          <ul className='py-2 text-sm' onClick={selectElement}>
-            {elementsList()}
-          </ul>
+          <ul className='py-2 text-sm'>{elementsList()}</ul>
         </div>
       </div>
     );

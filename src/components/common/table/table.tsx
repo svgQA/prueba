@@ -380,7 +380,7 @@ export const Table = <T,>({
               return (
                 <Fragment key={row.id}>
                   <tr
-                    className={`${
+                    className={`text-t-light dark:text-t-dark ${
                       data.length > pageSize && isLastRow
                         ? 'no-bottom-border'
                         : ''
@@ -675,7 +675,7 @@ export const Table = <T,>({
   return (
     <>
       {/* sticky top-[3.4rem] z-[8] */}
-      <div className='w-full py-1 flex items-center justify-end bg-b-content dark:bg-gray-800'>
+      <div className='w-full py-1 pb-3 flex items-center justify-end'>
         {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (
           <Search

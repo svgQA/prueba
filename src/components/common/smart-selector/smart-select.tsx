@@ -154,7 +154,7 @@ export function SmartSelector({
 
   const dropdown = (
     <div
-      class='absolute bg-white border border-gray-300 rounded shadow-md z-50 max-h-60 overflow-auto vox-scroll-design'
+      class='absolute bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-md z-50 max-h-60 overflow-auto vox-scroll-design'
       style={{
         top: dropdownPos.top + 5,
         left: dropdownPos.left,
@@ -165,7 +165,7 @@ export function SmartSelector({
       {allowAll && search.toLowerCase() === 'todos' && (
         <div
           onMouseDown={() => handleSelect('ALL')}
-          class='px-4 py-2 cursor-pointer hover:bg-gray-100'
+          class='px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200'
         >
           <strong>Todos</strong>
         </div>
@@ -174,11 +174,13 @@ export function SmartSelector({
         <div
           key={opt.value}
           onMouseDown={() => handleSelect(opt)}
-          class={`px-4 py-2 cursor-pointer ${
-            idx === selectedIndex
-              ? 'bg-blue-100 text-blue-800'
-              : 'hover:bg-gray-100'
-          }`}
+          class={`px-4 py-2 cursor-pointer flex items-center
+            transition-colors duration-200 border-none
+            ${
+              idx === selectedIndex
+                ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
         >
           {opt.label}
         </div>
@@ -219,13 +221,16 @@ export function SmartSelector({
         placeholder={placeholder}
         onInput={(e) => setSearch((e.currentTarget as HTMLInputElement).value)}
         onFocus={() => setFocused(true)}
-        className={`w-full border px-3 py-2 rounded ${
-          meta.touched && meta.error
-            ? 'border-red-500 focus:ring-red-500'
-            : 'border-gray-300 focus:ring-blue-500'
-        } appearance-none`}
+        className={`w-full border px-3 py-2 rounded
+          bg-white dark:bg-gray-800
+          text-gray-700 dark:text-gray-200
+          border-gray-300 dark:border-gray-700
+          focus:ring-blue-500 dark:focus:ring-blue-400
+          appearance-none
+          ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
+        `}
       />
-      {meta.touched && meta.error && (
+      {meta && meta.touched && meta.error && (
         <div class='text-sm text-red-600 mt-1'>{meta.error}</div>
       )}
       {focused &&

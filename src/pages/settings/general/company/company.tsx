@@ -4,6 +4,8 @@ import { useEffect } from 'preact/hooks';
 import { GeneralService } from '@/services/general';
 import { ICompanyResponse } from '@/utils/types/company.interface';
 import { useSignal } from '@preact/signals';
+import { Card } from '@/components/common/card/card';
+import { Button } from '@/components/common/button/button';
 
 export const CompanySettingPage: FunctionComponent = () => {
   const companies = useSignal<ICompanyResponse[]>([]);
@@ -100,66 +102,29 @@ export const CompanySettingPage: FunctionComponent = () => {
   */
 
   return (
-    <div className='container h-full overflow-y-auto vox-scroll-design p-8'>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+    <div className='h-full overflow-y-auto vox-scroll-design p-8 w-full'>
+      <div className='flex flex-row gap-4 justify-center flex-wrap'>
         {companies.value.map((company) => (
-          <div
-            key={company.id}
-            className='bg-white rounded-lg border border-gray-200 hover:border-indigo-500 transition-colors duration-200'
-          >
-            <div className='p-6'>
+          <Card key={company.id} name={`company-setting-${company.id}`}>
+            <div className='p-6 min-w-[420px]'>
               {/* Header */}
               <div className='flex items-start justify-between mb-4'>
                 <div className='flex-1'>
-                  <h3 className='text-lg font-semibold text-gray-900 truncate'>
+                  <h3 className='text-lg font-semibold truncate text-t-light dark:text-t-dark'>
                     {company.name}
                   </h3>
-                  <p className='text-sm text-gray-500 mt-1'>
+                  <p className='text-sm dark:text-gray-200 text-gray-800 mt-1'>
                     Created: {new Date(company.createdAt).toLocaleDateString()}
                   </p>
                 </div>
                 <div className='flex space-x-2 ml-4'>
-                  <button
-                    className='p-1 text-gray-400 hover:text-indigo-600 transition-colors'
-                    title='Edit'
-                  >
-                    <svg
-                      className='w-5 h-5'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        d='M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    className='p-1 text-gray-400 hover:text-red-600 transition-colors'
-                    title='Delete'
-                  >
-                    <svg
-                      className='w-5 h-5'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16'
-                      />
-                    </svg>
-                  </button>
+                  <Button name='company-setting-delete' icon='050' />
+                  <Button name='company-setting-delete' icon='099' />
                 </div>
               </div>
 
               {/* Description */}
-              <p className='text-sm text-gray-600 mb-4 line-clamp-2'>
+              <p className='text-sm dark:text-gray-200 text-gray-800 mb-4 line-clamp-2'>
                 {company.description}
               </p>
 
@@ -167,85 +132,31 @@ export const CompanySettingPage: FunctionComponent = () => {
               <div className='space-y-2'>
                 {company.address && (
                   <div className='flex items-start'>
-                    <svg
-                      className='w-5 h-5 text-gray-400 mt-0.5 mr-2'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z'
-                      />
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        d='M15 11a3 3 0 11-6 0 3 3 0 016 0z'
-                      />
-                    </svg>
-                    <span className='text-sm text-gray-600'>
+                    <span className='vox-icon vx-icon-168 size-sm dark:text-gray-200 text-gray-800 mr-2' />
+                    <span className='text-sm dark:text-gray-200 text-gray-800'>
                       {company.address}
                     </span>
                   </div>
                 )}
                 {company.phone && (
                   <div className='flex items-center'>
-                    <svg
-                      className='w-5 h-5 text-gray-400 mr-2'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        d='M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'
-                      />
-                    </svg>
-                    <span className='text-sm text-gray-600'>
+                    <span className='vox-icon vx-icon-168 size-sm dark:text-gray-200 text-gray-800 mr-2' />
+                    <span className='text-sm dark:text-gray-200 text-gray-800'>
                       {company.phone}
                     </span>
                   </div>
                 )}
                 {company.email && (
                   <div className='flex items-center'>
-                    <svg
-                      className='w-5 h-5 text-gray-400 mr-2'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
-                      />
-                    </svg>
-                    <span className='text-sm text-gray-600'>
+                    <span className='vox-icon vx-icon-168 size-sm dark:text-gray-200 text-gray-800 mr-2' />
+                    <span className='text-sm dark:text-gray-200 text-gray-800'>
                       {company.email}
                     </span>
                   </div>
                 )}
                 {company.website && (
                   <div className='flex items-center'>
-                    <svg
-                      className='w-5 h-5 text-gray-400 mr-2'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        d='M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9'
-                      />
-                    </svg>
+                    <span className='vox-icon vx-icon-168 size-sm dark:text-gray-200 text-gray-800 mr-2' />
                     <a
                       href={company.website}
                       target='_blank'
@@ -260,7 +171,7 @@ export const CompanySettingPage: FunctionComponent = () => {
 
               {/* Footer */}
               <div className='mt-4 pt-4 border-t border-gray-100'>
-                <div className='flex items-center justify-between text-xs text-gray-500'>
+                <div className='flex items-center justify-between text-xs dark:text-gray-200 text-gray-800'>
                   <span>ID: {company.externalId}</span>
                   <span>
                     Last updated:{' '}
@@ -269,7 +180,7 @@ export const CompanySettingPage: FunctionComponent = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

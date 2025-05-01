@@ -43,6 +43,8 @@ import { useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { IconsModal } from '../globals/icons/icons';
+import { ThemeButton } from '@/components/compose/button';
+import { Button } from '@/components/common/button/button';
 
 // import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
@@ -114,10 +116,15 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 icon='023'
                 borderless
               />
-              <div className='flex flex-row gap-1'>
-                <button className='focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center transition-colors duration-150 border-none'>
-                  <span className='vx-icon vx-icon-317 size-xsm' />
-                </button>
+              <div className='flex flex-row gap-4 items-center justify-center'>
+                <ThemeButton unpadded borderless />
+                <Button
+                  name='user-action'
+                  icon='317'
+                  iconSize='sm'
+                  borderless
+                  unpadded
+                />
                 <Dropdown
                   options={[
                     { label: 'setting', value: 1, icon: '158' },

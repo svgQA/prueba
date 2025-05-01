@@ -54,8 +54,8 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   const getSelected = useMemo(
     () => (to: string) =>
       to === location
-        ? 'bg-primary-opacity border-primary p-2 text-primary'
-        : '',
+        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700',
     [location]
   );
 
@@ -84,7 +84,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   return (
     <nav
       id={`${id}-nav`}
-      className='fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen border-r-2 border-gray-100 dark:border-b-dark-light z-20 bg-b-light dark:bg-b-dark-light'
+      className='fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen border-r border-gray-200 dark:border-gray-700 z-20'
     >
       {onHomeHandler && (
         <ul className='flex flex-col items-center'>
@@ -129,7 +129,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
         */}
         <span
           onClick={onSettingHandler}
-          className='cursor-pointer p-1 mt-1 hover:disabled rounded-sm'
+          className='cursor-pointer p-1 mt-1 hover:disabled rounded-sm text-gray-700 dark:text-gray-200'
         >
           <ButtonMenu name='vx-setting-button' label='setting' icon='169' />
         </span>

@@ -315,44 +315,34 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const buttonMenu = useMemo(
     () => (
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-2 mr-2'>
         <Button
           name='button-change-table'
           onClick={() => {
             handleViewChange(VIEW_NAME.TABLE);
           }}
-          rounded={false}
-          className={
-            currentView.value === VIEW_NAME.TABLE
-              ? 'bg-primary-opacity p-2'
-              : ''
-          }
-          icon='320'
+          className={`!py-3 ${currentView.value === VIEW_NAME.TABLE ? 'bg-red-300' : ''}`}
+          icon='443'
         />
         <Button
           name='button-change-scheduler'
           onClick={() => {
             handleViewChange(VIEW_NAME.SCHEDULER);
           }}
-          rounded={false}
-          className={
-            currentView.value === VIEW_NAME.SCHEDULER
-              ? 'bg-primary-opacity p-2'
-              : ''
-          }
-          icon='330'
+          className={`!py-3 ${currentView.value === VIEW_NAME.SCHEDULER ? 'bg-red-300' : ''}`}
+          icon='412'
         />
         <Button
-          name='button-change-table'
+          name='button-change-map'
           onClick={() => {
             handleViewChange(VIEW_NAME.MAP);
           }}
-          rounded={false}
           className={
-            currentView.value === VIEW_NAME.MAP ? 'bg-primary-opacity p-2' : ''
+            currentView.value === VIEW_NAME.MAP ? 'bg-primary-opacity' : ''
           }
-          icon='321'
+          icon='103'
         />
+
         <div className='relative'>
           <Button
             name='button-action'
@@ -382,6 +372,8 @@ export const ShiftsPage: FunctionalComponent = () => {
           name='button-supervision'
           label={t('shifts.remoteSupervision')}
           className='bg-primary text-white py-1 rounded px-4'
+          icon='079'
+          iconSize='sm'
           onClick={() => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
@@ -444,15 +436,16 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
       </div>
 
-      <div className='max-h-screen relative'>
+      <div className='max-h-screen'>
         <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
-          <div className='flex flex-row items-center justify-between'>
+          <div className='flex flex-row items-center justify-between sticky top-10'>
             {buttonMenu}
             <Button
               name='button-create-shift'
               label={t('shifts.buttons.create')}
-              className='mx-3 px-4 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
               onClick={handleCreacteNewShift}
+              icon='044'
+              iconSize='sm'
             />
           </div>
         </div>

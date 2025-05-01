@@ -12,7 +12,7 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
   rol,
 }: ICardSettingUserProps) => {
   return (
-    <Card id={id} name={name} borderless rounded={false}>
+    <Card id={id} name={name} borderless rounded={false} transparent>
       <div className='flex gap-2 p-2 w-full'>
         <div className='flex flex-col items-center'>
           <div className='border-2 border-bg-primary-opacity rounded-full'>

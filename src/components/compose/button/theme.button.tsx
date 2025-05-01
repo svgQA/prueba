@@ -1,8 +1,15 @@
 import { Button } from '@/components/common/button/button';
 import { useCallback } from 'preact/hooks';
 import { themeSignal } from './signal.theme';
+interface IThemeButtonProps {
+  unpadded?: boolean;
+  borderless?: boolean;
+}
 
-export const ThemeButton = () => {
+export const ThemeButton = ({
+  unpadded = false,
+  borderless = false,
+}: IThemeButtonProps) => {
   const toggleTheme = useCallback((event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -17,7 +24,11 @@ export const ThemeButton = () => {
       onClick={toggleTheme}
       type='button'
       rounded
-      icon='170'
+      icon='301'
+      padding='px-1'
+      borderless={borderless}
+      iconSize='xsm'
+      unpadded={unpadded}
     />
   );
 };

@@ -24,7 +24,9 @@ export const FormsPage: FunctionComponent = () => {
   const getResponseHandler = async () => {
     const response = await FormService.get_response_all();
     if (!response.getStatus()) return;
-    responses.value = response.getMany();
+    const data = response.getMany();
+    console.log('FORMS: ', data);
+    responses.value = data;
   };
 
   const navigateResponse = () => {
