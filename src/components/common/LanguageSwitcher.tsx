@@ -11,14 +11,14 @@ export const LanguageSwitcher = ({
   const { i18n } = useTranslation();
 
   const languageOptions = [
-    { id: 'es', label: 'Español', icon: '🇪🇸' },
-    { id: 'en', label: 'English', icon: '🇬🇧' },
+    { value: 'es', label: 'Español', sIcon: '🇪🇸' },
+    { value: 'en', label: 'English', sIcon: '🇬🇧' },
   ];
 
   const currentLanguage = i18n.language.startsWith('es') ? 'es' : 'en';
 
-  const handleLanguageChange = (lng: string) => {
-    i18n.changeLanguage(lng);
+  const handleLanguageChange = (lng: string | number) => {
+    i18n.changeLanguage(String(lng));
   };
 
   return (
@@ -26,7 +26,7 @@ export const LanguageSwitcher = ({
       options={languageOptions}
       value={currentLanguage}
       onChange={handleLanguageChange}
-      icon='🌐'
+      icon='080'
       borderless={borderless}
     />
   );

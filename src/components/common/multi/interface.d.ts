@@ -6,6 +6,7 @@ import { FieldMetaState } from 'react-final-form';
 export interface IOption {
   value: number | string;
   label: string;
+  icon?: string;
 }
 
 export interface IMultiProps {

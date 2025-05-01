@@ -16,7 +16,6 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
               name='button'
               label='Tarea'
               className='bg-primary/10 text-primary hover:bg-primary/20 transition-colors border border-primary/20 rounded-full'
-              border={true}
               padding='px-2 py-0.5'
               text='text-xs'
             />
@@ -24,7 +23,6 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
               name='button'
               label='Tarea'
               className='bg-primary/10 text-primary hover:bg-primary/20 transition-colors border border-primary/20 rounded-full'
-              border={true}
               padding='px-2 py-0.5'
               text='text-xs'
             />
@@ -32,7 +30,6 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
               name='button'
               label='Tarea'
               className='bg-primary/10 text-primary hover:bg-primary/20 transition-colors border border-primary/20 rounded-full'
-              border={true}
               padding='px-2 py-0.5'
               text='text-xs'
             />
@@ -167,6 +164,10 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
                     },
                   },
                 ]}
+                center={{
+                  lat: memo?.extraData?.place?.latitude || 0,
+                  lng: memo?.extraData?.place?.longitude || 0,
+                }}
                 sendPoints={() => {}}
                 height='100%'
                 disablePointSelection={true}

@@ -156,14 +156,14 @@ export const columns: CustomColumnDef<Memo>[] = [
     header: 'Prioridad',
     enableGrouping: true,
     cell: (info: any) => {
-      const priority = info.getValue() as number;
+      const priority = info.getValue() as string;
       let bgColor = 'bg-primary-opacity';
       let textColor = 'text-primary';
 
-      if (priority === 5) {
+      if (priority === 'Alta') {
         bgColor = 'bg-error-opacity';
         textColor = 'text-error';
-      } else if (priority === 4) {
+      } else if (priority === 'Media') {
         bgColor = 'bg-caution-opacity';
         textColor = 'text-caution';
       }
@@ -175,9 +175,7 @@ export const columns: CustomColumnDef<Memo>[] = [
             <div
               className={`px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}
             >
-              {priority === 5 ? 'Alta' : ''}
-              {priority === 4 ? 'Media' : ''}
-              {priority !== 5 && priority !== 4 ? 'Baja' : ''}
+              {priority}
             </div>
           </span>
         </div>
@@ -192,10 +190,7 @@ export const columns: CustomColumnDef<Memo>[] = [
     meta: { expander: 'extraData' },
     cell: (info) => {
       return (
-        <span
-          className=' p-1 size-sm cursor-pointer'
-          onClick={() => info.row.toggleExpanded()}
-        >
+        <span className=' p-1 size-sm cursor-pointer'>
           {info.getValue() as string}
         </span>
       );

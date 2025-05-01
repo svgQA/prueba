@@ -61,20 +61,20 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
     <div ref={dropdownRef} className={`relative ${className}`}>
       <button
         type='button'
-        className='inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 bg-white rounded-md hover:bg-gray-50'
+        className='inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className='vox-icon vx-icon-120 text-gray-500' />
+        <span className='vox-icon vx-icon-120 text-gray-500 dark:text-gray-400' />
         {displayText && <span>{displayText}</span>}
-        <span className='vox-icon vx-icon-001 text-gray-500' />
+        <span className='vox-icon vx-icon-001 text-gray-500 dark:text-gray-400' />
       </button>
 
       {isOpen && (
-        <div className='absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border-2 border-gray-100 py-1 z-50'>
+        <div className='absolute right-0 mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50'>
           <button
             className={`
               w-full px-4 py-2.5 text-sm text-left border-none
-              ${!currentGroup ? 'text-blue-600 bg-blue-50/50' : 'text-gray-600 hover:bg-gray-50'}
+              ${!currentGroup ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}
               transition-colors
             `}
             onClick={() => {
@@ -90,7 +90,7 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
               key={col.id}
               className={`
                 w-full px-4 py-2.5 text-sm text-left border-none
-                ${col.id === currentGroup ? 'text-blue-600 bg-blue-50/50' : 'text-gray-600 hover:bg-gray-50'}
+                ${col.id === currentGroup ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}
                 transition-colors
               `}
               onClick={() => {

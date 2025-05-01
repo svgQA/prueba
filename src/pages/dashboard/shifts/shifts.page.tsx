@@ -14,7 +14,7 @@ import {
 } from '@/services';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
-import { columns } from './components/shift.columns';
+import { getColumns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
 import { useTranslation } from 'react-i18next';
 
@@ -39,6 +39,7 @@ import { UserService } from '@/services/user';
 import { MentionOption } from '@/components/common/mention-editor';
 import { toast } from 'react-toastify';
 import i18n from '@/i18n';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 enum VIEW_NAME {
   TABLE,
@@ -315,44 +316,34 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const buttonMenu = useMemo(
     () => (
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-2 mr-2'>
         <Button
           name='button-change-table'
           onClick={() => {
             handleViewChange(VIEW_NAME.TABLE);
           }}
-          rounded={false}
-          className={
-            currentView.value === VIEW_NAME.TABLE
-              ? 'bg-primary-opacity p-2'
-              : ''
-          }
-          icon='320'
+          className={`!py-3 ${currentView.value === VIEW_NAME.TABLE ? 'bg-red-300' : ''}`}
+          icon='443'
         />
         <Button
           name='button-change-scheduler'
           onClick={() => {
             handleViewChange(VIEW_NAME.SCHEDULER);
           }}
-          rounded={false}
-          className={
-            currentView.value === VIEW_NAME.SCHEDULER
-              ? 'bg-primary-opacity p-2'
-              : ''
-          }
-          icon='330'
+          className={`!py-3 ${currentView.value === VIEW_NAME.SCHEDULER ? 'bg-red-300' : ''}`}
+          icon='412'
         />
         <Button
-          name='button-change-table'
+          name='button-change-map'
           onClick={() => {
             handleViewChange(VIEW_NAME.MAP);
           }}
-          rounded={false}
           className={
-            currentView.value === VIEW_NAME.MAP ? 'bg-primary-opacity p-2' : ''
+            currentView.value === VIEW_NAME.MAP ? 'bg-primary-opacity' : ''
           }
-          icon='321'
+          icon='103'
         />
+
         <div className='relative'>
           <Button
             name='button-action'
@@ -382,10 +373,13 @@ export const ShiftsPage: FunctionalComponent = () => {
           name='button-supervision'
           label={t('shifts.remoteSupervision')}
           className='bg-primary text-white py-1 rounded px-4'
+          icon='079'
+          iconSize='sm'
           onClick={() => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
         />
+        {/*
         <Button
           name='button-change-planner'
           onClick={() => {
@@ -399,6 +393,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           }
           icon='331'
         />
+        */}
       </div>
     ),
     [
@@ -414,6 +409,15 @@ export const ShiftsPage: FunctionalComponent = () => {
     getGanttHandler(view);
   };
 
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
+  };
+
   return (
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
@@ -426,7 +430,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <CardData
-          title='Turnos En Curso'
+          title={t('shifts.cards.inProgress')}
           count={calculatePercentage(shiftSummary.value.in_progress)}
           subtitle=''
           color='t-dark'
@@ -442,15 +446,16 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
       </div>
 
-      <div className='max-h-screen relative'>
+      <div className='max-h-screen'>
         <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
           <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
             <Button
               name='button-create-shift'
               label={t('shifts.buttons.create')}
-              className='mx-3 px-4 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
               onClick={handleCreacteNewShift}
+              icon='044'
+              iconSize='sm'
             />
           </div>
         </div>
@@ -458,7 +463,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         {currentView.value === VIEW_NAME.TABLE && (
           <Table<IShiftResponse>
             data={shifts.value}
-            columns={columns}
+            columns={getColumns(onClickAction)}
             showExpandableIcon={false}
             pageSize={20}
             selectable

@@ -1868,3 +1868,7 @@ span.vx-icon.size-xl {
 .vx-icon-454::before {
   content: '\02CD';
 }
+
+.vx-icon-options::before {
+  content: '\02CE';
+}

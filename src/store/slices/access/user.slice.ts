@@ -1,23 +1,22 @@
 import { create } from 'zustand';
-import { type ICompany } from './interface/user.interface';
-import { message_service_url } from '@/env.config';
+// import { type ICompany } from './interface/user.interface';
+// import { message_service_url } from '@/env.config';
 import { IUserResponse } from '@/types/auth';
+import { IOption } from '@/components/common/multi/interface';
 
 type State = {
+  companies: IOption[];
   user: IUserResponse | null;
-  companies: ICompany[];
   token: string;
   socket: string;
   cognito: string;
   tenant: string;
+  selectedCompany: IOption | null;
 };
 
 type Actions = {
   setUser: (user?: IUserResponse) => void;
   setToken: (token: string) => void;
-  setCompanies: (companies: ICompany[]) => void;
-  setSelected: (company_id: string) => void;
-  getSelected: () => ICompany | undefined;
   getUser: () => IUserResponse | null;
   getToken: () => string;
   getUrlSocket: () => string;
@@ -25,7 +24,12 @@ type Actions = {
   getCognito: () => string;
   setTenant: (uuid: string) => void;
   getTenant: () => string;
-  getCompany: () => string;
+  getCompany: (id: number) => IOption | null | undefined;
+  getCompanyId: () => string;
+  setCompanies: (companies: IOption[]) => void;
+  getCompanies: () => IOption[];
+  setSelectedCompany: (id: number) => void;
+  getSelectedCompany: () => IOption | null;
 };
 
 export const useUserStore = create<State & Actions>((set, get) => ({
@@ -35,7 +39,31 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   socket: '',
   cognito: '',
   tenant: '',
-  getCompany: () => '1',
+  selectedCompany: null,
+  getCompanyId: () => {
+    const { selectedCompany } = get();
+    return String(selectedCompany?.value || '1');
+  },
+  getCompany: (id: number) => {
+    const { companies } = get();
+    return companies.find((company) => company.value === id);
+  },
+  getSelectedCompany: () => {
+    const { selectedCompany } = get();
+    return selectedCompany;
+  },
+  setSelectedCompany: (id: number) => {
+    const { companies } = get();
+    const company = companies.find((company) => company.value === id);
+    if (company) {
+      set({ selectedCompany: company });
+    }
+  },
+  setCompanies: (companies: IOption[]) => set({ companies }),
+  getCompanies: () => {
+    const { companies } = get();
+    return companies;
+  },
   setTenant: (uuid: string) => set({ tenant: uuid }),
   getTenant: () => {
     const { tenant } = get();
@@ -50,6 +78,7 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   setToken: (token) => {
     set({ token });
   },
+  /*
   setCompanies: (companies) =>
     set({
       companies: companies.map((company) => ({ ...company, selected: false })),
@@ -82,6 +111,7 @@ export const useUserStore = create<State & Actions>((set, get) => ({
     const { companies } = get();
     return companies.find((company) => company.selected);
   },
+  */
   getUser: () => {
     const { user } = get();
     return user;
@@ -101,6 +131,7 @@ export const useUserStore = create<State & Actions>((set, get) => ({
  * desde tenant y no hay una forma definida para las companies que
  * provienen, por ese motivo se "estabilizar" con el objeto company.
  */
+/*
 export const parsingCompanies = (data: any): ICompany[] => {
   const model = data?.data;
   if (!model || !model?.companies) return [];
@@ -116,3 +147,4 @@ export const parsingCompanies = (data: any): ICompany[] => {
     })
   );
 };
+*/

@@ -10,6 +10,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { columns } from './components/inspect.columns';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 export const FormsPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -24,7 +25,8 @@ export const FormsPage: FunctionComponent = () => {
   const getResponseHandler = async () => {
     const response = await FormService.get_response_all();
     if (!response.getStatus()) return;
-    responses.value = response.getMany();
+    const data = response.getMany();
+    responses.value = data;
   };
 
   const navigateResponse = () => {
@@ -41,7 +43,14 @@ export const FormsPage: FunctionComponent = () => {
     const response = responses.value.find(
       (response) => response.id == action.id
     );
-    if (!response?.structure) throw Error('ERROR: Not exist response');
+
+    if (!response?.structure) {
+      toast.error(t('forms.error.notExistResponse'));
+      return;
+    }
+
+    console.log(response);
+
     switch (action.action) {
       case ROW_ACTIONS.RESPONSE: {
         // setResponse(
@@ -51,12 +60,12 @@ export const FormsPage: FunctionComponent = () => {
         navigateResponse();
         break;
       }
-      case ROW_ACTIONS.DELETE: {
-        const respons = await FormService.remove_response_one(response.id);
-        if (!respons.getStatus()) return;
-        getResponseHandler();
-        break;
-      }
+      // case ROW_ACTIONS.DELETE: {
+      //   const respons = await FormService.remove_response_one(response.id);
+      //   if (!respons.getStatus()) return;
+      //   getResponseHandler();
+      //   break;
+      // }
       case ROW_ACTIONS.REPORT: {
         // setResponse(
         //   { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id, hold: true },
@@ -101,7 +110,7 @@ export const FormsPage: FunctionComponent = () => {
       <Table<IResponseResponse>
         data={responses.value}
         columns={columns}
-        pageSize={20}
+        pageSize={30}
         onClickAction={handleOnClick}
       />
     </Section>

@@ -2,7 +2,6 @@ import { IShiftResponse } from '@/types/shift/activity';
 import ContractInfo from './expandable/contract.expandable';
 import DateInfo from './expandable/date.expandable';
 import EmployeeInfo from './expandable/employee.expandable';
-import ReportInfo from './expandable/report.expandable';
 import RoundInfo from './expandable/round.expandable';
 import ServiceInfo from './expandable/service.expandable ';
 import ShiftInfo from './expandable/shift.expandable';
@@ -43,8 +42,8 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
       return <EmployeeInfo employee={employee} place={service.place} />;
     case InfoType.CONTRACT:
       return <ContractInfo contract={service.contract} />;
-    case InfoType.REPORT:
-      return <ReportInfo data={shift} />;
+    // case InfoType.REPORT:
+    //   return <ReportInfo data={data} />;
     case InfoType.SHIFT:
       return <ShiftInfo data={shift} />;
     case InfoType.ROUND:
