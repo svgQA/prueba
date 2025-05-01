@@ -28,7 +28,6 @@ export const RoundsSettingPage: FunctionComponent = () => {
       label: 'create',
       id: 'rounds-create',
     };
-    navigate(menu.to);
     appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creación de ronda' });
     navigate('/round/create');
@@ -74,6 +73,12 @@ export const RoundsSettingPage: FunctionComponent = () => {
   };
 
   const editProject = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.update.to,
+      label: 'update',
+      id: 'rounds-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar ronda' });
     navigate(`/round/update/${id}`);
   };
