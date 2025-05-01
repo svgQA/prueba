@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { useSignal } from '@preact/signals';
 import { IMessage } from '@/utils/socket/interface';
 import { useEffect } from 'preact/hooks';
+import { Button } from '@/components/common/button/button';
 
 interface ChatMessage {
   message: string;
@@ -151,8 +152,8 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           </div>
         */}
 
-        <div className='flex flex-1 overflow-y-auto border-t'>
-          <div className='w-[30%] border-r dark:border-b-dark-light flex flex-col h-full'>
+        <div className='flex flex-1 overflow-y-auto border-t border-b-light-dark dark:border-b-dark-light'>
+          <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light'>
             {/*
             <ChatHeader />
             */}
@@ -165,7 +166,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               onClick={handleChatSelect}
               isSelected={selectedChat.value === '0'}
             />
-            <div className='flex-1 overflow-y-auto vox-scroll-design border-t dark:border-t-dark-light'>
+            <div className='flex-1 overflow-y-auto vox-scroll-design border-b-light-dark dark:border-b-dark-light'>
               {users.map((user: IUserResponse) => (
                 <ChatCard
                   user={user}
@@ -180,33 +181,25 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 />
               ))}
             </div>
-            <div className='flex justify-between items-center p-4 border-t dark:border-t-dark-light'>
-              <button
+            <div className='flex justify-between items-center p-4 border-t border-r dark:border-b-dark-light border-b-light-dark'>
+              <Button
+                name={t('memos.pagination.previous')}
                 onClick={handlePrevPage}
                 disabled={currentPage.value === 1}
-                className={`px-4 py-2 rounded-md ${
-                  currentPage.value === 1
-                    ? 'bg-gray-300 cursor-not-allowed'
-                    : 'bg-blue-500 hover:bg-blue-600'
-                } text-white`}
-              >
-                {t('memos.pagination.previous')}
-              </button>
+                icon='014'
+                label={t('memos.pagination.previous')}
+              />
               <span className='text-sm text-gray-500'>
                 {t('memos.pagination.page')} {currentPage.value}{' '}
                 {t('memos.pagination.of')} {totalPages.value}
               </span>
-              <button
+              <Button
+                name={t('memos.pagination.next')}
                 onClick={handleNextPage}
                 disabled={currentPage.value >= totalPages.value}
-                className={`px-4 py-2 rounded-md ${
-                  currentPage.value >= totalPages.value
-                    ? 'bg-gray-300 cursor-not-allowed'
-                    : 'bg-blue-500 hover:bg-blue-600'
-                } text-white`}
-              >
-                {t('memos.pagination.next')}
-              </button>
+                icon='015'
+                label={t('memos.pagination.next')}
+              />
             </div>
           </div>
 

@@ -45,6 +45,7 @@ import { Dropdown } from '@/components/common/dropdown/dropdown';
 // import { IconsModal } from '../globals/icons/icons';
 import { ThemeButton } from '@/components/compose/button';
 import { Button } from '@/components/common/button/button';
+import { IconsModal } from '../globals/icons/icons';
 
 // import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
@@ -225,7 +226,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           ))}
         </OnBordingModal>
         */}
-        {/* <IconsModal /> */}
+        <IconsModal />
         <ToastContainer />
       </section>
     );
