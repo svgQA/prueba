@@ -83,7 +83,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     },
   },
   {
-    id: 'start-time',
+    id: 'time-start',
     accessorKey: 'start',
     size: 150,
     header: t('shifts.columns.start'),
@@ -133,7 +133,7 @@ export const columns: ColumnDef<IShiftResponse>[] = [
     },
   },
   {
-    id: 'start-end',
+    id: 'time-end',
     accessorKey: 'end',
     size: 150,
     header: t('shifts.columns.end'),

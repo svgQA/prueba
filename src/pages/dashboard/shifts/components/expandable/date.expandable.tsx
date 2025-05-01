@@ -1,31 +1,94 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
+import { showAlert } from '@/components/common/show-alert/show-alert';
 import { useSignal } from '@preact/signals';
+import { toast } from 'react-toastify';
+import i18n from '@/i18n';
+import { ShiftService } from '@/services/shift';
+import dayjs from 'dayjs';
+const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
+  console.log('shift ==>', shift);
 
-const DateInfo = ({ data = {} }: any) => {
+  const calculateCheckStatus = (
+    checkTime: string,
+    scheduleTime: string,
+    isCheckIn: boolean
+  ) => {
+    if (!checkTime)
+      return {
+        message: 'Pendiente',
+        color: 'bg-gray-200 text-gray-700',
+      };
+
+    const check = new Date(checkTime);
+    const schedule = new Date(scheduleTime);
+
+    const diffMinutes = (check.getTime() - schedule.getTime()) / (1000 * 60);
+
+    if (isCheckIn) {
+      // Para check in, es tarde si llega después de la hora programada
+      if (diffMinutes > 0) {
+        return {
+          message: i18n.t('shift.expandable.date.checkError'),
+          color: 'bg-red-200 text-red-700',
+        };
+      } else {
+        return {
+          message: i18n.t('shift.expandable.date.checkSuccess'),
+          color: 'bg-green-200 text-green-700',
+        };
+      }
+    } else {
+      // Para check out, es temprano si sale antes de la hora programada
+      if (diffMinutes < 0) {
+        return {
+          message: i18n.t('shift.expandable.date.checkSuccess'),
+          color: 'bg-green-200 text-green-700',
+        };
+      } else {
+        return {
+          message: i18n.t('shift.expandable.date.checkError'),
+          color: 'bg-red-200 text-red-700',
+        };
+      }
+    }
+  };
+
+  const employeeName =
+    employee?.name && employee?.surname
+      ? `${employee.name} ${employee.surname}`
+      : '';
+
+  const checkInStatus = calculateCheckStatus(checkIn?.time, shift.start, true);
+  const checkOutStatus = calculateCheckStatus(checkOut?.time, shift.end, false);
+
   return (
     <div class='flex gap-6 justify-center p-4'>
       {/* Inicio del Turno */}
       <ShiftCard
         title='Inicio del Turno'
-        name={data.name || 'Brian Scott'}
-        date={data.startDate || '11/03/2024'}
-        time={data.startTime || '17:53'}
-        source={data.startSource || 'Desde la web'}
-        status={data.startStatus || 'Temprano'}
-        statusColor='bg-blue-200 text-blue-700'
-        distance={data.startDistance || '8 metros'}
+        name={employeeName}
+        date={checkIn?.time || ''}
+        time={checkIn?.time || ''}
+        source={checkIn?.platform || ''}
+        status={checkInStatus?.message || ''}
+        statusColor={checkInStatus?.color || ''}
+        distance={checkIn?.distance || ''}
+        btnLabel='Check In'
+        shiftId={shift?.id || 0}
       />
 
       {/* Finalización del Turno */}
       <ShiftCard
         title='Finalización del Turno'
-        name={data.name || 'Brian Scott'}
-        date={data.endDate || '11/03/2024'}
-        time={data.endTime || '17:53'}
-        source={data.endSource || 'Desde la app'}
-        status={data.endStatus || 'A Tiempo'}
-        statusColor='bg-green-200 text-green-700'
-        distance={data.endDistance || '6 metros'}
+        name={employeeName}
+        date={checkOut?.time || ''}
+        time={checkOut?.time || ''}
+        source={checkOut?.platform || ''}
+        status={checkOutStatus?.message || ''}
+        statusColor={checkOutStatus?.color || ''}
+        distance={checkOut?.distance || ''}
+        btnLabel='Check Out'
+        shiftId={shift?.id || 0}
       />
     </div>
   );
@@ -40,6 +103,8 @@ const ShiftCard = ({
   status,
   statusColor,
   distance,
+  btnLabel,
+  shiftId,
 }: {
   title: string;
   name: string;
@@ -49,6 +114,8 @@ const ShiftCard = ({
   status: string;
   statusColor: string;
   distance: string;
+  btnLabel: string;
+  shiftId: number;
 }) => {
   const points = useSignal<any>([
     [
@@ -62,10 +129,79 @@ const ShiftCard = ({
     ],
   ]);
 
+  const getLocation = async () => {
+    try {
+      const position = await new Promise<GeolocationPosition>(
+        (resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        }
+      );
+      return position;
+    } catch (error) {
+      console.log('error', error);
+      getErrorGeolocation(error as GeolocationPositionError);
+      return null;
+    }
+  };
+
+  const getErrorGeolocation = (error: GeolocationPositionError) => {
+    if (!(error instanceof GeolocationPositionError)) return;
+
+    if (error.code === error.PERMISSION_DENIED) {
+      showAlert({
+        title: i18n.t('shift.expandable.date.location.title'),
+        message: i18n.t('shift.expandable.date.location.message'),
+        onConfirm: () => {},
+        onCancel: () => {},
+      });
+    } else if (error.code === error.POSITION_UNAVAILABLE) {
+      toast.error(i18n.t('shift.expandable.date.location.gpsMessage'), {
+        position: 'top-right',
+      });
+    } else {
+      toast.error(i18n.t('shift.expandable.date.location.timeoutMessage'), {
+        position: 'top-right',
+      });
+    }
+  };
+
+  const handleCheck = async () => {
+    const position = await getLocation();
+    if (!position) return null;
+
+    const checkData = {
+      latitude: position.coords.latitude.toString(),
+      longitude: position.coords.longitude.toString(),
+      date: new Date().toISOString(),
+      platform: 'web',
+      type: btnLabel === 'Check In' ? 'CHECK_IN' : 'CHECK_OUT',
+    };
+
+    const response = await ShiftService.createCheck(checkData, shiftId);
+    if (response.getStatus()) {
+      toast.success(i18n.t('shift.expandable.date.success'));
+    }
+  };
+
   return (
     <div className='bg-b-white rounded-lg shadow-sm p-4 w-full'>
       {/* Título */}
-      <h2 className='text-t-light font-medium mb-4'>{title}</h2>
+      <div className='flex items-center justify-between mb-4'>
+        <h2 className='text-t-light font-medium'>{title}</h2>
+        <button
+          onClick={() =>
+            showAlert({
+              title: btnLabel,
+              message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
+              onConfirm: () => handleCheck(),
+              onCancel: () => {},
+            })
+          }
+          className='px-3 py-1 text-sm text-primary border border-primary rounded-md hover:bg-primary-opacity'
+        >
+          {btnLabel}
+        </button>
+      </div>
 
       <div className='flex'>
         {/* Columna izquierda - Foto y nombre */}
@@ -92,7 +228,9 @@ const ShiftCard = ({
             </div>
             <div>
               <p className='text-xs text-t-light-dark'>Fecha</p>
-              <p className='text-sm text-t-light'>{date}</p>
+              <p className='text-sm text-t-light'>
+                {dayjs(date).format('DD/MM/YYYY')}
+              </p>
             </div>
           </div>
 
@@ -102,7 +240,9 @@ const ShiftCard = ({
             </div>
             <div>
               <p className='text-xs text-t-light-dark'>Hora</p>
-              <p className='text-sm text-t-light'>{time}</p>
+              <p className='text-sm text-t-light'>
+                {dayjs(time).format('HH:mm')}
+              </p>
             </div>
           </div>
 
