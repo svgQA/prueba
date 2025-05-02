@@ -1,5 +1,4 @@
 import { Avatar } from '@/components/common/Avatar';
-import { ButtonAction } from '@/components/common/button/column';
 import { Chip } from '@/components/common/chip/chip';
 import { RelativeTime } from '@/components/common/relative/relative';
 import { IDropdownAction, DropdownActionsMenu } from '@/components/common/table/components/dropdown.actions.menu';
@@ -22,10 +21,10 @@ export const getColumns = (
         const { user } = info.row.original;
         return (
           <div className='flex items-center'>
-            <Avatar name={user.name} src={user.image} size='sm' square />
+            <Avatar name={user?.name} src={user?.image} size='sm' square />
             <div className='flex flex-col ml-3'>
               <div className='font-bold'>
-                {user.name} {user.surname}
+                {user?.name} {user?.surname}
               </div>
             </div>
           </div>
