@@ -26,8 +26,7 @@ import {
   useRef,
   useState,
 } from 'preact/hooks';
-import { ITableProps } from './interface';
-
+import { type ITableProps } from './interface';
 import { Search } from '../search/search';
 import {
   DndContext,
@@ -51,6 +50,7 @@ import { Switch } from '../switch/switch';
 import { ROW_ACTIONS } from './enum';
 import { Group } from './components/group';
 import { useSignal } from '@preact/signals';
+import { IShiftResponse } from '@/types/shift/activity';
 
 export const Table = <T,>({
   data,
@@ -62,9 +62,10 @@ export const Table = <T,>({
   onClickAction,
   unsearch,
   button,
-  showExpandableIcon = true,
+  showExpandableIcon = false,
   selectable,
   onSelectionChange,
+  onNotifications,
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -118,69 +119,6 @@ export const Table = <T,>({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  /*
-  const extendedColumns = useMemo(() => {
-    if (!selectable) return columnsData;
-
-    return [
-      {
-        id: 'select',
-        header: () => {
-          const allSelected = data.length > 0 && Object.keys(selectedRows).length === data.length;
-          const noneSelected = Object.keys(selectedRows).length === 0;
-
-          return (
-            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                className="w-4 h-4"
-                checked={allSelected}
-                indeterminate={!noneSelected && !allSelected} // esto lo maneja nativo si usas React, aquí no aplica directamente
-                onChange={(e) => {
-                  const checked = e.currentTarget.checked;
-                  const newSelection = checked
-                    ? Object.fromEntries(data.map((row: any) => [row.id, row]))
-                    : {};
-                  setSelectedRows(newSelection);
-                  onSelectionChange?.(Object.values(newSelection));
-                }}
-              />
-              <span className="text-sm font-medium text-gray-700">
-                {allSelected ? 'Limpiar selección' : 'Notificar'}
-              </span>
-            </label>
-          );
-        },
-
-        cell: ({ row }: { row: Row<T> }) => {
-          // const id = (row.original as any).id;
-          return (
-            <input
-              type="checkbox"
-              className="w-4 h-4"
-              checked={!!selectedRows[(row.original as any).id]}
-              onChange={(e) => {
-                const id = (row.original as any).id;
-                const updated = { ...selectedRows };
-                if (e.currentTarget.checked) {
-                  updated[id] = row.original;
-                } else {
-                  delete updated[id];
-                }
-                setSelectedRows(updated);
-                onSelectionChange?.(Object.values(updated));
-              }}
-            />
-          );
-        },
-        enableSorting: false,
-        enableHiding: false,
-      },
-      ...columnsData, // ← columnas originales van después del checkbox
-    ];
-  }, [selectable, data, selectedRows]);
-  */
 
   const table = useReactTable({
     data,
@@ -248,8 +186,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    // bg-b-light dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light
-    <div className='min-w-80 invisible absolute left-0 top-10 rounded-md p-4 bg-b-content border-2 border-gray-100 dark:border-b-dark-light'>
+    <div className='min-w-80 invisible absolute left-0 top-12 rounded-md p-4 bg-gray-200 dark:bg-gray-800 border-2 border-gray-100 dark:border-b-dark-light'>
       {table.getAllLeafColumns().map((column, index) => {
         const columnHeader =
           typeof column.columnDef.header !== 'string'
@@ -263,15 +200,16 @@ export const Table = <T,>({
             <div>
               {column.getCanPin() && (
                 <span
-                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${column.getIsPinned() ? 'text-error' : 'text-primary'
-                    }`}
+                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${
+                    column.getIsPinned() ? 'text-error' : 'text-primary'
+                  }`}
                   onClick={() =>
                     column.pin(column.getIsPinned() ? false : 'left')
                   }
                 />
               )}
             </div>
-            { }
+            {}
             <Switch
               name={`ch-hidden-${column.id}`}
               id={`ch-hidden-${column.id}`}
@@ -299,86 +237,197 @@ export const Table = <T,>({
             const isLastRow = rowIndex === rows.length - 1;
 
             if (row.getIsGrouped()) {
+              const selectableGroupItems = row.subRows
+                .map((r) => r.original as any)
+                .filter((item) => item?.employee?.playerId);
+
+              const selectableGroupIds = selectableGroupItems.map(
+                (item) => item.id
+              );
+
+              const allGroupSelected =
+                selectableGroupIds.length > 0 &&
+                selectableGroupIds.every((id) => selectedRows[id]);
+
+              const someGroupSelected =
+                selectableGroupIds.some((id) => selectedRows[id]) &&
+                !allGroupSelected;
+
               return (
                 <Fragment key={row.id}>
-                  <tr className='odd:bg-gray-100'>
+                  <tr>
                     {!unsettings && (
-                      <td
-                        className='text-center left-0 min-w-[30px]'
-                      // style={{ position: 'sticky', zIndex: 1 }}
-                      >
+                      <td className='text-center left-0 min-w-[30px]'>
                         <span
                           onClick={() => row.toggleExpanded()}
-                          className={`vox-icon ${row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
-                            } cursor-pointer size-sm`}
+                          className={`vox-icon ${
+                            row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
+                          } cursor-pointer size-sm`}
                         />
                       </td>
                     )}
                     <td
                       colSpan={
-                        row.getVisibleCells().length + (!unsettings ? 0 : 0)
+                        row.getVisibleCells().length + (!unsettings ? 1 : 0)
                       }
                       className='p-2 font-semibold'
                     >
-                      {row.groupingColumnId && (
+                      <div className='flex justify-between items-center w-full'>
+                        {/* <span>
+                          {row.groupingColumnId && (
+                            <>
+                              {row.getValue(row.groupingColumnId)} (
+                              {row.subRows.length})
+                            </>
+                          )}
+                        </span> */}
+
                         <span>
-                          {typeof row.columnFilters?.[0] === 'string' ? '' : ''}
-                          {row.getValue(row.groupingColumnId)} (
-                          {row.subRows.length})
+                          {(() => {
+                            const groupingColumn = table
+                              .getAllLeafColumns()
+                              .find((col) => col.id === row.groupingColumnId);
+                            const getIconGroup = (
+                              groupingColumn?.columnDef as any
+                            ).getIconGroup;
+                            const iconData = getIconGroup
+                              ? getIconGroup(row.original)
+                              : undefined;
+                            const iconGroup = iconData?.icon;
+                            const colorIconGroup = iconData?.color;
+                            return iconGroup ? (
+                              <span
+                                className={`vx-icon vx-icon-${iconGroup} size-md mt-3 ${colorIconGroup ?? ''}`}
+                              />
+                            ) : null;
+                          })()}
+                          <span className='ml-2'>
+                            {row.groupingColumnId
+                              ? `${row.getValue(row.groupingColumnId)} (${row.subRows.length})`
+                              : `(${row.subRows.length})`}
+                          </span>
                         </span>
-                      )}
+
+                        {selectable &&
+                          onNotifications &&
+                          row.subRows.some(
+                            (sub) => !!(sub.original as any).employee?.playerId
+                          ) && (
+                            <label className='inline-flex items-center gap-2'>
+                              <input
+                                type='checkbox'
+                                className='w-4 h-4'
+                                checked={allGroupSelected}
+                                ref={(el) => {
+                                  if (el) el.indeterminate = someGroupSelected;
+                                }}
+                                onChange={(e) => {
+                                  const isChecked = e.currentTarget.checked;
+                                  const updated = { ...selectedRows };
+
+                                  row.subRows.forEach((subRow) => {
+                                    const data = subRow.original as any;
+                                    if (data.employee?.playerId) {
+                                      const id = data.id;
+                                      if (isChecked) {
+                                        updated[id] = data;
+                                      } else {
+                                        delete updated[id];
+                                      }
+                                    }
+                                  });
+
+                                  setSelectedRows(updated);
+                                  onSelectionChange?.(Object.values(updated));
+                                }}
+                              />
+                              <span className='text-sm text-gray-700'>
+                                {allGroupSelected
+                                  ? 'Deseleccionar'
+                                  : 'Seleccionar todas'}
+                              </span>
+                            </label>
+                          )}
+                      </div>
                     </td>
                   </tr>
-                  {row.getIsExpanded() &&
+
+                  {/* {row.getIsExpanded() &&
                     row.subRows.length > 0 &&
-                    renderRows(row.subRows)}
+                    renderRows(row.subRows)} */}
+
+                  {row.getIsExpanded() &&
+                    !row.parentId &&
+                    row.subRows.map((subRow) => (
+                      <tr key={subRow.id}>
+                        {!unsettings && (
+                          <td className='left-0 min-w-[30px]'></td>
+                        )}
+                        {subRow.getVisibleCells().map((cell) => (
+                          <td key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
                 </Fragment>
               );
-            } else {
+            } else if (!row.parentId) {
+              // } else {
               return (
                 <Fragment key={row.id}>
                   <tr
-                    className={`odd:bg-gray-100 ${data.length > pageSize && isLastRow
-                      ? 'no-bottom-border'
-                      : ''
-                      }`}
+                    className={`text-t-light dark:text-t-dark ${
+                      data.length > pageSize && isLastRow
+                        ? 'no-bottom-border'
+                        : ''
+                    }`}
                   >
                     {!unsettings && (
                       <td
-                        className='left-0 min-w-[30px] bg-gray-200'
-                      // style={{ position: 'sticky', zIndex: 1 }}
+                        className='left-0 min-w-[30px]'
+                        // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
-                          <span
-                            onClick={() => row.toggleExpanded()}
-                            className='vox-icon vx-icon-001 cursor-pointer size-sm'
-                          />
-                        )}
-                        {selectable && (
-                          <div className='flex items-center justify-center'>
-                            <input
-                              type='checkbox'
-                              className='w-4 h-4'
-                              checked={!!selectedRows[(row.original as any).id]}
-                              onChange={(e) => {
-                                e.preventDefault();
-                                const id = (
-                                  row.original as unknown as {
-                                    id: string | number;
-                                  }
-                                ).id;
-                                const updated = { ...selectedRows };
-                                if (e.currentTarget.checked) {
-                                  updated[id] = row.original;
-                                } else {
-                                  delete updated[id];
-                                }
-                                setSelectedRows(updated);
-                                onSelectionChange?.(Object.values(updated));
-                              }}
+                          <div className='flex items-center justify-center h-full'>
+                            <span
+                              onClick={() => row.toggleExpanded()}
+                              className='vox-icon vx-icon-001 cursor-pointer size-sm'
                             />
                           </div>
                         )}
+                        {selectable &&
+                          onNotifications &&
+                          (row.original as IShiftResponse)?.employee
+                            ?.playerId && (
+                            <div className='flex items-center justify-center h-full'>
+                              <input
+                                type='checkbox'
+                                className='w-4 h-4'
+                                checked={
+                                  !!selectedRows[(row.original as any).id]
+                                }
+                                onChange={(e) => {
+                                  e.preventDefault();
+                                  const data = row.original as any;
+                                  const id = data.id;
+                                  const updated = { ...selectedRows };
+
+                                  if (e.currentTarget.checked) {
+                                    updated[id] = data;
+                                  } else {
+                                    delete updated[id];
+                                  }
+
+                                  setSelectedRows(updated);
+                                  onSelectionChange?.(Object.values(updated));
+                                }}
+                              />
+                            </div>
+                          )}
                       </td>
                     )}
                     {row.getVisibleCells().map((cell) => (
@@ -393,6 +442,12 @@ export const Table = <T,>({
                             currentColumnName.value = value;
                           }}
                           cell={cell}
+                          className={
+                            row.getIsExpanded() &&
+                            currentColumnName.value === cell.column.id
+                              ? 'bg-primary-opacity dark:bg-b-dark-light'
+                              : ''
+                          }
                         />
                       </SortableContext>
                     ))}
@@ -507,10 +562,11 @@ export const Table = <T,>({
           <button
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            className={`flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanPreviousPage()
-              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
+            className={`flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanPreviousPage()
+                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
           >
             <span>{'«'}</span>
           </button>
@@ -518,10 +574,11 @@ export const Table = <T,>({
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanPreviousPage()
-              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanPreviousPage()
+                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
           >
             <span>{'‹'}</span>
           </button>
@@ -534,7 +591,7 @@ export const Table = <T,>({
                 ref={activeDropdown === i ? dropdownRef : null}
               >
                 <button
-                  className='mx-1 flex h-8 w-8 items-center justify-center text-gray-600 hover:bg-gray-100 rounded-sm border border-gray-300'
+                  className='mx-1 flex h-8 w-8 items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
                   onClick={() =>
                     setActiveDropdown(activeDropdown === i ? null : i)
                   }
@@ -543,20 +600,20 @@ export const Table = <T,>({
                 </button>
 
                 {activeDropdown === i && (
-                  <div className='absolute bottom-full left-0 mb-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 py-2 px-2 min-w-[120px]'>
+                  <div className='absolute bottom-full left-0 mb-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 py-2 px-2 min-w-[120px]'>
                     <div className='grid grid-cols-3 gap-1'>
                       {(pageIdx === 'ellipsis-start'
                         ? getIntermediatePages(1, currentPage - 1).filter(
-                          (num) => !pageNumbers.includes(num)
-                        )
+                            (num) => !pageNumbers.includes(num)
+                          )
                         : getIntermediatePages(
-                          currentPage + 1,
-                          totalPages - 2
-                        ).filter((num) => !pageNumbers.includes(num))
+                            currentPage + 1,
+                            totalPages - 2
+                          ).filter((num) => !pageNumbers.includes(num))
                       ).map((pageNum) => (
                         <button
                           key={`dropdown-page-${pageNum}`}
-                          className='flex items-center justify-center h-8 w-8 rounded-sm hover:bg-gray-100 text-sm'
+                          className='flex items-center justify-center h-8 w-8 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-600 dark:text-gray-300'
                           onClick={(e) => {
                             e.stopPropagation();
                             table.setPageIndex(pageNum);
@@ -574,10 +631,11 @@ export const Table = <T,>({
               <button
                 key={`page-${pageIdx}`}
                 onClick={() => table.setPageIndex(Number(pageIdx))}
-                className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${currentPage === pageIdx
-                  ? 'border-[#00BCD4] bg-[#E0F7FA] text-[#00838F]'
-                  : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-                  }`}
+                className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+                  currentPage === pageIdx
+                    ? 'border-[#00BCD4] dark:border-[#006064] bg-[#E0F7FA] dark:bg-[#006064] text-[#00838F] dark:text-[#B2EBF2]'
+                    : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }`}
               >
                 {Number(pageIdx) + 1}
               </button>
@@ -587,10 +645,11 @@ export const Table = <T,>({
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanNextPage()
-              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanNextPage()
+                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
           >
             <span>{'›'}</span>
           </button>
@@ -598,10 +657,11 @@ export const Table = <T,>({
           <button
             onClick={() => table.setPageIndex(totalPages - 1)}
             disabled={!table.getCanNextPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${!table.getCanNextPage()
-              ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
+            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
+              !table.getCanNextPage()
+                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
           >
             <span>{'»'}</span>
           </button>
@@ -609,7 +669,7 @@ export const Table = <T,>({
 
         <div className='text-sm text-gray-600 flex items-center gap-2'>
           <span>Página</span>
-          <div className='inline-block border border-gray-300 bg-white rounded-sm px-3 py-1 min-w-[40px] text-center'>
+          <div className='inline-block border border-gray-300 bg-white dark:border-gray-700 dark:text-white dark:bg-gray-800 rounded-sm px-3 py-1 min-w-[40px] text-center'>
             {currentPage + 1}
           </div>
           <span>de {totalPages}</span>
@@ -620,7 +680,8 @@ export const Table = <T,>({
 
   return (
     <>
-      <div className='relative w-full my-2 flex items-center justify-end'>
+      {/* sticky top-[3.4rem] z-[8] */}
+      <div className='w-full py-1 pb-3 flex items-center justify-end'>
         {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (
           <Search
@@ -641,51 +702,77 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg !overflow-x-auto vox-scroll-design'
+          className='pb-16 min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg vox-scroll-design relative overflow-x-auto'
         >
           <table className='elements'>
             <thead>
               {table.getHeaderGroups().map((headerGroup, index) => (
                 <tr
                   key={`${headerGroup.id}-${index}`}
-                  className='sticky top-0 z-10'
+                  className='sticky top-0 z-[5]'
                 >
-
-                  {!unsettings && (
-                    <th
-                      colSpan={1}
-                      className='table-setting-button left-0 min-w-[30px] bg-white px-2'
-                      style={{ position: 'sticky', zIndex: 1 }}
-                    >
-                      <div className='flex items-center gap-2'>
-                        {selectable && (
-                          <input
-                            type='checkbox'
-                            className='w-4 h-4'
-                            checked={Object.keys(selectedRows).length === data.length}
-                            ref={(el) => {
-                              if (el) {
-                                const all = data.length > 0 && Object.keys(selectedRows).length === data.length;
-                                const none = Object.keys(selectedRows).length === 0;
-                                el.indeterminate = !all && !none;
-                              }
-                            }}
-                            onChange={(e) => {
-                              const checked = e.currentTarget.checked;
-                              const newSelection = checked
-                                ? Object.fromEntries(data.map((row: any) => [row.id, row]))
-                                : {};
-                              setSelectedRows(newSelection);
-                              onSelectionChange?.(Object.values(newSelection));
+                  <th
+                    colSpan={1}
+                    className='table-setting-button flex items-center justify-center'
+                    style={{ position: 'sticky', zIndex: 1 }}
+                  >
+                    {selectable &&
+                      onNotifications &&
+                      // TODO: esto se puede buscar y validar del ciclo que pinta las filas
+                      data.some((row: any) => !!row.employee?.playerId) && (
+                        <input
+                          type='checkbox'
+                          className='w-4 h-4'
+                          checked={
+                            Object.keys(selectedRows).length === data.length
+                          }
+                          ref={(el) => {
+                            if (el) {
+                              const all =
+                                data.length > 0 &&
+                                Object.keys(selectedRows).length ===
+                                  data.length;
+                              const none =
+                                Object.keys(selectedRows).length === 0;
+                              el.indeterminate = !all && !none;
+                            }
+                          }}
+                          onChange={(e) => {
+                            const checked = e.currentTarget.checked;
+                            const newSelection = checked
+                              ? Object.fromEntries(
+                                  data.map((row: any) => [row.id, row])
+                                )
+                              : {};
+                            setSelectedRows(newSelection);
+                            onSelectionChange?.(Object.values(newSelection));
+                          }}
+                        />
+                      )}
+                    {!unsettings && !onNotifications && (
+                      <div className='flex items-center gap-2 relative'>
+                        <div className='relative'>
+                          <span
+                            className='vox-icon vx-icon-168 size-sm cursor-pointer'
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveDropdown(
+                                activeDropdown === -1 ? null : -1
+                              );
                             }}
                           />
-                        )}
+                          {activeDropdown === -1 && (
+                            <div
+                              ref={dropdownRef}
+                              className='absolute -left-3 -mt-10 z-50'
+                            >
+                              {buildSettings()}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </th>
-                  )}
-                  <span className='vox-icon vx-icon-168 size-sm' />
-                  {buildSettings()}
-
+                    )}
+                  </th>
                   <SortableContext
                     items={columnOrder}
                     strategy={horizontalListSortingStrategy}
@@ -694,31 +781,26 @@ export const Table = <T,>({
                       <th
                         key={header.id}
                         colSpan={header.colSpan}
-                        className='px-2 py-1 text-left bg-white sticky top-0 z-10'
+                        className='px-2 py-1 text-left sticky top-0 z-10'
                       >
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </th>
                     ))}
                   </SortableContext>
                 </tr>
               ))}
             </thead>
-            <tbody>
-              {renderRows(table.getRowModel().rows)}
-              <tr>
-                <td
-                  colSpan={table.getAllColumns().length + (!unsettings ? 1 : 0)}
-                >
-                  {renderPagination()}
-                </td>
-              </tr>
-            </tbody>
+
+            <tbody>{renderRows(table.getRowModel().rows)}</tbody>
           </table>
+          <div className='bottom-2 left-0 right-0 bg-b-content dark:bg-b-dark absolute'>
+            {renderPagination()}
+          </div>
         </div>
       </DndContext>
     </>

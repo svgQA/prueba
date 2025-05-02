@@ -1,53 +1,86 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/common/badge/badge';
 import { IUserResponse } from '@/types/auth/service';
-import { ButtonAction } from '@/components/common/button/column';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import i18next from 'i18next';
+import {
+  IDropdownAction,
+  DropdownActionsMenu,
+} from '@/components/common/table/components/dropdown.actions.menu';
+import { Avatar } from '@/components/common/Avatar';
+// Función para obtener traducciones
+const t = (key: string) => i18next.t(key);
 
-export const userColumns: ColumnDef<IUserResponse>[] = [
+export const getColumns = (
+  onClickAction: (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => void
+): ColumnDef<IUserResponse>[] => [
   {
     id: 'name',
     accessorKey: 'name',
     size: 180,
-    header: 'Nombre',
+    header: t('users.columns.name'),
     cell: (info) => {
-      const { name, surname } = info.row.original;
-      return <div className='flex justify-center'>{`${name} ${surname}`}</div>;
+      const { name, surname, image } = info.row.original;
+      return (
+        <div className='flex items-center'>
+          <Avatar name={name} src={image} size='sm' square />
+          <span
+            className='p-1 size-sm cursor-pointer text-left'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            {`${name} ${surname}`}
+          </span>
+        </div>
+      );
     },
   },
   {
     id: 'cardId',
     accessorKey: 'cardId',
     size: 180,
-    header: 'Identificación',
+    header: t('users.columns.id'),
   },
   {
     id: 'email',
     accessorKey: 'email',
     size: 180,
-    header: 'E-mail',
+    header: t('users.columns.email'),
   },
   {
     id: 'company',
-    accessorKey: 'extraData.company',
+    accessorKey: 'companies',
     size: 180,
-    header: 'Compañía',
+    header: t('users.columns.company'),
     enableGrouping: true,
     cell: (info) => {
-      const { extraData } = info.row.original;
-      const value = extraData?.company || 'N/A';
-      return <div className='flex justify-center'>{value}</div>;
+      const { companies } = info.row.original;
+      return (
+        <div className='flex justify gap-1 flex-row'>
+          {companies.map((company) => (
+            <Avatar
+              name={company.company.name}
+              size='sm'
+              square
+              key={company.id}
+            />
+          ))}
+        </div>
+      );
     },
   },
   {
     id: 'department',
     accessorKey: 'extraData.area',
     size: 180,
-    header: 'Departamento',
+    header: t('users.columns.department'),
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
-      const value = extraData?.area || 'N/A';
+      const value = extraData?.area;
       return <div className='flex justify-center'>{value}</div>;
     },
   },
@@ -55,113 +88,119 @@ export const userColumns: ColumnDef<IUserResponse>[] = [
     id: 'ciudad',
     accessorKey: 'extraData.city',
     size: 180,
-    header: 'Ciudad',
+    header: t('users.columns.city'),
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
-      const value = extraData?.city || 'N/A';
+      const value = extraData?.city;
       return <div className='flex justify-center'>{value}</div>;
     },
   },
   {
-    id: 'connection',
-    accessorKey: 'connection',
-    size: 100,
+    id: 'conections',
+    accessorKey: 'conections',
     header: 'Conexión',
+    size: 100,
     cell: (info) => {
-      const value = info.getValue() as string; // 'Activo' | 'Inactivo'
-      // Podrías usar un badge distinto para "Activo" (verde) / "Inactivo" (rojo)
+      const value = info.getValue() as number;
+
+      let iconColor = 'success' as 'success' | 'error' | 'info' | 'warning'; // secondary por defecto
+      if (value >= 1 && value < 3) {
+        iconColor = 'error'; // error
+      } else if (value >= 3) {
+        iconColor = 'info'; // gray-text-light
+      }
+
       return (
-        <div className='flex justify-center'>
-          {value === 'Activo' ? (
-            <Badge label='' icon='190' textColor='text-secondary' size='md' />
-          ) : (
-            <Badge label='' icon='190' textColor='text-error' size='md' />
-          )}
+        <div className='flex items-center justify-center gap-2'>
+          <Badge icon='user-status' status={iconColor} size='md' />
         </div>
       );
     },
   },
   {
-    id: 'taskProgress',
-    accessorKey: 'taskProgress',
-    size: 180,
-    header: 'Progreso de tareas',
+    id: 'openRate',
+    header: 'Tasa de apertura',
+    size: 150,
     cell: (info) => {
-      const progress = info.getValue() as number;
-      // Definir el color dinámico basado en el progreso
-      // let progressColor = 'bg-error'; // Rojo por defecto para progreso <= 30%
+      const { tasks } = info.row.original as {
+        tasks?: { assigned: number; resolved: number };
+      };
+      const assignedTasks = tasks?.assigned ?? 0;
+      const resolvedTasks = tasks?.resolved ?? 0;
 
-      // if (progress < 30) {
-      //   progressColor = 'bg-error';
-      // } else if (progress >= 30 && progress < 70) {
-      //   progressColor = 'bg-caution';
-      // } else if (progress >= 70) {
-      //   progressColor = 'bg-primary';
-      // }
+      const hasTasks = assignedTasks > 0;
+      const openRate = hasTasks
+        ? Math.round((resolvedTasks / assignedTasks) * 100)
+        : 0;
 
-      // return (
-      //   <div className='flex flex-row justify-center'>
-      //     {/* Pasar el color dinámico al componente Gauge */}
-      //     <Gauge progress={progress} color={progressColor} />
-      //   </div>
-      // );
-
-      let progressColorClass = 'bg-error';
-      let textColorClass = 'text-error';
-
-      if (progress >= 30 && progress < 70) {
-        progressColorClass = 'bg-caution';
-        textColorClass = 'text-caution';
-      } else if (progress >= 70) {
-        progressColorClass = 'bg-primary';
-        textColorClass = 'text-primary';
-      }
+      let barColor = 'bg-caution';
+      if (openRate >= 70) barColor = 'bg-m6';
+      else if (openRate <= 30) barColor = 'bg-error';
 
       return (
-        <div className='flex flex-row justify-center'>
-          <div className='flex items-center w-full max-w-[120px]'>
-            <div className='relative flex-1 h-2 bg-gray-200 rounded-full mr-2'>
+        <div className='flex items-center gap-2 w-full'>
+          <div className='flex-1 h-2 bg-b-light-dark dark:bg-b-dark-light rounded-full overflow-hidden'>
+            {hasTasks && (
               <div
-                className={`absolute top-0 left-0 h-2 rounded-full ${progressColorClass}`}
-                style={{ width: `${progress}%` }}
+                className={`h-full ${barColor}`}
+                style={{ width: `${openRate}%` }}
               />
-            </div>
-            <span className={`text-sm font-medium ${textColorClass}`}>
-              {progress}%
-            </span>
+            )}
           </div>
+          <span className='text-xs font-semibold'>
+            {hasTasks ? `${openRate}%` : '%'}
+          </span>
         </div>
       );
     },
   },
   {
     id: 'actions',
-
     size: 20,
     cell: (info) => {
       const { id } = info.row.original;
+
+      const actions: IDropdownAction[] = [
+        {
+          label: 'Perfil del usuario',
+          icon: 'vox-icon vx-icon-229 text-primary',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'form',
+              action: ROW_ACTIONS.PROFILE,
+            });
+          },
+        },
+        {
+          label: 'Editar usuario',
+          icon: 'vox-icon vx-icon-123 text-primary',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'shift',
+              action: ROW_ACTIONS.UPDATE,
+            });
+          },
+        },
+        {
+          label: 'Eliminar usuario',
+          icon: 'vox-icon vx-icon-053 text-red-500',
+          color: 'text-red-600',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'shift',
+              action: ROW_ACTIONS.DELETE,
+            });
+          },
+        },
+      ];
+
       return (
         <div className='w-full flex justify-center'>
-          <ButtonAction
-            id={id}
-            type='form'
-            action={ROW_ACTIONS.PROFILE}
-            icon='229'
-          />
-          <ButtonAction
-            id={id}
-            type='shift'
-            action={ROW_ACTIONS.UPDATE}
-            icon='123'
-          />
-          <ButtonAction
-            id={id}
-            type='shift'
-            action={ROW_ACTIONS.DELETE}
-            icon='053'
-            color='!text-red-500'
-          />
+          <DropdownActionsMenu actions={actions} />
         </div>
       );
     },

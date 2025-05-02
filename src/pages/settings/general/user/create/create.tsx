@@ -3,7 +3,7 @@ import { useEffect } from 'preact/hooks';
 import { Form, Field } from 'react-final-form';
 import { required } from '@/utils/utilities';
 import { IUserRequest } from '@/types/auth';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { getUserMode, USER_MODE_SERVICE } from './store/user';
 import { navigate } from 'wouter/use-browser-location';
 import { Input } from '@/components/common/input/input';

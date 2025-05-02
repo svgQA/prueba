@@ -1,3 +1,5 @@
+import { IOption } from '@/components/common/multi/interface';
+
 export interface FormData {
   start: string;
   end: string;
@@ -7,8 +9,8 @@ export interface FormData {
   projectId: number;
   placeId: number;
   workstationId: number;
-  serviceId: string | number;
-  employeedId: string | number;
+  serviceId: any;
+  employeedId: any;
   roundId: number;
   externalId: string;
   keywords: string[];

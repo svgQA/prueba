@@ -7,13 +7,15 @@ import { columns } from './components/places.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect, useState } from 'preact/hooks';
-import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { PlaceService } from '@/services';
 
 export interface IRowActionPlace {
   id: string;
@@ -31,28 +33,40 @@ export const PlacesSettingPage: FunctionComponent = () => {
   }, []);
 
   const getPlaces = async () => {
-    const request: any = await ShiftService.getPlaces();
+    const request: any = await PlaceService.getPlaces();
     setPlaces(request.data);
   };
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.placesCreate.to,
+      label: 'create',
+      id: 'places-create',
+    };
+    navigate(menu.to);
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creacion de lugar' });
-    navigate('/rounds/places/create');
   };
 
   const deletePlace = async (id: string) => {
-    const request = await ShiftService.deletePlace(id);
+    const request = await PlaceService.deletePlace(id);
     if (!request.getStatus()) return;
     toast.success('Lugar eliminado', { position: 'top-right' });
     getPlaces();
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.placesUpdate.to,
+      label: 'update',
+      id: 'places-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar lugar' });
     navigate(`/rounds/places/update/${id}`);
   };
   const handleOnClick = async (action: IRowActionPlace | any) => {
-    console.log(action);
+    // console.log(action);
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
         update(action.id);

@@ -8,7 +8,7 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 
-import { ShiftService } from '@/services/shift';
+import { ShiftService } from '@/services/shift/shift';
 import { toast } from 'react-toastify';
 
 import {

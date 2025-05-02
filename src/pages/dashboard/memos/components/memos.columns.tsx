@@ -3,7 +3,27 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from '../utils/memos';
 
 import dayjs from 'dayjs';
-import { PBadge } from '@/components/common/priority/priority';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import {
+  IDropdownAction,
+  DropdownActionsMenu,
+} from '@/components/common/table/components/dropdown.actions.menu';
+import { Badge } from '@/components/common/badge/badge';
+import { Avatar } from '@/components/common/Avatar';
+
+// Define our custom properties
+type CustomColumnProps = {
+  iconGroup?: string;
+  colorIconGroup?: string;
+  getIconGroup?: (row: Memo) => { icon: string; color: string };
+};
+
+// Create a type that combines ColumnDef with our custom properties
+type CustomColumnDef<TData> = ColumnDef<TData> & CustomColumnProps;
+// import i18next from 'i18next';
+
+// Función para obtener traducciones
+// const t = (key: string) => i18next.t(key);
 
 export const ProgressBar: FunctionComponent<{ progress: number }> = ({
   progress,
@@ -44,55 +64,197 @@ export const FormattedDate: FunctionComponent<{ date: string }> = ({
   );
 };
 
-export const columns: ColumnDef<Memo>[] = [
+export const getColumns = (
+  onClickAction: (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => void
+): CustomColumnDef<Memo>[] => [
+  // {
+  //   id: 'id',
+  //   accessorKey: 'id',
+  //   header: 'ID',
+  //   cell: (info) => (
+  //     <div className='flex items-center'>
+  //       <span>{String(info.getValue())}</span>
+  //     </div>
+  //   ),
+  // },
+  // {
+  //   id: 'city',
+  //   accessorKey: 'city',
+  //   header: 'Ciudad',
+  // },
+  // {
+  //   id: 'address',
+  //   accessorKey: 'address',
+  //   header: 'Dirección',
+  //   cell: (info) => <span>{String(info.getValue())}</span>,
+  // },
+  // {
+  //   id: 'noveltyDate',
+  //   accessorKey: 'noveltyDate',
+  //   header: 'Fecha Novedad',
+  //   cell: (info) => <FormattedDate date={info.getValue() as string} />,
+  // },
+  // {
+  //   id: 'contact',
+  //   accessorKey: 'contact',
+  //   header: 'Contacto',
+  // },
   {
-    id: 'id',
-    accessorKey: 'id',
-    header: 'ID',
-    cell: (info) => (
-      <div className='flex items-center'>
-        <span>{String(info.getValue())}</span>
-      </div>
-    ),
+    id: 'noveltyType',
+    accessorKey: 'novelty.name',
+    header: 'Novedad',
+    enableGrouping: true,
+    getIconGroup: (row: Memo) => {
+      if (row.priority === 5) {
+        return { icon: '165', color: 'text-error' };
+      }
+
+      if (row.priority === 4) {
+        return { icon: '182', color: 'text-caution' };
+      }
+
+      return { icon: '319', color: 'text-primary' };
+    },
+  },
+  {
+    id: 'description',
+    accessorKey: 'description',
+    header: 'Descripción',
+    enableGrouping: true,
   },
   {
     id: 'name',
-    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-    header: 'Nombre',
+    accessorFn: (row) => `${row?.extraData?.client.name}`,
+    header: 'Usuario',
+    enableGrouping: true,
+    cell: (info) => {
+      const name = info.getValue() as string;
+      return (
+        <div className='flex items-center gap-1 justify-start'>
+          <Avatar name={name} size='sm' square />
+          <p
+            className=' p-1 size-sm cursor-pointer'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            {name}
+          </p>
+        </div>
+      );
+    },
   },
   {
-    id: 'city',
-    accessorKey: 'city',
-    header: 'Ciudad',
-  },
-  {
-    id: 'address',
-    accessorKey: 'address',
-    header: 'Dirección',
-    cell: (info) => <span>{String(info.getValue())}</span>,
-  },
-  {
-    id: 'noveltyType',
-    accessorKey: 'noveltyType',
-    header: 'Tipo Novedad',
-  },
-  {
-    id: 'noveltyDate',
-    accessorKey: 'noveltyDate',
-    header: 'Fecha Novedad',
-    cell: (info) => <FormattedDate date={info.getValue() as string} />,
-  },
-  {
-    id: 'contact',
-    accessorKey: 'contact',
-    header: 'Contacto',
+    id: 'status',
+    accessorKey: 'state',
+    header: 'Estado',
+    enableGrouping: true,
+    cell: (info: any) => {
+      const status = info.getValue() as string;
+      let statusText = 'info';
+      if (status === 'OPENED') {
+        statusText = 'success';
+      } else if (status === 'CLOSED') {
+        statusText = 'error';
+      } else if (status === 'IN_REVISION') {
+        statusText = 'warning';
+      }
+
+      return (
+        <Badge
+          label={status}
+          status={statusText as 'info' | 'error' | 'warning' | 'success'}
+          full
+        />
+      );
+    },
   },
   {
     id: 'priority',
     accessorKey: 'priority',
     header: 'Prioridad',
-    cell: (info) => (
-      <PBadge priority={info.getValue() as 'Alta' | 'Media' | 'Baja'} />
-    ),
+    enableGrouping: true,
+    cell: (info: any) => {
+      const priority = info.getValue() as number;
+      let status = 'info';
+      let label = 'Baja';
+      if (priority === 5) {
+        status = 'error';
+        label = 'Alta';
+      } else if (priority === 4) {
+        status = 'warning';
+        label = 'Media';
+      }
+
+      return (
+        <Badge
+          label={label}
+          status={status as 'info' | 'error' | 'warning' | 'success'}
+          full
+        />
+      );
+    },
+  },
+  {
+    id: 'supervisor',
+    accessorKey: 'extraData.company.name',
+    header: 'supervisor',
+    enableGrouping: true,
+    meta: { expander: 'extraData' },
+    cell: (info) => {
+      const supervisor = info.getValue() as string;
+      return (
+        <div className='flex items-center gap-1 justify-start'>
+          <Avatar name={supervisor} size='sm' square />
+          <p
+            className=' p-1 size-sm cursor-pointer'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            {supervisor}
+          </p>
+        </div>
+      );
+    },
+  },
+  {
+    id: 'actions',
+    size: 20,
+    cell: (info) => {
+      const { id } = info.row.original;
+
+      const actions: IDropdownAction[] = [
+        {
+          label: 'Editar memo',
+          icon: 'vox-icon vx-icon-123 text-primary',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'memo',
+              action: ROW_ACTIONS.UPDATE,
+            });
+          },
+        },
+        {
+          label: 'Eliminar memo',
+          icon: 'vox-icon vx-icon-053 text-red-500',
+          color: 'text-red-600',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'memo',
+              action: ROW_ACTIONS.DELETE,
+            });
+          },
+        },
+      ];
+
+      return (
+        <div className='w-full flex justify-center'>
+          <DropdownActionsMenu actions={actions} />
+        </div>
+      );
+    },
   },
 ];

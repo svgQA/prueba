@@ -7,14 +7,13 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-
-import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { NoveltyService } from '@/services';
 
 export interface INovelty {
   id: number;
@@ -39,7 +38,7 @@ export const NoveltySettingPage: FunctionComponent = () => {
   }, []);
 
   const getNovelties = async () => {
-    const request: any = await ShiftService.getNovelty();
+    const request: any = await NoveltyService.getNovelty();
     novelties.value = request.data;
   };
 
@@ -54,7 +53,7 @@ export const NoveltySettingPage: FunctionComponent = () => {
   };
 
   const deleteNovelty = async (id: string) => {
-    const request = await ShiftService.deleteNovelty(id);
+    const request = await NoveltyService.deleteNovelty(id);
     if (!request.getStatus()) return;
     toast.success('Novedad eliminado', { position: 'top-right' });
     getNovelties();

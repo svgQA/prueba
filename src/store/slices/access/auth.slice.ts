@@ -1,5 +1,5 @@
 // import { TenantService } from '@/services';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { IJwtPayload, IUserResponse } from '@/types/auth';
 import { fetchAuthSession } from 'aws-amplify/auth';
 // import { parsingCompanies } from './user.slice';
@@ -42,13 +42,16 @@ export const getUserId = async (
 
 export const hasUserTenant = async (
   setToken: (token: string) => void,
-  setUserId: (uuid: string) => void,
+  setCognito: (uuid: string) => void,
   setTenant: (uuid: string) => void,
   setUser: (user: IUserResponse) => void
 ): Promise<boolean> => {
   const user = await getUser(setToken);
-  setUserId(user?.sub || '');
-  setTenant(user?.['custom:tenant'] || '');
+  const cognito = user?.sub || '';
+  const tenant = user?.['custom:tenant'] || '';
+
+  setCognito(cognito);
+  setTenant(tenant);
 
   const profile = await UserService.profile();
   if (!profile.getStatus()) return false;

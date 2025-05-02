@@ -129,10 +129,10 @@ const GanttComponent: ComponentType<GanttProps> = ({
     new Set()
   );
 
-  const handleDateSubmit = (start: string, end: string) => {
+  const handleDateSubmit = (_start: string, _end: string) => {
     // Aquí puedes manejar la lógica para las fechas seleccionadas
-    console.log('Start Date:', start);
-    console.log('End Date:', end);
+    // console.log('Start Date:', start);
+    // console.log('End Date:', end);
   };
 
   useEffect(() => {
@@ -761,7 +761,8 @@ const GanttComponent: ComponentType<GanttProps> = ({
 
   return (
     <div>
-      <div className='relative w-full my-2 flex items-center justify-end gap-2'>
+      {/* sticky top-[3.4rem] z-[8] */}
+      <div className='w-full py-1 pb-3 flex items-center justify-end'>
         <ReplicateModal
           selectedUsers={selectedUsers}
           users={users}

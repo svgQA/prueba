@@ -3,26 +3,38 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
-import { omitBy, isNull, pick } from 'lodash';
 import WeeklyScheduler from '../components/weekly.scheduler';
+import { convertBlocksToCells, getSelectedHoursByDay } from '../utils';
+import { ICScheduleRequest } from '@/types/shift/shift.request';
+import { ScheduleService } from '@/services';
 
-interface FormData {
-  name: string;
-  day: string;
-  hourEnd: string;
-  hourStart: string;
-}
+const START_HOUR = 0;
+const END_HOUR = 24;
 
 export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const initialValues: Signal<Partial<FormData>> = useSignal({});
+  const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
+
+  const daysOfWeek = [
+    'Domingo',
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+  ];
+
+  const hours = Array.from(
+    { length: END_HOUR - START_HOUR + 1 },
+    (_, i) => START_HOUR + i
+  );
 
   // Estado compartido para las celdas seleccionadas
   const selectedCells = useSignal<{ [key: string]: boolean }>({});
@@ -37,16 +49,24 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
     selectedCells.value = newCells;
   };
 
-  const onSubmit = async (model: FormData) => {
+  const onSubmit = async (model: ICScheduleRequest) => {
+    const hoursByDay = getSelectedHoursByDay(
+      daysOfWeek,
+      hours,
+      selectedCells.value
+    ).filter((day) => day.blocks.length > 0);
+    model.daysAllowed = hoursByDay.map((day) => day.day);
+    model.days = hoursByDay;
+
     let request;
-    let message: string;
+    let message: string = id
+      ? 'Horario editado exitosamente!'
+      : 'Horario creado exitosamente!';
 
     if (id) {
-      request = await ShiftService.updateSchedule(model, id);
-      message = 'Horario editado exitosamente!';
+      request = await ScheduleService.updateSchedule(model, id);
     } else {
-      request = await ShiftService.createSchedule(model);
-      message = 'Horario creado exitosamente!';
+      request = await ScheduleService.createSchedule(model);
     }
 
     if (!request.getStatus()) return;
@@ -57,12 +77,25 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const setInitialValues = async () => {
     if (!id) return;
 
-    const userKeys = ['name', 'day', 'hourStart', 'hourEnd'] as const;
+    const request = await ScheduleService.getScheduleById(id);
+    if (!request.getStatus()) return;
+    const model = request.getOne();
 
-    const request: any = await ShiftService.getScheduleById(id);
-    const model = pick(omitBy(request.model, isNull), userKeys);
-
-    initialValues.value = model;
+    initialValues.value = {
+      name: model.name,
+      daysAllowed: model.daysAllowed,
+      days: model.days,
+    };
+    const days = model.days.reduce(
+      (acc, day) => {
+        acc[day.day] = day.blocks.map((block) => {
+          return { start: block.start, end: block.end };
+        });
+        return acc;
+      },
+      {} as { [key: string]: { start: number; end: number }[] }
+    );
+    selectedCells.value = convertBlocksToCells(days);
   };
 
   useEffect(() => {
@@ -71,17 +104,9 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
   return (
     <Section>
-      <Form
+      <Form<ICScheduleRequest>
         onSubmit={onSubmit}
         initialValues={initialValues.value}
-        validate={(values) => {
-          const errors: Partial<FormData> = {};
-
-          if (!values.hourStart) errors.hourStart = 'Campo obligatorio';
-          if (!values.hourEnd) errors.hourEnd = 'Campo obligatorio';
-
-          return errors;
-        }}
         render={({ handleSubmit, form, submitting }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
             {/** FORMULARIO PRINCIPAL */}
@@ -108,6 +133,8 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                   selectedCells={selectedCells.value}
                   onClearSelection={handleClearSelection}
                   onCellChange={handleCellChange}
+                  daysOfWeek={daysOfWeek}
+                  hours={hours}
                 />
               </div>
             </div>
@@ -126,7 +153,6 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                   form.reset();
                 }}
                 disabled={submitting}
-                border={true}
                 className='rounded-md px-4 py-2'
               />
 

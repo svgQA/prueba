@@ -5,7 +5,6 @@ import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { toast } from 'react-toastify';
@@ -13,7 +12,7 @@ import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import dayjs from 'dayjs';
-import { FormService } from '@/services';
+import { FormService, TaskService } from '@/services';
 import { IFormResponse } from '@/types/form';
 
 interface FormData {
@@ -33,10 +32,10 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     let message: string;
 
     if (id) {
-      request = await ShiftService.updateTask(model, id);
+      request = await TaskService.updateTask(model, id);
       message = 'Tarea editado exitosamente!';
     } else {
-      request = await ShiftService.createTask(model);
+      request = await TaskService.createTask(model);
       message = 'Tarea creado exitosamente!';
     }
 
@@ -50,7 +49,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
 
     const userKeys = ['status', 'formId', 'description', 'start'] as const;
 
-    const request: any = await ShiftService.getTaskById(id);
+    const request: any = await TaskService.getTaskById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
 
     initialValues.value = model;

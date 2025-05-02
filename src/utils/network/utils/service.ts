@@ -4,6 +4,9 @@ import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
 import { company_header, tenant_header } from '@/env.config';
 import { toast } from 'react-toastify';
+import i18n from '@/i18n';
+import { CustomToast } from '@/components/compose/toast/CustomToast';
+import { VoxError } from '../error';
 
 export interface IRequestModelOutput {
   header: Record<string, string>;
@@ -64,10 +67,20 @@ export class BaseService {
       url = `${url}?${queryParams.toString()}`;
     }
     const method = model?.method || REQUEST_METHODS.GET;
+
+    // Obtener el idioma actual de i18n
+    const currentLanguage = i18n.language;
+
+    // Configurar headers básicos incluyendo el idioma
+    model.headers = {
+      ...model?.headers,
+      'Accept-Language': currentLanguage,
+    };
+
     if (method === REQUEST_METHODS.POST || method === REQUEST_METHODS.PUT) {
       if (!model.uncontent) {
         model.headers = {
-          ...model?.headers,
+          ...model.headers,
           'Content-Type': 'application/json',
         };
         model.data = JSON.stringify(model.data || {});
@@ -78,9 +91,16 @@ export class BaseService {
       const tenant = this.getTenant();
       const company = this.getCompany();
 
-      if (!tenant_header || !tenant || !company_header || !company) {
-        throw new Error('ERROR: not include headers to request');
+      if (!tenant_header || !tenant) {
+        toast.error(i18n.t('error.not_found_tenant'));
+        throw new Error('ERROR: not include tenant header');
       }
+
+      if (!company_header || !company) {
+        toast.error(i18n.t('error.not_found_company'));
+        throw new Error('ERROR: not include company header');
+      }
+
       model.headers = {
         ...model.headers,
         [tenant_header]: tenant,
@@ -101,7 +121,7 @@ export class BaseService {
     return output;
   }
 
-  static async make_request<T>(
+  static async make_request<T = any>(
     instance: VoxServices,
     /* FIX:
      Pasar a usar unicamente el nombre del micro, porque esto va a
@@ -120,24 +140,28 @@ export class BaseService {
     prefix: boolean = false
   ): Promise<GenericResponse<T>> {
     this.openLoading();
+    const model_request = this.make_request_model(
+      instance,
+      model,
+      prefix,
+      tenance
+    );
+
     try {
-      const model_request = this.make_request_model(
-        instance,
-        model,
-        prefix,
-        tenance
-      );
       const response = await fetch(model_request.url, {
         headers: model_request.header,
         body: model.data,
         method: model.method,
       });
+
       if (!response.ok) {
-        const result = await response.json();
-        toast.error(result.error, { position: 'top-right' });
+        const result = (await response.json()) as VoxError;
+        toast.error(CustomToast, {
+          data: result,
+        });
         return new GenericResponse<T>({
           code: response?.status,
-          message: result?.text,
+          message: result?.message,
           data: {},
         });
       }
@@ -159,7 +183,7 @@ export class BaseService {
         });
       }
     } catch (error: unknown) {
-      // console.log('error consumiendo en BaseService =>', error);
+      toast.error(i18n.t('error.processing_response'));
       throw new Error('ERROR: processing response');
     } finally {
       this.closeLoading();

@@ -13,4 +13,9 @@ export interface IDropdownProps extends IComponentProps {
   options: IDropdownOptions[];
   labelTag?: DropdownOptionsKeys;
   valueTag?: DropdownOptionsKeys;
+  icon?: string;
+  iconSize?: 'sm' | 'md' | 'lg' | 'xsm';
+  onChange?: (value: string | number) => void;
+  meta?: FieldMetaState<string>;
+  value?: string | number;
 }

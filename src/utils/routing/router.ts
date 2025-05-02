@@ -23,6 +23,14 @@ export const PAGES_LIST_ROUTER = {
         areas: {
           base: '/areas',
           to: '/users/areas',
+          create: {
+            base: '/create',
+            to: '/users/areas/create',
+          },
+          update: {
+            base: '/update',
+            to: '/users/areas/update/:id',
+          },
         },
         roles: {
           base: '/roles',
@@ -164,25 +172,15 @@ export const PAGES_LIST_ROUTER = {
             base: '/notifications/scheduledNotifications/create',
             to: '/rounds/notifications/scheduledNotifications/create',
           },
-
-          update: {
-            base: '/notifications/scheduledNotifications/update',
-            to: '/rounds/notifications/scheduledNotifications/update/:id',
-          },
-
-          view: {
-            base: '/notifications/scheduledNotifications/view',
-            to: '/rounds/notifications/scheduledNotifications/view/:id',
-          },
-
-          history: {
-            base: '/notifications/scheduledNotifications/history',
-            to: '/rounds/notifications/scheduledNotifications/history/:id',
-          },
         },
         templateNotification: {
           base: '/templateNotifications',
           to: '/rounds/templateNotifications',
+
+          create: {
+            base: '/notifications/templateNotifications/create',
+            to: '/rounds/notifications/templateNotifications/create',
+          },
         },
       },
       setting: {

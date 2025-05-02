@@ -7,14 +7,15 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
-
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
 import { DataSchedule, DaySelection } from './components/data.schedule';
+import { ScheduleService } from '@/services';
 
 export interface ISchedule {
   id: number;
@@ -39,23 +40,35 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   }, []);
 
   const getSchedules = async () => {
-    const request: any = await ShiftService.getSchedules();
+    const request: any = await ScheduleService.getSchedules();
     if (!request.getStatus()) return;
     schedules.value = request.getMany();
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de horarios' });
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.create.to,
+      label: 'create',
+      id: 'schedule-create',
+    };
+    appendHistory(menu);
+    setMenu({ ...infoMenu.value, label: 'Creación de horarios' });
     navigate('/rounds/schedule/create');
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.update.to,
+      label: 'update',
+      id: 'schedule-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar horarios' });
     navigate(`/rounds/schedule/update/${id}`);
   };
 
   const deleteSchedule = async (id: string) => {
-    const request = await ShiftService.deleteSchedule(id);
+    const request = await ScheduleService.deleteSchedule(id);
     if (!request.getStatus()) return;
     toast.success('horario eliminado', { position: 'top-right' });
     getSchedules();
@@ -99,6 +112,8 @@ export const ScheduleSettingPage: FunctionComponent = () => {
         }}
         visibility={{
           id: false,
+          name: true,
+          daysAllowed: true,
         }}
         onClickAction={handleOnClick}
         unsearch={false}

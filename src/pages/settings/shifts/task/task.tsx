@@ -7,14 +7,15 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-
-import { ShiftService } from '@/services/shift';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 import { toast } from 'react-toastify';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { TaskService } from '@/services';
 
 export interface ITask {
   id: number;
@@ -40,22 +41,34 @@ export const TaskSettingPage: FunctionComponent = () => {
   }, []);
 
   const getTasks = async () => {
-    const request: any = await ShiftService.getTasks();
+    const request: any = await TaskService.getTasks();
     tasks.value = request.data;
   };
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.task.create.to,
+      label: 'create',
+      id: 'tasks-create',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creacion de tarea' });
     navigate('/rounds/task/create');
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.task.update.to,
+      label: 'update',
+      id: 'tasks-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar tarea' });
     navigate(`/rounds/task/update/${id}`);
   };
 
   const deleteTask = async (id: string) => {
-    const request = await ShiftService.deleteTask(id);
+    const request = await TaskService.deleteTask(id);
     if (!request.getStatus()) return;
     toast.success('Tarea eliminado', { position: 'top-right' });
     getTasks();

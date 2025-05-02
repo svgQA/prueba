@@ -63,7 +63,10 @@ import { UserRolesPage } from '../dashboard/users/roles/roles';
 import { UserPasswordPage } from '../dashboard/users/password/user.password';
 import { UserSettingsPage } from '../dashboard/users/setting/user.setting';
 import { ScheduledNotificationsPage } from './notifications/scheduleNotifications/scheduledNotifications';
-import { TemplateNotificationPage } from './notifications/templates/templateNotifications';
+import { TemplateNotificationPage } from './notifications/templateNotifications/templateNotifications';
+import { TemplateCreateForm } from './notifications/templateNotifications/create/create';
+import { AreaCreatePage } from '../dashboard/users/areas/area.create';
+import ScheduledNotificationForm from './notifications/scheduleNotifications/create/create';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -391,6 +394,14 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.users.roles.to}
           component={lazy(() => Promise.resolve({ default: UserRolesPage }))}
         />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.create.to}
+          component={lazy(() => Promise.resolve({ default: AreaCreatePage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.update.to}
+          component={lazy(() => Promise.resolve({ default: AreaCreatePage }))}
+        />
 
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.users.password.to}
@@ -459,6 +470,7 @@ export const RoutingContent = memo(() => {
           )}
         />
         {/* NOTIFICATIONS MENU */}
+        {/* SCHEDULED OPTIONS */}
         <Route
           path={
             PAGES_LIST_ROUTER.dashboard.setting.notifications
@@ -471,10 +483,29 @@ export const RoutingContent = memo(() => {
         <Route
           path={
             PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .scheduledNotification.create.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduledNotificationForm })
+          )}
+        />
+        {/* TEMPLATE OPTIONS */}
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
               .templateNotification.to
           }
           component={lazy(() =>
             Promise.resolve({ default: TemplateNotificationPage })
+          )}
+        />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .templateNotification.create.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: TemplateCreateForm })
           )}
         />
       </Suspense>

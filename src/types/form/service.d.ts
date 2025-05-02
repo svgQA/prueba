@@ -47,9 +47,11 @@ export interface IResponseRequest {
   structure: IFormat;
 }
 
+// TODO: Corregir estas interfaces en form y user
 export interface IResponseResponse extends IResponseRequest {
   id: string;
-  userId: number;
+  user: any;
+  form: any;
   status: RESPONSE_STATUS;
   createdAt?: Date;
   updatedAt?: Date;

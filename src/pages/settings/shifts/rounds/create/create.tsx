@@ -3,10 +3,8 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { Map } from '@/components/common/map/map';
 import { useEffect } from 'preact/hooks';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
@@ -19,7 +17,13 @@ import { Select } from '@/components/common/select/select';
 import dayjs from 'dayjs';
 import { Tooltip } from '@/components/common/tooltip/tooltip';
 import { ITask } from '@/types/shift/activity';
-import { FormService } from '@/services';
+import {
+  FormService,
+  PlaceService,
+  RoundService,
+  TaskService,
+} from '@/services';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 
 interface IPoint {
   latitude: number;
@@ -105,10 +109,10 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     }
 
     if (id) {
-      request = await ShiftService.updateRound(model, id);
+      request = await RoundService.updateRound(model, id);
       message = 'Ronda editada exitosamente!';
     } else {
-      request = await ShiftService.createRound(model);
+      request = await RoundService.createRound(model);
       message = 'Ronda creada exitosamente!';
     }
 
@@ -118,7 +122,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     navigate('/rounds');
   };
   const getTasks = async () => {
-    const response = await ShiftService.getTasks();
+    const response = await TaskService.getTasks();
     if (!response.getStatus()) return;
     tasks.value = response.getMany();
   };
@@ -133,7 +137,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       'radius',
       'description',
     ] as const;
-    const request: any = await ShiftService.getRoundById(id);
+    const request: any = await RoundService.getRoundById(id);
     points.value =
       request.model.points.map((point: any) => {
         count++;
@@ -152,7 +156,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
 
   const getPlaces = async () => {
-    const request: any = await ShiftService.getPlaces();
+    const request: any = await PlaceService.getPlaces();
     places.value = request.data;
   };
 
@@ -515,8 +519,29 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 </div>
               </div>
               <div>
-                <Map
+                {/* <Map
                   name='Map'
+                  pointsAmount={100}
+                  allowManualPoint={true}
+                  sendPoints={(data) => {
+                    const result = sendPointsRef(data);
+                    form.change('latitude', result?.lat);
+                    form.change('longitude', result?.lng);
+                  }}
+                  pointsRef={points.value}
+                  center={currentLocation.value}
+                  condition={false}
+                  errorCondition=''
+                  radialPoint={null}
+                  errorRadialPoint=''
+                  draggable={true}
+                  width='100%'
+                  height='500px'
+                  clickPoint={() => {}}
+                /> */}
+
+                <MapLibrePointsMap
+                  name='map-points'
                   pointsAmount={100}
                   allowManualPoint={true}
                   sendPoints={(data) => {
@@ -546,7 +571,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       form.reset();
                       resetMarket();
                     }}
-                    border={true}
                     className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
                   />
 

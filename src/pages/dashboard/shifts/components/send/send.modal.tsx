@@ -1,13 +1,12 @@
 import { useRef, useEffect } from 'preact/hooks';
 import { ManualNotificationForm } from './tabs/manual-notification-form';
 interface Props {
-  closed?: boolean;
+  hasplayers?: boolean;
   onClose?: () => void;
-  onSend?: (data: any) => void;
   users?: [];
 }
 
-export const SendForm = ({ closed, onClose, users }: Props) => {
+export const SendForm = ({ onClose, users, hasplayers }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
   // Cerrar si se hace click por fuera
@@ -21,29 +20,24 @@ export const SendForm = ({ closed, onClose, users }: Props) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [ref]);
 
-
   if (closed) return null;
-
-  console.log(users); 
 
   return (
     <div
       ref={ref}
-      className='absolute mt-2 w-[400px] max-w-[90vw] bg-white rounded shadow-lg z-50 border'
+      className='w-[800px] max-w-[90vw] bg-gray-100 py-3 border-dashedrounded border-round-lg border absolute z-50 p-4 mt-8'
     >
       <div className='px-4 py-3 border-b flex justify-between items-center'>
         <h3 className='text-base font-semibold'>Centro de notificaciones</h3>
         <button
           onClick={onClose}
-          className='text-sm text-gray-500 hover:text-gray-700'
+          className='text-sm text-gray-500 hover:text-gray-700 border-none'
         >
           ✕
         </button>
       </div>
 
-      <div className="px-4 pt-3">
-        <ManualNotificationForm users={users} />
-      </div>
+      <ManualNotificationForm users={users} hasplayers={hasplayers} />
     </div>
   );
 };

@@ -2,31 +2,31 @@ import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { Form, Field } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
-import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
 import { Switch } from '@/components/common/switch/switch';
-import { Button } from '@/components/common/button/button';
 import { toast } from 'react-toastify';
-import { useLocation } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import { ShiftService } from '@/services/shift';
-import { FormValues, IShiftSetting } from '@/types/settings';
+import { IShiftSetting } from '@/types/settings';
+import { ModuleService } from '@/services';
+import { StatusButton } from '../../component/custo.button';
 
 export const ShiftSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
-  const initialValues: Signal<Partial<FormValues>> = useSignal({
-    status: true,
-    has_service: false,
-    has_contract: false,
-    has_shift: false,
-    has_round: false,
-    has_task: false,
-    has_report: false,
-    field_shift_table: [],
-    max_check_range: '0',
-    max_check_time: '0',
-    min_check_time: '0',
+  const settingsIds = useSignal<{ shift: number }>({ shift: 0 });
+  const initialValues: Signal<IShiftSetting> = useSignal({
+    name: '',
+    time_checkin_min: 0,
+    time_checkin_max: 0,
+    time_checkout_min: 0,
+    time_checkout_max: 0,
+    distance_checkin_max: 0,
+    distance_checkout_max: 0,
+    allow_shift: false,
+    allow_service: false,
+    allow_contract: false,
+    allow_round: false,
+    allow_task: false,
+    create_shift: false,
   });
 
   useEffect(() => {
@@ -35,78 +35,55 @@ export const ShiftSettingPage: FunctionComponent = () => {
   }, []);
 
   const getSettings = async () => {
-    try {
-      const response = await ShiftService.getShiftSetting();
-      if (!response.getStatus()) return;
-      const shiftResponse = response.getOne();
-      if (!shiftResponse.settings.max_check_range) return;
-
-      initialValues.value = {
-        ...shiftResponse.settings,
-        max_check_range: shiftResponse.settings.max_check_range.toString(),
-        max_check_time: shiftResponse.settings.max_check_time.toString(),
-        min_check_time: shiftResponse.settings.min_check_time.toString(),
-      };
-    } catch (error) {
-      console.error('Error fetching settings:', error);
-      toast.error('Error al cargar la configuración', {
-        position: 'top-right',
-      });
-    }
+    const response = await ModuleService.getShiftSetting();
+    if (!response.getStatus()) return;
+    const shiftResponse = response.getOne();
+    settingsIds.value.shift = shiftResponse.id;
+    initialValues.value = {
+      ...shiftResponse.settings,
+    };
   };
 
-  const onSubmit = async (values: FormValues) => {
-    try {
-      // Convertir los strings a números para el envío
-      const model: IShiftSetting = {
-        ...values,
-        max_check_range: parseInt(values.max_check_range, 10),
-        max_check_time: parseInt(values.max_check_time, 10),
-        min_check_time: parseInt(values.min_check_time, 10),
-      };
+  const onSubmit = async (values: any) => {
+    const model: IShiftSetting = {
+      ...values,
+      time_checkin_min: parseInt(values.time_checkin_min || '0', 10),
+      time_checkin_max: parseInt(values.time_checkin_max || '0', 10),
+      time_checkout_min: parseInt(values.time_checkout_min || '0', 10),
+      time_checkout_max: parseInt(values.time_checkout_max || '0', 10),
+      distance_checkin_max: parseInt(values.distance_checkin_max || '0', 10),
+      distance_checkout_max: parseInt(values.distance_checkout_max || '0', 10),
+    };
 
-      await ShiftService.setShiftSetting(model);
-      toast.success('Configuración actualizada exitosamente!', {
-        position: 'top-right',
-      });
-      navigate('/rounds');
-    } catch (error) {
-      console.error('Error updating settings:', error);
-      toast.error('Error al actualizar la configuración', {
-        position: 'top-right',
-      });
+    const response = await ModuleService.setShiftSetting(
+      model,
+      settingsIds.value.shift
+    );
+    if (response.getStatus()) {
+      toast.success('settings.shifts.success');
     }
   };
 
   return (
     <Section className='p-5'>
-      <Form<FormValues>
+      <Form<any>
         onSubmit={onSubmit}
         initialValues={initialValues.value}
         validate={(values) => {
-          const errors: Partial<FormValues> = {};
+          const errors: Partial<any> = {};
           if (!values.name) errors.name = 'Campo obligatorio';
-          if (!values.description) errors.description = 'Campo obligatorio';
 
-          const maxRange = parseInt(values.max_check_range, 10);
-          const maxTime = parseInt(values.max_check_time, 10);
-          const minTime = parseInt(values.min_check_time, 10);
-
-          if (!maxRange || maxRange <= 0)
-            errors.max_check_range = 'Debe ser mayor a 0';
-          if (!maxTime || maxTime <= 0)
-            errors.max_check_time = 'Debe ser mayor a 0';
-          if (!minTime || minTime <= 0)
-            errors.min_check_time = 'Debe ser menor al tiempo máximo';
-          if (minTime >= maxTime) {
-            errors.min_check_time = 'Debe ser menor al tiempo máximo';
-          }
           return errors;
         }}
         render={({ handleSubmit, form, submitting, pristine }) => (
-          <form onSubmit={handleSubmit} className='space-y-6'>
-            <div className='grid grid-cols-3 gap-3'>
-              <div className='col-span-1'>
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-settings-shifts'
+          >
+            <h2 className='text-lg font-bold'>Configuración General</h2>
+            <div className='grid grid-cols-1 gap-3'>
+              <div className='col-span-3'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
@@ -119,16 +96,18 @@ export const ShiftSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-
+            </div>
+            <h2 className='text-lg font-bold'>Configuración de Check-in</h2>
+            <div className='grid grid-cols-2 gap-3'>
               <div className='col-span-1'>
-                <Field<string> name='max_check_range'>
+                <Field<string> name='time_checkin_min'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      label='Rango máximo de verificación'
+                      label='Rango mínimo de verificación'
                       placeholder='Ingrese rango...'
                       type='number'
-                      min='1'
+                      min='0'
                       value={input.value}
                       meta={meta}
                     />
@@ -137,30 +116,32 @@ export const ShiftSettingPage: FunctionComponent = () => {
               </div>
 
               <div className='col-span-1'>
-                <Field<string> name='max_check_time'>
+                <Field<string> name='time_checkin_max'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
                       label='Tiempo máximo de verificación'
                       placeholder='Ingrese tiempo máximo...'
                       type='number'
-                      min='1'
+                      min='0'
                       value={input.value}
                       meta={meta}
                     />
                   )}
                 </Field>
               </div>
-
+            </div>
+            <h2 className='text-lg font-bold'>Configuración de Check-out</h2>
+            <div className='grid grid-cols-2 gap-3'>
               <div className='col-span-1'>
-                <Field<string> name='min_check_time'>
+                <Field<string> name='time_checkout_min'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
                       label='Tiempo mínimo de verificación'
                       placeholder='Ingrese tiempo mínimo...'
                       type='number'
-                      min='1'
+                      min='0'
                       value={input.value}
                       meta={meta}
                     />
@@ -168,31 +149,65 @@ export const ShiftSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
 
-              <div className='col-span-3'>
-                <Field<string> name='description' validate={required}>
+              <div className='col-span-1'>
+                <Field<string> name='time_checkout_max'>
                   {({ input, meta }) => (
-                    <TextArea
+                    <Input
                       {...input}
-                      min='3'
-                      max='300'
-                      placeholder='Ingrese descripción...'
-                      label='Descripción'
-                      type='text'
+                      label='Tiempo máximo de verificación'
+                      placeholder='Ingrese tiempo máximo...'
+                      type='number'
+                      min='0'
+                      value={input.value}
                       meta={meta}
                     />
                   )}
                 </Field>
               </div>
             </div>
+            <h2 className='text-lg font-bold'>Configuración de Distancia</h2>
+            <div className='grid grid-cols-2 gap-3'>
+              <div className='col-span-1'>
+                <Field<string> name='distance_checkin_max'>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      label='Distancia máxima de verificación'
+                      placeholder='Ingrese distancia máxima...'
+                      type='number'
+                      min='0'
+                      value={input.value}
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
 
+              <div className='col-span-1'>
+                <Field<string> name='distance_checkout_max'>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      label='Distancia máxima de verificación'
+                      placeholder='Ingrese distancia máxima...'
+                      type='number'
+                      min='0'
+                      value={input.value}
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+            </div>
+            <h2 className='text-lg font-bold'>Configuración de Permisos</h2>
             <div className='grid grid-cols-3 gap-3'>
               <div className='col-span-1'>
-                <Field name='status' type='checkbox'>
+                <Field name='allow_shift' type='checkbox'>
                   {({ input }) => (
                     <Switch
-                      id='status'
-                      name='status'
-                      label='Estado'
+                      id='allow_shift'
+                      name='allow_shift'
+                      label='Permitir turno'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -201,12 +216,12 @@ export const ShiftSettingPage: FunctionComponent = () => {
               </div>
 
               <div className='col-span-1'>
-                <Field name='has_service' type='checkbox'>
+                <Field name='allow_service' type='checkbox'>
                   {({ input }) => (
                     <Switch
-                      id='has_service'
-                      name='has_service'
-                      label='Tiene servicio'
+                      id='allow_service'
+                      name='allow_service'
+                      label='Permitir servicio'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -215,12 +230,12 @@ export const ShiftSettingPage: FunctionComponent = () => {
               </div>
 
               <div className='col-span-1'>
-                <Field name='has_contract' type='checkbox'>
+                <Field name='allow_contract' type='checkbox'>
                   {({ input }) => (
                     <Switch
-                      id='has_contract'
-                      name='has_contract'
-                      label='Tiene contrato'
+                      id='allow_contract'
+                      name='allow_contract'
+                      label='Permitir contrato'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -229,12 +244,12 @@ export const ShiftSettingPage: FunctionComponent = () => {
               </div>
 
               <div className='col-span-1'>
-                <Field name='has_shift' type='checkbox'>
+                <Field name='allow_round' type='checkbox'>
                   {({ input }) => (
                     <Switch
-                      id='has_shift'
-                      name='has_shift'
-                      label='Tiene turno'
+                      id='allow_round'
+                      name='allow_round'
+                      label='Permitir ronda'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -243,40 +258,25 @@ export const ShiftSettingPage: FunctionComponent = () => {
               </div>
 
               <div className='col-span-1'>
-                <Field name='has_round' type='checkbox'>
+                <Field name='allow_task' type='checkbox'>
                   {({ input }) => (
                     <Switch
-                      id='has_round'
-                      name='has_round'
-                      label='Tiene ronda'
+                      id='allow_task'
+                      name='allow_task'
+                      label='Permitir tarea'
                       value={input.checked}
                       onChange={input.onChange}
                     />
                   )}
                 </Field>
               </div>
-
               <div className='col-span-1'>
-                <Field name='has_task' type='checkbox'>
+                <Field name='create_shift' type='checkbox'>
                   {({ input }) => (
                     <Switch
-                      id='has_task'
-                      name='has_task'
-                      label='Tiene tarea'
-                      value={input.checked}
-                      onChange={input.onChange}
-                    />
-                  )}
-                </Field>
-              </div>
-
-              <div className='col-span-1'>
-                <Field name='has_report' type='checkbox'>
-                  {({ input }) => (
-                    <Switch
-                      id='has_report'
-                      name='has_report'
-                      label='Tiene reporte'
+                      id='create_shift'
+                      name='create_shift'
+                      label='Permitir crear turno'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -285,26 +285,14 @@ export const ShiftSettingPage: FunctionComponent = () => {
               </div>
             </div>
 
-            {/* Botonera */}
-            <div className='w-full flex-row flex justify-end items-center'>
-              <Button
-                id='btn-clean'
-                name='btn-clean'
-                type='button'
-                label='Limpiar'
-                onClick={() => form.reset()}
-                disabled={submitting || pristine}
-              />
-
-              <Button
-                id='btn-save'
-                name='btn-save'
-                type='submit'
-                label='Guardar'
-                className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
-                disabled={submitting}
-              />
-            </div>
+            <StatusButton
+              onClickClean={() => {
+                form.reset();
+              }}
+              submitting={submitting}
+              pristine={pristine}
+              form='form-settings-shifts'
+            />
           </form>
         )}
       />

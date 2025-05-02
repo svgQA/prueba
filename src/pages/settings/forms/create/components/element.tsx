@@ -13,7 +13,7 @@ import { ELEMENT_TYPE_VALUES, REGEX_PATTERNS } from '../store/constant';
 import { validateSelectedElement } from '../store/control';
 import { toggleListModal } from '../../lists/store/list';
 import { toast } from 'react-toastify';
-
+import i18n from '@/i18n';
 const ItemType = {
   QUESTION: 'question',
 };
@@ -151,7 +151,7 @@ export const FormElement = ({
               ></span>
               <Input
                 type='text'
-                placeholder='Enter Section Title'
+                placeholder={i18n.t('form.placeholder.section_title')}
                 name='label'
                 id={`in-form-${question.id}-section-title`}
                 data-sectionid={question.id}
@@ -168,14 +168,14 @@ export const FormElement = ({
             {/* INPUT: title element */}
             <td
               onClick={handleSelect}
-              className={`flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
+              className={`bg-gray-800 flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
                 isOver ? 'bg-ternary text-t-dark' : ''
               } ${isDragging ? 'opacity-70' : ''}`}
             >
               {question.section && (
                 <div className=' mx-3 w-1 h-6 rounded-lg bg-primary dark:bg-b-light-dark'></div>
               )}
-              <div className='flex flex-row w-full'>
+              <div className='flex flex-row w-full items-center'>
                 <span
                   ref={(node) => ref(drop(node))}
                   className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
@@ -183,7 +183,7 @@ export const FormElement = ({
                 <Input
                   type='text'
                   name='label'
-                  placeholder='Enter Element Title'
+                  placeholder={i18n.t('form.placeholder.element_title')}
                   id={`in-form-${question.id}-element-title`}
                   value={question.label}
                   onChange={handleInputChange}
@@ -193,9 +193,9 @@ export const FormElement = ({
               </div>
             </td>
             {/* DROPDOW: select type */}
-            <td onClick={handleSelect} className='w-3/12'>
+            <td onClick={handleSelect} className='w-3/12 bg-gray-800'>
               <Select
-                placeholder='Type Element'
+                placeholder={i18n.t('form.placeholder.type_element')}
                 id={`se-form-${question.id}-element-type`}
                 icon='106'
                 value={question.type}
@@ -221,7 +221,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-required`}
                 name='required'
-                label='Required'
+                label={i18n.t('form.label.required')}
                 onChange={handleInputChange}
                 value={question.required}
               />
@@ -229,7 +229,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-visible`}
                 name='invisible'
-                label='Invisible'
+                label={i18n.t('form.label.invisible')}
                 onChange={handleInputChange}
                 value={question.invisible}
               />
@@ -239,7 +239,7 @@ export const FormElement = ({
                   <Switch
                     id={`cb-form-${question.id}-element-disable`}
                     name='disable'
-                    label='Disable'
+                    label={i18n.t('form.label.disable')}
                     onChange={handleInputChange}
                     value={question.disable}
                   />
@@ -247,7 +247,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-assigned`}
                 name='assigned'
-                label='Administrator'
+                label={i18n.t('form.label.administrator')}
                 onChange={handleInputChange}
                 value={question.assigned}
               />
@@ -263,7 +263,7 @@ export const FormElement = ({
                 id={`ta-form-${question.id}-element-description`}
                 value={question.description}
                 onChange={handleInputChange}
-                placeholder='Description'
+                placeholder={i18n.t('form.placeholder.element_description')}
               />
             </div>
 
@@ -271,12 +271,12 @@ export const FormElement = ({
               {question.type === ELEMENT_TYPE.NUMBER_INPUT && (
                 <Input
                   name='default'
-                  label='Default'
+                  label={i18n.t('form.label.default')}
                   type='number'
                   id={`in-number-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
-                  placeholder='Default value'
+                  placeholder={i18n.t('form.placeholder.default_value')}
                   borderless
                   thin
                   icon='123'
@@ -286,12 +286,12 @@ export const FormElement = ({
                 question.type === ELEMENT_TYPE.TEXT_AREA) && (
                 <Input
                   name='default'
-                  label='Default'
+                  label={i18n.t('form.label.default')}
                   type='text'
                   id={`in-text-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
-                  placeholder='Default value'
+                  placeholder={i18n.t('form.placeholder.default_value')}
                   borderless
                   thin
                   icon='123'
@@ -302,9 +302,9 @@ export const FormElement = ({
                   <div class='w-full mr-4'>
                     {question.isUrl ? (
                       <Input
-                        label='List URL'
+                        label={i18n.t('form.label.list_url')}
                         name='url'
-                        placeholder='List URL'
+                        placeholder={i18n.t('form.placeholder.list_url')}
                         onChange={handleInputChange}
                         id={`se-form-${question.id}-element-options-url`}
                         icon='104'
@@ -384,9 +384,9 @@ export const FormElement = ({
 
             {question.type === ELEMENT_TYPE.INPUT && (
               <Select
-                label='regex'
+                label={i18n.t('form.label.regex')}
                 name='regex'
-                placeholder='regex patters'
+                placeholder={i18n.t('form.placeholder.regex_patters')}
                 id={`se-form-${question.id}-element-regex`}
                 value={question.regex}
                 onChange={handleInputChange}
@@ -414,7 +414,7 @@ export const FormElement = ({
                 />
                 <Input
                   name='max'
-                  label='Maximum'
+                  label={i18n.t('form.label.maximum')}
                   id={`in-time-form-${question.id}-element-max`}
                   type={question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'}
                   value={question.max}
@@ -435,7 +435,7 @@ export const FormElement = ({
                 type='number'
                 id={`in-number-form-${question.id}-element-min`}
                 value={question.min}
-                placeholder='Min Length'
+                placeholder={i18n.t('form.placeholder.min_length')}
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -453,7 +453,7 @@ export const FormElement = ({
                 type='number'
                 id={`in-number-form-${question.id}-element-max`}
                 value={question.max}
-                placeholder='Max Length'
+                placeholder={i18n.t('form.placeholder.max_length')}
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -470,7 +470,7 @@ export const FormElement = ({
                 label='size'
                 id={`in-number-form-${question.id}-element-size`}
                 value={question.size}
-                placeholder='Size'
+                placeholder={i18n.t('form.placeholder.size')}
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -486,7 +486,7 @@ export const FormElement = ({
                 label='Number Files'
                 id={`in-number-form-${question.id}-element-files`}
                 value={question.maxNumberFiles}
-                placeholder='Number Files'
+                placeholder={i18n.t('form.placeholder.number_files')}
                 onChange={handleInputChange}
                 borderless
                 thin

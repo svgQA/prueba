@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'preact/hooks';
-import { NotificationServiceFront } from '@/services/notification';
+import { NotificationService, TemplateService } from '@/services';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { FormService } from '@/services/form';
-import { TemplateServiceFront } from '@/services/template';
+import { FormService } from '@/services/form/form';
+import { IOption } from '@/components/common/multi/interface';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/common/button/button';
 
 interface Props {
   users?: any[];
+  hasplayers?: boolean;
 }
 
-export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => {
-
-  /* console.log('📦 externalUsers:', externalUsers); */
-
+export const ManualNotificationForm = ({
+  users: externalUsers = [],
+  hasplayers,
+}: Props) => {
+  const { t } = useTranslation();
   const [templateId, setTemplateId] = useState<string>('');
   const [templates, setTemplates] = useState<any[]>([]);
 
@@ -27,12 +32,14 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
   const [selectedUsersFull, setSelectedUsersFull] = useState<
     { id: number; name: string; email: string; playerId: string }[]
   >([]);
-  const [forms, setForms] = useState<any[]>([]);
+  const [forms, setForms] = useState<IOption[]>([]);
 
   const usersWithPlayerId = externalUsers.filter((u) => !!u.playerId);
 
   const filteredUsers = usersWithPlayerId.filter((u) => {
-    const match = `${u.name} ${u.email}`.toLowerCase().includes(search.toLowerCase());
+    const match = `${u.name} ${u.email}`
+      .toLowerCase()
+      .includes(search.toLowerCase());
     return sendToShiftToday ? match && u.hasShiftToday : match;
   });
 
@@ -54,10 +61,7 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
   }, [selectedUserIds, usersWithPlayerId]);
 
   const handleSubmit = async () => {
-    if (selectedUsersFull.length === 0) {
-      alert('Ninguno de los usuarios seleccionados cumple con las condiciones para recibir notificaciones.');
-      return;
-    }
+    if (!hasplayers) return;
 
     const payload: ISendManualNotificationDto = {
       ...(templateId && { templateId }),
@@ -72,11 +76,11 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
     };
 
     try {
-      await NotificationServiceFront.sendManualNotification(payload);
-      alert('Notificación enviada con éxito');
+      await NotificationService.sendManualNotification(payload);
+      toast.success('Notificaciones enviadas correctamente');
     } catch (err) {
-      console.error('Error al enviar notificación:', err);
-      alert('Error al enviar notificación');
+      console.error('❌ Error al enviar notificaciones:', err);
+      toast.error('❌ Ocurrió un error al enviar las notificaciones');
     }
   };
 
@@ -87,7 +91,7 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
       try {
         const [formsResponse, templatesResponse] = await Promise.all([
           FormService.getBasicForms(),
-          TemplateServiceFront.getTemplates(),
+          TemplateService.getTemplates(),
         ]);
 
         if (formsResponse.getStatus()) setForms(formsResponse.getMany());
@@ -109,72 +113,63 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
     getFormStructure();
   }, [formId]);
 
-  if (usersWithPlayerId.length === 0) {
-    return (
-      <div className='p-4 text-red-600 font-medium'>
-        No hay usuarios disponibles que cumplan con las condiciones para enviar
-        notificaciones (playerId requerido).
-      </div>
-    );
-  }
-
   return (
-    <div className='space-y-6 w-full max-w-5xl mx-auto'>
-      <h4 className='text-xl font-semibold text-gray-800'>
-        Enviar notificación manual
-      </h4>
-
+    <div className='space-y-6 w-full max-w-5xl mx-auto p-4'>
       <div className='space-y-2'>
-        <label className='block text-sm font-medium mb-1'>Usuarios</label>
         <input
           type='text'
           className='w-full border border-gray-300 rounded px-3 py-2'
-          placeholder='Buscar por nombre o email...'
+          placeholder={t('shifts.notifications.searchPlaceholder')}
           value={search}
           onInput={(e) => setSearch(e.currentTarget.value)}
         />
 
         <div className='max-h-48 overflow-y-auto border border-gray-200 rounded p-2 bg-white'>
-          {filteredUsers.map((user: any) => (
-            <label key={user.id} className='flex items-center gap-2 py-1'>
-              <input
-                type='checkbox'
-                value={user.id}
-                checked={selectedUserIds.includes(user.id)}
-                onChange={() =>
-                  setSelectedUserIds((prev) =>
-                    prev.includes(user.id)
-                      ? prev.filter((id) => id !== user.id)
-                      : [...prev, user.id]
-                  )
-                }
-                className='accent-cyan-600'
-              />
-              <span className='text-sm'>
-                {user.name} ({user.email})
-              </span>
-            </label>
-          ))}
+          {[...new Map(filteredUsers.map((u) => [u.id, u])).values()].map(
+            (user: any) => (
+              <label key={user.id} className='flex items-center gap-2 py-1'>
+                <input
+                  type='checkbox'
+                  value={user.id}
+                  checked={selectedUserIds.includes(user.id)}
+                  onChange={() =>
+                    setSelectedUserIds(
+                      (prev) =>
+                        prev.includes(user.id)
+                          ? prev.filter((id) => id !== user.id)
+                          : [...new Set([...prev, user.id])] // <--- asegura no duplicar
+                    )
+                  }
+                  className='accent-cyan-600'
+                />
+                <span className='text-sm'>
+                  {user.name} ({user.email})
+                </span>
+              </label>
+            )
+          )}
         </div>
 
-        <div className='flex items-center gap-2 mt-2'>
-          <input
-            type='checkbox'
-            checked={sendToShiftToday}
-            onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
-            className='accent-cyan-600'
-          />
-          <span className='text-sm'>Solo con turno activo</span>
-        </div>
+        <div className='flex items-center justify-between mt-2'>
+          <div className='flex items-center gap-2'>
+            <input
+              type='checkbox'
+              checked={sendToShiftToday}
+              onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
+              className='accent-cyan-600'
+            />
+            <span className='text-sm'>Solo con turno activo</span>
+          </div>
 
-        {selectedUserIds.length > 0 && (
-          <button
-            className='text-sm text-cyan-700 hover:underline mt-1'
-            onClick={clearUserSelection}
-          >
-            Limpiar selección de usuarios
-          </button>
-        )}
+          {selectedUserIds.length > 0 && (
+            <button
+              className='text-sm text-cyan-700 hover:underline border-none'
+              onClick={clearUserSelection}
+            >
+              Limpiar selección de usuarios
+            </button>
+          )}
+        </div>
 
         {selectedUsersFull.length > 0 && (
           <div className='mt-2'>
@@ -182,7 +177,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
               Usuarios seleccionados con registro de notificaciones:
             </h5>
             <ul className='text-sm text-gray-800 list-disc list-inside space-y-1'>
-              {selectedUsersFull.map((u) => (
+              {[
+                ...new Map(selectedUsersFull.map((u) => [u.id, u])).values(),
+              ].map((u) => (
                 <li key={u.id}>
                   {u.name} ({u.email})
                 </li>
@@ -194,7 +191,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         <div>
-          <label className='block text-sm font-medium mb-1'>Plantilla</label>
+          <label className='block text-sm font-medium mb-1'>
+            {t('shifts.notifications.template')}
+          </label>
           <select
             className='w-full border border-gray-300 rounded px-3 py-2'
             value={templateId}
@@ -204,7 +203,7 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
               setFormStructure(null);
             }}
           >
-            <option value=''>Selecciona una plantilla</option>
+            <option value=''>{t('shifts.notifications.selectTemplate')}</option>
             {templates.map((tpl: any) => (
               <option key={tpl.id} value={tpl.id}>
                 {tpl.title}
@@ -214,7 +213,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
         </div>
 
         <div>
-          <label className='block text-sm font-medium mb-1'>Formulario</label>
+          <label className='block text-sm font-medium mb-1'>
+            {t('shifts.notifications.form')}
+          </label>
           <select
             className='w-full border border-gray-300 rounded px-3 py-2'
             value={formId}
@@ -224,9 +225,9 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
             }}
           >
             <option value=''>Selecciona un formulario</option>
-            {forms.map((form: any) => (
-              <option key={form.id} value={form.id}>
-                {form.title}
+            {forms.map((form) => (
+              <option key={form.value} value={form.value}>
+                {form.label}
               </option>
             ))}
           </select>
@@ -237,7 +238,7 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           <div>
             <label className='block text-sm font-medium mb-1'>
-              Título personalizado
+              {t('shifts.notifications.customTitle')}
             </label>
             <input
               className='w-full border border-gray-300 rounded px-3 py-2'
@@ -247,7 +248,7 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
           </div>
           <div>
             <label className='block text-sm font-medium mb-1'>
-              Descripción personalizada
+              {t('shifts.notifications.customDescription')}
             </label>
             <textarea
               className='w-full border border-gray-300 rounded px-3 py-2'
@@ -259,14 +260,11 @@ export const ManualNotificationForm = ({ users: externalUsers = [] }: Props) => 
         </div>
       )}
 
-      <div className='pt-4'>
-        <button
-          className='bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded'
-          onClick={handleSubmit}
-        >
-          Enviar notificación
-        </button>
-      </div>
+      <Button
+        label='Enviar notificacion'
+        onClick={handleSubmit}
+        name='button-notification'
+      />
     </div>
   );
 };

@@ -4,7 +4,6 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { toast } from 'react-toastify';
@@ -21,7 +20,15 @@ import { FieldArray } from 'react-final-form-arrays';
 import dayjs from 'dayjs';
 import { Input } from '@/components/common/input/input';
 import { IFormResponse } from '@/types/form';
-import { FormService } from '@/services';
+import {
+  ContractService,
+  FormService,
+  PlaceService,
+  RoundService,
+  ScheduleService,
+  ServiceService,
+  TaskService,
+} from '@/services';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 
 interface FormData {
@@ -48,16 +55,16 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const onSubmit = async (model: FormData) => {
     model.task = setTasks(model.task);
     model.hasRound = !!model.roundId;
-    console.log('model', model);
+    // console.log('model', model);
 
     let request;
     let message: string;
 
     if (id) {
-      request = await ShiftService.updateService(model, id);
+      request = await ServiceService.updateService(model, id);
       message = 'servicio editado exitosamente!';
     } else {
-      request = await ShiftService.createService(model);
+      request = await ServiceService.createService(model);
       message = 'servicio creado exitosamente!';
     }
 
@@ -101,17 +108,17 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   );
 
   const getProjects = async () => {
-    const request: any = await ShiftService.getProjects();
+    const request: any = await ContractService.getProjects();
     projects.value = request.data;
   };
 
   const getPlaces = async () => {
-    const request: any = await ShiftService.getPlaces();
+    const request: any = await PlaceService.getPlaces();
     places.value = request.data;
   };
 
   const getRounds = async () => {
-    const request: any = await ShiftService.getRounds();
+    const request: any = await RoundService.getRounds();
     rounds.value = request.data;
   };
 
@@ -122,12 +129,12 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   };
 
   const getTaks = async () => {
-    const request: any = await ShiftService.getTasks();
+    const request: any = await TaskService.getTasks();
     tasks.value = request.data;
   };
 
   const getSchedules = async () => {
-    const request: any = await ShiftService.getSchedules();
+    const request: any = await ScheduleService.getSchedules();
     schedules.value = request.data;
   };
 
@@ -146,7 +153,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       'task',
     ] as const;
 
-    const request: any = await ShiftService.getServiceById(id);
+    const request: any = await ServiceService.getServiceById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
 
     initialValues.value = model;

@@ -19,6 +19,7 @@ span.vx-icon {
 .bg-ternary,
 .bg-error {
   @apply text-t-dark;
+
   span.vox-icon {
     @apply text-t-dark;
   }
@@ -1337,7 +1338,7 @@ span.vx-icon.size-xl {
   content: '\0248';
 }
 
-.vx-icon-322::before {
+.vx-icon-calendar-days::before {
   content: '\0249';
 }
 
@@ -1867,4 +1868,56 @@ span.vx-icon.size-xl {
 
 .vx-icon-454::before {
   content: '\02CD';
+}
+
+.vx-icon-options::before {
+  content: '\02CE';
+}
+
+.vx-icon-user-inactive::before {
+  content: '\02CF';
+}
+
+.vx-icon-user-active::before {
+  content: '\02D0';
+}
+
+.vx-icon-user-status::before {
+  content: '\02D1';
+}
+
+.vx-icon-users::before {
+  content: '\02D2';
+}
+
+.vx-icon-devices::before {
+  content: '\02D3';
+}
+
+.vx-icon-user::before {
+  content: '\02D4';
+}
+
+.vx-icon-form::before {
+  content: '\02D5';
+}
+
+.vx-icon-user-tasks::before {
+  content: '\02D6';
+}
+
+.vx-icon-users-opacity::before {
+  content: '\02D7';
+}
+
+.vx-icon-settings::before {
+  content: '\02D8';
+}
+
+.vx-icon-notify::before {
+  content: '\02D9';
+}
+
+.vx-icon-open-mail::before {
+  content: '\02DA';
 }

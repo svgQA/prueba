@@ -12,11 +12,16 @@ export interface IButtonProps extends IComponentProps {
   loading?: boolean;
   disabled?: boolean;
   end?: boolean;
-  border?: boolean;
+  borderless?: boolean;
   padding?: string;
   text?: string;
   textColor?: string;
   iconColor?: string;
   form?: string;
   big?: boolean;
+  iconSize?: 'sm' | 'xsm' | 'xs' | 'xxs';
+  unpadded?: boolean;
+  selected?: boolean;
+  textAlign?: 'left' | 'center' | 'right';
+  bold?: boolean;
 }

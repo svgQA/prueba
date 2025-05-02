@@ -7,14 +7,15 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-
-import { ShiftService } from '@/services/shift';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 import { toast } from 'react-toastify';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { ServiceService } from '@/services';
 
 export interface IServicio {
   id: number;
@@ -39,22 +40,34 @@ export const ServiceSettingPage: FunctionComponent = () => {
   }, []);
 
   const getServices = async () => {
-    const request: any = await ShiftService.getServices();
+    const request: any = await ServiceService.getServices();
     novelties.value = request.data;
   };
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.create.to,
+      label: 'create',
+      id: 'service-create',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creacion de servicio' });
     navigate('/rounds/service/create');
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.update.to,
+      label: 'update',
+      id: 'service-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar servicio' });
     navigate(`/rounds/service/update/${id}`);
   };
 
   const deleteNovelty = async (id: string) => {
-    const request = await ShiftService.deleteService(id);
+    const request = await ServiceService.deleteService(id);
     if (!request.getStatus()) return;
     toast.success('Servicio eliminado', { position: 'top-right' });
     getServices();

@@ -7,7 +7,7 @@ export const Gauge: FunctionComponent<IGaugeProps> = ({
   stroke = 10,
   color = 'blue', // Valor por defecto para color
 }) => (
-  <div className={`flex items-center gap-2`}>
+  <div className={`flex items-center justify-center`}>
     <div className={`w-${size} h-${size} relative`}>
       <svg className='w-full h-full' viewBox='0 0 100 100'>
         {/* Fondo del círculo */}
@@ -34,19 +34,17 @@ export const Gauge: FunctionComponent<IGaugeProps> = ({
             stroke: color, // Usar el color dinámico para el progreso
           }}
         />
-        {size >= 15 && (
-          <text
-            x='50'
-            y='50'
-            className='text-sm font-medium'
-            dominantBaseline='middle'
-            textAnchor='middle'
-          >
-            {progress}%
-          </text>
-        )}
+        <text
+          x='50'
+          y='50'
+          className='fill-gray-700 dark:fill-gray-200'
+          dominantBaseline='middle'
+          textAnchor='middle'
+          style={{ fontSize: '26px' }}
+        >
+          {progress}%
+        </text>
       </svg>
     </div>
-    {size < 15 && <span className='text-base font-medium'>{progress}%</span>}
   </div>
 );

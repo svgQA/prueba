@@ -32,7 +32,8 @@ import { Button } from '@/components/common/button/button';
 import { FormElement } from './components/element';
 import { FormPhoneViewer } from './components/phone';
 import { getStatusElementSelected, toggleListModal } from '../lists/store/list';
-
+import i18n from '@/i18n';
+import { toast } from 'react-toastify';
 export const FormCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   useEffect(() => {
@@ -54,6 +55,10 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       description: getForm.value.description || getForm.value.label,
       structure: getForm.value,
     };
+
+    const message = getValidation(format);
+    if (message) return toast.error(message);
+
     if (getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE) {
       if (!getFormMode.value.id) return;
       const response = await FormService.update(format, getFormMode.value.id);
@@ -63,6 +68,19 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       if (!response.getStatus()) return;
     }
     navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.form.to);
+  };
+
+  const getValidation = (format: IFormRequest) => {
+    if (format.title.length < 5) {
+      return i18n.t('form.error.title');
+    }
+    if (format.description.length < 5) {
+      return i18n.t('form.error.description');
+    }
+    if (!format.structure) {
+      return i18n.t('form.error.structure');
+    }
+    return null;
   };
 
   const addLelement = () => {
@@ -121,28 +139,26 @@ export const FormCreateSettingPage: FunctionComponent = () => {
         />
       </div>
       <div class='flex-grow min-h-[78vh] p-3'>
-        <div className='flex flex-row w-full items-center mb-4 pr-3'>
-          <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-b-dark-light dark:border-b-light-dark'>
+        <div className='flex flex-row w-full items-center mb-4 gap-5 pr-12'>
+          <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer'>
             <span className='vx-icon vx-upload text-gray-400 text-2xl' />
           </div>
           <div className='flex flex-col gap-1 w-10/12'>
             <Input
               type='text'
-              placeholder='Enter title'
+              placeholder={i18n.t('form.placeholder.title')}
               name='label'
               icon='245'
               id={`in-form-${getForm.value.id}-format-title`}
               value={getForm.value.label}
               onChange={handleFormatInputChange}
-              borderless
             />
             <Input
               type='text'
-              placeholder='Enter description'
+              placeholder={i18n.t('form.placeholder.description')}
               name='description'
               icon='123'
               id={`in-form-${getForm.value.id}-format-description`}
-              borderless
               value={getForm.value.description}
               onChange={handleFormatInputChange}
             />
@@ -150,11 +166,11 @@ export const FormCreateSettingPage: FunctionComponent = () => {
           <Button
             name='bnt-create-form'
             type='button'
-            label={
+            label={i18n.t(
               getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE
-                ? 'Update'
-                : 'Create'
-            }
+                ? 'form.btn.update'
+                : 'form.btn.create'
+            )}
             icon='212'
             onClick={saveFormat}
           />
@@ -164,21 +180,24 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             <div key={page.id} className='w-full mb-5'>
               <Input
                 type='text'
-                placeholder='Enter title page'
+                placeholder={i18n.t('form.placeholder.title_page')}
                 name='label'
                 id={`in-form-${page.id}-page-title`}
                 data-pageid={page.id}
                 value={page.label}
                 onChange={handlePageInputChange}
-                borderless
                 icon='064'
               />
               <div className='mt-2 w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light'>
                 <table class='w-full text-left px-2'>
                   <thead className='border-b-2 border-b-light-dark dark:border-b-dark-light'>
                     <tr>
-                      <th className='py-1 px-2 rounded-tl-md'>Question</th>
-                      <th className='py-1 rounded-tr-md'>Type of Response</th>
+                      <th className='py-1 px-2 rounded-tl-md'>
+                        {i18n.t('form.field.question')}
+                      </th>
+                      <th className='py-1 rounded-tr-md'>
+                        {i18n.t('form.field.type')}
+                      </th>
                     </tr>
                   </thead>
                   <DndProvider backend={HTML5Backend}>

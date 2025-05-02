@@ -2,7 +2,7 @@ import { Button } from '@/components/common/button/button';
 import { memo } from 'preact/compat';
 
 export const MenuButtons = memo(({ goBack, goForward }: any) => (
-  <div className='mr-3 flex items-center justify-center max-w-44 min-w-40'>
+  <div className='mr-3 flex items-center justify-center max-w-44 min-w-40 gap-4'>
     <Button
       id='setting-go-back'
       name='setting-go-back'

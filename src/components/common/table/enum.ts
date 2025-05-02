@@ -6,4 +6,6 @@ export enum ROW_ACTIONS {
   RESPONSE,
   MESSAGE,
   PROFILE,
+  CHECK_IN,
+  CHECK_OUT,
 }

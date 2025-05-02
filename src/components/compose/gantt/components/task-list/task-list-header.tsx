@@ -10,7 +10,7 @@ export const TaskListHeaderDefault: ComponentType<TaskListHeaderProps> = ({
 }) => {
   return (
     <div
-      className='flex justify-center items-center bg-primary w-64 rounded-tl-lg border-b-2 dark:border-b-dark-light'
+      className='flex justify-center items-center bg-primary dark:bg-ternary w-64 rounded-tl-lg border-b-2 dark:border-b-dark-light'
       style={{
         height: headerHeight,
       }}

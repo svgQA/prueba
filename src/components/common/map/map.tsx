@@ -24,7 +24,7 @@ export const Map: FunctionComponent<IMapProps> = ({
   draggable,
   width,
   height,
-  clickPoint,
+  // clickPoint,
   center = {
     lat: 4.670355108326989,
     lng: -74.08689346772478,
@@ -32,7 +32,7 @@ export const Map: FunctionComponent<IMapProps> = ({
   allowManualPoint,
   radius,
 }) => {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [_map, setMap] = useState<google.maps.Map | null>(null);
   const [points, setPoint] = useState<
     { id: number; position: google.maps.LatLngLiteral; tasks: ITask[] }[]
   >([]);
@@ -70,7 +70,7 @@ export const Map: FunctionComponent<IMapProps> = ({
   }, []);
 
   const onUnmount = React.useCallback(() => {
-    console.log(map);
+    // console.log(map);
 
     setMap(null);
   }, []);
@@ -194,7 +194,7 @@ export const Map: FunctionComponent<IMapProps> = ({
         lng: marker.position.lng.toString(),
       });
     }
-    clickPoint?.(marker);
+    // clickPoint?.(marker);
     setActiveMarker(id);
   };
 

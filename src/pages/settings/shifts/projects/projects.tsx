@@ -7,14 +7,15 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-
-import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
+import { appendHistory } from '../../store/settings';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { ContractService } from '@/services';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 export interface IProject {
   id: number;
@@ -42,22 +43,34 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   }, []);
 
   const getProjects = async () => {
-    const request: any = await ShiftService.getProjects();
+    const request: any = await ContractService.getProjects();
     projects.value = request.data;
   };
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.projectCreate.to,
+      label: 'create',
+      id: 'projects-create',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creacion de contrato' });
     navigate('/rounds/project/create');
   };
 
   const editProject = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.projectUpdate.to,
+      label: 'update',
+      id: 'projects-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar contrato' });
     navigate(`/rounds/project/edit/${id}`);
   };
 
   const deleteProject = async (id: string) => {
-    const request = await ShiftService.deleteProject(id);
+    const request = await ContractService.deleteProject(id);
     if (!request.getStatus()) return;
     toast.success('Lugar contrato', { position: 'top-right' });
     getProjects();

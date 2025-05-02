@@ -11,9 +11,12 @@ import { IRowAction } from '@/components/common/table/interface.d';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Table } from '@/components/common/table/table';
 import { appendHistory } from '../../store/settings';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 export const FormInspectSettingPage: FunctionComponent = () => {
   const responses = useSignal<IResponseResponse[]>([]);
+  const { t } = useTranslation();
   const [_, navigate] = useLocation();
 
   useEffect(() => {
@@ -40,7 +43,12 @@ export const FormInspectSettingPage: FunctionComponent = () => {
     const response = responses.value.find(
       (response) => response.id == action.id
     );
-    if (!response?.structure) throw Error('ERROR: Not exist response');
+    if (!response?.structure) {
+      if (!response?.structure) {
+        toast.error(t('forms.error.notExistResponse'));
+        return;
+      }
+    }
     switch (action.action) {
       case ROW_ACTIONS.RESPONSE: {
         setResponse(
