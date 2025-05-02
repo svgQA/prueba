@@ -1,5 +1,5 @@
 import { Table } from '@/components/common/table/table';
-import { userColumns } from './user.columns';
+import { getColumns } from './user.columns';
 import { FunctionalComponent } from 'preact';
 import { useSignal } from '@preact/signals';
 import { IUserResponse } from '@/types/auth';
@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 
 interface UserTableProps {
   onUserEdit?: (user: IUserResponse) => void;
+  setSelectedUsers?: (users: IUserResponse[]) => void;
 }
 
 export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
@@ -50,7 +51,7 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
           title: 'Eliminar Usuario',
           message: `¿Está seguro que desea eliminar el usuario ${user.name} ${user.surname} - ${user.cardId}?`,
           onConfirm: () => deleteUser(Number(action.id)),
-          onCancel: () => {},
+          onCancel: () => { },
         });
         break;
       }
@@ -73,7 +74,7 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
           ¿Estás seguro que deseas asignar perfil a ${user.name} ${user.surname}?,
            Tenga en cuenta que el usuario ya podrá usar la aplicación.`,
           onConfirm: () => setProfile(user.id, company),
-          onCancel: () => {},
+          onCancel: () => { },
         });
         break;
       }
@@ -114,13 +115,18 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
   return (
     <Table<IUserResponse>
       data={users.value}
-      columns={userColumns}
+      columns={getColumns(handleOnClick)}
       pageSize={20}
       onClickAction={handleOnClick}
       visibility={{
         id: false,
         connection: false,
         taskProgress: false,
+      }}
+      onSelectionChange={(selectedRows) => {
+        if (props.setSelectedUsers) {
+          props.setSelectedUsers(selectedRows);
+        }
       }}
     />
   );

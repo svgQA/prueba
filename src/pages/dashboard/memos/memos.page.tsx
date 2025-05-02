@@ -14,13 +14,14 @@ import { toast } from 'react-toastify';
 import { Section } from '@/components/common/section/section';
 import { useTranslation } from 'react-i18next';
 import { Table } from '@/components/common/table/table';
-import { columns } from './components/memos.columns';
+import { getColumns } from './components/memos.columns';
 import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
 import { Chats, FrequentQuestion } from './interface';
 import { ExpandableMultiple } from './components/expandable.multiple';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 interface ChatMessage {
   message: string;
@@ -192,6 +193,12 @@ export const MemosPage: FunctionComponent = () => {
     userSelected.value = users.value.find((user) => user.cognitoId === chatId);
   };
 
+  const onClickAction = (params: { id: string; type: string; action: ROW_ACTIONS }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
+  };
+
+
   const chatView = () => {
     return (
       <>
@@ -335,7 +342,7 @@ export const MemosPage: FunctionComponent = () => {
             count={memoSummary.value.total}
             subtitle=''
             color='t-dark'
-            icon='054' // 328
+            icon='328' // 328
           />
 
           <CardData
@@ -343,7 +350,7 @@ export const MemosPage: FunctionComponent = () => {
             count={calculatePercentage(memoSummary.value.in_progress)}
             subtitle=''
             color='t-dark'
-            icon='052' // 311
+            icon='311' // 311
           />
 
           <CardData
@@ -351,7 +358,7 @@ export const MemosPage: FunctionComponent = () => {
             count={calculatePercentage(memoSummary.value.completed)}
             subtitle=''
             color='t-dark'
-            icon='015' // 312
+            icon='312' // 312
           />
         </div>
       )}
@@ -366,7 +373,7 @@ export const MemosPage: FunctionComponent = () => {
         {currentView.value === VIEW_NAME.TABLE && (
           <Table
             data={memos.value}
-            columns={columns}
+            columns={getColumns(onClickAction)}
             showExpandableIcon={false}
             pageSize={20}
             selectable

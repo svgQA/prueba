@@ -71,21 +71,21 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
           count={totalNotifications.value}
           subtitle=""
           color="t-dark"
-          icon="019"
+          icon="notify"
         />
         <CardData
           title={t('history.cards.openRate')}
           count={openRate.value}
           subtitle="%"
           color="t-dark"
-          icon="101"
+          icon="open-mail"
         />
         <CardData
           title={t('history.cards.monthlyNotifications')}
           count={notificationsThisMonth.value}
           subtitle=""
           color="t-dark"
-          icon="322"
+          icon="calendar-days"
         />
       </div>
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>

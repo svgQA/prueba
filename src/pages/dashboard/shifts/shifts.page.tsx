@@ -17,7 +17,6 @@ import { Table } from '@/components/common/table/table';
 import { getColumns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
 import { useTranslation } from 'react-i18next';
-
 import {
   GeneralTask,
   Task,
@@ -38,7 +37,6 @@ import { PlannerView } from './components/planner.view';
 import { UserService } from '@/services/user';
 import { MentionOption } from '@/components/common/mention-editor';
 import { toast } from 'react-toastify';
-import i18n from '@/i18n';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 enum VIEW_NAME {
@@ -196,8 +194,11 @@ export const ShiftsPage: FunctionalComponent = () => {
    * Eventos de toggle para los modales
    */
   const toggleSendModal = () => {
+
+    handleViewChange(VIEW_NAME.TABLE);
+    
     if (!hasValidPlayerRef.current) {
-      toast.warn(i18n.t('notification.nobody_have_player_id'));
+      toast.warn(t('notification.nobody_have_player_id'));
       return;
     }
 
@@ -210,7 +211,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
     // ✅ Siguientes veces: solo abre el modal (sin toggle)
     if (selectedUsers.length === 0) {
-      toast.warn(i18n.t('notification.select_at_least_one_employee'));
+      toast.warn(t('notification.select_at_least_one_employee'));
       setOnNotifications(false);
       onNotificationsRef.current = false;
       return;
@@ -359,12 +360,13 @@ export const ShiftsPage: FunctionalComponent = () => {
             name='button-action'
             rounded={false}
             icon='314'
+            label={t('shifts.remoteSupervision')}
             onClick={toggleSendModal}
             className={`border-2 p-2 ${!hasValidPlayer
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : onNotifications
-                  ? 'bg-primary-opacity'
-                  : 'border-primary'
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : onNotifications
+                ? 'bg-primary-opacity'
+                : 'border-primary'
               }`}
           />
           {showSendModal.value && (
@@ -378,14 +380,14 @@ export const ShiftsPage: FunctionalComponent = () => {
           )}
         </div>
 
-        <Button
+        {/* <Button
           name='button-supervision'
           label={t('shifts.remoteSupervision')}
           className='bg-primary text-white py-1 rounded px-4'
           onClick={() => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
-        />
+        /> */}
         <Button
           name='button-change-planner'
           onClick={() => {
@@ -407,6 +409,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       onNotifications,
       showSendModal.value,
       selectedUsers,
+      t
     ]
   );
 
@@ -428,7 +431,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           count={shiftSummary.value.total}
           subtitle=''
           color='t-dark'
-          icon='054'
+          icon='328'
         />
 
         <CardData
@@ -436,7 +439,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           count={calculatePercentage(shiftSummary.value.in_progress)}
           subtitle=''
           color='t-dark'
-          icon='052'
+          icon='311'
         />
 
         <CardData
@@ -444,7 +447,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           count={calculatePercentage(shiftSummary.value.completed)}
           subtitle=''
           color='t-dark'
-          icon='015'
+          icon='312'
         />
       </div>
 

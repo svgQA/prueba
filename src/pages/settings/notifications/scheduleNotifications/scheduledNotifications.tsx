@@ -5,10 +5,11 @@ import { useLocation } from 'wouter';
 import { useSignal } from '@preact/signals';
 import { Table } from '@/components/common/table/table';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
-import { columns } from './components/scheduled.columns';
+import { getColumns } from './components/scheduled.columns';
 import { SchedulerServiceFront } from '@/services/schedule';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
@@ -43,6 +44,11 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
     appendHistory(menu);
   };
 
+  const onClickAction = (params: { id: string; type: string; action: ROW_ACTIONS }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
+  };
+
   return (
     <Section>
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
@@ -56,7 +62,7 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
       <Table<INotificationScheduledItem>
         data={notifications.value}
-        columns={columns()}
+        columns={getColumns(onClickAction)}
         pageSize={10}
         showExpandableIcon={false}
       />

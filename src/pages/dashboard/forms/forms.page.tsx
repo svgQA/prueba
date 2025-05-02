@@ -8,7 +8,7 @@ import { CardData } from '@/components/compose/cards';
 import { Table } from '@/components/common/table/table';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { columns } from './components/inspect.columns';
+import { getColumns } from './components/inspect.columns';
 import { useTranslation } from 'react-i18next';
 
 export const FormsPage: FunctionComponent = () => {
@@ -79,7 +79,7 @@ export const FormsPage: FunctionComponent = () => {
           count={150}
           subtitle={t('forms.cards.subtitle')}
           color='t-dark'
-          icon='123'
+          icon='328'
         />
 
         <CardData
@@ -87,7 +87,7 @@ export const FormsPage: FunctionComponent = () => {
           count={100}
           subtitle={t('forms.cards.activeSubtitle')}
           color='t-dark'
-          icon='089'
+          icon='311'
         />
 
         <CardData
@@ -95,12 +95,12 @@ export const FormsPage: FunctionComponent = () => {
           count={50}
           subtitle={t('forms.cards.archivedSubtitle')}
           color='t-dark'
-          icon='098'
+          icon='312'
         />
       </div>
       <Table<IResponseResponse>
         data={responses.value}
-        columns={columns}
+        columns={getColumns(handleOnClick)}
         pageSize={20}
         onClickAction={handleOnClick}
       />

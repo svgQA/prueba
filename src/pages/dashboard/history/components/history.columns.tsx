@@ -70,7 +70,7 @@ export const getColumns = (
       size: 100,
       cell: (info) => (
         <div className="flex items-center gap-2 text-gray-700">
-          <span className="vox-icon vx-icon-340 text-lg" />
+          <span className="vox-icon vx-icon-users text-lg" />
           <span className="text-sm">{info.getValue() as number}</span>
         </div>
       ),
@@ -110,14 +110,14 @@ export const getColumns = (
 
         const actions: IDropdownAction[] = [
           {
-            label: 'Editar usuario',
+            label: 'Editar notificación',
             icon: 'vox-icon vx-icon-123 text-primary',
             onClick: () => {
               onClickAction({ id: String(id), type: 'shift', action: ROW_ACTIONS.UPDATE });
             },
           },
           {
-            label: 'Eliminar usuario',
+            label: 'Eliminar notificación',
             icon: 'vox-icon vx-icon-053 text-red-500',
             color: 'text-red-600',
             onClick: () => {
