@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
-import { TemplateServiceFront } from '@/services/notification/template';
+import { TemplateService } from '@/services';
 import { FormService } from '@/services/form/form';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
@@ -47,7 +47,7 @@ export const TemplateCreateForm = () => {
     if (useTasks && taskId) payload.data.taskId = taskId;
 
     setLoading(true);
-    const res = await TemplateServiceFront.createTemplate(payload);
+    const res = await TemplateService.createTemplate(payload);
     setLoading(false);
 
     if (res.getStatus()) {

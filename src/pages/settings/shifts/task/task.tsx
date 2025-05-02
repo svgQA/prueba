@@ -7,6 +7,8 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 import { toast } from 'react-toastify';
 
 import {
@@ -44,11 +46,23 @@ export const TaskSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.task.create.to,
+      label: 'create',
+      id: 'tasks-create',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creacion de tarea' });
     navigate('/rounds/task/create');
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.task.update.to,
+      label: 'update',
+      id: 'tasks-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar tarea' });
     navigate(`/rounds/task/update/${id}`);
   };

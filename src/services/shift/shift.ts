@@ -1,20 +1,14 @@
 import { FormValues } from '@/components/compose/gantt/components/gantt/replicate.modal';
-import {
-  type User,
-  ViewMode,
-} from '@/components/compose/gantt/types/public-types';
 import { type IPagination } from '@/types';
 import { type IShiftResponse } from '@/types/shift/activity';
+import { ICheckRequest } from '@/types/shift/shift.request';
 import { BaseService } from '@/utils/network';
 import {
   type IMakeRequest,
   VoxServices,
   REQUEST_METHODS,
 } from '@/utils/network/types';
-import {
-  type IPagintationGantt,
-  type IReplicateShift,
-} from '@/utils/types/shift.interface';
+import { type IReplicateShift } from '@/utils/types/shift.interface';
 
 export type ShiftSummary = {
   total: number;
@@ -48,19 +42,13 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async get_gantt(
-    params: IPagintationGantt = {
-      page: 1,
-      items: 10,
-      mode: ViewMode.QuarterDay,
-      // start: new Date().toISOString(),
-    }
-  ) {
+  static async createCheck(data: ICheckRequest, shiftId: number) {
     const model: IMakeRequest = {
-      url: ['activity', 'gantt'],
-      params: params as any,
+      url: ['activity', `${shiftId}`, 'check'],
+      method: REQUEST_METHODS.POST,
+      data,
     };
-    return await super.make_request<User>(this.name, model);
+    return await super.make_request(this.name, model);
   }
 
   /**

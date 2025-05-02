@@ -8,11 +8,13 @@ import { useWebSocket } from '@/utils/socket';
 import { Section } from '@/components/common/section/section';
 import { useTranslation } from 'react-i18next';
 import { Table } from '@/components/common/table/table';
-import { columns } from './components/memos.columns';
+import { getColumns } from './components/memos.columns';
 import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
+/* import { FrequentQuestion } from './interface'; */
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import SupervisorInfo from './components/expandable/supervisor.expandable';
 import { useUserStore } from '@/store/slices';
@@ -130,6 +132,15 @@ export const MemosPage: FunctionComponent = () => {
     [currentView.value]
   );
 
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
+  };
+
   return (
     <Section
       className={
@@ -144,7 +155,7 @@ export const MemosPage: FunctionComponent = () => {
             count={summary.value.total}
             subtitle=''
             color='t-dark'
-            icon='054' // 328
+            icon='328' // 328
           />
 
           <CardData
@@ -152,7 +163,7 @@ export const MemosPage: FunctionComponent = () => {
             count={calculatePercentage(summary.value.in_progress)}
             subtitle=''
             color='t-dark'
-            icon='052' // 311
+            icon='311' // 311
           />
 
           <CardData
@@ -160,7 +171,7 @@ export const MemosPage: FunctionComponent = () => {
             count={calculatePercentage(summary.value.completed)}
             subtitle=''
             color='t-dark'
-            icon='015' // 312
+            icon='312' // 312
           />
         </div>
       )}
@@ -177,8 +188,8 @@ export const MemosPage: FunctionComponent = () => {
         {currentView.value === VIEW_NAME.TABLE && (
           <Table
             data={memos.value}
-            columns={columns}
-            showExpandableIcon
+            columns={getColumns(onClickAction)}
+            showExpandableIcon={false}
             pageSize={20}
             selectable
             expandable={(row: Memo) => <SupervisorInfo memo={row} />}

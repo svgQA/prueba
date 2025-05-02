@@ -9,21 +9,14 @@ import { FormData } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { ServiceService } from '@/services';
+import { ServiceService, ShiftService } from '@/services';
 import { Chip } from '@/components/common/chip/chip';
 import { Task, User } from '@/components/compose/gantt/types/public-types';
 import { Badge } from '@/components/common/badge/badge';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { toast } from 'react-toastify';
-interface FormErrors {
-  employeedId?: string;
-  serviceId?: string;
-  start?: string;
-  end?: string;
-  type?: string;
-}
-// import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
+import i18n from '@/i18n';
 import { useTranslation } from 'react-i18next';
 
 interface ITaskFormProps {
@@ -34,13 +27,6 @@ interface ITaskFormProps {
   taskSelected?: Task;
   users?: IOption[];
 }
-
-// interface ITask {
-//   start: string;
-//   date: string;
-//   status: string;
-//   description: string;
-// }
 
 export const TaskForm = ({
   closed,
@@ -69,27 +55,27 @@ export const TaskForm = ({
 
   const onSubmit = async (model: FormData) => {
     try {
-      const { start, end } = model;
-      console.log('model: ', start, end);
+      const { start, end, employeedId, serviceId } = model;
+      model.employeedId = employeedId?.value;
+      model.serviceId = serviceId?.value;
 
-      //   if (start) model.start = dayjs(start).toISOString();
-      //   if (end) model.end = dayjs(end).toISOString();
+      if (start) model.start = dayjs(start).toISOString();
+      if (end) model.end = dayjs(end).toISOString();
 
-      //   const request = taskSelected?.id
-      //     ? await ShiftService.updateActivity(model, taskSelected.id)
-      //     : await ShiftService.createActivity(model);
+      const request = taskSelected?.id
+        ? await ShiftService.updateActivity(model, taskSelected.id)
+        : await ShiftService.createActivity(model);
 
-      //   if (!request.getStatus()) return;
+      if (!request.getStatus()) return;
+      const message = taskSelected?.id
+        ? t('shifts.upsert.successEdit')
+        : t('shifts.upsert.successCreate');
 
-      // const message = taskSelected?.id
-      //   ? t('shifts.upsert.successEdit')
-      //   : t('shifts.upsert.successCreate');
-
-      toast.success('shift.success.action');
+      toast.success(message);
       onClose?.();
       posSave?.();
     } catch (error) {
-      toast.error(t('shifts.upsert.errorProcessing'));
+      toast.error(i18n.t('shift.upsert.error'));
     }
   };
 
@@ -265,16 +251,6 @@ export const TaskForm = ({
           initialValues={initialValues}
           mutators={{
             ...arrayMutators,
-          }}
-          validate={(values) => {
-            const errors: FormErrors = {};
-            if (!values.employeedId) errors.employeedId = 'Campo obligatorio';
-            if (!values.serviceId) errors.serviceId = 'Campo obligatorio';
-            if (!values.start) errors.start = 'Campo obligatorio';
-            if (!values.end) errors.end = 'Campo obligatorio';
-            if (!values.type) errors.type = 'Campo obligatorio';
-
-            return errors;
           }}
           render={({ handleSubmit, values }) => (
             <form

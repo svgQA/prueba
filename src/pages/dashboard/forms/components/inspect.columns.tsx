@@ -1,7 +1,10 @@
 import { Avatar } from '@/components/common/Avatar';
-import { ButtonAction } from '@/components/common/button/column';
 import { Chip } from '@/components/common/chip/chip';
 import { RelativeTime } from '@/components/common/relative/relative';
+import {
+  IDropdownAction,
+  DropdownActionsMenu,
+} from '@/components/common/table/components/dropdown.actions.menu';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
@@ -10,7 +13,13 @@ import i18next from 'i18next';
 // Función para obtener traducciones
 const t = (key: string) => i18next.t(key);
 
-export const columns: ColumnDef<IResponseResponse>[] = [
+export const getColumns = (
+  onClickAction: (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => void
+): ColumnDef<IResponseResponse>[] => [
   {
     accessorKey: 'user',
     id: 'user',
@@ -19,10 +28,10 @@ export const columns: ColumnDef<IResponseResponse>[] = [
       const { user } = info.row.original;
       return (
         <div className='flex items-center'>
-          <Avatar name={user.name} src={user.image} size='sm' square />
+          <Avatar name={user?.name} src={user?.image} size='sm' square />
           <div className='flex flex-col ml-3'>
             <div className='font-bold'>
-              {user.name} {user.surname}
+              {user?.name} {user?.surname}
             </div>
           </div>
         </div>
@@ -74,28 +83,48 @@ export const columns: ColumnDef<IResponseResponse>[] = [
     size: 30,
     cell: (info) => {
       const { id, status } = info.row.original;
+
+      const actions: IDropdownAction[] = [
+        status === RESPONSE_STATUS.OPENED
+          ? {
+              label: t('forms.buttons.continue') || 'Continuar',
+              icon: 'vox-icon vx-icon-030 text-primary',
+              onClick: () => {
+                onClickAction({
+                  id: String(id),
+                  type: 'response',
+                  action: ROW_ACTIONS.RESPONSE,
+                });
+              },
+            }
+          : {
+              label: 'Ver reporte',
+              icon: 'vox-icon vx-icon-433 text-primary',
+              onClick: () => {
+                onClickAction({
+                  id: String(id),
+                  type: 'response',
+                  action: ROW_ACTIONS.REPORT,
+                });
+              },
+            },
+        {
+          label: 'Eliminar',
+          icon: 'vox-icon vx-icon-053 text-red-500',
+          color: 'text-red-600',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'response',
+              action: ROW_ACTIONS.DELETE,
+            });
+          },
+        },
+      ];
+
       return (
-        <div className='w-full flex justify-end '>
-          {status === RESPONSE_STATUS.OPENED ? (
-            <ButtonAction
-              id={id}
-              type='response'
-              action={ROW_ACTIONS.RESPONSE}
-              label={t('forms.buttons.continue')}
-            />
-          ) : (
-            <ButtonAction id={id} type='response' action={ROW_ACTIONS.REPORT} />
-          )}
-          <div>
-            {/* 
-            <ButtonAction
-              id={id}
-              type='response'
-              icon='053'
-              action={ROW_ACTIONS.DELETE}
-              />
-            */}
-          </div>
+        <div className='w-full flex justify-center'>
+          <DropdownActionsMenu actions={actions} />
         </div>
       );
     },

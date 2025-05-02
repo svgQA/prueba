@@ -8,6 +8,8 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect, useState } from 'preact/hooks';
 import { toast } from 'react-toastify';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 
 import {
   menuInformationSelected as infoMenu,
@@ -36,8 +38,14 @@ export const PlacesSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.placesCreate.to,
+      label: 'create',
+      id: 'places-create',
+    };
+    navigate(menu.to);
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creacion de lugar' });
-    navigate('/rounds/places/create');
   };
 
   const deletePlace = async (id: string) => {
@@ -48,6 +56,12 @@ export const PlacesSettingPage: FunctionComponent = () => {
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.placesUpdate.to,
+      label: 'update',
+      id: 'places-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar lugar' });
     navigate(`/rounds/places/update/${id}`);
   };

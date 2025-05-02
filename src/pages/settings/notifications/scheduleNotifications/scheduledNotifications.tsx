@@ -5,14 +5,14 @@ import { useLocation } from 'wouter';
 import { useSignal } from '@preact/signals';
 import { Table } from '@/components/common/table/table';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
-import { columns } from './components/scheduled.columns';
-import { SchedulerServiceFront } from '@/services/notification/schedule';
+import { getColumns } from './components/scheduled.columns';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { SchedulerService } from '@/services/notification/schedule';
 
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
-  const isLoading = useSignal(false);
   const [_, navigate] = useLocation();
 
   useEffect(() => {
@@ -21,15 +21,9 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
   }, []);
 
   const fetchNotifications = async () => {
-    isLoading.value = true;
-    try {
-      const response = await SchedulerServiceFront.getAll('all');
-      notifications.value = response.getMany();
-    } catch (error) {
-      console.error('❌ Error al cargar notificaciones:', error);
-    } finally {
-      isLoading.value = false;
-    }
+    const response = await SchedulerService.getAll('all');
+    if (!response.getStatus()) return;
+    notifications.value = response.getMany();
   };
 
   const redirect = () => {
@@ -41,6 +35,15 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
     };
     navigate(menu.to);
     appendHistory(menu);
+  };
+
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
   };
 
   return (
@@ -56,7 +59,7 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
       <Table<INotificationScheduledItem>
         data={notifications.value}
-        columns={columns()}
+        columns={getColumns(onClickAction)}
         pageSize={10}
         showExpandableIcon={false}
       />

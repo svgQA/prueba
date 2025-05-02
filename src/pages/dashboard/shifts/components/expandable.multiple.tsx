@@ -2,7 +2,6 @@ import { IShiftResponse } from '@/types/shift/activity';
 import ContractInfo from './expandable/contract.expandable';
 import DateInfo from './expandable/date.expandable';
 import EmployeeInfo from './expandable/employee.expandable';
-// import ReportInfo from './expandable/report.expandable';
 import RoundInfo from './expandable/round.expandable';
 import ServiceInfo from './expandable/service.expandable ';
 import ShiftInfo from './expandable/shift.expandable';
@@ -11,7 +10,7 @@ enum InfoType {
   EMPLOYED = 'employee',
   SERVICE = 'service',
   CONTRACT = 'contract',
-  DATE = 'start-end',
+  DATE = 'time',
   REPORT = 'report',
   SHIFT = 'shift',
   ROUND = 'round',
@@ -22,9 +21,19 @@ type Props = {
   data: IShiftResponse;
 };
 
-const getInfoContent = (type: string, data: IShiftResponse) => {
-  const { service, employee } = data;
-  // console.log('service.contract ==>', service.contract);
+const getInfoContent = (type: string, shift: IShiftResponse) => {
+  const { service, employee } = shift;
+  console.log('shift ==>', shift);
+  if (type.startsWith('time')) {
+    return (
+      <DateInfo
+        checkIn={shift.checkIn}
+        checkOut={shift.checkOut}
+        employee={employee}
+        shift={shift}
+      />
+    );
+  }
 
   switch (type) {
     case InfoType.SERVICE:
@@ -33,12 +42,10 @@ const getInfoContent = (type: string, data: IShiftResponse) => {
       return <EmployeeInfo employee={employee} place={service.place} />;
     case InfoType.CONTRACT:
       return <ContractInfo contract={service.contract} />;
-    case InfoType.DATE:
-      return <DateInfo data={data} />;
     // case InfoType.REPORT:
     //   return <ReportInfo data={data} />;
     case InfoType.SHIFT:
-      return <ShiftInfo data={data} />;
+      return <ShiftInfo data={shift} />;
     case InfoType.ROUND:
       return <RoundInfo />;
   }

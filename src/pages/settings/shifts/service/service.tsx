@@ -7,7 +7,8 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 import { toast } from 'react-toastify';
 
 import {
@@ -44,11 +45,23 @@ export const ServiceSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.create.to,
+      label: 'create',
+      id: 'service-create',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creacion de servicio' });
     navigate('/rounds/service/create');
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.update.to,
+      label: 'update',
+      id: 'service-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar servicio' });
     navigate(`/rounds/service/update/${id}`);
   };

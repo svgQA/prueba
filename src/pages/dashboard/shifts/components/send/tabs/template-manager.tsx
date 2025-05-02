@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
-import { TemplateServiceFront } from '@/services/notification/template';
 import { ICreateNotificationTemplateDto } from '@/types/notification/ICreateNotificationTemplateDto';
 import { useTranslation } from 'react-i18next';
+import { TemplateService } from '@/services';
 
 export const TemplateManager = () => {
   const { t } = useTranslation();
@@ -16,7 +16,7 @@ export const TemplateManager = () => {
   }, []);
 
   const fetchTemplates = async () => {
-    const res = await TemplateServiceFront.getTemplates();
+    const res = await TemplateService.getTemplates();
     if (!res.getStatus()) return;
     setTemplates(res.getMany());
   };
@@ -34,7 +34,7 @@ export const TemplateManager = () => {
         data: parsedData,
       };
 
-      await TemplateServiceFront.createTemplate(newTemplate);
+      await TemplateService.createTemplate(newTemplate);
       setTitle('');
       setDescription('');
       setDataJson('');

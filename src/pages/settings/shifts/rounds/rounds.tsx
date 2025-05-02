@@ -9,6 +9,8 @@ import { Round } from './utils/rounds';
 import { columns } from './components/rounds.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ExpandableRounds } from '@/components/compose/table/expandable/rounds';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 import {
   menuInformationSelected as infoMenu,
   setMenu,
@@ -21,6 +23,12 @@ export const RoundsSettingPage: FunctionComponent = () => {
   const [rounds, setRounds] = useState([]);
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.to,
+      label: 'create',
+      id: 'rounds-create',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creación de ronda' });
     navigate('/round/create');
   };
@@ -65,6 +73,12 @@ export const RoundsSettingPage: FunctionComponent = () => {
   };
 
   const editProject = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.update.to,
+      label: 'update',
+      id: 'rounds-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar ronda' });
     navigate(`/round/update/${id}`);
   };

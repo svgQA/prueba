@@ -8,7 +8,8 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { toast } from 'react-toastify';
-
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 import {
   menuInformationSelected as infoMenu,
   setMenu,
@@ -45,11 +46,23 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.create.to,
+      label: 'create',
+      id: 'schedule-create',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creación de horarios' });
     navigate('/rounds/schedule/create');
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.update.to,
+      label: 'update',
+      id: 'schedule-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar horarios' });
     navigate(`/rounds/schedule/update/${id}`);
   };
