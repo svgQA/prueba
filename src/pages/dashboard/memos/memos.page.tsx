@@ -13,12 +13,11 @@ import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
-import { Chats, FrequentQuestion } from './interface';
-import { ExpandableMultiple } from './components/expandable.multiple';
+/* import { FrequentQuestion } from './interface'; */
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import SupervisorInfo from './components/expandable/supervisor.expandable';
-interface ChatMessage {
+/* interface ChatMessage {
   message: string;
   isSender: boolean;
   from: string;
@@ -46,7 +45,7 @@ const FrequentQuestions = () => {
       ))}
     </div>
   );
-};
+}; */
 
 enum VIEW_NAME {
   TABLE,
