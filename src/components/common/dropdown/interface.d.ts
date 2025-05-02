@@ -16,4 +16,6 @@ export interface IDropdownProps extends IComponentProps {
   icon?: string;
   iconSize?: 'sm' | 'md' | 'lg' | 'xsm';
   onChange?: (value: string | number) => void;
+  meta?: FieldMetaState<string>;
+  value?: string | number;
 }

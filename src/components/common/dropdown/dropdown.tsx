@@ -9,18 +9,34 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
     name,
     label,
     options,
+    value,
     labelTag = 'label',
     icon,
     iconSize = 'sm',
     onChange,
+    meta,
   }: IDropdownProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [selected, setSelected] = useState<IDropdownOptions | undefined>();
+    const [selected, setSelected] = useState<IDropdownOptions | undefined>(
+      () => {
+        if (value !== undefined) {
+          return options.find((option) => option.value === value);
+        }
+        return undefined;
+      }
+    );
     const [dropdownPosition, setDropdownPosition] = useState<'left' | 'right'>(
       'right'
     );
     const dropdownRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+      if (value !== undefined) {
+        const selectedOption = options.find((option) => option.value === value);
+        setSelected(selectedOption);
+      }
+    }, [value, options]);
 
     const toggleDropdown = useCallback(() => {
       setIsOpen((prev) => !prev);
@@ -110,7 +126,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
         {label && (
           <label
             for={`${id}-input`}
-            className='capitalize block mb-1 text-sm font-medium'
+            className='capitalize block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200'
           >
             {label}
           </label>
@@ -134,6 +150,9 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
           )}
           {!isIconOnly && (selected?.[labelTag] || 'No Selected')}
         </button>
+        {meta && meta.touched && meta.error && (
+          <span className='text-red-500 text-sm'>{meta.error}</span>
+        )}
         <div
           id={`${id}-dropdown`}
           className={`${isIconOnly ? 'w-fit' : 'w-full'} z-10 ${isOpen ? '' : 'hidden'} absolute rounded-lg shadow-lg

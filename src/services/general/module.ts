@@ -1,4 +1,9 @@
-import { IAppSetting, IShiftSetting } from '@/types/settings';
+import {
+  IAppSetting,
+  IGeneralSetting,
+  IShiftSetting,
+  IUserSetting,
+} from '@/types/settings';
 import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
@@ -37,6 +42,17 @@ export class ModuleService extends BaseService {
     );
   }
 
+  static async getUserSetting() {
+    const model: IMakeRequest = {
+      url: ['module'],
+      params: { type: 'USER' },
+    };
+    return await super.make_request<IModuleResponse<IUserSetting>>(
+      this.sname,
+      model
+    );
+  }
+
   static async getShiftSetting() {
     const model: IMakeRequest = {
       url: ['module'],
@@ -48,9 +64,32 @@ export class ModuleService extends BaseService {
     );
   }
 
-  static async setAppSetting(data: IAppSetting) {
+  static async getGeneralSetting() {
     const model: IMakeRequest = {
-      url: ['module', 'app'],
+      url: ['module'],
+      params: { type: 'GENERAL' },
+    };
+    return await super.make_request<IModuleResponse<IGeneralSetting>>(
+      this.sname,
+      model
+    );
+  }
+
+  static async setUserSetting(data: IUserSetting, id: number) {
+    const model: IMakeRequest = {
+      url: ['module', 'user', String(id)],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<IModuleResponse<IUserSetting>>(
+      this.sname,
+      model
+    );
+  }
+
+  static async setAppSetting(data: IAppSetting, id: number) {
+    const model: IMakeRequest = {
+      url: ['module', 'app', String(id)],
       method: REQUEST_METHODS.POST,
       data,
     };
@@ -60,9 +99,21 @@ export class ModuleService extends BaseService {
     );
   }
 
-  static async setShiftSetting(data: IShiftSetting) {
+  static async setGeneralSetting(data: IGeneralSetting, id: number) {
     const model: IMakeRequest = {
-      url: ['module', 'shift'],
+      url: ['module', 'general', String(id)],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<IModuleResponse<IGeneralSetting>>(
+      this.sname,
+      model
+    );
+  }
+
+  static async setShiftSetting(data: IShiftSetting, id: number) {
+    const model: IMakeRequest = {
+      url: ['module', 'shift', String(id)],
       method: REQUEST_METHODS.POST,
       data,
     };
