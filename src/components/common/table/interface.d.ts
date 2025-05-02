@@ -27,4 +27,5 @@ export interface ITableProps<T> {
   selectable?: boolean;
   onSelectionChange?: (selected: T[]) => void;
   onNotifications?: boolean;
+  hasNotifications?: boolean;
 }
