@@ -1,4 +1,5 @@
 import { Avatar } from '@/components/common/Avatar';
+import { Button } from '@/components/common/button/button';
 import { Chip } from '@/components/common/chip/chip';
 import { RelativeTime } from '@/components/common/relative/relative';
 import {
@@ -87,7 +88,7 @@ export const getColumns = (
       const actions: IDropdownAction[] = [
         status === RESPONSE_STATUS.OPENED
           ? {
-              label: t('forms.buttons.continue') || 'Continuar',
+              label: t('forms.buttons.continue'),
               icon: 'vox-icon vx-icon-030 text-primary',
               onClick: () => {
                 onClickAction({
@@ -123,7 +124,22 @@ export const getColumns = (
       ];
 
       return (
-        <div className='w-full flex justify-center'>
+        <div className='w-full flex justify-end gap-3 items-center'>
+          {status === RESPONSE_STATUS.OPENED && (
+            <Button
+              name='continue'
+              label='Continuar'
+              onClick={() => {
+                onClickAction({
+                  id: String(id),
+                  type: 'response',
+                  action: ROW_ACTIONS.RESPONSE,
+                });
+              }}
+            >
+              Continuar
+            </Button>
+          )}
           <DropdownActionsMenu actions={actions} />
         </div>
       );

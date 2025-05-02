@@ -2,7 +2,7 @@ import { FormService } from '@/services';
 import { IResponseResponse } from '@/types/form';
 import { useSignal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useCallback, useEffect, useMemo } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 import { CardData } from '@/components/compose/cards';
 import { Table } from '@/components/common/table/table';
@@ -11,11 +11,20 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { getColumns } from './components/inspect.columns';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { Button } from '@/components/common/button/button';
+import { FormResponseSettingPage } from './response/response';
+import { RESPONSE_MODE_SERVICE, setResponse } from './response/store/response';
+
+enum VIEW_NAME {
+  TABLE,
+  INSPECT,
+  REPORT,
+}
 
 export const FormsPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const responses = useSignal<IResponseResponse[]>([]);
-  // const [_, navigate] = useLocation();
+  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
 
   useEffect(() => {
     document.title = t('forms.pageTitle');
@@ -29,35 +38,23 @@ export const FormsPage: FunctionComponent = () => {
     responses.value = data;
   };
 
-  const navigateResponse = () => {
-    // const menu = {
-    //   to: PAGES_LIST_ROUTER.dashboard.setting.forms.response.to,
-    //   label: 'response',
-    //   id: 'form-response',
-    // };
-    // appendHistory(menu);
-    // navigate(menu.to);
-  };
-
   const handleOnClick = async (action: IRowAction) => {
     const response = responses.value.find(
       (response) => response.id == action.id
     );
 
     if (!response?.structure) {
-      toast.error(t('forms.error.notExistResponse'));
+      toast.error(t('forms.error.not_exist_response'));
       return;
     }
 
-    console.log(response);
-
     switch (action.action) {
       case ROW_ACTIONS.RESPONSE: {
-        // setResponse(
-        //   { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id },
-        //   response.structure
-        // );
-        navigateResponse();
+        setResponse(
+          { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id },
+          response.structure
+        );
+        handleViewChange(VIEW_NAME.INSPECT);
         break;
       }
       // case ROW_ACTIONS.DELETE: {
@@ -67,18 +64,59 @@ export const FormsPage: FunctionComponent = () => {
       //   break;
       // }
       case ROW_ACTIONS.REPORT: {
-        // setResponse(
-        //   { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id, hold: true },
-        //   response.structure
-        // );
-        navigateResponse();
+        setResponse(
+          { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id, hold: true },
+          response.structure
+        );
+        handleViewChange(VIEW_NAME.REPORT);
         break;
       }
       default: {
-        throw Error('ERROR: Not exist option');
+        toast.error(t('forms.error.not_exist_option'));
       }
     }
   };
+
+  const handlePosFinishAction = () => {
+    getResponseHandler();
+    handleViewChange(VIEW_NAME.TABLE);
+  };
+
+  const handleViewChange = useCallback((view: VIEW_NAME) => {
+    currentView.value = view;
+  }, []);
+
+  const buttonMenu = useMemo(
+    () => (
+      <div className='flex items-center gap-2'>
+        <Button
+          name='button-change-table'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.TABLE);
+          }}
+          selected={currentView.value === VIEW_NAME.TABLE}
+          icon='092'
+        />
+        <Button
+          name='button-change-scheduler'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.INSPECT);
+          }}
+          selected={currentView.value === VIEW_NAME.INSPECT}
+          icon='418'
+        />
+        <Button
+          name='button-change-report'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.REPORT);
+          }}
+          selected={currentView.value === VIEW_NAME.REPORT}
+          icon='012'
+        />
+      </div>
+    ),
+    [currentView.value]
+  );
 
   return (
     <Section padding>
@@ -107,12 +145,35 @@ export const FormsPage: FunctionComponent = () => {
           icon='312'
         />
       </div>
-      <Table<IResponseResponse>
-        data={responses.value}
-        columns={getColumns(handleOnClick)}
-        pageSize={20}
-        onClickAction={handleOnClick}
-      />
+
+      <div className='max-h-screen'>
+        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
+          <div className='flex flex-row items-center justify-between'>
+            {buttonMenu}
+          </div>
+        </div>
+        {currentView.value === VIEW_NAME.TABLE && (
+          <Table<IResponseResponse>
+            data={responses.value}
+            columns={getColumns(handleOnClick)}
+            pageSize={20}
+            onClickAction={handleOnClick}
+          />
+        )}
+        {(currentView.value === VIEW_NAME.INSPECT ||
+          currentView.value === VIEW_NAME.REPORT) && (
+          <div className='max-h-screen'>
+            <div className='w-full py-1 pb-3 flex items-center justify-end'>
+              <h2 className='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
+                {currentView.value === VIEW_NAME.INSPECT
+                  ? t('forms.inspect.title')
+                  : t('forms.report.title')}
+              </h2>
+            </div>
+            <FormResponseSettingPage posFinishAction={handlePosFinishAction} />
+          </div>
+        )}
+      </div>
     </Section>
   );
 };
