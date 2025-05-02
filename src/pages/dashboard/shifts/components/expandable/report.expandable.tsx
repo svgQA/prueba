@@ -1,3 +1,5 @@
+import { Chip } from '@/components/common/chip/chip';
+
 const ReportInfo = ({ data = {} }: any) => {
   const reports = data.reports || [
     {
@@ -33,12 +35,10 @@ const ReportInfo = ({ data = {} }: any) => {
   ];
 
   return (
-    <div className='bg-b-white rounded-lg shadow-sm p-4'>
-      <div className='flex items-center justify-between border-b pb-2 mb-4'>
-        <h2 className='text-t-light font-medium'>Reportes del Turno</h2>
-        <span className='px-3 py-1 text-xs bg-primary-opacity text-primary rounded-full'>
-          {reports.length} Reportes
-        </span>
+    <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm p-4 w-full text-t-light dark:text-t-dark'>
+      <div className='flex items-center justify-between border-b pb-2 mb-4 border-b-light dark:border-b-dark'>
+        <h2 className='font-medium'>Reportes del Turno</h2>
+        <Chip label={`${reports.length} Reportes`} color='primary' />
       </div>
 
       <div className='space-y-4'>
@@ -48,11 +48,11 @@ const ReportInfo = ({ data = {} }: any) => {
             <div className='col-span-1'>
               {report.status === 'Solicitado' ? (
                 <span
-                  className={`vox-icon size-sm vx-icon-${report.icon} !text-secondary`}
+                  className={`vox-icon vx-icon-${report.icon} !text-secondary`}
                 ></span>
               ) : (
                 <span
-                  className={`vox-icon size-sm vx-icon-${report.icon} !text-error`}
+                  className={`vox-icon vx-icon-${report.icon} !text-error`}
                 ></span>
               )}
             </div>
@@ -68,11 +68,11 @@ const ReportInfo = ({ data = {} }: any) => {
 
             {/* Fechas */}
             <div className='col-span-3'>
-              <p className='text-xs text-t-light-dark'>
+              <p className=''>
                 Solicitud: {report.requestDate.split(' ')[0]}{' '}
                 {report.requestDate.split(' ')[1]}
               </p>
-              <p className='text-xs text-t-light-dark'>
+              <p className=''>
                 Reporte: {report.reportDate.split(' ')[0]}{' '}
                 {report.reportDate.split(' ')[1]}
               </p>
@@ -80,17 +80,12 @@ const ReportInfo = ({ data = {} }: any) => {
 
             {/* Descripción */}
             <div className='col-span-3'>
-              <p className='text-xs text-t-light-dark truncate'>
-                {report.description}
-              </p>
+              <p className='text truncate'>{report.description}</p>
             </div>
 
             {/* Comentarios */}
             <div className='col-span-1 text-center'>
-              <span className='inline-flex items-center px-3 py-1 rounded-full bg-primary-opacity text-primary text-xs'>
-                <span className='vox-icon vx-icon-239 !text-primary mr-1'></span>{' '}
-                {report.comments}
-              </span>
+              <Chip label={`${report.comments} Comentarios`} color='primary' />
             </div>
 
             {/* Ver detalles */}

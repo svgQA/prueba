@@ -5,10 +5,12 @@ import { IShiftResponse } from '@/types/shift/activity';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import dayjs from 'dayjs';
-import { Map } from '@/components/common/map/map';
+// import { Map } from '@/components/common/map/map';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { toast } from 'react-toastify';
+import { Avatar } from '@/components/common/Avatar';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 
 interface IShiftFormProps {
   closed?: boolean;
@@ -29,6 +31,7 @@ export const ShiftForm = ({
   const showReplicateForm = useSignal<boolean>(false);
   const replicateDate = useSignal<string>('');
 
+  /*
   const checkInPoints = useSignal([
     {
       id: 1,
@@ -48,6 +51,7 @@ export const ShiftForm = ({
       },
     },
   ]);
+  */
 
   const getShiftHandler = async () => {
     if (!taskSelected) return;
@@ -151,17 +155,14 @@ export const ShiftForm = ({
         </div>
 
         <div className='flex items-center gap-4 mb-6 px-5 py-2 justify-between'>
-          <div className='flex flex-row items-center justify-between w-4/12'>
+          <div className='flex flex-row items-center justify-evenly w-4/12'>
             <div className='w-20 h-20 rounded-full flex items-center justify-center bg-b-light'>
-              {taskData.employeeImage ? (
-                <img
-                  src={taskData.employeeImage}
-                  alt='Profile'
-                  className='w-full h-full object-cover rounded-full'
-                />
-              ) : (
-                <span className='!text-primary vox-icon size-lg vx-icon-308'></span>
-              )}
+              <Avatar
+                src={taskData.employeeImage}
+                name={taskData.employeeName}
+                size='lg'
+                square
+              />
             </div>
             <div className='px-4'>
               <h3 className='text-xl font-medium'>
@@ -177,11 +178,11 @@ export const ShiftForm = ({
               </div>
             </div>
           </div>
-          <div className='flex py-3 w-5/12 justify-end items-center'>
+          <div className='flex py-3 w-5/12 justify-end items-center gap-2'>
             {showReplicateForm.value ? (
               <>
                 <Button
-                  name='button-hidden-replcate'
+                  name='button-hidden-replicate'
                   rounded
                   icon='192'
                   onClick={toggleReplicateClick}
@@ -202,6 +203,7 @@ export const ShiftForm = ({
                 <Button
                   name='button-accept-replicate'
                   label='Replicar Hasta'
+                  icon='293'
                   onClick={handleAcceptReplicate}
                   className='bg-primary text-white py-1 rounded px-4 w-96'
                 />
@@ -213,6 +215,7 @@ export const ShiftForm = ({
                     <Button
                       name='button-delete-shift'
                       label='Eliminar'
+                      icon='192'
                       onClick={onDeleteShift}
                       className='mx-3 px-4 py-1 text-sm font-medium text-red-700 bg-white border border-red-300 rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
                     />
@@ -220,12 +223,14 @@ export const ShiftForm = ({
                 <Button
                   name='button-create-shift'
                   label='Replicar'
+                  icon='292'
                   onClick={toggleReplicateClick}
                   className='mx-3 px-4 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                 />
                 <Button
                   name='button-supervision'
                   label='Supervisión Remota'
+                  icon='092'
                   className='bg-primary text-white py-1 rounded px-4'
                   onClick={onSupervision}
                 />
@@ -323,7 +328,7 @@ export const ShiftForm = ({
                 </span>
               </div>
               <div className='h-48 rounded-lg overflow-hidden'>
-                <Map
+                {/* <Map
                   sendPoints={() => {}}
                   name='CheckInMap'
                   center={{
@@ -332,6 +337,32 @@ export const ShiftForm = ({
                   }}
                   pointsAmount={1}
                   pointsRef={checkInPoints.value}
+                  condition={false}
+                  errorCondition=''
+                  radialPoint={null}
+                  errorRadialPoint=''
+                  radius={50}
+                  draggable={false}
+                  width='100%'
+                  clickPoint={() => {}}
+                /> */}
+                <MapLibrePointsMap
+                  sendPoints={() => {}}
+                  name='CheckInMap'
+                  center={{
+                    lat: shift.value?.checkIn?.location?.lat || 4.649251,
+                    lng: shift.value?.checkIn?.location?.lng || -74.106992,
+                  }}
+                  pointsAmount={1}
+                  pointsRef={[
+                    {
+                      id: 1,
+                      position: {
+                        lat: shift.value?.checkIn?.location?.lat || 4.649251,
+                        lng: shift.value?.checkIn?.location?.lng || -74.106992,
+                      },
+                    },
+                  ]}
                   condition={false}
                   errorCondition=''
                   radialPoint={null}
@@ -352,7 +383,7 @@ export const ShiftForm = ({
                 </span>
               </div>
               <div className='h-48 rounded-lg overflow-hidden'>
-                <Map
+                {/* <Map
                   sendPoints={() => {}}
                   name='CheckOutMap'
                   center={{
@@ -361,6 +392,32 @@ export const ShiftForm = ({
                   }}
                   pointsAmount={1}
                   pointsRef={checkOutPoints.value}
+                  condition={false}
+                  errorCondition=''
+                  radialPoint={null}
+                  errorRadialPoint=''
+                  radius={50}
+                  draggable={false}
+                  width='100%'
+                  clickPoint={() => {}}
+                /> */}
+                <MapLibrePointsMap
+                  sendPoints={() => {}}
+                  name='CheckOutMap'
+                  center={{
+                    lat: shift.value?.checkOut?.location?.lat || 4.649251,
+                    lng: shift.value?.checkOut?.location?.lng || -74.106992,
+                  }}
+                  pointsAmount={1}
+                  pointsRef={[
+                    {
+                      id: 1,
+                      position: {
+                        lat: shift.value?.checkOut?.location?.lat || 4.649251,
+                        lng: shift.value?.checkOut?.location?.lng || -74.106992,
+                      },
+                    },
+                  ]}
                   condition={false}
                   errorCondition=''
                   radialPoint={null}

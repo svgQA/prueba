@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { Route, Router } from 'wouter';
-import { lazy, Suspense } from 'preact/compat';
+import { lazy, Suspense, useEffect } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -38,8 +38,14 @@ import { WebSocketProvider } from '@/utils/socket';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
 import { Loading } from '@/components/common/loading/loading';
+import { GeneralService } from '@/services/general';
+import { useUserStore } from '@/store/slices';
+import { localStorage } from '@/utils/storage';
+import { Dropdown } from '@/components/common/dropdown/dropdown';
+import { ThemeButton } from '@/components/compose/button';
+import { Button } from '@/components/common/button/button';
 
- import { IconsModal } from '../globals/icons/icons';
+// import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
 
 /** ***********************************************************************
@@ -47,6 +53,45 @@ import { Loading } from '@/components/common/loading/loading';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
+    const { setCompanies, companies, selectedCompany, setSelectedCompany } =
+      useUserStore();
+
+    useEffect(() => {
+      getCompanies();
+    }, []);
+
+    const getCompanies = async () => {
+      const company = await GeneralService.getCompanyList();
+
+      if (!company.getStatus()) return;
+      const companies = company.getMany();
+      if (companies.length === 0) return;
+      setCompanies(companies);
+
+      const selectedCompany = await localStorage.get('company');
+      if (selectedCompany) {
+        setSelectedCompany(Number(selectedCompany));
+      } else {
+        if (companies.length === 1) {
+          const firstCompany = companies[0].value;
+          setSelectedCompany(Number(firstCompany));
+        }
+      }
+    };
+
+    const handleCompanyChange = (value: string | number) => {
+      localStorage.set('company', value);
+      setSelectedCompany(Number(value));
+    };
+
+    const handleUserAction = (value: string | number) => {
+      if (value === 1) {
+        toggleSettingModal();
+      } else if (value === 2) {
+        signOut?.();
+      }
+    };
+
     return (
       <section className='bg-b-content dark:bg-b-dark w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
         <Loading />
@@ -57,33 +102,39 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           onHomeHandler={toggleSettingModal}
           menus={SIDEBAR_MENUS}
           isNavigation
-          onLogout={signOut}
+          // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
           <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
             <div className='flex flex-row px-6 gap-4 justify-between items-center'>
+              <LanguageSwitcher borderless />
               <CustomSwitcher
-                options={[
-                  { id: '123', label: 'inndico', icon: '' },
-                  { id: '1231', label: 'inndico 2', icon: '' },
-                  { id: '1232', label: 'inndico 3', icon: '' },
-                  { id: '1233', label: 'inndico 4', icon: '' },
-                  { id: '1234', label: 'inndico 5', icon: '' },
-                  { id: '1235', label: 'inndico 6', icon: '' },
-                  { id: '1236', label: 'inndico 7', icon: '' },
-                ]}
-                value='123'
-                onChange={() => {}}
-                icon='1232'
+                options={companies}
+                value={selectedCompany?.value}
+                onChange={handleCompanyChange}
+                icon='023'
                 borderless
               />
-              <button className='cursor-pointer border-none mx-2'>
-                <span className='vx-icon vx-icon-101 text-gray-400' />
-              </button>
-              <LanguageSwitcher borderless />
-              <button className='cursor-pointer border-none mx-2'>
-                <span className='vx-icon vx-icon-103 text-gray-400' />
-              </button>
+              <div className='flex flex-row gap-4 items-center justify-center'>
+                <ThemeButton unpadded borderless />
+                <Button
+                  name='user-action'
+                  icon='317'
+                  iconSize='sm'
+                  borderless
+                  unpadded
+                />
+                <Dropdown
+                  options={[
+                    { label: 'setting', value: 1, icon: '158' },
+                    { label: 'logout', value: 2, icon: '099' },
+                  ]}
+                  name='user'
+                  icon='318'
+                  iconSize='xsm'
+                  onChange={handleUserAction}
+                />
+              </div>
             </div>
           </header>
           <WebSocketProvider>
@@ -172,9 +223,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ))}
         </OnBordingModal>
-        
         */}
-        <IconsModal />
+        {/* <IconsModal /> */}
         <ToastContainer />
       </section>
     );

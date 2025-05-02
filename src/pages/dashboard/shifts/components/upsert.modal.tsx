@@ -16,14 +16,7 @@ import { Badge } from '@/components/common/badge/badge';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { toast } from 'react-toastify';
-interface FormErrors {
-  employeedId?: string;
-  serviceId?: string;
-  start?: string;
-  end?: string;
-  type?: string;
-}
-// import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
+import i18n from '@/i18n';
 import { useTranslation } from 'react-i18next';
 
 interface ITaskFormProps {
@@ -34,13 +27,6 @@ interface ITaskFormProps {
   taskSelected?: Task;
   users?: IOption[];
 }
-
-// interface ITask {
-//   start: string;
-//   date: string;
-//   status: string;
-//   description: string;
-// }
 
 export const TaskForm = ({
   closed,
@@ -85,11 +71,11 @@ export const TaskForm = ({
       //   ? t('shifts.upsert.successEdit')
       //   : t('shifts.upsert.successCreate');
 
-      toast.success('shift.success.action');
+      toast.success(i18n.t('shift.upsert.success'));
       onClose?.();
       posSave?.();
     } catch (error) {
-      toast.error(t('shifts.upsert.errorProcessing'));
+      toast.error(i18n.t('shift.upsert.error'));
     }
   };
 
@@ -265,16 +251,6 @@ export const TaskForm = ({
           initialValues={initialValues}
           mutators={{
             ...arrayMutators,
-          }}
-          validate={(values) => {
-            const errors: FormErrors = {};
-            if (!values.employeedId) errors.employeedId = 'Campo obligatorio';
-            if (!values.serviceId) errors.serviceId = 'Campo obligatorio';
-            if (!values.start) errors.start = 'Campo obligatorio';
-            if (!values.end) errors.end = 'Campo obligatorio';
-            if (!values.type) errors.type = 'Campo obligatorio';
-
-            return errors;
           }}
           render={({ handleSubmit, values }) => (
             <form

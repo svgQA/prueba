@@ -158,7 +158,6 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                   form.reset();
                 }}
                 disabled={submitting}
-                border={true}
                 className='rounded-md px-4 py-2'
               />
 

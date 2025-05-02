@@ -14,10 +14,16 @@ interface DropdownActionsMenuProps {
   actions: IDropdownAction[];
 }
 
-export const DropdownActionsMenu = ({ triggerClassName, actions }: DropdownActionsMenuProps) => {
+export const DropdownActionsMenu = ({
+  triggerClassName,
+  actions,
+}: DropdownActionsMenuProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const triggerRef = useRef<HTMLSpanElement>(null);
-  const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+  const [position, setPosition] = useState<{ top: number; left: number }>({
+    top: 0,
+    left: 0,
+  });
 
   const handleOpen = (e: MouseEvent) => {
     e.stopPropagation();
@@ -35,7 +41,10 @@ export const DropdownActionsMenu = ({ triggerClassName, actions }: DropdownActio
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -49,7 +58,10 @@ export const DropdownActionsMenu = ({ triggerClassName, actions }: DropdownActio
     <>
       <span
         ref={triggerRef}
-        className={triggerClassName || 'vox-icon vx-icon-options p-1 size-sm cursor-pointer'}
+        className={
+          triggerClassName ||
+          'vox-icon vx-icon-options p-1 size-sm cursor-pointer'
+        }
         onClick={handleOpen}
       />
       {isDropdownOpen &&
@@ -62,9 +74,9 @@ export const DropdownActionsMenu = ({ triggerClassName, actions }: DropdownActio
               left: position.left,
               zIndex: 9999,
             }}
-            className="w-56 bg-white rounded-lg shadow-lg py-2"
+            className='w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 border border-gray-200 dark:border-gray-700'
           >
-            <div className="flex flex-col gap-1 px-2">
+            <div className='flex flex-col gap-1 px-2'>
               {actions.map((action, idx) => (
                 <Button
                   key={idx}
@@ -75,28 +87,30 @@ export const DropdownActionsMenu = ({ triggerClassName, actions }: DropdownActio
                     action.onClick();
                     setIsDropdownOpen(false);
                   }}
-                  textColor={action.color || 'text-gray'}
+                  textColor={action.color || 'text-gray-700 dark:text-gray-200'}
                   icon={action.icon.replace('vox-icon vx-icon-', '')}
-                  padding="px-2 py-2"
-                  text="text-sm"
-                  border={false}
+                  padding='px-2 py-2'
+                  text='text-sm'
+                  borderless
                   bold={false}
                   textAlign='left'
+                  className='w-full justify-start hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
                 />
               ))}
             </div>
-            <div className="border-t border-gray-200 my-2"></div>
-            <div className="px-2">
+            <div className='border-t border-gray-200 dark:border-gray-700 my-2'></div>
+            <div className='px-2'>
               <Button
-                id="dropdown-cancel"
-                name="dropdown-cancel"
-                label="Cancelar"
+                id='dropdown-cancel'
+                name='dropdown-cancel'
+                label='Cancelar'
                 onClick={() => setIsDropdownOpen(false)}
-                textColor="text-gray-500"
-                padding="px-2 py-2"
-                text="text-sm"
-                border={false}
+                textColor='text-gray-500 dark:text-gray-400'
+                padding='px-2 py-2'
+                text='text-sm'
+                borderless
                 bold={true}
+                className='w-full justify-start hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
               />
             </div>
           </div>,

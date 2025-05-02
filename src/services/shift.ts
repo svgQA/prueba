@@ -10,7 +10,10 @@ import {
   type IShiftSettingResponse,
 } from '@/types/settings';
 import { type IShiftResponse } from '@/types/shift/activity';
-import { type ICScheduleRequest } from '@/types/shift/shift.request';
+import {
+  ICheckRequest,
+  type ICScheduleRequest,
+} from '@/types/shift/shift.request';
 import {
   type IDepartmentResponse,
   type IMunicipalityResponse,
@@ -510,6 +513,15 @@ export class ShiftService extends BaseService {
   static async setReplicateV2(data: FormValues) {
     const model: IMakeRequest = {
       url: ['activity', 'replicate', 'v2'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async createCheck(data: ICheckRequest, shiftId: number) {
+    const model: IMakeRequest = {
+      url: ['activity', `${shiftId}`, 'check'],
       method: REQUEST_METHODS.POST,
       data,
     };

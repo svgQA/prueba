@@ -17,7 +17,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
   }: ICardSettingMenuProps) => {
     const _to = `${base}${settings}`;
     return (
-      <Card id={id} name={name} borderless rounded={false}>
+      <Card id={id} name={name} borderless rounded={false} transparent>
         <div className='flex flex-col mt-2'>
           <div className='flex flex-row items-center justify-between'>
             <h2 className='capitalize text-sm font-bold mb-1'>{label}</h2>

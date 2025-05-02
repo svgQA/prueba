@@ -15,7 +15,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.user.base,
       id: 'user',
-      show: true,
+      show: false,
     },
     {
       icon: '088',

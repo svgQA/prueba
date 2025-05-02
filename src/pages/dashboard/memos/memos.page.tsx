@@ -1,16 +1,10 @@
 import { type FunctionComponent } from 'preact';
 import { useCallback, useEffect, useMemo } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import { ChatHeader } from './components/chat.header';
-import { ChatCard } from './components/chat.card';
-import { ChatMessage } from './components/chat.message';
-import { ChatInput } from './components/chat.input';
+
 import { UserService } from '@/services/user';
 import { IUserResponse } from '@/types/auth';
 import { useWebSocket } from '@/utils/socket';
-import { useUserStore } from '@/store/slices';
-import { IMessage } from '@/utils/socket/interface';
-import { toast } from 'react-toastify';
 import { Section } from '@/components/common/section/section';
 import { useTranslation } from 'react-i18next';
 import { Table } from '@/components/common/table/table';
@@ -22,7 +16,8 @@ import { MemoService, MemosSummary } from '@/services';
 import { Chats, FrequentQuestion } from './interface';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-
+import { ChatView } from './page/chat.page';
+import SupervisorInfo from './components/expandable/supervisor.expandable';
 interface ChatMessage {
   message: string;
   isSender: boolean;
@@ -58,236 +53,70 @@ enum VIEW_NAME {
   CHAT,
 }
 
+const defaultSummary = {
+  total: 0,
+  in_progress: 0,
+  completed: 0,
+};
+
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
-  const { cognito } = useUserStore();
 
   const wsManager = useWebSocket();
-  const selectedChat = useSignal<string>('0');
   const users = useSignal<IUserResponse[]>([]);
-  const userSelected = useSignal<IUserResponse | undefined>();
-  const currentPage = useSignal<number>(1);
-  const totalPages = useSignal<number>(3);
+
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
-  const defaultColumn = useSignal<string>('default');
 
-  const chats = useSignal<Chats>({});
-  const memoSummary = useSignal<MemosSummary>({
-    total: 0,
-    in_progress: 0,
-    completed: 0,
-  });
+  const summary = useSignal<MemosSummary>(defaultSummary);
 
   useEffect(() => {
     document.title = 'VX - Chat';
-    wsManager.addListener('memos', handleReceiveMessage);
-    getUsersHandler();
     fetchInitialData();
-    handleGetMemosSummary();
     return () => {
       wsManager.removeListener('memos');
     };
   }, []);
 
   const fetchInitialData = async () => {
-    try {
-      const [memosResponse] = await Promise.all([
-        MemoService.get_all({ page: 1, items: 1000 }),
-      ]);
-      if (memosResponse && memosResponse.getStatus())
-        memos.value = memosResponse.getMany();
-    } catch (error) {
-      toast.error('memos.error_fetching_initial_data');
+    const [responseMemos, responseUsers, responseSummary] = await Promise.all([
+      MemoService.get_all({ page: 1, items: 1000 }),
+      UserService.get_all_employee({ items: 20, page: 1 }),
+      MemoService.getMemosSummary(),
+    ]);
+
+    if (responseMemos.getStatus()) {
+      const memosData = responseMemos.getMany();
+      // TODO: Cambiar esto, porque desde back se puede tener
+      memos.value = memosData.map((memo) => ({
+        ...memo,
+        priority:
+          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+      }));
+    }
+    if (responseUsers.getStatus()) {
+      users.value = responseUsers.getMany();
+    }
+
+    if (responseSummary.getStatus()) {
+      summary.value = responseSummary.getOne();
     }
   };
 
-  const handleGetMemosSummary = async () => {
-    const summary = await MemoService.getMemosSummary();
-    if (!summary.getStatus()) return;
-    memoSummary.value = summary.getOne();
-  };
-
-  const handleSendMessage = (message: string) => {
-    if (!cognito || !userSelected.value?.cognitoId) {
-      toast.error('El mensaje tiene mala estructura');
-      return;
-    }
-    const objMessage: IMessage = {
-      from: cognito,
-      to: userSelected.value?.cognitoId,
-      message,
-    };
-    wsManager.sendMessage(objMessage);
-
-    chats.value = addMessageArray(objMessage.to, objMessage, true);
-  };
-
-  const addMessageArray = (
-    sender: string,
-    message: IMessage,
-    isSender: boolean = false
-  ) => {
-    const newChats = { ...chats.value };
-
-    if (!newChats[sender]) {
-      newChats[sender] = {
-        new: 1,
-        messages: [
-          {
-            message: message.message,
-            from: message.from,
-            to: message.to,
-            isSender: isSender,
-          },
-        ],
-      };
-    } else {
-      newChats[sender] = {
-        new: isSender ? newChats[sender].new : newChats[sender].new + 1,
-        messages: [
-          ...newChats[sender].messages,
-          {
-            message: message.message,
-            from: message.from,
-            to: message.to,
-            isSender: isSender,
-          },
-        ],
-      };
-    }
-
-    return newChats;
-  };
-
-  const handleReceiveMessage = (message: IMessage) => {
-    chats.value = addMessageArray(message.from, message);
-  };
-
+  // TODO: COrregir esta parte para que solo sea desde un chat list
+  // Que adapte unicamente a lo que necesita.
   const getUsersHandler = async (page: number = 1) => {
     const response = await UserService.get_all_employee({
       items: 20,
       page: page,
     });
     if (!response.getStatus()) return;
-
     users.value = response.getMany();
   };
 
-  const handleNextPage = () => {
-    if (currentPage.value < totalPages.value) {
-      currentPage.value += 1;
-      getUsersHandler(currentPage.value);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage.value > 1) {
-      currentPage.value -= 1;
-      getUsersHandler(currentPage.value);
-    }
-  };
-
-  const handleChatSelect = (chatId: string) => {
-    selectedChat.value = chatId;
-    userSelected.value = users.value.find((user) => user.cognitoId === chatId);
-  };
-
-  const onClickAction = (params: { id: string; type: string; action: ROW_ACTIONS }) => {
-    console.log('Acción seleccionada:', params);
-    // Aquí abres modales, haces navigations, etc.
-  };
-
-
-  const chatView = () => {
-    return (
-      <>
-        <div className='w-full flex flex-col h-full'>
-          {/*
-          <div className='w-full p-1 border-b dark:border-b-dark-light'>
-            {buttonMenu}
-          </div>
-          */}
-
-          <div className='flex flex-1 overflow-y-auto'>
-            <div className='w-[30%] border-r dark:border-b-dark-light flex flex-col h-full'>
-              <ChatHeader />
-              <ChatCard
-                id={'0'}
-                name={t('memos.chat.aiAssistant')}
-                lastMessage={t('memos.chat.aiDefaultMessage')}
-                time={t('memos.chat.time')}
-                isAI
-                onClick={handleChatSelect}
-                isSelected={selectedChat.value === '0'}
-              />
-              <div className='flex-1 overflow-y-auto vox-scroll-design border-t dark:border-t-dark-light'>
-                {users.value.map((user: IUserResponse) => (
-                  <ChatCard
-                    user={user}
-                    key={`chat-card-${user.cognitoId}`}
-                    id={user.cognitoId}
-                    name={`${user.name} ${user.surname}`}
-                    lastMessage={`${cognito === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
-                    time='10:15'
-                    amount={chats.value[user.cognitoId]?.new}
-                    onClick={handleChatSelect}
-                    isSelected={selectedChat.value === user.cognitoId}
-                  />
-                ))}
-              </div>
-              <div className='flex justify-between items-center p-4 border-t dark:border-t-dark-light'>
-                <button
-                  onClick={handlePrevPage}
-                  disabled={currentPage.value === 1}
-                  className={`px-4 py-2 rounded-md ${
-                    currentPage.value === 1
-                      ? 'bg-gray-300 cursor-not-allowed'
-                      : 'bg-blue-500 hover:bg-blue-600'
-                  } text-white`}
-                >
-                  {t('memos.pagination.previous')}
-                </button>
-                <span className='text-sm text-gray-500'>
-                  {t('memos.pagination.page')} {currentPage.value}{' '}
-                  {t('memos.pagination.of')} {totalPages.value}
-                </span>
-                <button
-                  onClick={handleNextPage}
-                  disabled={currentPage.value >= totalPages.value}
-                  className={`px-4 py-2 rounded-md ${
-                    currentPage.value >= totalPages.value
-                      ? 'bg-gray-300 cursor-not-allowed'
-                      : 'bg-blue-500 hover:bg-blue-600'
-                  } text-white`}
-                >
-                  {t('memos.pagination.next')}
-                </button>
-              </div>
-            </div>
-
-            <div className='w-[70%] flex flex-col'>
-              <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
-                {selectedChat.value === '0' && <FrequentQuestions />}
-                {chats.value[selectedChat.value]?.messages.map((msg, index) => (
-                  <ChatMessage
-                    key={index}
-                    message={msg.message}
-                    isSender={msg.isSender}
-                  />
-                ))}
-              </div>
-              <ChatInput onSend={handleSendMessage} />
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  };
-
   const calculatePercentage = (value: number): string => {
-    if (memoSummary.value.total === 0) return '0%';
-    return `${Math.round((value / memoSummary.value.total) * 100)}%`;
+    if (summary.value.total === 0) return '0%';
+    return `${Math.round((value / summary.value.total) * 100)}%`;
   };
 
   const handleViewChange = useCallback((view: VIEW_NAME) => {
@@ -328,6 +157,15 @@ export const MemosPage: FunctionComponent = () => {
     [currentView.value]
   );
 
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
+  };
+
   return (
     <Section
       className={
@@ -339,7 +177,7 @@ export const MemosPage: FunctionComponent = () => {
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
             title={t('memos.cards.totalToday')}
-            count={memoSummary.value.total}
+            count={summary.value.total}
             subtitle=''
             color='t-dark'
             icon='328' // 328
@@ -347,7 +185,7 @@ export const MemosPage: FunctionComponent = () => {
 
           <CardData
             title={t('memos.cards.unresolved')}
-            count={calculatePercentage(memoSummary.value.in_progress)}
+            count={calculatePercentage(summary.value.in_progress)}
             subtitle=''
             color='t-dark'
             icon='311' // 311
@@ -355,7 +193,7 @@ export const MemosPage: FunctionComponent = () => {
 
           <CardData
             title={t('memos.cards.resolved')}
-            count={calculatePercentage(memoSummary.value.completed)}
+            count={calculatePercentage(summary.value.completed)}
             subtitle=''
             color='t-dark'
             icon='312' // 312
@@ -363,8 +201,10 @@ export const MemosPage: FunctionComponent = () => {
         </div>
       )}
 
-      <div className='max-h-screen relative'>
-        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark top-0'>
+      <div
+        className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}
+      >
+        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 top-0 pl-1'>
           <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
           </div>
@@ -377,12 +217,7 @@ export const MemosPage: FunctionComponent = () => {
             showExpandableIcon={false}
             pageSize={20}
             selectable
-            expandable={(row: Memo, currentColumnName?: string) => (
-              <ExpandableMultiple
-                type={currentColumnName || defaultColumn.value}
-                data={row}
-              />
-            )}
+            expandable={(row: Memo) => <SupervisorInfo memo={row} />}
             visibility={{
               id: false,
               city: false,
@@ -393,7 +228,9 @@ export const MemosPage: FunctionComponent = () => {
           />
         )}
       </div>
-      {currentView.value === VIEW_NAME.CHAT && chatView()}
+      {currentView.value === VIEW_NAME.CHAT && (
+        <ChatView users={users.value} getUsersHandler={getUsersHandler} />
+      )}
     </Section>
   );
 };
