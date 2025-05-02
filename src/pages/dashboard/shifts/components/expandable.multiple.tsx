@@ -23,7 +23,6 @@ type Props = {
 
 const getInfoContent = (type: string, shift: IShiftResponse) => {
   const { service, employee } = shift;
-  console.log('shift ==>', shift);
   if (type.startsWith('time')) {
     return (
       <DateInfo

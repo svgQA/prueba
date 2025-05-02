@@ -384,8 +384,6 @@ const calculateDuration = (start: string, end: string) => {
   // Obtener horas y minutos
   const hours = Math.floor(duration.asHours());
   const minutes = duration.minutes();
-  console.log('hours', hours);
-  console.log('minutes', minutes);
   return {
     hours: hours,
     minutes: minutes,
