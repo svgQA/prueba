@@ -38,12 +38,12 @@ import { WebSocketProvider } from '@/utils/socket';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
 import { Loading } from '@/components/common/loading/loading';
-import { GeneralService } from '@/services/general';
 import { useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
 import { Button } from '@/components/common/button/button';
+import { CompanyService } from '@/services';
 
 // import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
@@ -61,7 +61,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     }, []);
 
     const getCompanies = async () => {
-      const company = await GeneralService.getCompanyList();
+      const company = await CompanyService.getCompanyList();
 
       if (!company.getStatus()) return;
       const companies = company.getMany();
@@ -85,6 +85,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     };
 
     const handleUserAction = (value: string | number) => {
+      console.log('value', value);
       if (value === 1) {
         toggleSettingModal();
       } else if (value === 2) {

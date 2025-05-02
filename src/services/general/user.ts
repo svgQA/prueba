@@ -201,5 +201,4 @@ export class UserService extends BaseService {
       disconnectedUsers: number;
     }>(this.name, model);
   }
-
 }

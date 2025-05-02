@@ -1,5 +1,11 @@
 import { FunctionalComponent } from 'preact';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'preact/hooks';
 import { Section } from '@/components/common/section/section'; // Ajusta según tu estructura
 import { CardData } from '@/components/compose/cards'; // Ajusta la ruta si difiere
 import { useSignal } from '@preact/signals';
@@ -9,9 +15,9 @@ import { UserMessage } from './components/user.message';
 import { UserTable } from './components/user.table';
 import { IUserResponse } from '@/types/auth';
 import { useTranslation } from 'react-i18next';
-import { UserService } from '@/services/user';
 import { SendForm } from '../shifts/components/send/send.modal';
 import { toast } from 'react-toastify';
+import { UserService } from '@/services';
 
 enum VIEW_NAME {
   TABLE,
@@ -56,8 +62,11 @@ export const UsersPage: FunctionalComponent = () => {
   const fetchStats = async () => {
     const response = await UserService.getDashboardStats();
     if (response.getStatus()) {
-      const { totalUsers: total, connectedUsers: active, disconnectedUsers: inactive } =
-        response.getOne();
+      const {
+        totalUsers: total,
+        connectedUsers: active,
+        disconnectedUsers: inactive,
+      } = response.getOne();
       totalUsers.value = total;
       connectedUsers.value = active;
       disconnectedUsers.value = inactive;
@@ -79,9 +88,8 @@ export const UsersPage: FunctionalComponent = () => {
   }, []);
 
   const toggleSendModal = () => {
-
     handleViewChange(VIEW_NAME.TABLE);
-    
+
     if (!hasValidPlayerRef.current) {
       toast.warn(t('notification.nobody_have_player_id'));
       return;
@@ -132,12 +140,13 @@ export const UsersPage: FunctionalComponent = () => {
             rounded={false}
             icon='314'
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${!hasValidPlayer
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : onNotifications
-                ? 'bg-primary-opacity'
-                : 'border-primary'
-              }`}
+            className={`border-2 p-2 ${
+              !hasValidPlayer
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : onNotifications
+                  ? 'bg-primary-opacity'
+                  : 'border-primary'
+            }`}
           />
           {showSendModal.value && (
             <div className='absolute mt-4 mr-12 z-50 rounded p-4'>

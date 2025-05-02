@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
-import { NotificationServiceFront } from '@/services/notification';
+import { NotificationService, TemplateService } from '@/services';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { FormService } from '@/services/form';
-import { TemplateServiceFront } from '@/services/template';
+import { FormService } from '@/services/form/form';
 import { IOption } from '@/components/common/multi/interface';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -77,7 +76,7 @@ export const ManualNotificationForm = ({
     };
 
     try {
-      await NotificationServiceFront.sendManualNotification(payload);
+      await NotificationService.sendManualNotification(payload);
       toast.success('Notificaciones enviadas correctamente');
     } catch (err) {
       console.error('❌ Error al enviar notificaciones:', err);
@@ -92,7 +91,7 @@ export const ManualNotificationForm = ({
       try {
         const [formsResponse, templatesResponse] = await Promise.all([
           FormService.getBasicForms(),
-          TemplateServiceFront.getTemplates(),
+          TemplateService.getTemplates(),
         ]);
 
         if (formsResponse.getStatus()) setForms(formsResponse.getMany());
@@ -265,8 +264,7 @@ export const ManualNotificationForm = ({
         label='Enviar notificacion'
         onClick={handleSubmit}
         name='button-notification'
-        />
-
+      />
     </div>
   );
 };

@@ -8,7 +8,9 @@ import {
 } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import {
-  NotificationServiceFront,
+  GanttService,
+  NotificationService,
+  ServiceService,
   ShiftService,
   ShiftSummary,
 } from '@/services';
@@ -34,7 +36,7 @@ import { ShiftForm } from './components/shift.modal';
 import LiveUserMap from './components/shift.map';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { MentionOption } from '@/components/common/mention-editor';
 import { toast } from 'react-toastify';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -95,7 +97,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   };
 
   const getGanttHandler = async (viewMode?: ViewMode) => {
-    const response = await ShiftService.get_gantt({
+    const response = await GanttService.get_gantt({
       page: 1,
       items: 100,
       mode: viewMode,
@@ -139,9 +141,9 @@ export const ShiftsPage: FunctionalComponent = () => {
         hasValidResponse,
       ] = await Promise.all([
         ShiftService.get_all({ page: 1, items: 1000 }),
-        ShiftService.getListService(),
+        ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),
-        NotificationServiceFront.hasUsersWithPlayerId(),
+        NotificationService.hasUsersWithPlayerId(),
       ]);
 
       if (shiftsResponse && shiftsResponse.getStatus()) {
@@ -194,9 +196,8 @@ export const ShiftsPage: FunctionalComponent = () => {
    * Eventos de toggle para los modales
    */
   const toggleSendModal = () => {
-
     handleViewChange(VIEW_NAME.TABLE);
-    
+
     if (!hasValidPlayerRef.current) {
       toast.warn(t('notification.nobody_have_player_id'));
       return;
@@ -404,7 +405,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       onNotifications,
       showSendModal.value,
       selectedUsers,
-      t
+      t,
     ]
   );
 

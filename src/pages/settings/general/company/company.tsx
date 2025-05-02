@@ -1,11 +1,11 @@
 // import { CreditCard, InvoiceCard } from '@/components/compose/cards';
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
-import { GeneralService } from '@/services/general';
 import { ICompanyResponse } from '@/utils/types/company.interface';
 import { useSignal } from '@preact/signals';
 import { Card } from '@/components/common/card/card';
 import { Button } from '@/components/common/button/button';
+import { CompanyService } from '@/services';
 
 export const CompanySettingPage: FunctionComponent = () => {
   const companies = useSignal<ICompanyResponse[]>([]);
@@ -29,7 +29,7 @@ export const CompanySettingPage: FunctionComponent = () => {
 
   const loadCompanies = async () => {
     try {
-      const response = await GeneralService.getCompanies();
+      const response = await CompanyService.getCompanies();
       if (!response.getStatus()) return;
       companies.value = response.getMany();
     } catch (error) {

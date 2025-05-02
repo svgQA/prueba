@@ -4,7 +4,7 @@ import { FunctionalComponent } from 'preact';
 import { useSignal } from '@preact/signals';
 import { IUserResponse } from '@/types/auth';
 import { useEffect } from 'preact/hooks';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IRowAction } from '@/components/common/table/interface';
 import { showAlert } from '@/components/common/show-alert/show-alert';
@@ -51,7 +51,7 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
           title: 'Eliminar Usuario',
           message: `¿Está seguro que desea eliminar el usuario ${user.name} ${user.surname} - ${user.cardId}?`,
           onConfirm: () => deleteUser(Number(action.id)),
-          onCancel: () => { },
+          onCancel: () => {},
         });
         break;
       }
@@ -74,7 +74,7 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
           ¿Estás seguro que deseas asignar perfil a ${user.name} ${user.surname}?,
            Tenga en cuenta que el usuario ya podrá usar la aplicación.`,
           onConfirm: () => setProfile(user.id, company),
-          onCancel: () => { },
+          onCancel: () => {},
         });
         break;
       }

@@ -7,8 +7,6 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
-import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 import { appendHistory } from '../../store/settings';
 
@@ -16,6 +14,8 @@ import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { ContractService } from '@/services';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 export interface IProject {
   id: number;
@@ -43,7 +43,7 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   }, []);
 
   const getProjects = async () => {
-    const request: any = await ShiftService.getProjects();
+    const request: any = await ContractService.getProjects();
     projects.value = request.data;
   };
 
@@ -70,7 +70,7 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   };
 
   const deleteProject = async (id: string) => {
-    const request = await ShiftService.deleteProject(id);
+    const request = await ContractService.deleteProject(id);
     if (!request.getStatus()) return;
     toast.success('Lugar contrato', { position: 'top-right' });
     getProjects();

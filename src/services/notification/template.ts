@@ -7,7 +7,7 @@ import {
 } from '@/utils/network/types';
 import { ICreateNotificationTemplateDto } from '@/types/notification/ICreateNotificationTemplateDto';
 
-export class TemplateServiceFront extends BaseService {
+export class TemplateService extends BaseService {
   static name: VoxServices = 'notification';
 
   static async getTemplates() {

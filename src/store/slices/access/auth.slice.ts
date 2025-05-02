@@ -1,5 +1,5 @@
 // import { TenantService } from '@/services';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { IJwtPayload, IUserResponse } from '@/types/auth';
 import { fetchAuthSession } from 'aws-amplify/auth';
 // import { parsingCompanies } from './user.slice';

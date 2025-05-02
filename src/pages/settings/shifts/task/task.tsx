@@ -9,13 +9,13 @@ import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store/settings';
-import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { TaskService } from '@/services';
 
 export interface ITask {
   id: number;
@@ -41,7 +41,7 @@ export const TaskSettingPage: FunctionComponent = () => {
   }, []);
 
   const getTasks = async () => {
-    const request: any = await ShiftService.getTasks();
+    const request: any = await TaskService.getTasks();
     tasks.value = request.data;
   };
 
@@ -68,7 +68,7 @@ export const TaskSettingPage: FunctionComponent = () => {
   };
 
   const deleteTask = async (id: string) => {
-    const request = await ShiftService.deleteTask(id);
+    const request = await TaskService.deleteTask(id);
     if (!request.getStatus()) return;
     toast.success('Tarea eliminado', { position: 'top-right' });
     getTasks();

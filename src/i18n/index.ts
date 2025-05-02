@@ -20,7 +20,7 @@ const resources = {
       ...error_en,
       ...form_en,
       ...shift_en,
-       ...notification_en,
+      ...notification_en,
       // ...home_en,
     },
   },

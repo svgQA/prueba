@@ -196,10 +196,11 @@ export const Search = ({
           const keyName = `filter-key-${key.id}-${index}`;
           return (
             <div
-              className={`px-3 py-2 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${index === selectedKeyIndex.value
+              className={`px-3 py-2 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${
+                index === selectedKeyIndex.value
                   ? 'bg-primary-opacity text-primary'
                   : 'hover:bg-b-light hover:text-primary'
-                }`}
+              }`}
               key={keyName}
               data-name={keyName}
               data-id={key.id}

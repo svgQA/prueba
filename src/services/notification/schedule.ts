@@ -6,7 +6,7 @@ import {
 } from '@/utils/network/types';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
 
-export class SchedulerServiceFront extends BaseService {
+export class SchedulerService extends BaseService {
   static name: VoxServices = 'notification';
 
   /**

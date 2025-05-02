@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
-import { TemplateServiceFront } from '@/services/template';
+import { TemplateService } from '@/services';
 import { Table } from '@/components/common/table/table';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
@@ -14,7 +14,7 @@ export const TemplateNotificationPage = () => {
   const [_, navigate] = useLocation();
 
   const fetchTemplates = async () => {
-    const res = await TemplateServiceFront.getTemplates();
+    const res = await TemplateService.getTemplates();
     if (res.getStatus()) setTemplates(res.getMany());
   };
 
@@ -34,7 +34,11 @@ export const TemplateNotificationPage = () => {
     appendHistory(menu);
   };
 
-  const onClickAction = (params: { id: string; type: string; action: ROW_ACTIONS }) => {
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
     console.log('Acción seleccionada:', params);
     // Aquí abres modales, haces navigations, etc.
   };

@@ -5,7 +5,7 @@ import { required } from '@/utils/utilities';
 import { validateEmail, validateCardId } from '@/utils/validators';
 import { composeValidators } from '@/utils/validators';
 import { IUserRequest } from '@/types/auth';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { getUserMode, USER_MODE_SERVICE } from '../store/user.store';
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
@@ -19,9 +19,9 @@ import {
 } from '@/types/shift/shift.response';
 import { Signal, useSignal } from '@preact/signals';
 import { Select } from '@/components/common/select/select';
-import { ShiftService } from '@/services/shift';
 import { File } from '@/components/common/file/file';
 import { toast } from 'react-toastify';
+import { PlaceService } from '@/services';
 
 interface CreateUserProps {
   onUserCreated?: (user: any) => void;
@@ -59,7 +59,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   };
 
   const getDepartments = async (): Promise<void> => {
-    const response = await ShiftService.getDepartments();
+    const response = await PlaceService.getDepartments();
     if (!response.getStatus()) return;
     departments.value = response.getMany();
     // console.log(departments.value);
@@ -82,7 +82,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     return department;
   };
   const getMunicipalities = async (departmentId: number): Promise<void> => {
-    const response = await ShiftService.getMunicipalities(departmentId);
+    const response = await PlaceService.getMunicipalities(departmentId);
     if (!response.getStatus()) return;
     municipalities.value = response.getMany();
   };

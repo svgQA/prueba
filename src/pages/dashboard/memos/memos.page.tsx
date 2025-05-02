@@ -2,7 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { useCallback, useEffect, useMemo } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { IUserResponse } from '@/types/auth';
 import { useWebSocket } from '@/utils/socket';
 import { Section } from '@/components/common/section/section';
@@ -17,35 +17,7 @@ import { MemoService, MemosSummary } from '@/services';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import SupervisorInfo from './components/expandable/supervisor.expandable';
-/* interface ChatMessage {
-  message: string;
-  isSender: boolean;
-  from: string;
-  to: string;
-}
-
-const FrequentQuestions = () => {
-  const { t } = useTranslation();
-
-  const questions: FrequentQuestion[] = [
-    { id: 1, question: t('memos.frequentQuestions.question1') },
-    { id: 2, question: t('memos.frequentQuestions.question2') },
-    { id: 3, question: t('memos.frequentQuestions.question3') },
-  ];
-
-  return (
-    <div className='flex flex-wrap gap-2 mb-4'>
-      {questions.map((q) => (
-        <div
-          key={q.id}
-          className='bg-gray-100 rounded-full px-4 py-2 cursor-pointer hover:bg-gray-200'
-        >
-          {q.question}
-        </div>
-      ))}
-    </div>
-  );
-}; */
+import { useUserStore } from '@/store/slices';
 
 enum VIEW_NAME {
   TABLE,
@@ -60,13 +32,13 @@ const defaultSummary = {
 
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
+  const { selectedCompany } = useUserStore();
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
-
   const summary = useSignal<MemosSummary>(defaultSummary);
 
   useEffect(() => {
@@ -76,6 +48,10 @@ export const MemosPage: FunctionComponent = () => {
       wsManager.removeListener('memos');
     };
   }, []);
+
+  useEffect(() => {
+    fetchInitialData();
+  }, [selectedCompany]);
 
   const fetchInitialData = async () => {
     const [responseMemos, responseUsers, responseSummary] = await Promise.all([

@@ -7,7 +7,6 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import { ShiftService } from '@/services/shift';
 import { toast } from 'react-toastify';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store/settings';
@@ -16,6 +15,7 @@ import {
   setMenu,
 } from '../../store/settings';
 import { DataSchedule, DaySelection } from './components/data.schedule';
+import { ScheduleService } from '@/services';
 
 export interface ISchedule {
   id: number;
@@ -40,7 +40,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   }, []);
 
   const getSchedules = async () => {
-    const request: any = await ShiftService.getSchedules();
+    const request: any = await ScheduleService.getSchedules();
     if (!request.getStatus()) return;
     schedules.value = request.getMany();
   };
@@ -68,7 +68,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   };
 
   const deleteSchedule = async (id: string) => {
-    const request = await ShiftService.deleteSchedule(id);
+    const request = await ScheduleService.deleteSchedule(id);
     if (!request.getStatus()) return;
     toast.success('horario eliminado', { position: 'top-right' });
     getSchedules();
