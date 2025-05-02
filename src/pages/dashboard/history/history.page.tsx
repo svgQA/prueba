@@ -96,8 +96,8 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
         <Button
           name='run-cron-button'
           label={t('history.buttons.executeReview')}
-          className='bg-primary text-white hover:bg-primary-opacity p-2'
           onClick={handleRunCron}
+          icon='137'
         />
       </div>
       <Table<INotificationListItem>

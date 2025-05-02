@@ -107,11 +107,7 @@ export const MemosPage: FunctionComponent = () => {
             handleViewChange(VIEW_NAME.TABLE);
           }}
           rounded={false}
-          className={
-            currentView.value === VIEW_NAME.TABLE
-              ? 'bg-primary-opacity p-2'
-              : ''
-          }
+          selected={currentView.value === VIEW_NAME.TABLE}
           icon='320'
         />
         <Button
@@ -120,9 +116,7 @@ export const MemosPage: FunctionComponent = () => {
             handleViewChange(VIEW_NAME.CHAT);
           }}
           rounded={false}
-          className={
-            currentView.value === VIEW_NAME.CHAT ? 'bg-primary-opacity p-2' : ''
-          }
+          selected={currentView.value === VIEW_NAME.CHAT}
           icon='418'
         />
         <Button name='button-change-scheduler' rounded={false} icon='331' />

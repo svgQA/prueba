@@ -8,6 +8,8 @@ import {
   IDropdownAction,
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
+import { Badge } from '@/components/common/badge/badge';
+import { Avatar } from '@/components/common/Avatar';
 
 // Define our custom properties
 type CustomColumnProps = {
@@ -129,6 +131,20 @@ export const getColumns = (
     accessorFn: (row) => `${row?.extraData?.client.name}`,
     header: 'Usuario',
     enableGrouping: true,
+    cell: (info) => {
+      const name = info.getValue() as string;
+      return (
+        <div className='flex items-center gap-1 justify-start'>
+          <Avatar name={name} size='sm' square />
+          <p
+            className=' p-1 size-sm cursor-pointer'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            {name}
+          </p>
+        </div>
+      );
+    },
   },
   {
     id: 'status',
@@ -137,26 +153,21 @@ export const getColumns = (
     enableGrouping: true,
     cell: (info: any) => {
       const status = info.getValue() as string;
-      let statusText = status;
-      let bgColor = 'bg-primary-opacity';
-      let textColor = 'text-primary';
-
+      let statusText = 'info';
       if (status === 'OPENED') {
-        statusText = 'En Revisión';
-        bgColor = 'bg-secondary-opacity';
-        textColor = 'text-secondary';
+        statusText = 'success';
+      } else if (status === 'CLOSED') {
+        statusText = 'error';
+      } else if (status === 'IN_REVISION') {
+        statusText = 'warning';
       }
 
       return (
-        <div className='flex flex-row justify-start'>
-          <span className='p-1 size-sm cursor-pointer'>
-            <div
-              className={`px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}
-            >
-              {statusText}
-            </div>
-          </span>
-        </div>
+        <Badge
+          label={status}
+          status={statusText as 'info' | 'error' | 'warning' | 'success'}
+          full
+        />
       );
     },
   },
@@ -167,30 +178,22 @@ export const getColumns = (
     enableGrouping: true,
     cell: (info: any) => {
       const priority = info.getValue() as number;
-      let bgColor = 'bg-primary-opacity';
-      let textColor = 'text-primary';
-
+      let status = 'info';
+      let label = 'Baja';
       if (priority === 5) {
-        bgColor = 'bg-error-opacity';
-        textColor = 'text-error';
+        status = 'error';
+        label = 'Alta';
       } else if (priority === 4) {
-        bgColor = 'bg-caution-opacity';
-        textColor = 'text-caution';
+        status = 'warning';
+        label = 'Media';
       }
 
       return (
-        //   <PBadge priority={info.getValue() as 'Alta' | 'Media' | 'Baja'} />
-        <div className='flex flex-row justify-start'>
-          <span className='p-1 size-sm cursor-pointer'>
-            <div
-              className={`px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}
-            >
-              {priority === 5 ? 'Alta' : ''}
-              {priority === 4 ? 'Media' : ''}
-              {priority !== 5 && priority !== 4 ? 'Baja' : ''}
-            </div>
-          </span>
-        </div>
+        <Badge
+          label={label}
+          status={status as 'info' | 'error' | 'warning' | 'success'}
+          full
+        />
       );
     },
   },
@@ -201,13 +204,17 @@ export const getColumns = (
     enableGrouping: true,
     meta: { expander: 'extraData' },
     cell: (info) => {
+      const supervisor = info.getValue() as string;
       return (
-        <span
-          className=' p-1 size-sm cursor-pointer'
-          onClick={() => info.row.toggleExpanded()}
-        >
-          {info.getValue() as string}
-        </span>
+        <div className='flex items-center gap-1 justify-start'>
+          <Avatar name={supervisor} size='sm' square />
+          <p
+            className=' p-1 size-sm cursor-pointer'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            {supervisor}
+          </p>
+        </div>
       );
     },
   },

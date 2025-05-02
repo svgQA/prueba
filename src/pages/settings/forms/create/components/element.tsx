@@ -168,14 +168,14 @@ export const FormElement = ({
             {/* INPUT: title element */}
             <td
               onClick={handleSelect}
-              className={`flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
+              className={`bg-gray-800 flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
                 isOver ? 'bg-ternary text-t-dark' : ''
               } ${isDragging ? 'opacity-70' : ''}`}
             >
               {question.section && (
                 <div className=' mx-3 w-1 h-6 rounded-lg bg-primary dark:bg-b-light-dark'></div>
               )}
-              <div className='flex flex-row w-full'>
+              <div className='flex flex-row w-full items-center'>
                 <span
                   ref={(node) => ref(drop(node))}
                   className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
@@ -193,7 +193,7 @@ export const FormElement = ({
               </div>
             </td>
             {/* DROPDOW: select type */}
-            <td onClick={handleSelect} className='w-3/12'>
+            <td onClick={handleSelect} className='w-3/12 bg-gray-800'>
               <Select
                 placeholder={i18n.t('form.placeholder.type_element')}
                 id={`se-form-${question.id}-element-type`}

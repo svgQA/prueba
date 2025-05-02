@@ -59,7 +59,7 @@ export const FormResponseSettingPage: FunctionComponent<
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
         return (
-          <div class='mb-4 bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 bg-white dark:bg-gray-800'>
             <span />
             <button
               onClick={() => toggleSection(element.id)}
@@ -81,19 +81,18 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.TITLE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
             <h2 class='text-xl font-bold'>{element.label}</h2>
           </div>
         );
       case ELEMENT_TYPE.INPUT:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
             <Input
               name={element.id}
               type='text'
               label={element.label}
               icon='123'
-              borderless
               value={element.value}
               onChange={handleInputChange}
               data-page={page}
@@ -104,12 +103,11 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.TEXT_AREA:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
             <TextArea
               name={element.id}
               label={element.label}
               icon='123'
-              borderless
               value={element.value}
               onChange={handleInputChange}
               data-page={page}
@@ -120,13 +118,12 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.NUMBER_INPUT:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
             <Input
               name={element.id}
               type='number'
               label={element.label}
               icon='123'
-              borderless
               value={element.value}
               onChange={handleInputChange}
               data-page={page}
@@ -137,13 +134,12 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.DROPDOWN:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
             <Select
               name={element.id}
               options={element?.options}
               label={element.label}
               icon='123'
-              borderless
               value={element.value}
               onChange={handleInputChange}
               data-page={page}
@@ -154,7 +150,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.RADIO_BUTTON:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
             <Radio
               name={element.id}
               label={element.label}
@@ -169,7 +165,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.CHECK_BOX:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
             <Checkbox
               name={element.id}
               label={element.label}
@@ -184,7 +180,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.IMAGE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
             <File
               name={element.id}
               onChange={handleInputChange}
@@ -199,7 +195,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.FILES:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
             <File
               name={element.id}
               onChange={handleInputChange}
@@ -215,7 +211,7 @@ export const FormResponseSettingPage: FunctionComponent<
 
       default:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
             {element.type}
             <label class='block text-sm font-medium mb-1'>
               {element.label}
@@ -279,24 +275,26 @@ export const FormResponseSettingPage: FunctionComponent<
                 <p className='mb-8'>{getResponse.value.description}</p>
               )}
             </div>
-            {!getResponseMode.value?.hold && (
-              <>
-                <Button
-                  type='button'
-                  onClick={finishResponse}
-                  name='btn-finish-response'
-                  icon='137'
-                  label='finish'
-                />
-                <Button
-                  type='button'
-                  onClick={saveResponse}
-                  name='btn-save-response'
-                  icon='134'
-                  label='save'
-                />
-              </>
-            )}
+            <div className='flex flex-row gap-2 items-center'>
+              {!getResponseMode.value?.hold && (
+                <>
+                  <Button
+                    type='button'
+                    onClick={finishResponse}
+                    name='btn-finish-response'
+                    icon='137'
+                    label='finish'
+                  />
+                  <Button
+                    type='button'
+                    onClick={saveResponse}
+                    name='btn-save-response'
+                    icon='134'
+                    label='save'
+                  />
+                </>
+              )}
+            </div>
           </div>
 
           <div className='mb-6'>
