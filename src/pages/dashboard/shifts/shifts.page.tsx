@@ -54,6 +54,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
   const showUpsertModal = useSignal<boolean>(false);
   const showSendModal = useSignal<boolean>(false);
+  const notificationValidate = useSignal<boolean>(false);
   const showShiftModal = useSignal<boolean>(false);
   const shiftSummary = useSignal<ShiftSummary>({
     total: 0,
@@ -147,7 +148,10 @@ export const ShiftsPage: FunctionalComponent = () => {
       ]);
 
       if (shiftsResponse && shiftsResponse.getStatus()) {
-        shifts.value = shiftsResponse.getMany();
+        const [hasNotifications, responseShifts] = findNotificationShift(shiftsResponse.getMany());
+        notificationValidate.value = hasNotifications;
+
+        shifts.value = responseShifts;
       }
 
       if (servicesResponse.getStatus()) {
@@ -165,6 +169,25 @@ export const ShiftsPage: FunctionalComponent = () => {
       toast.error('notification.error_fetching_initial_data');
     }
   };
+
+  const findNotificationShift = (shiftsResponse: IShiftResponse[]): [boolean, IShiftResponse[]] => {
+    let hasSomeNotifications = false;
+    const shifts = shiftsResponse.map((shifts) => {
+      if (shifts.employee?.playerId) {
+        hasSomeNotifications = true;
+        return {
+          ...shifts,
+          hasNotifications: true,
+        };
+      }
+      return {
+        ...shifts,
+        hasNotifications: false,
+      }
+    })
+
+    return [hasSomeNotifications, shifts]
+  }
 
   useEffect(() => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -255,7 +278,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => {}, []);
+  const handleClick = useCallback((/* task: Task */) => { }, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -353,13 +376,12 @@ export const ShiftsPage: FunctionalComponent = () => {
             icon='314'
             label={t('shifts.remoteSupervision')}
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${
-              !hasValidPlayer
+            className={`border-2 p-2 ${!hasValidPlayer
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : onNotifications
                   ? 'bg-primary-opacity'
                   : 'border-primary'
-            }`}
+              }`}
           />
           {showSendModal.value && (
             <div className='absolute mt-4 mr-12 z-50 rounded p-4'>
@@ -472,6 +494,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             pageSize={20}
             selectable
             onNotifications={onNotifications}
+            hasNotifications={notificationValidate.value}
             onSelectionChange={(rows) => {
               const validUsers = rows.map((row: any) => ({
                 id: row.employee.id,
