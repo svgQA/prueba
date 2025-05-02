@@ -50,7 +50,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
         transition-colors duration-150
         ${borderless ? 'border-none' : 'border border-gray-200 dark:border-gray-700'}
         ${full ? 'w-full' : ''}
-        ${selected ? 'bg-primary-opacity dark:bg-primary' : 'bg-white dark:bg-gray-800'}
+        ${selected ? 'bg-primary' : 'bg-white dark:bg-gray-800'}
         flex items-center justify-between text-center
         `}
       // ${bold ? 'font-bold' : 'font-normal'}
@@ -67,7 +67,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
     >
       {icon && !end && (
         <span
-          className={`${selected ? 'dark:text-white text-primary' : 'text-primary'} left-0 px-1 size-${iconSize} vx-icon vx-icon-${icon} hidden sm:inline ${iconColor} ${label ? 'mr-2' : ''}`}
+          className={`${selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vx-icon vx-icon-${icon} hidden sm:inline ${iconColor} ${label ? 'mr-2' : ''}`}
         />
       )}
 

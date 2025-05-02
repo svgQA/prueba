@@ -6,11 +6,16 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   icon,
   size = 'xs',
   status = 'error',
+  full = false,
+  borderless = false,
 }: IBadgeProps) => {
   return (
     <span
       className={`
-        text-${size} items-center capitalize pl-1 px-2 flex justify-between py-0.5 bg-white dark:bg-b-dark-light rounded-full w-fit border border-gray-100 dark:border-gray-700
+        text-${size} items-center capitalize px-3 py-0.5 flex justify-between rounded-full border-gray-100 dark:border-gray-700 ${icon ? '' : 'font-bold'} text-base
+        ${full ? 'w-full' : 'w-fit'}
+        ${borderless ? 'border-none' : 'border'}
+        ${!icon ? (status === 'error' ? 'bg-error' : status === 'success' ? 'bg-secondary' : status === 'warning' ? 'bg-amber-400' : status === 'info' ? 'bg-primary' : 'bg-white dark:bg-b-dark-light') : 'bg-white dark:bg-b-dark-light'}
       `}
     >
       {icon && (

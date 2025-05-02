@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import WeeklyScheduler from '../components/weekly.scheduler';
-import { getSelectedHoursByDay } from '../utils';
+import { convertBlocksToCells, getSelectedHoursByDay } from '../utils';
 import { ICScheduleRequest } from '@/types/shift/shift.request';
 import { ScheduleService } from '@/services';
 
@@ -86,22 +86,16 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
       daysAllowed: model.daysAllowed,
       days: model.days,
     };
-    console.log('model', model);
-    selectedCells.value = (model.days || []).reduce(
+    const days = model.days.reduce(
       (acc, day) => {
-        day.blocks.forEach((block: any) => {
-          // Iterate through each hour in the block
-          let position = 0;
-          for (let hour = block.start; hour < block.end; hour++) {
-            // Create key in format "day:hour:true"
-            acc[`${position}:${hour}`] = true;
-            position++;
-          }
+        acc[day.day] = day.blocks.map((block) => {
+          return { start: block.start, end: block.end };
         });
         return acc;
       },
-      {} as { [key: string]: boolean }
+      {} as { [key: string]: { start: number; end: number }[] }
     );
+    selectedCells.value = convertBlocksToCells(days);
   };
 
   useEffect(() => {

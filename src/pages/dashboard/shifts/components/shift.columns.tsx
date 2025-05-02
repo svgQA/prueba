@@ -3,6 +3,8 @@ import { Gauge } from '@/components/common/gauge/gauge';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IShiftResponse } from '@/types/shift/activity';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 import { Avatar } from '@/components/common/Avatar';
 import {
   IDropdownAction,
@@ -104,25 +106,30 @@ export const getColumns = (
     cell: (info) => {
       const rowData = info.row.original;
       const checkInData = rowData.checkIn;
-      const endDate = new Date(rowData.end);
-      const now = new Date();
+      const startDate = new Date(rowData.start);
 
       let colorClass = 'border-gray-500 text-gray-700';
 
       if (checkInData?.location) {
-        const twoDaysBefore = new Date(endDate);
-        twoDaysBefore.setDate(twoDaysBefore.getDate() - 2);
+        if (checkInData?.time) {
+          const checkInTime = new Date(checkInData.time);
+          const tenMinutesBefore = new Date(startDate);
+          const tenMinutesAfter = new Date(startDate);
 
-        if (now < twoDaysBefore) {
-          colorClass = 'border-primary text-primary';
-        } else if (now <= endDate) {
-          colorClass = 'border-secondary text-secondary';
-        } else {
-          colorClass = 'border-error text-error';
+          tenMinutesBefore.setMinutes(tenMinutesBefore.getMinutes() - 10);
+          tenMinutesAfter.setMinutes(tenMinutesAfter.getMinutes() + 10);
+
+          if (checkInTime <= startDate && checkInTime < tenMinutesBefore) {
+            colorClass = 'border-primary text-primary'; // On time
+          } else if (checkInTime > tenMinutesAfter) {
+            colorClass = 'border-error text-error'; // Early
+          } else {
+            colorClass = 'border-secondary text-secondary'; // Late
+          }
         }
       }
 
-      const scheduledTime = '19:00';
+      const scheduledTime = dayjs(startDate).format('HH:mm');
       const formatActualTime = (data: any) => {
         if (!data || !data.time) return '...';
         const date = new Date(data.time);
@@ -155,24 +162,28 @@ export const getColumns = (
       const rowData = info.row.original;
       const checkOutData = rowData.checkOut;
       const endDate = new Date(rowData.end);
-      const now = new Date();
-
       let colorClass = 'border-gray-500 text-gray-700';
 
       if (checkOutData?.location) {
-        const twoDaysBefore = new Date(endDate);
-        twoDaysBefore.setDate(twoDaysBefore.getDate() - 2);
+        if (checkOutData?.time) {
+          const checkInTime = new Date(checkOutData.time);
+          const tenMinutesBefore = new Date(endDate);
+          const tenMinutesAfter = new Date(endDate);
 
-        if (now < twoDaysBefore) {
-          colorClass = 'border-primary text-primary';
-        } else if (now <= endDate) {
-          colorClass = 'border-secondary text-secondary';
-        } else {
-          colorClass = 'border-error text-error';
+          tenMinutesBefore.setMinutes(tenMinutesBefore.getMinutes() - 10);
+          tenMinutesAfter.setMinutes(tenMinutesAfter.getMinutes() + 10);
+
+          if (checkInTime <= endDate && checkInTime < tenMinutesBefore) {
+            colorClass = 'border-orange-500 text-orange-500';
+          } else if (checkInTime > tenMinutesAfter) {
+            colorClass = 'border-primary text-primary';
+          } else {
+            colorClass = 'border-secondary text-secondary';
+          }
         }
       }
 
-      const scheduledTime = '07:00';
+      const scheduledTime = dayjs(endDate).format('HH:mm');
       const formatActualTime = (data: any) => {
         if (!data || !data.time) return '...';
         const date = new Date(data.time);
@@ -203,7 +214,7 @@ export const getColumns = (
     header: 'Estado',
   },
   {
-    id: 'duracion',
+    id: 'duración',
     accessorKey: 'duration',
     size: 120,
     header: 'Duración',
@@ -211,25 +222,26 @@ export const getColumns = (
       const rowData = info.row.original;
       const checkInData = rowData.checkIn;
       const checkOutData = rowData.checkOut;
-      const scheduledDuration = '12h';
+      let dateDifferent = { hours: 0, minutes: 0 };
+      let checkDifferent = { hours: 0, minutes: 0 };
 
-      let actualDuration = '...';
+      if (rowData.start && rowData.end) {
+        dateDifferent = calculateDuration(rowData.start, rowData.end);
+      }
+
       if (checkInData?.time && checkOutData?.time) {
-        const checkInTime = new Date(checkInData.time);
-        const checkOutTime = new Date(checkOutData.time);
-        const diffMs = checkOutTime.getTime() - checkInTime.getTime();
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        const diffMinutes = Math.floor(
-          (diffMs % (1000 * 60 * 60)) / (1000 * 60)
-        );
-        actualDuration = `${diffHours}h ${diffMinutes}m`;
+        checkDifferent = calculateDuration(checkInData.time, checkOutData.time);
       }
 
       return (
         <div className='inline-flex items-center px-2 py-0.5 text-sm'>
-          <span>{scheduledDuration}</span>
+          <span>
+            {dateDifferent.hours}h {dateDifferent.minutes}m
+          </span>
           <span className='mx-1'>→</span>
-          <span>{actualDuration}</span>
+          <span>
+            {checkDifferent.hours}h {checkDifferent.minutes}m
+          </span>
         </div>
       );
     },
@@ -256,7 +268,8 @@ export const getColumns = (
     size: 50,
     header: 'Actividades',
     cell: (info: any) => {
-      const progress = (info.getValue() as number) ?? 0;
+      // TODO: AJUSTAR EL PROGRESS
+      const progress = Math.floor(Math.random() * 101);
 
       let progressColor = '#E05858';
 
@@ -282,7 +295,8 @@ export const getColumns = (
     size: 50,
     header: 'Rondas',
     cell: (info: any) => {
-      const progress = (info.getValue() as number) ?? 0;
+      // TODO: AJUSTAR EL PROGRESS
+      const progress = Math.floor(Math.random() * 101);
 
       let progressColor = '#E05858';
 
@@ -376,3 +390,20 @@ export const getColumns = (
     },
   },
 ];
+
+const calculateDuration = (start: string, end: string) => {
+  const startTime = dayjs(start);
+  const endTime = dayjs(end);
+  const diffMs = endTime.diff(startTime);
+
+  // Crear una duración a partir de esa diferencia
+  const duration = dayjs.duration(diffMs);
+
+  // Obtener horas y minutos
+  const hours = Math.floor(duration.asHours());
+  const minutes = duration.minutes();
+  return {
+    hours: hours,
+    minutes: minutes,
+  };
+};

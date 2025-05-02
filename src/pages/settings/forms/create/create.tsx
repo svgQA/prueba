@@ -139,8 +139,8 @@ export const FormCreateSettingPage: FunctionComponent = () => {
         />
       </div>
       <div class='flex-grow min-h-[78vh] p-3'>
-        <div className='flex flex-row w-full items-center mb-4 pr-3'>
-          <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-b-dark-light dark:border-b-light-dark'>
+        <div className='flex flex-row w-full items-center mb-4 gap-5 pr-12'>
+          <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer'>
             <span className='vx-icon vx-upload text-gray-400 text-2xl' />
           </div>
           <div className='flex flex-col gap-1 w-10/12'>
@@ -152,7 +152,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               id={`in-form-${getForm.value.id}-format-title`}
               value={getForm.value.label}
               onChange={handleFormatInputChange}
-              borderless
             />
             <Input
               type='text'
@@ -160,7 +159,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               name='description'
               icon='123'
               id={`in-form-${getForm.value.id}-format-description`}
-              borderless
               value={getForm.value.description}
               onChange={handleFormatInputChange}
             />
@@ -188,7 +186,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                 data-pageid={page.id}
                 value={page.label}
                 onChange={handlePageInputChange}
-                borderless
                 icon='064'
               />
               <div className='mt-2 w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light'>

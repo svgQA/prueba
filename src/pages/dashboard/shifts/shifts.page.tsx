@@ -347,7 +347,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           onClick={() => {
             handleViewChange(VIEW_NAME.TABLE);
           }}
-          className={`!py-3 ${currentView.value === VIEW_NAME.TABLE ? 'bg-red-300' : ''}`}
+          selected={currentView.value === VIEW_NAME.TABLE}
           icon='443'
         />
         <Button
@@ -355,7 +355,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           onClick={() => {
             handleViewChange(VIEW_NAME.SCHEDULER);
           }}
-          className={`!py-3 ${currentView.value === VIEW_NAME.SCHEDULER ? 'bg-red-300' : ''}`}
+          selected={currentView.value === VIEW_NAME.SCHEDULER}
           icon='412'
         />
         <Button
@@ -363,9 +363,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           onClick={() => {
             handleViewChange(VIEW_NAME.MAP);
           }}
-          className={
-            currentView.value === VIEW_NAME.MAP ? 'bg-primary-opacity' : ''
-          }
+          selected={currentView.value === VIEW_NAME.MAP}
           icon='103'
         />
 

@@ -10,6 +10,8 @@ export interface IBadgeProps {
   outlined?: boolean;
   borderColor?: string;
   size?: 'xs' | 'sm' | 'md' | 'lg';
+  full?: boolean;
+  borderless?: boolean;
   status?: 'error' | 'success' | 'warning' | 'info';
 }
 
