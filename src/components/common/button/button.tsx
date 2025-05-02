@@ -22,7 +22,6 @@ export const Button: FunctionComponent<IButtonProps> = ({
   unpadded = false,
   selected = false,
   textAlign = 'center',
-  bold = true,
 }: IButtonProps) => {
   const getJustify = () => {
     switch (textAlign) {
@@ -53,8 +52,8 @@ export const Button: FunctionComponent<IButtonProps> = ({
         ${full ? 'w-full' : ''}
         ${selected ? 'bg-primary-opacity dark:bg-primary' : 'bg-white dark:bg-gray-800'}
         flex items-center justify-between text-center
-        ${bold ? 'font-bold' : 'font-normal'}
-      `}
+        `}
+      // ${bold ? 'font-bold' : 'font-normal'}
       // {`
       //   ${rounded ? 'rounded-full px-1 md:px-2' : 'rounded px-2 md:px-4'}
       //   ${full ? 'w-full' : ''}

@@ -25,7 +25,8 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
   const getUsers = async () => {
     const response = await UserService.get_all();
     if (!response.getStatus()) return;
-    users.value = response.getMany();
+    const r_users = response.getMany();
+    users.value = r_users;
   };
 
   const deleteUser = async (id: number) => {
@@ -56,11 +57,12 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
         break;
       }
       case ROW_ACTIONS.PROFILE: {
-        const company = user.extraData?.company;
-        if (user.cognitoId)
+        const company = String(user.companies[0].company.id);
+        if (user.cognitoId) {
           return toast.warning(
             'Este usuario ya tiene un perfil asignado, puede iniciar en la aplicación'
           );
+        }
 
         if (!company) {
           return toast.warning(
@@ -82,6 +84,7 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
         if (props.onUserEdit) {
           props.onUserEdit({
             id: user.id,
+            companies: user.companies,
             cognitoId: user.cognitoId,
             externalId: user.externalId,
             externalPlatformId: user.externalPlatformId,

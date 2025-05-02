@@ -52,14 +52,24 @@ export const getColumns = (
   },
   {
     id: 'company',
-    accessorKey: 'extraData.company',
+    accessorKey: 'companies',
     size: 180,
     header: t('users.columns.company'),
     enableGrouping: true,
     cell: (info) => {
-      const { extraData } = info.row.original;
-      const value = extraData?.company || 'N/A';
-      return <div className='flex justify-center'>{value}</div>;
+      const { companies } = info.row.original;
+      return (
+        <div className='flex justify gap-1 flex-row'>
+          {companies.map((company) => (
+            <Avatar
+              name={company.company.name}
+              size='sm'
+              square
+              key={company.id}
+            />
+          ))}
+        </div>
+      );
     },
   },
   {
@@ -70,7 +80,7 @@ export const getColumns = (
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
-      const value = extraData?.area || 'N/A';
+      const value = extraData?.area;
       return <div className='flex justify-center'>{value}</div>;
     },
   },
@@ -82,80 +92,8 @@ export const getColumns = (
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
-      const value = extraData?.city || 'N/A';
+      const value = extraData?.city;
       return <div className='flex justify-center'>{value}</div>;
-    },
-  },
-  {
-    id: 'connection',
-    accessorKey: 'connection',
-    size: 100,
-    header: t('users.columns.connection'),
-    cell: (info) => {
-      const value = info.getValue() as string; // 'Activo' | 'Inactivo'
-      // Podrías usar un badge distinto para "Activo" (verde) / "Inactivo" (rojo)
-      return (
-        <div className='flex justify-center'>
-          {value === 'Activo' ? (
-            <Badge label='' icon='190' textColor='text-secondary' size='md' />
-          ) : (
-            <Badge label='' icon='190' textColor='text-error' size='md' />
-          )}
-        </div>
-      );
-    },
-  },
-  {
-    id: 'taskProgress',
-    accessorKey: 'taskProgress',
-    size: 180,
-    header: t('users.columns.taskProgress'),
-    cell: (info) => {
-      const progress = info.getValue() as number;
-      // Definir el color dinámico basado en el progreso
-      // let progressColor = 'bg-error'; // Rojo por defecto para progreso <= 30%
-
-      // if (progress < 30) {
-      //   progressColor = 'bg-error';
-      // } else if (progress >= 30 && progress < 70) {
-      //   progressColor = 'bg-caution';
-      // } else if (progress >= 70) {
-      //   progressColor = 'bg-primary';
-      // }
-
-      // return (
-      //   <div className='flex flex-row justify-center'>
-      //     {/* Pasar el color dinámico al componente Gauge */}
-      //     <Gauge progress={progress} color={progressColor} />
-      //   </div>
-      // );
-
-      let progressColorClass = 'bg-error';
-      let textColorClass = 'text-error';
-
-      if (progress >= 30 && progress < 70) {
-        progressColorClass = 'bg-caution';
-        textColorClass = 'text-caution';
-      } else if (progress >= 70) {
-        progressColorClass = 'bg-primary';
-        textColorClass = 'text-primary';
-      }
-
-      return (
-        <div className='flex flex-row justify-center'>
-          <div className='flex items-center w-full max-w-[120px]'>
-            <div className='relative flex-1 h-2 bg-gray-200 rounded-full mr-2'>
-              <div
-                className={`absolute top-0 left-0 h-2 rounded-full ${progressColorClass}`}
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <span className={`text-sm font-medium ${textColorClass}`}>
-              {progress}%
-            </span>
-          </div>
-        </div>
-      );
     },
   },
   {
@@ -166,23 +104,16 @@ export const getColumns = (
     cell: (info) => {
       const value = info.getValue() as number;
 
-      let iconColor = '#1DD75B'; // secondary por defecto
-
+      let iconColor = 'success' as 'success' | 'error' | 'info' | 'warning'; // secondary por defecto
       if (value >= 1 && value < 3) {
-        iconColor = '#EF4444'; // error
+        iconColor = 'error'; // error
       } else if (value >= 3) {
-        iconColor = '#6B7280'; // gray-text-light
+        iconColor = 'info'; // gray-text-light
       }
 
       return (
         <div className='flex items-center justify-center gap-2'>
-          <div className='rounded-full p-1 bg-b-light'>
-            <span
-              className='vox-icon vx-icon-user-status text-sm'
-              style={{ color: iconColor }}
-            />
-          </div>
-          <span className='text-sm text-gray-700'>{value}</span>
+          <Badge icon='user-status' status={iconColor} size='md' />
         </div>
       );
     },
@@ -209,7 +140,7 @@ export const getColumns = (
 
       return (
         <div className='flex items-center gap-2 w-full'>
-          <div className='flex-1 h-2 bg-gray-200 rounded-full overflow-hidden'>
+          <div className='flex-1 h-2 bg-b-light-dark dark:bg-b-dark-light rounded-full overflow-hidden'>
             {hasTasks && (
               <div
                 className={`h-full ${barColor}`}
@@ -217,7 +148,7 @@ export const getColumns = (
               />
             )}
           </div>
-          <span className='text-xs font-semibold text-gray-700'>
+          <span className='text-xs font-semibold'>
             {hasTasks ? `${openRate}%` : '%'}
           </span>
         </div>

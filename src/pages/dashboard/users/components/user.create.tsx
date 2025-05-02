@@ -8,7 +8,6 @@ import { IUserRequest } from '@/types/auth';
 import { UserService } from '@/services/general/user';
 import { getUserMode, USER_MODE_SERVICE } from '../store/user.store';
 import { Input } from '@/components/common/input/input';
-import { Button } from '@/components/common/button/button';
 import {
   ICountryResponse,
   IDocumentTypeResponse,
@@ -21,7 +20,10 @@ import { Signal, useSignal } from '@preact/signals';
 import { Select } from '@/components/common/select/select';
 import { File } from '@/components/common/file/file';
 import { toast } from 'react-toastify';
-import { PlaceService } from '@/services';
+import { CompanyService, PlaceService } from '@/services';
+import { StatusButton } from '@/pages/settings/component/custo.button';
+import { IOption } from '@/components/common/multi/interface';
+import { AreaService } from '@/services/general/area';
 
 interface CreateUserProps {
   onUserCreated?: (user: any) => void;
@@ -33,14 +35,28 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const countries = useSignal<ICountryResponse[]>([]);
   const departments = useSignal<IDepartmentResponse[]>([]);
   const municipalities = useSignal<IMunicipalityResponse[]>([]);
+  const companies = useSignal<IOption[]>([]);
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
+  const areas = useSignal<IOption[]>([]);
 
   useEffect(() => {
+    // applyAllData();
     getInitialValues();
+    getCompanies();
     getDocumentTypes();
     getCountries();
     getDepartments();
   }, []);
+
+  // const applyAllData = async (): Promise<void> => {
+  //   await Promise.all([
+  //     getInitialValues(),
+  //     getCompanies(),
+  //     getDocumentTypes(),
+  //     getCountries(),
+  //     getDepartments(),
+  //   ]);
+  // };
 
   const getInitialValues = async (): Promise<void> => {
     if (props.user) {
@@ -65,6 +81,20 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     // console.log(departments.value);
   };
 
+  const getCompanies = async (): Promise<void> => {
+    const response = await CompanyService.getCompanyList();
+    if (!response.getStatus()) return;
+    const r_companies = response.getMany();
+    companies.value = r_companies;
+  };
+
+  const getAreas = async (company: string): Promise<void> => {
+    const id = parseInt(company);
+    const response = await AreaService.getArea(id);
+    if (!response.getStatus()) return;
+    areas.value = response.getMany();
+  };
+
   const onChangeDepartment = async (departmentId: number) => {
     await getMunicipalities(departmentId);
   };
@@ -81,6 +111,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     }
     return department;
   };
+
   const getMunicipalities = async (departmentId: number): Promise<void> => {
     const response = await PlaceService.getMunicipalities(departmentId);
     if (!response.getStatus()) return;
@@ -99,6 +130,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       getUserMode.value.mode === USER_MODE_SERVICE.UPDATE
         ? 'Usuario actualizado'
         : 'Usuario creado';
+
+    user.companyId = Number(user.companyId || 1);
     if (getUserMode.value.mode === USER_MODE_SERVICE.UPDATE && user.id) {
       request = await UserService.update(user, user.id);
     } else {
@@ -117,7 +150,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       initialValues={initialValues.value}
       onSubmit={onSubmit}
       render={({ handleSubmit }) => (
-        <form onSubmit={handleSubmit} className='p-4'>
+        <form onSubmit={handleSubmit} className='p-4' id='user-form'>
           <div className='grid grid-cols-2 gap-4 py-3'>
             <Field<string> name='name' validate={required}>
               {({ input, meta }) => (
@@ -291,7 +324,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                   placeholder='Seleccione país...'
                   label='País'
                   name='country'
-                  icon=''
+                  icon='012'
                   optionValue='name'
                   optionLabel='name'
                   options={countries.value}
@@ -300,7 +333,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
               )}
             </Field>
 
-            <Field<string> name='extraData.company' validate={required}>
+            <Field<string> name='companyId' validate={required}>
               {({ input, meta }) => (
                 <Select
                   {...input}
@@ -308,14 +341,16 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                   id='company'
                   label='Empresa'
                   name='company'
-                  optionValue='name'
-                  optionLabel='name'
-                  icon=''
-                  options={[
-                    { id: '1', name: 'Inndico S.A.S' },
-                    { id: '2', name: 'Servagro S.A.S' },
-                  ]}
+                  icon='123'
+                  options={companies.value}
                   meta={meta}
+                  onChange={(e) => {
+                    const id = e.currentTarget.value;
+                    if (id) {
+                      getAreas(id);
+                    }
+                    input.onChange(id);
+                  }}
                 />
               )}
             </Field>
@@ -372,14 +407,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                   id='area'
                   label='Area'
                   name='area'
-                  icon=''
-                  options={[
-                    { key: '1', label: 'Marketing' },
-                    { key: '2', label: 'Telemarketing' },
-                    { key: '3', label: 'Soporte' },
-                    { key: '4', label: 'Administrativo' },
-                    { key: '5', label: 'Gerencia' },
-                  ]}
+                  icon='045'
+                  options={areas.value}
                   meta={meta}
                 />
               )}
@@ -404,27 +433,12 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
               accept='image/*'
             />
           </div>
-          {/* Botonera */}
-          <div className='w-full flex-row flex justify-end items-center'>
-            <Button
-              id='btn-clean'
-              name='btn-clean'
-              type='button'
-              label='Limpiar'
-            />
-
-            <Button
-              id='btn-save'
-              name='btn-save'
-              type='submit'
-              label={
-                getUserMode.value.mode === USER_MODE_SERVICE.UPDATE
-                  ? 'Actualizar'
-                  : 'Crear'
-              }
-              className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-            />
-          </div>
+          <StatusButton
+            onClickClean={() => {}}
+            submitting={false}
+            pristine={false}
+            form='user-form'
+          />
         </form>
       )}
     />

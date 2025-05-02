@@ -326,7 +326,24 @@ export const getColumns = (
     id: 'actions',
     size: 20,
     cell: (info) => {
-      const { id } = info.row.original;
+      const { id, checkIn, checkOut } = info.row.original;
+      const model = checkOut
+        ? []
+        : [
+            {
+              label: !checkIn ? 'Marcar check-in' : 'Marcar check-out',
+              icon: 'vox-icon vx-icon-312 text-primary',
+              onClick: () => {
+                onClickAction({
+                  id: String(id),
+                  type: 'shift',
+                  action: !checkIn
+                    ? ROW_ACTIONS.CHECK_IN
+                    : ROW_ACTIONS.CHECK_OUT,
+                });
+              },
+            },
+          ];
 
       const actions: IDropdownAction[] = [
         {
@@ -340,17 +357,7 @@ export const getColumns = (
             });
           },
         },
-        {
-          label: 'Marcar check-in o check-out',
-          icon: 'vox-icon vx-icon-312 text-primary',
-          onClick: () => {
-            onClickAction({
-              id: String(id),
-              type: 'shift',
-              action: ROW_ACTIONS.UPDATE,
-            });
-          },
-        },
+        ...model,
         {
           label: 'Eliminar turno',
           icon: 'vox-icon vx-icon-053 text-red-500',

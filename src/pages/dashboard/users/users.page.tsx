@@ -198,10 +198,12 @@ export const UsersPage: FunctionalComponent = () => {
         </div>
         {/* Renderer el componente de creación de usuario */}
         {currentView.value === VIEW_NAME.CREATE && (
-          <CreateUser
-            onUserCreated={() => handleViewChange(VIEW_NAME.TABLE)}
-            user={user.value}
-          />
+          <div className='pt-14'>
+            <CreateUser
+              onUserCreated={() => handleViewChange(VIEW_NAME.TABLE)}
+              user={user.value}
+            />
+          </div>
         )}
         {/* Renderer el componente de mensaje */}
         {currentView.value === VIEW_NAME.MESSAGE && <UserMessage />}
