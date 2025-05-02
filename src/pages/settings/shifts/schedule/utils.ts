@@ -78,7 +78,7 @@ export const convertBlocksToCells = (blocks: {
 };
 
 // Example of how to use the function:
-const blocks = {
+/* const blocks = {
   lunes: [
     { start: 9, end: 12 }, // Morning block from 9am to 12pm
     { start: 14, end: 17 }, // Afternoon block from 2pm to 5pm
@@ -106,3 +106,4 @@ const cells = convertBlocksToCells(blocks);
 //   "3-14": true,  // Wednesday 2pm
 //   "3-15": true   // Wednesday 3pm
 // }
+*/
