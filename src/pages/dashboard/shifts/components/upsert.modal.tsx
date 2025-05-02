@@ -55,23 +55,23 @@ export const TaskForm = ({
 
   const onSubmit = async (model: FormData) => {
     try {
-      const { start, end } = model;
-      console.log('model: ', start, end);
+      const { start, end, employeedId, serviceId } = model;
+      model.employeedId = employeedId?.value;
+      model.serviceId = serviceId?.value;
 
-      //   if (start) model.start = dayjs(start).toISOString();
-      //   if (end) model.end = dayjs(end).toISOString();
+      if (start) model.start = dayjs(start).toISOString();
+      if (end) model.end = dayjs(end).toISOString();
 
-      //   const request = taskSelected?.id
-      //     ? await ShiftService.updateActivity(model, taskSelected.id)
-      //     : await ShiftService.createActivity(model);
+      const request = taskSelected?.id
+        ? await ShiftService.updateActivity(model, taskSelected.id)
+        : await ShiftService.createActivity(model);
 
-      //   if (!request.getStatus()) return;
+      if (!request.getStatus()) return;
+      const message = taskSelected?.id
+        ? t('shifts.upsert.successEdit')
+        : t('shifts.upsert.successCreate');
 
-      // const message = taskSelected?.id
-      //   ? t('shifts.upsert.successEdit')
-      //   : t('shifts.upsert.successCreate');
-
-      toast.success(i18n.t('shift.upsert.success'));
+      toast.success(message);
       onClose?.();
       posSave?.();
     } catch (error) {
