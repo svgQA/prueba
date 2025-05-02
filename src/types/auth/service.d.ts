@@ -41,6 +41,8 @@ export interface IRelationCompany {
 }
 export interface IUserResponse extends IUserRequest {
   id: number;
+  playerId?: string;
+  hasNotifications?: boolean;
   responses?: any[];
   createdAt?: Date;
   updatedAt?: Date;
