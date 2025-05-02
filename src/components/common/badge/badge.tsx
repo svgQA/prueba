@@ -4,18 +4,20 @@ import { type IBadgeProps } from './interface';
 export const Badge: FunctionComponent<IBadgeProps> = ({
   label,
   icon,
-  color,
-  bgColor,
-  textColor,
-  outlined,
-  borderColor = 'border-primary',
   size = 'xs',
+  status = 'error',
 }: IBadgeProps) => {
   return (
     <span
-      className={`${color} ${textColor} ${bgColor} ${outlined ? 'border-2' : ''} ${borderColor} text-${size} font-bold items-center capitalize pl-1 pr-2 flex justify-between rounded-md py-0.5`}
+      className={`
+        text-${size} items-center capitalize pl-1 px-2 flex justify-between py-0.5 bg-white dark:bg-b-dark-light rounded-full w-fit border border-gray-100 dark:border-gray-700
+      `}
     >
-      <span className={`vx-icon vx-icon-${icon} size-sm mx-1`}></span>
+      {icon && (
+        <span
+          className={`vx-icon vx-icon-${icon} size-${size} mx-1 ${status === 'error' ? 'text-error' : status === 'success' ? 'text-secondary' : status === 'warning' ? 'text-amber-400' : status === 'info' ? 'text-gray-400' : ''}`}
+        ></span>
+      )}
       {label}
     </span>
   );
