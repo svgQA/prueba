@@ -166,8 +166,8 @@ export const FormsPage: FunctionComponent = () => {
             <div className='w-full py-1 pb-3 flex items-center justify-end'>
               <h2 className='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
                 {currentView.value === VIEW_NAME.INSPECT
-                  ? t('forms.inspect.title')
-                  : t('forms.report.title')}
+                  ? t('form.inspect.title')
+                  : t('form.report.title')}
               </h2>
             </div>
             <FormResponseSettingPage posFinishAction={handlePosFinishAction} />
