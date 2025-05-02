@@ -123,7 +123,7 @@ export const getColumns = (
 
       const actions: IDropdownAction[] = [
         {
-          label: 'Editar usuario',
+          label: 'Editar notificación',
           icon: 'vox-icon vx-icon-123 text-primary',
           onClick: () => {
             onClickAction({
@@ -134,7 +134,7 @@ export const getColumns = (
           },
         },
         {
-          label: 'Eliminar usuario',
+          label: 'Eliminar notificación',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {

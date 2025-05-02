@@ -162,6 +162,7 @@ export const ScheduledNotificationForm = () => {
           </label>
           <input
             type='number'
+            min={1}
             placeholder='Ej: 30'
             className='w-full border px-3 py-2 rounded text-sm'
             value={formData.repeatEveryMinutes}
@@ -180,6 +181,7 @@ export const ScheduledNotificationForm = () => {
           </label>
           <input
             type='number'
+            min={1}
             placeholder='Ej: 5'
             className='w-full border px-3 py-2 rounded text-sm'
             value={formData.maxRepeats}
@@ -200,7 +202,7 @@ export const ScheduledNotificationForm = () => {
               setFormData({ ...formData, templateId: e.currentTarget.value })
             }
           >
-            <option value=''>Seleccione grupos...</option>
+            <option value=''>Seleccione plantilla...</option>
             {templates.map((tpl) => (
               <option key={tpl.id} value={tpl.id}>
                 {tpl.title}

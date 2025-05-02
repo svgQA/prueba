@@ -6,6 +6,7 @@ import { TemplateServiceFront } from '@/services/template';
 import { IOption } from '@/components/common/multi/interface';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/common/button/button';
 
 interface Props {
   users?: any[];
@@ -260,12 +261,12 @@ export const ManualNotificationForm = ({
         </div>
       )}
 
-      <button
-        className='bg-primary hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded'
+      <Button
+        label='Enviar notificacion'
         onClick={handleSubmit}
-      >
-        Enviar notificación
-      </button>
+        name='button-notification'
+        />
+
     </div>
   );
 };

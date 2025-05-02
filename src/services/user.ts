@@ -189,4 +189,17 @@ export class UserService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
+
+  static async getDashboardStats() {
+    const model: IMakeRequest = {
+      url: ['user', 'stats'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<{
+      totalUsers: number;
+      connectedUsers: number;
+      disconnectedUsers: number;
+    }>(this.name, model);
+  }
+
 }

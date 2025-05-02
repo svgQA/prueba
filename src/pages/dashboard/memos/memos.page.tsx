@@ -8,13 +8,44 @@ import { useWebSocket } from '@/utils/socket';
 import { Section } from '@/components/common/section/section';
 import { useTranslation } from 'react-i18next';
 import { Table } from '@/components/common/table/table';
-import { columns } from './components/memos.columns';
+import { getColumns } from './components/memos.columns';
 import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
+/* import { FrequentQuestion } from './interface'; */
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import SupervisorInfo from './components/expandable/supervisor.expandable';
+/* interface ChatMessage {
+  message: string;
+  isSender: boolean;
+  from: string;
+  to: string;
+}
+
+const FrequentQuestions = () => {
+  const { t } = useTranslation();
+
+  const questions: FrequentQuestion[] = [
+    { id: 1, question: t('memos.frequentQuestions.question1') },
+    { id: 2, question: t('memos.frequentQuestions.question2') },
+    { id: 3, question: t('memos.frequentQuestions.question3') },
+  ];
+
+  return (
+    <div className='flex flex-wrap gap-2 mb-4'>
+      {questions.map((q) => (
+        <div
+          key={q.id}
+          className='bg-gray-100 rounded-full px-4 py-2 cursor-pointer hover:bg-gray-200'
+        >
+          {q.question}
+        </div>
+      ))}
+    </div>
+  );
+}; */
 
 enum VIEW_NAME {
   TABLE,
@@ -125,6 +156,15 @@ export const MemosPage: FunctionComponent = () => {
     [currentView.value]
   );
 
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
+  };
+
   return (
     <Section
       className={
@@ -139,7 +179,7 @@ export const MemosPage: FunctionComponent = () => {
             count={summary.value.total}
             subtitle=''
             color='t-dark'
-            icon='054' // 328
+            icon='328' // 328
           />
 
           <CardData
@@ -147,7 +187,7 @@ export const MemosPage: FunctionComponent = () => {
             count={calculatePercentage(summary.value.in_progress)}
             subtitle=''
             color='t-dark'
-            icon='052' // 311
+            icon='311' // 311
           />
 
           <CardData
@@ -155,7 +195,7 @@ export const MemosPage: FunctionComponent = () => {
             count={calculatePercentage(summary.value.completed)}
             subtitle=''
             color='t-dark'
-            icon='015' // 312
+            icon='312' // 312
           />
         </div>
       )}
@@ -172,8 +212,8 @@ export const MemosPage: FunctionComponent = () => {
         {currentView.value === VIEW_NAME.TABLE && (
           <Table
             data={memos.value}
-            columns={columns}
-            showExpandableIcon
+            columns={getColumns(onClickAction)}
+            showExpandableIcon={false}
             pageSize={20}
             selectable
             expandable={(row: Memo) => <SupervisorInfo memo={row} />}

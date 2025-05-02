@@ -6,12 +6,12 @@ import { Table } from '@/components/common/table/table';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
-import { useTemplateColumns } from './components/template.columns';
+import { getColumns } from './components/template.columns';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 export const TemplateNotificationPage = () => {
   const [templates, setTemplates] = useState<any[]>([]);
   const [_, navigate] = useLocation();
-  const { columns } = useTemplateColumns();
 
   const fetchTemplates = async () => {
     const res = await TemplateServiceFront.getTemplates();
@@ -34,6 +34,11 @@ export const TemplateNotificationPage = () => {
     appendHistory(menu);
   };
 
+  const onClickAction = (params: { id: string; type: string; action: ROW_ACTIONS }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
+  };
+
   return (
     <Section>
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
@@ -47,7 +52,7 @@ export const TemplateNotificationPage = () => {
 
       <Table<any>
         data={templates}
-        columns={columns}
+        columns={getColumns(onClickAction)}
         pageSize={10}
         unsettings
         visibility={{}}
