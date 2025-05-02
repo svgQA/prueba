@@ -97,7 +97,7 @@ export const getColumns = (
     },
   },
   {
-    id: 'start-time',
+    id: 'time-start',
     accessorKey: 'start',
     size: 150,
     header: 'Inicio',
@@ -147,7 +147,7 @@ export const getColumns = (
     },
   },
   {
-    id: 'start-end',
+    id: 'time-end',
     accessorKey: 'end',
     size: 150,
     header: 'Finalización',

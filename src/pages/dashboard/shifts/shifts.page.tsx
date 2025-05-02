@@ -430,7 +430,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <CardData
-          title='Turnos En Curso'
+          title={t('shifts.cards.inProgress')}
           count={calculatePercentage(shiftSummary.value.in_progress)}
           subtitle=''
           color='t-dark'
