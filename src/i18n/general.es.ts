@@ -372,9 +372,13 @@ export const general_es = {
       archivedSubtitle: 'No disponibles',
     },
     columns: {
+      user: 'Usuario',
+      title: 'Título',
       id: 'ID',
       createdAt: 'Fecha de creación',
       updatedAt: 'Última actualización',
+      status: 'Estado',
+      actions: 'Acciones',
     },
     buttons: {
       continue: 'Continuar',
