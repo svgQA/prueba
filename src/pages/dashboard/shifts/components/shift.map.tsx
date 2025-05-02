@@ -205,6 +205,7 @@ const handle_user_disconnected = (user: { id: string }) => {
         sendPoints={() => {}}
         height='78vh'
         disablePointSelection={true}
+        adminUser={true}
       />
     </div>
   );
