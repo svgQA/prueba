@@ -103,7 +103,7 @@ export const MapLibrePointsMap = ({
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
       map.on('click', handleMapClick);
       setIsMapReady(true);
-      
+
       // Get user location when map loads
       getUserLocation();
     });
@@ -127,22 +127,26 @@ export const MapLibrePointsMap = ({
       nextIdRef.current = highestId + 1;
 
       // Only include the main user point if adminUser is true
-      const mainUserPoint = adminUser ? {
-        id: -1,
-        position: { lat: 2.6436182, lng: -76.5372449 }
-      } : null;
+      const mainUserPoint = adminUser
+        ? {
+            id: -1,
+            position: { lat: 2.6436182, lng: -76.5372449 },
+          }
+        : null;
 
       // Combine new points with main user point if it exists
-      const newPoints = mainUserPoint 
+      const newPoints = mainUserPoint
         ? [...JSON.parse(JSON.stringify(pointsRef)), mainUserPoint]
         : JSON.parse(JSON.stringify(pointsRef));
       setPoints(newPoints);
     } else {
       // Only set main user point if adminUser is true
-      const mainUserPoint = adminUser ? {
-        id: -1,
-        position: { lat: 2.6436182, lng: -76.5372449 }
-      } : null;
+      const mainUserPoint = adminUser
+        ? {
+            id: -1,
+            position: { lat: 2.6436182, lng: -76.5372449 },
+          }
+        : null;
       setPoints(mainUserPoint ? [mainUserPoint] : []);
       markersRef.current.forEach((marker) => marker.remove());
       markersRef.current = [];
@@ -157,7 +161,7 @@ export const MapLibrePointsMap = ({
     // Always update markers when points change
     updateMarkers();
     // Only send non-user points to parent
-    sendPoints(points.filter(p => p.id !== -1));
+    sendPoints(points.filter((p) => p.id !== -1));
   }, [points, isMapReady]);
 
   // Update circle when radius changes
@@ -271,9 +275,11 @@ export const MapLibrePointsMap = ({
 
     // Special styling for user location marker
     const isUserLocation = point.id === -1;
-    const markerColor = isUserLocation 
+    const markerColor = isUserLocation
       ? '#10B981' // Green color for user location
-      : (radialPoint && point?.id === radialPoint?.id ? '#2563EB' : '#EA4335');
+      : radialPoint && point?.id === radialPoint?.id
+        ? '#2563EB'
+        : '#EA4335';
 
     el.innerHTML = `
     <div style="
@@ -288,14 +294,14 @@ export const MapLibrePointsMap = ({
         <circle fill="#FFFFFF" cx="12" cy="12" r="9" />
         <text 
           fill="${markerColor}" 
-          x="${isUserLocation ? 8 : (index + 1 >= 10 ? 5 : 10)}" 
+          x="${isUserLocation ? 8 : index + 1 >= 10 ? 5 : 10}" 
           y="12.5" 
           fontFamily="Arial, sans-serif" 
           fontSize="10" 
           fontWeight="bold" 
           textAnchor="middle" 
           dy=".3em"
-        >${isUserLocation ? 'U' : (index + 1)}</text>
+        >${isUserLocation ? 'U' : index + 1}</text>
       </svg>
     </div>
   `;
@@ -344,9 +350,8 @@ export const MapLibrePointsMap = ({
       const marker = new maplibregl.Marker({
         element: markerEl,
         draggable: draggable && !isRadialPoint && !isUserPoint,
-      })
-        .setLngLat([point.position.lng, point.position.lat]);
-      
+      }).setLngLat([point.position.lng, point.position.lat]);
+
       if (mapRef.current) {
         marker.addTo(mapRef.current);
       }
@@ -650,7 +655,7 @@ export const MapLibrePointsMap = ({
     // Use exact coordinates
     const exactCoordinates = {
       lat: 2.6436182,
-      lng: -76.5372449
+      lng: -76.5372449,
     };
 
     const newUserPoint: MapPoint = {
@@ -658,16 +663,16 @@ export const MapLibrePointsMap = ({
       position: exactCoordinates,
     };
     setUserLocation(newUserPoint);
-    
+
     if (mapRef.current) {
       updateMarkers();
       mapRef.current.flyTo({
         center: [exactCoordinates.lng, exactCoordinates.lat],
         zoom: 18,
-        essential: true
+        essential: true,
       });
     }
-    
+
     toast.success('Location set to exact coordinates', {
       position: 'top-right',
     });
@@ -717,10 +722,10 @@ export const MapLibrePointsMap = ({
             type='button'
             onClick={addManualPoint}
             label='Añadir'
-            className='rounded-md bg-primary text-white px-4 py-2 my-1'
           />
         </div>
       )}
+      {/*
       <div className='flex justify-end mb-2'>
         <Button
           id='btn-location'
@@ -731,6 +736,7 @@ export const MapLibrePointsMap = ({
           className='rounded-md bg-green-500 text-white px-4 py-2'
         />
       </div>
+      */}
       <div
         ref={mapContainerRef}
         style={{ width, height }}

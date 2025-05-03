@@ -148,7 +148,9 @@ export const ShiftsPage: FunctionalComponent = () => {
       ]);
 
       if (shiftsResponse && shiftsResponse.getStatus()) {
-        const [hasNotifications, responseShifts] = findNotificationShift(shiftsResponse.getMany());
+        const [hasNotifications, responseShifts] = findNotificationShift(
+          shiftsResponse.getMany()
+        );
         notificationValidate.value = hasNotifications;
 
         shifts.value = responseShifts;
@@ -170,7 +172,9 @@ export const ShiftsPage: FunctionalComponent = () => {
     }
   };
 
-  const findNotificationShift = (shiftsResponse: IShiftResponse[]): [boolean, IShiftResponse[]] => {
+  const findNotificationShift = (
+    shiftsResponse: IShiftResponse[]
+  ): [boolean, IShiftResponse[]] => {
     let hasSomeNotifications = false;
     const shifts = shiftsResponse.map((shifts) => {
       if (shifts.employee?.playerId) {
@@ -183,11 +187,11 @@ export const ShiftsPage: FunctionalComponent = () => {
       return {
         ...shifts,
         hasNotifications: false,
-      }
-    })
+      };
+    });
 
-    return [hasSomeNotifications, shifts]
-  }
+    return [hasSomeNotifications, shifts];
+  };
 
   useEffect(() => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -278,7 +282,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -374,12 +378,13 @@ export const ShiftsPage: FunctionalComponent = () => {
             icon='314'
             label={t('shifts.remoteSupervision')}
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${!hasValidPlayer
+            className={`border-2 p-2 ${
+              !hasValidPlayer
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : onNotifications
                   ? 'bg-primary-opacity'
                   : 'border-primary'
-              }`}
+            }`}
           />
           {showSendModal.value && (
             <div className='absolute mt-4 mr-12 z-50 rounded p-4'>
@@ -488,7 +493,6 @@ export const ShiftsPage: FunctionalComponent = () => {
           <Table<IShiftResponse>
             data={shifts.value}
             columns={getColumns(onClickAction)}
-            showExpandableIcon={false}
             pageSize={20}
             selectable
             onNotifications={onNotifications}

@@ -67,12 +67,14 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
 
   return (
     <div className='relative'>
-      <button
-        className='px-2 py-1 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors'
+      <Button
+        name='btn-replicate'
+        label='Replicar'
+        icon='039'
+        rounded={false}
+        mode='primary'
         onClick={() => setShowDateForm((prev) => !prev)}
-      >
-        Replicar
-      </button>
+      />
 
       {showDateForm && (
         <div

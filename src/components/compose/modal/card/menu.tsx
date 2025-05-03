@@ -44,7 +44,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
                 data-label={menu.label}
                 data-description={menu.description}
                 id={menu.id}
-                className={`${selected.to === to ? 'bg-primary bg-opacity-30 !text-primary font-bold' : ''} capitalize flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
+                className={`${selected.to === to ? 'bg-primary bg-opacity-30 !text-primary' : ''} capitalize flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
               >
                 <span className={`vx-icon vx-icon-${menu.icon} size-sm mr-2`} />
                 {menu.label}

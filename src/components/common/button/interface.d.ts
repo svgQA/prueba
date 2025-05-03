@@ -24,4 +24,7 @@ export interface IButtonProps extends IComponentProps {
   selected?: boolean;
   textAlign?: 'left' | 'center' | 'right';
   bold?: boolean;
+  square?: boolean;
+  selectedColor?: string;
+  mode?: 'primary' | 'secondary' | 'tertiary';
 }
