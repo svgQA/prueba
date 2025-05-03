@@ -24,6 +24,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   textAlign = 'center',
   square = false,
   selectedColor = 'bg-primary',
+  mode,
 }: IButtonProps) => {
   const getJustify = () => {
     switch (textAlign) {
@@ -34,6 +35,15 @@ export const Button: FunctionComponent<IButtonProps> = ({
       default:
         return 'justify-center';
     }
+  };
+
+  const getBackgroundColor = () => {
+    if (mode) {
+      return `bg-${mode} text-white`;
+    }
+    return selected
+      ? `${selectedColor} text-white`
+      : 'bg-white dark:bg-gray-800 text-primary dark:text-gray-200';
   };
 
   return (
@@ -48,30 +58,18 @@ export const Button: FunctionComponent<IButtonProps> = ({
         ${square ? 'w-8 h-8' : ''}
         ${unpadded ? 'p-1' : 'p-2'}
         ${rounded ? 'rounded-full' : 'rounded'}
-        text-primary dark:text-gray-200
         hover:bg-opacity-70
         transition-colors duration-150
         ${borderless ? 'border-none' : 'border border-gray-200 dark:border-gray-700'}
         ${full ? 'w-full' : ''}
-        ${selected ? `${selectedColor} text-white` : 'bg-white dark:bg-gray-800'}
+        ${getBackgroundColor()}
         flex items-center text-center disabled:opacity-50
         ${icon && label ? 'justify-start' : 'justify-center'}
       `}
-      // ${bold ? 'font-bold' : 'font-normal'}
-      // {`
-      //   ${rounded ? 'rounded-full px-1 md:px-2' : 'rounded px-2 md:px-4'}
-      //   ${full ? 'w-full' : ''}
-      //   ${padding} ${text} h-fit items-center justify-center inline-flex font-bold ${className}
-      //   ${border ? 'border border-gray-200 dark:border-gray-700' : 'border-none'}
-      //   bg-white dark:bg-gray-800
-      //   text-gray-700 dark:text-gray-200
-      //   hover:bg-gray-50 dark:hover:bg-gray-700
-      //   transition-colors duration-150
-      // `}
     >
       {icon && !end && (
         <span
-          className={`${selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vx-icon vx-icon-${icon} hidden sm:inline ${iconColor} ${label ? 'mr-2' : ''}`}
+          className={`${mode ? 'text-white' : selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vx-icon vx-icon-${icon} hidden sm:inline ${iconColor} ${label ? 'mr-2' : ''}`}
         />
       )}
 
@@ -89,7 +87,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
 
       {icon && end && (
         <span
-          className={`${selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vox-icon vx-icon-${icon} hidden sm:inline ${iconColor} ${label ? 'ml-2' : ''}`}
+          className={`${mode ? 'text-white' : selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vox-icon vx-icon-${icon} hidden sm:inline ${iconColor} ${label ? 'ml-2' : ''}`}
         />
       )}
     </button>

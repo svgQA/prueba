@@ -92,11 +92,11 @@ export const getColumns = (
     header: 'Novedad',
     enableGrouping: true,
     getIconGroup: (row: Memo) => {
-      if (row.priority === 5) {
+      if (row.priority === 'Alta') {
         return { icon: '165', color: 'text-error' };
       }
 
-      if (row.priority === 4) {
+      if (row.priority === 'Media') {
         return { icon: '182', color: 'text-caution' };
       }
 
@@ -176,7 +176,7 @@ export const getColumns = (
   {
     id: 'supervisor',
     accessorKey: 'extraData.company.name',
-    header: 'supervisor',
+    header: 'Supervisor',
     enableGrouping: true,
     meta: { expander: 'extraData' },
     cell: (info) => {
@@ -187,6 +187,43 @@ export const getColumns = (
           {supervisor}
         </div>
       );
+    },
+  },
+  {
+    id: 'updatedBy',
+    accessorKey: 'userEdit',
+    header: 'Actualizado Por',
+    cell: (info) => {
+      const value = info.getValue() as string;
+      const displayValue = value?.trim()
+        ? value
+        : info.row.original?.extraData?.client?.name;
+      return (
+        <div className='flex items-center gap-1 justify-start'>
+          <Avatar name={displayValue} size='sm' square />
+          <p
+            className='p-1 size-sm cursor-pointer'
+            onClick={() => info.row.toggleExpanded()}
+          >
+            {displayValue}
+          </p>
+        </div>
+      );
+    },
+  },
+  {
+    id: 'createdAt',
+    accessorKey: 'createdAt',
+    header: 'Fecha',
+    cell: (info) => {
+      const dateStr = String(info.getValue());
+      if (!dateStr) return '-';
+
+      try {
+        return dayjs(dateStr).format('DD/MM/YYYY');
+      } catch (error) {
+        return '-';
+      }
     },
   },
   {

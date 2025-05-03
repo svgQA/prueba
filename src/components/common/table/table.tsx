@@ -65,8 +65,8 @@ export const Table = <T,>({
   showExpandableIcon = false,
   selectable,
   onSelectionChange,
-  onNotifications,
   hasNotifications = false,
+  onNotifications,
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -104,6 +104,8 @@ export const Table = <T,>({
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  console.log('hasNotifications', hasNotifications, onNotifications);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -238,7 +240,8 @@ export const Table = <T,>({
         <>
           {rows.map((row, rowIndex) => {
             const isLastRow = rowIndex === rows.length - 1;
-
+            const hasRowsNotifications = (row.original as any)
+              ?.hasNotifications;
             if (row.getIsGrouped()) {
               const selectableGroupItems = row.subRows
                 .map((r) => r.original as any)
@@ -311,42 +314,44 @@ export const Table = <T,>({
                           </span>
                         </span>
 
-                        {selectable && onNotifications && hasNotifications && (
-                          <label className='inline-flex items-center gap-2'>
-                            <input
-                              type='checkbox'
-                              className='w-4 h-4'
-                              checked={allGroupSelected}
-                              ref={(el) => {
-                                if (el) el.indeterminate = someGroupSelected;
-                              }}
-                              onChange={(e) => {
-                                const isChecked = e.currentTarget.checked;
-                                const updated = { ...selectedRows };
+                        {selectable &&
+                          onNotifications &&
+                          hasRowsNotifications && (
+                            <label className='inline-flex items-center gap-2'>
+                              <input
+                                type='checkbox'
+                                className='w-4 h-4'
+                                checked={allGroupSelected}
+                                ref={(el) => {
+                                  if (el) el.indeterminate = someGroupSelected;
+                                }}
+                                onChange={(e) => {
+                                  const isChecked = e.currentTarget.checked;
+                                  const updated = { ...selectedRows };
 
-                                row.subRows.forEach((subRow) => {
-                                  const data = subRow.original as any;
-                                  if (data.employee?.playerId) {
-                                    const id = data.id;
-                                    if (isChecked) {
-                                      updated[id] = data;
-                                    } else {
-                                      delete updated[id];
+                                  row.subRows.forEach((subRow) => {
+                                    const data = subRow.original as any;
+                                    if (data.employee?.playerId) {
+                                      const id = data.id;
+                                      if (isChecked) {
+                                        updated[id] = data;
+                                      } else {
+                                        delete updated[id];
+                                      }
                                     }
-                                  }
-                                });
+                                  });
 
-                                setSelectedRows(updated);
-                                onSelectionChange?.(Object.values(updated));
-                              }}
-                            />
-                            <span className='text-sm text-gray-700'>
-                              {allGroupSelected
-                                ? 'Deseleccionar'
-                                : 'Seleccionar todas'}
-                            </span>
-                          </label>
-                        )}
+                                  setSelectedRows(updated);
+                                  onSelectionChange?.(Object.values(updated));
+                                }}
+                              />
+                              <span className='text-sm text-gray-700'>
+                                {allGroupSelected
+                                  ? 'Deseleccionar'
+                                  : 'Seleccionar todas'}
+                              </span>
+                            </label>
+                          )}
                       </div>
                     </td>
                   </tr>
@@ -398,30 +403,34 @@ export const Table = <T,>({
                             />
                           </div>
                         )}
-                        {selectable && onNotifications && hasNotifications && (
-                          <div className='flex items-center justify-center h-full'>
-                            <input
-                              type='checkbox'
-                              className='w-4 h-4'
-                              checked={!!selectedRows[(row.original as any).id]}
-                              onChange={(e) => {
-                                e.preventDefault();
-                                const data = row.original as any;
-                                const id = data.id;
-                                const updated = { ...selectedRows };
-
-                                if (e.currentTarget.checked) {
-                                  updated[id] = data;
-                                } else {
-                                  delete updated[id];
+                        {selectable &&
+                          onNotifications &&
+                          hasRowsNotifications && (
+                            <div className='flex items-center justify-center h-full'>
+                              <input
+                                type='checkbox'
+                                className='w-4 h-4'
+                                checked={
+                                  !!selectedRows[(row.original as any).id]
                                 }
+                                onChange={(e) => {
+                                  e.preventDefault();
+                                  const data = row.original as any;
+                                  const id = data.id;
+                                  const updated = { ...selectedRows };
 
-                                setSelectedRows(updated);
-                                onSelectionChange?.(Object.values(updated));
-                              }}
-                            />
-                          </div>
-                        )}
+                                  if (e.currentTarget.checked) {
+                                    updated[id] = data;
+                                  } else {
+                                    delete updated[id];
+                                  }
+
+                                  setSelectedRows(updated);
+                                  onSelectionChange?.(Object.values(updated));
+                                }}
+                              />
+                            </div>
+                          )}
                       </td>
                     )}
                     {row.getVisibleCells().map((cell) => (
@@ -463,7 +472,15 @@ export const Table = <T,>({
         </>
       );
     },
-    [expandable, unsettings, data.length, pageSize, selectedRows]
+    [
+      expandable,
+      unsettings,
+      data.length,
+      pageSize,
+      selectedRows,
+      hasNotifications,
+      onNotifications,
+    ]
   );
 
   const renderPagination = () => {
@@ -617,7 +634,7 @@ export const Table = <T,>({
                 name='page'
                 unpadded
                 square
-                selectedColor='bg-ternary'
+                selectedColor='dark:bg-ternary bg-primary'
                 selected={currentPage === pageIdx}
                 label={`${Number(pageIdx) + 1}`}
               />

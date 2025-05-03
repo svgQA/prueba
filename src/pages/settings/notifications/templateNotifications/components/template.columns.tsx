@@ -19,7 +19,7 @@ export const getColumns = (
     size: 180,
     cell: (info) => (
       <span
-        className='p-1 size-sm font-medium text-gray-800 cursor-pointer'
+        className='font-medium cursor-pointer'
         onClick={() => info.row.toggleExpanded()}
       >
         {info.getValue() as string}
@@ -33,7 +33,7 @@ export const getColumns = (
     size: 300,
     cell: (info) => (
       <span
-        className='line-clamp-2 max-w-[300px] text-sm text-gray-600'
+        className='line-clamp-2 max-w-[300px]'
         title={info.getValue() as string}
       >
         {info.getValue() as string}
@@ -49,7 +49,7 @@ export const getColumns = (
       const value = info.getValue() as Record<string, any>;
       const parsed = `{formId: ${value?.formId ?? 'Ninguna'}, taskId: ${value?.taskId ?? 'Ninguna'}}`;
       return (
-        <span className='text-xs text-gray-500 whitespace-nowrap overflow-hidden text-ellipsis block'>
+        <span className='whitespace-nowrap overflow-hidden text-ellipsis block'>
           {parsed}
         </span>
       );

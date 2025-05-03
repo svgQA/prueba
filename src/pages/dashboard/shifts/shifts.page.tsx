@@ -54,6 +54,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
   const showUpsertModal = useSignal<boolean>(false);
   const showSendModal = useSignal<boolean>(false);
+  const notificationValidate = useSignal<boolean>(false);
   const showShiftModal = useSignal<boolean>(false);
   const shiftSummary = useSignal<ShiftSummary>({
     total: 0,
@@ -147,7 +148,12 @@ export const ShiftsPage: FunctionalComponent = () => {
       ]);
 
       if (shiftsResponse && shiftsResponse.getStatus()) {
-        shifts.value = shiftsResponse.getMany();
+        const [hasNotifications, responseShifts] = findNotificationShift(
+          shiftsResponse.getMany()
+        );
+        notificationValidate.value = hasNotifications;
+
+        shifts.value = responseShifts;
       }
 
       if (servicesResponse.getStatus()) {
@@ -164,6 +170,27 @@ export const ShiftsPage: FunctionalComponent = () => {
     } catch (error) {
       toast.error('notification.error_fetching_initial_data');
     }
+  };
+
+  const findNotificationShift = (
+    shiftsResponse: IShiftResponse[]
+  ): [boolean, IShiftResponse[]] => {
+    let hasSomeNotifications = false;
+    const shifts = shiftsResponse.map((shifts) => {
+      if (shifts.employee?.playerId) {
+        hasSomeNotifications = true;
+        return {
+          ...shifts,
+          hasNotifications: true,
+        };
+      }
+      return {
+        ...shifts,
+        hasNotifications: false,
+      };
+    });
+
+    return [hasSomeNotifications, shifts];
   };
 
   useEffect(() => {
@@ -469,6 +496,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             pageSize={20}
             selectable
             onNotifications={onNotifications}
+            hasNotifications={notificationValidate.value}
             onSelectionChange={(rows) => {
               const validUsers = rows.map((row: any) => ({
                 id: row.employee.id,

@@ -54,7 +54,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
       {icon ? (
         <>
           <span
-            className={`vx-icon vx-icon-${icon} size-${size} mx-1 ${status === 'error' ? 'text-error' : status === 'success' ? 'text-secondary' : status === 'warning' ? 'text-orange-500' : status === 'info' ? 'text-gray-400' : ''}`}
+            className={`vx-icon vx-icon-${icon} size-${size} mx-1 ${status === 'error' ? 'text-error' : status === 'success' ? 'text-secondary' : status === 'warning' ? 'text-orange-500' : status === 'info' ? 'text-primary' : ''}`}
           ></span>
           <span>{label}</span>
         </>
