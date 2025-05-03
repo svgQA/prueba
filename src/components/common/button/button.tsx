@@ -22,6 +22,8 @@ export const Button: FunctionComponent<IButtonProps> = ({
   unpadded = false,
   selected = false,
   textAlign = 'center',
+  square = false,
+  selectedColor = 'bg-primary',
 }: IButtonProps) => {
   const getJustify = () => {
     switch (textAlign) {
@@ -43,16 +45,18 @@ export const Button: FunctionComponent<IButtonProps> = ({
       disabled={loading || disabled}
       form={form}
       className={`
+        ${square ? 'w-8 h-8' : ''}
         ${unpadded ? 'p-1' : 'p-2'}
         ${rounded ? 'rounded-full' : 'rounded'}
-        text-gray-700 dark:text-gray-200
-        hover:bg-gray-50 dark:hover:bg-gray-700
+        text-primary dark:text-gray-200
+        hover:bg-opacity-70
         transition-colors duration-150
         ${borderless ? 'border-none' : 'border border-gray-200 dark:border-gray-700'}
         ${full ? 'w-full' : ''}
-        ${selected ? 'bg-primary' : 'bg-white dark:bg-gray-800'}
-        flex items-center justify-between text-center
-        `}
+        ${selected ? `${selectedColor} text-white` : 'bg-white dark:bg-gray-800'}
+        flex items-center text-center disabled:opacity-50
+        ${icon && label ? 'justify-start' : 'justify-center'}
+      `}
       // ${bold ? 'font-bold' : 'font-normal'}
       // {`
       //   ${rounded ? 'rounded-full px-1 md:px-2' : 'rounded px-2 md:px-4'}
@@ -76,13 +80,10 @@ export const Button: FunctionComponent<IButtonProps> = ({
           className={`flex flex-row ${getJustify()} items-center w-full md:w-auto`}
         >
           <p
-            className={`capitalize text-${textAlign} ${textColor} ${big ? 'py-1' : ''}`}
+            className={`capitalize w-full text-${textAlign} ${textColor} ${big ? 'py-1' : ''}`}
           >
             {label}
           </p>
-          <span
-            className={`left-0 px-1 vx-icon vx-logo ${loading ? 'visible' : 'invisible'}`}
-          />
         </div>
       )}
 

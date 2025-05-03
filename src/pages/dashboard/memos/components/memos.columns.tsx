@@ -71,38 +71,21 @@ export const getColumns = (
     action: ROW_ACTIONS;
   }) => void
 ): CustomColumnDef<Memo>[] => [
-  // {
-  //   id: 'id',
-  //   accessorKey: 'id',
-  //   header: 'ID',
-  //   cell: (info) => (
-  //     <div className='flex items-center'>
-  //       <span>{String(info.getValue())}</span>
-  //     </div>
-  //   ),
-  // },
-  // {
-  //   id: 'city',
-  //   accessorKey: 'city',
-  //   header: 'Ciudad',
-  // },
-  // {
-  //   id: 'address',
-  //   accessorKey: 'address',
-  //   header: 'Dirección',
-  //   cell: (info) => <span>{String(info.getValue())}</span>,
-  // },
-  // {
-  //   id: 'noveltyDate',
-  //   accessorKey: 'noveltyDate',
-  //   header: 'Fecha Novedad',
-  //   cell: (info) => <FormattedDate date={info.getValue() as string} />,
-  // },
-  // {
-  //   id: 'contact',
-  //   accessorKey: 'contact',
-  //   header: 'Contacto',
-  // },
+  {
+    id: 'name',
+    accessorFn: (row) => `${row?.extraData?.client.name}`,
+    header: 'Usuario',
+    enableGrouping: true,
+    cell: (info) => {
+      const name = info.getValue() as string;
+      return (
+        <div className='flex items-center gap-2 justify-start'>
+          <Avatar name={name} size='sm' square />
+          {name}
+        </div>
+      );
+    },
+  },
   {
     id: 'noveltyType',
     accessorKey: 'novelty.name',
@@ -124,24 +107,15 @@ export const getColumns = (
     id: 'description',
     accessorKey: 'description',
     header: 'Descripción',
-    enableGrouping: true,
-  },
-  {
-    id: 'name',
-    accessorFn: (row) => `${row?.extraData?.client.name}`,
-    header: 'Usuario',
+    size: 200,
     enableGrouping: true,
     cell: (info) => {
-      const name = info.getValue() as string;
+      const description = info.getValue() as string;
       return (
-        <div className='flex items-center gap-1 justify-start'>
-          <Avatar name={name} size='sm' square />
-          <p
-            className=' p-1 size-sm cursor-pointer'
-            onClick={() => info.row.toggleExpanded()}
-          >
-            {name}
-          </p>
+        <div className='max-w-[300px]'>
+          <span className='block truncate' title={description}>
+            {description}
+          </span>
         </div>
       );
     },
@@ -167,6 +141,7 @@ export const getColumns = (
           label={status}
           status={statusText as 'info' | 'error' | 'warning' | 'success'}
           full
+          outline
         />
       );
     },
@@ -193,6 +168,7 @@ export const getColumns = (
           label={label}
           status={status as 'info' | 'error' | 'warning' | 'success'}
           full
+          outline
         />
       );
     },
@@ -208,12 +184,7 @@ export const getColumns = (
       return (
         <div className='flex items-center gap-1 justify-start'>
           <Avatar name={supervisor} size='sm' square />
-          <p
-            className=' p-1 size-sm cursor-pointer'
-            onClick={() => info.row.toggleExpanded()}
-          >
-            {supervisor}
-          </p>
+          {supervisor}
         </div>
       );
     },
@@ -223,7 +194,6 @@ export const getColumns = (
     size: 20,
     cell: (info) => {
       const { id } = info.row.original;
-
       const actions: IDropdownAction[] = [
         {
           label: 'Editar memo',
@@ -250,11 +220,7 @@ export const getColumns = (
         },
       ];
 
-      return (
-        <div className='w-full flex justify-center'>
-          <DropdownActionsMenu actions={actions} />
-        </div>
-      );
+      return <DropdownActionsMenu actions={actions} />;
     },
   },
 ];

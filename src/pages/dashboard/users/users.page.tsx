@@ -77,10 +77,6 @@ export const UsersPage: FunctionalComponent = () => {
     currentView.value = view;
   }, []);
 
-  const handleStateChange = useCallback((view: VIEW_NAME) => {
-    return currentView.value === view ? 'bg-primary-opacity p-2' : '';
-  }, []);
-
   const handleCloseSendModal = useCallback(() => {
     showSendModal.value = false;
     setOnNotifications(false);
@@ -122,7 +118,7 @@ export const UsersPage: FunctionalComponent = () => {
             handleViewChange(VIEW_NAME.TABLE);
           }}
           rounded={false}
-          className={handleStateChange(VIEW_NAME.TABLE)}
+          selected={currentView.value === VIEW_NAME.TABLE}
           icon='320'
         />
         <Button
@@ -131,7 +127,7 @@ export const UsersPage: FunctionalComponent = () => {
             handleViewChange(VIEW_NAME.CREATE);
           }}
           rounded={false}
-          className={handleStateChange(VIEW_NAME.CREATE)}
+          selected={currentView.value === VIEW_NAME.CREATE}
           icon='039'
         />
         <div className='relative'>
@@ -140,13 +136,8 @@ export const UsersPage: FunctionalComponent = () => {
             rounded={false}
             icon='314'
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${
-              !hasValidPlayer
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : onNotifications
-                  ? 'bg-primary-opacity'
-                  : 'border-primary'
-            }`}
+            disabled={!hasValidPlayer}
+            selected={onNotifications}
           />
           {showSendModal.value && (
             <div className='absolute mt-4 mr-12 z-50 rounded p-4'>

@@ -50,7 +50,7 @@ import { Switch } from '../switch/switch';
 import { ROW_ACTIONS } from './enum';
 import { Group } from './components/group';
 import { useSignal } from '@preact/signals';
-import { IShiftResponse } from '@/types/shift/activity';
+import { Button } from '../button/button';
 
 export const Table = <T,>({
   data,
@@ -66,6 +66,7 @@ export const Table = <T,>({
   selectable,
   onSelectionChange,
   onNotifications,
+  hasNotifications = false,
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -186,7 +187,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='min-w-80 invisible absolute left-0 top-12 rounded-md p-4 bg-gray-200 dark:bg-gray-800 border-2 border-gray-100 dark:border-b-dark-light'>
+    <div className='min-w-80 invisible absolute left-0 top-12 rounded-b-md p-4 bg-b-light-dark dark:bg-b-dark-light border-2 border-gray-100 dark:border-gray-700'>
       {table.getAllLeafColumns().map((column, index) => {
         const columnHeader =
           typeof column.columnDef.header !== 'string'
@@ -195,21 +196,23 @@ export const Table = <T,>({
         return (
           <div
             key={`${column.id}-${index}`}
-            className='flex items-center space-x-2 py-1 flex-row'
+            className='flex items-center space-x-2 py-1 flex-row gap-2'
           >
             <div>
               {column.getCanPin() && (
-                <span
-                  className={`cursor-pointer vx-icon vx-icon-305 px-2 py-1 size-sm ${
-                    column.getIsPinned() ? 'text-error' : 'text-primary'
-                  }`}
+                <Button
+                  name={`btn-pin-${column.id}`}
+                  icon='030'
+                  iconSize='sm'
+                  selectedColor='bg-ternary'
+                  selected={!!column.getIsPinned()}
                   onClick={() =>
                     column.pin(column.getIsPinned() ? false : 'left')
                   }
+                  square
                 />
               )}
             </div>
-            {}
             <Switch
               name={`ch-hidden-${column.id}`}
               id={`ch-hidden-${column.id}`}
@@ -308,46 +311,42 @@ export const Table = <T,>({
                           </span>
                         </span>
 
-                        {selectable &&
-                          onNotifications &&
-                          row.subRows.some(
-                            (sub) => !!(sub.original as any).employee?.playerId
-                          ) && (
-                            <label className='inline-flex items-center gap-2'>
-                              <input
-                                type='checkbox'
-                                className='w-4 h-4'
-                                checked={allGroupSelected}
-                                ref={(el) => {
-                                  if (el) el.indeterminate = someGroupSelected;
-                                }}
-                                onChange={(e) => {
-                                  const isChecked = e.currentTarget.checked;
-                                  const updated = { ...selectedRows };
+                        {selectable && onNotifications && hasNotifications && (
+                          <label className='inline-flex items-center gap-2'>
+                            <input
+                              type='checkbox'
+                              className='w-4 h-4'
+                              checked={allGroupSelected}
+                              ref={(el) => {
+                                if (el) el.indeterminate = someGroupSelected;
+                              }}
+                              onChange={(e) => {
+                                const isChecked = e.currentTarget.checked;
+                                const updated = { ...selectedRows };
 
-                                  row.subRows.forEach((subRow) => {
-                                    const data = subRow.original as any;
-                                    if (data.employee?.playerId) {
-                                      const id = data.id;
-                                      if (isChecked) {
-                                        updated[id] = data;
-                                      } else {
-                                        delete updated[id];
-                                      }
+                                row.subRows.forEach((subRow) => {
+                                  const data = subRow.original as any;
+                                  if (data.employee?.playerId) {
+                                    const id = data.id;
+                                    if (isChecked) {
+                                      updated[id] = data;
+                                    } else {
+                                      delete updated[id];
                                     }
-                                  });
+                                  }
+                                });
 
-                                  setSelectedRows(updated);
-                                  onSelectionChange?.(Object.values(updated));
-                                }}
-                              />
-                              <span className='text-sm text-gray-700'>
-                                {allGroupSelected
-                                  ? 'Deseleccionar'
-                                  : 'Seleccionar todas'}
-                              </span>
-                            </label>
-                          )}
+                                setSelectedRows(updated);
+                                onSelectionChange?.(Object.values(updated));
+                              }}
+                            />
+                            <span className='text-sm text-gray-700'>
+                              {allGroupSelected
+                                ? 'Deseleccionar'
+                                : 'Seleccionar todas'}
+                            </span>
+                          </label>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -364,7 +363,7 @@ export const Table = <T,>({
                           <td className='left-0 min-w-[30px]'></td>
                         )}
                         {subRow.getVisibleCells().map((cell) => (
-                          <td key={cell.id}>
+                          <td key={cell.id} className='px-1'>
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext()
@@ -388,46 +387,41 @@ export const Table = <T,>({
                   >
                     {!unsettings && (
                       <td
-                        className='left-0 min-w-[30px]'
+                        className='left-0 min-w-[30px] px-1'
                         // style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
                           <div className='flex items-center justify-center h-full'>
                             <span
                               onClick={() => row.toggleExpanded()}
-                              className='vox-icon vx-icon-001 cursor-pointer size-sm'
+                              className='vx-icon vx-icon-001 cursor-pointer size-sm'
                             />
                           </div>
                         )}
-                        {selectable &&
-                          onNotifications &&
-                          (row.original as IShiftResponse)?.employee
-                            ?.playerId && (
-                            <div className='flex items-center justify-center h-full'>
-                              <input
-                                type='checkbox'
-                                className='w-4 h-4'
-                                checked={
-                                  !!selectedRows[(row.original as any).id]
+                        {selectable && onNotifications && hasNotifications && (
+                          <div className='flex items-center justify-center h-full'>
+                            <input
+                              type='checkbox'
+                              className='w-4 h-4'
+                              checked={!!selectedRows[(row.original as any).id]}
+                              onChange={(e) => {
+                                e.preventDefault();
+                                const data = row.original as any;
+                                const id = data.id;
+                                const updated = { ...selectedRows };
+
+                                if (e.currentTarget.checked) {
+                                  updated[id] = data;
+                                } else {
+                                  delete updated[id];
                                 }
-                                onChange={(e) => {
-                                  e.preventDefault();
-                                  const data = row.original as any;
-                                  const id = data.id;
-                                  const updated = { ...selectedRows };
 
-                                  if (e.currentTarget.checked) {
-                                    updated[id] = data;
-                                  } else {
-                                    delete updated[id];
-                                  }
-
-                                  setSelectedRows(updated);
-                                  onSelectionChange?.(Object.values(updated));
-                                }}
-                              />
-                            </div>
-                          )}
+                                setSelectedRows(updated);
+                                onSelectionChange?.(Object.values(updated));
+                              }}
+                            />
+                          </div>
+                        )}
                       </td>
                     )}
                     {row.getVisibleCells().map((cell) => (
@@ -558,31 +552,21 @@ export const Table = <T,>({
           </span>
         </div>
 
-        <div className='flex items-center'>
-          <button
+        <div className='flex items-center gap-1'>
+          <Button
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            className={`flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanPreviousPage()
-                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
-                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-            }`}
-          >
-            <span>{'«'}</span>
-          </button>
-
-          <button
+            name='first-page'
+            icon='285'
+            square
+          />
+          <Button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanPreviousPage()
-                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
-                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-            }`}
-          >
-            <span>{'‹'}</span>
-          </button>
-
+            name='previous-page'
+            icon='003'
+            square
+          />
           {pageNumbers.map((pageIdx, i) =>
             pageIdx === 'ellipsis-start' || pageIdx === 'ellipsis-end' ? (
               <div
@@ -590,18 +574,17 @@ export const Table = <T,>({
                 className='relative'
                 ref={activeDropdown === i ? dropdownRef : null}
               >
-                <button
-                  className='mx-1 flex h-8 w-8 items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
+                <Button
                   onClick={() =>
                     setActiveDropdown(activeDropdown === i ? null : i)
                   }
-                >
-                  ...
-                </button>
-
+                  name='ellipsis'
+                  icon='429'
+                  square
+                />
                 {activeDropdown === i && (
                   <div className='absolute bottom-full left-0 mb-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 py-2 px-2 min-w-[120px]'>
-                    <div className='grid grid-cols-3 gap-1'>
+                    <div className='grid grid-cols-3 gap-2'>
                       {(pageIdx === 'ellipsis-start'
                         ? getIntermediatePages(1, currentPage - 1).filter(
                             (num) => !pageNumbers.includes(num)
@@ -611,68 +594,58 @@ export const Table = <T,>({
                             totalPages - 2
                           ).filter((num) => !pageNumbers.includes(num))
                       ).map((pageNum) => (
-                        <button
+                        <Button
                           key={`dropdown-page-${pageNum}`}
-                          className='flex items-center justify-center h-8 w-8 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-600 dark:text-gray-300'
                           onClick={(e) => {
                             e.stopPropagation();
                             table.setPageIndex(pageNum);
                             setActiveDropdown(null);
                           }}
-                        >
-                          {pageNum + 1}
-                        </button>
+                          name='page'
+                          square
+                          label={`${pageNum + 1}`}
+                        />
                       ))}
                     </div>
                   </div>
                 )}
               </div>
             ) : (
-              <button
+              <Button
                 key={`page-${pageIdx}`}
                 onClick={() => table.setPageIndex(Number(pageIdx))}
-                className={`mx-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-                  currentPage === pageIdx
-                    ? 'border-[#00BCD4] dark:border-[#006064] bg-[#E0F7FA] dark:bg-[#006064] text-[#00838F] dark:text-[#B2EBF2]'
-                    : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                }`}
-              >
-                {Number(pageIdx) + 1}
-              </button>
+                name='page'
+                unpadded
+                square
+                selectedColor='bg-ternary'
+                selected={currentPage === pageIdx}
+                label={`${Number(pageIdx) + 1}`}
+              />
             )
           )}
 
-          <button
+          <Button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanNextPage()
-                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
-                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-            }`}
-          >
-            <span>{'›'}</span>
-          </button>
-
-          <button
-            onClick={() => table.setPageIndex(totalPages - 1)}
-            disabled={!table.getCanNextPage()}
-            className={`ml-1 flex h-8 w-8 items-center justify-center rounded-sm border ${
-              !table.getCanNextPage()
-                ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 cursor-not-allowed'
-                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-            }`}
-          >
-            <span>{'»'}</span>
-          </button>
+            name='next-page'
+            icon='004'
+            square
+          />
+          <Button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            name='previous-page'
+            icon='286'
+            square
+          />
         </div>
 
-        <div className='text-sm text-gray-600 flex items-center gap-2'>
-          <span>Página</span>
-          <div className='inline-block border border-gray-300 bg-white dark:border-gray-700 dark:text-white dark:bg-gray-800 rounded-sm px-3 py-1 min-w-[40px] text-center'>
+        <div className='text-sm flex items-center gap-2 px-2'>
+          Página
+          <div className='inline-block border rounded-md px-3 py-1 min-w-[40px] text-center border-b-light-dark dark:border-b-darkt'>
             {currentPage + 1}
           </div>
-          <span>de {totalPages}</span>
+          de {totalPages}
         </div>
       </div>
     );
@@ -702,7 +675,7 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='pb-16 min-h-[30vh] border-2 border-gray-100 dark:border-b-dark-light rounded-lg vox-scroll-design relative overflow-x-auto'
+          className='pb-16 min-h-[30vh] border-2 border-gr dark:border-b-dark-light rounded-lg vox-scroll-design relative overflow-x-auto'
         >
           <table className='elements'>
             <thead>
@@ -716,39 +689,34 @@ export const Table = <T,>({
                     className='table-setting-button flex items-center justify-center'
                     style={{ position: 'sticky', zIndex: 1 }}
                   >
-                    {selectable &&
-                      onNotifications &&
-                      // TODO: esto se puede buscar y validar del ciclo que pinta las filas
-                      data.some((row: any) => !!row.employee?.playerId) && (
-                        <input
-                          type='checkbox'
-                          className='w-4 h-4'
-                          checked={
-                            Object.keys(selectedRows).length === data.length
+                    {selectable && onNotifications && hasNotifications && (
+                      <input
+                        type='checkbox'
+                        className='w-4 h-4'
+                        checked={
+                          Object.keys(selectedRows).length === data.length
+                        }
+                        ref={(el) => {
+                          if (el) {
+                            const all =
+                              data.length > 0 &&
+                              Object.keys(selectedRows).length === data.length;
+                            const none = Object.keys(selectedRows).length === 0;
+                            el.indeterminate = !all && !none;
                           }
-                          ref={(el) => {
-                            if (el) {
-                              const all =
-                                data.length > 0 &&
-                                Object.keys(selectedRows).length ===
-                                  data.length;
-                              const none =
-                                Object.keys(selectedRows).length === 0;
-                              el.indeterminate = !all && !none;
-                            }
-                          }}
-                          onChange={(e) => {
-                            const checked = e.currentTarget.checked;
-                            const newSelection = checked
-                              ? Object.fromEntries(
-                                  data.map((row: any) => [row.id, row])
-                                )
-                              : {};
-                            setSelectedRows(newSelection);
-                            onSelectionChange?.(Object.values(newSelection));
-                          }}
-                        />
-                      )}
+                        }}
+                        onChange={(e) => {
+                          const checked = e.currentTarget.checked;
+                          const newSelection = checked
+                            ? Object.fromEntries(
+                                data.map((row: any) => [row.id, row])
+                              )
+                            : {};
+                          setSelectedRows(newSelection);
+                          onSelectionChange?.(Object.values(newSelection));
+                        }}
+                      />
+                    )}
                     {!unsettings && !onNotifications && (
                       <div className='flex items-center gap-2 relative'>
                         <div className='relative'>
@@ -798,9 +766,7 @@ export const Table = <T,>({
 
             <tbody>{renderRows(table.getRowModel().rows)}</tbody>
           </table>
-          <div className='bottom-2 left-0 right-0 bg-b-content dark:bg-b-dark absolute'>
-            {renderPagination()}
-          </div>
+          <div className='pagination-row'>{renderPagination()}</div>
         </div>
       </DndContext>
     </>

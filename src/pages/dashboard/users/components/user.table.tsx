@@ -17,6 +17,7 @@ interface UserTableProps {
 
 export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
   const users = useSignal<IUserResponse[]>([]);
+  // const [onNotifications, setOnNotifications] = useState(true);
 
   useEffect(() => {
     getUsers();
@@ -121,6 +122,8 @@ export const UserTable: FunctionalComponent<UserTableProps> = (props) => {
       columns={getColumns(handleOnClick)}
       pageSize={20}
       onClickAction={handleOnClick}
+      selectable
+      hasNotifications
       visibility={{
         id: false,
         connection: false,

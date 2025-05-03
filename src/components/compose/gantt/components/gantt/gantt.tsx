@@ -17,8 +17,6 @@ import { ganttDateRange, seedDates } from '../../helpers/date-helper';
 import { TaskListHeaderDefault } from '../task-list/task-list-header';
 import { TaskListTableDefault } from '../task-list/task-list-table';
 import { StandardTooltipContent, Tooltip } from '../other/tooltip';
-// import { VerticalScroll } from '../other/vertical-scroll';
-// import { HorizontalScroll } from '../other/horizontal-scroll';
 import { TaskListProps, TaskList } from '../task-list/task-list';
 import { TaskGantt } from './task-gantt';
 import { BarTask } from '../../types/bar-task';
@@ -33,11 +31,6 @@ import { memo } from 'preact/compat';
 import { Search } from '@/components/common/search/search';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { ReplicateModal } from './replicate.modal';
-
-// interface ColumnFilter {
-//   id: string;
-//   value: string;
-// }
 
 const GanttComponent: ComponentType<GanttProps> = ({
   tasks: initialTasks,
@@ -822,26 +815,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
             svgWidth={svgWidth}
           />
         )}
-        {/*
-          <VerticalScroll
-            ganttFullHeight={ganttFullHeight}
-            ganttHeight={ganttHeight}
-            headerHeight={headerHeight}
-            scroll={scrollY.value}
-            onScroll={handleScrollY}
-            rtl={rtl}
-          />
-          */}
       </div>
-      {/*
-      <HorizontalScroll
-        svgWidth={svgWidth}
-        taskListWidth={taskListWidth.value}
-        scroll={scrollX.value}
-        rtl={rtl}
-        onScroll={handleScrollX}
-      />
-      */}
     </div>
   );
 };

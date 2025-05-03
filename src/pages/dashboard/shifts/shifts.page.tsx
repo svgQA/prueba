@@ -466,7 +466,6 @@ export const ShiftsPage: FunctionalComponent = () => {
           <Table<IShiftResponse>
             data={shifts.value}
             columns={getColumns(onClickAction)}
-            showExpandableIcon={false}
             pageSize={20}
             selectable
             onNotifications={onNotifications}

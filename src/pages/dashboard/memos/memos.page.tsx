@@ -183,7 +183,7 @@ export const MemosPage: FunctionComponent = () => {
           <Table
             data={memos.value}
             columns={getColumns(onClickAction)}
-            showExpandableIcon={false}
+            showExpandableIcon
             pageSize={20}
             selectable
             expandable={(row: Memo) => <SupervisorInfo memo={row} />}

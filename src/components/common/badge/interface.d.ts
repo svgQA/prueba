@@ -13,6 +13,7 @@ export interface IBadgeProps {
   full?: boolean;
   borderless?: boolean;
   status?: 'error' | 'success' | 'warning' | 'info';
+  outline?: boolean;
 }
 
 export interface IFloatBadgeProps extends PropsWithChildren {
