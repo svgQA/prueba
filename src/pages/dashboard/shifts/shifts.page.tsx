@@ -378,16 +378,11 @@ export const ShiftsPage: FunctionalComponent = () => {
             icon='314'
             label={t('shifts.remoteSupervision')}
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${
-              !hasValidPlayer
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : onNotifications
-                  ? 'bg-primary-opacity'
-                  : 'border-primary'
-            }`}
+            selected={showSendModal.value}
+            disabled={!hasValidPlayer}
           />
           {showSendModal.value && (
-            <div className='absolute mt-4 mr-12 z-50 rounded p-4'>
+            <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
               <SendForm
                 onClose={handleCloseSendModal}
                 hasplayers={hasValidPlayer}

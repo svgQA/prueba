@@ -77,10 +77,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
       />
 
       {showDateForm && (
-        <div
-          className='my-3 absolute right-0 bg-b-content rounded-lg shadow-lg p-4 z-50 border border-gray-200 w-[600px]'
-          // onMouseLeave={handleMouseLeave}
-        >
+        <div className='my-3 absolute right-0 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 z-50 border border-gray-200 dark:border-gray-700 w-[600px]'>
           <Form<FormValues>
             onSubmit={onSubmit}
             initialValues={initialValues}
@@ -104,7 +101,6 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
               return errors;
             }}
             render={({ handleSubmit, submitting, pristine, form }) => {
-              // Inicializar el array de reemplazos si es necesario
               if (
                 selectedUsers.size > 0 &&
                 (!form.getState().values.replacements ||
@@ -112,7 +108,6 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                   form.getState().values.replacements.length !==
                     selectedUsers.size)
               ) {
-                // Usar un efecto de una sola vez para inicializar
                 const initialReplacements = Array.from(selectedUsers).map(
                   (userId) => ({
                     originalUserId: userId,
@@ -120,7 +115,6 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                   })
                 );
 
-                // Inicializar de inmediato sin setTimeout
                 form.change('replacements', initialReplacements);
               }
 
@@ -163,9 +157,9 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                     )}
                   </Field>
 
-                  <div className='py-3 border-y border-gray-100 border-dashed'>
+                  <div className='py-3 border-y border-gray-100 dark:border-gray-700 border-dashed'>
                     <div className='space-y-4 max-h-[400px] overflow-y-auto vox-scroll-design px-1 overflow-x-hidden py-2'>
-                      <div className='grid grid-cols-2 gap-4 font-medium text-sm text-gray-500 uppercase tracking-wider bg-gray-50 p-2 rounded-md'>
+                      <div className='grid grid-cols-2 gap-4 font-medium text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-700/50 p-2 rounded-md'>
                         <div>Usuario Original</div>
                         <div>Usuario de Reemplazo</div>
                       </div>
@@ -173,7 +167,6 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                         {({ fields }) => (
                           <div className='space-y-4'>
                             {fields.map((name, index) => {
-                              // Obtener el ID del usuario original del valor actual
                               const fieldValue = fields.value[index];
                               const originalUserId = fieldValue
                                 ? fieldValue.originalUserId
@@ -189,7 +182,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                                   key={originalUserId}
                                   className='grid grid-cols-2 items-center'
                                 >
-                                  <div className='text-sm text-gray-900'>
+                                  <div className='text-sm text-gray-900 dark:text-gray-200'>
                                     {originalUser.label}
                                   </div>
                                   <div className='relative'>
@@ -197,30 +190,18 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                                       name={`${name}.replacementUserId`}
                                       validate={required}
                                     >
-                                      {({ input, meta }) => {
-                                        return (
-                                          <SmartSelector
-                                            {...input}
-                                            meta={meta}
-                                            name={`${name}.replacementUserId`}
-                                            options={users || []}
-                                            multiple={true}
-                                            allowAll={true}
-                                            menuPortalTarget={document.body}
-                                            placeholder='Selecciona usuarios de reemplazo'
-                                          />
-                                          /*
-                                          <CustomSelector
-                                            {...input}
-                                            meta={meta}
-                                            menuPortalTarget={document.body}
-                                            name={`${name}.replacementUserId`}
-                                            options={users || []}
-                                            multiple={true}
-                                          />
-                                          */
-                                        );
-                                      }}
+                                      {({ input, meta }) => (
+                                        <SmartSelector
+                                          {...input}
+                                          meta={meta}
+                                          name={`${name}.replacementUserId`}
+                                          options={users || []}
+                                          multiple={true}
+                                          allowAll={true}
+                                          menuPortalTarget={document.body}
+                                          placeholder='Selecciona usuarios de reemplazo'
+                                        />
+                                      )}
                                     </Field>
                                   </div>
                                 </div>
@@ -246,7 +227,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                       name='btn-submit'
                       type='submit'
                       label='Crear'
-                      className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
+                      mode='primary'
                       disabled={submitting || pristine}
                     />
                   </div>

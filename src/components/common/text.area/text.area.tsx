@@ -41,7 +41,7 @@ export const TextArea = ({
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
         <textarea
-          className={`capitalize px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'}`}
+          className={`px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'}`}
           onChange={onChange}
           name={name}
           onKeyUp={onKeyUp}

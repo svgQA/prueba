@@ -151,7 +151,7 @@ export const UsersPage: FunctionalComponent = () => {
             selected={onNotifications}
           />
           {showSendModal.value && (
-            <div className='absolute mt-4 mr-12 z-50 rounded p-4'>
+            <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
               <SendForm
                 onClose={handleCloseSendModal}
                 hasplayers={hasValidPlayer}

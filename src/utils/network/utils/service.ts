@@ -3,10 +3,9 @@ import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
 import { company_header, tenant_header } from '@/env.config';
-import { toast } from 'react-toastify';
 import i18n from '@/i18n';
-import { CustomToast } from '@/components/compose/toast/CustomToast';
 import { VoxError } from '../error';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export interface IRequestModelOutput {
   header: Record<string, string>;
@@ -92,12 +91,12 @@ export class BaseService {
       const company = this.getCompany();
 
       if (!tenant_header || !tenant) {
-        toast.error(i18n.t('error.not_found_tenant'));
+        ToastManager.error('error.not_found_tenant');
         throw new Error('ERROR: not include tenant header');
       }
 
       if (!company_header || !company) {
-        toast.error(i18n.t('error.not_found_company'));
+        ToastManager.error('error.not_found_company');
         throw new Error('ERROR: not include company header');
       }
 
@@ -156,9 +155,7 @@ export class BaseService {
 
       if (!response.ok) {
         const result = (await response.json()) as VoxError;
-        toast.error(CustomToast, {
-          data: result,
-        });
+        ToastManager.error(result);
         return new GenericResponse<T>({
           code: response?.status,
           message: result?.message,
@@ -183,7 +180,7 @@ export class BaseService {
         });
       }
     } catch (error: unknown) {
-      toast.error(i18n.t('error.processing_response'));
+      ToastManager.error('error.processing_response');
       throw new Error('ERROR: processing response');
     } finally {
       this.closeLoading();
