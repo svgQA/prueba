@@ -141,7 +141,7 @@ export const FormElement = ({
           <td
             colSpan={2}
             onClick={handleSelect}
-            className={`${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`}
+            className={`dark:bg-gray-800 ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`}
           >
             {/* className={`${selected ? 'border-2 border-red-300' : ''}`} */}
             <div className='flex flex-row items-center'>
@@ -168,9 +168,9 @@ export const FormElement = ({
             {/* INPUT: title element */}
             <td
               onClick={handleSelect}
-              className={`bg-gray-800 flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
+              className={`rounded-bl-xl dark:bg-gray-800 flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
                 isOver ? 'bg-ternary text-t-dark' : ''
-              } ${isDragging ? 'opacity-70' : ''}`}
+              } ${isDragging ? 'opacity-70' : ''} items-center`}
             >
               {question.section && (
                 <div className=' mx-3 w-1 h-6 rounded-lg bg-primary dark:bg-b-light-dark'></div>
@@ -193,7 +193,10 @@ export const FormElement = ({
               </div>
             </td>
             {/* DROPDOW: select type */}
-            <td onClick={handleSelect} className='w-3/12 bg-gray-800'>
+            <td
+              onClick={handleSelect}
+              className='w-3/12 dark:bg-gray-800 rounded-br-xl'
+            >
               <Select
                 placeholder={i18n.t('form.placeholder.type_element')}
                 id={`se-form-${question.id}-element-type`}
@@ -213,7 +216,7 @@ export const FormElement = ({
       <tr className='vx-form-question vx-form-attrs relative'>
         <td
           colspan={2}
-          className={`${selected ? 'table-cell' : 'hidden'} relative`}
+          className={`${selected ? 'table-cell' : 'hidden'} relative rounded-b-xl`}
         >
           {/* CHECKBOX: required, visible, disable, administrator */}
           {question.type !== ELEMENT_TYPE.TITLE && (

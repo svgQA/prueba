@@ -9,6 +9,7 @@ export const validateExactLength = (length: number) => (value: string) => {
 };
 
 export const lengthSize = (min: number, max: number) => (value: string) => {
+  if (!value) return 'Campo obligatorio';
   if (value && (value.length < min || value.length > max)) {
     return `El campo debe tener exactamente min ${min} y max ${max} caracteres.`;
   }

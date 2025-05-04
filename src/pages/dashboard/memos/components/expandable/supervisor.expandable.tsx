@@ -86,8 +86,8 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
         </div>
 
         {/* Sección derecha - Mapa y fotos */}
-        <div className='w-[40%]'>
-          <div className='flex gap-2 h-full'>
+        <div className='w-[60%]'>
+          <div className='flex gap-2 h-full w-full'>
             {/* Mapa a la izquierda */}
             <div className='w-[60%] h-full rounded-lg overflow-hidden'>
               <MapLibrePointsMap
@@ -110,8 +110,7 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
                 disablePointSelection={true}
               />
             </div>
-
-            <div className='w-[45%] flex items-center justify-center gap-2 ml-2 bg-red-300 w-full'>
+            <div className='flex gap-2 flex-wrap'>
               <div className='w-20 h-20 rounded-lg overflow-hidden'>
                 <img
                   src={memo?.resource?.images}
