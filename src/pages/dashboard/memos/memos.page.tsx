@@ -16,7 +16,6 @@ import { MemoService, MemosSummary } from '@/services';
 /* import { FrequentQuestion } from './interface'; */
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
-import SupervisorInfo from './components/expandable/supervisor.expandable';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 
@@ -189,7 +188,6 @@ export const MemosPage: FunctionComponent = () => {
             showExpandableIcon
             pageSize={20}
             selectable
-            // expandable={(row: Memo) => <SupervisorInfo memo={row} />}
             expandable={(row: Memo, currentColumnName?: string) => (
               <ExpandableMultiple
                 type={currentColumnName || defaultColumn.value}

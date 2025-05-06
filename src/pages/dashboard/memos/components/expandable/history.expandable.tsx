@@ -167,11 +167,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
                   // Procesar imágenes
                   if (memo.resource.images) {
-                    const images = Array.isArray(memo.resource.images)
-                      ? memo.resource.images
+                    const images = Array.isArray(memo.resource.images) 
+                      ? memo.resource.images 
                       : [memo.resource.images];
-
-                    images.forEach((imageUrl, index) => {
+                    
+                    images.forEach((imageUrl) => {
                       if (imageUrl) {
                         allAttachments.push({
                           url: imageUrl,
@@ -184,11 +184,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
                   // Procesar archivos
                   if (memo.resource.files) {
-                    const files = Array.isArray(memo.resource.files)
-                      ? memo.resource.files
+                    const files = Array.isArray(memo.resource.files) 
+                      ? memo.resource.files 
                       : [memo.resource.files];
-
-                    files.forEach((fileUrl, index) => {
+                    
+                    files.forEach((fileUrl) => {
                       if (fileUrl) {
                         allAttachments.push({
                           url: fileUrl,
