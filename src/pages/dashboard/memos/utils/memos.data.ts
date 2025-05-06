@@ -42,6 +42,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Reporte_Incidente.pdf' },
     ],
+    state: 'OPENED',
   },
   {
     id: 2,
@@ -84,6 +85,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Reporte_Mantenimiento.pdf' },
     ],
+    state: 'IN_REVISION',
   },
   {
     id: 3,
@@ -126,6 +128,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Plan_Instalacion.pdf' },
     ],
+    state: 'CLOSED',
   },
   {
     id: 4,
@@ -168,6 +171,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Informe_Actualizacion.pdf' },
     ],
+    state: 'OPENED',
   },
   {
     id: 5,
@@ -210,6 +214,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Reporte_Reparacion.pdf' },
     ],
+    state: 'IN_REVISION',
   },
   {
     id: 6,
@@ -252,6 +257,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Reporte_Mantenimiento.pdf' },
     ],
+    state: 'OPENED',
   },
   {
     id: 7,
@@ -295,6 +301,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Plan_Instalacion.pdf' },
     ],
+    state: 'IN_REVISION',
   },
   {
     id: 8,
@@ -337,6 +344,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Informe_Actualizacion.pdf' },
     ],
+    state: 'OPENED',
   },
   {
     id: 9,
@@ -379,6 +387,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Reporte_Revision.pdf' },
     ],
+    state: 'OPENED',
   },
   {
     id: 10,
@@ -421,6 +430,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Informe_Mantenimiento.pdf' },
     ],
+    state: 'IN_REVISION',
   },
   {
     id: 11,
@@ -463,6 +473,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Manual_Configuracion.pdf' },
     ],
+    state: 'CLOSED',
   },
   {
     id: 12,
@@ -505,6 +516,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Manual_Usuario.pdf' },
     ],
+    state: 'OPENED',
   },
   {
     id: 13,
@@ -547,6 +559,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Release_Notes.pdf' },
     ],
+    state: 'IN_REVISION',
   },
   {
     id: 14,
@@ -589,6 +602,7 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Reporte_Servicio.pdf' },
     ],
+    state: 'OPENED',
   },
   {
     id: 15,
@@ -631,5 +645,6 @@ export const memosData: Memo[] = [
       },
       { type: 'pdf', url: '#', name: 'Especificaciones_Tecnicas.pdf' },
     ],
+    state: 'CLOSED',
   },
 ];
