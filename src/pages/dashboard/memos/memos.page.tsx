@@ -18,6 +18,7 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import SupervisorInfo from './components/expandable/supervisor.expandable';
 import { useUserStore } from '@/store/slices';
+import { ExpandableMultiple } from './components/expandable.multiple';
 
 enum VIEW_NAME {
   TABLE,
@@ -135,6 +136,8 @@ export const MemosPage: FunctionComponent = () => {
     // Aquí abres modales, haces navigations, etc.
   };
 
+  const defaultColumn = useSignal<string>('default');
+
   return (
     <Section
       className={
@@ -186,7 +189,13 @@ export const MemosPage: FunctionComponent = () => {
             showExpandableIcon
             pageSize={20}
             selectable
-            expandable={(row: Memo) => <SupervisorInfo memo={row} />}
+            // expandable={(row: Memo) => <SupervisorInfo memo={row} />}
+            expandable={(row: Memo, currentColumnName?: string) => (
+              <ExpandableMultiple
+                type={currentColumnName || defaultColumn.value}
+                data={row}
+              />
+            )}
             visibility={{
               id: false,
               city: false,
