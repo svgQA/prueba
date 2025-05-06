@@ -1,10 +1,13 @@
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Memo } from "../../utils/memos";
 import { Avatar } from '@/components/common/Avatar';
 import SupervisorInfo from "./supervisor.expandable";
 import dayjs from 'dayjs';
 import { Badge } from "@/components/common/badge/badge";
+import { useUserStore } from "@/store/slices";
+import { memo_history_service_url } from "@/env.config";
+import { io } from "socket.io-client";
 
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
@@ -12,6 +15,35 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [message, setMessage] = useState("")
   const [attachments, setAttachments] = useState<File[]>([])
   const [memos, setMemos] = useState<Memo[]>([memo]);
+
+  //socket
+  const [_, setConnectionStatus] = useState<string>('Connecting...');
+  const socketRef = useRef<any>(null);
+  const { getToken, tenant } = useUserStore();
+
+  const connect_socket = () => {
+    const socket = io(memo_history_service_url, {
+      query: { token: getToken(), tenantId: tenant},
+    });
+    socketRef.current = socket;
+    socket.on('connect', () => setConnectionStatus('Connected'));
+    socket.on('disconnect', disconnect_socket);
+    socket.on('connect_error', disconnect_socket);
+  };
+
+  const disconnect_socket = () => {
+    if (socketRef.current) {
+      socketRef.current.removeAllListeners();
+      socketRef.current.disconnect();
+      socketRef.current = null;
+    }
+    setConnectionStatus('Disconnected');
+  };
+
+  useEffect(() => {
+    connect_socket();
+    return () => disconnect_socket();
+  }, []);
 
   const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target as HTMLInputElement
