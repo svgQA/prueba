@@ -21,7 +21,6 @@ export const ManualNotificationForm = ({
   const [templates, setTemplates] = useState<any[]>([]);
 
   const [formId, setFormId] = useState<string>('');
-  const [formStructure, setFormStructure] = useState<any>(null);
 
   const [overrideTitle, setOverrideTitle] = useState<string>('');
   const [overrideDescription, setOverrideDescription] = useState<string>('');
@@ -62,7 +61,7 @@ export const ManualNotificationForm = ({
 
   const handleSubmit = async () => {
     if (!hasplayers) return;
-
+  
     const payload: ISendManualNotificationDto = {
       ...(templateId && { templateId }),
       ...(formId && { formId }),
@@ -72,9 +71,11 @@ export const ManualNotificationForm = ({
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
-      ...(formStructure && { data: { formId, formStructure } }),
+      data: {
+        ...(formId && { formId }), // solo se envía el formId como parte de data
+      },
     };
-
+  
     try {
       await NotificationService.sendManualNotification(payload);
       toast.success('Notificaciones enviadas correctamente');
@@ -83,7 +84,7 @@ export const ManualNotificationForm = ({
       toast.error('❌ Ocurrió un error al enviar las notificaciones');
     }
   };
-
+  
   const clearUserSelection = () => setSelectedUserIds([]);
 
   useEffect(() => {
@@ -104,14 +105,14 @@ export const ManualNotificationForm = ({
     fetchFormsAndTemplates();
   }, []);
 
-  useEffect(() => {
+/*   useEffect(() => {
     const getFormStructure = async () => {
       if (!formId) return;
       const response = await FormService.get_one(formId);
       if (response.getStatus()) setFormStructure(response.getOne());
     };
     getFormStructure();
-  }, [formId]);
+  }, [formId]); */
 
   return (
     <div className='space-y-6 w-full max-w-5xl mx-auto p-4'>
@@ -199,8 +200,6 @@ export const ManualNotificationForm = ({
             value={templateId}
             onChange={(e) => {
               setTemplateId(e.currentTarget.value);
-              setFormId('');
-              setFormStructure(null);
             }}
           >
             <option value=''>{t('shifts.notifications.selectTemplate')}</option>
@@ -221,7 +220,6 @@ export const ManualNotificationForm = ({
             value={formId}
             onChange={(e) => {
               setFormId(e.currentTarget.value);
-              setTemplateId('');
             }}
           >
             <option value=''>Selecciona un formulario</option>
