@@ -33,7 +33,8 @@ import { FormElement } from './components/element';
 import { FormPhoneViewer } from './components/phone';
 import { getStatusElementSelected, toggleListModal } from '../lists/store/list';
 import i18n from '@/i18n';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { formValidation } from './utils/validation';
 export const FormCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   useEffect(() => {
@@ -52,12 +53,12 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   const saveFormat = async () => {
     const format: IFormRequest = {
       title: getForm.value.label,
-      description: getForm.value.description || getForm.value.label,
+      description: getForm.value.description || '',
       structure: getForm.value,
     };
 
-    const message = getValidation(format);
-    if (message) return toast.error(message);
+    const message = formValidation(format);
+    if (message) return ToastManager.error(message);
 
     if (getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE) {
       if (!getFormMode.value.id) return;
@@ -68,19 +69,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       if (!response.getStatus()) return;
     }
     navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.form.to);
-  };
-
-  const getValidation = (format: IFormRequest) => {
-    if (format.title.length < 5) {
-      return i18n.t('form.error.title');
-    }
-    if (format.description.length < 5) {
-      return i18n.t('form.error.description');
-    }
-    if (!format.structure) {
-      return i18n.t('form.error.structure');
-    }
-    return null;
   };
 
   const addLelement = () => {

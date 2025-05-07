@@ -20,6 +20,16 @@ export const columns: ColumnDef<INovelty>[] = [
     accessorKey: 'description',
     size: 60,
     header: 'Descripción',
+    cell: (info) => {
+      const value = info.getValue() as string;
+      return (
+        <div className='max-w-[300px]'>
+          <span className='block truncate' title={value}>
+            {value}
+          </span>
+        </div>
+      );
+    },
   },
   {
     id: 'priority',
@@ -29,7 +39,9 @@ export const columns: ColumnDef<INovelty>[] = [
     cell: (info) => {
       const value = info.getValue() as string;
       return (
-        <span className={`px-2 py-1 rounded bg-secondary text-white`}>
+        <span
+          className={`px-2 py-1 rounded bg-secondary dark:bg-ternary text-white`}
+        >
           {value}
         </span>
       );

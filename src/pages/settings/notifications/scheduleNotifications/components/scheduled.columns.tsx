@@ -19,11 +19,7 @@ export const getColumns = (
     accessorKey: 'overrideTitle',
     header: 'Título',
     size: 200,
-    cell: (info) => (
-      <span className='p-1 size-sm font-medium text-gray-text-light'>
-        {info.getValue() as string}
-      </span>
-    ),
+    cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
     id: 'description',
@@ -32,7 +28,7 @@ export const getColumns = (
     size: 300,
     cell: (info) => (
       <span
-        className='line-clamp-2 max-w-[300px] text-sm text-gray-text-light'
+        className='line-clamp-2 max-w-[300px]'
         title={info.getValue() as string}
       >
         {info.getValue() as string}
@@ -72,10 +68,7 @@ export const getColumns = (
       const value = info.getValue() as string;
       if (!value) return '-';
       return (
-        <time
-          dateTime={new Date(value).toISOString()}
-          className='p-1 size-sm text-sm text-gray-text-light'
-        >
+        <time dateTime={new Date(value).toISOString()}>
           {dayjs(value).format('DD/MM/YYYY HH:mm')}
         </time>
       );
@@ -90,10 +83,7 @@ export const getColumns = (
       const value = info.getValue() as string;
       if (!value) return '-';
       return (
-        <time
-          dateTime={new Date(value).toISOString()}
-          className='p-1 size-sm text-sm text-gray-text-light'
-        >
+        <time dateTime={new Date(value).toISOString()}>
           {dayjs(value).format('DD/MM/YYYY HH:mm')}
         </time>
       );

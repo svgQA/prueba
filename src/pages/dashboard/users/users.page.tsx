@@ -86,16 +86,12 @@ export const UsersPage: FunctionalComponent = () => {
         disconnectedUsers.value = inactive;
       }
     } catch (error) {
-      console.error("❌ Error obteniendo estadísticas del dashboard:", error);
+      console.error('❌ Error obteniendo estadísticas del dashboard:', error);
     }
   };
 
   const handleViewChange = useCallback((view: VIEW_NAME) => {
     currentView.value = view;
-  }, []);
-
-  const handleStateChange = useCallback((view: VIEW_NAME) => {
-    return currentView.value === view ? 'bg-primary-opacity p-2' : '';
   }, []);
 
   const handleCloseSendModal = useCallback(() => {
@@ -135,14 +131,14 @@ export const UsersPage: FunctionalComponent = () => {
           name='button-change-table'
           onClick={() => handleViewChange(VIEW_NAME.TABLE)}
           rounded={false}
-          className={handleStateChange(VIEW_NAME.TABLE)}
+          selected={currentView.value === VIEW_NAME.TABLE}
           icon='320'
         />
         <Button
           name='button-change-table'
           onClick={() => handleViewChange(VIEW_NAME.CREATE)}
           rounded={false}
-          className={handleStateChange(VIEW_NAME.CREATE)}
+          selected={currentView.value === VIEW_NAME.CREATE}
           icon='039'
         />
         <div className='relative'>
@@ -151,10 +147,11 @@ export const UsersPage: FunctionalComponent = () => {
             rounded={false}
             icon='314'
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${!hasValidPlayer ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : onNotifications ? 'bg-primary-opacity' : 'border-primary'}`}
+            disabled={!hasValidPlayer}
+            selected={onNotifications}
           />
           {showSendModal.value && (
-            <div className='absolute mt-4 mr-12 z-50 rounded p-4'>
+            <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
               <SendForm
                 onClose={handleCloseSendModal}
                 hasplayers={hasValidPlayer}
@@ -165,7 +162,13 @@ export const UsersPage: FunctionalComponent = () => {
         </div>
       </div>
     ),
-    [currentView.value, onNotifications, showSendModal.value, selectedUsers, hasValidPlayer]
+    [
+      currentView.value,
+      onNotifications,
+      showSendModal.value,
+      selectedUsers,
+      hasValidPlayer,
+    ]
   );
 
   const users = useSignal<IUserResponse[]>([]);
@@ -177,12 +180,16 @@ export const UsersPage: FunctionalComponent = () => {
   const getUsers = async () => {
     const response = await UserService.get_all();
     if (!response.getStatus()) return;
-    const [hasNotifications, responseUsers] = findNotificationsUser(response.getMany());
+    const [hasNotifications, responseUsers] = findNotificationsUser(
+      response.getMany()
+    );
     notificationValidate.value = hasNotifications;
     users.value = responseUsers;
   };
 
-  const findNotificationsUser = (usersResponse: IUserResponse[]): [boolean, IUserResponse[]] => {
+  const findNotificationsUser = (
+    usersResponse: IUserResponse[]
+  ): [boolean, IUserResponse[]] => {
     let hasSomeNotifications = false;
     const users = usersResponse.map((user) => {
       if (user.playerId) {
@@ -195,11 +202,11 @@ export const UsersPage: FunctionalComponent = () => {
       return {
         ...user,
         hasNotifications: false,
-      }
-    })
+      };
+    });
 
-    return [hasSomeNotifications, users]
-  }
+    return [hasSomeNotifications, users];
+  };
 
   const deleteUser = async (id: number) => {
     const response = await UserService.delete(id);
@@ -210,7 +217,9 @@ export const UsersPage: FunctionalComponent = () => {
   const setProfile = async (id: number, companyId: string) => {
     const response = await UserService.setProfile(id, companyId);
     if (!response.getStatus()) return;
-    toast.success('Perfil asignado correctamente, te enviamos un código de verificación');
+    toast.success(
+      'Perfil asignado correctamente, te enviamos un código de verificación'
+    );
     getUsers();
   };
 
@@ -222,22 +231,26 @@ export const UsersPage: FunctionalComponent = () => {
           title: 'Eliminar Usuario',
           message: `¿Está seguro que desea eliminar el usuario ${user.name} ${user.surname} - ${user.cardId}?`,
           onConfirm: () => deleteUser(user.id),
-          onCancel: () => { },
+          onCancel: () => {},
         });
         break;
       case ROW_ACTIONS.PROFILE:
         const company = String(user.companies[0].company.id);
         if (user.cognitoId) {
-          return toast.warning('Este usuario ya tiene un perfil asignado, puede iniciar en la aplicación');
+          return toast.warning(
+            'Este usuario ya tiene un perfil asignado, puede iniciar en la aplicación'
+          );
         }
         if (!company) {
-          return toast.warning('Este usuario no tiene una empresa asignada, por favor asigne para poder asignarle un perfil');
+          return toast.warning(
+            'Este usuario no tiene una empresa asignada, por favor asigne para poder asignarle un perfil'
+          );
         }
         showAlert({
           title: 'Asignar perfil',
           message: `¿Estás seguro que deseas asignar perfil a ${user.name} ${user.surname}?, Tenga en cuenta que el usuario ya podrá usar la aplicación.`,
           onConfirm: () => setProfile(user.id, company),
-          onCancel: () => { },
+          onCancel: () => {},
         });
         break;
       case ROW_ACTIONS.UPDATE:
@@ -307,6 +320,8 @@ export const UsersPage: FunctionalComponent = () => {
             onClickAction={handleOnClick}
             onNotifications={onNotifications}
             hasNotifications={notificationValidate.value}
+            // showExpandableIcon
+            // expandable={() => <></>}
             visibility={{
               id: false,
               connection: false,

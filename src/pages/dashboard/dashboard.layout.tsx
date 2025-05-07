@@ -44,6 +44,7 @@ import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
 import { Button } from '@/components/common/button/button';
 import { CompanyService } from '@/services';
+import { IconsModal } from '../globals/icons/icons';
 
 // import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
@@ -85,7 +86,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     };
 
     const handleUserAction = (value: string | number) => {
-      console.log('value', value);
       if (value === 1) {
         toggleSettingModal();
       } else if (value === 2) {
@@ -224,8 +224,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ))}
         </OnBordingModal>
-        */}
-        {/* <IconsModal /> */}
+          */}
+        <IconsModal />
         <ToastContainer />
       </section>
     );
