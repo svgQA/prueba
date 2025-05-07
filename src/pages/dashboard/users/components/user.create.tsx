@@ -22,6 +22,7 @@ import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift';
 import { File } from '@/components/common/file/file';
 import { toast } from 'react-toastify';
+import { IPresignedRequest } from '@/types/file';
 
 interface CreateUserProps {
   onUserCreated?: (user: any) => void;
@@ -34,7 +35,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const departments = useSignal<IDepartmentResponse[]>([]);
   const municipalities = useSignal<IMunicipalityResponse[]>([]);
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
-
+  const image = useSignal<IPresignedRequest[]>([]);
   useEffect(() => {
     getInitialValues();
     getDocumentTypes();
@@ -116,7 +117,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     <Form
       initialValues={initialValues.value}
       onSubmit={onSubmit}
-      render={({ handleSubmit }) => (
+      render={({ handleSubmit, values }) => (
         <form onSubmit={handleSubmit} className='p-4'>
           <div className='grid grid-cols-2 gap-4 py-3'>
             <Field<string> name='name' validate={required}>
@@ -398,8 +399,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
             </Field>
             <File
               name='extraData.image'
-              onChange={() => {}}
-              value={[]}
+              onChange={(e) => {
+                console.log(e);
+                image.value = e.target.value;
+              }}
+              value={image.value}
               label='Imagen'
               accept='image/*'
             />
