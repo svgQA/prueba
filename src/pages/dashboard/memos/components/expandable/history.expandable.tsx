@@ -19,16 +19,28 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   //socket
   const [_, setConnectionStatus] = useState<string>('Connecting...');
   const socketRef = useRef<any>(null);
-  const { getToken, tenant } = useUserStore();
+  const { getToken, tenant, user } = useUserStore();
 
   const connect_socket = () => {
     const socket = io(memo_history_service_url, {
-      query: { token: getToken(), tenantId: tenant},
+      query: { token: getToken(), tenantId: tenant, memoId: memo.id },
     });
     socketRef.current = socket;
-    socket.on('connect', () => setConnectionStatus('Connected'));
+    socket.on('connect', () => {
+      setConnectionStatus('Connected');
+      // Enviamos el memo principal al conectarnos
+      socket.emit('create-message', memo);
+    });
     socket.on('disconnect', disconnect_socket);
     socket.on('connect_error', disconnect_socket);
+    socket.on('memo-messages', (updatedMemos: Memo[]) => {
+      console.log('📨 Recibiendo mensajes del socket:', updatedMemos);
+      // Aseguramos que el memo principal esté en la lista
+      const hasMainMemo = updatedMemos.some(m => m.id === memo.id);
+      const finalMemos = hasMainMemo ? updatedMemos : [memo, ...updatedMemos];
+      console.log('📝 Memos finales a renderizar:', finalMemos);
+      setMemos(finalMemos);
+    });
   };
 
   const disconnect_socket = () => {
@@ -45,6 +57,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     return () => disconnect_socket();
   }, []);
 
+  useEffect(() => {
+    console.log('🔄 Estado de memos actualizado:', memos);
+    console.log('🔍 Número de memos a renderizar:', memos.length);
+  }, [memos]);
+
   const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target as HTMLInputElement
     if (fileInput && fileInput.files) {
@@ -58,39 +75,66 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     setAttachments((prevAttachments) => prevAttachments.filter((_, i) => i !== index))
   }
 
-  const handleSubmitMessage = (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    if (!message.trim()) return
+  const handleSubmitMessage = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    if (!message.trim() && attachments.length === 0) return;
 
-    // Crear un nuevo memo basado en el memo inicial
+    const now = new Date().toISOString();
+
+    // Creamos un nuevo memo basado en el principal
     const newMemo: Memo = {
-      ...memo, // Copiamos todos los campos del memo inicial
+      ...memo,
       id: Date.now(), // Nuevo ID
-      description: message, // El mensaje como descripción
-      updatedAt: new Date().toISOString(), // Nueva fecha
-      updatedBy: "Usuario Actual", // En producción, esto vendría del contexto de autenticación
+      description: message,
       attachments: attachments.map(file => ({
         name: file.name,
-        url: URL.createObjectURL(file),
-        type: file.type.startsWith("image/") ? "image" : "file"
-      }))
+        url: URL.createObjectURL(file)
+      })),
+      createdAt: now,
+      updatedAt: now,
+      updatedBy: user?.name || 'Usuario', // Usuario actual
+      extraData: {
+        client: {
+          name: user?.name || 'Usuario',
+          phone: memo.extraData?.client?.phone || ''
+        },
+        city: memo.extraData?.city || {
+          name: '',
+          country: '',
+          department: ''
+        },
+        place: memo.extraData?.place || {
+          name: '',
+          address: '',
+          latitude: 0,
+          longitude: 0
+        },
+        company: memo.extraData?.company || {
+          name: '',
+          description: ''
+        },
+        service: memo.extraData?.service || {
+          name: '',
+          description: ''
+        }
+      }
+    };
+
+    // Enviamos al socket primero
+    if (socketRef.current) {
+      socketRef.current.emit('create-message', newMemo);
+      // Solicitamos una actualización de la lista de mensajes
+      socketRef.current.emit('request-messages', { memoId: memo.id });
     }
 
-    setMemos(prevMemos => [...prevMemos, newMemo])
-    setMessage("")
-    setAttachments([])
-  }
+    setMessage("");
+    setAttachments([]);
+  };
 
-  const formatDate = (info: string | Date) => {
-    const dateStr = String(info);
-    if (!dateStr) return '-';
-
-    try {
-      return dayjs(dateStr).format('DD/MM/YYYY');
-    } catch (error) {
-      return '-';
-    }
-  }
+  const formatDate = (date: string | Date) => {
+    if (!date) return '-';
+    return dayjs(date).format('DD/MM/YYYY HH:mm');
+  };
 
   const getStatusColor = (status: string) => {
     let statusText = 'info';
