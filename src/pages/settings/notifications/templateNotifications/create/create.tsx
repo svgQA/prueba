@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
-import { TemplateServiceFront } from '@/services/template';
-import { FormService } from '@/services/form';
-import { ShiftService } from '@/services/shift'; // ✅ Importado
+import { TemplateService } from '@/services';
+import { FormService } from '@/services/form/form';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '@/pages/settings/store/settings';
 import { toast } from 'react-toastify';
+import { TaskService } from '@/services';
 
 export const TemplateCreateForm = () => {
   const [title, setTitle] = useState('');
@@ -47,7 +47,7 @@ export const TemplateCreateForm = () => {
     if (useTasks && taskId) payload.data.taskId = taskId;
 
     setLoading(true);
-    const res = await TemplateServiceFront.createTemplate(payload);
+    const res = await TemplateService.createTemplate(payload);
     setLoading(false);
 
     if (res.getStatus()) {
@@ -71,7 +71,7 @@ export const TemplateCreateForm = () => {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const res = await ShiftService.getBasicTasks();
+      const res = await TaskService.getBasicTasks();
       if (res.getStatus()) setTasks(res.getMany());
     };
 

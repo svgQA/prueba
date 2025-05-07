@@ -19,11 +19,7 @@ export const getColumns = (
     accessorKey: 'title',
     header: 'Título',
     size: 200,
-    cell: (info) => (
-      <span className='p-1 size-sm font-medium text-gray-800'>
-        {info.getValue() as string}
-      </span>
-    ),
+    cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
     id: 'description',
@@ -32,7 +28,7 @@ export const getColumns = (
     size: 250,
     cell: (info) => (
       <span
-        className='line-clamp-2 max-w-[250px] text-sm text-gray-600'
+        className='line-clamp-2 max-w-[250px]'
         title={info.getValue() as string}
       >
         {info.getValue() as string}
@@ -67,10 +63,7 @@ export const getColumns = (
     cell: (info) => {
       const date = new Date(info.getValue() as string);
       return (
-        <time
-          dateTime={date.toISOString()}
-          className='p-1 size-sm text-gray-700'
-        >
+        <time dateTime={date.toISOString()} className='p-1 size-sm'>
           {dayjs(date).format('DD/MM/YYYY HH:mm')}
         </time>
       );
@@ -82,7 +75,7 @@ export const getColumns = (
     header: 'Destinatarios',
     size: 100,
     cell: (info) => (
-      <div className='flex items-center gap-2 text-gray-700'>
+      <div className='flex items-center gap-2'>
         <span className='vox-icon vx-icon-340 text-lg' />
         <span className='text-sm'>{info.getValue() as number}</span>
       </div>
@@ -108,9 +101,7 @@ export const getColumns = (
               style={{ width: `${openRate}%` }}
             />
           </div>
-          <span className='text-xs font-semibold text-gray-700'>
-            {openRate}%
-          </span>
+          <span className='text-xs font-semibold'>{openRate}%</span>
         </div>
       );
     },
@@ -123,7 +114,7 @@ export const getColumns = (
 
       const actions: IDropdownAction[] = [
         {
-          label: 'Editar usuario',
+          label: 'Editar notificación',
           icon: 'vox-icon vx-icon-123 text-primary',
           onClick: () => {
             onClickAction({
@@ -134,7 +125,7 @@ export const getColumns = (
           },
         },
         {
-          label: 'Eliminar usuario',
+          label: 'Eliminar notificación',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {

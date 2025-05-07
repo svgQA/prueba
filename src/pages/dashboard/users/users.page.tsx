@@ -1,14 +1,27 @@
 import { FunctionalComponent } from 'preact';
-import { useCallback, useEffect, useMemo } from 'preact/hooks';
-import { Section } from '@/components/common/section/section'; // Ajusta según tu estructura
-import { CardData } from '@/components/compose/cards'; // Ajusta la ruta si difiere
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'preact/hooks';
+import { Section } from '@/components/common/section/section';
+import { CardData } from '@/components/compose/cards';
 import { useSignal } from '@preact/signals';
 import { Button } from '@/components/common/button/button';
 import { CreateUser } from './components/user.create';
 import { UserMessage } from './components/user.message';
-import { UserTable } from './components/user.table';
 import { IUserResponse } from '@/types/auth';
 import { useTranslation } from 'react-i18next';
+import { SendForm } from '../shifts/components/send/send.modal';
+import { toast } from 'react-toastify';
+import { NotificationService, UserService } from '@/services';
+import { getColumns } from './components/user.columns';
+import { showAlert } from '@/components/common/show-alert/show-alert';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { IRowAction } from '@/components/common/table/interface';
+import { Table } from '@/components/common/table/table';
 
 enum VIEW_NAME {
   TABLE,
@@ -20,101 +33,302 @@ export const UsersPage: FunctionalComponent = () => {
   const { t } = useTranslation();
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const user = useSignal<IUserResponse>();
+
+  const totalUsers = useSignal(0);
+  const connectedUsers = useSignal(0);
+  const disconnectedUsers = useSignal(0);
+
+  const showSendModal = useSignal<boolean>(false);
+  const notificationValidate = useSignal<boolean>(false);
+
+  const [selectedUsers, setSelectedUsers] = useState<IUserResponse[]>([]);
+  const [onNotifications, setOnNotifications] = useState(false);
+  const [hasValidPlayer, setHasValidPlayer] = useState(false);
+
+  const hasValidPlayerRef = useRef(false);
+  const onNotificationsRef = useRef(false);
+
   useEffect(() => {
     document.title = t('users.pageTitle');
+    fetchStats();
   }, []);
+
+  useEffect(() => {
+    hasValidPlayerRef.current = hasValidPlayer;
+    setHasValidPlayer(hasValidPlayerRef.current);
+  }, [hasValidPlayer]);
+
+  useEffect(() => {
+    onNotificationsRef.current = onNotifications;
+    setOnNotifications(onNotificationsRef.current);
+  }, [onNotifications]);
+
+  const fetchStats = async () => {
+    try {
+      const [hasValidResponse, statsResponse] = await Promise.all([
+        NotificationService.hasUsersWithPlayerId(),
+        UserService.getDashboardStats(),
+      ]);
+
+      const { hasUsers } = hasValidResponse.getOne();
+      setHasValidPlayer(hasUsers);
+      hasValidPlayerRef.current = hasUsers;
+
+      if (statsResponse.getStatus()) {
+        const {
+          totalUsers: total,
+          connectedUsers: active,
+          disconnectedUsers: inactive,
+        } = statsResponse.getOne();
+
+        totalUsers.value = total;
+        connectedUsers.value = active;
+        disconnectedUsers.value = inactive;
+      }
+    } catch (error) {
+      console.error('❌ Error obteniendo estadísticas del dashboard:', error);
+    }
+  };
 
   const handleViewChange = useCallback((view: VIEW_NAME) => {
     currentView.value = view;
   }, []);
 
-  const handleStateChange = useCallback((view: VIEW_NAME) => {
-    return currentView.value === view ? 'bg-primary-opacity p-2' : '';
+  const handleCloseSendModal = useCallback(() => {
+    showSendModal.value = false;
+    setOnNotifications(false);
+    onNotificationsRef.current = false;
   }, []);
+
+  const toggleSendModal = () => {
+    handleViewChange(VIEW_NAME.TABLE);
+
+    if (!hasValidPlayerRef.current) {
+      toast.warn(t('notification.nobody_have_player_id'));
+      return;
+    }
+
+    if (!onNotificationsRef.current) {
+      setOnNotifications(true);
+      onNotificationsRef.current = true;
+      return;
+    }
+
+    if (selectedUsers.length === 0) {
+      toast.warn(t('notification.select_at_least_one_employee'));
+      setOnNotifications(false);
+      onNotificationsRef.current = false;
+      return;
+    } else {
+      showSendModal.value = true;
+    }
+  };
 
   const buttonMenu = useMemo(
     () => (
       <div className='flex items-center gap-2'>
         <Button
           name='button-change-table'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.TABLE);
-          }}
+          onClick={() => handleViewChange(VIEW_NAME.TABLE)}
           rounded={false}
-          className={handleStateChange(VIEW_NAME.TABLE)}
+          selected={currentView.value === VIEW_NAME.TABLE}
           icon='320'
         />
         <Button
           name='button-change-table'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.CREATE);
-          }}
+          onClick={() => handleViewChange(VIEW_NAME.CREATE)}
           rounded={false}
-          className={handleStateChange(VIEW_NAME.CREATE)}
+          selected={currentView.value === VIEW_NAME.CREATE}
           icon='039'
         />
-        <Button
-          name='button-change-table'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.MESSAGE);
-          }}
-          rounded={false}
-          className={handleStateChange(VIEW_NAME.MESSAGE)}
-          icon='314'
-        />
+        <div className='relative'>
+          <Button
+            name='button-action'
+            rounded={false}
+            icon='314'
+            onClick={toggleSendModal}
+            disabled={!hasValidPlayer}
+            selected={onNotifications}
+          />
+          {showSendModal.value && (
+            <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
+              <SendForm
+                onClose={handleCloseSendModal}
+                hasplayers={hasValidPlayer}
+                users={selectedUsers as []}
+              />
+            </div>
+          )}
+        </div>
       </div>
     ),
-    [currentView.value]
+    [
+      currentView.value,
+      onNotifications,
+      showSendModal.value,
+      selectedUsers,
+      hasValidPlayer,
+    ]
   );
+
+  const users = useSignal<IUserResponse[]>([]);
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const getUsers = async () => {
+    const response = await UserService.get_all();
+    if (!response.getStatus()) return;
+    const [hasNotifications, responseUsers] = findNotificationsUser(
+      response.getMany()
+    );
+    notificationValidate.value = hasNotifications;
+    users.value = responseUsers;
+  };
+
+  const findNotificationsUser = (
+    usersResponse: IUserResponse[]
+  ): [boolean, IUserResponse[]] => {
+    let hasSomeNotifications = false;
+    const users = usersResponse.map((user) => {
+      if (user.playerId) {
+        hasSomeNotifications = true;
+        return {
+          ...user,
+          hasNotifications: true,
+        };
+      }
+      return {
+        ...user,
+        hasNotifications: false,
+      };
+    });
+
+    return [hasSomeNotifications, users];
+  };
+
+  const deleteUser = async (id: number) => {
+    const response = await UserService.delete(id);
+    if (!response.getStatus()) return;
+    getUsers();
+  };
+
+  const setProfile = async (id: number, companyId: string) => {
+    const response = await UserService.setProfile(id, companyId);
+    if (!response.getStatus()) return;
+    toast.success(
+      'Perfil asignado correctamente, te enviamos un código de verificación'
+    );
+    getUsers();
+  };
+
+  const handleOnClick = async (action: IRowAction) => {
+    const user = findUser(Number(action.id));
+    switch (action.action) {
+      case ROW_ACTIONS.DELETE:
+        showAlert({
+          title: 'Eliminar Usuario',
+          message: `¿Está seguro que desea eliminar el usuario ${user.name} ${user.surname} - ${user.cardId}?`,
+          onConfirm: () => deleteUser(user.id),
+          onCancel: () => {},
+        });
+        break;
+      case ROW_ACTIONS.PROFILE:
+        const company = String(user.companies[0].company.id);
+        if (user.cognitoId) {
+          return toast.warning(
+            'Este usuario ya tiene un perfil asignado, puede iniciar en la aplicación'
+          );
+        }
+        if (!company) {
+          return toast.warning(
+            'Este usuario no tiene una empresa asignada, por favor asigne para poder asignarle un perfil'
+          );
+        }
+        showAlert({
+          title: 'Asignar perfil',
+          message: `¿Estás seguro que deseas asignar perfil a ${user.name} ${user.surname}?, Tenga en cuenta que el usuario ya podrá usar la aplicación.`,
+          onConfirm: () => setProfile(user.id, company),
+          onCancel: () => {},
+        });
+        break;
+      case ROW_ACTIONS.UPDATE:
+        // @ts-ignore
+        user.value = user;
+        handleViewChange(VIEW_NAME.CREATE);
+        break;
+    }
+  };
+
+  const findUser = (id: number): IUserResponse => {
+    const user = users.value.find((u) => u.id === id);
+    if (!user) throw new Error(`User with id ${id} not found`);
+    return user;
+  };
 
   return (
     <Section padding>
-      {/* Ejemplo de 3 cards arriba, análogo a shifts */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
           title={t('users.cards.total')}
-          count={0}
+          count={totalUsers.value}
           subtitle={t('users.cards.totalSubtitle')}
           color='text-secondary'
-          icon='189'
+          icon='users'
         />
         <CardData
           title={t('users.cards.activeConnection')}
-          count={0}
+          count={connectedUsers.value}
           subtitle={t('users.cards.activeSubtitle')}
           color='text-primary'
-          icon='020'
+          icon='user-active'
         />
         <CardData
           title={t('users.cards.inactiveConnection')}
-          count={0}
+          count={disconnectedUsers.value}
           subtitle={t('users.cards.inactiveSubtitle')}
           color='text-error'
-          icon='110'
+          icon='user-inactive'
         />
       </div>
-      {/* Menu de botones */}
+
       <div className='max-h-screen relative'>
         <div className='py-2 flex flex-row justify-center xl:justify-between px-1 items-center overflow-visible xl:absolute relative z-10 w-full xl:w-fit'>
           <div className='flex flex-row items-center !w-full xl:!w-fit md:w-auto justify-between'>
             {buttonMenu}
           </div>
         </div>
-        {/* Renderer el componente de creación de usuario */}
+
         {currentView.value === VIEW_NAME.CREATE && (
-          <CreateUser
-            onUserCreated={() => handleViewChange(VIEW_NAME.TABLE)}
-            user={user.value}
-          />
+          <div className='pt-14'>
+            <CreateUser
+              onUserCreated={() => handleViewChange(VIEW_NAME.TABLE)}
+              user={user.value}
+            />
+          </div>
         )}
-        {/* Renderer el componente de mensaje */}
+
         {currentView.value === VIEW_NAME.MESSAGE && <UserMessage />}
-        {/* Renderer la tabla de usuarios */}
+
         {currentView.value === VIEW_NAME.TABLE && (
-          <UserTable
-            onUserEdit={(value) => {
-              user.value = value;
-              handleViewChange(VIEW_NAME.CREATE);
+          <Table<IUserResponse>
+            data={users.value}
+            columns={getColumns(handleOnClick)}
+            pageSize={20}
+            selectable
+            onClickAction={handleOnClick}
+            onNotifications={onNotifications}
+            hasNotifications={notificationValidate.value}
+            // showExpandableIcon
+            // expandable={() => <></>}
+            visibility={{
+              id: false,
+              connection: false,
+              taskProgress: false,
+            }}
+            onSelectionChange={(rows) => {
+              setSelectedUsers(rows);
             }}
           />
         )}

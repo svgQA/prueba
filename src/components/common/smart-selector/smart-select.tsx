@@ -8,6 +8,11 @@ export interface IOption {
   value: string | number;
 }
 
+const ALL_OPTION: IOption = {
+  label: 'Todos',
+  value: 0,
+};
+
 interface SmartSelectorProps {
   name: string;
   options: IOption[];
@@ -16,7 +21,7 @@ interface SmartSelectorProps {
   placeholder?: string;
   menuPortalTarget?: HTMLElement | null;
   value?: IOption[] | IOption | string;
-  onChange: (value: any) => void;
+  onChange?: (value?: IOption) => void;
   meta?: FieldMetaState<any>;
   label?: string;
   id?: string;
@@ -31,6 +36,7 @@ export function SmartSelector({
   menuPortalTarget = null,
   label,
   id,
+  onChange,
 }: SmartSelectorProps) {
   const { input, meta } = useField<IOption[] | IOption | string>(name);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -40,7 +46,7 @@ export function SmartSelector({
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
 
   const selected: IOption[] = useMemo(() => {
-    if (input.value === 'ALL') return [{ label: 'Todos', value: 'ALL' }];
+    if (input.value === ALL_OPTION.value) return [ALL_OPTION];
     if (Array.isArray(input.value)) return input.value;
     return input.value ? [input.value as IOption] : [];
   }, [input.value]);
@@ -54,11 +60,12 @@ export function SmartSelector({
     );
   }, [search, options, selected]);
 
-  const handleSelect = (option: IOption | 'ALL') => {
-    if (option === 'ALL') {
-      input.onChange('ALL');
+  const handleSelect = (option: IOption) => {
+    if (option.value === ALL_OPTION.value) {
+      input.onChange(ALL_OPTION.value);
     } else if (multiple) {
-      const isAll = selected.length === 1 && selected[0].value === 'ALL';
+      const isAll =
+        selected.length === 1 && selected[0].value === ALL_OPTION.value;
       const newSelection = isAll ? [option] : [...selected, option];
       input.onChange(newSelection);
     } else {
@@ -67,13 +74,19 @@ export function SmartSelector({
 
     setSearch(''); // ✅ Limpiar búsqueda
     setSelectedIndex(0); // ✅ Reiniciar índice
-    setFocused(true); // ✅ Mantener enfocado para seguir buscando (o false si quieres cerrar)
+    setFocused(false); // ✅ Cerrar el dropdown después de seleccionar
+    onChange?.(option);
   };
 
   const handleRemove = (option: IOption) => {
-    if (option.value === 'ALL') return input.onChange([]);
-    const updated = selected.filter((sel) => sel.value !== option.value);
-    input.onChange(updated);
+    if (option.value === ALL_OPTION.value) {
+      input.onChange([]);
+      onChange?.();
+    } else {
+      const updated = selected.filter((sel) => sel.value !== option.value);
+      input.onChange(updated);
+      if (updated.length === 0) onChange?.();
+    }
   };
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -164,7 +177,10 @@ export function SmartSelector({
     >
       {allowAll && search.toLowerCase() === 'todos' && (
         <div
-          onMouseDown={() => handleSelect('ALL')}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            handleSelect(ALL_OPTION);
+          }}
           class='px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200'
         >
           <strong>Todos</strong>
@@ -173,7 +189,10 @@ export function SmartSelector({
       {filtered.map((opt, idx) => (
         <div
           key={opt.value}
-          onMouseDown={() => handleSelect(opt)}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            handleSelect(opt);
+          }}
           class={`px-4 py-2 cursor-pointer flex items-center
             transition-colors duration-200 border-none
             ${

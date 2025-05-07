@@ -1,15 +1,30 @@
 import { useState, useEffect } from 'preact/hooks';
-import { NotificationServiceFront } from '@/services/notification';
-import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { FormService } from '@/services/form';
-import { TemplateServiceFront } from '@/services/template';
+import { FormService } from '@/services/form/form';
+import { TemplateService } from '@/services/notification/template';
 import { IOption } from '@/components/common/multi/interface';
-import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/common/button/button';
+import { Input } from '@/components/common/input/input';
+import { TextArea } from '@/components/common/text.area/text.area';
+import { Switch } from '@/components/common/switch/switch';
+import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { Form, Field } from 'react-final-form';
+import { useSignal } from '@preact/signals';
+import { lengthSize } from '@/utils/utilities';
+import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
+import { NotificationService } from '@/services';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 interface Props {
   users?: any[];
   hasplayers?: boolean;
+}
+
+interface UserBasicInformation {
+  id: number;
+  name: string;
+  email: string;
+  playerId: string;
 }
 
 export const ManualNotificationForm = ({
@@ -17,23 +32,22 @@ export const ManualNotificationForm = ({
   hasplayers,
 }: Props) => {
   const { t } = useTranslation();
-  const [templateId, setTemplateId] = useState<string>('');
-  const [templates, setTemplates] = useState<any[]>([]);
-
-  const [formId, setFormId] = useState<string>('');
+  const [templateSelected, setTemplateSelected] = useState<
+    IOption | undefined
+  >();
+  const [formSelected, setFormSelected] = useState<IOption | undefined>();
   const [formStructure, setFormStructure] = useState<any>(null);
 
-  const [overrideTitle, setOverrideTitle] = useState<string>('');
-  const [overrideDescription, setOverrideDescription] = useState<string>('');
+  const templates = useSignal<IOption[]>([]);
+  const forms = useSignal<IOption[]>([]);
+
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
 
   const [search, setSearch] = useState<string>('');
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [selectedUsersFull, setSelectedUsersFull] = useState<
-    { id: number; name: string; email: string; playerId: string }[]
+    UserBasicInformation[]
   >([]);
-  const [forms, setForms] = useState<IOption[]>([]);
-
   const usersWithPlayerId = externalUsers.filter((u) => !!u.playerId);
 
   const filteredUsers = usersWithPlayerId.filter((u) => {
@@ -60,28 +74,26 @@ export const ManualNotificationForm = ({
     setSelectedUsersFull(finalUsers);
   }, [selectedUserIds, usersWithPlayerId]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: any) => {
     if (!hasplayers) return;
 
     const payload: ISendManualNotificationDto = {
-      ...(templateId && { templateId }),
-      ...(formId && { formId }),
-      ...(overrideTitle && { overrideTitle }),
-      ...(overrideDescription && { overrideDescription }),
+      templateId: values.template?.value,
+      formId: values.form?.value,
+      ...(!templateSelected && {
+        overrideTitle: values.title,
+        overrideDescription: values.description,
+      }),
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
-      ...(formStructure && { data: { formId, formStructure } }),
+      ...(formStructure && {
+        data: { formId: values.form?.value, formStructure },
+      }),
     };
-
-    try {
-      await NotificationServiceFront.sendManualNotification(payload);
-      toast.success('Notificaciones enviadas correctamente');
-    } catch (err) {
-      console.error('❌ Error al enviar notificaciones:', err);
-      toast.error('❌ Ocurrió un error al enviar las notificaciones');
-    }
+    const response = await NotificationService.sendManualNotification(payload);
+    if (response.getStatus()) ToastManager.success('notification.send.success');
   };
 
   const clearUserSelection = () => setSelectedUserIds([]);
@@ -91,14 +103,14 @@ export const ManualNotificationForm = ({
       try {
         const [formsResponse, templatesResponse] = await Promise.all([
           FormService.getBasicForms(),
-          TemplateServiceFront.getTemplates(),
+          TemplateService.getBasicTemplates(),
         ]);
 
-        if (formsResponse.getStatus()) setForms(formsResponse.getMany());
+        if (formsResponse.getStatus()) forms.value = formsResponse.getMany();
         if (templatesResponse.getStatus())
-          setTemplates(templatesResponse.getMany());
+          templates.value = templatesResponse.getMany();
       } catch (err) {
-        console.error('Error cargando formularios o plantillas:', err);
+        ToastManager.error('notification.send.error_loading_forms_templates');
       }
     };
     fetchFormsAndTemplates();
@@ -106,166 +118,179 @@ export const ManualNotificationForm = ({
 
   useEffect(() => {
     const getFormStructure = async () => {
-      if (!formId) return;
-      const response = await FormService.get_one(formId);
+      if (!formSelected) return;
+      const response = await FormService.get_one(Number(formSelected.value));
       if (response.getStatus()) setFormStructure(response.getOne());
     };
     getFormStructure();
-  }, [formId]);
+  }, [formSelected]);
 
   return (
-    <div className='space-y-6 w-full max-w-5xl mx-auto p-4'>
-      <div className='space-y-2'>
-        <input
-          type='text'
-          className='w-full border border-gray-300 rounded px-3 py-2'
-          placeholder={t('shifts.notifications.searchPlaceholder')}
-          value={search}
-          onInput={(e) => setSearch(e.currentTarget.value)}
-        />
+    <Form
+      onSubmit={handleSubmit}
+      render={({ handleSubmit }) => (
+        <form
+          onSubmit={handleSubmit}
+          className='space-y-6 w-full max-w-5xl mx-auto p-1'
+        >
+          <div className='space-y-2'>
+            <input
+              type='text'
+              className='w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200'
+              placeholder={t('shifts.notifications.searchPlaceholder')}
+              value={search}
+              onInput={(e) => setSearch(e.currentTarget.value)}
+            />
 
-        <div className='max-h-48 overflow-y-auto border border-gray-200 rounded p-2 bg-white'>
-          {[...new Map(filteredUsers.map((u) => [u.id, u])).values()].map(
-            (user: any) => (
-              <label key={user.id} className='flex items-center gap-2 py-1'>
-                <input
-                  type='checkbox'
-                  value={user.id}
-                  checked={selectedUserIds.includes(user.id)}
-                  onChange={() =>
-                    setSelectedUserIds(
-                      (prev) =>
-                        prev.includes(user.id)
-                          ? prev.filter((id) => id !== user.id)
-                          : [...new Set([...prev, user.id])] // <--- asegura no duplicar
-                    )
-                  }
-                  className='accent-cyan-600'
+            <div className='max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-2  bg-white dark:bg-gray-800'>
+              {[...new Map(filteredUsers.map((u) => [u.id, u])).values()].map(
+                (user: any) => (
+                  <label
+                    key={user.id}
+                    className='flex items-center gap-2 py-1 text-gray-700 dark:text-gray-200'
+                  >
+                    <Switch
+                      backgroundColor='bg-gray-300 dark:bg-gray-600'
+                      name={`switch-${user.id}`}
+                      identifier={user.id}
+                      value={selectedUserIds.includes(user.id)}
+                      onChange={() =>
+                        setSelectedUserIds((prev) =>
+                          prev.includes(user.id)
+                            ? prev.filter((id) => id !== user.id)
+                            : [...new Set([...prev, user.id])]
+                        )
+                      }
+                    />
+                    <span className='text-sm'>
+                      {user.name} ({user.email})
+                    </span>
+                  </label>
+                )
+              )}
+            </div>
+
+            <div className='flex items-center justify-between mt-2'>
+              <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
+                <Switch
+                  name='switch-send-to-shift-today'
+                  backgroundColor='bg-gray-300 dark:bg-gray-600'
+                  value={sendToShiftToday}
+                  onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
+                  label='Solo con turno activo'
                 />
-                <span className='text-sm'>
-                  {user.name} ({user.email})
-                </span>
-              </label>
-            )
+              </div>
+
+              {selectedUserIds.length > 0 && (
+                <Button
+                  name='button-clear-user-selection'
+                  label='Limpiar selección de usuarios'
+                  mode='primary'
+                  onClick={clearUserSelection}
+                  borderless
+                  unpadded
+                  icon='053'
+                />
+              )}
+            </div>
+
+            {selectedUsersFull.length > 0 && (
+              <div className='mt-2 border-y-b-light-dark dark:border-y-b-dark-light border-y py-3'>
+                <h5 className='font-medium mb-1'>
+                  Usuarios seleccionados con registro de notificaciones:
+                </h5>
+                <ul className='list-disc list-inside space-y-1'>
+                  {[
+                    ...new Map(
+                      selectedUsersFull.map((u) => [u.id, u])
+                    ).values(),
+                  ].map((u) => (
+                    <li key={u.id}>
+                      {u.name} ({u.email})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+            <Field<IOption[]>
+              name='template'
+              render={({ input, meta }) => (
+                <SmartSelector
+                  {...input}
+                  meta={meta}
+                  options={templates.value}
+                  menuPortalTarget={document.body}
+                  placeholder='Selecciona una plantilla'
+                  label='Plantilla'
+                  onChange={(value?: IOption) => {
+                    setTemplateSelected(value);
+                  }}
+                />
+              )}
+            />
+
+            <Field<IOption[]>
+              name='form'
+              render={({ input, meta }) => (
+                <SmartSelector
+                  {...input}
+                  meta={meta}
+                  options={forms.value}
+                  menuPortalTarget={document.body}
+                  placeholder='Selecciona un formulario'
+                  label='Formulario'
+                  onChange={(value?: IOption) => {
+                    setFormSelected(value);
+                  }}
+                />
+              )}
+            />
+          </div>
+
+          {!templateSelected && (
+            <div className='flex flex-col gap-2'>
+              <Field<string>
+                name='title'
+                validate={lengthSize(5, 50)}
+                render={({ input, meta }) => (
+                  <Input
+                    {...input}
+                    label={t('shifts.notifications.customTitle')}
+                    meta={meta}
+                    type='text'
+                  />
+                )}
+              />
+              <Field<string>
+                name='description'
+                validate={lengthSize(5, 200)}
+                render={({ input, meta }) => (
+                  <TextArea
+                    {...input}
+                    name='input-custom-description'
+                    label={t('shifts.notifications.customDescription')}
+                    meta={meta}
+                    type='text'
+                  />
+                )}
+              />
+            </div>
           )}
-        </div>
-
-        <div className='flex items-center justify-between mt-2'>
-          <div className='flex items-center gap-2'>
-            <input
-              type='checkbox'
-              checked={sendToShiftToday}
-              onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
-              className='accent-cyan-600'
-            />
-            <span className='text-sm'>Solo con turno activo</span>
-          </div>
-
-          {selectedUserIds.length > 0 && (
-            <button
-              className='text-sm text-cyan-700 hover:underline border-none'
-              onClick={clearUserSelection}
-            >
-              Limpiar selección de usuarios
-            </button>
-          )}
-        </div>
-
-        {selectedUsersFull.length > 0 && (
-          <div className='mt-2'>
-            <h5 className='text-sm font-medium text-gray-700 mb-1'>
-              Usuarios seleccionados con registro de notificaciones:
-            </h5>
-            <ul className='text-sm text-gray-800 list-disc list-inside space-y-1'>
-              {[
-                ...new Map(selectedUsersFull.map((u) => [u.id, u])).values(),
-              ].map((u) => (
-                <li key={u.id}>
-                  {u.name} ({u.email})
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-        <div>
-          <label className='block text-sm font-medium mb-1'>
-            {t('shifts.notifications.template')}
-          </label>
-          <select
-            className='w-full border border-gray-300 rounded px-3 py-2'
-            value={templateId}
-            onChange={(e) => {
-              setTemplateId(e.currentTarget.value);
-              setFormId('');
-              setFormStructure(null);
-            }}
-          >
-            <option value=''>{t('shifts.notifications.selectTemplate')}</option>
-            {templates.map((tpl: any) => (
-              <option key={tpl.id} value={tpl.id}>
-                {tpl.title}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className='block text-sm font-medium mb-1'>
-            {t('shifts.notifications.form')}
-          </label>
-          <select
-            className='w-full border border-gray-300 rounded px-3 py-2'
-            value={formId}
-            onChange={(e) => {
-              setFormId(e.currentTarget.value);
-              setTemplateId('');
-            }}
-          >
-            <option value=''>Selecciona un formulario</option>
-            {forms.map((form) => (
-              <option key={form.value} value={form.value}>
-                {form.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {!templateId && (
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-          <div>
-            <label className='block text-sm font-medium mb-1'>
-              {t('shifts.notifications.customTitle')}
-            </label>
-            <input
-              className='w-full border border-gray-300 rounded px-3 py-2'
-              value={overrideTitle}
-              onInput={(e) => setOverrideTitle(e.currentTarget.value)}
+          <div className='flex justify-end'>
+            <Button
+              label='Enviar notificacion'
+              mode='ternary'
+              type='submit'
+              name='button-notification'
+              disabled={!hasplayers}
+              icon='039'
             />
           </div>
-          <div>
-            <label className='block text-sm font-medium mb-1'>
-              {t('shifts.notifications.customDescription')}
-            </label>
-            <textarea
-              className='w-full border border-gray-300 rounded px-3 py-2'
-              rows={3}
-              value={overrideDescription}
-              onInput={(e) => setOverrideDescription(e.currentTarget.value)}
-            />
-          </div>
-        </div>
+        </form>
       )}
-
-      <button
-        className='bg-primary hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded'
-        onClick={handleSubmit}
-      >
-        Enviar notificación
-      </button>
-    </div>
+    />
   );
 };

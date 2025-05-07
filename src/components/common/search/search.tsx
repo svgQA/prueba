@@ -190,33 +190,35 @@ export const Search = ({
 
   const keysList = useMemo(
     () =>
-      keys.map((key, index) => {
-        const keyName = `filter-key-${key.id}-${index}`;
-        return (
-          <div
-            className={`px-3 py-2 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${
-              index === selectedKeyIndex.value
-                ? 'bg-primary-opacity text-primary'
-                : 'hover:bg-b-light hover:text-primary'
-            }`}
-            key={keyName}
-            data-name={keyName}
-            data-id={key.id}
-            data-label={key.label}
-            tabIndex={0}
-            onKeyDown={handleKeyPress}
-            onClick={(e) => {
-              e.stopPropagation();
-              setFilterSelected(key);
-            }}
-          >
-            <span className='px-2 mr-1 font-medium text-sm capitalize'>
-              {key.label}:
-            </span>
-            <span className='text-sm font-normal'>{inputState.value}</span>
-          </div>
-        );
-      }),
+      keys
+        .filter((key) => key.id !== 'actions')
+        .map((key, index) => {
+          const keyName = `filter-key-${key.id}-${index}`;
+          return (
+            <div
+              className={`px-3 py-2 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${
+                index === selectedKeyIndex.value
+                  ? 'bg-primary-opacity text-primary'
+                  : 'hover:bg-b-light hover:text-primary'
+              }`}
+              key={keyName}
+              data-name={keyName}
+              data-id={key.id}
+              data-label={key.label}
+              tabIndex={0}
+              onKeyDown={handleKeyPress}
+              onClick={(e) => {
+                e.stopPropagation();
+                setFilterSelected(key);
+              }}
+            >
+              <span className='px-2 mr-1 font-medium text-sm capitalize'>
+                {key.label}:
+              </span>
+              <span className='text-sm font-normal'>{inputState.value}</span>
+            </div>
+          );
+        }),
     [
       keys,
       selectedKeyIndex.value,

@@ -4,8 +4,8 @@ import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { toast } from 'react-toastify';
 import i18n from '@/i18n';
-import { ShiftService } from '@/services/shift';
 import dayjs from 'dayjs';
+import { ShiftService } from '@/services';
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   console.log('shift ==>', shift);
 

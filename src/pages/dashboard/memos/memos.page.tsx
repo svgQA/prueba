@@ -2,19 +2,22 @@ import { type FunctionComponent } from 'preact';
 import { useCallback, useEffect, useMemo } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { IUserResponse } from '@/types/auth';
 import { useWebSocket } from '@/utils/socket';
 import { Section } from '@/components/common/section/section';
 import { useTranslation } from 'react-i18next';
 import { Table } from '@/components/common/table/table';
-import { columns } from './components/memos.columns';
+import { getColumns } from './components/memos.columns';
 import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
+/* import { FrequentQuestion } from './interface'; */
+import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
-import SupervisorInfo from './components/expandable/supervisor.expandable';
+import { useUserStore } from '@/store/slices';
+import { ExpandableMultiple } from './components/expandable.multiple';
 
 enum VIEW_NAME {
   TABLE,
@@ -29,13 +32,13 @@ const defaultSummary = {
 
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
+  const { selectedCompany } = useUserStore();
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
-
   const summary = useSignal<MemosSummary>(defaultSummary);
 
   useEffect(() => {
@@ -45,6 +48,10 @@ export const MemosPage: FunctionComponent = () => {
       wsManager.removeListener('memos');
     };
   }, []);
+
+  useEffect(() => {
+    fetchInitialData();
+  }, [selectedCompany]);
 
   const fetchInitialData = async () => {
     const [responseMemos, responseUsers, responseSummary] = await Promise.all([
@@ -100,11 +107,7 @@ export const MemosPage: FunctionComponent = () => {
             handleViewChange(VIEW_NAME.TABLE);
           }}
           rounded={false}
-          className={
-            currentView.value === VIEW_NAME.TABLE
-              ? 'bg-primary-opacity p-2'
-              : ''
-          }
+          selected={currentView.value === VIEW_NAME.TABLE}
           icon='320'
         />
         <Button
@@ -113,9 +116,7 @@ export const MemosPage: FunctionComponent = () => {
             handleViewChange(VIEW_NAME.CHAT);
           }}
           rounded={false}
-          className={
-            currentView.value === VIEW_NAME.CHAT ? 'bg-primary-opacity p-2' : ''
-          }
+          selected={currentView.value === VIEW_NAME.CHAT}
           icon='418'
         />
         <Button name='button-change-scheduler' rounded={false} icon='331' />
@@ -124,6 +125,17 @@ export const MemosPage: FunctionComponent = () => {
     ),
     [currentView.value]
   );
+
+  const onClickAction = (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => {
+    console.log('Acción seleccionada:', params);
+    // Aquí abres modales, haces navigations, etc.
+  };
+
+  const defaultColumn = useSignal<string>('default');
 
   return (
     <Section
@@ -139,7 +151,7 @@ export const MemosPage: FunctionComponent = () => {
             count={summary.value.total}
             subtitle=''
             color='t-dark'
-            icon='054' // 328
+            icon='328' // 328
           />
 
           <CardData
@@ -147,7 +159,7 @@ export const MemosPage: FunctionComponent = () => {
             count={calculatePercentage(summary.value.in_progress)}
             subtitle=''
             color='t-dark'
-            icon='052' // 311
+            icon='311' // 311
           />
 
           <CardData
@@ -155,7 +167,7 @@ export const MemosPage: FunctionComponent = () => {
             count={calculatePercentage(summary.value.completed)}
             subtitle=''
             color='t-dark'
-            icon='015' // 312
+            icon='312' // 312
           />
         </div>
       )}
@@ -172,11 +184,16 @@ export const MemosPage: FunctionComponent = () => {
         {currentView.value === VIEW_NAME.TABLE && (
           <Table
             data={memos.value}
-            columns={columns}
+            columns={getColumns(onClickAction)}
             showExpandableIcon
             pageSize={20}
             selectable
-            expandable={(row: Memo) => <SupervisorInfo memo={row} />}
+            expandable={(row: Memo, currentColumnName?: string) => (
+              <ExpandableMultiple
+                type={currentColumnName || defaultColumn.value}
+                data={row}
+              />
+            )}
             visibility={{
               id: false,
               city: false,

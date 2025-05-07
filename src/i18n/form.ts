@@ -40,6 +40,12 @@ export const form_es = {
       question: 'Pregunta',
       type: 'Tipo de respuesta',
     },
+    inspect: {
+      title: 'Inspección',
+    },
+    report: {
+      title: 'Reporte',
+    },
   },
 };
 
@@ -84,6 +90,12 @@ export const form_en = {
     field: {
       question: 'Question',
       type: 'Type of response',
+    },
+    inspect: {
+      title: 'Inspection',
+    },
+    report: {
+      title: 'Report',
     },
   },
 };

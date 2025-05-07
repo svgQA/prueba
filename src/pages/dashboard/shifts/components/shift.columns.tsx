@@ -10,6 +10,7 @@ import {
   IDropdownAction,
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
+import { Badge } from '@/components/common/badge/badge';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -120,11 +121,11 @@ export const getColumns = (
           tenMinutesAfter.setMinutes(tenMinutesAfter.getMinutes() + 10);
 
           if (checkInTime <= startDate && checkInTime < tenMinutesBefore) {
-            colorClass = 'border-primary text-primary'; // On time
+            colorClass = 'success'; // On time
           } else if (checkInTime > tenMinutesAfter) {
-            colorClass = 'border-error text-error'; // Early
+            colorClass = 'info'; // Early
           } else {
-            colorClass = 'border-secondary text-secondary'; // Late
+            colorClass = 'warning'; // Late
           }
         }
       }
@@ -142,13 +143,14 @@ export const getColumns = (
       const actualTime = formatActualTime(checkInData);
 
       return (
-        <div
-          onClick={() => info.row.toggleExpanded()}
-          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm w-full justify-center`}
-        >
-          <span>{scheduledTime}</span>
-          <span className='mx-1'>→</span>
-          <span>{actualTime}</span>
+        <div onClick={() => info.row.toggleExpanded()}>
+          <Badge
+            label={`${scheduledTime} → ${actualTime}`}
+            status={colorClass as 'info' | 'error' | 'warning' | 'success'}
+            outline
+            full
+            size='xs'
+          />
         </div>
       );
     },
@@ -162,7 +164,8 @@ export const getColumns = (
       const rowData = info.row.original;
       const checkOutData = rowData.checkOut;
       const endDate = new Date(rowData.end);
-      let colorClass = 'border-gray-500 text-gray-700';
+
+      let colorClass = 'success';
 
       if (checkOutData?.location) {
         if (checkOutData?.time) {
@@ -174,11 +177,11 @@ export const getColumns = (
           tenMinutesAfter.setMinutes(tenMinutesAfter.getMinutes() + 10);
 
           if (checkInTime <= endDate && checkInTime < tenMinutesBefore) {
-            colorClass = 'border-orange-500 text-orange-500';
+            colorClass = 'warning';
           } else if (checkInTime > tenMinutesAfter) {
-            colorClass = 'border-primary text-primary';
+            colorClass = 'error';
           } else {
-            colorClass = 'border-secondary text-secondary';
+            colorClass = 'success';
           }
         }
       }
@@ -194,15 +197,15 @@ export const getColumns = (
         });
       };
       const actualTime = formatActualTime(checkOutData);
-
       return (
-        <div
-          onClick={() => info.row.toggleExpanded()}
-          className={`p-1 size-sm cursor-pointer inline-flex items-center px-2 py-0.5 rounded-md border ${colorClass} text-sm w-full justify-center`}
-        >
-          <span>{scheduledTime}</span>
-          <span className='mx-1'>→</span>
-          <span>{actualTime}</span>
+        <div onClick={() => info.row.toggleExpanded()}>
+          <Badge
+            label={`${scheduledTime} → ${actualTime}`}
+            status={colorClass as 'info' | 'error' | 'warning' | 'success'}
+            outline
+            full
+            size='xs'
+          />
         </div>
       );
     },
@@ -252,13 +255,8 @@ export const getColumns = (
     size: 50,
     header: 'Reportes',
     cell: (info) => (
-      <div
-        className='inline-flex items-center px-2 py-0.5 text-sm rounded-md border'
-        onClick={() => info.row.toggleExpanded()}
-      >
-        <span>2</span>
-        <span className='mx-1'>→</span>
-        <span>12h</span>
+      <div onClick={() => info.row.toggleExpanded()}>
+        <Badge label={`2 → 12h`} outline full size='xs' />
       </div>
     ),
   },
@@ -340,11 +338,28 @@ export const getColumns = (
     id: 'actions',
     size: 20,
     cell: (info) => {
-      const { id } = info.row.original;
+      const { id, checkIn, checkOut } = info.row.original;
+      const model = checkOut
+        ? []
+        : [
+            {
+              label: !checkIn ? 'Marcar check-in' : 'Marcar check-out',
+              icon: 'vox-icon vx-icon-312 text-primary',
+              onClick: () => {
+                onClickAction({
+                  id: String(id),
+                  type: 'shift',
+                  action: !checkIn
+                    ? ROW_ACTIONS.CHECK_IN
+                    : ROW_ACTIONS.CHECK_OUT,
+                });
+              },
+            },
+          ];
 
       const actions: IDropdownAction[] = [
         {
-          label: 'Editar usuario',
+          label: 'Editar turno',
           icon: 'vox-icon vx-icon-123 text-primary',
           onClick: () => {
             onClickAction({
@@ -354,8 +369,9 @@ export const getColumns = (
             });
           },
         },
+        ...model,
         {
-          label: 'Eliminar usuario',
+          label: 'Eliminar turno',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {

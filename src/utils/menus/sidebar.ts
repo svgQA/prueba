@@ -13,14 +13,14 @@ export const SIDEBAR_MENUS: IMenu[] = [
     label: 'shifts',
     to: PAGES_LIST_ROUTER.dashboard.shift,
     description: 'este es',
-    icon: '314',
+    icon: 'user-tasks',
     id: 'shift',
   },
   {
     label: 'forms',
     to: PAGES_LIST_ROUTER.dashboard.form,
     description: 'este es',
-    icon: '306',
+    icon: 'form',
     id: 'form',
   },
   /*
@@ -43,23 +43,21 @@ export const SIDEBAR_MENUS: IMenu[] = [
     label: 'users',
     to: PAGES_LIST_ROUTER.dashboard.users,
     description: 'Usuarios de la aplicación',
-    icon: '308',
+    icon: 'user',
     id: 'users-dashoboar-externo',
   },
-  /*
-  {
-    label: 'devices',
-    to: PAGES_LIST_ROUTER.dashboard.devices,
-    description: 'este es',
-    icon: '307',
-    id: 'device',
-  },
-  */
   {
     label: 'notifications',
     to: PAGES_LIST_ROUTER.dashboard.history,
     description: 'este es',
-    icon: '314',
+    icon: 'notify',
     id: 'history',
   },
+  /* {
+    label: 'devices',
+    to: PAGES_LIST_ROUTER.dashboard.devices,
+    description: 'este es',
+    icon: 'devices',
+    id: 'device',
+  }, */
 ];

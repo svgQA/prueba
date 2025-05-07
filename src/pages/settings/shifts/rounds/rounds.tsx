@@ -9,7 +9,6 @@ import { Round } from './utils/rounds';
 import { columns } from './components/rounds.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ExpandableRounds } from '@/components/compose/table/expandable/rounds';
-import { ShiftService } from '@/services/shift';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store/settings';
 import {
@@ -17,6 +16,7 @@ import {
   setMenu,
 } from '../../store/settings';
 import { toast } from 'react-toastify';
+import { RoundService } from '@/services';
 
 export const RoundsSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -39,7 +39,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   }, []);
 
   const getRounds = async () => {
-    const request: any = await ShiftService.getRounds();
+    const request: any = await RoundService.getRounds();
 
     const rounds = request.data.map((item: any) => {
       const points = [];
@@ -66,7 +66,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   };
 
   const deleteRound = async (id: string) => {
-    const request = await ShiftService.deleteRound(id);
+    const request = await RoundService.deleteRound(id);
     if (!request.getStatus()) return;
     toast.success('Ronda eliminado', { position: 'top-right' });
     getRounds();

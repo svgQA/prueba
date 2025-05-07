@@ -5,15 +5,15 @@ import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { toast } from 'react-toastify';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import dayjs from 'dayjs';
+import { ContractService } from '@/services';
 
 interface FormData {
   name: string;
@@ -36,11 +36,11 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
     let message: string;
 
     if (id) {
-      request = await ShiftService.updateProject(model, id);
-      message = 'Lugar editado exitosamente!';
+      request = await ContractService.updateProject(model, id);
+      message = 'Contrato editado exitosamente!';
     } else {
-      request = await ShiftService.createProject(model);
-      message = 'Lugar creado exitosamente!';
+      request = await ContractService.createProject(model);
+      message = 'Contrato creado exitosamente!';
     }
 
     if (!request.getStatus()) return;
@@ -67,7 +67,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
       'clientId',
     ] as const;
 
-    const request: any = await ShiftService.getProject(id);
+    const request: any = await ContractService.getProject(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
     initialValues.value = model;
   };

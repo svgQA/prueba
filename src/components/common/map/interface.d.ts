@@ -19,6 +19,7 @@ export interface IMapProps extends IComponentProps {
   allowManualPoint?: boolean;
   radius?: number;
   disablePointSelection?: boolean;
+  adminUser?: boolean;
 }
 
 export interface MapPoint {

@@ -39,7 +39,7 @@ const FrequentQuestions = () => {
       {questions.map((q) => (
         <div
           key={q.id}
-          className='bg-gray-100 rounded-full px-4 py-2 cursor-pointer hover:bg-gray-200'
+          className='rounded-full px-4 py-2 cursor-pointer bg-b-light-dark dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light'
         >
           {q.question}
         </div>

@@ -3,7 +3,7 @@ import { IMakeRequest, REQUEST_METHODS } from '@/utils/network/types';
 import { BaseService } from '@/utils/network';
 import { VoxServices } from '@/utils/network/types';
 
-export class NotificationServiceFront extends BaseService {
+export class NotificationService extends BaseService {
   static name: VoxServices = 'notification';
 
   static async sendManualNotification(data: ISendManualNotificationDto) {

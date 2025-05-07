@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react';
 import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
 import { useLocation } from 'wouter';
-import { SchedulerServiceFront } from '@/services/schedule';
-import { TemplateServiceFront } from '@/services/template';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '@/pages/settings/store/settings';
 import { toast } from 'react-toastify';
+import { SchedulerService, TemplateService } from '@/services';
 
 export const ScheduledNotificationForm = () => {
   const [templates, setTemplates] = useState<any[]>([]);
@@ -25,12 +24,9 @@ export const ScheduledNotificationForm = () => {
   useEffect(() => {
     document.title = 'VX - Programar Nueva Notificación';
     const fetchTemplates = async () => {
-      try {
-        const response = await TemplateServiceFront.getTemplates();
-        if (response.getStatus()) setTemplates(response.getMany());
-      } catch (error) {
-        console.error('❌ Error al obtener plantillas:', error);
-      }
+      const response = await TemplateService.getTemplates();
+      if (!response.getStatus()) return;
+      setTemplates(response.getMany());
     };
     fetchTemplates();
   }, []);
@@ -57,7 +53,7 @@ export const ScheduledNotificationForm = () => {
     }
 
     try {
-      await SchedulerServiceFront.scheduleNotification({
+      await SchedulerService.scheduleNotification({
         templateId,
         sendAt: new Date(sendAt),
         filters: { userIds: [], shiftToday: false },
@@ -162,6 +158,7 @@ export const ScheduledNotificationForm = () => {
           </label>
           <input
             type='number'
+            min={1}
             placeholder='Ej: 30'
             className='w-full border px-3 py-2 rounded text-sm'
             value={formData.repeatEveryMinutes}
@@ -180,6 +177,7 @@ export const ScheduledNotificationForm = () => {
           </label>
           <input
             type='number'
+            min={1}
             placeholder='Ej: 5'
             className='w-full border px-3 py-2 rounded text-sm'
             value={formData.maxRepeats}
@@ -200,7 +198,7 @@ export const ScheduledNotificationForm = () => {
               setFormData({ ...formData, templateId: e.currentTarget.value })
             }
           >
-            <option value=''>Seleccione grupos...</option>
+            <option value=''>Seleccione plantilla...</option>
             {templates.map((tpl) => (
               <option key={tpl.id} value={tpl.id}>
                 {tpl.title}

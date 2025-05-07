@@ -13,7 +13,7 @@ import {
   INotificationListItem,
 } from '@/types/notification/INotificationTypes';
 
-export class NotificationHistoryServiceFront extends BaseService {
+export class NotificationHistoryService extends BaseService {
   static name: VoxServices = 'notification';
 
   /**

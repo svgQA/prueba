@@ -7,6 +7,7 @@ import { general_es } from './general.es';
 import { error_en, error_es } from './error';
 import { form_en, form_es } from './form';
 import { shift_en, shift_es } from './shift';
+import { notification_en, notification_es } from './notification';
 
 // import { notification_en, notification_es } from './notification';
 // import { shift_en, shift_es } from './shift';
@@ -19,7 +20,7 @@ const resources = {
       ...error_en,
       ...form_en,
       ...shift_en,
-      // ...notification_en,
+      ...notification_en,
       // ...home_en,
     },
   },
@@ -29,7 +30,7 @@ const resources = {
       ...error_es,
       ...form_es,
       ...shift_es,
-      // ...notification_es,
+      ...notification_es,
       // ...home_es,
     },
   },

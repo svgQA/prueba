@@ -2,18 +2,24 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
 import dayjs from 'dayjs';
+import {
+  IDropdownAction,
+  DropdownActionsMenu,
+} from '@/components/common/table/components/dropdown.actions.menu';
 
-export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
+export const getColumns = (
+  onClickAction: (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => void
+): ColumnDef<INotificationScheduledItem>[] => [
   {
     id: 'title',
     accessorKey: 'overrideTitle',
     header: 'Título',
     size: 200,
-    cell: (info) => (
-      <span className='p-1 size-sm font-medium text-gray-text-light'>
-        {info.getValue() as string}
-      </span>
-    ),
+    cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
     id: 'description',
@@ -22,7 +28,7 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
     size: 300,
     cell: (info) => (
       <span
-        className='line-clamp-2 max-w-[300px] text-sm text-gray-text-light'
+        className='line-clamp-2 max-w-[300px]'
         title={info.getValue() as string}
       >
         {info.getValue() as string}
@@ -62,10 +68,7 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
       const value = info.getValue() as string;
       if (!value) return '-';
       return (
-        <time
-          dateTime={new Date(value).toISOString()}
-          className='p-1 size-sm text-sm text-gray-text-light'
-        >
+        <time dateTime={new Date(value).toISOString()}>
           {dayjs(value).format('DD/MM/YYYY HH:mm')}
         </time>
       );
@@ -80,10 +83,7 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
       const value = info.getValue() as string;
       if (!value) return '-';
       return (
-        <time
-          dateTime={new Date(value).toISOString()}
-          className='p-1 size-sm text-sm text-gray-text-light'
-        >
+        <time dateTime={new Date(value).toISOString()}>
           {dayjs(value).format('DD/MM/YYYY HH:mm')}
         </time>
       );
@@ -91,29 +91,37 @@ export const columns = (): ColumnDef<INotificationScheduledItem>[] => [
   },
   {
     id: 'actions',
-    header: 'Acciones',
-    size: 80,
+    size: 20,
     cell: (info) => {
       const { id } = info.row.original;
-      return (
-        <div className='w-full flex justify-center group relative'>
-          <span className='vox-icon vx-icon-233 p-1 size-sm cursor-pointer' />
-          <div className='absolute left-full ml-2 hidden group-hover:flex bg-white shadow-lg rounded p-1'>
-            <span
-              className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
-              data-id={id}
-              data-type='scheduledNotification'
-              data-action={ROW_ACTIONS.UPDATE}
-            />
-            <span
-              className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
-              data-id={id}
-              data-type='scheduledNotification'
-              data-action={ROW_ACTIONS.DELETE}
-            />
-          </div>
-        </div>
-      );
+
+      const actions: IDropdownAction[] = [
+        {
+          label: 'Editar programación',
+          icon: 'vox-icon vx-icon-123 text-primary',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'shift',
+              action: ROW_ACTIONS.UPDATE,
+            });
+          },
+        },
+        {
+          label: 'Eliminar programación',
+          icon: 'vox-icon vx-icon-053 text-red-500',
+          color: 'text-red-600',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'shift',
+              action: ROW_ACTIONS.DELETE,
+            });
+          },
+        },
+      ];
+
+      return <DropdownActionsMenu actions={actions} />;
     },
   },
 ];

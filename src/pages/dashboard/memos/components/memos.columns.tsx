@@ -4,6 +4,12 @@ import { Memo } from '../utils/memos';
 
 import dayjs from 'dayjs';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import {
+  IDropdownAction,
+  DropdownActionsMenu,
+} from '@/components/common/table/components/dropdown.actions.menu';
+import { Badge } from '@/components/common/badge/badge';
+import { Avatar } from '@/components/common/Avatar';
 
 // Define our custom properties
 type CustomColumnProps = {
@@ -58,168 +64,218 @@ export const FormattedDate: FunctionComponent<{ date: string }> = ({
   );
 };
 
-export const columns: CustomColumnDef<Memo>[] = [
-  // {
-  //   id: 'id',
-  //   accessorKey: 'id',
-  //   header: 'ID',
-  //   cell: (info) => (
-  //     <div className='flex items-center'>
-  //       <span>{String(info.getValue())}</span>
-  //     </div>
-  //   ),
-  // },
-  // {
-  //   id: 'city',
-  //   accessorKey: 'city',
-  //   header: 'Ciudad',
-  // },
-  // {
-  //   id: 'address',
-  //   accessorKey: 'address',
-  //   header: 'Dirección',
-  //   cell: (info) => <span>{String(info.getValue())}</span>,
-  // },
-  // {
-  //   id: 'noveltyDate',
-  //   accessorKey: 'noveltyDate',
-  //   header: 'Fecha Novedad',
-  //   cell: (info) => <FormattedDate date={info.getValue() as string} />,
-  // },
-  // {
-  //   id: 'contact',
-  //   accessorKey: 'contact',
-  //   header: 'Contacto',
-  // },
-  {
-    id: 'noveltyType',
-    accessorKey: 'novelty.name',
-    header: 'Novedad',
-    enableGrouping: true,
-    getIconGroup: (row: Memo) => {
-      if (row.priority === 5) {
-        return { icon: '165', color: 'text-error' };
-      }
-
-      if (row.priority === 4) {
-        return { icon: '182', color: 'text-caution' };
-      }
-
-      return { icon: '319', color: 'text-primary' };
-    },
-  },
-  {
-    id: 'description',
-    accessorKey: 'description',
-    header: 'Descripción',
-    enableGrouping: true,
-  },
-  {
-    id: 'name',
-    accessorFn: (row) => `${row?.extraData?.client.name}`,
-    header: 'Usuario',
-    enableGrouping: true,
-  },
-  {
-    id: 'status',
-    accessorKey: 'state',
-    header: 'Estado',
-    enableGrouping: true,
-    cell: (info: any) => {
-      const status = info.getValue() as string;
-      let statusText = status;
-      let bgColor = 'bg-primary-opacity';
-      let textColor = 'text-primary';
-
-      if (status === 'OPENED') {
-        statusText = 'En Revisión';
-        bgColor = 'bg-secondary-opacity';
-        textColor = 'text-secondary';
-      }
-
-      return (
-        <div className='flex flex-row justify-start'>
-          <span className='p-1 size-sm cursor-pointer'>
-            <div
-              className={`px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}
-            >
-              {statusText}
-            </div>
-          </span>
-        </div>
-      );
-    },
-  },
-  {
-    id: 'priority',
-    accessorKey: 'priority',
-    header: 'Prioridad',
-    enableGrouping: true,
-    cell: (info: any) => {
-      const priority = info.getValue() as string;
-      let bgColor = 'bg-primary-opacity';
-      let textColor = 'text-primary';
-
-      if (priority === 'Alta') {
-        bgColor = 'bg-error-opacity';
-        textColor = 'text-error';
-      } else if (priority === 'Media') {
-        bgColor = 'bg-caution-opacity';
-        textColor = 'text-caution';
-      }
-
-      return (
-        //   <PBadge priority={info.getValue() as 'Alta' | 'Media' | 'Baja'} />
-        <div className='flex flex-row justify-start'>
-          <span className='p-1 size-sm cursor-pointer'>
-            <div
-              className={`px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}
-            >
-              {priority}
-            </div>
-          </span>
-        </div>
-      );
-    },
-  },
-  {
-    id: 'supervisor',
-    accessorKey: 'extraData.company.name',
-    header: 'supervisor',
-    enableGrouping: true,
-    meta: { expander: 'extraData' },
-    cell: (info) => {
-      return (
-        <span className=' p-1 size-sm cursor-pointer'>
-          {info.getValue() as string}
-        </span>
-      );
-    },
-  },
-  {
-    id: 'actions',
-    size: 20,
-    cell: (info) => {
-      const { id } = info.row.original;
-      return (
-        <div className='w-full flex justify-center group relative'>
-          <span className='vox-icon vx-icon-233 p-1 size-sm cursor-pointer' />
-          <div className='absolute left-full ml-2 hidden group-hover:flex bg-white shadow-lg rounded p-1'>
-            <span
-              className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
-              data-id={id}
-              data-type='memo'
-              data-action={ROW_ACTIONS.UPDATE}
-            ></span>
-            <span
-              className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
-              data-id={id}
-              data-type='memo'
-              data-action={ROW_ACTIONS.DELETE}
-            ></span>
+export const getColumns = (
+  onClickAction: (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => void
+): CustomColumnDef<Memo>[] => [
+    {
+      id: 'name',
+      accessorFn: (row) => `${row?.extraData?.client.name}`,
+      header: 'Usuario',
+      enableGrouping: true,
+      cell: (info) => {
+        const name = info.getValue() as string;
+        return (
+          <div className='flex items-center gap-2 justify-start' onClick={() => info.row.toggleExpanded()}>
+            <Avatar name={name} size='sm' square />
+            {name}
           </div>
-        </div>
-      );
+        );
+      },
     },
-  },
-];
+    {
+      id: 'noveltyType',
+      accessorKey: 'novelty.name',
+      header: 'Novedad',
+      enableGrouping: true,
+      getIconGroup: (row: Memo) => {
+        if (row.priority === 'Alta') {
+          return { icon: '165', color: 'text-error' };
+        }
+
+        if (row.priority === 'Media') {
+          return { icon: '182', color: 'text-caution' };
+        }
+
+        return { icon: '319', color: 'text-primary' };
+      },
+    },
+    {
+      id: 'description',
+      accessorKey: 'description',
+      header: 'Descripción',
+      size: 200,
+      enableGrouping: true,
+      cell: (info) => {
+        const description = info.getValue() as string;
+        return (
+          <div className='max-w-[300px]' onClick={() => info.row.toggleExpanded()}>
+            <span className='block truncate' title={description}>
+              {description}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'status',
+      accessorKey: 'state',
+      header: 'Estado',
+      enableGrouping: true,
+      cell: (info: any) => {
+        const status = info.getValue() as string;
+        let statusText = 'info';
+        if (status === 'OPENED') {
+          statusText = 'success';
+        } else if (status === 'CLOSED') {
+          statusText = 'error';
+        } else if (status === 'IN_REVISION') {
+          statusText = 'warning';
+        }
+
+        return (
+          <Badge
+            label={status}
+            status={statusText as 'info' | 'error' | 'warning' | 'success'}
+            full
+            outline
+          />
+        );
+      },
+    },
+    {
+      id: 'priority',
+      accessorKey: 'priority',
+      header: 'Prioridad',
+      enableGrouping: true,
+      cell: (info: any) => {
+        const priority = info.getValue() as string;
+        let status = 'info';
+        let label = 'Baja';
+        if (priority === "Alta") {
+          status = 'error';
+          label = 'Alta';
+        } else if (priority === "Media") {
+          status = 'warning';
+          label = 'Media';
+        }
+
+        return (
+          <Badge
+            label={label}
+            status={status as 'info' | 'error' | 'warning' | 'success'}
+            full
+            outline
+          />
+        );
+      },
+    },
+    {
+      id: 'supervisor',
+      accessorKey: 'extraData.company.name',
+      header: 'Supervisor',
+      enableGrouping: true,
+      cell: (info) => {
+        const supervisor = info.getValue() as string;
+        return (
+          <div className='flex items-center gap-1 justify-start' onClick={() => info.row.toggleExpanded()}>
+            <Avatar name={supervisor} size='sm' square />
+            {supervisor}
+          </div>
+        );
+      },
+    },
+    {
+      id: 'updatedBy',
+      accessorKey: 'userEdit',
+      header: 'Actualizado Por',
+      cell: (info) => {
+        const value = info.getValue() as string;
+        const displayValue = value?.trim()
+          ? value
+          : info.row.original?.extraData?.client?.name;
+        return (
+          <div className='flex items-center gap-1 justify-start'>
+            <Avatar name={displayValue} size='sm' square />
+            <p
+              className='p-1 size-sm cursor-pointer'
+              onClick={() => info.row.toggleExpanded()}
+            >
+              {displayValue}
+            </p>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'history',
+      accessorKey: 'level',
+      header: 'Historial',
+      cell: (info) => {
+        const value = info.getValue() as string;
+
+        return (
+          <div className='flex items-center gap-1 justify-start'>
+            <span
+              className='p-1 size-sm cursor-pointer'
+              onClick={() => info.row.toggleExpanded()}
+            >
+              💬 {value}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'createdAt',
+      accessorKey: 'createdAt',
+      header: 'Fecha',
+      cell: (info) => {
+        const dateStr = String(info.getValue());
+        if (!dateStr) return '-';
+
+        try {
+          return dayjs(dateStr).format('DD/MM/YYYY');
+        } catch (error) {
+          return '-';
+        }
+      },
+    },
+    {
+      id: 'actions',
+      size: 20,
+      cell: (info) => {
+        const { id } = info.row.original;
+        const actions: IDropdownAction[] = [
+          {
+            label: 'Editar memo',
+            icon: 'vox-icon vx-icon-123 text-primary',
+            onClick: () => {
+              onClickAction({
+                id: String(id),
+                type: 'memo',
+                action: ROW_ACTIONS.UPDATE,
+              });
+            },
+          },
+          {
+            label: 'Eliminar memo',
+            icon: 'vox-icon vx-icon-053 text-red-500',
+            color: 'text-red-600',
+            onClick: () => {
+              onClickAction({
+                id: String(id),
+                type: 'memo',
+                action: ROW_ACTIONS.DELETE,
+              });
+            },
+          },
+        ];
+
+        return <DropdownActionsMenu actions={actions} />;
+      },
+    },
+  ];

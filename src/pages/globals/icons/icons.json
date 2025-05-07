@@ -2268,5 +2268,70 @@
     "name": "vx-icon-454",
     "code": "\\02CD",
     "number": "454"
+  },
+  {
+    "name": "vx-icon-options",
+    "code": "\\02CE",
+    "number": "462"
+  },
+  {
+    "name": "vx-icon-user-inactive",
+    "code": "\\02CF",
+    "number": "463"
+  },
+  {
+    "name": "vx-icon-user-active",
+    "code": "\\02D0",
+    "number": "464"
+  },
+  {
+    "name": "vx-icon-user-status",
+    "code": "\\02D1",
+    "number": "465"
+  },
+  {
+    "name": "vx-icon-users",
+    "code": "\\02D2",
+    "number": "466"
+  },
+  {
+    "name": "vx-icon-devices",
+    "code": "\\02D3",
+    "number": "467"
+  },
+  {
+    "name": "vx-icon-user",
+    "code": "\\02D4",
+    "number": "468"
+  },
+  {
+    "name": "vx-icon-list",
+    "code": "\\02D5",
+    "number": "469"
+  },
+  {
+    "name": "vx-icon-usr-taks",
+    "code": "\\02D6",
+    "number": "470"
+  },
+  {
+    "name": "vx-icon-users-opacity",
+    "code": "\\02D7",
+    "number": "471"
+  },
+  {
+    "name": "vx-icon-settings",
+    "code": "\\02D8",
+    "number": "472"
+  },
+  {
+    "name": "vx-icon-notify",
+    "code": "\\02D9",
+    "number": "473"
+  },
+  {
+    "name": "vx-icon-open-mail",
+    "code": "\\02DA",
+    "number": "474"
   }
 ]

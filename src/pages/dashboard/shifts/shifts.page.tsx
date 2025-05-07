@@ -8,7 +8,9 @@ import {
 } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import {
-  NotificationServiceFront,
+  GanttService,
+  NotificationService,
+  ServiceService,
   ShiftService,
   ShiftSummary,
 } from '@/services';
@@ -17,7 +19,6 @@ import { Table } from '@/components/common/table/table';
 import { getColumns } from './components/shift.columns';
 import { IShiftResponse } from '@/types/shift/activity';
 import { useTranslation } from 'react-i18next';
-
 import {
   GeneralTask,
   Task,
@@ -35,10 +36,9 @@ import { ShiftForm } from './components/shift.modal';
 import LiveUserMap from './components/shift.map';
 import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import { MentionOption } from '@/components/common/mention-editor';
 import { toast } from 'react-toastify';
-import i18n from '@/i18n';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
@@ -56,6 +56,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
   const showUpsertModal = useSignal<boolean>(false);
   const showSendModal = useSignal<boolean>(false);
+  const notificationValidate = useSignal<boolean>(false);
   const showShiftModal = useSignal<boolean>(false);
   const shiftSummary = useSignal<ShiftSummary>({
     total: 0,
@@ -99,7 +100,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   };
 
   const getGanttHandler = async (viewMode?: ViewMode) => {
-    const response = await ShiftService.get_gantt({
+    const response = await GanttService.get_gantt({
       page: 1,
       items: 100,
       mode: viewMode,
@@ -143,13 +144,18 @@ export const ShiftsPage: FunctionalComponent = () => {
         hasValidResponse,
       ] = await Promise.all([
         ShiftService.get_all({ page: 1, items: 1000 }),
-        ShiftService.getListService(),
+        ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),
-        NotificationServiceFront.hasUsersWithPlayerId(),
+        NotificationService.hasUsersWithPlayerId(),
       ]);
 
       if (shiftsResponse && shiftsResponse.getStatus()) {
-        shifts.value = shiftsResponse.getMany();
+        const [hasNotifications, responseShifts] = findNotificationShift(
+          shiftsResponse.getMany()
+        );
+        notificationValidate.value = hasNotifications;
+
+        shifts.value = responseShifts;
       }
 
       if (servicesResponse.getStatus()) {
@@ -166,6 +172,27 @@ export const ShiftsPage: FunctionalComponent = () => {
     } catch (error) {
       toast.error('notification.error_fetching_initial_data');
     }
+  };
+
+  const findNotificationShift = (
+    shiftsResponse: IShiftResponse[]
+  ): [boolean, IShiftResponse[]] => {
+    let hasSomeNotifications = false;
+    const shifts = shiftsResponse.map((shifts) => {
+      if (shifts.employee?.playerId) {
+        hasSomeNotifications = true;
+        return {
+          ...shifts,
+          hasNotifications: true,
+        };
+      }
+      return {
+        ...shifts,
+        hasNotifications: false,
+      };
+    });
+
+    return [hasSomeNotifications, shifts];
   };
 
   useEffect(() => {
@@ -198,8 +225,10 @@ export const ShiftsPage: FunctionalComponent = () => {
    * Eventos de toggle para los modales
    */
   const toggleSendModal = () => {
+    handleViewChange(VIEW_NAME.TABLE);
+
     if (!hasValidPlayerRef.current) {
-      toast.warn(i18n.t('notification.nobody_have_player_id'));
+      toast.warn(t('notification.nobody_have_player_id'));
       return;
     }
 
@@ -212,7 +241,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
     // ✅ Siguientes veces: solo abre el modal (sin toggle)
     if (selectedUsers.length === 0) {
-      toast.warn(i18n.t('notification.select_at_least_one_employee'));
+      toast.warn(t('notification.select_at_least_one_employee'));
       setOnNotifications(false);
       onNotificationsRef.current = false;
       return;
@@ -324,7 +353,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           onClick={() => {
             handleViewChange(VIEW_NAME.TABLE);
           }}
-          className={`!py-3 ${currentView.value === VIEW_NAME.TABLE ? 'bg-red-300' : ''}`}
+          selected={currentView.value === VIEW_NAME.TABLE}
           icon='443'
         />
         <Button
@@ -332,7 +361,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           onClick={() => {
             handleViewChange(VIEW_NAME.SCHEDULER);
           }}
-          className={`!py-3 ${currentView.value === VIEW_NAME.SCHEDULER ? 'bg-red-300' : ''}`}
+          selected={currentView.value === VIEW_NAME.SCHEDULER}
           icon='412'
         />
         <Button
@@ -340,9 +369,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           onClick={() => {
             handleViewChange(VIEW_NAME.MAP);
           }}
-          className={
-            currentView.value === VIEW_NAME.MAP ? 'bg-primary-opacity' : ''
-          }
+          selected={currentView.value === VIEW_NAME.MAP}
           icon='103'
         />
 
@@ -351,17 +378,13 @@ export const ShiftsPage: FunctionalComponent = () => {
             name='button-action'
             rounded={false}
             icon='314'
+            label={t('shifts.remoteSupervision')}
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${
-              !hasValidPlayer
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : onNotifications
-                  ? 'bg-primary-opacity'
-                  : 'border-primary'
-            }`}
+            selected={showSendModal.value}
+            disabled={!hasValidPlayer}
           />
           {showSendModal.value && (
-            <div className='absolute mt-4 mr-12 z-50 rounded p-4'>
+            <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
               <SendForm
                 onClose={handleCloseSendModal}
                 hasplayers={hasValidPlayer}
@@ -371,7 +394,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           )}
         </div>
 
-        <Button
+        {/* <Button
           name='button-supervision'
           label={t('shifts.remoteSupervision')}
           className='bg-primary text-white py-1 rounded px-4'
@@ -404,6 +427,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       onNotifications,
       showSendModal.value,
       selectedUsers,
+      t,
     ]
   );
 
@@ -461,7 +485,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           count={shiftSummary.value.total}
           subtitle=''
           color='t-dark'
-          icon='054'
+          icon='328'
         />
 
         <CardData
@@ -469,7 +493,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           count={calculatePercentage(shiftSummary.value.in_progress)}
           subtitle=''
           color='t-dark'
-          icon='052'
+          icon='311'
         />
 
         <CardData
@@ -477,7 +501,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           count={calculatePercentage(shiftSummary.value.completed)}
           subtitle=''
           color='t-dark'
-          icon='015'
+          icon='312'
         />
       </div>
 
@@ -499,10 +523,10 @@ export const ShiftsPage: FunctionalComponent = () => {
           <Table<IShiftResponse>
             data={shifts.value}
             columns={getColumns(onClickAction)}
-            showExpandableIcon={false}
             pageSize={20}
             selectable
             onNotifications={onNotifications}
+            hasNotifications={notificationValidate.value}
             onSelectionChange={(rows) => {
               const validUsers = rows.map((row: any) => ({
                 id: row.employee.id,

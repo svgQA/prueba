@@ -9,7 +9,7 @@ import { FormData } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { ShiftService } from '@/services';
+import { ServiceService, ShiftService } from '@/services';
 import { Chip } from '@/components/common/chip/chip';
 import { Task, User } from '@/components/compose/gantt/types/public-types';
 import { Badge } from '@/components/common/badge/badge';
@@ -80,7 +80,7 @@ export const TaskForm = ({
   };
 
   const getServices = useCallback(async () => {
-    const request = await ShiftService.getServicesSimpleList();
+    const request = await ServiceService.getServicesSimpleList();
     if (request.getStatus()) {
       services.value = request.getMany();
     }

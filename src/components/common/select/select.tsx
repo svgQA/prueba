@@ -25,23 +25,30 @@ export const Select = ({
       {label && (
         <label
           for={`${id}-select`}
-          className='capitalize block text-sm font-medium'
+          className='capitalize block text-sm font-medium text-gray-700 dark:text-gray-200'
         >
           {label}
         </label>
       )}
       <div
-        className={`${borderless ? '' : 'border-b-light-dark dark:border-b-dark-light border'} rounded flex flex-row items-center`}
+        className={`
+          ${borderless ? '' : 'border border-gray-200 dark:border-gray-700'}
+          rounded flex flex-row items-center
+          bg-white dark:bg-gray-800
+        `}
       >
         {!end && icon && (
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
         <select
-          className={`w-full px-3 py-2 rounded ${
-            meta?.touched && meta?.error
-              ? 'border-red-500 focus:ring-red-500'
-              : 'border-gray-300 focus:ring-blue-500'
-          } appearance-none`}
+          className={`w-full px-3 py-2 rounded
+            bg-white dark:bg-gray-800
+            text-gray-700 dark:text-gray-200
+            border-gray-300 dark:border-gray-700
+            focus:ring-blue-500 dark:focus:ring-blue-400
+            appearance-none
+            ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
+          `}
           onChange={onChange}
           value={value}
           name={name}

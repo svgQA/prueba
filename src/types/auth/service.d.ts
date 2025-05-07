@@ -15,6 +15,7 @@ export interface IUserRequest extends IUser {
   readonly address: string;
   readonly image?: string;
   readonly phone?: string;
+  companyId?: number;
 
   readonly cardId?: string;
   readonly cardType?: CARD_ID_TYPE;
@@ -31,12 +32,22 @@ export interface IExtraData {
   company: string;
 }
 
+export interface IRelationCompany {
+  id: number;
+  company: {
+    id: number;
+    name: string;
+  };
+}
 export interface IUserResponse extends IUserRequest {
   id: number;
+  playerId?: string;
+  hasNotifications?: boolean;
   responses?: any[];
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
+  companies: IRelationCompany[];
 }
 
 export interface IJwtPayload {

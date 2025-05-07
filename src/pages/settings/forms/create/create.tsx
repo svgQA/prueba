@@ -33,7 +33,8 @@ import { FormElement } from './components/element';
 import { FormPhoneViewer } from './components/phone';
 import { getStatusElementSelected, toggleListModal } from '../lists/store/list';
 import i18n from '@/i18n';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { formValidation } from './utils/validation';
 export const FormCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   useEffect(() => {
@@ -52,12 +53,12 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   const saveFormat = async () => {
     const format: IFormRequest = {
       title: getForm.value.label,
-      description: getForm.value.description || getForm.value.label,
+      description: getForm.value.description || '',
       structure: getForm.value,
     };
 
-    const message = getValidation(format);
-    if (message) return toast.error(message);
+    const message = formValidation(format);
+    if (message) return ToastManager.error(message);
 
     if (getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE) {
       if (!getFormMode.value.id) return;
@@ -68,19 +69,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       if (!response.getStatus()) return;
     }
     navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.form.to);
-  };
-
-  const getValidation = (format: IFormRequest) => {
-    if (format.title.length < 5) {
-      return i18n.t('form.error.title');
-    }
-    if (format.description.length < 5) {
-      return i18n.t('form.error.description');
-    }
-    if (!format.structure) {
-      return i18n.t('form.error.structure');
-    }
-    return null;
   };
 
   const addLelement = () => {
@@ -139,8 +127,8 @@ export const FormCreateSettingPage: FunctionComponent = () => {
         />
       </div>
       <div class='flex-grow min-h-[78vh] p-3'>
-        <div className='flex flex-row w-full items-center mb-4 pr-3'>
-          <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer border-b-dark-light dark:border-b-light-dark'>
+        <div className='flex flex-row w-full items-center mb-4 gap-5 pr-12'>
+          <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer'>
             <span className='vx-icon vx-upload text-gray-400 text-2xl' />
           </div>
           <div className='flex flex-col gap-1 w-10/12'>
@@ -152,7 +140,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               id={`in-form-${getForm.value.id}-format-title`}
               value={getForm.value.label}
               onChange={handleFormatInputChange}
-              borderless
             />
             <Input
               type='text'
@@ -160,7 +147,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               name='description'
               icon='123'
               id={`in-form-${getForm.value.id}-format-description`}
-              borderless
               value={getForm.value.description}
               onChange={handleFormatInputChange}
             />
@@ -188,7 +174,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                 data-pageid={page.id}
                 value={page.label}
                 onChange={handlePageInputChange}
-                borderless
                 icon='064'
               />
               <div className='mt-2 w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light'>

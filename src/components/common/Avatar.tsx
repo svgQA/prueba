@@ -11,10 +11,10 @@ interface AvatarProps {
 }
 
 const sizeMap = {
-  sm: 'w-8 h-8 text-base',
-  md: 'w-12 h-12 text-xl',
-  lg: 'w-20 h-20 text-3xl',
-  xl: 'w-32 h-32 text-5xl',
+  sm: 'min-w-8 max-w-8 min-h-8 max-h-8 text-base',
+  md: 'min-w-12 max-w-12 min-h-12 max-h-12 text-xl',
+  lg: 'min-w-20 max-w-20 min-h-20 max-h-20 text-3xl',
+  xl: 'min-w-32 max-w-32 min-h-32 max-h-32 text-5xl',
   auto: 'w-full h-full',
 };
 const iconSizeMap = {

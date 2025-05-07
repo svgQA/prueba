@@ -92,27 +92,25 @@ export const DropdownActionsMenu = ({
                   padding='px-2 py-2'
                   text='text-sm'
                   borderless
-                  bold={false}
-                  textAlign='left'
+                  full
                   className='w-full justify-start hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
                 />
               ))}
             </div>
-            <div className='border-t border-gray-200 dark:border-gray-700 my-2'></div>
-            <div className='px-2'>
-              <Button
-                id='dropdown-cancel'
-                name='dropdown-cancel'
-                label='Cancelar'
-                onClick={() => setIsDropdownOpen(false)}
-                textColor='text-gray-500 dark:text-gray-400'
-                padding='px-2 py-2'
-                text='text-sm'
-                borderless
-                bold={true}
-                className='w-full justify-start hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
-              />
-            </div>
+            <div className='border-t border-gray-200 dark:border-gray-700'></div>
+            <Button
+              id='dropdown-cancel'
+              name='dropdown-cancel'
+              label='Cancelar'
+              onClick={() => setIsDropdownOpen(false)}
+              textColor='text-gray-500 dark:text-gray-400'
+              padding='px-2 py-2'
+              text='text-sm'
+              borderless
+              bold={true}
+              full
+              className='w-full justify-start hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
+            />
           </div>,
           document.body
         )}

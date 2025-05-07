@@ -3,7 +3,6 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { toast } from 'react-toastify';
@@ -12,6 +11,8 @@ import { useEffect } from 'preact/hooks';
 import WeeklyScheduler from '../components/weekly.scheduler';
 import { convertBlocksToCells, getSelectedHoursByDay } from '../utils';
 import { ICScheduleRequest } from '@/types/shift/shift.request';
+import { ScheduleService } from '@/services';
+
 const START_HOUR = 0;
 const END_HOUR = 24;
 
@@ -63,9 +64,9 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
       : 'Horario creado exitosamente!';
 
     if (id) {
-      request = await ShiftService.updateSchedule(model, id);
+      request = await ScheduleService.updateSchedule(model, id);
     } else {
-      request = await ShiftService.createSchedule(model);
+      request = await ScheduleService.createSchedule(model);
     }
 
     if (!request.getStatus()) return;
@@ -76,7 +77,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const setInitialValues = async () => {
     if (!id) return;
 
-    const request = await ShiftService.getScheduleById(id);
+    const request = await ScheduleService.getScheduleById(id);
     if (!request.getStatus()) return;
     const model = request.getOne();
 
