@@ -17,6 +17,7 @@ import {
 import {
   type IDepartmentResponse,
   type IMunicipalityResponse,
+  type IProjectMetricsResponse,
 } from '@/types/shift/shift.response';
 import { type ICountryResponse } from '@/types/user/user.response';
 import { BaseService } from '@/utils/network';
@@ -120,6 +121,13 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
+  static async getProjectMetrics(id: number) {
+    const model: IMakeRequest = {
+      url: ['contract', `${id}`, 'metrics'],
+    };
+    return await super.make_request<IProjectMetricsResponse>(this.name, model);
+  }
+
   static async getDepartments(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['place/departments'],
@@ -167,6 +175,14 @@ export class ShiftService extends BaseService {
   static async deletePlace(id: string) {
     const model: IMakeRequest = {
       url: ['place', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async deleteShift(id: string) {
+    const model: IMakeRequest = {
+      url: ['activity', id],
       method: REQUEST_METHODS.DELETE,
     };
     return await super.make_request(this.name, model);

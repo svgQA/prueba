@@ -40,6 +40,8 @@ import { MentionOption } from '@/components/common/mention-editor';
 import { toast } from 'react-toastify';
 import i18n from '@/i18n';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { showAlert } from '@/components/common/show-alert/show-alert';
+import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 
 enum VIEW_NAME {
   TABLE,
@@ -414,8 +416,41 @@ export const ShiftsPage: FunctionalComponent = () => {
     type: string;
     action: ROW_ACTIONS;
   }) => {
-    console.log('Acción seleccionada:', params);
+    switch (params.action) {
+      case ROW_ACTIONS.UPDATE:
+        toggleUpsertModal();
+        break;
+      case ROW_ACTIONS.DELETE:
+        const shift = shifts.value.find(
+          (shift) => shift.id === Number(params.id)
+        );
+        if (!shift) {
+          toast.error(t('shift.table.delete.error'));
+          return;
+        }
+
+        const status = shift.status as unknown as SHIFT_STATUS;
+        if (status !== SHIFT_STATUS.CREATED) {
+          toast.warning(t('shift.table.delete.warning'));
+          return;
+        }
+
+        showAlert({
+          title: t('shift.table.delete.title'),
+          message: t('shift.table.delete.message'),
+          onConfirm: () => deleteShift(params.id),
+          onCancel: () => {},
+        });
+        break;
+    }
     // Aquí abres modales, haces navigations, etc.
+  };
+
+  const deleteShift = async (id: string) => {
+    const response = await ShiftService.deleteShift(id);
+    if (!response.getStatus()) return;
+    toast.success(t('shift.table.delete.success'));
+    fetchInitialData();
   };
 
   return (

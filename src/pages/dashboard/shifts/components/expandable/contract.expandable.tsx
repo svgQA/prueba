@@ -1,13 +1,28 @@
 import { Chip } from '@/components/common/chip/chip';
 import { IContract } from '@/types/shift/activity';
+import { useEffect } from 'react';
+import { ShiftService } from '@/services';
+import { useSignal } from '@preact/signals';
+import { IProjectMetricsResponse } from '@/types/shift/shift.response';
 
 const ContractInfo = ({ contract }: { contract: IContract }) => {
-  const extra = {
-    completedShifts: 12,
-    incidents: 2,
-    totalHours: 144,
-    compliance: 10,
+  const metrics = useSignal<IProjectMetricsResponse>({
+    completedShifts: 0,
+    completionPercentage: 0,
+    totalHours: 0,
+    totalShifts: 0,
+  });
+
+  const getMetrics = async () => {
+    console.log(contract.id);
+    const response = await ShiftService.getProjectMetrics(contract.id);
+    if (!response.getStatus()) return;
+    metrics.value = response.getOne();
   };
+
+  useEffect(() => {
+    getMetrics();
+  }, []);
 
   return (
     <div className='bg-b-light-dark dark:bg-b-dark-light p-4 rounded-lg'>
@@ -80,7 +95,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   </div>
                   <div>
                     <p className='font-semibold'>Turnos completados</p>
-                    <p className='text-sm'>{extra.completedShifts}</p>
+                    <p className='text-sm'>{metrics.value.completedShifts}</p>
                   </div>
                 </div>
 
@@ -90,7 +105,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   </div>
                   <div>
                     <p className='font-semibold'>Horas totales</p>
-                    <p className='text-sm'>{extra.totalHours}</p>
+                    <p className='text-sm'>{metrics.value.totalHours}</p>
                   </div>
                 </div>
 
@@ -99,8 +114,8 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                     <span className='text-error vox-icon size-sm vx-icon-308'></span>
                   </div>
                   <div>
-                    <p className='font-semibold'>Incidencias</p>
-                    <p className='text-sm'>{extra.incidents}</p>
+                    <p className='font-semibold'>Total de turnos</p>
+                    <p className='text-sm'>{metrics.value.totalShifts}</p>
                   </div>
                 </div>
 
@@ -110,7 +125,9 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   </div>
                   <div>
                     <p className='font-semibold'>Cumplimiento</p>
-                    <p className='text-sm'>{extra.compliance}%</p>
+                    <p className='text-sm'>
+                      {metrics.value.completionPercentage.toFixed(2)}%
+                    </p>
                   </div>
                 </div>
               </div>
