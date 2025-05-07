@@ -42,15 +42,14 @@ export const getColumns = (
       size: 120,
       cell: (info) => {
         const type = info.getValue() as string;
-        const label = type === 'manual' ? 'Usuarios' : 'Programada';
         const color =
-          type === 'manual' ? 'bg-m6 text-primary' : 'bg-caution text-yellow-800';
+          type === 'Usuarios' ? 'bg-m6 text-primary' : 'bg-caution text-yellow-800';
 
         return (
           <span
             className={`px-2 py-1 rounded-full text-xs font-semibold ${color}`}
           >
-            {label}
+            {type}
           </span>
         )
       },
@@ -102,33 +101,6 @@ export const getColumns = (
               />
             </div>
             <span className='text-xs font-semibold'>{openRate}%</span>
-          </div>
-        );
-      },
-    },
-    {
-      id: 'openRate',
-      accessorKey: 'openRate',
-      header: 'Tasa de apertura',
-      size: 150,
-      cell: (info) => {
-        const openRate = info.getValue() as number;
-
-        let barColor = 'bg-caution';
-        if (openRate >= 70) barColor = 'bg-m6';
-        else if (openRate <= 30) barColor = 'bg-error';
-
-        return (
-          <div className='flex items-center gap-2 w-full'>
-            <div className='flex-1 h-2 bg-gray-200 rounded-full overflow-hidden'>
-              <div
-                className={`h-full ${barColor}`}
-                style={{ width: `${openRate}%` }}
-              />
-            </div>
-            <span className='text-xs font-semibold text-gray-700'>
-              {openRate}%
-            </span>
           </div>
         );
       },
