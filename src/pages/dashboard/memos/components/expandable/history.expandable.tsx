@@ -24,23 +24,20 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const connect_socket = () => {
     const socket = io(memo_history_service_url, {
       query: { token: getToken(), tenantId: tenant, memoId: memo.id },
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionAttempts: 5
     });
+
     socketRef.current = socket;
     socket.on('connect', () => {
       setConnectionStatus('Connected');
-      // Enviamos el memo principal al conectarnos
       socket.emit('create-message', memo);
     });
+    socket.on('all-messages', (data: Memo[]) => setMemos(data));
+    socket.on('update-messages', (data: Memo[]) => setMemos(data));
     socket.on('disconnect', disconnect_socket);
     socket.on('connect_error', disconnect_socket);
-    socket.on('memo-messages', (updatedMemos: Memo[]) => {
-      console.log('📨 Recibiendo mensajes del socket:', updatedMemos);
-      // Aseguramos que el memo principal esté en la lista
-      const hasMainMemo = updatedMemos.some(m => m.id === memo.id);
-      const finalMemos = hasMainMemo ? updatedMemos : [memo, ...updatedMemos];
-      console.log('📝 Memos finales a renderizar:', finalMemos);
-      setMemos(finalMemos);
-    });
   };
 
   const disconnect_socket = () => {
@@ -57,10 +54,37 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     return () => disconnect_socket();
   }, []);
 
-  useEffect(() => {
-    console.log('🔄 Estado de memos actualizado:', memos);
-    console.log('🔍 Número de memos a renderizar:', memos.length);
-  }, [memos]);
+  const handleSubmitMessage = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    if (!message.trim() && attachments.length === 0) return;
+
+    const now = new Date().toISOString();
+
+    // Creamos un nuevo memo basado en el principal
+    const newMemo: Memo = {
+      ...memo,
+      id: Date.now(),
+      description: message,
+      attachments: attachments.map(file => ({
+        name: file.name,
+        url: URL.createObjectURL(file)
+      })),
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    // Enviamos al socket primero
+    if (socketRef.current) {
+      newMemo.extraData = {
+        ...newMemo.extraData,
+        client: { name: '', phone: '' }
+      } as typeof newMemo.extraData;
+      socketRef.current.emit('create-message', newMemo);
+    }
+
+    setMessage("");
+    setAttachments([]);
+  };
 
   const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target as HTMLInputElement
@@ -74,62 +98,6 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const removeAttachment = (index: number) => {
     setAttachments((prevAttachments) => prevAttachments.filter((_, i) => i !== index))
   }
-
-  const handleSubmitMessage = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    if (!message.trim() && attachments.length === 0) return;
-
-    const now = new Date().toISOString();
-
-    // Creamos un nuevo memo basado en el principal
-    const newMemo: Memo = {
-      ...memo,
-      id: Date.now(), // Nuevo ID
-      description: message,
-      attachments: attachments.map(file => ({
-        name: file.name,
-        url: URL.createObjectURL(file)
-      })),
-      createdAt: now,
-      updatedAt: now,
-      updatedBy: user?.name || 'Usuario', // Usuario actual
-      extraData: {
-        client: {
-          name: user?.name || 'Usuario',
-          phone: memo.extraData?.client?.phone || ''
-        },
-        city: memo.extraData?.city || {
-          name: '',
-          country: '',
-          department: ''
-        },
-        place: memo.extraData?.place || {
-          name: '',
-          address: '',
-          latitude: 0,
-          longitude: 0
-        },
-        company: memo.extraData?.company || {
-          name: '',
-          description: ''
-        },
-        service: memo.extraData?.service || {
-          name: '',
-          description: ''
-        }
-      }
-    };
-
-    // Enviamos al socket primero
-    if (socketRef.current) {
-      socketRef.current.emit('create-message', newMemo);
-      // Solicitamos una actualización de la lista de mensajes
-      socketRef.current.emit('request-messages', { memoId: memo.id });
-    }
-
-    setMessage("");
-    setAttachments([]);
-  };
 
   const formatDate = (date: string | Date) => {
     if (!date) return '-';
@@ -152,7 +120,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const getPriorityColor = (priority: string) => {
     let status = 'info';
-    
+
     if (priority === "Alta") {
       status = 'error';
     } else if (priority === "Media") {
@@ -243,10 +211,10 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
                   // Procesar imágenes
                   if (memo.resource.images) {
-                    const images = Array.isArray(memo.resource.images) 
-                      ? memo.resource.images 
+                    const images = Array.isArray(memo.resource.images)
+                      ? memo.resource.images
                       : [memo.resource.images];
-                    
+
                     images.forEach((imageUrl) => {
                       if (imageUrl) {
                         allAttachments.push({
@@ -260,10 +228,10 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
                   // Procesar archivos
                   if (memo.resource.files) {
-                    const files = Array.isArray(memo.resource.files) 
-                      ? memo.resource.files 
+                    const files = Array.isArray(memo.resource.files)
+                      ? memo.resource.files
                       : [memo.resource.files];
-                    
+
                     files.forEach((fileUrl) => {
                       if (fileUrl) {
                         allAttachments.push({
@@ -324,7 +292,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       <div className="h-px bg-gray-border dark:bg-b-dark-light" />
 
       {/* Chat Messages */}
-      <div className={`overflow-y-auto p-4 ${memos.length > 1 ? 'h-[400px]' : 'min-h-[200px]'}`}>
+      <div className={`overflow-y-auto p-4 ${memos.length > 1 ? 'h-[350px]' : 'min-h-[200px]'}`}>
         <div className="space-y-4">
           {memos.map((memo) => (
             <div key={memo.id} className="flex gap-3">
