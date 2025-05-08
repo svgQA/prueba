@@ -20,11 +20,11 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
     setQr(JSON.stringify(title));
   }, []);
 
-  const handlePoint = async (data: any) => {
+  /* const handlePoint = async (data: any) => {
     const title = `Latitud: ${data.position.lat}, Longitud: ${data.position.lng}`;
 
     setQr(JSON.stringify(title));
-  };
+  };*/
 
   const handleDownloadPDF = async () => {
     if (!qrRef.current) return;
@@ -101,6 +101,7 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
                 height='100%'
                 clickPoint={() => {}}
                 disablePointSelection={true}
+                //clickPoint={handlePoint}
               />
             </div>
           ) : (
