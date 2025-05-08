@@ -20,6 +20,7 @@ import { Signal, useSignal } from '@preact/signals';
 import { Select } from '@/components/common/select/select';
 import { File } from '@/components/common/file/file';
 import { toast } from 'react-toastify';
+import { IPresignedRequest } from '@/types/file';
 import { CompanyService, PlaceService } from '@/services';
 import { StatusButton } from '@/pages/settings/component/custo.button';
 import { IOption } from '@/components/common/multi/interface';
@@ -37,6 +38,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const municipalities = useSignal<IMunicipalityResponse[]>([]);
   const companies = useSignal<IOption[]>([]);
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
+  const image = useSignal<IPresignedRequest[]>([]);
   const areas = useSignal<IOption[]>([]);
 
   useEffect(() => {
@@ -427,11 +429,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
             </Field>
             <File
               name='extraData.image'
-              onChange={() => {}}
-              value={[]}
+              onChange={(e) => {
+                console.log(e);
+                image.value = e.target.value;
+              }}
+              value={image.value}
               label='Imagen'
               accept='image/*'
             />
+            <pre>{JSON.stringify(image.value, null, 2)}</pre>
           </div>
           <StatusButton
             onClickClean={() => {}}
