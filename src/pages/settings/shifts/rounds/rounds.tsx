@@ -108,6 +108,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
         </div>
       </div>
       <Table<Round>
+        showExpandableIcon={true}
         data={rounds}
         columns={columns}
         expandable={(row: any) => <ExpandableRounds row={row} />}
