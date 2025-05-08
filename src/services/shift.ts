@@ -172,6 +172,14 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
+  static async deleteShift(id: string) {
+    const model: IMakeRequest = {
+      url: ['activity', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
   static async deleteProject(id: string) {
     const model: IMakeRequest = {
       url: ['contract', id],

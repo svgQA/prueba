@@ -34,6 +34,23 @@ export class TemplateService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
+  static async updateTemplate(id: string, data: Partial<ICreateNotificationTemplateDto>) {
+    const model: IMakeRequest = {
+      url: ['notifications', 'template', id],
+      method: REQUEST_METHODS.PACTH,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteTemplate(id: string) {
+    const model: IMakeRequest = {
+      url: ['notifications', 'template', id, 'hard'],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
   static async getBasicTemplates() {
     const model: IMakeRequest = {
       url: ['template', 'simple', 'list'],
@@ -41,4 +58,5 @@ export class TemplateService extends BaseService {
     };
     return await super.make_request<IOption>(this.name, model);
   }
+
 }
