@@ -1,102 +1,64 @@
 import type React from "react"
-import { useEffect, useRef, useState } from "react"
-import { Memo } from "../../utils/memos";
+import { useState } from "react"
+import { IFilesMemo, IFile, Memo } from "../../utils/memos";
 import { Avatar } from '@/components/common/Avatar';
 import SupervisorInfo from "./supervisor.expandable";
 import dayjs from 'dayjs';
 import { Badge } from "@/components/common/badge/badge";
-import { useUserStore } from "@/store/slices";
-import { memo_history_service_url } from "@/env.config";
-import { io } from "socket.io-client";
+import { MemoService } from "@/services";
+import { File } from "@/components/common/file/file";
+import { TextArea } from "@/components/common/text.area/text.area";
 
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
-  const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null)
-  const [message, setMessage] = useState("")
-  const [attachments, setAttachments] = useState<File[]>([])
-  const [memos, setMemos] = useState<Memo[]>([memo]);
-
-  //socket
-  const [_, setConnectionStatus] = useState<string>('Connecting...');
-  const socketRef = useRef<any>(null);
-  const { getToken, tenant, user } = useUserStore();
-
-  const connect_socket = () => {
-    const socket = io(memo_history_service_url, {
-      query: { token: getToken(), tenantId: tenant, memoId: memo.id },
-      transports: ['websocket'],
-      reconnection: true,
-      reconnectionAttempts: 5
-    });
-
-    socketRef.current = socket;
-    socket.on('connect', () => {
-      setConnectionStatus('Connected');
-      socket.emit('create-message', memo);
-    });
-    socket.on('all-messages', (data: Memo[]) => setMemos(data));
-    socket.on('update-messages', (data: Memo[]) => setMemos(data));
-    socket.on('disconnect', disconnect_socket);
-    socket.on('connect_error', disconnect_socket);
-  };
-
-  const disconnect_socket = () => {
-    if (socketRef.current) {
-      socketRef.current.removeAllListeners();
-      socketRef.current.disconnect();
-      socketRef.current = null;
-    }
-    setConnectionStatus('Disconnected');
-  };
-
-  useEffect(() => {
-    connect_socket();
-    return () => disconnect_socket();
-  }, []);
+  const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
+  const [memos, setMemos] = useState<Memo[]>([]);
+  const [files, setFiles] = useState<IFilesMemo[]>([]);
+  const [message, setMessage] = useState("");
 
   const handleSubmitMessage = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    if (!message.trim() && attachments.length === 0) return;
+    if (!message.trim() && files.length === 0) return;
 
-    const now = new Date().toISOString();
-
-    // Creamos un nuevo memo basado en el principal
-    const newMemo: Memo = {
+    const newMemo = {
       ...memo,
-      id: Date.now(),
       description: message,
-      attachments: attachments.map(file => ({
-        name: file.name,
-        url: URL.createObjectURL(file)
-      })),
-      createdAt: now,
-      updatedAt: now,
+      priority: memo.priority === 'Alta' ? 5 : memo.priority === 'Media' ? 4 : 3,
+      updatedAt: new Date(),
+      createdAt: new Date(),
+      resource: {
+        images: files[files.length - 1]?.images || [],
+        files: files[files.length - 1]?.files || []
+      },
+      parentId: memo.id,
     };
 
-    // Enviamos al socket primero
-    if (socketRef.current) {
-      newMemo.extraData = {
-        ...newMemo.extraData,
-        client: { name: '', phone: '' }
-      } as typeof newMemo.extraData;
-      socketRef.current.emit('create-message', newMemo);
+    const response = await MemoService.createMemo(newMemo);
+
+    if (response.getStatus()) {
+      setMemos([...memos, response.getOne()]);
     }
 
+    setFiles([]);
     setMessage("");
-    setAttachments([]);
   };
 
-  const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileInput = e.target as HTMLInputElement
-    if (fileInput && fileInput.files) {
-      const fileList = fileInput.files
-      const filesArray: File[] = Array.from(fileList)
-      setAttachments((prevAttachments) => [...prevAttachments, ...filesArray])
-    }
-  }
+  const handleAttachmentUpload = (e: any) => {
+    const type = e.target.type;
+    const fileInput: IFile = e.target.value[0];
+    fileInput.area = 'memo';
 
-  const removeAttachment = (index: number) => {
-    setAttachments((prevAttachments) => prevAttachments.filter((_, i) => i !== index))
+    if (type === 'file') {
+      setFiles([...files, {
+        images: files[files.length - 1]?.images || [],
+        files: [...(files[files.length - 1]?.files || []), fileInput]
+      }]);
+    } else {
+      setFiles([...files, {
+        images: [...(files[files.length - 1]?.images || []), fileInput],
+        files: files[files.length - 1]?.files || []
+      }]);
+    }
   }
 
   const formatDate = (date: string | Date) => {
@@ -146,7 +108,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           <div className="flex items-center gap-2">
             <Badge
               label={memo?.state}
-              status={`${getStatusColor(memo.state)}` as 'info' | 'error' | 'warning' | 'success'}
+              status={`${getStatusColor(memo?.state as string)}` as 'info' | 'error' | 'warning' | 'success'}
               full
               outline
             />
@@ -292,7 +254,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       <div className="h-px bg-gray-border dark:bg-b-dark-light" />
 
       {/* Chat Messages */}
-      <div className={`overflow-y-auto p-4 ${memos.length > 1 ? 'h-[350px]' : 'min-h-[200px]'}`}>
+      <div className={`overflow-y-auto p-4 ${memos.length > 1 ? 'h-[350px]' : 'min-h-[10px]'}`}>
         <div className="space-y-4">
           {memos.map((memo) => (
             <div key={memo.id} className="flex gap-3">
@@ -341,6 +303,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               </div>
             </div>
           ))}
+          {memos.length === 0 && (
+            <div className="flex justify-center items-center h-full">
+              <p className="text-gray-text-light dark:text-t-dark-light">
+                No hay mensajes
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -348,28 +317,44 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       <div className="p-4 border-t border-gray-border">
         <form onSubmit={handleSubmitMessage}>
           <div className="flex flex-col space-y-2">
-            <textarea
+            <TextArea
+              name="message"
               placeholder="Escribe un mensaje..."
               value={message}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage((e.target as HTMLTextAreaElement).value)}
-              className="min-h-[80px] w-full p-3 rounded-md border border-gray-border bg-b-white dark:bg-b-dark-light text-t-light dark:text-t-dark focus:outline-none focus:ring-2 focus:ring-primary"
             />
 
-            {attachments.length > 0 && (
+            {files.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {attachments.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center p-1.5 bg-b-light dark:bg-b-dark-light rounded-md text-xs group"
-                  >
+                {files[files.length - 1]?.images.map((image, index) => (
+                  <div key={`img-${index}`} className="relative group">
+                    {image.url ? (
+                      <img
+                        src={image.url}
+                        alt={image.name}
+                        className="h-20 w-20 object-cover rounded-md"
+                      />
+                    ) : (
+                      <div className="h-20 w-20 bg-b-light dark:bg-b-dark-light rounded-md flex items-center justify-center">
+                        <span className="vox-icon size-sm vx-icon-311" />
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {files[files.length - 1]?.files.map((file, index) => (
+                  <div key={`file-${index}`} className="flex items-center p-1.5 bg-b-light dark:bg-b-dark-light rounded-md text-xs group">
                     <span className="vox-icon size-sm vx-icon-311 px-2" />
                     <span className="truncate max-w-[120px] text-t-light dark:text-t-dark">{file.name}</span>
                     <button
                       type="button"
-                      onClick={() => removeAttachment(index)}
+                      onClick={() => {
+                        const newFiles = [...files];
+                        newFiles[newFiles.length - 1].files = newFiles[newFiles.length - 1].files.filter((_, i) => i !== index);
+                        setFiles(newFiles);
+                      }}
                       className="ml-1 text-gray-text-light hover:text-error"
                     >
-                      <span className="vox-icon size-sm vx-icon-311 px-2" />
+                      <span className="vox-icon size-sm vx-icon-311" />
                     </button>
                   </div>
                 ))}
@@ -378,13 +363,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
             <div className="flex justify-between items-center mt-2">
               <div className="flex gap-2">
-                <label htmlFor="file-upload" className="cursor-pointer">
-                  <div className="flex items-center text-sm text-gray-text-light hover:text-primary transition-colors">
-                    <span className="vox-icon size-sm vx-icon-311 px-2" />
-                    <span>Adjuntar</span>
-                  </div>
-                  <input id="file-upload" type="file" multiple className="hidden" onChange={handleAttachmentUpload} />
-                </label>
+                <File
+                  name='attachments'
+                  onChange={handleAttachmentUpload}
+                  value={[]}
+                  accept='image/*'
+                  multiple={true}
+                />
               </div>
               <button
                 type="submit"

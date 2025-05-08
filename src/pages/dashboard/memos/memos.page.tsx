@@ -32,7 +32,7 @@ const defaultSummary = {
 
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
-  const { selectedCompany } = useUserStore();
+  const { selectedCompany, getToken } = useUserStore();
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
@@ -51,7 +51,34 @@ export const MemosPage: FunctionComponent = () => {
 
   useEffect(() => {
     fetchInitialData();
+    // const unsubscribe = handleSSE();
+
+    // return () => {
+    //   unsubscribe();
+    //   MemoService.disconnectSSE();
+    // };
   }, [selectedCompany]);
+
+  // const handleSSE = () => {
+  //   // Conectar SSE
+  //   MemoService.connectSSE(getToken());
+
+  //   return MemoService.addEventListener((data) => {
+  //     switch (data.type) {
+  //       case 'create':
+  //         memos.value = [...memos.value, data.data];
+  //         break;
+  //       case 'update':
+  //         memos.value = memos.value.map(memo => 
+  //           memo.id === data.data.id ? data.data : memo
+  //         );
+  //         break;
+  //       case 'delete':
+  //         memos.value = memos.value.filter(memo => memo.id !== data.data.id);
+  //         break;
+  //     }
+  //   });
+  // };
 
   const fetchInitialData = async () => {
     const [responseMemos, responseUsers, responseSummary] = await Promise.all([
