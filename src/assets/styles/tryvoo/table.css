@@ -2,7 +2,7 @@ table.elements {
   @apply w-full overflow-x-auto;
   thead {
     th {
-      @apply h-10 dark:bg-b-dark-light bg-b-content shadow-black;
+      @apply h-10 dark:bg-b-dark-light bg-b-light-dark shadow-black;
       &:first-child {
         @apply rounded-tl-lg;
       }
@@ -16,6 +16,10 @@ table.elements {
       @apply h-12 border-t-2 border-gray-100 dark:border-b-dark-light;
     }
   }
+}
+
+.pagination-row {
+  @apply bottom-0 left-0 right-0 absolute rounded-b-lg dark:bg-b-dark-light bg-b-light-dark shadow-black  text-t-light dark:text-t-dark;
 }
 
 /*

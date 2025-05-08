@@ -80,8 +80,25 @@ export const Input = ({
               text-gray-700 dark:text-gray-200
               border-gray-300 dark:border-gray-700
               focus:ring-blue-500 dark:focus:ring-blue-400
-              appearance-none
               ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
+              ${
+                type === 'number'
+                  ? `
+                [&::-webkit-inner-spin-button]:appearance-none
+                [&::-webkit-outer-spin-button]:appearance-none
+                [&::-webkit-inner-spin-button]:bg-gray-100
+                [&::-webkit-inner-spin-button]:dark:bg-gray-800
+                [&::-webkit-inner-spin-button]:hover:bg-gray-200
+                [&::-webkit-inner-spin-button]:dark:hover:bg-gray-700
+                [&::-webkit-inner-spin-button]:transition-colors
+                [&::-webkit-inner-spin-button]:duration-200
+                [&::-webkit-inner-spin-button]:opacity-100
+                [&::-webkit-inner-spin-button]:dark:opacity-100
+                [&::-webkit-inner-spin-button]:text-gray-900
+                [&::-webkit-inner-spin-button]:dark:text-gray-200
+              `
+                  : ''
+              }
             `}
             onChange={onChange}
             name={name}

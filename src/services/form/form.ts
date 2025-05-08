@@ -142,9 +142,9 @@ export class FormService extends BaseService {
     return await super.make_request<IListResponse>(this.sname, model);
   }
 
-  static async get_one(id: string) {
+  static async get_one(id: number) {
     const model: IMakeRequest = {
-      url: ['form', id],
+      url: ['form', String(id)],
     };
     return await super.make_request<IFormResponse>(this.sname, model);
   }

@@ -4,6 +4,16 @@ export const shift_es = {
       success: 'Turno creado exitosamente!',
       error: 'Error al crear el turno',
     },
+    table: {
+      delete: {
+        title: 'Eliminar Turno',
+        message: '¿Está seguro que desea eliminar el turno?',
+        success: 'Turno eliminado exitosamente!',
+        error: 'Error al eliminar el turno',
+        warning:
+          'El turno no se puede eliminar porque ya esta en curso o finalizado',
+      },
+    },
     expandable: {
       date: {
         location: {
@@ -29,6 +39,14 @@ export const shift_en = {
     upsert: {
       success: 'Shift created successfully!',
       error: 'Error creating shift',
+    },
+    table: {
+      delete: {
+        title: 'Delete Shift',
+        message: 'Are you sure you want to delete the shift?',
+        success: 'Shift deleted successfully!',
+        error: 'Error deleting shift',
+      },
     },
     expandable: {
       date: {

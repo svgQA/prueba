@@ -125,4 +125,16 @@ export class NotificationHistoryService extends BaseService {
 
     await super.make_request(this.name, model);
   }
+
+  /**
+ * 🗑 Eliminar notificación del historial
+ */
+  static async deleteNotification(id: string): Promise<void> {
+    const model: IMakeRequest = {
+      url: ['notifications', 'history', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+
+    await super.make_request(this.name, model);
+  }
 }

@@ -6,10 +6,10 @@ import { Avatar } from '@/components/common/Avatar';
 const SupervisorInfo = ({ memo }: { memo: Memo }) => {
   return (
     <div className='w-full bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm p-3 text-b-dark-light dark:text-b-light-dark'>
-      <div className='flex flex-row gap-2'>
+      <div className='flex flex-row gap-2 p-3'>
         {/* Sección izquierda - Descripción y botones */}
         <div className='w-[20%]'>
-          <p className='text-xs mb-2 leading-tight'>{memo?.description}</p>
+          <p className='mb-2 leading-tight'>{memo?.description}</p>
           <div className='flex flex-wrap gap-1'>
             <Chip label='Tarea' />
             <Chip label='Tarea' />
@@ -23,29 +23,29 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
             <div className='flex items-start gap-2'>
               <Avatar name='SV' size='sm' />
               <div>
-                <p className='font-medium text-xs'>Supervisor</p>
-                <p className='text-xs'>{memo?.extraData?.company.name}</p>
+                <p className='font-medium'>Supervisor</p>
+                <p>{memo?.extraData?.company.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='SV' size='sm' />
               <div>
-                <p className='font-medium text-xs'>Servicio</p>
-                <p className='text-xs'>{memo?.novelty?.name}</p>
+                <p className='font-medium'>Servicio</p>
+                <p>{memo?.novelty?.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='AU' size='sm' />
               <div>
-                <p className='font-medium text-xs'>Actualizado</p>
-                <p className='text-xs'>{memo?.updatedAt}</p>
+                <p className='font-medium'>Actualizado</p>
+                <p>{memo?.updatedAt}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='LG' size='sm' />
               <div>
-                <p className='font-medium text-xs'>Lugar</p>
-                <p className='text-xs'>{memo?.extraData?.place.address}</p>
+                <p className='font-medium'>Lugar</p>
+                <p>{memo?.extraData?.place.address}</p>
               </div>
             </div>
           </div>
@@ -57,37 +57,37 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
             <div className='flex items-start gap-2'>
               <Avatar name='CL' size='sm' />
               <div>
-                <p className='font-medium text-xs'>Cliente</p>
-                <p className='text-xs'>{memo?.extraData?.client.name}</p>
+                <p className='font-medium'>Cliente</p>
+                <p>{memo?.extraData?.client.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='CD' size='sm' />
               <div>
-                <p className='font-medium text-xs'>Ciudad</p>
-                <p className='text-xs'>{memo?.extraData?.city.name}</p>
+                <p className='font-medium'>Ciudad</p>
+                <p>{memo?.extraData?.city.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='CP' size='sm' />
               <div>
-                <p className='font-medium text-xs'>Compañía</p>
-                <p className='text-xs'>{memo?.extraData?.company?.name}</p>
+                <p className='font-medium'>Compañía</p>
+                <p>{memo?.extraData?.company?.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='DR' size='sm' />
               <div>
-                <p className='font-medium text-xs'>Dirección</p>
-                <p className='text-xs'>{memo?.extraData?.place?.address}</p>
+                <p className='font-medium'>Dirección</p>
+                <p>{memo?.extraData?.place?.address}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Sección derecha - Mapa y fotos */}
-        <div className='w-[40%]'>
-          <div className='flex gap-2 h-full'>
+        <div className='w-[60%]'>
+          <div className='flex gap-2 h-full w-full'>
             {/* Mapa a la izquierda */}
             <div className='w-[60%] h-full rounded-lg overflow-hidden'>
               <MapLibrePointsMap
@@ -110,11 +110,10 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
                 disablePointSelection={true}
               />
             </div>
-
-            <div className='w-[45%] flex items-center justify-center gap-2 ml-2'>
+            <div className='flex gap-2 flex-wrap'>
               <div className='w-20 h-20 rounded-lg overflow-hidden'>
                 <img
-                  src={memo?.resource?.images}
+                  src={Array.isArray(memo?.resource?.images) ? memo?.resource?.images[0] : memo?.resource?.images}
                   alt='Supervisor'
                   className='w-full h-full object-cover'
                 />

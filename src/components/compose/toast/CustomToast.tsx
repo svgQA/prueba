@@ -19,13 +19,13 @@ export const CustomToast: FunctionComponent<{ data: VoxError }> = ({
         type='button'
         label={i18n.t('error.custom_toast_refresh_page')}
         onClick={handleRefresh}
-        className='!text-[15px] py-1 w-fit text-primary '
+        className='!text-[15px] py-1 w-fit text-primary dark:text-primary'
       />
     </div>
   );
 
   return (
-    <div className='msg-container w-[280px] bg-white dark:bg-gray-800'>
+    <div className='msg-container w-[280px] bg-white dark:bg-[#121212]'>
       <div className='flex flex-col gap-1.5 justify-center items-center'>
         {/* URL */}
         <div className='flex items-center gap-1.5 text-[11px] w-full'>
@@ -36,14 +36,14 @@ export const CustomToast: FunctionComponent<{ data: VoxError }> = ({
         </div>
 
         {/* Main Message */}
-        <p className='font-medium text-gray-900 text-sm leading-tight w-full text-left'>
+        <p className='font-medium text-gray-900 dark:text-gray-100 text-sm leading-tight w-full text-left'>
           {data.message}
         </p>
 
         {/* Data Section */}
         {data.data && Object.keys(data.data).length > 0 && (
-          <div className='bg-gray-50 dark:bg-gray-900 rounded p-1.5 min-w-64'>
-            <p className='text-[11px] text-gray-600 dark:text-gray-400 max-h-[200px] overflow-y-auto whitespace-pre-wrap break-words vox-scroll-design font-mono'>
+          <div className='bg-gray-50 dark:bg-gray-900/50 rounded p-1.5 min-w-64'>
+            <p className='text-[11px] text-gray-600 dark:text-gray-300 max-h-[200px] overflow-y-auto whitespace-pre-wrap break-words vox-scroll-design font-mono'>
               {JSON.stringify(data.data, null, 2)}
             </p>
           </div>

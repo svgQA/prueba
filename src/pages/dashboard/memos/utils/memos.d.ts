@@ -33,10 +33,12 @@ export interface Memo {
   novelty?: Novelty;
   service?: Service;
   updatedAt?: string;
+  createdAt?: string;
   resource?: Resource;
   attachments: any[];
   supervisor: string;
   updatedBy: string;
+  state: string;
 }
 
 export interface Novelty {
@@ -105,8 +107,6 @@ export interface ExtraData {
 }
 
 export interface Resource {
-  files: string;
-  images: string;
-  // files: string[];
-  // images: string[];
+  files: string | string[];
+  images: string | string[];
 }

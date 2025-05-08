@@ -26,14 +26,17 @@ export const getColumns = (
     cell: (info) => {
       const { name, surname, image } = info.row.original;
       return (
-        <div className='flex items-center'>
+        <div className='flex items-center gap-2'>
           <Avatar name={name} src={image} size='sm' square />
+          {`${name} ${surname}`}
+          {/*
           <span
             className='p-1 size-sm cursor-pointer text-left'
-            onClick={() => info.row.toggleExpanded()}
+            // onClick={() => info.row.toggleExpanded()}
           >
             {`${name} ${surname}`}
           </span>
+          */}
         </div>
       );
     },
@@ -59,7 +62,7 @@ export const getColumns = (
     cell: (info) => {
       const { companies } = info.row.original;
       return (
-        <div className='flex justify gap-1 flex-row'>
+        <div className='flex justify-center gap-1 flex-row'>
           {companies.map((company) => (
             <Avatar
               name={company.company.name}

@@ -40,6 +40,8 @@ import { UserService } from '@/services/general/user';
 import { MentionOption } from '@/components/common/mention-editor';
 import { toast } from 'react-toastify';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { showAlert } from '@/components/common/show-alert/show-alert';
+import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 
 enum VIEW_NAME {
   TABLE,
@@ -148,7 +150,9 @@ export const ShiftsPage: FunctionalComponent = () => {
       ]);
 
       if (shiftsResponse && shiftsResponse.getStatus()) {
-        const [hasNotifications, responseShifts] = findNotificationShift(shiftsResponse.getMany());
+        const [hasNotifications, responseShifts] = findNotificationShift(
+          shiftsResponse.getMany()
+        );
         notificationValidate.value = hasNotifications;
 
         shifts.value = responseShifts;
@@ -170,7 +174,9 @@ export const ShiftsPage: FunctionalComponent = () => {
     }
   };
 
-  const findNotificationShift = (shiftsResponse: IShiftResponse[]): [boolean, IShiftResponse[]] => {
+  const findNotificationShift = (
+    shiftsResponse: IShiftResponse[]
+  ): [boolean, IShiftResponse[]] => {
     let hasSomeNotifications = false;
     const shifts = shiftsResponse.map((shifts) => {
       if (shifts.employee?.playerId) {
@@ -183,11 +189,11 @@ export const ShiftsPage: FunctionalComponent = () => {
       return {
         ...shifts,
         hasNotifications: false,
-      }
-    })
+      };
+    });
 
-    return [hasSomeNotifications, shifts]
-  }
+    return [hasSomeNotifications, shifts];
+  };
 
   useEffect(() => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -278,7 +284,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -374,15 +380,11 @@ export const ShiftsPage: FunctionalComponent = () => {
             icon='314'
             label={t('shifts.remoteSupervision')}
             onClick={toggleSendModal}
-            className={`border-2 p-2 ${!hasValidPlayer
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : onNotifications
-                  ? 'bg-primary-opacity'
-                  : 'border-primary'
-              }`}
+            selected={showSendModal.value}
+            disabled={!hasValidPlayer}
           />
           {showSendModal.value && (
-            <div className='absolute mt-4 mr-12 z-50 rounded p-4'>
+            <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
               <SendForm
                 onClose={handleCloseSendModal}
                 hasplayers={hasValidPlayer}
@@ -438,8 +440,41 @@ export const ShiftsPage: FunctionalComponent = () => {
     type: string;
     action: ROW_ACTIONS;
   }) => {
-    console.log('Acción seleccionada:', params);
+    switch (params.action) {
+      case ROW_ACTIONS.UPDATE:
+        toggleUpsertModal();
+        break;
+      case ROW_ACTIONS.DELETE:
+        const shift = shifts.value.find(
+          (shift) => shift.id === Number(params.id)
+        );
+        if (!shift) {
+          toast.error(t('shift.table.delete.error'));
+          return;
+        }
+
+        const status = shift.status as unknown as SHIFT_STATUS;
+        if (status !== SHIFT_STATUS.CREATED) {
+          toast.warning(t('shift.table.delete.warning'));
+          return;
+        }
+
+        showAlert({
+          title: t('shift.table.delete.title'),
+          message: t('shift.table.delete.message'),
+          onConfirm: () => deleteShift(params.id),
+          onCancel: () => {},
+        });
+        break;
+    }
     // Aquí abres modales, haces navigations, etc.
+  };
+
+  const deleteShift = async (id: string) => {
+    const response = await ShiftService.deleteActivity(id);
+    if (!response.getStatus()) return;
+    toast.success(t('shift.table.delete.success'));
+    fetchInitialData();
   };
 
   return (
@@ -488,7 +523,6 @@ export const ShiftsPage: FunctionalComponent = () => {
           <Table<IShiftResponse>
             data={shifts.value}
             columns={getColumns(onClickAction)}
-            showExpandableIcon={false}
             pageSize={20}
             selectable
             onNotifications={onNotifications}

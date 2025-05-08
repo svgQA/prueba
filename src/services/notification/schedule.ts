@@ -22,7 +22,7 @@ export class SchedulerService extends BaseService {
   }
 
   /**
-   * Obtener notificaciones programadas por estado (opcional)
+   * Obtener todas las notificaciones programadas (por estado opcional)
    */
   static async getAll(status?: string) {
     const model: IMakeRequest = {
@@ -34,6 +34,40 @@ export class SchedulerService extends BaseService {
       this.name,
       model
     );
+  }
+
+  /**
+   * Obtener una notificación programada por ID
+   */
+  static async getById(id: string) {
+    const model: IMakeRequest = {
+      url: ['notifications', 'scheduled', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  /**
+   * Actualizar una notificación programada
+   */
+  static async updateScheduledNotification(id: string, data: Partial<any>) {
+    const model: IMakeRequest = {
+      url: ['notifications', 'scheduled', id],
+      method: REQUEST_METHODS.PACTH,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  /**
+   * Eliminar una notificación programada (hard delete)
+   */
+  static async deleteScheduledNotification(id: string) {
+    const model: IMakeRequest = {
+      url: ['notifications', 'scheduled', id, 'hard'],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<any>(this.name, model);
   }
 
   /**

@@ -1,12 +1,12 @@
 import { type FunctionComponent } from 'preact';
 import { IExpandableProps } from './interface';
-import { Map } from '@/components/common/map/map';
 import { useEffect, useState, useRef } from 'preact/hooks';
 import QRCode from 'react-qr-code';
 import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import { Button } from '@/components/common/button/button';
 import shortUUID from 'short-uuid';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 
 export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
   row,
@@ -20,11 +20,11 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
     setQr(JSON.stringify(title));
   }, []);
 
-  const handlePoint = async (data: any) => {
+  /* const handlePoint = async (data: any) => {
     const title = `Latitud: ${data.position.lat}, Longitud: ${data.position.lng}`;
 
     setQr(JSON.stringify(title));
-  };
+  };*/
 
   const handleDownloadPDF = async () => {
     if (!qrRef.current) return;
@@ -82,19 +82,28 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
         <div className='text-center'>
           <h2>Ubicación de los punto en mapa</h2>
           {row.markers.length ? (
-            <Map
-              name='Map'
-              pointsAmount={100}
-              sendPoints={() => {}}
-              pointsRef={row.markers ?? []}
-              center={row.markers[0].position ?? []}
-              condition={true}
-              errorCondition='No tienes autorizado modificar puntos'
-              radialPoint={null}
-              errorRadialPoint=''
-              width='100%'
-              clickPoint={handlePoint}
-            />
+            <div className=' h-[400px] w-[70%] '>
+              <MapLibrePointsMap
+                pointsRef={row.markers}
+                sendPoints={() => {}}
+                name='map-points'
+                center={{
+                  lat: row.markers[0].position.lat,
+                  lng: row.markers[0].position.lng,
+                }}
+                pointsAmount={1}
+                condition={false}
+                errorCondition=''
+                radialPoint={null}
+                errorRadialPoint=''
+                draggable={true}
+                width='100%'
+                height='100%'
+                clickPoint={() => {}}
+                disablePointSelection={true}
+                //clickPoint={handlePoint}
+              />
+            </div>
           ) : (
             <p>No hay puntos en la ronda </p>
           )}
