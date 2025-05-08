@@ -105,8 +105,6 @@ export const Table = <T,>({
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  console.log('hasNotifications', hasNotifications, onNotifications);
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

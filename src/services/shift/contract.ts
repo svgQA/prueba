@@ -1,4 +1,5 @@
 import { IPagination } from '@/types';
+import { type IProjectMetricsResponse } from '@/types/contract/contract.response';
 import { BaseService } from '@/utils/network';
 import { REQUEST_METHODS, VoxServices } from '@/utils/network/types';
 
@@ -46,5 +47,12 @@ export class ContractService extends BaseService {
       params: params as any,
     };
     return await super.make_request(this.name, model);
+  }
+
+  static async getProjectMetrics(id: number) {
+    const model: IMakeRequest = {
+      url: ['contract', `${id}`, 'metrics'],
+    };
+    return await super.make_request<IProjectMetricsResponse>(this.name, model);
   }
 }

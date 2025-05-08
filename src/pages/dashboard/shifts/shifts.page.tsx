@@ -471,7 +471,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   };
 
   const deleteShift = async (id: string) => {
-    const response = await ShiftService.deleteShift(id);
+    const response = await ShiftService.deleteActivity(id);
     if (!response.getStatus()) return;
     toast.success(t('shift.table.delete.success'));
     fetchInitialData();

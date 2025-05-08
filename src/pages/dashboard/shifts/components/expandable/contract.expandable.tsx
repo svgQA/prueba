@@ -1,9 +1,9 @@
 import { Chip } from '@/components/common/chip/chip';
 import { IContract } from '@/types/shift/activity';
 import { useEffect } from 'react';
-import { ShiftService } from '@/services';
+import { ContractService } from '@/services';
 import { useSignal } from '@preact/signals';
-import { IProjectMetricsResponse } from '@/types/shift/shift.response';
+import { IProjectMetricsResponse } from '@/types/contract/contract.response';
 
 const ContractInfo = ({ contract }: { contract: IContract }) => {
   const metrics = useSignal<IProjectMetricsResponse>({
@@ -14,8 +14,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
   });
 
   const getMetrics = async () => {
-    console.log(contract.id);
-    const response = await ShiftService.getProjectMetrics(contract.id);
+    const response = await ContractService.getProjectMetrics(contract.id);
     if (!response.getStatus()) return;
     metrics.value = response.getOne();
   };
