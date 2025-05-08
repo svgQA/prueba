@@ -10,6 +10,7 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { SchedulerService } from '@/services/notification/schedule';
+import { toast } from 'react-toastify';
 
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
@@ -28,8 +29,7 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
   const redirect = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
-        .scheduledNotification.create.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.create.to,
       label: 'create',
       id: 'scheduled-create',
     };
@@ -37,13 +37,47 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
     appendHistory(menu);
   };
 
-  const onClickAction = (params: {
+  const editScheduled = (id: string) => {
+    const menu = {
+      to: `${PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.update.to.replace(':id', id)}`,
+      label: 'update',
+      id: 'scheduled-update',
+    };
+    navigate(menu.to);
+    appendHistory(menu);
+  };
+
+  const deleteScheduled = async (id: string) => {
+    const confirmed = window.confirm('¿Deseas eliminar esta notificación programada?');
+    if (!confirmed) return;
+
+    const res = await SchedulerService.deleteScheduledNotification(id);
+    if (res.getStatus()) {
+      toast.success('Notificación eliminada correctamente');
+      fetchNotifications();
+    } else {
+      toast.error('Error al eliminar la notificación');
+    }
+  };
+
+  const onClickAction = async ({
+    id,
+    action,
+  }: {
     id: string;
     type: string;
     action: ROW_ACTIONS;
   }) => {
-    console.log('Acción seleccionada:', params);
-    // Aquí abres modales, haces navigations, etc.
+    switch (action) {
+      case ROW_ACTIONS.UPDATE:
+        editScheduled(id);
+        break;
+      case ROW_ACTIONS.DELETE:
+        await deleteScheduled(id);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
