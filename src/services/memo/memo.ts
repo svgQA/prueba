@@ -1,4 +1,3 @@
-import { default_service_url } from '@/env.config';
 import { Memo } from '@/pages/dashboard/memos/utils/memos';
 import { IPagination } from '@/types';
 import { BaseService, IRequestModelOutput } from '@/utils/network';
@@ -17,8 +16,6 @@ export type MemosSummary = {
 
 export class MemoService extends BaseService {
   static name: VoxServices = 'memo';
-  private static eventSource: EventSource | null = null;
-  private static listeners: ((data: any) => void)[] = [];
 
   static async get_all(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
@@ -60,10 +57,10 @@ export class MemoService extends BaseService {
   }
 
   static async streamQuery(
-    prompt: string = '',
     onData: (chunk: string) => void,
     onDone?: () => void,
-    onError?: (err: any) => void
+    onError?: (err: any) => void,
+    prompt: string = '',
   ) {
     const model: IRequestModelOutput = this.make_request_model(
       'memo',
