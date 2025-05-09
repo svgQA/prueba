@@ -1,5 +1,5 @@
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { IFilesMemo, IFile, Memo } from "../../utils/memos";
 import { Avatar } from '@/components/common/Avatar';
 import SupervisorInfo from "./supervisor.expandable";
@@ -8,13 +8,35 @@ import { Badge } from "@/components/common/badge/badge";
 import { MemoService } from "@/services";
 import { File } from "@/components/common/file/file";
 import { TextArea } from "@/components/common/text.area/text.area";
+import { useSignal } from "@preact/signals";
 
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
-  const [memos, setMemos] = useState<Memo[]>([]);
+  const memos = useSignal<Memo[]>([]);
   const [files, setFiles] = useState<IFilesMemo[]>([]);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetchInitialData();
+  }, []);
+
+  const fetchInitialData = async () => {
+    const [responseMemos] = await Promise.all([
+      MemoService.getMemosByHistory(memo.id.toString()),
+    ]);
+
+    if (responseMemos.getStatus()) {
+      const memosData = responseMemos.getMany();
+      console.log("memosData: ", memosData);
+      // TODO: Cambiar esto, porque desde back se puede tener
+      memos.value = memosData.map((memo) => ({
+        ...memo,
+        priority:
+          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+      }));
+    }
+  }
 
   const handleSubmitMessage = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -36,7 +58,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     const response = await MemoService.createMemo(newMemo);
 
     if (response.getStatus()) {
-      setMemos([...memos, response.getOne()]);
+      memos.value = [...memos.value, response.getOne()];
     }
 
     setFiles([]);
@@ -254,15 +276,15 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       <div className="h-px bg-gray-border dark:bg-b-dark-light" />
 
       {/* Chat Messages */}
-      <div className={`overflow-y-auto p-4 ${memos.length > 1 ? 'h-[350px]' : 'min-h-[10px]'}`}>
+      <div className={`overflow-y-auto p-4 ${memos.value.length > 1 ? 'h-[350px]' : 'min-h-[10px]'}`}>
         <div className="space-y-4">
-          {memos.map((memo) => (
+          {memos.value.map((memo: Memo) => (
             <div key={memo.id} className="flex gap-3">
-              <Avatar name={memo.extraData?.client?.name} size='sm' square />
+              <Avatar name={memo.user.name + " " + memo.user.surname} size='sm' square />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-sm text-t-light dark:text-t-dark">
-                    {memo.extraData?.client?.name}
+                    {memo.user.name + " " + memo.user.surname}
                   </span>
                   <span className="text-xs text-gray-text-light dark:text-t-dark-light">
                     {formatDate(memo.updatedAt || new Date())}
@@ -303,7 +325,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               </div>
             </div>
           ))}
-          {memos.length === 0 && (
+          {memos.value.length === 0 && (
             <div className="flex justify-center items-center h-full">
               <p className="text-gray-text-light dark:text-t-dark-light">
                 No hay mensajes

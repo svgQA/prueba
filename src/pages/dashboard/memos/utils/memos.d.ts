@@ -46,6 +46,7 @@ export interface Memo {
   mapUrl: string;
   supervisor: string;
   parentId: number;
+  user: User;
 }
 
 export interface Novelty {

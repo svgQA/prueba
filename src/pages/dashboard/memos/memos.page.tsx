@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'preact';
-import { useCallback, useEffect, useMemo } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 
 import { UserService } from '@/services/general/user';
@@ -18,6 +18,9 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
+import { default_service_url } from '@/env.config';
+import { toast } from 'react-toastify';
+import { fixTruncatedJSONArray } from '@/components/common/mention-editor/utils';
 
 enum VIEW_NAME {
   TABLE,
@@ -41,6 +44,9 @@ export const MemosPage: FunctionComponent = () => {
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
 
+  const [streamingResponse, setStreamingResponse] = useState<string>('');
+  const [isStreaming, setIsStreaming] = useState<boolean>(false);
+
   useEffect(() => {
     document.title = 'VX - Chat';
     fetchInitialData();
@@ -51,34 +57,40 @@ export const MemosPage: FunctionComponent = () => {
 
   useEffect(() => {
     fetchInitialData();
-    // const unsubscribe = handleSSE();
-
-    // return () => {
-    //   unsubscribe();
-    //   MemoService.disconnectSSE();
-    // };
+    handleSSE();
   }, [selectedCompany]);
 
-  // const handleSSE = () => {
-  //   // Conectar SSE
-  //   MemoService.connectSSE(getToken());
+  const handleSSE = useCallback(async () => {
+    setStreamingResponse('');
+    setIsStreaming(true);
+    let accumulatedResponse = '';
 
-  //   return MemoService.addEventListener((data) => {
-  //     switch (data.type) {
-  //       case 'create':
-  //         memos.value = [...memos.value, data.data];
-  //         break;
-  //       case 'update':
-  //         memos.value = memos.value.map(memo => 
-  //           memo.id === data.data.id ? data.data : memo
-  //         );
-  //         break;
-  //       case 'delete':
-  //         memos.value = memos.value.filter(memo => memo.id !== data.data.id);
-  //         break;
-  //     }
-  //   });
-  // };
+    try {
+      await MemoService.streamQuery(
+        '',
+        (chunk) => {
+          accumulatedResponse += chunk;
+          setStreamingResponse(accumulatedResponse);
+        },
+        () => {
+          setIsStreaming(false);
+          toast.success('Stream completado');
+        },
+        (error) => {
+          setIsStreaming(false);
+          toast.error(`Error en el stream: ${error.message}`);
+        }
+      )
+    } catch (error) {
+      setIsStreaming(false);
+      toast.error(`Error SSE: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    }
+
+    if (streamingResponse) {
+      console.log("streamingResponse: ", streamingResponse);
+    }
+  }, []);
+
 
   const fetchInitialData = async () => {
     const [responseMemos, responseUsers, responseSummary] = await Promise.all([

@@ -1,7 +1,8 @@
 import { default_service_url } from '@/env.config';
 import { Memo } from '@/pages/dashboard/memos/utils/memos';
 import { IPagination } from '@/types';
-import { BaseService } from '@/utils/network';
+import { BaseService, IRequestModelOutput } from '@/utils/network';
+import { streamIAResponse } from '@/utils/network/sse.post';
 import {
   IMakeRequest,
   REQUEST_METHODS,
@@ -49,61 +50,35 @@ export class MemoService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  //SSE
-  static connectSSE(token: string) {
-    if (this.eventSource) {
-      this.eventSource.close();
-    }
-
-    // Obtener el token de autenticación
-    if (!token) {
-      console.error('No authentication token found');
-      return;
-    }
-
-    // Remover el prefijo 'Bearer ' si existe
-    const cleanToken = token.replace('Bearer ', '');
-
-    // Agregar el token como query parameter
-    const url = `${default_service_url}/memo/emitChangesMemos?token=${cleanToken}`;
-    this.eventSource = new EventSource(url);
-
-    this.eventSource.onopen = () => {
-      console.log('SSE Connection opened');
+  static async getMemosByHistory(id: string) {
+    const model: IMakeRequest = {
+      url: ['memo/history', id],
+      method: REQUEST_METHODS.GET,
     };
 
-    this.eventSource.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        this.listeners.forEach(listener => listener(data));
-      } catch (error) {
-        console.error('Error parsing SSE data:', error);
-      }
-    };
-
-    this.eventSource.onerror = (error) => {
-      console.error('SSE Error:', error);
-      if (this.eventSource?.readyState === EventSource.CLOSED) {
-        // Intentar reconectar después de un error
-        setTimeout(() => {
-          this.disconnectSSE();
-          this.connectSSE(token);
-        }, 5000);
-      }
-    };
+    return await super.make_request<Memo>(this.name, model);
   }
 
-  static disconnectSSE() {
-    if (this.eventSource) {
-      this.eventSource.close();
-      this.eventSource = null;
-    }
-  }
+  static async streamQuery(
+    prompt: string = '',
+    onData: (chunk: string) => void,
+    onDone?: () => void,
+    onError?: (err: any) => void
+  ) {
+    const model: IRequestModelOutput = this.make_request_model(
+      'memo',
+      {
+        url: ['memo', 'stream/history'],
+        method: REQUEST_METHODS.POST,
+        data: { prompt },
+      },
+      false
+    );
 
-  static addEventListener(listener: (data: any) => void) {
-    this.listeners.push(listener);
-    return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
-    };
+    try {
+      await streamIAResponse(model, onData, onDone, onError);
+    } catch (error) {
+      onError?.(error);
+    }
   }
 }
