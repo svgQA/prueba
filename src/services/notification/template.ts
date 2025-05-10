@@ -34,7 +34,10 @@ export class TemplateService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async updateTemplate(id: string, data: Partial<ICreateNotificationTemplateDto>) {
+  static async updateTemplate(
+    id: string,
+    data: Partial<ICreateNotificationTemplateDto>
+  ) {
     const model: IMakeRequest = {
       url: ['notifications', 'template', id],
       method: REQUEST_METHODS.PACTH,
@@ -58,5 +61,4 @@ export class TemplateService extends BaseService {
     };
     return await super.make_request<IOption>(this.name, model);
   }
-
 }

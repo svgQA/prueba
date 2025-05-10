@@ -29,7 +29,8 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
   const redirect = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.create.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
+        .scheduledNotification.create.to,
       label: 'create',
       id: 'scheduled-create',
     };
@@ -48,7 +49,9 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
   };
 
   const deleteScheduled = async (id: string) => {
-    const confirmed = window.confirm('¿Deseas eliminar esta notificación programada?');
+    const confirmed = window.confirm(
+      '¿Deseas eliminar esta notificación programada?'
+    );
     if (!confirmed) return;
 
     const res = await SchedulerService.deleteScheduledNotification(id);
