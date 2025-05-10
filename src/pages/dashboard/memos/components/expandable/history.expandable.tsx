@@ -1,99 +1,99 @@
 import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { Memo } from '../../utils/memos';
+import { useEffect, useState } from 'react';
+import { IFilesMemo, IFile, Memo } from '../../utils/memos';
 import { Avatar } from '@/components/common/Avatar';
 import SupervisorInfo from './supervisor.expandable';
 import dayjs from 'dayjs';
 import { Badge } from '@/components/common/badge/badge';
-import { useUserStore } from '@/store/slices';
-import { memo_history_service_url } from '@/env.config';
-import { io } from 'socket.io-client';
+import { MemoService } from '@/services';
+import { File } from '@/components/common/file/file';
+import { TextArea } from '@/components/common/text.area/text.area';
+import { useSignal } from '@preact/signals';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
+  const memos = useSignal<Memo[]>([]);
+  const [files, setFiles] = useState<IFilesMemo[]>([]);
   const [message, setMessage] = useState('');
-  const [attachments, setAttachments] = useState<File[]>([]);
-  const [memos, setMemos] = useState<Memo[]>([memo]);
-
-  //socket
-  const [_, setConnectionStatus] = useState<string>('Connecting...');
-  const socketRef = useRef<any>(null);
-  const { getToken, tenant } = useUserStore();
-
-  const connect_socket = () => {
-    const socket = io(memo_history_service_url, {
-      query: { token: getToken(), tenantId: tenant },
-    });
-    socketRef.current = socket;
-    socket.on('connect', () => setConnectionStatus('Connected'));
-    socket.on('disconnect', disconnect_socket);
-    socket.on('connect_error', disconnect_socket);
-  };
-
-  const disconnect_socket = () => {
-    if (socketRef.current) {
-      socketRef.current.removeAllListeners();
-      socketRef.current.disconnect();
-      socketRef.current = null;
-    }
-    setConnectionStatus('Disconnected');
-  };
 
   useEffect(() => {
-    connect_socket();
-    return () => disconnect_socket();
+    fetchInitialData();
   }, []);
 
-  const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileInput = e.target as HTMLInputElement;
-    if (fileInput && fileInput.files) {
-      const fileList = fileInput.files;
-      const filesArray: File[] = Array.from(fileList);
-      setAttachments((prevAttachments) => [...prevAttachments, ...filesArray]);
+  const fetchInitialData = async () => {
+    const [responseMemos] = await Promise.all([
+      MemoService.getMemosByHistory(memo.id.toString()),
+    ]);
+
+    if (responseMemos.getStatus()) {
+      const memosData = responseMemos.getMany();
+      // TODO: Cambiar esto, porque desde back se puede tener
+      memos.value = memosData.map((memo) => ({
+        ...memo,
+        priority:
+          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+      }));
     }
   };
 
-  const removeAttachment = (index: number) => {
-    setAttachments((prevAttachments) =>
-      prevAttachments.filter((_, i) => i !== index)
-    );
-  };
-
-  const handleSubmitMessage = (e: { preventDefault: () => void }) => {
+  const handleSubmitMessage = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim() && files.length === 0) return;
 
-    // Crear un nuevo memo basado en el memo inicial
-    const newMemo: Memo = {
-      ...memo, // Copiamos todos los campos del memo inicial
-      id: Date.now(), // Nuevo ID
-      description: message, // El mensaje como descripción
-      updatedAt: new Date().toISOString(), // Nueva fecha
-      updatedBy: 'Usuario Actual', // En producción, esto vendría del contexto de autenticación
-      attachments: attachments.map((file) => ({
-        name: file.name,
-        url: URL.createObjectURL(file),
-        type: file.type.startsWith('image/') ? 'image' : 'file',
-      })),
+    const newMemo = {
+      ...memo,
+      description: message,
+      priority:
+        memo.priority === 'Alta' ? 5 : memo.priority === 'Media' ? 4 : 3,
+      updatedAt: new Date(),
+      createdAt: new Date(),
+      resource: {
+        images: files[files.length - 1]?.images || [],
+        files: files[files.length - 1]?.files || [],
+      },
+      parentId: memo.id,
     };
 
-    setMemos((prevMemos) => [...prevMemos, newMemo]);
+    const response = await MemoService.createMemo(newMemo);
+
+    if (response.getStatus()) {
+      memos.value = [...memos.value, response.getOne()];
+    }
+
+    setFiles([]);
     setMessage('');
-    setAttachments([]);
   };
 
-  const formatDate = (info: string | Date) => {
-    const dateStr = String(info);
-    if (!dateStr) return '-';
+  const handleAttachmentUpload = (e: any) => {
+    const type = e.target.type;
+    const fileInput: IFile = e.target.value[0];
+    fileInput.area = 'memo';
 
-    try {
-      return dayjs(dateStr).format('DD/MM/YYYY');
-    } catch (error) {
-      return '-';
+    if (type === 'file') {
+      setFiles([
+        ...files,
+        {
+          images: files[files.length - 1]?.images || [],
+          files: [...(files[files.length - 1]?.files || []), fileInput],
+        },
+      ]);
+    } else {
+      setFiles([
+        ...files,
+        {
+          images: [...(files[files.length - 1]?.images || []), fileInput],
+          files: files[files.length - 1]?.files || [],
+        },
+      ]);
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const formatDate = (date: string | Date) => {
+    if (!date) return '-';
+    return dayjs(date).format('DD/MM/YYYY HH:mm');
+  };
+
+  const getStatusColor = (status?: string) => {
     let statusText = 'info';
 
     if (status === 'OPENED') {
@@ -102,6 +102,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       statusText = 'error';
     } else if (status === 'IN_REVISION') {
       statusText = 'warning';
+    } else {
+      statusText = 'info';
     }
 
     return statusText;
@@ -306,16 +308,20 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
       {/* Chat Messages */}
       <div
-        className={`overflow-y-auto p-4 ${memos.length > 1 ? 'h-[400px]' : 'min-h-[200px]'}`}
+        className={`overflow-y-auto p-4 ${memos.value.length > 1 ? 'h-[350px]' : 'min-h-[10px]'}`}
       >
         <div className='space-y-4'>
-          {memos.map((memo) => (
+          {memos.value.map((memo: Memo) => (
             <div key={memo.id} className='flex gap-3'>
-              <Avatar name={memo.extraData?.client?.name} size='sm' square />
+              <Avatar
+                name={memo.user.name + ' ' + memo.user.surname}
+                size='sm'
+                square
+              />
               <div className='flex-1'>
                 <div className='flex items-center gap-2'>
                   <span className='font-medium text-sm text-t-light dark:text-t-dark'>
-                    {memo.extraData?.client?.name}
+                    {memo.user.name + ' ' + memo.user.surname}
                   </span>
                   <span className='text-xs text-gray-text-light dark:text-t-dark-light'>
                     {formatDate(memo.updatedAt || new Date())}
@@ -362,6 +368,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               </div>
             </div>
           ))}
+          {memos.value.length === 0 && (
+            <div className='flex justify-center items-center h-full'>
+              <p className='text-gray-text-light dark:text-t-dark-light'>
+                No hay mensajes
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -369,20 +382,35 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       <div className='p-4 border-t border-gray-border'>
         <form onSubmit={handleSubmitMessage}>
           <div className='flex flex-col space-y-2'>
-            <textarea
+            <TextArea
+              name='message'
               placeholder='Escribe un mensaje...'
               value={message}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setMessage((e.target as HTMLTextAreaElement).value)
               }
-              className='min-h-[80px] w-full p-3 rounded-md border border-gray-border bg-b-white dark:bg-b-dark-light text-t-light dark:text-t-dark focus:outline-none focus:ring-2 focus:ring-primary'
             />
 
-            {attachments.length > 0 && (
+            {files.length > 0 && (
               <div className='flex flex-wrap gap-2 mt-2'>
-                {attachments.map((file, index) => (
+                {files[files.length - 1]?.images.map((image, index) => (
+                  <div key={`img-${index}`} className='relative group'>
+                    {image.url ? (
+                      <img
+                        src={image.url}
+                        alt={image.name}
+                        className='h-20 w-20 object-cover rounded-md'
+                      />
+                    ) : (
+                      <div className='h-20 w-20 bg-b-light dark:bg-b-dark-light rounded-md flex items-center justify-center'>
+                        <span className='vox-icon size-sm vx-icon-311' />
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {files[files.length - 1]?.files.map((file, index) => (
                   <div
-                    key={index}
+                    key={`file-${index}`}
                     className='flex items-center p-1.5 bg-b-light dark:bg-b-dark-light rounded-md text-xs group'
                   >
                     <span className='vox-icon size-sm vx-icon-311 px-2' />
@@ -391,10 +419,16 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     </span>
                     <button
                       type='button'
-                      onClick={() => removeAttachment(index)}
+                      onClick={() => {
+                        const newFiles = [...files];
+                        newFiles[newFiles.length - 1].files = newFiles[
+                          newFiles.length - 1
+                        ].files.filter((_, i) => i !== index);
+                        setFiles(newFiles);
+                      }}
                       className='ml-1 text-gray-text-light hover:text-error'
                     >
-                      <span className='vox-icon size-sm vx-icon-311 px-2' />
+                      <span className='vox-icon size-sm vx-icon-311' />
                     </button>
                   </div>
                 ))}
@@ -403,19 +437,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
             <div className='flex justify-between items-center mt-2'>
               <div className='flex gap-2'>
-                <label htmlFor='file-upload' className='cursor-pointer'>
-                  <div className='flex items-center text-sm text-gray-text-light hover:text-primary transition-colors'>
-                    <span className='vox-icon size-sm vx-icon-311 px-2' />
-                    <span>Adjuntar</span>
-                  </div>
-                  <input
-                    id='file-upload'
-                    type='file'
-                    multiple
-                    className='hidden'
-                    onChange={handleAttachmentUpload}
-                  />
-                </label>
+                <File
+                  name='attachments'
+                  onChange={handleAttachmentUpload}
+                  value={[]}
+                  accept='image/*'
+                  multiple={true}
+                />
               </div>
               <button
                 type='submit'

@@ -18,6 +18,7 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
+import { toast } from 'react-toastify';
 
 enum VIEW_NAME {
   TABLE,
@@ -51,7 +52,20 @@ export const MemosPage: FunctionComponent = () => {
 
   useEffect(() => {
     fetchInitialData();
+    handleSSE();
   }, [selectedCompany]);
+
+  const handleSSE = useCallback(async () => {
+    await MemoService.streamQuery(
+      (chunk: any) => handleEmitSSE(chunk),
+      () => toast.success('Stream completado'),
+      (error: any) => toast.error(`Error en el stream: ${error.message}`)
+    );
+  }, []);
+
+  const handleEmitSSE = (data: any) => {
+    console.log('data SSE: ', data);
+  };
 
   const fetchInitialData = async () => {
     const [responseMemos, responseUsers, responseSummary] = await Promise.all([

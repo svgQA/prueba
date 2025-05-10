@@ -221,18 +221,17 @@ export const getColumns = (
   },
   {
     id: 'history',
-    accessorKey: 'level',
+    accessorKey: 'messages',
     header: 'Historial',
     cell: (info) => {
       const value = info.getValue() as string;
-
       return (
         <div className='flex items-center gap-1 justify-start'>
           <span
             className='p-1 size-sm cursor-pointer'
             onClick={() => info.row.toggleExpanded()}
           >
-            💬 {value}
+            💬 {value || 0}
           </span>
         </div>
       );
