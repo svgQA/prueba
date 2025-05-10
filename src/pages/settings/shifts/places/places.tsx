@@ -66,7 +66,6 @@ export const PlacesSettingPage: FunctionComponent = () => {
     navigate(`/rounds/places/update/${id}`);
   };
   const handleOnClick = async (action: IRowActionPlace | any) => {
-    // console.log(action);
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
         update(action.id);

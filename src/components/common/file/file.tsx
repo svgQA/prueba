@@ -3,6 +3,7 @@ import { useSignal } from '@preact/signals';
 import { IPresignedRequest } from '@/types/file';
 import { handleFileChangeWrapper } from './utils';
 import { GeneralService } from '@/services/general/general';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const File = ({
   id,
@@ -32,8 +33,8 @@ export const File = ({
     isLoading.value = true;
     try {
       await handleFileChangeWrapper(e, emitChange);
-    } catch (error) {
-      console.log('ERROR: No se ha podido cargar la imagen', error);
+    } catch {
+      ToastManager.error('No se ha podido cargar la imagen');
     } finally {
       isLoading.value = false;
       e.target.value = '';

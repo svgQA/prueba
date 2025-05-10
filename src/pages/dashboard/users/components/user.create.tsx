@@ -80,7 +80,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     const response = await PlaceService.getDepartments();
     if (!response.getStatus()) return;
     departments.value = response.getMany();
-    // console.log(departments.value);
   };
 
   const getCompanies = async (): Promise<void> => {
@@ -430,7 +429,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
             <File
               name='extraData.image'
               onChange={(e) => {
-                console.log(e);
                 image.value = e.target.value;
               }}
               value={image.value}

@@ -3,6 +3,7 @@ import { IPresignedRequest } from '@/types/file';
 import { useSignal } from '@preact/signals';
 import { useRef } from 'preact/hooks';
 import { IDropzoneProps } from './interface';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const CardDropzone = ({
   description,
@@ -29,7 +30,7 @@ export const CardDropzone = ({
     try {
       await handleFileChangeWrapper(e, emitChange, 'report');
     } catch (error) {
-      console.log('ERROR: No se ha podido cargar la imagen', error);
+      ToastManager.error('No se ha podido cargar la imagen');
     } finally {
       isLoading.value = false;
       e.target.value = '';

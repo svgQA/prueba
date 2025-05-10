@@ -28,8 +28,6 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
 
   const handleDownloadPDF = async () => {
     if (!qrRef.current) return;
-    // console.log(qr);
-
     try {
       const qrImage = await toPng(qrRef.current);
       const pdf = new jsPDF();

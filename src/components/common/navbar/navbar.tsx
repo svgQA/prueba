@@ -32,7 +32,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
       <div className='flex justify-end md:hidden w-full'>
         <button
           onClick={toggleMenu}
-          className='flex flex-col justify-center items-center p-1.5 rounded-lg hover:bg-gray-100 transition-colors duration-200 border !border-white'
+          className='flex flex-col justify-center items-center p-1.5 rounded-lg hover:bg-gray-100 hover:bg-opacity-20 transition-colors duration-200 border !border-white'
         >
           <span
             className={`bg-white border-b w-7 rounded-full transition-transform duration-300 ease-in-out ${isOpen.value ? 'rotate-45 translate-y-2.5' : ''}`}

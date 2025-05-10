@@ -8,7 +8,7 @@ import { DashboardLayout } from './pages/dashboard/dashboard.layout';
 import { Amplify } from 'aws-amplify';
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import { CustomLoginPage } from '@/components/compose/login/custom';
-import { useUserStore } from './store/slices';
+import { hasUserTenant, useUserStore } from './store/slices';
 import { BaseService } from './utils/network';
 import { closeLoading, openLoading } from './store/signals/modals';
 import { useEffect } from 'preact/hooks';
@@ -34,21 +34,22 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
     getTenant,
     getToken,
     getCompanyId,
-    // setToken,
-    // setCognito,
-    // setTenant,
-    // setUser,
+    setToken,
+    setCognito,
+    setTenant,
+    setUser,
   } = useUserStore();
 
   useEffect(() => {
     BaseService.setLoading(openLoading, closeLoading);
     BaseService.setUser(getTenant, getToken, getCompanyId);
-    // validateUser();
+    validateUser();
+    console.log('validateUser', 'Mierda .com');
   }, []);
 
-  // const validateUser = async () => {
-  //   await hasUserTenant(setToken, setCognito, setTenant, setUser);
-  // };
+  const validateUser = async () => {
+    await hasUserTenant(setToken, setCognito, setTenant, setUser);
+  };
 
   return (
     <section className='h-screen'>

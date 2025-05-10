@@ -47,8 +47,6 @@ export const TaskForm = ({
   // const setTasks = (serviceId: number) => {
   //   // const service = services.value.find((service) => service.id === serviceId);
   //   // tasks.value = service?.task || [];
-  //   // console.log(service);
-  //   // console.log(tasks.value);
   // };
 
   // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
@@ -465,11 +463,9 @@ export const TaskForm = ({
                             options={tasks.value}
                             onChange={(e) => {
                               const description = e.currentTarget.value;
-                              // console.log(description);
                               const task = tasks.value.find(
                                 (task: any) => task.description === description
                               );
-                              // console.log(task);
                               fields.push(task);
                             }}
                           />

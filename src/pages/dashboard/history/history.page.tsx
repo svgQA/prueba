@@ -58,12 +58,11 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
     }
   };
 
-  const onClickAction = (params: {
+  const onClickAction = (_: {
     id: string;
     type: string;
     action: ROW_ACTIONS;
   }) => {
-    console.log('Acción seleccionada:', params);
     // Aquí abres modales, haces navigations, etc.
   };
 

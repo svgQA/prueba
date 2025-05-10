@@ -7,8 +7,6 @@ import i18n from '@/i18n';
 import dayjs from 'dayjs';
 import { ShiftService } from '@/services';
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
-  console.log('shift ==>', shift);
-
   const calculateCheckStatus = (
     checkTime: string,
     scheduleTime: string,
@@ -139,7 +137,6 @@ const ShiftCard = ({
       );
       return position;
     } catch (error) {
-      console.log('error', error);
       getErrorGeolocation(error as GeolocationPositionError);
       return null;
     }
