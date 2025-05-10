@@ -598,7 +598,7 @@ export const Table = <T,>({
                   square
                 />
                 {activeDropdown === i && (
-                  <div className='absolute bottom-full left-0 mb-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 py-2 px-2 min-w-[120px]'>
+                  <div className='absolute bottom-full left-0 mb-1 bg-white dark:bg-b-dark-dark border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 py-2 px-2 min-w-[120px]'>
                     <div className='grid grid-cols-3 gap-2'>
                       {(pageIdx === 'ellipsis-start'
                         ? getIntermediatePages(1, currentPage - 1).filter(

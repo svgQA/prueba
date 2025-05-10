@@ -77,7 +77,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
       />
 
       {showDateForm && (
-        <div className='my-3 absolute right-0 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 z-50 border border-gray-200 dark:border-gray-700 w-[600px]'>
+        <div className='my-3 absolute right-0 bg-white dark:bg-b-dark-dark rounded-lg shadow-lg p-4 z-50 border border-gray-200 dark:border-gray-700 w-[600px]'>
           <Form<FormValues>
             onSubmit={onSubmit}
             initialValues={initialValues}

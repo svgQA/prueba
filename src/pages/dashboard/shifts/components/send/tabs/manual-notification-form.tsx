@@ -142,7 +142,7 @@ export const ManualNotificationForm = ({
               onInput={(e) => setSearch(e.currentTarget.value)}
             />
 
-            <div className='max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-2  bg-white dark:bg-gray-800'>
+            <div className='max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-2  bg-white dark:bg-b-dark-dark'>
               {[...new Map(filteredUsers.map((u) => [u.id, u])).values()].map(
                 (user: any) => (
                   <label

@@ -66,7 +66,7 @@ export const Input = ({
         className={`
           ${borderless ? '' : 'border border-gray-200 dark:border-gray-700'}
           rounded flex flex-row items-center w-full
-          bg-white dark:bg-gray-800
+          bg-white dark:bg-b-dark-dark
         `}
       >
         {!end && icon && (
@@ -76,7 +76,7 @@ export const Input = ({
           <input
             ref={ref}
             className={`w-full px-3 py-2 rounded
-              bg-white dark:bg-gray-800
+              bg-white dark:bg-b-dark-dark
               text-gray-700 dark:text-gray-200
               border-gray-300 dark:border-gray-700
               focus:ring-blue-500 dark:focus:ring-blue-400
@@ -87,7 +87,7 @@ export const Input = ({
                 [&::-webkit-inner-spin-button]:appearance-none
                 [&::-webkit-outer-spin-button]:appearance-none
                 [&::-webkit-inner-spin-button]:bg-gray-100
-                [&::-webkit-inner-spin-button]:dark:bg-gray-800
+                [&::-webkit-inner-spin-button]:dark:bg-b-dark-dark
                 [&::-webkit-inner-spin-button]:hover:bg-gray-200
                 [&::-webkit-inner-spin-button]:dark:hover:bg-gray-700
                 [&::-webkit-inner-spin-button]:transition-colors

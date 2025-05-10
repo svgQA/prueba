@@ -151,7 +151,7 @@ export const TaskForm = ({
     (task: Task) => (
       <div
         key={task.id}
-        className='dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 w-64'
+        className='dark:bg-b-dark-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 w-64'
       >
         <div className='flex justify-between items-center mb-3'>
           <h3 className='font-medium text-gray-900 dark:text-white truncate'>
@@ -553,12 +553,12 @@ export const TaskForm = ({
         {/*
         <div className='w-[650px] max-h-52 overflow-y-scroll'>
           {taskSelected && (
-            <pre className='bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-auto'>
+            <pre className='bg-gray-100 dark:bg-b-dark-dark p-4 rounded-lg overflow-auto'>
               {JSON.stringify(taskSelected, null, 2)}
             </pre>
           )}
           {userSelected && (
-            <pre className='bg-gray-100 dark:bg-gray-800 p-4 mt-4 rounded-lg overflow-auto'>
+            <pre className='bg-gray-100 dark:bg-b-dark-dark p-4 mt-4 rounded-lg overflow-auto'>
               {JSON.stringify(userSelected, null, 2)}
             </pre>
           )}

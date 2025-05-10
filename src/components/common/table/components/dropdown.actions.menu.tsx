@@ -74,7 +74,7 @@ export const DropdownActionsMenu = ({
               left: position.left,
               zIndex: 9999,
             }}
-            className='w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 border border-gray-200 dark:border-gray-700'
+            className='w-56 bg-white dark:bg-b-dark-dark rounded-lg shadow-lg py-2 border border-gray-200 dark:border-gray-700'
           >
             <div className='flex flex-col gap-1 px-2'>
               {actions.map((action, idx) => (

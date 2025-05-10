@@ -17,7 +17,7 @@ export const Card: FunctionComponent<ICardProps> = ({
       className={`${borderless ? 'border-0' : 'border-2 border-gray-100 dark:border-b-dark-light'}
       ${rounded ? 'rounded-lg' : ''}
       ${color}  ${shadow ? 'shadow-md' : ''} ${maxWidth}
-      ${transparent ? 'bg-transparent' : 'bg-white dark:bg-gray-800'}
+      ${transparent ? 'bg-transparent' : 'bg-white dark:bg-b-dark-dark'}
       text-t-light dark:text-t-dark
       relative capitalize p-2 m-1 h-fit transition duration-300 focus:outline-2`}
     >

@@ -156,7 +156,7 @@ export const StandardTooltipContent = ({
 
   return (
     <div
-      className='bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2 max-w-3xl border-2 border-gray-200 dark:border-gray-700'
+      className='bg-white dark:bg-b-dark-dark rounded-lg shadow-lg p-2 max-w-3xl border-2 border-gray-200 dark:border-gray-700'
       style={style}
     >
       <div className='flex'>
