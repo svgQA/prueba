@@ -1,8 +1,24 @@
 export interface Memo {
   id: number;
+  noveltyId?: number;
+  serviceId?: number;
+  companyId?: number;
+  description: string;
+  date?: string;
+  latitude?: number;
+  longitude?: number;
+  state?: string;
+  priority?: number | string;
+  resource?: Resource;
+  attachments: any[];
+  updatedAt?: string | Date;
+  createdAt?: string | Date;
+  extraData?: ExtraData;
+  novelty?: Novelty;
+  service?: Service;
+  updatedBy?: string;
   firstName: string;
   lastName: string;
-  description: string;
   workerAge: number;
   workerPhoto: string;
   workerEmail: string;
@@ -20,7 +36,6 @@ export interface Memo {
   visits: number;
   status: string;
   progress: number;
-  priority: number | string;
   noveltyType: string;
   noveltyDate: string;
   location: string;
@@ -29,16 +44,9 @@ export interface Memo {
   company: string;
   address: string;
   mapUrl: string;
-  extraData?: ExtraData;
-  novelty?: Novelty;
-  service?: Service;
-  updatedAt?: string;
-  createdAt?: string;
-  resource?: Resource;
-  attachments: any[];
   supervisor: string;
-  updatedBy: string;
-  state: string;
+  parentId: number;
+  user: User;
 }
 
 export interface Novelty {
@@ -97,6 +105,7 @@ export interface ExtraData {
     phone: string;
   };
   company: {
+    id: number;
     name: string;
     description: string;
   };
@@ -107,6 +116,19 @@ export interface ExtraData {
 }
 
 export interface Resource {
-  files: string | string[];
-  images: string | string[];
+  files: string | any[] | IFile[];
+  images: string | any[] | IFile[];
+}
+
+export interface IFile {
+  name: string;
+  type: string;
+  uuid: string;
+  area: string;
+  url?: string;
+}
+
+export interface IFilesMemo {
+  images: IFile[];
+  files: IFile[];
 }
