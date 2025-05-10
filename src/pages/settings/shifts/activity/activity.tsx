@@ -9,7 +9,7 @@ import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 
 import { ShiftService } from '@/services/shift/shift';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 import {
   menuInformationSelected as infoMenu,
@@ -59,7 +59,7 @@ export const ActivitySettingPage: FunctionComponent = () => {
   const deleteActivity = async (id: string) => {
     const request = await ShiftService.deleteActivity(id);
     if (!request.getStatus()) return;
-    toast.success('Turno eliminado', { position: 'top-right' });
+    ToastManager.success('Turno eliminado');
     getActivities();
   };
 

@@ -11,7 +11,7 @@ import { IRowAction } from '@/components/common/table/interface.d';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Table } from '@/components/common/table/table';
 import { appendHistory } from '../../store/settings';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
 
 export const FormInspectSettingPage: FunctionComponent = () => {
@@ -45,7 +45,7 @@ export const FormInspectSettingPage: FunctionComponent = () => {
     );
     if (!response?.structure) {
       if (!response?.structure) {
-        toast.error(t('forms.error.notExistResponse'));
+        ToastManager.error(t('forms.error.notExistResponse'));
         return;
       }
     }

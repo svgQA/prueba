@@ -4,7 +4,7 @@ import { Form, Field } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
 import { Switch } from '@/components/common/switch/switch';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useEffect, useState } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import {
@@ -108,7 +108,7 @@ export const GeneralSettingPage: FunctionComponent = () => {
       settingsIds.value.app
     );
     if (response.getStatus()) {
-      toast.success(t('settings.general.success'));
+      ToastManager.success(t('settings.general.success'));
     }
   };
 
@@ -118,7 +118,7 @@ export const GeneralSettingPage: FunctionComponent = () => {
       settingsIds.value.general
     );
     if (response.getStatus()) {
-      toast.success(t('settings.general.success'));
+      ToastManager.success(t('settings.general.success'));
     }
   };
 

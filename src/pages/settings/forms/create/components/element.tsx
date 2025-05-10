@@ -12,7 +12,7 @@ import { moveElement, updateForm, updateSectionForm } from '../store/question';
 import { ELEMENT_TYPE_VALUES, REGEX_PATTERNS } from '../store/constant';
 import { validateSelectedElement } from '../store/control';
 import { toggleListModal } from '../../lists/store/list';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 const ItemType = {
   QUESTION: 'question',
@@ -61,9 +61,7 @@ export const FormElement = ({
     const isURL = urlPattern.test(event);
 
     if (!isURL) {
-      toast.error('No es una url valida!', {
-        position: 'top-right',
-      });
+      ToastManager.error('No es una url valida!');
       return;
     }
 
@@ -77,18 +75,14 @@ export const FormElement = ({
               typeof item === 'object' && 'label' in item && 'value' in item
           )
         ) {
-          toast.error('La estructura de datos no es válida', {
-            position: 'top-right',
-          });
+          ToastManager.error('La estructura de datos no es válida');
           return;
         }
-        toast.success('Los datos estan bien.');
+        ToastManager.success('Los datos estan bien.');
         updateForm(question.id, page, section)('options', data.slice(0, 50));
       })
       .catch(() => {
-        toast.error('Error al obtener los datos', {
-          position: 'top-right',
-        });
+        ToastManager.error('Error al obtener los datos');
       });
   };
 

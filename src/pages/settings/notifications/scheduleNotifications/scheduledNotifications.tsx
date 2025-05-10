@@ -10,7 +10,7 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { SchedulerService } from '@/services/notification/schedule';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
@@ -56,10 +56,10 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
     const res = await SchedulerService.deleteScheduledNotification(id);
     if (res.getStatus()) {
-      toast.success('Notificación eliminada correctamente');
+      ToastManager.success('Notificación eliminada correctamente');
       fetchNotifications();
     } else {
-      toast.error('Error al eliminar la notificación');
+      ToastManager.error('Error al eliminar la notificación');
     }
   };
 

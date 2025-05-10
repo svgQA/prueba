@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 // import { Map } from '@/components/common/map/map';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { Avatar } from '@/components/common/Avatar';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 
@@ -71,10 +71,10 @@ export const ShiftForm = ({
       id: taskSelected?.id,
     });
     if (!response.getStatus()) {
-      toast.error('Error al replicar el turno');
+      ToastManager.error('Error al replicar el turno');
       return;
     }
-    toast.success('Turno replicado exitosamente');
+    ToastManager.success('Turno replicado exitosamente');
     toggleReplicateClick();
     replicateDate.value = '';
     onClose?.();
@@ -93,10 +93,10 @@ export const ShiftForm = ({
     if (!taskSelected?.id) return;
     const response = await ShiftService.deleteActivity(taskSelected?.id);
     if (!response.getStatus()) {
-      toast.error('Error al eliminar el turno');
+      ToastManager.error('Error al eliminar el turno');
       return;
     }
-    toast.success('Turno eliminado exitosamente');
+    ToastManager.success('Turno eliminado exitosamente');
     onClose?.();
     posAction?.();
   };
@@ -107,7 +107,7 @@ export const ShiftForm = ({
 
   const handleAcceptReplicate = () => {
     if (!replicateDate.value) {
-      toast.error('Debe seleccionar una fecha');
+      ToastManager.error('Debe seleccionar una fecha');
       return;
     }
     setReplicateHandler(replicateDate.value);

@@ -15,7 +15,7 @@ import { Task, User } from '@/components/compose/gantt/types/public-types';
 import { Badge } from '@/components/common/badge/badge';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import { useTranslation } from 'react-i18next';
 
@@ -71,11 +71,11 @@ export const TaskForm = ({
         ? t('shifts.upsert.successEdit')
         : t('shifts.upsert.successCreate');
 
-      toast.success(message);
+      ToastManager.success(message);
       onClose?.();
       posSave?.();
     } catch (error) {
-      toast.error(i18n.t('shift.upsert.error'));
+      ToastManager.error(i18n.t('shift.upsert.error'));
     }
   };
 

@@ -4,7 +4,7 @@ import maplibregl, { type Map as MaplibreMap } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { IMapProps, MapPoint } from './interface';
 import { themeSignal } from '@/components/compose/button/signal.theme';
 
@@ -245,7 +245,7 @@ export const MapLibrePointsMap = ({
   // Add a marker to the map
   const setMarkerOnMap = (lat: number, lng: number) => {
     if (condition) {
-      toast.error(`${errorCondition}`, { position: 'top-right' });
+      ToastManager.error(`${errorCondition}`);
       return;
     }
 
@@ -258,7 +258,7 @@ export const MapLibrePointsMap = ({
     if (radialPoint) {
       const pointValidation = haversineDistance(radialPoint, newPoint);
       if (pointValidation) {
-        toast.error(`${errorRadialPoint}`, { position: 'top-right' });
+        ToastManager.error(`${errorRadialPoint}`);
         return;
       }
     }
@@ -463,9 +463,7 @@ export const MapLibrePointsMap = ({
   // Handle marker drag end
   const handleMarkerDragEnd = (id: number, lat: number, lng: number) => {
     if (radialPoint?.id === id) {
-      toast.error('Punto del lugar no se debe mover', {
-        position: 'top-right',
-      });
+      ToastManager.error('Punto del lugar no se debe mover');
       updateMarkers();
       return;
     }
@@ -474,7 +472,7 @@ export const MapLibrePointsMap = ({
       const testPoint = { position: { lat, lng } };
       const pointValidation = haversineDistance(radialPoint, testPoint);
       if (pointValidation) {
-        toast.error(`${errorRadialPoint}`, { position: 'top-right' });
+        ToastManager.error(`${errorRadialPoint}`);
         updateMarkers();
         return;
       }
@@ -596,9 +594,7 @@ export const MapLibrePointsMap = ({
       setMarkerOnMap(lat, lng);
       setCoords({ lat: '', lng: '' });
     } else {
-      toast.error('Por favor ingrese coordenadas válidas', {
-        position: 'top-right',
-      });
+      ToastManager.error('Por favor ingrese coordenadas válidas');
     }
   };
 
@@ -607,15 +603,13 @@ export const MapLibrePointsMap = ({
     const pointExists = points.some((p) => p.id === id);
 
     if (!pointExists) {
-      toast.error('No se pudo encontrar el punto para eliminar', {
-        position: 'top-right',
-      });
+      ToastManager.error('No se pudo encontrar el punto para eliminar');
       return;
     }
 
     setPoints((prevPoints) => {
       const newPoints = prevPoints.filter((p) => p.id !== id);
-      toast.success('Punto eliminado correctamente', { position: 'top-right' });
+      ToastManager.success('Punto eliminado correctamente');
       return newPoints;
     });
 
@@ -628,9 +622,7 @@ export const MapLibrePointsMap = ({
     const newLng = Number.parseFloat(editCoords.lng);
 
     if (isNaN(newLat) || isNaN(newLng)) {
-      toast.error('Por favor ingrese coordenadas válidas', {
-        position: 'top-right',
-      });
+      ToastManager.error('Por favor ingrese coordenadas válidas');
       return;
     }
 
@@ -643,7 +635,7 @@ export const MapLibrePointsMap = ({
     );
 
     closeActivePopup();
-    toast.success('Punto actualizado correctamente', { position: 'top-right' });
+    ToastManager.success('Punto actualizado correctamente');
   };
 
   // Add this function after the other utility functions
@@ -673,9 +665,7 @@ export const MapLibrePointsMap = ({
       });
     }
 
-    toast.success('Location set to exact coordinates', {
-      position: 'top-right',
-    });
+    ToastManager.success('Location set to exact coordinates');
   }, [adminUser]);
 
   // Clean up watch on unmount

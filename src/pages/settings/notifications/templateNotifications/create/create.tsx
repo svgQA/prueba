@@ -5,7 +5,7 @@ import { FormService } from '@/services/form/form';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '@/pages/settings/store/settings';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { TaskService } from '@/services';
 
 export const TemplateCreateForm = () => {
@@ -33,7 +33,7 @@ export const TemplateCreateForm = () => {
 
   const handleSubmit = async () => {
     if (!title.trim() || !description.trim()) {
-      toast.warning('Título y descripción son obligatorios');
+      ToastManager.warning('Título y descripción son obligatorios');
       return;
     }
 
@@ -51,10 +51,10 @@ export const TemplateCreateForm = () => {
     setLoading(false);
 
     if (res.getStatus()) {
-      toast.success('Plantilla creada exitosamente');
+      ToastManager.success('Plantilla creada exitosamente');
       redirectToList();
     } else {
-      toast.error('Error al crear plantilla');
+      ToastManager.error('Error al crear plantilla');
     }
   };
 

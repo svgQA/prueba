@@ -38,7 +38,7 @@ import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
 import { UserService } from '@/services/general/user';
 import { MentionOption } from '@/components/common/mention-editor';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
@@ -170,7 +170,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       setHasValidPlayer(hasUsers);
       hasValidPlayerRef.current = hasUsers;
     } catch (error) {
-      toast.error('notification.error_fetching_initial_data');
+      ToastManager.error('notification.error_fetching_initial_data');
     }
   };
 
@@ -228,7 +228,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     handleViewChange(VIEW_NAME.TABLE);
 
     if (!hasValidPlayerRef.current) {
-      toast.warn(t('notification.nobody_have_player_id'));
+      ToastManager.warning(t('notification.nobody_have_player_id'));
       return;
     }
 
@@ -241,7 +241,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
     // ✅ Siguientes veces: solo abre el modal (sin toggle)
     if (selectedUsers.length === 0) {
-      toast.warn(t('notification.select_at_least_one_employee'));
+      ToastManager.warning(t('notification.select_at_least_one_employee'));
       setOnNotifications(false);
       onNotificationsRef.current = false;
       return;
@@ -449,13 +449,13 @@ export const ShiftsPage: FunctionalComponent = () => {
           (shift) => shift.id === Number(params.id)
         );
         if (!shift) {
-          toast.error(t('shift.table.delete.error'));
+          ToastManager.error(t('shift.table.delete.error'));
           return;
         }
 
         const status = shift.status as unknown as SHIFT_STATUS;
         if (status !== SHIFT_STATUS.CREATED) {
-          toast.warning(t('shift.table.delete.warning'));
+          ToastManager.warning(t('shift.table.delete.warning'));
           return;
         }
 
@@ -473,7 +473,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const deleteShift = async (id: string) => {
     const response = await ShiftService.deleteActivity(id);
     if (!response.getStatus()) return;
-    toast.success(t('shift.table.delete.success'));
+    ToastManager.success(t('shift.table.delete.success'));
     fetchInitialData();
   };
 

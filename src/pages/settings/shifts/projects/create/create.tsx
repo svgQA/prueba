@@ -7,7 +7,7 @@ import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
@@ -44,7 +44,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
     }
 
     if (!request.getStatus()) return;
-    toast.success(message, { position: 'top-right' });
+    ToastManager.success(message);
     navigate('/rounds/projects');
   };
 

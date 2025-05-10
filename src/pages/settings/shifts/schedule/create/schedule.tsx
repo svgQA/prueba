@@ -5,7 +5,7 @@ import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import WeeklyScheduler from '../components/weekly.scheduler';
@@ -70,7 +70,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
     }
 
     if (!request.getStatus()) return;
-    toast.success(message, { position: 'top-right' });
+    ToastManager.success(message);
     navigate('/rounds/schedule');
   };
 

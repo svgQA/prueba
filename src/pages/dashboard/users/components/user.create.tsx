@@ -19,7 +19,7 @@ import {
 import { Signal, useSignal } from '@preact/signals';
 import { Select } from '@/components/common/select/select';
 import { File } from '@/components/common/file/file';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { IPresignedRequest } from '@/types/file';
 import { CompanyService, PlaceService } from '@/services';
 import { StatusButton } from '@/pages/settings/component/custo.button';
@@ -144,7 +144,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       props.onUserCreated(request.getOne());
     }
 
-    toast.success(message);
+    ToastManager.success(message);
   };
 
   return (

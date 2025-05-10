@@ -8,7 +8,7 @@ import { Button } from '@/components/common/button/button';
 import { required } from '@/utils/utilities';
 import { IOption } from '@/components/common/multi/interface';
 import { ShiftService } from '@/services';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 
 interface ReplicateModalProps {
@@ -57,10 +57,10 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
   const onSubmit = async (values: FormValues) => {
     const response = await ShiftService.setReplicateV2(values);
     if (!response.getStatus()) {
-      toast.error('Error replicating shifts');
+      ToastManager.error('Error replicating shifts');
       return;
     }
-    toast.success('Shifts replicated successfully');
+    ToastManager.success('Shifts replicated successfully');
     setShowDateForm((prev) => !prev);
     onReloadSignal?.();
   };

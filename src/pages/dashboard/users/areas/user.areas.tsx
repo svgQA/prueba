@@ -8,7 +8,7 @@ import { useEffect } from 'preact/hooks';
 import { IUserAreaResponse } from '@/types/user/user.response';
 import { Button } from '@/components/common/button/button';
 import { useLocation } from 'wouter';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import {
@@ -40,7 +40,7 @@ export const UserAreasPage: FunctionComponent = () => {
   const deleteArea = async (id: number) => {
     const request = await UserService.deleteArea(id);
     if (!request.getStatus()) return;
-    toast.success('Ronda eliminado', { position: 'top-right' });
+    ToastManager.success('Ronda eliminado');
     fetchAreas();
   };
 

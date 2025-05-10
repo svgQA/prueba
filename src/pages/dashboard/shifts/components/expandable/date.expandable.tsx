@@ -2,7 +2,7 @@ import { Avatar } from '@/components/common/Avatar';
 import { Chip } from '@/components/common/chip/chip';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { showAlert } from '@/components/common/show-alert/show-alert';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import dayjs from 'dayjs';
 import { ShiftService } from '@/services';
@@ -156,13 +156,11 @@ const ShiftCard = ({
         onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
-      toast.error(i18n.t('shift.expandable.date.location.gpsMessage'), {
-        position: 'top-right',
-      });
+      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
     } else {
-      toast.error(i18n.t('shift.expandable.date.location.timeoutMessage'), {
-        position: 'top-right',
-      });
+      ToastManager.error(
+        i18n.t('shift.expandable.date.location.timeoutMessage')
+      );
     }
   };
 
@@ -180,7 +178,7 @@ const ShiftCard = ({
 
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
-      toast.success(i18n.t('shift.expandable.date.success'));
+      ToastManager.success(i18n.t('shift.expandable.date.success'));
     }
   };
 

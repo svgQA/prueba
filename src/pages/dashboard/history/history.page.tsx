@@ -6,7 +6,7 @@ import { Table } from '@/components/common/table/table';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { INotificationListItem } from '@/types/notification/INotificationTypes';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { getColumns } from './components/history.columns';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +33,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
       const res = await NotificationHistoryService.getNotificationList();
       notifications.value = res;
     } catch (error) {
-      toast.error(t('history.errors.loadHistory'));
+      ToastManager.error(t('history.errors.loadHistory'));
     }
   };
 
@@ -44,17 +44,17 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
       openRate.value = stats.openRate;
       notificationsThisMonth.value = stats.notificationsOfMonth;
     } catch (error) {
-      toast.error(t('history.errors.loadStats'));
+      ToastManager.error(t('history.errors.loadStats'));
     }
   };
 
   const handleRunCron = async () => {
     try {
       await NotificationHistoryService.runSchedulerTask();
-      toast.success(t('history.success.cronExecuted'));
+      ToastManager.success(t('history.success.cronExecuted'));
       await fetchAll();
     } catch (error) {
-      toast.error(t('history.errors.cronExecution'));
+      ToastManager.error(t('history.errors.cronExecution'));
     }
   };
 
