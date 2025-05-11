@@ -166,7 +166,7 @@ export const getColumns = (
 
       const actions: IDropdownAction[] = [
         {
-          label: 'Perfil del usuario',
+          label: t('user.columns.actions.profile'),
           icon: 'vox-icon vx-icon-229 text-primary',
           onClick: () => {
             onClickAction({
@@ -177,7 +177,7 @@ export const getColumns = (
           },
         },
         {
-          label: 'Editar usuario',
+          label: t('user.columns.actions.edit'),
           icon: 'vox-icon vx-icon-123 text-primary',
           onClick: () => {
             onClickAction({
@@ -188,7 +188,7 @@ export const getColumns = (
           },
         },
         {
-          label: 'Eliminar usuario',
+          label: t('user.columns.actions.delete'),
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
