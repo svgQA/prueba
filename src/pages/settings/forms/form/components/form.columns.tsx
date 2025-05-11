@@ -12,7 +12,7 @@ export const columns: ColumnDef<IFormResponse>[] = [
   {
     accessorKey: 'title',
     id: 'title',
-    header: t('forms.columns.title'),
+    header: t('form.columns.title'),
     size: 80,
     cell: (info) => {
       const { title, description } = info.row.original;
@@ -33,7 +33,7 @@ export const columns: ColumnDef<IFormResponse>[] = [
     accessorKey: 'group',
     id: 'group',
     size: 30,
-    header: t('forms.columns.group'),
+    header: t('form.columns.group'),
     cell: (info) => {
       const { group } = info.row.original as any;
       return (

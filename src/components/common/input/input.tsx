@@ -32,6 +32,8 @@ export const Input = ({
   onKeyDown,
   onFocus,
   onBlur,
+  error,
+  warning,
   ...props
 }: IInputProps) => {
   const handleKeyUp = (e: KeyboardEvent) => {
@@ -151,6 +153,8 @@ export const Input = ({
       {meta && meta.touched && meta.error && (
         <span className='text-red-500 text-sm'>{meta.error}</span>
       )}
+      {error && <span className='text-red-500 text-sm'>{error}</span>}
+      {warning && <span className='text-yellow-500 text-sm'>{warning}</span>}
     </div>
   );
 };

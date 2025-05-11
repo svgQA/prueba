@@ -14,6 +14,7 @@ import { validateSelectedElement } from '../store/control';
 import { toggleListModal } from '../../lists/store/list';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
+import { IElementError } from '@/types/form/error.type';
 const ItemType = {
   QUESTION: 'question',
 };
@@ -154,6 +155,7 @@ export const FormElement = ({
                 onChange={handleSectionInputChange}
                 borderless
                 thin
+                error={(question as IElementError).label_error}
               />
             </div>
           </td>
@@ -183,6 +185,7 @@ export const FormElement = ({
                   onChange={handleInputChange}
                   borderless
                   thin
+                  error={(question as IElementError).label_error}
                 />
               </div>
             </td>

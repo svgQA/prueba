@@ -14,6 +14,8 @@ export interface IInputProps extends IComponentProps {
   step?: number;
   pattern?: string;
   required?: boolean;
+  error?: string;
+  warning?: string;
   placeholder?: string;
   icon?: string;
   labelLeft?: boolean;

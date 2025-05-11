@@ -2,11 +2,9 @@ import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { FormService } from '@/services';
-import { IFormRequest, IListResponse } from '@/types/form';
+import { IListResponse } from '@/types/form';
 import { ListFormModal } from '../lists/lists';
-import { useLocation } from 'wouter';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
+// import { useLocation } from 'wouter';
 import {
   getSelectedElement,
   setSelectedElement,
@@ -20,6 +18,7 @@ import {
   getForm,
   getFormMode,
   removeElement,
+  setFormat,
   udpateGeneralForm,
   updateForm,
   updatePageForm,
@@ -35,8 +34,9 @@ import { getStatusElementSelected, toggleListModal } from '../lists/store/list';
 import i18n from '@/i18n';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { formValidation } from './utils/validation';
+import { IFormError, IPageError } from '@/types/form/error.type';
 export const FormCreateSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  // const [_, navigate] = useLocation();
   useEffect(() => {
     document.title = 'Forms Create Settings';
   }, []);
@@ -51,15 +51,18 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   };
 
   const saveFormat = async () => {
+    const [message, error] = formValidation(getForm.value);
+    console.log('ERRORES: ', message);
+    if (error) {
+      setFormat({ mode: FORMAT_MODE_SERVICE.UPDATE }, message);
+      return ToastManager.error('Hay un error en el formulario');
+    }
+    /*
     const format: IFormRequest = {
       title: getForm.value.label,
       description: getForm.value.description || '',
       structure: getForm.value,
     };
-
-    const message = formValidation(format);
-    if (message) return ToastManager.error(message);
-
     if (getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE) {
       if (!getFormMode.value.id) return;
       const response = await FormService.update(format, getFormMode.value.id);
@@ -69,6 +72,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       if (!response.getStatus()) return;
     }
     navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.form.to);
+    */
   };
 
   const addLelement = () => {
@@ -140,6 +144,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               id={`in-form-${getForm.value.id}-format-title`}
               value={getForm.value.label}
               onChange={handleFormatInputChange}
+              error={(getForm.value as IFormError).label_error}
             />
             <Input
               type='text'
@@ -149,6 +154,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               id={`in-form-${getForm.value.id}-format-description`}
               value={getForm.value.description}
               onChange={handleFormatInputChange}
+              error={(getForm.value as IFormError).description_error}
             />
           </div>
           <Button
@@ -175,6 +181,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                 value={page.label}
                 onChange={handlePageInputChange}
                 icon='064'
+                error={(page as IPageError).pages_error}
               />
               <div className='mt-2 w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light'>
                 <table class='w-full text-left px-2'>

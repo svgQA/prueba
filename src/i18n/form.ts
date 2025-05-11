@@ -37,6 +37,7 @@ export const form_es = {
       actions: 'Acciones',
       createdAt: 'Fecha de creación',
       updatedAt: 'Fecha de actualización',
+      group: 'Grupo',
     },
     new: 'Crear formulario',
     error: {
@@ -103,6 +104,7 @@ export const form_en = {
       actions: 'Actions',
       createdAt: 'Created at',
       updatedAt: 'Updated at',
+      group: 'Group',
     },
     new: 'Create form',
     error: {
