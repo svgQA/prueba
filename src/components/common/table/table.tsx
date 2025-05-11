@@ -51,6 +51,7 @@ import { ROW_ACTIONS } from './enum';
 import { Group } from './components/group';
 import { useSignal } from '@preact/signals';
 import { Button } from '../button/button';
+import { DraggableTableHeader } from './components/draggable.header';
 
 export const Table = <T,>({
   data,
@@ -67,6 +68,7 @@ export const Table = <T,>({
   onSelectionChange,
   hasNotifications = false,
   onNotifications,
+  isSettingTable = false,
 }: ITableProps<T>) => {
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
@@ -102,8 +104,15 @@ export const Table = <T,>({
   );
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
-
+  const isSettingOpen = useSignal(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const handleSettingToggle = useCallback((e: MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    isSettingOpen.value = !isSettingOpen.value;
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -111,7 +120,7 @@ export const Table = <T,>({
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setActiveDropdown(null);
+        isSettingOpen.value = false;
       }
     };
 
@@ -187,8 +196,9 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='min-w-80 invisible absolute left-0 top-12 rounded-b-md p-4 bg-b-light-dark dark:bg-b-dark-light border-2 border-gray-100 dark:border-gray-700'>
+    <div className='min-w-80 rounded-b-md p-4 bg-b-light-dark dark:bg-b-dark-dark border-2 border-gray-100 dark:border-gray-700 rounded-md max-h-container-table overflow-y-auto vox-scroll-design'>
       {table.getAllLeafColumns().map((column, index) => {
+        if (['id', 'actions'].includes(column.id)) return null;
         const columnHeader =
           typeof column.columnDef.header !== 'string'
             ? column.id
@@ -390,8 +400,8 @@ export const Table = <T,>({
                   >
                     {!unsettings && (
                       <td
-                        className='left-0 min-w-[30px] px-1'
-                        // style={{ position: 'sticky', zIndex: 1 }}
+                        className='left-0 min-w-[30px] px-1 bg-b-light dark:bg-b-dark'
+                        style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
                           <div className='flex items-center justify-center h-full'>
@@ -443,12 +453,6 @@ export const Table = <T,>({
                             currentColumnName.value = value;
                           }}
                           cell={cell}
-                          className={
-                            row.getIsExpanded() &&
-                            currentColumnName.value === cell.column.id
-                              ? 'bg-primary-opacity dark:bg-b-dark-light'
-                              : ''
-                          }
                         />
                       </SortableContext>
                     ))}
@@ -587,7 +591,7 @@ export const Table = <T,>({
               <div
                 key={`ellipsis-${i}`}
                 className='relative'
-                ref={activeDropdown === i ? dropdownRef : null}
+                // ref={activeDropdown === i ? dropdownRef : null}
               >
                 <Button
                   onClick={() =>
@@ -690,97 +694,94 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='pb-16 min-h-[30vh] border-2 border-gr dark:border-b-dark-light rounded-lg vox-scroll-design relative overflow-x-auto'
+          className='pb-12 min-h-[30vh] border-2 border-gray-200 dark:border-b-dark-light rounded-lg relative'
         >
-          <table className='elements'>
-            <thead>
-              {table.getHeaderGroups().map((headerGroup, index) => (
-                <tr
-                  key={`${headerGroup.id}-${index}`}
-                  className='sticky top-0 z-[5]'
-                >
-                  <th
-                    colSpan={1}
-                    className='table-setting-button flex items-center justify-center'
-                    style={{ position: 'sticky', zIndex: 1 }}
+          <div
+            className={`${
+              isSettingTable ? 'max-h-setting-table' : 'max-h-general-table'
+            } overflow-y-auto relative overflow-x-auto vox-scroll-design`}
+          >
+            <table className='elements relative'>
+              <thead>
+                {table.getHeaderGroups().map((headerGroup, index) => (
+                  <tr
+                    key={`${headerGroup.id}-${index}`}
+                    className='sticky top-0 z-10'
                   >
-                    {selectable && onNotifications && hasNotifications && (
-                      <input
-                        type='checkbox'
-                        className='w-4 h-4'
-                        checked={
-                          Object.keys(selectedRows).length === data.length
-                        }
-                        ref={(el) => {
-                          if (el) {
-                            const all =
-                              data.length > 0 &&
-                              Object.keys(selectedRows).length === data.length;
-                            const none = Object.keys(selectedRows).length === 0;
-                            el.indeterminate = !all && !none;
+                    <th
+                      colSpan={1}
+                      style={{
+                        position: 'sticky',
+                        left: '0',
+                        zIndex: 1,
+                      }}
+                    >
+                      {selectable && onNotifications && hasNotifications && (
+                        <input
+                          type='checkbox'
+                          className='w-4 h-4'
+                          checked={
+                            Object.keys(selectedRows).length === data.length
                           }
-                        }}
-                        onChange={(e) => {
-                          const checked = e.currentTarget.checked;
-                          const newSelection = checked
-                            ? Object.fromEntries(
-                                data.map((row: any) => [row.id, row])
-                              )
-                            : {};
-                          setSelectedRows(newSelection);
-                          onSelectionChange?.(Object.values(newSelection));
-                        }}
-                      />
-                    )}
-                    {!unsettings && !onNotifications && (
-                      <div className='flex items-center gap-2 relative'>
-                        <div className='relative'>
-                          <span
-                            className='vox-icon vx-icon-168 size-sm cursor-pointer'
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setActiveDropdown(
-                                activeDropdown === -1 ? null : -1
-                              );
-                            }}
+                          ref={(el) => {
+                            if (el) {
+                              const all =
+                                data.length > 0 &&
+                                Object.keys(selectedRows).length ===
+                                  data.length;
+                              const none =
+                                Object.keys(selectedRows).length === 0;
+                              el.indeterminate = !all && !none;
+                            }
+                          }}
+                          onChange={(e) => {
+                            const checked = e.currentTarget.checked;
+                            const newSelection = checked
+                              ? Object.fromEntries(
+                                  data.map((row: any) => [row.id, row])
+                                )
+                              : {};
+                            setSelectedRows(newSelection);
+                            onSelectionChange?.(Object.values(newSelection));
+                          }}
+                        />
+                      )}
+                      {!unsettings && !onNotifications && (
+                        <div className='flex items-center gap-2 relative w-full px-1 z-20'>
+                          <Button
+                            name='setting'
+                            icon='168'
+                            square
+                            onClick={handleSettingToggle}
                           />
-                          {activeDropdown === -1 && (
-                            <div
-                              ref={dropdownRef}
-                              className='absolute -left-3 -mt-10 z-50'
-                            >
-                              {buildSettings()}
-                            </div>
-                          )}
+                          <div
+                            ref={dropdownRef}
+                            className={`absolute left-1 top-11 transition-opacity duration-200 ${
+                              isSettingOpen.value
+                                ? 'opacity-100 visible'
+                                : 'opacity-0 invisible'
+                            }`}
+                          >
+                            {buildSettings()}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </th>
-                  <SortableContext
-                    items={columnOrder}
-                    strategy={horizontalListSortingStrategy}
-                  >
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        colSpan={header.colSpan}
-                        className='px-2 py-1 text-left sticky top-0 z-10'
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </th>
-                    ))}
-                  </SortableContext>
-                </tr>
-              ))}
-            </thead>
+                      )}
+                    </th>
+                    <SortableContext
+                      items={columnOrder}
+                      strategy={horizontalListSortingStrategy}
+                    >
+                      {headerGroup.headers.map((header) => (
+                        <DraggableTableHeader key={header.id} header={header} />
+                      ))}
+                    </SortableContext>
+                  </tr>
+                ))}
+              </thead>
 
-            <tbody>{renderRows(table.getRowModel().rows)}</tbody>
-          </table>
+              <tbody>{renderRows(table.getRowModel().rows)}</tbody>
+            </table>
+          </div>
           <div className='pagination-row'>{renderPagination()}</div>
         </div>
       </DndContext>

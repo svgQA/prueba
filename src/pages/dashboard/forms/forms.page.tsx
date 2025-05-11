@@ -72,7 +72,7 @@ export const FormsPage: FunctionComponent = () => {
         break;
       }
       default: {
-        ToastManager.error(t('forms.error.not_exist_option'));
+        ToastManager.error(t('form.error.not_exist_option'));
       }
     }
   };

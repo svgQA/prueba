@@ -19,7 +19,9 @@ export const DraggableCell = <T,>({
     <td
       ref={setNodeRef}
       style={getCommonPinningStyles<T>(cell.column, isDragging, transform)}
-      className={`text-left px-2 ${className}`}
+      className={`text-left px-2 ${
+        cell.column.getIsPinned() ? 'bg-b-light dark:bg-b-dark' : ''
+      } ${className}`}
       onClick={() => {
         const columnName = cell.id.split('_')[1];
         onCurrentColumnName(columnName);

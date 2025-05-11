@@ -37,6 +37,16 @@ module.exports = {
         'caution-opacity': '#FFF7E6',
         'blue-dark': '#172554',
       },
+      maxHeight: {
+        'general-table': '66vh',
+        'setting-table': '50vh',
+        'container-table': '40vh',
+      },
+      height: {
+        'general-table': '66vh',
+        'setting-table': '50vh',
+        'container-table': '40vh',
+      },
     },
   },
   plugins: [],
@@ -58,5 +68,11 @@ module.exports = {
     'text-primary-opacity',
     'text-primary-opacity-2',
     'text-blue-dark',
+    'max-h-general-table',
+    'max-h-setting-table',
+    'max-h-container-table',
+    'h-general-table',
+    'h-setting-table',
+    'h-container-table',
   ],
 };

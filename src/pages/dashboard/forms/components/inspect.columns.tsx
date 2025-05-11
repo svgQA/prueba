@@ -24,7 +24,7 @@ export const getColumns = (
   {
     accessorKey: 'user',
     id: 'user',
-    header: t('forms.columns.user'),
+    header: t('form.columns.user'),
     cell: (info) => {
       const { user } = info.row.original;
       return (
@@ -42,7 +42,7 @@ export const getColumns = (
   {
     accessorKey: 'title',
     id: 'title',
-    header: t('forms.columns.title'),
+    header: t('form.columns.title'),
     cell: (info) => {
       const { form } = info.row.original;
       return (
@@ -61,19 +61,19 @@ export const getColumns = (
   {
     accessorKey: 'createdAt',
     id: 'createdAt',
-    header: t('forms.columns.createdAt'),
+    header: t('form.columns.createdAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
-    header: t('forms.columns.updatedAt'),
+    header: t('form.columns.updatedAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'status',
     id: 'status',
-    header: t('forms.columns.status'),
+    header: t('form.columns.status'),
     cell: (info) => {
       const { status } = info.row.original;
       return <Chip label={status} />;
@@ -88,7 +88,7 @@ export const getColumns = (
       const actions: IDropdownAction[] = [
         status === RESPONSE_STATUS.OPENED
           ? {
-              label: t('forms.buttons.continue'),
+              label: t('form.buttons.continue'),
               icon: 'vox-icon vx-icon-030 text-primary',
               onClick: () => {
                 onClickAction({

@@ -9,7 +9,12 @@ interface IDraggableTableHeade<T> {
 export const DraggableTableHeader = <T,>({
   header,
 }: IDraggableTableHeade<T>) => {
-  const { isDragging, listeners, setNodeRef, transform } = useSortable({
+  const {
+    // isDragging,
+    // listeners,
+    setNodeRef,
+    transform,
+  } = useSortable({
     id: header.column.id,
   });
 
@@ -17,7 +22,11 @@ export const DraggableTableHeader = <T,>({
     <th
       ref={setNodeRef}
       colSpan={header.colSpan}
-      style={getCommonPinningStyles<T>(header.column, isDragging, transform)}
+      style={getCommonPinningStyles<T>(
+        header.column,
+        /* isDragging */ false,
+        transform
+      )}
       className='text-center'
     >
       <div
@@ -25,6 +34,8 @@ export const DraggableTableHeader = <T,>({
         onClick={header.column.getToggleSortingHandler()}
       >
         {flexRender(header.column.columnDef.header, header.getContext())}
+        {/* Este es el icono de la flecha para ejecutar el drag */}
+        {/*
         {{
           asc: <span className='vox-icon vx-icon-002 size-sm mx-1' />,
           desc: <span className='vox-icon vx-icon-001 size-sm mx-1' />,
@@ -35,6 +46,7 @@ export const DraggableTableHeader = <T,>({
             className='mx-1 cursor-move vox-icon vx-icon-031 size-sm'
           ></span>
         )}
+        */}
       </div>
     </th>
   );
