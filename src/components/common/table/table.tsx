@@ -185,8 +185,8 @@ export const Table = <T,>({
   };
 
   const handleClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
+    // e.stopPropagation();
+    // e.preventDefault();
     const target = e.target as HTMLElement;
     if (target.tagName === 'SPAN') {
       const id = target.dataset.id;
@@ -196,6 +196,7 @@ export const Table = <T,>({
       const rowId = target.dataset.rowId;
       const clickable = target.dataset.clickable;
 
+      console.log('TARGET: ', target);
       if (id && type && action && rowId && clickable) {
         const row = table.getRow(rowId);
         if (!row) return;
@@ -235,27 +236,27 @@ export const Table = <T,>({
             key={`${column.id}-${index}`}
             className='flex items-center space-x-2 py-1 flex-row gap-2'
           >
-            <div>
-              {column.getCanPin() && (
-                <Button
-                  name={`btn-pin-${column.id}`}
-                  icon='030'
-                  iconSize='sm'
-                  selectedColor='bg-ternary'
-                  selected={!!column.getIsPinned()}
-                  onClick={() =>
-                    column.pin(column.getIsPinned() ? false : 'left')
-                  }
-                  square
-                />
-              )}
-            </div>
+            {column.getCanPin() && (
+              <Button
+                name={`btn-pin-${column.id}`}
+                icon='030'
+                iconSize='sm'
+                selectedColor='bg-ternary'
+                selected={!!column.getIsPinned()}
+                onClick={() =>
+                  column.pin(column.getIsPinned() ? false : 'left')
+                }
+                square
+              />
+            )}
+
             <Switch
-              name={`ch-hidden-${column.id}`}
               id={`ch-hidden-${column.id}`}
+              name={`ch-hidden-${column.id}`}
+              label={columnHeader}
               value={column.getIsVisible()}
               onChange={column.getToggleVisibilityHandler()}
-              label={columnHeader}
+              backgroundColor='bg-b-light-dark dark:bg-b-dark-light'
             />
           </div>
         );
