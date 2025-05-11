@@ -42,7 +42,7 @@ export const TextEllipsis = ({
     <div
       // ref={containerRef}
       style={containerStyle}
-      className={`${className} ${tooltip ? 'cursor-help' : ''}`}
+      className={`${className} ${tooltip ? 'cursor-help' : 'cursor-default'}`}
       title={tooltip ? text : undefined}
     >
       {children || text}

@@ -7,7 +7,7 @@ export interface IDropdownAction {
   label: string;
   icon: string;
   color?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 interface DropdownActionsMenuProps {
@@ -86,7 +86,7 @@ export const DropdownActionsMenu = ({
                   name={`dropdown-action-${idx}`}
                   label={action.label}
                   onClick={() => {
-                    action.onClick();
+                    action?.onClick?.();
                     setIsDropdownOpen(false);
                   }}
                   textColor={action.color || 'text-gray-700 dark:text-gray-200'}

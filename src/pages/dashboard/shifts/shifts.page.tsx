@@ -66,7 +66,6 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const shifts = useSignal<IShiftResponse[]>([]);
-  const defaultColumn = useSignal<string>('default');
 
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
@@ -537,11 +536,8 @@ export const ShiftsPage: FunctionalComponent = () => {
 
               setSelectedUsers(validUsers as any);
             }}
-            expandable={(row: IShiftResponse, currentColumnName?: string) => (
-              <ExpandableMultiple
-                type={currentColumnName || defaultColumn.value}
-                data={row}
-              />
+            expandable={(row: IShiftResponse, column?: string) => (
+              <ExpandableMultiple type={column} data={row} />
             )}
             visibility={{
               servicePlaceAddress: false,

@@ -52,6 +52,7 @@ import { Group } from './components/group';
 import { useSignal } from '@preact/signals';
 import { Button } from '../button/button';
 import { DraggableTableHeader } from './components/draggable.header';
+import { ROW_ACTIONS } from './enum';
 
 export const Table = <T,>({
   data,
@@ -60,7 +61,7 @@ export const Table = <T,>({
   expandable,
   unsettings,
   visibility,
-  // onClickAction,
+  onClickAction,
   unsearch,
   button,
   showExpandableIcon = false,
@@ -70,6 +71,7 @@ export const Table = <T,>({
   onNotifications,
   isSettingTable = false,
 }: ITableProps<T>) => {
+  const preCellSelected = useSignal<string>('');
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
 
@@ -96,7 +98,7 @@ export const Table = <T,>({
     pageSize: pageSize,
   });
   const [expanded, setExpanded] = useState<ExpandedState>({});
-  const currentColumnName = useSignal<string>('');
+  // const currentColumnName = useSignal<string>('');
 
   const [grouping, setGrouping] = useState<GroupingState>([]);
   const [columnOrder, setColumnOrder] = useState(() =>
@@ -184,19 +186,39 @@ export const Table = <T,>({
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     const target = e.target as HTMLElement;
-    console.log('DONDE CLICK: ', target);
-    {
-      /*
-    if (target.tagName.toLowerCase() === 'span') {
+    if (target.tagName === 'SPAN') {
       const id = target.dataset.id;
       const type = target.dataset.type;
       const action = target.dataset.action;
+
+      const rowId = target.dataset.rowId;
+      const clickable = target.dataset.clickable;
+
+      if (id && type && action && rowId && clickable) {
+        const row = table.getRow(rowId);
+        if (!row) return;
+        const isExpanded = row.getIsExpanded();
+        if (preCellSelected.value === id) {
+          row.toggleExpanded();
+        } else if (!isExpanded) {
+          row.toggleExpanded();
+        }
+
+        preCellSelected.value = id;
+        // row.toggleExpanded();
+        // const expanded = row.getIsExpanded();
+        // console.log('EXPANDED: ', expanded);
+        // onClickAction?.({ id, type, action: Number(action) as ROW_ACTIONS });
+      }
+
+      // TODO: Esta validacion va a morir porque todo va a cambiar al dropdown
+      // de acciones de las columnas. Lo cual me parece una mierda por performance.
+      // Por ahora se deja aquí porque algunas columnas de settings no tienen dropdown
       if (id && type && action) {
         onClickAction?.({ id, type, action: Number(action) as ROW_ACTIONS });
       }
-    }
-    */
     }
   };
 
@@ -278,7 +300,10 @@ export const Table = <T,>({
                     {!unsettings && (
                       <td className='text-center left-0 min-w-[30px]'>
                         <span
-                          onClick={() => row.toggleExpanded()}
+                          // TODO: Toggle expandable row
+                          // onClick={() => {
+                          //   row.toggleExpanded()
+                          // }}
                           className={`vox-icon ${
                             row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
                           } cursor-pointer size-sm`}
@@ -410,6 +435,7 @@ export const Table = <T,>({
                         {expandable && showExpandableIcon && (
                           <div className='flex items-center justify-center h-full max-w-[2.5rem]'>
                             <span
+                              // TODO: Toggle expandable row (POSIBLE VOLVER A PONER)
                               onClick={() => row.toggleExpanded()}
                               className='vx-icon vx-icon-001 cursor-pointer size-sm'
                             />
@@ -453,10 +479,8 @@ export const Table = <T,>({
                       >
                         <DraggableCell<T>
                           key={`cell-${row.id}-${cell.id}`}
-                          onCurrentColumnName={(value) => {
-                            currentColumnName.value = value;
-                          }}
                           cell={cell}
+                          rowId={row.id}
                         />
                       </SortableContext>
                     ))}
@@ -467,7 +491,7 @@ export const Table = <T,>({
                         colSpan={row.getVisibleCells().length + 1}
                         className='p-4'
                       >
-                        {expandable(row.original, currentColumnName.value)}
+                        {expandable(row.original, preCellSelected.value)}
                       </td>
                     </tr>
                   )}

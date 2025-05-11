@@ -9,9 +9,7 @@ const EmployeeInfo = ({
   place: IPlace;
 }) => {
   return (
-    <div className='p-2 text-t-light dark:text-t-dark'>
-      <h2 className='text-base mb-3 font-bold'>Detalles del usuario</h2>
-
+    <>
       <div className='flex flex-row gap-6'>
         {/* Perfil */}
         <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 w-56 flex flex-col items-center shadow-sm'>
@@ -86,7 +84,7 @@ const EmployeeInfo = ({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

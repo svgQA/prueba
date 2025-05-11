@@ -24,7 +24,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
   }, []);
 
   return (
-    <div className='bg-b-light-dark dark:bg-b-dark-light p-4 rounded-lg'>
+    <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4'>
       <div className='grid grid-cols-12 gap-8'>
         {/* Columna izquierda - Información del contrato */}
         <div className='col-span-4 pr-4'>
@@ -32,9 +32,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
           <p className='text-sm mt-1 pr-4'>{contract.description}</p>
 
           <div className='mt-3'>
-            <span className='inline-block px-3 py-0.5 bg-m6 text-secondary rounded-full text-xs'>
-              Prioridad {contract.priority}
-            </span>
+            <Chip label={contract.priority} color='success' />
           </div>
 
           <div className='mt-4'>

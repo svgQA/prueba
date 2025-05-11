@@ -61,7 +61,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   const checkOutStatus = calculateCheckStatus(checkOut?.time, shift.end, false);
 
   return (
-    <div class='flex gap-6 justify-center p-4'>
+    <div class='flex gap-6 justify-center'>
       {/* Inicio del Turno */}
       <ShiftCard
         title='Inicio del Turno'
@@ -180,7 +180,7 @@ const ShiftCard = ({
   };
 
   return (
-    <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm p-4 w-full text-t-light dark:text-t-dark flex flex-row gap-4'>
+    <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-4 p-4'>
       {/* Título */}
       <div>
         <h2 className='font-medium mb-4'>{title}</h2>
