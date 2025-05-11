@@ -68,28 +68,15 @@ const ServiceInfo = ({ service }: { service: IService }) => {
       </div>
 
       {/* Área de cobertura */}
-      <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm text-t-light dark:text-t-dark'>
-        <h4 className='font-semibold mb-3'>Área de cobertura</h4>
-        <div className='relative w-full' style={{ height: '180px' }}>
-          {/* <Map
-              sendPoints={() => {}}
-              name='Map'
-              center={{
-                lat: service.place.latitude,
-                lng: service.place.longitude,
-              }}
-              pointsAmount={1}
-              pointsRef={points.value}
-              condition={false}
-              errorCondition=''
-              radialPoint={null}
-              errorRadialPoint=''
-              radius={service.place.radius || 50}
-              draggable={true}
-              width='100%'
-              height='100%'
-              clickPoint={() => {}}
-            /> */}
+      <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-3 flex-1 shadow-sm text-t-light dark:text-t-dark'>
+        <div className='flex flex-row items-center justify-between mb-3'>
+          <h4 className='font-semibold'>Área de cobertura</h4>
+          <Chip
+            label={`Radio: ${service.place.radius || 50}m`}
+            color='primary'
+          />
+        </div>
+        <div className='relative w-full h-56'>
           <MapLibrePointsMap
             sendPoints={() => {}}
             name='Map'
@@ -105,16 +92,11 @@ const ServiceInfo = ({ service }: { service: IService }) => {
             errorRadialPoint=''
             radius={service.place.radius || 50}
             draggable={true}
-            width='100%'
             height='100%'
             clickPoint={() => {}}
             disablePointSelection={true}
           />
         </div>
-        <p className='text-xs mt-2 flex items-center'>
-          <span className='!text-primary mr-2 vox-icon size-md vx-icon-103'></span>
-          Radio: {service.place.radius || 50}m
-        </p>
       </div>
     </div>
   );

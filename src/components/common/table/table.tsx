@@ -481,6 +481,7 @@ export const Table = <T,>({
                           key={`cell-${row.id}-${cell.id}`}
                           cell={cell}
                           rowId={row.id}
+                          selected={cell.column.id === preCellSelected.value}
                         />
                       </SortableContext>
                     ))}

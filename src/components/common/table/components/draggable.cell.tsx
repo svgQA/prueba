@@ -8,9 +8,14 @@ interface DraggableCellProps<T> {
   cell: Cell<T, unknown>;
   className?: string;
   rowId: string;
+  selected?: boolean;
 }
 
-export const DraggableCell = <T,>({ cell, rowId }: DraggableCellProps<T>) => {
+export const DraggableCell = <T,>({
+  cell,
+  rowId,
+  selected = false,
+}: DraggableCellProps<T>) => {
   const { setNodeRef, isDragging, transform } = useSortable({
     id: cell.column.id,
   });
@@ -23,7 +28,7 @@ export const DraggableCell = <T,>({ cell, rowId }: DraggableCellProps<T>) => {
       style={getCommonPinningStyles<T>(cell.column, isDragging, transform)}
       className={`text-left px-2 relative ${
         cell.column.getIsPinned() ? 'bg-b-light dark:bg-b-dark' : ''
-      }`}
+      } ${selected ? 'bg-b-light-ligth dark:bg-b-dark-dark' : ''}`}
     >
       {/* Este span es para que el usuario pueda hacer click en la celda NO TOCAR */}
       {isClickable && cell.column.id !== 'actions' && (
