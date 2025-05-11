@@ -100,6 +100,7 @@ export const ActivitySettingPage: FunctionComponent = () => {
           type: true,
         }}
         onClickAction={handleOnClick}
+        isSettingTable
       />
     </Section>
   );

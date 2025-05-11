@@ -105,18 +105,16 @@ export const SettingsModal = () => {
     >
       <div
         onClick={selectMenu}
-        className='max-w-80 min-w-44 max-h-[90vh] border-r-2 border-gray-50 dark:border-b-dark-light'
+        className='max-w-80 min-w-44 max-h-[90vh] border-r-2 border-gray-50 dark:border-b-dark-light flex flex-col gap-1'
       >
-        <div className='border-b-2 border-b-gray-50 dark:border-b-dark-light'>
-          <CardSettingUser
-            id='user-information'
-            name='user-information'
-            company={'Inndico'}
-            username={user?.name + ' ' + user?.surname}
-            image={user?.image || ''}
-            rol={user?.userType || ''}
-          />
-        </div>
+        <CardSettingUser
+          id='user-information'
+          name='user-information'
+          company={'Inndico'}
+          username={user?.name + ' ' + user?.surname}
+          image={user?.image || ''}
+          rol={user?.userType || ''}
+        />
         <MenuList
           menuSettings={menuSettings}
           menuInformationSelected={menuInformationSelected.value}

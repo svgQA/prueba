@@ -53,6 +53,10 @@ export const form_es = {
     },
     inspect: {
       title: 'Inspección',
+      continue: 'Continuar',
+      delete: 'Eliminar',
+      cancel: 'Cancelar',
+      report: 'Ver reporte',
     },
     report: {
       title: 'Reporte',
@@ -115,6 +119,10 @@ export const form_en = {
     },
     inspect: {
       title: 'Inspection',
+      continue: 'Continue',
+      delete: 'Delete',
+      cancel: 'Cancel',
+      report: 'Report',
     },
     report: {
       title: 'Report',

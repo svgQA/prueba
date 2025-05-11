@@ -9,6 +9,7 @@ import { MemoService } from '@/services';
 import { File } from '@/components/common/file/file';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { useSignal } from '@preact/signals';
+import { Button } from '@/components/common/button/button';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -122,7 +123,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   };
 
   return (
-    <div className='w-full rounded-lg shadow-md bg-b-white dark:bg-b-dark border border-gray-border'>
+    <div className='w-full rounded-lg shadow-md bg-b-white dark:bg-b-dark border border-b-light-dark dark:border-b-dark-light'>
       <div className='p-4 pb-2'>
         <div className='flex justify-between items-start'>
           <div>
@@ -360,7 +361,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
                   {/* Memo Details */}
                   {expandedMemoId === memo.id && (
-                    <div className='mt-4 pt-4 border-t border-gray-border'>
+                    <div className='mt-4 pt-4 border-t border-b-light-dark dark:border-b-dark-light'>
                       <SupervisorInfo memo={memo} />
                     </div>
                   )}
@@ -379,7 +380,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       </div>
 
       {/* Message Input */}
-      <div className='p-4 border-t border-gray-border'>
+      <div className='p-4 border-t border-b-light-dark dark:border-b-dark-light'>
         <form onSubmit={handleSubmitMessage}>
           <div className='flex flex-col space-y-2'>
             <TextArea
@@ -445,18 +446,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                   multiple={true}
                 />
               </div>
-              <button
+              <Button
+                name='memo-send-response'
                 type='submit'
                 disabled={!message.trim()}
-                className={`px-4 py-2 rounded-md text-sm flex items-center ${
-                  message.trim()
-                    ? 'bg-primary text-t-dark hover:bg-ternary'
-                    : 'bg-b-light-dark text-gray-text-light cursor-not-allowed'
-                } transition-colors`}
-              >
-                <span className='vox-icon size-sm vx-icon-311 px-2' />
-                Enviar
-              </button>
+                label='Enviar'
+                icon='311'
+              />
             </div>
           </div>
         </form>

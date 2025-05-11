@@ -39,12 +39,12 @@ module.exports = {
       },
       maxHeight: {
         'general-table': '66vh',
-        'setting-table': '50vh',
+        'setting-table': '60vh',
         'container-table': '40vh',
       },
       height: {
         'general-table': '66vh',
-        'setting-table': '50vh',
+        'setting-table': '60vh',
         'container-table': '40vh',
       },
     },

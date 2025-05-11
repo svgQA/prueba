@@ -96,19 +96,29 @@ export const File = ({
         {label && (
           <label
             for={`${id}-input`}
-            className='capitalize block text-sm font-medium'
+            className='capitalize block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200'
           >
             {label}
           </label>
         )}
         <div
-          className={`${borderless ? '' : 'border-b-light-dark dark:border-b-dark-light border'} rounded flex flex-row items-center`}
+          className={`${
+            borderless ? '' : 'border border-gray-200 dark:border-gray-700'
+          } rounded-lg flex flex-row items-center bg-white dark:bg-b-dark-dark`}
         >
           {!end && icon && (
-            <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
+            <span
+              className={`vox-icon size-sm vx-icon-${icon} px-2 text-gray-700 dark:text-gray-200`}
+            />
           )}
           <input
-            className={`px-2 w-full mr-2 bg-transparent rounded-md ${thin ? '' : 'py-2'} file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100`}
+            className={`px-2 w-full mr-2 bg-transparent rounded-md text-gray-700 dark:text-gray-200
+              ${thin ? '' : 'py-2'} 
+              file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 
+              file:text-sm file:bg-violet-50 dark:file:bg-violet-900/30 
+              file:text-violet-700 dark:file:text-violet-300 
+              hover:file:bg-violet-100 dark:hover:file:bg-violet-800/40
+              disabled:opacity-50 disabled:cursor-not-allowed`}
             onChange={handleFileChange}
             name={name}
             type='file'
@@ -120,29 +130,41 @@ export const File = ({
             disabled={disabled}
             {...props}
           />
-          {end && icon && <span className={`vox-icon vx-icon-${icon}`} />}
+          {end && icon && (
+            <span
+              className={`vox-icon vx-icon-${icon} text-gray-700 dark:text-gray-200`}
+            />
+          )}
         </div>
-        {meta && meta.touched && meta.error && <span>{meta?.error}</span>}
+        {meta && meta.touched && meta.error && (
+          <span className='text-red-500 dark:text-red-400 text-sm'>
+            {meta?.error}
+          </span>
+        )}
         <div className='mt-4 grid grid-cols-4 gap-4'>
           {Array.isArray(value) &&
             value.map((file) => (
               <div
                 key={file.uuid}
-                className='p-2 border rounded border-green-500 relative'
+                className='p-2 border rounded-lg border-green-500 dark:border-green-400 relative bg-white dark:bg-b-dark-dark'
               >
                 {!disabled ? (
                   <span
-                    className='vox-icon vx-icon-008 size-xs absolute top-0 right-1 cursor-pointer'
+                    className='vox-icon vx-icon-008 size-xs absolute top-0 right-1 cursor-pointer text-gray-700 dark:text-gray-200 hover:text-red-500 dark:hover:text-red-400'
                     onClick={() => removeAction(file.uuid)}
                   ></span>
                 ) : (
                   <span
-                    className='vox-icon vx-icon-207 size-xs absolute top-0 right-1 cursor-pointer'
+                    className='vox-icon vx-icon-207 size-xs absolute top-0 right-1 cursor-pointer text-gray-700 dark:text-gray-200 hover:text-primary dark:hover:text-primary'
                     onClick={() => downloadAction(file.uuid)}
                   ></span>
                 )}
-                <p className='text-sm truncate'>{file.name}</p>
-                <p className='text-xs text-gray-500'>{file.type}</p>
+                <p className='text-sm truncate text-gray-700 dark:text-gray-200'>
+                  {file.name}
+                </p>
+                <p className='text-xs text-gray-500 dark:text-gray-400'>
+                  {file.type}
+                </p>
               </div>
             ))}
         </div>

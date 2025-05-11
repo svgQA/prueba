@@ -117,6 +117,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
         }}
         onClickAction={handleOnClick}
         unsearch={false}
+        isSettingTable
       />
     </Section>
   );

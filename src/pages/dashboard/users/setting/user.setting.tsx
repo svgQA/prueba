@@ -1,7 +1,7 @@
 import { Input } from '@/components/common/input/input';
 import { Section } from '@/components/common/section/section';
 import { Switch } from '@/components/common/switch/switch';
-import { StatusButton } from '@/pages/settings/component/custo.button';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 import { ModuleService } from '@/services';
 import { IUserSetting } from '@/types/settings';
 import { useSignal } from '@preact/signals';

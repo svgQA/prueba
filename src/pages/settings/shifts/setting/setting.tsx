@@ -9,7 +9,7 @@ import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { IShiftSetting } from '@/types/settings';
 import { ModuleService } from '@/services';
-import { StatusButton } from '../../component/custo.button';
+import { StatusButton } from '../../components/custom.button';
 
 export const ShiftSettingPage: FunctionComponent = () => {
   const settingsIds = useSignal<{ shift: number }>({ shift: 0 });

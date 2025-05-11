@@ -19,7 +19,8 @@ export const Card: FunctionComponent<ICardProps> = ({
       ${color}  ${shadow ? 'shadow-md' : ''} ${maxWidth}
       ${transparent ? 'bg-transparent' : 'bg-white dark:bg-b-dark-dark'}
       text-t-light dark:text-t-dark
-      relative capitalize p-2 m-1 h-fit transition duration-300 focus:outline-2`}
+      px-0.5
+      relative capitalize h-fit transition duration-300 focus:outline-2`}
     >
       {children}
     </div>

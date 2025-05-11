@@ -18,7 +18,7 @@ import { ModuleService } from '@/services';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { Preview } from './preview';
 import { useTranslation } from 'react-i18next';
-import { StatusButton } from '../../component/custo.button';
+import { StatusButton } from '../../components/custom.button';
 import { ColorPicker } from '@/components/common/color-picker/color-picker';
 
 export const GeneralSettingPage: FunctionComponent = () => {

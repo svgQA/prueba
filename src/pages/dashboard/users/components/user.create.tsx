@@ -22,7 +22,7 @@ import { File } from '@/components/common/file/file';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { IPresignedRequest } from '@/types/file';
 import { CompanyService, PlaceService } from '@/services';
-import { StatusButton } from '@/pages/settings/component/custo.button';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 import { IOption } from '@/components/common/multi/interface';
 import { AreaService } from '@/services/general/area';
 

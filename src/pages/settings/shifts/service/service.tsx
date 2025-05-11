@@ -105,6 +105,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
         }}
         onClickAction={handleOnClick}
         unsearch={false}
+        isSettingTable
       />
     </Section>
   );

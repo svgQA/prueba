@@ -6,6 +6,7 @@ import {
   IDropdownAction,
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
+import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -19,7 +20,9 @@ export const getColumns = (
     accessorKey: 'title',
     header: 'Título',
     size: 200,
-    cell: (info) => <span>{info.getValue() as string}</span>,
+    cell: (info) => (
+      <TextEllipsis text={String(info.getValue())} maxWidth='200px' />
+    ),
   },
   {
     id: 'description',
@@ -27,12 +30,7 @@ export const getColumns = (
     header: 'Descripción',
     size: 250,
     cell: (info) => (
-      <span
-        className='line-clamp-2 max-w-[250px]'
-        title={info.getValue() as string}
-      >
-        {info.getValue() as string}
-      </span>
+      <TextEllipsis text={String(info.getValue())} maxWidth='250px' />
     ),
   },
   {
@@ -41,7 +39,7 @@ export const getColumns = (
     header: 'Tipo',
     size: 120,
     cell: (info) => {
-      const type = info.getValue() as string;
+      const type = String(info.getValue());
       const color =
         type === 'Usuarios'
           ? 'bg-m6 text-primary'
@@ -62,7 +60,7 @@ export const getColumns = (
     header: 'Fecha de envío',
     size: 180,
     cell: (info) => {
-      const date = new Date(info.getValue() as string);
+      const date = new Date(String(info.getValue()));
       return (
         <time dateTime={date.toISOString()} className='p-1 size-sm'>
           {dayjs(date).format('DD/MM/YYYY HH:mm')}
@@ -78,7 +76,7 @@ export const getColumns = (
     cell: (info) => (
       <div className='flex items-center gap-2'>
         <span className='vox-icon vx-icon-340 text-lg' />
-        <span className='text-sm'>{info.getValue() as number}</span>
+        <span className='text-sm'>{Number(info.getValue())}</span>
       </div>
     ),
   },
@@ -88,7 +86,7 @@ export const getColumns = (
     header: 'Tasa de apertura',
     size: 150,
     cell: (info) => {
-      const openRate = info.getValue() as number;
+      const openRate = Number(info.getValue());
 
       let barColor = 'bg-caution';
       if (openRate >= 70) barColor = 'bg-m6';

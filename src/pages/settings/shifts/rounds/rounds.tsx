@@ -118,6 +118,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
         }}
         onClickAction={handleOnClick}
         unsearch={false}
+        isSettingTable
       />
     </Section>
   );

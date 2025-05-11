@@ -133,6 +133,7 @@ export const FormSettingPage = () => {
         columns={columns}
         pageSize={10}
         onClickAction={handleOnClick}
+        isSettingTable
       />
     </Section>
   );

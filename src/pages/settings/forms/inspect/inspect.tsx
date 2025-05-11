@@ -85,6 +85,7 @@ export const FormInspectSettingPage: FunctionComponent = () => {
         columns={columns}
         pageSize={20}
         onClickAction={handleOnClick}
+        isSettingTable
       />
     </section>
   );

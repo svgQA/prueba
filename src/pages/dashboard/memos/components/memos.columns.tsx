@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'preact';
 import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from '../utils/memos';
 
@@ -10,6 +9,7 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { Badge } from '@/components/common/badge/badge';
 import { Avatar } from '@/components/common/Avatar';
+import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 
 // Define our custom properties
 type CustomColumnProps = {
@@ -20,49 +20,6 @@ type CustomColumnProps = {
 
 // Create a type that combines ColumnDef with our custom properties
 type CustomColumnDef<TData> = ColumnDef<TData> & CustomColumnProps;
-// import i18next from 'i18next';
-
-// Función para obtener traducciones
-// const t = (key: string) => i18next.t(key);
-
-export const ProgressBar: FunctionComponent<{ progress: number }> = ({
-  progress,
-}) => (
-  <div className='flex items-center w-full'>
-    <div className='w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700'>
-      <div
-        className='bg-blue-600 h-2.5 rounded-full'
-        style={{ width: `${progress}%` }}
-      ></div>
-    </div>
-    <span className='text-sm font-medium'>{progress}%</span>
-  </div>
-);
-
-export const InfoIcon: FunctionComponent<{
-  onClick: () => void;
-  isExpanded: boolean;
-}> = ({ onClick, isExpanded }) => (
-  <button
-    onClick={onClick}
-    className='rounded-full hover:bg-gray-200 transition-colors duration-200'
-  >
-    <span
-      className={`vx-icon mx-1 vx-${isExpanded ? 'logo' : 'sensor'} size-sm`}
-    />
-  </button>
-);
-
-export const FormattedDate: FunctionComponent<{ date: string }> = ({
-  date,
-}) => {
-  return (
-    <div className='flex items-center'>
-      <span className='vx-icon-025" size-sm'></span>
-      <span>{dayjs(date).format('YYYY-MM-DD HH:mm')}</span>
-    </div>
-  );
-};
 
 export const getColumns = (
   onClickAction: (params: {
@@ -79,10 +36,7 @@ export const getColumns = (
     cell: (info) => {
       const name = info.getValue() as string;
       return (
-        <div
-          className='flex items-center gap-2 justify-start'
-          onClick={() => info.row.toggleExpanded()}
-        >
+        <div className='flex items-center gap-2 justify-start'>
           <Avatar name={name} size='sm' square />
           {name}
         </div>
@@ -114,16 +68,7 @@ export const getColumns = (
     enableGrouping: true,
     cell: (info) => {
       const description = info.getValue() as string;
-      return (
-        <div
-          className='max-w-[300px]'
-          onClick={() => info.row.toggleExpanded()}
-        >
-          <span className='block truncate' title={description}>
-            {description}
-          </span>
-        </div>
-      );
+      return <TextEllipsis text={description} maxWidth='300px' />;
     },
   },
   {
@@ -209,12 +154,7 @@ export const getColumns = (
       return (
         <div className='flex items-center gap-1 justify-start'>
           <Avatar name={displayValue} size='sm' square />
-          <p
-            className='p-1 size-sm cursor-pointer'
-            onClick={() => info.row.toggleExpanded()}
-          >
-            {displayValue}
-          </p>
+          {displayValue}
         </div>
       );
     },

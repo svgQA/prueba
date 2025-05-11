@@ -7,6 +7,7 @@ import {
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
 import i18next from 'i18next';
@@ -50,9 +51,7 @@ export const getColumns = (
           <span className='vox-icon vx-icon-152 mt-1 size-md' />
           <div className='flex flex-col ml-3 text-left'>
             <h5 className='font-bold text-left'>{form.title}</h5>
-            <p className='w-full flex justify-start max-w-96 overflow-hidden text-ellipsis whitespace-nowrap'>
-              {form.description}
-            </p>
+            <TextEllipsis text={form.description} maxWidth='300px' />
           </div>
         </div>
       );
@@ -88,7 +87,7 @@ export const getColumns = (
       const actions: IDropdownAction[] = [
         status === RESPONSE_STATUS.OPENED
           ? {
-              label: t('form.buttons.continue'),
+              label: t('form.inspect.continue'),
               icon: 'vox-icon vx-icon-030 text-primary',
               onClick: () => {
                 onClickAction({
@@ -99,7 +98,7 @@ export const getColumns = (
               },
             }
           : {
-              label: 'Ver reporte',
+              label: t('form.inspect.report'),
               icon: 'vox-icon vx-icon-433 text-primary',
               onClick: () => {
                 onClickAction({
@@ -110,7 +109,7 @@ export const getColumns = (
               },
             },
         {
-          label: 'Eliminar',
+          label: t('form.inspect.delete'),
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
@@ -128,7 +127,9 @@ export const getColumns = (
           {status === RESPONSE_STATUS.OPENED && (
             <Button
               name='continue'
-              label='Continuar'
+              label={t('form.inspect.continue')}
+              icon='030'
+              unpadded
               onClick={() => {
                 onClickAction({
                   id: String(id),
@@ -136,9 +137,7 @@ export const getColumns = (
                   action: ROW_ACTIONS.RESPONSE,
                 });
               }}
-            >
-              Continuar
-            </Button>
+            ></Button>
           )}
           <DropdownActionsMenu actions={actions} />
         </div>
