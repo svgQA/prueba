@@ -4,28 +4,19 @@ import { ColumnDef } from '@tanstack/react-table';
 
 export const columns: ColumnDef<Round>[] = [
   {
-    id: 'id',
-    accessorKey: 'id',
-    size: 60,
-    header: 'ID',
-  },
-  {
     id: 'name',
     accessorKey: 'name',
-    size: 180,
     header: 'Nombre',
     enableGrouping: true,
   },
   {
     id: 'frequency',
     accessorKey: 'frequency',
-    size: 180,
     header: 'Frecuencia',
     enableGrouping: true,
   },
   {
     id: 'actions',
-    size: 20,
     cell: (info) => {
       const { id } = info.row.original;
       return (

@@ -105,7 +105,7 @@ export const SettingsModal = () => {
     >
       <div
         onClick={selectMenu}
-        className='max-w-80 min-w-44 max-h-[90vh] border-r-2 border-gray-50 dark:border-b-dark-light flex flex-col gap-1'
+        className='max-w-80 min-w-60 max-h-[90vh] border-r-2 border-gray-50 dark:border-b-dark-light flex flex-col gap-1'
       >
         <CardSettingUser
           id='user-information'

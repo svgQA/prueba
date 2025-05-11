@@ -14,16 +14,25 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
 }: ICardSettingUserProps) => {
   return (
     <Card id={id} name={name} borderless rounded={false} transparent>
-      <div className='flex gap-2 w-full pb-2 justify-between px-3 py-1'>
-        <Avatar name={username} src={image} size='lg' />
-        <div className='flex flex-col justify-center'>
-          <p className='text-sm font-medium max-w-52 overflow-hidden'>
-            {username}
-          </p>
-          <p className='text-xs pt-2'>{rol}</p>
+      <div className='px-2'>
+        <div className='flex gap-2 w-full pb-2 justify-between px-3 py-1'>
+          <Avatar name={username} src={image} size='lg' />
+          <div className='flex flex-col justify-center'>
+            <p className='text-sm font-medium max-w-52 overflow-hidden'>
+              {username}
+            </p>
+            <p className='text-xs pt-2'>{rol}</p>
+          </div>
         </div>
+        <Badge
+          outline
+          label={company}
+          icon='012'
+          size='sm'
+          full
+          status='info'
+        />
       </div>
-      <Badge outline label={company} icon='012' size='sm' full status='info' />
     </Card>
   );
 };

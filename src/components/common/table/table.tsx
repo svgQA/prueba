@@ -47,7 +47,7 @@ import {
 import { DraggableCell } from './components';
 import { Fragment } from 'preact/jsx-runtime';
 import { Switch } from '../switch/switch';
-import { ROW_ACTIONS } from './enum';
+// import { ROW_ACTIONS } from './enum';
 import { Group } from './components/group';
 import { useSignal } from '@preact/signals';
 import { Button } from '../button/button';
@@ -60,7 +60,7 @@ export const Table = <T,>({
   expandable,
   unsettings,
   visibility,
-  onClickAction,
+  // onClickAction,
   unsearch,
   button,
   showExpandableIcon = false,
@@ -185,6 +185,9 @@ export const Table = <T,>({
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
     const target = e.target as HTMLElement;
+    console.log('DONDE CLICK: ', target);
+    {
+      /*
     if (target.tagName.toLowerCase() === 'span') {
       const id = target.dataset.id;
       const type = target.dataset.type;
@@ -192,6 +195,8 @@ export const Table = <T,>({
       if (id && type && action) {
         onClickAction?.({ id, type, action: Number(action) as ROW_ACTIONS });
       }
+    }
+    */
     }
   };
 
@@ -388,7 +393,6 @@ export const Table = <T,>({
                 </Fragment>
               );
             } else if (!row.parentId) {
-              // } else {
               return (
                 <Fragment key={row.id}>
                   <tr
@@ -400,11 +404,11 @@ export const Table = <T,>({
                   >
                     {!unsettings && (
                       <td
-                        className='left-0 min-w-[30px] px-1 bg-b-light dark:bg-b-dark'
+                        className='left-0 bg-b-light dark:bg-b-dark'
                         style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
-                          <div className='flex items-center justify-center h-full'>
+                          <div className='flex items-center justify-center h-full max-w-[2.5rem]'>
                             <span
                               onClick={() => row.toggleExpanded()}
                               className='vx-icon vx-icon-001 cursor-pointer size-sm'
@@ -414,7 +418,7 @@ export const Table = <T,>({
                         {selectable &&
                           onNotifications &&
                           hasRowsNotifications && (
-                            <div className='flex items-center justify-center h-full'>
+                            <div className='flex items-center justify-center h-full max-w-[2.5rem]'>
                               <input
                                 type='checkbox'
                                 className='w-4 h-4'
@@ -715,6 +719,7 @@ export const Table = <T,>({
                         left: '0',
                         zIndex: 1,
                       }}
+                      className='!max-w-[2.5rem]'
                     >
                       {selectable && onNotifications && hasNotifications && (
                         <input
