@@ -149,8 +149,6 @@ export const MemosPage: FunctionComponent = () => {
     // Aquí abres modales, haces navigations, etc.
   };
 
-  const defaultColumn = useSignal<string>('default');
-
   return (
     <Section
       className={
@@ -199,14 +197,11 @@ export const MemosPage: FunctionComponent = () => {
           <Table
             data={memos.value}
             columns={getColumns(onClickAction)}
-            showExpandableIcon
+            // showExpandableIcon
             pageSize={20}
             selectable
-            expandable={(row: Memo, currentColumnName?: string) => (
-              <ExpandableMultiple
-                type={currentColumnName || defaultColumn.value}
-                data={row}
-              />
+            expandable={(row: Memo, column?: string) => (
+              <ExpandableMultiple type={column} data={row} />
             )}
             visibility={{
               id: false,

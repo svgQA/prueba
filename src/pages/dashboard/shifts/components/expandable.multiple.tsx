@@ -46,7 +46,7 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
         />
       );
     default:
-      return <div>No content</div>;
+      return <>No content</>;
   }
 };
 

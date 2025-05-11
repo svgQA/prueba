@@ -10,6 +10,7 @@ import {
 import { Badge } from '@/components/common/badge/badge';
 import { Avatar } from '@/components/common/Avatar';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
+import { NColumnDef } from '@/components/common/table/type';
 
 // Define our custom properties
 type CustomColumnProps = {
@@ -19,7 +20,9 @@ type CustomColumnProps = {
 };
 
 // Create a type that combines ColumnDef with our custom properties
-type CustomColumnDef<TData> = ColumnDef<TData> & CustomColumnProps;
+type CustomColumnDef<TData> = ColumnDef<TData> &
+  CustomColumnProps &
+  NColumnDef<TData>;
 
 export const getColumns = (
   onClickAction: (params: {
@@ -128,6 +131,7 @@ export const getColumns = (
     id: 'supervisor',
     accessorKey: 'extraData.company.name',
     header: 'Supervisor',
+    clickable: true,
     enableGrouping: true,
     cell: (info) => {
       const supervisor = info.getValue() as string;
@@ -163,14 +167,12 @@ export const getColumns = (
     id: 'history',
     accessorKey: 'messages',
     header: 'Historial',
+    clickable: true,
     cell: (info) => {
       const value = info.getValue() as string;
       return (
         <div className='flex items-center gap-1 justify-center flex-row w-full'>
-          <span
-            className='vx-icon vx-icon-113 cursor-pointer'
-            onClick={() => info.row.toggleExpanded()}
-          ></span>
+          <span className='vx-icon vx-icon-113 cursor-pointer'></span>
           {value || 0}
         </div>
       );
