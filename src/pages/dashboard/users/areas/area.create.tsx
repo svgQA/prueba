@@ -11,8 +11,11 @@ import { IUserAreaRequest } from '@/types/user/user.request';
 import { useLocation } from 'wouter';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
+import { required } from '@/utils/utilities/validate';
+import { useTranslation } from 'react-i18next';
 
 export const AreaCreatePage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const initialValues: Signal<Partial<IUserAreaRequest>> = useSignal({});
   const [_, navigate] = useLocation();
@@ -27,10 +30,10 @@ export const AreaCreatePage: FunctionComponent = () => {
 
     if (id) {
       request = await UserService.updateArea(id, model);
-      message = 'Área actualizada exitosamente!';
+      message = t('user.area.update');
     } else {
       request = await UserService.createArea(model);
-      message = 'Área creada exitosamente!';
+      message = t('user.area.success');
     }
 
     if (!request.getStatus()) return;
@@ -60,14 +63,14 @@ export const AreaCreatePage: FunctionComponent = () => {
           <form onSubmit={handleSubmit} className='space-y-6'>
             <div className='grid grid-cols-2 gap-4'>
               <div className='col-span-1'>
-                <Field name='name'>
+                <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
                       id='name'
                       name='name'
-                      placeholder='Ingrese el nombre de la área...'
+                      placeholder={t('user.area.placeholder.name')}
                       meta={meta}
-                      label='Nombre'
+                      label={t('user.area.form.name')}
                       value={input.value}
                       onChange={input.onChange}
                     />
@@ -76,13 +79,13 @@ export const AreaCreatePage: FunctionComponent = () => {
               </div>
 
               <div className='col-span-1'>
-                <Field name='description'>
+                <Field<string> name='description' validate={required}>
                   {({ input, meta }) => (
                     <Input
                       id='description'
                       name='description'
-                      placeholder='Ingrese la descripción de la área...'
-                      label='Descripción'
+                      placeholder={t('user.area.placeholder.description')}
+                      label={t('user.area.form.description')}
                       value={input.value}
                       meta={meta}
                       onChange={input.onChange}
@@ -96,7 +99,11 @@ export const AreaCreatePage: FunctionComponent = () => {
                 id='btn-save'
                 name='btn-save'
                 type='submit'
-                label={id ? 'Actualizar' : 'Guardar'}
+                label={
+                  id
+                    ? t('user.area.form.btnUpdate')
+                    : t('user.area.form.btnSave')
+                }
                 className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
                 disabled={submitting}
               />
