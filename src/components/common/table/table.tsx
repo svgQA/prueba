@@ -331,9 +331,9 @@ export const Table = <T,>({
                       <td className='text-center left-0 min-w-[30px]'>
                         <span
                           // TODO: Toggle expandable row
-                          // onClick={() => {
-                          //   row.toggleExpanded()
-                          // }}
+                          onClick={() => {
+                            row.toggleExpanded();
+                          }}
                           className={`vox-icon ${
                             row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
                           } cursor-pointer size-sm`}
@@ -413,7 +413,7 @@ export const Table = <T,>({
                                   onSelectionChange?.(Object.values(updated));
                                 }}
                               />
-                              <span className='text-sm text-gray-700'>
+                              <span className='text-sm'>
                                 {allGroupSelected
                                   ? 'Deseleccionar'
                                   : 'Seleccionar todas'}
@@ -463,7 +463,7 @@ export const Table = <T,>({
                         style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
-                          <div className='flex items-center justify-center h-full max-w-[2.5rem]'>
+                          <div className='flex items-center justify-center h-full max-w-[2.5rem] min-w-[2.5rem]'>
                             <span
                               // TODO: Toggle expandable row (POSIBLE VOLVER A PONER)
                               onClick={() => row.toggleExpanded()}
@@ -474,7 +474,7 @@ export const Table = <T,>({
                         {selectable &&
                           onNotifications &&
                           hasRowsNotifications && (
-                            <div className='flex items-center justify-center h-full max-w-[2.5rem]'>
+                            <div className='flex items-center justify-center h-full max-w-[2.5rem] min-w-[2.5rem]'>
                               <input
                                 type='checkbox'
                                 className='w-4 h-4'
@@ -767,7 +767,7 @@ export const Table = <T,>({
                 {table.getHeaderGroups().map((headerGroup, index) => (
                   <tr
                     key={`${headerGroup.id}-${index}`}
-                    className='sticky top-0 z-10'
+                    className='sticky top-0 z-[5]'
                   >
                     <th
                       colSpan={1}
@@ -776,12 +776,12 @@ export const Table = <T,>({
                         left: '0',
                         zIndex: 1,
                       }}
-                      className='!max-w-[2.5rem]'
+                      className='!max-w-[2.5rem] min-w-[2.5rem] bg-red-300'
                     >
                       {selectable && onNotifications && hasNotifications && (
                         <input
                           type='checkbox'
-                          className='w-4 h-4'
+                          className='w-7 h-4'
                           checked={
                             Object.keys(selectedRows).length === data.length
                           }

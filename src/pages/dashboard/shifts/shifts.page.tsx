@@ -394,7 +394,8 @@ export const ShiftsPage: FunctionalComponent = () => {
           )}
         </div>
 
-        {/* <Button
+        {/*
+        <Button
           name='button-supervision'
           label={t('shifts.remoteSupervision')}
           className='bg-primary text-white py-1 rounded px-4'
@@ -404,7 +405,6 @@ export const ShiftsPage: FunctionalComponent = () => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
         />
-        {/*
         <Button
           name='button-change-planner'
           onClick={() => {
@@ -479,7 +479,6 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   return (
     <Section padding>
-      <AudioButton />
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
           title={t('shifts.cards.totalToday')}
@@ -517,6 +516,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               icon='044'
               iconSize='sm'
             />
+            <AudioButton />
           </div>
         </div>
 

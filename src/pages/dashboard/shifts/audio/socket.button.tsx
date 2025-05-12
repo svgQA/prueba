@@ -1,11 +1,20 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { io, Socket } from 'socket.io-client';
 import { IJanusSettings, IParticipant } from './interfaces';
+import { Button } from '@/components/common/button/button';
+import { useSignal } from '@preact/signals';
 
 const myName = `User_${Math.floor(Math.random() * 1000)}`;
 let pendingOfferMap = new Map();
 
+export interface AudioButtonProps {
+  onClose?: () => void;
+}
+
 export const AudioButton = () => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const isOpen = useSignal<boolean>(false);
   const [connected, setConnected] = useState<boolean>(false);
   const [room, setRoom] = useState<string | null>(null);
   const [participants, setParticipants] = useState<IParticipant[]>([]);
@@ -30,6 +39,16 @@ export const AudioButton = () => {
       removeAllAudioElements();
     };
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        isOpen.value = false;
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [ref]);
 
   const removeAllAudioElements = () => {
     setParticipants([]);
@@ -206,6 +225,7 @@ export const AudioButton = () => {
   };
 
   const handleToggleConnection = () => {
+    isOpen.value = !isOpen.value;
     if (connected) {
       socketRef?.current?.disconnect();
     } else {
@@ -214,16 +234,23 @@ export const AudioButton = () => {
   };
 
   return (
-    <div>
-      <button
+    <div className='flex flex-row items-center gap-2 ml-2 relative'>
+      <Button
+        name='audio-button'
         onClick={handleToggleConnection}
+        selected={connected}
         className='border-2 bg-gray-100 hover:bg-gray-300'
+        icon='114'
+        iconSize='sm'
+      />
+      <div
+        className={`absolute top-12 left-0 min-w-[300px] h-fit flex flex-col justify-between bg-b-light-light dark:bg-b-dark-dark rounded-lg p-4 z-10 border border-b-light-dark dark:border-b-dark-light ${isOpen.value ? 'block' : 'hidden'}`}
+        ref={ref}
       >
-        {connected ? 'Disconnect' : 'Connect'}
-      </button>
-      <div>
-        <h2>AudioBridge Room: {room || 'Not connected'}</h2>
-        <h3>Participants: {audioStream ? 'SI' : 'NO'}</h3>
+        <div className='flex flex-col justify-between'>
+          <h2>AudioBridge Room: {room || 'Not connected'}</h2>
+          <h3>Participants: {audioStream ? 'SI' : 'NO'}</h3>
+        </div>
         {audioStream && (
           <audio
             autoPlay
