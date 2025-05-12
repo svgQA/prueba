@@ -1,12 +1,13 @@
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
+import { useTranslation } from 'react-i18next';
 
 export interface IDropdownAction {
   label: string;
   icon: string;
   color?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 interface DropdownActionsMenuProps {
@@ -18,6 +19,7 @@ export const DropdownActionsMenu = ({
   triggerClassName,
   actions,
 }: DropdownActionsMenuProps) => {
+  const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const triggerRef = useRef<HTMLSpanElement>(null);
   const [position, setPosition] = useState<{ top: number; left: number }>({
@@ -74,7 +76,7 @@ export const DropdownActionsMenu = ({
               left: position.left,
               zIndex: 9999,
             }}
-            className='w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 border border-gray-200 dark:border-gray-700'
+            className='w-56 bg-white dark:bg-b-dark-dark rounded-lg shadow-lg py-2 border border-gray-200 dark:border-gray-700'
           >
             <div className='flex flex-col gap-1 px-2'>
               {actions.map((action, idx) => (
@@ -84,7 +86,7 @@ export const DropdownActionsMenu = ({
                   name={`dropdown-action-${idx}`}
                   label={action.label}
                   onClick={() => {
-                    action.onClick();
+                    action?.onClick?.();
                     setIsDropdownOpen(false);
                   }}
                   textColor={action.color || 'text-gray-700 dark:text-gray-200'}
@@ -101,15 +103,11 @@ export const DropdownActionsMenu = ({
             <Button
               id='dropdown-cancel'
               name='dropdown-cancel'
-              label='Cancelar'
+              label={t('form.inspect.cancel')}
               onClick={() => setIsDropdownOpen(false)}
-              textColor='text-gray-500 dark:text-gray-400'
-              padding='px-2 py-2'
-              text='text-sm'
               borderless
-              bold={true}
+              unpadded
               full
-              className='w-full justify-start hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
             />
           </div>,
           document.body

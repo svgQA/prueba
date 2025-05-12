@@ -9,7 +9,7 @@ import { FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { Field } from 'react-final-form';
 import { Form } from 'react-final-form';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const UserPasswordPage: FunctionComponent = () => {
   const users = useSignal<IUserResponse[]>([]);
@@ -25,13 +25,9 @@ export const UserPasswordPage: FunctionComponent = () => {
       values.confirmPassword
     );
     if (response.getStatus()) {
-      toast.success('Contraseña actualizada exitosamente!', {
-        position: 'top-right',
-      });
+      ToastManager.success('Contraseña actualizada exitosamente!');
     } else {
-      toast.error('Error al actualizar la contraseña', {
-        position: 'top-right',
-      });
+      ToastManager.error('Error al actualizar la contraseña');
     }
   };
 

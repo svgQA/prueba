@@ -70,7 +70,7 @@ export const CustomSwitcher = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 min-w-40 justify-between ${buttonClassName} ${
+        className={`flex items-center gap-2 px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-b-dark-dark border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 min-w-40 justify-between ${buttonClassName} ${
           borderless ? 'border-none' : ''
         }`}
       >
@@ -95,7 +95,7 @@ export const CustomSwitcher = ({
 
       {isOpen && (
         <div
-          className={`absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50 ${dropdownClassName}`}
+          className={`absolute right-0 mt-2 w-48 bg-white dark:bg-b-dark-dark rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50 ${dropdownClassName}`}
         >
           {options.map((option) => (
             <button

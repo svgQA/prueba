@@ -9,12 +9,10 @@ const EmployeeInfo = ({
   place: IPlace;
 }) => {
   return (
-    <div className='p-2 text-t-light dark:text-t-dark'>
-      <h2 className='text-base mb-3 font-bold'>Detalles del usuario</h2>
-
+    <>
       <div className='flex flex-row gap-6'>
         {/* Perfil */}
-        <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 w-56 flex flex-col items-center shadow-sm'>
+        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 w-56 flex flex-col items-center shadow-sm'>
           <img
             src={employee.image}
             alt='User'
@@ -28,7 +26,7 @@ const EmployeeInfo = ({
         </div>
 
         {/* Información Personal */}
-        <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
+        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='mr-2 !text-primary size-sm vox-icon vx-icon-308'></span>
             Información Personal
@@ -54,7 +52,7 @@ const EmployeeInfo = ({
         </div>
 
         {/* Información de la Empresa */}
-        <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
+        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='!text-primary mr-2 vox-icon size-sm vx-icon-195'></span>
             Información de la empresa
@@ -76,7 +74,7 @@ const EmployeeInfo = ({
         </div>
 
         {/* Estadísticas */}
-        <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
+        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             Estadísticas Turno
           </h4>
@@ -86,7 +84,7 @@ const EmployeeInfo = ({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -44,8 +44,8 @@ import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
 import { Button } from '@/components/common/button/button';
 import { CompanyService } from '@/services';
-import { IconsModal } from '../globals/icons/icons';
 
+// import { IconsModal } from '../globals/icons/icons';
 // import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
 
@@ -202,7 +202,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             <div
               key={`selector-company-${company.name}`}
               // name={company.id}
-              className='w-5/12 float-left cursor-pointer py-3 rounded-lg flex flex-row justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 border border-gray-200 dark:border-gray-700'
+              className='w-5/12 float-left cursor-pointer py-3 rounded-lg flex flex-row justify-between items-center hover:bg-gray-100 dark:hover:bg-b-dark-dark transition-colors duration-200 border border-gray-200 dark:border-gray-700'
               onClick={() => setCompanySelected(company.id)}
               tabIndex={0}
             >
@@ -224,8 +224,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ))}
         </OnBordingModal>
-          */}
         <IconsModal />
+        */}
         <ToastContainer />
       </section>
     );

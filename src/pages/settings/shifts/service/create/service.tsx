@@ -6,7 +6,7 @@ import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect, useState } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
@@ -55,7 +55,6 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const onSubmit = async (model: FormData) => {
     model.task = setTasks(model.task);
     model.hasRound = !!model.roundId;
-    // console.log('model', model);
 
     let request;
     let message: string;
@@ -69,7 +68,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     }
 
     if (!request.getStatus()) return;
-    toast.success(message, { position: 'top-right' });
+    ToastManager.success(message);
     navigate('/rounds/service/');
   };
 
@@ -348,7 +347,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                           {fields.map((name, index) => (
                             <div
                               key={index}
-                              className='bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden'
+                              className='bg-white dark:bg-b-dark-dark rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden'
                             >
                               <div className='bg-gray-50 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600'>
                                 <h2 className='text-lg font-medium text-gray-900 dark:text-white'>

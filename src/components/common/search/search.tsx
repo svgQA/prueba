@@ -280,7 +280,7 @@ export const Search = ({
   return (
     <div
       id={id}
-      className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200'
+      className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700 shadow-sm focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200'
     >
       <span className='vox-icon vx-icon-153 text-gray-500 dark:text-gray-400' />
       <div
@@ -314,7 +314,7 @@ export const Search = ({
       {keys.length > 0 && isDropdownOpen.value && (
         <div
           ref={keysContainerRef}
-          className='absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-white dark:bg-gray-800 rounded-xl shadow-md border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto vox-scroll-design'
+          className='absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-white dark:bg-b-dark-dark rounded-xl shadow-md border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto vox-scroll-design'
           onClick={handleClickKeys}
         >
           <h6 className='px-3 py-1 text-xs text-gray-500 dark:text-gray-400 font-medium uppercase'>

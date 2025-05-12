@@ -6,7 +6,7 @@ import { Navbar } from '@/components/common/navbar/navbar';
 import { Logo } from '@/components/common/logo/logo';
 import { HomeAbout } from './section/about';
 import { HomePros } from './section/pros';
-import { HomeMain } from './section/main';
+import { HomeHero } from './section/home';
 import { HomeFooter } from './section/footer';
 import { HomeCarousel } from './section/carousel';
 import { HomeSolutions } from './section/solutions';
@@ -36,7 +36,7 @@ export const HomeLayout: FunctionComponent = () => {
       <div className='w-full pt-16 bg-gradient-to-r from-cyan-500 to-emerald-400 content-center'>
         {homeMenu === '/' && (
           <section>
-            <HomeMain />
+            <HomeHero />
             <HomePros />
             {/* <HomeService /> */}
             <HomeCarousel />

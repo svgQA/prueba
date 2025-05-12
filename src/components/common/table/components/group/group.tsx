@@ -61,7 +61,7 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
     <div ref={dropdownRef} className={`relative ${className}`}>
       <button
         type='button'
-        className='inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
+        className='inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-b-dark-dark border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className='vox-icon vx-icon-120 text-gray-500 dark:text-gray-400' />
@@ -70,7 +70,7 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
       </button>
 
       {isOpen && (
-        <div className='absolute right-0 mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50'>
+        <div className='absolute right-0 mt-1 w-48 bg-white dark:bg-b-dark-dark rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50'>
           <button
             className={`
               w-full px-4 py-2.5 text-sm text-left border-none

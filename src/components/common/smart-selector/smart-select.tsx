@@ -167,7 +167,7 @@ export function SmartSelector({
 
   const dropdown = (
     <div
-      class='absolute bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-md z-50 max-h-60 overflow-auto vox-scroll-design'
+      class='absolute bg-white dark:bg-b-dark-dark border border-gray-200 dark:border-gray-700 rounded shadow-md z-50 max-h-60 overflow-auto vox-scroll-design'
       style={{
         top: dropdownPos.top + 5,
         left: dropdownPos.left,
@@ -241,7 +241,7 @@ export function SmartSelector({
         onInput={(e) => setSearch((e.currentTarget as HTMLInputElement).value)}
         onFocus={() => setFocused(true)}
         className={`w-full border px-3 py-2 rounded
-          bg-white dark:bg-gray-800
+          bg-white dark:bg-b-dark-dark
           text-gray-700 dark:text-gray-200
           border-gray-300 dark:border-gray-700
           focus:ring-blue-500 dark:focus:ring-blue-400

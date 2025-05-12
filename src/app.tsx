@@ -44,6 +44,7 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
     BaseService.setLoading(openLoading, closeLoading);
     BaseService.setUser(getTenant, getToken, getCompanyId);
     validateUser();
+    console.log('validateUser', 'Mierda .com');
   }, []);
 
   const validateUser = async () => {

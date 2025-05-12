@@ -127,6 +127,7 @@ export const ListFormModal = ({ onSelected }: IListFormModalProps) => {
           columns={columns}
           pageSize={8}
           unsettings
+          isSettingTable
           onClickAction={handleOnClick}
         />
       </div>

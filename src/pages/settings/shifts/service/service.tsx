@@ -9,7 +9,7 @@ import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store/settings';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 import {
   menuInformationSelected as infoMenu,
@@ -69,7 +69,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
   const deleteNovelty = async (id: string) => {
     const request = await ServiceService.deleteService(id);
     if (!request.getStatus()) return;
-    toast.success('Servicio eliminado', { position: 'top-right' });
+    ToastManager.success('Servicio eliminado');
     getServices();
   };
 
@@ -105,6 +105,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
         }}
         onClickAction={handleOnClick}
         unsearch={false}
+        isSettingTable
       />
     </Section>
   );

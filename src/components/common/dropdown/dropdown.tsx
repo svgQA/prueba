@@ -136,7 +136,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
           id={`${id}-dropdown-button`}
           name={name}
           class={`focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center transition-colors duration-150
-            bg-white dark:bg-gray-800
+            bg-white dark:bg-b-dark-dark
             text-gray-700 dark:text-gray-200
             border border-gray-200 dark:border-gray-700
             ${isIconOnly ? 'border-none justify-center hover:bg-gray-100 dark:hover:bg-gray-700' : 'w-full focus:ring-blue-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
@@ -156,7 +156,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
         <div
           id={`${id}-dropdown`}
           className={`${isIconOnly ? 'w-fit' : 'w-full'} z-10 ${isOpen ? '' : 'hidden'} absolute rounded-lg shadow-lg
-            bg-white dark:bg-gray-800
+            bg-white dark:bg-b-dark-dark
             border border-gray-200 dark:border-gray-700
             ${dropdownPosition === 'left' ? 'right-0' : 'left-0'}`}
         >

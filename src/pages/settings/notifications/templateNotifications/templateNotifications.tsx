@@ -8,7 +8,7 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
 import { getColumns } from './components/template.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const TemplateNotificationPage = () => {
   const [templates, setTemplates] = useState<any[]>([]);
@@ -26,7 +26,8 @@ export const TemplateNotificationPage = () => {
 
   const redirect = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.create.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
+        .create.to,
       label: 'create',
       id: 'template-create',
     };
@@ -36,7 +37,10 @@ export const TemplateNotificationPage = () => {
 
   const editTemplate = (id: string) => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.update.to.replace(':id', id),
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.update.to.replace(
+        ':id',
+        id
+      ),
       label: 'update',
       id: 'template-update',
     };
@@ -51,7 +55,7 @@ export const TemplateNotificationPage = () => {
     const res = await TemplateService.deleteTemplate(id);
     if (!res.getStatus()) return;
 
-    toast.success('Plantilla eliminada correctamente', { position: 'top-right' });
+    ToastManager.success('Plantilla eliminada correctamente');
     fetchTemplates();
   };
 

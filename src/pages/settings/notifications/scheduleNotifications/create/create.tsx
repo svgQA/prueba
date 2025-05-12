@@ -4,7 +4,7 @@ import { Button } from '@/components/common/button/button';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '@/pages/settings/store/settings';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { SchedulerService, TemplateService } from '@/services';
 
 export const ScheduledNotificationForm = () => {
@@ -43,12 +43,12 @@ export const ScheduledNotificationForm = () => {
     } = formData;
 
     if (!templateId) {
-      toast.warning('Debes seleccionar una plantilla obligatoriamente.');
+      ToastManager.warning('Debes seleccionar una plantilla obligatoriamente.');
       return;
     }
 
     if (!sendAt) {
-      toast.warning('Debes indicar la fecha de envío.');
+      ToastManager.warning('Debes indicar la fecha de envío.');
       return;
     }
 
@@ -66,11 +66,10 @@ export const ScheduledNotificationForm = () => {
         maxRepeats: maxRepeats ? parseInt(maxRepeats) : undefined,
         repeatUntil: repeatUntil ? new Date(repeatUntil) : undefined,
       });
-      toast.success('Notificación programada exitosamente');
+      ToastManager.success('Notificación programada exitosamente');
       redirectToList();
     } catch (error) {
-      console.error(error);
-      toast.error('Error al programar notificación');
+      ToastManager.error('Error al programar notificación');
     }
   };
 

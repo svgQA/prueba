@@ -1,4 +1,3 @@
-import { ColumnDef } from '@tanstack/react-table';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IShiftResponse } from '@/types/shift/activity';
@@ -11,6 +10,8 @@ import {
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { Badge } from '@/components/common/badge/badge';
+import { NColumnDef } from '@/components/common/table/type';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -18,9 +19,10 @@ export const getColumns = (
     type: string;
     action: ROW_ACTIONS;
   }) => void
-): ColumnDef<IShiftResponse>[] => [
+): NColumnDef<IShiftResponse>[] => [
   {
     id: 'employee',
+    clickable: true,
     accessorKey: 'employee.name',
     size: 180,
     header: 'Usuario',
@@ -50,19 +52,11 @@ export const getColumns = (
     accessorKey: 'service.name',
     size: 180,
     header: 'Servicio',
+    clickable: true,
     enableGrouping: true,
-    meta: { expander: 'serviceId' },
-
     cell: (info) => {
-      const serviceId = info.getValue() as number;
-      return (
-        <span
-          className=' p-1 size-sm cursor-pointer'
-          onClick={() => info.row.toggleExpanded()}
-        >
-          {serviceId}
-        </span>
-      );
+      const service = String(info.getValue());
+      return <TextEllipsis text={service} maxWidth='250px' />;
     },
   },
   {
@@ -70,16 +64,10 @@ export const getColumns = (
     accessorKey: 'service.contract.name',
     size: 120,
     header: 'Contrato',
+    clickable: true,
     cell: (info) => {
       const contract = String(info.getValue());
-      return (
-        <span
-          className='p-1 size-sm cursor-pointer'
-          onClick={() => info.row.toggleExpanded()}
-        >
-          {contract}
-        </span>
-      );
+      return <TextEllipsis text={contract} maxWidth='250px' />;
     },
   },
   {
@@ -103,6 +91,7 @@ export const getColumns = (
     id: 'time-start',
     accessorKey: 'start',
     size: 150,
+    clickable: true,
     header: 'Inicio',
     cell: (info) => {
       const rowData = info.row.original;
@@ -143,15 +132,13 @@ export const getColumns = (
       const actualTime = formatActualTime(checkInData);
 
       return (
-        <div onClick={() => info.row.toggleExpanded()}>
-          <Badge
-            label={`${scheduledTime} → ${actualTime}`}
-            status={colorClass as 'info' | 'error' | 'warning' | 'success'}
-            outline
-            full
-            size='xs'
-          />
-        </div>
+        <Badge
+          label={`${scheduledTime} → ${actualTime}`}
+          status={colorClass as 'info' | 'error' | 'warning' | 'success'}
+          outline
+          full
+          size='xs'
+        />
       );
     },
   },
@@ -159,6 +146,7 @@ export const getColumns = (
     id: 'time-end',
     accessorKey: 'end',
     size: 150,
+    clickable: true,
     header: 'Finalización',
     cell: (info) => {
       const rowData = info.row.original;
@@ -198,15 +186,13 @@ export const getColumns = (
       };
       const actualTime = formatActualTime(checkOutData);
       return (
-        <div onClick={() => info.row.toggleExpanded()}>
-          <Badge
-            label={`${scheduledTime} → ${actualTime}`}
-            status={colorClass as 'info' | 'error' | 'warning' | 'success'}
-            outline
-            full
-            size='xs'
-          />
-        </div>
+        <Badge
+          label={`${scheduledTime} → ${actualTime}`}
+          status={colorClass as 'info' | 'error' | 'warning' | 'success'}
+          outline
+          full
+          size='xs'
+        />
       );
     },
   },
@@ -217,10 +203,11 @@ export const getColumns = (
     header: 'Estado',
   },
   {
-    id: 'duración',
+    id: 'duration',
     accessorKey: 'duration',
     size: 120,
     header: 'Duración',
+    clickable: true,
     cell: (info) => {
       const rowData = info.row.original;
       const checkInData = rowData.checkIn;
@@ -254,20 +241,18 @@ export const getColumns = (
     accessorKey: 'report',
     size: 50,
     header: 'Reportes',
-    cell: (info) => (
-      <div onClick={() => info.row.toggleExpanded()}>
-        <Badge label={`2 → 12h`} outline full size='xs' />
-      </div>
-    ),
+    cell: (_: any) => <Badge label={`2 → 12h`} outline full size='xs' />,
   },
   {
     id: 'shift',
     accessorKey: 'activitiesProgress',
+    clickable: true,
     size: 50,
     header: 'Actividades',
-    cell: (info: any) => {
+    cell: (_: any) => {
       // TODO: AJUSTAR EL PROGRESS
-      const progress = Math.floor(Math.random() * 101);
+      // const progress = Math.floor(Math.random() * 101);
+      const progress = 60;
 
       let progressColor = '#E05858';
 
@@ -277,24 +262,19 @@ export const getColumns = (
         progressColor = '#00BDD6';
       }
 
-      return (
-        <div
-          onClick={() => info.row.toggleExpanded()}
-          className=' p-1 size-sm cursor-pointer flex flex-row justify-center'
-        >
-          <Gauge progress={progress} color={progressColor} />
-        </div>
-      );
+      return <Gauge progress={progress} color={progressColor} />;
     },
   },
   {
     id: 'round',
     accessorKey: 'activitiesProgress',
-    size: 50,
+    size: 100,
+    clickable: true,
     header: 'Rondas',
-    cell: (info: any) => {
+    cell: (_: any) => {
       // TODO: AJUSTAR EL PROGRESS
-      const progress = Math.floor(Math.random() * 101);
+      // const progress = Math.floor(Math.random() * 101);
+      const progress = 20;
 
       let progressColor = '#E05858';
 
@@ -306,12 +286,7 @@ export const getColumns = (
 
       return (
         <div className='flex flex-row justify-center'>
-          <span
-            className=' p-1 size-sm cursor-pointer'
-            onClick={() => info.row.toggleExpanded()}
-          >
-            <Gauge progress={progress} color={progressColor} />
-          </span>
+          <Gauge progress={progress} color={progressColor} />
         </div>
       );
     },
@@ -320,25 +295,20 @@ export const getColumns = (
     id: 'client',
     accessorKey: 'service.contract.client.name',
     size: 120,
+    clickable: true,
     header: 'Cliente',
     enableGrouping: true,
     cell: (info) => {
-      const contract = String(info.getValue());
-      return (
-        <span
-          className='p-1 size-sm cursor-pointer'
-          onClick={() => info.row.toggleExpanded()}
-        >
-          {contract}
-        </span>
-      );
+      const client = String(info.getValue());
+      return <TextEllipsis text={client} maxWidth='250px' />;
     },
   },
   {
     id: 'actions',
-    size: 20,
+    size: 10,
     cell: (info) => {
       const { id, checkIn, checkOut } = info.row.original;
+      const s_id = String(id);
       const model = checkOut
         ? []
         : [
@@ -347,7 +317,7 @@ export const getColumns = (
               icon: 'vox-icon vx-icon-312 text-primary',
               onClick: () => {
                 onClickAction({
-                  id: String(id),
+                  id: s_id,
                   type: 'shift',
                   action: !checkIn
                     ? ROW_ACTIONS.CHECK_IN
@@ -363,7 +333,7 @@ export const getColumns = (
           icon: 'vox-icon vx-icon-123 text-primary',
           onClick: () => {
             onClickAction({
-              id: String(id),
+              id: s_id,
               type: 'shift',
               action: ROW_ACTIONS.UPDATE,
             });
@@ -376,7 +346,7 @@ export const getColumns = (
           color: 'text-red-600',
           onClick: () => {
             onClickAction({
-              id: String(id),
+              id: s_id,
               type: 'shift',
               action: ROW_ACTIONS.DELETE,
             });

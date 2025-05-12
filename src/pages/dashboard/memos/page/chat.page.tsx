@@ -8,7 +8,7 @@ import { useUserStore } from '@/store/slices';
 import { IUserResponse } from '@/types/auth';
 import { Chats, FrequentQuestion } from '../interface';
 import { useWebSocket } from '@/utils/socket';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useSignal } from '@preact/signals';
 import { IMessage } from '@/utils/socket/interface';
 import { useEffect } from 'preact/hooks';
@@ -111,7 +111,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
   const handleSendMessage = (message: string) => {
     if (!cognito || !userSelected.value?.cognitoId) {
-      toast.error('El mensaje tiene mala estructura');
+      ToastManager.error('El mensaje tiene mala estructura');
       return;
     }
     const objMessage: IMessage = {

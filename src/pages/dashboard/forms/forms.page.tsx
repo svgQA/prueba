@@ -10,7 +10,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { getColumns } from './components/inspect.columns';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { Button } from '@/components/common/button/button';
 import { FormResponseSettingPage } from './response/response';
 import { RESPONSE_MODE_SERVICE, setResponse } from './response/store/response';
@@ -44,7 +44,7 @@ export const FormsPage: FunctionComponent = () => {
     );
 
     if (!response?.structure) {
-      toast.error(t('forms.error.not_exist_response'));
+      ToastManager.error(t('forms.error.not_exist_response'));
       return;
     }
 
@@ -72,7 +72,7 @@ export const FormsPage: FunctionComponent = () => {
         break;
       }
       default: {
-        toast.error(t('forms.error.not_exist_option'));
+        ToastManager.error(t('form.error.not_exist_option'));
       }
     }
   };

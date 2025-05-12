@@ -1,9 +1,8 @@
-import { Button } from '@/components/common/button/button';
 import HomeMainDesktopImg from '@/assets/image/home-main-desktop.png';
 import { useTranslation } from 'react-i18next';
 import BrandCarousel from './component/brand.carousel';
 
-export const HomeMain = () => {
+export const HomeHero = () => {
   const { t } = useTranslation();
 
   return (
@@ -23,16 +22,15 @@ export const HomeMain = () => {
               </span>
             </div>
             <div className='flex justify-center md:justify-start'>
-              <Button
-                label={t('home.demoButton')}
+              <button
                 type='button'
-                id='schedule'
-                name='schedule'
-                text='text-lg sm:text-xl md:text-2xl'
-                padding='px-6 sm:px-8 py-3 sm:py-4'
-                className='bg-secondary rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl'
-                textColor='text-blue-dark'
-              />
+                className='bg-secondary rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl border-none font-bold py-3 px-5'
+                onClick={() => {
+                  window.location.href = '/dashboard';
+                }}
+              >
+                {t('home.demoButton')}
+              </button>
             </div>
           </div>
         </div>

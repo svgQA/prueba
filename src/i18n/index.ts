@@ -8,6 +8,7 @@ import { error_en, error_es } from './error';
 import { form_en, form_es } from './form';
 import { shift_en, shift_es } from './shift';
 import { notification_en, notification_es } from './notification';
+import { user_en, user_es } from './user';
 
 // import { notification_en, notification_es } from './notification';
 // import { shift_en, shift_es } from './shift';
@@ -20,6 +21,7 @@ const resources = {
       ...error_en,
       ...form_en,
       ...shift_en,
+      ...user_en,
       ...notification_en,
       // ...home_en,
     },
@@ -30,6 +32,7 @@ const resources = {
       ...error_es,
       ...form_es,
       ...shift_es,
+      ...user_es,
       ...notification_es,
       // ...home_es,
     },
