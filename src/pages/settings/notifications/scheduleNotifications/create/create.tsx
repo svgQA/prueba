@@ -127,28 +127,54 @@ export const ScheduledNotificationForm = () => {
           <label className='block text-sm font-medium text-gray-700 mb-1'>
             Fecha de Inicio *
           </label>
-          <input
-            type='datetime-local'
-            className='w-full border px-3 py-2 rounded text-sm'
-            value={formData.sendAt}
-            onChange={(e) =>
-              setFormData({ ...formData, sendAt: e.currentTarget.value })
-            }
-          />
+          <div className='relative'>
+            <input
+              id='sendAtInput'
+              type='datetime-local'
+              className='w-full border px-3 py-2 rounded text-sm pr-10'
+              value={formData.sendAt}
+              onChange={(e) =>
+                setFormData({ ...formData, sendAt: e.currentTarget.value })
+              }
+            />
+            <button
+              type='button'
+              onClick={() => {
+                const input = document.getElementById('sendAtInput') as HTMLInputElement;
+                if (input?.showPicker) input.showPicker(); else input?.focus();
+              }}
+              className='absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-white p-1 rounded'
+            >
+              <span className='vox-icon vx-icon-calendar-days text-base' />
+            </button>
+          </div>
         </div>
 
         <div>
           <label className='block text-sm font-medium text-gray-700 mb-1'>
             Fecha de Finalización *
           </label>
-          <input
-            type='datetime-local'
-            className='w-full border px-3 py-2 rounded text-sm'
-            value={formData.repeatUntil}
-            onChange={(e) =>
-              setFormData({ ...formData, repeatUntil: e.currentTarget.value })
-            }
-          />
+          <div className='relative'>
+            <input
+              id='repeatUntilInput'
+              type='datetime-local'
+              className='w-full border px-3 py-2 rounded text-sm pr-10'
+              value={formData.repeatUntil}
+              onChange={(e) =>
+                setFormData({ ...formData, repeatUntil: e.currentTarget.value })
+              }
+            />
+            <button
+              type='button'
+              onClick={() => {
+                const input = document.getElementById('repeatUntilInput') as HTMLInputElement;
+                if (input?.showPicker) input.showPicker(); else input?.focus();
+              }}
+              className='absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-white p-1 rounded'
+            >
+              <span className='vox-icon vx-icon-calendar-days text-base' />
+            </button>
+          </div>
         </div>
 
         <div>
