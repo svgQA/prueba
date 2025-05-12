@@ -68,9 +68,9 @@ export const AreaCreatePage: FunctionComponent = () => {
                     <Input
                       id='name'
                       name='name'
-                      placeholder='Ingrese el nombre de la área...'
+                      placeholder={t('user.area.placeholder.name')}
                       meta={meta}
-                      label='Nombre'
+                      label={t('user.area.form.name')}
                       value={input.value}
                       onChange={input.onChange}
                     />
@@ -84,8 +84,8 @@ export const AreaCreatePage: FunctionComponent = () => {
                     <Input
                       id='description'
                       name='description'
-                      placeholder='Ingrese la descripción de la área...'
-                      label='Descripción'
+                      placeholder={t('user.area.placeholder.description')}
+                      label={t('user.area.form.description')}
                       value={input.value}
                       meta={meta}
                       onChange={input.onChange}
@@ -99,7 +99,11 @@ export const AreaCreatePage: FunctionComponent = () => {
                 id='btn-save'
                 name='btn-save'
                 type='submit'
-                label={id ? 'Actualizar' : 'Guardar'}
+                label={
+                  id
+                    ? t('user.area.form.btnUpdate')
+                    : t('user.area.form.btnSave')
+                }
                 className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
                 disabled={submitting}
               />

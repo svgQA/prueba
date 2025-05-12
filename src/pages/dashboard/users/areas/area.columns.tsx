@@ -1,44 +1,29 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ButtonAction } from '@/components/common/button/column';
+import { t } from 'i18next';
 
 export const columns: ColumnDef<any>[] = [
   {
     id: 'description',
     accessorKey: 'description',
     size: 180,
-    header: 'Descripción',
+    header: t('user.area.table.description'),
     enableGrouping: true,
     cell: (info) => {
       const { description } = info.row.original;
-      return (
-        <span
-          className='p-1 size-sm cursor-pointer'
-          onClick={() => info.row.toggleExpanded()}
-        >
-          {description}
-        </span>
-      );
+      return <span>{description}</span>;
     },
   },
   {
     id: 'name',
     accessorKey: 'name',
     size: 180,
-    header: 'Nombre',
+    header: t('user.area.table.name'),
     enableGrouping: true,
-    meta: { expander: 'serviceId' },
-
     cell: (info) => {
       const name = info.getValue() as string;
-      return (
-        <span
-          className=' p-1 size-sm cursor-pointer'
-          onClick={() => info.row.toggleExpanded()}
-        >
-          {name}
-        </span>
-      );
+      return <span>{name}</span>;
     },
   },
   {
