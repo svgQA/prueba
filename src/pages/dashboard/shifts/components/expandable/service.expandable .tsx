@@ -22,7 +22,7 @@ const ServiceInfo = ({ service }: { service: IService }) => {
           <span className='!text-primary mr-2 vox-icon size-sm vx-icon-341'></span>
           Detalles del Servicio
         </h4>
-        <div className='space-y-4 text-sm'>
+        <div className='space-y-4 text-md'>
           <div>
             <p className='mb-1 font-semibold'>Nombre del Servicio</p>
             <p>{service.description}</p>
@@ -46,7 +46,7 @@ const ServiceInfo = ({ service }: { service: IService }) => {
           <span className='!text-primary mr-2 vox-icon size-sm vx-icon-103'></span>
           Ubicación y Descripción
         </h4>
-        <div className='space-y-4 text-sm'>
+        <div className='space-y-4 text-md'>
           <div>
             <p className='mb-1 font-semibold'>Ubicación</p>
             <div className='flex items-center'>

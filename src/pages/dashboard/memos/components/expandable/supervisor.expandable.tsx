@@ -2,14 +2,20 @@ import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { Memo } from '../../utils/memos';
 import { Chip } from '@/components/common/chip/chip';
 import { Avatar } from '@/components/common/Avatar';
+import dayjs from 'dayjs';
 
 const SupervisorInfo = ({ memo }: { memo: Memo }) => {
+  const formatDate = (date: string | Date) => {
+    if (!date) return '-';
+    return dayjs(date).format('DD/MM/YYYY HH:mm');
+  };
+
   return (
     <div className='w-full bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm p-3 text-b-dark-light dark:text-b-light-dark'>
       <div className='flex flex-row gap-2 p-3'>
         {/* Sección izquierda - Descripción y botones */}
         <div className='w-[20%]'>
-          <p className='mb-2 leading-tight'>{memo?.description}</p>
+          <p className='mb-2 leading-tight text-lg'>{memo?.description}</p>
           <div className='flex flex-wrap gap-1'>
             <Chip label='Tarea' />
             <Chip label='Tarea' />
@@ -22,28 +28,28 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
           <div className='space-y-2'>
             <div className='flex items-start gap-2'>
               <Avatar name='SV' size='sm' />
-              <div>
+              <div className='text-md'>
                 <p className='font-medium'>Supervisor</p>
                 <p>{memo?.extraData?.company.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='SV' size='sm' />
-              <div>
+              <div className='text-md'>
                 <p className='font-medium'>Servicio</p>
                 <p>{memo?.novelty?.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='AU' size='sm' />
-              <div>
+              <div className='text-md'>
                 <p className='font-medium'>Actualizado</p>
-                <p>{memo?.updatedAt}</p>
+                <p>{formatDate(new Date(memo.updatedAt || Date.now()))}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='LG' size='sm' />
-              <div>
+              <div className='text-md'>
                 <p className='font-medium'>Lugar</p>
                 <p>{memo?.extraData?.place.address}</p>
               </div>
@@ -56,28 +62,28 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
           <div className='space-y-2'>
             <div className='flex items-start gap-2'>
               <Avatar name='CL' size='sm' />
-              <div>
+              <div className='text-md'>
                 <p className='font-medium'>Cliente</p>
                 <p>{memo?.extraData?.client.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='CD' size='sm' />
-              <div>
+              <div className='text-md'>
                 <p className='font-medium'>Ciudad</p>
                 <p>{memo?.extraData?.city.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='CP' size='sm' />
-              <div>
+              <div className='text-md'>
                 <p className='font-medium'>Compañía</p>
                 <p>{memo?.extraData?.company?.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='DR' size='sm' />
-              <div>
+              <div className='text-md'>
                 <p className='font-medium'>Dirección</p>
                 <p>{memo?.extraData?.place?.address}</p>
               </div>
