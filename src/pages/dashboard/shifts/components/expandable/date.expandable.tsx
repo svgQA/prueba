@@ -200,7 +200,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Fecha</p>
-                <p className='text-md'>{dayjs(date).format('DD/MM/YYYY')}</p>
+                <p>{dayjs(date).format('DD/MM/YYYY')}</p>
               </div>
             </div>
 
@@ -210,7 +210,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Hora</p>
-                <p className='text-md'>{dayjs(time).format('HH:mm')}</p>
+                <p>{dayjs(time).format('HH:mm')}</p>
               </div>
             </div>
 
@@ -220,7 +220,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Fuente</p>
-                <p className='text-md'>{source}</p>
+                <p>{source}</p>
               </div>
             </div>
 
@@ -230,7 +230,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Distancia</p>
-                <p className='text-md'>{distance}</p>
+                <p>{distance}</p>
               </div>
             </div>
 

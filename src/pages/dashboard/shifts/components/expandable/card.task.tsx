@@ -33,10 +33,10 @@ export const CardTask = ({ point }: CardTaskProps) => {
           <span className='text-xs'>{point.distance}</span>
         </div>
 
-        <div className='w-40 text-right'>
+        <div className='w-45 text-right'>
           <a
             href='#'
-            className='flex items-center justify-end text-primary text-md'
+            className='flex items-center justify-end text-primary'
           >
             <span className='vox-icon vx-icon-306 !text-primary mr-1'></span>
             {point.form}

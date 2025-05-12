@@ -19,7 +19,7 @@ export const CardRound = ({ activity }: CardRoundProps) => {
               )}
               <TextEllipsis text={activity.title} maxWidth='300px' />
             </div>
-            <a href='#' className='flex items-center text-primary text-md'>
+            <a href='#' className='flex items-center text-primary'>
               <span className='vox-icon vx-icon-306 !text-primary mr-1'></span>
               {activity.form}
               <span className='ml-1 vox-icon vx-icon-004 !text-primary'></span>

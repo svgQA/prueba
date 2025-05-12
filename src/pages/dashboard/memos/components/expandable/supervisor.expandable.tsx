@@ -28,28 +28,28 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
           <div className='space-y-2'>
             <div className='flex items-start gap-2'>
               <Avatar name='SV' size='sm' />
-              <div className='text-md'>
+              <div>
                 <p className='font-medium'>Supervisor</p>
                 <p>{memo?.extraData?.company.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='SV' size='sm' />
-              <div className='text-md'>
+              <div>
                 <p className='font-medium'>Servicio</p>
                 <p>{memo?.novelty?.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='AU' size='sm' />
-              <div className='text-md'>
+              <div>
                 <p className='font-medium'>Actualizado</p>
                 <p>{formatDate(new Date(memo.updatedAt || Date.now()))}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='LG' size='sm' />
-              <div className='text-md'>
+              <div>
                 <p className='font-medium'>Lugar</p>
                 <p>{memo?.extraData?.place.address}</p>
               </div>
@@ -62,28 +62,28 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
           <div className='space-y-2'>
             <div className='flex items-start gap-2'>
               <Avatar name='CL' size='sm' />
-              <div className='text-md'>
+              <div>
                 <p className='font-medium'>Cliente</p>
                 <p>{memo?.extraData?.client.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='CD' size='sm' />
-              <div className='text-md'>
+              <div>
                 <p className='font-medium'>Ciudad</p>
                 <p>{memo?.extraData?.city.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='CP' size='sm' />
-              <div className='text-md'>
+              <div>
                 <p className='font-medium'>Compañía</p>
                 <p>{memo?.extraData?.company?.name}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
               <Avatar name='DR' size='sm' />
-              <div className='text-md'>
+              <div>
                 <p className='font-medium'>Dirección</p>
                 <p>{memo?.extraData?.place?.address}</p>
               </div>
@@ -111,7 +111,7 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
                   lat: memo?.extraData?.place?.latitude || 0,
                   lng: memo?.extraData?.place?.longitude || 0,
                 }}
-                sendPoints={() => {}}
+                sendPoints={() => { }}
                 height='100%'
                 disablePointSelection={true}
               />
