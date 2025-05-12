@@ -249,10 +249,9 @@ export const getColumns = (
     clickable: true,
     size: 50,
     header: 'Actividades',
-    cell: (_: any) => {
-      // TODO: AJUSTAR EL PROGRESS
-      // const progress = Math.floor(Math.random() * 101);
-      const progress = 60;
+    cell: (info: any) => {
+      const { activityPct } = info.row.original;
+      const progress = activityPct;
 
       let progressColor = '#E05858';
 
@@ -271,10 +270,9 @@ export const getColumns = (
     size: 100,
     clickable: true,
     header: 'Rondas',
-    cell: (_: any) => {
-      // TODO: AJUSTAR EL PROGRESS
-      // const progress = Math.floor(Math.random() * 101);
-      const progress = 20;
+    cell: (info: any) => {
+      const { roundPct } = info.row.original;
+      const progress = roundPct;
 
       let progressColor = '#E05858';
 

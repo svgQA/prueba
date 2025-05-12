@@ -4,9 +4,13 @@ import { IPlace, IUser } from '@/types/shift/activity';
 const EmployeeInfo = ({
   employee,
   place,
+  activityPct,
+  roundPct,
 }: {
   employee: IUser;
   place: IPlace;
+  activityPct: number;
+  roundPct: number;
 }) => {
   return (
     <>
@@ -79,8 +83,8 @@ const EmployeeInfo = ({
             Estadísticas Turno
           </h4>
           <div className='flex justify-around'>
-            <StatCircle title='Actividades' percentage={75} />
-            <StatCircle title='Rondas' percentage={75} />
+            <StatCircle title='Actividades' percentage={activityPct} />
+            <StatCircle title='Rondas' percentage={roundPct} />
           </div>
         </div>
       </div>

@@ -177,6 +177,8 @@ export interface IShiftResponse {
   createdBy: string | null;
   editedBy: string | null;
   deletedBy: string | null;
+  activityPct: number;
+  roundPct: number;
 }
 
 export interface ITask {

@@ -36,7 +36,7 @@ const ShiftInfo = ({ data = {} }: any) => {
         <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
           Actividades del Turno
         </h2>
-        <Chip label={`Progreso: ${data.progress ?? 75}%`} color='primary' />
+        <Chip label={`Progreso: ${data.activityPct}%`} color='primary' />
       </div>
 
       <div className='flex flex-row gap-2 flex-wrap justify-center'>

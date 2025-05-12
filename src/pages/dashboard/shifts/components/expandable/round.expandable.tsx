@@ -1,6 +1,6 @@
 import { Chip } from '@/components/common/chip/chip';
 import { CardTask } from './card.task';
-const RoundInfo = ({}: any) => {
+const RoundInfo = ({ roundPct }: any) => {
   const points = [
     {
       id: 1,
@@ -37,7 +37,7 @@ const RoundInfo = ({}: any) => {
         <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
           Rondas del Turno
         </h2>
-        <Chip label={`Progreso: 75%`} color='primary' />
+        <Chip label={`Progreso: ${roundPct}%`} color='primary' />
       </div>
 
       <div className='flex flex-row gap-2 flex-wrap justify-center'>
