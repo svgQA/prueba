@@ -43,6 +43,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Reporte_Incidente.pdf' },
     ],
     state: 'OPENED',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 2,
@@ -86,6 +92,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Reporte_Mantenimiento.pdf' },
     ],
     state: 'IN_REVISION',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 3,
@@ -129,6 +141,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Plan_Instalacion.pdf' },
     ],
     state: 'CLOSED',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 4,
@@ -172,6 +190,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Informe_Actualizacion.pdf' },
     ],
     state: 'OPENED',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 5,
@@ -215,6 +239,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Reporte_Reparacion.pdf' },
     ],
     state: 'IN_REVISION',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 6,
@@ -258,6 +288,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Reporte_Mantenimiento.pdf' },
     ],
     state: 'OPENED',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 7,
@@ -302,6 +338,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Plan_Instalacion.pdf' },
     ],
     state: 'IN_REVISION',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 8,
@@ -345,6 +387,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Informe_Actualizacion.pdf' },
     ],
     state: 'OPENED',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 9,
@@ -388,6 +436,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Reporte_Revision.pdf' },
     ],
     state: 'OPENED',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 10,
@@ -431,6 +485,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Informe_Mantenimiento.pdf' },
     ],
     state: 'IN_REVISION',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 11,
@@ -474,6 +534,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Manual_Configuracion.pdf' },
     ],
     state: 'CLOSED',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 12,
@@ -517,6 +583,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Manual_Usuario.pdf' },
     ],
     state: 'OPENED',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 13,
@@ -560,6 +632,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Release_Notes.pdf' },
     ],
     state: 'IN_REVISION',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 14,
@@ -603,6 +681,12 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Reporte_Servicio.pdf' },
     ],
     state: 'OPENED',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
   {
     id: 15,
@@ -646,5 +730,11 @@ export const memosData: Memo[] = [
       { type: 'pdf', url: '#', name: 'Especificaciones_Tecnicas.pdf' },
     ],
     state: 'CLOSED',
+    parentId: 0,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    },
   },
 ];
