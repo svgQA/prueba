@@ -4,7 +4,7 @@ import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { Field, Form } from 'react-final-form';
 import { UserService } from '@/services/general/user';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useParams } from 'wouter';
 import { Signal } from '@preact/signals';
 import { IUserAreaRequest } from '@/types/user/user.request';
@@ -37,7 +37,7 @@ export const AreaCreatePage: FunctionComponent = () => {
     }
 
     if (!request.getStatus()) return;
-    toast.success(message, { position: 'top-right' });
+    ToastManager.success(message);
     navigate('/users/areas/');
   };
 

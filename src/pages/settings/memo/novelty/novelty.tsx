@@ -7,7 +7,7 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 import {
   menuInformationSelected as infoMenu,
@@ -55,7 +55,7 @@ export const NoveltySettingPage: FunctionComponent = () => {
   const deleteNovelty = async (id: string) => {
     const request = await NoveltyService.deleteNovelty(id);
     if (!request.getStatus()) return;
-    toast.success('Novedad eliminado', { position: 'top-right' });
+    ToastManager.success('Novedad eliminado');
     getNovelties();
   };
 

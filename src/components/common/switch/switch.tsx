@@ -12,7 +12,7 @@ export const Switch: FunctionComponent<ISwitchProps> = memo(
     identifier,
   }: ISwitchProps) => {
     return (
-      <label class='inline-flex items-center cursor-pointer select-none'>
+      <label class='inline-flex items-center cursor-pointer'>
         <input
           type='checkbox'
           id={id}
@@ -29,7 +29,7 @@ export const Switch: FunctionComponent<ISwitchProps> = memo(
             peer-checked:bg-primary
             flex items-center
             peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300
-            ${backgroundColor ? backgroundColor : 'bg-gray-200 dark:bg-gray-800'}
+            ${backgroundColor ? backgroundColor : 'bg-gray-200 dark:bg-b-dark-dark'}
           `}
         >
           <div

@@ -7,7 +7,7 @@ import { columns } from './components/places.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect, useState } from 'preact/hooks';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store/settings';
 
@@ -51,7 +51,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
   const deletePlace = async (id: string) => {
     const request = await PlaceService.deletePlace(id);
     if (!request.getStatus()) return;
-    toast.success('Lugar eliminado', { position: 'top-right' });
+    ToastManager.success('Lugar eliminado');
     getPlaces();
   };
 
@@ -66,7 +66,6 @@ export const PlacesSettingPage: FunctionComponent = () => {
     navigate(`/rounds/places/update/${id}`);
   };
   const handleOnClick = async (action: IRowActionPlace | any) => {
-    // console.log(action);
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
         update(action.id);
@@ -99,6 +98,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
         }}
         onClickAction={handleOnClick}
         unsearch={false}
+        isSettingTable
       />
     </Section>
   );

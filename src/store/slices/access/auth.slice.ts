@@ -50,6 +50,7 @@ export const hasUserTenant = async (
   const cognito = user?.sub || '';
   const tenant = user?.['custom:tenant'] || '';
 
+  console.log('hasUserTenant', cognito, tenant);
   setCognito(cognito);
   setTenant(tenant);
 

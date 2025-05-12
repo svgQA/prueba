@@ -113,7 +113,11 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
             <div className='flex gap-2 flex-wrap'>
               <div className='w-20 h-20 rounded-lg overflow-hidden'>
                 <img
-                  src={Array.isArray(memo?.resource?.images) ? memo?.resource?.images[0] : memo?.resource?.images}
+                  src={
+                    Array.isArray(memo?.resource?.images)
+                      ? memo?.resource?.images[0]
+                      : memo?.resource?.images
+                  }
                   alt='Supervisor'
                   className='w-full h-full object-cover'
                 />

@@ -7,7 +7,7 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store/settings';
 import {
@@ -70,7 +70,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   const deleteSchedule = async (id: string) => {
     const request = await ScheduleService.deleteSchedule(id);
     if (!request.getStatus()) return;
-    toast.success('horario eliminado', { position: 'top-right' });
+    ToastManager.success('horario eliminado');
     getSchedules();
   };
 
@@ -117,6 +117,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
         }}
         onClickAction={handleOnClick}
         unsearch={false}
+        isSettingTable
       />
     </Section>
   );

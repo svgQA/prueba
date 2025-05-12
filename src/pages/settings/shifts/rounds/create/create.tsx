@@ -6,7 +6,7 @@ import { required } from '@/utils/utilities';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { useEffect } from 'preact/hooks';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
 import arrayMutators from 'final-form-arrays';
@@ -83,9 +83,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     let request;
     let message: string;
     if (!points.value.length) {
-      return toast.warning('Ingrese puntos en el mapa', {
-        position: 'top-right',
-      });
+      return ToastManager.warning('Ingrese puntos en el mapa');
     } else {
       model.points = points.value.map(
         (point: {
@@ -117,7 +115,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     }
 
     if (!request.getStatus()) return;
-    toast.success(message, { position: 'top-right' });
+    ToastManager.success(message);
 
     navigate('/rounds');
   };

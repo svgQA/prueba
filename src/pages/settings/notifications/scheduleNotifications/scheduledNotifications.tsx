@@ -10,7 +10,7 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { SchedulerService } from '@/services/notification/schedule';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
@@ -29,7 +29,8 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
   const redirect = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.create.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
+        .scheduledNotification.create.to,
       label: 'create',
       id: 'scheduled-create',
     };
@@ -48,15 +49,17 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
   };
 
   const deleteScheduled = async (id: string) => {
-    const confirmed = window.confirm('¿Deseas eliminar esta notificación programada?');
+    const confirmed = window.confirm(
+      '¿Deseas eliminar esta notificación programada?'
+    );
     if (!confirmed) return;
 
     const res = await SchedulerService.deleteScheduledNotification(id);
     if (res.getStatus()) {
-      toast.success('Notificación eliminada correctamente');
+      ToastManager.success('Notificación eliminada correctamente');
       fetchNotifications();
     } else {
-      toast.error('Error al eliminar la notificación');
+      ToastManager.error('Error al eliminar la notificación');
     }
   };
 

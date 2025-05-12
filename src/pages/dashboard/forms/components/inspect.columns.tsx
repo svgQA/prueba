@@ -7,12 +7,10 @@ import {
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
+import i18n from '@/i18n';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
-import i18next from 'i18next';
-
-// Función para obtener traducciones
-const t = (key: string) => i18next.t(key);
 
 export const getColumns = (
   onClickAction: (params: {
@@ -24,7 +22,7 @@ export const getColumns = (
   {
     accessorKey: 'user',
     id: 'user',
-    header: t('forms.columns.user'),
+    header: i18n.t('form.columns.user'),
     cell: (info) => {
       const { user } = info.row.original;
       return (
@@ -42,7 +40,7 @@ export const getColumns = (
   {
     accessorKey: 'title',
     id: 'title',
-    header: t('forms.columns.title'),
+    header: i18n.t('form.columns.title'),
     cell: (info) => {
       const { form } = info.row.original;
       return (
@@ -50,9 +48,7 @@ export const getColumns = (
           <span className='vox-icon vx-icon-152 mt-1 size-md' />
           <div className='flex flex-col ml-3 text-left'>
             <h5 className='font-bold text-left'>{form.title}</h5>
-            <p className='w-full flex justify-start max-w-96 overflow-hidden text-ellipsis whitespace-nowrap'>
-              {form.description}
-            </p>
+            <TextEllipsis text={form.description} maxWidth='300px' />
           </div>
         </div>
       );
@@ -61,19 +57,19 @@ export const getColumns = (
   {
     accessorKey: 'createdAt',
     id: 'createdAt',
-    header: t('forms.columns.createdAt'),
+    header: i18n.t('form.columns.createdAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
-    header: t('forms.columns.updatedAt'),
+    header: i18n.t('form.columns.updatedAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'status',
     id: 'status',
-    header: t('forms.columns.status'),
+    header: i18n.t('form.columns.status'),
     cell: (info) => {
       const { status } = info.row.original;
       return <Chip label={status} />;
@@ -88,7 +84,7 @@ export const getColumns = (
       const actions: IDropdownAction[] = [
         status === RESPONSE_STATUS.OPENED
           ? {
-              label: t('forms.buttons.continue'),
+              label: i18n.t('form.inspect.continue'),
               icon: 'vox-icon vx-icon-030 text-primary',
               onClick: () => {
                 onClickAction({
@@ -99,7 +95,7 @@ export const getColumns = (
               },
             }
           : {
-              label: 'Ver reporte',
+              label: i18n.t('form.inspect.report'),
               icon: 'vox-icon vx-icon-433 text-primary',
               onClick: () => {
                 onClickAction({
@@ -110,7 +106,7 @@ export const getColumns = (
               },
             },
         {
-          label: 'Eliminar',
+          label: i18n.t('form.inspect.delete'),
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
@@ -128,7 +124,9 @@ export const getColumns = (
           {status === RESPONSE_STATUS.OPENED && (
             <Button
               name='continue'
-              label='Continuar'
+              label={i18n.t('form.inspect.continue')}
+              icon='030'
+              unpadded
               onClick={() => {
                 onClickAction({
                   id: String(id),
@@ -136,9 +134,7 @@ export const getColumns = (
                   action: ROW_ACTIONS.RESPONSE,
                 });
               }}
-            >
-              Continuar
-            </Button>
+            ></Button>
           )}
           <DropdownActionsMenu actions={actions} />
         </div>

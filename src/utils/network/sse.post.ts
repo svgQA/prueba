@@ -6,7 +6,6 @@ export async function streamIAResponse(
   onDone?: () => void,
   onError?: (err: any) => void
 ) {
-  // console.log('streamIAResponse', model);
   const response = await fetch(model.url, {
     method: model.method,
     headers: {
@@ -42,23 +41,8 @@ export async function streamIAResponse(
           .replace(/^0:\s*/, '')
           .replace(/^"/, '')
           .replace(/"$/, '');
-        // console.log('output', output);
         onData(output);
       }
-
-      // console.log('lines', lines);
-      // for (const line of lines) {
-      //   if (line.startsWith('data: ')) {
-      //     const content = line
-      //       .replace('data: ', '')
-      //       .trim()
-      //       .replace(/^f:/, '')
-      //       .replace(/^0:\s*/, '')
-      //       .replace(/^"/, '')
-      //       .replace(/"$/, '');
-      //     onData(content);
-      //   }
-      // }
     }
     onDone?.();
   } catch (err) {

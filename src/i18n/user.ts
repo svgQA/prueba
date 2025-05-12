@@ -26,6 +26,13 @@ export const user_es = {
         description: 'Ingrese la descripción de la área...',
       },
     },
+    columns: {
+      actions: {
+        profile: 'Crear acceso',
+        edit: 'Editar',
+        delete: 'Eliminar',
+      },
+    },
   },
 };
 
@@ -55,6 +62,13 @@ export const user_en = {
       placeholder: {
         name: 'Enter the area name...',
         description: 'Enter the area description...',
+      },
+    },
+    columns: {
+      actions: {
+        profile: 'Create access',
+        edit: 'Edit',
+        delete: 'Delete',
       },
     },
   },

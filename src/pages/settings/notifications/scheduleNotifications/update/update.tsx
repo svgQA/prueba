@@ -66,20 +66,28 @@ export const ScheduledNotificationEditPage = () => {
           label='Descripción'
           name='overrideDescription'
           value={form.overrideDescription || ''}
-          onChange={(e) => handleChange('overrideDescription', e.currentTarget.value)}
+          onChange={(e) =>
+            handleChange('overrideDescription', e.currentTarget.value)
+          }
         />
         <Input
           label='Fecha de envío'
           name='sendAt'
           type='datetime-local'
-          value={form.sendAt ? new Date(form.sendAt).toISOString().slice(0, 16) : ''}
+          value={
+            form.sendAt ? new Date(form.sendAt).toISOString().slice(0, 16) : ''
+          }
           onChange={(e) => handleChange('sendAt', e.currentTarget.value)}
         />
         <Input
           label='Repetir hasta (opcional)'
           name='repeatUntil'
           type='datetime-local'
-          value={form.repeatUntil ? new Date(form.repeatUntil).toISOString().slice(0, 16) : ''}
+          value={
+            form.repeatUntil
+              ? new Date(form.repeatUntil).toISOString().slice(0, 16)
+              : ''
+          }
           onChange={(e) => handleChange('repeatUntil', e.currentTarget.value)}
         />
         <Input
@@ -87,14 +95,18 @@ export const ScheduledNotificationEditPage = () => {
           name='repeatEveryMinutes'
           type='number'
           value={form.repeatEveryMinutes ?? ''}
-          onChange={(e) => handleChange('repeatEveryMinutes', Number(e.currentTarget.value))}
+          onChange={(e) =>
+            handleChange('repeatEveryMinutes', Number(e.currentTarget.value))
+          }
         />
         <Input
           label='Máximo de repeticiones'
           name='maxRepeats'
           type='number'
           value={form.maxRepeats ?? ''}
-          onChange={(e) => handleChange('maxRepeats', Number(e.currentTarget.value))}
+          onChange={(e) =>
+            handleChange('maxRepeats', Number(e.currentTarget.value))
+          }
         />
         <Input
           label='Adjunto (URL)'

@@ -43,7 +43,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
     }
     return selected
       ? `${selectedColor} text-white`
-      : 'bg-white dark:bg-gray-800 text-primary dark:text-gray-200';
+      : 'bg-white dark:bg-b-dark-dark text-primary dark:text-gray-200';
   };
 
   return (
@@ -65,6 +65,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
         ${getBackgroundColor()}
         flex items-center text-center disabled:opacity-50
         ${icon && label ? 'justify-start' : 'justify-center'}
+        ${label ? 'pr-2' : ''}
       `}
     >
       {icon && !end && (

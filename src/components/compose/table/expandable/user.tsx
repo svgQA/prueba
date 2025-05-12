@@ -12,7 +12,6 @@ export const ExpandableUser: FunctionComponent<IExpandableProps> = (
   const [descMsg, setDescMsg] = useState('');
 
   const handleSend = () => {
-    // console.log('Enviando mensaje con:', titleMsg, descMsg);
     // Aquí podrías implementar tu lógica de envío
   };
 

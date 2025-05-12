@@ -4,12 +4,12 @@ import { Form, Field } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
 import { Switch } from '@/components/common/switch/switch';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { IShiftSetting } from '@/types/settings';
 import { ModuleService } from '@/services';
-import { StatusButton } from '../../component/custo.button';
+import { StatusButton } from '../../components/custom.button';
 
 export const ShiftSettingPage: FunctionComponent = () => {
   const settingsIds = useSignal<{ shift: number }>({ shift: 0 });
@@ -60,7 +60,7 @@ export const ShiftSettingPage: FunctionComponent = () => {
       settingsIds.value.shift
     );
     if (response.getStatus()) {
-      toast.success('settings.shifts.success');
+      ToastManager.success('settings.shifts.success');
     }
   };
 

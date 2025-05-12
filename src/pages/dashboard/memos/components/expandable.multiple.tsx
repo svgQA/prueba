@@ -2,25 +2,26 @@ import { Memo } from '../utils/memos';
 import HistoryInfo from './expandable/history.expandable';
 import SupervisorInfo from './expandable/supervisor.expandable';
 
-enum InfoType {
-  SUPERVISOR = 'supervisor',
-  HISTORY = 'history',
-}
-
 type Props = {
-  type: string;
+  type?: string;
   data: Memo;
 };
 
-const getInfoContent = (type: string = InfoType.SUPERVISOR, data: Memo) => {
+const getInfoContent = (type: string, data: Memo) => {
   switch (type) {
-    case InfoType.SUPERVISOR:
+    case 'supervisor':
       return <SupervisorInfo memo={data} />;
-    case InfoType.HISTORY:
+    case 'history':
       return <HistoryInfo memo={data} />;
+    default:
+      return <>No content</>;
   }
 };
 
 export const ExpandableMultiple = ({ type, data }: Props) => {
-  return <div class='info-container'>{getInfoContent(type, data)}</div>;
+  return (
+    <div className='info-container'>
+      {type && data && getInfoContent(type, data)}
+    </div>
+  );
 };

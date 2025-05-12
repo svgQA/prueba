@@ -28,4 +28,5 @@ export interface ITableProps<T> {
   onSelectionChange?: (selected: T[]) => void;
   onNotifications?: boolean;
   hasNotifications?: boolean;
+  isSettingTable?: boolean;
 }

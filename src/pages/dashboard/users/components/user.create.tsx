@@ -19,10 +19,10 @@ import {
 import { Signal, useSignal } from '@preact/signals';
 import { Select } from '@/components/common/select/select';
 import { File } from '@/components/common/file/file';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { IPresignedRequest } from '@/types/file';
 import { CompanyService, PlaceService } from '@/services';
-import { StatusButton } from '@/pages/settings/component/custo.button';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 import { IOption } from '@/components/common/multi/interface';
 import { AreaService } from '@/services/general/area';
 
@@ -80,7 +80,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     const response = await PlaceService.getDepartments();
     if (!response.getStatus()) return;
     departments.value = response.getMany();
-    // console.log(departments.value);
   };
 
   const getCompanies = async (): Promise<void> => {
@@ -144,7 +143,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       props.onUserCreated(request.getOne());
     }
 
-    toast.success(message);
+    ToastManager.success(message);
   };
 
   return (
@@ -430,7 +429,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
             <File
               name='extraData.image'
               onChange={(e) => {
-                console.log(e);
                 image.value = e.target.value;
               }}
               value={image.value}

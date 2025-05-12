@@ -60,7 +60,7 @@ export class MemoService extends BaseService {
     onData: (chunk: string) => void,
     onDone?: () => void,
     onError?: (err: any) => void,
-    prompt: string = '',
+    prompt: string = ''
   ) {
     const model: IRequestModelOutput = this.make_request_model(
       'memo',

@@ -85,7 +85,6 @@ export const ganttDateRange = (
   let newStartDate: Date = new Date(tasks.endDate);
   let newEndDate: Date = new Date(tasks.startDate);
 
-  // console.log("STEP: 1", newStartDate.toISOString(), newEndDate.toISOString(), viewMode);
   for (const user of tasks.users) {
     for (const task of user.tasks) {
       if (new Date(task.end) > newEndDate) {
@@ -96,7 +95,6 @@ export const ganttDateRange = (
       }
     }
   }
-  // console.log("STEP: 2", newStartDate.toISOString(), newEndDate.toISOString());
 
   switch (viewMode) {
     case ViewMode.Month:
@@ -153,7 +151,6 @@ export const ganttDateRange = (
       break;
   }
 
-  // console.log("STEP: 3", newStartDate.toISOString(), newEndDate.toISOString());
   return [newStartDate, newEndDate];
 };
 

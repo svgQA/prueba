@@ -15,7 +15,7 @@ export const getCommonPinningStyles = <T>(
     boxShadow: isLastLeftPinnedColumn
       ? '-2px 0 2px -2px gray inset'
       : undefined,
-    left: isPinned ? `${column.getStart('left') + 30}px` : undefined,
+    left: isPinned ? `${column.getStart('left') + 40}px` : undefined,
     // opacity: isDragging || isPinned ? 0.9 : 1,
     position: isPinned ? 'sticky' : 'relative',
     minWidth: width,
