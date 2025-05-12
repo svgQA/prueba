@@ -117,26 +117,23 @@ export const MapLibrePointsMap = ({
   // Handle points updates
   useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
-
-    // Always update when pointsRef changes
+  
     if (pointsRef && pointsRef.length > 0) {
-      const highestId = Math.max(
-        ...pointsRef.map((point: MapPoint) => point.id),
-        0
-      );
+      // Comparar si ya están los mismos puntos antes de reemplazar
+      const currentIds = points.map(p => p.id).sort();
+      const refIds = pointsRef.map((p: any) => p.id).sort();
+      const isSame = JSON.stringify(currentIds) === JSON.stringify(refIds);
+      if (isSame) return;
+  
+      const highestId = Math.max(...pointsRef.map((point: any) => point.id), 0);
       nextIdRef.current = highestId + 1;
-
-      // Combine new points with main user point if it exists
+  
       const newPoints = JSON.parse(JSON.stringify(pointsRef));
       setPoints(newPoints);
-    } else {
-      // Only set main user point if adminUser is true
+    } else if (pointsRef && pointsRef.length === 0) {
       setPoints([]);
-      markersRef.current.forEach((marker) => marker.remove());
-      markersRef.current = [];
-      nextIdRef.current = 1;
     }
-  }, [pointsRef, isMapReady, adminUser]);
+  }, [pointsRef, isMapReady]);
 
   // Update markers and send points to parent
   useEffect(() => {
@@ -472,7 +469,7 @@ export const MapLibrePointsMap = ({
   // Handle marker click
   const handleMarkerClick = (id: number) => {
     const point = points.find((p) => p.id === id);
-    if (!point || !mapRef.current) return;
+    if (!point || !mapRef.current || disablePointSelection) return;
 
     // setActiveMarker(id);
     setEditCoords({
