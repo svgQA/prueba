@@ -166,7 +166,7 @@ export const getColumns = (
 
       const actions: IDropdownAction[] = [
         {
-          label: 'Perfil del usuario',
+          label: 'Crear acceso',
           icon: 'vox-icon vx-icon-229 text-primary',
           onClick: () => {
             onClickAction({
