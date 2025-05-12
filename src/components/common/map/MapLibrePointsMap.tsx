@@ -130,6 +130,8 @@ export const MapLibrePointsMap = ({
   
       const newPoints = JSON.parse(JSON.stringify(pointsRef));
       setPoints(newPoints);
+    } else if (pointsRef && pointsRef.length === 0) {
+      setPoints([]);
     }
   }, [pointsRef, isMapReady]);
 
