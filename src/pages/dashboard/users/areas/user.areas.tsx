@@ -11,17 +11,19 @@ import { useLocation } from 'wouter';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { useTranslation } from 'react-i18next';
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '@/pages/settings/store/settings';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 export const UserAreasPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const areas = useSignal<IUserAreaResponse[]>([]);
   const [_, navigate] = useLocation();
 
   useEffect(() => {
-    document.title = 'VX - Areas';
+    document.title = t('user.area.title');
     fetchAreas();
   }, []);
 
@@ -33,19 +35,19 @@ export const UserAreasPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Nueva area' });
+    setMenu({ ...infoMenu.value, label: t('user.area.create') });
     navigate('/users/areas/create');
   };
 
   const deleteArea = async (id: number) => {
     const request = await UserService.deleteArea(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Ronda eliminado');
+    ToastManager.success(t('user.area.delete'));
     fetchAreas();
   };
 
   const editArea = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar ronda' });
+    setMenu({ ...infoMenu.value, label: t('user.area.edit') });
     navigate(`/users/areas/update/${id}`);
   };
 
@@ -56,8 +58,8 @@ export const UserAreasPage: FunctionComponent = () => {
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: 'Eliminar area',
-          message: `¿Estás seguro de querer eliminar la area?`,
+          title: t('user.area.showAlert.title'),
+          message: t('user.area.showAlert.msg'),
           onConfirm: () => deleteArea(action.id),
           onCancel: () => {},
         });
@@ -71,7 +73,7 @@ export const UserAreasPage: FunctionComponent = () => {
         <div className='flex flex-row items-center justify-between'>
           <Button
             name='button-create-shift'
-            label='Nueva Area'
+            label={t('user.area.create')}
             icon='039'
             onClick={() => redirect()}
             className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
