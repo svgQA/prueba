@@ -4,6 +4,14 @@ export const form_es = {
       create: 'Crear',
       update: 'Actualizar',
     },
+    buttons: {
+      startInspection: 'Iniciar inspección',
+      response: 'Iniciar respuesta',
+      update: 'Actualizar',
+    },
+    error: {
+      general: 'Hay un error en el formulario',
+    },
     placeholder: {
       title: 'Título de la página',
       description: 'Descripción de la página',
@@ -38,16 +46,9 @@ export const form_es = {
       createdAt: 'Fecha de creación',
       updatedAt: 'Fecha de actualización',
       group: 'Grupo',
+      category: 'Categoría',
     },
     new: 'Crear formulario',
-    error: {
-      description: 'La descripción debe tener al menos 5 caracteres',
-      title: 'El título debe tener al menos 5 caracteres',
-      structure: 'Debe tener al menos una sección',
-      not_exist_response: 'No existe respuesta',
-      not_exist_column: 'No existe columna',
-      not_exist_option: 'No existe opción',
-    },
     field: {
       question: 'Pregunta',
       type: 'Tipo de respuesta',
@@ -58,9 +59,17 @@ export const form_es = {
       delete: 'Eliminar',
       cancel: 'Cancelar',
       report: 'Ver reporte',
+      response: 'Ver respuesta',
     },
     report: {
       title: 'Reporte',
+    },
+    create: {
+      error: {
+        title: 'El título debe tener al menos 5 caracteres',
+        description: 'La descripción debe tener al menos 5 caracteres',
+        structure: 'Debe tener al menos una sección',
+      },
     },
   },
 };
@@ -70,6 +79,14 @@ export const form_en = {
     btn: {
       create: 'Create',
       update: 'Update',
+    },
+    buttons: {
+      startInspection: 'Start inspection',
+      response: 'Start response',
+      update: 'Update',
+    },
+    error: {
+      general: 'There is an error in the form',
     },
     placeholder: {
       title: 'Enter title page',
@@ -105,16 +122,9 @@ export const form_en = {
       createdAt: 'Created at',
       updatedAt: 'Updated at',
       group: 'Group',
+      category: 'Category',
     },
     new: 'Create form',
-    error: {
-      description: 'The description must be at least 5 characters long',
-      title: 'The title must be at least 5 characters long',
-      structure: 'The form must have at least one section',
-      not_exist_response: 'No exist response',
-      not_exist_column: 'No exist column',
-      not_exist_option: 'No exist option',
-    },
     field: {
       question: 'Question',
       type: 'Type of response',
@@ -125,9 +135,17 @@ export const form_en = {
       delete: 'Delete',
       cancel: 'Cancel',
       report: 'Report',
+      response: 'Response',
     },
     report: {
       title: 'Report',
+    },
+    create: {
+      error: {
+        title: 'The title must be at least 5 characters long',
+        description: 'The description must be at least 5 characters long',
+        structure: 'The form must have at least one section',
+      },
     },
   },
 };

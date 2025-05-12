@@ -32,9 +32,11 @@ const RoundInfo = ({}: any) => {
   ];
 
   return (
-    <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark p-4'>
-      <div className='flex items-center justify-between mb-4'>
-        <h2 className='font-medium'>Rondas del Turno</h2>
+    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark p-4 relative'>
+      <div className='flex items-center justify-between absolute top-0 right-0 w-full'>
+        <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
+          Rondas del Turno
+        </h2>
         <Chip label={`Progreso: 75%`} color='primary' />
       </div>
 

@@ -71,7 +71,9 @@ export const Table = <T,>({
   onNotifications,
   isSettingTable = false,
 }: ITableProps<T>) => {
-  const preCellSelected = useSignal<string>('');
+  const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
+    {}
+  );
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
 
@@ -185,6 +187,7 @@ export const Table = <T,>({
   };
 
   const handleClick = (e: MouseEvent) => {
+    // TODO: No descomentar esto, dejar asi.
     // e.stopPropagation();
     // e.preventDefault();
     const target = e.target as HTMLElement;
@@ -192,26 +195,52 @@ export const Table = <T,>({
       const id = target.dataset.id;
       const type = target.dataset.type;
       const action = target.dataset.action;
-
       const rowId = target.dataset.rowId;
       const clickable = target.dataset.clickable;
 
-      console.log('TARGET: ', target);
       if (id && type && action && rowId && clickable) {
         const row = table.getRow(rowId);
         if (!row) return;
-        const isExpanded = row.getIsExpanded();
-        if (preCellSelected.value === id) {
-          row.toggleExpanded();
-        } else if (!isExpanded) {
-          row.toggleExpanded();
+        /**
+         * @description
+         * Si el id de la celda seleccionada es el mismo que el id de la celda actual, se expande la fila.
+         * Si la fila no está expandida, se expande la fila.
+         * Si la fila está expandida, se elimina el id de la celda seleccionada.
+         *
+         * i_e = true Y i_s = true => row.toggleExpanded(false)
+         * i_e = true Y i_s = false => row.toggleExpanded(true)
+         * i_e = false Y i_s = true => row.toggleExpanded(true)
+         * i_e = false Y i_s = false => row.toggleExpanded(true)
+         */
+        const isExpanded /* i_e */ = row.getIsExpanded();
+        const isSelected /* i_s */ = selectedCells[rowId] === id;
+
+        if (isExpanded && isSelected) {
+          row.toggleExpanded(false);
+          // Eliminar la selección de esta fila cuando se cierra el expanded
+          setSelectedCells((prev) => {
+            const { [rowId]: _, ...rest } = prev;
+            return rest;
+          });
+        } else if (isExpanded && !isSelected) {
+          // Solo actualizar la celda seleccionada sin cambiar el estado de expansión
+          setSelectedCells((prev) => ({
+            ...prev,
+            [rowId]: id,
+          }));
+        } else if (!isExpanded && isSelected) {
+          row.toggleExpanded(true);
+        } else if (!isExpanded && !isSelected) {
+          row.toggleExpanded(true);
         }
 
-        preCellSelected.value = id;
-        // row.toggleExpanded();
-        // const expanded = row.getIsExpanded();
-        // console.log('EXPANDED: ', expanded);
-        // onClickAction?.({ id, type, action: Number(action) as ROW_ACTIONS });
+        // Solo actualizar la selección si no estamos cerrando el expanded
+        if (!(isExpanded && isSelected)) {
+          setSelectedCells((prev) => ({
+            ...prev,
+            [rowId]: id,
+          }));
+        }
       }
 
       // TODO: Esta validacion va a morir porque todo va a cambiar al dropdown
@@ -482,18 +511,19 @@ export const Table = <T,>({
                           key={`cell-${row.id}-${cell.id}`}
                           cell={cell}
                           rowId={row.id}
-                          selected={cell.column.id === preCellSelected.value}
+                          selected={cell.column.id === selectedCells[row.id]}
                         />
                       </SortableContext>
                     ))}
                   </tr>
                   {expandable && row.getIsExpanded() && (
-                    <tr className='border-b border-gray-200'>
+                    <tr>
                       <td
                         colSpan={row.getVisibleCells().length + 1}
-                        className='p-4'
+                        className='p-2'
                       >
-                        {expandable(row.original, preCellSelected.value)}
+                        {expandable &&
+                          expandable(row.original, selectedCells[row.id])}
                       </td>
                     </tr>
                   )}
@@ -512,6 +542,7 @@ export const Table = <T,>({
       selectedRows,
       hasNotifications,
       onNotifications,
+      selectedCells,
     ]
   );
 

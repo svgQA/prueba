@@ -22,6 +22,8 @@ export const TextArea = ({
   thin,
   disabled,
   className,
+  error,
+  warning,
   ...props
 }: ITextAreaProps) => {
   return (
@@ -78,6 +80,8 @@ export const TextArea = ({
       {meta && meta.touched && meta.error && (
         <span className='text-red-500 text-sm'>{meta.error}</span>
       )}
+      {error && <span className='text-red-500 text-sm'>{error}</span>}
+      {warning && <span className='text-yellow-500 text-sm'>{warning}</span>}
     </div>
   );
 };

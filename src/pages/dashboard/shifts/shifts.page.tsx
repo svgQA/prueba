@@ -536,9 +536,10 @@ export const ShiftsPage: FunctionalComponent = () => {
 
               setSelectedUsers(validUsers as any);
             }}
-            expandable={(row: IShiftResponse, column?: string) => (
-              <ExpandableMultiple type={column} data={row} />
-            )}
+            expandable={(row: IShiftResponse, column?: string) => {
+              console.log('RES: ', row.id, column);
+              return <ExpandableMultiple type={column} data={row} />;
+            }}
             visibility={{
               servicePlaceAddress: false,
               city: false,

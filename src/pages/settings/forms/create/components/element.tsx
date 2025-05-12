@@ -13,8 +13,8 @@ import { ELEMENT_TYPE_VALUES, REGEX_PATTERNS } from '../store/constant';
 import { validateSelectedElement } from '../store/control';
 import { toggleListModal } from '../../lists/store/list';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import i18n from '@/i18n';
 import { IElementError } from '@/types/form/error.type';
+import { useTranslation } from 'react-i18next';
 const ItemType = {
   QUESTION: 'question',
 };
@@ -28,6 +28,7 @@ export const FormElement = ({
   onSelect,
   onDelete,
 }: IElementProps) => {
+  const { t } = useTranslation();
   const openModalList = () => {
     toggleListModal({ question: question.id, page, section, field: 'options' });
   };
@@ -146,7 +147,7 @@ export const FormElement = ({
               ></span>
               <Input
                 type='text'
-                placeholder={i18n.t('form.placeholder.section_title')}
+                placeholder={t('form.placeholder.section_title')}
                 name='label'
                 id={`in-form-${question.id}-section-title`}
                 data-sectionid={question.id}
@@ -179,7 +180,7 @@ export const FormElement = ({
                 <Input
                   type='text'
                   name='label'
-                  placeholder={i18n.t('form.placeholder.element_title')}
+                  placeholder={t('form.placeholder.element_title')}
                   id={`in-form-${question.id}-element-title`}
                   value={question.label}
                   onChange={handleInputChange}
@@ -195,7 +196,7 @@ export const FormElement = ({
               className='w-3/12 dark:bg-b-dark-dark rounded-br-xl'
             >
               <Select
-                placeholder={i18n.t('form.placeholder.type_element')}
+                placeholder={t('form.placeholder.type_element')}
                 id={`se-form-${question.id}-element-type`}
                 icon='106'
                 value={question.type}
@@ -221,7 +222,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-required`}
                 name='required'
-                label={i18n.t('form.label.required')}
+                label={t('form.label.required')}
                 onChange={handleInputChange}
                 value={question.required}
               />
@@ -229,7 +230,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-visible`}
                 name='invisible'
-                label={i18n.t('form.label.invisible')}
+                label={t('form.label.invisible')}
                 onChange={handleInputChange}
                 value={question.invisible}
               />
@@ -239,7 +240,7 @@ export const FormElement = ({
                   <Switch
                     id={`cb-form-${question.id}-element-disable`}
                     name='disable'
-                    label={i18n.t('form.label.disable')}
+                    label={t('form.label.disable')}
                     onChange={handleInputChange}
                     value={question.disable}
                   />
@@ -247,7 +248,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-assigned`}
                 name='assigned'
-                label={i18n.t('form.label.administrator')}
+                label={t('form.label.administrator')}
                 onChange={handleInputChange}
                 value={question.assigned}
               />
@@ -263,7 +264,7 @@ export const FormElement = ({
                 id={`ta-form-${question.id}-element-description`}
                 value={question.description}
                 onChange={handleInputChange}
-                placeholder={i18n.t('form.placeholder.element_description')}
+                placeholder={t('form.placeholder.element_description')}
               />
             </div>
 
@@ -271,12 +272,12 @@ export const FormElement = ({
               {question.type === ELEMENT_TYPE.NUMBER_INPUT && (
                 <Input
                   name='default'
-                  label={i18n.t('form.label.default')}
+                  label={t('form.label.default')}
                   type='number'
                   id={`in-number-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
-                  placeholder={i18n.t('form.placeholder.default_value')}
+                  placeholder={t('form.placeholder.default_value')}
                   borderless
                   thin
                   icon='123'
@@ -286,12 +287,12 @@ export const FormElement = ({
                 question.type === ELEMENT_TYPE.TEXT_AREA) && (
                 <Input
                   name='default'
-                  label={i18n.t('form.label.default')}
+                  label={t('form.label.default')}
                   type='text'
                   id={`in-text-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
-                  placeholder={i18n.t('form.placeholder.default_value')}
+                  placeholder={t('form.placeholder.default_value')}
                   borderless
                   thin
                   icon='123'
@@ -302,9 +303,9 @@ export const FormElement = ({
                   <div class='w-full mr-4'>
                     {question.isUrl ? (
                       <Input
-                        label={i18n.t('form.label.list_url')}
+                        label={t('form.label.list_url')}
                         name='url'
-                        placeholder={i18n.t('form.placeholder.list_url')}
+                        placeholder={t('form.placeholder.list_url')}
                         onChange={handleInputChange}
                         id={`se-form-${question.id}-element-options-url`}
                         icon='104'
@@ -384,9 +385,9 @@ export const FormElement = ({
 
             {question.type === ELEMENT_TYPE.INPUT && (
               <Select
-                label={i18n.t('form.label.regex')}
+                label={t('form.label.regex')}
                 name='regex'
-                placeholder={i18n.t('form.placeholder.regex_patters')}
+                placeholder={t('form.placeholder.regex_patters')}
                 id={`se-form-${question.id}-element-regex`}
                 value={question.regex}
                 onChange={handleInputChange}
@@ -414,7 +415,7 @@ export const FormElement = ({
                 />
                 <Input
                   name='max'
-                  label={i18n.t('form.label.maximum')}
+                  label={t('form.label.maximum')}
                   id={`in-time-form-${question.id}-element-max`}
                   type={question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'}
                   value={question.max}
@@ -435,7 +436,7 @@ export const FormElement = ({
                 type='number'
                 id={`in-number-form-${question.id}-element-min`}
                 value={question.min}
-                placeholder={i18n.t('form.placeholder.min_length')}
+                placeholder={t('form.placeholder.min_length')}
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -453,7 +454,7 @@ export const FormElement = ({
                 type='number'
                 id={`in-number-form-${question.id}-element-max`}
                 value={question.max}
-                placeholder={i18n.t('form.placeholder.max_length')}
+                placeholder={t('form.placeholder.max_length')}
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -470,7 +471,7 @@ export const FormElement = ({
                 label='size'
                 id={`in-number-form-${question.id}-element-size`}
                 value={question.size}
-                placeholder={i18n.t('form.placeholder.size')}
+                placeholder={t('form.placeholder.size')}
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -486,7 +487,7 @@ export const FormElement = ({
                 label='Number Files'
                 id={`in-number-form-${question.id}-element-files`}
                 value={question.maxNumberFiles}
-                placeholder={i18n.t('form.placeholder.number_files')}
+                placeholder={t('form.placeholder.number_files')}
                 onChange={handleInputChange}
                 borderless
                 thin

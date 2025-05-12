@@ -11,6 +11,7 @@ import { Badge } from '@/components/common/badge/badge';
 import { Avatar } from '@/components/common/Avatar';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { NColumnDef } from '@/components/common/table/type';
+import { FloatBadge } from '@/components/common/badge/float';
 
 // Define our custom properties
 type CustomColumnProps = {
@@ -171,9 +172,10 @@ export const getColumns = (
     cell: (info) => {
       const value = info.getValue() as string;
       return (
-        <div className='flex items-center gap-1 justify-center flex-row w-full'>
-          <span className='vx-icon vx-icon-113 cursor-pointer'></span>
-          {value || 0}
+        <div className='flex items-center gap-1 justify-center'>
+          <FloatBadge label={value || '0'}>
+            <span className='vx-icon vx-icon-113 cursor-pointer'></span>
+          </FloatBadge>
         </div>
       );
     },

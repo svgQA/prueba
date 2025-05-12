@@ -17,7 +17,7 @@ const ServiceInfo = ({ service }: { service: IService }) => {
   return (
     <div className='flex flex-row gap-6'>
       {/* Detalles del Servicio */}
-      <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm text-t-light dark:text-t-dark'>
+      <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm text-t-light dark:text-t-dark'>
         <h4 className='font-semibold mb-3 flex items-center'>
           <span className='!text-primary mr-2 vox-icon size-sm vx-icon-341'></span>
           Detalles del Servicio
@@ -41,7 +41,7 @@ const ServiceInfo = ({ service }: { service: IService }) => {
       </div>
 
       {/* Ubicación y Descripción */}
-      <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm text-t-light dark:text-t-dark'>
+      <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm text-t-light dark:text-t-dark'>
         <h4 className='font-semibold mb-3 flex items-center'>
           <span className='!text-primary mr-2 vox-icon size-sm vx-icon-103'></span>
           Ubicación y Descripción
@@ -68,7 +68,7 @@ const ServiceInfo = ({ service }: { service: IService }) => {
       </div>
 
       {/* Área de cobertura */}
-      <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-3 flex-1 shadow-sm text-t-light dark:text-t-dark'>
+      <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-3 flex-1 shadow-sm text-t-light dark:text-t-dark'>
         <div className='flex flex-row items-center justify-between mb-3'>
           <h4 className='font-semibold'>Área de cobertura</h4>
           <Chip

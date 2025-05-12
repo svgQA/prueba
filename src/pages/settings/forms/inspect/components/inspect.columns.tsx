@@ -5,16 +5,13 @@ import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
-import i18next from 'i18next';
-
-// Función para obtener traducciones
-const t = (key: string) => i18next.t(key);
+import i18n from '@/i18n';
 
 export const columns: ColumnDef<IResponseResponse>[] = [
   {
     accessorKey: 'user',
     id: 'user',
-    header: t('forms.columns.user'),
+    header: i18n.t('forms.columns.user'),
     cell: (info) => {
       const { user } = info.row.original;
       return (
@@ -32,7 +29,7 @@ export const columns: ColumnDef<IResponseResponse>[] = [
   {
     accessorKey: 'structure',
     id: 'title',
-    header: t('forms.columns.title'),
+    header: i18n.t('forms.columns.title'),
     cell: (info) => {
       const { form } = info.row.original;
       return (
@@ -51,19 +48,19 @@ export const columns: ColumnDef<IResponseResponse>[] = [
   {
     accessorKey: 'createdAt',
     id: 'createdAt',
-    header: t('forms.columns.createdAt'),
+    header: i18n.t('forms.columns.createdAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
-    header: t('forms.columns.updatedAt'),
+    header: i18n.t('forms.columns.updatedAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'status',
     id: 'status',
-    header: t('forms.columns.status'),
+    header: i18n.t('forms.columns.status'),
     cell: (info) => {
       const { status } = info.row.original;
       return <Chip label={status} />;
@@ -81,7 +78,7 @@ export const columns: ColumnDef<IResponseResponse>[] = [
               id={id}
               type='response'
               action={ROW_ACTIONS.RESPONSE}
-              label={t('forms.buttons.continue')}
+              label={i18n.t('forms.buttons.continue')}
             />
           ) : (
             <ButtonAction id={id} type='response' action={ROW_ACTIONS.REPORT} />

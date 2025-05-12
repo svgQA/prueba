@@ -180,7 +180,7 @@ const ShiftCard = ({
   };
 
   return (
-    <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-4 p-4'>
+    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-4 p-4'>
       {/* Título */}
       <div>
         <h2 className='font-medium mb-4'>{title}</h2>

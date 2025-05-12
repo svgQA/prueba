@@ -8,12 +8,9 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
+import i18n from '@/i18n';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
-import i18next from 'i18next';
-
-// Función para obtener traducciones
-const t = (key: string) => i18next.t(key);
 
 export const getColumns = (
   onClickAction: (params: {
@@ -25,7 +22,7 @@ export const getColumns = (
   {
     accessorKey: 'user',
     id: 'user',
-    header: t('form.columns.user'),
+    header: i18n.t('form.columns.user'),
     cell: (info) => {
       const { user } = info.row.original;
       return (
@@ -43,7 +40,7 @@ export const getColumns = (
   {
     accessorKey: 'title',
     id: 'title',
-    header: t('form.columns.title'),
+    header: i18n.t('form.columns.title'),
     cell: (info) => {
       const { form } = info.row.original;
       return (
@@ -60,19 +57,19 @@ export const getColumns = (
   {
     accessorKey: 'createdAt',
     id: 'createdAt',
-    header: t('form.columns.createdAt'),
+    header: i18n.t('form.columns.createdAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
-    header: t('form.columns.updatedAt'),
+    header: i18n.t('form.columns.updatedAt'),
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'status',
     id: 'status',
-    header: t('form.columns.status'),
+    header: i18n.t('form.columns.status'),
     cell: (info) => {
       const { status } = info.row.original;
       return <Chip label={status} />;
@@ -87,7 +84,7 @@ export const getColumns = (
       const actions: IDropdownAction[] = [
         status === RESPONSE_STATUS.OPENED
           ? {
-              label: t('form.inspect.continue'),
+              label: i18n.t('form.inspect.continue'),
               icon: 'vox-icon vx-icon-030 text-primary',
               onClick: () => {
                 onClickAction({
@@ -98,7 +95,7 @@ export const getColumns = (
               },
             }
           : {
-              label: t('form.inspect.report'),
+              label: i18n.t('form.inspect.report'),
               icon: 'vox-icon vx-icon-433 text-primary',
               onClick: () => {
                 onClickAction({
@@ -109,7 +106,7 @@ export const getColumns = (
               },
             },
         {
-          label: t('form.inspect.delete'),
+          label: i18n.t('form.inspect.delete'),
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
@@ -127,7 +124,7 @@ export const getColumns = (
           {status === RESPONSE_STATUS.OPENED && (
             <Button
               name='continue'
-              label={t('form.inspect.continue')}
+              label={i18n.t('form.inspect.continue')}
               icon='030'
               unpadded
               onClick={() => {
