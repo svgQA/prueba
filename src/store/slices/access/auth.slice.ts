@@ -44,13 +44,16 @@ export const hasUserTenant = async (
   setToken: (token: string) => void,
   setCognito: (uuid: string) => void,
   setTenant: (uuid: string) => void,
-  setUser: (user: IUserResponse) => void
+  setUser: (user: IUserResponse) => void,
+  getLoaded: () => boolean
 ): Promise<boolean> => {
+  if (getLoaded()) return true;
+
   const user = await getUser(setToken);
   const cognito = user?.sub || '';
   const tenant = user?.['custom:tenant'] || '';
+  if (!user) return false;
 
-  console.log('hasUserTenant', cognito, tenant);
   setCognito(cognito);
   setTenant(tenant);
 

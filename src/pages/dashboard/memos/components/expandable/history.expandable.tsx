@@ -123,7 +123,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   };
 
   return (
-    <div className='w-full rounded-lg shadow-md bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light'>
+    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light'>
       <div className='p-4 pb-2'>
         <div className='flex justify-between items-start'>
           <div>

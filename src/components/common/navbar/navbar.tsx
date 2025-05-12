@@ -48,11 +48,10 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
 
       <div className='flex w-auto md:w-full justify-between items-center'>
         <ul
-          className={`md:flex md:flex-row md:relative md:w-full md:justify-center absolute top-full left-0 w-full items-center text-center space-y-4 md:space-y-0 md:space-x-4 shadow-lg md:shadow-none transition-all duration-300 ${
-            isOpen.value ? 'flex flex-col py-4 bg-ternary' : 'hidden'
+          className={`md:flex md:flex-row md:relative md:w-auto md:mx-auto md:justify-center absolute top-full left-0 w-full items-center text-center space-y-4 md:space-y-0 md:space-x-4 shadow-lg md:shadow-none transition-all duration-300 rounded-full border-2 border-white py-2 px-5 bg-white dark:bg-b-dark-dark text-primary ${
+            isOpen.value ? 'flex flex-col py-4 bg-ternary' : 'hidden md:flex'
           }`}
         >
-          {/*{service && <li>{service}</li>}*/}
           {menus.map((menu) => (
             <li
               key={`navbar-menu-${menu.id}`}
@@ -60,16 +59,22 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
             >
               {menu.button && onActionHandler ? (
                 <button
-                  onClick={() => onActionHandler(menu.to)}
+                  onClick={() => {
+                    onActionHandler(menu.to);
+                    if (isOpen.value) toggleMenu();
+                  }}
                   className='px-3 py-2 rounded hover:bg-opacity-20 transition-colors duration-200 whitespace-nowrap'
                 >
                   {t(menu.label)}
                 </button>
               ) : menu.label === 'Services' ? (
-                <ModalServices label={menu.label} />
+                <div onClick={() => isOpen.value && toggleMenu()}>
+                  <ModalServices label={menu.label} />
+                </div>
               ) : (
                 <Link
                   to={menu.to}
+                  onClick={() => isOpen.value && toggleMenu()}
                   className='px-3 py-2 rounded hover:bg-opacity-20 transition-colors duration-200 whitespace-nowrap'
                 >
                   {t(menu.label)}
@@ -83,15 +88,11 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
           <div className='hidden sm:block'>
             <LanguageSwitcher />
           </div>
-          {/*
-          <div className='w-8 h-8 sm:w-9 sm:h-9 md:w-11 md:h-11 bg-white rounded-full flex items-center justify-center'>
-            <span className='vox-icon vx-icon-007 size-sm md:size-md !text-ternary flex items-center justify-center' />
-          </div>
-          */}
           <Link
             to={PAGES_LIST_ROUTER.dashboard.base}
-            className='px-2 sm:px-3 md:px-4 lg:px-6 py-1.5 rounded-lg bg-white text-ternary hover:bg-opacity-90 transition-colors duration-200 whitespace-nowrap text-xs sm:text-sm md:text-base flex items-center justify-center min-w-[60px] sm:min-w-[70px] md:min-w-[80px]'
+            className='px-2 sm:px-3 md:px-4 lg:px-6 py-[3px] rounded-lg bg-white text-ternary hover:bg-opacity-90 transition-colors duration-200 whitespace-nowrap text-xs sm:text-sm md:text-base flex items-center justify-center min-w-[60px] sm:min-w-[70px] md:min-w-[80px]'
           >
+            <span className='vox-icon vx-icon-007 size-sm md:size-md !text-ternary flex items-center justify-center px-3' />
             {t('navbar.signin')}
           </Link>
         </div>

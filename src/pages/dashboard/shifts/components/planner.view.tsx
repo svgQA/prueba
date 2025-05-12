@@ -23,8 +23,8 @@ export const PlannerView: FunctionalComponent<{
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [shifts, setShifts] = useState<Shift[]>([]);
 
-  const handleShiftUpdate = useCallback((turnoActualizado: Shift) => {
-    console.log('Turno actualizado:', turnoActualizado);
+  const handleShiftUpdate = useCallback((_: Shift) => {
+    // console.log('Turno actualizado:', turnoActualizado);
   }, []);
 
   const handleSendPrompt = useCallback(async () => {
