@@ -126,28 +126,12 @@ export const MapLibrePointsMap = ({
       );
       nextIdRef.current = highestId + 1;
 
-      // Only include the main user point if adminUser is true
-      const mainUserPoint = adminUser
-        ? {
-            id: -1,
-            position: { lat: 2.6436182, lng: -76.5372449 },
-          }
-        : null;
-
       // Combine new points with main user point if it exists
-      const newPoints = mainUserPoint
-        ? [...JSON.parse(JSON.stringify(pointsRef)), mainUserPoint]
-        : JSON.parse(JSON.stringify(pointsRef));
+      const newPoints = JSON.parse(JSON.stringify(pointsRef));
       setPoints(newPoints);
     } else {
       // Only set main user point if adminUser is true
-      const mainUserPoint = adminUser
-        ? {
-            id: -1,
-            position: { lat: 2.6436182, lng: -76.5372449 },
-          }
-        : null;
-      setPoints(mainUserPoint ? [mainUserPoint] : []);
+      setPoints([]);
       markersRef.current.forEach((marker) => marker.remove());
       markersRef.current = [];
       nextIdRef.current = 1;
@@ -638,17 +622,42 @@ export const MapLibrePointsMap = ({
     ToastManager.success('Punto actualizado correctamente');
   };
 
+  const getLocation = (): Promise<{ lat: number; lng: number }> => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        return;
+      }
+  
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          resolve({ lat: latitude, lng: longitude });
+        },
+        (err) => {
+          console.error('Error de geolocalización:', err);
+        },
+        {
+          enableHighAccuracy: true, 
+          timeout: 10000, 
+          maximumAge: 0,   
+        }
+      );
+    });
+  };
+
   // Add this function after the other utility functions
-  const getUserLocation = useCallback(() => {
+  const getUserLocation = useCallback(async () => {
     if (!adminUser) {
       return;
     }
 
+    const exactCoordinates = await getLocation();
+
     // Use exact coordinates
-    const exactCoordinates = {
-      lat: 2.6436182,
-      lng: -76.5372449,
-    };
+    // const exactCoordinates = {
+    //   lat: 2.6436182,
+    //   lng: -76.5372449,
+    // };
 
     const newUserPoint: MapPoint = {
       id: -1,
