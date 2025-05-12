@@ -51,6 +51,10 @@ export const setFormat = (
   formatMode.value = mode;
 };
 
+export const setSingleFormat = (model: IFormat) => {
+  format.value = { ...model };
+};
+
 export const getFormLength = computed(() => format.value.pages.length);
 export const getForm = computed(() => format.value);
 export const getFormMode = computed(() => formatMode.value);

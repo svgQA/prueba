@@ -3,17 +3,24 @@ import { type ICardProps } from './interface';
 
 export const Card: FunctionComponent<ICardProps> = ({
   id,
-  name,
   children,
-  color = 'bg-opacity-40 bg-b-light-dark dark:bg-b-dark-light',
+  color = 'text-t-light dark:text-t-dark',
   shadow = false,
   maxWidth,
+  rounded = true,
+  borderless = false,
+  transparent = false,
 }: ICardProps) => {
   return (
     <div
       id={id}
-      name={name}
-      className={`${color} ${shadow ? 'shadow-md' : ''} ${maxWidth} relative capitalize rounded-lg p-2 m-1 h-fit transition duration-300`}
+      className={`${borderless ? 'border-0' : 'border-2 border-gray-100 dark:border-b-dark-light'}
+      ${rounded ? 'rounded-lg' : ''}
+      ${color}  ${shadow ? 'shadow-md' : ''} ${maxWidth}
+      ${transparent ? 'bg-transparent' : 'bg-white dark:bg-b-dark-dark'}
+      text-t-light dark:text-t-dark
+      px-0.5
+      relative capitalize h-fit transition duration-300 focus:outline-2`}
     >
       {children}
     </div>

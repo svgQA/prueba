@@ -10,12 +10,15 @@ export interface IInputProps extends IComponentProps {
   label?: string;
   min?: string;
   max?: string;
-  value?: string | number;
+  value?: string | number | Date | undefined;
   step?: number;
   pattern?: string;
   required?: boolean;
+  error?: string;
+  warning?: string;
   placeholder?: string;
   icon?: string;
+  labelLeft?: boolean;
   type?:
     | 'text'
     | 'password'
@@ -24,7 +27,14 @@ export interface IInputProps extends IComponentProps {
     | 'email'
     | 'time'
     | 'date'
-    | 'datetime-local';
+    | 'datetime-local'
+    | 'search'
+    | 'url'
+    | 'file'
+    | 'color'
+    | 'range'
+    | 'keywords'
+    | 'checkbox';
   meta?: FieldMetaState<string>;
   end?: boolean;
   borderless?: boolean;
@@ -36,4 +46,8 @@ export interface IInputProps extends IComponentProps {
   normal?: boolean;
   disabled?: boolean;
   className?: string;
+  ref?: React.RefObject<HTMLInputElement>;
+  onInput?: (event: TargetedEvent<HTMLInputElement>) => void;
+  onFocus?: (event: FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
 }

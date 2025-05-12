@@ -9,19 +9,27 @@ import { Round } from './utils/rounds';
 import { columns } from './components/rounds.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ExpandableRounds } from '@/components/compose/table/expandable/rounds';
-import { ShiftService } from '@/services/shift';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { RoundService } from '@/services';
 
 export const RoundsSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const [rounds, setRounds] = useState([]);
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de ronda' });
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.to,
+      label: 'create',
+      id: 'rounds-create',
+    };
+    appendHistory(menu);
+    setMenu({ ...infoMenu.value, label: 'Creación de ronda' });
     navigate('/round/create');
   };
 
@@ -31,7 +39,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   }, []);
 
   const getRounds = async () => {
-    const request: any = await ShiftService.getRounds();
+    const request: any = await RoundService.getRounds();
 
     const rounds = request.data.map((item: any) => {
       const points = [];
@@ -58,14 +66,20 @@ export const RoundsSettingPage: FunctionComponent = () => {
   };
 
   const deleteRound = async (id: string) => {
-    const request = await ShiftService.deleteRound(id);
+    const request = await RoundService.deleteRound(id);
     if (!request.getStatus()) return;
-    toast.success('Ronda eliminado', { position: 'top-right' });
+    ToastManager.success('Ronda eliminado');
     getRounds();
   };
 
   const editProject = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar proyecto' });
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.update.to,
+      label: 'update',
+      id: 'rounds-update',
+    };
+    appendHistory(menu);
+    setMenu({ ...infoMenu.value, label: 'Editar ronda' });
     navigate(`/round/update/${id}`);
   };
 
@@ -82,34 +96,30 @@ export const RoundsSettingPage: FunctionComponent = () => {
 
   return (
     <Section>
-      <div className='p-4 dark:bg-black bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
-        <div className='flex flex-col gap-1 w-10/12'>
-          <div className='flex flex-row'>
-            <Button
-              onClick={() => redirect()}
-              type='button'
-              icon='039'
-              name='back'
-              rounded={true}
-              className='w-auto'
-            />
-          </div>
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Nueva Ronda'
+            icon='039'
+            onClick={() => redirect()}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
         </div>
-        <Table<Round>
-          data={rounds}
-          columns={columns}
-          expandable={(row: any) => <ExpandableRounds row={row} />}
-          pageSize={20}
-          visibility={{
-            address: false,
-            city: false,
-            employeeId: false,
-            duration: false,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
       </div>
+      <Table<Round>
+        showExpandableIcon={true}
+        data={rounds}
+        columns={columns}
+        expandable={(row: any) => <ExpandableRounds row={row} />}
+        pageSize={10}
+        visibility={{
+          id: false,
+        }}
+        onClickAction={handleOnClick}
+        unsearch={false}
+        isSettingTable
+      />
     </Section>
   );
 };

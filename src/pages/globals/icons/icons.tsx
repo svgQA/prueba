@@ -3,10 +3,7 @@ import IconsList from './icons.json';
 import { useState, useCallback, memo } from 'preact/compat';
 
 const Icon = memo(({ name, number }: { name: string; number: string }) => (
-  <div
-    name={name}
-    className='h-13 px-3 cursor-pointer hover:bg-teal-600 hover:text-white rounded-md'
-  >
+  <div className='h-13 px-3 cursor-pointer hover:bg-teal-600 hover:text-white rounded-md'>
     <span className={`vox-icon ${name}`} />
     <p className='text-xs'>{number}</p>
   </div>
@@ -41,7 +38,7 @@ export const IconsModal = () => {
         className='fixed top-1/2 right-0 z-30 px-3 py-2 bg-b-light border-b-light-dark dark:bg-b-dark dark:border-b-dark-light border-2 rounded-md'
         onClick={toggleIconsPage}
       >
-        <span className='vox-icon vx-icon-009' /> {getStatusIconsPage.value}
+        <span className='vox-icon vx-icon-364' /> {getStatusIconsPage.value}
       </button>
       <div
         className={`${getStatusIconsPage.value ? 'visible' : 'invisible'} z-20 absolute w-screen h-full top-0 flex justify-center items-center bg-b-light-dark dark:bg-b-dark-light bg-opacity-95`}

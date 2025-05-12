@@ -5,4 +5,7 @@ export enum ROW_ACTIONS {
   REPORT,
   RESPONSE,
   MESSAGE,
+  PROFILE,
+  CHECK_IN,
+  CHECK_OUT,
 }

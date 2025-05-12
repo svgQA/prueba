@@ -4,18 +4,17 @@ import { type ISidebarProps } from './interface';
 import { useEffect, useMemo } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { ButtonMenu } from '../button/menu/button';
-import { useUserStore } from '@/store/slices';
+// import { useUserStore } from '@/store/slices';
 import {
-  closeOnBoardingModal,
+  // closeOnBoardingModal,
   getStatusSettingModal,
 } from '@/store/signals/modals';
 import { useSignal } from '@preact/signals';
-import { CompanyItem } from './company';
+// import { CompanyItem } from './company';
 import { MenuItem } from './menu';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
   id,
-  name,
   menus,
   onSettingHandler,
   onHomeHandler,
@@ -25,15 +24,15 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
 }: ISidebarProps) => {
   const [location, navigate] = useLocation();
   const menuSelected = useSignal<string | null>('');
-  const { companies, setSelected } = useUserStore();
+  // const { companies, setSelected } = useUserStore();
 
-  const setCompanySelected = useMemo(
-    () => (company: string) => {
-      setSelected(company);
-      closeOnBoardingModal();
-    },
-    [setSelected]
-  );
+  // const setCompanySelected = useMemo(
+  //   () => (company: string) => {
+  //     setSelected(company);
+  //     closeOnBoardingModal();
+  //   },
+  //   [setSelected]
+  // );
 
   useEffect(() => {
     if (!getStatusSettingModal.value) {
@@ -53,7 +52,10 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   }, [location]);
 
   const getSelected = useMemo(
-    () => (to: string) => (to === location ? 'text-primary' : ''),
+    () => (to: string) =>
+      to === location
+        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700',
     [location]
   );
 
@@ -78,17 +80,17 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
     [isNavigation, onHandlerClick]
   );
 
+  // const onAssistant = () => {};
   return (
     <nav
       id={`${id}-nav`}
-      name={name}
-      className='fixed left-0 top-0 transform px-1 flex flex-col justify-between h-screen border-r border-b-light-dark dark:border-b-dark-light z-20 bg-b-light dark:bg-b-dark-light'
+      className='fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen border-r border-gray-200 dark:border-gray-700 z-20'
     >
       {onHomeHandler && (
-        <ul>
-          <a onClick={onHomeHandler} className='cursor-pointer'>
+        <ul className='flex flex-col items-center'>
+          <span onClick={onHomeHandler} className='cursor-pointer'>
             <ButtonMenu name='vx-home-button' label='home' icon='023' />
-          </a>
+          </span>
         </ul>
       )}
       <ul
@@ -105,6 +107,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
         ))}
       </ul>
       <ul className='flex flex-col justify-between capitalize'>
+        {/*
         <div className='relative group'>
           <a className='cursor-pointer'>
             <ButtonMenu name='vx-company-button' label='company' icon='281' />
@@ -123,18 +126,19 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
             </div>
           )}
         </div>
+        */}
         <span
           onClick={onSettingHandler}
-          className='cursor-pointer p-1 mt-1 hover:disabled rounded-sm'
+          className='cursor-pointer p-1 mt-1 hover:disabled rounded-sm text-gray-700 dark:text-gray-200'
         >
-          <ButtonMenu name='vx-setting-button' label='setting' icon='169' />
+          <ButtonMenu name='vx-setting-button' label='setting' icon='159' />
         </span>
 
         {/*
         {onLogout && (
-          <a onClick={onLogout} className='cursor-pointer'>
+          <span onClick={onLogout} className='cursor-pointer'>
             <ButtonMenu name='vx-logout-button' label='logout' icon='225' />
-          </a>
+          </span>
         )}
         */}
       </ul>

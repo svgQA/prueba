@@ -1,9 +1,8 @@
 table.elements {
-  @apply w-full;
+  @apply w-full overflow-x-auto;
   thead {
-    @apply rounded-xl;
     th {
-      @apply h-10 bg-b-light-dark dark:bg-b-dark-light;
+      @apply h-11 dark:bg-b-dark-light bg-b-light-light shadow-black;
       &:first-child {
         @apply rounded-tl-lg;
       }
@@ -13,11 +12,70 @@ table.elements {
     }
   }
   tbody {
-    @apply border-x border-b-light-dark dark:border-b-dark-light;
     td {
-      @apply h-24 border-b-2 border-b-light-dark dark:border-b-dark-light bg-b-light dark:bg-b-dark;
+      @apply h-12 border-t-2 border-b-light-light dark:border-b-dark-light;
     }
   }
+}
+
+.pagination-row {
+  @apply bottom-0 left-0 right-0 absolute rounded-b-lg dark:bg-b-dark-light bg-b-content shadow-black  text-t-light dark:text-t-dark border-t border-b-light-dark dark:border-b-dark-light;
+}
+
+/*
+.pagination-row {
+  @apply !bg-red-500;
+}
+.pagination-row td {
+  padding: 0 !important;
+}
+
+.pagination-row td > div {
+  width: 100%;
+}
+
+*/
+/*
+tr.no-bottom-border td {
+  border-bottom: none !important;
+}
+*/
+
+/*
+.pagination-row {
+  border-top: 1px solid #e5e7eb;
+}
+*/
+
+.pagination-row button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.pagination-row button span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 1;
+  font-size: 14px;
+}
+
+.pagination-row button span:first-child {
+  font-size: 16px;
+  margin-top: -1px; /* Ajuste fino para centrar verticalmente */
+}
+
+.pagination-row .inline-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  height: 28px;
 }
 
 /* table.info {

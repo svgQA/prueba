@@ -11,8 +11,40 @@ export const PAGES_LIST_ROUTER = {
     correspondence: '/correspondence',
     users: '/users',
     devices: '/devices',
+    history: '/history',
     setting: {
       base: '/setting',
+      users: {
+        base: '/users',
+        password: {
+          base: '/password',
+          to: '/users/password',
+        },
+        areas: {
+          base: '/areas',
+          to: '/users/areas',
+          create: {
+            base: '/create',
+            to: '/users/areas/create',
+          },
+          update: {
+            base: '/update',
+            to: '/users/areas/update/:id',
+          },
+        },
+        roles: {
+          base: '/roles',
+          to: '/users/roles',
+        },
+        groups: {
+          base: '/groups',
+          to: '/users/groups',
+        },
+        settings: {
+          base: '/settings',
+          to: '/users/settings',
+        },
+      },
       admin: {
         base: '/admin',
         analytic: {
@@ -45,6 +77,7 @@ export const PAGES_LIST_ROUTER = {
       },
       shifts: {
         base: '/rounds',
+        settings: '/rounds/settings',
         service: {
           base: '/service',
           to: '/rounds/service',
@@ -130,8 +163,37 @@ export const PAGES_LIST_ROUTER = {
           to: '/rounds/project/edit/:id',
         },
       },
+      notifications: {
+        scheduledNotification: {
+          base: '/scheduledNotifications',
+          to: '/rounds/scheduledNotifications',
+
+          create: {
+            base: '/notifications/scheduledNotifications/create',
+            to: '/rounds/notifications/scheduledNotifications/create',
+          },
+          update: {
+            base: '/notifications/scheduledNotifications/update',
+            to: '/rounds/notifications/scheduledNotifications/update/:id',
+          },
+        },
+        templateNotification: {
+          base: '/templateNotifications',
+          to: '/rounds/templateNotifications',
+
+          create: {
+            base: '/notifications/templateNotifications/create',
+            to: '/rounds/notifications/templateNotifications/create',
+          },
+          update: {
+            base: '/notifications/templateNotifications/update',
+            to: '/rounds/notifications/templateNotifications/update/:id',
+          },
+        },
+      },
       setting: {
         base: '/setting',
+        settings: '/setting/settings',
         user: {
           base: '/',
           to: '/setting',

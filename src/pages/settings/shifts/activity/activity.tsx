@@ -8,8 +8,8 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 
-import { ShiftService } from '@/services/shift';
-import { toast } from 'react-toastify';
+import { ShiftService } from '@/services/shift/shift';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 import {
   menuInformationSelected as infoMenu,
@@ -59,7 +59,7 @@ export const ActivitySettingPage: FunctionComponent = () => {
   const deleteActivity = async (id: string) => {
     const request = await ShiftService.deleteActivity(id);
     if (!request.getStatus()) return;
-    toast.success('Turno eliminado', { position: 'top-right' });
+    ToastManager.success('Turno eliminado');
     getActivities();
   };
 
@@ -76,31 +76,32 @@ export const ActivitySettingPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-black bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
-        <Button
-          onClick={redirect}
-          type='button'
-          icon='039'
-          name='back'
-          rounded={true}
-          className='w-auto'
-        />
-        <Table<IActivity>
-          data={activity.value}
-          columns={columns}
-          pageSize={20}
-          visibility={{
-            start: true,
-            end: true,
-            roundId: true,
-            projectId: true,
-            status: true,
-            type: true,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Nueva Actividad'
+            icon='039'
+            onClick={redirect}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
+        </div>
       </div>
+      <Table<IActivity>
+        data={activity.value}
+        columns={columns}
+        pageSize={20}
+        visibility={{
+          start: true,
+          end: true,
+          roundId: true,
+          projectId: true,
+          status: true,
+          type: true,
+        }}
+        onClickAction={handleOnClick}
+        isSettingTable
+      />
     </Section>
   );
 };

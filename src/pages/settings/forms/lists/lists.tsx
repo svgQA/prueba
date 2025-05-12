@@ -88,7 +88,7 @@ export const ListFormModal = ({ onSelected }: IListFormModalProps) => {
             </Field>
             <MultipleInput
               name='list'
-              id={`mt-form-new-list-options`}
+              id='mt-form-new-list-options'
               icon='123'
               value={listValues.value}
               onChange={onChange}
@@ -127,6 +127,7 @@ export const ListFormModal = ({ onSelected }: IListFormModalProps) => {
           columns={columns}
           pageSize={8}
           unsettings
+          isSettingTable
           onClickAction={handleOnClick}
         />
       </div>

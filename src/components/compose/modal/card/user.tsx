@@ -2,37 +2,36 @@ import { type FunctionComponent } from 'preact';
 import { type ICardSettingUserProps } from './interface';
 import { Card } from '@/components/common/card/card';
 import { Badge } from '@/components/common/badge/badge';
+import { Avatar } from '@/components/common/Avatar';
 
 export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
   id,
   name,
   username,
-  // image,
+  image,
   company,
   rol,
 }: ICardSettingUserProps) => {
   return (
-    <Card id={id} name={name}>
-      <div className='flex flex-row justify-center items-center h-12'>
-        {/* <img
-          src={image}
-          alt={`sett-user-${id}`}
-          className='w-12 h-12 mr-2 rounded-full'
-        ></img> */}
-        <div className='w-full mx-1'>
-          <p className='text-sm h-5 font-thin max-w-40 overflow-hidden'>
-            {username}
-          </p>
-          <div className='flex flex-row justify-between mt-2'>
-            <p className='font-bold mr-1 text-xs'>{company}</p>
-            <Badge
-              label={rol}
-              icon='users'
-              color='poner color'
-              bgColor='poner color'
-            />
+    <Card id={id} name={name} borderless rounded={false} transparent>
+      <div className='px-2'>
+        <div className='flex gap-2 w-full pb-2 justify-between px-3 py-1'>
+          <Avatar name={username} src={image} size='lg' />
+          <div className='flex flex-col justify-center'>
+            <p className='text-sm font-medium max-w-52 overflow-hidden'>
+              {username}
+            </p>
+            <p className='text-xs pt-2'>{rol}</p>
           </div>
         </div>
+        <Badge
+          outline
+          label={company}
+          icon='012'
+          size='sm'
+          full
+          status='info'
+        />
       </div>
     </Card>
   );

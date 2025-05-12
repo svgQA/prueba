@@ -7,14 +7,15 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-
-import { ShiftService } from '@/services/shift';
-import { toast } from 'react-toastify';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { ServiceService } from '@/services';
 
 export interface IServicio {
   id: number;
@@ -39,24 +40,36 @@ export const ServiceSettingPage: FunctionComponent = () => {
   }, []);
 
   const getServices = async () => {
-    const request: any = await ShiftService.getServices();
+    const request: any = await ServiceService.getServices();
     novelties.value = request.data;
   };
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.create.to,
+      label: 'create',
+      id: 'service-create',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creacion de servicio' });
     navigate('/rounds/service/create');
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.update.to,
+      label: 'update',
+      id: 'service-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar servicio' });
     navigate(`/rounds/service/update/${id}`);
   };
 
   const deleteNovelty = async (id: string) => {
-    const request = await ShiftService.deleteService(id);
+    const request = await ServiceService.deleteService(id);
     if (!request.getStatus()) return;
-    toast.success('Servicio eliminado', { position: 'top-right' });
+    ToastManager.success('Servicio eliminado');
     getServices();
   };
 
@@ -73,29 +86,27 @@ export const ServiceSettingPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-black bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
-        <Button
-          onClick={redirect}
-          type='button'
-          icon='039'
-          name='back'
-          rounded={true}
-          className='w-auto'
-        />
-        <Table<IServicio>
-          data={novelties.value}
-          columns={columns}
-          pageSize={20}
-          visibility={{
-            name: true,
-            description: true,
-            priority: true,
-            action: true,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Nuevo Servicio'
+            icon='039'
+            onClick={redirect}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
+        </div>
       </div>
+      <Table<IServicio>
+        data={novelties.value}
+        columns={columns}
+        visibility={{
+          id: false,
+        }}
+        onClickAction={handleOnClick}
+        unsearch={false}
+        isSettingTable
+      />
     </Section>
   );
 };

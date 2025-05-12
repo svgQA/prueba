@@ -4,7 +4,7 @@ import { memo } from 'preact/compat';
 
 type CardProps = {
   title: string;
-  count: number;
+  count: number | string;
   subtitle: string;
   color: string;
   icon: string;
@@ -12,15 +12,29 @@ type CardProps = {
 
 export const CardData: FunctionalComponent<CardProps> = memo(
   ({ title, count, subtitle, color, icon = '071' }) => (
-    <Card name={`card-data-${title}`} shadow>
-      <div className='flex items-center'>
-        <span className={`vox-icon vx-icon-${icon} size-xl mr-4`} />
-        <div className='max-w-96 min-h-[120px] overflow-hidden'>
-          <h3 className='text-xl font-bold mb-2 truncate'>{title}</h3>
-          <p className={`text-3xl font-bold ${color} truncate`}>{count}</p>
-          <p className='mt-2 text-t-light-dark dark:text-t-dark-light truncate'>
-            {subtitle}
-          </p>
+    <Card name={`card-data-${title}`}>
+      <div className='flex items-center gap-6 w-full p-3'>
+        <span
+          className={`vox-icon vx-icon-${icon} w-20 h-20 flex items-center justify-center rounded-full bg-sky-100 dark:bg-sky-900/40 !text-sky-500 dark:!text-sky-300 shrink-0 size-xl`}
+        />
+        <div className='flex-1 min-h-[60px] flex flex-col justify-center overflow-hidden'>
+          <div className='w-full overflow-hidden'>
+            <h3 className='text-xl font-bold whitespace-nowrap overflow-hidden text-ellipsis'>
+              {title}
+            </h3>
+          </div>
+          <div className='w-full overflow-hidden'>
+            <p
+              className={`text-2xl font-bold ${color} whitespace-nowrap overflow-hidden text-ellipsis`}
+            >
+              {count}
+            </p>
+          </div>
+          <div className='w-full overflow-hidden'>
+            <p className='text-t-light-dark dark:text-t-dark-light whitespace-nowrap overflow-hidden text-ellipsis'>
+              {subtitle}
+            </p>
+          </div>
         </div>
       </div>
     </Card>

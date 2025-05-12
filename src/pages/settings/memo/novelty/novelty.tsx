@@ -7,14 +7,13 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-
-import { ShiftService } from '@/services/shift';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { NoveltyService } from '@/services';
 
 export interface INovelty {
   id: number;
@@ -39,7 +38,7 @@ export const NoveltySettingPage: FunctionComponent = () => {
   }, []);
 
   const getNovelties = async () => {
-    const request: any = await ShiftService.getNovelty();
+    const request: any = await NoveltyService.getNovelty();
     novelties.value = request.data;
   };
 
@@ -54,9 +53,9 @@ export const NoveltySettingPage: FunctionComponent = () => {
   };
 
   const deleteNovelty = async (id: string) => {
-    const request = await ShiftService.deleteNovelty(id);
+    const request = await NoveltyService.deleteNovelty(id);
     if (!request.getStatus()) return;
-    toast.success('Novedad eliminado', { position: 'top-right' });
+    ToastManager.success('Novedad eliminado');
     getNovelties();
   };
 
@@ -72,30 +71,31 @@ export const NoveltySettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='p-4 dark:bg-black bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
-        <Button
-          onClick={redirect}
-          type='button'
-          icon='039'
-          name='back'
-          rounded={true}
-          className='w-auto'
-        />
-        <Table<INovelty>
-          data={novelties.value}
-          columns={columns}
-          pageSize={20}
-          visibility={{
-            name: true,
-            description: true,
-            priority: true,
-            action: true,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
+    <Section>
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Nueva Novedad'
+            icon='039'
+            onClick={redirect}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
+        </div>
       </div>
+      <Table<INovelty>
+        data={novelties.value}
+        columns={columns}
+        pageSize={20}
+        visibility={{
+          name: true,
+          description: true,
+          priority: true,
+          action: true,
+        }}
+        onClickAction={handleOnClick}
+        unsearch={false}
+      />
     </Section>
   );
 };

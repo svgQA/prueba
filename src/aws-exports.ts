@@ -12,6 +12,9 @@ export const AWS_AMPLIFY_SETTINGS: ResourcesConfig = {
       userPoolClientId: aws_cognito_client_id,
       signUpVerificationMethod: 'code' as 'code' | 'link',
       loginWith: {
+        username: true,
+        email: false,
+        phone: false,
         oauth: {
           domain: aws_oauth_domain,
           scopes: [
@@ -25,9 +28,13 @@ export const AWS_AMPLIFY_SETTINGS: ResourcesConfig = {
           redirectSignOut: ['http://localhost:3050/'],
           responseType: 'code',
         },
-        username: true,
-        email: false,
-        phone: false,
+      },
+      passwordFormat: {
+        minLength: 8,
+        requireLowercase: true,
+        requireUppercase: true,
+        requireNumbers: true,
+        requireSpecialCharacters: true,
       },
     },
   },

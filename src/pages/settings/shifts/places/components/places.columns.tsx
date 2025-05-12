@@ -15,12 +15,22 @@ export const columns: ColumnDef<Place>[] = [
     accessorKey: 'name',
     size: 60,
     header: 'Nombre',
+    enableGrouping: true,
   },
   {
-    id: 'code',
-    accessorKey: 'code',
-    size: 60,
+    id: 'description',
+    accessorKey: 'description',
+    size: 20,
     header: 'Descripción',
+    enableGrouping: true,
+    cell: (info) => {
+      const description = info.getValue() as string;
+      return (
+        <div className='w-full flex justify-center max-w-96 overflow-hidden text-ellipsis whitespace-nowrap'>
+          {description}
+        </div>
+      );
+    },
   },
   {
     id: 'latitude',

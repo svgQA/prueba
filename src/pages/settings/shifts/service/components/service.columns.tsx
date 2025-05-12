@@ -14,22 +14,30 @@ export const columns: ColumnDef<IServicio>[] = [
     accessorKey: 'description',
     size: 60,
     header: 'Descripción',
+    cell: (info) => {
+      const description = info.getValue() as string;
+      return (
+        <div className='w-full flex justify-center max-w-96 overflow-hidden text-ellipsis whitespace-nowrap'>
+          {description}
+        </div>
+      );
+    },
   },
   {
     id: 'roundId',
-    accessorKey: 'roundId',
+    accessorKey: 'round.name',
     size: 60,
     header: 'Ronda',
   },
   {
     id: 'contractId',
-    accessorKey: 'contractId',
+    accessorKey: 'contract.name',
     size: 60,
     header: 'Contrato',
   },
   {
     id: 'placeId',
-    accessorKey: 'placeId',
+    accessorKey: 'place.name',
     size: 180,
     header: 'Place',
   },

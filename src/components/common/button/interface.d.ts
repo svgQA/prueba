@@ -4,7 +4,7 @@ export interface IButtonProps extends IComponentProps {
   label?: string;
   icon?: string;
   color?: string;
-  type: 'button' | 'submit' | 'reset';
+  type?: 'button' | 'submit' | 'reset';
   onClick?: (event: MouseEvent) => void;
   rounded?: boolean;
   full?: boolean;
@@ -12,4 +12,19 @@ export interface IButtonProps extends IComponentProps {
   loading?: boolean;
   disabled?: boolean;
   end?: boolean;
+  borderless?: boolean;
+  padding?: string;
+  text?: string;
+  textColor?: string;
+  iconColor?: string;
+  form?: string;
+  big?: boolean;
+  iconSize?: 'sm' | 'xsm' | 'xs' | 'xxs';
+  unpadded?: boolean;
+  selected?: boolean;
+  textAlign?: 'left' | 'center' | 'right';
+  bold?: boolean;
+  square?: boolean;
+  selectedColor?: string;
+  mode?: 'primary' | 'secondary' | 'ternary' | 'danger';
 }

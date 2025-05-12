@@ -7,13 +7,15 @@ import { columns } from './components/places.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect, useState } from 'preact/hooks';
-import { ShiftService } from '@/services/shift';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { PlaceService } from '@/services';
 
 export interface IRowActionPlace {
   id: string;
@@ -31,28 +33,39 @@ export const PlacesSettingPage: FunctionComponent = () => {
   }, []);
 
   const getPlaces = async () => {
-    const request: any = await ShiftService.getPlaces();
+    const request: any = await PlaceService.getPlaces();
     setPlaces(request.data);
   };
 
   const redirect = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.placesCreate.to,
+      label: 'create',
+      id: 'places-create',
+    };
+    navigate(menu.to);
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Creacion de lugar' });
-    navigate('/rounds/places/create');
   };
 
   const deletePlace = async (id: string) => {
-    const request = await ShiftService.deletePlace(id);
+    const request = await PlaceService.deletePlace(id);
     if (!request.getStatus()) return;
-    toast.success('Lugar eliminado', { position: 'top-right' });
+    ToastManager.success('Lugar eliminado');
     getPlaces();
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.placesUpdate.to,
+      label: 'update',
+      id: 'places-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar lugar' });
     navigate(`/rounds/places/update/${id}`);
   };
   const handleOnClick = async (action: IRowActionPlace | any) => {
-    console.log(action);
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
         update(action.id);
@@ -65,29 +78,28 @@ export const PlacesSettingPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-black bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
-        <Button
-          onClick={redirect}
-          type='button'
-          icon='039'
-          name='back'
-          rounded={true}
-          className='w-auto'
-        />
-        <Table<Place>
-          data={places}
-          columns={columns}
-          pageSize={20}
-          visibility={{
-            address: true,
-            name: true,
-            description: true,
-            action: true,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Nueva Actividad'
+            icon='039'
+            onClick={redirect}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
+        </div>
       </div>
+      <Table<Place>
+        data={places}
+        columns={columns}
+        visibility={{
+          description: false,
+          id: false,
+        }}
+        onClickAction={handleOnClick}
+        unsearch={false}
+        isSettingTable
+      />
     </Section>
   );
 };

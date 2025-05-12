@@ -1,0 +1,116 @@
+import { FormValues } from '@/components/compose/gantt/components/gantt/replicate.modal';
+import { type IPagination } from '@/types';
+import { type IShiftResponse } from '@/types/shift/activity';
+import { ICheckRequest } from '@/types/shift/shift.request';
+import { BaseService } from '@/utils/network';
+import {
+  type IMakeRequest,
+  VoxServices,
+  REQUEST_METHODS,
+} from '@/utils/network/types';
+import { type IReplicateShift } from '@/utils/types/shift.interface';
+
+export type ShiftSummary = {
+  total: number;
+  in_progress: number;
+  completed: number;
+};
+
+export class ShiftService extends BaseService {
+  static name: VoxServices = 'shift';
+  static async get_all(params: IPagination = { page: 1, items: 400 }) {
+    const model: IMakeRequest = {
+      url: ['activity'],
+      params: params as any,
+    };
+    return await super.make_request<IShiftResponse>(this.name, model);
+  }
+
+  static async get_shift(id: string | number) {
+    const model: IMakeRequest = {
+      url: ['activity', String(id)],
+    };
+    return await super.make_request<IShiftResponse>(this.name, model);
+  }
+
+  static async set_replicate(data: IReplicateShift) {
+    const model: IMakeRequest = {
+      url: ['activity', 'replicate'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async createCheck(data: ICheckRequest, shiftId: number) {
+    const model: IMakeRequest = {
+      url: ['activity', `${shiftId}`, 'check'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  /**
+   * Gets a summary of shifts including total count, in progress and completed
+   * @returns Summary object with total, progress and completed counts
+   */
+  static async getShiftSummary() {
+    const model: IMakeRequest = {
+      url: ['activity/summary'],
+      method: REQUEST_METHODS.GET,
+    };
+
+    return await super.make_request<ShiftSummary>(this.name, model);
+  }
+
+  static async createActivity(data: any) {
+    const model: IMakeRequest = {
+      url: ['activity'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request(this.name, model);
+  }
+  static async updateActivity(data: any, id: string | number) {
+    const model: IMakeRequest = {
+      url: ['activity', String(id)],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async deleteActivity(id: string | number) {
+    const model: IMakeRequest = {
+      url: ['activity', String(id)],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async getActivities(params: IPagination = { page: 1, items: 400 }) {
+    const model: IMakeRequest = {
+      url: ['activity'],
+      params: params as any,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async getActivityById(id: string) {
+    const model: IMakeRequest = {
+      url: ['activity', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async setReplicateV2(data: FormValues) {
+    const model: IMakeRequest = {
+      url: ['activity', 'replicate', 'v2'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request(this.name, model);
+  }
+}

@@ -4,18 +4,29 @@ import { type IButtonMenuProps } from './interface';
 export const ButtonMenu: FunctionComponent<IButtonMenuProps> = ({
   label,
   icon,
-  name,
   small,
 }: IButtonMenuProps) => {
   return (
     <div
-      className={`${small ? 'h-10' : 'h-12'} my-1 text-center overflow-hidden relative cursor-pointer content-end px-1 hover:text-primary`}
+      className={`
+        ${small ? 'h-10' : 'h-12'}
+        my-1 text-center overflow-hidden relative cursor-pointer content-end px-1 hover:text-primary
+        w-14
+      `}
     >
       <span
-        name={name}
-        className={`absolute w-full left-0 h-14 -top-1 vx-icon vx-icon-${icon} size-xsm`}
+        className={`absolute w-full left-0 h-14 -top-1 vx-icon vx-icon-${icon}`}
       ></span>
-      <h6 className={`${small ? 'text-2xs' : 'text-xs'} capitalize`}>
+      <h6
+        className={`
+          ${small ? 'text-2xs' : 'text-xs'}
+          capitalize
+          truncate
+          overflow-hidden
+          whitespace-nowrap
+        `}
+        title={label}
+      >
         {label}
       </h6>
     </div>

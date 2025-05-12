@@ -1,5 +1,5 @@
 import { type ITimelineProps } from './interface';
 
-export const Timeline = ({ id, name }: ITimelineProps) => {
-  return <div id={id} name={name}></div>;
+export const Timeline = ({ id }: ITimelineProps) => {
+  return <div id={id}></div>;
 };

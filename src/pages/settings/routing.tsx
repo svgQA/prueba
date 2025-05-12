@@ -55,6 +55,20 @@ import { TaskSettingPage } from './shifts/task/task';
 import { TaskCreateSettingPage } from './shifts/task/create/task';
 import { ScheduleSettingPage } from './shifts/schedule/schedule';
 import { ScheduleCreateSettingPage } from './shifts/schedule/create/schedule';
+import { ShiftSettingPage } from './shifts/setting/setting';
+import { GeneralSettingPage } from './general/setting/setting';
+import { UserAreasPage } from '../dashboard/users/areas/user.areas';
+import { UserGroupsPage } from '../dashboard/users/groups/user.groups';
+import { UserRolesPage } from '../dashboard/users/roles/roles';
+import { UserPasswordPage } from '../dashboard/users/password/user.password';
+import { UserSettingsPage } from '../dashboard/users/setting/user.setting';
+import { ScheduledNotificationsPage } from './notifications/scheduleNotifications/scheduledNotifications';
+import { TemplateNotificationPage } from './notifications/templateNotifications/templateNotifications';
+import { TemplateCreateForm } from './notifications/templateNotifications/create/create';
+import { AreaCreatePage } from '../dashboard/users/areas/area.create';
+import ScheduledNotificationForm from './notifications/scheduleNotifications/create/create';
+import { TemplateNotificationEditPage } from './notifications/templateNotifications/update/update';
+import { ScheduledNotificationEditPage } from './notifications/scheduleNotifications/update/update';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -80,6 +94,12 @@ export const RoutingContent = memo(() => {
           )}
         />
         {/* GENERAL MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: GeneralSettingPage })
+          )}
+        />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.setting.user.to}
           component={lazy(() => Promise.resolve({ default: UserSettingPage }))}
@@ -214,6 +234,10 @@ export const RoutingContent = memo(() => {
           component={lazy(() => Promise.resolve({ default: IASettingPage }))}
         />
         {/* SHIFTS MENU */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.settings}
+          component={lazy(() => Promise.resolve({ default: ShiftSettingPage }))}
+        />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.to}
           component={lazy(() =>
@@ -359,6 +383,37 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: ScheduleCreateSettingPage })
           )}
         />
+        {/* OPCIONES DE USUARIOS */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.to}
+          component={lazy(() => Promise.resolve({ default: UserAreasPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.groups.to}
+          component={lazy(() => Promise.resolve({ default: UserGroupsPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.roles.to}
+          component={lazy(() => Promise.resolve({ default: UserRolesPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.create.to}
+          component={lazy(() => Promise.resolve({ default: AreaCreatePage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.update.to}
+          component={lazy(() => Promise.resolve({ default: AreaCreatePage }))}
+        />
+
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.password.to}
+          component={lazy(() => Promise.resolve({ default: UserPasswordPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.settings.to}
+          component={lazy(() => Promise.resolve({ default: UserSettingsPage }))}
+        />
+
         {/* SALES MENU */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.sales.sales.to}
@@ -414,6 +469,63 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.access.createInformation.to}
           component={lazy(() =>
             Promise.resolve({ default: CreateInformationSettingPage })
+          )}
+        />
+        {/* NOTIFICATIONS MENU */}
+        {/* SCHEDULED OPTIONS */}
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .scheduledNotification.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduledNotificationsPage })
+          )}
+        />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .scheduledNotification.create.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduledNotificationForm })
+          )}
+        />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .scheduledNotification.update.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: ScheduledNotificationEditPage })
+          )}
+        />
+        {/* TEMPLATE OPTIONS */}
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .templateNotification.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: TemplateNotificationPage })
+          )}
+        />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .templateNotification.create.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: TemplateCreateForm })
+          )}
+        />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.notifications
+              .templateNotification.update.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: TemplateNotificationEditPage })
           )}
         />
       </Suspense>

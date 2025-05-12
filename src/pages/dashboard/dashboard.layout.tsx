@@ -1,7 +1,6 @@
 import { type FunctionComponent } from 'preact';
-import { useEffect } from 'preact/hooks';
 import { Route, Router } from 'wouter';
-import { Suspense, lazy } from 'preact/compat';
+import { lazy, Suspense, useEffect } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,96 +24,104 @@ import { UsersPage } from './users/users.page';
 /** ***********************************************************************
  * STORE SIGNALS
  ** ***********************************************************************/
-import {
-  getStatusOnBoardingModal,
-  toggleSettingModal,
-  closeOnBoardingModal,
-  openOnBoardingModal,
-  openLoading,
-  closeLoading,
-} from '@/store/signals/modals';
+import { toggleSettingModal } from '@/store/signals/modals';
 
 /** ***********************************************************************
  * COMMENTS
  ** ***********************************************************************/
-import { hasUserTenant, useUserStore } from '@/store/slices';
-import { BaseService } from '@/utils/network';
 import { SettingsModal } from '../settings/settings';
 import { ToastContainer } from 'react-toastify';
-import { Loading } from '@/components/common/loading/loading';
 import { Sidebar } from '@/components/common/sidebar/sidebar';
-import { OnBordingModal } from '../globals/onbording/onboarding';
-import { IconsModal } from '../globals/icons/icons';
-import { AuthAmplifyProps } from '../interface';
-import { useWebSocket } from '@/utils/socket';
+import { AuthAmplifyProps } from '@/utils/types/auth.interface';
+import { HistoryNotificationsPage } from './history/history.page';
+import { WebSocketProvider } from '@/utils/socket';
+import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
+import { CustomSwitcher } from '@/components/common/CustomSwitcher';
+import { Loading } from '@/components/common/loading/loading';
+import { hasUserTenant, useUserStore } from '@/store/slices';
+import { localStorage } from '@/utils/storage';
+import { Dropdown } from '@/components/common/dropdown/dropdown';
+import { ThemeButton } from '@/components/compose/button';
+import { Button } from '@/components/common/button/button';
+import { CompanyService } from '@/services';
+// import { setUser } from '../settings/general/user/create/store/user';
 
-// const GENERAL_GROUP_MENU = 0,
-//   SETTING_USER_MENU = 0;
+// import { IconsModal } from '../globals/icons/icons';
+// import { IconsModal } from '../globals/icons/icons';
+// import { OnBordingModal } from '../globals/onbording/onboarding';
 
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    const wsManager = useWebSocket();
-
     const {
-      setSelected,
-      companies,
       setCompanies,
-      getSelected,
+      companies,
+      selectedCompany,
+      setSelectedCompany,
       setToken,
-      getToken,
-      getUrlSocket,
       setCognito,
+      setTenant,
+      setUser,
+      getLoaded,
+      setLoaded,
     } = useUserStore();
 
-    const setCompanySelected = (company: string) => {
-      setSelected(company);
-      closeOnBoardingModal();
-      // getProfile();
-      initSocket();
-    };
-
     useEffect(() => {
-      BaseService.setLoading(openLoading, closeLoading);
-      BaseService.setUser(getSelected, getToken);
       validateUser();
     }, []);
 
     const validateUser = async () => {
-      /* [TODO]: Bad code */
-      // closeOnBoardingModal();
-      /* [TODO]: Correct code */
-      const existTenant = await hasUserTenant(
-        setCompanies,
-        setSelected,
+      const result = await hasUserTenant(
         setToken,
-        setCognito
+        setCognito,
+        setTenant,
+        setUser,
+        getLoaded
       );
-      if (!existTenant) openOnBoardingModal();
-      else closeOnBoardingModal();
+      setLoaded(result);
+
+      if (result) {
+        getCompanies();
+      }
     };
 
-    // const getProfile = async () => {
-    //   const response = await UserService.profile();
-    //   if (!response.getStatus()) return;
-    //   const user = response.getOne();
-    //   setUser({
-    //     id: user.id,
-    //     name: user.name,
-    //     phone: user.phone,
-    //     address: user.email,
-    //     cognito: user.cognitoId,
-    //   });
-    // };
+    const getCompanies = async () => {
+      const company = await CompanyService.getCompanyList();
 
-    const initSocket = () => {
-      wsManager.connect(getUrlSocket());
+      if (!company.getStatus()) return;
+      const companies = company.getMany();
+
+      if (companies.length === 0) return;
+      setCompanies(companies);
+
+      const selectedCompany = await localStorage.get('company');
+      if (selectedCompany) {
+        setSelectedCompany(Number(selectedCompany));
+      } else {
+        if (companies.length === 1) {
+          const firstCompany = companies[0].value;
+          setSelectedCompany(Number(firstCompany));
+        }
+      }
+    };
+
+    const handleCompanyChange = (value: string | number) => {
+      localStorage.set('company', value);
+      setSelectedCompany(Number(value));
+    };
+
+    const handleUserAction = (value: string | number) => {
+      if (value === 1) {
+        toggleSettingModal();
+      } else if (value === 2) {
+        signOut?.();
+      }
     };
 
     return (
-      <section className='w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
+      <section className='bg-b-content dark:bg-b-dark w-full h-screen text-t-light dark:text-t-dark overflow-scroll vox-scroll-design'>
         <Loading />
         <Sidebar
           id='sidebar'
@@ -123,47 +130,97 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           onHomeHandler={toggleSettingModal}
           menus={SIDEBAR_MENUS}
           isNavigation
-          onLogout={signOut}
+          // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
-          <Router>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Route
-                path={PAGES_LIST.HOME}
-                component={lazy(() => Promise.resolve({ default: MemosPage }))}
+          <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
+            <div className='flex flex-row px-6 gap-4 justify-between items-center'>
+              <LanguageSwitcher borderless />
+              <CustomSwitcher
+                options={companies}
+                value={selectedCompany?.value}
+                onChange={handleCompanyChange}
+                icon='023'
+                borderless
               />
-              <Route
-                path={PAGES_LIST.SHIFTS}
-                component={lazy(() => Promise.resolve({ default: ShiftsPage }))}
-              />
-              <Route
-                path={PAGES_LIST.ACCESS}
-                component={lazy(() => Promise.resolve({ default: AccesPage }))}
-              />
-              <Route
-                path={PAGES_LIST.CORRESPONDENCE}
-                component={lazy(() =>
-                  Promise.resolve({ default: CorrespondencePage })
-                )}
-              />
-              <Route
-                path={PAGES_LIST.USERS}
-                component={lazy(() => Promise.resolve({ default: UsersPage }))}
-              />
-              <Route
-                path={PAGES_LIST.FORMS}
-                component={lazy(() => Promise.resolve({ default: FormsPage }))}
-              />
-              <Route
-                path={PAGES_LIST.DEVICES}
-                component={lazy(() =>
-                  Promise.resolve({ default: DevicesPage })
-                )}
-              />
-            </Suspense>
-          </Router>
+              <div className='flex flex-row gap-4 items-center justify-center'>
+                <ThemeButton unpadded borderless />
+                <Button
+                  name='user-action'
+                  icon='317'
+                  iconSize='sm'
+                  borderless
+                  unpadded
+                />
+                <Dropdown
+                  options={[
+                    { label: 'setting', value: 1, icon: '158' },
+                    { label: 'logout', value: 2, icon: '099' },
+                  ]}
+                  name='user'
+                  icon='318'
+                  iconSize='xsm'
+                  onChange={handleUserAction}
+                />
+              </div>
+            </div>
+          </header>
+          <WebSocketProvider>
+            <Router>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Route
+                  path={PAGES_LIST.HOME}
+                  component={MemosPage}
+                  key='memos-page'
+                />
+                <Route
+                  path={PAGES_LIST.SHIFTS}
+                  component={lazy(() =>
+                    Promise.resolve({ default: ShiftsPage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.ACCESS}
+                  component={lazy(() =>
+                    Promise.resolve({ default: AccesPage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.CORRESPONDENCE}
+                  component={lazy(() =>
+                    Promise.resolve({ default: CorrespondencePage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.USERS}
+                  component={lazy(() =>
+                    Promise.resolve({ default: UsersPage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.FORMS}
+                  component={lazy(() =>
+                    Promise.resolve({ default: FormsPage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.DEVICES}
+                  component={lazy(() =>
+                    Promise.resolve({ default: DevicesPage })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.HISTORY}
+                  component={lazy(() =>
+                    Promise.resolve({ default: HistoryNotificationsPage })
+                  )}
+                />
+              </Suspense>
+            </Router>
+          </WebSocketProvider>
         </div>
         <SettingsModal />
+        {/*
         <OnBordingModal
           closed={getStatusOnBoardingModal.value}
           onLogout={signOut || (() => {})}
@@ -171,8 +228,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           {companies.map((company) => (
             <div
               key={`selector-company-${company.name}`}
-              name={company.id}
-              className='w-5/12 float-left cursor-pointer py-3 rounded-lg flex flex-row justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 border border-gray-200 dark:border-gray-700'
+              // name={company.id}
+              className='w-5/12 float-left cursor-pointer py-3 rounded-lg flex flex-row justify-between items-center hover:bg-gray-100 dark:hover:bg-b-dark-dark transition-colors duration-200 border border-gray-200 dark:border-gray-700'
               onClick={() => setCompanySelected(company.id)}
               tabIndex={0}
             >
@@ -195,6 +252,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           ))}
         </OnBordingModal>
         <IconsModal />
+        */}
         <ToastContainer />
       </section>
     );

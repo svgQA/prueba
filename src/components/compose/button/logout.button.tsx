@@ -4,7 +4,6 @@ import { useCallback } from 'preact/hooks';
 export const LogoutButton = () => {
   const logout = useCallback((event: MouseEvent) => {
     event.stopPropagation();
-    console.log('Mierda');
   }, []);
 
   return (

@@ -18,4 +18,6 @@ export const VOS_SERVICES = {
   memo: default_service_url,
   user: default_service_url,
   file: default_service_url,
+  notification: default_service_url,
+  module: default_service_url,
 };

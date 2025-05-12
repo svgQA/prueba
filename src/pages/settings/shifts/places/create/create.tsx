@@ -5,14 +5,14 @@ import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { required, lengthSize } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { Map } from '@/components/common/map/map';
-import { useEffect } from 'preact/hooks';
-import { toast } from 'react-toastify';
+import { useEffect, useState } from 'preact/hooks';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
+import { PlaceService } from '@/services';
 
 interface FormData {
   code?: number;
@@ -24,6 +24,9 @@ interface FormData {
   state?: string;
   type?: string;
   municipalityId: number;
+  zipCode: number;
+  countryId: number;
+  radius: number;
 }
 
 interface SelectOption {
@@ -39,11 +42,13 @@ interface ILocation {
 }
 
 export const PlaceCreateSettingPage: FunctionComponent = () => {
+  const [green, setGreen] = useState(0);
   const municipalities: Signal<SelectOption[]> = useSignal([]);
   const departmentId = useSignal<number>();
   const municipalityLocation = useSignal<ILocation>();
   const departments = useSignal<any>([]);
   const points = useSignal<any>([]);
+  const countries = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
 
   // const [points, setPoint] = useState<{ id: number; position: any }[]>([]);
@@ -52,7 +57,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
 
   const sendPointsRef = (data: any) => {
-    console.log('data', data);
     if (!data.length) return;
     const { lat, lng } = data[0].position;
     points.value = data;
@@ -61,48 +65,47 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     return { lat, lng };
   };
 
-  const fetchMunicipalities = async (deparmentId: string) => {
-    const request: any = await ShiftService.getMunicipalities(deparmentId);
+  const fetchMunicipalities = async (departmentId: number) => {
+    const request: any = await PlaceService.getMunicipalities(departmentId);
     municipalities.value = request.data;
-    console.log('departments:', municipalities.value);
   };
 
   const fetchDepartments = async () => {
-    const request: any = await ShiftService.getDepartments();
-
+    const request: any = await PlaceService.getDepartments();
     departments.value = request.data;
-    console.log('departments:', departments.value);
+  };
+
+  const getCountries = async () => {
+    const request: any = await PlaceService.getCountries();
+    countries.value = request.data;
   };
 
   const onSubmit = async (model: FormData) => {
     let request;
     let message: string;
-
+    const data = { ...model, radius: green };
     if (!id) {
-      request = await ShiftService.createPlace(model);
+      request = await PlaceService.createPlace(data);
       message = 'Lugar creado exitosamente!';
     } else {
-      request = await ShiftService.updatePlace(model, id);
+      request = await PlaceService.updatePlace(data, id);
       message = 'Lugar editado exitosamente!';
     }
     if (!request.getStatus()) return;
 
-    toast.success(message, {
-      position: 'top-right',
-    });
+    ToastManager.success(message);
 
     navigate('/rounds/places');
   };
 
-  const onChangeDeparment = async (deparmentId: string) => {
-    await fetchMunicipalities(deparmentId + '');
+  const onChangeDeparment = async (departmentId: number) => {
+    await fetchMunicipalities(departmentId);
   };
 
   const setPosition = (municipalityId: number) => {
     const municipality = municipalities.value.find(
       (item) => item.id === municipalityId
     );
-    console.log(municipality);
 
     if (!municipality?.latitude) return;
     const lat = parseFloat(municipality.latitude.replace(',', '.'));
@@ -123,13 +126,20 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       'longitude',
       'state',
       'type',
+      'countryId',
+      'zipCode',
+      'radius',
       'municipalityId',
     ] as const;
 
-    const request: any = await ShiftService.getPlaceById(id);
+    const request: any = await PlaceService.getPlaceById(id);
     departmentId.value = request.model.municipality.departmentId;
-    await onChangeDeparment(`${departmentId}`);
+
+    if (departmentId.value) {
+      await onChangeDeparment(departmentId.value);
+    }
     const model = pick(omitBy(request.model, isNull), userKeys);
+    setGreen(model.radius || 0);
     points.value = [
       { id: 1, position: { lat: model.latitude, lng: model.longitude } },
     ];
@@ -140,222 +150,299 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   useEffect(() => {
     setInitialValues();
     fetchDepartments();
+    getCountries();
   }, []);
 
   return (
-    <Section className='pt-2'>
-      <div className='p-4 dark:bg-b-dark bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
-        <Form
-          onSubmit={onSubmit}
-          initialValues={initialValues.value}
-          validate={(values) => {
-            const errors: Partial<FormData> = {};
-            if (!values.name) errors.name = 'Campo obligatorio';
-            if (!values.description) errors.description = 'Campo obligatorio';
-            if (!values.address) errors.address = 'Required';
-            return errors;
-          }}
-          render={({ handleSubmit, form, submitting, pristine }) => (
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              {/** FORMULARIO PRINCIPAL */}
-              <div className='grid grid-cols-4 gap-3'>
-                <div class='col-span-1'>
-                  <Field
-                    name='code'
-                    parse={(value) => (value ? Number(value) : undefined)}
-                  >
-                    {({ input }) => (
-                      <Input
-                        id='input-code'
-                        {...input}
-                        placeholder='Ingrese un codigo...'
-                        label='Codigo'
-                        type='number'
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-3'>
-                  <Field<string> name='name' validate={lengthSize(3, 30)}>
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        type='text'
-                        placeholder='Ingrese nombre...'
-                        label='Nombre'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-4'>
-                  <Field<string>
-                    name='description'
-                    validate={lengthSize(3, 250)}
-                  >
-                    {({ input, meta }) => (
-                      <TextArea
-                        {...input}
-                        min='3'
-                        max='300'
-                        placeholder='Ingrese Descripción...'
-                        label='Descripción'
-                        type='text'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div class='col-span-1'>
-                  <Field name='type'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione tipo...'
-                        label='Tipo'
-                        name='type'
-                        icon='252'
-                        options={[
-                          { value: 'INDUSTRIAL', label: 'Industrial' },
-                          { value: 'RESIDENTIAL', label: 'Residencial' },
-                          { value: 'OTHER', label: 'Otro' },
-                        ]}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field name='state'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione estado...'
-                        label='Estado'
-                        name='state'
-                        icon='252'
-                        options={[
-                          { value: 'ACTIVE', label: 'Activo' },
-                          { value: 'INACTIVE', label: 'Inactivo' },
-                          { value: 'UNCER_REVIEW', label: 'Revisión' },
-                        ]}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-2'>
-                  <Field<string> name='address' validate={required}>
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        placeholder='Ingrese Dirección...'
-                        label='Dirección'
-                        type='text'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-2'>
-                  <Select
-                    value={departmentId.value}
-                    placeholder='Seleccione Departamento...'
-                    id='departmentId'
-                    label='Departamento'
-                    name='departmentId'
-                    icon='252'
-                    optionValue='id'
-                    optionLabel='name'
-                    options={departments.value}
-                    onChange={(e) => {
-                      const id = e.currentTarget.value;
-                      onChangeDeparment(id);
-                    }}
-                  />
-                </div>
-                <div class='col-span-2'>
-                  <Field<string> name='municipalityId' validate={required}>
-                    {({ input, meta }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione Municipio...'
-                        label='Municipio'
-                        id='municipalityId'
-                        name='municipalityId'
-                        icon='252'
-                        optionValue='id'
-                        optionLabel='name'
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                          setPosition(id);
-                        }}
-                        options={municipalities.value}
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div class='col-span-2'>
-                  <Field<string> name='latitude'>
-                    {({ input }) => (
-                      <Input {...input} label='Latitud' type='text' disabled />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-2'>
-                  <Field<string> name='longitude'>
-                    {({ input }) => (
-                      <Input {...input} label='Longitud' type='text' disabled />
-                    )}
-                  </Field>
-                </div>
+    <Section>
+      <Form
+        onSubmit={onSubmit}
+        initialValues={initialValues.value}
+        validate={(values) => {
+          const errors: Partial<FormData> = {};
+          if (!values.name) errors.name = 'Campo obligatorio';
+          if (!values.description) errors.description = 'Campo obligatorio';
+          if (!values.address) errors.address = 'Required';
+          return errors;
+        }}
+        render={({ handleSubmit, form, submitting, pristine }) => (
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            {/** FORMULARIO PRINCIPAL */}
+            <div className='grid grid-cols-4 gap-3'>
+              <div class='col-span-1'>
+                <Field
+                  name='code'
+                  parse={(value) => (value ? Number(value) : undefined)}
+                >
+                  {({ input }) => (
+                    <Input
+                      id='input-code'
+                      {...input}
+                      placeholder='Ingrese un codigo...'
+                      label='Codigo'
+                      type='number'
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-3'>
+                <Field<string> name='name' validate={lengthSize(3, 30)}>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      type='text'
+                      placeholder='Ingrese nombre...'
+                      label='Nombre'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-4'>
+                <Field<string> name='description' validate={lengthSize(3, 250)}>
+                  {({ input, meta }) => (
+                    <TextArea
+                      {...input}
+                      min='3'
+                      max='300'
+                      placeholder='Ingrese Descripción...'
+                      label='Descripción'
+                      type='text'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
               </div>
 
-              <Map
-                name='Map'
-                pointsAmount={1}
-                sendPoints={(data) => {
-                  const result = sendPointsRef(data);
-                  form.change('latitude', result?.lat);
-                  form.change('longitude', result?.lng);
+              <div class='col-span-1'>
+                <Field name='type'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='Selecione tipo...'
+                      label='Tipo'
+                      name='type'
+                      icon=''
+                      options={[
+                        { value: 'INDUSTRIAL', label: 'Industrial' },
+                        { value: 'RESIDENTIAL', label: 'Residencial' },
+                        { value: 'OTHER', label: 'Otro' },
+                      ]}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-2'>
+                <Field name='state'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='Selecione estado...'
+                      label='Estado'
+                      name='state'
+                      icon=''
+                      options={[
+                        { value: 'ACTIVE', label: 'Activo' },
+                        { value: 'INACTIVE', label: 'Inactivo' },
+                        { value: 'UNCER_REVIEW', label: 'Revisión' },
+                      ]}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field<string> name='address' validate={required}>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      placeholder='Ingrese Dirección...'
+                      label='Dirección'
+                      type='text'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-3'>
+                <Field<string> name='countryId' validate={required}>
+                  {({ input, meta }) => (
+                    <Select
+                      {...input}
+                      placeholder='Selecione país...'
+                      label='País'
+                      name='countryId'
+                      icon=''
+                      optionValue='id'
+                      optionLabel='name'
+                      onChange={(e) => {
+                        const id = parseInt(e.currentTarget.value);
+                        input.onChange(id);
+                      }}
+                      options={countries.value}
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field name='zipCode'>
+                  {({ input }) => (
+                    <Input
+                      id='input-code'
+                      {...input}
+                      placeholder='Ingrese un código ZIP..'
+                      label='Código ZIP'
+                      type='number'
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-2'>
+                <Select
+                  value={departmentId.value}
+                  placeholder='Seleccione Departamento...'
+                  id='departmentId'
+                  label='Departamento'
+                  name='departmentId'
+                  icon=''
+                  optionValue='id'
+                  optionLabel='name'
+                  options={departments.value}
+                  onChange={(e) => {
+                    const id = e.currentTarget.value;
+                    onChangeDeparment(parseInt(id));
+                  }}
+                />
+              </div>
+              <div class='col-span-2'>
+                <Field<string> name='municipalityId' validate={required}>
+                  {({ input, meta }) => (
+                    <Select
+                      {...input}
+                      placeholder='Selecione Municipio...'
+                      label='Municipio'
+                      id='municipalityId'
+                      name='municipalityId'
+                      icon=''
+                      optionValue='id'
+                      optionLabel='name'
+                      onChange={(e) => {
+                        const id = parseInt(e.currentTarget.value);
+                        input.onChange(id);
+                        setPosition(id);
+                      }}
+                      options={municipalities.value}
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+            </div>
+            {/* <Map
+              name='Map'
+              pointsAmount={1}
+              sendPoints={(data) => {
+                const result = sendPointsRef(data);
+                form.change('latitude', result?.lat);
+                form.change('longitude', result?.lng);
+              }}
+              pointsRef={points.value}
+              center={municipalityLocation.value}
+              condition={false}
+              errorCondition=''
+              radialPoint={null}
+              errorRadialPoint=''
+              radius={green}
+              draggable={true}
+              width='100%'
+              clickPoint={() => { }}
+            /> */}
+
+            <MapLibrePointsMap
+              name='map-points'
+              pointsAmount={1}
+              sendPoints={(data) => {
+                const result = sendPointsRef(data);
+                form.change('latitude', result?.lat);
+                form.change('longitude', result?.lng);
+              }}
+              pointsRef={points.value}
+              center={municipalityLocation.value}
+              condition={false}
+              errorCondition=''
+              radialPoint={null}
+              errorRadialPoint=''
+              radius={green}
+              draggable={true}
+              width='100%'
+              clickPoint={() => {}}
+            />
+
+            <div className='grid grid-cols-4 gap-3'>
+              <div class='col-span-2'>
+                <Field<string> name='latitude'>
+                  {({ input }) => (
+                    <Input {...input} label='Latitud' type='text' disabled />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-2'>
+                <Field<string> name='longitude'>
+                  {({ input }) => (
+                    <Input {...input} label='Longitud' type='text' disabled />
+                  )}
+                </Field>
+              </div>
+            </div>
+            <div className='flex items-center space-x-4 p-4'>
+              <div className='relative w-full h-2 bg-gray-200 rounded-full'>
+                <div
+                  className='absolute h-full bg-cyan-500 rounded-full'
+                  style={{ width: `${(green / 2000) * 100}%` }}
+                />
+                <input
+                  // label={'ee'}
+                  type='range'
+                  min='0'
+                  max='2000'
+                  step='1'
+                  value={green}
+                  onChange={(e) => setGreen(Number(e.currentTarget.value))}
+                  className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+                />
+              </div>
+              <span className='w-20 p-1 text-center'>{green} m</span>
+            </div>
+            {/* Botonera Convertir esto en un componente */}
+            <div className='w-full flex-row flex justify-between items-center'>
+              <Button
+                id='btn-clean'
+                name='btn-clean'
+                type='button'
+                label='Limpiar'
+                onClick={() => {
+                  form.reset();
+                  setGreen(0);
+                  points.value = [];
+                  municipalityLocation.value = undefined;
                 }}
-                pointsRef={points.value}
-                center={municipalityLocation.value}
-                condition={false}
-                errorCondition=''
-                radialPoint={null}
-                errorRadialPoint=''
-                draggable={true}
-                width='100%'
-                clickPoint={() => {}}
+                disabled={submitting || pristine}
+                className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
               />
-              {/* Botonera */}
-              <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
-                <Button
-                  id='btn-clean'
-                  name='btn-clean'
-                  type='button'
-                  label='Limpiar'
-                  onClick={form.reset}
-                  disabled={submitting || pristine}
-                />
 
-                <Button
-                  id='btn-save'
-                  name='btn-save'
-                  type='submit'
-                  label={id ? 'Editar' : 'Guardar'}
-                  className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-                  disabled={submitting}
-                />
-              </div>
-              {/*<pre>{JSON.stringify(values, 0, 2)}</pre>*/}
-            </form>
-          )}
-        />
-      </div>
+              <Button
+                id='btn-save'
+                name='btn-save'
+                type='submit'
+                label={id ? 'Editar' : 'Guardar'}
+                className='rounded-md bg-primary text-white px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
+                disabled={submitting}
+              />
+            </div>
+            {/*<pre>{JSON.stringify(values, 0, 2)}</pre>*/}
+          </form>
+        )}
+      />
     </Section>
   );
 };

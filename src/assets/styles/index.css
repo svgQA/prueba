@@ -6,3 +6,37 @@
 @import url('./tryvoo/table.css');
 @import url('./tryvoo/forms.css');
 @import url('./tryvoo/button.css');
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.33%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 25s linear infinite;
+  width: fit-content;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+input[type='date']::-webkit-inner-spin-button,
+input[type='date']::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+input[type='datetime-local']::-webkit-inner-spin-button,
+input[type='datetime-local']::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -4,17 +4,18 @@ import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { ShiftService } from '@/services/shift';
-import { UserService } from '@/services/user';
+import { ShiftService } from '@/services/shift/shift';
+import { UserService } from '@/services/general/user';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import dayjs from 'dayjs';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
+import { ServiceService } from '@/services';
 
 interface ITask {
   start: string;
@@ -63,7 +64,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
     }
 
     if (!request.getStatus()) return;
-    toast.success(message, { position: 'top-right' });
+    ToastManager.success(message);
     navigate('/rounds/activity');
   };
 
@@ -88,7 +89,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
   };
 
   const getServices = async () => {
-    const request: any = await ShiftService.getServices();
+    const request: any = await ServiceService.getServices();
     services.value = request.data;
   };
 
@@ -109,192 +110,191 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
     main();
   }, []);
   return (
-    <Section className='pt-2'>
-      <div className='p-4 dark:bg-b-dark bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
-        <Form
-          onSubmit={onSubmit}
-          mutators={{
-            ...arrayMutators,
-          }}
-          initialValues={initialValues.value}
-          render={({ handleSubmit, form, submitting, values, pristine }) => (
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              {/** FORMULARIO PRINCIPAL */}
-              <div className='grid grid-cols-2 gap-3'>
-                <div class='col-span-1'>
-                  <Field<string>
-                    name='start'
-                    validate={required}
-                    parse={(value) => (value ? dayjs(value).toISOString() : '')}
-                    format={(value) =>
-                      value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
-                    }
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        type='datetime-local'
-                        label='Fecha inicio'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field<string>
-                    name='end'
-                    validate={required}
-                    parse={(value) => (value ? dayjs(value).toISOString() : '')}
-                    format={(value) =>
-                      value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
-                    }
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        type='datetime-local'
-                        label='Fecha fin'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
+    <Section>
+      <Form
+        onSubmit={onSubmit}
+        mutators={{
+          ...arrayMutators,
+        }}
+        initialValues={initialValues.value}
+        render={({ handleSubmit, form, submitting, values, pristine }) => (
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            {/** FORMULARIO PRINCIPAL */}
+            <div className='grid grid-cols-2 gap-3'>
+              <div class='col-span-1'>
+                <Field<string>
+                  name='start'
+                  validate={required}
+                  parse={(value) => (value ? dayjs(value).toISOString() : '')}
+                  format={(value) =>
+                    value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
+                  }
+                >
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      type='datetime-local'
+                      label='Fecha inicio'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field<string>
+                  name='end'
+                  validate={required}
+                  parse={(value) => (value ? dayjs(value).toISOString() : '')}
+                  format={(value) =>
+                    value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
+                  }
+                >
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      type='datetime-local'
+                      label='Fecha fin'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
 
-                <div class='col-span-1'>
-                  <Field<string> name='status'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione estado...'
-                        label='Estado'
-                        name='status'
-                        icon='252'
-                        options={[
-                          { value: 'CREATED', label: 'Creado' },
-                          { value: 'OPENED', label: 'Abierto' },
-                          { value: 'CLOSED', label: 'Cerrado' },
-                          { value: 'RESOLVED', label: 'Resuelto' },
-                        ]}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field<string> name='type'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione tipo...'
-                        label='Tipo'
-                        name='type'
-                        icon='252'
-                        options={[
-                          { value: 'EXTERNAL', label: 'Externo' },
-                          { value: 'INTERNAL', label: 'Interno' },
-                        ]}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field<string> name='employeedId'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione empleado...'
-                        label='Empleado'
-                        name='employeedId'
-                        icon='252'
-                        options={users.value}
-                        optionValue='id'
-                        optionLabel='fullname'
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                        }}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field name='serviceId'>
-                    {({ input }) => (
-                      <Select
-                        {...input}
-                        placeholder='Selecione Servicio...'
-                        label='Servicio'
-                        name='serviceId'
-                        icon='252'
-                        optionValue='id'
-                        optionLabel='description'
-                        options={services.value}
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                        }}
-                      />
-                    )}
-                  </Field>
-                </div>
+              <div class='col-span-1'>
+                <Field<string> name='status'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='Selecione estado...'
+                      label='Estado'
+                      name='status'
+                      icon='252'
+                      options={[
+                        { value: 'CREATED', label: 'Creado' },
+                        { value: 'OPENED', label: 'Abierto' },
+                        { value: 'CLOSED', label: 'Cerrado' },
+                        { value: 'RESOLVED', label: 'Resuelto' },
+                      ]}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field<string> name='type'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='Selecione tipo...'
+                      label='Tipo'
+                      name='type'
+                      icon='252'
+                      options={[
+                        { value: 'EXTERNAL', label: 'Externo' },
+                        { value: 'INTERNAL', label: 'Interno' },
+                      ]}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field<string> name='employeedId'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='Selecione empleado...'
+                      label='Empleado'
+                      name='employeedId'
+                      icon='252'
+                      options={users.value}
+                      optionValue='id'
+                      optionLabel='fullname'
+                      onChange={(e) => {
+                        const id = parseInt(e.currentTarget.value);
+                        input.onChange(id);
+                      }}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field name='serviceId'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='Selecione Servicio...'
+                      label='Servicio'
+                      name='serviceId'
+                      icon='252'
+                      optionValue='id'
+                      optionLabel='description'
+                      options={services.value}
+                      onChange={(e) => {
+                        const id = parseInt(e.currentTarget.value);
+                        input.onChange(id);
+                      }}
+                    />
+                  )}
+                </Field>
+              </div>
 
-                <div class='col-span-1'>
-                  <Field<string> name='externalId'>
-                    {({ input }) => (
-                      <Input {...input} type='text' label='Codigo externo' />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1 mt-4'>
-                  <FieldArray<string> name='keywords'>
-                    {({ fields }) => (
-                      <div className='flex flex-col gap-2'>
-                        <div className='flex items-center border p-2 rounded-md'>
-                          <input
-                            value={inputKeywords.value}
-                            type='keywords'
-                            onChange={(e) =>
-                              (inputKeywords.value = e.currentTarget.value)
-                            }
-                            placeholder='Escribe una palabra clave'
-                            className='flex-grow p-2 border rounded-md'
-                          />
-                          <button
-                            type='button'
-                            className='ml-2 px-4 py-2 bg-blue-500 text-white rounded-md'
-                            onClick={() => {
-                              fields.push(inputKeywords.value);
-                              inputKeywords.value = '';
-                            }}
-                          >
-                            Agregar
-                          </button>
-                        </div>
-                        <div className='flex flex-wrap gap-2'>
-                          {values.keywords?.map(
-                            (keyword: string, index: number) => (
-                              <span
-                                key={index}
-                                className='px-3 py-1 bg-gray-200 rounded-md flex items-center'
-                              >
-                                {keyword}
-                                <button
-                                  type='button'
-                                  className='ml-2 text-red-500'
-                                  onClick={() => {
-                                    fields.remove(index);
-                                  }}
-                                >
-                                  ×
-                                </button>
-                              </span>
-                            )
-                          )}
-                        </div>
+              <div class='col-span-1'>
+                <Field<string> name='externalId'>
+                  {({ input }) => (
+                    <Input {...input} type='text' label='Codigo externo' />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1 mt-4'>
+                <FieldArray<string> name='keywords'>
+                  {({ fields }) => (
+                    <div className='flex flex-col gap-2'>
+                      <div className='flex items-center border p-2 rounded-md'>
+                        <input
+                          value={inputKeywords.value}
+                          type='keywords'
+                          onChange={(e) =>
+                            (inputKeywords.value = e.currentTarget.value)
+                          }
+                          placeholder='Escribe una palabra clave'
+                          className='flex-grow p-2 border rounded-md'
+                        />
+                        <button
+                          type='button'
+                          className='ml-2 px-4 py-2 bg-blue-500 text-white rounded-md'
+                          onClick={() => {
+                            fields.push(inputKeywords.value);
+                            inputKeywords.value = '';
+                          }}
+                        >
+                          Agregar
+                        </button>
                       </div>
-                    )}
-                  </FieldArray>
-                </div>
-                {/* <div class='col-span-2'>
+                      <div className='flex flex-wrap gap-2'>
+                        {values.keywords?.map(
+                          (keyword: string, index: number) => (
+                            <span
+                              key={index}
+                              className='px-3 py-1 bg-gray-200 rounded-md flex items-center'
+                            >
+                              {keyword}
+                              <button
+                                type='button'
+                                className='ml-2 text-red-500'
+                                onClick={() => {
+                                  fields.remove(index);
+                                }}
+                              >
+                                ×
+                              </button>
+                            </span>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </FieldArray>
+              </div>
+              {/* <div class='col-span-2'>
                   <FieldArray name='tasks'>
                     {({ fields }) => (
                       <div>
@@ -313,7 +313,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                         {fields.map((name, index) => (
                           <div
                             key={index}
-                            className='rounded-lg shadow p-2 border-2'
+                            className='rounde shadow p-2 border-2'
                           >
                             <div className='bg-gray-100 dark:bg-b-dark-light p-3 text-center'>
                               <h2 className='text-xl font-semibold '>
@@ -400,33 +400,32 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                     )}
                   </FieldArray>
                 </div> */}
-              </div>
+            </div>
 
-              {/* Botonera */}
-              <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
-                <Button
-                  id='btn-clean'
-                  name='btn-clean'
-                  type='button'
-                  label='Limpiar'
-                  onClick={() => form.reset()}
-                  disabled={submitting || pristine}
-                />
+            {/* Botonera */}
+            <div className='w-full flex-row flex justify-end items-center'>
+              <Button
+                id='btn-clean'
+                name='btn-clean'
+                type='button'
+                label='Limpiar'
+                onClick={() => form.reset()}
+                disabled={submitting || pristine}
+              />
 
-                <Button
-                  id='btn-save'
-                  name='btn-save'
-                  type='submit'
-                  label={id ? 'Editar' : 'Guardar'}
-                  className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-                  disabled={submitting}
-                />
-              </div>
-            </form>
-          )}
-        />
-        {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
-      </div>
+              <Button
+                id='btn-save'
+                name='btn-save'
+                type='submit'
+                label={id ? 'Editar' : 'Guardar'}
+                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+                disabled={submitting}
+              />
+            </div>
+          </form>
+        )}
+      />
+      {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
     </Section>
   );
 };

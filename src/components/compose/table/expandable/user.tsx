@@ -12,7 +12,6 @@ export const ExpandableUser: FunctionComponent<IExpandableProps> = (
   const [descMsg, setDescMsg] = useState('');
 
   const handleSend = () => {
-    console.log('Enviando mensaje con:', titleMsg, descMsg);
     // Aquí podrías implementar tu lógica de envío
   };
 
@@ -34,7 +33,6 @@ export const ExpandableUser: FunctionComponent<IExpandableProps> = (
       </div>
       <div className='mt-4 flex w-full md:flex-row gap-4 '>
         <textarea
-          type='text'
           placeholder='Descripción'
           className='border border-gray-300 pl-4 p-2 rounded-sm w-full md:w-full'
           value={descMsg}

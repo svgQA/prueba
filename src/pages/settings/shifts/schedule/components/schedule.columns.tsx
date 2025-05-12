@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ISchedule } from '../schedule';
-import dayjs from 'dayjs';
 
 export const columns: ColumnDef<ISchedule>[] = [
   {
@@ -17,24 +16,10 @@ export const columns: ColumnDef<ISchedule>[] = [
     header: 'Nombre',
   },
   {
-    id: 'hourStart',
-    accessorKey: 'hourStart',
+    id: 'daysAllowed',
+    accessorKey: 'daysAllowed',
     size: 60,
-    header: 'Hora inicio',
-    cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('HH:mm');
-    },
-  },
-  {
-    id: 'hourEnd',
-    accessorKey: 'hourEnd',
-    size: 180,
-    header: 'Hora fin',
-    cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('HH:mm');
-    },
+    header: 'Dias configurados',
   },
   {
     id: 'actions',

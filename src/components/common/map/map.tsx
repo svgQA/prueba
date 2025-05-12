@@ -4,13 +4,14 @@ import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
 import {
   GoogleMap,
-  Polygon,
+  Circle,
   InfoWindow,
   Marker,
   useJsApiLoader,
 } from '@react-google-maps/api';
 import React, { useState, useEffect } from 'preact/compat';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { ITask } from '@/types/shift/activity';
 
 export const Map: FunctionComponent<IMapProps> = ({
   pointsAmount,
@@ -23,17 +24,22 @@ export const Map: FunctionComponent<IMapProps> = ({
   draggable,
   width,
   height,
-  clickPoint,
+  // clickPoint,
   center = {
     lat: 4.670355108326989,
     lng: -74.08689346772478,
   },
   allowManualPoint,
+  radius,
 }) => {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [_map, setMap] = useState<google.maps.Map | null>(null);
   const [points, setPoint] = useState<
-    { id: number; position: google.maps.LatLngLiteral }[]
+    { id: number; position: google.maps.LatLngLiteral; tasks: ITask[] }[]
   >([]);
+  const [editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({
+    lat: '',
+    lng: '',
+  });
   const [activeMarker, setActiveMarker] = useState<number | null>(null);
   const [coords, setCoords] = useState<{ lat: string; lng: string }>({
     lat: '',
@@ -64,8 +70,6 @@ export const Map: FunctionComponent<IMapProps> = ({
   }, []);
 
   const onUnmount = React.useCallback(() => {
-    console.log(map);
-
     setMap(null);
   }, []);
 
@@ -108,19 +112,21 @@ export const Map: FunctionComponent<IMapProps> = ({
 
   const setMarkerOnMap = (lat: number, lng: number) => {
     if (condition) {
-      toast.error(`${errorCondition}`, { position: 'top-right' });
+      ToastManager.error(`${errorCondition}`);
       return;
     }
     if (pointsAmount === 1) {
       setPoint([]);
     }
 
-    const marker = { id: points.length + 1, position: { lat, lng } };
+    const markerId = pointsAmount === 1 ? 1 : points.length + 1;
+
+    const marker = { id: markerId, position: { lat, lng }, tasks: [] };
 
     if (radialPoint) {
       const pointValidation = haversineDistance(radialPoint, marker);
       if (pointValidation) {
-        toast.error(`${errorRadialPoint}`, { position: 'top-right' });
+        ToastManager.error(`${errorRadialPoint}`);
         return;
       }
     }
@@ -141,22 +147,21 @@ export const Map: FunctionComponent<IMapProps> = ({
     const lat = event.latLng?.lat() ?? 0;
     const lng = event.latLng?.lng() ?? 0;
     const pointsRef = JSON.parse(JSON.stringify(points));
-
     if (id === radialPoint?.id) {
       setPoint([]);
       setPoint(pointsRef);
-      toast.error('Punto del lugar no se debe mover', {
-        position: 'top-right',
-      });
+      ToastManager.error('Punto del lugar no se debe mover');
       return;
     }
 
+    let pointValidation;
     const marker = { id: points.length + 1, position: { lat, lng } };
-
-    const pointValidation = haversineDistance(radialPoint, marker);
+    if (radialPoint) {
+      pointValidation = haversineDistance(radialPoint, marker);
+    }
 
     if (pointValidation) {
-      toast.error(`${errorRadialPoint}`, { position: 'top-right' });
+      ToastManager.error(`${errorRadialPoint}`);
       setPoint([]);
       setPoint(pointsRef);
       return;
@@ -178,9 +183,22 @@ export const Map: FunctionComponent<IMapProps> = ({
   };
 
   const handleMarkerClick = (id: number) => {
-    const marker = points.find((item: any) => item.id === id);
-    clickPoint?.(marker);
+    const marker = points.find((item) => item.id === id);
+    if (marker) {
+      setEditCoords({
+        lat: marker.position.lat.toString(),
+        lng: marker.position.lng.toString(),
+      });
+    }
+    // clickPoint?.(marker);
     setActiveMarker(id);
+  };
+
+  const handleEditChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: 'lat' | 'lng'
+  ) => {
+    setEditCoords((prev) => ({ ...prev, [type]: e.currentTarget.value }));
   };
 
   const removeMarkerById = (id: number): void => {
@@ -192,6 +210,25 @@ export const Map: FunctionComponent<IMapProps> = ({
           return { ...val, id: validateOrder(val.id, size, id) };
         })
     );
+  };
+
+  const editMarkerById = (id: number): void => {
+    const newLat = parseFloat(editCoords.lat);
+    const newLng = parseFloat(editCoords.lng);
+    if (isNaN(newLat) || isNaN(newLng)) {
+      ToastManager.error('Por favor ingrese coordenadas válidas');
+      return;
+    }
+
+    setPoint((prevPoints) =>
+      prevPoints.map((point) =>
+        point.id === id
+          ? { ...point, position: { lat: newLat, lng: newLng } }
+          : point
+      )
+    );
+
+    setActiveMarker(null);
   };
 
   const validateOrder = (number: number, size: number, id: number) => {
@@ -209,37 +246,33 @@ export const Map: FunctionComponent<IMapProps> = ({
   return isLoaded ? (
     <>
       {allowManualPoint && (
-        <div className='grid grid-cols-5 gap-2'>
-          <div className='col-span-2'>
-            <Input
-              name='latitude'
-              placeholder='6.246631'
-              label='Latitud'
-              type='number'
-              value={coords.lat}
-              onChange={(e) => handleInputChange(e, 'lat')}
-            />
-          </div>
-          <div className='col-span-2'>
-            <Input
-              name='longitude'
-              placeholder='-75.581775'
-              label='Longitud'
-              type='number'
-              value={coords.lng}
-              onChange={(e) => handleInputChange(e, 'lng')}
-            />
-          </div>
-          <div className='col-span-1 mt-auto'>
-            <Button
-              id='btn-add'
-              name='btn-add'
-              type='button'
-              onClick={addManualPoint}
-              label='Añadir'
-              className='rounded-md bg-green-600 text-white px-4'
-            />
-          </div>
+        <div className='flex flex-row items-end justify-between gap-x-2 py-1'>
+          <Input
+            name='latitude'
+            placeholder='6.246631'
+            label='Latitud'
+            type='number'
+            value={coords.lat}
+            onChange={(e) => handleInputChange(e, 'lat')}
+          />
+
+          <Input
+            name='longitude'
+            placeholder='-75.581775'
+            label='Longitud'
+            type='number'
+            value={coords.lng}
+            onChange={(e) => handleInputChange(e, 'lng')}
+          />
+
+          <Button
+            id='btn-add'
+            name='btn-add'
+            type='button'
+            onClick={addManualPoint}
+            label='Añadir'
+            className='rounded-md bg-primary text-white px-4 py-2 my-1'
+          />
         </div>
       )}
 
@@ -267,37 +300,69 @@ export const Map: FunctionComponent<IMapProps> = ({
                   lng: marker.position.lng,
                 }}
                 onCloseClick={handleInfoWindowClose}
+                options={{
+                  pixelOffset: new window.google.maps.Size(0, -30),
+                  maxWidth: 240,
+                }}
               >
-                <div>
-                  <h1>Punto: {marker.id}</h1>
-                  <p>
-                    <strong>Lat:</strong> {marker.position.lat}
-                  </p>
-                  <p>
-                    <strong>Lng:</strong> {marker.position.lng}
-                  </p>
-                  <Button
-                    id='btn-delete-marker'
-                    name='btn-delete-marker'
-                    type='button'
-                    onClick={() => {
-                      removeMarkerById(marker.id);
-                    }}
-                    label='eliminar'
-                    className='rounded-md bg-red-800 text-white px-4'
-                  />
+                <div className='bg-white rounded-md shadow-sm overflow-hidden w-full'>
+                  {/* Content */}
+                  <div>
+                    <div className='flex flex-col'>
+                      <Input
+                        name='latitude'
+                        id='id-maker-latitude'
+                        type='text'
+                        label='latitude'
+                        value={editCoords.lat}
+                        onChange={(e) => handleEditChange(e, 'lat')}
+                        className='w-full text-sm p-1'
+                      />
+
+                      <Input
+                        name='longitude'
+                        id='id-maker-longitude'
+                        label='longitude'
+                        type='text'
+                        value={editCoords.lng}
+                        onChange={(e) => handleEditChange(e, 'lng')}
+                        className='w-full text-sm p-1'
+                      />
+                    </div>
+
+                    {/* Buttons */}
+                    <div className='flex justify-between mt-2'>
+                      <Button
+                        id='btn-delete-marker'
+                        name='btn-delete-marker'
+                        type='button'
+                        icon='008'
+                        onClick={() => removeMarkerById(marker.id)}
+                        className='hover:bg-red-600 !text-white text-xs py-1 px-2 rounded'
+                      ></Button>
+                      <Button
+                        id='btn-edit-marker'
+                        name='btn-edit-marker'
+                        type='button'
+                        icon='054'
+                        onClick={() => editMarkerById(marker.id)}
+                        className='bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded'
+                      ></Button>
+                    </div>
+                  </div>
                 </div>
               </InfoWindow>
             )}
           </Marker>
         ))}
 
-        <Polygon
-          paths={points.map((point) => point.position)}
+        <Circle
+          center={center}
+          radius={radius}
           options={{
-            fillColor: 'blue',
+            fillColor: '#FF0000',
             fillOpacity: 0.2,
-            strokeColor: 'blue',
+            strokeColor: '#FF0000',
             strokeOpacity: 0.8,
             strokeWeight: 2,
           }}

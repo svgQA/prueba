@@ -62,7 +62,7 @@ export const FormPhoneViewer = () => {
           </div>
           <div className='mt-auto justify-center flex flex-row py-2 h-10 items-center'>
             {getForm.value.pages.map((page, index) => (
-              <div key={`page-button-${page.id}`} className='mx-3 bg-red-100'>
+              <div key={`page-button-${page.id}`} className='mx-3'>
                 <span
                   className={`${getPhonePage.value === index ? 'bg-primary' : 'bg-b-light-dark'} w-3 h-3 rounded-full block cursor-pointer`}
                   data-index={index}

@@ -7,4 +7,6 @@ export interface IMenu {
   status?: boolean;
   button?: boolean;
   id: string;
+  show?: boolean;
+  new?: boolean;
 }

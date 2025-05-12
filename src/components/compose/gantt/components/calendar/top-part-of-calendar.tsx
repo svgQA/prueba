@@ -1,0 +1,42 @@
+import { VNode } from 'preact';
+import styles from './calendar.module.css';
+
+type TopPartOfCalendarProps = {
+  value: string;
+  x1Line: number;
+  y1Line: number;
+  y2Line: number;
+  xText: number;
+  yText: number;
+};
+
+export const TopPartOfCalendar = ({
+  value,
+  x1Line,
+  y1Line,
+  y2Line,
+  xText,
+  yText,
+}: TopPartOfCalendarProps): VNode => {
+  return (
+    <g className='calendarTop'>
+      <line
+        x1={x1Line}
+        y1={y1Line}
+        x2={x1Line}
+        y2={y2Line}
+        className={styles.calendarTopTick}
+        key={value + 'line'}
+      />
+      <text
+        key={value + 'text'}
+        y={yText}
+        x={xText}
+        className={`${styles.calendarTopText} fill-t-light-dark dark:fill-t-dark-light text-anchor-middle`}
+        // className={styles.calendarTopText}
+      >
+        {value}
+      </text>
+    </g>
+  );
+};

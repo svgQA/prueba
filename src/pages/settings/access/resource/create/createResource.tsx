@@ -4,6 +4,7 @@ import { Input } from '@/components/common/input/input';
 import { FunctionComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { useResourceStore } from '@/store/slices/optimusAccess/access.slice'; // Importamos el store
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const CreateResourceSettingPage: FunctionComponent = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -15,7 +16,7 @@ export const CreateResourceSettingPage: FunctionComponent = () => {
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     if (file) {
-      console.log('Archivo seleccionado:', file.name);
+      ToastManager.success('Archivo seleccionado');
     }
   };
 

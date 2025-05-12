@@ -7,21 +7,21 @@ import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-
-import { ShiftService } from '@/services/shift';
-import { toast } from 'react-toastify';
-
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { appendHistory } from '../../store/settings';
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { DataSchedule, DaySelection } from './components/data.schedule';
+import { ScheduleService } from '@/services';
 
 export interface ISchedule {
   id: number;
   name: string;
-  day: string;
-  hourStart: string;
-  hourEnd: string;
+  daysAllowed: string[];
+  days: any;
 }
 
 export interface IRowActionPlace {
@@ -40,24 +40,37 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   }, []);
 
   const getSchedules = async () => {
-    const request: any = await ShiftService.getSchedules();
-    schedules.value = request.data;
+    const request: any = await ScheduleService.getSchedules();
+    if (!request.getStatus()) return;
+    schedules.value = request.getMany();
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de horarios' });
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.create.to,
+      label: 'create',
+      id: 'schedule-create',
+    };
+    appendHistory(menu);
+    setMenu({ ...infoMenu.value, label: 'Creación de horarios' });
     navigate('/rounds/schedule/create');
   };
 
   const update = (id: string) => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.update.to,
+      label: 'update',
+      id: 'schedule-update',
+    };
+    appendHistory(menu);
     setMenu({ ...infoMenu.value, label: 'Editar horarios' });
     navigate(`/rounds/schedule/update/${id}`);
   };
 
   const deleteSchedule = async (id: string) => {
-    const request = await ShiftService.deleteSchedule(id);
+    const request = await ScheduleService.deleteSchedule(id);
     if (!request.getStatus()) return;
-    toast.success('horario eliminado', { position: 'top-right' });
+    ToastManager.success('horario eliminado');
     getSchedules();
   };
 
@@ -74,29 +87,38 @@ export const ScheduleSettingPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-black bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
-        <Button
-          onClick={redirect}
-          type='button'
-          icon='039'
-          name='back'
-          rounded={true}
-          className='w-auto'
-        />
-        <Table<ISchedule>
-          data={schedules.value}
-          columns={columns}
-          pageSize={20}
-          visibility={{
-            name: true,
-            description: true,
-            priority: true,
-            action: true,
-          }}
-          onClickAction={handleOnClick}
-          unsearch={false}
-        />
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-shift'
+            label='Nueva Horario'
+            icon='039'
+            onClick={redirect}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
+        </div>
       </div>
+      <Table<ISchedule>
+        data={schedules.value}
+        columns={columns}
+        expandable={(row: any) => {
+          return (
+            <ul className='flex flex-wrap justify-center gap-x-2'>
+              {row.days.map((dayInfo: DaySelection) => (
+                <DataSchedule daySelection={dayInfo} />
+              ))}
+            </ul>
+          );
+        }}
+        visibility={{
+          id: false,
+          name: true,
+          daysAllowed: true,
+        }}
+        onClickAction={handleOnClick}
+        unsearch={false}
+        isSettingTable
+      />
     </Section>
   );
 };

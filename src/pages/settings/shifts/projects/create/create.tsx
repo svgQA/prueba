@@ -5,15 +5,15 @@ import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { ShiftService } from '@/services/shift';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
-import { UserService } from '@/services/user';
+import { UserService } from '@/services/general/user';
 import dayjs from 'dayjs';
+import { ContractService } from '@/services';
 
 interface FormData {
   name: string;
@@ -36,15 +36,15 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
     let message: string;
 
     if (id) {
-      request = await ShiftService.updateProject(model, id);
-      message = 'Lugar editado exitosamente!';
+      request = await ContractService.updateProject(model, id);
+      message = 'Contrato editado exitosamente!';
     } else {
-      request = await ShiftService.createProject(model);
-      message = 'Lugar creado exitosamente!';
+      request = await ContractService.createProject(model);
+      message = 'Contrato creado exitosamente!';
     }
 
     if (!request.getStatus()) return;
-    toast.success(message, { position: 'top-right' });
+    ToastManager.success(message);
     navigate('/rounds/projects');
   };
 
@@ -67,7 +67,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
       'clientId',
     ] as const;
 
-    const request: any = await ShiftService.getProject(id);
+    const request: any = await ContractService.getProject(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
     initialValues.value = model;
   };
@@ -78,7 +78,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
   }, []);
   return (
     <Section className='pt-2'>
-      <div className='p-4 dark:bg-b-dark bg-white rounded-lg shadow-xl  border-t-4 border-cyan-500  '>
+      <div>
         <Form
           onSubmit={onSubmit}
           initialValues={initialValues.value}
@@ -220,7 +220,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
               </div>
 
               {/* Botonera */}
-              <div className='flex dark:bg-b-dark-light justify-end gap-2 p-4 bg-gray-50'>
+              <div className='w-full flex-row flex justify-end items-center'>
                 <Button
                   id='btn-clean'
                   name='btn-clean'

@@ -1,0 +1,57 @@
+{
+  "navbar": {
+    "products": "Our Products",
+    "about": "About Us",
+    "demo": "Request a Demo",
+    "signin": "Sign In"
+  },
+  "home": {
+    "title": "Transform Operations Management With Tryvoo",
+    "subtitle": "Optimize the management of activities, resources and assets, even without connectivity for your business",
+    "demoButton": "Schedule a Free Demo"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Solutions for every need",
+    "button": "View more services",
+    "items": {
+      "monitoring": {
+        "title": "Real-Time Monitoring",
+        "subtitle": "Visualize task progress and asset status with automatic updates based on real-time data."
+      },
+      "offline": {
+        "title": "Offline Capabilities",
+        "subtitle": "Operators can continue working without connection, and all data syncs when internet connection is restored."
+      },
+      "ai": {
+        "title": "AI and Virtual Support",
+        "subtitle": "Your virtual assistant to solve field problems, with recommendations based on data captured during operations."
+      },
+      "integration": {
+        "title": "Integration and Customization",
+        "subtitle": "Easy integration with existing tools and a platform that adapts to the needs of each sector."
+      }
+    }
+  },
+  "carousel": {
+    "viewDetails": "View details",
+    "items": {
+      "monitoring": {
+        "title": "Real-Time Monitoring",
+        "subtitle": "Visualize task progress and asset status with automatic updates based on real-time data."
+      },
+      "offline": {
+        "title": "Offline Capabilities",
+        "subtitle": "Operators can continue working without connection, and all data syncs when internet connection is restored."
+      },
+      "ai": {
+        "title": "AI and Virtual Support",
+        "subtitle": "Your virtual assistant to solve field problems, with recommendations based on data captured during operations."
+      },
+      "integration": {
+        "title": "Integration and Customization",
+        "subtitle": "Easy integration with existing tools and a platform that adapts to the needs of each sector."
+      }
+    }
+  }
+}
