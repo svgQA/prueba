@@ -233,7 +233,7 @@ export const ShiftsGanttViewer = ({
   }
 
   const handleSendDatabase = () => {
-    console.log('Enviar prompt');
+    // console.log('Enviar prompt');
   };
 
   return (

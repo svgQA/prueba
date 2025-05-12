@@ -69,8 +69,6 @@ export class BaseService {
 
     // Obtener el idioma actual de i18n
     const currentLanguage = i18n.language;
-
-    // Configurar headers básicos incluyendo el idioma
     model.headers = {
       ...model?.headers,
       'Accept-Language': currentLanguage,
