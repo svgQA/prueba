@@ -623,7 +623,7 @@ export const MapLibrePointsMap = ({
   };
 
   const getLocation = (): Promise<{ lat: number; lng: number }> => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (!navigator.geolocation) {
         return;
       }
