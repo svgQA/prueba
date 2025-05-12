@@ -14,7 +14,7 @@ interface CardTaskProps {
 
 export const CardTask = ({ point }: CardTaskProps) => {
   return (
-    <div className='flex flex-col items-center justify-between bg-b-light-dark dark:bg-b-dark-dark rounded-lg p-2'>
+    <div className='mt-5 flex flex-col items-center justify-between bg-b-light-dark dark:bg-b-dark-dark rounded-lg p-2'>
       <div className='flex flex-row items-center justify-between w-full'>
         <div className='w-32 flex items-center'>
           <span className='vox-icon vx-icon-324 !text-secondary mr-2'></span>
@@ -33,10 +33,10 @@ export const CardTask = ({ point }: CardTaskProps) => {
           <span className='text-xs'>{point.distance}</span>
         </div>
 
-        <div className='w-40 text-right'>
+        <div className='w-45 text-right'>
           <a
             href='#'
-            className='flex items-center justify-end text-primary text-sm'
+            className='flex items-center justify-end text-primary'
           >
             <span className='vox-icon vx-icon-306 !text-primary mr-1'></span>
             {point.form}

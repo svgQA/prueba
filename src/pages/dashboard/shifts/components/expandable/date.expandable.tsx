@@ -200,7 +200,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Fecha</p>
-                <p className='text-sm'>{dayjs(date).format('DD/MM/YYYY')}</p>
+                <p>{dayjs(date).format('DD/MM/YYYY')}</p>
               </div>
             </div>
 
@@ -210,7 +210,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Hora</p>
-                <p className='text-sm'>{dayjs(time).format('HH:mm')}</p>
+                <p>{dayjs(time).format('HH:mm')}</p>
               </div>
             </div>
 
@@ -220,7 +220,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Fuente</p>
-                <p className='text-sm'>{source}</p>
+                <p>{source}</p>
               </div>
             </div>
 
@@ -230,7 +230,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Distancia</p>
-                <p className='text-sm'>{distance}</p>
+                <p>{distance}</p>
               </div>
             </div>
 
@@ -243,7 +243,7 @@ const ShiftCard = ({
                   onCancel: () => {},
                 })
               }
-              className='px-3 py-1 text-sm text-primary border border-primary rounded-md hover:bg-primary-opacity'
+              className='px-3 py-1 text-md text-primary border border-primary rounded-md hover:bg-primary-opacity'
             >
               {btnLabel}
             </button>

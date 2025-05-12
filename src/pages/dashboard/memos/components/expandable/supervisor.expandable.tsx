@@ -2,14 +2,20 @@ import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { Memo } from '../../utils/memos';
 import { Chip } from '@/components/common/chip/chip';
 import { Avatar } from '@/components/common/Avatar';
+import dayjs from 'dayjs';
 
 const SupervisorInfo = ({ memo }: { memo: Memo }) => {
+  const formatDate = (date: string | Date) => {
+    if (!date) return '-';
+    return dayjs(date).format('DD/MM/YYYY HH:mm');
+  };
+
   return (
     <div className='w-full bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm p-3 text-b-dark-light dark:text-b-light-dark'>
       <div className='flex flex-row gap-2 p-3'>
         {/* Sección izquierda - Descripción y botones */}
         <div className='w-[20%]'>
-          <p className='mb-2 leading-tight'>{memo?.description}</p>
+          <p className='mb-2 leading-tight text-lg'>{memo?.description}</p>
           <div className='flex flex-wrap gap-1'>
             <Chip label='Tarea' />
             <Chip label='Tarea' />
@@ -38,7 +44,7 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
               <Avatar name='AU' size='sm' />
               <div>
                 <p className='font-medium'>Actualizado</p>
-                <p>{memo?.updatedAt}</p>
+                <p>{formatDate(new Date(memo.updatedAt || Date.now()))}</p>
               </div>
             </div>
             <div className='flex items-start gap-2'>
@@ -105,7 +111,7 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
                   lat: memo?.extraData?.place?.latitude || 0,
                   lng: memo?.extraData?.place?.longitude || 0,
                 }}
-                sendPoints={() => {}}
+                sendPoints={() => { }}
                 height='100%'
                 disablePointSelection={true}
               />
