@@ -26,6 +26,9 @@ interface ITaskFormProps {
   userSelected?: User;
   taskSelected?: Task;
   users?: IOption[];
+  keywordsSelected?: string[];
+  timeBeforeSelected?: number;
+  externalSelected?: string;
 }
 
 export const TaskForm = ({
@@ -35,6 +38,9 @@ export const TaskForm = ({
   taskSelected,
   posSave,
   users,
+  keywordsSelected,
+  timeBeforeSelected,
+  externalSelected,
 }: ITaskFormProps) => {
   const { t } = useTranslation();
   const inputKeywords = useSignal('');
@@ -202,13 +208,17 @@ export const TaskForm = ({
 
   useEffect(() => {
     if (taskSelected) {
-      // setSelectedEmployeeId(taskSelected.userId?.toString());
+      const selectedService = services.value.find((service) => service.value === Number(taskSelected.serviceId));
+      const selectedUser = users?.find((user) => user.value === Number(taskSelected.userId));
       setInitialValues({
-        employeedId: taskSelected.userId,
+        employeedId: selectedUser || '',
         start: taskSelected.start?.toString(),
         end: taskSelected.end?.toString(),
-        serviceId: taskSelected.serviceId,
-        type: 'INTERNAL',
+        serviceId: selectedService || '',
+        type: taskSelected.type,
+        keywords: keywordsSelected,
+        timeBefore: timeBeforeSelected,
+        externalId: externalSelected,
       });
       return;
     }
@@ -220,6 +230,8 @@ export const TaskForm = ({
         end: '',
         serviceId: '',
         type: 'INTERNAL',
+        timeBefore: 0,
+        externalId: '',
       });
       return;
     }
@@ -230,8 +242,10 @@ export const TaskForm = ({
       end: '',
       serviceId: '',
       type: 'INTERNAL',
+      timeBefore: 0,
+      externalId: '',
     });
-  }, [userSelected, taskSelected]);
+  }, [userSelected, taskSelected, timeBeforeSelected]);
 
   return (
     <Modal

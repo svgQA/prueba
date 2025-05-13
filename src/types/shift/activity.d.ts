@@ -179,6 +179,7 @@ export interface IShiftResponse {
   deletedBy: string | null;
   activityPct: number;
   roundPct: number;
+  timeBefore: number;
 }
 
 export interface ITask {

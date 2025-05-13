@@ -15,6 +15,7 @@ export interface FormData {
   externalId: string;
   keywords: string[];
   tasks: ITask[];
+  timeBefore?: number;
 }
 
 export interface ITask {

@@ -22,6 +22,8 @@ import { useTranslation } from 'react-i18next';
 import {
   GeneralTask,
   Task,
+  TaskStatus,
+  TaskType,
   User,
   ViewMode,
 } from '@/components/compose/gantt/types/public-types';
@@ -72,6 +74,9 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const [taskSelected, setTaskSelected] = useState<Task>();
   const [userSelected, setUserSelected] = useState<User>();
+  const [keywordsSelected, setKeywordsSelected] = useState<string[]>([]);
+  const [timeBeforeSelected, setTimeBeforeSelected] = useState<number>(0);
+  const [externalSelected, setExternalSelected] = useState<string>('');
 
   const [services, setServices] = useState<MentionOption[]>([]);
   const [users, setUsers] = useState<MentionOption[]>([]);
@@ -275,7 +280,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => {}, []);
+  const handleClick = useCallback((/* task: Task */) => { }, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -433,6 +438,29 @@ export const ShiftsPage: FunctionalComponent = () => {
   }) => {
     switch (params.action) {
       case ROW_ACTIONS.UPDATE:
+        const shiftUpdate = shifts.value.find((shift) => shift.id === Number(params.id));
+        
+        setTaskSelected({
+          id: Number(params.id),
+          end: shiftUpdate?.end || '',
+          start: shiftUpdate?.start || '',
+          type: shiftUpdate?.type as TaskType,
+          userId: String(shiftUpdate?.employee?.id || ''),
+          serviceId: shiftUpdate?.serviceId || '',
+          // TODO: Verificar si es necesario
+          phone: shiftUpdate?.service?.contract.client.phone || '',
+          contract: String(shiftUpdate?.service?.contract.id || ''),
+          client: String(shiftUpdate?.service?.contract.client.id || ''),
+          cardId: shiftUpdate?.employee?.cardId || '',
+          status: shiftUpdate?.status as TaskStatus,
+          name: shiftUpdate?.service?.name || '',
+          progress: 0,
+          service: shiftUpdate?.service?.name || '',
+        });
+
+        setKeywordsSelected(shiftUpdate?.keywords || []);
+        setTimeBeforeSelected(shiftUpdate?.timeBefore || 0);
+        setExternalSelected(shiftUpdate?.externalId || '');
         toggleUpsertModal();
         break;
       case ROW_ACTIONS.DELETE:
@@ -454,7 +482,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           title: t('shift.table.delete.title'),
           message: t('shift.table.delete.message'),
           onConfirm: () => deleteShift(params.id),
-          onCancel: () => {},
+          onCancel: () => { },
         });
         break;
     }
@@ -582,6 +610,9 @@ export const ShiftsPage: FunctionalComponent = () => {
         userSelected={userSelected}
         taskSelected={taskSelected}
         users={users}
+        keywordsSelected={keywordsSelected}
+        timeBeforeSelected={timeBeforeSelected}
+        externalSelected={externalSelected}
       />
 
       <ShiftForm
