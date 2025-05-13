@@ -20,6 +20,9 @@ export const ScheduledNotificationForm = () => {
   });
 
   const [_, navigate] = useLocation();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingSubmission, setPendingSubmission] = useState(false);
+
 
   useEffect(() => {
     document.title = 'VX - Programar Nueva Notificación';
@@ -31,16 +34,8 @@ export const ScheduledNotificationForm = () => {
     fetchTemplates();
   }, []);
 
-  const handleSubmit = async () => {
-    const {
-      templateId,
-      overrideTitle,
-      overrideDescription,
-      sendAt,
-      repeatEveryMinutes,
-      maxRepeats,
-      repeatUntil,
-    } = formData;
+  const handleSubmit = () => {
+    const { templateId, sendAt } = formData;
 
     if (!templateId) {
       ToastManager.warning('Debes seleccionar una plantilla obligatoriamente.');
@@ -51,6 +46,21 @@ export const ScheduledNotificationForm = () => {
       ToastManager.warning('Debes indicar la fecha de envío.');
       return;
     }
+
+    setShowConfirmModal(true); // Mostrar modal de confirmación
+  };
+
+  const handleConfirmedSubmit = async () => {
+    setPendingSubmission(true);
+    const {
+      templateId,
+      overrideTitle,
+      overrideDescription,
+      sendAt,
+      repeatEveryMinutes,
+      maxRepeats,
+      repeatUntil,
+    } = formData;
 
     try {
       await SchedulerService.scheduleNotification({
@@ -70,8 +80,12 @@ export const ScheduledNotificationForm = () => {
       redirectToList();
     } catch (error) {
       ToastManager.error('Error al programar notificación');
+    } finally {
+      setShowConfirmModal(false);
+      setPendingSubmission(false);
     }
   };
+
 
   const redirectToList = () => {
     const menu = {
@@ -127,28 +141,58 @@ export const ScheduledNotificationForm = () => {
           <label className='block text-sm font-medium text-gray-700 mb-1'>
             Fecha de Inicio *
           </label>
-          <input
-            type='datetime-local'
-            className='w-full border px-3 py-2 rounded text-sm'
-            value={formData.sendAt}
-            onChange={(e) =>
-              setFormData({ ...formData, sendAt: e.currentTarget.value })
-            }
-          />
+          <div className='relative'>
+            <input
+              id='sendAtInput'
+              type='datetime-local'
+              className='w-full border px-3 py-2 rounded text-sm pr-10'
+              value={formData.sendAt}
+              onChange={(e) =>
+                setFormData({ ...formData, sendAt: e.currentTarget.value })
+              }
+            />
+            <span
+              role="button"
+              className='vox-icon vx-icon-calendar-days text-base text-gray-500 bg-white p-[6px] rounded absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer'
+              onClick={() => {
+                const input = document.getElementById('sendAtInput') as HTMLInputElement;
+                if (input?.showPicker) {
+                  input.showPicker();
+                } else {
+                  input?.focus();
+                }
+              }}
+            />
+          </div>
         </div>
 
         <div>
           <label className='block text-sm font-medium text-gray-700 mb-1'>
             Fecha de Finalización *
           </label>
-          <input
-            type='datetime-local'
-            className='w-full border px-3 py-2 rounded text-sm'
-            value={formData.repeatUntil}
-            onChange={(e) =>
-              setFormData({ ...formData, repeatUntil: e.currentTarget.value })
-            }
-          />
+          <div className='relative'>
+            <input
+              id='repeatUntilInput'
+              type='datetime-local'
+              className='w-full border px-3 py-2 rounded text-sm pr-10'
+              value={formData.repeatUntil}
+              onChange={(e) =>
+                setFormData({ ...formData, repeatUntil: e.currentTarget.value })
+              }
+            />
+            <span
+              role="button"
+              className='vox-icon vx-icon-calendar-days text-base text-gray-500 bg-white p-[6px] rounded absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer'
+              onClick={() => {
+                const input = document.getElementById('repeatUntilInput') as HTMLInputElement;
+                if (input?.showPicker) {
+                  input.showPicker();
+                } else {
+                  input?.focus();
+                }
+              }}
+            />
+          </div>
         </div>
 
         <div>
@@ -221,6 +265,35 @@ export const ScheduledNotificationForm = () => {
           onClick={handleSubmit}
         />
       </div>
+      
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              ¿Deseas continuar?
+            </h3>
+            <p className="text-sm text-gray-600 mb-6">
+              Las notificaciones programadas se enviarán únicamente a usuarios con servicio activo en el intervalo horario seleccionado.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                className="px-4 py-2 text-sm rounded border border-gray-300 text-gray-700 hover:bg-gray-100"
+                onClick={() => setShowConfirmModal(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="px-4 py-2 text-sm rounded bg-primary text-white hover:bg-primary-opacity disabled:opacity-50"
+                onClick={handleConfirmedSubmit}
+                disabled={pendingSubmission}
+              >
+                {pendingSubmission ? 'Enviando...' : 'Sí, programar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </Section>
   );
 };

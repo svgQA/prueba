@@ -4,7 +4,6 @@ import { useSignal } from '@preact/signals';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { CardData } from '@/components/compose/cards';
-import { Button } from '@/components/common/button/button';
 import { INotificationListItem } from '@/types/notification/INotificationTypes';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -48,7 +47,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
     }
   };
 
-  const handleRunCron = async () => {
+  /* const handleRunCron = async () => {
     try {
       await NotificationHistoryService.runSchedulerTask();
       ToastManager.success(t('history.success.cronExecuted'));
@@ -56,7 +55,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
     } catch (error) {
       ToastManager.error(t('history.errors.cronExecution'));
     }
-  };
+  }; */
 
   const onClickAction = (_: {
     id: string;
@@ -91,14 +90,14 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
           icon='calendar-days'
         />
       </div>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+{/*       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
         <Button
           name='run-cron-button'
           label={t('history.buttons.executeReview')}
           onClick={handleRunCron}
           icon='137'
         />
-      </div>
+      </div> */}
       <Table<INotificationListItem>
         data={notifications.value}
         columns={getColumns(onClickAction)}
