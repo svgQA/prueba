@@ -59,7 +59,12 @@ export const MemosPage: FunctionComponent = () => {
     await MemoService.streamQuery(
       (chunk: any) => handleEmitSSE(chunk),
       () => ToastManager.success('Stream completado'),
-      (error: any) => ToastManager.error(`Error en el stream: ${error.message}`)
+      (error: any) => {
+        // Show error toast
+        console.log('Stream error:', error);
+        // TODO: Cambiar para que BaseService muestre el error
+        //ToastManager.error(`Error en el stream: ${error.message}`);
+      }
     );
   }, []);
 

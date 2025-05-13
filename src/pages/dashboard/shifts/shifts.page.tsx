@@ -135,42 +135,34 @@ export const ShiftsPage: FunctionalComponent = () => {
   // };
 
   const fetchInitialData = async () => {
-    try {
-      const [
-        shiftsResponse,
-        servicesResponse,
-        usersResponse,
-        hasValidResponse,
-      ] = await Promise.all([
+    const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
+      await Promise.all([
         ShiftService.get_all({ page: 1, items: 1000 }),
         ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),
         NotificationService.hasUsersWithPlayerId(),
       ]);
 
-      if (shiftsResponse && shiftsResponse.getStatus()) {
-        const [hasNotifications, responseShifts] = findNotificationShift(
-          shiftsResponse.getMany()
-        );
-        notificationValidate.value = hasNotifications;
+    if (shiftsResponse && shiftsResponse.getStatus()) {
+      const [hasNotifications, responseShifts] = findNotificationShift(
+        shiftsResponse.getMany()
+      );
+      notificationValidate.value = hasNotifications;
 
-        shifts.value = responseShifts;
-      }
-
-      if (servicesResponse.getStatus()) {
-        setServices(servicesResponse.getMany());
-      }
-
-      if (usersResponse.getStatus()) {
-        setUsers(usersResponse.getMany());
-      }
-
-      const { hasUsers } = hasValidResponse.getOne();
-      setHasValidPlayer(hasUsers);
-      hasValidPlayerRef.current = hasUsers;
-    } catch (error) {
-      ToastManager.error('notification.error_fetching_initial_data');
+      shifts.value = responseShifts;
     }
+
+    if (servicesResponse.getStatus()) {
+      setServices(servicesResponse.getMany());
+    }
+
+    if (usersResponse.getStatus()) {
+      setUsers(usersResponse.getMany());
+    }
+
+    const { hasUsers } = hasValidResponse.getOne();
+    setHasValidPlayer(hasUsers);
+    hasValidPlayerRef.current = hasUsers;
   };
 
   const findNotificationShift = (
