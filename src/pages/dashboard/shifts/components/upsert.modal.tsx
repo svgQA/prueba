@@ -16,7 +16,6 @@ import { Badge } from '@/components/common/badge/badge';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import i18n from '@/i18n';
 import { useTranslation } from 'react-i18next';
 
 interface ITaskFormProps {
@@ -58,29 +57,25 @@ export const TaskForm = ({
   // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
 
   const onSubmit = async (model: FormData) => {
-    try {
-      const { start, end, employeedId, serviceId } = model;
-      model.employeedId = employeedId?.value;
-      model.serviceId = serviceId?.value;
+    const { start, end, employeeId, serviceId } = model;
+    model.employeeId = employeeId?.value;
+    model.serviceId = serviceId?.value;
 
-      if (start) model.start = dayjs(start).toISOString();
-      if (end) model.end = dayjs(end).toISOString();
+    if (start) model.start = dayjs(start).toISOString();
+    if (end) model.end = dayjs(end).toISOString();
 
-      const request = taskSelected?.id
-        ? await ShiftService.updateActivity(model, taskSelected.id)
-        : await ShiftService.createActivity(model);
+    const request = taskSelected?.id
+      ? await ShiftService.updateActivity(model, taskSelected.id)
+      : await ShiftService.createActivity(model);
 
-      if (!request.getStatus()) return;
-      const message = taskSelected?.id
-        ? t('shifts.upsert.successEdit')
-        : t('shifts.upsert.successCreate');
+    if (!request.getStatus()) return;
+    const message = taskSelected?.id
+      ? t('shifts.upsert.successEdit')
+      : t('shifts.upsert.successCreate');
 
-      ToastManager.success(message);
-      onClose?.();
-      posSave?.();
-    } catch (error) {
-      ToastManager.error(i18n.t('shift.upsert.error'));
-    }
+    ToastManager.success(message);
+    onClose?.();
+    posSave?.();
   };
 
   const getServices = useCallback(async () => {
@@ -211,7 +206,7 @@ export const TaskForm = ({
       const selectedService = services.value.find((service) => service.value === Number(taskSelected.serviceId));
       const selectedUser = users?.find((user) => user.value === Number(taskSelected.userId));
       setInitialValues({
-        employeedId: selectedUser || '',
+        employeeId: selectedUser || '',
         start: taskSelected.start?.toString(),
         end: taskSelected.end?.toString(),
         serviceId: selectedService || '',
@@ -225,7 +220,7 @@ export const TaskForm = ({
     if (userSelected) {
       // setSelectedEmployeeId(userSelected.id?.toString());
       setInitialValues({
-        employeedId: userSelected.id,
+        employeeId: userSelected.id,
         start: '',
         end: '',
         serviceId: '',
@@ -237,7 +232,7 @@ export const TaskForm = ({
     }
     // setSelectedEmployeeId('');
     setInitialValues({
-      employeedId: '',
+      employeeId: '',
       start: '',
       end: '',
       serviceId: '',
@@ -273,13 +268,13 @@ export const TaskForm = ({
             >
               <div className='grid grid-cols-2 gap-3 z-50'>
                 <div class='col-span-1'>
-                  <Field<IOption> name='employeedId' validate={required}>
+                  <Field<IOption> name='employeeId' validate={required}>
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        name='employeedId'
-                        id='select-employeed'
+                        name='employeeId'
+                        id='select-employeeId'
                         label='Empleado'
                         options={users || []}
                         multiple={false}

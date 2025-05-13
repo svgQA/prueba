@@ -10,7 +10,7 @@ export interface FormData {
   placeId: number;
   workstationId: number;
   serviceId: any;
-  employeedId: any;
+  employeeId: any;
   roundId: number;
   externalId: string;
   keywords: string[];
