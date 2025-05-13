@@ -1,11 +1,16 @@
 import { VOX_DEFAULT_PATH, VOS_SERVICES } from './constants';
-import { IMakeRequest, REQUEST_METHODS } from '../interface';
+import { IMakeRequest, REQUEST_METHODS, UNAUTHORIZED } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
 import { company_header, tenant_header } from '@/env.config';
 import i18n from '@/i18n';
 import { VoxError } from '../error';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import {
+  getIsInErrorState,
+  setIsInErrorState,
+  setTypeOfError,
+} from '@/store/signals/service/service.signals';
 
 export interface IRequestModelOutput {
   header: Record<string, string>;
@@ -136,6 +141,14 @@ export class BaseService {
     tenance: boolean = true,
     prefix: boolean = false
   ): Promise<GenericResponse<T>> {
+    //  Valida si existe un error en la aplicación, para evitar peticiones innecesarias
+    if (getIsInErrorState()) {
+      return new GenericResponse<T>({
+        code: 0,
+        message: 'Existe un error en la aplicación',
+        data: {},
+      });
+    }
     this.openLoading();
     const model_request = this.make_request_model(
       instance,
@@ -153,7 +166,12 @@ export class BaseService {
 
       if (!response.ok) {
         const result = (await response.json()) as VoxError;
-        ToastManager.error(result);
+        if (result.code === UNAUTHORIZED) {
+          setIsInErrorState(true);
+          setTypeOfError('authorization');
+        } else {
+          ToastManager.error(result);
+        }
         return new GenericResponse<T>({
           code: response?.status,
           message: result?.message,
@@ -178,7 +196,8 @@ export class BaseService {
         });
       }
     } catch (error: unknown) {
-      ToastManager.error('error.processing_response');
+      setIsInErrorState(true);
+      setTypeOfError('network');
       throw new Error('ERROR: processing response');
     } finally {
       this.closeLoading();
