@@ -24,6 +24,7 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
           place={service.place}
           activityPct={activityPct}
           roundPct={roundPct}
+          service={service}
         />
       );
     case 'contract':

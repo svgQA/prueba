@@ -1,17 +1,25 @@
 import { Chip } from '@/components/common/chip/chip';
-import { IPlace, IUser } from '@/types/shift/activity';
+import { IPlace, IService, IUser } from '@/types/shift/activity';
+import dayjs from 'dayjs';
 
 const EmployeeInfo = ({
   employee,
   place,
   activityPct,
   roundPct,
+  service,
 }: {
   employee: IUser;
   place: IPlace;
   activityPct: number;
   roundPct: number;
+  service: IService;
 }) => {
+  const formatDate = (date: string | Date) => {
+    if (!date) return '-';
+    return dayjs(date).format('DD/MM/YYYY HH:mm');
+  };
+
   return (
     <>
       <div className='flex flex-row gap-6'>
@@ -64,15 +72,15 @@ const EmployeeInfo = ({
           <div className='grid grid-cols-2 gap-y-2'>
             <div>
               <p className='font-semibold'>Compañía</p>
-              <p>{'Acme'}</p>
+              <p>{service.contract.company?.name}</p>
             </div>
             <div>
               <p className='font-semibold'>Departamento</p>
-              <p>{'Operativo'}</p>
+              <p>{employee.extraData?.area}</p>
             </div>
             <div>
               <p className='font-semibold'>Fecha de Inicio</p>
-              <p>{'11/03/2024'}</p>
+              <p>{formatDate(service.contract.startDate)}</p>
             </div>
           </div>
         </div>
