@@ -44,15 +44,20 @@ export const MemosPage: FunctionComponent = () => {
 
   useEffect(() => {
     document.title = 'VX - Chat';
-    fetchInitialData();
     return () => {
       wsManager.removeListener('memos');
     };
   }, []);
 
   useEffect(() => {
-    fetchInitialData();
-    handleSSE();
+    // TODO: No tocar esta parte, para evitar que se ejecute cuando no hay una compañia seleccionada
+    // Lo cual emite errores innecsarios.
+    // Esto tambien se puede prevenir desde el service, pero pasa que por cada peticicón el responderia
+    // con este error
+    if (selectedCompany) {
+      fetchInitialData();
+      handleSSE();
+    }
   }, [selectedCompany]);
 
   const handleSSE = useCallback(async () => {
@@ -68,8 +73,8 @@ export const MemosPage: FunctionComponent = () => {
     );
   }, []);
 
-  const handleEmitSSE = (data: any) => {
-    console.log('data SSE: ', data);
+  const handleEmitSSE = (_: any) => {
+    // console.log('data SSE: ', data);
   };
 
   const fetchInitialData = async () => {
@@ -145,12 +150,12 @@ export const MemosPage: FunctionComponent = () => {
     [currentView.value]
   );
 
-  const onClickAction = (params: {
+  const onClickAction = (_: {
     id: string;
     type: string;
     action: ROW_ACTIONS;
   }) => {
-    console.log('Acción seleccionada:', params);
+    // console.log('Acción seleccionada:', params);
     // Aquí abres modales, haces navigations, etc.
   };
 

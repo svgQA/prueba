@@ -6,7 +6,7 @@ interface CardRoundProps {
 
 export const CardRound = ({ activity }: CardRoundProps) => {
   return (
-    <div className='flex items-start justify-between bg-b-light-dark dark:bg-b-dark-dark p-2 rounded-lg h-20 w-fit'>
+    <div className='mt-10 flex items-start justify-between bg-b-light-dark dark:bg-b-dark-dark p-2 rounded-lg h-20 w-fit'>
       <div className='flex items-start flex-1'>
         {/* Detalles de la actividad */}
         <div className='flex-1'>
@@ -19,7 +19,7 @@ export const CardRound = ({ activity }: CardRoundProps) => {
               )}
               <TextEllipsis text={activity.title} maxWidth='300px' />
             </div>
-            <a href='#' className='flex items-center text-primary text-sm'>
+            <a href='#' className='flex items-center text-primary'>
               <span className='vox-icon vx-icon-306 !text-primary mr-1'></span>
               {activity.form}
               <span className='ml-1 vox-icon vx-icon-004 !text-primary'></span>

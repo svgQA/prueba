@@ -173,7 +173,7 @@ export const getColumns = (
       const value = info.getValue() as string;
       return (
         <div className='flex items-center gap-1 justify-center'>
-          <FloatBadge label={value || '0'}>
+          <FloatBadge label={value || '-'}>
             <span className='vx-icon vx-icon-113 cursor-pointer'></span>
           </FloatBadge>
         </div>

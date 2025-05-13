@@ -25,7 +25,7 @@ const EmployeeInfo = ({
           <h3 className='text-base font-medium'>
             {employee?.name} {employee?.surname}
           </h3>
-          <p className='text-sm'>{'Operativo'}</p>
+          <p>{'Operativo'}</p>
           <Chip label='Activo' color='success' />
         </div>
 
@@ -35,7 +35,7 @@ const EmployeeInfo = ({
             <span className='mr-2 !text-primary size-sm vox-icon vx-icon-308'></span>
             Información Personal
           </h4>
-          <div className='grid grid-cols-2 gap-y-2 text-sm'>
+          <div className='grid grid-cols-2 gap-y-2'>
             <div>
               <p className='font-semibold'>Identificación</p>
               <p>{employee.cardId}</p>
@@ -61,7 +61,7 @@ const EmployeeInfo = ({
             <span className='!text-primary mr-2 vox-icon size-sm vx-icon-195'></span>
             Información de la empresa
           </h4>
-          <div className='grid grid-cols-2 gap-y-2 text-sm'>
+          <div className='grid grid-cols-2 gap-y-2'>
             <div>
               <p className='font-semibold'>Compañía</p>
               <p>{'Acme'}</p>

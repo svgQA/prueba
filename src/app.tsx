@@ -39,6 +39,8 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
     setCognito,
     setTenant,
     setUser,
+    setLoaded,
+    getLoaded,
   } = useUserStore();
 
   useEffect(() => {
@@ -48,7 +50,14 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
   }, []);
 
   const validateUser = async () => {
-    await hasUserTenant(setToken, setCognito, setTenant, setUser);
+    const result = await hasUserTenant(
+      setToken,
+      setCognito,
+      setTenant,
+      setUser,
+      getLoaded
+    );
+    setLoaded(result);
   };
 
   return (

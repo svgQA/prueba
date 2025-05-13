@@ -123,14 +123,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   };
 
   return (
-    <div className='w-full rounded-lg shadow-md bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light'>
+    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light'>
       <div className='p-4 pb-2'>
         <div className='flex justify-between items-start'>
           <div>
             <h3 className='text-xl font-bold text-t-light dark:text-t-dark'>
               {memo.novelty?.name || 'Memorando #' + memo.id}
             </h3>
-            <p className='mt-1 text-sm text-gray-text-light dark:text-t-dark-light'>
+            <p className='mt-1  text-gray-text-light dark:text-t-dark-light'>
               {memo.updatedBy || memo.extraData?.client?.name} •{' '}
               {memo.updatedAt
                 ? formatDate(new Date(memo.updatedAt))
@@ -170,26 +170,26 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       <div className='p-4 pt-2'>
         <div className='space-y-4'>
           <div className='flex flex-col space-y-1'>
-            <span className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
+            <span className=' font-medium text-gray-text-light dark:text-t-dark-light'>
               Descripción:
             </span>
-            <p className='text-sm text-t-light dark:text-t-dark'>
+            <p className=' text-t-light dark:text-t-dark'>
               {memo.description || 'Sin descripción disponible'}
             </p>
           </div>
 
           <div className='flex flex-col space-y-1'>
-            <h4 className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
+            <h4 className=' font-medium text-gray-text-light dark:text-t-dark-light'>
               Historial de cambios
             </h4>
-            <div className='flex gap-6'>
+            <div className='flex gap-6 '>
               <div className='flex-1 flex items-start gap-3'>
                 <div className='w-1 h-full bg-b-light-dark dark:bg-b-dark-light rounded-full' />
                 <div>
                   <p className='font-medium text-t-light dark:text-t-dark'>
                     Creación del memorando
                   </p>
-                  <p className='text-gray-text-light dark:text-t-dark-light text-xs'>
+                  <p className='text-gray-text-light dark:text-t-dark-light '>
                     {formatDate(new Date(memo.createdAt || Date.now()))}
                   </p>
                 </div>
@@ -200,7 +200,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                   <p className='font-medium text-t-light dark:text-t-dark'>
                     Actualización de estado
                   </p>
-                  <p className='text-gray-text-light dark:text-t-dark-light text-xs'>
+                  <p className='text-gray-text-light dark:text-t-dark-light '>
                     {formatDate(new Date(memo.updatedAt || Date.now()))}
                   </p>
                 </div>
@@ -210,7 +210,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
           {memo.resource && (
             <div className='flex flex-col space-y-1'>
-              <span className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
+              <span className=' font-medium text-gray-text-light dark:text-t-dark-light'>
                 Archivos adjuntos:
               </span>
               <div className='flex flex-wrap gap-2 bg-b-light-light dark:bg-b-dark-dark rounded-md p-2'>
@@ -259,7 +259,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
                   if (allAttachments.length === 0) {
                     return (
-                      <span className='text-sm text-gray-text-light dark:text-t-dark-light'>
+                      <span className=' text-gray-text-light dark:text-t-dark-light'>
                         No hay archivos adjuntos
                       </span>
                     );
@@ -288,7 +288,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         href={attachment.url}
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='flex items-center p-2 bg-b-light dark:bg-b-dark-light rounded-md text-sm hover:bg-b-light-dark dark:hover:bg-b-dark transition-colors'
+                        className='flex items-center p-2 bg-b-light dark:bg-b-dark-light rounded-md  hover:bg-b-light-dark dark:hover:bg-b-dark transition-colors'
                       >
                         <span className='vox-icon size-sm vx-icon-311 px-2' />
                         <span className='truncate max-w-[150px] text-t-light dark:text-t-dark'>
@@ -321,7 +321,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               />
               <div className='flex-1'>
                 <div className='flex items-center gap-2'>
-                  <span className='font-medium text-sm text-t-light dark:text-t-dark'>
+                  <span className='font-medium  text-t-light dark:text-t-dark'>
                     {memo.user.name + ' ' + memo.user.surname}
                   </span>
                   <span className='text-xs text-gray-text-light dark:text-t-dark-light'>
@@ -336,7 +336,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     )
                   }
                 >
-                  <p className='text-sm text-t-light dark:text-t-dark'>
+                  <p className=' text-t-light dark:text-t-dark'>
                     {memo.description}
                   </p>
 

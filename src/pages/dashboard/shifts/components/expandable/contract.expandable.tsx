@@ -28,8 +28,8 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
       <div className='grid grid-cols-12 gap-8'>
         {/* Columna izquierda - Información del contrato */}
         <div className='col-span-4 pr-4'>
-          <h3 className='text-lg font-medium'>{contract.name}</h3>
-          <p className='text-sm mt-1 pr-4'>{contract.description}</p>
+          <h3 className='font-medium'>{contract.name}</h3>
+          <p className='mt-1 pr-4'>{contract.description}</p>
 
           <div className='mt-3'>
             <Chip label={contract.priority} color='success' />
@@ -41,7 +41,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
               <div className='flex-shrink-0 mr-2'>
                 <span className='!text-primary vox-icon size-sm vx-icon-308'></span>
               </div>
-              <p className='text-sm'>
+              <p>
                 {contract.client.name} {contract.client.surname}
               </p>
             </div>
@@ -52,7 +52,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
         <div className='col-span-8'>
           {/* Estado */}
           <div className='flex justify-between items-center pb-2 mb-4 border-b border-b-light-light dark:border-b-dark-light w-[90%]'>
-            <p className='font-semibold'>Estado</p>
+            <p className='font-semibold '>Estado</p>
             <Chip label={contract.state} color='success' />
           </div>
 
@@ -66,7 +66,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                 </div>
                 <div>
                   <p className='font-semibold'>Fecha de inicio</p>
-                  <p className='text-sm'>{formatDate(contract.startDate)}</p>
+                  <p>{formatDate(contract.startDate)}</p>
                 </div>
               </div>
 
@@ -76,7 +76,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                 </div>
                 <div>
                   <p className='font-semibold'>Fecha de finalización</p>
-                  <p className='text-sm'>{formatDate(contract.endDate)}</p>
+                  <p>{formatDate(contract.endDate)}</p>
                 </div>
               </div>
             </div>
@@ -92,7 +92,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   </div>
                   <div>
                     <p className='font-semibold'>Turnos completados</p>
-                    <p className='text-sm'>{metrics.value.completedShifts}</p>
+                    <p >{metrics.value.completedShifts}</p>
                   </div>
                 </div>
 
@@ -102,7 +102,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   </div>
                   <div>
                     <p className='font-semibold'>Horas totales</p>
-                    <p className='text-sm'>{metrics.value.totalHours}</p>
+                    <p>{metrics.value.totalHours}</p>
                   </div>
                 </div>
 
@@ -112,7 +112,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   </div>
                   <div>
                     <p className='font-semibold'>Total de turnos</p>
-                    <p className='text-sm'>{metrics.value.totalShifts}</p>
+                    <p>{metrics.value.totalShifts}</p>
                   </div>
                 </div>
 
@@ -122,7 +122,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   </div>
                   <div>
                     <p className='font-semibold'>Cumplimiento</p>
-                    <p className='text-sm'>
+                    <p>
                       {metrics.value.completionPercentage.toFixed(2)}%
                     </p>
                   </div>

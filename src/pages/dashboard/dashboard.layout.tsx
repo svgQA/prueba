@@ -38,12 +38,13 @@ import { WebSocketProvider } from '@/utils/socket';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
 import { Loading } from '@/components/common/loading/loading';
-import { useUserStore } from '@/store/slices';
+import { hasUserTenant, useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
 import { Button } from '@/components/common/button/button';
 import { CompanyService } from '@/services';
+// import { setUser } from '../settings/general/user/create/store/user';
 
 // import { IconsModal } from '../globals/icons/icons';
 // import { IconsModal } from '../globals/icons/icons';
@@ -54,18 +55,44 @@ import { CompanyService } from '@/services';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    const { setCompanies, companies, selectedCompany, setSelectedCompany } =
-      useUserStore();
+    const {
+      setCompanies,
+      companies,
+      selectedCompany,
+      setSelectedCompany,
+      setToken,
+      setCognito,
+      setTenant,
+      setUser,
+      getLoaded,
+      setLoaded,
+    } = useUserStore();
 
     useEffect(() => {
-      getCompanies();
+      validateUser();
     }, []);
+
+    const validateUser = async () => {
+      const result = await hasUserTenant(
+        setToken,
+        setCognito,
+        setTenant,
+        setUser,
+        getLoaded
+      );
+      setLoaded(result);
+
+      if (result) {
+        getCompanies();
+      }
+    };
 
     const getCompanies = async () => {
       const company = await CompanyService.getCompanyList();
 
       if (!company.getStatus()) return;
       const companies = company.getMany();
+
       if (companies.length === 0) return;
       setCompanies(companies);
 
