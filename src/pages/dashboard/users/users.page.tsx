@@ -87,6 +87,9 @@ export const UsersPage: FunctionalComponent = () => {
   };
 
   const handleViewChange = useCallback((view: VIEW_NAME) => {
+    if (currentView.value === VIEW_NAME.CREATE && view !== VIEW_NAME.CREATE) {
+      user.value = undefined;
+    }
     currentView.value = view;
   }, []);
 
@@ -301,6 +304,7 @@ export const UsersPage: FunctionalComponent = () => {
             <CreateUser
               onUserCreated={() => {
                 handleViewChange(VIEW_NAME.TABLE);
+                user.value = undefined;
                 getUsers();
               }}
               user={user.value}
