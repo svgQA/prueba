@@ -16,7 +16,7 @@ export interface IUserRequest extends IUser {
   readonly image?: string;
   readonly phone?: string;
   companyId?: number;
-
+  companies?: IOption[];
   readonly cardId?: string;
   readonly cardType?: CARD_ID_TYPE;
   extraData?: IExtraData;
