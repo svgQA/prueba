@@ -1,3 +1,4 @@
+import { ToastManager } from '../toast/toast-manager';
 import { IMessage, IWebSocketManager } from './interface';
 
 type NamedListener = {
@@ -20,7 +21,7 @@ export class WebSocketManager implements IWebSocketManager {
 
   connect(url?: string) {
     if (this.ws) {
-      console.warn('WebSocket ya está conectado.');
+      ToastManager.warning('WebSocket ya está conectado.');
       return;
     }
 
@@ -31,7 +32,7 @@ export class WebSocketManager implements IWebSocketManager {
     try {
       this.ws = new WebSocket(this.url);
       this.ws.onopen = () => {
-        console.log('WebSocket conectado.');
+        ToastManager.success('WebSocket conectado.');
       };
 
       this.ws.onmessage = (event) => {
@@ -39,21 +40,21 @@ export class WebSocketManager implements IWebSocketManager {
           const message: IMessage = JSON.parse(event.data);
           this.listeners.forEach((listener) => listener.callback(message));
         } catch (e) {
-          console.error('No allow connect with message', e);
+          ToastManager.error('No allow connect with message');
         }
       };
 
       this.ws.onclose = () => {
-        console.warn('WebSocket disconnected. Trying to connect.');
+        ToastManager.warning('WebSocket desconectado. Intentando reconectar.');
         this.ws = null;
         // setTimeout(() => this.connect(), 5000);
       };
 
-      this.ws.onerror = (error) => {
-        console.error('Error en WebSocket:', error);
+      this.ws.onerror = (_) => {
+        ToastManager.error('Error en WebSocket');
       };
     } catch {
-      console.error('ERROR: Cannot connect with socket server');
+      ToastManager.error('Cannot connect with socket server');
     }
   }
 
@@ -63,7 +64,7 @@ export class WebSocketManager implements IWebSocketManager {
         typeof message === 'string' ? message : JSON.stringify(message);
       this.ws.send(msg);
     } else {
-      console.error(
+      ToastManager.error(
         'No se puede enviar el mensaje. WebSocket no está conectado.'
       );
     }

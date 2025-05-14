@@ -1,29 +1,9 @@
-import { Button } from '@/components/common/button/button';
-import i18n from '@/i18n';
 import { type VoxError } from '@/utils/network/error';
-import { UNAUTHORIZED } from '@/utils/network/interface/network.enum';
 import { type FunctionComponent } from 'preact';
 
 export const CustomToast: FunctionComponent<{ data: VoxError }> = ({
   data,
 }) => {
-  const handleRefresh = () => {
-    window.location.reload();
-  };
-
-  const refreshButton = (
-    <div className='flex justify-end w-full'>
-      <Button
-        name='refresh'
-        id='refresh-btn'
-        type='button'
-        label={i18n.t('error.custom_toast_refresh_page')}
-        onClick={handleRefresh}
-        className='!text-[15px] py-1 w-fit text-primary dark:text-primary'
-      />
-    </div>
-  );
-
   return (
     <div className='msg-container w-[280px] bg-white dark:bg-[#121212]'>
       <div className='flex flex-col gap-1.5 justify-center items-center'>
@@ -56,9 +36,6 @@ export const CustomToast: FunctionComponent<{ data: VoxError }> = ({
             {data.timestamp}
           </h5>
         </div>
-
-        {/* Refresh Button */}
-        {data.code === UNAUTHORIZED && refreshButton}
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
@@ -40,7 +40,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     }
 
     if (!request.getStatus()) return;
-    toast.success(message, { position: 'top-right' });
+    ToastManager.success(message);
     navigate('/rounds/task');
   };
 
@@ -58,7 +58,6 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   const getFormsHandler = async () => {
     const response = await FormService.get_all();
     if (!response.getStatus()) return;
-    console.log('reponse', response);
     forms.value = response.getMany();
   };
 

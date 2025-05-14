@@ -10,7 +10,7 @@ import {
   useJsApiLoader,
 } from '@react-google-maps/api';
 import React, { useState, useEffect } from 'preact/compat';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { ITask } from '@/types/shift/activity';
 
 export const Map: FunctionComponent<IMapProps> = ({
@@ -70,8 +70,6 @@ export const Map: FunctionComponent<IMapProps> = ({
   }, []);
 
   const onUnmount = React.useCallback(() => {
-    // console.log(map);
-
     setMap(null);
   }, []);
 
@@ -114,7 +112,7 @@ export const Map: FunctionComponent<IMapProps> = ({
 
   const setMarkerOnMap = (lat: number, lng: number) => {
     if (condition) {
-      toast.error(`${errorCondition}`, { position: 'top-right' });
+      ToastManager.error(`${errorCondition}`);
       return;
     }
     if (pointsAmount === 1) {
@@ -128,7 +126,7 @@ export const Map: FunctionComponent<IMapProps> = ({
     if (radialPoint) {
       const pointValidation = haversineDistance(radialPoint, marker);
       if (pointValidation) {
-        toast.error(`${errorRadialPoint}`, { position: 'top-right' });
+        ToastManager.error(`${errorRadialPoint}`);
         return;
       }
     }
@@ -152,9 +150,7 @@ export const Map: FunctionComponent<IMapProps> = ({
     if (id === radialPoint?.id) {
       setPoint([]);
       setPoint(pointsRef);
-      toast.error('Punto del lugar no se debe mover', {
-        position: 'top-right',
-      });
+      ToastManager.error('Punto del lugar no se debe mover');
       return;
     }
 
@@ -165,7 +161,7 @@ export const Map: FunctionComponent<IMapProps> = ({
     }
 
     if (pointValidation) {
-      toast.error(`${errorRadialPoint}`, { position: 'top-right' });
+      ToastManager.error(`${errorRadialPoint}`);
       setPoint([]);
       setPoint(pointsRef);
       return;
@@ -220,9 +216,7 @@ export const Map: FunctionComponent<IMapProps> = ({
     const newLat = parseFloat(editCoords.lat);
     const newLng = parseFloat(editCoords.lng);
     if (isNaN(newLat) || isNaN(newLng)) {
-      toast.error('Por favor ingrese coordenadas válidas', {
-        position: 'top-right',
-      });
+      ToastManager.error('Por favor ingrese coordenadas válidas');
       return;
     }
 

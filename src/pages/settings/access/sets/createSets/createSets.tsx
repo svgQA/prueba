@@ -1,6 +1,7 @@
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { FunctionComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { useResourceStore } from '@/store/slices/optimusAccess/access.slice'; // Importamos el store
@@ -16,7 +17,7 @@ export const CreateSetsSettingPage: FunctionComponent = () => {
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     if (file) {
-      console.log('Archivo seleccionado:', file.name);
+      ToastManager.success('Archivo seleccionado');
     }
   };
 

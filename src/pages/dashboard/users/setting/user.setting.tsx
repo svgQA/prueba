@@ -1,7 +1,7 @@
 import { Input } from '@/components/common/input/input';
 import { Section } from '@/components/common/section/section';
 import { Switch } from '@/components/common/switch/switch';
-import { StatusButton } from '@/pages/settings/component/custo.button';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 import { ModuleService } from '@/services';
 import { IUserSetting } from '@/types/settings';
 import { useSignal } from '@preact/signals';
@@ -11,7 +11,7 @@ import { useEffect } from 'preact/hooks';
 import { Field } from 'react-final-form';
 import { Form } from 'react-final-form';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const UserSettingsPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -40,7 +40,7 @@ export const UserSettingsPage: FunctionComponent = () => {
       settingsIds.value.user
     );
     if (response.getStatus()) {
-      toast.success('settings.users.success');
+      ToastManager.success('settings.users.success');
     }
   };
 

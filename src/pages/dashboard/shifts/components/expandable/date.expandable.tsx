@@ -2,13 +2,11 @@ import { Avatar } from '@/components/common/Avatar';
 import { Chip } from '@/components/common/chip/chip';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { showAlert } from '@/components/common/show-alert/show-alert';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import dayjs from 'dayjs';
 import { ShiftService } from '@/services';
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
-  console.log('shift ==>', shift);
-
   const calculateCheckStatus = (
     checkTime: string,
     scheduleTime: string,
@@ -63,7 +61,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   const checkOutStatus = calculateCheckStatus(checkOut?.time, shift.end, false);
 
   return (
-    <div class='flex gap-6 justify-center p-4'>
+    <div class='flex gap-6 justify-center'>
       {/* Inicio del Turno */}
       <ShiftCard
         title='Inicio del Turno'
@@ -139,7 +137,6 @@ const ShiftCard = ({
       );
       return position;
     } catch (error) {
-      console.log('error', error);
       getErrorGeolocation(error as GeolocationPositionError);
       return null;
     }
@@ -156,13 +153,11 @@ const ShiftCard = ({
         onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
-      toast.error(i18n.t('shift.expandable.date.location.gpsMessage'), {
-        position: 'top-right',
-      });
+      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
     } else {
-      toast.error(i18n.t('shift.expandable.date.location.timeoutMessage'), {
-        position: 'top-right',
-      });
+      ToastManager.error(
+        i18n.t('shift.expandable.date.location.timeoutMessage')
+      );
     }
   };
 
@@ -180,12 +175,12 @@ const ShiftCard = ({
 
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
-      toast.success(i18n.t('shift.expandable.date.success'));
+      ToastManager.success(i18n.t('shift.expandable.date.success'));
     }
   };
 
   return (
-    <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm p-4 w-full text-t-light dark:text-t-dark flex flex-row gap-4'>
+    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-4 p-4'>
       {/* Título */}
       <div>
         <h2 className='font-medium mb-4'>{title}</h2>
@@ -205,7 +200,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Fecha</p>
-                <p className='text-sm'>{dayjs(date).format('DD/MM/YYYY')}</p>
+                <p>{dayjs(date).format('DD/MM/YYYY')}</p>
               </div>
             </div>
 
@@ -215,7 +210,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Hora</p>
-                <p className='text-sm'>{dayjs(time).format('HH:mm')}</p>
+                <p>{dayjs(time).format('HH:mm')}</p>
               </div>
             </div>
 
@@ -225,7 +220,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Fuente</p>
-                <p className='text-sm'>{source}</p>
+                <p>{source}</p>
               </div>
             </div>
 
@@ -235,7 +230,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Distancia</p>
-                <p className='text-sm'>{distance}</p>
+                <p>{distance}</p>
               </div>
             </div>
 
@@ -248,7 +243,7 @@ const ShiftCard = ({
                   onCancel: () => {},
                 })
               }
-              className='px-3 py-1 text-sm text-primary border border-primary rounded-md hover:bg-primary-opacity'
+              className='px-3 py-1 text-md text-primary border border-primary rounded-md hover:bg-primary-opacity'
             >
               {btnLabel}
             </button>

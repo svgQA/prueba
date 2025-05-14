@@ -3,185 +3,194 @@ import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { ICompanyResponse } from '@/utils/types/company.interface';
 import { useSignal } from '@preact/signals';
-import { Card } from '@/components/common/card/card';
 import { Button } from '@/components/common/button/button';
 import { CompanyService } from '@/services';
+import { CardCompany } from './component/card.company';
+import { Form, Field } from 'react-final-form';
+import { Input } from '@/components/common/input/input';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { StatusButton } from '../../components/custom.button';
+import {
+  ICCompanyRequest,
+  IUCompanyRequest,
+} from '@/utils/types/company.interface';
+import { useUserStore } from '@/store/slices/access/user.slice';
 
 export const CompanySettingPage: FunctionComponent = () => {
+  const { setCompanies } = useUserStore();
+
   const companies = useSignal<ICompanyResponse[]>([]);
-  // const selectedCompany = signal<IListResponse | null>(null);
-  // const isEditing = signal(false);
-  // const formData = signal<ICCompanyRequest>({
-  //   name: '',
-  //   description: '',
-  //   address: '',
-  //   phone: '',
-  //   email: '',
-  //   website: '',
-  //   logo: ''
-  // });
+  const showForm = useSignal(false);
+  const isEditing = useSignal(false);
+  const selectedCompany = useSignal<ICompanyResponse | null>(null);
+
+  const initialFormValues: ICCompanyRequest = {
+    name: '',
+    description: '',
+    address: '',
+  };
 
   useEffect(() => {
     document.title = 'Company Settings';
     loadCompanies();
-    // loadCompanyOptions();
   }, []);
 
   const loadCompanies = async () => {
-    try {
-      const response = await CompanyService.getCompanies();
-      if (!response.getStatus()) return;
-      companies.value = response.getMany();
-    } catch (error) {
-      console.error('Error loading companies:', error);
+    const [responseGeneral, responseList] = await Promise.all([
+      CompanyService.getCompanies(),
+      CompanyService.getCompanyList(),
+    ]);
+    if (responseGeneral.getStatus()) {
+      companies.value = responseGeneral.getMany();
     }
-  };
-
-  /*
-  const handleInputChange = (e: Event) => {
-    const target = e.target as HTMLInputElement;
-    formData.value = {
-      ...formData.value,
-      [target.name]: target.value
-    };
-  };
-
-  const handleSubmit = async (e: Event) => {
-    e.preventDefault();
-    try {
-      if (isEditing.value && selectedCompany.value) {
-        await GeneralService.updateCompany(selectedCompany.value.id, formData.value as IUCompanyRequest);
-      } else {
-        await GeneralService.createCompany(formData.value);
+    if (responseList.getStatus()) {
+      const list = responseList.getMany();
+      if (list.length > 0) {
+        setCompanies(list);
       }
-      loadCompanies();
-      resetForm();
-    } catch (error) {
-      console.error('Error saving company:', error);
     }
   };
 
-  const handleEdit = (company: IListResponse) => {
+  const handleEdit = (company: ICompanyResponse) => {
+    resetForm(true, true, company);
+  };
+
+  const handleAdd = () => {
+    resetForm(true);
+  };
+
+  const resetForm = (
+    show: boolean = false,
+    isEdit: boolean = false,
+    company: ICompanyResponse | null = null
+  ) => {
     selectedCompany.value = company;
-    formData.value = {
-      name: company.name,
-      description: company.description,
-      address: company.address || '',
-      phone: company.phone || '',
-      email: company.email || '',
-      website: company.website || '',
-      logo: company.logo || ''
-    };
-    isEditing.value = true;
+    isEditing.value = isEdit;
+    showForm.value = show;
   };
 
-  const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this company?')) {
-      try {
-        await GeneralService.deleteCompany(id);
-        loadCompanies();
-      } catch (error) {
-        console.error('Error deleting company:', error);
-      }
+  const onSubmit = async (values: ICCompanyRequest | IUCompanyRequest) => {
+    let response;
+    if (isEditing && selectedCompany.value) {
+      response = await CompanyService.updateCompany(
+        selectedCompany.value.id,
+        values as IUCompanyRequest
+      );
+    } else {
+      response = await CompanyService.createCompany(values as ICCompanyRequest);
     }
+    if (!response.getStatus()) return;
+    ToastManager.success(
+      isEditing
+        ? 'Empresa actualizada correctamente'
+        : 'Empresa creada correctamente'
+    );
+    resetForm(false);
+    loadCompanies();
   };
-  
-  const resetForm = () => {
-    formData.value = {
-      name: '',
-      description: '',
-      address: '',
-      phone: '',
-      email: '',
-      website: '',
-      logo: ''
-    };
-    selectedCompany.value = null;
-    isEditing.value = false;
-  };
-  */
 
   return (
-    <div className='h-full overflow-y-auto vox-scroll-design p-8 w-full'>
-      <div className='flex flex-row gap-4 justify-center flex-wrap'>
-        {companies.value.map((company) => (
-          <Card key={company.id} name={`company-setting-${company.id}`}>
-            <div className='p-6 min-w-[420px]'>
-              {/* Header */}
-              <div className='flex items-start justify-between mb-4'>
-                <div className='flex-1'>
-                  <h3 className='text-lg font-semibold truncate text-t-light dark:text-t-dark'>
-                    {company.name}
-                  </h3>
-                  <p className='text-sm dark:text-gray-200 text-gray-800 mt-1'>
-                    Created: {new Date(company.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-                <div className='flex space-x-2 ml-4'>
-                  <Button name='company-setting-delete' icon='050' />
-                  <Button name='company-setting-delete' icon='099' />
-                </div>
-              </div>
-
-              {/* Description */}
-              <p className='text-sm dark:text-gray-200 text-gray-800 mb-4 line-clamp-2'>
-                {company.description}
-              </p>
-
-              {/* Contact Info */}
-              <div className='space-y-2'>
-                {company.address && (
-                  <div className='flex items-start'>
-                    <span className='vox-icon vx-icon-168 size-sm dark:text-gray-200 text-gray-800 mr-2' />
-                    <span className='text-sm dark:text-gray-200 text-gray-800'>
-                      {company.address}
-                    </span>
+    <div className='h-full overflow-y-auto vox-scroll-design p-5 w-full relative'>
+      <div className='flex flex-row justify-between'>
+        <div className='flex flex-row gap-2 justify-center flex-wrap'>
+          {companies.value.map((company) => (
+            <CardCompany
+              key={company.id}
+              company={company}
+              onEdit={() => handleEdit(company)}
+            />
+          ))}
+        </div>
+        {showForm.value && (
+          <div className='min-w-[500px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
+            <Form<ICCompanyRequest | IUCompanyRequest>
+              onSubmit={onSubmit}
+              initialValues={
+                selectedCompany.value
+                  ? {
+                      name: selectedCompany.value?.name,
+                      description: selectedCompany.value?.description,
+                      address: selectedCompany.value?.address || '',
+                    }
+                  : initialFormValues
+              }
+              validate={(values) => {
+                const errors: Partial<ICCompanyRequest> = {};
+                if (!values.name || values.name.length < 4)
+                  errors.name = 'Nombre requerido (mínimo 4 caracteres)';
+                if (!values.description)
+                  errors.description = 'Descripción requerida';
+                if (!values.address) errors.address = 'Dirección requerida';
+                return errors;
+              }}
+              render={({ handleSubmit, form, submitting, pristine }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  className='h-full flex flex-col justify-between'
+                  id='form-company'
+                >
+                  <div className='flex flex-col justify-between gap-4'>
+                    <h2 className='text-2xl font-bold'>
+                      {isEditing ? 'Editar Empresa' : 'Nueva Empresa'}
+                    </h2>
+                    <div className='grid grid-cols-2 gap-4'>
+                      <Field<string> name='name'>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            id='name'
+                            name='name'
+                            label='Nombre'
+                            meta={meta}
+                            type='text'
+                          />
+                        )}
+                      </Field>
+                      <Field<string> name='description'>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            id='description'
+                            name='description'
+                            label='Descripción'
+                            meta={meta}
+                            type='text'
+                          />
+                        )}
+                      </Field>
+                      <Field<string> name='address'>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            id='address'
+                            name='address'
+                            label='Dirección'
+                            meta={meta}
+                            type='text'
+                          />
+                        )}
+                      </Field>
+                    </div>
                   </div>
-                )}
-                {company.phone && (
-                  <div className='flex items-center'>
-                    <span className='vox-icon vx-icon-168 size-sm dark:text-gray-200 text-gray-800 mr-2' />
-                    <span className='text-sm dark:text-gray-200 text-gray-800'>
-                      {company.phone}
-                    </span>
-                  </div>
-                )}
-                {company.email && (
-                  <div className='flex items-center'>
-                    <span className='vox-icon vx-icon-168 size-sm dark:text-gray-200 text-gray-800 mr-2' />
-                    <span className='text-sm dark:text-gray-200 text-gray-800'>
-                      {company.email}
-                    </span>
-                  </div>
-                )}
-                {company.website && (
-                  <div className='flex items-center'>
-                    <span className='vox-icon vx-icon-168 size-sm dark:text-gray-200 text-gray-800 mr-2' />
-                    <a
-                      href={company.website}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='text-sm text-indigo-600 hover:text-indigo-900 hover:underline'
-                    >
-                      {company.website}
-                    </a>
-                  </div>
-                )}
-              </div>
-
-              {/* Footer */}
-              <div className='mt-4 pt-4 border-t border-gray-100'>
-                <div className='flex items-center justify-between text-xs dark:text-gray-200 text-gray-800'>
-                  <span>ID: {company.externalId}</span>
-                  <span>
-                    Last updated:{' '}
-                    {new Date(company.updatedAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
+                  <StatusButton
+                    onClickClean={() => {
+                      form.reset();
+                      if (isEditing) {
+                        resetForm(false);
+                      }
+                    }}
+                    submitting={submitting}
+                    pristine={pristine}
+                    form='form-company'
+                  />
+                </form>
+              )}
+            />
+          </div>
+        )}
+        <div className='absolute top-0 right-0'>
+          <Button name='company-setting-add' icon='039' onClick={handleAdd} />
+        </div>
       </div>
     </div>
   );

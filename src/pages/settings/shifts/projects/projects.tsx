@@ -2,12 +2,12 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { columns } from './components/places.columns';
+import { columns } from './components/project.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { appendHistory } from '../../store/settings';
 
 import {
@@ -72,7 +72,7 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   const deleteProject = async (id: string) => {
     const request = await ContractService.deleteProject(id);
     if (!request.getStatus()) return;
-    toast.success('Lugar contrato', { position: 'top-right' });
+    ToastManager.success('Lugar contrato');
     getProjects();
   };
 
@@ -103,12 +103,14 @@ export const ProjectsSettingPage: FunctionComponent = () => {
       <Table<IProject>
         data={projects.value}
         columns={columns}
+        pageSize={20}
         visibility={{
           id: false,
           description: false,
         }}
         onClickAction={handleOnClick}
         unsearch={false}
+        isSettingTable
       />
     </Section>
   );

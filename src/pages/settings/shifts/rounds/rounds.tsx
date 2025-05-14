@@ -15,7 +15,7 @@ import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { RoundService } from '@/services';
 
 export const RoundsSettingPage: FunctionComponent = () => {
@@ -68,7 +68,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   const deleteRound = async (id: string) => {
     const request = await RoundService.deleteRound(id);
     if (!request.getStatus()) return;
-    toast.success('Ronda eliminado', { position: 'top-right' });
+    ToastManager.success('Ronda eliminado');
     getRounds();
   };
 
@@ -118,6 +118,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
         }}
         onClickAction={handleOnClick}
         unsearch={false}
+        isSettingTable
       />
     </Section>
   );

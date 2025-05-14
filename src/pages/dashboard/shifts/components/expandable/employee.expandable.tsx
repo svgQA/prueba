@@ -1,20 +1,30 @@
 import { Chip } from '@/components/common/chip/chip';
-import { IPlace, IUser } from '@/types/shift/activity';
+import { IPlace, IService, IUser } from '@/types/shift/activity';
+import dayjs from 'dayjs';
 
 const EmployeeInfo = ({
   employee,
   place,
+  activityPct,
+  roundPct,
+  service,
 }: {
   employee: IUser;
   place: IPlace;
+  activityPct: number;
+  roundPct: number;
+  service: IService;
 }) => {
-  return (
-    <div className='p-2 text-t-light dark:text-t-dark'>
-      <h2 className='text-base mb-3 font-bold'>Detalles del usuario</h2>
+  const formatDate = (date: string | Date) => {
+    if (!date) return '-';
+    return dayjs(date).format('DD/MM/YYYY HH:mm');
+  };
 
+  return (
+    <>
       <div className='flex flex-row gap-6'>
         {/* Perfil */}
-        <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 w-56 flex flex-col items-center shadow-sm'>
+        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 w-56 flex flex-col items-center shadow-sm'>
           <img
             src={employee.image}
             alt='User'
@@ -23,17 +33,17 @@ const EmployeeInfo = ({
           <h3 className='text-base font-medium'>
             {employee?.name} {employee?.surname}
           </h3>
-          <p className='text-sm'>{'Operativo'}</p>
+          <p>{'Operativo'}</p>
           <Chip label='Activo' color='success' />
         </div>
 
         {/* Información Personal */}
-        <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
+        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='mr-2 !text-primary size-sm vox-icon vx-icon-308'></span>
             Información Personal
           </h4>
-          <div className='grid grid-cols-2 gap-y-2 text-sm'>
+          <div className='grid grid-cols-2 gap-y-2'>
             <div>
               <p className='font-semibold'>Identificación</p>
               <p>{employee.cardId}</p>
@@ -54,39 +64,39 @@ const EmployeeInfo = ({
         </div>
 
         {/* Información de la Empresa */}
-        <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
+        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='!text-primary mr-2 vox-icon size-sm vx-icon-195'></span>
             Información de la empresa
           </h4>
-          <div className='grid grid-cols-2 gap-y-2 text-sm'>
+          <div className='grid grid-cols-2 gap-y-2'>
             <div>
               <p className='font-semibold'>Compañía</p>
-              <p>{'Acme'}</p>
+              <p>{service.contract.company?.name}</p>
             </div>
             <div>
               <p className='font-semibold'>Departamento</p>
-              <p>{'Operativo'}</p>
+              <p>{employee.extraData?.area}</p>
             </div>
             <div>
               <p className='font-semibold'>Fecha de Inicio</p>
-              <p>{'11/03/2024'}</p>
+              <p>{formatDate(service.contract.startDate)}</p>
             </div>
           </div>
         </div>
 
         {/* Estadísticas */}
-        <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
+        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             Estadísticas Turno
           </h4>
           <div className='flex justify-around'>
-            <StatCircle title='Actividades' percentage={75} />
-            <StatCircle title='Rondas' percentage={75} />
+            <StatCircle title='Actividades' percentage={activityPct} />
+            <StatCircle title='Rondas' percentage={roundPct} />
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

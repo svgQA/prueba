@@ -38,14 +38,17 @@ import { WebSocketProvider } from '@/utils/socket';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
 import { Loading } from '@/components/common/loading/loading';
-import { useUserStore } from '@/store/slices';
+import { hasUserTenant, useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
 import { Button } from '@/components/common/button/button';
 import { CompanyService } from '@/services';
-import { IconsModal } from '../globals/icons/icons';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { Avatar } from '@/components/common/Avatar';
+// import { setUser } from '../settings/general/user/create/store/user';
 
+// import { IconsModal } from '../globals/icons/icons';
 // import { IconsModal } from '../globals/icons/icons';
 // import { OnBordingModal } from '../globals/onbording/onboarding';
 
@@ -54,18 +57,45 @@ import { IconsModal } from '../globals/icons/icons';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    const { setCompanies, companies, selectedCompany, setSelectedCompany } =
-      useUserStore();
+    const {
+      setCompanies,
+      companies,
+      selectedCompany,
+      setSelectedCompany,
+      setToken,
+      setCognito,
+      setTenant,
+      setUser,
+      getLoaded,
+      setLoaded,
+      user,
+    } = useUserStore();
 
     useEffect(() => {
-      getCompanies();
+      validateUser();
     }, []);
+
+    const validateUser = async () => {
+      const result = await hasUserTenant(
+        setToken,
+        setCognito,
+        setTenant,
+        setUser,
+        getLoaded
+      );
+      setLoaded(result);
+
+      if (result) {
+        getCompanies();
+      }
+    };
 
     const getCompanies = async () => {
       const company = await CompanyService.getCompanyList();
 
       if (!company.getStatus()) return;
       const companies = company.getMany();
+
       if (companies.length === 0) return;
       setCompanies(companies);
 
@@ -106,7 +136,16 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
-          <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
+          <header className='h-14 flex flex-row items-center justify-between sticky top-0 bg-b-content dark:bg-b-dark z-10'>
+            <div className='flex flex-row gap-2 items-center ml-8'>
+              <TextEllipsis text={user?.name || ''} maxWidth='100px' />
+              <Avatar
+                name={user?.name || ''}
+                src={user?.image || ''}
+                size='sm'
+                square
+              />
+            </div>
             <div className='flex flex-row px-6 gap-4 justify-between items-center'>
               <LanguageSwitcher borderless />
               <CustomSwitcher
@@ -202,7 +241,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             <div
               key={`selector-company-${company.name}`}
               // name={company.id}
-              className='w-5/12 float-left cursor-pointer py-3 rounded-lg flex flex-row justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 border border-gray-200 dark:border-gray-700'
+              className='w-5/12 float-left cursor-pointer py-3 rounded-lg flex flex-row justify-between items-center hover:bg-gray-100 dark:hover:bg-b-dark-dark transition-colors duration-200 border border-gray-200 dark:border-gray-700'
               onClick={() => setCompanySelected(company.id)}
               tabIndex={0}
             >
@@ -224,8 +263,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ))}
         </OnBordingModal>
-          */}
         <IconsModal />
+        */}
         <ToastContainer />
       </section>
     );

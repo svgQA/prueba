@@ -84,7 +84,6 @@ const handle_user_disconnected = (user: { id: string }) => {
 */
 
   const handle_location_update = (user: User | User[]) => {
-    // console.log('handle_location_update', user);
     setUsers((prevUsers) => {
       if (Array.isArray(user)) {
         // Handle array of users

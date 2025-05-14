@@ -10,10 +10,11 @@ import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { getColumns } from './components/inspect.columns';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { Button } from '@/components/common/button/button';
 import { FormResponseSettingPage } from './response/response';
 import { RESPONSE_MODE_SERVICE, setResponse } from './response/store/response';
+import { validateResponse } from '@/pages/settings/forms/response/store/response';
 
 enum VIEW_NAME {
   TABLE,
@@ -44,7 +45,12 @@ export const FormsPage: FunctionComponent = () => {
     );
 
     if (!response?.structure) {
-      toast.error(t('forms.error.not_exist_response'));
+      ToastManager.error(t('form.error.notExistResponse'));
+      return;
+    }
+
+    if (!validateResponse(response.structure)) {
+      ToastManager.error(t('form.error.invalidResponse'));
       return;
     }
 
@@ -57,12 +63,12 @@ export const FormsPage: FunctionComponent = () => {
         handleViewChange(VIEW_NAME.INSPECT);
         break;
       }
-      // case ROW_ACTIONS.DELETE: {
-      //   const respons = await FormService.remove_response_one(response.id);
-      //   if (!respons.getStatus()) return;
-      //   getResponseHandler();
-      //   break;
-      // }
+      case ROW_ACTIONS.DELETE: {
+        const respons = await FormService.remove_response_one(response.id);
+        if (!respons.getStatus()) return;
+        getResponseHandler();
+        break;
+      }
       case ROW_ACTIONS.REPORT: {
         setResponse(
           { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id, hold: true },
@@ -72,7 +78,7 @@ export const FormsPage: FunctionComponent = () => {
         break;
       }
       default: {
-        toast.error(t('forms.error.not_exist_option'));
+        ToastManager.error(t('form.error.not_exist_option'));
       }
     }
   };

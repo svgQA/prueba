@@ -12,6 +12,7 @@ type State = {
   cognito: string;
   tenant: string;
   selectedCompany: IOption | null;
+  loaded: boolean;
 };
 
 type Actions = {
@@ -19,6 +20,8 @@ type Actions = {
   setToken: (token: string) => void;
   getUser: () => IUserResponse | null;
   getToken: () => string;
+  setLoaded: (loaded: boolean) => void;
+  getLoaded: () => boolean;
   getUrlSocket: () => string;
   setCognito: (uuid: string) => void;
   getCognito: () => string;
@@ -40,6 +43,12 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   cognito: '',
   tenant: '',
   selectedCompany: null,
+  loaded: false,
+  setLoaded: (loaded: boolean) => set({ loaded }),
+  getLoaded: () => {
+    const { loaded } = get();
+    return loaded;
+  },
   getCompanyId: () => {
     const { selectedCompany } = get();
     return String(selectedCompany?.value || '1');
@@ -57,6 +66,8 @@ export const useUserStore = create<State & Actions>((set, get) => ({
     const company = companies.find((company) => company.value === id);
     if (company) {
       set({ selectedCompany: company });
+    } else {
+      set({ selectedCompany: companies[0] });
     }
   },
   setCompanies: (companies: IOption[]) => set({ companies }),

@@ -9,6 +9,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   full = false,
   borderless = false,
   outline = false,
+  width = 'w-32',
 }: IBadgeProps) => {
   const getStatusColor = (status?: string) => {
     switch (status) {
@@ -30,7 +31,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
       className={`
         text-${size} items-center capitalize px-3 flex rounded-md py-1
         ${icon ? 'justify-between' : 'justify-center'} text-base
-        ${full ? 'w-full' : 'w-fit'}
+        ${full ? 'w-full' : width}
         ${
           outline
             ? `border ${getStatusColor(status)} bg-transparent`

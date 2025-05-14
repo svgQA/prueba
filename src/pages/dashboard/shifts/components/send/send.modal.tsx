@@ -26,9 +26,9 @@ export const SendForm = ({ onClose, users, hasplayers }: Props) => {
   return (
     <div
       ref={ref}
-      className='bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4'
+      className='bg-white dark:bg-b-dark-dark rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4'
     >
-      <div className='px-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center pb-2 bg-white dark:bg-gray-800'>
+      <div className='px-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center pb-2 bg-white dark:bg-b-dark-dark'>
         <h3 className='text-base font-semibold text-gray-900 dark:text-gray-200'>
           Centro de notificaciones
         </h3>

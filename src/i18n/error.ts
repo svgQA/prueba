@@ -92,6 +92,16 @@ export const error_en = {
     player_id_update_success: 'Player ID updated successfully',
     processing_response: 'Error processing response',
     custom_toast_refresh_page: 'Refresh page',
+    service: {
+      networkTitle: 'Network Error',
+      authorizationTitle: 'Authorization Error',
+      networkMessage:
+        'There was an error with the network request. Please try again.',
+      authorizationMessage:
+        'There was an error with the authorization request. Please try again.',
+      actionNetwork: 'Retry',
+      actionAuthorization: 'Refresh token',
+    },
   },
 };
 
@@ -191,5 +201,15 @@ export const error_es = {
     player_id_update_success: 'ID del jugador actualizado exitosamente',
     processing_response: 'Error al procesar la respuesta',
     custom_toast_refresh_page: 'Refrescar página',
+    service: {
+      networkTitle: 'Error de red o servidor',
+      authorizationTitle: 'Error de autorización',
+      networkMessage:
+        'Error al procesar la solicitud. Verifica la conexión a internet e intenta nuevamente. Si el problema continúa, contacta a un administrador.',
+      authorizationMessage:
+        'Su token expiró, por favor refresque su token para continuar.',
+      actionNetwork: 'Reintentar petición',
+      actionAuthorization: 'Refrescar token',
+    },
   },
 };

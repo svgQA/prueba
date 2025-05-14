@@ -2,7 +2,7 @@ import { FunctionalComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import { IaService } from '@/services';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import {
   MentionEditor,
   MentionOption,
@@ -23,8 +23,8 @@ export const PlannerView: FunctionalComponent<{
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [shifts, setShifts] = useState<Shift[]>([]);
 
-  const handleShiftUpdate = useCallback((turnoActualizado: Shift) => {
-    console.log('Turno actualizado:', turnoActualizado);
+  const handleShiftUpdate = useCallback((_: Shift) => {
+    // console.log('Turno actualizado:', turnoActualizado);
   }, []);
 
   const handleSendPrompt = useCallback(async () => {
@@ -44,16 +44,18 @@ export const PlannerView: FunctionalComponent<{
           const parsedShifts = fixTruncatedJSONArray(accumulatedResponse);
           setShifts(parsedShifts);
           setIsStreaming(false);
-          toast.success('Stream completado');
+          ToastManager.success('Stream completado');
         },
         (error) => {
           setIsStreaming(false);
-          toast.error(`Error en el stream: ${error.message}`);
+          console.log('Stream error:', error);
+          // TODO: Cambiar para que BaseService muestre el error
+          //ToastManager.error(`Error en el stream: ${error.message}`);
         }
       );
     } catch (error) {
       setIsStreaming(false);
-      toast.error(
+      ToastManager.error(
         `Error al enviar el prompt: ${error instanceof Error ? error.message : 'Error desconocido'}`
       );
     }

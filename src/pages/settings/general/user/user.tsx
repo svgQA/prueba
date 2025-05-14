@@ -13,7 +13,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { Button } from '@/components/common/button/button';
 import { useLocation } from 'wouter';
 import { appendHistory } from '../../store/settings';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const UserSettingPage: FunctionComponent = () => {
   const users = useSignal<IUserResponse[]>([]);
@@ -33,7 +33,7 @@ export const UserSettingPage: FunctionComponent = () => {
   const deletePlace = async (id: number) => {
     const request = await UserService.delete(id);
     if (!request.getStatus()) return;
-    toast.success('Usuario eliminado', { position: 'top-right' });
+    ToastManager.success('Usuario eliminado');
     getUsersHandler();
   };
 

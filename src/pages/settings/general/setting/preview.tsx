@@ -19,7 +19,7 @@ export const Preview: FunctionComponent<PreviewProps> = ({
         {label}
       </label>
       {preview && (
-        <div className='mt-2 p-2 my-4 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800'>
+        <div className='mt-2 p-2 my-4 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-b-dark-dark'>
           <img
             src={preview}
             alt={`${label} Preview`}

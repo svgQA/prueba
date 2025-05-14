@@ -22,6 +22,8 @@ import { useTranslation } from 'react-i18next';
 import {
   GeneralTask,
   Task,
+  TaskStatus,
+  TaskType,
   User,
   ViewMode,
 } from '@/components/compose/gantt/types/public-types';
@@ -38,7 +40,7 @@ import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
 import { UserService } from '@/services/general/user';
 import { MentionOption } from '@/components/common/mention-editor';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
@@ -66,13 +68,15 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const shifts = useSignal<IShiftResponse[]>([]);
-  const defaultColumn = useSignal<string>('default');
 
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
 
   const [taskSelected, setTaskSelected] = useState<Task>();
   const [userSelected, setUserSelected] = useState<User>();
+  const [keywordsSelected, setKeywordsSelected] = useState<string[]>([]);
+  const [timeBeforeSelected, setTimeBeforeSelected] = useState<number>(0);
+  const [externalSelected, setExternalSelected] = useState<string>('');
 
   const [services, setServices] = useState<MentionOption[]>([]);
   const [users, setUsers] = useState<MentionOption[]>([]);
@@ -136,42 +140,34 @@ export const ShiftsPage: FunctionalComponent = () => {
   // };
 
   const fetchInitialData = async () => {
-    try {
-      const [
-        shiftsResponse,
-        servicesResponse,
-        usersResponse,
-        hasValidResponse,
-      ] = await Promise.all([
+    const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
+      await Promise.all([
         ShiftService.get_all({ page: 1, items: 1000 }),
         ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),
         NotificationService.hasUsersWithPlayerId(),
       ]);
 
-      if (shiftsResponse && shiftsResponse.getStatus()) {
-        const [hasNotifications, responseShifts] = findNotificationShift(
-          shiftsResponse.getMany()
-        );
-        notificationValidate.value = hasNotifications;
+    if (shiftsResponse && shiftsResponse.getStatus()) {
+      const [hasNotifications, responseShifts] = findNotificationShift(
+        shiftsResponse.getMany()
+      );
+      notificationValidate.value = hasNotifications;
 
-        shifts.value = responseShifts;
-      }
-
-      if (servicesResponse.getStatus()) {
-        setServices(servicesResponse.getMany());
-      }
-
-      if (usersResponse.getStatus()) {
-        setUsers(usersResponse.getMany());
-      }
-
-      const { hasUsers } = hasValidResponse.getOne();
-      setHasValidPlayer(hasUsers);
-      hasValidPlayerRef.current = hasUsers;
-    } catch (error) {
-      toast.error('notification.error_fetching_initial_data');
+      shifts.value = responseShifts;
     }
+
+    if (servicesResponse.getStatus()) {
+      setServices(servicesResponse.getMany());
+    }
+
+    if (usersResponse.getStatus()) {
+      setUsers(usersResponse.getMany());
+    }
+
+    const { hasUsers } = hasValidResponse.getOne();
+    setHasValidPlayer(hasUsers);
+    hasValidPlayerRef.current = hasUsers;
   };
 
   const findNotificationShift = (
@@ -228,7 +224,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     handleViewChange(VIEW_NAME.TABLE);
 
     if (!hasValidPlayerRef.current) {
-      toast.warn(t('notification.nobody_have_player_id'));
+      ToastManager.warning(t('notification.nobody_have_player_id'));
       return;
     }
 
@@ -241,7 +237,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
     // ✅ Siguientes veces: solo abre el modal (sin toggle)
     if (selectedUsers.length === 0) {
-      toast.warn(t('notification.select_at_least_one_employee'));
+      ToastManager.warning(t('notification.select_at_least_one_employee'));
       setOnNotifications(false);
       onNotificationsRef.current = false;
       return;
@@ -442,6 +438,31 @@ export const ShiftsPage: FunctionalComponent = () => {
   }) => {
     switch (params.action) {
       case ROW_ACTIONS.UPDATE:
+        const shiftUpdate = shifts.value.find(
+          (shift) => shift.id === Number(params.id)
+        );
+
+        setTaskSelected({
+          id: Number(params.id),
+          end: shiftUpdate?.end || '',
+          start: shiftUpdate?.start || '',
+          type: shiftUpdate?.type as TaskType,
+          userId: String(shiftUpdate?.employee?.id || ''),
+          serviceId: shiftUpdate?.serviceId || '',
+          // TODO: Verificar si es necesario
+          phone: shiftUpdate?.service?.contract.client.phone || '',
+          contract: String(shiftUpdate?.service?.contract.id || ''),
+          client: String(shiftUpdate?.service?.contract.client.id || ''),
+          cardId: shiftUpdate?.employee?.cardId || '',
+          status: shiftUpdate?.status as TaskStatus,
+          name: shiftUpdate?.service?.name || '',
+          progress: 0,
+          service: shiftUpdate?.service?.name || '',
+        });
+
+        setKeywordsSelected(shiftUpdate?.keywords || []);
+        setTimeBeforeSelected(shiftUpdate?.timeBefore || 0);
+        setExternalSelected(shiftUpdate?.externalId || '');
         toggleUpsertModal();
         break;
       case ROW_ACTIONS.DELETE:
@@ -449,13 +470,13 @@ export const ShiftsPage: FunctionalComponent = () => {
           (shift) => shift.id === Number(params.id)
         );
         if (!shift) {
-          toast.error(t('shift.table.delete.error'));
+          ToastManager.error(t('shift.table.delete.error'));
           return;
         }
 
         const status = shift.status as unknown as SHIFT_STATUS;
         if (status !== SHIFT_STATUS.CREATED) {
-          toast.warning(t('shift.table.delete.warning'));
+          ToastManager.warning(t('shift.table.delete.warning'));
           return;
         }
 
@@ -473,7 +494,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const deleteShift = async (id: string) => {
     const response = await ShiftService.deleteActivity(id);
     if (!response.getStatus()) return;
-    toast.success(t('shift.table.delete.success'));
+    ToastManager.success(t('shift.table.delete.success'));
     fetchInitialData();
   };
 
@@ -537,12 +558,9 @@ export const ShiftsPage: FunctionalComponent = () => {
 
               setSelectedUsers(validUsers as any);
             }}
-            expandable={(row: IShiftResponse, currentColumnName?: string) => (
-              <ExpandableMultiple
-                type={currentColumnName || defaultColumn.value}
-                data={row}
-              />
-            )}
+            expandable={(row: IShiftResponse, column?: string) => {
+              return <ExpandableMultiple type={column} data={row} />;
+            }}
             visibility={{
               servicePlaceAddress: false,
               city: false,
@@ -594,6 +612,9 @@ export const ShiftsPage: FunctionalComponent = () => {
         userSelected={userSelected}
         taskSelected={taskSelected}
         users={users}
+        keywordsSelected={keywordsSelected}
+        timeBeforeSelected={timeBeforeSelected}
+        externalSelected={externalSelected}
       />
 
       <ShiftForm

@@ -4,6 +4,16 @@ export const form_es = {
       create: 'Crear',
       update: 'Actualizar',
     },
+    buttons: {
+      startInspection: 'Iniciar inspección',
+      response: 'Iniciar respuesta',
+      update: 'Actualizar',
+    },
+    error: {
+      general: 'Hay un error en el formulario',
+      invalidResponse: 'La estructura del formulario no es válida',
+      notExistResponse: 'La estructura del formulario no existe',
+    },
     placeholder: {
       title: 'Título de la página',
       description: 'Descripción de la página',
@@ -30,21 +40,38 @@ export const form_es = {
       maximum: 'Máximo',
       minimum: 'Mínimo',
     },
-    new: 'Crear formulario',
-    error: {
-      description: 'La descripción debe tener al menos 5 caracteres',
-      title: 'El título debe tener al menos 5 caracteres',
-      structure: 'Debe tener al menos una sección',
+    columns: {
+      user: 'Usuario',
+      title: 'Título',
+      status: 'Estado',
+      actions: 'Acciones',
+      createdAt: 'Fecha de creación',
+      updatedAt: 'Fecha de actualización',
+      group: 'Grupo',
+      category: 'Categoría',
     },
+    new: 'Crear formulario',
     field: {
       question: 'Pregunta',
       type: 'Tipo de respuesta',
     },
     inspect: {
       title: 'Inspección',
+      continue: 'Continuar',
+      delete: 'Eliminar',
+      cancel: 'Cancelar',
+      report: 'Ver reporte',
+      response: 'Ver respuesta',
     },
     report: {
       title: 'Reporte',
+    },
+    create: {
+      error: {
+        title: 'El título debe tener al menos 5 caracteres',
+        description: 'La descripción debe tener al menos 5 caracteres',
+        structure: 'Debe tener al menos una sección',
+      },
     },
   },
 };
@@ -54,6 +81,16 @@ export const form_en = {
     btn: {
       create: 'Create',
       update: 'Update',
+    },
+    buttons: {
+      startInspection: 'Start inspection',
+      response: 'Start response',
+      update: 'Update',
+    },
+    error: {
+      general: 'There is an error in the form',
+      invalidResponse: 'The form structure is invalid',
+      notExistResponse: 'The form structure does not exist',
     },
     placeholder: {
       title: 'Enter title page',
@@ -81,21 +118,38 @@ export const form_en = {
       maximum: 'Maximum',
       minimum: 'Minimum',
     },
-    new: 'Create form',
-    error: {
-      description: 'The description must be at least 5 characters long',
-      title: 'The title must be at least 5 characters long',
-      structure: 'The form must have at least one section',
+    columns: {
+      user: 'User',
+      title: 'Title',
+      status: 'Status',
+      actions: 'Actions',
+      createdAt: 'Created at',
+      updatedAt: 'Updated at',
+      group: 'Group',
+      category: 'Category',
     },
+    new: 'Create form',
     field: {
       question: 'Question',
       type: 'Type of response',
     },
     inspect: {
       title: 'Inspection',
+      continue: 'Continue',
+      delete: 'Delete',
+      cancel: 'Cancel',
+      report: 'Report',
+      response: 'Response',
     },
     report: {
       title: 'Report',
+    },
+    create: {
+      error: {
+        title: 'The title must be at least 5 characters long',
+        description: 'The description must be at least 5 characters long',
+        structure: 'The form must have at least one section',
+      },
     },
   },
 };

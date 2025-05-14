@@ -3,15 +3,15 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import WeeklyScheduler from '../components/weekly.scheduler';
 import { convertBlocksToCells, getSelectedHoursByDay } from '../utils';
 import { ICScheduleRequest } from '@/types/shift/shift.request';
 import { ScheduleService } from '@/services';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 
 const START_HOUR = 0;
 const END_HOUR = 24;
@@ -70,7 +70,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
     }
 
     if (!request.getStatus()) return;
-    toast.success(message, { position: 'top-right' });
+    ToastManager.success(message);
     navigate('/rounds/schedule');
   };
 
@@ -108,7 +108,11 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
         onSubmit={onSubmit}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting }) => (
-          <form onSubmit={handleSubmit} className='space-y-6'>
+          <form
+            onSubmit={handleSubmit}
+            id='form-schedule-create'
+            className='space-y-6'
+          >
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-1 gap-3'>
               <div class='col-span-1 px-5'>
@@ -139,10 +143,18 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
               </div>
             </div>
 
+            <StatusButton
+              onClickClean={() => {
+                handleClearSelection();
+                form.reset();
+              }}
+              submitting={submitting}
+              pristine={form.getState().pristine}
+              form='form-schedule-create'
+            />
             {/* Botonera */}
+            {/*
             <div className='w-full flex-row flex justify-end items-center'>
-              {/* Botón de prueba que SOLO llama a handleClearSelection */}
-
               <Button
                 id='btn-clean'
                 name='btn-clean'
@@ -165,7 +177,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                 disabled={submitting}
               />
             </div>
-            {/*<pre>{JSON.stringify(values, 0, 2)}</pre>*/}
+            */}
           </form>
         )}
       />

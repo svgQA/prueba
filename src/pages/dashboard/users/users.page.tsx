@@ -15,7 +15,7 @@ import { UserMessage } from './components/user.message';
 import { IUserResponse } from '@/types/auth';
 import { useTranslation } from 'react-i18next';
 import { SendForm } from '../shifts/components/send/send.modal';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { NotificationService, UserService } from '@/services';
 import { getColumns } from './components/user.columns';
 import { showAlert } from '@/components/common/show-alert/show-alert';
@@ -104,7 +104,7 @@ export const UsersPage: FunctionalComponent = () => {
     handleViewChange(VIEW_NAME.TABLE);
 
     if (!hasValidPlayerRef.current) {
-      toast.warn(t('notification.nobody_have_player_id'));
+      ToastManager.warning(t('notification.nobody_have_player_id'));
       return;
     }
 
@@ -115,7 +115,7 @@ export const UsersPage: FunctionalComponent = () => {
     }
 
     if (selectedUsers.length === 0) {
-      toast.warn(t('notification.select_at_least_one_employee'));
+      ToastManager.warning(t('notification.select_at_least_one_employee'));
       setOnNotifications(false);
       onNotificationsRef.current = false;
       return;
@@ -217,7 +217,7 @@ export const UsersPage: FunctionalComponent = () => {
   const setProfile = async (id: number, companyId: string) => {
     const response = await UserService.setProfile(id, companyId);
     if (!response.getStatus()) return;
-    toast.success(
+    ToastManager.success(
       'Perfil asignado correctamente, te enviamos un código de verificación'
     );
     getUsers();
@@ -237,12 +237,12 @@ export const UsersPage: FunctionalComponent = () => {
       case ROW_ACTIONS.PROFILE:
         const company = String(user.companies[0].company.id);
         if (user.cognitoId) {
-          return toast.warning(
+          return ToastManager.warning(
             'Este usuario ya tiene un perfil asignado, puede iniciar en la aplicación'
           );
         }
         if (!company) {
-          return toast.warning(
+          return ToastManager.warning(
             'Este usuario no tiene una empresa asignada, por favor asigne para poder asignarle un perfil'
           );
         }

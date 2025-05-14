@@ -1,22 +1,20 @@
 import { useState, useEffect } from 'preact/hooks';
+import { Form } from 'react-final-form';
 import { Button } from '@/components/common/button/button';
 import { TemplateService } from '@/services';
 import { FormService } from '@/services/form/form';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '@/pages/settings/store/settings';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { TaskService } from '@/services';
+import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 
 export const TemplateCreateForm = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const [useForm, setUseForm] = useState(false);
-  const [formId, setFormId] = useState('');
   const [useTasks, setUseTasks] = useState(false);
-  const [taskId, setTaskId] = useState('');
   const [forms, setForms] = useState<any[]>([]);
-  const [tasks, setTasks] = useState<any[]>([]); // ✅ Tareas
+  const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [_, navigate] = useLocation();
 
@@ -31,9 +29,11 @@ export const TemplateCreateForm = () => {
     appendHistory(menu);
   };
 
-  const handleSubmit = async () => {
-    if (!title.trim() || !description.trim()) {
-      toast.warning('Título y descripción son obligatorios');
+  const handleSubmit = async (values: any) => {
+    const { title, description, formId, taskSelector } = values;
+
+    if (!title?.trim() || !description?.trim()) {
+      ToastManager.warning('Título y descripción son obligatorios');
       return;
     }
 
@@ -44,17 +44,18 @@ export const TemplateCreateForm = () => {
     };
 
     if (useForm && formId) payload.data.formId = formId;
-    if (useTasks && taskId) payload.data.taskId = taskId;
+    if (useTasks && taskSelector?.value)
+      payload.data.taskId = taskSelector.value;
 
     setLoading(true);
     const res = await TemplateService.createTemplate(payload);
     setLoading(false);
 
     if (res.getStatus()) {
-      toast.success('Plantilla creada exitosamente');
+      ToastManager.success('Plantilla creada exitosamente');
       redirectToList();
     } else {
-      toast.error('Error al crear plantilla');
+      ToastManager.error('Error al crear plantilla');
     }
   };
 
@@ -63,10 +64,7 @@ export const TemplateCreateForm = () => {
       const res = await FormService.getBasicForms();
       if (res.getStatus()) setForms(res.getMany());
     };
-
-    if (useForm && forms.length === 0) {
-      fetchForms();
-    }
+    if (useForm && forms.length === 0) fetchForms();
   }, [useForm]);
 
   useEffect(() => {
@@ -74,129 +72,137 @@ export const TemplateCreateForm = () => {
       const res = await TaskService.getBasicTasks();
       if (res.getStatus()) setTasks(res.getMany());
     };
-
-    if (useTasks && tasks.length === 0) {
-      fetchTasks();
-    }
+    if (useTasks && tasks.length === 0) fetchTasks();
   }, [useTasks]);
 
   return (
     <div className='w-full px-4 sm:px-6'>
-      <form className='space-y-6 w-full'>
-        <div>
-          <label className='block text-sm font-medium text-gray-700'>
-            Título <span className='text-red-500'>*</span>
-          </label>
-          <input
-            type='text'
-            value={title}
-            onInput={(e) => setTitle(e.currentTarget.value)}
-            className='mt-1 w-full border rounded px-3 py-2'
-            placeholder='Ingrese el título de la plantilla...'
-            required
-          />
-        </div>
-
-        <div>
-          <label className='block text-sm font-medium text-gray-700'>
-            Descripción <span className='text-red-500'>*</span>
-          </label>
-          <textarea
-            value={description}
-            onInput={(e) => setDescription(e.currentTarget.value)}
-            className='mt-1 w-full border rounded px-3 py-2'
-            placeholder='Ingrese una descripción...'
-            rows={4}
-            required
-          />
-        </div>
-
-        <div>
-          <h3 className='text-md font-semibold mb-2'>Contenido</h3>
-
-          <div className='border rounded p-4 mb-4'>
-            <div className='flex items-center justify-between mb-2'>
-              <span className='font-medium flex items-center gap-2'>
-                <span className='vox-icon vx-icon-168 text-base' />
-                Agregar Formulario
-              </span>
+      <Form
+        onSubmit={handleSubmit}
+        render={({ handleSubmit, values }) => (
+          <form className='space-y-6 w-full' onSubmit={handleSubmit}>
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Título <span className='text-red-500'>*</span>
+              </label>
               <input
-                type='checkbox'
-                checked={useForm}
-                onChange={() => setUseForm(!useForm)}
-                className='toggle'
+                type='text'
+                name='title'
+                value={values.title || ''}
+                onInput={(e) => (values.title = e.currentTarget.value)}
+                className='mt-1 w-full border rounded px-3 py-2'
+                placeholder='Ingrese el título de la plantilla...'
+                required
               />
             </div>
-            <select
-              disabled={!useForm}
-              className='w-full border rounded px-3 py-2'
-              value={formId}
-              onChange={(e) => setFormId(e.currentTarget.value)}
-            >
-              <option value=''>Seleccione un formulario...</option>
-              {forms.map((form) => (
-                <option key={form.value} value={form.value}>
-                  {form.label}
-                </option>
-              ))}
-            </select>
-          </div>
 
-          <div className='border rounded p-4'>
-            <div className='flex items-center justify-between mb-2'>
-              <span className='font-medium flex items-center gap-2'>
-                <span className='vox-icon vx-icon-169 text-base' />
-                Agregar Tareas
-              </span>
-              <input
-                type='checkbox'
-                checked={useTasks}
-                onChange={() => setUseTasks(!useTasks)}
-                className='toggle'
+            <div>
+              <label className='block text-sm font-medium text-gray-700'>
+                Descripción <span className='text-red-500'>*</span>
+              </label>
+              <textarea
+                name='description'
+                value={values.description || ''}
+                onInput={(e) => (values.description = e.currentTarget.value)}
+                className='mt-1 w-full border rounded px-3 py-2'
+                placeholder='Ingrese una descripción...'
+                rows={4}
+                required
               />
             </div>
-            <div className='flex gap-2'>
-              <select
-                disabled={!useTasks}
-                className='w-full border rounded px-3 py-2'
-                value={taskId}
-                onChange={(e) => setTaskId(e.currentTarget.value)}
-              >
-                <option value=''>Seleccione una tarea...</option>
-                {tasks.map((task) => (
-                  <option key={task.id} value={task.id}>
-                    {task.description}
-                  </option>
-                ))}
-              </select>
 
-              <button
-                type='button'
-                disabled={!useTasks}
-                className='bg-gray-200 px-3 rounded text-xl'
-                title='Agregar tarea'
-              >
-                +
-              </button>
+            <div>
+              <h3 className='text-md font-semibold mb-2'>Contenido</h3>
+
+              <div className='border rounded p-4 mb-4'>
+                <div className='flex items-center justify-between mb-2'>
+                  <span className='font-medium flex items-center gap-2'>
+                    <span className='vox-icon vx-icon-168 text-base' />
+                    Agregar Formulario
+                  </span>
+                  <input
+                    type='checkbox'
+                    checked={useForm}
+                    onChange={() => setUseForm(!useForm)}
+                    className='toggle'
+                  />
+                </div>
+                <select
+                  name='formId'
+                  disabled={!useForm}
+                  value={values.formId || ''}
+                  onChange={(e) => (values.formId = e.currentTarget.value)}
+                  className='w-full border rounded px-3 py-2'
+                >
+                  <option value=''>Seleccione un formulario...</option>
+                  {forms.map((form) => (
+                    <option key={form.value} value={form.value}>
+                      {form.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className='border rounded p-4'>
+                <div className='flex items-center justify-between mb-2'>
+                  <span className='font-medium flex items-center gap-2'>
+                    <span className='vox-icon vx-icon-169 text-base' />
+                    Agregar Tareas
+                  </span>
+                  <input
+                    type='checkbox'
+                    checked={useTasks}
+                    onChange={() => setUseTasks(!useTasks)}
+                    className='toggle'
+                  />
+                </div>
+
+                <div className='flex gap-2 flex-col'>
+                  <SmartSelector
+                    name='taskSelector'
+                    options={tasks.map((task) => ({
+                      label: task.description,
+                      value: task.id,
+                    }))}
+                    multiple={false}
+                    allowAll={false}
+                    placeholder='Buscar tarea por descripción...'
+                    disabled={!useTasks}
+                    onChange={(option) => {
+                      values.taskSelector = option;
+                    }}
+                    id='task-selector'
+                  />
+
+                  <button
+                    type='button'
+                    disabled={!useTasks}
+                    className='bg-gray-200 px-3 py-1 rounded text-xl self-start'
+                    title='Agregar tarea'
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className='flex justify-end gap-4 pt-4'>
-          <Button
-            name='cancel-template'
-            label={'Cancelar'}
-            className='bg-white text-grey p-2'
-            onClick={redirectToList}
-          />
-          <Button
-            name='create-template'
-            label={loading ? 'Creando...' : 'Crear Plantilla'}
-            className='bg-primary text-white p-2'
-            onClick={handleSubmit}
-          />
-        </div>
-      </form>
+            <div className='flex justify-end gap-4 pt-4'>
+              <Button
+                name='cancel-template'
+                label={'Cancelar'}
+                className='bg-white text-grey p-2'
+                onClick={redirectToList}
+              />
+              <Button
+                name='create-template'
+                label={loading ? 'Creando...' : 'Crear Plantilla'}
+                className='bg-primary text-white p-2'
+                type='submit'
+              />
+            </div>
+          </form>
+        )}
+      />
     </div>
   );
 };

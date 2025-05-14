@@ -5,13 +5,17 @@ import { useEffect } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { columns } from './components/inspect.columns';
 import { FormService } from '@/services';
-import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
+import {
+  RESPONSE_MODE_SERVICE,
+  setResponse,
+  validateResponse,
+} from '../response/store/response';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { IRowAction } from '@/components/common/table/interface.d';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Table } from '@/components/common/table/table';
 import { appendHistory } from '../../store/settings';
-import { toast } from 'react-toastify';
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
 
 export const FormInspectSettingPage: FunctionComponent = () => {
@@ -43,12 +47,19 @@ export const FormInspectSettingPage: FunctionComponent = () => {
     const response = responses.value.find(
       (response) => response.id == action.id
     );
+
     if (!response?.structure) {
       if (!response?.structure) {
-        toast.error(t('forms.error.notExistResponse'));
+        ToastManager.error(t('form.error.notExistResponse'));
         return;
       }
     }
+
+    if (!validateResponse(response.structure)) {
+      ToastManager.error(t('form.error.invalidResponse'));
+      return;
+    }
+
     switch (action.action) {
       case ROW_ACTIONS.RESPONSE: {
         setResponse(
@@ -85,6 +96,7 @@ export const FormInspectSettingPage: FunctionComponent = () => {
         columns={columns}
         pageSize={20}
         onClickAction={handleOnClick}
+        isSettingTable
       />
     </section>
   );

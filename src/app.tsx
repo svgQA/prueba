@@ -12,7 +12,8 @@ import { hasUserTenant, useUserStore } from './store/slices';
 import { BaseService } from './utils/network';
 import { closeLoading, openLoading } from './store/signals/modals';
 import { useEffect } from 'preact/hooks';
-
+import { getIsInErrorState } from './store/signals/service/service.signals';
+import { ModalBaseService } from './components/compose/base-service/base-service';
 Amplify.configure(AWS_AMPLIFY_SETTINGS);
 
 // Componente AuthenticatedContent que decide qué renderizar basado en el estado de autenticación
@@ -38,6 +39,8 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
     setCognito,
     setTenant,
     setUser,
+    setLoaded,
+    getLoaded,
   } = useUserStore();
 
   useEffect(() => {
@@ -47,7 +50,14 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
   }, []);
 
   const validateUser = async () => {
-    await hasUserTenant(setToken, setCognito, setTenant, setUser);
+    const result = await hasUserTenant(
+      setToken,
+      setCognito,
+      setTenant,
+      setUser,
+      getLoaded
+    );
+    setLoaded(result);
   };
 
   return (
@@ -66,6 +76,7 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
           </div>
         </Router>
       </Switch>
+      <ModalBaseService isOpen={getIsInErrorState()} />
     </section>
   );
 };

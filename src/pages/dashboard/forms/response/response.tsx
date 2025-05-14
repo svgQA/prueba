@@ -59,7 +59,7 @@ export const FormResponseSettingPage: FunctionComponent<
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
         return (
-          <div class='mb-4 bg-white dark:bg-gray-800'>
+          <div class='mb-4 bg-white dark:bg-b-dark-dark'>
             <span />
             <button
               onClick={() => toggleSection(element.id)}
@@ -81,13 +81,13 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.TITLE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
             <h2 class='text-xl font-bold'>{element.label}</h2>
           </div>
         );
       case ELEMENT_TYPE.INPUT:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
             <Input
               name={element.id}
               type='text'
@@ -103,7 +103,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.TEXT_AREA:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
             <TextArea
               name={element.id}
               label={element.label}
@@ -118,7 +118,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.NUMBER_INPUT:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
             <Input
               name={element.id}
               type='number'
@@ -134,7 +134,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.DROPDOWN:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
             <Select
               name={element.id}
               options={element?.options}
@@ -150,7 +150,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.RADIO_BUTTON:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
             <Radio
               name={element.id}
               label={element.label}
@@ -165,7 +165,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.CHECK_BOX:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
             <Checkbox
               name={element.id}
               label={element.label}
@@ -180,7 +180,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.IMAGE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
             <File
               name={element.id}
               onChange={handleInputChange}
@@ -195,7 +195,7 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.FILES:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
             <File
               name={element.id}
               onChange={handleInputChange}
@@ -211,7 +211,7 @@ export const FormResponseSettingPage: FunctionComponent<
 
       default:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-gray-800'>
+          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
             {element.type}
             <label class='block text-sm font-medium mb-1'>
               {element.label}

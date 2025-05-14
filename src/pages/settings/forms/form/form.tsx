@@ -1,5 +1,5 @@
 import { useLocation } from 'wouter';
-import { columns } from './components/form.columns';
+import { getColumns } from './components/form.columns';
 import { useEffect } from 'preact/hooks';
 import { FormService } from '@/services';
 import { useSignal } from '@preact/signals';
@@ -14,8 +14,10 @@ import { Table } from '@/components/common/table/table';
 import { appendHistory } from '../../store/settings';
 import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
-import i18n from '@/i18n';
+import { useTranslation } from 'react-i18next';
+
 export const FormSettingPage = () => {
+  const { t } = useTranslation();
   const forms = useSignal<IFormResponse[]>([]);
   const [_, navigate] = useLocation();
 
@@ -62,7 +64,7 @@ export const FormSettingPage = () => {
 
   const handleOnClick = async (action: IRowAction) => {
     const format = forms.value.find((format) => format.id == action.id);
-    if (!format?.structure) throw Error('ERROR: Not exist format in this form');
+    if (!format?.structure) throw Error(t('form.error.general'));
     switch (action.action) {
       case ROW_ACTIONS.UPDATE: {
         const menu = {
@@ -121,7 +123,7 @@ export const FormSettingPage = () => {
         <div className='flex flex-row items-center justify-between'>
           <Button
             name='button-create-shift'
-            label={i18n.t('form.new')}
+            label={t('form.new')}
             icon='039'
             onClick={redirect}
             className='px-6 py-1 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
@@ -130,9 +132,10 @@ export const FormSettingPage = () => {
       </div>
       <Table<IFormResponse>
         data={forms.value}
-        columns={columns}
+        columns={getColumns(handleOnClick)}
         pageSize={10}
         onClickAction={handleOnClick}
+        isSettingTable
       />
     </Section>
   );

@@ -25,6 +25,7 @@ interface SmartSelectorProps {
   meta?: FieldMetaState<any>;
   label?: string;
   id?: string;
+  disabled?: boolean;
 }
 
 export function SmartSelector({
@@ -37,6 +38,7 @@ export function SmartSelector({
   label,
   id,
   onChange,
+  disabled = false,
 }: SmartSelectorProps) {
   const { input, meta } = useField<IOption[] | IOption | string>(name);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -167,7 +169,7 @@ export function SmartSelector({
 
   const dropdown = (
     <div
-      class='absolute bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-md z-50 max-h-60 overflow-auto vox-scroll-design'
+      class='absolute bg-white dark:bg-b-dark-dark border border-gray-200 dark:border-gray-700 rounded shadow-md z-50 max-h-60 overflow-auto vox-scroll-design'
       style={{
         top: dropdownPos.top + 5,
         left: dropdownPos.left,
@@ -238,17 +240,20 @@ export function SmartSelector({
         id={`${id}-input`}
         value={search}
         placeholder={placeholder}
+        disabled={disabled} // ✅ aquí
         onInput={(e) => setSearch((e.currentTarget as HTMLInputElement).value)}
-        onFocus={() => setFocused(true)}
+        onFocus={() => !disabled && setFocused(true)} // ✅ evitar focus si está deshabilitado
         className={`w-full border px-3 py-2 rounded
-          bg-white dark:bg-gray-800
-          text-gray-700 dark:text-gray-200
-          border-gray-300 dark:border-gray-700
-          focus:ring-blue-500 dark:focus:ring-blue-400
-          appearance-none
-          ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
-        `}
+    bg-white dark:bg-b-dark-dark
+    text-gray-700 dark:text-gray-200
+    border-gray-300 dark:border-gray-700
+    focus:ring-blue-500 dark:focus:ring-blue-400
+    appearance-none
+    ${disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}
+    ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
+  `}
       />
+
       {meta && meta.touched && meta.error && (
         <div class='text-sm text-red-600 mt-1'>{meta.error}</div>
       )}

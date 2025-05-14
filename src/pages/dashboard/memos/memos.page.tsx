@@ -18,6 +18,7 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 enum VIEW_NAME {
   TABLE,
@@ -43,15 +44,38 @@ export const MemosPage: FunctionComponent = () => {
 
   useEffect(() => {
     document.title = 'VX - Chat';
-    fetchInitialData();
     return () => {
       wsManager.removeListener('memos');
     };
   }, []);
 
   useEffect(() => {
-    fetchInitialData();
+    // TODO: No tocar esta parte, para evitar que se ejecute cuando no hay una compañia seleccionada
+    // Lo cual emite errores innecsarios.
+    // Esto tambien se puede prevenir desde el service, pero pasa que por cada peticicón el responderia
+    // con este error
+    if (selectedCompany) {
+      fetchInitialData();
+      handleSSE();
+    }
   }, [selectedCompany]);
+
+  const handleSSE = useCallback(async () => {
+    await MemoService.streamQuery(
+      (chunk: any) => handleEmitSSE(chunk),
+      () => ToastManager.success('Stream completado'),
+      (error: any) => {
+        // Show error toast
+        console.log('Stream error:', error);
+        // TODO: Cambiar para que BaseService muestre el error
+        //ToastManager.error(`Error en el stream: ${error.message}`);
+      }
+    );
+  }, []);
+
+  const handleEmitSSE = (_: any) => {
+    // console.log('data SSE: ', data);
+  };
 
   const fetchInitialData = async () => {
     const [responseMemos, responseUsers, responseSummary] = await Promise.all([
@@ -126,16 +150,14 @@ export const MemosPage: FunctionComponent = () => {
     [currentView.value]
   );
 
-  const onClickAction = (params: {
+  const onClickAction = (_: {
     id: string;
     type: string;
     action: ROW_ACTIONS;
   }) => {
-    console.log('Acción seleccionada:', params);
+    // console.log('Acción seleccionada:', params);
     // Aquí abres modales, haces navigations, etc.
   };
-
-  const defaultColumn = useSignal<string>('default');
 
   return (
     <Section
@@ -185,14 +207,11 @@ export const MemosPage: FunctionComponent = () => {
           <Table
             data={memos.value}
             columns={getColumns(onClickAction)}
-            showExpandableIcon
+            // showExpandableIcon
             pageSize={20}
             selectable
-            expandable={(row: Memo, currentColumnName?: string) => (
-              <ExpandableMultiple
-                type={currentColumnName || defaultColumn.value}
-                data={row}
-              />
+            expandable={(row: Memo, column?: string) => (
+              <ExpandableMultiple type={column} data={row} />
             )}
             visibility={{
               id: false,

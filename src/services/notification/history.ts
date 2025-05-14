@@ -127,8 +127,8 @@ export class NotificationHistoryService extends BaseService {
   }
 
   /**
- * 🗑 Eliminar notificación del historial
- */
+   * 🗑 Eliminar notificación del historial
+   */
   static async deleteNotification(id: string): Promise<void> {
     const model: IMakeRequest = {
       url: ['notifications', 'history', id],

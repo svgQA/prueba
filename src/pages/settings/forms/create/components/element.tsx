@@ -12,8 +12,9 @@ import { moveElement, updateForm, updateSectionForm } from '../store/question';
 import { ELEMENT_TYPE_VALUES, REGEX_PATTERNS } from '../store/constant';
 import { validateSelectedElement } from '../store/control';
 import { toggleListModal } from '../../lists/store/list';
-import { toast } from 'react-toastify';
-import i18n from '@/i18n';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { IElementError } from '@/types/form/error.type';
+import { useTranslation } from 'react-i18next';
 const ItemType = {
   QUESTION: 'question',
 };
@@ -27,6 +28,7 @@ export const FormElement = ({
   onSelect,
   onDelete,
 }: IElementProps) => {
+  const { t } = useTranslation();
   const openModalList = () => {
     toggleListModal({ question: question.id, page, section, field: 'options' });
   };
@@ -61,9 +63,7 @@ export const FormElement = ({
     const isURL = urlPattern.test(event);
 
     if (!isURL) {
-      toast.error('No es una url valida!', {
-        position: 'top-right',
-      });
+      ToastManager.error('No es una url valida!');
       return;
     }
 
@@ -77,18 +77,14 @@ export const FormElement = ({
               typeof item === 'object' && 'label' in item && 'value' in item
           )
         ) {
-          toast.error('La estructura de datos no es válida', {
-            position: 'top-right',
-          });
+          ToastManager.error('La estructura de datos no es válida');
           return;
         }
-        toast.success('Los datos estan bien.');
+        ToastManager.success('Los datos estan bien.');
         updateForm(question.id, page, section)('options', data.slice(0, 50));
       })
       .catch(() => {
-        toast.error('Error al obtener los datos', {
-          position: 'top-right',
-        });
+        ToastManager.error('Error al obtener los datos');
       });
   };
 
@@ -141,7 +137,7 @@ export const FormElement = ({
           <td
             colSpan={2}
             onClick={handleSelect}
-            className={`dark:bg-gray-800 ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`}
+            className={`dark:bg-b-dark-dark ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`}
           >
             {/* className={`${selected ? 'border-2 border-red-300' : ''}`} */}
             <div className='flex flex-row items-center'>
@@ -151,7 +147,7 @@ export const FormElement = ({
               ></span>
               <Input
                 type='text'
-                placeholder={i18n.t('form.placeholder.section_title')}
+                placeholder={t('form.placeholder.section_title')}
                 name='label'
                 id={`in-form-${question.id}-section-title`}
                 data-sectionid={question.id}
@@ -160,6 +156,7 @@ export const FormElement = ({
                 onChange={handleSectionInputChange}
                 borderless
                 thin
+                error={(question as IElementError).label_error}
               />
             </div>
           </td>
@@ -168,7 +165,7 @@ export const FormElement = ({
             {/* INPUT: title element */}
             <td
               onClick={handleSelect}
-              className={`rounded-bl-xl dark:bg-gray-800 flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
+              className={`rounded-bl-xl dark:bg-b-dark-dark flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
                 isOver ? 'bg-ternary text-t-dark' : ''
               } ${isDragging ? 'opacity-70' : ''} items-center`}
             >
@@ -183,22 +180,23 @@ export const FormElement = ({
                 <Input
                   type='text'
                   name='label'
-                  placeholder={i18n.t('form.placeholder.element_title')}
+                  placeholder={t('form.placeholder.element_title')}
                   id={`in-form-${question.id}-element-title`}
                   value={question.label}
                   onChange={handleInputChange}
                   borderless
                   thin
+                  error={(question as IElementError).label_error}
                 />
               </div>
             </td>
             {/* DROPDOW: select type */}
             <td
               onClick={handleSelect}
-              className='w-3/12 dark:bg-gray-800 rounded-br-xl'
+              className='w-3/12 dark:bg-b-dark-dark rounded-br-xl'
             >
               <Select
-                placeholder={i18n.t('form.placeholder.type_element')}
+                placeholder={t('form.placeholder.type_element')}
                 id={`se-form-${question.id}-element-type`}
                 icon='106'
                 value={question.type}
@@ -224,7 +222,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-required`}
                 name='required'
-                label={i18n.t('form.label.required')}
+                label={t('form.label.required')}
                 onChange={handleInputChange}
                 value={question.required}
               />
@@ -232,7 +230,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-visible`}
                 name='invisible'
-                label={i18n.t('form.label.invisible')}
+                label={t('form.label.invisible')}
                 onChange={handleInputChange}
                 value={question.invisible}
               />
@@ -242,7 +240,7 @@ export const FormElement = ({
                   <Switch
                     id={`cb-form-${question.id}-element-disable`}
                     name='disable'
-                    label={i18n.t('form.label.disable')}
+                    label={t('form.label.disable')}
                     onChange={handleInputChange}
                     value={question.disable}
                   />
@@ -250,7 +248,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-assigned`}
                 name='assigned'
-                label={i18n.t('form.label.administrator')}
+                label={t('form.label.administrator')}
                 onChange={handleInputChange}
                 value={question.assigned}
               />
@@ -266,7 +264,7 @@ export const FormElement = ({
                 id={`ta-form-${question.id}-element-description`}
                 value={question.description}
                 onChange={handleInputChange}
-                placeholder={i18n.t('form.placeholder.element_description')}
+                placeholder={t('form.placeholder.element_description')}
               />
             </div>
 
@@ -274,12 +272,12 @@ export const FormElement = ({
               {question.type === ELEMENT_TYPE.NUMBER_INPUT && (
                 <Input
                   name='default'
-                  label={i18n.t('form.label.default')}
+                  label={t('form.label.default')}
                   type='number'
                   id={`in-number-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
-                  placeholder={i18n.t('form.placeholder.default_value')}
+                  placeholder={t('form.placeholder.default_value')}
                   borderless
                   thin
                   icon='123'
@@ -289,12 +287,12 @@ export const FormElement = ({
                 question.type === ELEMENT_TYPE.TEXT_AREA) && (
                 <Input
                   name='default'
-                  label={i18n.t('form.label.default')}
+                  label={t('form.label.default')}
                   type='text'
                   id={`in-text-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
-                  placeholder={i18n.t('form.placeholder.default_value')}
+                  placeholder={t('form.placeholder.default_value')}
                   borderless
                   thin
                   icon='123'
@@ -305,9 +303,9 @@ export const FormElement = ({
                   <div class='w-full mr-4'>
                     {question.isUrl ? (
                       <Input
-                        label={i18n.t('form.label.list_url')}
+                        label={t('form.label.list_url')}
                         name='url'
-                        placeholder={i18n.t('form.placeholder.list_url')}
+                        placeholder={t('form.placeholder.list_url')}
                         onChange={handleInputChange}
                         id={`se-form-${question.id}-element-options-url`}
                         icon='104'
@@ -387,9 +385,9 @@ export const FormElement = ({
 
             {question.type === ELEMENT_TYPE.INPUT && (
               <Select
-                label={i18n.t('form.label.regex')}
+                label={t('form.label.regex')}
                 name='regex'
-                placeholder={i18n.t('form.placeholder.regex_patters')}
+                placeholder={t('form.placeholder.regex_patters')}
                 id={`se-form-${question.id}-element-regex`}
                 value={question.regex}
                 onChange={handleInputChange}
@@ -417,7 +415,7 @@ export const FormElement = ({
                 />
                 <Input
                   name='max'
-                  label={i18n.t('form.label.maximum')}
+                  label={t('form.label.maximum')}
                   id={`in-time-form-${question.id}-element-max`}
                   type={question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'}
                   value={question.max}
@@ -438,7 +436,7 @@ export const FormElement = ({
                 type='number'
                 id={`in-number-form-${question.id}-element-min`}
                 value={question.min}
-                placeholder={i18n.t('form.placeholder.min_length')}
+                placeholder={t('form.placeholder.min_length')}
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -456,7 +454,7 @@ export const FormElement = ({
                 type='number'
                 id={`in-number-form-${question.id}-element-max`}
                 value={question.max}
-                placeholder={i18n.t('form.placeholder.max_length')}
+                placeholder={t('form.placeholder.max_length')}
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -473,7 +471,7 @@ export const FormElement = ({
                 label='size'
                 id={`in-number-form-${question.id}-element-size`}
                 value={question.size}
-                placeholder={i18n.t('form.placeholder.size')}
+                placeholder={t('form.placeholder.size')}
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -489,7 +487,7 @@ export const FormElement = ({
                 label='Number Files'
                 id={`in-number-form-${question.id}-element-files`}
                 value={question.maxNumberFiles}
-                placeholder={i18n.t('form.placeholder.number_files')}
+                placeholder={t('form.placeholder.number_files')}
                 onChange={handleInputChange}
                 borderless
                 thin
