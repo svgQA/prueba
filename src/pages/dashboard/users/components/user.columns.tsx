@@ -119,7 +119,7 @@ export const getColumns = (
 
       return (
         <div className='flex items-center justify-center gap-2'>
-          <Badge icon='user-status' status={iconColor} size='md' />
+          <Badge icon='user-status' status={iconColor} size='md' width='w-16' />
         </div>
       );
     },

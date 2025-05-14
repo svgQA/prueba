@@ -28,7 +28,7 @@ export const DraggableCell = <T,>({
       style={getCommonPinningStyles<T>(cell.column, isDragging, transform)}
       className={`text-left px-2 relative ${
         cell.column.getIsPinned() ? 'bg-b-light dark:bg-b-dark' : ''
-      } ${selected ? 'bg-b-light-ligth dark:bg-b-dark-dark' : ''}`}
+      } ${selected ? 'bg-b-light-light dark:bg-b-dark-dark' : ''}`}
     >
       {/* Este span es para que el usuario pueda hacer click en la celda NO TOCAR */}
       {isClickable && cell.column.id !== 'actions' && (
