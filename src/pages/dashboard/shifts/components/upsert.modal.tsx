@@ -203,8 +203,12 @@ export const TaskForm = ({
 
   useEffect(() => {
     if (taskSelected) {
-      const selectedService = services.value.find((service) => service.value === Number(taskSelected.serviceId));
-      const selectedUser = users?.find((user) => user.value === Number(taskSelected.userId));
+      const selectedService = services.value.find(
+        (service) => service.value === Number(taskSelected.serviceId)
+      );
+      const selectedUser = users?.find(
+        (user) => user.value === Number(taskSelected.userId)
+      );
       setInitialValues({
         employeeId: selectedUser || '',
         start: taskSelected.start?.toString(),

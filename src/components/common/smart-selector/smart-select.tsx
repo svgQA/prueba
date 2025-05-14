@@ -38,7 +38,7 @@ export function SmartSelector({
   label,
   id,
   onChange,
-  disabled = false
+  disabled = false,
 }: SmartSelectorProps) {
   const { input, meta } = useField<IOption[] | IOption | string>(name);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -197,9 +197,10 @@ export function SmartSelector({
           }}
           class={`px-4 py-2 cursor-pointer flex items-center
             transition-colors duration-200 border-none
-            ${idx === selectedIndex
-              ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
+            ${
+              idx === selectedIndex
+                ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
         >
           {opt.label}

@@ -14,6 +14,7 @@ export interface IBadgeProps {
   borderless?: boolean;
   status?: 'error' | 'success' | 'warning' | 'info';
   outline?: boolean;
+  width?: 'w-24' | 'w-32' | 'w-48' | 'w-64' | 'w-96';
 }
 
 export interface IFloatBadgeProps extends PropsWithChildren {

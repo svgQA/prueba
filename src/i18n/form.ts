@@ -11,6 +11,8 @@ export const form_es = {
     },
     error: {
       general: 'Hay un error en el formulario',
+      invalidResponse: 'La estructura del formulario no es válida',
+      notExistResponse: 'La estructura del formulario no existe',
     },
     placeholder: {
       title: 'Título de la página',
@@ -87,6 +89,8 @@ export const form_en = {
     },
     error: {
       general: 'There is an error in the form',
+      invalidResponse: 'The form structure is invalid',
+      notExistResponse: 'The form structure does not exist',
     },
     placeholder: {
       title: 'Enter title page',

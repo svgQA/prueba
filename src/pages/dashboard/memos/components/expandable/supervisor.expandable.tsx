@@ -111,7 +111,7 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
                   lat: memo?.extraData?.place?.latitude || 0,
                   lng: memo?.extraData?.place?.longitude || 0,
                 }}
-                sendPoints={() => { }}
+                sendPoints={() => {}}
                 height='100%'
                 disablePointSelection={true}
               />
