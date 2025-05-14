@@ -435,7 +435,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
               label='Imagen'
               accept='image/*'
             />
-            <pre>{JSON.stringify(image.value, null, 2)}</pre>
+            {/* <pre>{JSON.stringify(image.value, null, 2)}</pre> */}
           </div>
           <StatusButton
             onClickClean={() => {}}

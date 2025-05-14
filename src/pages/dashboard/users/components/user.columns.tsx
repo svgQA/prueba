@@ -64,12 +64,14 @@ export const getColumns = (
       return (
         <div className='flex justify-center gap-1 flex-row'>
           {companies.map((company) => (
-            <Avatar
-              name={company.company.name}
-              size='sm'
-              square
-              key={company.id}
-            />
+            <div key={company.id} className="flex items-center gap-2">
+              <Avatar
+                name={company.company.name}
+                size='sm'
+                square
+              />
+              <span>{company.company.name}</span>
+            </div>
           ))}
         </div>
       );
