@@ -56,7 +56,7 @@ export const CompanySettingPage: FunctionComponent = () => {
   };
 
   const handleAdd = () => {
-    resetForm(true);
+    resetForm(!showForm.value);
   };
 
   const resetForm = (
