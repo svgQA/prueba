@@ -29,6 +29,7 @@ export const form_es = {
       size: 'Ingrese el tamaño',
       number_files: 'Ingrese el número de archivos',
       element_description: 'Ingrese la descripción',
+      company: 'Seleccione la empresa',
     },
     label: {
       required: 'Requerido',
@@ -107,6 +108,7 @@ export const form_en = {
       size: 'Enter size',
       number_files: 'Enter number files',
       element_description: 'Enter description',
+      company: 'Select company',
     },
     label: {
       required: 'Required',

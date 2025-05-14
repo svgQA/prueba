@@ -25,6 +25,9 @@ import { CompanyService, PlaceService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { IOption } from '@/components/common/multi/interface';
 import { AreaService } from '@/services/general/area';
+import { ICompanyResponse } from '@/utils/types/company.interface';
+import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { t } from 'i18next';
 
 interface CreateUserProps {
   onUserCreated?: (user: any) => void;
@@ -32,13 +35,12 @@ interface CreateUserProps {
 }
 
 export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUserProps) => {
-  console.log('props: ', props.user);
-
   const documentTypes = useSignal<IDocumentTypeResponse[]>([]);
   const countries = useSignal<ICountryResponse[]>([]);
   const departments = useSignal<IDepartmentResponse[]>([]);
   const municipalities = useSignal<IMunicipalityResponse[]>([]);
   const companies = useSignal<IOption[]>([]);
+  const allCompanies = useSignal<ICompanyResponse[]>([]);
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
   const image = useSignal<IPresignedRequest[]>([]);
   const areas = useSignal<IOption[]>([]);
@@ -50,6 +52,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
     getDocumentTypes();
     getCountries();
     getDepartments();
+    getAllCompanies();
   }, []);
 
   // const applyAllData = async (): Promise<void> => {
@@ -78,6 +81,10 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
         externalId: user.externalId || '',
         externalPlatformId: user.externalPlatformId || '',
         companyId: user.companies?.[0]?.company?.id || 1,
+        companies: user.companies?.map(comp => ({
+          label: comp.company.name,
+          value: comp.company.id
+        })) || [],
         extraData: {
           area: user.extraData?.area || '',
           city: user.extraData?.city || '',
@@ -119,6 +126,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
         externalId: '',
         externalPlatformId: '',
         companyId: 1,
+        companies: [],
         extraData: {
           country: '',
           state: '',
@@ -150,6 +158,12 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
     if (!response.getStatus()) return;
     const r_companies = response.getMany();
     companies.value = r_companies;
+  };
+
+  const getAllCompanies = async (): Promise<void> => {
+    const response = await CompanyService.getCompanies();
+    if (!response.getStatus()) return;
+    allCompanies.value = response.getMany();
   };
 
   const getAreas = async (company: string): Promise<void> => {
@@ -207,6 +221,32 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
 
     ToastManager.success(message);
   };
+
+  const onClean = () => {
+    initialValues.value = {
+      name: '',
+      surname: '',
+      email: '',
+      phone: '',
+      cardType: '',
+      cognitoId: '',
+      companies: [],
+      extraData: {
+        country: '',
+        state: '',
+        city: '',
+        area: '',
+        job: '',
+        sucursal: '',
+        company: ''
+      }
+    };
+    companies.value = [];
+    areas.value = [];
+    municipalities.value = [];
+    departments.value = [];
+    countries.value = [];
+  }
 
   return (
     <Form
@@ -499,10 +539,30 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
               label='Imagen'
               accept='image/*'
             />
+            <Field<string> name='companies' validate={required}>
+              {({ input, meta }) => (
+                <SmartSelector
+                  {...input}
+                  meta={meta}
+                  name='companies'
+                  id='select-companies'
+                  label='Empresa'
+                  options={allCompanies.value.map((company) => ({
+                    label: company.name,
+                    value: company.id
+                  }))}
+                  allowAll={true}
+                  menuPortalTarget={document.body}
+                  placeholder={t(
+                    'form.placeholder.company'
+                  )}
+                />
+              )}
+            </Field>
             {/* <pre>{JSON.stringify(image.value, null, 2)}</pre> */}
           </div>
           <StatusButton
-            onClickClean={() => { }}
+            onClickClean={onClean}
             submitting={false}
             pristine={false}
             form='user-form'
