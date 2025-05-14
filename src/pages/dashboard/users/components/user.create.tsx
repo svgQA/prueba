@@ -25,7 +25,6 @@ import { CompanyService, PlaceService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { IOption } from '@/components/common/multi/interface';
 import { AreaService } from '@/services/general/area';
-import { ICompanyResponse } from '@/utils/types/company.interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { t } from 'i18next';
 
@@ -180,18 +179,18 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
     await getMunicipalities(departmentId);
   };
 
-  const findDepartmentByName = (
-    name: string | undefined
-  ): IDepartmentResponse => {
-    const department = departments.value.find(
-      (department) => department.name === name
-    );
+  // const findDepartmentByName = (
+  //   name: string | undefined
+  // ): IDepartmentResponse => {
+  //   const department = departments.value.find(
+  //     (department) => department.name === name
+  //   );
 
-    if (!department) {
-      throw new Error(`department with name ${name} not found`);
-    }
-    return department;
-  };
+  //   if (!department) {
+  //     throw new Error(`department with name ${name} not found`);
+  //   }
+  //   return department;
+  // };
 
   const getMunicipalities = async (departmentId: number): Promise<void> => {
     const response = await PlaceService.getMunicipalities(departmentId);
