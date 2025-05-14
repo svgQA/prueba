@@ -40,7 +40,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
   const departments = useSignal<IDepartmentResponse[]>([]);
   const municipalities = useSignal<IMunicipalityResponse[]>([]);
   const companies = useSignal<IOption[]>([]);
-  const allCompanies = useSignal<ICompanyResponse[]>([]);
+  const allCompanies = useSignal<IOption[]>([]);
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
   const image = useSignal<IPresignedRequest[]>([]);
   const areas = useSignal<IOption[]>([]);
@@ -74,13 +74,13 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
         surname: user.surname,
         email: user.email,
         phone: user.phone,
-        cardType: user.cardType || '',
+        cardType: user.cardType,
         cardId: user.cardId,
         address: user.address,
         userType: user.userType,
-        externalId: user.externalId || '',
-        externalPlatformId: user.externalPlatformId || '',
-        companyId: user.companies?.[0]?.company?.id || 1,
+        externalId: user.externalId,
+        externalPlatformId: user.externalPlatformId,
+        companyId: user.companyId || user.companies?.[0]?.company?.id,
         companies: user.companies?.map(comp => ({
           label: comp.company.name,
           value: comp.company.id
@@ -163,7 +163,10 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
   const getAllCompanies = async (): Promise<void> => {
     const response = await CompanyService.getCompanies();
     if (!response.getStatus()) return;
-    allCompanies.value = response.getMany();
+    allCompanies.value = response.getMany().map(company => ({
+      label: company.name,
+      value: company.id
+    }));
   };
 
   const getAreas = async (company: string): Promise<void> => {
@@ -539,7 +542,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
               label='Imagen'
               accept='image/*'
             />
-            <Field<string> name='companies' validate={required}>
+            <Field<IOption[]> name='companies' validate={required}>
               {({ input, meta }) => (
                 <SmartSelector
                   {...input}
@@ -547,15 +550,14 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUser
                   name='companies'
                   id='select-companies'
                   label='Empresa'
-                  options={allCompanies.value.map((company) => ({
-                    label: company.name,
-                    value: company.id
-                  }))}
+                  options={allCompanies.value}
+                  multiple={true}
                   allowAll={true}
                   menuPortalTarget={document.body}
                   placeholder={t(
                     'form.placeholder.company'
                   )}
+                  onChange={() => {}}
                 />
               )}
             </Field>
