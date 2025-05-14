@@ -119,6 +119,7 @@ export const TaskForm = ({
           type='button'
           label={t('shifts.upsert.buttons.cancel')}
           onClick={onClose}
+          icon='041'
         />
         <Button
           id='btn-form-shift-save'
@@ -131,6 +132,7 @@ export const TaskForm = ({
           }
           className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
           form='form-shift-update'
+          icon='041'
         />
       </div>
     ),
@@ -270,7 +272,7 @@ export const TaskForm = ({
               id='form-shift-update'
               onKeyDown={preventKeyDown}
             >
-              <div className='grid grid-cols-2 gap-3 z-50'>
+              <div className='grid grid-cols-2 gap-3 z-50 grid-cols-en'>
                 <div class='col-span-1'>
                   <Field<IOption> name='employeeId' validate={required}>
                     {({ input, meta }) => (

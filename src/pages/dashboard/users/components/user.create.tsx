@@ -31,6 +31,14 @@ interface CreateUserProps {
   user?: IUserRequest;
 }
 
+const validatePhone = (value: string) => {
+  if (!value) return 'El teléfono es requerido';
+  if (!value.startsWith('+')) return 'El teléfono debe comenzar con +';
+  if (value.length < 8) return 'El teléfono debe tener al menos 8 dígitos';
+  if (!/^\+\d{8,15}$/.test(value)) return 'Formato de teléfono inválido';
+  return undefined;
+};
+
 export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const documentTypes = useSignal<IDocumentTypeResponse[]>([]);
   const countries = useSignal<ICountryResponse[]>([]);
@@ -193,7 +201,10 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
               )}
             </Field>
 
-            <Field<string> name='phone' validate={composeValidators(required)}>
+            <Field<string>
+              name='phone'
+              validate={composeValidators(required, validatePhone)}
+            >
               {({ input, meta }) => (
                 <Input
                   {...input}
@@ -204,9 +215,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                   normal
                   onChange={(e) => {
                     const value = e.currentTarget.value;
-                    input.onChange(
-                      value.startsWith('+57') ? value : `+57${value}`
-                    );
+                    input.onChange(value.startsWith('+') ? value : `+${value}`);
                   }}
                 />
               )}

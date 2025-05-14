@@ -44,8 +44,8 @@ import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
 import { Button } from '@/components/common/button/button';
 import { CompanyService } from '@/services';
-import { TextEllipsis } from '@/components/common/text-ellipsis';
-import { Avatar } from '@/components/common/Avatar';
+// import { TextEllipsis } from '@/components/common/text-ellipsis';
+// import { Avatar } from '@/components/common/Avatar';
 // import { setUser } from '../settings/general/user/create/store/user';
 
 // import { IconsModal } from '../globals/icons/icons';
@@ -68,7 +68,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setUser,
       getLoaded,
       setLoaded,
-      user,
+      // user,
     } = useUserStore();
 
     useEffect(() => {
@@ -136,16 +136,18 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
-          <header className='h-14 flex flex-row items-center justify-between sticky top-0 bg-b-content dark:bg-b-dark z-10'>
-            <div className='flex flex-row gap-2 items-center ml-8'>
-              <TextEllipsis text={user?.name || ''} maxWidth='100px' />
+          <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
+            {/*
+            <div className='flex flex-row gap-2 items-center ml-56 justify-between'>
               <Avatar
                 name={user?.name || ''}
                 src={user?.image || ''}
                 size='sm'
                 square
               />
+              <TextEllipsis text={user?.name || ''} maxWidth='100px' />
             </div>
+            */}
             <div className='flex flex-row px-6 gap-4 justify-between items-center'>
               <LanguageSwitcher borderless />
               <CustomSwitcher
