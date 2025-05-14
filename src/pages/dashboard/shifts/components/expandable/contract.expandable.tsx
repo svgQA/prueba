@@ -92,7 +92,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   </div>
                   <div>
                     <p className='font-semibold'>Turnos completados</p>
-                    <p >{metrics.value.completedShifts}</p>
+                    <p>{metrics.value.completedShifts}</p>
                   </div>
                 </div>
 
@@ -122,9 +122,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   </div>
                   <div>
                     <p className='font-semibold'>Cumplimiento</p>
-                    <p>
-                      {metrics.value.completionPercentage.toFixed(2)}%
-                    </p>
+                    <p>{metrics.value.completionPercentage.toFixed(2)}%</p>
                   </div>
                 </div>
               </div>

@@ -2,24 +2,25 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IProject } from '../projects';
 import dayjs from 'dayjs';
-
+import { Badge } from '@/components/common/badge/badge';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 const status: { key: string; label: string; color: string }[] = [
   {
     key: 'IN_PROGRESS',
     label: 'En progreso',
-    color: 'bg-orange-600 text-white',
+    color: 'info',
   },
-  { key: 'COMPLETED', label: 'Completado', color: 'bg-secondary text-white' },
-  { key: 'PENDING', label: 'Pendiente', color: 'bg-error text-white' },
+  { key: 'COMPLETED', label: 'Completado', color: 'success' },
+  { key: 'PENDING', label: 'Pendiente', color: 'error' },
 ];
 const priorities: { key: string; label: string; color: string }[] = [
   {
     key: 'LOW',
     label: 'Baja',
-    color: 'bg-orange-600 text-white',
+    color: 'info',
   },
-  { key: 'MEDIUM', label: 'Media', color: 'bg-secondary text-white' },
-  { key: 'HIGH', label: 'Alta', color: 'bg-error text-white' },
+  { key: 'MEDIUM', label: 'Media', color: 'warning' },
+  { key: 'HIGH', label: 'Alta', color: 'error' },
 ];
 
 export const columns: ColumnDef<IProject>[] = [
@@ -42,11 +43,7 @@ export const columns: ColumnDef<IProject>[] = [
     header: 'Descripción',
     cell: (info) => {
       const description = info.getValue() as string;
-      return (
-        <div className='w-full flex justify-center max-w-96 overflow-hidden text-ellipsis whitespace-nowrap'>
-          {description}
-        </div>
-      );
+      return <TextEllipsis text={description} maxWidth='300px' />;
     },
   },
   {
@@ -80,9 +77,13 @@ export const columns: ColumnDef<IProject>[] = [
       const value = info.getValue() as string;
       const state = status.find((sta) => sta.key == value);
       return (
-        <span className={`px-2 py-1 rounded ${state?.color}`}>
-          {state?.label}
-        </span>
+        <Badge
+          label={state?.label}
+          status={state?.color as 'info' | 'error' | 'warning' | 'success'}
+          outline
+          full
+          size='xs'
+        />
       );
     },
   },
@@ -95,9 +96,13 @@ export const columns: ColumnDef<IProject>[] = [
       const value = info.getValue() as string;
       const priority = priorities.find((sta) => sta.key == value);
       return (
-        <span className={`px-2 py-1 rounded ${priority?.color}`}>
-          {priority?.label}
-        </span>
+        <Badge
+          label={priority?.label}
+          status={priority?.color as 'info' | 'error' | 'warning' | 'success'}
+          outline
+          full
+          size='xs'
+        />
       );
     },
   },

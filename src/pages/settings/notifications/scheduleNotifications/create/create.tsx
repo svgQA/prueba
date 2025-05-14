@@ -23,7 +23,6 @@ export const ScheduledNotificationForm = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingSubmission, setPendingSubmission] = useState(false);
 
-
   useEffect(() => {
     document.title = 'VX - Programar Nueva Notificación';
     const fetchTemplates = async () => {
@@ -85,7 +84,6 @@ export const ScheduledNotificationForm = () => {
       setPendingSubmission(false);
     }
   };
-
 
   const redirectToList = () => {
     const menu = {
@@ -152,10 +150,12 @@ export const ScheduledNotificationForm = () => {
               }
             />
             <span
-              role="button"
+              role='button'
               className='vox-icon vx-icon-calendar-days text-base text-gray-500 bg-white p-[6px] rounded absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer'
               onClick={() => {
-                const input = document.getElementById('sendAtInput') as HTMLInputElement;
+                const input = document.getElementById(
+                  'sendAtInput'
+                ) as HTMLInputElement;
                 if (input?.showPicker) {
                   input.showPicker();
                 } else {
@@ -181,10 +181,12 @@ export const ScheduledNotificationForm = () => {
               }
             />
             <span
-              role="button"
+              role='button'
               className='vox-icon vx-icon-calendar-days text-base text-gray-500 bg-white p-[6px] rounded absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer'
               onClick={() => {
-                const input = document.getElementById('repeatUntilInput') as HTMLInputElement;
+                const input = document.getElementById(
+                  'repeatUntilInput'
+                ) as HTMLInputElement;
                 if (input?.showPicker) {
                   input.showPicker();
                 } else {
@@ -265,25 +267,26 @@ export const ScheduledNotificationForm = () => {
           onClick={handleSubmit}
         />
       </div>
-      
+
       {showConfirmModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+        <div className='fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center'>
+          <div className='bg-white rounded-lg shadow-lg max-w-md w-full p-6'>
+            <h3 className='text-lg font-semibold text-gray-800 mb-4'>
               ¿Deseas continuar?
             </h3>
-            <p className="text-sm text-gray-600 mb-6">
-              Las notificaciones programadas se enviarán únicamente a usuarios con servicio activo en el intervalo horario seleccionado.
+            <p className='text-sm text-gray-600 mb-6'>
+              Las notificaciones programadas se enviarán únicamente a usuarios
+              con servicio activo en el intervalo horario seleccionado.
             </p>
-            <div className="flex justify-end gap-3">
+            <div className='flex justify-end gap-3'>
               <button
-                className="px-4 py-2 text-sm rounded border border-gray-300 text-gray-700 hover:bg-gray-100"
+                className='px-4 py-2 text-sm rounded border border-gray-300 text-gray-700 hover:bg-gray-100'
                 onClick={() => setShowConfirmModal(false)}
               >
                 Cancelar
               </button>
               <button
-                className="px-4 py-2 text-sm rounded bg-primary text-white hover:bg-primary-opacity disabled:opacity-50"
+                className='px-4 py-2 text-sm rounded bg-primary text-white hover:bg-primary-opacity disabled:opacity-50'
                 onClick={handleConfirmedSubmit}
                 disabled={pendingSubmission}
               >
@@ -293,7 +296,6 @@ export const ScheduledNotificationForm = () => {
           </div>
         </div>
       )}
-
     </Section>
   );
 };

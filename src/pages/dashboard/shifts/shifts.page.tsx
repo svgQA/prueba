@@ -280,7 +280,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
     (id: string | number) => {
@@ -438,8 +438,10 @@ export const ShiftsPage: FunctionalComponent = () => {
   }) => {
     switch (params.action) {
       case ROW_ACTIONS.UPDATE:
-        const shiftUpdate = shifts.value.find((shift) => shift.id === Number(params.id));
-        
+        const shiftUpdate = shifts.value.find(
+          (shift) => shift.id === Number(params.id)
+        );
+
         setTaskSelected({
           id: Number(params.id),
           end: shiftUpdate?.end || '',
@@ -482,7 +484,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           title: t('shift.table.delete.title'),
           message: t('shift.table.delete.message'),
           onConfirm: () => deleteShift(params.id),
-          onCancel: () => { },
+          onCancel: () => {},
         });
         break;
     }

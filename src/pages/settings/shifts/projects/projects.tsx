@@ -2,7 +2,7 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { columns } from './components/places.columns';
+import { columns } from './components/project.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
@@ -103,6 +103,7 @@ export const ProjectsSettingPage: FunctionComponent = () => {
       <Table<IProject>
         data={projects.value}
         columns={columns}
+        pageSize={20}
         visibility={{
           id: false,
           description: false,

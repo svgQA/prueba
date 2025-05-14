@@ -253,7 +253,7 @@ export const Table = <T,>({
   };
 
   const buildSettings = () => (
-    <div className='min-w-80 rounded-b-md p-4 bg-b-light-dark dark:bg-b-dark-dark border-2 border-gray-100 dark:border-gray-700 rounded-md max-h-container-table overflow-y-auto vox-scroll-design'>
+    <div className='min-w-80 rounded-b-md p-4 bg-b-light-light dark:bg-b-dark-dark border-2 border-gray-100 dark:border-gray-700 rounded-md max-h-container-table overflow-y-auto vox-scroll-design'>
       {table.getAllLeafColumns().map((column, index) => {
         if (['id', 'actions'].includes(column.id)) return null;
         const columnHeader =
@@ -285,7 +285,7 @@ export const Table = <T,>({
               label={columnHeader}
               value={column.getIsVisible()}
               onChange={column.getToggleVisibilityHandler()}
-              backgroundColor='bg-b-light-dark dark:bg-b-dark-light'
+              backgroundColor='bg-b-content dark:bg-b-dark-light'
             />
           </div>
         );

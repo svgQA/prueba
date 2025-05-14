@@ -20,7 +20,8 @@ export const TemplateCreateForm = () => {
 
   const redirectToList = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
+        .to,
       label: 'notificaciones',
       id: 'template-notifications',
     };
@@ -43,7 +44,8 @@ export const TemplateCreateForm = () => {
     };
 
     if (useForm && formId) payload.data.formId = formId;
-    if (useTasks && taskSelector?.value) payload.data.taskId = taskSelector.value;
+    if (useTasks && taskSelector?.value)
+      payload.data.taskId = taskSelector.value;
 
     setLoading(true);
     const res = await TemplateService.createTemplate(payload);

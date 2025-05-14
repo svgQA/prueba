@@ -117,17 +117,17 @@ export const MapLibrePointsMap = ({
   // Handle points updates
   useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
-  
+
     if (pointsRef && pointsRef.length > 0) {
       // Comparar si ya están los mismos puntos antes de reemplazar
-      const currentIds = points.map(p => p.id).sort();
+      const currentIds = points.map((p) => p.id).sort();
       const refIds = pointsRef.map((p: any) => p.id).sort();
       const isSame = JSON.stringify(currentIds) === JSON.stringify(refIds);
       if (isSame) return;
-  
+
       const highestId = Math.max(...pointsRef.map((point: any) => point.id), 0);
       nextIdRef.current = highestId + 1;
-  
+
       const newPoints = JSON.parse(JSON.stringify(pointsRef));
       setPoints(newPoints);
     } else if (pointsRef && pointsRef.length === 0) {
@@ -624,7 +624,7 @@ export const MapLibrePointsMap = ({
       if (!navigator.geolocation) {
         return;
       }
-  
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -634,9 +634,9 @@ export const MapLibrePointsMap = ({
           console.error('Error de geolocalización:', err);
         },
         {
-          enableHighAccuracy: true, 
-          timeout: 10000, 
-          maximumAge: 0,   
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
         }
       );
     });

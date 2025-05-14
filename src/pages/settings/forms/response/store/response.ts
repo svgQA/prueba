@@ -88,3 +88,25 @@ export const updateResponse = (
     }),
   };
 };
+
+export const validateResponse = (model: any): boolean => {
+  if (!model) return false;
+  if (!Array.isArray(model.pages)) return false;
+
+  for (const page of model.pages) {
+    if (!page.id) return false;
+    if (!Array.isArray(page.elements)) return false;
+
+    for (const element of page.elements) {
+      if (!element.id) return false;
+
+      if (element.elements && Array.isArray(element.elements)) {
+        for (const nestedElement of element.elements) {
+          if (!nestedElement.id) return false;
+        }
+      }
+    }
+  }
+
+  return true;
+};
