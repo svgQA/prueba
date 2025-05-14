@@ -32,7 +32,7 @@ enum VIEW_NAME {
 export const UsersPage: FunctionalComponent = () => {
   const { t } = useTranslation();
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
-  const user = useSignal<IUserResponse>();
+  const user = useSignal<IUserResponse | any>();
 
   const totalUsers = useSignal(0);
   const connectedUsers = useSignal(0);
@@ -64,29 +64,25 @@ export const UsersPage: FunctionalComponent = () => {
   }, [onNotifications]);
 
   const fetchStats = async () => {
-    try {
-      const [hasValidResponse, statsResponse] = await Promise.all([
-        NotificationService.hasUsersWithPlayerId(),
-        UserService.getDashboardStats(),
-      ]);
+    const [hasValidResponse, statsResponse] = await Promise.all([
+      NotificationService.hasUsersWithPlayerId(),
+      UserService.getDashboardStats(),
+    ]);
 
-      const { hasUsers } = hasValidResponse.getOne();
-      setHasValidPlayer(hasUsers);
-      hasValidPlayerRef.current = hasUsers;
+    const { hasUsers } = hasValidResponse.getOne();
+    setHasValidPlayer(hasUsers);
+    hasValidPlayerRef.current = hasUsers;
 
-      if (statsResponse.getStatus()) {
-        const {
-          totalUsers: total,
-          connectedUsers: active,
-          disconnectedUsers: inactive,
-        } = statsResponse.getOne();
+    if (statsResponse.getStatus()) {
+      const {
+        totalUsers: total,
+        connectedUsers: active,
+        disconnectedUsers: inactive,
+      } = statsResponse.getOne();
 
-        totalUsers.value = total;
-        connectedUsers.value = active;
-        disconnectedUsers.value = inactive;
-      }
-    } catch (error) {
-      console.error('❌ Error obteniendo estadísticas del dashboard:', error);
+      totalUsers.value = total;
+      connectedUsers.value = active;
+      disconnectedUsers.value = inactive;
     }
   };
 
@@ -224,19 +220,19 @@ export const UsersPage: FunctionalComponent = () => {
   };
 
   const handleOnClick = async (action: IRowAction) => {
-    const user = findUser(Number(action.id));
+    const userFound = findUser(Number(action.id));
     switch (action.action) {
       case ROW_ACTIONS.DELETE:
         showAlert({
           title: 'Eliminar Usuario',
-          message: `¿Está seguro que desea eliminar el usuario ${user.name} ${user.surname} - ${user.cardId}?`,
-          onConfirm: () => deleteUser(user.id),
-          onCancel: () => {},
+          message: `¿Está seguro que desea eliminar el usuario ${userFound.name} ${userFound.surname} - ${userFound.cardId}?`,
+          onConfirm: () => deleteUser(userFound.id),
+          onCancel: () => { },
         });
         break;
       case ROW_ACTIONS.PROFILE:
-        const company = String(user.companies[0].company.id);
-        if (user.cognitoId) {
+        const company = String(userFound.companies[0].company.id);
+        if (userFound.cognitoId) {
           return ToastManager.warning(
             'Este usuario ya tiene un perfil asignado, puede iniciar en la aplicación'
           );
@@ -248,14 +244,14 @@ export const UsersPage: FunctionalComponent = () => {
         }
         showAlert({
           title: 'Asignar perfil',
-          message: `¿Estás seguro que deseas asignar perfil a ${user.name} ${user.surname}?, Tenga en cuenta que el usuario ya podrá usar la aplicación.`,
-          onConfirm: () => setProfile(user.id, company),
-          onCancel: () => {},
+          message: `¿Estás seguro que deseas asignar perfil a ${userFound.name} ${userFound.surname}?, Tenga en cuenta que el usuario ya podrá usar la aplicación.`,
+          onConfirm: () => setProfile(userFound.id, company),
+          onCancel: () => { },
         });
         break;
       case ROW_ACTIONS.UPDATE:
         // @ts-ignore
-        user.value = user;
+        user.value = userFound;
         handleViewChange(VIEW_NAME.CREATE);
         break;
     }
@@ -303,7 +299,10 @@ export const UsersPage: FunctionalComponent = () => {
         {currentView.value === VIEW_NAME.CREATE && (
           <div className='pt-14'>
             <CreateUser
-              onUserCreated={() => handleViewChange(VIEW_NAME.TABLE)}
+              onUserCreated={() => {
+                handleViewChange(VIEW_NAME.TABLE);
+                getUsers();
+              }}
               user={user.value}
             />
           </div>

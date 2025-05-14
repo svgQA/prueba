@@ -8,6 +8,7 @@ import {
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { Avatar } from '@/components/common/Avatar';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 // Función para obtener traducciones
 const t = (key: string) => i18next.t(key);
 
@@ -28,7 +29,7 @@ export const getColumns = (
       return (
         <div className='flex items-center gap-2'>
           <Avatar name={name} src={image} size='sm' square />
-          {`${name} ${surname}`}
+          <TextEllipsis text={`${name} ${surname}`} maxWidth='250px'/>
           {/*
           <span
             className='p-1 size-sm cursor-pointer text-left'
@@ -70,7 +71,7 @@ export const getColumns = (
                 size='sm'
                 square
               />
-              <span>{company.company.name}</span>
+              {/* <span>{company.company.name}</span> */}
             </div>
           ))}
         </div>
@@ -79,13 +80,13 @@ export const getColumns = (
   },
   {
     id: 'department',
-    accessorKey: 'extraData.area',
+    accessorKey: 'extraData.state',
     size: 180,
     header: t('users.columns.department'),
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
-      const value = extraData?.area;
+      const value = extraData?.state;
       return <div className='flex justify-center'>{value}</div>;
     },
   },

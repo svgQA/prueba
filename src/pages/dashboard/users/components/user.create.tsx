@@ -4,7 +4,7 @@ import { Form, Field } from 'react-final-form';
 import { required } from '@/utils/utilities';
 import { validateEmail, validateCardId } from '@/utils/validators';
 import { composeValidators } from '@/utils/validators';
-import { IUserRequest } from '@/types/auth';
+import { IUserRequest, IUserResponse } from '@/types/auth';
 import { UserService } from '@/services/general/user';
 import { getUserMode, USER_MODE_SERVICE } from '../store/user.store';
 import { Input } from '@/components/common/input/input';
@@ -28,10 +28,12 @@ import { AreaService } from '@/services/general/area';
 
 interface CreateUserProps {
   onUserCreated?: (user: any) => void;
-  user?: IUserRequest;
+  user?: IUserResponse;
 }
 
-export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
+export const CreateUser: FunctionComponent<CreateUserProps> = (props: CreateUserProps) => {
+  console.log('props: ', props.user);
+
   const documentTypes = useSignal<IDocumentTypeResponse[]>([]);
   const countries = useSignal<ICountryResponse[]>([]);
   const departments = useSignal<IDepartmentResponse[]>([]);
@@ -62,11 +64,72 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
 
   const getInitialValues = async (): Promise<void> => {
     if (props.user) {
-      initialValues.value = props.user;
-      const { extraData } = props.user;
-      const department = findDepartmentByName(extraData?.state);
-      getMunicipalities(department.id);
+      const user = props.user;
+      initialValues.value = {
+        id: user.id,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        phone: user.phone,
+        cardType: user.cardType || '',
+        cardId: user.cardId,
+        address: user.address,
+        userType: user.userType,
+        externalId: user.externalId || '',
+        externalPlatformId: user.externalPlatformId || '',
+        companyId: user.companies?.[0]?.company?.id || 1,
+        extraData: {
+          area: user.extraData?.area || '',
+          city: user.extraData?.city || '',
+          country: user.extraData?.country || '',
+          state: user.extraData?.state || '',
+          sucursal: user.extraData?.sucursal || '',
+          // TODO: Validar si es necesario
+          job: user.extraData?.job || '',
+          company: user.extraData?.company || ''
+        }
+      };
+
+      if (user.companies?.[0]?.company?.id) {
+        await getAreas(user.companies[0].company.id.toString());
+      }
+
+      if (user.extraData?.state) {
+        // Primero cargamos los departamentos para asegurarnos que estén disponibles
+        await getDepartments();
+        const department = departments.value.find(
+          (department) => department.name === user.extraData?.state
+        );
+        if (department?.id) {
+          await getMunicipalities(department.id);
+        }
+      }
+
       getUserMode.value.mode = USER_MODE_SERVICE.UPDATE;
+    } else {
+      initialValues.value = {
+        name: '',
+        surname: '',
+        email: '',
+        phone: '',
+        cardType: '',
+        cardId: '',
+        address: '',
+        userType: 'USER',
+        externalId: '',
+        externalPlatformId: '',
+        companyId: 1,
+        extraData: {
+          country: '',
+          state: '',
+          city: '',
+          area: '',
+          sucursal: '',
+          job: '',
+          company: ''
+        }
+      };
+      getUserMode.value.mode = USER_MODE_SERVICE.CREATE;
     }
   };
 
@@ -133,15 +196,14 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         : 'Usuario creado';
 
     user.companyId = Number(user.companyId || 1);
+
     if (getUserMode.value.mode === USER_MODE_SERVICE.UPDATE && user.id) {
       request = await UserService.update(user, user.id);
     } else {
       request = await UserService.create(user);
     }
     if (!request.getStatus()) return;
-    if (props.onUserCreated) {
-      props.onUserCreated(request.getOne());
-    }
+    props.onUserCreated?.(request.getOne());
 
     ToastManager.success(message);
   };
@@ -345,6 +407,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                   icon='123'
                   options={companies.value}
                   meta={meta}
+                  value={props.user?.companies?.[0]?.company?.id?.toString()}
                   onChange={(e) => {
                     const id = e.currentTarget.value;
                     if (id) {
@@ -411,6 +474,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                   icon='045'
                   options={areas.value}
                   meta={meta}
+                  value={props.user?.extraData?.area}
                 />
               )}
             </Field>
@@ -438,7 +502,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
             {/* <pre>{JSON.stringify(image.value, null, 2)}</pre> */}
           </div>
           <StatusButton
-            onClickClean={() => {}}
+            onClickClean={() => { }}
             submitting={false}
             pristine={false}
             form='user-form'
