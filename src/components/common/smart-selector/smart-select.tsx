@@ -40,8 +40,9 @@ export function SmartSelector({
   id,
   onChange,
   disabled = false,
+  meta,
 }: SmartSelectorProps) {
-  const { input, meta } = useField<IOption[] | IOption | string>(name);
+  const { input } = useField<IOption[] | IOption | string>(name);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState('');
@@ -75,9 +76,9 @@ export function SmartSelector({
       input.onChange(option);
     }
 
-    setSearch(''); // ✅ Limpiar búsqueda
-    setSelectedIndex(0); // ✅ Reiniciar índice
-    setFocused(false); // ✅ Cerrar el dropdown después de seleccionar
+    setSearch(''); // Limpiar búsqueda
+    setSelectedIndex(0); // Reiniciar índice
+    setFocused(false); // Cerrar el dropdown después de seleccionar
     onChange?.(option);
   };
 
@@ -119,6 +120,7 @@ export function SmartSelector({
 
     if (e.key === 'Escape') {
       setFocused(false);
+      setSearch(''); // Limpiar búsqueda al presionar Escape
     }
   };
 
@@ -234,9 +236,15 @@ export function SmartSelector({
         id={`${id}-input`}
         value={search}
         placeholder={placeholder}
-        disabled={disabled} // ✅ aquí
-        onInput={(e) => setSearch((e.currentTarget as HTMLInputElement).value)}
-        onFocus={() => !disabled && setFocused(true)} // ✅ evitar focus si está deshabilitado
+        disabled={disabled}
+        onInput={(e) => {
+          const value = (e.currentTarget as HTMLInputElement).value;
+          setSearch(value);
+          if (value.length > 0) {
+            setFocused(true);
+          }
+        }}
+        onFocus={() => !disabled && setFocused(true)}
         className={`w-full border px-3 py-2 rounded
         !bg-white dark:!bg-b-dark-dark
         text-gray-700 dark:text-gray-200

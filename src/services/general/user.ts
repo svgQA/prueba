@@ -1,13 +1,12 @@
-import { IOption } from '@/components/common/multi/interface';
-import { IPagination } from '@/types';
-import { IUserRequest, IUserResponse } from '@/types/auth';
-import { IUserAreaRequest } from '@/types/user/user.request';
+import { type IOption } from '@/components/common/multi/interface';
+import { type IPagination } from '@/types';
+import { type IUserRequest, type IUserResponse } from '@/types/auth';
+import { type IUserAreaRequest } from '@/types/user/user.request';
 
 import {
-  IDocumentTypeResponse,
-  IDeleteUserResponse,
-  ICountryResponse,
-  IUserAreaResponse,
+  type IDocumentTypeResponse,
+  type IDeleteUserResponse,
+  type IUserAreaResponse,
 } from '@/types/user/user.response';
 import { BaseService } from '@/utils/network';
 
@@ -71,13 +70,6 @@ export class UserService extends BaseService {
       method: REQUEST_METHODS.POST,
     };
     return await super.make_request<IUserResponse>(this.name, model);
-  }
-
-  static async getCountries() {
-    const model: IMakeRequest = {
-      url: ['user', 'countries'],
-    };
-    return await super.make_request<ICountryResponse>(this.name, model);
   }
 
   static async delete(id: number) {

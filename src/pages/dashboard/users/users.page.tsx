@@ -22,6 +22,7 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IRowAction } from '@/components/common/table/interface';
 import { Table } from '@/components/common/table/table';
+import { setUser, USER_MODE_SERVICE } from './store/user.store';
 
 enum VIEW_NAME {
   TABLE,
@@ -255,6 +256,7 @@ export const UsersPage: FunctionalComponent = () => {
       case ROW_ACTIONS.UPDATE:
         // @ts-ignore
         user.value = userFound;
+        setUser({ mode: USER_MODE_SERVICE.UPDATE, id: userFound.id });
         handleViewChange(VIEW_NAME.CREATE);
         break;
     }

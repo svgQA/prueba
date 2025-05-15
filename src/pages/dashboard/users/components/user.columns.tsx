@@ -76,26 +76,26 @@ export const getColumns = (
   },
   {
     id: 'department',
-    accessorKey: 'extraData.state',
+    accessorKey: 'extraData.state.label',
     size: 180,
     header: t('users.columns.department'),
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
-      const value = extraData?.state;
-      return <div className='flex justify-center'>{value}</div>;
+      const value = extraData?.state?.label;
+      return <TextEllipsis text={value} maxWidth='150px' />;
     },
   },
   {
     id: 'ciudad',
-    accessorKey: 'extraData.city',
+    accessorKey: 'extraData.city.label',
     size: 180,
     header: t('users.columns.city'),
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
-      const value = extraData?.city;
-      return <div className='flex justify-center'>{value}</div>;
+      const value = extraData?.city?.label;
+      return <TextEllipsis text={value} maxWidth='150px' />;
     },
   },
   {

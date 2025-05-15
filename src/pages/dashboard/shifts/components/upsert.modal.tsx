@@ -283,8 +283,6 @@ export const TaskForm = ({
                         id='select-employeeId'
                         label='Empleado'
                         options={users || []}
-                        multiple={false}
-                        allowAll={false}
                         menuPortalTarget={document.body}
                         placeholder={t(
                           'shifts.upsert.form.employeePlaceholder'
