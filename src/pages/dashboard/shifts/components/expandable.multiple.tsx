@@ -13,7 +13,7 @@ type Props = {
 };
 
 const getInfoContent = (type: string, shift: IShiftResponse) => {
-  const { service, employee, activityPct, roundPct } = shift;
+  const { service, employee, activityPct, roundPct, tasks } = shift;
   switch (type) {
     case 'service':
       return <ServiceInfo service={service} />;
@@ -32,7 +32,14 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
     // case 'report':
     //   return <ReportInfo data={data} />;
     case 'shift':
-      return <ShiftInfo data={shift} />;
+      return (
+        <ShiftInfo
+          tasks={tasks}
+          activityPct={activityPct}
+          start={shift.start}
+          end={shift.end}
+        />
+      );
     case 'round':
       return <RoundInfo roundPct={roundPct} />;
     case 'time-start':

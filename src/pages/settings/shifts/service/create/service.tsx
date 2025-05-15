@@ -36,7 +36,7 @@ interface FormData {
   description: string;
   hasRound: boolean;
   roundId: number;
-  task: any;
+  tasks: any;
 }
 
 export const ServiceCreateSettingPage: FunctionComponent = () => {
@@ -53,7 +53,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const forms = useSignal<IFormResponse[]>([]);
 
   const onSubmit = async (model: FormData) => {
-    model.task = setTasks(model.task);
+    model.tasks = setTasks(model.tasks);
     model.hasRound = !!model.roundId;
 
     let request;
@@ -77,21 +77,26 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
 
     const mappedTasks = _tasks?.map((task: any) => {
       const taskData = {
-        start: '',
-        status: '',
-        description: '',
+        hourStart: null as string | null,
+        formId: null,
+        name: null,
+        description: null,
       };
 
       if (!task.create && task.taskId) {
         const matchingTask: any = tasks.value.find(
           (val: any) => val.id === task.taskId
         );
-        taskData.start = matchingTask.start;
-        taskData.status = matchingTask.status;
+        taskData.hourStart = matchingTask.hourStart;
+        taskData.formId = matchingTask.formId;
+        taskData.name = matchingTask.name;
         taskData.description = matchingTask.description;
       } else {
-        taskData.start = task.start;
-        taskData.status = task.status;
+        taskData.hourStart = task.hourStart
+          ? dayjs(`${date}T${task.hourStart}:00`).toISOString() //TODO: Cambiar a ISO
+          : null;
+        taskData.formId = task.formId || null;
+        taskData.name = task.name;
         taskData.description = task.description;
       }
 
@@ -127,7 +132,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     forms.value = response.getMany();
   };
 
-  const getTaks = async () => {
+  const getTasks = async () => {
     const request: any = await TaskService.getTasks();
     tasks.value = request.data;
   };
@@ -159,7 +164,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   };
 
   useEffect(() => {
-    getTaks();
+    getTasks();
     getPlaces();
     getRounds();
     getProjects();
@@ -461,7 +466,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
               </div>
               <div class='col-span-2'>
                 <ExpansionPanel title='Tareas del servicio'>
-                  <FieldArray name='task'>
+                  <FieldArray name='tasks'>
                     {({ fields }: any) => (
                       <div className='space-y-6'>
                         <div className='flex items-center justify-between'>
@@ -507,8 +512,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                                 name='taskId'
                                                 icon='252'
                                                 optionValue='id'
-                                                optionLabel='description'
-                                                options={forms.value}
+                                                optionLabel='name'
+                                                options={tasks.value}
                                                 disabled={isCreateChecked}
                                                 onChange={(e) => {
                                                   const id = parseInt(
@@ -539,39 +544,27 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                         <div className='grid grid-cols-6 gap-4'>
                                           <div className='col-span-2'>
                                             <Field<string>
-                                              name={`${name}.start`}
+                                              name={`${name}.hourStart`}
                                               validate={required}
-                                              parse={(value) =>
-                                                value
-                                                  ? dayjs(value).toISOString()
-                                                  : ''
-                                              }
-                                              format={(value) =>
-                                                value
-                                                  ? dayjs(value).format(
-                                                      'YYYY-MM-DD HH:mm'
-                                                    )
-                                                  : ''
-                                              }
                                             >
                                               {({ input, meta }) => (
                                                 <Input
                                                   {...input}
-                                                  type='datetime-local'
+                                                  type='time'
                                                   id='task-start'
-                                                  label='Fecha inicio'
+                                                  label='Hora inicio'
                                                   meta={meta}
                                                 />
                                               )}
                                             </Field>
                                           </div>
 
-                                          <div className='col-span-2'>
-                                            <Field name='formId'>
+                                          <div className='col-span-3'>
+                                            <Field name={`${name}.formId`}>
                                               {({ input }) => (
                                                 <Select
                                                   {...input}
-                                                  placeholder='Selecione formulario...'
+                                                  placeholder='Seleccione formulario...'
                                                   label='Formulario'
                                                   name='formId'
                                                   icon='252'
@@ -588,38 +581,23 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                               )}
                                             </Field>
                                           </div>
-
-                                          <div className='col-span-2'>
+                                          <div className='col-span-6'>
                                             <Field<string>
-                                              name={`${name}.status`}
+                                              name={`${name}.name`}
+                                              validate={required}
                                             >
-                                              {({ input }) => (
-                                                <Select
+                                              {({ input, meta }) => (
+                                                <Input
                                                   {...input}
-                                                  placeholder='Selecione tipo...'
-                                                  label='Tipo'
-                                                  id='task-status'
-                                                  name='type'
-                                                  icon='252'
-                                                  options={[
-                                                    {
-                                                      value: 'CREATED',
-                                                      label: 'Creado',
-                                                    },
-                                                    {
-                                                      value: 'RESOLVED',
-                                                      label: 'Resuelto',
-                                                    },
-                                                    {
-                                                      value: 'CLOSED',
-                                                      label: 'Cerrado',
-                                                    },
-                                                  ]}
+                                                  id='task-name'
+                                                  placeholder='Ingrese nombre...'
+                                                  label='Nombre'
+                                                  type='text'
+                                                  meta={meta}
                                                 />
                                               )}
                                             </Field>
                                           </div>
-
                                           <div className='col-span-6'>
                                             <Field<string>
                                               name={`${name}.description`}

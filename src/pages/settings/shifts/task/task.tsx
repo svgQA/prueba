@@ -42,6 +42,7 @@ export const TaskSettingPage: FunctionComponent = () => {
 
   const getTasks = async () => {
     const request: any = await TaskService.getTasks();
+    console.log(request.data);
     tasks.value = request.data;
   };
 
