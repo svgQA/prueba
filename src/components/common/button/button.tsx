@@ -65,7 +65,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
         ${getBackgroundColor()}
         flex items-center text-center disabled:opacity-50
         ${icon && label ? 'justify-start' : 'justify-center'}
-        ${label ? 'pr-2' : ''}
+        ${label ? 'pr-4' : ''}
       `}
     >
       {icon && !end && (
