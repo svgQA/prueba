@@ -27,6 +27,8 @@ interface SmartSelectorProps {
   label?: string;
   id?: string;
   disabled?: boolean;
+  icon?: string;
+  end?: boolean;
 }
 
 export function SmartSelector({
@@ -41,6 +43,8 @@ export function SmartSelector({
   onChange,
   disabled = false,
   meta,
+  icon,
+  end = false,
 }: SmartSelectorProps) {
   const { input } = useField<IOption[] | IOption | string>(name);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -229,32 +233,46 @@ export function SmartSelector({
         ))}
       </div>
 
-      <input
-        ref={inputRef}
-        type='text'
-        name={name}
-        id={`${id}-input`}
-        value={search}
-        placeholder={placeholder}
-        disabled={disabled}
-        onInput={(e) => {
-          const value = (e.currentTarget as HTMLInputElement).value;
-          setSearch(value);
-          if (value.length > 0) {
-            setFocused(true);
-          }
-        }}
-        onFocus={() => !disabled && setFocused(true)}
-        className={`w-full border px-3 py-2 rounded
-        !bg-white dark:!bg-b-dark-dark
-        text-gray-700 dark:text-gray-200
-        border-gray-300 dark:border-gray-700
-        focus:ring-blue-500 dark:focus:ring-blue-400
-        appearance-none
-        ${disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}
-        ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
+      <div
+        className={`
+        border border-gray-200 dark:border-gray-700
+        rounded flex flex-row items-center w-full
+        bg-white dark:bg-b-dark-dark
       `}
-      />
+      >
+        {!end && icon && (
+          <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
+        )}
+        <div className='relative flex-1'>
+          <input
+            ref={inputRef}
+            type='text'
+            name={name}
+            id={`${id}-input`}
+            value={search}
+            placeholder={placeholder}
+            disabled={disabled}
+            onInput={(e) => {
+              const value = (e.currentTarget as HTMLInputElement).value;
+              setSearch(value);
+              if (value.length > 0) {
+                setFocused(true);
+              }
+            }}
+            onFocus={() => !disabled && setFocused(true)}
+            className={`w-full px-3 py-2 rounded
+            !bg-white dark:!bg-b-dark-dark
+            text-gray-700 dark:text-gray-200
+            border-gray-300 dark:border-gray-700
+            focus:ring-blue-500 dark:focus:ring-blue-400
+            appearance-none
+            ${disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}
+            ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
+          `}
+          />
+        </div>
+        {end && icon && <span className={`vox-icon vx-icon-${icon} px-2`} />}
+      </div>
 
       {meta && meta.touched && meta.error && (
         <div class='text-sm text-red-600 mt-1'>{meta.error}</div>

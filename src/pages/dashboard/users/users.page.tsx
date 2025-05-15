@@ -302,7 +302,7 @@ export const UsersPage: FunctionalComponent = () => {
         </div>
 
         {currentView.value === VIEW_NAME.CREATE && (
-          <div className='pt-14'>
+          <div className='pt-16'>
             <CreateUser
               onUserCreated={() => {
                 handleViewChange(VIEW_NAME.TABLE);
