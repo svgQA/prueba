@@ -22,6 +22,7 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IRowAction } from '@/components/common/table/interface';
 import { Table } from '@/components/common/table/table';
+import { setUser, USER_MODE_SERVICE } from './store/user.store';
 
 enum VIEW_NAME {
   TABLE,
@@ -230,7 +231,7 @@ export const UsersPage: FunctionalComponent = () => {
           title: 'Eliminar Usuario',
           message: `¿Está seguro que desea eliminar el usuario ${userFound.name} ${userFound.surname} - ${userFound.cardId}?`,
           onConfirm: () => deleteUser(userFound.id),
-          onCancel: () => { },
+          onCancel: () => {},
         });
         break;
       case ROW_ACTIONS.PROFILE:
@@ -249,12 +250,13 @@ export const UsersPage: FunctionalComponent = () => {
           title: 'Asignar perfil',
           message: `¿Estás seguro que deseas asignar perfil a ${userFound.name} ${userFound.surname}?, Tenga en cuenta que el usuario ya podrá usar la aplicación.`,
           onConfirm: () => setProfile(userFound.id, company),
-          onCancel: () => { },
+          onCancel: () => {},
         });
         break;
       case ROW_ACTIONS.UPDATE:
         // @ts-ignore
         user.value = userFound;
+        setUser({ mode: USER_MODE_SERVICE.UPDATE, id: userFound.id });
         handleViewChange(VIEW_NAME.CREATE);
         break;
     }

@@ -1,7 +1,7 @@
 import { JSX } from 'preact';
 
 interface TextEllipsisProps {
-  text: string;
+  text?: string;
   maxWidth?: string | number;
   className?: string;
   tooltip?: boolean;

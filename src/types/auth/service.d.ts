@@ -1,3 +1,4 @@
+import { IOption } from '@/components/common/multi/interface';
 import { IFormat } from './form';
 
 interface IUser {
@@ -15,7 +16,6 @@ export interface IUserRequest extends IUser {
   readonly address: string;
   readonly image?: string;
   readonly phone?: string;
-  companyId?: number;
   companies?: IOption[];
   readonly cardId?: string;
   readonly cardType?: CARD_ID_TYPE;
@@ -23,13 +23,12 @@ export interface IUserRequest extends IUser {
 }
 
 export interface IExtraData {
-  country: string;
-  state: string;
-  city: string;
-  job: string;
-  area: string;
-  sucursal: string;
-  company: string;
+  country?: IOption;
+  state?: IOption;
+  city?: IOption;
+  area?: IOption;
+  sucursal?: string;
+  job?: string;
 }
 
 export interface IRelationCompany {

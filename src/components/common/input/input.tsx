@@ -144,6 +144,7 @@ export const Input = ({
             icon={buttonIcon}
             type={buttonType}
             rounded
+            borderless
           />
         )}
         {!button && end && icon && (
