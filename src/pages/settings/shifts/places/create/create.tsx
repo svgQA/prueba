@@ -7,15 +7,15 @@ import { required, lengthSize } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { Section } from '@/components/common/section/section';
 import { useEffect, useState } from 'preact/hooks';
-import { useParams } from 'wouter';
-import { omitBy, isNull, pick } from 'lodash';
+import { useLocation, useParams } from 'wouter';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { PlaceService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { Slider } from '@/components/common/slider/slider';
-import { composeValidators } from '@/utils/validators';
+import { composeValidators, validateNumber } from '@/utils/validators';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 interface SelectOption extends IOption {
   latitude: string;
@@ -48,14 +48,12 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const municipalities = useSignal<SelectOption[]>([]);
   const countries = useSignal<IOption[]>([]);
 
-  const departmentId = useSignal<number>();
   const municipalityLocation = useSignal<ILocation>();
   const points = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
 
   const { id } = useParams(); // Obtiene el id de la URL
-
-  // const [_, navigate] = useLocation();
+  const [_, navigate] = useLocation();
 
   const sendPointsRef = (data: any) => {
     if (!data.length) return;
@@ -69,11 +67,12 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     const request =
       await PlaceService.getMunicipalitieList<SelectOption>(departmentId);
     if (!request.getStatus()) return;
-    municipalities.value = request.getMany();
+    const options = request.getMany();
+    municipalities.value = options;
   };
 
-  const fetchDepartments = async () => {
-    const request = await PlaceService.getDepartmentList(1);
+  const fetchDepartments = async (countryId: number) => {
+    const request = await PlaceService.getDepartmentList(countryId);
     if (!request.getStatus()) return;
     departments.value = request.getMany();
   };
@@ -85,35 +84,37 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   };
 
   const onSubmit = async (model: FormData) => {
-    // let request;
-    // let message: string;
     const data = {
-      ...model,
+      name: model.name,
+      address: model.address,
+      latitude: model.latitude,
+      longitude: model.longitude,
+      state: model.state,
       radius: green,
       countryId: Number(model.countryId.value),
       departmentId: Number(model.departmentId.value),
       municipalityId: Number(model.municipalityId.value),
+      ...(model.description == '' ? {} : { description: model.description }),
+      code: Number(model.code),
     };
 
-    console.log(data);
-    /*
+    let request: any;
     if (!id) {
       request = await PlaceService.createPlace(data);
-      message = 'Lugar creado exitosamente!';
     } else {
       request = await PlaceService.updatePlace(data, id);
-      message = 'Lugar editado exitosamente!';
     }
     if (!request.getStatus()) return;
 
-    ToastManager.success(message);
-
+    ToastManager.success('Accion con exito');
     navigate('/rounds/places');
-    */
   };
 
   const onChangeDeparment = async (departmentId: number) => {
     await fetchMunicipalities(departmentId);
+    // Resetear la ubicación cuando cambia el departamento
+    points.value = [];
+    municipalityLocation.value = undefined;
   };
 
   const setPosition = (municipalityId: number) => {
@@ -121,17 +122,14 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       (item) => item.value === municipalityId
     );
 
-    console.log('DATA: ', municipality);
     if (!municipality?.latitude || !municipality?.longitude) return;
-    const lat = Number(municipality.latitude);
-    const lng = Number(municipality.longitude);
+    const lat = Number(municipality.latitude.replace(',', '.'));
+    const lng = Number(municipality.longitude.replace(',', '.'));
 
     const modelLat = {
       lat: lat,
       lng: lng,
     };
-
-    console.log(modelLat);
 
     points.value = [{ id: 1, position: modelLat }];
     municipalityLocation.value = modelLat;
@@ -139,38 +137,68 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
 
   const setInitialValues = async () => {
     if (!id) return;
-    const userKeys = [
-      'code',
-      'name',
-      'description',
-      'address',
-      'latitude',
-      'longitude',
-      'state',
-      'type',
-      'countryId',
-      'zipCode',
-      'radius',
-      'municipalityId',
-    ] as const;
 
-    const request: any = await PlaceService.getPlaceById(id);
-    departmentId.value = request.model.municipality.departmentId;
+    const request = await PlaceService.getPlaceById(id);
+    let municipalityId = {
+      value: 0,
+      label: 'Seleccione un municipio',
+      latitude: 0,
+      longitude: 0,
+    };
+    let departmentId = {
+      value: 0,
+      label: 'Seleccione un departamento',
+    };
 
-    if (departmentId.value) {
-      await onChangeDeparment(departmentId.value);
+    let countryId = {
+      value: 0,
+      label: 'Seleccione un país',
+    };
+
+    if (request.getStatus()) {
+      const model = request.getOne();
+      municipalityId = {
+        value: model?.municipalityId,
+        label: model?.municipality?.name,
+        latitude: model?.municipality?.latitude,
+        longitude: model?.municipality?.longitude,
+      };
+
+      departmentId = {
+        value: model?.municipality?.department.id,
+        label: model?.municipality?.department?.name,
+      };
+
+      countryId = {
+        value: model?.country?.id,
+        label: model?.country?.name,
+      };
+
+      setGreen(model?.radius || 0);
+      points.value = [
+        {
+          id: 1,
+          position: {
+            lat: model?.latitude,
+            lng: model?.longitude,
+          },
+        },
+      ];
+      municipalityLocation.value = {
+        lat: model?.latitude,
+        lng: model?.longitude,
+      };
+      initialValues.value = {
+        ...model,
+        municipalityId,
+        departmentId,
+        countryId,
+      };
     }
-    const model = pick(omitBy(request.model, isNull), userKeys);
-    setGreen(model.radius || 0);
-    points.value = [
-      { id: 1, position: { lat: model.latitude, lng: model.longitude } },
-    ];
-    municipalityLocation.value = { lat: model.latitude, lng: model.longitude };
-    initialValues.value = model;
   };
 
   useEffect(() => {
-    Promise.all([setInitialValues(), fetchDepartments(), getCountries()]);
+    Promise.all([setInitialValues(), fetchDepartments(1), getCountries()]);
   }, []);
 
   return (
@@ -194,7 +222,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                   <div className='grid grid-cols-2 gap-3'>
                     <Field<string>
                       name='code'
-                      validate={composeValidators(required, lengthSize(3, 30))}
+                      validate={composeValidators(required, validateNumber)}
                     >
                       {({ input, meta }) => (
                         <Input
@@ -226,10 +254,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                     </Field>
                   </div>
 
-                  <Field<string>
-                    name='description'
-                    validate={composeValidators(required, lengthSize(3, 250))}
-                  >
+                  <Field<string> name='description'>
                     {({ input, meta }) => (
                       <TextArea
                         {...input}
@@ -430,8 +455,10 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               pointsAmount={1}
               sendPoints={(data) => {
                 const result = sendPointsRef(data);
-                form.change('latitude', result?.lat);
-                form.change('longitude', result?.lng);
+                if (result) {
+                  form.change('latitude', result.lat);
+                  form.change('longitude', result.lng);
+                }
               }}
               pointsRef={points.value}
               center={municipalityLocation.value}
@@ -443,6 +470,11 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               draggable={true}
               width='100%'
               clickPoint={() => {}}
+              key={
+                municipalityLocation.value
+                  ? `${municipalityLocation.value.lat}-${municipalityLocation.value.lng}`
+                  : 'initial'
+              }
             />
 
             {/* Botonera Convertir esto en un componente */}

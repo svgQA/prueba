@@ -15,6 +15,20 @@ export const composeValidators = (...validators: FieldValidator<any>[]) => {
   };
 };
 
+export const validateNumber: FieldValidator<string> = (
+  value: string
+): string | undefined => {
+  if (!value) return 'El número es requerido';
+
+  const numberRegex = /^\d{1,20}$/;
+
+  if (!numberRegex.test(value)) {
+    return 'El número debe tener entre 1 y 20 dígitos';
+  }
+
+  return undefined;
+};
+
 /**
  * Validates if a string is a valid email address
  * @param value - The string to validate

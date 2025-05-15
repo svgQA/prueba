@@ -7,7 +7,7 @@ import { columns } from './components/places.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect, useState } from 'preact/hooks';
-import { ToastManager } from '@/utils/toast/toast-manager';
+// import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store/settings';
 
@@ -51,7 +51,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
   const deletePlace = async (id: string) => {
     const request = await PlaceService.deletePlace(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Lugar eliminado');
+    // ToastManager.success('Lugar eliminado');
     getPlaces();
   };
 
