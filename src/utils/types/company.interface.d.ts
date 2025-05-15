@@ -3,12 +3,14 @@ export interface ICCompanyRequest {
   description: string;
   address?: string;
   logo?: string;
+  identification: string;
 }
 
 export interface IUCompanyRequest
-  extends Omit<ICCompanyRequest, 'name' | 'description'> {
+  extends Omit<ICCompanyRequest, 'name' | 'description' | 'identification'> {
   name?: string;
   description?: string;
+  identification?: string;
 }
 
 export interface ICompanyResponse {
@@ -17,6 +19,7 @@ export interface ICompanyResponse {
   description: string;
   address?: string;
   logo?: string;
+  identification: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;

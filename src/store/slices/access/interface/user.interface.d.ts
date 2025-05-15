@@ -6,6 +6,7 @@ export interface ICompany {
   type: string;
   selected?: boolean;
   role: string;
+  identification: string;
 }
 
 export interface IUser {
