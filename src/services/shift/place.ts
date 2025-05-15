@@ -78,7 +78,7 @@ export class PlaceService extends BaseService {
     return await super.make_request<ICountryResponse>(this.name, model);
   }
 
-  static async getMunicipalitieList<T = IOption>(departmentId: number) {
+  static async getMunicipalitieList<T extends IOption>(departmentId: number) {
     const model: IMakeRequest = {
       url: ['place', 'municipality', 'simple', 'list', `${departmentId}`],
     };

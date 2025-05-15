@@ -69,7 +69,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     const request =
       await PlaceService.getMunicipalitieList<SelectOption>(departmentId);
     if (!request.getStatus()) return;
-    municipalities.value = request.getMany();
+    const options = request.getMany();
+    municipalities.value = options;
   };
 
   const fetchDepartments = async () => {
@@ -114,6 +115,9 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
 
   const onChangeDeparment = async (departmentId: number) => {
     await fetchMunicipalities(departmentId);
+    // Resetear la ubicación cuando cambia el departamento
+    points.value = [];
+    municipalityLocation.value = undefined;
   };
 
   const setPosition = (municipalityId: number) => {
@@ -121,17 +125,14 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       (item) => item.value === municipalityId
     );
 
-    console.log('DATA: ', municipality);
     if (!municipality?.latitude || !municipality?.longitude) return;
-    const lat = Number(municipality.latitude);
-    const lng = Number(municipality.longitude);
+    const lat = Number(municipality.latitude.replace(',', '.'));
+    const lng = Number(municipality.longitude.replace(',', '.'));
 
     const modelLat = {
       lat: lat,
       lng: lng,
     };
-
-    console.log(modelLat);
 
     points.value = [{ id: 1, position: modelLat }];
     municipalityLocation.value = modelLat;
@@ -430,8 +431,10 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               pointsAmount={1}
               sendPoints={(data) => {
                 const result = sendPointsRef(data);
-                form.change('latitude', result?.lat);
-                form.change('longitude', result?.lng);
+                if (result) {
+                  form.change('latitude', result.lat);
+                  form.change('longitude', result.lng);
+                }
               }}
               pointsRef={points.value}
               center={municipalityLocation.value}
@@ -443,6 +446,11 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
               draggable={true}
               width='100%'
               clickPoint={() => {}}
+              key={
+                municipalityLocation.value
+                  ? `${municipalityLocation.value.lat}-${municipalityLocation.value.lng}`
+                  : 'initial'
+              }
             />
 
             {/* Botonera Convertir esto en un componente */}
