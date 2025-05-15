@@ -15,7 +15,12 @@ export const CompanyItem = memo<ICompanyItem>(
     >
       <div>
         <h4>{company.name}</h4>
-        <span>{company.role}</span>
+        <div className='flex flex-col'>
+          <span>{company.role}</span>
+          <span className='text-sm text-gray-500'>
+            {company.identification}
+          </span>
+        </div>
       </div>
       <span className='vx-icon vx-users' />
     </div>
