@@ -106,7 +106,6 @@ export const ProjectsSettingPage: FunctionComponent = () => {
         pageSize={20}
         visibility={{
           id: false,
-          description: false,
         }}
         onClickAction={handleOnClick}
         unsearch={false}

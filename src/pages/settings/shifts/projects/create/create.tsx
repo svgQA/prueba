@@ -5,7 +5,6 @@ import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
@@ -14,6 +13,7 @@ import { omitBy, isNull, pick } from 'lodash';
 import { UserService } from '@/services/general/user';
 import dayjs from 'dayjs';
 import { ContractService } from '@/services';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 
 interface FormData {
   name: string;
@@ -221,22 +221,12 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
 
               {/* Botonera */}
               <div className='w-full flex-row flex justify-end items-center'>
-                <Button
-                  id='btn-clean'
-                  name='btn-clean'
-                  type='button'
-                  label='Limpiar'
-                  onClick={() => form.reset()}
-                  disabled={submitting || pristine}
-                />
-
-                <Button
-                  id='btn-save'
-                  name='btn-save'
-                  type='submit'
+                <StatusButton
+                  onClickClean={() => form.reset()}
+                  submitting={submitting}
+                  pristine={pristine}
+                  form='form-project-create'
                   label={id ? 'Editar' : 'Guardar'}
-                  className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-                  disabled={submitting}
                 />
               </div>
             </form>

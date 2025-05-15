@@ -89,12 +89,12 @@ const WeeklyScheduler = ({
   return (
     <div className='p-4 w-full overflow-auto'>
       {/* Contenedor del título y el botón de limpiar */}
-      <div className='flex justify-between items-center mb-4'>
+      <div className='flex justify-between items-center'>
         <h1 className='text-2xl text-center '>{title}</h1>
         {/* Botón para limpiar la selección */}
         {clearSelection && (
           <button
-            className='px-4 py-2 bg-primary text-white rounded-md hover:bg-primary'
+            className='px-4 bg-primary text-white rounded-md hover:bg-primary'
             onClick={() => onClearSelection()}
           >
             Limpiar selección
@@ -102,8 +102,19 @@ const WeeklyScheduler = ({
         )}
       </div>
 
+      {/* Mostrar las horas seleccionadas por día agrupadas en bloques */}
+      <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
+        <ul className='flex flex-wrap gap-3 justify-center'>
+          {getSelectedHoursByDay(daysOfWeek, hours, selectedCells).map(
+            (daySelection) => (
+              <DataSchedule daySelection={daySelection} />
+            )
+          )}
+        </ul>
+      </div>
+
       <div
-        className='grid grid-cols-[80px_repeat(7,1fr)] w-full border border-gray-100 rounded-md'
+        className='grid grid-cols-[80px_repeat(7,1fr)] w-full border border-b-light-dark dark:border-b-dark-light rounded-md'
         onMouseUp={handleMouseUp}
         style={{ userSelect: 'none' }} // Deshabilitar la selección de texto en el contenedor
       >
@@ -112,7 +123,7 @@ const WeeklyScheduler = ({
         {daysOfWeek.map((day, index) => (
           <div
             key={index}
-            className='p-3 text-center font-bold text-sm sticky top-0 z-10 border-l border-gray-100'
+            className='p-3 text-center font-bold text-sm sticky top-0 z-10 border-l border-b-light-dark dark:border-b-dark-light'
           >
             {day}
           </div>
@@ -122,7 +133,7 @@ const WeeklyScheduler = ({
         {hours.map((hour) => (
           <React.Fragment key={hour}>
             {/* Columna de las horas */}
-            <div className='p-3 text-center font-semibold text-sm text-gray-text-light border-t border-gray-100'>
+            <div className='p-3 text-center font-semibold text-sm border-t border-b-light-dark dark:border-b-dark-light'>
               {hour}:00
             </div>
 
@@ -146,25 +157,6 @@ const WeeklyScheduler = ({
             })}
           </React.Fragment>
         ))}
-      </div>
-
-      {/* Mostrar las horas seleccionadas por día agrupadas en bloques */}
-      <div className='mt-6 bg-white rounded-lg p-4'>
-        <h2 className='text-xl font-semibold mb-3'>Horas seleccionadas:</h2>
-        <ul className='flex flex-wrap gap-3'>
-          {getSelectedHoursByDay(daysOfWeek, hours, selectedCells).map(
-            (daySelection) => (
-              <DataSchedule daySelection={daySelection} />
-            )
-          )}
-          {/*<pre>
-            {JSON.stringify(
-              getSelectedHoursByDay(daysOfWeek, hours, selectedCells),
-              null,
-              2
-            )}
-          </pre>*/}
-        </ul>
       </div>
     </div>
   );
