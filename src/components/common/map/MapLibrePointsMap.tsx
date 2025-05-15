@@ -7,6 +7,7 @@ import { Button } from '@/components/common/button/button';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { IMapProps, MapPoint } from './interface';
 import { themeSignal } from '@/components/compose/button/signal.theme';
+import { useTranslation } from 'react-i18next';
 
 export const MapLibrePointsMap = ({
   pointsAmount = 100,
@@ -48,6 +49,8 @@ export const MapLibrePointsMap = ({
   const [isMarkerClick, setIsMarkerClick] = useState<boolean>(false);
   const [userLocation, setUserLocation] = useState<MapPoint | null>(null);
   const watchIdRef = useRef<number | null>(null);
+  const [permissionStatus, setPermissionStatus] = useState<PermissionState | null>(null);
+  const { t } = useTranslation();
 
   // Map style configuration
   /*
@@ -320,7 +323,6 @@ export const MapLibrePointsMap = ({
         typeof point.position.lat !== 'number' ||
         typeof point.position.lng !== 'number'
       ) {
-        console.warn('Invalid point structure:', point);
         return;
       }
 
@@ -444,7 +446,7 @@ export const MapLibrePointsMap = ({
   // Handle marker drag end
   const handleMarkerDragEnd = (id: number, lat: number, lng: number) => {
     if (radialPoint?.id === id) {
-      ToastManager.error('Punto del lugar no se debe mover');
+      ToastManager.error(t('maps.connect.error_point_move'));
       updateMarkers();
       return;
     }
@@ -575,7 +577,7 @@ export const MapLibrePointsMap = ({
       setMarkerOnMap(lat, lng);
       setCoords({ lat: '', lng: '' });
     } else {
-      ToastManager.error('Por favor ingrese coordenadas válidas');
+      ToastManager.error(t('maps.connect.error_point'));
     }
   };
 
@@ -584,13 +586,13 @@ export const MapLibrePointsMap = ({
     const pointExists = points.some((p) => p.id === id);
 
     if (!pointExists) {
-      ToastManager.error('No se pudo encontrar el punto para eliminar');
+      ToastManager.error(t('maps.connect.error_point_remove'));
       return;
     }
 
     setPoints((prevPoints) => {
       const newPoints = prevPoints.filter((p) => p.id !== id);
-      ToastManager.success('Punto eliminado correctamente');
+      ToastManager.success(t('maps.connect.success_point_remove'));
       return newPoints;
     });
 
@@ -603,7 +605,7 @@ export const MapLibrePointsMap = ({
     const newLng = Number.parseFloat(editCoords.lng);
 
     if (isNaN(newLat) || isNaN(newLng)) {
-      ToastManager.error('Por favor ingrese coordenadas válidas');
+      ToastManager.error(t('maps.connect.error_point'));
       return;
     }
 
@@ -616,23 +618,40 @@ export const MapLibrePointsMap = ({
     );
 
     closeActivePopup();
-    ToastManager.success('Punto actualizado correctamente');
+    ToastManager.success(t('maps.connect.success_point'));
   };
 
   const getLocation = (): Promise<{ lat: number; lng: number }> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
         return;
       }
 
+      const handleSuccess = (position: GeolocationPosition) => {
+        const { latitude, longitude } = position.coords;
+        resolve({ lat: latitude, lng: longitude });
+      };
+
+      const handleError = (err: GeolocationPositionError) => {
+        switch (err.code) {
+          case err.PERMISSION_DENIED:
+            ToastManager.error(t('maps.connect.error_permission'));
+            break;
+          case err.POSITION_UNAVAILABLE:
+            ToastManager.error(t('maps.connect.error_location'));
+            break;
+          case err.TIMEOUT:
+            ToastManager.error(t('maps.connect.error_timeout'));
+            break;
+          default:
+            ToastManager.error(t('maps.connect.error_unknown'));
+        }
+        reject(err);
+      };
+
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          resolve({ lat: latitude, lng: longitude });
-        },
-        (err) => {
-          console.error('Error de geolocalización:', err);
-        },
+        handleSuccess,
+        handleError,
         {
           enableHighAccuracy: true,
           timeout: 10000,
@@ -642,7 +661,6 @@ export const MapLibrePointsMap = ({
     });
   };
 
-  // Add this function after the other utility functions
   const getUserLocation = useCallback(async () => {
     if (!adminUser) {
       return;
@@ -670,9 +688,51 @@ export const MapLibrePointsMap = ({
         essential: true,
       });
     }
-
-    ToastManager.success('Location set to exact coordinates');
   }, [adminUser]);
+
+  useEffect(() => {
+    if (!adminUser) return;
+    let mounted = true;
+
+    const checkAndMonitorPermissions = async () => {
+      const permission = await navigator.permissions.query({ name: 'geolocation' });
+      if (!mounted) return;
+      setPermissionStatus(permission.state);
+
+      const handlePermissionChange = (e: Event) => {
+        if (!mounted) return;
+        const target = e.target as PermissionStatus;
+        const newState = target.state;
+        setPermissionStatus(newState);
+
+        if (newState === 'granted') {
+          ToastManager.success(t('maps.connect.success'));
+          getUserLocation();
+        } else if (newState === 'denied') {
+          ToastManager.error(t('maps.connect.error_permission'));
+          setUserLocation(null);
+        }
+      };
+
+      permission.addEventListener('change', handlePermissionChange);
+
+      // Initial check for granted permission
+      if (permission.state === 'granted') {
+        ToastManager.success(t('maps.connect.success'));
+        getUserLocation();
+      }
+
+      return () => {
+        permission.removeEventListener('change', handlePermissionChange);
+      };
+    };
+
+    checkAndMonitorPermissions();
+
+    return () => {
+      mounted = false;
+    };
+  }, [adminUser, getUserLocation]);
 
   // Clean up watch on unmount
   useEffect(() => {
