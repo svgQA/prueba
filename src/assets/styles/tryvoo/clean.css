@@ -14,7 +14,7 @@
   }
 
   body {
-    @apply min-h-screen bg-white text-gray-900;
+    @apply min-h-screen text-gray-900;
   }
 
   h1,

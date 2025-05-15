@@ -331,9 +331,9 @@ export const Table = <T,>({
                       <td className='text-center left-0 min-w-[30px]'>
                         <span
                           // TODO: Toggle expandable row
-                          // onClick={() => {
-                          //   row.toggleExpanded()
-                          // }}
+                          onClick={() => {
+                            row.toggleExpanded();
+                          }}
                           className={`vox-icon ${
                             row.getIsExpanded() ? 'vx-icon-002' : 'vx-icon-001'
                           } cursor-pointer size-sm`}
@@ -413,7 +413,7 @@ export const Table = <T,>({
                                   onSelectionChange?.(Object.values(updated));
                                 }}
                               />
-                              <span className='text-sm text-gray-700'>
+                              <span className='text-sm'>
                                 {allGroupSelected
                                   ? 'Deseleccionar'
                                   : 'Seleccionar todas'}
@@ -767,7 +767,7 @@ export const Table = <T,>({
                 {table.getHeaderGroups().map((headerGroup, index) => (
                   <tr
                     key={`${headerGroup.id}-${index}`}
-                    className='sticky top-0 z-[2]'
+                    className='sticky top-0 z-[5]'
                   >
                     <th
                       colSpan={1}

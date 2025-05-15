@@ -52,10 +52,10 @@ export const validateCardId: FieldValidator<string> = (
 ): string | undefined => {
   if (!value) return 'El número de documento es requerido';
 
-  const cardIdRegex = /^\d{10}$/;
+  const cardIdRegex = /^\d{5,20}$/;
 
   if (!cardIdRegex.test(value)) {
-    return 'Por favor ingrese un número de documento válido';
+    return 'El número de documento debe tener entre 5 y 20 dígitos';
   }
 
   return undefined;

@@ -61,15 +61,11 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
   };
 
   return (
-    <section className='h-screen'>
+    <section>
       <Switch>
         <Route path={PAGES_LIST.HOME} component={HomeLayout} />
         <Router base={PAGES_LIST.DASHBOARD}>
           <div className='w-full h-full'>
-            {/*
-              Usamos Authenticator como proveedor de contexto sin UI por defecto
-              y dentro controlamos qué renderizar con nuestro componente personalizado
-            */}
             <Authenticator.Provider>
               <AuthenticatedContent props={props} />
             </Authenticator.Provider>

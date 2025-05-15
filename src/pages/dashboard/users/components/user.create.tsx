@@ -105,8 +105,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         cardId: user.cardId,
         address: user.address,
         userType: user.userType,
-        externalId: user.externalId,
-        externalPlatformId: user.externalPlatformId,
+        // externalId: user.externalId,
+        // externalPlatformId: user.externalPlatformId,
         companies: userCompanies,
         extraData: userExtraData,
       };
@@ -262,377 +262,275 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
 
   return (
     <div className='flex flex-col'>
-      <h2 className='text-2xl font-bold mt-3 border-b border-b-light-dark dark:border-b-dark-light pb-2 w-full text-end'>
-        {getUserMode.value.mode === USER_MODE_SERVICE.CREATE
-          ? 'Crear usuario'
-          : 'Editar usuario'}
-      </h2>
+      <div className='absolute top-0 right-0 flex items-center justify-center bg-red gap-10 flex-row'>
+        <h2 className='text-2xl font-bold mt-3 pb-2 w-full text-start'>
+          {getUserMode.value.mode === USER_MODE_SERVICE.CREATE
+            ? 'Crear usuario'
+            : 'Editar usuario'}
+        </h2>
+        <StatusButton
+          onClickClean={onClean}
+          submitting={false}
+          pristine={false}
+          form='user-form'
+        />
+      </div>
+
       <Form
         initialValues={initialValues.value}
         onSubmit={onSubmit}
         render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit} id='user-form'>
-            <div className='grid grid-cols-2 gap-4 py-3'>
-              <Field<string> name='name' validate={required}>
-                {({ input, meta }) => (
-                  <Input
-                    {...input}
-                    placeholder='Ingrese el nombre...'
-                    label='Nombre'
-                    type='text'
-                    meta={meta}
-                  />
-                )}
-              </Field>
+            <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
+              {/* Información Personal */}
+              <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
+                <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
+                  Información Personal
+                </h3>
+                <div className='grid grid-cols-1 xl:grid-cols-2 gap-4'>
+                  <Field<string> name='name' validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder='Ingrese el nombre...'
+                        label='Nombre'
+                        type='text'
+                        icon='231'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
 
-              <Field<string> name='surname' validate={required}>
-                {({ input, meta }) => (
-                  <Input
-                    {...input}
-                    placeholder='Ingrese el apellido...'
-                    label='Apellido'
-                    type='text'
-                    meta={meta}
-                  />
-                )}
-              </Field>
+                  <Field<string> name='surname' validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder='Ingrese el apellido...'
+                        label='Apellido'
+                        type='text'
+                        icon='231'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
 
-              <Field<string>
-                name='email'
-                validate={composeValidators(required, validateEmail)}
-              >
-                {({ input, meta }) => (
-                  <Input
-                    {...input}
-                    placeholder='Ingrese el email...'
-                    label='Email'
-                    type='email'
-                    meta={meta}
-                    normal
-                  />
-                )}
-              </Field>
+                  <Field<string>
+                    name='email'
+                    validate={composeValidators(required, validateEmail)}
+                  >
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder='Ingrese el email...'
+                        label='Email'
+                        type='email'
+                        icon='231'
+                        meta={meta}
+                        normal
+                      />
+                    )}
+                  </Field>
 
-              <Field<string>
-                name='phone'
-                validate={composeValidators(required, validatePhone)}
-              >
-                {({ input, meta }) => (
-                  <Input
-                    {...input}
-                    placeholder='Ingrese el teléfono...'
-                    label='Teléfono'
-                    type='tel'
-                    meta={meta}
-                    normal
+                  <Field<string>
+                    name='phone'
+                    validate={composeValidators(required, validatePhone)}
+                  >
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder='Ingrese el teléfono...'
+                        label='Teléfono'
+                        type='tel'
+                        meta={meta}
+                        icon='231'
+                        normal
+                        onChange={(e) => {
+                          const value = e.currentTarget.value;
+                          input.onChange(
+                            value.startsWith('+') ? value : `+${value}`
+                          );
+                        }}
+                      />
+                    )}
+                  </Field>
+                </div>
+              </div>
+
+              {/* Información de Documento */}
+              <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
+                <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
+                  Información de Documento
+                </h3>
+                <div className='grid grid-cols-1 gap-4'>
+                  <Field<string> name='cardType' validate={required}>
+                    {({ input, meta }) => (
+                      <Select
+                        {...input}
+                        placeholder='Seleccione tipo de documento...'
+                        label='Tipo de documento'
+                        name='cardType'
+                        icon='231'
+                        optionValue='id'
+                        optionLabel='name'
+                        onChange={(e) => {
+                          const id = parseInt(e.currentTarget.value);
+                          input.onChange(id);
+                        }}
+                        options={documentTypes.value}
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+
+                  <Field<string>
+                    name='cardId'
+                    validate={composeValidators(required, validateCardId)}
+                  >
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder='Ingrese el numero de documento...'
+                        label='Numero de documento'
+                        type='text'
+                        icon='231'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+              </div>
+
+              {/* Información de Ubicación */}
+              <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
+                <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
+                  Información de Ubicación
+                </h3>
+                <div className='grid grid-cols-1 xl:grid-cols-2 gap-4'>
+                  <Field<IOption>
+                    name='extraData.country'
+                    validate={validateOption}
+                  >
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        id='country'
+                        label='País'
+                        icon='321'
+                        options={countries.value}
+                      />
+                    )}
+                  </Field>
+
+                  <Field<IOption>
+                    name='extraData.state'
+                    validate={validateOption}
+                  >
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        id='departmentId'
+                        label='Departamento'
+                        icon='321'
+                        options={departments.value}
+                        onChange={(e) => {
+                          if (e?.value) {
+                            const id = Number(e.value);
+                            onChangeDepartment(id);
+                          }
+                          input.onChange(e);
+                        }}
+                      />
+                    )}
+                  </Field>
+
+                  <Field<IOption>
+                    name='extraData.city'
+                    validate={validateOption}
+                  >
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        id='municipalityId'
+                        label='Municipio'
+                        icon='321'
+                        options={municipalities.value}
+                      />
+                    )}
+                  </Field>
+
+                  <Field<string> name='address' validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder='Dirección'
+                        label='Dirección'
+                        icon='321'
+                        type='text'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+              </div>
+
+              {/* Información de Usuario */}
+              <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
+                <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
+                  Información de Usuario
+                </h3>
+                <div className='grid grid-cols-1 gap-4'>
+                  <Field<string> name='userType' validate={required}>
+                    {({ input, meta }) => (
+                      <Select
+                        {...input}
+                        placeholder='Seleccione tipo de usuario...'
+                        label='Tipo de usuario'
+                        name='userType'
+                        icon='231'
+                        optionValue='id'
+                        optionLabel='name'
+                        options={[
+                          { id: 'USER', name: 'Operador' },
+                          { id: 'ADMIN', name: 'Administrador' },
+                          { id: 'CLIENT', name: 'Cliente' },
+                        ]}
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+
+                  <Field<IOption[]> name='companies' validate={required}>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        id='select-companies'
+                        label='Empresa'
+                        icon='231'
+                        options={companies.value}
+                        multiple={true}
+                        allowAll={true}
+                        menuPortalTarget={document.body}
+                        placeholder={t('form.placeholder.company')}
+                        onChange={() => {}}
+                      />
+                    )}
+                  </Field>
+                  <File
+                    name='extraData.image'
                     onChange={(e) => {
-                      const value = e.currentTarget.value;
-                      input.onChange(
-                        value.startsWith('+') ? value : `+${value}`
-                      );
+                      image.value = e.target.value;
                     }}
+                    value={image.value}
+                    label='Imagen'
+                    accept='image/*'
                   />
-                )}
-              </Field>
-              <Field<string> name='cardType' validate={required}>
-                {({ input, meta }) => (
-                  <Select
-                    {...input}
-                    placeholder='Seleccione tipo de documento...'
-                    label='Tipo de documento'
-                    name='cardType'
-                    icon=''
-                    optionValue='id'
-                    optionLabel='name'
-                    onChange={(e) => {
-                      const id = parseInt(e.currentTarget.value);
-                      input.onChange(id);
-                    }}
-                    options={documentTypes.value}
-                    meta={meta}
-                  />
-                )}
-              </Field>
-
-              <Field<string>
-                name='cardId'
-                validate={composeValidators(required, validateCardId)}
-              >
-                {({ input, meta }) => (
-                  <Input
-                    {...input}
-                    placeholder='Ingrese el numero de documento...'
-                    label='Numero de documento'
-                    type='text'
-                    meta={meta}
-                  />
-                )}
-              </Field>
-
-              <Field<string> name='address' validate={required}>
-                {({ input, meta }) => (
-                  <Input
-                    {...input}
-                    placeholder='Dirección'
-                    label='Dirección'
-                    type='text'
-                    meta={meta}
-                  />
-                )}
-              </Field>
-
-              <Field<string> name='userType' validate={required}>
-                {({ input, meta }) => (
-                  <Select
-                    {...input}
-                    placeholder='Seleccione tipo de usuario...'
-                    label='Tipo de usuario'
-                    name='userType'
-                    icon=''
-                    optionValue='id'
-                    optionLabel='name'
-                    options={[
-                      { id: 'USER', name: 'Operador' },
-                      { id: 'ADMIN', name: 'Administrador' },
-                      { id: 'CLIENT', name: 'Cliente' },
-                    ]}
-                    meta={meta}
-                  />
-                )}
-              </Field>
-
-              {/*
-            <Field<string>
-              name='externalId'
-              validate={(value) => {
-                if (!value) return undefined;
-                if (value.length < 5)
-                  return 'El código externo debe tener al menos 5 caracteres';
-                return undefined;
-              }}
-            >
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='Ingrese el código externo...'
-                  label='Código externo'
-                  type='text'
-                  meta={meta}
-                />
-              )}
-            </Field>
-
-            <Field<string>
-              name='externalPlatformId'
-              validate={(value) => {
-                if (!value) return undefined;
-                if (value.length < 5)
-                  return 'El código de plataforma externa debe tener al menos 5 caracteres';
-                return undefined;
-              }}
-            >
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='Ingrese plataforma externa...'
-                  label='Plataforma externa'
-                  type='text'
-                  meta={meta}
-                />
-              )}
-            </Field>
-            */}
-
-              <Field<IOption>
-                name='extraData.country'
-                validate={validateOption}
-              >
-                {({ input, meta }) => (
-                  <SmartSelector
-                    {...input}
-                    meta={meta}
-                    id='country'
-                    label='País'
-                    options={countries.value}
-                  />
-                  /*
-                <Select
-                  {...input}
-                  placeholder='Seleccione país...'
-                  label='País'
-                  name='country'
-                  icon='012'
-                  optionValue='name'
-                  optionLabel='name'
-                  options={countries.value}
-                  meta={meta}
-                />
-                */
-                )}
-              </Field>
-
-              {/*
-            <Field<string> name='companyId' validate={required}>
-              {({ input, meta }) => (
-                <Select
-                  {...input}
-                  placeholder='Seleccione empresa...'
-                  id='company'
-                  label='Empresa'
-                  name='company'
-                  icon='123'
-                  options={companies.value}
-                  meta={meta}
-                  // TODO: @Esteban ten mucho cuidado con esto. la posicion
-                  // del array puede ser diferente lo cual causaria un error.
-                  value={props.user?.companies?.[0]?.company?.id?.toString()}
-                  onChange={(e) => {
-                    const id = e.currentTarget.value;
-                    if (id) {
-                      getAreas(id);
-                    }
-                    input.onChange(id);
-                  }}
-                />
-              )}
-            </Field>
-            */}
-
-              <Field<IOption> name='extraData.state' validate={validateOption}>
-                {({ input, meta }) => (
-                  <SmartSelector
-                    {...input}
-                    meta={meta}
-                    id='departmentId'
-                    label='Departamento'
-                    options={departments.value}
-                    onChange={(e) => {
-                      if (e?.value) {
-                        const id = Number(e.value);
-                        onChangeDepartment(id);
-                      }
-                      input.onChange(e);
-                    }}
-                  />
-                  /*
-                <Select
-                  {...input}
-                  placeholder='Seleccione Departamento...'
-                  id='departmentId'
-                  label='Departamento'
-                  name='departmentId'
-                  icon=''
-                  optionValue='name'
-                  optionLabel='name'
-                  options={departments.value}
-                  onChange={
-                  (e) => {
-                    // const name = e.currentTarget.value;
-                    // const department = departments.value.find(
-                    //   (department) => department.name === name
-                    // );
-                    // if (department?.id) {
-                    //   onChangeDepartment(department.id);
-                    // }
-                    // input.onChange(department?.name);
-                  }}
-                  meta={meta}
-                />
-                */
-                )}
-              </Field>
-
-              <Field<IOption> name='extraData.city' validate={validateOption}>
-                {({ input, meta }) => (
-                  <SmartSelector
-                    {...input}
-                    meta={meta}
-                    id='municipalityId'
-                    label='Municipio'
-                    options={municipalities.value}
-                  />
-                  /*
-                <Select
-                  {...input}
-                  placeholder='Seleccione Ciudad...'
-                  label='Municipio'
-                  id='municipalityId'
-                  name='municipalityId'
-                  icon=''
-                  optionValue='name'
-                  optionLabel='name'
-                  options={municipalities.value}
-                  meta={meta}
-                />
-                */
-                )}
-              </Field>
-
-              {/*
-            <Field<string> name='extraData.area' validate={required}>
-              {({ input, meta }) => (
-                <Select
-                  {...input}
-                  placeholder='Seleccione area...'
-                  id='area'
-                  label='Area'
-                  name='area'
-                  icon='045'
-                  options={areas.value}
-                  meta={meta}
-                  value={props.user?.extraData?.area}
-                />
-              )}
-            </Field>
-            */}
-
-              {/*
-            <Field<string> name='extraData.sucursal'>
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='Ingrese la sucursal...'
-                  label='Sucursal'
-                  type='text'
-                  meta={meta}
-                />
-              )}
-            </Field>
-            */}
-
-              <File
-                name='extraData.image'
-                onChange={(e) => {
-                  image.value = e.target.value;
-                }}
-                value={image.value}
-                label='Imagen'
-                accept='image/*'
-              />
-              <Field<IOption[]> name='companies' validate={required}>
-                {({ input, meta }) => (
-                  <SmartSelector
-                    {...input}
-                    meta={meta}
-                    id='select-companies'
-                    label='Empresa'
-                    options={companies.value}
-                    multiple={true}
-                    allowAll={true}
-                    menuPortalTarget={document.body}
-                    placeholder={t('form.placeholder.company')}
-                    onChange={() => {}}
-                  />
-                )}
-              </Field>
-              {/* <pre>{JSON.stringify(image.value, null, 2)}</pre> */}
+                </div>
+              </div>
             </div>
-            <StatusButton
-              onClickClean={onClean}
-              submitting={false}
-              pristine={false}
-              form='user-form'
-            />
           </form>
         )}
       />
