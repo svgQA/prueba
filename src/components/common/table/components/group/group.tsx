@@ -1,3 +1,4 @@
+import { Button } from '@/components/common/button/button';
 import { Table } from '@tanstack/react-table';
 import {
   useCallback,
@@ -24,20 +25,6 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const selectedColumnName = useMemo(() => {
-    if (!currentGroup) return '';
-    const column = groupableColumns.find((col) => col.id === currentGroup);
-    const header = column?.columnDef.header;
-    if (typeof header === 'string') return header;
-    if (typeof header === 'function') return column?.id;
-    return column?.id || '';
-  }, [currentGroup, groupableColumns]);
-
-  const displayText = useMemo(
-    () => (currentGroup ? selectedColumnName : ''),
-    [currentGroup, selectedColumnName]
-  );
-
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (
       dropdownRef.current &&
@@ -59,15 +46,13 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
 
   return (
     <div ref={dropdownRef} className={`relative ${className}`}>
-      <button
-        type='button'
-        className='inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-b-dark-dark border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150'
+      <Button
+        name='group-none-filter'
         onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className='vox-icon vx-icon-120 text-gray-500 dark:text-gray-400' />
-        {displayText && <span>{displayText}</span>}
-        <span className='vox-icon vx-icon-001 text-gray-500 dark:text-gray-400' />
-      </button>
+        icon='231'
+        square
+        borderless
+      />
 
       {isOpen && (
         <div className='absolute right-0 mt-1 w-48 bg-white dark:bg-b-dark-dark rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50'>
@@ -86,22 +71,23 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
           </button>
 
           {groupableColumns.map((col) => (
-            <button
+            <Button
               key={col.id}
-              className={`
-                w-full px-4 py-2.5 text-sm text-left border-none
-                ${col.id === currentGroup ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}
-                transition-colors
-              `}
+              name={`group-${col.id}-filter`}
               onClick={() => {
                 table.setGrouping([col.id]);
                 setIsOpen(false);
               }}
-            >
-              {typeof col.columnDef.header === 'string'
-                ? col.columnDef.header
-                : col.id}
-            </button>
+              full
+              selected={col.id === currentGroup}
+              borderless
+              label={
+                typeof col.columnDef.header === 'string'
+                  ? col.columnDef.header
+                  : col.id
+              }
+              icon='004'
+            />
           ))}
         </div>
       )}

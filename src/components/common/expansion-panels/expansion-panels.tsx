@@ -31,21 +31,19 @@ export const ExpansionPanel: FunctionComponent<IExpansionPanelProps> = ({
     <div
       id={id}
       // name={name}
-      className={`border rounded-md overflow-hidden ${className} ${
+      className={`border-b-light-dark dark:border-b-dark-dark rounded-md overflow-hidden ${className} ${
         disabled ? 'opacity-50 cursor-not-allowed' : ''
       }`}
     >
       <div
-        className={`flex items-center justify-between p-4 bg-gray-50 ${
+        className={`flex items-center justify-between p-4 bg-b-light-light dark:bg-b-dark-light ${
           !disabled ? 'cursor-pointer hover:bg-gray-100' : ''
         }`}
         onClick={handleToggle}
       >
         <div className='flex flex-col'>
           <span className='font-medium'>{title}</span>
-          {subtitle && (
-            <span className='text-sm text-gray-500'>{subtitle}</span>
-          )}
+          {subtitle && <span className='text-sm'>{subtitle}</span>}
         </div>
         <div className='flex items-center gap-2'>
           {onAdd && (
@@ -87,7 +85,7 @@ export const ExpansionPanel: FunctionComponent<IExpansionPanelProps> = ({
           </svg>
         </div>
       </div>
-      {isExpanded && <div className='p-4 border-t'>{children}</div>}
+      {isExpanded && <div>{children}</div>}
     </div>
   );
 };

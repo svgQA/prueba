@@ -33,13 +33,13 @@ export const columns: ColumnDef<IProject>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    size: 60,
+    size: 120,
     header: 'Nombre',
   },
   {
     id: 'description',
     accessorKey: 'description',
-    size: 60,
+    size: 120,
     header: 'Descripción',
     cell: (info) => {
       const description = info.getValue() as string;
@@ -49,7 +49,7 @@ export const columns: ColumnDef<IProject>[] = [
   {
     id: 'startDate',
     accessorKey: 'startDate',
-    size: 60,
+    size: 70,
     header: 'Inicio',
     cell: (info) => {
       const dateStr = info.getValue() as string;
@@ -60,7 +60,7 @@ export const columns: ColumnDef<IProject>[] = [
   {
     id: 'endDate',
     accessorKey: 'endDate',
-    size: 60,
+    size: 70,
     header: 'Fin',
     cell: (info) => {
       const dateStr = info.getValue() as string;
@@ -71,7 +71,7 @@ export const columns: ColumnDef<IProject>[] = [
   {
     id: 'state',
     accessorKey: 'state',
-    size: 60,
+    size: 50,
     header: 'Estado',
     cell: (info) => {
       const value = info.getValue() as string;
@@ -90,7 +90,7 @@ export const columns: ColumnDef<IProject>[] = [
   {
     id: 'priority',
     accessorKey: 'priority',
-    size: 180,
+    size: 50,
     header: 'prioridad',
     cell: (info) => {
       const value = info.getValue() as string;

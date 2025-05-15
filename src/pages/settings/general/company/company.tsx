@@ -28,6 +28,7 @@ export const CompanySettingPage: FunctionComponent = () => {
     name: '',
     description: '',
     address: '',
+    identification: '',
   };
 
   useEffect(() => {
@@ -111,6 +112,8 @@ export const CompanySettingPage: FunctionComponent = () => {
                       name: selectedCompany.value?.name,
                       description: selectedCompany.value?.description,
                       address: selectedCompany.value?.address || '',
+                      identification:
+                        selectedCompany.value?.identification || '',
                     }
                   : initialFormValues
               }
@@ -121,6 +124,9 @@ export const CompanySettingPage: FunctionComponent = () => {
                 if (!values.description)
                   errors.description = 'Descripción requerida';
                 if (!values.address) errors.address = 'Dirección requerida';
+                if (!values.identification || values.identification.length < 3)
+                  errors.identification =
+                    'Identificación requerida (mínimo 3 caracteres)';
                 return errors;
               }}
               render={({ handleSubmit, form, submitting, pristine }) => (
@@ -141,6 +147,17 @@ export const CompanySettingPage: FunctionComponent = () => {
                             id='name'
                             name='name'
                             label='Nombre'
+                            meta={meta}
+                            type='text'
+                          />
+                        )}
+                      </Field>
+                      <Field<string> name='identification'>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            id='identification'
+                            label='Identificación (NIT)'
                             meta={meta}
                             type='text'
                           />

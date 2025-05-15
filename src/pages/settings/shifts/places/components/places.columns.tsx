@@ -7,7 +7,6 @@ export const columns: ColumnDef<Place>[] = [
     id: 'id',
     accessorKey: 'id',
     size: 60,
-
     header: 'ID',
   },
   {

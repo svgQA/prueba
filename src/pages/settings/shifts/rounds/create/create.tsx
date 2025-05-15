@@ -24,6 +24,7 @@ import {
   TaskService,
 } from '@/services';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 
 interface IPoint {
   latitude: number;
@@ -197,7 +198,11 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         }}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting }) => (
-          <form onSubmit={handleSubmit} className='space-y-6'>
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-round-create'
+          >
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid md:grid-cols-2 gap-6'>
               <div className='space-y-4'>
@@ -265,11 +270,11 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   </div>
                 </div>
 
-                <ExpansionPanel title='Tareas por punto'>
+                <ExpansionPanel title='Tareas por punto' className='mb-2'>
                   {points.value.map((point: IPointMap, index: number) => (
                     <ExpansionPanel
                       subtitle={`lat: ${point.position.lat}, lng: ${point.position.lng}`}
-                      className='mt-1'
+                      className='my-1'
                       key={point.id}
                       title={`📍 Punto ${index + 1} `}
                     >
@@ -278,7 +283,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                           const isCreateChecked = createInput.value;
 
                           return (
-                            <div className='grid grid-cols-12 gap-4 items-start'>
+                            <div className='grid grid-cols-12 gap-4 items-start bg-b-light-light dark:bg-b-dark-light p-3 border-t border-b-light dark:border-b-dark'>
                               {/* Checkbox */}
                               <div className='col-span-1'>
                                 <Tooltip text='Crear tarea'>
@@ -420,7 +425,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       {point.tasks && point.tasks.length > 0 && (
                         <div className='mt-4'>
                           <table className='min-w-full divide-y divide-gray-200'>
-                            <thead className='bg-gray-50'>
+                            <thead className='bg-b-light-light dark:bg-b-dark-light'>
                               <tr>
                                 <th
                                   scope='col'
@@ -446,7 +451,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                                 </th>
                               </tr>
                             </thead>
-                            <tbody className='bg-white divide-y divide-gray-200'>
+                            <tbody className='divide-y divide-gray-200'>
                               {point.tasks.map(
                                 (task: ITask, taskIndex: number) => (
                                   <tr key={taskIndex}>
@@ -501,7 +506,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   />
 
                   {showHelp.value && (
-                    <div className='mt-2 border rounded-md p-4 bg-primary-opacity'>
+                    <div className='mt-2 rounded-md p-4 bg-b-light-light dark:bg-b-dark-light'>
                       <h3 className='font-medium mb-2'>Instrucciones</h3>
                       <ul className='list-disc pl-5 space-y-2'>
                         <li>
@@ -558,27 +563,18 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   height='500px'
                   clickPoint={() => {}}
                 />
+
                 {/* Botonera */}
                 <div className='w-full flex-row flex justify-end items-center mt-2'>
-                  <Button
-                    id='btn-clean'
-                    name='btn-clean'
-                    type='button'
-                    label='Limpiar'
-                    onClick={() => {
+                  <StatusButton
+                    onClickClean={() => {
                       form.reset();
                       resetMarket();
                     }}
-                    className='rounded-md px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
-                  />
-
-                  <Button
-                    id='btn-save'
-                    name='btn-save'
-                    type='submit'
+                    submitting={submitting}
+                    pristine={true}
+                    form='form-round-create'
                     label={id ? 'Editar' : 'Guardar'}
-                    className='rounded-md bg-primary text-white px-4 py-2 hover:bg-primary-opacity  hover:text-primary'
-                    disabled={submitting}
                   />
                 </div>
               </div>
