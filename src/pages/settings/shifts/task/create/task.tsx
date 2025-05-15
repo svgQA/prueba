@@ -16,9 +16,10 @@ import { FormService, TaskService } from '@/services';
 import { IFormResponse } from '@/types/form';
 
 interface FormData {
+  name: string;
   description: string;
-  status: number;
-  start: string;
+  formId: number;
+  hourStart: string;
 }
 
 export const TaskCreateSettingPage: FunctionComponent = () => {
@@ -47,7 +48,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   const setInitialValues = async () => {
     if (!id) return;
 
-    const userKeys = ['status', 'formId', 'description', 'start'] as const;
+    const userKeys = ['name', 'formId', 'description', 'hourStart'] as const;
 
     const request: any = await TaskService.getTaskById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
@@ -70,30 +71,19 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
-        validate={(values) => {
-          const errors: Partial<FormData> = {};
-          if (!values.description) errors.description = 'Campo obligatorio';
-
-          return errors;
-        }}
         render={({ handleSubmit, form, submitting, pristine }) => (
           <form onSubmit={handleSubmit} className='space-y-6'>
-            {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-3 gap-3'>
               <div class='col-span-1'>
-                <Field name='status'>
-                  {({ input }) => (
-                    <Select
+                <Field<string> name='name' validate={required}>
+                  {({ input, meta }) => (
+                    <Input
                       {...input}
-                      placeholder='Selecione estado...'
-                      label='Estado'
-                      name='status'
-                      icon='252'
-                      options={[
-                        { value: 'CREATED', label: 'Creado' },
-                        { value: 'RESOLVED', label: 'Resuelto' },
-                        { value: 'CLOSED', label: 'Cerrado' },
-                      ]}
+                      placeholder='Ingrese nombre...'
+                      label='Nombre'
+                      meta={meta}
+                      name='name'
+                      type='text'
                     />
                   )}
                 </Field>
@@ -103,7 +93,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                   {({ input }) => (
                     <Select
                       {...input}
-                      placeholder='Selecione formulario...'
+                      placeholder='Seleccione formulario...'
                       label='Formulario'
                       name='formId'
                       icon='252'
@@ -120,20 +110,33 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
               </div>
 
               <div class='col-span-1'>
-                <Field<string>
-                  name='start'
-                  parse={(value) => (value ? dayjs(value).toISOString() : '')}
-                  format={(value) =>
-                    value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
-                  }
-                >
-                  {({ input }) => (
-                    <Input
-                      {...input}
-                      type='datetime-local'
-                      label='Fecha inicio'
-                    />
-                  )}
+                <Field<string> name='hourStart' validate={required}>
+                  {({ input, meta }) => {
+                    let timeValue = '';
+                    if (input.value) {
+                      timeValue = dayjs(input.value).format('HH:mm');
+                    }
+                    return (
+                      <Input
+                        {...input}
+                        type='time'
+                        id='task-start'
+                        label='Hora inicio'
+                        meta={meta}
+                        value={timeValue}
+                        onChange={(e) => {
+                          const time = (e.target as HTMLInputElement).value;
+                          const [hours, minutes] = time.split(':');
+                          const date = dayjs()
+                            .hour(parseInt(hours))
+                            .minute(parseInt(minutes))
+                            .second(0)
+                            .millisecond(0);
+                          input.onChange(date.toISOString());
+                        }}
+                      />
+                    );
+                  }}
                 </Field>
               </div>
               <div class='col-span-4'>

@@ -1,8 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ITask } from '../task';
-import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
+import dayjs from 'dayjs';
 
 export const columns: ColumnDef<ITask>[] = [
   {
@@ -22,26 +22,22 @@ export const columns: ColumnDef<ITask>[] = [
     },
   },
   {
-    id: 'status',
-    accessorKey: 'status',
+    id: 'name',
+    accessorKey: 'name',
     size: 60,
-    header: 'Estado',
-    cell: (info) => (
-      <Badge label={String(info.getValue())} icon='123' outlined />
-    ),
+    header: 'Nombre',
   },
   {
-    id: 'start',
-    accessorKey: 'start',
+    id: 'hourStart',
+    accessorKey: 'hourStart',
     size: 60,
-    header: 'Fecha',
+    header: 'Hora de inicio',
+    cell: (info) => {
+      const start = info.getValue() as string;
+      return <p className='text-center'>{dayjs(start).format('HH:mm')}</p>;
+    },
   },
-  {
-    id: 'formId',
-    accessorKey: 'formId',
-    size: 60,
-    header: 'Formulario',
-  },
+
   {
     id: 'actions',
     size: 20,

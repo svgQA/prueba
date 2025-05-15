@@ -143,6 +143,7 @@ interface IMunicipality {
 export interface IShiftResponse {
   id: number;
   service: IService;
+  tasks: ITaskHistory[]; // TODO: Define task interface based on requirements
   start: string;
   end: string;
   employeeId: number;
@@ -184,6 +185,19 @@ export interface IShiftResponse {
   timeBefore: number;
 }
 
+interface ITaskHistory {
+  id: number;
+  date: string | null;
+  state: boolean;
+  solution: string | null;
+  serviceTask: {
+    id: number;
+    name: string;
+    description: string;
+    formId: number | null;
+    hourStart: string;
+  };
+}
 export interface ITask {
   start: string;
   status: string;
