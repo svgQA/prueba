@@ -7,7 +7,7 @@ import {
 } from '@/utils/network/types';
 export class AreaService extends BaseService {
   static sname: VoxServices = 'shift';
-  static async getArea(company: number) {
+  static async getAreaList(company: number) {
     const model: IMakeRequest = {
       url: ['area', 'simple', 'list', `${company}`],
       method: REQUEST_METHODS.GET,

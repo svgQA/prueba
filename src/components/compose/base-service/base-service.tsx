@@ -28,7 +28,7 @@ export const ModalBaseService: FunctionComponent<ModalBaseServiceProps> = ({
 
   return (
     <div class='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50'>
-      <div class='bg-white rounded-lg shadow-xl p-6 w-full max-w-md'>
+      <div class='bg-b-light-light dark:bg-b-dark-dark rounded-lg shadow-xl p-6 w-full max-w-md'>
         <div class='flex items-center space-x-3 mb-4'>
           <div class='bg-yellow-100 text-yellow-600 rounded-full p-2'>
             <svg
@@ -46,13 +46,13 @@ export const ModalBaseService: FunctionComponent<ModalBaseServiceProps> = ({
               />
             </svg>
           </div>
-          <h2 class='text-lg font-semibold'>
+          <h2 class='text-lg font-semibold text-t-light-dark dark:text-t-dark-light'>
             {typeOfError === 'network'
               ? t('error.service.networkTitle')
               : t('error.service.authorizationTitle')}
           </h2>
         </div>
-        <p class='text-gray-600 mb-6'>
+        <p class='text-t-light-dark dark:text-t-dark-light mb-6'>
           {typeOfError === 'network'
             ? t('error.service.networkMessage')
             : t('error.service.authorizationMessage')}
@@ -68,7 +68,7 @@ export const ModalBaseService: FunctionComponent<ModalBaseServiceProps> = ({
                 ? t('error.service.actionNetwork')
                 : t('error.service.actionAuthorization')
             }
-            className='!bg-primary !text-white'
+            icon='023'
           />
         </div>
       </div>

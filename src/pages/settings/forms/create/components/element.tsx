@@ -15,6 +15,8 @@ import { toggleListModal } from '../../lists/store/list';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { IElementError } from '@/types/form/error.type';
 import { useTranslation } from 'react-i18next';
+import { TextArea } from '@/components/common/text.area/text.area';
+
 const ItemType = {
   QUESTION: 'question',
 };
@@ -258,8 +260,7 @@ export const FormElement = ({
           {/* INPUT: description, default value, regex, size, number files */}
           <div className='vx-form-attrs-fields'>
             <div className='col-span-2'>
-              <textarea
-                className='w-full min-h-6 vox-scroll-design'
+              <TextArea
                 name='description'
                 id={`ta-form-${question.id}-element-description`}
                 value={question.description}

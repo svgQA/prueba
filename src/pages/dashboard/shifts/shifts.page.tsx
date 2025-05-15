@@ -44,6 +44,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
+import { AudioButton } from './audio/socket.button';
 
 enum VIEW_NAME {
   TABLE,
@@ -380,7 +381,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             disabled={!hasValidPlayer}
           />
           {showSendModal.value && (
-            <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
+            <div className='my-3 absolute left-0 rounded-lg shadow-lg w-[600px]'>
               <SendForm
                 onClose={handleCloseSendModal}
                 hasplayers={hasValidPlayer}
@@ -390,7 +391,8 @@ export const ShiftsPage: FunctionalComponent = () => {
           )}
         </div>
 
-        {/* <Button
+        {/*
+        <Button
           name='button-supervision'
           label={t('shifts.remoteSupervision')}
           className='bg-primary text-white py-1 rounded px-4'
@@ -400,7 +402,6 @@ export const ShiftsPage: FunctionalComponent = () => {
             handleViewChange(VIEW_NAME.SUPERVISOR);
           }}
         />
-        {/*
         <Button
           name='button-change-planner'
           onClick={() => {
@@ -537,6 +538,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               icon='044'
               iconSize='sm'
             />
+            <AudioButton />
           </div>
         </div>
 
