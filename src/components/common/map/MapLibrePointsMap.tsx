@@ -718,6 +718,7 @@ export const MapLibrePointsMap = ({
             type='button'
             onClick={addManualPoint}
             label='Añadir'
+            icon='123'
           />
         </div>
       )}

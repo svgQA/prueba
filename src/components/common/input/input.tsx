@@ -55,7 +55,7 @@ export const Input = ({
   };
 
   return (
-    <div id={id} className='w-full my-1'>
+    <div id={id} className='w-full mt-1'>
       {label && (
         <label
           for={`${id}-input`}

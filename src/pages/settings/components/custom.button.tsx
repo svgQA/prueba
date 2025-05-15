@@ -5,6 +5,7 @@ interface StatusButtonProps {
   submitting: boolean;
   pristine: boolean;
   form: string;
+  label?: string;
 }
 
 export const StatusButton = ({
@@ -12,6 +13,7 @@ export const StatusButton = ({
   submitting,
   pristine,
   form,
+  label = 'Guardar',
 }: StatusButtonProps) => {
   return (
     <div className='w-full flex-row flex justify-end items-center gap-4'>
@@ -29,7 +31,7 @@ export const StatusButton = ({
         id='btn-save'
         name='btn-save'
         type='submit'
-        label='Guardar'
+        label={label}
         form={form}
         icon='022'
         className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
