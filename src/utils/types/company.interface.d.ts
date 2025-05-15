@@ -2,20 +2,13 @@ export interface ICCompanyRequest {
   name: string;
   description: string;
   address?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
   logo?: string;
 }
 
-export interface IUCompanyRequest {
+export interface IUCompanyRequest
+  extends Omit<ICCompanyRequest, 'name' | 'description'> {
   name?: string;
   description?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  logo?: string;
 }
 
 export interface ICompanyResponse {
@@ -23,9 +16,6 @@ export interface ICompanyResponse {
   name: string;
   description: string;
   address?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
   logo?: string;
   createdAt: string;
   updatedAt: string;

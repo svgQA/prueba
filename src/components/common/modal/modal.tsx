@@ -33,7 +33,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
     >
       {/*aria-hidden={true}*/}
       <div
-        className={`${expand ? 'h-full' : 'h-fit'} ${width ? width : 'w-full'} ${shadowed ? 'shadow-lg' : ''} overflow-hidden rounded-md modal-shadow p-0 bg-b-white dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light border-2`}
+        className={`${expand ? 'h-full' : 'h-fit'} ${width ? width : 'w-full'} ${shadowed ? 'shadow-lg' : ''} overflow-hidden rounded-md modal-shadow p-0 bg-b-content dark:bg-b-dark text-t-light dark:text-t-dark border-b-light-dark dark:border-b-dark-light border-2`}
       >
         {/* vox-scroll-design */}
         <div className='flex flex-row w-full items-center pt-2 p-3 border-b-2 border-b-gray-50 dark:border-b-dark-light'>

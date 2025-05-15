@@ -13,6 +13,7 @@ interface IUser {
   cardType: number;
   extraData: {
     preferences: string;
+    area?: string;
   };
   createdAt: string;
   updatedAt: string;
@@ -71,6 +72,7 @@ interface IContract {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  company: ICompany;
 }
 
 interface IService {
@@ -179,6 +181,7 @@ export interface IShiftResponse {
   deletedBy: string | null;
   activityPct: number;
   roundPct: number;
+  timeBefore: number;
 }
 
 export interface ITask {

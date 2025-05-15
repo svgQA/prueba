@@ -21,13 +21,22 @@ const buildInitUser = (): IUserRequest => ({
   cardId: '',
   cardType: undefined,
   extraData: {
-    country: '',
-    state: '',
-    city: '',
+    country: {
+      value: '',
+      label: '',
+    },
+    state: {
+      value: '',
+      label: '',
+    },
+    city: {
+      value: '',
+      label: '',
+    },
     job: '',
-    area: '',
     sucursal: '',
-    company: '',
+    // area: '',
+    // company: '',
   },
 });
 

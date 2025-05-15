@@ -72,8 +72,6 @@ export const TemplateNotificationPage = () => {
 
   return (
     <Section>
-      <h2 className='text-xl font-bold mb-4'>Plantillas de Notificación</h2>
-
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
         <Button
           name='create-template'

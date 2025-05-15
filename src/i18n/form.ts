@@ -11,6 +11,8 @@ export const form_es = {
     },
     error: {
       general: 'Hay un error en el formulario',
+      invalidResponse: 'La estructura del formulario no es válida',
+      notExistResponse: 'La estructura del formulario no existe',
     },
     placeholder: {
       title: 'Título de la página',
@@ -27,6 +29,7 @@ export const form_es = {
       size: 'Ingrese el tamaño',
       number_files: 'Ingrese el número de archivos',
       element_description: 'Ingrese la descripción',
+      company: 'Seleccione la empresa',
     },
     label: {
       required: 'Requerido',
@@ -87,6 +90,8 @@ export const form_en = {
     },
     error: {
       general: 'There is an error in the form',
+      invalidResponse: 'The form structure is invalid',
+      notExistResponse: 'The form structure does not exist',
     },
     placeholder: {
       title: 'Enter title page',
@@ -103,6 +108,7 @@ export const form_en = {
       size: 'Enter size',
       number_files: 'Enter number files',
       element_description: 'Enter description',
+      company: 'Select company',
     },
     label: {
       required: 'Required',

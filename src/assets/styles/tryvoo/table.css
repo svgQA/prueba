@@ -19,7 +19,7 @@ table.elements {
 }
 
 .pagination-row {
-  @apply bottom-0 left-0 right-0 absolute rounded-b-lg dark:bg-b-dark-light bg-b-content shadow-black  text-t-light dark:text-t-dark border-t border-b-light-dark dark:border-b-dark-light;
+  @apply bottom-0 left-0 right-0 absolute rounded-b-lg dark:bg-b-dark-light bg-b-content shadow-black  text-t-light dark:text-t-dark border-t border-b-light-dark dark:border-b-dark-light z-10;
 }
 
 /*

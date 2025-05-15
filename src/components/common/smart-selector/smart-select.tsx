@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useField } from 'react-final-form';
 import { createPortal } from 'preact/compat';
 import { FieldMetaState } from 'react-final-form';
+import { Chip } from '../chip/chip';
 
 export interface IOption {
   label: string;
@@ -25,6 +26,7 @@ interface SmartSelectorProps {
   meta?: FieldMetaState<any>;
   label?: string;
   id?: string;
+  disabled?: boolean;
 }
 
 export function SmartSelector({
@@ -37,8 +39,10 @@ export function SmartSelector({
   label,
   id,
   onChange,
+  disabled = false,
+  meta,
 }: SmartSelectorProps) {
-  const { input, meta } = useField<IOption[] | IOption | string>(name);
+  const { input } = useField<IOption[] | IOption | string>(name);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState('');
@@ -72,9 +76,9 @@ export function SmartSelector({
       input.onChange(option);
     }
 
-    setSearch(''); // ✅ Limpiar búsqueda
-    setSelectedIndex(0); // ✅ Reiniciar índice
-    setFocused(false); // ✅ Cerrar el dropdown después de seleccionar
+    setSearch(''); // Limpiar búsqueda
+    setSelectedIndex(0); // Reiniciar índice
+    setFocused(false); // Cerrar el dropdown después de seleccionar
     onChange?.(option);
   };
 
@@ -116,6 +120,7 @@ export function SmartSelector({
 
     if (e.key === 'Escape') {
       setFocused(false);
+      setSearch(''); // Limpiar búsqueda al presionar Escape
     }
   };
 
@@ -209,28 +214,21 @@ export function SmartSelector({
 
   return (
     <div ref={wrapperRef} class='relative w-full'>
-      <div class='flex flex-wrap gap-2 mb-2'>
-        {selected.map((opt) => (
-          <span
-            key={opt.value}
-            class='bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded-full flex items-center gap-1'
-          >
-            {opt.label}
-            <button
-              onClick={() => handleRemove(opt)}
-              class='text-blue-600 hover:text-red-500 border-none'
-              type='button'
-            >
-              ×
-            </button>
-          </span>
-        ))}
-      </div>
       {label && (
-        <label for={`${id}-input`} class='block text-sm font-medium'>
+        <label for={`${id}-input`} class='block text-sm font-medium pb-1'>
           {label}
         </label>
       )}
+      <div class='flex flex-wrap gap-2 mb-2'>
+        {selected.map((opt) => (
+          <Chip
+            key={opt.value}
+            label={opt.label}
+            onDelete={() => handleRemove(opt)}
+          />
+        ))}
+      </div>
+
       <input
         ref={inputRef}
         type='text'
@@ -238,17 +236,26 @@ export function SmartSelector({
         id={`${id}-input`}
         value={search}
         placeholder={placeholder}
-        onInput={(e) => setSearch((e.currentTarget as HTMLInputElement).value)}
-        onFocus={() => setFocused(true)}
+        disabled={disabled}
+        onInput={(e) => {
+          const value = (e.currentTarget as HTMLInputElement).value;
+          setSearch(value);
+          if (value.length > 0) {
+            setFocused(true);
+          }
+        }}
+        onFocus={() => !disabled && setFocused(true)}
         className={`w-full border px-3 py-2 rounded
-          bg-white dark:bg-b-dark-dark
-          text-gray-700 dark:text-gray-200
-          border-gray-300 dark:border-gray-700
-          focus:ring-blue-500 dark:focus:ring-blue-400
-          appearance-none
-          ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
-        `}
+        !bg-white dark:!bg-b-dark-dark
+        text-gray-700 dark:text-gray-200
+        border-gray-300 dark:border-gray-700
+        focus:ring-blue-500 dark:focus:ring-blue-400
+        appearance-none
+        ${disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}
+        ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
+      `}
       />
+
       {meta && meta.touched && meta.error && (
         <div class='text-sm text-red-600 mt-1'>{meta.error}</div>
       )}

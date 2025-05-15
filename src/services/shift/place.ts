@@ -1,3 +1,4 @@
+import { IOption } from '@/components/common/multi/interface';
 import { IPagination } from '@/types';
 import {
   IDepartmentResponse,
@@ -46,6 +47,14 @@ export class PlaceService extends BaseService {
     };
     return await super.make_request(this.name, model);
   }
+
+  static async getDepartmentList(countryId: number) {
+    const model: IMakeRequest = {
+      url: ['place/department', 'simple', 'list', `${countryId}`],
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
   static async getDepartments(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['place/departments'],
@@ -54,12 +63,26 @@ export class PlaceService extends BaseService {
     return await super.make_request<IDepartmentResponse>(this.name, model);
   }
 
+  static async getCountriesList() {
+    const model: IMakeRequest = {
+      url: ['place/country', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
   static async getCountries(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['place/countries'],
       params: params as any,
     };
     return await super.make_request<ICountryResponse>(this.name, model);
+  }
+
+  static async getMunicipalitieList(departmentId: number) {
+    const model: IMakeRequest = {
+      url: ['place/municipality', 'simple', 'list', `${departmentId}`],
+    };
+    return await super.make_request<IOption>(this.name, model);
   }
 
   static async getMunicipalities(
