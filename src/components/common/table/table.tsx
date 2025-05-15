@@ -463,7 +463,7 @@ export const Table = <T,>({
                         style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
-                          <div className='flex items-center justify-center h-full max-w-[2.5rem]'>
+                          <div className='flex items-center justify-center h-full max-w-[2.5rem] min-w-[2.5rem]'>
                             <span
                               // TODO: Toggle expandable row (POSIBLE VOLVER A PONER)
                               onClick={() => row.toggleExpanded()}
@@ -474,7 +474,7 @@ export const Table = <T,>({
                         {selectable &&
                           onNotifications &&
                           hasRowsNotifications && (
-                            <div className='flex items-center justify-center h-full max-w-[2.5rem]'>
+                            <div className='flex items-center justify-center h-full max-w-[2.5rem] min-w-[2.5rem]'>
                               <input
                                 type='checkbox'
                                 className='w-4 h-4'
@@ -663,7 +663,7 @@ export const Table = <T,>({
                   square
                 />
                 {activeDropdown === i && (
-                  <div className='absolute bottom-full left-0 mb-1 bg-white dark:bg-b-dark-dark border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 py-2 px-2 min-w-[120px]'>
+                  <div className='absolute bottom-full left-0 mb-1 bg-white dark:bg-b-dark-dark border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20 py-2 px-2 min-w-[120px]'>
                     <div className='grid grid-cols-3 gap-2'>
                       {(pageIdx === 'ellipsis-start'
                         ? getIntermediatePages(1, currentPage - 1).filter(
@@ -767,7 +767,7 @@ export const Table = <T,>({
                 {table.getHeaderGroups().map((headerGroup, index) => (
                   <tr
                     key={`${headerGroup.id}-${index}`}
-                    className='sticky top-0 z-10'
+                    className='sticky top-0 z-[2]'
                   >
                     <th
                       colSpan={1}
@@ -776,37 +776,38 @@ export const Table = <T,>({
                         left: '0',
                         zIndex: 1,
                       }}
-                      className='!max-w-[2.5rem]'
                     >
                       {selectable && onNotifications && hasNotifications && (
-                        <input
-                          type='checkbox'
-                          className='w-4 h-4'
-                          checked={
-                            Object.keys(selectedRows).length === data.length
-                          }
-                          ref={(el) => {
-                            if (el) {
-                              const all =
-                                data.length > 0 &&
-                                Object.keys(selectedRows).length ===
-                                  data.length;
-                              const none =
-                                Object.keys(selectedRows).length === 0;
-                              el.indeterminate = !all && !none;
+                        <div className='flex items-center justify-center h-full max-w-[2.5rem] min-w-[2.5rem]'>
+                          <input
+                            type='checkbox'
+                            className='w-4 h-4'
+                            checked={
+                              Object.keys(selectedRows).length === data.length
                             }
-                          }}
-                          onChange={(e) => {
-                            const checked = e.currentTarget.checked;
-                            const newSelection = checked
-                              ? Object.fromEntries(
-                                  data.map((row: any) => [row.id, row])
-                                )
-                              : {};
-                            setSelectedRows(newSelection);
-                            onSelectionChange?.(Object.values(newSelection));
-                          }}
-                        />
+                            ref={(el) => {
+                              if (el) {
+                                const all =
+                                  data.length > 0 &&
+                                  Object.keys(selectedRows).length ===
+                                    data.length;
+                                const none =
+                                  Object.keys(selectedRows).length === 0;
+                                el.indeterminate = !all && !none;
+                              }
+                            }}
+                            onChange={(e) => {
+                              const checked = e.currentTarget.checked;
+                              const newSelection = checked
+                                ? Object.fromEntries(
+                                    data.map((row: any) => [row.id, row])
+                                  )
+                                : {};
+                              setSelectedRows(newSelection);
+                              onSelectionChange?.(Object.values(newSelection));
+                            }}
+                          />
+                        </div>
                       )}
                       {!unsettings && !onNotifications && (
                         <div className='flex items-center gap-2 relative w-full px-1 z-20'>

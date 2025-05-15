@@ -247,7 +247,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       email: '',
       phone: '',
       cardType: '',
-      cognitoId: '',
+      // cognitoId: '',
       companies: [],
       extraData: {
         country: undefined,

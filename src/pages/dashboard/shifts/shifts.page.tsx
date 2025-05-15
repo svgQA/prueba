@@ -380,7 +380,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             disabled={!hasValidPlayer}
           />
           {showSendModal.value && (
-            <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
+            <div className='my-3 absolute left-0 rounded-lg shadow-lg w-[600px]'>
               <SendForm
                 onClose={handleCloseSendModal}
                 hasplayers={hasValidPlayer}
