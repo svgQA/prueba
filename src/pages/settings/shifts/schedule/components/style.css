@@ -3,5 +3,5 @@
 }
 
 .general-cell {
-  @apply p-3 border-t border-l cursor-pointer transition-all hover:bg-primary-opacity border-gray-100;
+  @apply p-3 border-t border-l cursor-pointer transition-all hover:bg-primary-opacity border-b-light-dark dark:border-b-dark-light;
 }

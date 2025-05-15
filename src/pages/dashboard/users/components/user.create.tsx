@@ -263,16 +263,16 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   return (
     <div className='flex flex-col'>
       <div className='absolute top-0 right-0 flex items-center justify-center bg-red gap-10 flex-row'>
-        <h2 className='text-2xl font-bold mt-3 pb-2 w-full text-start'>
-          {getUserMode.value.mode === USER_MODE_SERVICE.CREATE
-            ? 'Crear usuario'
-            : 'Editar usuario'}
-        </h2>
         <StatusButton
           onClickClean={onClean}
           submitting={false}
           pristine={false}
           form='user-form'
+          label={
+            getUserMode.value.mode === USER_MODE_SERVICE.CREATE
+              ? 'Crear'
+              : 'Actualizar'
+          }
         />
       </div>
 

@@ -43,21 +43,21 @@ export class PlaceService extends BaseService {
 
   static async getWorkPointsByPlaceId(placeId: number) {
     const model: IMakeRequest = {
-      url: ['place/workstation', `${placeId}`],
+      url: ['place', 'workstation', `${placeId}`],
     };
     return await super.make_request(this.name, model);
   }
 
   static async getDepartmentList(countryId: number) {
     const model: IMakeRequest = {
-      url: ['place/department', 'simple', 'list', `${countryId}`],
+      url: ['place', 'department', 'simple', 'list', `${countryId}`],
     };
     return await super.make_request<IOption>(this.name, model);
   }
 
   static async getDepartments(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
-      url: ['place/departments'],
+      url: ['place', 'departments'],
       params: params as any,
     };
     return await super.make_request<IDepartmentResponse>(this.name, model);
@@ -65,24 +65,24 @@ export class PlaceService extends BaseService {
 
   static async getCountriesList() {
     const model: IMakeRequest = {
-      url: ['place/country', 'simple', 'list'],
+      url: ['place', 'country', 'simple', 'list'],
     };
     return await super.make_request<IOption>(this.name, model);
   }
 
   static async getCountries(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
-      url: ['place/countries'],
+      url: ['place', 'countries'],
       params: params as any,
     };
     return await super.make_request<ICountryResponse>(this.name, model);
   }
 
-  static async getMunicipalitieList(departmentId: number) {
+  static async getMunicipalitieList<T = IOption>(departmentId: number) {
     const model: IMakeRequest = {
-      url: ['place/municipality', 'simple', 'list', `${departmentId}`],
+      url: ['place', 'municipality', 'simple', 'list', `${departmentId}`],
     };
-    return await super.make_request<IOption>(this.name, model);
+    return await super.make_request<T>(this.name, model);
   }
 
   static async getMunicipalities(
@@ -90,7 +90,7 @@ export class PlaceService extends BaseService {
     params: IPagination = { page: 1, items: 400 }
   ) {
     const model: IMakeRequest = {
-      url: ['place/municipalities', `${id}`],
+      url: ['place', 'municipalities', `${id}`],
       params: params as any,
     };
     return await super.make_request<IMunicipalityResponse>(this.name, model);
@@ -114,7 +114,7 @@ export class PlaceService extends BaseService {
 
   static async getWorkPointById(id: number) {
     const model: IMakeRequest = {
-      url: ['place/workstationid', `${id}`],
+      url: ['place', 'workstationid', `${id}`],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request(this.name, model);

@@ -2,7 +2,7 @@ import { type TargetedEvent } from 'preact/compat';
 import { type IComponentProps } from '@/components/utils/interface';
 import { FieldMetaState } from 'react-final-form';
 
-export interface IInputProps extends IComponentProps {
+export interface IInputProps<T> extends IComponentProps {
   onChange?: (event: TargetedEvent<HTMLInputElement>) => void;
   onKeyUp?: (event: KeyboardEvent<HTMLElement>) => void;
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
@@ -35,7 +35,7 @@ export interface IInputProps extends IComponentProps {
     | 'range'
     | 'keywords'
     | 'checkbox';
-  meta?: FieldMetaState<string>;
+  meta?: FieldMetaState<T>;
   end?: boolean;
   borderless?: boolean;
   tabIndex?: number;

@@ -307,7 +307,9 @@ export const Table = <T,>({
             const isLastRow = rowIndex === rows.length - 1;
             const hasRowsNotifications = (row.original as any)
               ?.hasNotifications;
-            if (row.getIsGrouped()) {
+
+            const isGrouped = row.getIsGrouped();
+            if (isGrouped) {
               const selectableGroupItems = row.subRows
                 .map((r) => r.original as any)
                 .filter((item) => item?.employee?.playerId);
@@ -326,9 +328,9 @@ export const Table = <T,>({
 
               return (
                 <Fragment key={row.id}>
-                  <tr>
+                  <tr className='bg-gray-100 dark:bg-gray-700 border-b border-b-light-light dark:border-b-dark-light'>
                     {!unsettings && (
-                      <td className='text-center left-0 min-w-[30px]'>
+                      <td className='flex items-center justify-center h-full max-w-[2.5rem] min-w-[2.5rem]'>
                         <span
                           // TODO: Toggle expandable row
                           onClick={() => {
@@ -344,18 +346,9 @@ export const Table = <T,>({
                       colSpan={
                         row.getVisibleCells().length + (!unsettings ? 1 : 0)
                       }
-                      className='p-2 font-semibold'
+                      className='w-full'
                     >
                       <div className='flex justify-between items-center w-full'>
-                        {/* <span>
-                          {row.groupingColumnId && (
-                            <>
-                              {row.getValue(row.groupingColumnId)} (
-                              {row.subRows.length})
-                            </>
-                          )}
-                        </span> */}
-
                         <span>
                           {(() => {
                             const groupingColumn = table
@@ -424,19 +417,18 @@ export const Table = <T,>({
                     </td>
                   </tr>
 
-                  {/* {row.getIsExpanded() &&
-                    row.subRows.length > 0 &&
-                    renderRows(row.subRows)} */}
-
                   {row.getIsExpanded() &&
                     !row.parentId &&
                     row.subRows.map((subRow) => (
                       <tr key={subRow.id}>
                         {!unsettings && (
-                          <td className='left-0 min-w-[30px]'></td>
+                          <td className='left-0 max-w-[2.5rem] min-w-[2.5rem] border-b border-b-light-light dark:border-b-dark-light'></td>
                         )}
                         {subRow.getVisibleCells().map((cell) => (
-                          <td key={cell.id} className='px-1'>
+                          <td
+                            key={cell.id}
+                            className='text-left px-2 relative border-b border-b-light-light dark:border-b-dark-light'
+                          >
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext()
@@ -451,7 +443,7 @@ export const Table = <T,>({
               return (
                 <Fragment key={row.id}>
                   <tr
-                    className={`text-t-light dark:text-t-dark ${
+                    className={`text-t-light dark:text-t-dark border-b border-b-light-light dark:border-b-dark-light ${
                       data.length > pageSize && isLastRow
                         ? 'no-bottom-border'
                         : ''
@@ -459,7 +451,7 @@ export const Table = <T,>({
                   >
                     {!unsettings && (
                       <td
-                        className='left-0 bg-b-light dark:bg-b-dark'
+                        className='left-0'
                         style={{ position: 'sticky', zIndex: 1 }}
                       >
                         {expandable && showExpandableIcon && (
@@ -760,9 +752,9 @@ export const Table = <T,>({
           <div
             className={`${
               isSettingTable ? 'max-h-setting-table' : 'max-h-general-table'
-            } overflow-y-auto relative overflow-x-auto vox-scroll-design`}
+            } ${data.length > 10 ? 'overflow-auto' : 'overflow-hidden'} relative vox-scroll-design min-h-[20vh]`}
           >
-            <table className='elements relative'>
+            <table className='elements relative w-full'>
               <thead>
                 {table.getHeaderGroups().map((headerGroup, index) => (
                   <tr

@@ -1,7 +1,7 @@
 import { Button } from '../button/button';
 import { type IInputProps } from './interface';
 
-export const Input = ({
+export const Input = <T = string,>({
   id,
   name,
   min,
@@ -35,7 +35,7 @@ export const Input = ({
   error,
   warning,
   ...props
-}: IInputProps) => {
+}: IInputProps<T>) => {
   const handleKeyUp = (e: KeyboardEvent) => {
     e.preventDefault();
     if (e.key === 'Enter' && onClick) {
@@ -55,7 +55,7 @@ export const Input = ({
   };
 
   return (
-    <div id={id} className='w-full my-1'>
+    <div id={id} className='w-full mt-1'>
       {label && (
         <label
           for={`${id}-input`}

@@ -107,15 +107,15 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
       <Form<ICScheduleRequest>
         onSubmit={onSubmit}
         initialValues={initialValues.value}
-        render={({ handleSubmit, form, submitting }) => (
+        render={({ handleSubmit, form, submitting, pristine }) => (
           <form
             onSubmit={handleSubmit}
             id='form-schedule-create'
             className='space-y-6'
           >
             {/** FORMULARIO PRINCIPAL */}
-            <div className='grid grid-cols-1 gap-3'>
-              <div class='col-span-1 px-5'>
+            <div className='grid grid-cols-1'>
+              <div className='col-span-1 px-5'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
@@ -128,7 +128,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-1'>
+              <div className='col-span-1'>
                 <WeeklyScheduler
                   startHour={0}
                   endHour={24}
@@ -149,35 +149,10 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                 form.reset();
               }}
               submitting={submitting}
-              pristine={form.getState().pristine}
+              pristine={pristine}
               form='form-schedule-create'
+              label={id ? 'Editar' : 'Guardar'}
             />
-            {/* Botonera */}
-            {/*
-            <div className='w-full flex-row flex justify-end items-center'>
-              <Button
-                id='btn-clean'
-                name='btn-clean'
-                type='button'
-                label='Limpiar'
-                onClick={() => {
-                  handleClearSelection();
-                  form.reset();
-                }}
-                disabled={submitting}
-                className='rounded-md px-4 py-2'
-              />
-
-              <Button
-                id='btn-save'
-                name='btn-save'
-                type='submit'
-                label={id ? 'Editar' : 'Guardar'}
-                className='rounded-md bg-primary text-white px-4 py-2'
-                disabled={submitting}
-              />
-            </div>
-            */}
           </form>
         )}
       />

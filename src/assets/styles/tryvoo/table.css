@@ -13,7 +13,7 @@ table.elements {
   }
   tbody {
     td {
-      @apply h-12 border-t-2 border-b-light-light dark:border-b-dark-light;
+      @apply h-12;
     }
   }
 }
