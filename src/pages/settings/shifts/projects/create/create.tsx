@@ -14,6 +14,8 @@ import { UserService } from '@/services/general/user';
 import dayjs from 'dayjs';
 import { ContractService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
+import { IOption } from '@/components/common/multi/interface';
+import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 
 interface FormData {
   name: string;
@@ -22,24 +24,29 @@ interface FormData {
   endDate: string;
   state: string;
   priority: string;
-  clientId: number;
+  clientId: IOption;
 }
 
 export const ProjectCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
-  const users = useSignal([]);
+  const users = useSignal<IOption[]>([]);
 
   const onSubmit = async (model: FormData) => {
     let request;
     let message: string;
 
+    const output = {
+      ...model,
+      clientId: Number(model.clientId.value),
+    };
+
     if (id) {
-      request = await ContractService.updateProject(model, id);
+      request = await ContractService.updateProject(output, id);
       message = 'Contrato editado exitosamente!';
     } else {
-      request = await ContractService.createProject(model);
+      request = await ContractService.createProject(output);
       message = 'Contrato creado exitosamente!';
     }
 
@@ -49,10 +56,10 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
   };
 
   const getUsers = async () => {
-    const request: any = await UserService.get_all();
-    users.value = request.data.map((user: any) => {
-      return { ...user, fullname: `${user.name} ${user.surname}` };
-    });
+    const request = await UserService.getListClients();
+
+    if (!request.getStatus()) return;
+    users.value = request.getMany();
   };
 
   const setInitialValues = async () => {
@@ -68,14 +75,29 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
     ] as const;
 
     const request: any = await ContractService.getProject(id);
+    let clientId: IOption | undefined;
+
+    if (request.getStatus()) {
+      const model = request.getOne();
+      if (model?.client) {
+        clientId = {
+          value: model?.client?.id,
+          label: model?.client?.name + ' ' + model?.client?.surname,
+        };
+      }
+    }
+
     const model = pick(omitBy(request.model, isNull), userKeys);
-    initialValues.value = model;
+    initialValues.value = {
+      ...model,
+      clientId,
+    };
   };
 
   useEffect(() => {
-    getUsers();
-    setInitialValues();
+    Promise.all([getUsers(), setInitialValues()]);
   }, []);
+
   return (
     <Section className='pt-2'>
       <div>
@@ -89,7 +111,11 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
             return errors;
           }}
           render={({ handleSubmit, form, submitting, pristine }) => (
-            <form onSubmit={handleSubmit} className='space-y-6'>
+            <form
+              onSubmit={handleSubmit}
+              className='space-y-6'
+              id='form-project-create'
+            >
               {/** FORMULARIO PRINCIPAL */}
               <div className='grid grid-cols-2 gap-3'>
                 <div class='col-span-1'>
@@ -106,8 +132,17 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
                 <div class='col-span-1'>
-                  <Field<string> name='clientId' validate={required}>
+                  <Field<IOption> name='clientId' validate={required}>
                     {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        placeholder='Selecione cliente...'
+                        label='Cliente'
+                        icon='252'
+                        options={users.value}
+                      />
+                      /*
                       <Select
                         {...input}
                         meta={meta}
@@ -123,6 +158,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                           input.onChange(id);
                         }}
                       />
+*/
                     )}
                   </Field>
                 </div>

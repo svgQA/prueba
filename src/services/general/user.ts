@@ -116,7 +116,14 @@ export class UserService extends BaseService {
 
   static async getListUsers() {
     const model: IMakeRequest = {
-      url: ['user', 'simple', 'list'],
+      url: ['user', 'employee', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
+  static async getListClients() {
+    const model: IMakeRequest = {
+      url: ['user', 'client', 'simple', 'list'],
     };
     return await super.make_request<IOption>(this.name, model);
   }

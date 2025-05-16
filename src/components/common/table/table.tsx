@@ -605,15 +605,27 @@ export const Table = <T,>({
                 const target = e.target as HTMLSelectElement;
                 table.setPageSize(Number(target.value));
               }}
-              className='h-8 appearance-none rounded pl-3 pr-8 text-sm'
+              className='h-8 appearance-none rounded pl-3 pr-8 text-sm
+                bg-white dark:bg-b-dark-dark
+                text-gray-700 dark:text-gray-200
+                border border-gray-200 dark:border-gray-700
+                focus:ring-2 focus:ring-primary dark:focus:ring-primary
+                focus:border-primary dark:focus:border-primary
+                hover:border-gray-300 dark:hover:border-gray-600
+                transition-colors duration-200
+                cursor-pointer'
             >
               {[10, 20, 30, 50, 100].map((size) => (
-                <option key={size} value={size}>
+                <option
+                  key={size}
+                  value={size}
+                  className='bg-white dark:bg-b-dark-dark'
+                >
                   {size}
                 </option>
               ))}
             </select>
-            <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2'>
+            <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-gray-400'>
               <span className='vox-icon vx-icon-001 !text-sm'></span>
             </div>
           </div>

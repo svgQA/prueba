@@ -378,7 +378,7 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
-
+                {/*
                 <div class='col-span-1'>
                   <Field<string> name='externalId'>
                     {({ input }) => (
@@ -392,7 +392,7 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
-
+                */}
                 <div class='col-span-1 '>
                   <FieldArray<string> name='keywords'>
                     {({ fields }) => {

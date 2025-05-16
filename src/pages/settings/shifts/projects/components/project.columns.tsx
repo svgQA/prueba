@@ -4,6 +4,7 @@ import { IProject } from '../projects';
 import dayjs from 'dayjs';
 import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { Avatar } from '@/components/common/Avatar';
 const status: { key: string; label: string; color: string }[] = [
   {
     key: 'IN_PROGRESS',
@@ -29,6 +30,24 @@ export const columns: ColumnDef<IProject>[] = [
     accessorKey: 'id',
     size: 60,
     header: 'ID',
+  },
+  {
+    id: 'client',
+    accessorKey: 'client',
+    size: 120,
+    header: 'Cliente',
+    cell: (info) => {
+      const client = info.getValue() as any;
+      return (
+        <div className='flex items-center gap-2'>
+          <Avatar square size='sm' src={client?.image} />
+          <TextEllipsis
+            text={client?.name + ' ' + client?.surname}
+            maxWidth='300px'
+          />
+        </div>
+      );
+    },
   },
   {
     id: 'name',
