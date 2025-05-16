@@ -8,17 +8,13 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
-import { IProject } from '../../projects/projects';
-import { Place } from '@/pages/settings/shifts/places/utils/places';
-import { Round } from '@/pages/settings/shifts/rounds/utils/rounds';
 import { TextArea } from '@/components/common/text.area/text.area';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
 import dayjs from 'dayjs';
 import { Input } from '@/components/common/input/input';
-import { IFormResponse } from '@/types/form';
 import {
   ContractService,
   FormService,
@@ -30,31 +26,34 @@ import {
 } from '@/services';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 import { StatusButton } from '@/pages/settings/components/custom.button';
-import {
-  ScheduleSelector,
-  IScheduleOption,
-} from '@/components/common/schedule-selector/schedule-selector';
+import { ScheduleSelector } from '@/components/common/schedule-selector/schedule-selector';
+import { IOption } from '@/components/common/multi/interface';
+import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 
 interface FormData {
   name: string;
   description: string;
   hasRound: boolean;
-  roundId: number;
+  roundId?: IOption;
+  placeId?: IOption;
+  contractId?: IOption;
+  schedules: IOption[];
   tasks: any;
 }
 
 export const ServiceCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const initialValues: Signal<Partial<FormData>> = useSignal({});
-  const projects: Signal<IProject[]> = useSignal([]);
-  const places: Signal<Place[]> = useSignal([]);
-  const rounds: Signal<Round[]> = useSignal([]);
+  const schedules: Signal<IOption[]> = useSignal([]);
+  const projects: Signal<IOption[]> = useSignal([]);
+  const places: Signal<IOption[]> = useSignal([]);
+  const rounds: Signal<IOption[]> = useSignal([]);
+
   const tasks = useSignal([]);
-  const schedules: Signal<IScheduleOption[]> = useSignal([]);
-  const [search, setSearch] = useState('');
+  const forms: Signal<IOption[]> = useSignal([]);
+
+  const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
   const date = dayjs().format('YYYY-MM-DD');
-  const forms = useSignal<IFormResponse[]>([]);
 
   const onSubmit = async (model: FormData) => {
     model.tasks = setTasks(model.tasks);
@@ -63,8 +62,15 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     let request;
     let message: string;
 
+    const output = {
+      ...model,
+      placeId: Number(model.placeId?.value),
+      roundId: Number(model.roundId?.value),
+      contractId: Number(model.contractId?.value),
+    };
+
     if (id) {
-      request = await ServiceService.updateService(model, id);
+      request = await ServiceService.updateService(output, id);
       message = 'servicio editado exitosamente!';
     } else {
       request = await ServiceService.createService(model);
@@ -117,34 +123,39 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   // );
 
   const getProjects = async () => {
-    const request: any = await ContractService.getProjects();
-    projects.value = request.data;
+    const request = await ContractService.getSimpleList();
+    if (!request.getStatus()) return;
+    projects.value = request.getMany();
   };
 
   const getPlaces = async () => {
-    const request: any = await PlaceService.getPlaces();
-    places.value = request.data;
+    const request = await PlaceService.getSimpleList();
+    if (!request.getStatus()) return;
+    places.value = request.getMany();
   };
 
   const getRounds = async () => {
-    const request: any = await RoundService.getRounds();
-    rounds.value = request.data;
+    const request = await RoundService.getSimpleList();
+    if (!request.getStatus()) return;
+    rounds.value = request.getMany();
   };
 
   const getFormsHandler = async () => {
-    const response = await FormService.get_all();
+    const response = await FormService.getSimpleList();
     if (!response.getStatus()) return;
     forms.value = response.getMany();
   };
 
   const getTasks = async () => {
     const request: any = await TaskService.getTasks();
-    tasks.value = request.data;
+    if (!request.getStatus()) return;
+    tasks.value = request.getMany();
   };
 
   const getSchedules = async () => {
-    const request: any = await ScheduleService.getSchedules();
-    schedules.value = request.data;
+    const request = await ScheduleService.getSimpleList();
+    if (!request.getStatus()) return;
+    schedules.value = request.getMany();
   };
 
   const setInitialValues = async () => {
@@ -163,9 +174,48 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     ] as const;
 
     const request: any = await ServiceService.getServiceById(id);
+    let placeId: IOption | undefined;
+    let roundId: IOption | undefined;
+    let contractId: IOption | undefined;
+    let schedules: IOption[] = [];
+
+    if (request.getStatus()) {
+      const model = request.getOne();
+      if (model.place) {
+        placeId = {
+          value: model.place.id,
+          label: model.place.name,
+        };
+      }
+      if (model.round) {
+        roundId = {
+          value: model.round.id,
+          label: model.round.name,
+        };
+      }
+      if (model.contract) {
+        contractId = {
+          value: model.contract.id,
+          label: model.contract.name,
+        };
+      }
+      if (model.schedules) {
+        schedules = model.schedules.map((schedule: any) => ({
+          value: schedule.schedule.id,
+          label: schedule.schedule.name,
+        }));
+      }
+    }
+
     const model = pick(omitBy(request.model, isNull), userKeys);
 
-    initialValues.value = model;
+    initialValues.value = {
+      ...model,
+      placeId,
+      roundId,
+      contractId,
+      schedules,
+    };
   };
 
   useEffect(() => {
@@ -210,8 +260,18 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
               </div>
 
               <div class='col-span-2'>
-                <Field<string> name='contractId' validate={required}>
+                <Field<IOption> name='contractId' validate={required}>
                   {({ input, meta }) => (
+                    <SmartSelector
+                      {...input}
+                      meta={meta}
+                      placeholder='Seleccione Contrato...'
+                      label='Contrato'
+                      id='contractId'
+                      icon='241'
+                      options={projects.value}
+                    />
+                    /*
                     <Select
                       {...input}
                       placeholder='Seleccione Contrato...'
@@ -228,12 +288,23 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       options={projects.value}
                       meta={meta}
                     />
+                    */
                   )}
                 </Field>
               </div>
               <div class='col-span-2'>
-                <Field<string> name='placeId' validate={required}>
+                <Field<IOption> name='placeId' validate={required}>
                   {({ input, meta }) => (
+                    <SmartSelector
+                      {...input}
+                      meta={meta}
+                      placeholder='Seleccione lugar...'
+                      label='Lugar'
+                      id='placeId'
+                      icon='252'
+                      options={places.value}
+                    />
+                    /*
                     <Select
                       {...input}
                       placeholder='Seleccione lugar...'
@@ -250,25 +321,19 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       options={places.value}
                       meta={meta}
                     />
+                    */
                   )}
                 </Field>
               </div>
               <div class='col-span-2'>
-                <Field<string> name='roundId'>
+                <Field<IOption> name='roundId'>
                   {({ input }) => (
-                    <Select
+                    <SmartSelector
                       {...input}
                       placeholder='Seleccione ronda...'
                       label='Ronda'
                       id='roundId'
-                      name='roundId'
                       icon='252'
-                      optionValue='id'
-                      optionLabel='name'
-                      onChange={(e) => {
-                        const id = parseInt(e.currentTarget.value);
-                        input.onChange(id);
-                      }}
                       options={rounds.value}
                     />
                   )}
@@ -292,32 +357,15 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
 
               <div class='col-span-4'>
                 <h3 className='text-lg font-medium mb-4'>Horarios:</h3>
-
-                <Field<number> name='schedules' validate={required}>
-                  {({ input }) => (
-                    <div className='rounded-lg shadow-sm p-4 bg-b-light-light dark:bg-b-dark-light w-full'>
-                      <div className='flex items-center gap-4 mb-3'>
-                        <div className='flex-1'>
-                          <Input
-                            name='search'
-                            type='text'
-                            value={search}
-                            label='Buscar'
-                            icon='123'
-                            onChange={(e) => {
-                              setSearch(e.currentTarget.value);
-                            }}
-                            placeholder='Escribe para buscar...'
-                          />
-                        </div>
-                      </div>
-
-                      <ScheduleSelector
-                        input={input}
-                        options={schedules.value}
-                        searchValue={search}
-                      />
-                    </div>
+                <Field<IOption[]> name='schedules' validate={required}>
+                  {({ input, meta }) => (
+                    <ScheduleSelector
+                      {...input}
+                      meta={meta}
+                      options={schedules.value}
+                      label='Horarios disponibles'
+                      id='schedules'
+                    />
                   )}
                 </Field>
               </div>

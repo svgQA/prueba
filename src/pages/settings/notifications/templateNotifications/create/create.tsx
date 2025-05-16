@@ -61,7 +61,7 @@ export const TemplateCreateForm = () => {
 
   useEffect(() => {
     const fetchForms = async () => {
-      const res = await FormService.getBasicForms();
+      const res = await FormService.getSimpleList();
       if (res.getStatus()) setForms(res.getMany());
     };
     if (useForm && forms.length === 0) fetchForms();
@@ -69,7 +69,7 @@ export const TemplateCreateForm = () => {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const res = await TaskService.getBasicTasks();
+      const res = await TaskService.getSimpleList();
       if (res.getStatus()) setTasks(res.getMany());
     };
     if (useTasks && tasks.length === 0) fetchTasks();

@@ -219,19 +219,24 @@ export function SmartSelector({
   return (
     <div ref={wrapperRef} class='relative w-full'>
       {label && (
-        <label for={`${id}-input`} class='block text-sm font-medium pb-1'>
+        <label
+          for={`${id}-input`}
+          class={`block text-sm font-medium ${multiple ? 'mb-2' : 'mb-1'}`}
+        >
           {label}
         </label>
       )}
-      <div class='flex flex-wrap gap-2 mb-2'>
-        {selected.map((opt) => (
-          <Chip
-            key={opt.value}
-            label={opt.label}
-            onDelete={() => handleRemove(opt)}
-          />
-        ))}
-      </div>
+      {multiple && (
+        <div class='flex flex-wrap gap-2 mb-2'>
+          {selected.map((opt) => (
+            <Chip
+              key={opt.value}
+              label={opt.label}
+              onDelete={() => handleRemove(opt)}
+            />
+          ))}
+        </div>
+      )}
 
       <div
         className={`
@@ -268,8 +273,20 @@ export function SmartSelector({
             appearance-none
             ${disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}
             ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
+            ${!multiple && selected.length > 0 ? 'pr-24' : ''}
           `}
           />
+          {!multiple && selected.length > 0 && (
+            <div className='absolute right-2 top-1/2 -translate-y-1/2'>
+              <div className='relative flex items-center rounded-full border border-slate-300 dark:border-slate-600 py-0 px-2 text-center text-sm transition-all text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 max-w-full h-6'>
+                <span className='truncate'>{selected[0].label}</span>
+                <span
+                  className='right-3 vox-icon vx-icon-192 cursor-pointer size-sm pl-3 flex-shrink-0'
+                  onClick={() => handleRemove(selected[0])}
+                />
+              </div>
+            </div>
+          )}
         </div>
         {end && icon && <span className={`vox-icon vx-icon-${icon} px-2`} />}
       </div>

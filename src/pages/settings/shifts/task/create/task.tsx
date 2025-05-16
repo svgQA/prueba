@@ -76,7 +76,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   };
 
   const getFormsHandler = async () => {
-    const response = await FormService.getBasicForms();
+    const response = await FormService.getSimpleList();
     if (!response.getStatus()) return;
     forms.value = response.getMany();
   };

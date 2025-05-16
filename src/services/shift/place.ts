@@ -63,6 +63,13 @@ export class PlaceService extends BaseService {
     return await super.make_request<IDepartmentResponse>(this.name, model);
   }
 
+  static async getSimpleList() {
+    const model: IMakeRequest = {
+      url: ['place', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
   static async getCountriesList() {
     const model: IMakeRequest = {
       url: ['place', 'country', 'simple', 'list'],
