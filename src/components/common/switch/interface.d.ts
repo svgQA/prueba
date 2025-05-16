@@ -7,4 +7,5 @@ export interface ISwitchProps extends IComponentProps {
   value?: boolean;
   backgroundColor?: string; // Custom background color for the switch
   identifier?: string | number;
+  disabled?: boolean;
 }

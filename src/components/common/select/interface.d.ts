@@ -28,4 +28,5 @@ export interface ISelectProps extends IComponentProps {
   disabled?: boolean;
   optionValue?: string;
   optionLabel?: string;
+  error?: string;
 }

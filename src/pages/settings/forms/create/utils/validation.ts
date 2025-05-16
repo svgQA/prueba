@@ -1,6 +1,35 @@
-// import { IFormat, IFormRequest } from '@/types/form';
 import { IFormError, IPageError } from '@/types/form/error.type';
 import i18n from '@/i18n';
+import { IResponseError } from '@/types/form';
+
+export const responseValidation = (
+  format: IResponseError
+): [IResponseError, boolean] => {
+  let error = false;
+  for (const page of format.pages) {
+    for (const element of page.elements) {
+      if (element.elements && element.elements.length > 0) {
+        for (const subElement of element.elements) {
+          if (subElement.required && subElement.assigned && !subElement.value) {
+            subElement.value_error = i18n.t('form.create.error.required');
+            error = true;
+          } else {
+            subElement.value_error = undefined;
+          }
+        }
+      } else {
+        if (element.required && element.assigned && !element.value) {
+          element.value_error = i18n.t('form.create.error.required');
+          error = true;
+        } else {
+          element.value_error = undefined;
+        }
+      }
+    }
+  }
+
+  return [format, error];
+};
 
 export const formValidation = (format: IFormError): [IFormError, boolean] => {
   const message = i18n.t('form.create.error.title');
