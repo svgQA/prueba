@@ -49,7 +49,6 @@ export const MapLibrePointsMap = ({
   const [isMarkerClick, setIsMarkerClick] = useState<boolean>(false);
   const [userLocation, setUserLocation] = useState<MapPoint | null>(null);
   const watchIdRef = useRef<number | null>(null);
-  const [permissionStatus, setPermissionStatus] = useState<PermissionState | null>(null);
   const { t } = useTranslation();
 
   // Map style configuration
@@ -471,7 +470,7 @@ export const MapLibrePointsMap = ({
   // Handle marker click
   const handleMarkerClick = (id: number) => {
     const point = points.find((p) => p.id === id);
-    if (!point || !mapRef.current || disablePointSelection) return;
+    if (!point || !mapRef.current) return;
 
     // setActiveMarker(id);
     setEditCoords({
@@ -487,13 +486,16 @@ export const MapLibrePointsMap = ({
       <div>
         <div class="flex flex-col mb-2">
           <label class="text-sm mb-1">Latitude</label>
-          <input id="edit-lat" type="text" value="${point.position.lat}" class="w-full text-sm p-1 border rounded" />
+          <input id="edit-lat" type="text" value="${point.position.lat}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''}/>
           
           <label class="text-sm mb-1 mt-2">Longitude</label>
-          <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" />
+          <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>
-        
-        <div class="flex justify-between mt-2">
+        ${
+          disablePointSelection ? 
+          '' : 
+          `
+          <div class="flex justify-between mt-2">
           <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
             Delete
           </button>
@@ -501,6 +503,8 @@ export const MapLibrePointsMap = ({
             Update
           </button>
         </div>
+          `
+        }
       </div>
     `;
 
@@ -692,19 +696,19 @@ export const MapLibrePointsMap = ({
 
   useEffect(() => {
     if (!adminUser) return;
+
     let mounted = true;
 
     const checkAndMonitorPermissions = async () => {
       const permission = await navigator.permissions.query({ name: 'geolocation' });
       if (!mounted) return;
-      setPermissionStatus(permission.state);
 
       const handlePermissionChange = (e: Event) => {
         if (!mounted) return;
+        
         const target = e.target as PermissionStatus;
         const newState = target.state;
-        setPermissionStatus(newState);
-
+          
         if (newState === 'granted') {
           ToastManager.success(t('maps.connect.success'));
           getUserLocation();
@@ -732,7 +736,7 @@ export const MapLibrePointsMap = ({
     return () => {
       mounted = false;
     };
-  }, [adminUser, getUserLocation]);
+  }, [adminUser, getUserLocation, t]);
 
   // Clean up watch on unmount
   useEffect(() => {
