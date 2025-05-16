@@ -60,6 +60,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setUser,
       getLoaded,
       setLoaded,
+      cleanUserStore,
       // user,
     } = useUserStore();
 
@@ -95,7 +96,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       if (selectedCompany) {
         setSelectedCompany(Number(selectedCompany));
       } else {
-        if (companies.length === 1) {
+        if (companies.length > 0) {
           const firstCompany = companies[0].value;
           setSelectedCompany(Number(firstCompany));
         }
@@ -111,6 +112,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       if (value === 1) {
         toggleSettingModal();
       } else if (value === 2) {
+        cleanUserStore();
+        cleanUserStore();
         signOut?.();
       }
     };

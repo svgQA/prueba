@@ -421,6 +421,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                     onChange={setGreen}
                     label='Radio de cobertura'
                     showValue={true}
+                    disabled={!points.value || points.value.length < 1}
                   />
                   <div className='grid grid-cols-1 xl:grid-cols-2 gap-3'>
                     <Field<string> name='latitude' validate={required}>

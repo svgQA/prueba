@@ -33,6 +33,7 @@ type Actions = {
   getCompanies: () => IOption[];
   setSelectedCompany: (id: number) => void;
   getSelectedCompany: () => IOption | null;
+  cleanUserStore: () => void;
 };
 
 export const useUserStore = create<State & Actions>((set, get) => ({
@@ -134,6 +135,18 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   getToken: () => {
     const { token } = get();
     return `Bearer ${token}`;
+  },
+  cleanUserStore: () => {
+    set({
+      user: null,
+      token: 'Bearer',
+      companies: [],
+      socket: '',
+      cognito: '',
+      tenant: '',
+      selectedCompany: null,
+      loaded: false,
+    });
   },
 }));
 

@@ -1,22 +1,30 @@
 import { type FunctionComponent } from 'preact';
-import { ELEMENT_TYPE, IElement, IRElement } from '@/types/form';
+import {
+  ELEMENT_TYPE,
+  IElement,
+  IRElementError,
+  IResponse,
+} from '@/types/form';
 import { Checkbox } from '@/components/common/checkbox/checkbox';
 import { Radio } from '@/components/common/radio/radio';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { TargetedEvent, useState } from 'preact/compat';
+import {
+  getResponse,
+  getResponseMode,
+  setSingleResponse,
+  updateResponse,
+} from './store/response';
 import { FormService } from '@/services';
 import { File } from '@/components/common/file/file';
 import { Input } from '@/components/common/input/input';
 import { Select } from '@/components/common/select/select';
 import { Button } from '@/components/common/button/button';
 import { handleChange } from '@/components/utils/input';
-import {
-  getResponse,
-  getResponseMode,
-  RESPONSE_MODE_SERVICE,
-  setResponse,
-  updateResponse,
-} from './store/response';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { Switch } from '@/components/common/switch/switch';
+import { Ranking } from '@/components/common/ranking/ranking';
+import { responseValidation } from '@/pages/settings/forms/create/utils/validation';
 
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
@@ -51,15 +59,18 @@ export const FormResponseSettingPage: FunctionComponent<
   };
 
   const renderElement = (
-    element: IRElement,
+    element: IRElementError,
     page?: string,
     section?: string
   ) => {
+    if (element.invisible) return;
+    const disabled =
+      getResponseMode.value?.hold || element.disable || !element.assigned;
     switch (element.type) {
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
         return (
-          <div class='mb-4 bg-white dark:bg-b-dark-dark'>
+          <div class='mb-4 bg-b-light dark:bg-b-dark'>
             <span />
             <button
               onClick={() => toggleSection(element.id)}
@@ -81,76 +92,84 @@ export const FormResponseSettingPage: FunctionComponent<
         );
       case ELEMENT_TYPE.TITLE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <h2 class='text-xl font-bold'>{element.label}</h2>
           </div>
         );
       case ELEMENT_TYPE.INPUT:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <Input
               name={element.id}
               type='text'
               label={element.label}
               icon='123'
-              value={element.value}
+              borderless
+              value={element.value || element.default}
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
+              error={element.value_error}
             />
           </div>
         );
       case ELEMENT_TYPE.TEXT_AREA:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <TextArea
               name={element.id}
               label={element.label}
               icon='123'
-              value={element.value}
+              borderless
+              value={element.value || element.default}
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
+              error={element.value_error}
             />
           </div>
         );
       case ELEMENT_TYPE.NUMBER_INPUT:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <Input
               name={element.id}
               type='number'
               label={element.label}
               icon='123'
-              value={element.value}
+              borderless
+              value={element.value || element.default}
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
+              error={element.value_error}
             />
           </div>
         );
       case ELEMENT_TYPE.DROPDOWN:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <Select
               name={element.id}
               options={element?.options}
               label={element.label}
               icon='123'
+              borderless
               value={element.value}
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
+              error={element.value_error}
             />
           </div>
         );
       case ELEMENT_TYPE.RADIO_BUTTON:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <Radio
               name={element.id}
               label={element.label}
@@ -159,13 +178,13 @@ export const FormResponseSettingPage: FunctionComponent<
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
       case ELEMENT_TYPE.CHECK_BOX:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <Checkbox
               name={element.id}
               label={element.label}
@@ -174,13 +193,13 @@ export const FormResponseSettingPage: FunctionComponent<
               value={element.value}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
       case ELEMENT_TYPE.IMAGE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <File
               name={element.id}
               onChange={handleInputChange}
@@ -189,13 +208,13 @@ export const FormResponseSettingPage: FunctionComponent<
               label={element.label}
               data-section={section}
               accept='image/*'
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
       case ELEMENT_TYPE.FILES:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <File
               name={element.id}
               onChange={handleInputChange}
@@ -204,14 +223,98 @@ export const FormResponseSettingPage: FunctionComponent<
               label={element.label}
               data-section={section}
               accept=':not(image/*),.pdf,.doc,.docx,.txt,.xls,.xlsx,.csv'
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
-
+      case ELEMENT_TYPE.SWITCH:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Switch
+              name={element.id}
+              label={element.label}
+              onChange={handleInputChange}
+              value={element.value}
+              disabled={disabled}
+              data-page={page}
+              data-section={section}
+            />
+          </div>
+        );
+      case ELEMENT_TYPE.RATING:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Ranking
+              id={element.id}
+              name={element.id}
+              label={element.label}
+              value={element.value}
+              maxValue={element.max || 5}
+              onChange={(value) => {
+                const event = {
+                  target: {
+                    name: element.id,
+                    value: value,
+                    dataset: {
+                      page,
+                      section,
+                    },
+                  },
+                } as any;
+                handleInputChange(event);
+              }}
+              disabled={disabled}
+              error={element.value_error}
+              dataPage={page}
+              dataSection={section}
+            />
+          </div>
+        );
+      case ELEMENT_TYPE.DATE:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Input
+              name={element.id}
+              type='date'
+              label={element.label}
+              icon='123'
+              borderless
+              value={element.value}
+              onChange={handleInputChange}
+              disabled={disabled}
+              error={element.value_error}
+              data-page={page}
+              data-section={section}
+            />
+          </div>
+        );
+      case ELEMENT_TYPE.TIME:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Input
+              name={element.id}
+              type='time'
+              label={element.label}
+              icon='123'
+              borderless
+              value={element.value}
+              onChange={handleInputChange}
+              disabled={disabled}
+              error={element.value_error}
+              data-page={page}
+              data-section={section}
+            />
+          </div>
+        );
       default:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-white dark:bg-b-dark-dark'>
+          <div className='bg-b-light dark:bg-b-dark p-3 my-3'>
+            {element.label}
+          </div>
+        );
+        {
+          /*(
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             {element.type}
             <label class='block text-sm font-medium mb-1'>
               {element.label}
@@ -221,6 +324,8 @@ export const FormResponseSettingPage: FunctionComponent<
             )}
           </div>
         );
+        */
+        }
     }
   };
 
@@ -236,28 +341,40 @@ export const FormResponseSettingPage: FunctionComponent<
 
   const getCurrentPage = () => {
     if (!getResponse.value) return;
-    return getResponse.value?.pages[currentPage]?.id;
+    return getResponse.value.pages[currentPage].id;
   };
 
   const saveResponse = async () => {
+    if (!getResponse.value) return;
+    const [structure, error] = responseValidation(getResponse.value);
+    if (error) {
+      setSingleResponse(structure as IResponse);
+      return ToastManager.error('form.error.general');
+    }
+
     if (!getResponse?.value || !getResponseMode?.value?.id) return;
     const response = await FormService.update_response(
-      { structure: getResponse.value },
+      { structure },
       getResponseMode.value.id
     );
     if (!response.getStatus()) return;
-    setResponse({ mode: RESPONSE_MODE_SERVICE.CREATE });
     posFinishAction();
   };
 
   const finishResponse = async () => {
+    if (!getResponse.value) return;
+    const [structure, error] = responseValidation(getResponse.value);
+    if (error) {
+      setSingleResponse(structure as IResponse);
+      return ToastManager.error('form.error.general');
+    }
+
     if (!getResponse?.value || !getResponseMode?.value?.id) return;
     const response = await FormService.finish_response(
-      { structure: getResponse.value },
+      { structure },
       getResponseMode.value.id
     );
     if (!response.getStatus()) return;
-    setResponse({ mode: RESPONSE_MODE_SERVICE.CREATE });
     posFinishAction();
   };
 
@@ -275,33 +392,27 @@ export const FormResponseSettingPage: FunctionComponent<
                 <p className='mb-8'>{getResponse.value.description}</p>
               )}
             </div>
-            <div className='flex flex-row gap-2 items-center'>
-              {!getResponseMode.value?.hold && (
-                <>
-                  <Button
-                    type='button'
-                    onClick={finishResponse}
-                    name='btn-finish-response'
-                    icon='137'
-                    label='finish'
-                  />
-                  <Button
-                    type='button'
-                    onClick={saveResponse}
-                    name='btn-save-response'
-                    icon='134'
-                    label='save'
-                  />
-                </>
-              )}
-            </div>
+            <Button
+              type='button'
+              onClick={finishResponse}
+              name='btn-finish-response'
+              icon='137'
+              label='finish'
+            />
+            <Button
+              type='button'
+              onClick={saveResponse}
+              name='btn-save-response'
+              icon='134'
+              label='save'
+            />
           </div>
 
           <div className='mb-6'>
             <h2 className='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
-              {getResponse.value?.pages[currentPage]?.label}
+              {getResponse.value.pages[currentPage].label}
             </h2>
-            {getResponse.value?.pages[currentPage]?.elements.map((element) =>
+            {getResponse.value.pages[currentPage].elements.map((element) =>
               renderElement(element, getCurrentPage())
             )}
           </div>

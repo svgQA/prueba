@@ -132,6 +132,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     const request = await PlaceService.getSimpleList();
     if (!request.getStatus()) return;
     places.value = request.getMany();
+
+    console.log('PLACES:', places.value);
   };
 
   const getRounds = async () => {
@@ -218,8 +220,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     };
   };
 
-  useEffect(() => {
-    Promise.all([
+  const getAllData = async () => {
+    await Promise.all([
       getTasks(),
       getPlaces(),
       getRounds(),
@@ -228,7 +230,12 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       getFormsHandler(),
       setInitialValues(),
     ]);
+  };
+
+  useEffect(() => {
+    getAllData();
   }, []);
+
   return (
     <Section>
       <Form

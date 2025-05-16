@@ -6,6 +6,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import dayjs from 'dayjs';
 import { ShiftService } from '@/services';
+import { Button } from '@/components/common/button/button';
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   const calculateCheckStatus = (
     checkTime: string,
@@ -77,6 +78,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         latitude={checkIn?.location.lat || 4.649251}
         longitude={checkIn?.location.lng || -74.106992}
         url={checkIn?.url || ''}
+        disabled={!!checkOut?.distance}
       />
 
       {/* Finalización del Turno */}
@@ -94,10 +96,28 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         latitude={checkOut?.location.lat || 4.649251}
         longitude={checkOut?.location.lng || -74.106992}
         url={checkOut?.url || ''}
+        disabled={!checkIn?.distance || !!checkOut?.distance}
       />
     </div>
   );
 };
+
+interface IShiftCardProps {
+  title: string;
+  name: string;
+  date: string;
+  time: string;
+  source: string;
+  status: string;
+  statusColor: string;
+  btnLabel: string;
+  shiftId: number;
+  distance?: string;
+  latitude: number;
+  longitude: number;
+  url: string;
+  disabled: boolean;
+}
 
 const ShiftCard = ({
   title,
@@ -113,21 +133,8 @@ const ShiftCard = ({
   latitude,
   longitude,
   url,
-}: {
-  title: string;
-  name: string;
-  date: string;
-  time: string;
-  source: string;
-  status: string;
-  statusColor: string;
-  btnLabel: string;
-  shiftId: number;
-  distance?: string;
-  latitude: number;
-  longitude: number;
-  url: string;
-}) => {
+  disabled,
+}: IShiftCardProps) => {
   const getLocation = async () => {
     try {
       const position = await new Promise<GeolocationPosition>(
@@ -199,6 +206,7 @@ const ShiftCard = ({
                 <span className='!text-primary vox-icon size-sm vx-icon-323'></span>
               </div>
               <div>
+                {date}
                 <p className='font-semibold'>Fecha</p>
                 <p>{dayjs(date).format('DD/MM/YYYY')}</p>
               </div>
@@ -234,7 +242,10 @@ const ShiftCard = ({
               </div>
             </div>
 
-            <button
+            <Button
+              label={btnLabel}
+              icon={btnLabel === 'Check In' ? '023' : '024'}
+              disabled={disabled}
               onClick={() =>
                 showAlert({
                   title: btnLabel,
@@ -243,10 +254,8 @@ const ShiftCard = ({
                   onCancel: () => {},
                 })
               }
-              className='px-3 py-1 text-md text-primary border border-primary rounded-md hover:bg-primary-opacity'
-            >
-              {btnLabel}
-            </button>
+              name={btnLabel}
+            />
           </div>
         </div>
       </div>
