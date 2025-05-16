@@ -3,6 +3,7 @@ import { ICScheduleRequest } from '@/types/shift/shift.request';
 import { IMakeRequest } from '@/utils/network/types';
 import { BaseService } from '@/utils/network';
 import { IPagination } from '@/types';
+import { IOption } from '@/components/common/multi/interface';
 
 export class ScheduleService extends BaseService {
   static name: VoxServices = 'shift';
@@ -47,5 +48,12 @@ export class ScheduleService extends BaseService {
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<ICScheduleRequest>(this.name, model);
+  }
+
+  static async getSimpleList() {
+    const model: IMakeRequest = {
+      url: ['schedule', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.name, model);
   }
 }

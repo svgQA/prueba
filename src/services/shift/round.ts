@@ -1,3 +1,4 @@
+import { IOption } from '@/components/common/multi/interface';
 import { BaseService } from '@/utils/network';
 import { IMakeRequest, REQUEST_METHODS } from '@/utils/network/interface';
 import { VoxServices } from '@/utils/network/types';
@@ -45,5 +46,12 @@ export class RoundService extends BaseService {
       params: params as any,
     };
     return await super.make_request(this.name, model);
+  }
+
+  static async getSimpleList() {
+    const model: IMakeRequest = {
+      url: ['round', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.name, model);
   }
 }

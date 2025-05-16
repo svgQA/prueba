@@ -1,3 +1,4 @@
+import { IOption } from '@/components/common/multi/interface';
 import { IPagination } from '@/types';
 import { type IProjectMetricsResponse } from '@/types/contract/contract.response';
 import { BaseService } from '@/utils/network';
@@ -54,5 +55,12 @@ export class ContractService extends BaseService {
       url: ['contract', `${id}`, 'metrics'],
     };
     return await super.make_request<IProjectMetricsResponse>(this.name, model);
+  }
+
+  static async getSimpleList() {
+    const model: IMakeRequest = {
+      url: ['contract', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.name, model);
   }
 }

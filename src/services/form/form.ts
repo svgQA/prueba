@@ -156,7 +156,7 @@ export class FormService extends BaseService {
     };
     return await super.make_request<IFormResponse>(this.sname, model);
   }
-  static async getBasicForms() {
+  static async getSimpleList() {
     const model: IMakeRequest = {
       url: ['form', 'simple', 'list'],
       method: REQUEST_METHODS.GET,

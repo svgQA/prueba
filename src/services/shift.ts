@@ -377,7 +377,7 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async getBasicTasks() {
+  static async getSimpleList() {
     const model: IMakeRequest = {
       url: ['task', 'simple', 'list'],
       method: REQUEST_METHODS.GET,
