@@ -325,18 +325,25 @@ export const getColumns = (
             },
           ];
 
+      const uModel =
+        checkIn || checkOut
+          ? []
+          : [
+              {
+                label: 'Editar turno',
+                icon: 'vox-icon vx-icon-123 text-primary',
+                onClick: () => {
+                  onClickAction({
+                    id: s_id,
+                    type: 'shift',
+                    action: ROW_ACTIONS.UPDATE,
+                  });
+                },
+              },
+            ];
+
       const actions: IDropdownAction[] = [
-        {
-          label: 'Editar turno',
-          icon: 'vox-icon vx-icon-123 text-primary',
-          onClick: () => {
-            onClickAction({
-              id: s_id,
-              type: 'shift',
-              action: ROW_ACTIONS.UPDATE,
-            });
-          },
-        },
+        ...uModel,
         ...model,
         {
           label: 'Eliminar turno',
