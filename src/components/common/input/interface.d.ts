@@ -3,13 +3,14 @@ import { type IComponentProps } from '@/components/utils/interface';
 import { FieldMetaState } from 'react-final-form';
 
 export interface IInputProps<T> extends IComponentProps {
+  name: string;
   onChange?: (event: TargetedEvent<HTMLInputElement>) => void;
   onKeyUp?: (event: KeyboardEvent<HTMLElement>) => void;
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
   onClick?: (event: any) => void;
   label?: string;
-  min?: string;
-  max?: string;
+  min?: string | number; // ✅ actualizado
+  max?: string | number; // ✅ actualizado
   value?: string | number | Date | undefined;
   step?: number;
   pattern?: string;
@@ -45,6 +46,7 @@ export interface IInputProps<T> extends IComponentProps {
   buttonType?: 'button' | 'submit' | 'reset';
   normal?: boolean;
   disabled?: boolean;
+  readOnly?: boolean; // ✅ agregado
   className?: string;
   ref?: React.RefObject<HTMLInputElement>;
   onInput?: (event: TargetedEvent<HTMLInputElement>) => void;
