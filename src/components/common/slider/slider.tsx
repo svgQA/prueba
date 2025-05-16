@@ -9,6 +9,7 @@ interface SliderProps {
   label?: string;
   showValue?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 export const Slider: FunctionComponent<SliderProps> = ({
@@ -20,6 +21,7 @@ export const Slider: FunctionComponent<SliderProps> = ({
   label,
   showValue = true,
   className = '',
+  disabled = false,
 }) => {
   const percentage = ((value - min) / (max - min)) * 100;
 
@@ -30,13 +32,19 @@ export const Slider: FunctionComponent<SliderProps> = ({
           {label}: {showValue ? value : ''}
         </label>
       )}
-      <div className='relative w-full h-2 bg-gray-200 rounded-full'>
+      <div
+        className={`relative w-full h-2 bg-gray-200 rounded-full ${disabled ? 'opacity-50' : ''}`}
+      >
         <div
-          className='absolute h-full bg-cyan-500 rounded-full'
+          className={`absolute h-full rounded-full ${
+            disabled ? 'bg-gray-400' : 'bg-cyan-500'
+          }`}
           style={{ width: `${percentage}%` }}
         />
         <div
-          className='absolute top-0 h-6 w-6 bg-cyan-500 rounded-full -mt-2 pointer-events-none'
+          className={`absolute top-0 h-6 w-6 rounded-full -mt-2 pointer-events-none ${
+            disabled ? 'bg-gray-400' : 'bg-cyan-500'
+          }`}
           style={{ left: `${percentage}%`, transform: 'translateX(-50%)' }}
         />
         <input
@@ -45,12 +53,17 @@ export const Slider: FunctionComponent<SliderProps> = ({
           max={max}
           step={step}
           value={value}
-          onChange={(e) => onChange(Number(e.currentTarget.value))}
-          className='absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10'
+          onChange={(e) => !disabled && onChange(Number(e.currentTarget.value))}
+          className={`absolute inset-0 w-full h-full opacity-0 z-10 ${
+            disabled
+              ? 'cursor-not-allowed pointer-events-none'
+              : 'cursor-pointer'
+          }`}
           style={{
             height: '24px',
             marginTop: '-8px',
           }}
+          disabled={disabled}
         />
       </div>
     </div>
