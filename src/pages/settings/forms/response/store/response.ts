@@ -20,6 +20,10 @@ export const setResponse = (mode: IResponseMode, model: IResponse) => {
   responseMode.value = mode;
 };
 
+export const setSingleResponse = (model: IResponse) => {
+  response.value = { ...model };
+};
+
 export const getResponse = computed(() => response.value);
 export const getResponseMode = computed(() => responseMode.value);
 

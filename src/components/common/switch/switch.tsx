@@ -10,9 +10,12 @@ export const Switch: FunctionComponent<ISwitchProps> = memo(
     value = false,
     backgroundColor,
     identifier,
+    disabled = false,
   }: ISwitchProps) => {
     return (
-      <label class='inline-flex items-center cursor-pointer'>
+      <label
+        class={`inline-flex items-center ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+      >
         <input
           type='checkbox'
           id={id}
@@ -20,6 +23,7 @@ export const Switch: FunctionComponent<ISwitchProps> = memo(
           value={identifier}
           checked={value}
           onChange={onChange}
+          disabled={disabled}
           class='sr-only peer'
         />
         <div
@@ -29,6 +33,7 @@ export const Switch: FunctionComponent<ISwitchProps> = memo(
             peer-checked:bg-primary
             flex items-center
             peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300
+            ${disabled ? 'opacity-50' : ''}
             ${backgroundColor ? backgroundColor : 'bg-gray-200 dark:bg-b-dark-dark'}
           `}
         >
@@ -38,10 +43,13 @@ export const Switch: FunctionComponent<ISwitchProps> = memo(
               rounded-full transition-all duration-200 ease-in-out
               ${value ? 'right-[4px]' : 'left-[4px]'}
               peer-checked:border-white
+              ${disabled ? 'opacity-50' : ''}
             `}
           />
         </div>
-        <span class='ms-3 text-sm font-medium text-gray-900 dark:text-gray-300'>
+        <span
+          class={`ms-3 text-sm font-medium ${disabled ? 'text-gray-500 dark:text-gray-500' : 'text-gray-900 dark:text-gray-300'}`}
+        >
           {label}
         </span>
       </label>

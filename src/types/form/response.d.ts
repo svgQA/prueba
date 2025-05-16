@@ -2,6 +2,7 @@
 //   [key: string]: unknown;
 // }
 
+import { IFormatError, IPageError } from './error.type';
 import { IElement, IFormat, IFormBase, IPage } from './form';
 
 export interface IRValueObject {
@@ -40,4 +41,17 @@ export interface IRPage extends IPage {
 
 export interface IResponse extends IFormat {
   pages: IRPage[];
+}
+
+export interface IRElementError extends IRElement {
+  elements?: IRElementError[];
+  value_error?: string;
+}
+
+export interface IRPageError extends IPageError {
+  elements: IRElementError[];
+}
+
+export interface IResponseError extends IFormatError {
+  pages: IRPageError[];
 }
