@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IServicio } from '../service';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 export const columns: ColumnDef<IServicio>[] = [
   {
@@ -10,17 +11,23 @@ export const columns: ColumnDef<IServicio>[] = [
     header: 'ID',
   },
   {
+    id: 'name',
+    accessorKey: 'name',
+    size: 60,
+    header: 'Nombre',
+    cell: (info) => {
+      const name = info.getValue() as string;
+      return <TextEllipsis text={name} maxWidth='200px' />;
+    },
+  },
+  {
     id: 'description',
     accessorKey: 'description',
     size: 60,
     header: 'Descripción',
     cell: (info) => {
       const description = info.getValue() as string;
-      return (
-        <div className='w-full flex justify-center max-w-96 overflow-hidden text-ellipsis whitespace-nowrap'>
-          {description}
-        </div>
-      );
+      return <TextEllipsis text={description} maxWidth='230px' />;
     },
   },
   {
