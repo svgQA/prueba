@@ -45,6 +45,7 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 import { AudioButton } from './audio/socket.button';
+import { getLocation } from '@/utils/utilities/location';
 
 enum VIEW_NAME {
   TABLE,
@@ -488,8 +489,36 @@ export const ShiftsPage: FunctionalComponent = () => {
           onCancel: () => {},
         });
         break;
+      case ROW_ACTIONS.CHECK_IN:
+        handleCheck('CHECK_IN', Number(params.id));
+        break;
+      case ROW_ACTIONS.CHECK_OUT:
+        handleCheck('CHECK_OUT', Number(params.id));
+        break;
     }
-    // Aquí abres modales, haces navigations, etc.
+  };
+
+  const handleCheck = async (type: string, shiftId: number) => {
+    const position = await getLocation();
+    if (!position) {
+      ToastManager.error(t('Error al obtener la ubicación'));
+      return;
+    }
+
+    console.log('position', position);
+
+    const checkData = {
+      latitude: position.coords.latitude.toString(),
+      longitude: position.coords.longitude.toString(),
+      date: new Date().toISOString(),
+      platform: 'web',
+      type: type,
+    };
+
+    const response = await ShiftService.createCheck(checkData, shiftId);
+    if (response.getStatus()) {
+      ToastManager.success(t('shift.expandable.date.success'));
+    }
   };
 
   const deleteShift = async (id: string) => {
