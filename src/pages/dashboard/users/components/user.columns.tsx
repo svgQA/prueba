@@ -179,10 +179,11 @@ export const getColumns = (
     id: 'actions',
     size: 20,
     cell: (info) => {
-      const { id, userType } = info.row.original;
+      const { id, userType, cognitoId } = info.row.original;
+      const isClient = userType === 'CLIENT' || cognitoId;
 
       const actions: IDropdownAction[] = [
-        ...(userType === 'CLIENT'
+        ...(isClient
           ? []
           : [
               {
