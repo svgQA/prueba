@@ -1,26 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'preact/hooks';
+import { Form } from 'react-final-form';
 import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
+import { Input } from '@/components/common/input/input';
+import { TextArea } from '@/components/common/text.area/text.area';
 import { useLocation } from 'wouter';
-import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '@/pages/settings/store/settings';
-import { ToastManager } from '@/utils/toast/toast-manager';
 import { SchedulerService, TemplateService } from '@/services';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
+import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { IOption } from '@/components/common/smart-selector/smart-select';
 
 export const ScheduledNotificationForm = () => {
-  const [templates, setTemplates] = useState<any[]>([]);
-  const [formData, setFormData] = useState({
-    templateId: '',
-    overrideTitle: '',
-    overrideDescription: '',
-    sendAt: '',
-    repeatEveryMinutes: '',
-    maxRepeats: '',
-    repeatUntil: '',
-  });
-
+  const [templates, setTemplates] = useState<IOption[]>([]);
   const [_, navigate] = useLocation();
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingSubmission, setPendingSubmission] = useState(false);
 
   useEffect(() => {
@@ -28,29 +22,28 @@ export const ScheduledNotificationForm = () => {
     const fetchTemplates = async () => {
       const response = await TemplateService.getTemplates();
       if (!response.getStatus()) return;
-      setTemplates(response.getMany());
+      const formatted = response.getMany().map((tpl: any) => ({
+        label: tpl.title,
+        value: tpl.id,
+      }));
+      setTemplates(formatted);
     };
     fetchTemplates();
   }, []);
 
-  const handleSubmit = () => {
-    const { templateId, sendAt } = formData;
-
-    if (!templateId) {
-      ToastManager.warning('Debes seleccionar una plantilla obligatoriamente.');
-      return;
-    }
-
-    if (!sendAt) {
-      ToastManager.warning('Debes indicar la fecha de envío.');
-      return;
-    }
-
-    setShowConfirmModal(true); // Mostrar modal de confirmación
+  const redirectToList = () => {
+    const menu = {
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.to,
+      label: 'notificaciones',
+      id: 'template-notifications',
+    };
+    navigate(menu.to);
+    appendHistory(menu);
   };
 
-  const handleConfirmedSubmit = async () => {
-    setPendingSubmission(true);
+  const handleSubmit = async (values: any) => {
+    console.log(values);
+
     const {
       templateId,
       overrideTitle,
@@ -59,243 +52,143 @@ export const ScheduledNotificationForm = () => {
       repeatEveryMinutes,
       maxRepeats,
       repeatUntil,
-    } = formData;
+    } = values;
 
-    try {
-      await SchedulerService.scheduleNotification({
-        templateId,
-        sendAt: new Date(sendAt),
-        filters: { userIds: [], shiftToday: false },
-        sentTo: [1],
-        overrideTitle: overrideTitle || undefined,
-        overrideDescription: overrideDescription || undefined,
-        repeatEveryMinutes: repeatEveryMinutes
-          ? parseInt(repeatEveryMinutes)
-          : undefined,
-        maxRepeats: maxRepeats ? parseInt(maxRepeats) : undefined,
-        repeatUntil: repeatUntil ? new Date(repeatUntil) : undefined,
-      });
+    // templateId ya es string, no .value
+    if (!templateId.value || typeof templateId.value !== 'string') {
+      ToastManager.warning('Debes seleccionar una plantilla obligatoriamente.');
+      return;
+    }
+
+    if (!sendAt || typeof sendAt !== 'string') {
+      ToastManager.warning('Debes indicar la fecha de envío.');
+      return;
+    }
+
+    const payload = {
+      templateId: templateId.value, // ✅ ahora sí es string
+      sendAt: new Date(sendAt),
+      filters: { userIds: [], shiftToday: false },
+      sentTo: [1],
+      overrideTitle: overrideTitle?.trim() || undefined,
+      overrideDescription: overrideDescription?.trim() || undefined,
+      repeatEveryMinutes: repeatEveryMinutes ? parseInt(repeatEveryMinutes) : undefined,
+      maxRepeats: maxRepeats ? parseInt(maxRepeats) : undefined,
+      repeatUntil: repeatUntil ? new Date(repeatUntil) : undefined,
+    };
+
+    setPendingSubmission(true);
+    const res = await SchedulerService.scheduleNotification(payload);
+    setPendingSubmission(false);
+
+    if (res.getStatus()) {
       ToastManager.success('Notificación programada exitosamente');
       redirectToList();
-    } catch (error) {
+    } else {
       ToastManager.error('Error al programar notificación');
-    } finally {
-      setShowConfirmModal(false);
-      setPendingSubmission(false);
     }
   };
 
-  const redirectToList = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
-        .scheduledNotification.to,
-      label: 'notificaciones',
-      id: 'template-notifications',
-    };
-    navigate(menu.to);
-    appendHistory(menu);
-  };
 
   return (
     <Section padding>
-      <h2 className='text-xl font-semibold mb-6'>
-        Detalles de la Notificación
-      </h2>
+      <h2 className='text-xl font-semibold mb-6'>Detalles de la Notificación</h2>
+      <Form
+        onSubmit={handleSubmit}
+        render={({ handleSubmit, values }) => (
+          <form onSubmit={handleSubmit} className='grid grid-cols-2 gap-4'>
+            <Input
+              id='overrideTitle'
+              name='overrideTitle'
+              type='text'
+              label='Título *'
+              placeholder='Ingrese el título de la notificación...'
+              value={values.overrideTitle || ''}
+              onChange={(e) => (values.overrideTitle = e.currentTarget.value)}
+            />
 
-      <div className='grid grid-cols-2 gap-4'>
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
-            Título *
-          </label>
-          <input
-            type='text'
-            placeholder='Ingrese el título de la notificación...'
-            className='w-full border px-3 py-2 rounded text-sm'
-            value={formData.overrideTitle}
-            onChange={(e) =>
-              setFormData({ ...formData, overrideTitle: e.currentTarget.value })
-            }
-          />
-        </div>
+            <TextArea
+              id='overrideDescription'
+              name='overrideDescription'
+              label='Descripción *'
+              placeholder='Ingrese una descripción...'
+              className='col-span-2'
+              value={values.overrideDescription || ''}
+              onChange={(e: any) => (values.overrideDescription = e.currentTarget.value)}
+            />
 
-        <div className='col-span-2'>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
-            Descripción *
-          </label>
-          <textarea
-            placeholder='Ingrese una descripción...'
-            className='w-full border px-3 py-2 rounded text-sm'
-            value={formData.overrideDescription}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                overrideDescription: e.currentTarget.value,
-              })
-            }
-          />
-        </div>
-
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
-            Fecha de Inicio *
-          </label>
-          <div className='relative'>
-            <input
+            <Input
               id='sendAtInput'
+              name='sendAt'
               type='datetime-local'
-              className='w-full border px-3 py-2 rounded text-sm pr-10'
-              value={formData.sendAt}
-              onChange={(e) =>
-                setFormData({ ...formData, sendAt: e.currentTarget.value })
-              }
+              label='Fecha de Inicio *'
+              value={values.sendAt || ''}
+              onChange={(e) => (values.sendAt = e.currentTarget.value)}
             />
-            <span
-              role='button'
-              className='vox-icon vx-icon-calendar-days text-base text-gray-500 bg-white p-[6px] rounded absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer'
-              onClick={() => {
-                const input = document.getElementById(
-                  'sendAtInput'
-                ) as HTMLInputElement;
-                if (input?.showPicker) {
-                  input.showPicker();
-                } else {
-                  input?.focus();
-                }
-              }}
-            />
-          </div>
-        </div>
 
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
-            Fecha de Finalización *
-          </label>
-          <div className='relative'>
-            <input
+            <Input
               id='repeatUntilInput'
+              name='repeatUntil'
               type='datetime-local'
-              className='w-full border px-3 py-2 rounded text-sm pr-10'
-              value={formData.repeatUntil}
-              onChange={(e) =>
-                setFormData({ ...formData, repeatUntil: e.currentTarget.value })
-              }
+              label='Fecha de Finalización *'
+              value={values.repeatUntil || ''}
+              onChange={(e) => (values.repeatUntil = e.currentTarget.value)}
             />
-            <span
-              role='button'
-              className='vox-icon vx-icon-calendar-days text-base text-gray-500 bg-white p-[6px] rounded absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer'
-              onClick={() => {
-                const input = document.getElementById(
-                  'repeatUntilInput'
-                ) as HTMLInputElement;
-                if (input?.showPicker) {
-                  input.showPicker();
-                } else {
-                  input?.focus();
-                }
-              }}
+
+            <Input
+              id='repeatEveryMinutes'
+              name='repeatEveryMinutes'
+              type='number'
+              label='Intervalo de Repetición'
+              placeholder='Ej: 30'
+              min={1}
+              value={values.repeatEveryMinutes || ''}
+              onChange={(e) => (values.repeatEveryMinutes = e.currentTarget.value)}
             />
-          </div>
-        </div>
 
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
-            Intervalo de Repetición
-          </label>
-          <input
-            type='number'
-            min={1}
-            placeholder='Ej: 30'
-            className='w-full border px-3 py-2 rounded text-sm'
-            value={formData.repeatEveryMinutes}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                repeatEveryMinutes: e.currentTarget.value,
-              })
-            }
-          />
-        </div>
+            <Input
+              id='maxRepeats'
+              name='maxRepeats'
+              type='number'
+              label='Máximo de Repeticiones'
+              placeholder='Ej: 5'
+              min={1}
+              value={values.maxRepeats || ''}
+              onChange={(e) => (values.maxRepeats = e.currentTarget.value)}
+            />
 
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
-            Máximo de Repeticiones
-          </label>
-          <input
-            type='number'
-            min={1}
-            placeholder='Ej: 5'
-            className='w-full border px-3 py-2 rounded text-sm'
-            value={formData.maxRepeats}
-            onChange={(e) =>
-              setFormData({ ...formData, maxRepeats: e.currentTarget.value })
-            }
-          />
-        </div>
+            <div className='col-span-2'>
+              <SmartSelector
+                id='templateSelector'
+                name='templateId'
+                options={templates}
+                placeholder='Selecciona una plantilla...'
+                value={templates.find((t) => t.value === values.templateId) || undefined}
+                onChange={(option) => {
+                  values.templateId = option?.value || ''; // 🔥 guardamos solo el string value
+                }}
+              />
 
-        <div className='col-span-2'>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
-            Plantilla de notificación *
-          </label>
-          <select
-            className='w-full border px-3 py-2 rounded text-sm'
-            value={formData.templateId}
-            onChange={(e) =>
-              setFormData({ ...formData, templateId: e.currentTarget.value })
-            }
-          >
-            <option value=''>Seleccione plantilla...</option>
-            {templates.map((tpl) => (
-              <option key={tpl.id} value={tpl.id}>
-                {tpl.title}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className='flex justify-end mt-6 gap-2'>
-        <Button
-          name='cancel-create-scheduled'
-          label='Cancelar'
-          className='border border-gray-300 text-gray-700 bg-white p-2'
-          onClick={redirectToList}
-        />
-        <Button
-          name='submit-create-scheduled'
-          label='Programar Notificación'
-          className='bg-primary text-white hover:bg-primary-opacity p-2'
-          onClick={handleSubmit}
-        />
-      </div>
-
-      {showConfirmModal && (
-        <div className='fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center'>
-          <div className='bg-white rounded-lg shadow-lg max-w-md w-full p-6'>
-            <h3 className='text-lg font-semibold text-gray-800 mb-4'>
-              ¿Deseas continuar?
-            </h3>
-            <p className='text-sm text-gray-600 mb-6'>
-              Las notificaciones programadas se enviarán únicamente a usuarios
-              con servicio activo en el intervalo horario seleccionado.
-            </p>
-            <div className='flex justify-end gap-3'>
-              <button
-                className='px-4 py-2 text-sm rounded border border-gray-300 text-gray-700 hover:bg-gray-100'
-                onClick={() => setShowConfirmModal(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                className='px-4 py-2 text-sm rounded bg-primary text-white hover:bg-primary-opacity disabled:opacity-50'
-                onClick={handleConfirmedSubmit}
-                disabled={pendingSubmission}
-              >
-                {pendingSubmission ? 'Enviando...' : 'Sí, programar'}
-              </button>
             </div>
-          </div>
-        </div>
-      )}
+
+            <div className='col-span-2 flex justify-end gap-2 mt-6'>
+              <Button
+                name='cancel-create-scheduled'
+                label='Cancelar'
+                onClick={redirectToList}
+                borderless
+              />
+              <Button
+                name='submit-create-scheduled'
+                label={pendingSubmission ? 'Enviando...' : 'Programar Notificación'}
+                type='submit'
+                className='bg-primary text-white hover:bg-primary-opacity'
+                disabled={pendingSubmission}
+              />
+            </div>
+          </form>
+        )}
+      />
     </Section>
   );
 };
