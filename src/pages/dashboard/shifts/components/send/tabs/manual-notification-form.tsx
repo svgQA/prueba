@@ -102,7 +102,7 @@ export const ManualNotificationForm = ({
     const fetchFormsAndTemplates = async () => {
       try {
         const [formsResponse, templatesResponse] = await Promise.all([
-          FormService.getBasicForms(),
+          FormService.getSimpleList(),
           TemplateService.getBasicTemplates(),
         ]);
 

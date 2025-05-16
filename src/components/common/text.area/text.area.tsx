@@ -31,7 +31,7 @@ export const TextArea = ({
       {label && (
         <label
           for={`${id}-input`}
-          className='capitalize block text-sm font-medium text-gray-700 dark:text-gray-200'
+          className='capitalize block text-sm font-medium text-gray-700 dark:text-gray-200 pb-1'
         >
           {label}
         </label>
