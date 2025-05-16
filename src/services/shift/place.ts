@@ -66,7 +66,9 @@ export class PlaceService extends BaseService {
   static async getSimpleList() {
     const model: IMakeRequest = {
       url: ['place', 'simple', 'list'],
+      method: REQUEST_METHODS.GET,
     };
+    console.log(model);
     return await super.make_request<IOption>(this.name, model);
   }
 
