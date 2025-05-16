@@ -14,7 +14,6 @@ import { IProject } from '../../projects/projects';
 import { Place } from '@/pages/settings/shifts/places/utils/places';
 import { Round } from '@/pages/settings/shifts/rounds/utils/rounds';
 import { TextArea } from '@/components/common/text.area/text.area';
-import { ISchedule } from '../../schedule/schedule';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
 import dayjs from 'dayjs';
@@ -30,6 +29,11 @@ import {
   TaskService,
 } from '@/services';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
+import { StatusButton } from '@/pages/settings/components/custom.button';
+import {
+  ScheduleSelector,
+  IScheduleOption,
+} from '@/components/common/schedule-selector/schedule-selector';
 
 interface FormData {
   name: string;
@@ -46,7 +50,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const places: Signal<Place[]> = useSignal([]);
   const rounds: Signal<Round[]> = useSignal([]);
   const tasks = useSignal([]);
-  const schedules: Signal<ISchedule[]> = useSignal([]);
+  const schedules: Signal<IScheduleOption[]> = useSignal([]);
   const [search, setSearch] = useState('');
   const { id } = useParams(); // Obtiene el id de la URL
   const date = dayjs().format('YYYY-MM-DD');
@@ -107,9 +111,10 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
 
     return data;
   };
-  const filteredOptions: any = schedules.value.filter((option) =>
-    option.name.toLowerCase().includes(search.toLowerCase())
-  );
+
+  // const filteredOptions: any = schedules.value.filter((option) =>
+  //   option.name.toLowerCase().includes(search.toLowerCase())
+  // );
 
   const getProjects = async () => {
     const request: any = await ContractService.getProjects();
@@ -164,13 +169,15 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   };
 
   useEffect(() => {
-    getTasks();
-    getPlaces();
-    getRounds();
-    getProjects();
-    getSchedules();
-    getFormsHandler();
-    setInitialValues();
+    Promise.all([
+      getTasks(),
+      getPlaces(),
+      getRounds(),
+      getProjects(),
+      getSchedules(),
+      getFormsHandler(),
+      setInitialValues(),
+    ]);
   }, []);
   return (
     <Section>
@@ -180,8 +187,12 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
         }}
         onSubmit={onSubmit}
         initialValues={initialValues.value}
-        render={({ handleSubmit, form, submitting }) => (
-          <form onSubmit={handleSubmit} className='space-y-6'>
+        render={({ handleSubmit, form, submitting, pristine }) => (
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-service-create'
+          >
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-2'>
               <div class='col-span-2'>
@@ -280,50 +291,32 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
               </div>
 
               <div class='col-span-4'>
-                <h3 className='text-lg font-medium text-gray-900 mb-4'>
-                  Horarios:
-                </h3>
+                <h3 className='text-lg font-medium mb-4'>Horarios:</h3>
 
                 <Field<number> name='schedules' validate={required}>
                   {({ input }) => (
-                    <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-4'>
+                    <div className='rounded-lg shadow-sm p-4 bg-b-light-light dark:bg-b-dark-light w-full'>
                       <div className='flex items-center gap-4 mb-3'>
                         <div className='flex-1'>
-                          <label className='text-sm font-medium text-gray-700'>
-                            Buscar:
-                          </label>
-                          <input
+                          <Input
+                            name='search'
                             type='text'
                             value={search}
-                            onChange={(e) => setSearch(e.currentTarget.value)}
-                            className='mt-1 block w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                            label='Buscar'
+                            icon='123'
+                            onChange={(e) => {
+                              setSearch(e.currentTarget.value);
+                            }}
                             placeholder='Escribe para buscar...'
                           />
                         </div>
                       </div>
 
-                      <select
-                        {...input}
-                        multiple
-                        onChange={(e) => {
-                          const selectedValues = Array.from(
-                            e.currentTarget.selectedOptions,
-                            (option) => Number(option.value)
-                          );
-                          input.onChange(selectedValues);
-                        }}
-                        className='block w-full px-3 py-2 text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-28'
-                      >
-                        {filteredOptions.map((option: any) => (
-                          <option
-                            key={option.id}
-                            value={option.id}
-                            className='py-1 px-2'
-                          >
-                            {`* Horario: ${option.name}  [ ${option.daysAllowed} ]`}
-                          </option>
-                        ))}
-                      </select>
+                      <ScheduleSelector
+                        input={input}
+                        options={schedules.value}
+                        searchValue={search}
+                      />
                     </div>
                   )}
                 </Field>
@@ -333,13 +326,13 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   <FieldArray name='overtimes'>
                     {({ fields }) => (
                       <div>
-                        <div className='flex items-center justify-between mb-4'>
+                        <div className='flex items-center justify-between my-2'>
                           <h3 className='text-lg font-medium text-gray-900 dark:text-white'>
                             Añadir turnos extra
                           </h3>
                           <Button
                             icon='044'
-                            rounded
+                            square
                             id='menu-btn'
                             name='menu'
                             type='button'
@@ -348,117 +341,113 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                           />
                         </div>
 
-                        <div className='space-y-4'>
-                          {fields.map((name, index) => (
-                            <div
-                              key={index}
-                              className='bg-white dark:bg-b-dark-dark rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden'
-                            >
-                              <div className='bg-gray-50 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600'>
-                                <h2 className='text-lg font-medium text-gray-900 dark:text-white'>
-                                  Turno extra #{index + 1}
-                                </h2>
+                        {fields.map((name, index) => (
+                          <div
+                            key={index}
+                            className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden'
+                          >
+                            <div className='bg-gray-50 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600'>
+                              <h2 className='text-lg font-medium text-gray-900 dark:text-white'>
+                                Turno extra #{index + 1}
+                              </h2>
+                            </div>
+
+                            <div className='p-4'>
+                              <div className='grid grid-cols-3 gap-4'>
+                                <div>
+                                  <Field<string>
+                                    name={`${name}.start`}
+                                    validate={required}
+                                    parse={(value) =>
+                                      value ? dayjs(value).toISOString() : ''
+                                    }
+                                    format={(value) =>
+                                      value
+                                        ? dayjs(value).format(
+                                            'YYYY-MM-DD HH:mm'
+                                          )
+                                        : ''
+                                    }
+                                  >
+                                    {({ input, meta }) => (
+                                      <Input
+                                        {...input}
+                                        type='datetime-local'
+                                        id='task-start'
+                                        label='Fecha'
+                                        meta={meta}
+                                      />
+                                    )}
+                                  </Field>
+                                </div>
+
+                                <div>
+                                  <Field<string>
+                                    name={`${name}.hourStart`}
+                                    required={required}
+                                    parse={(value) =>
+                                      value
+                                        ? dayjs(
+                                            `${date}T${value}:00`
+                                          ).toISOString()
+                                        : ''
+                                    }
+                                    format={(value) =>
+                                      value ? dayjs(value).format('HH:mm') : ''
+                                    }
+                                  >
+                                    {({ input, meta }) => (
+                                      <Input
+                                        {...input}
+                                        meta={meta}
+                                        type='time'
+                                        label='Hora inicio'
+                                      />
+                                    )}
+                                  </Field>
+                                </div>
+
+                                <div>
+                                  <Field<string>
+                                    name={`${name}.hourEnd`}
+                                    required={required}
+                                    parse={(value) =>
+                                      value
+                                        ? dayjs(
+                                            `${date}T${value}:00`
+                                          ).toISOString()
+                                        : ''
+                                    }
+                                    format={(value) =>
+                                      value ? dayjs(value).format('HH:mm') : ''
+                                    }
+                                  >
+                                    {({ input, meta }) => (
+                                      <Input
+                                        {...input}
+                                        meta={meta}
+                                        type='time'
+                                        label='Hora fin'
+                                      />
+                                    )}
+                                  </Field>
+                                </div>
                               </div>
 
-                              <div className='p-4'>
-                                <div className='grid grid-cols-3 gap-4'>
-                                  <div>
-                                    <Field<string>
-                                      name={`${name}.start`}
-                                      validate={required}
-                                      parse={(value) =>
-                                        value ? dayjs(value).toISOString() : ''
-                                      }
-                                      format={(value) =>
-                                        value
-                                          ? dayjs(value).format(
-                                              'YYYY-MM-DD HH:mm'
-                                            )
-                                          : ''
-                                      }
-                                    >
-                                      {({ input, meta }) => (
-                                        <Input
-                                          {...input}
-                                          type='datetime-local'
-                                          id='task-start'
-                                          label='Fecha'
-                                          meta={meta}
-                                        />
-                                      )}
-                                    </Field>
-                                  </div>
-
-                                  <div>
-                                    <Field<string>
-                                      name={`${name}.hourStart`}
-                                      required={required}
-                                      parse={(value) =>
-                                        value
-                                          ? dayjs(
-                                              `${date}T${value}:00`
-                                            ).toISOString()
-                                          : ''
-                                      }
-                                      format={(value) =>
-                                        value
-                                          ? dayjs(value).format('HH:mm')
-                                          : ''
-                                      }
-                                    >
-                                      {({ input, meta }) => (
-                                        <Input
-                                          {...input}
-                                          meta={meta}
-                                          type='time'
-                                          label='Hora inicio'
-                                        />
-                                      )}
-                                    </Field>
-                                  </div>
-
-                                  <div>
-                                    <Field<string>
-                                      name={`${name}.hourEnd`}
-                                      required={required}
-                                      parse={(value) =>
-                                        value
-                                          ? dayjs(
-                                              `${date}T${value}:00`
-                                            ).toISOString()
-                                          : ''
-                                      }
-                                      format={(value) =>
-                                        value
-                                          ? dayjs(value).format('HH:mm')
-                                          : ''
-                                      }
-                                    >
-                                      {({ input, meta }) => (
-                                        <Input
-                                          {...input}
-                                          meta={meta}
-                                          type='time'
-                                          label='Hora fin'
-                                        />
-                                      )}
-                                    </Field>
-                                  </div>
-                                </div>
-
-                                <div className='mt-4 flex justify-end'>
-                                  <button
-                                    type='button'
-                                    onClick={() => fields.remove(index)}
-                                    className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 '
-                                  >
-                                    Eliminar
-                                  </button>
-                                </div>
+                              <div className='mt-4 flex justify-end'>
+                                <Button
+                                  icon='044'
+                                  id='menu-btn'
+                                  name='menu'
+                                  type='button'
+                                  label='Eliminar'
+                                  color='text-primary'
+                                  onClick={() => fields.remove(index)}
+                                />
                               </div>
                             </div>
-                          ))}
-                        </div>
+                          </div>
+                        ))}
                       </div>
                     )}
                   </FieldArray>
@@ -468,14 +457,14 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                 <ExpansionPanel title='Tareas del servicio'>
                   <FieldArray name='tasks'>
                     {({ fields }: any) => (
-                      <div className='space-y-6'>
-                        <div className='flex items-center justify-between'>
+                      <div>
+                        <div className='flex items-center justify-between my-2'>
                           <h3 className='text-lg font-medium text-gray-900 dark:text-white'>
                             Añadir tareas al servicio
                           </h3>
                           <Button
                             icon='044'
-                            rounded
+                            square
                             id='menu-btn'
                             name='menu'
                             type='button'
@@ -487,9 +476,9 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                         {fields.map((name: any, index: any) => (
                           <div
                             key={index}
-                            className='bg-white dark:bg-b-dark rounded-lg border border-gray-200 shadow-sm'
+                            className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden'
                           >
-                            <div className='bg-gray-50 dark:bg-b-dark-light px-4 py-3 border-b border-gray-200 rounded-t-lg'>
+                            <div className='bg-gray-50 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600'>
                               <h2 className='text-lg font-medium text-gray-900 dark:text-white'>
                                 Tarea {index + 1}
                               </h2>
@@ -623,13 +612,15 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                               </Field>
 
                               <div className='flex justify-end'>
-                                <button
+                                <Button
+                                  icon='044'
+                                  id='menu-btn'
+                                  name='menu'
                                   type='button'
+                                  color='text-primary'
+                                  label='Eliminar'
                                   onClick={() => fields.remove(index)}
-                                  className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:ring-2 focus:ring-offset-2'
-                                >
-                                  Eliminar
-                                </button>
+                                />
                               </div>
                             </div>
                           </div>
@@ -643,22 +634,12 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
 
             {/* Botonera */}
             <div className='w-full flex-row flex justify-end items-center'>
-              <Button
-                id='btn-clean'
-                name='btn-clean'
-                type='button'
-                label='Limpiar'
-                onClick={() => form.reset()}
-                disabled={submitting}
-              />
-
-              <Button
-                id='btn-save'
-                name='btn-save'
-                type='submit'
+              <StatusButton
+                onClickClean={() => form.reset()}
+                submitting={submitting}
+                pristine={pristine}
+                form='form-service-create'
                 label={id ? 'Editar' : 'Guardar'}
-                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-                disabled={submitting}
               />
             </div>
             {/* <pre>{JSON.stringify(values, 0, 2)}</pre>*/}
