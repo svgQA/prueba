@@ -9,6 +9,7 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { Avatar } from '@/components/common/Avatar';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { Chip } from '@/components/common/chip/chip';
 // Función para obtener traducciones
 const t = (key: string) => i18next.t(key);
 
@@ -104,20 +105,28 @@ export const getColumns = (
     header: 'Conexión',
     size: 100,
     cell: (info) => {
-      const value = info.getValue() as number;
+      const { userType } = info.row.original;
+      if (userType !== 'CLIENT') {
+        const value = info.getValue() as number;
 
-      let iconColor = 'success' as 'success' | 'error' | 'info' | 'warning'; // secondary por defecto
-      if (value >= 1 && value < 3) {
-        iconColor = 'error'; // error
-      } else if (value >= 3) {
-        iconColor = 'info'; // gray-text-light
+        let iconColor = 'success' as 'success' | 'error' | 'info' | 'warning'; // secondary por defecto
+        if (value >= 1 && value < 3) {
+          iconColor = 'error'; // error
+        } else if (value >= 3) {
+          iconColor = 'info'; // gray-text-light
+        }
+
+        return (
+          <div className='flex items-center justify-center gap-2'>
+            <Badge
+              icon='user-status'
+              status={iconColor}
+              size='md'
+              width='w-16'
+            />
+          </div>
+        );
       }
-
-      return (
-        <div className='flex items-center justify-center gap-2'>
-          <Badge icon='user-status' status={iconColor} size='md' width='w-16' />
-        </div>
-      );
     },
   },
   {
@@ -158,23 +167,36 @@ export const getColumns = (
     },
   },
   {
+    id: 'userType',
+    accessorKey: 'userType',
+    header: 'Tipo de usuario',
+    size: 20,
+    cell: (info) => {
+      return <Chip label={info.getValue() as string} color='gray' />;
+    },
+  },
+  {
     id: 'actions',
     size: 20,
     cell: (info) => {
-      const { id } = info.row.original;
+      const { id, userType } = info.row.original;
 
       const actions: IDropdownAction[] = [
-        {
-          label: t('user.columns.actions.profile'),
-          icon: 'vox-icon vx-icon-229 text-primary',
-          onClick: () => {
-            onClickAction({
-              id: String(id),
-              type: 'form',
-              action: ROW_ACTIONS.PROFILE,
-            });
-          },
-        },
+        ...(userType === 'CLIENT'
+          ? []
+          : [
+              {
+                label: t('user.columns.actions.profile'),
+                icon: 'vox-icon vx-icon-229 text-primary',
+                onClick: () => {
+                  onClickAction({
+                    id: String(id),
+                    type: 'form',
+                    action: ROW_ACTIONS.PROFILE,
+                  });
+                },
+              },
+            ]),
         {
           label: t('user.columns.actions.edit'),
           icon: 'vox-icon vx-icon-123 text-primary',

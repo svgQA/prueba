@@ -149,9 +149,9 @@ export const MapLibrePointsMap = ({
     // Ajustar el zoom para mostrar todos los puntos
     if (points.length > 0) {
       const bounds = new maplibregl.LngLatBounds();
-      
+
       // Agregar todos los puntos al bounds
-      points.forEach(point => {
+      points.forEach((point) => {
         bounds.extend([point.position.lng, point.position.lat]);
       });
 
@@ -169,7 +169,7 @@ export const MapLibrePointsMap = ({
       mapRef.current.fitBounds(bounds, {
         padding: 50,
         maxZoom: 12, //15
-        duration: 1000
+        duration: 1000,
       });
     }
   }, [points, isMapReady]);
@@ -486,9 +486,9 @@ export const MapLibrePointsMap = ({
 
     // Si es el punto del admin, actualizar userLocation
     if (id === -1) {
-      setUserLocation(prev => ({
+      setUserLocation((prev) => ({
         ...prev!,
-        position: { lat, lng }
+        position: { lat, lng },
       }));
     } else {
       // Para puntos normales
@@ -524,9 +524,9 @@ export const MapLibrePointsMap = ({
           <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>
         ${
-          disablePointSelection ? 
-          '' : 
-          `
+          disablePointSelection
+            ? ''
+            : `
           <div class="flex justify-between mt-2">
             <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
               Delete
@@ -534,11 +534,15 @@ export const MapLibrePointsMap = ({
             <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
               Update
             </button>
-            ${id === -1 ? `
+            ${
+              id === -1
+                ? `
             <button id="btn-restore" class="bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-2 rounded">
               Restore Location
             </button>
-            ` : ''}
+            `
+                : ''
+            }
           </div>
           `
         }
@@ -600,7 +604,7 @@ export const MapLibrePointsMap = ({
         const location = await getLocation();
         setUserLocation({
           id: -1,
-          position: location
+          position: location,
         });
         popup.remove();
         ToastManager.success(t('maps.connect.success_location_restored'));
@@ -707,15 +711,11 @@ export const MapLibrePointsMap = ({
         reject(err);
       };
 
-      navigator.geolocation.getCurrentPosition(
-        handleSuccess,
-        handleError,
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0,
-        }
-      );
+      navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      });
     });
   };
 
@@ -754,15 +754,17 @@ export const MapLibrePointsMap = ({
     let mounted = true;
 
     const checkAndMonitorPermissions = async () => {
-      const permission = await navigator.permissions.query({ name: 'geolocation' });
+      const permission = await navigator.permissions.query({
+        name: 'geolocation',
+      });
       if (!mounted) return;
 
       const handlePermissionChange = (e: Event) => {
         if (!mounted) return;
-        
+
         const target = e.target as PermissionStatus;
         const newState = target.state;
-          
+
         if (newState === 'granted') {
           ToastManager.success(t('maps.connect.success'));
           getUserLocation();
