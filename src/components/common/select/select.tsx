@@ -18,6 +18,7 @@ export const Select = ({
   disabled,
   optionValue = 'value',
   optionLabel = 'label',
+  error,
   ...props
 }: ISelectProps) => {
   return (
@@ -71,6 +72,7 @@ export const Select = ({
       {meta && meta.touched && meta.error && (
         <span className='text-red-500 text-sm'>{meta.error}</span>
       )}
+      {error && <span className='text-red-500 text-sm'>{error}</span>}
     </div>
   );
 };

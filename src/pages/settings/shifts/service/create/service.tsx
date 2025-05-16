@@ -73,7 +73,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       request = await ServiceService.updateService(output, id);
       message = 'servicio editado exitosamente!';
     } else {
-      request = await ServiceService.createService(model);
+      request = await ServiceService.createService(output);
       message = 'servicio creado exitosamente!';
     }
 

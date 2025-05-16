@@ -1,23 +1,37 @@
 import { type FunctionComponent } from 'preact';
-import { ELEMENT_TYPE, IElement, IRElement } from '@/types/form';
+import {
+  ELEMENT_TYPE,
+  IElement,
+  IRElementError,
+  IResponse,
+} from '@/types/form';
 import { Checkbox } from '@/components/common/checkbox/checkbox';
 import { Radio } from '@/components/common/radio/radio';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { TargetedEvent, useState } from 'preact/compat';
-import { getResponse, getResponseMode, updateResponse } from './store/response';
-// import { FormService } from '@/services';
-// import { useLocation } from 'wouter';
-// import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import {
+  getResponse,
+  getResponseMode,
+  setSingleResponse,
+  updateResponse,
+} from './store/response';
+import { FormService } from '@/services';
+import { useLocation } from 'wouter';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { File } from '@/components/common/file/file';
 import { Input } from '@/components/common/input/input';
 import { Select } from '@/components/common/select/select';
 import { Button } from '@/components/common/button/button';
 import { handleChange } from '@/components/utils/input';
+import { responseValidation } from '../create/utils/validation';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { Switch } from '@/components/common/switch/switch';
+import { Ranking } from '@/components/common/ranking/ranking';
 
 export const FormResponseSettingPage: FunctionComponent = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  // const [_, navigate] = useLocation();
+  const [_, navigate] = useLocation();
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev: any) =>
@@ -42,7 +56,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
   };
 
   const renderElement = (
-    element: IRElement,
+    element: IRElementError,
     page?: string,
     section?: string
   ) => {
@@ -93,6 +107,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               data-page={page}
               data-section={section}
               disabled={disabled}
+              error={element.value_error}
             />
           </div>
         );
@@ -109,6 +124,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               data-page={page}
               data-section={section}
               disabled={disabled}
+              error={element.value_error}
             />
           </div>
         );
@@ -126,6 +142,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               data-page={page}
               data-section={section}
               disabled={disabled}
+              error={element.value_error}
             />
           </div>
         );
@@ -143,6 +160,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               data-page={page}
               data-section={section}
               disabled={disabled}
+              error={element.value_error}
             />
           </div>
         );
@@ -206,9 +224,91 @@ export const FormResponseSettingPage: FunctionComponent = () => {
             />
           </div>
         );
-
+      case ELEMENT_TYPE.SWITCH:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Switch
+              name={element.id}
+              label={element.label}
+              onChange={handleInputChange}
+              value={element.value}
+              disabled={disabled}
+              data-page={page}
+              data-section={section}
+            />
+          </div>
+        );
+      case ELEMENT_TYPE.RATING:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Ranking
+              id={element.id}
+              name={element.id}
+              label={element.label}
+              value={element.value}
+              maxValue={element.max || 5}
+              onChange={(value) => {
+                const event = {
+                  target: {
+                    name: element.id,
+                    value: value,
+                    dataset: {
+                      page,
+                      section,
+                    },
+                  },
+                } as any;
+                handleInputChange(event);
+              }}
+              disabled={disabled}
+              error={element.value_error}
+              dataPage={page}
+              dataSection={section}
+            />
+          </div>
+        );
+      case ELEMENT_TYPE.DATE:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Input
+              name={element.id}
+              type='date'
+              label={element.label}
+              icon='123'
+              borderless
+              value={element.value}
+              onChange={handleInputChange}
+              disabled={disabled}
+              error={element.value_error}
+              data-page={page}
+              data-section={section}
+            />
+          </div>
+        );
+      case ELEMENT_TYPE.TIME:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Input
+              name={element.id}
+              type='time'
+              label={element.label}
+              icon='123'
+              borderless
+              value={element.value}
+              onChange={handleInputChange}
+              disabled={disabled}
+              error={element.value_error}
+              data-page={page}
+              data-section={section}
+            />
+          </div>
+        );
       default:
-        return <div className='bg-red-300 p-3 my-3'>{element.label}</div>;
+        return (
+          <div className='bg-b-light dark:bg-b-dark p-3 my-3'>
+            {element.label}
+          </div>
+        );
         {
           /*(
           <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
@@ -242,24 +342,37 @@ export const FormResponseSettingPage: FunctionComponent = () => {
   };
 
   const saveResponse = async () => {
-    console.log('saveResponse', getResponse.value);
-    // if (!getResponse?.value || !getResponseMode?.value?.id) return;
-    // const response = await FormService.update_response(
-    //   { structure: getResponse.value },
-    //   getResponseMode.value.id
-    // );
-    // if (!response.getStatus()) return;
-    // navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
+    if (!getResponse.value) return;
+    const [structure, error] = responseValidation(getResponse.value);
+    if (error) {
+      setSingleResponse(structure as IResponse);
+      return ToastManager.error('form.error.general');
+    }
+
+    if (!getResponse?.value || !getResponseMode?.value?.id) return;
+    const response = await FormService.update_response(
+      { structure },
+      getResponseMode.value.id
+    );
+    if (!response.getStatus()) return;
+    navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
   };
 
   const finishResponse = async () => {
-    // if (!getResponse?.value || !getResponseMode?.value?.id) return;
-    // const response = await FormService.finish_response(
-    //   { structure: getResponse.value },
-    //   getResponseMode.value.id
-    // );
-    // if (!response.getStatus()) return;
-    // navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
+    if (!getResponse.value) return;
+    const [structure, error] = responseValidation(getResponse.value);
+    if (error) {
+      setSingleResponse(structure as IResponse);
+      return ToastManager.error('form.error.general');
+    }
+
+    if (!getResponse?.value || !getResponseMode?.value?.id) return;
+    const response = await FormService.finish_response(
+      { structure },
+      getResponseMode.value.id
+    );
+    if (!response.getStatus()) return;
+    navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
   };
 
   return (
