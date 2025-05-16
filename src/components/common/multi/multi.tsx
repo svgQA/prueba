@@ -27,15 +27,19 @@ export const MultipleInput = ({
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Enter' && inputValue) {
+        // e.preventDefault(); // Prevent form submission
+        // e.stopPropagation();
         e.preventDefault(); // Prevent form submission
-        const lastValue = value[value.length - 1].value;
-        const index_value = value.length + 1;
-        const index =
-          value && Array.isArray(value) && value.length > 1
-            ? typeof lastValue === 'number'
-              ? lastValue + 1
-              : `${lastValue}-${index_value}`
-            : value.length;
+        let index: number | string = 0;
+        if (Array.isArray(value) && value.length > 0) {
+          const position = value.length - 1;
+          const _value = value[position].value;
+          if (typeof _value === 'number') {
+            index = _value + 1;
+          } else {
+            index = `${value.length + 1}`;
+          }
+        }
 
         const newValue = [...value, { value: index, label: inputValue }];
         onChange(newValue, name);
@@ -62,7 +66,7 @@ export const MultipleInput = ({
     () =>
       Array.isArray(value) && value.length > 0 ? (
         <div
-          className={`${scrollable ? 'max-w-full overflow-auto vox-scroll-design py-1' : 'flex-wrap'} flex gap-1 justify-center`}
+          className={`${scrollable ? 'max-w-3xl overflow-auto vox-scroll-design py-1' : 'flex-wrap'} flex gap-1 justify-center bg-b-dark rounded-full`}
         >
           {value.map((item, index) => {
             const total = ellipse || value.length;
@@ -74,7 +78,6 @@ export const MultipleInput = ({
                     onClick={() => handleDelete(item.value)}
                   ></span>
                   {getElement(item, index)}
-                  asdasd
                 </div>
               ) : (
                 <Chip
@@ -94,9 +97,9 @@ export const MultipleInput = ({
   );
 
   return (
-    <div className='w-full'>
+    <div className='w-full flex flex-col gap-1 items-center'>
       {!bottom && defaultChips}
-      <div className='flex flex-row justify-between items-end'>
+      <div className='flex flex-row justify-between items-end w-full'>
         <Input
           {...options}
           type='text'
@@ -110,7 +113,6 @@ export const MultipleInput = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder || 'Type and press Enter'}
           thin
-          borderless
           button
           onClick={onSelect}
           buttonIcon={buttonIcon}

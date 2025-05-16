@@ -55,7 +55,7 @@ export class FormService extends BaseService {
     return await super.make_request<IFormResponse>(this.sname, model);
   }
 
-  static async get_list_all(params: IPagination = { page: 1, items: 10 }) {
+  static async get_list_all(params: IPagination = { page: 1, items: 200 }) {
     const model: IMakeRequest = {
       url: ['list'],
       params: params as any,
