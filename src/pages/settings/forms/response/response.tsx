@@ -5,9 +5,9 @@ import { Radio } from '@/components/common/radio/radio';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { TargetedEvent, useState } from 'preact/compat';
 import { getResponse, getResponseMode, updateResponse } from './store/response';
-import { FormService } from '@/services';
-import { useLocation } from 'wouter';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
+// import { FormService } from '@/services';
+// import { useLocation } from 'wouter';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { File } from '@/components/common/file/file';
 import { Input } from '@/components/common/input/input';
 import { Select } from '@/components/common/select/select';
@@ -17,7 +17,7 @@ import { handleChange } from '@/components/utils/input';
 export const FormResponseSettingPage: FunctionComponent = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [_, navigate] = useLocation();
+  // const [_, navigate] = useLocation();
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev: any) =>
@@ -46,6 +46,9 @@ export const FormResponseSettingPage: FunctionComponent = () => {
     page?: string,
     section?: string
   ) => {
+    if (element.invisible) return;
+    const disabled =
+      getResponseMode.value?.hold || element.disable || !element.assigned;
     switch (element.type) {
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
@@ -85,11 +88,11 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               label={element.label}
               icon='123'
               borderless
-              value={element.value}
+              value={element.value || element.default}
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
@@ -101,11 +104,11 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               label={element.label}
               icon='123'
               borderless
-              value={element.value}
+              value={element.value || element.default}
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
@@ -118,11 +121,11 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               label={element.label}
               icon='123'
               borderless
-              value={element.value}
+              value={element.value || element.default}
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
@@ -139,7 +142,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
@@ -154,7 +157,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               onChange={handleInputChange}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
@@ -169,7 +172,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               value={element.value}
               data-page={page}
               data-section={section}
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
@@ -184,7 +187,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               label={element.label}
               data-section={section}
               accept='image/*'
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
@@ -199,13 +202,13 @@ export const FormResponseSettingPage: FunctionComponent = () => {
               label={element.label}
               data-section={section}
               accept=':not(image/*),.pdf,.doc,.docx,.txt,.xls,.xlsx,.csv'
-              disabled={getResponseMode.value?.hold}
+              disabled={disabled}
             />
           </div>
         );
 
       default:
-        return;
+        return <div className='bg-red-300 p-3 my-3'>{element.label}</div>;
         {
           /*(
           <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
@@ -239,23 +242,24 @@ export const FormResponseSettingPage: FunctionComponent = () => {
   };
 
   const saveResponse = async () => {
-    if (!getResponse?.value || !getResponseMode?.value?.id) return;
-    const response = await FormService.update_response(
-      { structure: getResponse.value },
-      getResponseMode.value.id
-    );
-    if (!response.getStatus()) return;
-    navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
+    console.log('saveResponse', getResponse.value);
+    // if (!getResponse?.value || !getResponseMode?.value?.id) return;
+    // const response = await FormService.update_response(
+    //   { structure: getResponse.value },
+    //   getResponseMode.value.id
+    // );
+    // if (!response.getStatus()) return;
+    // navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
   };
 
   const finishResponse = async () => {
-    if (!getResponse?.value || !getResponseMode?.value?.id) return;
-    const response = await FormService.finish_response(
-      { structure: getResponse.value },
-      getResponseMode.value.id
-    );
-    if (!response.getStatus()) return;
-    navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
+    // if (!getResponse?.value || !getResponseMode?.value?.id) return;
+    // const response = await FormService.finish_response(
+    //   { structure: getResponse.value },
+    //   getResponseMode.value.id
+    // );
+    // if (!response.getStatus()) return;
+    // navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
   };
 
   return (

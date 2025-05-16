@@ -74,7 +74,7 @@ export const Input = <T = string,>({
         {!end && icon && (
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
-        <div className='relative flex-1'>
+        <div className='relative flex-1 py-0.5'>
           <input
             ref={ref}
             className={`w-full px-3 py-2 rounded
@@ -104,7 +104,8 @@ export const Input = <T = string,>({
             `}
             onChange={onChange}
             name={name}
-            onKeyUp={handleKeyUp}
+            onKeyDown={onKeyDown}
+            onKeyUp={onKeyUp ? handleKeyUp : undefined}
             onClick={handleInputClick}
             type={type}
             value={value instanceof Date ? value.toISOString() : value}

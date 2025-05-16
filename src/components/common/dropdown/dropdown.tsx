@@ -15,6 +15,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
     iconSize = 'sm',
     onChange,
     meta,
+    disabled = false,
   }: IDropdownProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<IDropdownOptions | undefined>(
@@ -39,8 +40,10 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
     }, [value, options]);
 
     const toggleDropdown = useCallback(() => {
-      setIsOpen((prev) => !prev);
-    }, []);
+      if (!disabled) {
+        setIsOpen((prev) => !prev);
+      }
+    }, [disabled]);
 
     /**
      * Selecciona un elemento del dropdown
@@ -48,6 +51,8 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
      */
     const selectElement = useCallback(
       (event: MouseEvent) => {
+        if (disabled) return;
+
         const target = event.target as HTMLElement;
         if (target.nodeName === 'LI') {
           const menuClicked = target.getAttribute('data-name');
@@ -62,7 +67,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
           }
         }
       },
-      [options, labelTag, toggleDropdown, onChange]
+      [options, labelTag, toggleDropdown, onChange, disabled]
     );
 
     const elementsList = useCallback(
@@ -135,10 +140,12 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
           ref={buttonRef}
           id={`${id}-dropdown-button`}
           name={name}
+          disabled={disabled}
           class={`focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center transition-colors duration-150
             bg-white dark:bg-b-dark-dark
             text-gray-700 dark:text-gray-200
             border border-gray-200 dark:border-gray-700
+            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
             ${isIconOnly ? 'border-none justify-center hover:bg-gray-100 dark:hover:bg-gray-700' : 'w-full focus:ring-blue-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
           type='button'
           onClick={toggleDropdown}

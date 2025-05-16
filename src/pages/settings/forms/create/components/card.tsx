@@ -1,3 +1,4 @@
+import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ELEMENT_TYPE, IElement } from '@/types/form';
 
 export interface CardElementProps {
@@ -52,7 +53,12 @@ export const CardElement = ({
       case ELEMENT_TYPE.DROPDOWN:
         return (
           <div className='text-sm border border-zinc-300 rounded-md p-2 mt-1 flex flex-row'>
-            <span className='vx-icon vx-icon-096' />
+            <Dropdown
+              name='element-dropdown'
+              options={element.options || []}
+              disabled
+            />
+            {/*
             <select className='w-full ml-2'>
               {Array.isArray(element.options) &&
                 element.options?.map((option, index) => (
@@ -61,6 +67,7 @@ export const CardElement = ({
                   </option>
                 ))}
             </select>
+            */}
           </div>
         );
       case ELEMENT_TYPE.RADIO_BUTTON:
