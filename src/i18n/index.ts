@@ -9,6 +9,7 @@ import { form_en, form_es } from './form';
 import { shift_en, shift_es } from './shift';
 import { user_en, user_es } from './user';
 import { notification_en, notification_es } from './notification';
+import { maps_en, maps_es } from './maps';
 
 // import { notification_en, notification_es } from './notification';
 // import { shift_en, shift_es } from './shift';
@@ -24,6 +25,7 @@ const resources = {
       ...user_en,
       ...notification_en,
       ...user_en,
+      ...maps_en,
       // ...home_en,
     },
   },
@@ -36,6 +38,7 @@ const resources = {
       ...user_es,
       ...notification_es,
       ...user_es,
+      ...maps_es,
       // ...home_es,
     },
   },

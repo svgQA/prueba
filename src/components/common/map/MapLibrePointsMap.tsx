@@ -7,6 +7,7 @@ import { Button } from '@/components/common/button/button';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { IMapProps, MapPoint } from './interface';
 import { themeSignal } from '@/components/compose/button/signal.theme';
+import { useTranslation } from 'react-i18next';
 
 export const MapLibrePointsMap = ({
   pointsAmount = 100,
@@ -48,6 +49,7 @@ export const MapLibrePointsMap = ({
   const [isMarkerClick, setIsMarkerClick] = useState<boolean>(false);
   const [userLocation, setUserLocation] = useState<MapPoint | null>(null);
   const watchIdRef = useRef<number | null>(null);
+  const { t } = useTranslation();
 
   // Map style configuration
   /*
@@ -143,6 +145,33 @@ export const MapLibrePointsMap = ({
     updateMarkers();
     // Only send non-user points to parent
     sendPoints(points.filter((p) => p.id !== -1));
+
+    // Ajustar el zoom para mostrar todos los puntos
+    if (points.length > 0) {
+      const bounds = new maplibregl.LngLatBounds();
+      
+      // Agregar todos los puntos al bounds
+      points.forEach(point => {
+        bounds.extend([point.position.lng, point.position.lat]);
+      });
+
+      // Si hay un punto radial, incluirlo también
+      if (radialPoint) {
+        bounds.extend([radialPoint.position.lng, radialPoint.position.lat]);
+      }
+
+      // Si hay ubicación del usuario, incluirla también
+      if (userLocation) {
+        bounds.extend([userLocation.position.lng, userLocation.position.lat]);
+      }
+
+      // Ajustar el mapa para mostrar todos los puntos con un padding
+      mapRef.current.fitBounds(bounds, {
+        padding: 50,
+        maxZoom: 12, //15
+        duration: 1000
+      });
+    }
   }, [points, isMapReady]);
 
   // Update circle when radius changes
@@ -320,38 +349,34 @@ export const MapLibrePointsMap = ({
         typeof point.position.lat !== 'number' ||
         typeof point.position.lng !== 'number'
       ) {
-        console.warn('Invalid point structure:', point);
         return;
       }
 
       const markerEl = createMarkerElement(point, index);
       const isRadialPoint = radialPoint && point?.id === radialPoint?.id;
-      const isUserPoint = point.id === -1;
 
       const marker = new maplibregl.Marker({
         element: markerEl,
-        draggable: draggable && !isRadialPoint && !isUserPoint,
+        draggable: draggable && !isRadialPoint,
       }).setLngLat([point.position.lng, point.position.lat]);
 
       if (mapRef.current) {
         marker.addTo(mapRef.current);
       }
 
-      if (!isUserPoint) {
-        marker.on('dragend', () => {
-          const lngLat = marker.getLngLat();
-          handleMarkerDragEnd(point.id, lngLat.lat, lngLat.lng);
-        });
+      marker.on('dragend', () => {
+        const lngLat = marker.getLngLat();
+        handleMarkerDragEnd(point.id, lngLat.lat, lngLat.lng);
+      });
 
-        markerEl.addEventListener('click', (e) => {
-          e.stopPropagation();
-          setIsMarkerClick(true);
-          closeActivePopup();
-          setTimeout(() => {
-            handleMarkerClick(point.id);
-          }, 10);
-        });
-      }
+      markerEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setIsMarkerClick(true);
+        closeActivePopup();
+        setTimeout(() => {
+          handleMarkerClick(point.id);
+        }, 10);
+      });
 
       markersRef.current.push(marker);
     });
@@ -444,7 +469,7 @@ export const MapLibrePointsMap = ({
   // Handle marker drag end
   const handleMarkerDragEnd = (id: number, lat: number, lng: number) => {
     if (radialPoint?.id === id) {
-      ToastManager.error('Punto del lugar no se debe mover');
+      ToastManager.error(t('maps.connect.error_point_move'));
       updateMarkers();
       return;
     }
@@ -459,19 +484,27 @@ export const MapLibrePointsMap = ({
       }
     }
 
-    setPoints((prevPoints) =>
-      prevPoints.map((point) =>
-        point.id === id ? { ...point, position: { lat, lng } } : point
-      )
-    );
+    // Si es el punto del admin, actualizar userLocation
+    if (id === -1) {
+      setUserLocation(prev => ({
+        ...prev!,
+        position: { lat, lng }
+      }));
+    } else {
+      // Para puntos normales
+      setPoints((prevPoints) =>
+        prevPoints.map((point) =>
+          point.id === id ? { ...point, position: { lat, lng } } : point
+        )
+      );
+    }
   };
 
   // Handle marker click
   const handleMarkerClick = (id: number) => {
-    const point = points.find((p) => p.id === id);
-    if (!point || !mapRef.current || disablePointSelection) return;
+    const point = id === -1 ? userLocation : points.find((p) => p.id === id);
+    if (!point || !mapRef.current) return;
 
-    // setActiveMarker(id);
     setEditCoords({
       lat: point.position.lat.toString(),
       lng: point.position.lng.toString(),
@@ -485,20 +518,30 @@ export const MapLibrePointsMap = ({
       <div>
         <div class="flex flex-col mb-2">
           <label class="text-sm mb-1">Latitude</label>
-          <input id="edit-lat" type="text" value="${point.position.lat}" class="w-full text-sm p-1 border rounded" />
+          <input id="edit-lat" type="text" value="${point.position.lat}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''}/>
           
           <label class="text-sm mb-1 mt-2">Longitude</label>
-          <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" />
+          <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>
-        
-        <div class="flex justify-between mt-2">
-          <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
-            Delete
-          </button>
-          <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
-            Update
-          </button>
-        </div>
+        ${
+          disablePointSelection ? 
+          '' : 
+          `
+          <div class="flex justify-between mt-2">
+            <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
+              Delete
+            </button>
+            <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
+              Update
+            </button>
+            ${id === -1 ? `
+            <button id="btn-restore" class="bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-2 rounded">
+              Restore Location
+            </button>
+            ` : ''}
+          </div>
+          `
+        }
       </div>
     `;
 
@@ -522,6 +565,7 @@ export const MapLibrePointsMap = ({
     ) as HTMLInputElement;
     const deleteButton = popupNode.querySelector('#btn-delete');
     const editButton = popupNode.querySelector('#btn-edit');
+    const restoreButton = popupNode.querySelector('#btn-restore');
 
     editLatInput.addEventListener('input', (e) => {
       setEditCoords((prev) => ({
@@ -551,8 +595,19 @@ export const MapLibrePointsMap = ({
       });
     }
 
+    if (restoreButton) {
+      restoreButton.addEventListener('click', async () => {
+        const location = await getLocation();
+        setUserLocation({
+          id: -1,
+          position: location
+        });
+        popup.remove();
+        ToastManager.success(t('maps.connect.success_location_restored'));
+      });
+    }
+
     popup.on('close', () => {
-      // setActiveMarker(null);
       setActivePopup(null);
     });
   };
@@ -575,22 +630,27 @@ export const MapLibrePointsMap = ({
       setMarkerOnMap(lat, lng);
       setCoords({ lat: '', lng: '' });
     } else {
-      ToastManager.error('Por favor ingrese coordenadas válidas');
+      ToastManager.error(t('maps.connect.error_point'));
     }
   };
 
   // Remove marker by ID
   const removeMarkerById = (id: number): void => {
-    const pointExists = points.some((p) => p.id === id);
+    if (id === -1) {
+      setUserLocation(null);
+      ToastManager.success(t('maps.connect.success_point_remove'));
+      return;
+    }
 
+    const pointExists = points.some((p) => p.id === id);
     if (!pointExists) {
-      ToastManager.error('No se pudo encontrar el punto para eliminar');
+      ToastManager.error(t('maps.connect.error_point_remove'));
       return;
     }
 
     setPoints((prevPoints) => {
       const newPoints = prevPoints.filter((p) => p.id !== id);
-      ToastManager.success('Punto eliminado correctamente');
+      ToastManager.success(t('maps.connect.success_point_remove'));
       return newPoints;
     });
 
@@ -603,7 +663,7 @@ export const MapLibrePointsMap = ({
     const newLng = Number.parseFloat(editCoords.lng);
 
     if (isNaN(newLat) || isNaN(newLng)) {
-      ToastManager.error('Por favor ingrese coordenadas válidas');
+      ToastManager.error(t('maps.connect.error_point'));
       return;
     }
 
@@ -616,23 +676,40 @@ export const MapLibrePointsMap = ({
     );
 
     closeActivePopup();
-    ToastManager.success('Punto actualizado correctamente');
+    ToastManager.success(t('maps.connect.success_point'));
   };
 
   const getLocation = (): Promise<{ lat: number; lng: number }> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
         return;
       }
 
+      const handleSuccess = (position: GeolocationPosition) => {
+        const { latitude, longitude } = position.coords;
+        resolve({ lat: latitude, lng: longitude });
+      };
+
+      const handleError = (err: GeolocationPositionError) => {
+        switch (err.code) {
+          case err.PERMISSION_DENIED:
+            ToastManager.error(t('maps.connect.error_permission'));
+            break;
+          case err.POSITION_UNAVAILABLE:
+            ToastManager.error(t('maps.connect.error_location'));
+            break;
+          case err.TIMEOUT:
+            ToastManager.error(t('maps.connect.error_timeout'));
+            break;
+          default:
+            ToastManager.error(t('maps.connect.error_unknown'));
+        }
+        reject(err);
+      };
+
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          resolve({ lat: latitude, lng: longitude });
-        },
-        (err) => {
-          console.error('Error de geolocalización:', err);
-        },
+        handleSuccess,
+        handleError,
         {
           enableHighAccuracy: true,
           timeout: 10000,
@@ -642,7 +719,6 @@ export const MapLibrePointsMap = ({
     });
   };
 
-  // Add this function after the other utility functions
   const getUserLocation = useCallback(async () => {
     if (!adminUser) {
       return;
@@ -670,9 +746,51 @@ export const MapLibrePointsMap = ({
         essential: true,
       });
     }
-
-    ToastManager.success('Location set to exact coordinates');
   }, [adminUser]);
+
+  useEffect(() => {
+    if (!adminUser) return;
+
+    let mounted = true;
+
+    const checkAndMonitorPermissions = async () => {
+      const permission = await navigator.permissions.query({ name: 'geolocation' });
+      if (!mounted) return;
+
+      const handlePermissionChange = (e: Event) => {
+        if (!mounted) return;
+        
+        const target = e.target as PermissionStatus;
+        const newState = target.state;
+          
+        if (newState === 'granted') {
+          ToastManager.success(t('maps.connect.success'));
+          getUserLocation();
+        } else if (newState === 'denied') {
+          ToastManager.error(t('maps.connect.error_permission'));
+          setUserLocation(null);
+        }
+      };
+
+      permission.addEventListener('change', handlePermissionChange);
+
+      // Initial check for granted permission
+      if (permission.state === 'granted') {
+        ToastManager.success(t('maps.connect.success'));
+        getUserLocation();
+      }
+
+      return () => {
+        permission.removeEventListener('change', handlePermissionChange);
+      };
+    };
+
+    checkAndMonitorPermissions();
+
+    return () => {
+      mounted = false;
+    };
+  }, [adminUser, getUserLocation, t]);
 
   // Clean up watch on unmount
   useEffect(() => {
