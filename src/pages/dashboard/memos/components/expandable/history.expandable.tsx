@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { IFilesMemo, IFile, Memo } from '../../utils/memos';
 import { Avatar } from '@/components/common/Avatar';
 import SupervisorInfo from './supervisor.expandable';
@@ -10,6 +10,7 @@ import { File } from '@/components/common/file/file';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { useSignal } from '@preact/signals';
 import { Button } from '@/components/common/button/button';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -19,6 +20,25 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   useEffect(() => {
     fetchInitialData();
+    handleSSE();
+  }, []);
+
+  const handleSSE = useCallback(async () => {
+    await MemoService.streamQuery(
+      (chunk: any) => {
+        let data = JSON.parse(chunk);
+        if (data) {
+          fetchInitialData();
+        }
+      },
+      () => ToastManager.success('Stream completado'),
+      (error: any) => {
+        // Show error toast
+        console.log('Stream error:', error);
+        // TODO: Cambiar para que BaseService muestre el error
+        //ToastManager.error(`Error en el stream: ${error.message}`);
+      }
+    );
   }, []);
 
   const fetchInitialData = async () => {
@@ -315,14 +335,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           {memos.value.map((memo: Memo) => (
             <div key={memo.id} className='flex gap-3'>
               <Avatar
-                name={memo.user.name + ' ' + memo.user.surname}
+                name={memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'}
                 size='sm'
                 square
               />
               <div className='flex-1'>
                 <div className='flex items-center gap-2'>
                   <span className='font-medium  text-t-light dark:text-t-dark'>
-                    {memo.user.name + ' ' + memo.user.surname}
+                    {memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'}
                   </span>
                   <span className='text-xs text-gray-text-light dark:text-t-dark-light'>
                     {formatDate(memo.updatedAt || new Date())}

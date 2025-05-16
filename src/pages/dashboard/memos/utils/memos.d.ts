@@ -47,6 +47,7 @@ export interface Memo {
   supervisor: string;
   parentId: number;
   user: User;
+  messages: number;
 }
 
 export interface Novelty {

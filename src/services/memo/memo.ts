@@ -65,7 +65,7 @@ export class MemoService extends BaseService {
     const model: IRequestModelOutput = this.make_request_model(
       'memo',
       {
-        url: ['memo', 'stream/history'],
+        url: ['memo', 'stream', 'history'],
         method: REQUEST_METHODS.POST,
         data: { prompt },
       },

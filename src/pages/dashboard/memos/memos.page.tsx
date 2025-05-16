@@ -62,7 +62,24 @@ export const MemosPage: FunctionComponent = () => {
 
   const handleSSE = useCallback(async () => {
     await MemoService.streamQuery(
-      (chunk: any) => handleEmitSSE(chunk),
+      (chunk: any) => {
+        let data = JSON.parse(chunk);
+        if (data) {
+          const idMemo = data.id;
+          const memoIndex = memos.value.findIndex((memo) => memo.id === idMemo);
+
+          memos.value = [
+            ...memos.value.slice(0, memoIndex),
+            {
+              ...memos.value[memoIndex],
+              state: data.state,
+              messages: data.messages,
+              // ...data  // Actualizar cualquier otra propiedad que venga en data
+            },
+            ...memos.value.slice(memoIndex + 1)
+          ];
+        }
+      },
       () => ToastManager.success('Stream completado'),
       (error: any) => {
         // Show error toast
@@ -72,10 +89,6 @@ export const MemosPage: FunctionComponent = () => {
       }
     );
   }, []);
-
-  const handleEmitSSE = (_: any) => {
-    // console.log('data SSE: ', data);
-  };
 
   const fetchInitialData = async () => {
     const [responseMemos, responseUsers, responseSummary] = await Promise.all([
