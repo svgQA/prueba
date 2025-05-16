@@ -145,6 +145,33 @@ export const MapLibrePointsMap = ({
     updateMarkers();
     // Only send non-user points to parent
     sendPoints(points.filter((p) => p.id !== -1));
+
+    // Ajustar el zoom para mostrar todos los puntos
+    if (points.length > 0) {
+      const bounds = new maplibregl.LngLatBounds();
+      
+      // Agregar todos los puntos al bounds
+      points.forEach(point => {
+        bounds.extend([point.position.lng, point.position.lat]);
+      });
+
+      // Si hay un punto radial, incluirlo también
+      if (radialPoint) {
+        bounds.extend([radialPoint.position.lng, radialPoint.position.lat]);
+      }
+
+      // Si hay ubicación del usuario, incluirla también
+      if (userLocation) {
+        bounds.extend([userLocation.position.lng, userLocation.position.lat]);
+      }
+
+      // Ajustar el mapa para mostrar todos los puntos con un padding
+      mapRef.current.fitBounds(bounds, {
+        padding: 50,
+        maxZoom: 12, //15
+        duration: 1000
+      });
+    }
   }, [points, isMapReady]);
 
   // Update circle when radius changes
