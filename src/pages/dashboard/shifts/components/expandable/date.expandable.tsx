@@ -208,7 +208,7 @@ const ShiftCard = ({
               <div>
                 {date}
                 <p className='font-semibold'>Fecha</p>
-                <p>{dayjs(date).format('DD/MM/YYYY')}</p>
+                <p>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</p>
               </div>
             </div>
 
@@ -218,7 +218,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Hora</p>
-                <p>{dayjs(time).format('HH:mm')}</p>
+                <p>{time ? dayjs(time).format('HH:mm') : ''}</p>
               </div>
             </div>
 

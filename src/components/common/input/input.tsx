@@ -27,6 +27,7 @@ export const Input = <T = string,>({
   buttonIcon = '123',
   buttonType = 'button',
   disabled,
+  readOnly, // ✅ agregado
   ref,
   onInput,
   onKeyDown,
@@ -58,7 +59,7 @@ export const Input = <T = string,>({
     <div id={id} className='w-full mt-1'>
       {label && (
         <label
-          for={`${id}-input`}
+          htmlFor={`${id}-input`}
           className='capitalize block text-sm font-medium'
         >
           {label}
@@ -118,6 +119,7 @@ export const Input = <T = string,>({
             required={required}
             tabIndex={tabIndex}
             disabled={disabled}
+            readOnly={readOnly} // ✅ agregado
             {...props}
           />
           {isDateTimeInput && (
