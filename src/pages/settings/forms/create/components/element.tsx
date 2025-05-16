@@ -172,7 +172,7 @@ export const FormElement = ({
               } ${isDragging ? 'opacity-70' : ''} items-center`}
             >
               {question.section && (
-                <div className=' mx-3 w-1 h-6 rounded-lg bg-primary dark:bg-b-light-dark'></div>
+                <div className='mx-3 w-1 h-6 rounded-lg bg-primary dark:bg-b-light-dark'></div>
               )}
               <div className='flex flex-row w-full items-center'>
                 <span
@@ -328,17 +328,20 @@ export const FormElement = ({
                         button
                         onSelect={openModalList}
                         buttonIcon='093'
+                        bottom
                         scrollable
                       />
                     )}
                   </div>
-                  <Switch
-                    label='URL'
-                    value={question.isUrl}
-                    onChange={handleInputChange}
-                    name='isUrl'
-                    id={`sw-form-${question.id}-element-option-type`}
-                  />
+                  <div className='pt-5'>
+                    <Switch
+                      label='URL'
+                      value={question.isUrl}
+                      onChange={handleInputChange}
+                      name='isUrl'
+                      id={`sw-form-${question.id}-element-option-type`}
+                    />
+                  </div>
                 </div>
               )}
               {(question.type === ELEMENT_TYPE.CHECK_BOX ||

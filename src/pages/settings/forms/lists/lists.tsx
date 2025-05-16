@@ -120,13 +120,13 @@ export const ListFormModal = ({ onSelected }: IListFormModalProps) => {
       header={modalHeader}
       position='fixed'
     >
-      <div className='p-3 w-full flex flex-col max-h-[70vh] overflow-y-hidden'>
+      <div className='p-2 w-full flex flex-col max-h-[70vh] overflow-y-hidden'>
         {renderForm}
         <Table<IListResponse>
           data={lists.value}
           columns={columns}
-          pageSize={8}
-          unsettings
+          pageSize={50}
+          // unsettings
           isSettingTable
           onClickAction={handleOnClick}
         />

@@ -40,6 +40,7 @@ export const form_es = {
       regex: 'Regex',
       maximum: 'Máximo',
       minimum: 'Mínimo',
+      list_url: 'URL de la lista',
     },
     columns: {
       user: 'Usuario',
@@ -119,6 +120,7 @@ export const form_en = {
       regex: 'Regex',
       maximum: 'Maximum',
       minimum: 'Minimum',
+      list_url: 'List URL',
     },
     columns: {
       user: 'User',

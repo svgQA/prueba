@@ -18,4 +18,5 @@ export interface IDropdownProps extends IComponentProps {
   onChange?: (value: string | number) => void;
   meta?: FieldMetaState<string>;
   value?: string | number;
+  disabled?: boolean;
 }
