@@ -1,8 +1,5 @@
-import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { Section } from '@/components/common/section/section';
-import { Select } from '@/components/common/select/select';
-import { IUserResponse } from '@/types/auth';
 import { useSignal } from '@preact/signals';
 import { UserService } from '@/services/general/user';
 import { FunctionComponent } from 'preact';
@@ -10,29 +7,50 @@ import { useEffect } from 'preact/hooks';
 import { Field } from 'react-final-form';
 import { Form } from 'react-final-form';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { IOption } from '@/components/common/multi/interface';
+import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { StatusButton } from '@/pages/settings/components/custom.button';
+import { useLocation } from 'wouter';
+
+interface IFormData {
+  userId: IOption;
+  newPassword: string;
+  confirmPassword: string;
+}
 
 export const UserPasswordPage: FunctionComponent = () => {
-  const users = useSignal<IUserResponse[]>([]);
+  const users = useSignal<IOption[]>([]);
+  const [_, navigate] = useLocation();
 
   useEffect(() => {
     getUsers();
   }, []);
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: IFormData) => {
+    if (
+      !values.userId.value ||
+      !values.newPassword ||
+      !values.confirmPassword
+    ) {
+      ToastManager.error('Todos los campos son requeridos');
+      return;
+    }
     const response = await UserService.changePassword(
-      values.userId,
+      Number(values.userId.value),
       values.newPassword,
       values.confirmPassword
     );
+
     if (response.getStatus()) {
       ToastManager.success('Contraseña actualizada exitosamente!');
+      navigate('/settings/users');
     } else {
       ToastManager.error('Error al actualizar la contraseña');
     }
   };
 
   const getUsers = async () => {
-    const _users = await UserService.get_all();
+    const _users = await UserService.getListUsers();
     if (_users.getStatus()) {
       users.value = _users.getMany();
     }
@@ -51,24 +69,22 @@ export const UserPasswordPage: FunctionComponent = () => {
           onSubmit={onSubmit}
           initialValues={{}}
           render={({ handleSubmit, form, submitting, pristine, values }) => (
-            <form onSubmit={handleSubmit} className='space-y-6'>
+            <form
+              onSubmit={handleSubmit}
+              className='space-y-6'
+              id='form-password-change'
+            >
               <div className='grid grid-cols-1 gap-4'>
                 <div className='col-span-1'>
-                  <Field name='userId'>
+                  <Field<IOption> name='userId'>
                     {({ input, meta }) => (
-                      <Select
+                      <SmartSelector
+                        {...input}
                         id='userId'
                         meta={meta}
                         name='userId'
                         label='Usuario'
                         placeholder='Seleccione un usuario...'
-                        value={input.value}
-                        onChange={(e) => {
-                          const id = parseInt(e.currentTarget.value);
-                          input.onChange(id);
-                        }}
-                        optionLabel='name'
-                        optionValue='id'
                         options={users.value}
                       />
                     )}
@@ -126,22 +142,12 @@ export const UserPasswordPage: FunctionComponent = () => {
                 </div>
               </div>
               <div className='flex justify-end space-x-4'>
-                <Button
-                  id='btn-clean'
-                  name='btn-clean'
-                  type='button'
-                  label='Limpiar'
-                  onClick={() => form.reset()}
-                  disabled={submitting || pristine}
-                />
-
-                <Button
-                  id='btn-save'
-                  name='btn-save'
-                  type='submit'
+                <StatusButton
+                  onClickClean={() => form.reset()}
+                  submitting={submitting}
+                  pristine={pristine}
+                  form='form-password-change'
                   label='Guardar'
-                  className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
-                  disabled={submitting}
                 />
               </div>
             </form>

@@ -16,6 +16,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { IElementError } from '@/types/form/error.type';
 import { useTranslation } from 'react-i18next';
 import { TextArea } from '@/components/common/text.area/text.area';
+import { useUserStore } from '@/store/slices';
 
 const ItemType = {
   QUESTION: 'question',
@@ -31,6 +32,8 @@ export const FormElement = ({
   onDelete,
 }: IElementProps) => {
   const { t } = useTranslation();
+
+  const { getToken, getTenant, getCompanyId } = useUserStore();
   const openModalList = () => {
     toggleListModal({ question: question.id, page, section, field: 'options' });
   };
@@ -68,8 +71,16 @@ export const FormElement = ({
       ToastManager.error('No es una url valida!');
       return;
     }
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: getToken(),
+      'voxline-tenant': getTenant(),
+      'voxline-company': getCompanyId(),
+    };
 
-    fetch(event)
+    fetch(event, {
+      headers: headers,
+    })
       .then((res) => res.json())
       .then((data) => {
         if (
@@ -82,8 +93,9 @@ export const FormElement = ({
           ToastManager.error('La estructura de datos no es válida');
           return;
         }
-        ToastManager.success('Los datos estan bien.');
-        updateForm(question.id, page, section)('options', data.slice(0, 50));
+        ToastManager.success('Los datos tienen una buena estructura.');
+        console.log(question.id, page, section);
+        updateForm(question.id, page, section)('options', data.slice(0, 10));
       })
       .catch(() => {
         ToastManager.error('Error al obtener los datos');

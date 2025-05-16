@@ -309,7 +309,17 @@ export const FormResponseSettingPage: FunctionComponent<
       default:
         return (
           <div className='bg-b-light dark:bg-b-dark p-3 my-3'>
-            {element.label}
+            <Input
+              name={element.id}
+              type='text'
+              label={element.label}
+              icon='123'
+              borderless
+              disabled={disabled}
+              error={element.value_error}
+              data-page={page}
+              data-section={section}
+            />
           </div>
         );
         {
@@ -346,15 +356,18 @@ export const FormResponseSettingPage: FunctionComponent<
 
   const saveResponse = async () => {
     if (!getResponse.value) return;
-    const [structure, error] = responseValidation(getResponse.value);
-    if (error) {
-      setSingleResponse(structure as IResponse);
-      return ToastManager.error('form.error.general');
-    }
+
+    // TODO: No borrar esta parte que es para guardar donde se puede dejar como se quiera
+    // el formulario
+    // const [structure, error] = responseValidation(getResponse.value);
+    // if (error) {
+    //   setSingleResponse(structure as IResponse);
+    //   return ToastManager.error('form.error.general');
+    // }
 
     if (!getResponse?.value || !getResponseMode?.value?.id) return;
     const response = await FormService.update_response(
-      { structure },
+      { structure: getResponse.value },
       getResponseMode.value.id
     );
     if (!response.getStatus()) return;
