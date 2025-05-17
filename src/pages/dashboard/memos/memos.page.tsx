@@ -67,17 +67,11 @@ export const MemosPage: FunctionComponent = () => {
         if (data) {
           const idMemo = data.id;
           const memoIndex = memos.value.findIndex((memo) => memo.id === idMemo);
-
-          memos.value = [
-            ...memos.value.slice(0, memoIndex),
-            {
-              ...memos.value[memoIndex],
-              state: data.state,
-              messages: data.messages,
-              // ...data  // Actualizar cualquier otra propiedad que venga en data
-            },
-            ...memos.value.slice(memoIndex + 1)
-          ];
+          if (memoIndex < 0) return;
+          const memoCopy = memos.value;
+          memoCopy[memoIndex].messages = data.messages;
+          memoCopy[memoIndex].state = data.state;
+          memos.value = [...memoCopy];
         }
       },
       () => ToastManager.success('Stream completado'),

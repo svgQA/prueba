@@ -53,7 +53,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         ...memo,
         priority:
           memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-      }));
+      })).sort((a, b) => {
+        const dateA = new Date(a.updatedAt || a.createdAt || 0);
+        const dateB = new Date(b.updatedAt || b.createdAt || 0);
+        return dateA.getTime() - dateB.getTime();
+      });
     }
   };
 
