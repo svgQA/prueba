@@ -11,13 +11,17 @@ import { TextArea } from '@/components/common/text.area/text.area';
 import { useSignal } from '@preact/signals';
 import { Button } from '@/components/common/button/button';
 import { EventBus } from '@/utils/network/event.bus';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import i18n from '@/i18n';
+import { showAlert } from '@/components/common/show-alert/show-alert';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
   const memos = useSignal<Memo[]>([]);
   const [files, setFiles] = useState<IFilesMemo[]>([]);
   const [message, setMessage] = useState('');
-
+  const [btnLabel, setBtnLabel] = useState('Check In');
+  
   useEffect(() => {
     fetchInitialData();
 
@@ -47,6 +51,57 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         const dateB = new Date(b.updatedAt || b.createdAt || 0);
         return dateA.getTime() - dateB.getTime();
       });
+    }
+
+    setBtnLabel(memo.state === 'OPENED' || memo.state === 'IN_REVISION' || memo.state === 'CREATED' ? 'Check In' : 'Check Out');
+  };
+
+  const getLocation = async () => {
+    try {
+      const position = await new Promise<GeolocationPosition>(
+        (resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        }
+      );
+      return position;
+    } catch (error) {
+      getErrorGeolocation(error as GeolocationPositionError);
+      return null;
+    }
+  };
+
+  const getErrorGeolocation = (error: GeolocationPositionError) => {
+    if (!(error instanceof GeolocationPositionError)) return;
+
+    if (error.code === error.PERMISSION_DENIED) {
+      showAlert({
+        title: i18n.t('shift.expandable.date.location.title'),
+        message: i18n.t('shift.expandable.date.location.message'),
+        onConfirm: () => { },
+        onCancel: () => { },
+      });
+    } else if (error.code === error.POSITION_UNAVAILABLE) {
+      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
+    } else {
+      ToastManager.error(i18n.t('shift.expandable.date.location.timeoutMessage'));
+    }
+  };
+
+  const handleCheck = async () => {
+    const position = await getLocation();
+    if (!position) return null;
+
+    const checkData = {
+      latitude: position.coords.latitude.toString(),
+      longitude: position.coords.longitude.toString(),
+      date: new Date().toISOString(),
+      platform: 'web',
+      type: btnLabel === 'Check In' ? 'CHECK_IN' : 'CHECK_OUT',
+    };
+
+    const response = await MemoService.createCheck(checkData, memo.id);
+    if (response.getStatus()) {
+      ToastManager.success(i18n.t('shift.expandable.date.success'));
     }
   };
 
@@ -214,6 +269,20 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               {memo.description || 'Sin descripción disponible'}
             </p>
           </div>
+
+          <Button
+            label={btnLabel}
+            icon={btnLabel === 'Check In' ? '023' : '024'}
+            onClick={() =>
+              showAlert({
+                title: btnLabel,
+                message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
+                onConfirm: () => handleCheck(),
+                onCancel: () => { },
+              })
+            }
+            name={btnLabel}
+          />
 
           {memo.resource && (
             <div className='flex flex-col space-y-2'>
@@ -384,8 +453,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         </div>
       </div>
 
-     {/* Message Input */}
-     <div className='p-4 border-t border-b-light-dark dark:border-b-dark-light'>
+      {/* Message Input */}
+      <div className='p-4 border-t border-b-light-dark dark:border-b-dark-light'>
         <form onSubmit={handleSubmitMessage}>
           <div className='flex flex-col space-y-2'>
             <TextArea

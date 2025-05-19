@@ -48,6 +48,7 @@ export interface Memo {
   parentId: number;
   user: User;
   messages: number;
+  userEdit: any;
 }
 
 export interface Novelty {

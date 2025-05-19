@@ -69,6 +69,10 @@ export const MemosPage: FunctionComponent = () => {
       const memoCopy = memos.value;
       memoCopy[memoIndex].messages = data.messages;
       memoCopy[memoIndex].state = data.state;
+      memoCopy[memoIndex].userEdit = data.userEdit;
+      memoCopy[memoIndex].latitude = data.latitude;
+      memoCopy[memoIndex].longitude = data.longitude;
+      memoCopy[memoIndex].updatedAt = data.updatedAt;
       memos.value = [...memoCopy];
       EventBus.emit({ id: data.id, data: data });
     }

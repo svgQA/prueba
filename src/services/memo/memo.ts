@@ -1,5 +1,6 @@
 import { Memo } from '@/pages/dashboard/memos/utils/memos';
 import { IPagination } from '@/types';
+import { ICheckRequest } from '@/types/memo/memo.request';
 import { BaseService, IRequestModelOutput } from '@/utils/network';
 import { streamIAResponse } from '@/utils/network/sse.post';
 import {
@@ -49,11 +50,20 @@ export class MemoService extends BaseService {
 
   static async getMemosByHistory(id: string) {
     const model: IMakeRequest = {
-      url: ['memo/history', id],
+      url: ['memo','history', id],
       method: REQUEST_METHODS.GET,
     };
 
     return await super.make_request<Memo>(this.name, model);
+  }
+
+  static async createCheck(data: ICheckRequest, memoId: number) {
+    const model: IMakeRequest = {
+      url: ['memo', `${memoId}`, 'check'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request(this.name, model);
   }
 
   static async streamQuery(

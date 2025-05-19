@@ -149,7 +149,7 @@ export const getColumns = (
   },
   {
     id: 'updatedBy',
-    accessorKey: 'userEdit',
+    accessorKey: 'userEdit.name',
     header: 'Actualizado Por',
     cell: (info) => {
       const value = info.getValue() as string;
