@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IFilesMemo, IFile, Memo } from '../../utils/memos';
 import { Avatar } from '@/components/common/Avatar';
 import SupervisorInfo from './supervisor.expandable';
@@ -10,7 +10,7 @@ import { File } from '@/components/common/file/file';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { useSignal } from '@preact/signals';
 import { Button } from '@/components/common/button/button';
-import { ToastManager } from '@/utils/toast/toast-manager';
+import { EventBus } from '@/utils/network/event.bus';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -20,25 +20,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   useEffect(() => {
     fetchInitialData();
-    handleSSE();
-  }, []);
 
-  const handleSSE = useCallback(async () => {
-    await MemoService.streamQuery(
-      (chunk: any) => {
-        let data = JSON.parse(chunk);
-        if (data) {
-          fetchInitialData();
-        }
-      },
-      () => ToastManager.success('Stream completado'),
-      (error: any) => {
-        // Show error toast
-        console.log('Stream error:', error);
-        // TODO: Cambiar para que BaseService muestre el error
-        //ToastManager.error(`Error en el stream: ${error.message}`);
+    const unsubscribe = EventBus.subscribe((event) => {
+      if (event.id.toString() === memo.id.toString()) {
+        fetchInitialData();
       }
-    );
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const fetchInitialData = async () => {
