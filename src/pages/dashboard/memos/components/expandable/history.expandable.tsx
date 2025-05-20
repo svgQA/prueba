@@ -21,7 +21,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [files, setFiles] = useState<IFilesMemo[]>([]);
   const [message, setMessage] = useState('');
   const [btnLabel, setBtnLabel] = useState('Check In');
-  
+
   useEffect(() => {
     fetchInitialData();
 
@@ -53,7 +53,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       });
     }
 
-    setBtnLabel(memo.state === 'OPENED' || memo.state === 'IN_REVISION' || memo.state === 'CREATED' ? 'Check In' : 'Check Out');
+    getStatus(memo?.state || '');
+  };
+
+  const getStatus = (state: string) => {
+    const statesToSolve = new Set(['OPENED', 'IN_REVISION', 'CREATED']);
+    const status = statesToSolve.has(state) ? 'SOLVE' : 'RESOLVED';
+    setBtnLabel(status);
   };
 
   const getLocation = async () => {
@@ -96,7 +102,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       longitude: position.coords.longitude.toString(),
       date: new Date().toISOString(),
       platform: 'web',
-      type: btnLabel === 'Check In' ? 'CHECK_IN' : 'CHECK_OUT',
+      type: btnLabel === 'SOLVE' ? 'SOLVE' : 'RESOLVED',
     };
 
     const response = await MemoService.createCheck(checkData, memo.id);
@@ -270,19 +276,22 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
             </p>
           </div>
 
-          <Button
-            label={btnLabel}
-            icon={btnLabel === 'Check In' ? '023' : '024'}
-            onClick={() =>
-              showAlert({
-                title: btnLabel,
-                message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
-                onConfirm: () => handleCheck(),
-                onCancel: () => { },
-              })
-            }
-            name={btnLabel}
-          />
+          {memo.state != 'IN_REVISION' && memo.state != 'CREATED' && (
+            <Button
+              label={btnLabel}
+              icon={btnLabel === 'SOLVE' || btnLabel === 'RESOLVED' ? '023' : '024'}
+              disabled={btnLabel === 'RESOLVED'}
+              onClick={() =>
+                showAlert({
+                  title: btnLabel,
+                  message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
+                  onConfirm: () => handleCheck(),
+                  onCancel: () => { },
+                })
+              }
+              name={btnLabel}
+            />
+          )}
 
           {memo.resource && (
             <div className='flex flex-col space-y-2'>
