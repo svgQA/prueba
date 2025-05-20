@@ -19,6 +19,7 @@ import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { EventBus } from '@/utils/network/event.bus';
+import dayjs from 'dayjs';
 
 enum VIEW_NAME {
   TABLE,
@@ -96,6 +97,7 @@ export const MemosPage: FunctionComponent = () => {
         ...memo,
         priority:
           memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+        updatedAt: dayjs(memo.updatedAt).format('DD/MM/YYYY'),
       }));
     }
     if (responseUsers.getStatus()) {
@@ -224,6 +226,7 @@ export const MemosPage: FunctionComponent = () => {
               address: false,
               noveltyDate: false,
               contact: false,
+              updatedAt: false,
             }}
           />
         )}
