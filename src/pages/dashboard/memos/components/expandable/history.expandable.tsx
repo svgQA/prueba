@@ -10,15 +10,28 @@ import { File } from '@/components/common/file/file';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { useSignal } from '@preact/signals';
 import { Button } from '@/components/common/button/button';
+import { EventBus } from '@/utils/network/event.bus';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import i18n from '@/i18n';
+import { showAlert } from '@/components/common/show-alert/show-alert';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
   const memos = useSignal<Memo[]>([]);
   const [files, setFiles] = useState<IFilesMemo[]>([]);
   const [message, setMessage] = useState('');
+  const [btnLabel, setBtnLabel] = useState('Check In');
 
   useEffect(() => {
     fetchInitialData();
+
+    const unsubscribe = EventBus.subscribe((event) => {
+      if (event.id.toString() === memo.id.toString()) {
+        fetchInitialData();
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const fetchInitialData = async () => {
@@ -33,7 +46,68 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         ...memo,
         priority:
           memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-      }));
+      })).sort((a, b) => {
+        const dateA = new Date(a.updatedAt || a.createdAt || 0);
+        const dateB = new Date(b.updatedAt || b.createdAt || 0);
+        return dateA.getTime() - dateB.getTime();
+      });
+    }
+
+    getStatus(memo?.state || '');
+  };
+
+  const getStatus = (state: string) => {
+    const statesToSolve = new Set(['OPENED', 'IN_REVISION', 'CREATED']);
+    const status = statesToSolve.has(state) ? 'SOLVE' : 'RESOLVED';
+    setBtnLabel(status);
+  };
+
+  const getLocation = async () => {
+    try {
+      const position = await new Promise<GeolocationPosition>(
+        (resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        }
+      );
+      return position;
+    } catch (error) {
+      getErrorGeolocation(error as GeolocationPositionError);
+      return null;
+    }
+  };
+
+  const getErrorGeolocation = (error: GeolocationPositionError) => {
+    if (!(error instanceof GeolocationPositionError)) return;
+
+    if (error.code === error.PERMISSION_DENIED) {
+      showAlert({
+        title: i18n.t('shift.expandable.date.location.title'),
+        message: i18n.t('shift.expandable.date.location.message'),
+        onConfirm: () => { },
+        onCancel: () => { },
+      });
+    } else if (error.code === error.POSITION_UNAVAILABLE) {
+      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
+    } else {
+      ToastManager.error(i18n.t('shift.expandable.date.location.timeoutMessage'));
+    }
+  };
+
+  const handleCheck = async () => {
+    const position = await getLocation();
+    if (!position) return null;
+
+    const checkData = {
+      latitude: position.coords.latitude.toString(),
+      longitude: position.coords.longitude.toString(),
+      date: new Date().toISOString(),
+      platform: 'web',
+      type: btnLabel === 'SOLVE' ? 'SOLVE' : 'RESOLVED',
+    };
+
+    const response = await MemoService.createCheck(checkData, memo.id);
+    if (response.getStatus()) {
+      ToastManager.success(i18n.t('shift.expandable.date.success'));
     }
   };
 
@@ -123,19 +197,43 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   };
 
   return (
-    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light'>
-      <div className='p-4 pb-2'>
-        <div className='flex justify-between items-start'>
-          <div>
-            <h3 className='text-xl font-bold text-t-light dark:text-t-dark'>
+    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm h-[450px] overflow-y-auto'>
+      <div className='p-6 pb-3'>
+        <div className='flex justify-between items-start gap-6'>
+          <div className='space-y-2 flex-1'>
+            <h3 className='text-2xl font-bold text-t-light dark:text-t-dark'>
               {memo.novelty?.name || 'Memorando #' + memo.id}
             </h3>
-            <p className='mt-1  text-gray-text-light dark:text-t-dark-light'>
+            <p className='text-sm text-gray-text-light dark:text-t-dark-light'>
               {memo.updatedBy || memo.extraData?.client?.name} •{' '}
               {memo.updatedAt
                 ? formatDate(new Date(memo.updatedAt))
                 : formatDate(new Date())}
             </p>
+          </div>
+          <div className='flex gap-4 flex-1'>
+            <div className='flex-1 flex items-start gap-3 bg-gradient-to-br from-b-light-light to-b-light dark:from-b-dark-dark dark:to-b-dark rounded-lg p-4 shadow-sm'>
+              <div className='w-1 h-full bg-primary rounded-full' />
+              <div className='space-y-1'>
+                <p className='font-medium text-t-light dark:text-t-dark text-sm'>
+                  Creación del memorando
+                </p>
+                <p className='text-xs text-gray-text-light dark:text-t-dark-light'>
+                  {formatDate(new Date(memo.createdAt || Date.now()))}
+                </p>
+              </div>
+            </div>
+            <div className='flex-1 flex items-start gap-3 bg-gradient-to-br from-b-light-light to-b-light dark:from-b-dark-dark dark:to-b-dark rounded-lg p-4 shadow-sm'>
+              <div className='w-1 h-full bg-primary rounded-full' />
+              <div className='space-y-1'>
+                <p className='font-medium text-t-light dark:text-t-dark text-sm'>
+                  Actualización de estado
+                </p>
+                <p className='text-xs text-gray-text-light dark:text-t-dark-light'>
+                  {formatDate(new Date(memo.updatedAt || Date.now()))}
+                </p>
+              </div>
+            </div>
           </div>
           <div className='flex items-center gap-2'>
             <Badge
@@ -167,53 +265,40 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       </div>
 
       {/* Content */}
-      <div className='p-4 pt-2'>
-        <div className='space-y-4'>
-          <div className='flex flex-col space-y-1'>
-            <span className=' font-medium text-gray-text-light dark:text-t-dark-light'>
+      <div className='px-6 py-3'>
+        <div className='space-y-6'>
+          <div className='flex flex-col space-y-2'>
+            <span className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
               Descripción:
             </span>
-            <p className=' text-t-light dark:text-t-dark'>
+            <p className='text-t-light dark:text-t-dark leading-relaxed'>
               {memo.description || 'Sin descripción disponible'}
             </p>
           </div>
 
-          <div className='flex flex-col space-y-1'>
-            <h4 className=' font-medium text-gray-text-light dark:text-t-dark-light'>
-              Historial de cambios
-            </h4>
-            <div className='flex gap-6 '>
-              <div className='flex-1 flex items-start gap-3'>
-                <div className='w-1 h-full bg-b-light-dark dark:bg-b-dark-light rounded-full' />
-                <div>
-                  <p className='font-medium text-t-light dark:text-t-dark'>
-                    Creación del memorando
-                  </p>
-                  <p className='text-gray-text-light dark:text-t-dark-light '>
-                    {formatDate(new Date(memo.createdAt || Date.now()))}
-                  </p>
-                </div>
-              </div>
-              <div className='flex-1 flex items-start gap-3'>
-                <div className='w-1 h-full bg-b-light-dark dark:bg-b-dark-light rounded-full' />
-                <div>
-                  <p className='font-medium text-t-light dark:text-t-dark'>
-                    Actualización de estado
-                  </p>
-                  <p className='text-gray-text-light dark:text-t-dark-light '>
-                    {formatDate(new Date(memo.updatedAt || Date.now()))}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          {memo.state != 'IN_REVISION' && memo.state != 'CREATED' && (
+            <Button
+              label={btnLabel}
+              icon={btnLabel === 'SOLVE' || btnLabel === 'RESOLVED' ? '023' : '024'}
+              disabled={btnLabel === 'RESOLVED'}
+              onClick={() =>
+                showAlert({
+                  title: btnLabel,
+                  message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
+                  onConfirm: () => handleCheck(),
+                  onCancel: () => { },
+                })
+              }
+              name={btnLabel}
+            />
+          )}
 
           {memo.resource && (
-            <div className='flex flex-col space-y-1'>
-              <span className=' font-medium text-gray-text-light dark:text-t-dark-light'>
+            <div className='flex flex-col space-y-2'>
+              <span className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
                 Archivos adjuntos:
               </span>
-              <div className='flex flex-wrap gap-2 bg-b-light-light dark:bg-b-dark-dark rounded-md p-2'>
+              <div className='flex flex-wrap gap-3 bg-b-light-light dark:bg-b-dark-dark rounded-lg p-4'>
                 {(() => {
                   interface Attachment {
                     url: string;
@@ -259,7 +344,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
                   if (allAttachments.length === 0) {
                     return (
-                      <span className=' text-gray-text-light dark:text-t-dark-light'>
+                      <span className='text-sm text-gray-text-light dark:text-t-dark-light'>
                         No hay archivos adjuntos
                       </span>
                     );
@@ -272,12 +357,12 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                           <img
                             src={attachment.url}
                             alt={attachment.name}
-                            className='h-20 w-20 object-cover rounded-md cursor-pointer hover:opacity-90 transition-opacity'
+                            className='h-24 w-24 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity shadow-sm'
                             onClick={() =>
                               window.open(attachment.url, '_blank')
                             }
                           />
-                          <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-md' />
+                          <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg' />
                         </div>
                       );
                     }
@@ -288,10 +373,10 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         href={attachment.url}
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='flex items-center p-2 bg-b-light dark:bg-b-dark-light rounded-md  hover:bg-b-light-dark dark:hover:bg-b-dark transition-colors'
+                        className='flex items-center p-3 bg-b-white dark:bg-b-dark-light rounded-lg hover:bg-b-light-dark dark:hover:bg-b-dark transition-colors shadow-sm'
                       >
                         <span className='vox-icon size-sm vx-icon-311 px-2' />
-                        <span className='truncate max-w-[150px] text-t-light dark:text-t-dark'>
+                        <span className='truncate max-w-[200px] text-t-light dark:text-t-dark'>
                           {attachment.name}
                         </span>
                       </a>
@@ -308,50 +393,48 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       <div className='h-px bg-gray-border dark:bg-b-dark-light' />
 
       {/* Chat Messages */}
-      <div
-        className={`overflow-y-auto p-4 ${memos.value.length > 1 ? 'h-[350px]' : 'min-h-[10px]'}`}
-      >
-        <div className='space-y-4'>
+      <div className='px-6 py-4 pb-25'>
+        <div className='space-y-6'>
           {memos.value.map((memo: Memo) => (
-            <div key={memo.id} className='flex gap-3'>
+            <div key={memo.id} className='flex gap-4'>
               <Avatar
-                name={memo.user.name + ' ' + memo.user.surname}
-                size='sm'
+                name={memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'}
+                size='md'
                 square
               />
               <div className='flex-1'>
-                <div className='flex items-center gap-2'>
-                  <span className='font-medium  text-t-light dark:text-t-dark'>
-                    {memo.user.name + ' ' + memo.user.surname}
+                <div className='flex items-center gap-2 mb-2'>
+                  <span className='font-medium text-t-light dark:text-t-dark'>
+                    {memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'}
                   </span>
                   <span className='text-xs text-gray-text-light dark:text-t-dark-light'>
                     {formatDate(memo.updatedAt || new Date())}
                   </span>
                 </div>
                 <div
-                  className='mt-1 p-3 bg-b-light dark:bg-b-dark-light rounded-lg cursor-pointer hover:bg-b-light-dark dark:hover:bg-b-dark transition-colors'
+                  className='p-4 bg-b-light-light dark:bg-b-dark-light rounded-lg cursor-pointer shadow-sm'
                   onClick={() =>
                     setExpandedMemoId(
                       expandedMemoId === memo.id ? null : memo.id
                     )
                   }
                 >
-                  <p className=' text-t-light dark:text-t-dark'>
+                  <p className='text-t-light dark:text-t-dark leading-relaxed whitespace-pre-wrap'>
                     {memo.description}
                   </p>
 
                   {memo.attachments && memo.attachments.length > 0 && (
-                    <div className='mt-2 flex flex-wrap gap-2'>
+                    <div className='mt-3 flex flex-wrap gap-2'>
                       {memo.attachments.map((attachment, idx) => (
                         <a
                           key={idx}
                           href={attachment.url}
                           target='_blank'
                           rel='noopener noreferrer'
-                          className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs hover:bg-b-light dark:hover:bg-b-dark-light transition-colors'
+                          className='flex items-center p-2 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
                         >
                           <span className='vox-icon size-sm vx-icon-311 px-2' />
-                          <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
+                          <span className='truncate max-w-[150px] text-t-light dark:text-t-dark'>
                             {attachment.name}
                           </span>
                         </a>
@@ -370,9 +453,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
             </div>
           ))}
           {memos.value.length === 0 && (
-            <div className='flex justify-center items-center h-full'>
+            <div className='flex justify-center items-center h-32'>
               <p className='text-gray-text-light dark:text-t-dark-light'>
-                No hay mensajes
+                No hay Comentarios
               </p>
             </div>
           )}
@@ -385,7 +468,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           <div className='flex flex-col space-y-2'>
             <TextArea
               name='message'
-              placeholder='Escribe un mensaje...'
+              placeholder='Escribe un Comentario...'
               value={message}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setMessage((e.target as HTMLTextAreaElement).value)

@@ -149,7 +149,7 @@ export const getColumns = (
   },
   {
     id: 'updatedBy',
-    accessorKey: 'userEdit',
+    accessorKey: 'userEdit.name',
     header: 'Actualizado Por',
     cell: (info) => {
       const value = info.getValue() as string;
@@ -184,6 +184,22 @@ export const getColumns = (
     id: 'createdAt',
     accessorKey: 'createdAt',
     header: 'Fecha',
+    cell: (info) => {
+      const dateStr = String(info.getValue());
+      if (!dateStr) return '-';
+
+      try {
+        return dayjs(dateStr).format('DD/MM/YYYY');
+      } catch (error) {
+        return '-';
+      }
+    },
+  },
+  {
+    id: 'updatedAt',
+    accessorKey: 'updatedAt',
+    header: 'Actualizado',
+    enableGrouping: true,
     cell: (info) => {
       const dateStr = String(info.getValue());
       if (!dateStr) return '-';

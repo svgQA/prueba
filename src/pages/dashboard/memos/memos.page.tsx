@@ -18,7 +18,8 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
-import { ToastManager } from '@/utils/toast/toast-manager';
+import { EventBus } from '@/utils/network/event.bus';
+import dayjs from 'dayjs';
 
 enum VIEW_NAME {
   TABLE,
@@ -56,26 +57,31 @@ export const MemosPage: FunctionComponent = () => {
     // con este error
     if (selectedCompany) {
       fetchInitialData();
-      handleSSE();
+      fetchSSE();
     }
   }, [selectedCompany]);
 
-  const handleSSE = useCallback(async () => {
-    await MemoService.streamQuery(
-      (chunk: any) => handleEmitSSE(chunk),
-      () => ToastManager.success('Stream completado'),
-      (error: any) => {
-        // Show error toast
-        console.log('Stream error:', error);
-        // TODO: Cambiar para que BaseService muestre el error
-        //ToastManager.error(`Error en el stream: ${error.message}`);
-      }
-    );
-  }, []);
+  const handleMemoSSE = (chunk: string) => {
+    let data = JSON.parse(chunk);
+    if (data) {
+      const idMemo = data.id;
+      const memoIndex = memos.value.findIndex((memo) => memo.id === idMemo);
+      if (memoIndex < 0) return;
+      const memoCopy = memos.value;
+      memoCopy[memoIndex].messages = data.messages;
+      memoCopy[memoIndex].state = data.state;
+      memoCopy[memoIndex].userEdit = data.userEdit;
+      memoCopy[memoIndex].latitude = data.latitude;
+      memoCopy[memoIndex].longitude = data.longitude;
+      memoCopy[memoIndex].updatedAt = data.updatedAt;
+      memos.value = [...memoCopy];
+      EventBus.emit({ id: data.id, data: data });
+    }
+  }
 
-  const handleEmitSSE = (_: any) => {
-    // console.log('data SSE: ', data);
-  };
+  const fetchSSE = useCallback(async () => {
+    await MemoService.streamQuery((chunk: string) => handleMemoSSE(chunk));
+  }, []);
 
   const fetchInitialData = async () => {
     const [responseMemos, responseUsers, responseSummary] = await Promise.all([
@@ -91,6 +97,7 @@ export const MemosPage: FunctionComponent = () => {
         ...memo,
         priority:
           memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+        updatedAt: dayjs(memo.updatedAt).format('DD/MM/YYYY'),
       }));
     }
     if (responseUsers.getStatus()) {
@@ -219,6 +226,7 @@ export const MemosPage: FunctionComponent = () => {
               address: false,
               noveltyDate: false,
               contact: false,
+              updatedAt: false,
             }}
           />
         )}

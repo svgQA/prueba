@@ -186,7 +186,7 @@ export const Table = <T,>({
     }
   };
 
-  const handleClick = (e: MouseEvent) => {
+  const handleClick = useCallback((e: MouseEvent) => {
     // TODO: No descomentar esto, dejar asi.
     // e.stopPropagation();
     // e.preventDefault();
@@ -250,7 +250,7 @@ export const Table = <T,>({
         onClickAction?.({ id, type, action: Number(action) as ROW_ACTIONS });
       }
     }
-  };
+  }, [selectedCells, setSelectedCells, onClickAction]);
 
   const buildSettings = () => (
     <div className='min-w-80 rounded-b-md p-4 bg-b-light-light dark:bg-b-dark-dark border-2 border-gray-100 dark:border-gray-700 rounded-md max-h-container-table overflow-y-auto vox-scroll-design'>
@@ -508,7 +508,7 @@ export const Table = <T,>({
                       </SortableContext>
                     ))}
                   </tr>
-                  {expandable && row.getIsExpanded() && (
+                  {expandable && (row.getIsExpanded() || selectedCells[row.id]) && (
                     <tr>
                       <td
                         colSpan={row.getVisibleCells().length + 1}

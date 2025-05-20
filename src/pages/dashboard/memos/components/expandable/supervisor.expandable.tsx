@@ -3,8 +3,75 @@ import { Memo } from '../../utils/memos';
 import { Chip } from '@/components/common/chip/chip';
 import { Avatar } from '@/components/common/Avatar';
 import dayjs from 'dayjs';
+import { Button } from '@/components/common/button/button';
+import { useEffect, useState } from 'preact/hooks';
+import { MemoService } from '@/services';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import i18n from '@/i18n';
+import { showAlert } from '@/components/common/show-alert/show-alert';
 
-const SupervisorInfo = ({ memo }: { memo: Memo }) => {
+const SupervisorInfo = ({ memo, resolved = false }: { memo: Memo, resolved?: boolean }) => {
+  const [btnLabel, setBtnLabel] = useState('Check In');
+
+  const getStatus = (state: string) => {
+    const statesToSolve = new Set(['IN_REVISION', 'CREATED']);
+    const status = statesToSolve.has(state) ? 'OPENED' : 'SOLVE';
+    setBtnLabel(status);
+  };
+
+  useEffect(() => {
+    getStatus(memo.state || '');
+  }, [memo.state]);
+
+  const getLocation = async () => {
+    try {
+      const position = await new Promise<GeolocationPosition>(
+        (resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        }
+      );
+      return position;
+    } catch (error) {
+      getErrorGeolocation(error as GeolocationPositionError);
+      return null;
+    }
+  };
+
+  const getErrorGeolocation = (error: GeolocationPositionError) => {
+    if (!(error instanceof GeolocationPositionError)) return;
+
+    if (error.code === error.PERMISSION_DENIED) {
+      showAlert({
+        title: i18n.t('shift.expandable.date.location.title'),
+        message: i18n.t('shift.expandable.date.location.message'),
+        onConfirm: () => { },
+        onCancel: () => { },
+      });
+    } else if (error.code === error.POSITION_UNAVAILABLE) {
+      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
+    } else {
+      ToastManager.error(i18n.t('shift.expandable.date.location.timeoutMessage'));
+    }
+  };
+
+  const handleCheck = async () => {
+    const position = await getLocation();
+    if (!position) return null;
+
+    const checkData = {
+      latitude: position.coords.latitude.toString(),
+      longitude: position.coords.longitude.toString(),
+      date: new Date().toISOString(),
+      platform: 'web',
+      type: btnLabel === 'OPENED' ? 'OPENED' : 'SOLVE',
+    };
+
+    const response = await MemoService.createCheck(checkData, memo.id);
+    if (response.getStatus()) {
+      ToastManager.success(i18n.t('shift.expandable.date.success'));
+    }
+  };
+
   const formatDate = (date: string | Date) => {
     if (!date) return '-';
     return dayjs(date).format('DD/MM/YYYY HH:mm');
@@ -20,6 +87,24 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
             <Chip label='Tarea' />
             <Chip label='Tarea' />
             <Chip label='Tarea' />
+          </div>
+          <div className='flex flex-wrap gap-1'>
+            {resolved && memo.state !== 'RESOLVED' && memo.state !== 'CLOSED' && (
+              <Button
+                label={btnLabel}
+                icon={btnLabel === 'OPENED' || btnLabel === 'SOLVE' ? '023' : '024'}
+                disabled={btnLabel === 'SOLVE'}
+                onClick={() =>
+                  showAlert({
+                    title: btnLabel,
+                    message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
+                    onConfirm: () => handleCheck(),
+                    onCancel: () => { },
+                  })
+                }
+                name={btnLabel}
+              />
+            )}
           </div>
         </div>
 
