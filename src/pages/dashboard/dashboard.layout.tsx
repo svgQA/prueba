@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { Route, Router } from 'wouter';
-import { lazy, Suspense, useEffect } from 'preact/compat';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
  * UTILS
  ** ***********************************************************************/
 import { SIDEBAR_MENUS } from '@/utils/menus';
-import { PAGES_LIST } from '@/utils/routing';
+import { PAGES_LIST, PAGES_LIST_ROUTER } from '@/utils/routing';
 
 /** ***********************************************************************
  * PAGES
@@ -42,13 +42,16 @@ import { hasUserTenant, useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
-import { Button } from '@/components/common/button/button';
-import { CompanyService } from '@/services';
+import { CompanyService, MemoService } from '@/services';
+import { INotification } from '@/components/common/notifications/interface';
+import Notifications from '@/components/common/notifications/notifications';
+import { EventBus } from '@/utils/network/event.bus';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
+    const [notifications, setNotifications] = useState<INotification[]>([]);
     const {
       setCompanies,
       companies,
@@ -66,6 +69,18 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     useEffect(() => {
       validateUser();
+      const unsubscribe = EventBus.subscribe((event) => {
+        if (event.type && event.data && event.type === 'create-parent') {
+          setNotifications(prevNotifications => [...prevNotifications, {
+            label: 'Memo: ' + event.data?.novelty?.name,
+            value: prevNotifications.length + 1,
+            icon: '077',
+            redirect: PAGES_LIST_ROUTER.dashboard.memos
+          }]);
+        }
+      });
+
+      return () => unsubscribe();
     }, []);
 
     const validateUser = async () => {
@@ -128,7 +143,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           onHomeHandler={toggleSettingModal}
           menus={SIDEBAR_MENUS}
           isNavigation
-          // onLogout={signOut}
+        // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
           <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
@@ -154,12 +169,17 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
               />
               <div className='flex flex-row gap-4 items-center justify-center'>
                 <ThemeButton unpadded borderless />
-                <Button
+                {/* <Button
                   name='user-action'
                   icon='317'
                   iconSize='sm'
                   borderless
                   unpadded
+                /> */}
+                <Notifications
+                  notifications={notifications}
+                  icon='317'
+                  iconSize='xsm'
                 />
                 <Dropdown
                   options={[

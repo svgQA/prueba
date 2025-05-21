@@ -1,6 +1,7 @@
 import { type FunctionComponent } from 'preact';
-import { useCallback, useEffect, useMemo } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
+import './utils/memos.css';
 
 import { UserService } from '@/services/general/user';
 import { IUserResponse } from '@/types/auth';
@@ -20,6 +21,7 @@ import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { EventBus } from '@/utils/network/event.bus';
 import dayjs from 'dayjs';
+import { FloatBadge } from '@/components/common/badge/float';
 
 enum VIEW_NAME {
   TABLE,
@@ -43,6 +45,12 @@ export const MemosPage: FunctionComponent = () => {
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
 
+  //notifications
+  const [notificationMemo, setNotificationMemo] = useState<number>(0);
+  const [showReload, setShowReload] = useState<boolean>(false);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     document.title = 'VX - Chat';
     return () => {
@@ -62,21 +70,29 @@ export const MemosPage: FunctionComponent = () => {
   }, [selectedCompany]);
 
   const handleMemoSSE = (chunk: string) => {
-    let data = JSON.parse(chunk);
-    if (data) {
-      const idMemo = data.id;
-      const memoIndex = memos.value.findIndex((memo) => memo.id === idMemo);
+    const data = JSON.parse(chunk);
+    const { name, message } = data[0];
+
+    if (name && message && (name === 'create-parent' || name === 'update')) {
+      const memoIndex = memos.value.findIndex((memo) => memo.id === message.id);
       if (memoIndex < 0) return;
       const memoCopy = memos.value;
-      memoCopy[memoIndex].messages = data.messages;
-      memoCopy[memoIndex].state = data.state;
-      memoCopy[memoIndex].userEdit = data.userEdit;
-      memoCopy[memoIndex].latitude = data.latitude;
-      memoCopy[memoIndex].longitude = data.longitude;
-      memoCopy[memoIndex].updatedAt = data.updatedAt;
+      memoCopy[memoIndex].messages = message.messages;
+      memoCopy[memoIndex].state = message.state;
+      memoCopy[memoIndex].userEdit = message.userEdit;
+      memoCopy[memoIndex].latitude = message.latitude;
+      memoCopy[memoIndex].longitude = message.longitude;
+      memoCopy[memoIndex].updatedAt = message.updatedAt;
       memos.value = [...memoCopy];
-      EventBus.emit({ id: data.id, data: data });
     }
+
+    if (name && message && name === 'create-parent') {
+      setNotificationMemo(prevCount => prevCount + 1);
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 1000);
+    }
+
+    EventBus.emit({ id: message.id, data: message, type: name });
   }
 
   const fetchSSE = useCallback(async () => {
@@ -166,6 +182,27 @@ export const MemosPage: FunctionComponent = () => {
     // Aquí abres modales, haces navigations, etc.
   };
 
+  const handleReload = async () => {
+    setNotificationMemo(0);
+    setShowReload(false);
+    await fetchInitialData();
+  };
+
+  useEffect(() => {
+    if (!showReload) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        setShowReload(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showReload]);
+
   return (
     <Section
       className={
@@ -207,6 +244,30 @@ export const MemosPage: FunctionComponent = () => {
         <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 top-0 pl-1'>
           <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
+            {notificationMemo > 0 && (
+              <div className='ml-3 relative'>
+                <FloatBadge label={notificationMemo || '0'} color='bg-primary'>
+                  <div
+                    className={`border border-primary rounded-lg px-4 py-1.5 flex items-center justify-center cursor-pointer transition-all duration-300 ${isAnimating ? 'animate-curtain' : ''}`}
+                    onClick={() => setShowReload(!showReload)}
+                  >
+                    <span className="text-sm text-primary pr-2">Memo nuevo</span>
+                  </div>
+                </FloatBadge>
+                {showReload && (
+                  <div
+                    ref={popupRef}
+                    className='absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg p-2 animate-fade-in'
+                  >
+                    <Button
+                      name='button-change-scheduler'
+                      onClick={handleReload}
+                      label='Ver Memo'
+                    />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
