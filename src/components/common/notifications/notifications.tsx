@@ -3,6 +3,9 @@ import { FloatBadge } from "../badge/float";
 import { Button } from "../button/button";
 import { INotification, INotificationsProps } from "./interface";
 import { useLocation } from 'wouter';
+import { localStorage } from '@/utils/storage';
+
+const STORAGE_KEY = 'notifications';
 
 const Notifications = ({
     notifications,
@@ -10,8 +13,26 @@ const Notifications = ({
     iconSize = 'xsm'
 }: INotificationsProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [localNotifications, setLocalNotifications] = useState<INotification[]>([]);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [, navigate] = useLocation();
+
+    useEffect(() => {
+        const storedNotifications = localStorage.get<INotification[]>(STORAGE_KEY);
+        setLocalNotifications(Array.isArray(storedNotifications) ? storedNotifications : []);
+    }, []);
+
+    useEffect(() => {
+        if (notifications.length > 0) {
+            const uniqueNotifications = notifications.filter(newNotif => !localNotifications.some(existingNotif => existingNotif.value === newNotif.value));
+            
+            if (uniqueNotifications.length > 0) {
+                const allNotifications = [...localNotifications, ...uniqueNotifications];
+                setLocalNotifications(allNotifications);
+                localStorage.set(STORAGE_KEY, allNotifications);
+            }
+        }
+    }, [notifications]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -30,15 +51,37 @@ const Notifications = ({
 
     const handleRedirect = (info: INotification) => {
         if (info.redirect) {
+            const updatedNotifications = localNotifications.filter(n => n.value !== info.value);
+            setLocalNotifications(updatedNotifications);
+            localStorage.set(STORAGE_KEY, updatedNotifications);
+            
+            const index = notifications.indexOf(info);
+            if (index > -1) {
+                notifications.splice(index, 1);
+            }
+            
             navigate(info.redirect);
-            notifications.splice(notifications.indexOf(info), 1);
             setIsOpen(false);
         }
     }
 
+    const handleDelete = (info: INotification, event: MouseEvent) => {
+        event.stopPropagation(); 
+        const updatedNotifications = localNotifications.filter(n => n.value !== info.value);
+        setLocalNotifications(updatedNotifications);
+        localStorage.set(STORAGE_KEY, updatedNotifications);
+
+        const index = notifications.indexOf(info);
+        if (index > -1) {
+            notifications.splice(index, 1);
+        }
+    }
+
+    const allNotifications = notifications.length > 0 ? notifications : localNotifications;
+
     return (
         <div className="relative">
-            <FloatBadge label={notifications.length || '0'} color='bg-primary'>
+            <FloatBadge label={allNotifications.length || '0'} color='bg-primary'>
                 <Button
                     name='user-action'
                     icon={icon}
@@ -51,25 +94,31 @@ const Notifications = ({
             {isOpen && (
                 <div
                     ref={dropdownRef}
-                    className='absolute top-full right-0 mt-2 bg-white dark:bg-b-dark-dark shadow-lg rounded-lg p-2 animate-fade-in border border-gray-200 dark:border-gray-700'
+                    className='absolute top-full right-0 mt-2 bg-white dark:bg-b-dark-dark shadow-lg rounded-lg p-2 animate-fade-in border border-gray-200 dark:border-gray-700 w-80 max-h-[300px] overflow-y-auto vox-scroll-design'
                 >
-                    {notifications.length === 0 ? (
+                    {allNotifications.length === 0 ? (
                         <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">
                             No hay notificaciones
                         </div>
                     ) : (
-                        notifications.map((notification) => (
+                        allNotifications.map((notification) => (
                             <div
                                 key={notification.value}
-                                className="px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-2"
+                                className="px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-between gap-2"
                                 onClick={() => handleRedirect(notification)}
                             >
-                                {notification.icon && (
-                                    <span className={`vx-icon vx-icon-${notification.icon}`} />
-                                )}
-                                <span className="text-sm text-gray-700 dark:text-gray-200">
-                                    {notification.label}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                    {notification.icon && (
+                                        <span className={`vx-icon vx-icon-${notification.icon}`} />
+                                    )}
+                                    <span className="text-sm text-gray-700 dark:text-gray-200">
+                                        {notification.label}
+                                    </span>
+                                </div>
+                                <span 
+                                    className="vx-icon vx-icon-053 text-gray-400 hover:text-red-500 transition-colors"
+                                    onClick={(e) => handleDelete(notification, e)}
+                                />
                             </div>
                         ))
                     )}

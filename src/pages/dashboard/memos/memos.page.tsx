@@ -22,6 +22,7 @@ import { ExpandableMultiple } from './components/expandable.multiple';
 import { EventBus } from '@/utils/network/event.bus';
 import dayjs from 'dayjs';
 import { FloatBadge } from '@/components/common/badge/float';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 enum VIEW_NAME {
   TABLE,
@@ -86,13 +87,20 @@ export const MemosPage: FunctionComponent = () => {
       memos.value = [...memoCopy];
     }
 
-    if (name && message && name === 'create-parent') {
+    if (name && message && name === 'create') {
       setNotificationMemo(prevCount => prevCount + 1);
       setIsAnimating(true);
       setTimeout(() => setIsAnimating(false), 1000);
     }
 
-    EventBus.emit({ id: message.id, data: message, type: name });
+    EventBus.emit({
+      id: message.id,
+      data: message.novelty?.name,
+      type: name,
+      label: 'Memo',
+      icon: '077',
+      redirect: PAGES_LIST_ROUTER.dashboard.memos
+    });
   }
 
   const fetchSSE = useCallback(async () => {

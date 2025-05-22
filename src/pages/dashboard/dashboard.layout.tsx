@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { Route, Router } from 'wouter';
-import { lazy, Suspense, useCallback, useEffect, useState } from 'preact/compat';
+import { lazy, Suspense, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
  * UTILS
  ** ***********************************************************************/
 import { SIDEBAR_MENUS } from '@/utils/menus';
-import { PAGES_LIST, PAGES_LIST_ROUTER } from '@/utils/routing';
+import { PAGES_LIST } from '@/utils/routing';
 
 /** ***********************************************************************
  * PAGES
@@ -42,7 +42,7 @@ import { hasUserTenant, useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
-import { CompanyService, MemoService } from '@/services';
+import { CompanyService } from '@/services';
 import { INotification } from '@/components/common/notifications/interface';
 import Notifications from '@/components/common/notifications/notifications';
 import { EventBus } from '@/utils/network/event.bus';
@@ -70,17 +70,22 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     useEffect(() => {
       validateUser();
       const unsubscribe = EventBus.subscribe((event) => {
-        if (event.type && event.data && event.type === 'create-parent') {
-          setNotifications(prevNotifications => [...prevNotifications, {
-            label: 'Memo: ' + event.data?.novelty?.name,
-            value: prevNotifications.length + 1,
-            icon: '077',
-            redirect: PAGES_LIST_ROUTER.dashboard.memos
-          }]);
+        if (event.type && event.data && event.type === 'create') {
+          const newNotification = {
+            label: (event.label + ': ' + event.data),
+            value: Date.now(),
+            icon: event.icon,
+            redirect: event.redirect,
+            id: event.id
+          };
+          setNotifications(prevNotifications => [...prevNotifications, newNotification]);
         }
       });
 
-      return () => unsubscribe();
+      return () => {
+        unsubscribe();
+        EventBus.unsubscribe(unsubscribe);
+      };
     }, []);
 
     const validateUser = async () => {
