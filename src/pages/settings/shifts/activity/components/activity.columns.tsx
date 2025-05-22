@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IActivity } from '../activity';
-import dayjs from 'dayjs';
+import { FormattedDate } from '@/components/compose/forms';
 
 export const columns: ColumnDef<IActivity>[] = [
   {
@@ -16,8 +16,7 @@ export const columns: ColumnDef<IActivity>[] = [
     size: 60,
     header: 'Inicio',
     cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('YYYY-MM-DD HH:mm');
+      return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
   },
   {
@@ -26,8 +25,7 @@ export const columns: ColumnDef<IActivity>[] = [
     size: 60,
     header: 'Fin',
     cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('YYYY-MM-DD HH:mm');
+      return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
   },
   {

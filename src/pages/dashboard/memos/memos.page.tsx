@@ -19,7 +19,7 @@ import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { EventBus } from '@/utils/network/event.bus';
-import dayjs from 'dayjs';
+import { DateUtils } from '@/utils/utilities/dates';
 
 enum VIEW_NAME {
   TABLE,
@@ -77,7 +77,7 @@ export const MemosPage: FunctionComponent = () => {
       memos.value = [...memoCopy];
       EventBus.emit({ id: data.id, data: data });
     }
-  }
+  };
 
   const fetchSSE = useCallback(async () => {
     await MemoService.streamQuery((chunk: string) => handleMemoSSE(chunk));
@@ -97,9 +97,12 @@ export const MemosPage: FunctionComponent = () => {
         ...memo,
         priority:
           memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-        updatedAt: dayjs(memo.updatedAt).format('DD/MM/YYYY'),
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
+          format: 'DD/MM/YYYY',
+        }),
       }));
     }
+
     if (responseUsers.getStatus()) {
       users.value = responseUsers.getMany();
     }

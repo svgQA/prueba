@@ -1,7 +1,7 @@
 // src/pages/dashboard/access/components/access.columns.tsx
 import { ColumnDef } from '@tanstack/react-table';
 import { IAccess } from '../utils';
-import dayjs from 'dayjs';
+import { FormattedDate } from '@/components/compose/forms';
 
 export const accessColumns: ColumnDef<IAccess>[] = [
   {
@@ -29,8 +29,7 @@ export const accessColumns: ColumnDef<IAccess>[] = [
     size: 140,
     header: 'Hora Ingreso',
     cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('HH:mm');
+      return <FormattedDate date={info.getValue() as string} format='time' />;
     },
   },
   {
@@ -39,8 +38,7 @@ export const accessColumns: ColumnDef<IAccess>[] = [
     size: 140,
     header: 'Hora Salida',
     cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('HH:mm');
+      return <FormattedDate date={info.getValue() as string} format='time' />;
     },
   },
   {

@@ -13,7 +13,6 @@ import { omitBy, isNull, pick } from 'lodash';
 import { TextArea } from '@/components/common/text.area/text.area';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
-import dayjs from 'dayjs';
 import { Input } from '@/components/common/input/input';
 import {
   ContractService,
@@ -29,6 +28,9 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 import { ScheduleSelector } from '@/components/common/schedule-selector/schedule-selector';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { DateUtils } from '@/utils/utilities/dates';
+import { DateField } from '@/components/compose/forms';
+import { useTranslation } from 'react-i18next';
 
 interface FormData {
   name: string;
@@ -47,13 +49,14 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const projects: Signal<IOption[]> = useSignal([]);
   const places: Signal<IOption[]> = useSignal([]);
   const rounds: Signal<IOption[]> = useSignal([]);
+  const { t } = useTranslation();
 
   const tasks = useSignal([]);
   const forms: Signal<IOption[]> = useSignal([]);
 
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
-  const date = dayjs().format('YYYY-MM-DD');
+  // const date = dayjs().format('YYYY-MM-DD');
 
   const onSubmit = async (model: FormData) => {
     model.tasks = setTasks(model.tasks);
@@ -102,8 +105,14 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
         taskData.name = matchingTask.name;
         taskData.description = matchingTask.description;
       } else {
+        // TODO: Revisar esta mierda por si queda con errores
+        /*
         taskData.hourStart = task.hourStart
-          ? dayjs(`${date}T${task.hourStart}:00`).toISOString() //TODO: Cambiar a ISO
+          ? dayjs(`${date}T${task.hourStart}:00`).toISOString()
+          : null;
+        */
+        taskData.hourStart = task.hourStart
+          ? DateUtils.dateToBackend(task.hourStart)
           : null;
         taskData.formId = task.formId || null;
         taskData.name = task.name;
@@ -132,8 +141,6 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     const request = await PlaceService.getSimpleList();
     if (!request.getStatus()) return;
     places.value = request.getMany();
-
-    console.log('PLACES:', places.value);
   };
 
   const getRounds = async () => {
@@ -278,24 +285,6 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       icon='241'
                       options={projects.value}
                     />
-                    /*
-                    <Select
-                      {...input}
-                      placeholder='Seleccione Contrato...'
-                      label='Contrato'
-                      id='contractId'
-                      name='contractId'
-                      icon='241'
-                      optionValue='id'
-                      optionLabel='name'
-                      onChange={(e) => {
-                        const id = parseInt(e.currentTarget.value);
-                        input.onChange(id);
-                      }}
-                      options={projects.value}
-                      meta={meta}
-                    />
-                    */
                   )}
                 </Field>
               </div>
@@ -311,24 +300,6 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       icon='252'
                       options={places.value}
                     />
-                    /*
-                    <Select
-                      {...input}
-                      placeholder='Seleccione lugar...'
-                      label='Lugar'
-                      id='placeId'
-                      name='placeId'
-                      icon='252'
-                      optionValue='id'
-                      optionLabel='name'
-                      onChange={(e) => {
-                        const id = parseInt(e.currentTarget.value);
-                        input.onChange(id);
-                      }}
-                      options={places.value}
-                      meta={meta}
-                    />
-                    */
                   )}
                 </Field>
               </div>
@@ -410,82 +381,29 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                             <div className='p-4'>
                               <div className='grid grid-cols-3 gap-4'>
                                 <div>
-                                  <Field<string>
+                                  <DateField
                                     name={`${name}.start`}
+                                    label={t('shifts.date')}
                                     validate={required}
-                                    parse={(value) =>
-                                      value ? dayjs(value).toISOString() : ''
-                                    }
-                                    format={(value) =>
-                                      value
-                                        ? dayjs(value).format(
-                                            'YYYY-MM-DD HH:mm'
-                                          )
-                                        : ''
-                                    }
-                                  >
-                                    {({ input, meta }) => (
-                                      <Input
-                                        {...input}
-                                        type='datetime-local'
-                                        id='task-start'
-                                        label='Fecha'
-                                        meta={meta}
-                                      />
-                                    )}
-                                  </Field>
+                                  />
                                 </div>
 
                                 <div>
-                                  <Field<string>
-                                    name={`${name}.hourStart`}
-                                    required={required}
-                                    parse={(value) =>
-                                      value
-                                        ? dayjs(
-                                            `${date}T${value}:00`
-                                          ).toISOString()
-                                        : ''
-                                    }
-                                    format={(value) =>
-                                      value ? dayjs(value).format('HH:mm') : ''
-                                    }
-                                  >
-                                    {({ input, meta }) => (
-                                      <Input
-                                        {...input}
-                                        meta={meta}
-                                        type='time'
-                                        label='Hora inicio'
-                                      />
-                                    )}
-                                  </Field>
+                                  <DateField
+                                    name={`${name}.end`}
+                                    label={t('shifts.date')}
+                                    validate={required}
+                                    format='time'
+                                  />
                                 </div>
 
                                 <div>
-                                  <Field<string>
-                                    name={`${name}.hourEnd`}
-                                    required={required}
-                                    parse={(value) =>
-                                      value
-                                        ? dayjs(
-                                            `${date}T${value}:00`
-                                          ).toISOString()
-                                        : ''
-                                    }
-                                    format={(value) =>
-                                      value ? dayjs(value).format('HH:mm') : ''
-                                    }
-                                  >
-                                    {({ input, meta }) => (
-                                      <Input
-                                        {...input}
-                                        meta={meta}
-                                        type='time'
-                                        label='Hora fin'
-                                      />
-                                    )}
-                                  </Field>
+                                  <DateField
+                                    name={`${name}.end`}
+                                    label={t('shifts.date')}
+                                    validate={required}
+                                    format='time'
+                                  />
                                 </div>
                               </div>
 

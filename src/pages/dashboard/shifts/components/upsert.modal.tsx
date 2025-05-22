@@ -3,7 +3,6 @@ import { Select } from '@/components/common/select/select';
 import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 import arrayMutators from 'final-form-arrays';
-import dayjs from 'dayjs';
 import { useSignal } from '@preact/signals';
 import { FormData } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
@@ -17,6 +16,8 @@ import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
+import { DateUtils } from '@/utils/utilities/dates';
+import { DateField } from '@/components/compose/forms';
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -57,12 +58,9 @@ export const TaskForm = ({
   // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
 
   const onSubmit = async (model: FormData) => {
-    const { start, end, employeeId, serviceId } = model;
+    const { employeeId, serviceId } = model;
     model.employeeId = employeeId?.value;
     model.serviceId = serviceId?.value;
-
-    if (start) model.start = dayjs(start).toISOString();
-    if (end) model.end = dayjs(end).toISOString();
 
     const request = taskSelected?.id
       ? await ShiftService.updateActivity(model, taskSelected.id)
@@ -189,12 +187,12 @@ export const TaskForm = ({
           </div>
           <div className='flex justify-center items-center text-xs text-center text-gray-500 dark:text-gray-400 mt-2 w-full'>
             <div>
-              <i className='fas fa-calendar-alt mr-1'></i>
-              {new Date(task.start).toLocaleString()}
+              <i className='fas fa-calendar-alt mx-1'></i>
+              {DateUtils.dateToFrontend(task.start, { mode: '12' })}
             </div>
             <div>
-              <i className='fas fa-flag-checkered mr-1'></i>
-              {new Date(task.end).toLocaleString()}
+              <i className='fas fa-flag-checkered mx-1'></i>
+              {DateUtils.dateToFrontend(task.end, { mode: '12' })}
             </div>
           </div>
         </div>
@@ -319,47 +317,19 @@ export const TaskForm = ({
                 </div>
 
                 <div class='col-span-1'>
-                  <Field<string>
+                  <DateField
                     name='start'
+                    label={t('shifts.upsert.form.startDate')}
                     validate={required}
-                    parse={(value) => (value ? dayjs(value).toISOString() : '')}
-                    format={(value) =>
-                      value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
-                    }
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        id='input-start-date'
-                        name='input-start-date'
-                        type='datetime-local'
-                        label={t('shifts.upsert.form.startDate')}
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
+                  />
                 </div>
 
                 <div class='col-span-1'>
-                  <Field<string>
+                  <DateField
                     name='end'
+                    label={t('shifts.upsert.form.endDate')}
                     validate={required}
-                    parse={(value) => (value ? dayjs(value).toISOString() : '')}
-                    format={(value) =>
-                      value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
-                    }
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        id='input-end-date'
-                        name='input-end-date'
-                        type='datetime-local'
-                        label={t('shifts.upsert.form.endDate')}
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
+                  />
                 </div>
 
                 <div class='col-span-1'>
@@ -455,107 +425,6 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
-
-                {/*
-                <div className='col-span-2'>
-                  <ExpansionPanel
-                    title={t('shifts.upsert.form.taskPanel.title')}
-                  >
-                    <FieldArray name='tasks'>
-                      {({ fields }) => (
-                        <div>
-                          <Select
-                            placeholder={t(
-                              'shifts.upsert.form.taskPanel.selectTaskPlaceholder'
-                            )}
-                            label={t('shifts.upsert.form.taskPanel.task')}
-                            name='taskId'
-                            icon='252'
-                            optionValue='description'
-                            optionLabel='description'
-                            options={tasks.value}
-                            onChange={(e) => {
-                              const description = e.currentTarget.value;
-                              const task = tasks.value.find(
-                                (task: any) => task.description === description
-                              );
-                              fields.push(task);
-                            }}
-                          />
-                          <div className='mt-4'>
-                            <table className='min-w-full divide-y divide-gray-200'>
-                              <thead className='bg-gray-50'>
-                                <tr>
-                                  <th
-                                    scope='col'
-                                    className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
-                                  />
-                                  <th
-                                    scope='col'
-                                    className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
-                                  >
-                                    {t(
-                                      'shifts.upsert.form.taskPanel.startDate'
-                                    )}
-                                  </th>
-                                  <th
-                                    scope='col'
-                                    className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
-                                  >
-                                    {t('shifts.upsert.form.taskPanel.formId')}
-                                  </th>
-                                  <th
-                                    scope='col'
-                                    className='px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
-                                  >
-                                    {t(
-                                      'shifts.upsert.form.taskPanel.description'
-                                    )}
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody className='bg-white divide-y divide-gray-200'>
-                                {fields.value &&
-                                  fields.value.map(
-                                    (task: any, taskIndex: number) => (
-                                      <tr key={taskIndex}>
-                                        <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
-                                          <Button
-                                            textColor='text-red-600'
-                                            id='btn-delete'
-                                            name='btn-delete'
-                                            icon='041'
-                                            type='button'
-                                            className='text-red-600 hover:text-red-800'
-                                            onClick={() =>
-                                              fields.remove(taskIndex)
-                                            }
-                                          />
-                                        </td>
-                                        <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
-                                          {dayjs(task.start).format(
-                                            'DD/MM/YYYY HH:mm'
-                                          )}
-                                        </td>
-                                        <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
-                                          {task.formId}
-                                        </td>
-
-                                        <td className='px-4 py-2 whitespace-nowrap text-sm text-gray-500'>
-                                          <p>{task.description}</p>
-                                        </td>
-                                      </tr>
-                                    )
-                                  )}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      )}
-                    </FieldArray>
-                  </ExpansionPanel>
-                </div>
-                */}
               </div>
             </form>
           )}
@@ -563,20 +432,6 @@ export const TaskForm = ({
         <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
           {userSelected?.tasks.map(renderTaskCard)}
         </div>
-        {/*
-        <div className='w-[650px] max-h-52 overflow-y-scroll'>
-          {taskSelected && (
-            <pre className='bg-gray-100 dark:bg-b-dark-dark p-4 rounded-lg overflow-auto'>
-              {JSON.stringify(taskSelected, null, 2)}
-            </pre>
-          )}
-          {userSelected && (
-            <pre className='bg-gray-100 dark:bg-b-dark-dark p-4 mt-4 rounded-lg overflow-auto'>
-              {JSON.stringify(userSelected, null, 2)}
-            </pre>
-          )}
-        </div>
-        */}
       </div>
     </Modal>
   );

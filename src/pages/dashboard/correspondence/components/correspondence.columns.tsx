@@ -2,7 +2,7 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { ICorrespondence } from '../utils';
-import dayjs from 'dayjs';
+import { FormattedDate } from '@/components/compose/forms';
 
 /**
  * Columnas para la tabla de Correspondencia.
@@ -43,8 +43,9 @@ export const correspondenceColumns: ColumnDef<ICorrespondence>[] = [
     size: 160,
     header: 'Hora Recibido',
     cell: (info) => {
-      const dateStr = info.getValue() as string;
-      return dayjs(dateStr).format('YYYY-MM-DD HH:mm');
+      return (
+        <FormattedDate date={info.getValue() as string} format='datetime' />
+      );
     },
   },
   {

@@ -50,7 +50,7 @@ export class MemoService extends BaseService {
 
   static async getMemosByHistory(id: string) {
     const model: IMakeRequest = {
-      url: ['memo','history', id],
+      url: ['memo', 'history', id],
       method: REQUEST_METHODS.GET,
     };
 
