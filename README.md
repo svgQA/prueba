@@ -71,6 +71,13 @@ uca-web-client/
     └── unit/
 
 ```
+# Documentation
+
+- [Dates](./src/utils/utilities/README.md)
+- [Network](./src/utils/network/README.md)
+- [Toast](./src/utils/toast/README.md)
+- [Socket](./src/utils/socket/README.md)
+
 
 # Installation
 
