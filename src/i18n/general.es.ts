@@ -360,6 +360,10 @@ export const general_es = {
       contact: 'Contacto',
       priority: 'Prioridad',
     },
+    view: {
+      users: 'Usuarios',
+      services: 'Servicios',
+    },
   },
   forms: {
     pageTitle: 'VX - Servicio de Formularios',

@@ -50,6 +50,7 @@ export const MemosPage: FunctionComponent = () => {
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
+  const memosGroupedByService = useSignal<any[]>([]);
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
@@ -133,10 +134,11 @@ export const MemosPage: FunctionComponent = () => {
   }, []);
 
   const fetchInitialData = async () => {
-    const [responseMemos, responseUsers, responseSummary] = await Promise.all([
+    const [responseMemos, responseUsers, responseSummary, responseGroupedByService] = await Promise.all([
       MemoService.get_all({ page: 1, items: 1000 }),
       UserService.get_all_employee({ items: 20, page: 1 }),
       MemoService.getMemosSummary(),
+      MemoService.get_all_by_service(),
     ]);
 
     if (responseMemos.getStatus()) {
@@ -158,6 +160,10 @@ export const MemosPage: FunctionComponent = () => {
 
     if (responseSummary.getStatus()) {
       summary.value = responseSummary.getOne();
+    }
+
+    if (responseGroupedByService.getStatus()) {
+      memosGroupedByService.value = responseGroupedByService.getMany();
     }
   };
 
@@ -335,7 +341,7 @@ export const MemosPage: FunctionComponent = () => {
         )}
       </div>
       {currentView.value === VIEW_NAME.CHAT && (
-        <ChatView users={users.value} getUsersHandler={getUsersHandler} />
+        <ChatView users={users.value} getUsersHandler={getUsersHandler} memosGroupedByService={memosGroupedByService.value} />
       )}
     </Section>
   );

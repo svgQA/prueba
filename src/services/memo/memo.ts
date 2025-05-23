@@ -66,6 +66,22 @@ export class MemoService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
+  static async get_all_by_service(params: IPagination = { page: 1, items: 400 }) {
+    const model: IMakeRequest = {
+      url: ['memo', 'grouped-by-service'],
+      params: params as any,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async get_all_by_service_id(serviceId: string, params: IPagination = { page: 1, items: 400 }) {
+    const model: IMakeRequest = {
+      url: ['memo', 'by-service', serviceId],
+      params: params as any,
+    };
+    return await super.make_request(this.name, model);
+  }
+
   static async streamQuery(
     onData: (chunk: string) => void,
     onDone?: () => void,
