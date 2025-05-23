@@ -229,13 +229,16 @@ export const FormCreateSettingPage: FunctionComponent = () => {
           </div>
         </div>
         <div className='flex flex-row w-full items-center mb-4 gap-5 pr-8 justify-end'>
-          {getHasUnsavedChanges.value && (
-            <Badge
-              outline
-              status={isAutoSaving ? 'info' : 'warning'}
-              label={isAutoSaving ? 'Auto-saving...' : 'Unsaved changes'}
-            />
-          )}
+          <div className='max-w-64'>
+            {getHasUnsavedChanges.value && (
+              <Badge
+                outline
+                status={isAutoSaving ? 'info' : 'warning'}
+                label={isAutoSaving ? 'Auto-saving...' : 'Unsaved changes'}
+                full
+              />
+            )}
+          </div>
         </div>
         <div className='flex flex-col w-[98%] 2xl:max-w-[60vw]'>
           {getForm.value.pages.map((page) => (

@@ -16,6 +16,7 @@ export interface IBadgeProps {
   outline?: boolean;
   width?: 'w-12' | 'w-16' | 'w-24' | 'w-32' | 'w-48' | 'w-64' | 'w-96';
   onClick?: () => void;
+  onRemove?: () => void;
 }
 
 export interface IFloatBadgeProps extends PropsWithChildren {
