@@ -76,17 +76,25 @@ export const MemosPage: FunctionComponent = () => {
     if (selectedCompany) {
       fetchInitialData();
       fetchSSE();
-    }
-
-    // Show column memoId
-    const urlParams = new URLSearchParams(window.location.search);
-    const memoId = urlParams.get('memoId');
-    if (memoId) {
-      setHighlightedMemoId(Number(memoId));
-      setLocation(location.split('?')[0]);
+      selectedMemo();
     }
   }, [selectedCompany, location]);
 
+  const selectedMemo = () => {
+    // Add event listener for notification clicks
+    const handleNotificationClick = (event: CustomEvent) => {
+      const { id } = event.detail;
+      if (id) setHighlightedMemoId(Number(id));
+    };
+
+    window.addEventListener('notification-click', handleNotificationClick as EventListener);
+
+    // Get memoId from URL on initial load
+    const urlParams = new URLSearchParams(window.location.search);
+    const memoId = urlParams.get('notificationId');
+    if (memoId) setHighlightedMemoId(Number(memoId));
+  };
+  
   const handleMemoSSE = (chunk: string) => {
     const data = JSON.parse(chunk);
     const { name, message } = data[0];

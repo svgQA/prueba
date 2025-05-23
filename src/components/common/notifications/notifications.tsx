@@ -87,8 +87,14 @@ const Notifications = ({
                 notifications.splice(index, 1);
             }
             
+            // Emit custom event for notification click
+            if (info.id) {
+                const event = new CustomEvent('notification-click', { detail: { id: info.id } });
+                window.dispatchEvent(event);
+            }
+            
             // Añadir el ID como parámetro de consulta si existe
-            const redirectUrl = info.id ? `${info.redirect}?memoId=${info.id}` : info.redirect;
+            const redirectUrl = info.id ? `${info.redirect}?notificationId=${info.id}` : info.redirect;
             navigate(redirectUrl);
             setIsOpen(false);
         }
