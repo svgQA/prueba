@@ -1,11 +1,11 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
-import dayjs from 'dayjs';
 import {
   IDropdownAction,
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
+import { FormattedDate } from '@/components/compose/forms';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -65,13 +65,7 @@ export const getColumns = (
     header: 'Fecha Programada',
     size: 180,
     cell: (info) => {
-      const value = info.getValue() as string;
-      if (!value) return '-';
-      return (
-        <time dateTime={new Date(value).toISOString()}>
-          {dayjs(value).format('DD/MM/YYYY HH:mm')}
-        </time>
-      );
+      return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
   },
   {
@@ -80,13 +74,7 @@ export const getColumns = (
     header: 'Fecha de creación',
     size: 180,
     cell: (info) => {
-      const value = info.getValue() as string;
-      if (!value) return '-';
-      return (
-        <time dateTime={new Date(value).toISOString()}>
-          {dayjs(value).format('DD/MM/YYYY HH:mm')}
-        </time>
-      );
+      return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
   },
   {

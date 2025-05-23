@@ -1,7 +1,7 @@
 import { Chip } from '@/components/common/chip/chip';
 import { CardRound } from './card.round';
-import dayjs from 'dayjs';
 import { ITaskHistory } from '@/types/shift/activity';
+import { DateUtils } from '@/utils/utilities/dates';
 
 interface ShiftInfoProps {
   tasks: ITaskHistory[];
@@ -16,30 +16,6 @@ const ShiftInfo = ({
   start,
   end,
 }: ShiftInfoProps) => {
-  const calculateTaskDate = (taskTime: string, start: string, end: string) => {
-    const taskHour = dayjs(taskTime).hour();
-    const taskMinute = dayjs(taskTime).minute();
-    const startDay = dayjs(start);
-    const endDay = dayjs(end);
-
-    const startDate = startDay.startOf('day');
-    const endDate = endDay.startOf('day');
-
-    if (!startDate.isSame(endDate, 'day')) {
-      const startHour = startDay.hour();
-      const endHour = endDay.hour();
-
-      if (taskHour >= startHour) {
-        return startDay.set('hour', taskHour).set('minute', taskMinute);
-      }
-
-      if (taskHour <= endHour) {
-        return endDay.set('hour', taskHour).set('minute', taskMinute);
-      }
-    }
-
-    return startDay.set('hour', taskHour).set('minute', taskMinute);
-  };
   return (
     <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark p-4 relative'>
       {tasks.length > 0 ? (
@@ -58,7 +34,7 @@ const ShiftInfo = ({
                   ...task,
                   serviceTask: {
                     ...task.serviceTask,
-                    hourStart: calculateTaskDate(
+                    hourStart: DateUtils.calculateTaskDate(
                       task.serviceTask.hourStart,
                       start,
                       end

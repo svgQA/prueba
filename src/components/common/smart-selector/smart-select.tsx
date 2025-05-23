@@ -264,6 +264,7 @@ export function SmartSelector({
                 setFocused(true);
               }
             }}
+            autoComplete='off'
             onFocus={() => !disabled && setFocused(true)}
             className={`w-full px-3 py-2 rounded
             !bg-white dark:!bg-b-dark-dark
