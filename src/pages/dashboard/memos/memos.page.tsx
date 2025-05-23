@@ -8,6 +8,7 @@ import {
 } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import './utils/memos.css';
+import { useLocation } from 'wouter';
 
 import { UserService } from '@/services/general/user';
 import { IUserResponse } from '@/types/auth';
@@ -44,6 +45,8 @@ const defaultSummary = {
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
+  const [location, setLocation] = useLocation();
+  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(null);
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
@@ -74,7 +77,15 @@ export const MemosPage: FunctionComponent = () => {
       fetchInitialData();
       fetchSSE();
     }
-  }, [selectedCompany]);
+
+    // Show column memoId
+    const urlParams = new URLSearchParams(window.location.search);
+    const memoId = urlParams.get('memoId');
+    if (memoId) {
+      setHighlightedMemoId(Number(memoId));
+      setLocation(location.split('?')[0]);
+    }
+  }, [selectedCompany, location]);
 
   const handleMemoSSE = (chunk: string) => {
     const data = JSON.parse(chunk);
@@ -311,6 +322,7 @@ export const MemosPage: FunctionComponent = () => {
               contact: false,
               updatedAt: false,
             }}
+            rowClassName={(row: Memo) => row.id === highlightedMemoId ? 'bg-gray-200 dark:bg-gray-700' : ''}
           />
         )}
       </div>

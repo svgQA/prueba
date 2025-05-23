@@ -87,7 +87,9 @@ const Notifications = ({
                 notifications.splice(index, 1);
             }
             
-            navigate(info.redirect);
+            // Añadir el ID como parámetro de consulta si existe
+            const redirectUrl = info.id ? `${info.redirect}?memoId=${info.id}` : info.redirect;
+            navigate(redirectUrl);
             setIsOpen(false);
         }
     }

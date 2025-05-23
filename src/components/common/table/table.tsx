@@ -70,6 +70,7 @@ export const Table = <T,>({
   hasNotifications = false,
   onNotifications,
   isSettingTable = false,
+  rowClassName,
 }: ITableProps<T>) => {
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
     {}
@@ -447,10 +448,8 @@ export const Table = <T,>({
                 <Fragment key={row.id}>
                   <tr
                     className={`text-t-light dark:text-t-dark border-b border-b-light-light dark:border-b-dark-light ${
-                      data.length > pageSize && isLastRow
-                        ? 'no-bottom-border'
-                        : ''
-                    }`}
+                      data.length > pageSize && isLastRow ? 'no-bottom-border' : ''
+                    } ${rowClassName ? rowClassName(row.original) : ''}`}
                   >
                     {!unsettings && (
                       <td
@@ -539,6 +538,7 @@ export const Table = <T,>({
       hasNotifications,
       onNotifications,
       selectedCells,
+      rowClassName,
     ]
   );
 
