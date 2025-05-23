@@ -5,6 +5,8 @@ export const notification_es = {
       'Ningún empleado está configurado para notificaciones',
     select_at_least_one_employee:
       'Selecciona al menos un empleado para notificar',
+    memo: 'Memo',
+    memo_state: 'Estado de Memo',
   },
 };
 
@@ -13,5 +15,7 @@ export const notification_en = {
     error_fetching_initial_data: 'Error fetching initial data',
     nobody_have_player_id: 'No employee is configured for notifications',
     select_at_least_one_employee: 'Select at least one employee to notify',
+    memo: 'Memo',
+    memo_state: 'Memo State', 
   },
 };

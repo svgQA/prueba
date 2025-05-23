@@ -80,7 +80,7 @@ export const MemosPage: FunctionComponent = () => {
     const data = JSON.parse(chunk);
     const { name, message } = data[0];
 
-    if (name && message && (name === 'create-parent' || name === 'update')) {
+    if (name && message && (name === 'create-parent' || name === 'update' || name === 'update-check')) {
       const memoIndex = memos.value.findIndex((memo) => memo.id === message.id);
       if (memoIndex < 0) return;
       const memoCopy = memos.value;
@@ -101,11 +101,11 @@ export const MemosPage: FunctionComponent = () => {
 
     EventBus.emit({
       id: message.id,
-      data: message.novelty?.name,
-      type: name,
-      label: 'Memo',
       icon: '077',
       redirect: PAGES_LIST_ROUTER.dashboard.memos,
+      type: (name === 'update-check' || name === 'create') ? 'notification' : name,
+      data: (name === 'update-check') ? message.state : message.novelty?.name,
+      label: (name === 'update-check') ? t('notification.memo_state') : t('notification.memo'),
     });
   };
 
@@ -297,7 +297,7 @@ export const MemosPage: FunctionComponent = () => {
           <Table
             data={memos.value}
             columns={getColumns(onClickAction)}
-            // showExpandableIcon
+            showExpandableIcon
             pageSize={20}
             selectable
             expandable={(row: Memo, column?: string) => (
