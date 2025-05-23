@@ -11,5 +11,8 @@ export const EventBus = {
     subscribe(listener: Listener) {
         listeners.add(listener);
         return () => listeners.delete(listener);
+    },
+    unsubscribe(listener: Listener) {
+        listeners.delete(listener);
     }
 };
