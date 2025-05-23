@@ -1,5 +1,11 @@
 import { type FunctionComponent } from 'preact';
-import { useCallback, useEffect, useMemo, useState, useRef } from 'preact/hooks';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import './utils/memos.css';
 
@@ -20,9 +26,9 @@ import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { EventBus } from '@/utils/network/event.bus';
-import dayjs from 'dayjs';
 import { FloatBadge } from '@/components/common/badge/float';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { DateUtils } from '@/utils/utilities/dates';
 
 enum VIEW_NAME {
   TABLE,
@@ -88,7 +94,7 @@ export const MemosPage: FunctionComponent = () => {
     }
 
     if (name && message && name === 'create') {
-      setNotificationMemo(prevCount => prevCount + 1);
+      setNotificationMemo((prevCount) => prevCount + 1);
       setIsAnimating(true);
       setTimeout(() => setIsAnimating(false), 1000);
     }
@@ -99,9 +105,9 @@ export const MemosPage: FunctionComponent = () => {
       type: name,
       label: 'Memo',
       icon: '077',
-      redirect: PAGES_LIST_ROUTER.dashboard.memos
+      redirect: PAGES_LIST_ROUTER.dashboard.memos,
     });
-  }
+  };
 
   const fetchSSE = useCallback(async () => {
     await MemoService.streamQuery((chunk: string) => handleMemoSSE(chunk));
@@ -121,9 +127,12 @@ export const MemosPage: FunctionComponent = () => {
         ...memo,
         priority:
           memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-        updatedAt: dayjs(memo.updatedAt).format('DD/MM/YYYY'),
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
+          format: 'DD/MM/YYYY',
+        }),
       }));
     }
+
     if (responseUsers.getStatus()) {
       users.value = responseUsers.getMany();
     }
@@ -200,7 +209,10 @@ export const MemosPage: FunctionComponent = () => {
     if (!showReload) return;
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
         setShowReload(false);
       }
     };
@@ -259,7 +271,9 @@ export const MemosPage: FunctionComponent = () => {
                     className={`border border-primary rounded-lg px-4 py-1.5 flex items-center justify-center cursor-pointer transition-all duration-300 ${isAnimating ? 'animate-curtain' : ''}`}
                     onClick={() => setShowReload(!showReload)}
                   >
-                    <span className="text-sm text-primary pr-2">Memo nuevo</span>
+                    <span className='text-sm text-primary pr-2'>
+                      Memo nuevo
+                    </span>
                   </div>
                 </FloatBadge>
                 {showReload && (

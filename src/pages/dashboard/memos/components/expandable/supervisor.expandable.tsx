@@ -2,15 +2,21 @@ import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { Memo } from '../../utils/memos';
 import { Chip } from '@/components/common/chip/chip';
 import { Avatar } from '@/components/common/Avatar';
-import dayjs from 'dayjs';
 import { Button } from '@/components/common/button/button';
 import { useEffect, useState } from 'preact/hooks';
 import { MemoService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import { showAlert } from '@/components/common/show-alert/show-alert';
+import { DateUtils } from '@/utils/utilities/dates';
 
-const SupervisorInfo = ({ memo, resolved = false }: { memo: Memo, resolved?: boolean }) => {
+const SupervisorInfo = ({
+  memo,
+  resolved = false,
+}: {
+  memo: Memo;
+  resolved?: boolean;
+}) => {
   const [btnLabel, setBtnLabel] = useState('Check In');
 
   const getStatus = (state: string) => {
@@ -44,13 +50,15 @@ const SupervisorInfo = ({ memo, resolved = false }: { memo: Memo, resolved?: boo
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
     } else {
-      ToastManager.error(i18n.t('shift.expandable.date.location.timeoutMessage'));
+      ToastManager.error(
+        i18n.t('shift.expandable.date.location.timeoutMessage')
+      );
     }
   };
 
@@ -72,11 +80,6 @@ const SupervisorInfo = ({ memo, resolved = false }: { memo: Memo, resolved?: boo
     }
   };
 
-  const formatDate = (date: string | Date) => {
-    if (!date) return '-';
-    return dayjs(date).format('DD/MM/YYYY HH:mm');
-  };
-
   return (
     <div className='w-full bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm p-3 text-b-dark-light dark:text-b-light-dark'>
       <div className='flex flex-row gap-2 p-3'>
@@ -89,22 +92,28 @@ const SupervisorInfo = ({ memo, resolved = false }: { memo: Memo, resolved?: boo
             <Chip label='Tarea' />
           </div>
           <div className='flex flex-wrap gap-1'>
-            {resolved && memo.state !== 'RESOLVED' && memo.state !== 'CLOSED' && (
-              <Button
-                label={btnLabel}
-                icon={btnLabel === 'OPENED' || btnLabel === 'SOLVE' ? '023' : '024'}
-                disabled={btnLabel === 'SOLVE'}
-                onClick={() =>
-                  showAlert({
-                    title: btnLabel,
-                    message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
-                    onConfirm: () => handleCheck(),
-                    onCancel: () => { },
-                  })
-                }
-                name={btnLabel}
-              />
-            )}
+            {resolved &&
+              memo.state !== 'RESOLVED' &&
+              memo.state !== 'CLOSED' && (
+                <Button
+                  label={btnLabel}
+                  icon={
+                    btnLabel === 'OPENED' || btnLabel === 'SOLVE'
+                      ? '023'
+                      : '024'
+                  }
+                  disabled={btnLabel === 'SOLVE'}
+                  onClick={() =>
+                    showAlert({
+                      title: btnLabel,
+                      message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
+                      onConfirm: () => handleCheck(),
+                      onCancel: () => {},
+                    })
+                  }
+                  name={btnLabel}
+                />
+              )}
           </div>
         </div>
 
@@ -129,7 +138,11 @@ const SupervisorInfo = ({ memo, resolved = false }: { memo: Memo, resolved?: boo
               <Avatar name='AU' size='sm' />
               <div>
                 <p className='font-medium'>Actualizado</p>
-                <p>{formatDate(new Date(memo.updatedAt || Date.now()))}</p>
+                <p>
+                  {DateUtils.dateToFrontend(memo.updatedAt, {
+                    format: 'datetime',
+                  })}
+                </p>
               </div>
             </div>
             <div className='flex items-start gap-2'>

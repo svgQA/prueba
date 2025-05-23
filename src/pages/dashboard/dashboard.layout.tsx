@@ -72,13 +72,16 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       const unsubscribe = EventBus.subscribe((event) => {
         if (event.type && event.data && event.type === 'create') {
           const newNotification = {
-            label: (event.label + ': ' + event.data),
+            label: event.label + ': ' + event.data,
             value: Date.now(),
             icon: event.icon,
             redirect: event.redirect,
-            id: event.id
+            id: event.id,
           };
-          setNotifications(prevNotifications => [...prevNotifications, newNotification]);
+          setNotifications((prevNotifications) => [
+            ...prevNotifications,
+            newNotification,
+          ]);
         }
       });
 
@@ -148,7 +151,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           onHomeHandler={toggleSettingModal}
           menus={SIDEBAR_MENUS}
           isNavigation
-        // onLogout={signOut}
+          // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
           <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>

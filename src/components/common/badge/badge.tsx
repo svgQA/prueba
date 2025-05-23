@@ -10,6 +10,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   borderless = false,
   outline = false,
   width = 'w-32',
+  onClick,
 }: IBadgeProps) => {
   const getStatusColor = (status?: string) => {
     switch (status) {
@@ -51,6 +52,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
              }`
         }
       `}
+      onClick={onClick}
     >
       {icon ? (
         <>

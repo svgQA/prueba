@@ -11,11 +11,11 @@ import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import { UserService } from '@/services/general/user';
-import dayjs from 'dayjs';
 import { ContractService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { DateField } from '@/components/compose/forms/DateField';
 
 interface FormData {
   name: string;
@@ -216,42 +216,18 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                 </div>
 
                 <div class='col-span-1'>
-                  <Field<string>
+                  <DateField
                     name='startDate'
+                    label='Fecha inicio'
                     validate={required}
-                    parse={(value) => (value ? dayjs(value).toISOString() : '')}
-                    format={(value) =>
-                      value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
-                    }
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        type='datetime-local'
-                        label='Fecha inicio'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
+                  />
                 </div>
                 <div class='col-span-1'>
-                  <Field<string>
+                  <DateField
                     name='endDate'
+                    label='Fecha fin'
                     validate={required}
-                    parse={(value) => (value ? dayjs(value).toISOString() : '')}
-                    format={(value) =>
-                      value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
-                    }
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        type='datetime-local'
-                        label='Fecha fin'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
+                  />
                 </div>
               </div>
 

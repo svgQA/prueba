@@ -94,7 +94,6 @@ export const FormElement = ({
           return;
         }
         ToastManager.success('Los datos tienen una buena estructura.');
-        console.log(question.id, page, section);
         updateForm(question.id, page, section)('options', data.slice(0, 10));
       })
       .catch(() => {
@@ -146,12 +145,15 @@ export const FormElement = ({
 
   return (
     <>
-      <tr ref={drop} className='vx-form-question relative'>
+      <tr
+        ref={drop}
+        className='vx-form-question relative bg-white dark:bg-b-dark-dark'
+      >
         {question.type === ELEMENT_TYPE.SECTION ? (
           <td
             colSpan={2}
             onClick={handleSelect}
-            className={`dark:bg-b-dark-dark ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`}
+            className={`dark:bg-b-dark-dark bg-white ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''}`}
           >
             {/* className={`${selected ? 'border-2 border-red-300' : ''}`} */}
             <div className='flex flex-row items-center'>
@@ -179,12 +181,12 @@ export const FormElement = ({
             {/* INPUT: title element */}
             <td
               onClick={handleSelect}
-              className={`rounded-bl-xl dark:bg-b-dark-dark flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
+              className={`rounded-bl-xl dark:bg-b-dark-dark bg-white flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
                 isOver ? 'bg-ternary text-t-dark' : ''
               } ${isDragging ? 'opacity-70' : ''} items-center`}
             >
               {question.section && (
-                <div className='mx-3 w-1 h-6 rounded-lg bg-primary dark:bg-b-light-dark'></div>
+                <div className='mx-3 w-1 h-6 rounded-lg bg-primary'></div>
               )}
               <div className='flex flex-row w-full items-center'>
                 <span
@@ -207,7 +209,7 @@ export const FormElement = ({
             {/* DROPDOW: select type */}
             <td
               onClick={handleSelect}
-              className='w-3/12 dark:bg-b-dark-dark rounded-br-xl'
+              className='w-3/12 dark:bg-b-dark-dark bg-white'
             >
               <Select
                 placeholder={t('form.placeholder.type_element')}

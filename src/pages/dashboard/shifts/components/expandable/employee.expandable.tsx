@@ -1,6 +1,6 @@
 import { Chip } from '@/components/common/chip/chip';
+import { FormattedDate } from '@/components/compose/forms';
 import { IPlace, IService, IUser } from '@/types/shift/activity';
-import dayjs from 'dayjs';
 
 const EmployeeInfo = ({
   employee,
@@ -15,11 +15,6 @@ const EmployeeInfo = ({
   roundPct: number;
   service: IService;
 }) => {
-  const formatDate = (date: string | Date) => {
-    if (!date) return '-';
-    return dayjs(date).format('DD/MM/YYYY HH:mm');
-  };
-
   return (
     <>
       <div className='flex flex-row gap-6'>
@@ -80,7 +75,10 @@ const EmployeeInfo = ({
             </div>
             <div>
               <p className='font-semibold'>Fecha de Inicio</p>
-              <p>{formatDate(service.contract.startDate)}</p>
+              <FormattedDate
+                date={service.contract.startDate}
+                format='datetime'
+              />
             </div>
           </div>
         </div>

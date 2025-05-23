@@ -505,8 +505,6 @@ export const ShiftsPage: FunctionalComponent = () => {
       return;
     }
 
-    console.log('position', position);
-
     const checkData = {
       latitude: position.coords.latitude.toString(),
       longitude: position.coords.longitude.toString(),

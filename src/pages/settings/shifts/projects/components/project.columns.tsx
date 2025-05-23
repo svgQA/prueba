@@ -1,10 +1,11 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IProject } from '../projects';
-import dayjs from 'dayjs';
 import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { Avatar } from '@/components/common/Avatar';
+import { FormattedDate } from '@/components/compose/forms';
+
 const status: { key: string; label: string; color: string }[] = [
   {
     key: 'IN_PROGRESS',
@@ -71,9 +72,7 @@ export const columns: ColumnDef<IProject>[] = [
     size: 70,
     header: 'Inicio',
     cell: (info) => {
-      const dateStr = info.getValue() as string;
-      if (!dateStr) return '';
-      return dayjs(dateStr).format('YYYY-MM-DD HH:mm');
+      return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
   },
   {
@@ -82,9 +81,7 @@ export const columns: ColumnDef<IProject>[] = [
     size: 70,
     header: 'Fin',
     cell: (info) => {
-      const dateStr = info.getValue() as string;
-      if (!dateStr) return '';
-      return dayjs(dateStr).format('YYYY-MM-DD HH:mm');
+      return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
   },
   {

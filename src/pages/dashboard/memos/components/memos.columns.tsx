@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from '../utils/memos';
 
-import dayjs from 'dayjs';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import {
   IDropdownAction,
@@ -12,6 +11,7 @@ import { Avatar } from '@/components/common/Avatar';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { NColumnDef } from '@/components/common/table/type';
 import { FloatBadge } from '@/components/common/badge/float';
+import { FormattedDate } from '@/components/compose/forms';
 
 // Define our custom properties
 type CustomColumnProps = {
@@ -147,6 +147,7 @@ export const getColumns = (
       );
     },
   },
+  /*
   {
     id: 'updatedBy',
     accessorKey: 'userEdit.name',
@@ -164,6 +165,7 @@ export const getColumns = (
       );
     },
   },
+  */
   {
     id: 'history',
     accessorKey: 'messages',
@@ -185,14 +187,7 @@ export const getColumns = (
     accessorKey: 'createdAt',
     header: 'Fecha',
     cell: (info) => {
-      const dateStr = String(info.getValue());
-      if (!dateStr) return '-';
-
-      try {
-        return dayjs(dateStr).format('DD/MM/YYYY');
-      } catch (error) {
-        return '-';
-      }
+      return <FormattedDate date={String(info.getValue())} format='date' />;
     },
   },
   {
@@ -201,14 +196,7 @@ export const getColumns = (
     header: 'Actualizado',
     enableGrouping: true,
     cell: (info) => {
-      const dateStr = String(info.getValue());
-      if (!dateStr) return '-';
-
-      try {
-        return dayjs(dateStr).format('DD/MM/YYYY');
-      } catch (error) {
-        return '-';
-      }
+      return <FormattedDate date={String(info.getValue())} format='date' />;
     },
   },
   {
