@@ -28,7 +28,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     const unsubscribe = EventBus.subscribe((event) => {
       if (
         event.label === 'Memo' &&
-        event.type === 'create' &&
+        event.type === 'create-parent' &&
         event.id.toString() === memo.id.toString()
       ) {
         fetchInitialData();
