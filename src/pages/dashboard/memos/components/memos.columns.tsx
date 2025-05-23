@@ -132,14 +132,11 @@ export const getColumns = (
     id: 'supervisor',
     accessorKey: 'extraData.company.name',
     header: 'Supervisor',
-    clickable: true,
-    enableGrouping: true,
     cell: (info) => {
       const supervisor = info.getValue() as string;
       return (
         <div
           className='flex items-center gap-1 justify-start'
-          onClick={() => info.row.toggleExpanded()}
         >
           <Avatar name={supervisor} size='sm' square />
           {supervisor}

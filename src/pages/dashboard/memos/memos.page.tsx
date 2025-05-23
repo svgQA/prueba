@@ -45,7 +45,7 @@ const defaultSummary = {
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
-  const [location, setLocation] = useLocation();
+  const [location] = useLocation();
   const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(null);
 
   const wsManager = useWebSocket();
@@ -320,7 +320,7 @@ export const MemosPage: FunctionComponent = () => {
             pageSize={20}
             selectable
             expandable={(row: Memo, column?: string) => (
-              <ExpandableMultiple type={column} data={row} />
+              <ExpandableMultiple type={column || 'supervisor'} data={row} />
             )}
             visibility={{
               id: false,
