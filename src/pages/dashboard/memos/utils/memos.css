@@ -31,6 +31,24 @@
   }
 }
 
+@keyframes highlightRow {
+  0% {
+    background-color: rgb(229 231 235); /* bg-gray-200 */
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes highlightRowDark {
+  0% {
+    background-color: rgb(55 65 81); /* dark:bg-gray-700 */
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
 .animate-slide-in {
   animation: slideIn 0.5s ease-out forwards;
 }
@@ -41,4 +59,12 @@
 
 .animate-curtain {
   animation: curtain 0.5s ease-out forwards;
+}
+
+.animate-highlight {
+  animation: highlightRow 5s ease-out forwards;
+}
+
+.dark .animate-highlight {
+  animation: highlightRowDark 5s ease-out forwards;
 }

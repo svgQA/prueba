@@ -330,7 +330,7 @@ export const MemosPage: FunctionComponent = () => {
               contact: false,
               updatedAt: false,
             }}
-            rowClassName={(row: Memo) => row.id === highlightedMemoId ? 'bg-gray-200 dark:bg-gray-700' : ''}
+            rowClassName={(row: Memo) => row.id === highlightedMemoId ? 'animate-highlight' : ''}
           />
         )}
       </div>
