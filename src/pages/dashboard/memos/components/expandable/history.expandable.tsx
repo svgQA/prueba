@@ -26,12 +26,19 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     fetchInitialData();
 
     const unsubscribe = EventBus.subscribe((event) => {
-      if (event.id.toString() === memo.id.toString()) {
+      if (
+        event.label === 'Memo' &&
+        event.type === 'create' &&
+        event.id.toString() === memo.id.toString()
+      ) {
         fetchInitialData();
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      EventBus.unsubscribe(unsubscribe);
+    };
   }, []);
 
   const fetchInitialData = async () => {

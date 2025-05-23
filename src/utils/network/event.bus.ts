@@ -12,4 +12,7 @@ export const EventBus = {
     listeners.add(listener);
     return () => listeners.delete(listener);
   },
+  unsubscribe(listener: Listener) {
+    listeners.delete(listener);
+  },
 };
