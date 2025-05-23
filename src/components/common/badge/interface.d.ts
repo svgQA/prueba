@@ -15,6 +15,7 @@ export interface IBadgeProps {
   status?: 'error' | 'success' | 'warning' | 'info';
   outline?: boolean;
   width?: 'w-12' | 'w-16' | 'w-24' | 'w-32' | 'w-48' | 'w-64' | 'w-96';
+  onClick?: () => void;
 }
 
 export interface IFloatBadgeProps extends PropsWithChildren {

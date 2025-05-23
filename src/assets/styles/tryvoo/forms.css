@@ -1,5 +1,5 @@
 .vx-form-attrs {
-  @apply bg-b-light-dark dark:bg-b-dark-light;
+  @apply bg-b-light-light dark:bg-b-dark-light;
 }
 
 .vx-form-attrs-checkbox {

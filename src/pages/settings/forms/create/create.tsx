@@ -1,10 +1,11 @@
 import { type FunctionComponent } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { IFormRequest, IListResponse } from '@/types/form';
 import { ListFormModal } from '../lists/lists';
 import {
+  FORM_AUTO_SAVE_KEY,
   getSelectedElement,
   setSelectedElement,
   validateSelectedElement,
@@ -21,6 +22,8 @@ import {
   udpateGeneralForm,
   updateForm,
   updatePageForm,
+  getHasUnsavedChanges,
+  setHasUnsavedChanges,
 } from './store/question';
 import { setPhonePage } from './store/phone';
 import { TargetedEvent } from 'preact/compat';
@@ -38,13 +41,61 @@ import { FormService } from '@/services';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
 import { TextArea } from '@/components/common/text.area/text.area';
+import { Badge } from '@/components/common/badge/badge';
+import { localStorage } from '@/utils/storage';
+
+const AUTO_SAVE_INTERVAL = 4000; // 4 seconds
 
 export const FormCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const [_, navigate] = useLocation();
+  const [isAutoSaving, setIsAutoSaving] = useState(false);
+
   useEffect(() => {
     document.title = 'Forms Create Settings';
   }, []);
+
+  useEffect(() => {
+    let timeoutId: number;
+    let savingTimeoutId: number;
+
+    const autoSave = async () => {
+      if (getHasUnsavedChanges.value) {
+        setIsAutoSaving(true);
+        try {
+          localStorage.set(FORM_AUTO_SAVE_KEY, getForm.value);
+          setHasUnsavedChanges(false);
+        } catch (error) {
+          console.error('Error auto-saving:', error);
+        } finally {
+          if (savingTimeoutId) {
+            clearTimeout(savingTimeoutId);
+          }
+          savingTimeoutId = window.setTimeout(() => {
+            setIsAutoSaving(false);
+          }, 500);
+        }
+      }
+    };
+
+    const scheduleAutoSave = () => {
+      timeoutId = window.setTimeout(() => {
+        autoSave();
+        scheduleAutoSave();
+      }, AUTO_SAVE_INTERVAL);
+    };
+
+    scheduleAutoSave();
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (savingTimeoutId) {
+        clearTimeout(savingTimeoutId);
+      }
+    };
+  }, [getHasUnsavedChanges.value]);
 
   const handleSelect = (id: string, page: string, section?: string) => {
     if (id === getSelectedElement.value?.id) return;
@@ -74,6 +125,10 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       const response = await FormService.create(format);
       if (!response.getStatus()) return;
     }
+
+    // Clear auto-save data on successful save
+    localStorage.remove(FORM_AUTO_SAVE_KEY);
+    setHasUnsavedChanges(false);
     navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.form.to);
   };
 
@@ -173,6 +228,15 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             />
           </div>
         </div>
+        <div className='flex flex-row w-full items-center mb-4 gap-5 pr-8 justify-end'>
+          {getHasUnsavedChanges.value && (
+            <Badge
+              outline
+              status={isAutoSaving ? 'info' : 'warning'}
+              label={isAutoSaving ? 'Auto-saving...' : 'Unsaved changes'}
+            />
+          )}
+        </div>
         <div className='flex flex-col w-[98%] 2xl:max-w-[60vw]'>
           {getForm.value.pages.map((page) => (
             <div key={page.id} className='w-full mb-5'>
@@ -187,9 +251,9 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                 icon='064'
                 error={(page as IPageError).pages_error}
               />
-              <div className='mt-2 w-full rounded-xl border-2 border-b-light-dark dark:border-b-dark-light'>
+              <div className='mt-2 w-full rounded-xl border-2 border-b-light-light dark:border-b-dark-light'>
                 <table class='w-full text-left px-2'>
-                  <thead className='border-b-2 border-b-light-dark dark:border-b-dark-light'>
+                  <thead className='border-b-2 border-b-light-light dark:border-b-dark-light'>
                     <tr>
                       <th className='py-1 px-2 rounded-tl-md'>
                         {t('form.field.question')}

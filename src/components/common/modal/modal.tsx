@@ -40,7 +40,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
           <div class='flex flex-row w-full items-center px-2.5'>
             <div className='flex flex-row w-10/12 items-center'>{header}</div>
             <div className='flex w-2/12 items-center justify-end gap-2'>
-              {theme && <ThemeButton rounded />}
+              {theme && <ThemeButton rounded borderless />}
               {expandable && (
                 <Button
                   id='setting-expand'
