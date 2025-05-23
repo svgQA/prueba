@@ -471,6 +471,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         const shift = shifts.value.find(
           (shift) => shift.id === Number(params.id)
         );
+
         if (!shift) {
           ToastManager.error(t('shift.table.delete.error'));
           return;

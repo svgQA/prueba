@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/common/badge/badge';
 import { localStorage } from '@/utils/storage';
 import { FORM_AUTO_SAVE_KEY } from '../create/store/control';
+import { showAlert } from '@/components/common/show-alert/show-alert';
 
 export const FormSettingPage = () => {
   const { t } = useTranslation();
@@ -135,6 +136,31 @@ export const FormSettingPage = () => {
     }
   };
 
+  const handleContinueUnfinishedForm = () => {
+    localStorage.remove(FORM_AUTO_SAVE_KEY);
+    setHasUnfinishedForm(false);
+  };
+
+  const handleRemoveUnfinishedForm = () => {
+    showAlert({
+      title: 'Eliminar Formulario',
+      message: '¿Estás seguro que quieres eliminar el formulario guardado?',
+      onConfirm: handleContinueUnfinishedForm,
+      onCancel: () => {},
+    });
+  };
+
+  const handleContinueCreatingForm = () => {
+    if (!hasUnfinishedForm) return redirect();
+    showAlert({
+      title: 'Continuar Formulario',
+      message:
+        '¿Estás seguro que quieres continuar, esto eliminará el formulario guardado?',
+      onConfirm: redirect,
+      onCancel: () => {},
+    });
+  };
+
   return (
     <Section>
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-50'>
@@ -143,7 +169,7 @@ export const FormSettingPage = () => {
             name='button-create-shift'
             label={t('form.new')}
             icon='039'
-            onClick={() => redirect()}
+            onClick={handleContinueCreatingForm}
             className='px-6 py-1 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
           />
           {hasUnfinishedForm && (
@@ -151,7 +177,15 @@ export const FormSettingPage = () => {
               onClick={continueUnfinishedForm}
               className='cursor-pointer hover:opacity-80'
             >
-              <Badge status='warning' label='Continuar Formulario' />
+              <Badge
+                status='warning'
+                label='Continuar Formulario'
+                full
+                outline
+                icon='039'
+                size='sm'
+                onRemove={handleRemoveUnfinishedForm}
+              />
             </div>
           )}
         </div>
