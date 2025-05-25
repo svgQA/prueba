@@ -359,6 +359,10 @@ export const general_en = {
       contact: 'Contact',
       priority: 'Priority',
     },
+    view: {
+      users: 'Users',
+      services: 'Services',
+    },
   },
   forms: {
     pageTitle: 'VX - Forms Service',

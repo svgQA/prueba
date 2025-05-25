@@ -8,6 +8,7 @@ import {
 } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import './utils/memos.css';
+import { useLocation } from 'wouter';
 
 import { UserService } from '@/services/general/user';
 import { IUserResponse } from '@/types/auth';
@@ -44,9 +45,12 @@ const defaultSummary = {
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
+  const [location] = useLocation();
+  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(null);
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
+  const memosGroupedByService = useSignal<any[]>([]);
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
@@ -73,14 +77,30 @@ export const MemosPage: FunctionComponent = () => {
     if (selectedCompany) {
       fetchInitialData();
       fetchSSE();
+      selectedMemo();
     }
-  }, [selectedCompany]);
+  }, [selectedCompany, location]);
 
+  const selectedMemo = () => {
+    // Add event listener for notification clicks
+    const handleNotificationClick = (event: CustomEvent) => {
+      const { id } = event.detail;
+      if (id) setHighlightedMemoId(Number(id));
+    };
+
+    window.addEventListener('notification-click', handleNotificationClick as EventListener);
+
+    // Get memoId from URL on initial load
+    const urlParams = new URLSearchParams(window.location.search);
+    const memoId = urlParams.get('notificationId');
+    if (memoId) setHighlightedMemoId(Number(memoId));
+  };
+  
   const handleMemoSSE = (chunk: string) => {
     const data = JSON.parse(chunk);
     const { name, message } = data[0];
 
-    if (name && message && (name === 'create-parent' || name === 'update')) {
+    if (name && message && (name === 'create-parent' || name === 'update' || name === 'update-check')) {
       const memoIndex = memos.value.findIndex((memo) => memo.id === message.id);
       if (memoIndex < 0) return;
       const memoCopy = memos.value;
@@ -101,11 +121,11 @@ export const MemosPage: FunctionComponent = () => {
 
     EventBus.emit({
       id: message.id,
-      data: message.novelty?.name,
-      type: name,
-      label: 'Memo',
       icon: '077',
       redirect: PAGES_LIST_ROUTER.dashboard.memos,
+      type: (name === 'update-check' || name === 'create') ? 'notification' : name,
+      data: (name === 'update-check') ? message.state : message.novelty?.name,
+      label: (name === 'update-check') ? t('notification.memo_state') : t('notification.memo'),
     });
   };
 
@@ -114,10 +134,11 @@ export const MemosPage: FunctionComponent = () => {
   }, []);
 
   const fetchInitialData = async () => {
-    const [responseMemos, responseUsers, responseSummary] = await Promise.all([
+    const [responseMemos, responseUsers, responseSummary, responseGroupedByService] = await Promise.all([
       MemoService.get_all({ page: 1, items: 1000 }),
       UserService.get_all_employee({ items: 20, page: 1 }),
       MemoService.getMemosSummary(),
+      MemoService.get_all_by_service(),
     ]);
 
     if (responseMemos.getStatus()) {
@@ -139,6 +160,10 @@ export const MemosPage: FunctionComponent = () => {
 
     if (responseSummary.getStatus()) {
       summary.value = responseSummary.getOne();
+    }
+
+    if (responseGroupedByService.getStatus()) {
+      memosGroupedByService.value = responseGroupedByService.getMany();
     }
   };
 
@@ -297,11 +322,11 @@ export const MemosPage: FunctionComponent = () => {
           <Table
             data={memos.value}
             columns={getColumns(onClickAction)}
-            // showExpandableIcon
+            showExpandableIcon
             pageSize={20}
             selectable
             expandable={(row: Memo, column?: string) => (
-              <ExpandableMultiple type={column} data={row} />
+              <ExpandableMultiple type={column || 'supervisor'} data={row} />
             )}
             visibility={{
               id: false,
@@ -311,11 +336,12 @@ export const MemosPage: FunctionComponent = () => {
               contact: false,
               updatedAt: false,
             }}
+            rowClassName={(row: Memo) => row.id === highlightedMemoId ? 'animate-highlight' : ''}
           />
         )}
       </div>
       {currentView.value === VIEW_NAME.CHAT && (
-        <ChatView users={users.value} getUsersHandler={getUsersHandler} />
+        <ChatView users={users.value} getUsersHandler={getUsersHandler} memosGroupedByService={memosGroupedByService.value} />
       )}
     </Section>
   );

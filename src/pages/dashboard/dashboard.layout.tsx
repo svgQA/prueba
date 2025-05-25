@@ -70,7 +70,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     useEffect(() => {
       validateUser();
       const unsubscribe = EventBus.subscribe((event) => {
-        if (event.type && event.data && event.type === 'create') {
+        if (event.type && event.data && event.type === 'notification') {
           const newNotification = {
             label: event.label + ': ' + event.data,
             value: Date.now(),
