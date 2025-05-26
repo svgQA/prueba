@@ -76,30 +76,22 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   const checkOutStatus = calculateCheckStatus(checkOut?.time, shift.end, false);
 
   const handleCheck = (checkData:ICheckData) => {
-    if (checkData.type === 'CHECK_IN') {  
-      setCheckInData({
-        time: checkData.time,
-        platform: checkData.platform,
-        distance: checkData.distance,
-        location: {
-          lat: checkData.location.lat,
-          lng: checkData.location.lng,
-        },
-        url: '',
-      })
-    } else {
-      setCheckOutData({
-        time: checkData.time,
-        platform: checkData.platform,
-        distance: checkData.distance,
-        location: {
-          lat: checkData.location.lat,
-          lng: checkData.location.lng,
-        },
-        url: '',
-      })
+    const checkInData = {
+      time: checkData.time,
+      platform: checkData.platform,
+      distance: checkData.distance,
+      location: {
+        lat: checkData.location.lat,  
+        lng: checkData.location.lng,
+      },
+      url: '',
     }
-    console.log({checkIn}, {checkOut});
+    
+    if (checkData.type === 'CHECK_IN') {  
+      setCheckInData(checkInData);    
+    } else {
+      setCheckOutData(checkOutData);
+    }
   };
 
   return (
