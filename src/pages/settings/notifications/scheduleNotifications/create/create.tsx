@@ -35,7 +35,8 @@ export const ScheduledNotificationForm = () => {
 
   const redirectToList = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
+        .scheduledNotification.to,
       label: 'notificaciones',
       id: 'template-notifications',
     };
@@ -71,7 +72,9 @@ export const ScheduledNotificationForm = () => {
       sentTo: [1],
       overrideTitle: overrideTitle?.trim() || undefined,
       overrideDescription: overrideDescription?.trim() || undefined,
-      repeatEveryMinutes: repeatEveryMinutes ? parseInt(repeatEveryMinutes) : undefined,
+      repeatEveryMinutes: repeatEveryMinutes
+        ? parseInt(repeatEveryMinutes)
+        : undefined,
       maxRepeats: maxRepeats ? parseInt(maxRepeats) : undefined,
       repeatUntil: repeatUntil ? new Date(repeatUntil) : undefined,
     };
@@ -90,30 +93,36 @@ export const ScheduledNotificationForm = () => {
 
   return (
     <Section padding>
-      <h2 className='text-xl font-semibold mb-6'>Detalles de la Notificación</h2>
+      <h2 className='text-xl font-semibold mb-6'>
+        Detalles de la Notificación
+      </h2>
 
       {showConfirmModal && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4 text-gray-800">Confirmar programación</h3>
-            <p className="text-sm text-gray-700 mb-6">
-              Las notificaciones programadas serán enviadas únicamente a los usuarios que tengan turnos activos dentro de los horarios establecidos para la programación. ¿Deseas continuar?
+        <div className='fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center'>
+          <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-md'>
+            <h3 className='text-lg font-semibold mb-4 text-gray-800'>
+              Confirmar programación
+            </h3>
+            <p className='text-sm text-gray-700 mb-6'>
+              Las notificaciones programadas serán enviadas únicamente a los
+              usuarios que tengan turnos activos dentro de los horarios
+              establecidos para la programación. ¿Deseas continuar?
             </p>
-            <div className="flex justify-end gap-4">
+            <div className='flex justify-end gap-4'>
               <Button
-                name="cancel-confirm-modal"
-                label="Cancelar"
+                name='cancel-confirm-modal'
+                label='Cancelar'
                 onClick={() => setShowConfirmModal(false)}
                 borderless
               />
               <Button
-                name="confirm-schedule"
-                label="Confirmar y Programar"
+                name='confirm-schedule'
+                label='Confirmar y Programar'
                 onClick={async () => {
                   setShowConfirmModal(false);
                   await handleSubmit(formValues);
                 }}
-                className="bg-primary text-white hover:bg-primary-opacity"
+                className='bg-primary text-white hover:bg-primary-opacity'
               />
             </div>
           </div>
@@ -147,7 +156,9 @@ export const ScheduledNotificationForm = () => {
               placeholder='Ingrese una descripción...'
               className='col-span-2'
               value={values.overrideDescription || ''}
-              onChange={(e: any) => (values.overrideDescription = e.currentTarget.value)}
+              onChange={(e: any) =>
+                (values.overrideDescription = e.currentTarget.value)
+              }
             />
 
             <Input
@@ -176,7 +187,9 @@ export const ScheduledNotificationForm = () => {
               placeholder='Ej: 30'
               min={1}
               value={values.repeatEveryMinutes || ''}
-              onChange={(e) => (values.repeatEveryMinutes = e.currentTarget.value)}
+              onChange={(e) =>
+                (values.repeatEveryMinutes = e.currentTarget.value)
+              }
             />
 
             <Input
@@ -196,7 +209,10 @@ export const ScheduledNotificationForm = () => {
                 name='templateId'
                 options={templates}
                 placeholder='Selecciona una plantilla...'
-                value={templates.find((t) => t.value === values.templateId?.value) || undefined}
+                value={
+                  templates.find((t) => t.value === values.templateId?.value) ||
+                  undefined
+                }
                 onChange={(option) => {
                   values.templateId = option || '';
                 }}
@@ -212,7 +228,9 @@ export const ScheduledNotificationForm = () => {
               />
               <Button
                 name='submit-create-scheduled'
-                label={pendingSubmission ? 'Enviando...' : 'Programar Notificación'}
+                label={
+                  pendingSubmission ? 'Enviando...' : 'Programar Notificación'
+                }
                 type='submit'
                 className='bg-primary text-white hover:bg-primary-opacity'
                 disabled={pendingSubmission}

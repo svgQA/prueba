@@ -13,3 +13,5 @@ export const setSelectedElement = (selected?: IElementSelected) => {
 
 export const validateSelectedElement = (id: string) =>
   selectedElement.value?.id === id;
+
+export const FORM_AUTO_SAVE_KEY = 'form_auto_save';

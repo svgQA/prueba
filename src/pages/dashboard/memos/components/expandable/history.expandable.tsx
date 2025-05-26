@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { IFilesMemo, IFile, Memo } from '../../utils/memos';
 import { Avatar } from '@/components/common/Avatar';
 import SupervisorInfo from './supervisor.expandable';
-import dayjs from 'dayjs';
 import { Badge } from '@/components/common/badge/badge';
 import { MemoService } from '@/services';
 import { File } from '@/components/common/file/file';
@@ -14,6 +13,7 @@ import { EventBus } from '@/utils/network/event.bus';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import { showAlert } from '@/components/common/show-alert/show-alert';
+import { FormattedDate } from '@/components/compose/forms';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -26,12 +26,19 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     fetchInitialData();
 
     const unsubscribe = EventBus.subscribe((event) => {
-      if (event.id.toString() === memo.id.toString()) {
+      if (
+        event.label === 'Memo' &&
+        event.type === 'create-parent' &&
+        event.id.toString() === memo.id.toString()
+      ) {
         fetchInitialData();
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      EventBus.unsubscribe(unsubscribe);
+    };
   }, []);
 
   const fetchInitialData = async () => {
@@ -42,15 +49,21 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     if (responseMemos.getStatus()) {
       const memosData = responseMemos.getMany();
       // TODO: Cambiar esto, porque desde back se puede tener
-      memos.value = memosData.map((memo) => ({
-        ...memo,
-        priority:
-          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-      })).sort((a, b) => {
-        const dateA = new Date(a.updatedAt || a.createdAt || 0);
-        const dateB = new Date(b.updatedAt || b.createdAt || 0);
-        return dateA.getTime() - dateB.getTime();
-      });
+      memos.value = memosData
+        .map((memo) => ({
+          ...memo,
+          priority:
+            memo.priority === 5
+              ? 'Alta'
+              : memo.priority === 4
+                ? 'Media'
+                : 'Baja',
+        }))
+        .sort((a, b) => {
+          const dateA = new Date(a.updatedAt || a.createdAt || 0);
+          const dateB = new Date(b.updatedAt || b.createdAt || 0);
+          return dateA.getTime() - dateB.getTime();
+        });
     }
 
     getStatus(memo?.state || '');
@@ -83,13 +96,15 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
     } else {
-      ToastManager.error(i18n.t('shift.expandable.date.location.timeoutMessage'));
+      ToastManager.error(
+        i18n.t('shift.expandable.date.location.timeoutMessage')
+      );
     }
   };
 
@@ -163,11 +178,6 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     }
   };
 
-  const formatDate = (date: string | Date) => {
-    if (!date) return '-';
-    return dayjs(date).format('DD/MM/YYYY HH:mm');
-  };
-
   const getStatusColor = (status?: string) => {
     let statusText = 'info';
 
@@ -205,10 +215,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               {memo.novelty?.name || 'Memorando #' + memo.id}
             </h3>
             <p className='text-sm text-gray-text-light dark:text-t-dark-light'>
-              {memo.updatedBy || memo.extraData?.client?.name} •{' '}
-              {memo.updatedAt
-                ? formatDate(new Date(memo.updatedAt))
-                : formatDate(new Date())}
+              <FormattedDate date={memo.updatedAt} format='datetime' />
             </p>
           </div>
           <div className='flex gap-4 flex-1'>
@@ -219,7 +226,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                   Creación del memorando
                 </p>
                 <p className='text-xs text-gray-text-light dark:text-t-dark-light'>
-                  {formatDate(new Date(memo.createdAt || Date.now()))}
+                  <FormattedDate date={memo.createdAt} format='datetime' />
                 </p>
               </div>
             </div>
@@ -230,7 +237,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                   Actualización de estado
                 </p>
                 <p className='text-xs text-gray-text-light dark:text-t-dark-light'>
-                  {formatDate(new Date(memo.updatedAt || Date.now()))}
+                  <FormattedDate date={memo.updatedAt} format='datetime' />
                 </p>
               </div>
             </div>
@@ -279,14 +286,16 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           {memo.state != 'IN_REVISION' && memo.state != 'CREATED' && (
             <Button
               label={btnLabel}
-              icon={btnLabel === 'SOLVE' || btnLabel === 'RESOLVED' ? '023' : '024'}
+              icon={
+                btnLabel === 'SOLVE' || btnLabel === 'RESOLVED' ? '023' : '024'
+              }
               disabled={btnLabel === 'RESOLVED'}
               onClick={() =>
                 showAlert({
                   title: btnLabel,
                   message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
                   onConfirm: () => handleCheck(),
-                  onCancel: () => { },
+                  onCancel: () => {},
                 })
               }
               name={btnLabel}
@@ -398,17 +407,23 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           {memos.value.map((memo: Memo) => (
             <div key={memo.id} className='flex gap-4'>
               <Avatar
-                name={memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'}
+                name={
+                  memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'
+                }
                 size='md'
                 square
               />
               <div className='flex-1'>
                 <div className='flex items-center gap-2 mb-2'>
                   <span className='font-medium text-t-light dark:text-t-dark'>
-                    {memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'}
+                    {memo.user?.name + ' ' + memo.user?.surname ||
+                      'Unknown User'}
                   </span>
                   <span className='text-xs text-gray-text-light dark:text-t-dark-light'>
-                    {formatDate(memo.updatedAt || new Date())}
+                    <FormattedDate
+                      date={memo.updatedAt || new Date()}
+                      format='datetime'
+                    />
                   </span>
                 </div>
                 <div

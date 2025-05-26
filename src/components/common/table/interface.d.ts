@@ -29,4 +29,5 @@ export interface ITableProps<T> {
   onNotifications?: boolean;
   hasNotifications?: boolean;
   isSettingTable?: boolean;
+  rowClassName?: (row: T) => string;
 }

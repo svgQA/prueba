@@ -12,10 +12,11 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
 import { ServiceService } from '@/services';
+import { DateField } from '@/components/compose/forms';
 
 interface ITask {
   start: string;
@@ -48,12 +49,12 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
   const { id } = useParams(); // Obtiene el id de la URL
 
   const onSubmit = async (model: FormData) => {
-    const { start, end } = model;
+    // const { start, end } = model;
     let request;
     let message: string;
 
-    if (start) model.start = dayjs(start).toISOString();
-    if (end) model.end = dayjs(end).toISOString();
+    // if (start) model.start = dayjs(start).toISOString();
+    // if (end) model.end = dayjs(end).toISOString();
 
     if (!id) {
       request = await ShiftService.createActivity(model);
@@ -122,6 +123,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-2 gap-3'>
               <div class='col-span-1'>
+                {/*
                 <Field<string>
                   name='start'
                   validate={required}
@@ -139,8 +141,16 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                     />
                   )}
                 </Field>
+                */}
+                <DateField
+                  name='start'
+                  label='Fecha inicio'
+                  validate={required}
+                />
               </div>
               <div class='col-span-1'>
+                <DateField name='end' label='Fecha fin' validate={required} />
+                {/*
                 <Field<string>
                   name='end'
                   validate={required}
@@ -158,6 +168,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                     />
                   )}
                 </Field>
+                */}
               </div>
 
               <div class='col-span-1'>

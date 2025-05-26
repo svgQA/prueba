@@ -437,8 +437,12 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           meta={meta}
                           onChange={(e) => {
                             input.onChange(e);
-                            const longitude = form.getFieldState('longitude')?.value;
-                            changeValue(Number(e.currentTarget.value), Number(longitude) || 0);
+                            const longitude =
+                              form.getFieldState('longitude')?.value;
+                            changeValue(
+                              Number(e.currentTarget.value),
+                              Number(longitude) || 0
+                            );
                           }}
                         />
                       )}
@@ -452,8 +456,12 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           meta={meta}
                           onChange={(e) => {
                             input.onChange(e);
-                            const latitude = form.getFieldState('latitude')?.value;
-                            changeValue(Number(latitude) || 0, Number(e.currentTarget.value));
+                            const latitude =
+                              form.getFieldState('latitude')?.value;
+                            changeValue(
+                              Number(latitude) || 0,
+                              Number(e.currentTarget.value)
+                            );
                           }}
                         />
                       )}

@@ -1,8 +1,9 @@
 import { useState, useMemo, useEffect } from 'react';
-import dayjs from 'dayjs';
 import { MentionOption } from '../mention-editor/mention.editor';
 import { UserSelector } from '../user-selector/user-selector';
 import { IOption } from '../multi/interface';
+import { DateUtils } from '@/utils/utilities/dates';
+import dayjs from 'dayjs';
 
 // Tipado del shift
 export interface Shift {
@@ -76,7 +77,11 @@ export const ShiftsGanttViewer = ({
 
   const dias = useMemo(() => {
     return Array.from(
-      new Set(shifts.map((t) => dayjs(t.start).format('YYYY-MM-DD')))
+      new Set(
+        shifts.map((t) =>
+          DateUtils.dateToFrontend(t.start, { format: 'YYYY-MM-DD' })
+        )
+      )
     );
   }, [shifts]);
 
@@ -285,7 +290,7 @@ export const ShiftsGanttViewer = ({
                   className='border-b border-r border-gray-300 bg-gray-50 flex items-center justify-center font-medium h-full'
                   style={{ width: CELL_WIDTH }}
                 >
-                  {dayjs(dia).format('DD/MM/YYYY')}
+                  {DateUtils.dateToFrontend(dia, { mode: '12' })}
                 </div>
               ))}
             </div>
@@ -321,7 +326,9 @@ export const ShiftsGanttViewer = ({
                   const shiftsDia = shifts.filter(
                     (t) =>
                       t.employeeId === person.id &&
-                      dayjs(t.start).format('YYYY-MM-DD') === dia
+                      DateUtils.dateToFrontend(t.start, {
+                        format: 'YYYY-MM-DD',
+                      }) === dia
                   );
 
                   const shiftsColumns = organizeshifts(shiftsDia);
@@ -380,8 +387,13 @@ export const ShiftsGanttViewer = ({
                                     {shift.service}
                                   </div>
                                   <div className='opacity-75 truncate'>
-                                    {dayjs(shift.start).format('HH:mm')} -{' '}
-                                    {dayjs(shift.end).format('HH:mm')}
+                                    {DateUtils.dateToFrontend(shift.start, {
+                                      format: 'HH:mm',
+                                    })}{' '}
+                                    -{' '}
+                                    {DateUtils.dateToFrontend(shift.end, {
+                                      format: 'HH:mm',
+                                    })}
                                     {extendsToNextDay && ' →'}
                                   </div>
                                 </div>

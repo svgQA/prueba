@@ -1,15 +1,16 @@
+import { FormattedDate } from '@/components/compose/forms';
 import { IExecutionResult } from '@/types/ia';
-import dayjs from 'dayjs';
+import { DateUtils } from '@/utils/utilities/dates';
 
 interface IHistoryCardProps {
   history: IExecutionResult;
 }
 
 export const HistoryCard = ({ history }: IHistoryCardProps) => {
-  const start = dayjs(history.start_time);
-  const end = dayjs(history.end_time);
-  const duration = end.diff(start, 'milliseconds');
-
+  const duration = DateUtils.getTimeDifference(
+    history.start_time,
+    history.end_time
+  );
   return (
     <div
       className={`p-3 rounded-lg ${
@@ -20,7 +21,7 @@ export const HistoryCard = ({ history }: IHistoryCardProps) => {
     >
       <div className='flex justify-between items-center'>
         <span className='text-sm'>
-          {dayjs(history.start_time).format('MM/DD/YYYY HH:mm')}
+          <FormattedDate date={String(history.start_time)} format='datetime' />
         </span>
         <span
           className={`text-sm font-medium ${
@@ -33,7 +34,7 @@ export const HistoryCard = ({ history }: IHistoryCardProps) => {
         </span>
       </div>
       <div className='text-sm mt-1'>
-        <span>Duration: {duration}ms</span>
+        <span>Duration: {duration.miliseconds}ms</span>
         <span className='mx-2'>•</span>
         <span>Processed: {history.item_count}</span>
         <span className='mx-2'>•</span>

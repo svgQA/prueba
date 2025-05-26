@@ -50,7 +50,7 @@ export class MemoService extends BaseService {
 
   static async getMemosByHistory(id: string) {
     const model: IMakeRequest = {
-      url: ['memo','history', id],
+      url: ['memo', 'history', id],
       method: REQUEST_METHODS.GET,
     };
 
@@ -62,6 +62,22 @@ export class MemoService extends BaseService {
       url: ['memo', `${memoId}`, 'check'],
       method: REQUEST_METHODS.POST,
       data,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async get_all_by_service(params: IPagination = { page: 1, items: 400 }) {
+    const model: IMakeRequest = {
+      url: ['memo', 'grouped-by-service'],
+      params: params as any,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async get_all_by_service_id(serviceId: string, params: IPagination = { page: 1, items: 400 }) {
+    const model: IMakeRequest = {
+      url: ['memo', 'by-service', serviceId],
+      params: params as any,
     };
     return await super.make_request(this.name, model);
   }

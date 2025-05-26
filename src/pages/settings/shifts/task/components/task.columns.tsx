@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ITask } from '../task';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
-import dayjs from 'dayjs';
+import { FormattedDate } from '@/components/compose/forms';
 
 export const columns: ColumnDef<ITask>[] = [
   {
@@ -33,8 +33,7 @@ export const columns: ColumnDef<ITask>[] = [
     size: 60,
     header: 'Hora de inicio',
     cell: (info) => {
-      const start = info.getValue() as string;
-      return <p className='text-center'>{dayjs(start).format('HH:mm')}</p>;
+      return <FormattedDate date={String(info.getValue())} format='time' />;
     },
   },
 

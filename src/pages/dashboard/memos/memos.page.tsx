@@ -1,6 +1,14 @@
 import { type FunctionComponent } from 'preact';
-import { useCallback, useEffect, useMemo } from 'preact/hooks';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from 'preact/hooks';
 import { useSignal } from '@preact/signals';
+import './utils/memos.css';
+import { useLocation } from 'wouter';
 
 import { UserService } from '@/services/general/user';
 import { IUserResponse } from '@/types/auth';
@@ -19,7 +27,9 @@ import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { EventBus } from '@/utils/network/event.bus';
-import dayjs from 'dayjs';
+import { FloatBadge } from '@/components/common/badge/float';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { DateUtils } from '@/utils/utilities/dates';
 
 enum VIEW_NAME {
   TABLE,
@@ -35,13 +45,22 @@ const defaultSummary = {
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
+  const [location] = useLocation();
+  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(null);
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
+  const memosGroupedByService = useSignal<any[]>([]);
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
+
+  //notifications
+  const [notificationMemo, setNotificationMemo] = useState<number>(0);
+  const [showReload, setShowReload] = useState<boolean>(false);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.title = 'VX - Chat';
@@ -58,36 +77,68 @@ export const MemosPage: FunctionComponent = () => {
     if (selectedCompany) {
       fetchInitialData();
       fetchSSE();
+      selectedMemo();
     }
-  }, [selectedCompany]);
+  }, [selectedCompany, location]);
 
+  const selectedMemo = () => {
+    // Add event listener for notification clicks
+    const handleNotificationClick = (event: CustomEvent) => {
+      const { id } = event.detail;
+      if (id) setHighlightedMemoId(Number(id));
+    };
+
+    window.addEventListener('notification-click', handleNotificationClick as EventListener);
+
+    // Get memoId from URL on initial load
+    const urlParams = new URLSearchParams(window.location.search);
+    const memoId = urlParams.get('notificationId');
+    if (memoId) setHighlightedMemoId(Number(memoId));
+  };
+  
   const handleMemoSSE = (chunk: string) => {
-    let data = JSON.parse(chunk);
-    if (data) {
-      const idMemo = data.id;
-      const memoIndex = memos.value.findIndex((memo) => memo.id === idMemo);
+    const data = JSON.parse(chunk);
+    const { name, message } = data[0];
+
+    if (name && message && (name === 'create-parent' || name === 'update' || name === 'update-check')) {
+      const memoIndex = memos.value.findIndex((memo) => memo.id === message.id);
       if (memoIndex < 0) return;
       const memoCopy = memos.value;
-      memoCopy[memoIndex].messages = data.messages;
-      memoCopy[memoIndex].state = data.state;
-      memoCopy[memoIndex].userEdit = data.userEdit;
-      memoCopy[memoIndex].latitude = data.latitude;
-      memoCopy[memoIndex].longitude = data.longitude;
-      memoCopy[memoIndex].updatedAt = data.updatedAt;
+      memoCopy[memoIndex].messages = message.messages;
+      memoCopy[memoIndex].state = message.state;
+      memoCopy[memoIndex].userEdit = message.userEdit;
+      memoCopy[memoIndex].latitude = message.latitude;
+      memoCopy[memoIndex].longitude = message.longitude;
+      memoCopy[memoIndex].updatedAt = message.updatedAt;
       memos.value = [...memoCopy];
-      EventBus.emit({ id: data.id, data: data });
     }
-  }
+
+    if (name && message && name === 'create') {
+      setNotificationMemo((prevCount) => prevCount + 1);
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 1000);
+    }
+
+    EventBus.emit({
+      id: message.id,
+      icon: '077',
+      redirect: PAGES_LIST_ROUTER.dashboard.memos,
+      type: (name === 'update-check' || name === 'create') ? 'notification' : name,
+      data: (name === 'update-check') ? message.state : message.novelty?.name,
+      label: (name === 'update-check') ? t('notification.memo_state') : t('notification.memo'),
+    });
+  };
 
   const fetchSSE = useCallback(async () => {
     await MemoService.streamQuery((chunk: string) => handleMemoSSE(chunk));
   }, []);
 
   const fetchInitialData = async () => {
-    const [responseMemos, responseUsers, responseSummary] = await Promise.all([
+    const [responseMemos, responseUsers, responseSummary, responseGroupedByService] = await Promise.all([
       MemoService.get_all({ page: 1, items: 1000 }),
       UserService.get_all_employee({ items: 20, page: 1 }),
       MemoService.getMemosSummary(),
+      MemoService.get_all_by_service(),
     ]);
 
     if (responseMemos.getStatus()) {
@@ -97,15 +148,22 @@ export const MemosPage: FunctionComponent = () => {
         ...memo,
         priority:
           memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-        updatedAt: dayjs(memo.updatedAt).format('DD/MM/YYYY'),
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
+          format: 'DD/MM/YYYY',
+        }),
       }));
     }
+
     if (responseUsers.getStatus()) {
       users.value = responseUsers.getMany();
     }
 
     if (responseSummary.getStatus()) {
       summary.value = responseSummary.getOne();
+    }
+
+    if (responseGroupedByService.getStatus()) {
+      memosGroupedByService.value = responseGroupedByService.getMany();
     }
   };
 
@@ -166,6 +224,30 @@ export const MemosPage: FunctionComponent = () => {
     // Aquí abres modales, haces navigations, etc.
   };
 
+  const handleReload = async () => {
+    setNotificationMemo(0);
+    setShowReload(false);
+    await fetchInitialData();
+  };
+
+  useEffect(() => {
+    if (!showReload) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setShowReload(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showReload]);
+
   return (
     <Section
       className={
@@ -207,6 +289,32 @@ export const MemosPage: FunctionComponent = () => {
         <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 top-0 pl-1'>
           <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
+            {notificationMemo > 0 && (
+              <div className='ml-3 relative'>
+                <FloatBadge label={notificationMemo || '0'} color='bg-primary'>
+                  <div
+                    className={`border border-primary rounded-lg px-4 py-1.5 flex items-center justify-center cursor-pointer transition-all duration-300 ${isAnimating ? 'animate-curtain' : ''}`}
+                    onClick={() => setShowReload(!showReload)}
+                  >
+                    <span className='text-sm text-primary pr-2'>
+                      Memo nuevo
+                    </span>
+                  </div>
+                </FloatBadge>
+                {showReload && (
+                  <div
+                    ref={popupRef}
+                    className='absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg p-2 animate-fade-in'
+                  >
+                    <Button
+                      name='button-change-scheduler'
+                      onClick={handleReload}
+                      label='Ver Memo'
+                    />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -214,11 +322,11 @@ export const MemosPage: FunctionComponent = () => {
           <Table
             data={memos.value}
             columns={getColumns(onClickAction)}
-            // showExpandableIcon
+            showExpandableIcon
             pageSize={20}
             selectable
             expandable={(row: Memo, column?: string) => (
-              <ExpandableMultiple type={column} data={row} />
+              <ExpandableMultiple type={column || 'supervisor'} data={row} />
             )}
             visibility={{
               id: false,
@@ -228,11 +336,12 @@ export const MemosPage: FunctionComponent = () => {
               contact: false,
               updatedAt: false,
             }}
+            rowClassName={(row: Memo) => row.id === highlightedMemoId ? 'animate-highlight' : ''}
           />
         )}
       </div>
       {currentView.value === VIEW_NAME.CHAT && (
-        <ChatView users={users.value} getUsersHandler={getUsersHandler} />
+        <ChatView users={users.value} getUsersHandler={getUsersHandler} memosGroupedByService={memosGroupedByService.value} />
       )}
     </Section>
   );

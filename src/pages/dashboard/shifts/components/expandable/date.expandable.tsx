@@ -4,7 +4,6 @@ import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
-import dayjs from 'dayjs';
 import { ShiftService } from '@/services';
 import { Button } from '@/components/common/button/button';
 import { useState } from 'preact/hooks';
@@ -18,6 +17,7 @@ interface ICheckData {
   type: string;
 }
 
+import { FormattedDate } from '@/components/compose/forms';
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   const [checkInData, setCheckInData] = useState(checkIn);  
   const [checkOutData, setCheckOutData] = useState(checkOut);
@@ -264,7 +264,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Fecha</p>
-                <p>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</p>
+                <FormattedDate date={date} format='datetime' />
               </div>
             </div>
 
@@ -274,7 +274,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Hora</p>
-                <p>{time ? dayjs(time).format('HH:mm') : ''}</p>
+                <FormattedDate date={time} format='time' />
               </div>
             </div>
 

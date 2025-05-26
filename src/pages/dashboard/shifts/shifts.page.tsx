@@ -471,6 +471,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         const shift = shifts.value.find(
           (shift) => shift.id === Number(params.id)
         );
+
         if (!shift) {
           ToastManager.error(t('shift.table.delete.error'));
           return;
@@ -504,8 +505,6 @@ export const ShiftsPage: FunctionalComponent = () => {
       ToastManager.error(t('Error al obtener la ubicación'));
       return;
     }
-
-    console.log('position', position);
 
     const checkData = {
       latitude: position.coords.latitude.toString(),

@@ -52,4 +52,5 @@ export interface IInputProps<T> extends IComponentProps {
   onInput?: (event: TargetedEvent<HTMLInputElement>) => void;
   onFocus?: (event: FocusEvent<HTMLInputElement>) => void;
   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+  autoComplete?: string; // ✅ agregado
 }

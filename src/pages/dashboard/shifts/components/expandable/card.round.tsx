@@ -1,5 +1,6 @@
 import { TextEllipsis } from '@/components/common/text-ellipsis';
-import dayjs from 'dayjs';
+import { FormattedDate } from '@/components/compose/forms';
+
 interface CardRoundProps {
   activity: any;
 }
@@ -44,7 +45,10 @@ export const CardRound = ({ activity }: CardRoundProps) => {
               <span className='vox-icon vx-icon-325'></span>
               <span>
                 Programación:{' '}
-                {dayjs(activity.serviceTask.hourStart).format('DD/MM/YY HH:mm')}
+                <FormattedDate
+                  date={activity.serviceTask.hourStart}
+                  format='datetime'
+                />
               </span>
             </div>
 
@@ -53,9 +57,7 @@ export const CardRound = ({ activity }: CardRoundProps) => {
                 <span className='vox-icon vx-icon-325'></span>
                 <span>
                   Solución:{' '}
-                  {activity.date
-                    ? dayjs(activity.date).format('DD/MM/YY HH:mm')
-                    : ''}
+                  <FormattedDate date={activity.date} format='datetime' />
                 </span>
               </div>
             )}

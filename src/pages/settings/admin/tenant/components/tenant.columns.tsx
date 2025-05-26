@@ -1,11 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/es';
 import { ITenantResponse } from '@/types/tenant';
-
-dayjs.extend(relativeTime);
-dayjs.locale('es');
+import { FormattedDate } from '@/components/compose/forms';
 
 export const columns: ColumnDef<ITenantResponse>[] = [
   {
@@ -35,12 +30,16 @@ export const columns: ColumnDef<ITenantResponse>[] = [
     accessorKey: 'createdAt',
     id: 'createdAt',
     header: 'Fecha de creación',
-    cell: (info) => dayjs(info.getValue() as string).fromNow(),
+    cell: (info) => (
+      <FormattedDate date={String(info.getValue())} format='relative' />
+    ),
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
     header: 'Última actualización',
-    cell: (info) => dayjs(info.getValue() as string).fromNow(),
+    cell: (info) => (
+      <FormattedDate date={String(info.getValue())} format='relative' />
+    ),
   },
 ];

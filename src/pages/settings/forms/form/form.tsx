@@ -1,9 +1,9 @@
 import { useLocation } from 'wouter';
 import { getColumns } from './components/form.columns';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { FormService } from '@/services';
 import { useSignal } from '@preact/signals';
-import { IFormResponse } from '@/types/form';
+import { IFormResponse, IFormat } from '@/types/form';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { setReport, updateReport } from '../report/store/report';
 import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
@@ -15,15 +15,34 @@ import { appendHistory } from '../../store/settings';
 import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
 import { useTranslation } from 'react-i18next';
+import { Badge } from '@/components/common/badge/badge';
+import { localStorage } from '@/utils/storage';
+import { FORM_AUTO_SAVE_KEY } from '../create/store/control';
+import { showAlert } from '@/components/common/show-alert/show-alert';
 
 export const FormSettingPage = () => {
   const { t } = useTranslation();
   const forms = useSignal<IFormResponse[]>([]);
   const [_, navigate] = useLocation();
+  const [hasUnfinishedForm, setHasUnfinishedForm] = useState(false);
 
   useEffect(() => {
     getFormsHandler();
+    checkUnfinishedForm();
   }, []);
+
+  const checkUnfinishedForm = () => {
+    const savedData = localStorage.get<IFormat>(FORM_AUTO_SAVE_KEY);
+    if (savedData && typeof savedData === 'object') {
+      setHasUnfinishedForm(true);
+    }
+  };
+
+  const continueUnfinishedForm = () => {
+    const savedData = localStorage.get<IFormat>(FORM_AUTO_SAVE_KEY);
+    if (!savedData || typeof savedData !== 'object') return;
+    redirect(savedData);
+  };
 
   const getFormsHandler = async () => {
     const response = await FormService.get_all();
@@ -51,8 +70,8 @@ export const FormSettingPage = () => {
     navigate(menu.to);
   };
 
-  const redirect = () => {
-    setFormat({ mode: FORMAT_MODE_SERVICE.CREATE });
+  const redirect = (model?: IFormat) => {
+    setFormat({ mode: FORMAT_MODE_SERVICE.CREATE }, model);
     const menu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.create.to,
       label: 'create',
@@ -117,17 +136,58 @@ export const FormSettingPage = () => {
     }
   };
 
+  const handleContinueUnfinishedForm = () => {
+    localStorage.remove(FORM_AUTO_SAVE_KEY);
+    setHasUnfinishedForm(false);
+  };
+
+  const handleRemoveUnfinishedForm = () => {
+    showAlert({
+      title: 'Eliminar Formulario',
+      message: '¿Estás seguro que quieres eliminar el formulario guardado?',
+      onConfirm: handleContinueUnfinishedForm,
+      onCancel: () => {},
+    });
+  };
+
+  const handleContinueCreatingForm = () => {
+    if (!hasUnfinishedForm) return redirect();
+    showAlert({
+      title: 'Continuar Formulario',
+      message:
+        '¿Estás seguro que quieres continuar, esto eliminará el formulario guardado?',
+      onConfirm: redirect,
+      onCancel: () => {},
+    });
+  };
+
   return (
     <Section>
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-50'>
-        <div className='flex flex-row items-center justify-between'>
+        <div className='flex flex-row items-center justify-between gap-2'>
           <Button
             name='button-create-shift'
             label={t('form.new')}
             icon='039'
-            onClick={redirect}
+            onClick={handleContinueCreatingForm}
             className='px-6 py-1 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
           />
+          {hasUnfinishedForm && (
+            <div
+              onClick={continueUnfinishedForm}
+              className='cursor-pointer hover:opacity-80'
+            >
+              <Badge
+                status='warning'
+                label='Continuar Formulario'
+                full
+                outline
+                icon='039'
+                size='sm'
+                onRemove={handleRemoveUnfinishedForm}
+              />
+            </div>
+          )}
         </div>
       </div>
       <Table<IFormResponse>
