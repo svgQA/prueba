@@ -6,8 +6,22 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import { ShiftService } from '@/services';
 import { Button } from '@/components/common/button/button';
+import { useState } from 'preact/hooks';
+
+interface ICheckData {
+  time: string;
+  platform: string;
+  distance?: string;
+  location: { lat: string; lng: string };
+  url: string;
+  type: string;
+}
+
 import { FormattedDate } from '@/components/compose/forms';
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
+  const [checkInData, setCheckInData] = useState(checkIn);  
+  const [checkOutData, setCheckOutData] = useState(checkOut);
+
   const calculateCheckStatus = (
     checkTime: string,
     scheduleTime: string,
@@ -61,42 +75,63 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   const checkInStatus = calculateCheckStatus(checkIn?.time, shift.start, true);
   const checkOutStatus = calculateCheckStatus(checkOut?.time, shift.end, false);
 
+  const handleCheck = (checkData:ICheckData) => {
+    const checkInData = {
+      time: checkData.time,
+      platform: checkData.platform,
+      distance: checkData.distance,
+      location: {
+        lat: checkData.location.lat,  
+        lng: checkData.location.lng,
+      },
+      url: '',
+    }
+    
+    if (checkData.type === 'CHECK_IN') {  
+      setCheckInData(checkInData);    
+    } else {
+      setCheckOutData(checkOutData);
+    }
+  };
+
   return (
     <div class='flex gap-6 justify-center'>
       {/* Inicio del Turno */}
       <ShiftCard
         title='Inicio del Turno'
         name={employeeName}
-        date={checkIn?.time || ''}
-        time={checkIn?.time || ''}
-        source={checkIn?.platform || ''}
+        date={checkInData?.time || ''}
+        time={checkInData?.time || ''}
+        source={checkInData?.platform || ''}
         status={checkInStatus?.message || ''}
         statusColor={checkInStatus?.color || ''}
-        distance={checkIn?.distance || ''}
+        distance={checkInData?.distance || ''}
         btnLabel='Check In'
         shiftId={shift?.id || 0}
-        latitude={checkIn?.location.lat || 4.649251}
-        longitude={checkIn?.location.lng || -74.106992}
-        url={checkIn?.url || ''}
-        disabled={!!checkOut?.distance}
+        latitude={checkInData?.location.lat || 4.649251}
+        longitude={checkInData?.location.lng || -74.106992}
+        url={checkInData?.url || ''}
+        disabled={!!checkOutData?.distance}
+        onCheck={handleCheck}
       />
 
       {/* Finalización del Turno */}
       <ShiftCard
         title='Finalización del Turno'
         name={employeeName}
-        date={checkOut?.time || ''}
-        time={checkOut?.time || ''}
-        source={checkOut?.platform || ''}
+        date={checkOutData?.time || ''}
+        time={checkOutData?.time || ''}
+        source={checkOutData?.platform || ''}
         status={checkOutStatus?.message || ''}
         statusColor={checkOutStatus?.color || ''}
-        distance={checkOut?.distance || ''}
+        distance={checkOutData?.distance || ''}
         btnLabel='Check Out'
         shiftId={shift?.id || 0}
-        latitude={checkOut?.location.lat || 4.649251}
-        longitude={checkOut?.location.lng || -74.106992}
-        url={checkOut?.url || ''}
-        disabled={!checkIn?.distance || !!checkOut?.distance}
+        latitude={checkOutData?.location.lat || 4.649251}
+        longitude={checkOutData?.location.lng || -74.106992}
+        url={checkOutData?.url || ''}
+        disabled={!checkInData?.distance || !!checkOutData?.distance}
+        onCheck={handleCheck}
       />
     </div>
   );
@@ -117,6 +152,7 @@ interface IShiftCardProps {
   longitude: number;
   url: string;
   disabled: boolean;
+  onCheck: (checkData: ICheckData) => void;
 }
 
 const ShiftCard = ({
@@ -134,6 +170,7 @@ const ShiftCard = ({
   longitude,
   url,
   disabled,
+  onCheck,
 }: IShiftCardProps) => {
   const getLocation = async () => {
     try {
@@ -182,7 +219,19 @@ const ShiftCard = ({
 
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
+      const { distance } = response.getOne();
       ToastManager.success(i18n.t('shift.expandable.date.success'));
+      onCheck({
+        type: checkData.type,
+        time: checkData.date,
+        platform: checkData.platform,
+        distance: distance,
+        location: {
+          lat: checkData.latitude,
+          lng: checkData.longitude,
+        },
+        url: '', 
+      });
     }
   };
 
