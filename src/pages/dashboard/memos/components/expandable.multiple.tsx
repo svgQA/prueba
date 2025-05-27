@@ -10,7 +10,7 @@ type Props = {
 const getInfoContent = (type: string, data: Memo) => {
   switch (type) {
     case 'supervisor':
-      return <SupervisorInfo memo={data} />;
+      return <SupervisorInfo memo={data} resolved={true} />;
     case 'history':
       return <HistoryInfo memo={data} />;
     default:

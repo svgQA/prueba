@@ -1,12 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { INotificationListItem } from '@/types/notification/INotificationTypes';
-import dayjs from 'dayjs';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import {
   IDropdownAction,
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
+import { FormattedDate } from '@/components/compose/forms';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -60,12 +60,7 @@ export const getColumns = (
     header: 'Fecha de envío',
     size: 180,
     cell: (info) => {
-      const date = new Date(String(info.getValue()));
-      return (
-        <time dateTime={date.toISOString()} className='p-1 size-sm'>
-          {dayjs(date).format('DD/MM/YYYY HH:mm')}
-        </time>
-      );
+      return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
   },
   {

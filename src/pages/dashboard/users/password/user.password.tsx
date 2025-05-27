@@ -112,6 +112,7 @@ export const UserPasswordPage: FunctionComponent = () => {
                         label='Nueva Contraseña'
                         value={input.value}
                         onChange={input.onChange}
+                        autoComplete='new-password'
                       />
                     )}
                   </Field>
@@ -136,6 +137,7 @@ export const UserPasswordPage: FunctionComponent = () => {
                         value={input.value}
                         meta={meta}
                         onChange={input.onChange}
+                        autoComplete='new-password'
                       />
                     )}
                   </Field>

@@ -70,6 +70,7 @@ export const Table = <T,>({
   hasNotifications = false,
   onNotifications,
   isSettingTable = false,
+  rowClassName,
 }: ITableProps<T>) => {
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
     {}
@@ -186,71 +187,74 @@ export const Table = <T,>({
     }
   };
 
-  const handleClick = (e: MouseEvent) => {
-    // TODO: No descomentar esto, dejar asi.
-    // e.stopPropagation();
-    // e.preventDefault();
-    const target = e.target as HTMLElement;
-    if (target.tagName === 'SPAN') {
-      const id = target.dataset.id;
-      const type = target.dataset.type;
-      const action = target.dataset.action;
-      const rowId = target.dataset.rowId;
-      const clickable = target.dataset.clickable;
+  const handleClick = useCallback(
+    (e: MouseEvent) => {
+      // TODO: No descomentar esto, dejar asi.
+      // e.stopPropagation();
+      // e.preventDefault();
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'SPAN') {
+        const id = target.dataset.id;
+        const type = target.dataset.type;
+        const action = target.dataset.action;
+        const rowId = target.dataset.rowId;
+        const clickable = target.dataset.clickable;
 
-      if (id && type && action && rowId && clickable) {
-        const row = table.getRow(rowId);
-        if (!row) return;
-        /**
-         * @description
-         * Si el id de la celda seleccionada es el mismo que el id de la celda actual, se expande la fila.
-         * Si la fila no está expandida, se expande la fila.
-         * Si la fila está expandida, se elimina el id de la celda seleccionada.
-         *
-         * i_e = true Y i_s = true => row.toggleExpanded(false)
-         * i_e = true Y i_s = false => row.toggleExpanded(true)
-         * i_e = false Y i_s = true => row.toggleExpanded(true)
-         * i_e = false Y i_s = false => row.toggleExpanded(true)
-         */
-        const isExpanded /* i_e */ = row.getIsExpanded();
-        const isSelected /* i_s */ = selectedCells[rowId] === id;
+        if (id && type && action && rowId && clickable) {
+          const row = table.getRow(rowId);
+          if (!row) return;
+          /**
+           * @description
+           * Si el id de la celda seleccionada es el mismo que el id de la celda actual, se expande la fila.
+           * Si la fila no está expandida, se expande la fila.
+           * Si la fila está expandida, se elimina el id de la celda seleccionada.
+           *
+           * i_e = true Y i_s = true => row.toggleExpanded(false)
+           * i_e = true Y i_s = false => row.toggleExpanded(true)
+           * i_e = false Y i_s = true => row.toggleExpanded(true)
+           * i_e = false Y i_s = false => row.toggleExpanded(true)
+           */
+          const isExpanded /* i_e */ = row.getIsExpanded();
+          const isSelected /* i_s */ = selectedCells[rowId] === id;
 
-        if (isExpanded && isSelected) {
-          row.toggleExpanded(false);
-          // Eliminar la selección de esta fila cuando se cierra el expanded
-          setSelectedCells((prev) => {
-            const { [rowId]: _, ...rest } = prev;
-            return rest;
-          });
-        } else if (isExpanded && !isSelected) {
-          // Solo actualizar la celda seleccionada sin cambiar el estado de expansión
-          setSelectedCells((prev) => ({
-            ...prev,
-            [rowId]: id,
-          }));
-        } else if (!isExpanded && isSelected) {
-          row.toggleExpanded(true);
-        } else if (!isExpanded && !isSelected) {
-          row.toggleExpanded(true);
+          if (isExpanded && isSelected) {
+            row.toggleExpanded(false);
+            // Eliminar la selección de esta fila cuando se cierra el expanded
+            setSelectedCells((prev) => {
+              const { [rowId]: _, ...rest } = prev;
+              return rest;
+            });
+          } else if (isExpanded && !isSelected) {
+            // Solo actualizar la celda seleccionada sin cambiar el estado de expansión
+            setSelectedCells((prev) => ({
+              ...prev,
+              [rowId]: id,
+            }));
+          } else if (!isExpanded && isSelected) {
+            row.toggleExpanded(true);
+          } else if (!isExpanded && !isSelected) {
+            row.toggleExpanded(true);
+          }
+
+          // Solo actualizar la selección si no estamos cerrando el expanded
+          if (!(isExpanded && isSelected)) {
+            setSelectedCells((prev) => ({
+              ...prev,
+              [rowId]: id,
+            }));
+          }
         }
 
-        // Solo actualizar la selección si no estamos cerrando el expanded
-        if (!(isExpanded && isSelected)) {
-          setSelectedCells((prev) => ({
-            ...prev,
-            [rowId]: id,
-          }));
+        // TODO: Esta validacion va a morir porque todo va a cambiar al dropdown
+        // de acciones de las columnas. Lo cual me parece una mierda por performance.
+        // Por ahora se deja aquí porque algunas columnas de settings no tienen dropdown
+        if (id && type && action) {
+          onClickAction?.({ id, type, action: Number(action) as ROW_ACTIONS });
         }
       }
-
-      // TODO: Esta validacion va a morir porque todo va a cambiar al dropdown
-      // de acciones de las columnas. Lo cual me parece una mierda por performance.
-      // Por ahora se deja aquí porque algunas columnas de settings no tienen dropdown
-      if (id && type && action) {
-        onClickAction?.({ id, type, action: Number(action) as ROW_ACTIONS });
-      }
-    }
-  };
+    },
+    [selectedCells, setSelectedCells, onClickAction]
+  );
 
   const buildSettings = () => (
     <div className='min-w-80 rounded-b-md p-4 bg-b-light-light dark:bg-b-dark-dark border-2 border-gray-100 dark:border-gray-700 rounded-md max-h-container-table overflow-y-auto vox-scroll-design'>
@@ -444,10 +448,8 @@ export const Table = <T,>({
                 <Fragment key={row.id}>
                   <tr
                     className={`text-t-light dark:text-t-dark border-b border-b-light-light dark:border-b-dark-light ${
-                      data.length > pageSize && isLastRow
-                        ? 'no-bottom-border'
-                        : ''
-                    }`}
+                      data.length > pageSize && isLastRow ? 'no-bottom-border' : ''
+                    } ${rowClassName ? rowClassName(row.original) : ''}`}
                   >
                     {!unsettings && (
                       <td
@@ -508,17 +510,18 @@ export const Table = <T,>({
                       </SortableContext>
                     ))}
                   </tr>
-                  {expandable && row.getIsExpanded() && (
-                    <tr>
-                      <td
-                        colSpan={row.getVisibleCells().length + 1}
-                        className='p-2'
-                      >
-                        {expandable &&
-                          expandable(row.original, selectedCells[row.id])}
-                      </td>
-                    </tr>
-                  )}
+                  {expandable &&
+                    (row.getIsExpanded() || selectedCells[row.id]) && (
+                      <tr>
+                        <td
+                          colSpan={row.getVisibleCells().length + 1}
+                          className='p-2'
+                        >
+                          {expandable &&
+                            expandable(row.original, selectedCells[row.id])}
+                        </td>
+                      </tr>
+                    )}
                 </Fragment>
               );
             }
@@ -535,6 +538,7 @@ export const Table = <T,>({
       hasNotifications,
       onNotifications,
       selectedCells,
+      rowClassName,
     ]
   );
 

@@ -1,5 +1,6 @@
 import { Memo } from '@/pages/dashboard/memos/utils/memos';
 import { IPagination } from '@/types';
+import { ICheckRequest } from '@/types/memo/memo.request';
 import { BaseService, IRequestModelOutput } from '@/utils/network';
 import { streamIAResponse } from '@/utils/network/sse.post';
 import {
@@ -49,11 +50,36 @@ export class MemoService extends BaseService {
 
   static async getMemosByHistory(id: string) {
     const model: IMakeRequest = {
-      url: ['memo/history', id],
+      url: ['memo', 'history', id],
       method: REQUEST_METHODS.GET,
     };
 
     return await super.make_request<Memo>(this.name, model);
+  }
+
+  static async createCheck(data: ICheckRequest, memoId: number) {
+    const model: IMakeRequest = {
+      url: ['memo', `${memoId}`, 'check'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async get_all_by_service(params: IPagination = { page: 1, items: 400 }) {
+    const model: IMakeRequest = {
+      url: ['memo', 'grouped-by-service'],
+      params: params as any,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async get_all_by_service_id(serviceId: string, params: IPagination = { page: 1, items: 400 }) {
+    const model: IMakeRequest = {
+      url: ['memo', 'by-service', serviceId],
+      params: params as any,
+    };
+    return await super.make_request(this.name, model);
   }
 
   static async streamQuery(
@@ -65,7 +91,7 @@ export class MemoService extends BaseService {
     const model: IRequestModelOutput = this.make_request_model(
       'memo',
       {
-        url: ['memo', 'stream/history'],
+        url: ['memo', 'stream', 'history'],
         method: REQUEST_METHODS.POST,
         data: { prompt },
       },

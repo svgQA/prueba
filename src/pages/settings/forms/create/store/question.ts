@@ -39,13 +39,14 @@ interface IFormMode {
 
 const format = signal<IFormat>(buildInitFormat());
 const formatMode = signal<IFormMode>({ mode: FORMAT_MODE_SERVICE.CREATE });
+const hasUnsavedChanges = signal<boolean>(false);
 
 export const setFormat = (
   mode: IFormMode = { mode: FORMAT_MODE_SERVICE.CREATE },
   model?: IFormat
 ) => {
   format.value =
-    mode.mode === FORMAT_MODE_SERVICE.CREATE
+    mode.mode === FORMAT_MODE_SERVICE.CREATE && !model
       ? buildInitFormat()
       : model || buildInitFormat();
   formatMode.value = mode;
@@ -59,11 +60,18 @@ export const getFormLength = computed(() => format.value.pages.length);
 export const getForm = computed(() => format.value);
 export const getFormMode = computed(() => formatMode.value);
 
+export const setHasUnsavedChanges = (value: boolean) => {
+  hasUnsavedChanges.value = value;
+};
+
+export const getHasUnsavedChanges = computed(() => hasUnsavedChanges.value);
+
 export const addPage = () => {
   format.value = {
     ...format.value,
     pages: [...format.value.pages, getInitPage()],
   };
+  hasUnsavedChanges.value = true;
 };
 
 export const removePage = (pageId: string) => {
@@ -71,6 +79,7 @@ export const removePage = (pageId: string) => {
     ...format.value,
     pages: format.value.pages.filter((page) => page.id !== pageId),
   };
+  hasUnsavedChanges.value = true;
 };
 
 export const addElement = (page: string, section?: string) => {
@@ -100,6 +109,7 @@ export const addElement = (page: string, section?: string) => {
       return p;
     }),
   };
+  hasUnsavedChanges.value = true;
 };
 
 export const addSection = (page: string) => {
@@ -125,6 +135,7 @@ export const addSection = (page: string) => {
       return p;
     }),
   };
+  hasUnsavedChanges.value = true;
 };
 
 export function removeElement(id: string, page: string, section?: string) {
@@ -170,6 +181,7 @@ export function removeElement(id: string, page: string, section?: string) {
     ...format.value,
     pages: updatedPages,
   };
+  hasUnsavedChanges.value = true;
 }
 
 export const moveElement = (
@@ -224,6 +236,7 @@ export const moveElement = (
       return p;
     }),
   };
+  hasUnsavedChanges.value = true;
 };
 
 export const udpateGeneralForm = (name: string, value: string) => {
@@ -231,6 +244,7 @@ export const udpateGeneralForm = (name: string, value: string) => {
     ...format.value,
     [name]: value,
   };
+  hasUnsavedChanges.value = true;
 };
 
 export const updatePageForm = (
@@ -244,6 +258,7 @@ export const updatePageForm = (
       page.id === page_id ? { ...page, [name]: value } : page
     ),
   };
+  hasUnsavedChanges.value = true;
 };
 
 export const updateForm =
@@ -281,6 +296,7 @@ export const updateForm =
         return p;
       }),
     };
+    hasUnsavedChanges.value = true;
   };
 
 const updateElement = (
@@ -344,4 +360,5 @@ export const updateSectionForm = (
       };
     }),
   };
+  hasUnsavedChanges.value = true;
 };

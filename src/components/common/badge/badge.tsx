@@ -10,6 +10,8 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   borderless = false,
   outline = false,
   width = 'w-32',
+  onRemove,
+  onClick,
 }: IBadgeProps) => {
   const getStatusColor = (status?: string) => {
     switch (status) {
@@ -29,9 +31,10 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   return (
     <span
       className={`
-        text-${size} items-center capitalize px-3 flex rounded-md py-1
+        relative text-${size} items-center capitalize px-3 flex rounded-md py-1
         ${icon ? 'justify-between' : 'justify-center'} text-base
         ${full ? 'w-full' : width}
+        ${onRemove ? 'pr-8' : ''}
         ${
           outline
             ? `border ${getStatusColor(status)} bg-transparent`
@@ -51,16 +54,26 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
              }`
         }
       `}
+      onClick={onClick}
     >
       {icon ? (
         <>
           <span
-            className={`vx-icon vx-icon-${icon} size-${size} mx-1 ${status === 'error' ? 'text-error' : status === 'success' ? 'text-secondary' : status === 'warning' ? 'text-orange-500' : status === 'info' ? 'text-primary' : ''}`}
+            className={`vx-icon vx-icon-${icon} size-${size} mr-2 ml-1 ${status === 'error' ? 'text-error' : status === 'success' ? 'text-secondary' : status === 'warning' ? 'text-orange-500' : status === 'info' ? 'text-primary' : ''}`}
           ></span>
           <span>{label}</span>
         </>
       ) : (
         <span>{label}</span>
+      )}
+      {onRemove && (
+        <span
+          className='vx-icon vx-icon-045 size-4 mx-1 cursor-pointer size-sm right-0 absolute top-1'
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove();
+          }}
+        ></span>
       )}
     </span>
   );

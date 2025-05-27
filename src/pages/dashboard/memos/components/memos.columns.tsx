@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from '../utils/memos';
 
-import dayjs from 'dayjs';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import {
   IDropdownAction,
@@ -12,6 +11,7 @@ import { Avatar } from '@/components/common/Avatar';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { NColumnDef } from '@/components/common/table/type';
 import { FloatBadge } from '@/components/common/badge/float';
+import { FormattedDate } from '@/components/compose/forms';
 
 // Define our custom properties
 type CustomColumnProps = {
@@ -132,14 +132,11 @@ export const getColumns = (
     id: 'supervisor',
     accessorKey: 'extraData.company.name',
     header: 'Supervisor',
-    clickable: true,
-    enableGrouping: true,
     cell: (info) => {
       const supervisor = info.getValue() as string;
       return (
         <div
           className='flex items-center gap-1 justify-start'
-          onClick={() => info.row.toggleExpanded()}
         >
           <Avatar name={supervisor} size='sm' square />
           {supervisor}
@@ -147,9 +144,10 @@ export const getColumns = (
       );
     },
   },
+  /*
   {
     id: 'updatedBy',
-    accessorKey: 'userEdit',
+    accessorKey: 'userEdit.name',
     header: 'Actualizado Por',
     cell: (info) => {
       const value = info.getValue() as string;
@@ -164,6 +162,7 @@ export const getColumns = (
       );
     },
   },
+  */
   {
     id: 'history',
     accessorKey: 'messages',
@@ -185,14 +184,16 @@ export const getColumns = (
     accessorKey: 'createdAt',
     header: 'Fecha',
     cell: (info) => {
-      const dateStr = String(info.getValue());
-      if (!dateStr) return '-';
-
-      try {
-        return dayjs(dateStr).format('DD/MM/YYYY');
-      } catch (error) {
-        return '-';
-      }
+      return <FormattedDate date={String(info.getValue())} format='date' />;
+    },
+  },
+  {
+    id: 'updatedAt',
+    accessorKey: 'updatedAt',
+    header: 'Actualizado',
+    enableGrouping: true,
+    cell: (info) => {
+      return <FormattedDate date={String(info.getValue())} format='date' />;
     },
   },
   {

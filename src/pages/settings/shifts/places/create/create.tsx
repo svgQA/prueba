@@ -197,6 +197,10 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     }
   };
 
+  const changeValue = (latitude: number, longitude: number) => {
+    sendPointsRef([{ id: 1, position: { lat: latitude, lng: longitude } }]);
+  };
+
   useEffect(() => {
     Promise.all([setInitialValues(), fetchDepartments(1), getCountries()]);
   }, []);
@@ -430,8 +434,16 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           {...input}
                           label='Latitud'
                           type='text'
-                          disabled
                           meta={meta}
+                          onChange={(e) => {
+                            input.onChange(e);
+                            const longitude =
+                              form.getFieldState('longitude')?.value;
+                            changeValue(
+                              Number(e.currentTarget.value),
+                              Number(longitude) || 0
+                            );
+                          }}
                         />
                       )}
                     </Field>
@@ -441,8 +453,16 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           {...input}
                           label='Longitud'
                           type='text'
-                          disabled
                           meta={meta}
+                          onChange={(e) => {
+                            input.onChange(e);
+                            const latitude =
+                              form.getFieldState('latitude')?.value;
+                            changeValue(
+                              Number(latitude) || 0,
+                              Number(e.currentTarget.value)
+                            );
+                          }}
                         />
                       )}
                     </Field>
