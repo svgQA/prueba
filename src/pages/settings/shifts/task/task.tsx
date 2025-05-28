@@ -34,6 +34,7 @@ export interface IRowActionPlace {
 export const TaskSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const tasks: Signal<ITask[]> = useSignal([]);
+  const loading = useSignal<boolean>(false);
 
   useEffect(() => {
     document.title = 'VX - Task Service';
@@ -41,9 +42,12 @@ export const TaskSettingPage: FunctionComponent = () => {
   }, []);
 
   const getTasks = async () => {
+    loading.value = true;
     const request: any = await TaskService.getTasks();
-    console.log(request.data);
-    tasks.value = request.data;
+    if (request.getStatus()) {
+      tasks.value = request.getMany();
+    }
+    loading.value = false;
   };
 
   const redirect = () => {
@@ -106,8 +110,8 @@ export const TaskSettingPage: FunctionComponent = () => {
           id: false,
         }}
         onClickAction={handleOnClick}
-        unsearch={false}
         isSettingTable
+        loading={loading.value}
       />
     </Section>
   );

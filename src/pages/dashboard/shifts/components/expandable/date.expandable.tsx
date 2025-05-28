@@ -19,7 +19,7 @@ interface ICheckData {
 
 import { FormattedDate } from '@/components/compose/forms';
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
-  const [checkInData, setCheckInData] = useState(checkIn);  
+  const [checkInData, setCheckInData] = useState(checkIn);
   const [checkOutData, setCheckOutData] = useState(checkOut);
 
   const calculateCheckStatus = (
@@ -75,20 +75,20 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   const checkInStatus = calculateCheckStatus(checkIn?.time, shift.start, true);
   const checkOutStatus = calculateCheckStatus(checkOut?.time, shift.end, false);
 
-  const handleCheck = (checkData:ICheckData) => {
+  const handleCheck = (checkData: ICheckData) => {
     const checkInData = {
       time: checkData.time,
       platform: checkData.platform,
       distance: checkData.distance,
       location: {
-        lat: checkData.location.lat,  
+        lat: checkData.location.lat,
         lng: checkData.location.lng,
       },
       url: '',
-    }
-    
-    if (checkData.type === 'CHECK_IN') {  
-      setCheckInData(checkInData);    
+    };
+
+    if (checkData.type === 'CHECK_IN') {
+      setCheckInData(checkInData);
     } else {
       setCheckOutData(checkOutData);
     }
@@ -230,7 +230,7 @@ const ShiftCard = ({
           lat: checkData.latitude,
           lng: checkData.longitude,
         },
-        url: '', 
+        url: '',
       });
     }
   };

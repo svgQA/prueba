@@ -92,7 +92,7 @@ export const getColumns = (
           scheduledDate={rowData.start}
           actualDate={rowData.checkIn}
           type='start'
-          showLocation
+          // showLocation
         />
       );
     },
@@ -110,7 +110,7 @@ export const getColumns = (
           scheduledDate={rowData.end}
           actualDate={rowData.checkOut}
           type='end'
-          showLocation
+          // showLocation
         />
       );
     },

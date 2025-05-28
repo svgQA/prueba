@@ -135,9 +135,7 @@ export const getColumns = (
     cell: (info) => {
       const supervisor = info.getValue() as string;
       return (
-        <div
-          className='flex items-center gap-1 justify-start'
-        >
+        <div className='flex items-center gap-1 justify-start'>
           <Avatar name={supervisor} size='sm' square />
           {supervisor}
         </div>

@@ -33,6 +33,7 @@ export interface IRowActionPlace {
 export const ScheduleSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const schedules: Signal<ISchedule[]> = useSignal([]);
+  const loading = useSignal<boolean>(false);
 
   useEffect(() => {
     document.title = 'VX - Schedule Service';
@@ -40,9 +41,12 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   }, []);
 
   const getSchedules = async () => {
+    loading.value = true;
     const request: any = await ScheduleService.getSchedules();
-    if (!request.getStatus()) return;
-    schedules.value = request.getMany();
+    if (request.getStatus()) {
+      schedules.value = request.getMany();
+    }
+    loading.value = false;
   };
 
   const redirect = () => {
@@ -116,8 +120,8 @@ export const ScheduleSettingPage: FunctionComponent = () => {
           daysAllowed: true,
         }}
         onClickAction={handleOnClick}
-        unsearch={false}
         isSettingTable
+        loading={loading.value}
       />
     </Section>
   );

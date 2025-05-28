@@ -59,7 +59,6 @@ export class DateUtils {
     if (!dateInput) return '';
 
     if (options?.format) {
-      console.log(options);
       return this.fromUTCToLocal(dateInput, options.format);
     }
 

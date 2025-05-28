@@ -36,15 +36,19 @@ export interface IRowActionPlace {
 export const ProjectsSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const projects: Signal<IProject[]> = useSignal([]);
-
+  const loading = useSignal<boolean>(false);
   useEffect(() => {
     document.title = 'VX - Project Service';
     getProjects();
   }, []);
 
   const getProjects = async () => {
+    loading.value = true;
     const request: any = await ContractService.getProjects();
-    projects.value = request.data;
+    if (request.getStatus()) {
+      projects.value = request.getMany();
+    }
+    loading.value = false;
   };
 
   const redirect = () => {
@@ -108,8 +112,8 @@ export const ProjectsSettingPage: FunctionComponent = () => {
           id: false,
         }}
         onClickAction={handleOnClick}
-        unsearch={false}
         isSettingTable
+        loading={loading.value}
       />
     </Section>
   );

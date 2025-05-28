@@ -87,6 +87,8 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [onNotifications, setOnNotifications] = useState(false);
   const [hasValidPlayer, setHasValidPlayer] = useState(false);
 
+  const loading = useSignal<boolean>(false);
+
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
   const memoizedServices = useMemo(() => services, [services]);
   const memoizedUsers = useMemo(() => users, [users]);
@@ -142,6 +144,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   // };
 
   const fetchInitialData = async () => {
+    loading.value = true;
     const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
       await Promise.all([
         ShiftService.get_all({ page: 1, items: 1000 }),
@@ -157,6 +160,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       notificationValidate.value = hasNotifications;
 
       shifts.value = responseShifts;
+      loading.value = false;
     }
 
     if (servicesResponse.getStatus()) {
@@ -578,6 +582,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             selectable
             onNotifications={onNotifications}
             hasNotifications={notificationValidate.value}
+            loading={loading.value}
             onSelectionChange={(rows) => {
               const validUsers = rows.map((row: any) => ({
                 id: row.employee.id,

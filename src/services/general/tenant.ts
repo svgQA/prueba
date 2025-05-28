@@ -6,6 +6,7 @@ import {
   // type IOwner,
   type ITenant,
   type IMakeRequest,
+  type IInstance,
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
@@ -31,6 +32,13 @@ export class TenantService extends BaseService {
     return await super.make_request<any>(this.name, model, false);
   }
 
+  static async get_tenant() {
+    const model: IMakeRequest = {
+      url: ['tenant'],
+    };
+    return await super.make_request<ITenant>(this.name, model, false);
+  }
+
   // static async get_tenants() {
   //   const model: IMakeRequest = {
   //     url: ['tenants'],
@@ -38,12 +46,12 @@ export class TenantService extends BaseService {
   //   return await super.make_request<ITenant>(this.name, model);
   // }
 
-  // static async get_instances() {
-  //   const model: IMakeRequest = {
-  //     url: ['instances'],
-  //   };
-  //   return await super.make_request<IInstance>(this.name, model);
-  // }
+  static async get_instances() {
+    const model: IMakeRequest = {
+      url: ['instance'],
+    };
+    return await super.make_request<IInstance>(this.name, model);
+  }
 
   // static async get_modules() {
   //   const model: IMakeRequest = {

@@ -37,7 +37,7 @@ import { HistoryNotificationsPage } from './history/history.page';
 import { WebSocketProvider } from '@/utils/socket';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
-import { Loading } from '@/components/common/loading/loading';
+// import { Loading } from '@/components/common/loading/loading';
 import { hasUserTenant, useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
@@ -143,7 +143,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     return (
       <section>
-        <Loading />
+        {/* <Loading /> */}
         <Sidebar
           id='sidebar'
           name='sidebar'
