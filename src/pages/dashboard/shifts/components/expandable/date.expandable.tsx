@@ -222,7 +222,7 @@ const ShiftCard = ({
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
       const { distance } = response.getOne();
-      ToastManager.success(i18n.t('shift.expandable.date.success'));
+      // ToastManager.success(i18n.t('shift.expandable.date.success'));
       onCheck({
         type: checkData.type,
         time: checkData.date,

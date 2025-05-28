@@ -48,8 +48,6 @@ import { AudioButton } from './audio/socket.button';
 import { getLocation } from '@/utils/utilities/location';
 import { IBaseSSE, SSE_EVENTS, SSE_TYPE, SseManager } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
-// import { EventBus } from '@/utils/network/event.bus';
-// import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 enum VIEW_NAME {
   TABLE,

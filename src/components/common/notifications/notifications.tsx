@@ -23,7 +23,9 @@ const Notifications = ({
 
     useEffect(() => {
         const storedNotifications = localStorage.get<INotification[]>(STORAGE_KEY);
-        setLocalNotifications(Array.isArray(storedNotifications) ? storedNotifications : []);
+        const initialNotifications = Array.isArray(storedNotifications) ? storedNotifications : [];
+        setLocalNotifications(initialNotifications);
+        setNotifications(initialNotifications);
         EventBus.on(SSE_TYPE.ALL, handleNotificationSSE);
     }, []);
 
@@ -39,7 +41,12 @@ const Notifications = ({
             redirect: SIDEBAR_MENUS.find(menu => menu.label === type)?.to,
         }
 
-        setNotifications([...notifications, newNotification]);
+        setNotifications(prevNotifications => {
+            const updatedNotifications = [...prevNotifications, newNotification];
+            setLocalNotifications(updatedNotifications);
+            localStorage.set(STORAGE_KEY, updatedNotifications);
+            return updatedNotifications;
+        });
     }
 
     useEffect(() => {
