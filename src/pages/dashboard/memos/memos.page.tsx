@@ -319,7 +319,7 @@ export const MemosPage: FunctionComponent = () => {
         </div>
 
         {currentView.value === VIEW_NAME.TABLE && (
-          <Table
+          <Table<Memo>
             data={memos.value}
             columns={getColumns(onClickAction)}
             showExpandableIcon

@@ -46,6 +46,8 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 import { AudioButton } from './audio/socket.button';
 import { getLocation } from '@/utils/utilities/location';
+import { EventBus } from '@/utils/network/event.bus';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 enum VIEW_NAME {
   TABLE,
@@ -133,6 +135,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     document.title = t('shifts.pageTitle');
     handleGetShiftSummary();
     fetchInitialData();
+    fetchSSE();
   }, []);
 
   // const fetchShifts = async () => {
@@ -140,6 +143,33 @@ export const ShiftsPage: FunctionalComponent = () => {
   //   if (!response.getStatus()) return;
   //   hifts.value(response.getMany());
   // };
+
+  const handleMemoSSE = (chunk: string) => {
+    const data = JSON.parse(chunk);
+    const { name, message } = data[0];
+
+    if (name && message && (name === 'update' || name === 'update-check')) {
+      const shiftIndex = shifts.value.findIndex((shift) => Number(shift.id) === Number(message.id));
+      if (shiftIndex < 0) return;
+      const shiftCopy = shifts.value;
+      shiftCopy[shiftIndex].status = message.status;
+      shiftCopy[shiftIndex].updatedAt = message.updatedAt;
+      shifts.value = [...shiftCopy];
+    }
+
+    EventBus.emit({
+      id: message.id,
+      icon: '077',
+      redirect: PAGES_LIST_ROUTER.dashboard.shift,
+      type: (name === 'update-check' || name === 'create') ? 'notification' : name,
+      data: (name === 'update-check') ? message.status : message.novelty?.name,
+      label: (name === 'update-check') ? t('notification.shift_state') : t('notification.shift'),
+    });
+  };
+
+  const fetchSSE = useCallback(async () => {
+    await ShiftService.streamQuery((chunk: string) => handleMemoSSE(chunk));
+  }, []);
 
   const fetchInitialData = async () => {
     const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =

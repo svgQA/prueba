@@ -7,6 +7,7 @@ import i18n from '@/i18n';
 import { ShiftService } from '@/services';
 import { Button } from '@/components/common/button/button';
 import { useState } from 'preact/hooks';
+import { FormattedDate } from '@/components/compose/forms';
 
 interface ICheckData {
   time: string;
@@ -17,7 +18,6 @@ interface ICheckData {
   type: string;
 }
 
-import { FormattedDate } from '@/components/compose/forms';
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   const [checkInData, setCheckInData] = useState(checkIn);  
   const [checkOutData, setCheckOutData] = useState(checkOut);
@@ -111,7 +111,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         latitude={checkInData?.location.lat || 4.649251}
         longitude={checkInData?.location.lng || -74.106992}
         url={checkInData?.url || ''}
-        disabled={!!checkOutData?.distance}
+        // disabled={!!checkOutData?.distance}
+        disabled={shift?.status === 'CLOSED'} // TODO: Validar distancia
         onCheck={handleCheck}
       />
 
@@ -130,7 +131,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         latitude={checkOutData?.location.lat || 4.649251}
         longitude={checkOutData?.location.lng || -74.106992}
         url={checkOutData?.url || ''}
-        disabled={!checkInData?.distance || !!checkOutData?.distance}
+        // disabled={!checkInData?.distance || !!checkOutData?.distance}
+        disabled={shift?.status === 'OPENED' || shift?.status === 'CREATED'} // TODO: Validar distancia
         onCheck={handleCheck}
       />
     </div>
