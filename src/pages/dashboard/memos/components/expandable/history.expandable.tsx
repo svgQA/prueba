@@ -9,7 +9,6 @@ import { File } from '@/components/common/file/file';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { useSignal } from '@preact/signals';
 import { Button } from '@/components/common/button/button';
-// import { EventBus } from '@/utils/network/event.bus';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import { showAlert } from '@/components/common/show-alert/show-alert';
@@ -31,7 +30,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const handleMemoSSE = (event: IBaseSSE) => {
     const { name } = event;
-    if ((name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK)) {
+    if (name === SSE_EVENTS.CREATE_PARENT) {
       fetchInitialData();
     }
   };

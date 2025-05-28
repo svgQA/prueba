@@ -1,8 +1,7 @@
 import { Memo } from '@/pages/dashboard/memos/utils/memos';
 import { IPagination } from '@/types';
 import { ICheckRequest } from '@/types/memo/memo.request';
-import { BaseService, IRequestModelOutput } from '@/utils/network';
-import { streamIAResponse } from '@/utils/network/sse.post';
+import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
   REQUEST_METHODS,

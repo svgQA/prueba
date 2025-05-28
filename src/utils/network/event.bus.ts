@@ -8,6 +8,10 @@ export class EventBus {
     for (const listener of listeners.get(type) || []) {
       listener(event);
     }
+
+    for (const listener of listeners.get(SSE_TYPE.ALL) || []) {
+      listener(event);
+    }
   }
 
   static on = (type: SSE_TYPE, listener: Listener) => {

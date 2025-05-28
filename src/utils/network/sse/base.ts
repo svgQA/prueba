@@ -9,9 +9,9 @@ export enum SSE_EVENTS {
 }
 
 export enum SSE_TYPE {
-    MEMO = 'memo',
-    SHIFT = 'shift',
-    NOTIFICATION = 'default',
+    MEMO = 'memos',
+    SHIFT = 'shifts',
+    ALL = 'all',
 }
 
 export interface IBaseSSE {
@@ -19,7 +19,6 @@ export interface IBaseSSE {
     name: SSE_EVENTS;
     message: any;
     notification?: any;
-    icon?: string;
 }
 
 export class SseManager {

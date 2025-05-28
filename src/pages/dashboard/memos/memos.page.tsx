@@ -102,7 +102,6 @@ export const MemosPage: FunctionComponent = () => {
   }, []);
   
   const handleMemoSSE = (event: IBaseSSE) => {
-    console.log('memo event list: ', event);
     const { name, message } = event;
 
     if ((name === SSE_EVENTS.CREATE_PARENT || name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK)) {

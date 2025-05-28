@@ -6,6 +6,7 @@ import { useLocation } from 'wouter';
 import { localStorage } from '@/utils/storage';
 import { EventBus } from '@/utils/network/event.bus';
 import { IBaseSSE, SSE_TYPE } from '@/utils/network/sse/base';
+import { SIDEBAR_MENUS } from '@/utils/menus/sidebar';
 
 const STORAGE_KEY = 'notifications';
 
@@ -23,20 +24,21 @@ const Notifications = ({
     useEffect(() => {
         const storedNotifications = localStorage.get<INotification[]>(STORAGE_KEY);
         setLocalNotifications(Array.isArray(storedNotifications) ? storedNotifications : []);
-        EventBus.on(SSE_TYPE.NOTIFICATION, handleNotificationSSE);
+        EventBus.on(SSE_TYPE.ALL, handleNotificationSSE);
     }, []);
 
     const handleNotificationSSE = (event: IBaseSSE) => {
-        console.log('event notificacion: ', event);
-        const { type, message, notification, icon } = event;
-        const newNotification = {
-            id: message.id,
-            icon: icon,
-            label: type,
+        const { type, message, notification } = event;
+        if (!notification) return;
+
+        let newNotification = {
+            id: String(notifications.length + 1),
+            label: type + ' ' + notification,
             value: message,
-            redirect: message.redirect,
-            notification: notification,
-        };
+            icon: SIDEBAR_MENUS.find(menu => menu.label === type)?.icon,
+            redirect: SIDEBAR_MENUS.find(menu => menu.label === type)?.to,
+        }
+
         setNotifications([...notifications, newNotification]);
     }
 
