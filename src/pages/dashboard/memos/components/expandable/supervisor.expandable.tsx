@@ -74,10 +74,12 @@ const SupervisorInfo = ({
       type: btnLabel === 'OPENED' ? 'OPENED' : 'SOLVE',
     };
 
-    const response = await MemoService.createCheck(checkData, memo.id);
-    if (response.getStatus()) {
-      ToastManager.success(i18n.t('shift.expandable.date.success'));
-    }
+    // const response = await MemoService.createCheck(checkData, memo.id);
+    await MemoService.createCheck(checkData, memo.id);
+    
+    // if (response.getStatus()) {
+    //   ToastManager.success(i18n.t('shift.expandable.date.success'));
+    // }
   };
 
   return (
