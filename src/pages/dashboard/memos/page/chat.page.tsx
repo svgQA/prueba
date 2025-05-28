@@ -254,11 +254,22 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 />
               ))}
               {selectedChat.value !== '0' && memoByService.value.map((memo: Memo, index) => (
-                <ChatMessage
-                  key={index}
-                  message={`${memo.novelty?.description || ''}`}
-                  isSender={memo.userEdit.id === cognito}
-                />
+                <>
+                  {/* Memo principal */}
+                  <ChatMessage
+                    key={`parent-${index}`}
+                    message={`${memo.novelty?.description || ''}`}
+                    isSender={true}
+                  />
+                  {/* Submemos */}
+                  {memo.children?.map((childMemo: Memo, childIndex: number) => (
+                    <ChatMessage
+                      key={`child-${index}-${childIndex}`}
+                      message={`${childMemo.description || ''}`}
+                      isSender={false}
+                    />
+                  ))}
+                </>
               ))}
             </div>
             <ChatInput onSend={handleSendMessage} />

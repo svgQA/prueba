@@ -49,6 +49,7 @@ export interface Memo {
   user: User;
   messages: number;
   userEdit: any;
+  children: Memo[];
 }
 
 export interface Novelty {
