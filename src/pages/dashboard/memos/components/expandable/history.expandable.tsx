@@ -9,11 +9,13 @@ import { File } from '@/components/common/file/file';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { useSignal } from '@preact/signals';
 import { Button } from '@/components/common/button/button';
-import { EventBus } from '@/utils/network/event.bus';
+// import { EventBus } from '@/utils/network/event.bus';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { FormattedDate } from '@/components/compose/forms';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/event.bus';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -24,22 +26,15 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   useEffect(() => {
     fetchInitialData();
-
-    const unsubscribe = EventBus.subscribe((event) => {
-      if (
-        event.label === 'Memo' &&
-        event.type === 'create-parent' &&
-        event.id.toString() === memo.id.toString()
-      ) {
-        fetchInitialData();
-      }
-    });
-
-    return () => {
-      unsubscribe();
-      EventBus.unsubscribe(unsubscribe);
-    };
+    EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
   }, []);
+
+  const handleMemoSSE = (event: IBaseSSE) => {
+    const { name } = event;
+    if ((name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK)) {
+      fetchInitialData();
+    }
+  };
 
   const fetchInitialData = async () => {
     const [responseMemos] = await Promise.all([
@@ -126,7 +121,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     }
   };
 
-  const handleSubmitMessage = async (e: { preventDefault: () => void }) => {
+  const handleSubmitMessage = async (e: /*{ preventDefault: () => void }*/ any) => {
     e.preventDefault();
     if (!message.trim() && files.length === 0) return;
 

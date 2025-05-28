@@ -4,11 +4,12 @@ import { Button } from "../button/button";
 import { INotification, INotificationsProps } from "./interface";
 import { useLocation } from 'wouter';
 import { localStorage } from '@/utils/storage';
+import { EventBus } from '@/utils/network/event.bus';
+import { IBaseSSE, SSE_TYPE } from '@/utils/network/sse/base';
 
 const STORAGE_KEY = 'notifications';
 
 const Notifications = ({
-    notifications,
     icon,
     iconSize = 'xsm'
 }: INotificationsProps) => {
@@ -17,36 +18,52 @@ const Notifications = ({
     const [badgeColor, setBadgeColor] = useState('bg-primary');
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [, navigate] = useLocation();
+    const [notifications, setNotifications] = useState<INotification[]>([]);
 
     useEffect(() => {
         const storedNotifications = localStorage.get<INotification[]>(STORAGE_KEY);
         setLocalNotifications(Array.isArray(storedNotifications) ? storedNotifications : []);
+        EventBus.on(SSE_TYPE.NOTIFICATION, handleNotificationSSE);
     }, []);
+
+    const handleNotificationSSE = (event: IBaseSSE) => {
+        console.log('event notificacion: ', event);
+        const { type, message, notification, icon } = event;
+        const newNotification = {
+            id: message.id,
+            icon: icon,
+            label: type,
+            value: message,
+            redirect: message.redirect,
+            notification: notification,
+        };
+        setNotifications([...notifications, newNotification]);
+    }
 
     useEffect(() => {
         if (notifications.length > 0) {
             const uniqueNotifications = notifications.filter(newNotif => !localNotifications.some(existingNotif => existingNotif.value === newNotif.value));
-            
+
             if (uniqueNotifications.length > 0) {
                 const allNotifications = [...localNotifications, ...uniqueNotifications];
                 setLocalNotifications(allNotifications);
                 localStorage.set(STORAGE_KEY, allNotifications);
-                
+
                 // Efecto especial para múltiples notificaciones
                 if (uniqueNotifications.length > 1) {
                     let pulseCount = 0;
                     const maxPulses = 6; // 3 segundos con cambios cada 500ms
-                    
+
                     const pulseInterval = setInterval(() => {
                         setBadgeColor(prev => prev === 'bg-secondary' ? 'bg-primary' : 'bg-secondary');
                         pulseCount++;
-                        
+
                         if (pulseCount >= maxPulses) {
                             clearInterval(pulseInterval);
                             setBadgeColor('bg-primary');
                         }
                     }, 500);
-                    
+
                     return () => clearInterval(pulseInterval);
                 } else {
                     // Efecto normal para una sola notificación
@@ -54,7 +71,7 @@ const Notifications = ({
                     const timer = setTimeout(() => {
                         setBadgeColor('bg-primary');
                     }, 3000);
-                    
+
                     return () => clearTimeout(timer);
                 }
             }
@@ -81,18 +98,18 @@ const Notifications = ({
             const updatedNotifications = localNotifications.filter(n => n.value !== info.value);
             setLocalNotifications(updatedNotifications);
             localStorage.set(STORAGE_KEY, updatedNotifications);
-            
+
             const index = notifications.indexOf(info);
             if (index > -1) {
                 notifications.splice(index, 1);
             }
-            
+
             // Emit custom event for notification click
             if (info.id) {
                 const event = new CustomEvent('notification-click', { detail: { id: info.id } });
                 window.dispatchEvent(event);
             }
-            
+
             // Añadir el ID como parámetro de consulta si existe
             const redirectUrl = info.id ? `${info.redirect}?notificationId=${info.id}` : info.redirect;
             navigate(redirectUrl);
@@ -101,7 +118,7 @@ const Notifications = ({
     }
 
     const handleDelete = (info: INotification, event: MouseEvent) => {
-        event.stopPropagation(); 
+        event.stopPropagation();
         const updatedNotifications = localNotifications.filter(n => n.value !== info.value);
         setLocalNotifications(updatedNotifications);
         localStorage.set(STORAGE_KEY, updatedNotifications);
@@ -150,7 +167,7 @@ const Notifications = ({
                                         {notification.label}
                                     </span>
                                 </div>
-                                <span 
+                                <span
                                     className="vx-icon vx-icon-053 text-gray-400 hover:text-red-500 transition-colors"
                                     onClick={(e) => handleDelete(notification, e)}
                                 />

@@ -46,8 +46,10 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 import { AudioButton } from './audio/socket.button';
 import { getLocation } from '@/utils/utilities/location';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE, SseManager } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
+// import { EventBus } from '@/utils/network/event.bus';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 enum VIEW_NAME {
   TABLE,
@@ -136,6 +138,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     handleGetShiftSummary();
     fetchInitialData();
     fetchSSE();
+    EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
   }, []);
 
   // const fetchShifts = async () => {
@@ -144,11 +147,14 @@ export const ShiftsPage: FunctionalComponent = () => {
   //   hifts.value(response.getMany());
   // };
 
-  const handleMemoSSE = (chunk: string) => {
-    const data = JSON.parse(chunk);
-    const { name, message } = data[0];
+  const fetchSSE = useCallback(async () => {
+    await SseManager.getQuery(['activity', 'stream', 'check']);
+  }, []);
 
-    if (name && message && (name === 'update' || name === 'update-check')) {
+  const handleMemoSSE = (event: IBaseSSE) => {
+    const { name, message } = event;
+
+    if ((name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK)) {
       const shiftIndex = shifts.value.findIndex((shift) => Number(shift.id) === Number(message.id));
       if (shiftIndex < 0) return;
       const shiftCopy = shifts.value;
@@ -156,20 +162,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       shiftCopy[shiftIndex].updatedAt = message.updatedAt;
       shifts.value = [...shiftCopy];
     }
-
-    EventBus.emit({
-      id: message.id,
-      icon: '077',
-      redirect: PAGES_LIST_ROUTER.dashboard.shift,
-      type: (name === 'update-check' || name === 'create') ? 'notification' : name,
-      data: (name === 'update-check') ? message.status : message.novelty?.name,
-      label: (name === 'update-check') ? t('notification.shift_state') : t('notification.shift'),
-    });
   };
-
-  const fetchSSE = useCallback(async () => {
-    await ShiftService.streamQuery((chunk: string) => handleMemoSSE(chunk));
-  }, []);
 
   const fetchInitialData = async () => {
     const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =

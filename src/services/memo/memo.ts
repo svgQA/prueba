@@ -81,27 +81,4 @@ export class MemoService extends BaseService {
     };
     return await super.make_request(this.name, model);
   }
-
-  static async streamQuery(
-    onData: (chunk: string) => void,
-    onDone?: () => void,
-    onError?: (err: any) => void,
-    prompt: string = ''
-  ) {
-    const model: IRequestModelOutput = this.make_request_model(
-      'memo',
-      {
-        url: ['memo', 'stream', 'history'],
-        method: REQUEST_METHODS.POST,
-        data: { prompt },
-      },
-      false
-    );
-
-    try {
-      await streamIAResponse(model, onData, onDone, onError);
-    } catch (error) {
-      onError?.(error);
-    }
-  }
 }

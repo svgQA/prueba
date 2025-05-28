@@ -1,18 +1,26 @@
-type Event = { id: string; [key: string]: any };
-type Listener = (event: Event) => void;
-const listeners = new Set<Listener>();
+import { IBaseSSE, SSE_TYPE } from "./sse/base";
 
-export const EventBus = {
-  emit(event: Event) {
-    for (const listener of listeners) {
+type Listener = (event: IBaseSSE) => void;
+const listeners = new Map<string, Listener[]>();
+
+export class EventBus {
+  static emit = (type: SSE_TYPE, event: IBaseSSE) => {
+    for (const listener of listeners.get(type) || []) {
       listener(event);
     }
-  },
-  subscribe(listener: Listener) {
-    listeners.add(listener);
-    return () => listeners.delete(listener);
-  },
-  unsubscribe(listener: Listener) {
-    listeners.delete(listener);
-  },
+  }
+
+  static on = (type: SSE_TYPE, listener: Listener) => {
+    const result = listeners.get(type) || [];
+    listeners.set(type, [...result, listener]);
+  }
+
+  // static on = (listener: Listener) => {
+  //   const result = listeners.get('default') || [];
+  //   listeners.set('default', [...result, listener]);
+  // }
+
+  // static off = (listener: Listener) => {
+  //   listeners.delete(listener);
+  // }
 };
