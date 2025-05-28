@@ -4,14 +4,13 @@ import { Button } from '../button/button';
 import { INotification, INotificationsProps } from './interface';
 import { useLocation } from 'wouter';
 import { localStorage } from '@/utils/storage';
+import { EventBus } from '@/utils/network/event.bus';
+import { IBaseSSE, SSE_TYPE } from '@/utils/network/sse/base';
+import { SIDEBAR_MENUS } from '@/utils/menus/sidebar';
 
 const STORAGE_KEY = 'notifications';
 
-const Notifications = ({
-  notifications,
-  icon,
-  iconSize = 'xsm',
-}: INotificationsProps) => {
+const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [localNotifications, setLocalNotifications] = useState<INotification[]>(
     []
@@ -19,13 +18,37 @@ const Notifications = ({
   const [badgeColor, setBadgeColor] = useState('bg-primary');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [, navigate] = useLocation();
+  const [notifications, setNotifications] = useState<INotification[]>([]);
 
   useEffect(() => {
     const storedNotifications = localStorage.get<INotification[]>(STORAGE_KEY);
-    setLocalNotifications(
-      Array.isArray(storedNotifications) ? storedNotifications : []
-    );
+    const initialNotifications = Array.isArray(storedNotifications)
+      ? storedNotifications
+      : [];
+    setLocalNotifications(initialNotifications);
+    setNotifications(initialNotifications);
+    EventBus.on(SSE_TYPE.ALL, handleNotificationSSE);
   }, []);
+
+  const handleNotificationSSE = (event: IBaseSSE) => {
+    const { type, message, notification } = event;
+    if (!notification) return;
+
+    let newNotification = {
+      id: String(notifications.length + 1),
+      label: type + ' ' + notification,
+      value: message,
+      icon: SIDEBAR_MENUS.find((menu) => menu.label === type)?.icon,
+      redirect: SIDEBAR_MENUS.find((menu) => menu.label === type)?.to,
+    };
+
+    setNotifications((prevNotifications) => {
+      const updatedNotifications = [...prevNotifications, newNotification];
+      setLocalNotifications(updatedNotifications);
+      localStorage.set(STORAGE_KEY, updatedNotifications);
+      return updatedNotifications;
+    });
+  };
 
   useEffect(() => {
     if (notifications.length > 0) {

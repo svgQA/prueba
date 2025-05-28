@@ -26,11 +26,15 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
-import { EventBus } from '@/utils/network/event.bus';
 import { FloatBadge } from '@/components/common/badge/float';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { DateUtils } from '@/utils/utilities/dates';
-// import { getStatusLoading } from '@/store/signals/modals';
+import {
+  IBaseSSE,
+  SSE_EVENTS,
+  SSE_TYPE,
+  SseManager,
+} from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/event.bus';
 
 enum VIEW_NAME {
   TABLE,
@@ -81,6 +85,7 @@ export const MemosPage: FunctionComponent = () => {
       fetchInitialData();
       fetchSSE();
       selectedMemo();
+      EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
     }
   }, [selectedCompany, location]);
 
@@ -102,14 +107,17 @@ export const MemosPage: FunctionComponent = () => {
     if (memoId) setHighlightedMemoId(Number(memoId));
   };
 
-  const handleMemoSSE = (chunk: string) => {
-    const data = JSON.parse(chunk);
-    const { name, message } = data[0];
+  const fetchSSE = useCallback(async () => {
+    await SseManager.getQuery(['memo', 'stream', 'history']);
+  }, []);
+
+  const handleMemoSSE = (event: IBaseSSE) => {
+    const { name, message } = event;
 
     if (
-      name &&
-      message &&
-      (name === 'create-parent' || name === 'update' || name === 'update-check')
+      name === SSE_EVENTS.CREATE_PARENT ||
+      name === SSE_EVENTS.UPDATE ||
+      name === SSE_EVENTS.UPDATE_CHECK
     ) {
       const memoIndex = memos.value.findIndex((memo) => memo.id === message.id);
       if (memoIndex < 0) return;
@@ -128,24 +136,7 @@ export const MemosPage: FunctionComponent = () => {
       setIsAnimating(true);
       setTimeout(() => setIsAnimating(false), 1000);
     }
-
-    EventBus.emit({
-      id: message.id,
-      icon: '077',
-      redirect: PAGES_LIST_ROUTER.dashboard.memos,
-      type:
-        name === 'update-check' || name === 'create' ? 'notification' : name,
-      data: name === 'update-check' ? message.state : message.novelty?.name,
-      label:
-        name === 'update-check'
-          ? t('notification.memo_state')
-          : t('notification.memo'),
-    });
   };
-
-  const fetchSSE = useCallback(async () => {
-    await MemoService.streamQuery((chunk: string) => handleMemoSSE(chunk));
-  }, []);
 
   const fetchInitialData = async () => {
     loading.value = true;
@@ -340,7 +331,7 @@ export const MemosPage: FunctionComponent = () => {
         </div>
 
         {currentView.value === VIEW_NAME.TABLE && (
-          <Table
+          <Table<Memo>
             data={memos.value}
             columns={getColumns(onClickAction)}
             showExpandableIcon

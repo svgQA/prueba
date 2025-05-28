@@ -7,6 +7,8 @@ export const notification_es = {
       'Selecciona al menos un empleado para notificar',
     memo: 'Memo',
     memo_state: 'Estado de Memo',
+    shift: 'Turno',
+    shift_state: 'Estado de Turno',
   },
 };
 
@@ -17,5 +19,7 @@ export const notification_en = {
     select_at_least_one_employee: 'Select at least one employee to notify',
     memo: 'Memo',
     memo_state: 'Memo State',
+    shift: 'Shift',
+    shift_state: 'Shift State',
   },
 };

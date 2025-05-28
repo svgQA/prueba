@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { Route, Router } from 'wouter';
-import { lazy, Suspense, useEffect, useState } from 'preact/compat';
+import { lazy, Suspense, useEffect } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -43,15 +43,15 @@ import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
 import { CompanyService } from '@/services';
-import { INotification } from '@/components/common/notifications/interface';
+// import { INotification } from '@/components/common/notifications/interface';
 import Notifications from '@/components/common/notifications/notifications';
-import { EventBus } from '@/utils/network/event.bus';
+// import { EventBus } from '@/utils/network/event.bus';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    const [notifications, setNotifications] = useState<INotification[]>([]);
+    // const [notifications, setNotifications] = useState<INotification[]>([]);
     const {
       setCompanies,
       companies,
@@ -69,26 +69,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     useEffect(() => {
       validateUser();
-      const unsubscribe = EventBus.subscribe((event) => {
-        if (event.type && event.data && event.type === 'notification') {
-          const newNotification = {
-            label: event.label + ': ' + event.data,
-            value: Date.now(),
-            icon: event.icon,
-            redirect: event.redirect,
-            id: event.id,
-          };
-          setNotifications((prevNotifications) => [
-            ...prevNotifications,
-            newNotification,
-          ]);
-        }
-      });
-
-      return () => {
-        unsubscribe();
-        EventBus.unsubscribe(unsubscribe);
-      };
     }, []);
 
     const validateUser = async () => {
@@ -184,11 +164,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                   borderless
                   unpadded
                 /> */}
-                <Notifications
-                  notifications={notifications}
-                  icon='317'
-                  iconSize='xsm'
-                />
+                <Notifications icon='317' iconSize='xsm' />
                 <Dropdown
                   options={[
                     { label: 'setting', value: 1, icon: '158' },
