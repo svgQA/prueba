@@ -104,7 +104,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
         }}
         onClickAction={handleOnClick}
         isSettingTable
-        loading={true}
+        loading={loading.value}
       />
     </Section>
   );
