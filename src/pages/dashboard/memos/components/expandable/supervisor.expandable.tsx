@@ -76,7 +76,7 @@ const SupervisorInfo = ({
 
     // const response = await MemoService.createCheck(checkData, memo.id);
     await MemoService.createCheck(checkData, memo.id);
-    
+
     // if (response.getStatus()) {
     //   ToastManager.success(i18n.t('shift.expandable.date.success'));
     // }
