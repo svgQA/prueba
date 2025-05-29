@@ -46,7 +46,12 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 import { AudioButton } from './audio/socket.button';
 import { getLocation } from '@/utils/utilities/location';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE, SseManager } from '@/utils/network/sse/base';
+import {
+  IBaseSSE,
+  SSE_EVENTS,
+  SSE_TYPE,
+  SseManager,
+} from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 
 enum VIEW_NAME {
@@ -152,8 +157,10 @@ export const ShiftsPage: FunctionalComponent = () => {
   const handleMemoSSE = (event: IBaseSSE) => {
     const { name, message } = event;
 
-    if ((name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK)) {
-      const shiftIndex = shifts.value.findIndex((shift) => Number(shift.id) === Number(message.id));
+    if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
+      const shiftIndex = shifts.value.findIndex(
+        (shift) => Number(shift.id) === Number(message.id)
+      );
       if (shiftIndex < 0) return;
       const shiftCopy = shifts.value;
       shiftCopy[shiftIndex].status = message.status;

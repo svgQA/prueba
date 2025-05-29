@@ -150,10 +150,13 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     }
   };
 
-  const handleChatSelect = async (chatId: string, isService: boolean = false): Promise<void> => {
+  const handleChatSelect = async (
+    chatId: string,
+    isService: boolean = false
+  ): Promise<void> => {
     selectedChat.value = chatId;
     userSelected.value = users.find((user) => user.cognitoId === chatId);
-   
+
     if (isService) {
       const response = await MemoService.get_all_by_service_id(chatId);
       if (!response.getStatus()) return;
@@ -170,13 +173,13 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               <div className='flex gap-2'>
                 <Button
                   name='users'
-                  onClick={() => viewMode.value = 'users'}
+                  onClick={() => (viewMode.value = 'users')}
                   className={`flex-1 ${viewMode.value === 'users' ? 'bg-primary text-white' : 'bg-b-light-dark dark:bg-b-dark-light'}`}
                   label={t('memos.view.users')}
                 />
                 <Button
                   name='services'
-                  onClick={() => viewMode.value = 'services'}
+                  onClick={() => (viewMode.value = 'services')}
                   className={`flex-1 ${viewMode.value === 'services' ? 'bg-primary text-white' : 'bg-b-light-dark dark:bg-b-dark-light'}`}
                   label={t('memos.view.services')}
                 />
@@ -192,34 +195,32 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               isSelected={selectedChat.value === '0'}
             />
             <div className='flex-1 overflow-y-auto vox-scroll-design border-b-light-dark dark:border-b-dark-light'>
-              {viewMode.value === 'users' ? (
-                users.map((user: IUserResponse) => (
-                  <ChatCard
-                    user={user}
-                    key={`chat-card-${user.cognitoId}`}
-                    id={user.cognitoId}
-                    name={`${user.name} ${user.surname}`}
-                    lastMessage={`${cognito === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
-                    time='10:15'
-                    amount={chats.value[user.cognitoId]?.new}
-                    onClick={handleChatSelect}
-                    isSelected={selectedChat.value === user.cognitoId}
-                  />
-                ))
-              ) : (
-                memosGroupedByService.map((service: any) => (
-                  <ChatCard
-                    key={`service-card-${service.service.id}`}
-                    id={service.service.id}
-                    name={service.service.name}
-                    lastMessage={service.service.description || ''}
-                    time={service.service.time || ''}
-                    amount={service.service.unreadCount}
-                    onClick={() => handleChatSelect(service.service.id, true)}
-                    isSelected={selectedChat.value === service.service.id}
-                  />
-                ))
-              )}
+              {viewMode.value === 'users'
+                ? users.map((user: IUserResponse) => (
+                    <ChatCard
+                      user={user}
+                      key={`chat-card-${user.cognitoId}`}
+                      id={user.cognitoId}
+                      name={`${user.name} ${user.surname}`}
+                      lastMessage={`${cognito === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
+                      time='10:15'
+                      amount={chats.value[user.cognitoId]?.new}
+                      onClick={handleChatSelect}
+                      isSelected={selectedChat.value === user.cognitoId}
+                    />
+                  ))
+                : memosGroupedByService.map((service: any) => (
+                    <ChatCard
+                      key={`service-card-${service.service.id}`}
+                      id={service.service.id}
+                      name={service.service.name}
+                      lastMessage={service.service.description || ''}
+                      time={service.service.time || ''}
+                      amount={service.service.unreadCount}
+                      onClick={() => handleChatSelect(service.service.id, true)}
+                      isSelected={selectedChat.value === service.service.id}
+                    />
+                  ))}
             </div>
             <div className='flex justify-between items-center p-4 border-t border-r dark:border-b-dark-light border-b-light-dark'>
               <Button
@@ -246,20 +247,35 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           <div className='w-[70%] flex flex-col'>
             <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
               {selectedChat.value === '0' && <FrequentQuestions />}
-              {selectedChat.value === '0' && chats.value[selectedChat.value]?.messages.map((msg, index) => (
-                <ChatMessage
-                  key={index}
-                  message={msg.message}
-                  isSender={msg.isSender}
-                />
-              ))}
-              {selectedChat.value !== '0' && memoByService.value.map((memo: Memo, index) => (
-                <ChatMessage
-                  key={index}
-                  message={`${memo.novelty?.description || ''}`}
-                  isSender={memo.userEdit.id === cognito}
-                />
-              ))}
+              {selectedChat.value === '0' &&
+                chats.value[selectedChat.value]?.messages.map((msg, index) => (
+                  <ChatMessage
+                    key={index}
+                    message={msg.message}
+                    isSender={msg.isSender}
+                  />
+                ))}
+              {selectedChat.value !== '0' &&
+                memoByService.value.map((memo: Memo, index) => (
+                  <>
+                    {/* Memo principal */}
+                    <ChatMessage
+                      key={`parent-${index}`}
+                      message={`${memo.novelty?.description || ''}`}
+                      isSender={true}
+                    />
+                    {/* Submemos */}
+                    {memo.children?.map(
+                      (childMemo: Memo, childIndex: number) => (
+                        <ChatMessage
+                          key={`child-${index}-${childIndex}`}
+                          message={`${childMemo.description || ''}`}
+                          isSender={false}
+                        />
+                      )
+                    )}
+                  </>
+                ))}
             </div>
             <ChatInput onSend={handleSendMessage} />
           </div>

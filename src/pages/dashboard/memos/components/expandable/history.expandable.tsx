@@ -122,7 +122,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     // }
   };
 
-  const handleSubmitMessage = async (e: /*{ preventDefault: () => void }*/ any) => {
+  const handleSubmitMessage = async (
+    e: /*{ preventDefault: () => void }*/ any
+  ) => {
     e.preventDefault();
     if (!message.trim() && files.length === 0) return;
 

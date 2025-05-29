@@ -28,7 +28,12 @@ import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { FloatBadge } from '@/components/common/badge/float';
 import { DateUtils } from '@/utils/utilities/dates';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE, SseManager } from '@/utils/network/sse/base';
+import {
+  IBaseSSE,
+  SSE_EVENTS,
+  SSE_TYPE,
+  SseManager,
+} from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 
 enum VIEW_NAME {
@@ -46,7 +51,9 @@ export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
   const [location] = useLocation();
-  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(null);
+  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(
+    null
+  );
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
@@ -89,7 +96,10 @@ export const MemosPage: FunctionComponent = () => {
       if (id) setHighlightedMemoId(Number(id));
     };
 
-    window.addEventListener('notification-click', handleNotificationClick as EventListener);
+    window.addEventListener(
+      'notification-click',
+      handleNotificationClick as EventListener
+    );
 
     // Get memoId from URL on initial load
     const urlParams = new URLSearchParams(window.location.search);
@@ -100,11 +110,15 @@ export const MemosPage: FunctionComponent = () => {
   const fetchSSE = useCallback(async () => {
     await SseManager.getQuery(['memo', 'stream', 'history']);
   }, []);
-  
+
   const handleMemoSSE = (event: IBaseSSE) => {
     const { name, message } = event;
 
-    if ((name === SSE_EVENTS.CREATE_PARENT || name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK)) {
+    if (
+      name === SSE_EVENTS.CREATE_PARENT ||
+      name === SSE_EVENTS.UPDATE ||
+      name === SSE_EVENTS.UPDATE_CHECK
+    ) {
       const memoIndex = memos.value.findIndex((memo) => memo.id === message.id);
       if (memoIndex < 0) return;
       const memoCopy = memos.value;
@@ -125,7 +139,12 @@ export const MemosPage: FunctionComponent = () => {
   };
 
   const fetchInitialData = async () => {
-    const [responseMemos, responseUsers, responseSummary, responseGroupedByService] = await Promise.all([
+    const [
+      responseMemos,
+      responseUsers,
+      responseSummary,
+      responseGroupedByService,
+    ] = await Promise.all([
       MemoService.get_all({ page: 1, items: 1000 }),
       UserService.get_all_employee({ items: 20, page: 1 }),
       MemoService.getMemosSummary(),
@@ -327,12 +346,18 @@ export const MemosPage: FunctionComponent = () => {
               contact: false,
               updatedAt: false,
             }}
-            rowClassName={(row: Memo) => row.id === highlightedMemoId ? 'animate-highlight' : ''}
+            rowClassName={(row: Memo) =>
+              row.id === highlightedMemoId ? 'animate-highlight' : ''
+            }
           />
         )}
       </div>
       {currentView.value === VIEW_NAME.CHAT && (
-        <ChatView users={users.value} getUsersHandler={getUsersHandler} memosGroupedByService={memosGroupedByService.value} />
+        <ChatView
+          users={users.value}
+          getUsersHandler={getUsersHandler}
+          memosGroupedByService={memosGroupedByService.value}
+        />
       )}
     </Section>
   );

@@ -131,7 +131,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           onHomeHandler={toggleSettingModal}
           menus={SIDEBAR_MENUS}
           isNavigation
-        // onLogout={signOut}
+          // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
           <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
@@ -164,10 +164,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                   borderless
                   unpadded
                 /> */}
-                <Notifications
-                  icon='317'
-                  iconSize='xsm'
-                />
+                <Notifications icon='317' iconSize='xsm' />
                 <Dropdown
                   options={[
                     { label: 'setting', value: 1, icon: '158' },
