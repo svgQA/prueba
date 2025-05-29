@@ -9,7 +9,7 @@ export const CardRound = ({ activity }: CardRoundProps) => {
   const openForm = (formId: number | null) => {
     if (formId) {
       // TODO: Open form
-      console.log(formId);
+      // console.log(formId);
     }
   };
   return (

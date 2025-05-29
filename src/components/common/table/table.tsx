@@ -54,6 +54,21 @@ import { Button } from '../button/button';
 import { DraggableTableHeader } from './components/draggable.header';
 import { ROW_ACTIONS } from './enum';
 
+const SkeletonRow = ({ columns }: { columns: number }) => {
+  return (
+    <tr className='animate-pulse'>
+      <td className='h-12 px-2'>
+        <div className='h-4 w-4 bg-gray-200 dark:bg-gray-700 rounded'></div>
+      </td>
+      {Array.from({ length: columns }).map((_, index) => (
+        <td key={index} className='h-12 px-2'>
+          <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4'></div>
+        </td>
+      ))}
+    </tr>
+  );
+};
+
 export const Table = <T,>({
   data,
   columns = [],
@@ -71,6 +86,7 @@ export const Table = <T,>({
   onNotifications,
   isSettingTable = false,
   rowClassName,
+  loading = false,
 }: ITableProps<T>) => {
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
     {}
@@ -657,63 +673,64 @@ export const Table = <T,>({
             icon='003'
             square
           />
-          {pageNumbers.map((pageIdx, i) =>
-            pageIdx === 'ellipsis-start' || pageIdx === 'ellipsis-end' ? (
-              <div
-                key={`ellipsis-${i}`}
-                className='relative'
-                // ref={activeDropdown === i ? dropdownRef : null}
-              >
-                <Button
-                  onClick={() =>
-                    setActiveDropdown(activeDropdown === i ? null : i)
-                  }
-                  name='ellipsis'
-                  icon='429'
-                  square
-                />
-                {activeDropdown === i && (
-                  <div className='absolute bottom-full left-0 mb-1 bg-white dark:bg-b-dark-dark border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20 py-2 px-2 min-w-[120px]'>
-                    <div className='grid grid-cols-3 gap-2'>
-                      {(pageIdx === 'ellipsis-start'
-                        ? getIntermediatePages(1, currentPage - 1).filter(
-                            (num) => !pageNumbers.includes(num)
-                          )
-                        : getIntermediatePages(
-                            currentPage + 1,
-                            totalPages - 2
-                          ).filter((num) => !pageNumbers.includes(num))
-                      ).map((pageNum) => (
-                        <Button
-                          key={`dropdown-page-${pageNum}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            table.setPageIndex(pageNum);
-                            setActiveDropdown(null);
-                          }}
-                          name='page'
-                          square
-                          label={`${pageNum + 1}`}
-                        />
-                      ))}
+          <div className='flex items-center gap-1 flex-row min-w-[30px]'>
+            {pageNumbers.map((pageIdx, i) =>
+              pageIdx === 'ellipsis-start' || pageIdx === 'ellipsis-end' ? (
+                <div
+                  key={`ellipsis-${i}`}
+                  className='relative'
+                  // ref={activeDropdown === i ? dropdownRef : null}
+                >
+                  <Button
+                    onClick={() =>
+                      setActiveDropdown(activeDropdown === i ? null : i)
+                    }
+                    name='ellipsis'
+                    icon='429'
+                    square
+                  />
+                  {activeDropdown === i && (
+                    <div className='absolute bottom-full left-0 mb-1 bg-white dark:bg-b-dark-dark border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20 py-2 px-2 min-w-[120px]'>
+                      <div className='grid grid-cols-3 gap-2'>
+                        {(pageIdx === 'ellipsis-start'
+                          ? getIntermediatePages(1, currentPage - 1).filter(
+                              (num) => !pageNumbers.includes(num)
+                            )
+                          : getIntermediatePages(
+                              currentPage + 1,
+                              totalPages - 2
+                            ).filter((num) => !pageNumbers.includes(num))
+                        ).map((pageNum) => (
+                          <Button
+                            key={`dropdown-page-${pageNum}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              table.setPageIndex(pageNum);
+                              setActiveDropdown(null);
+                            }}
+                            name='page'
+                            square
+                            label={`${pageNum + 1}`}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Button
-                key={`page-${pageIdx}`}
-                onClick={() => table.setPageIndex(Number(pageIdx))}
-                name='page'
-                unpadded
-                square
-                selectedColor='dark:bg-ternary bg-primary'
-                selected={currentPage === pageIdx}
-                label={`${Number(pageIdx) + 1}`}
-              />
-            )
-          )}
-
+                  )}
+                </div>
+              ) : (
+                <Button
+                  key={`page-${pageIdx}`}
+                  onClick={() => table.setPageIndex(Number(pageIdx))}
+                  name='page'
+                  unpadded
+                  square
+                  selectedColor='dark:bg-ternary bg-primary'
+                  selected={currentPage === pageIdx}
+                  label={`${Number(pageIdx) + 1}`}
+                />
+              )
+            )}
+          </div>
           <Button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
@@ -754,6 +771,7 @@ export const Table = <T,>({
             onChange={setColumnFilters}
             table={table}
             group={<Group<T> table={table} />}
+            disabled={loading}
           />
         )}
       </div>
@@ -852,7 +870,20 @@ export const Table = <T,>({
                 ))}
               </thead>
 
-              <tbody>{renderRows(table.getRowModel().rows)}</tbody>
+              <tbody>
+                {loading ? (
+                  <>
+                    {Array.from([1, 2, 3, 4, 5]).map((_, index) => (
+                      <SkeletonRow
+                        key={index}
+                        columns={table.getHeaderGroups()[0].headers.length}
+                      />
+                    ))}
+                  </>
+                ) : (
+                  renderRows(table.getRowModel().rows)
+                )}
+              </tbody>
             </table>
           </div>
           <div className='pagination-row'>{renderPagination()}</div>

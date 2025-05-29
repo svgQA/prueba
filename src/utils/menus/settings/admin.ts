@@ -14,6 +14,7 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
       base: BASE_ADMIN,
       to: PAGES_LIST_ROUTER.dashboard.setting.admin.analytic.base,
       id: 'analytic',
+      show: false,
     },
     {
       icon: '054',
@@ -22,7 +23,7 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
       base: BASE_ADMIN,
       to: PAGES_LIST_ROUTER.dashboard.setting.admin.database.base,
       id: 'database',
-      show: true,
+      show: false,
     },
     {
       icon: '088',

@@ -123,8 +123,12 @@ export const AudioButton = () => {
       if (peerConnectionRef.current && data.jsep) {
         peerConnectionRef.current
           .setRemoteDescription(data.jsep)
-          .then(() => console.log('remote sdp OK'))
-          .catch((e) => console.log('error setting remote sdp', e));
+          .then(() => {
+            /*console.log('remote sdp OK')*/
+          })
+          .catch(() => {
+            /*console.log('error setting remote sdp', e)*/
+          });
       }
     });
   };

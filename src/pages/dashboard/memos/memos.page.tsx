@@ -62,7 +62,7 @@ export const MemosPage: FunctionComponent = () => {
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
-
+  const loading = useSignal<boolean>(false);
   //notifications
   const [notificationMemo, setNotificationMemo] = useState<number>(0);
   const [showReload, setShowReload] = useState<boolean>(false);
@@ -139,6 +139,7 @@ export const MemosPage: FunctionComponent = () => {
   };
 
   const fetchInitialData = async () => {
+    loading.value = true;
     const [
       responseMemos,
       responseUsers,
@@ -162,6 +163,7 @@ export const MemosPage: FunctionComponent = () => {
           format: 'DD/MM/YYYY',
         }),
       }));
+      loading.value = false;
     }
 
     if (responseUsers.getStatus()) {
@@ -335,6 +337,7 @@ export const MemosPage: FunctionComponent = () => {
             showExpandableIcon
             pageSize={20}
             selectable
+            loading={loading.value}
             expandable={(row: Memo, column?: string) => (
               <ExpandableMultiple type={column || 'supervisor'} data={row} />
             )}

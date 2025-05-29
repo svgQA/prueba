@@ -7,6 +7,8 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { FormattedDate } from '@/components/compose/forms';
+import { Badge } from '@/components/common/badge/badge';
+import { FloatBadge } from '@/components/common/badge/float';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -40,17 +42,12 @@ export const getColumns = (
     size: 120,
     cell: (info) => {
       const type = String(info.getValue());
-      const color =
-        type === 'Usuarios'
-          ? 'bg-m6 text-primary'
-          : 'bg-caution text-yellow-800';
-
       return (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-semibold ${color}`}
-        >
-          {type}
-        </span>
+        <Badge
+          status={type === 'Usuarios' ? 'success' : 'warning'}
+          label={type}
+          outline
+        />
       );
     },
   },
@@ -60,7 +57,7 @@ export const getColumns = (
     header: 'Fecha de envío',
     size: 180,
     cell: (info) => {
-      return <FormattedDate date={String(info.getValue())} format='datetime' />;
+      return <FormattedDate date={String(info.getValue())} format='human' />;
     },
   },
   {
@@ -70,8 +67,9 @@ export const getColumns = (
     size: 100,
     cell: (info) => (
       <div className='flex items-center gap-2'>
-        <span className='vox-icon vx-icon-340 text-lg' />
-        <span className='text-sm'>{Number(info.getValue())}</span>
+        <FloatBadge label={Number(info.getValue())}>
+          <span className='vox-icon vx-icon-340 text-lg' />
+        </FloatBadge>
       </div>
     ),
   },

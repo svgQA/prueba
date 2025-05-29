@@ -21,6 +21,7 @@ export const UserAreasPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const areas = useSignal<IUserAreaResponse[]>([]);
   const [_, navigate] = useLocation();
+  const loading = useSignal<boolean>(false);
 
   useEffect(() => {
     document.title = t('user.area.title');
@@ -28,10 +29,12 @@ export const UserAreasPage: FunctionComponent = () => {
   }, []);
 
   const fetchAreas = async () => {
+    loading.value = true;
     const response = await UserService.getAreas();
     if (response.getStatus()) {
       areas.value = response.getMany();
     }
+    loading.value = false;
   };
 
   const redirect = () => {
@@ -86,7 +89,8 @@ export const UserAreasPage: FunctionComponent = () => {
         showExpandableIcon={false}
         onClickAction={handleOnClick}
         pageSize={20}
-        visibility={{}}
+        isSettingTable
+        loading={loading.value}
       />
     </Section>
   );

@@ -31,15 +31,19 @@ export interface IRowActionPlace {
 export const NoveltySettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const novelties: Signal<INovelty[]> = useSignal([]);
-
+  const loading = useSignal<boolean>(false);
   useEffect(() => {
     document.title = 'VX - Novelty Service';
     getNovelties();
   }, []);
 
   const getNovelties = async () => {
+    loading.value = true;
     const request: any = await NoveltyService.getNovelty();
-    novelties.value = request.data;
+    if (request.getStatus()) {
+      novelties.value = request.getMany();
+    }
+    loading.value = false;
   };
 
   const redirect = () => {
@@ -94,7 +98,8 @@ export const NoveltySettingPage: FunctionComponent = () => {
           action: true,
         }}
         onClickAction={handleOnClick}
-        unsearch={false}
+        isSettingTable
+        loading={loading.value}
       />
     </Section>
   );

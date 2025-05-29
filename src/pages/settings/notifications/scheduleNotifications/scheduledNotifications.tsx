@@ -15,16 +15,19 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
   const [_, navigate] = useLocation();
-
+  const loading = useSignal<boolean>(false);
   useEffect(() => {
     document.title = 'VX - Notificaciones Programadas';
     fetchNotifications();
   }, []);
 
   const fetchNotifications = async () => {
+    loading.value = true;
     const response = await SchedulerService.getAll('all');
-    if (!response.getStatus()) return;
-    notifications.value = response.getMany();
+    if (response.getStatus()) {
+      notifications.value = response.getMany();
+    }
+    loading.value = false;
   };
 
   const redirect = () => {
@@ -99,6 +102,7 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
         columns={getColumns(onClickAction)}
         pageSize={10}
         showExpandableIcon={false}
+        loading={loading.value}
       />
     </Section>
   );

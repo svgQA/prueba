@@ -34,6 +34,7 @@ export const UsersPage: FunctionalComponent = () => {
   const { t } = useTranslation();
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const user = useSignal<IUserResponse | any>();
+  const loading = useSignal<boolean>(false);
 
   const totalUsers = useSignal(0);
   const connectedUsers = useSignal(0);
@@ -178,13 +179,18 @@ export const UsersPage: FunctionalComponent = () => {
   }, []);
 
   const getUsers = async () => {
+    loading.value = true;
     const response = await UserService.get_all();
-    if (!response.getStatus()) return;
+    if (!response.getStatus()) {
+      loading.value = false;
+      return;
+    }
     const [hasNotifications, responseUsers] = findNotificationsUser(
       response.getMany()
     );
     notificationValidate.value = hasNotifications;
     users.value = responseUsers;
+    loading.value = false;
   };
 
   const findNotificationsUser = (
@@ -325,6 +331,7 @@ export const UsersPage: FunctionalComponent = () => {
             onClickAction={handleOnClick}
             onNotifications={onNotifications}
             hasNotifications={notificationValidate.value}
+            loading={loading.value}
             // showExpandableIcon
             // expandable={() => <></>}
             visibility={{

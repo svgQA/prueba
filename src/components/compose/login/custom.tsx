@@ -104,7 +104,9 @@ const components = {
       return (
         <div className='text-center'>
           <button
-            onClick={() => console.log(t('login.forgotPassword'))}
+            onClick={() => {
+              /*console.log(t('login.forgotPassword'))*/
+            }}
             className='text-xs sm:text-sm font-normal border-0 outline-none focus:outline-none hover:border-0 active:border-0'
           >
             {t('login.forgotPassword')}

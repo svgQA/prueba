@@ -68,7 +68,6 @@ export class PlaceService extends BaseService {
       url: ['place', 'simple', 'list'],
       method: REQUEST_METHODS.GET,
     };
-    console.log(model);
     return await super.make_request<IOption>(this.name, model);
   }
 

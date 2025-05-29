@@ -1,5 +1,4 @@
-import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'preact/hooks';
 import { IFilesMemo, IFile, Memo } from '../../utils/memos';
 import { Avatar } from '@/components/common/Avatar';
 import SupervisorInfo from './supervisor.expandable';

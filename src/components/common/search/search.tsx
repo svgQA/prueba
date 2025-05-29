@@ -14,6 +14,7 @@ export const Search = ({
   table,
   group,
   grouping,
+  disabled = false,
 }: ISearchProps) => {
   const inputState = useSignal<string>('');
   const searchArray = useSignal<ColumnFiltersState>(value);
@@ -302,6 +303,7 @@ export const Search = ({
             }
           }}
           value={inputState.value}
+          disabled={disabled}
         />
       </div>
 
