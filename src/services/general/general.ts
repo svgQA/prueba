@@ -1,3 +1,4 @@
+import { IResource } from '@/pages/settings/access/resource/type';
 import { IPresignedRequest, IPresignedResponse } from '@/types/file';
 import { BaseService, IRequestModelOutput } from '@/utils/network';
 import { streamIAResponse } from '@/utils/network/sse.post';
@@ -23,6 +24,23 @@ export class GeneralService extends BaseService {
       data,
     };
     return await super.make_request<IPresignedResponse>(this.sname, model);
+  }
+
+  static async resource() {
+    const model: IMakeRequest = {
+      url: ['resource'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<IResource>(this.sname, model);
+  }
+
+  static async createResource(data: IResource) {
+    const model: IMakeRequest = {
+      url: ['resource'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<IResource>(this.sname, model);
   }
 
   static async streamQuery(

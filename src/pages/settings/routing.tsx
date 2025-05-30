@@ -71,6 +71,7 @@ import { TemplateNotificationEditPage } from './notifications/templateNotificati
 import { ScheduledNotificationEditPage } from './notifications/scheduleNotifications/update/update';
 import { PredefinedSettingPage } from './memo/predefined/predefined';
 import { PredefinedCreateSettingPage } from './memo/predefined/create/create';
+// import { ResourceCreateSettingPage } from './memo/resource/create/create';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -332,7 +333,15 @@ export const RoutingContent = memo(() => {
         />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.memo.predefined.to}
-          component={lazy(() => Promise.resolve({ default: PredefinedSettingPage }))}
+          component={lazy(() =>
+            Promise.resolve({ default: PredefinedSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.resource.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ResourceSettingPage })
+          )}
         />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.memo.predefined.create.to}
@@ -340,7 +349,7 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: PredefinedCreateSettingPage })
           )}
         />
-         <Route
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.memo.predefined.update.to}
           component={lazy(() =>
             Promise.resolve({ default: PredefinedCreateSettingPage })

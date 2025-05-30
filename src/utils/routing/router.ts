@@ -86,6 +86,18 @@ export const PAGES_LIST_ROUTER = {
             to: '/memo/predefined/update/:id',
           },
         },
+        resource: {
+          base: '/resource',
+          to: '/memo/resource',
+          create: {
+            base: '/resource/create',
+            to: '/memo/resource/create',
+          },
+          update: {
+            base: '/resource/update',
+            to: '/memo/resource/update/:id',
+          },
+        },
       },
       shifts: {
         base: '/rounds',
