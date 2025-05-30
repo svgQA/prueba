@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'preact/hooks';
-import { IFilesMemo, IFile, Memo, Resource, ExtraData } from '../../utils/memos';
+import {
+  IFilesMemo,
+  IFile,
+  Memo,
+  Resource,
+  ExtraData,
+} from '../../utils/memos';
 import { Avatar } from '@/components/common/Avatar';
 import { Badge } from '@/components/common/badge/badge';
 import { MemoService } from '@/services';
@@ -14,7 +20,10 @@ import { FormattedDate } from '@/components/compose/forms';
 import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 import { Card } from '@/components/common/card/card';
-import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
+import {
+  IOption,
+  SmartSelector,
+} from '@/components/common/smart-selector/smart-select';
 import { Field, Form } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
 import { DateField } from '@/components/compose/forms';
@@ -47,7 +56,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       MemoService.getMemosByHistory(memo.id.toString()),
       PredefinedService.getPredefined(),
     ]);
- 
+
     if (responseMemos.getStatus()) {
       // memos.value = responseMemos.getMany();
       const memosData = responseMemos.getMany();
@@ -106,8 +115,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
@@ -167,7 +176,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     if (response.getStatus()) {
       // Verificar si el memo ya existe antes de agregarlo
       const newMemoData = response.getOne();
-      const exists = memos.value.find(m => m.id === newMemoData.id);
+      const exists = memos.value.find((m) => m.id === newMemoData.id);
       if (!exists) {
         memos.value = [...memos.value, newMemoData];
       }
@@ -332,13 +341,25 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               <div className='flex items-center gap-2'>
                 <Badge
                   label={memo?.state}
-                  status={`${getStatusColor(memo.state)}` as 'info' | 'error' | 'warning' | 'success'}
+                  status={
+                    `${getStatusColor(memo.state)}` as
+                      | 'info'
+                      | 'error'
+                      | 'warning'
+                      | 'success'
+                  }
                   full
                   outline
                 />
                 <Badge
                   label={memo?.priority?.toString()}
-                  status={`${getPriorityColor(memo.priority?.toString() || '')}` as 'info' | 'error' | 'warning' | 'success'}
+                  status={
+                    `${getPriorityColor(memo.priority?.toString() || '')}` as
+                      | 'info'
+                      | 'error'
+                      | 'warning'
+                      | 'success'
+                  }
                   full
                   outline
                 />
@@ -384,14 +405,16 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           <div className='mt-3'>
             <Button
               label={btnLabel}
-              icon={btnLabel === 'SOLVE' || btnLabel === 'RESOLVED' ? '023' : '024'}
+              icon={
+                btnLabel === 'SOLVE' || btnLabel === 'RESOLVED' ? '023' : '024'
+              }
               disabled={btnLabel === 'RESOLVED'}
               onClick={() =>
                 showAlert({
                   title: btnLabel,
                   message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
                   onConfirm: () => handleCheck(),
-                  onCancel: () => { },
+                  onCancel: () => {},
                 })
               }
               name={btnLabel}
@@ -406,42 +429,50 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       {/* Chat Messages */}
       <div className='px-4 py-2 border-t border-b-light-dark dark:border-b-dark-light'>
         <div className='space-y-3'>
-          {memos.value
-            .map((memo: Memo) => (
-              <div key={memo.id} className='flex gap-3'>
-                <Avatar
-                  name={memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'}
-                  size='sm'
-                  square
-                />
-                <div className='flex-1'>
-                  <div className='flex items-center gap-2 mb-1'>
-                    <span className='font-medium text-t-light dark:text-t-dark text-sm'>
-                      {memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'}
-                    </span>
-                    <span className='text-xs text-gray-text-light dark:text-t-dark-light'>
-                      <FormattedDate date={memo.updatedAt} format='datetime' />
-                    </span>
-                  </div>
-                  <div onClick={() => setExpandedMemoId(expandedMemoId === memo.id ? null : memo.id)}>
-                    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-3'>
-                      <div className='flex items-start gap-3'>
-                        <div className='flex-1'>
-                          <div className='flex items-center gap-2 mb-2'>
-                            <span className='vox-icon size-sm vx-icon-113 text-primary' />
-                            <span className='text-sm text-t-light dark:text-t-dark'>
-                              {memo.description}
-                            </span>
-                          </div>
-                          {memo.extraData && (
-                            <div className='flex flex-wrap gap-2 text-xs text-t-light dark:text-t-dark'>
-                              {memo.extraData.predefined && (
-                                <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
-                                  <span className='vox-icon size-sm vx-icon-233 text-primary' />
-                                  {memo.extraData.predefined.label}
-                                </span>
-                              )}
-                              {/* {memo.extraData.category && (
+          {memos.value.map((memo: Memo) => (
+            <div key={memo.id} className='flex gap-3'>
+              <Avatar
+                name={
+                  memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'
+                }
+                size='sm'
+                square
+              />
+              <div className='flex-1'>
+                <div className='flex items-center gap-2 mb-1'>
+                  <span className='font-medium text-t-light dark:text-t-dark text-sm'>
+                    {memo.user?.name + ' ' + memo.user?.surname ||
+                      'Unknown User'}
+                  </span>
+                  <span className='text-xs text-gray-text-light dark:text-t-dark-light'>
+                    <FormattedDate date={memo.updatedAt} format='datetime' />
+                  </span>
+                </div>
+                <div
+                  onClick={() =>
+                    setExpandedMemoId(
+                      expandedMemoId === memo.id ? null : memo.id
+                    )
+                  }
+                >
+                  <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-3'>
+                    <div className='flex items-start gap-3'>
+                      <div className='flex-1'>
+                        <div className='flex items-center gap-2 mb-2'>
+                          <span className='vox-icon size-sm vx-icon-113 text-primary' />
+                          <span className='text-sm text-t-light dark:text-t-dark'>
+                            {memo.description}
+                          </span>
+                        </div>
+                        {memo.extraData && (
+                          <div className='flex flex-wrap gap-2 text-xs text-t-light dark:text-t-dark'>
+                            {memo.extraData.predefined && (
+                              <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
+                                <span className='vox-icon size-sm vx-icon-233 text-primary' />
+                                {memo.extraData.predefined.label}
+                              </span>
+                            )}
+                            {/* {memo.extraData.category && (
                               <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
                                 <span className='vox-icon size-sm vx-icon-234 text-primary' />
                                 {memo.extraData.category.label}
@@ -453,48 +484,50 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                                 {memo.extraData.resolution.label}
                               </span>
                             )} */}
-                              {memo.extraData.duration && (
-                                <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
-                                  <span className='vox-icon size-sm vx-icon-236 text-primary' />
-                                  {memo.extraData.duration}
+                            {memo.extraData.duration && (
+                              <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
+                                <span className='vox-icon size-sm vx-icon-236 text-primary' />
+                                {memo.extraData.duration}
+                              </span>
+                            )}
+                            {memo.extraData.time && (
+                              <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
+                                <span className='vox-icon size-sm vx-icon-237 text-primary' />
+                                {DateUtils.dateToFrontend(memo.extraData.time, {
+                                  format: 'DD/MM/YYYY HH:mm',
+                                })}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        {memo.attachments && memo.attachments.length > 0 && (
+                          <div className='mt-2 flex flex-wrap gap-2'>
+                            {memo.attachments.map((attachment, idx) => (
+                              <a
+                                key={idx}
+                                href={attachment.url}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
+                              >
+                                <span className='vox-icon size-sm vx-icon-311 px-1' />
+                                <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
+                                  {attachment.name}
                                 </span>
-                              )}
-                              {memo.extraData.time && (
-                                <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
-                                  <span className='vox-icon size-sm vx-icon-237 text-primary' />
-                                  {DateUtils.dateToFrontend(memo.extraData.time, {
-                                    format: 'DD/MM/YYYY HH:mm'
-                                  })}
-                                </span>
-                              )}
-                            </div>
-                          )}
-                          {memo.attachments && memo.attachments.length > 0 && (
-                            <div className='mt-2 flex flex-wrap gap-2'>
-                              {memo.attachments.map((attachment, idx) => (
-                                <a
-                                  key={idx}
-                                  href={attachment.url}
-                                  target='_blank'
-                                  rel='noopener noreferrer'
-                                  className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
-                                >
-                                  <span className='vox-icon size-sm vx-icon-311 px-1' />
-                                  <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
-                                    {attachment.name}
-                                  </span>
-                                </a>
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                              </a>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
-                    {expandedMemoId === memo.id && memo.resource && showFiles(memo.resource)}
                   </div>
+                  {expandedMemoId === memo.id &&
+                    memo.resource &&
+                    showFiles(memo.resource)}
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
           {memos.value.length === 0 && (
             <div className='flex justify-center items-center h-20'>
               <p className='text-gray-text-light dark:text-t-dark-light text-sm'>
@@ -510,7 +543,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         <Form
           onSubmit={handleSubmitMessage}
           render={({ handleSubmit, form }) => (
-            <form 
+            <form
               onSubmit={async (e) => {
                 e.preventDefault();
                 await handleSubmit();
@@ -518,7 +551,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                 setMessage('');
                 setFiles([]);
                 setShowAdditionalInfo(false);
-              }} 
+              }}
               className='p-4'
             >
               <div className='space-y-4'>
@@ -542,7 +575,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                 <div className='relative'>
                   <Button
                     name='toggle-additional-info'
-                    label={showAdditionalInfo ? 'Ocultar información adicional' : 'Más información'}
+                    label={
+                      showAdditionalInfo
+                        ? 'Ocultar información adicional'
+                        : 'Más información'
+                    }
                     icon='233'
                     onClick={() => setShowAdditionalInfo(!showAdditionalInfo)}
                   />

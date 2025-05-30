@@ -1,6 +1,9 @@
 import { Card } from '@/components/common/card/card';
 import { memo } from 'react';
 import edificioImagen from '../../../../assets/image/edificio.jpg';
+import { Button } from '@/components/common/button/button';
+import { Badge } from '@/components/common/badge/badge';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 type CardProps = {
   title: string;
@@ -8,32 +11,38 @@ type CardProps = {
   imageUrl: string;
   icon?: string;
   onEdit: () => void;
+  type: string;
+  link: string;
 };
 
 export const CardAccess = memo(
-  ({ title, subtitle, imageUrl, icon, onEdit }: CardProps) => (
-    <Card name='relative flex gap-4 p-4 max-w-md hover:bg-gray-50/50 transition-colors'>
-      <div className='w-128 h-40 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center'>
-        <img
-          src={imageUrl || edificioImagen}
-          alt={title}
-          className='w-full h-full object-cover'
-        />
-      </div>
-      <div className='flex-1 min-w-0 pr-8 ml-4'>
-        <h3 className='font-semibold text-lg text-gray-900 mb-4 mt-4'>
-          {title}
-        </h3>
-        <p className='text-sm text-gray-600 line-clamp-2 mb-4'>{subtitle}</p>
-      </div>
-      <div className='flex justify-end mt-4'>
-        <button
-          onClick={onEdit}
-          className='p-2 rounded-full shadow-sm hover:bg-gray-300 transition-colors border-none'
-          aria-label='Edit'
-        >
-          <span className={`vox-icon vx-icon-${icon} text-xs`}></span>
-        </button>
+  ({ title, subtitle, imageUrl, icon, onEdit, type, link }: CardProps) => (
+    <Card>
+      <div className='flex flex-row min-h-24'>
+        <div className='min-h-full'>
+          <img
+            src={imageUrl || edificioImagen}
+            alt={title}
+            className='object-cover h-full w-full'
+          />
+        </div>
+        <div className='flex flex-col justify-between min-h-full px-1'>
+          <div className=''>
+            <h3 className='font-semibold text-lg'>{title}</h3>
+            <TextEllipsis text={subtitle} maxWidth='250px' />
+            <TextEllipsis text={link} maxWidth='250px' />
+          </div>
+          <div className='flex flex-row justify-between items-center'>
+            <Badge color='primary' label={type} outline />
+            <Button
+              icon={icon}
+              onClick={onEdit}
+              name='button-card'
+              borderless
+              iconSize='sm'
+            />
+          </div>
+        </div>
       </div>
     </Card>
   )

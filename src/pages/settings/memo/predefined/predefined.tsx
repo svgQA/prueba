@@ -8,7 +8,10 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { menuInformationSelected as infoMenu, setMenu, } from '../../store/settings';
+import {
+  menuInformationSelected as infoMenu,
+  setMenu,
+} from '../../store/settings';
 import { IPredefined, IRowActionPlace } from './utils/predefined.d';
 import { PredefinedService } from '@/services/shift/predefined';
 

@@ -1,4 +1,4 @@
-import { IOption } from "@/components/common/smart-selector/smart-select";
+import { IOption } from '@/components/common/smart-selector/smart-select';
 
 export interface Memo {
   id: number;
