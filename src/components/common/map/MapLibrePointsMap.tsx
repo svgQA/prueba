@@ -8,6 +8,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { IMapProps, MapPoint } from './interface';
 import { themeSignal } from '@/components/compose/button/signal.theme';
 import { useTranslation } from 'react-i18next';
+import './style.css';
 
 export const MapLibrePointsMap = ({
   pointsAmount = 100,
@@ -299,17 +300,17 @@ export const MapLibrePointsMap = ({
       cursor: pointer;
     ">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="38" viewBox="0 0 24 38">
-        <path fill="${markerColor}" 
+        <path fill="${markerColor}"
               d="M12 0C5.4 0 0 5.4 0 12c0 6.5 12 25 12 25s12-18.5 12-25c0-6.6-5.4-12-12-12z" />
         <circle fill="#FFFFFF" cx="12" cy="12" r="9" />
-        <text 
-          fill="${markerColor}" 
-          x="${isUserLocation ? 8 : index + 1 >= 10 ? 5 : 10}" 
-          y="12.5" 
-          fontFamily="Arial, sans-serif" 
-          fontSize="10" 
-          fontWeight="bold" 
-          textAnchor="middle" 
+        <text
+          fill="${markerColor}"
+          x="${isUserLocation ? 8 : index + 1 >= 10 ? 5 : 10}"
+          y="12.5"
+          fontFamily="Arial, sans-serif"
+          fontSize="10"
+          fontWeight="bold"
+          textAnchor="middle"
           dy=".3em"
         >${isUserLocation ? 'U' : index + 1}</text>
       </svg>
@@ -519,7 +520,7 @@ export const MapLibrePointsMap = ({
         <div class="flex flex-col mb-2">
           <label class="text-sm mb-1">Latitude</label>
           <input id="edit-lat" type="text" value="${point.position.lat}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''}/>
-          
+
           <label class="text-sm mb-1 mt-2">Longitude</label>
           <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>

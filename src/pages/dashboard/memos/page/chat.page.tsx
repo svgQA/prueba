@@ -173,11 +173,13 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               <div className='flex gap-2'>
                 <Button
                   name='users'
+                  icon='321'
                   onClick={() => (viewMode.value = 'users')}
                   className={`flex-1 ${viewMode.value === 'users' ? 'bg-primary text-white' : 'bg-b-light-dark dark:bg-b-dark-light'}`}
                   label={t('memos.view.users')}
                 />
                 <Button
+                  icon='113'
                   name='services'
                   onClick={() => (viewMode.value = 'services')}
                   className={`flex-1 ${viewMode.value === 'services' ? 'bg-primary text-white' : 'bg-b-light-dark dark:bg-b-dark-light'}`}
