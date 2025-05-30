@@ -69,6 +69,8 @@ import { AreaCreatePage } from '../dashboard/users/areas/area.create';
 import ScheduledNotificationForm from './notifications/scheduleNotifications/create/create';
 import { TemplateNotificationEditPage } from './notifications/templateNotifications/update/update';
 import { ScheduledNotificationEditPage } from './notifications/scheduleNotifications/update/update';
+import { PredefinedSettingPage } from './memo/predefined/predefined';
+import { PredefinedCreateSettingPage } from './memo/predefined/create/create';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -326,6 +328,22 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.update.to}
           component={lazy(() =>
             Promise.resolve({ default: NoveltyCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.predefined.to}
+          component={lazy(() => Promise.resolve({ default: PredefinedSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.predefined.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: PredefinedCreateSettingPage })
+          )}
+        />
+         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.predefined.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: PredefinedCreateSettingPage })
           )}
         />
         {/* SERVICES MENU */}
