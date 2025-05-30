@@ -30,4 +30,5 @@ export interface ITableProps<T> {
   hasNotifications?: boolean;
   isSettingTable?: boolean;
   rowClassName?: (row: T) => string;
+  loading?: boolean;
 }

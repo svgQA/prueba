@@ -1,7 +1,6 @@
 import { IOption } from '../multi/interface';
 
 export interface INotificationsProps {
-  notifications: INotification[];
   icon: string;
   iconSize?: 'sm' | 'xsm' | 'xs' | 'xxs';
 }

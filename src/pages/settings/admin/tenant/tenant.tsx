@@ -1,6 +1,10 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
+import { TenantService } from '@/services/general/tenant';
+import { IInstance } from '@/utils/network/types';
+import { useSignal } from '@preact/signals';
+import { InstanceCard } from '@/components/compose/cards/instance.card';
 // import { tenantData } from './utils/tenant.data';
 // import { ITenantResponse } from '@/types/tenant';
 // import { CardData } from '@/components/compose/cards';
@@ -8,16 +12,26 @@ import { Section } from '@/components/common/section/section';
 // import { columns } from './components/tenant.columns';
 
 export const TenantSettingPage: FunctionComponent = () => {
+  const instances = useSignal<IInstance[]>([]);
+
   useEffect(() => {
     document.title = 'Tenant Settings';
     getTenant();
   }, []);
 
-  const getTenant = async () => {};
+  const getTenant = async () => {
+    const response = await TenantService.get_instances();
+    if (!response.getStatus()) return;
+    instances.value = response.getMany();
+  };
 
   return (
     <Section>
-      Tenants
+      <div className='flex flex-row gap-4 justify-center flex-wrap'>
+        {instances.value.map((instance) => (
+          <InstanceCard key={instance.id} instance={instance} />
+        ))}
+      </div>
       {/*
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData

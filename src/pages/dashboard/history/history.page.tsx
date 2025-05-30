@@ -17,7 +17,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
   const totalNotifications = useSignal<number>(0);
   const openRate = useSignal<number>(0);
   const notificationsThisMonth = useSignal<number>(0);
-
+  const loading = useSignal<boolean>(false);
   useEffect(() => {
     document.title = t('history.pageTitle');
     fetchAll();
@@ -29,10 +29,13 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
 
   const fetchNotifications = async () => {
     try {
+      loading.value = true;
       const res = await NotificationHistoryService.getNotificationList();
       notifications.value = res;
     } catch (error) {
       ToastManager.error(t('history.errors.loadHistory'));
+    } finally {
+      loading.value = false;
     }
   };
 
@@ -103,6 +106,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
         columns={getColumns(onClickAction)}
         pageSize={10}
         showExpandableIcon={false}
+        loading={loading.value}
       />
     </Section>
   );

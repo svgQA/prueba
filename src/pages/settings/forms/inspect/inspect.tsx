@@ -17,20 +17,24 @@ import { Table } from '@/components/common/table/table';
 import { appendHistory } from '../../store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
+import { Section } from '@/components/common/section/section';
 
 export const FormInspectSettingPage: FunctionComponent = () => {
   const responses = useSignal<IResponseResponse[]>([]);
   const { t } = useTranslation();
   const [_, navigate] = useLocation();
-
+  const loading = useSignal<boolean>(false);
   useEffect(() => {
     getResponseHandler();
   }, []);
 
   const getResponseHandler = async () => {
+    loading.value = true;
     const response = await FormService.get_response_all();
-    if (!response.getStatus()) return;
-    responses.value = response.getMany();
+    if (response.getStatus()) {
+      responses.value = response.getMany();
+    }
+    loading.value = false;
   };
 
   const navigateResponse = () => {
@@ -90,14 +94,15 @@ export const FormInspectSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <section className='pt-5'>
+    <Section>
       <Table<IResponseResponse>
         data={responses.value}
         columns={columns}
         pageSize={20}
         onClickAction={handleOnClick}
         isSettingTable
+        loading={loading.value}
       />
-    </section>
+    </Section>
   );
 };

@@ -1,8 +1,7 @@
 import { Memo } from '@/pages/dashboard/memos/utils/memos';
 import { IPagination } from '@/types';
 import { ICheckRequest } from '@/types/memo/memo.request';
-import { BaseService, IRequestModelOutput } from '@/utils/network';
-import { streamIAResponse } from '@/utils/network/sse.post';
+import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
   REQUEST_METHODS,
@@ -66,7 +65,9 @@ export class MemoService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async get_all_by_service(params: IPagination = { page: 1, items: 400 }) {
+  static async get_all_by_service(
+    params: IPagination = { page: 1, items: 400 }
+  ) {
     const model: IMakeRequest = {
       url: ['memo', 'grouped-by-service'],
       params: params as any,
@@ -74,34 +75,14 @@ export class MemoService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async get_all_by_service_id(serviceId: string, params: IPagination = { page: 1, items: 400 }) {
+  static async get_all_by_service_id(
+    serviceId: string,
+    params: IPagination = { page: 1, items: 400 }
+  ) {
     const model: IMakeRequest = {
       url: ['memo', 'by-service', serviceId],
       params: params as any,
     };
     return await super.make_request(this.name, model);
-  }
-
-  static async streamQuery(
-    onData: (chunk: string) => void,
-    onDone?: () => void,
-    onError?: (err: any) => void,
-    prompt: string = ''
-  ) {
-    const model: IRequestModelOutput = this.make_request_model(
-      'memo',
-      {
-        url: ['memo', 'stream', 'history'],
-        method: REQUEST_METHODS.POST,
-        data: { prompt },
-      },
-      false
-    );
-
-    try {
-      await streamIAResponse(model, onData, onDone, onError);
-    } catch (error) {
-      onError?.(error);
-    }
   }
 }

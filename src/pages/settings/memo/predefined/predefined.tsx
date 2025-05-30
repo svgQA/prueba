@@ -2,65 +2,52 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
-import { columns } from './components/novelty.columns';
+import { columns } from './components/predefined';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
-
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
-import { NoveltyService } from '@/services';
+import { IPredefined, IRowActionPlace } from './utils/predefined.d';
+import { PredefinedService } from '@/services/shift/predefined';
 
-export interface INovelty {
-  id: number;
-  name: string;
-  description: string;
-  priority: string;
-}
-
-export interface IRowActionPlace {
-  id: string;
-  type: string;
-  action: ROW_ACTIONS;
-}
-
-export const NoveltySettingPage: FunctionComponent = () => {
+export const PredefinedSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const novelties: Signal<INovelty[]> = useSignal([]);
+  const predefined: Signal<IPredefined[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
   useEffect(() => {
-    document.title = 'VX - Novelty Service';
-    getNovelties();
+    document.title = 'VX - Predefined Service';
+    getPredefined();
   }, []);
 
-  const getNovelties = async () => {
+  const getPredefined = async () => {
     loading.value = true;
-    const request: any = await NoveltyService.getNovelty();
+    const request: any = await PredefinedService.getPredefined();
     if (request.getStatus()) {
-      novelties.value = request.getMany();
+      predefined.value = request.getMany();
     }
     loading.value = false;
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de novedad' });
-    navigate('/memo/novelty/create');
+    setMenu({ ...infoMenu.value, label: 'Creacion de predefinido' });
+    navigate('/memo/predefined/create');
   };
 
   const update = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar novedad' });
-    navigate(`/memo/novelty/update/${id}`);
+    setMenu({ ...infoMenu.value, label: 'Editar predefinido' });
+    navigate(`/memo/predefined/update/${id}`);
   };
 
-  const deleteNovelty = async (id: string) => {
-    const request = await NoveltyService.deleteNovelty(id);
+  const deletePredefined = async (id: string) => {
+    const request = await PredefinedService.deletePredefined(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Novedad eliminado');
-    getNovelties();
+    ToastManager.success('Predefinido eliminado');
+    getPredefined();
   };
 
   const handleOnClick = async (action: IRowActionPlace | any) => {
@@ -69,7 +56,7 @@ export const NoveltySettingPage: FunctionComponent = () => {
         update(action.id);
         break;
       case ROW_ACTIONS.DELETE:
-        await deleteNovelty(action.id);
+        await deletePredefined(action.id);
         break;
     }
   };
@@ -80,15 +67,15 @@ export const NoveltySettingPage: FunctionComponent = () => {
         <div className='flex flex-row items-center justify-between'>
           <Button
             name='button-create-shift'
-            label='Nueva Novedad'
+            label='Nuevo Predefinido'
             icon='039'
             onClick={redirect}
             className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
           />
         </div>
       </div>
-      <Table<INovelty>
-        data={novelties.value}
+      <Table<IPredefined>
+        data={predefined.value}
         columns={columns}
         pageSize={20}
         visibility={{

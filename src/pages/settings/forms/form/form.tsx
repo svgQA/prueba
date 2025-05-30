@@ -25,7 +25,7 @@ export const FormSettingPage = () => {
   const forms = useSignal<IFormResponse[]>([]);
   const [_, navigate] = useLocation();
   const [hasUnfinishedForm, setHasUnfinishedForm] = useState(false);
-
+  const loading = useSignal<boolean>(false);
   useEffect(() => {
     getFormsHandler();
     checkUnfinishedForm();
@@ -45,9 +45,12 @@ export const FormSettingPage = () => {
   };
 
   const getFormsHandler = async () => {
+    loading.value = true;
     const response = await FormService.get_all();
-    if (!response.getStatus()) return;
-    forms.value = response.getMany();
+    if (response.getStatus()) {
+      forms.value = response.getMany();
+    }
+    loading.value = false;
   };
 
   const navigateReport = () => {
@@ -196,6 +199,7 @@ export const FormSettingPage = () => {
         pageSize={10}
         onClickAction={handleOnClick}
         isSettingTable
+        loading={loading.value}
       />
     </Section>
   );

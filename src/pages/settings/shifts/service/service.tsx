@@ -33,15 +33,19 @@ export interface IRowActionPlace {
 export const ServiceSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const novelties: Signal<IServicio[]> = useSignal([]);
-
+  const loading = useSignal<boolean>(false);
   useEffect(() => {
     document.title = 'VX - Servie Service';
     getServices();
   }, []);
 
   const getServices = async () => {
+    loading.value = true;
     const request: any = await ServiceService.getServices();
-    novelties.value = request.data;
+    if (request.getStatus()) {
+      novelties.value = request.getMany();
+    }
+    loading.value = false;
   };
 
   const redirect = () => {
@@ -104,8 +108,8 @@ export const ServiceSettingPage: FunctionComponent = () => {
           id: false,
         }}
         onClickAction={handleOnClick}
-        unsearch={false}
         isSettingTable
+        loading={loading.value}
       />
     </Section>
   );

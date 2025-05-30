@@ -46,9 +46,9 @@ export const PlannerView: FunctionalComponent<{
           setIsStreaming(false);
           ToastManager.success('Stream completado');
         },
-        (error) => {
+        (_) => {
           setIsStreaming(false);
-          console.log('Stream error:', error);
+          // console.log('Stream error:', error);
           // TODO: Cambiar para que BaseService muestre el error
           //ToastManager.error(`Error en el stream: ${error.message}`);
         }

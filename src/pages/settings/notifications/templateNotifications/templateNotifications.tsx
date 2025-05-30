@@ -9,14 +9,19 @@ import { appendHistory } from '../../store/settings';
 import { getColumns } from './components/template.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { useSignal } from '@preact/signals';
 
 export const TemplateNotificationPage = () => {
   const [templates, setTemplates] = useState<any[]>([]);
   const [_, navigate] = useLocation();
-
+  const loading = useSignal<boolean>(false);
   const fetchTemplates = async () => {
+    loading.value = true;
     const res = await TemplateService.getTemplates();
-    if (res.getStatus()) setTemplates(res.getMany());
+    if (res.getStatus()) {
+      setTemplates(res.getMany());
+    }
+    loading.value = false;
   };
 
   useEffect(() => {
@@ -85,8 +90,8 @@ export const TemplateNotificationPage = () => {
         data={templates}
         columns={getColumns(handleOnClick)}
         pageSize={10}
-        unsettings
-        visibility={{}}
+        isSettingTable
+        loading={loading.value}
       />
     </Section>
   );

@@ -17,10 +17,12 @@ import {
 } from '../../store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { RoundService } from '@/services';
+import { useSignal } from '@preact/signals';
 
 export const RoundsSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const [rounds, setRounds] = useState([]);
+  const loading = useSignal<boolean>(false);
 
   const redirect = () => {
     const menu = {
@@ -39,6 +41,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   }, []);
 
   const getRounds = async () => {
+    loading.value = true;
     const request: any = await RoundService.getRounds();
 
     const rounds = request.data.map((item: any) => {
@@ -63,6 +66,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
     });
 
     setRounds(rounds);
+    loading.value = false;
   };
 
   const deleteRound = async (id: string) => {
@@ -119,6 +123,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
         onClickAction={handleOnClick}
         unsearch={false}
         isSettingTable
+        loading={loading.value}
       />
     </Section>
   );

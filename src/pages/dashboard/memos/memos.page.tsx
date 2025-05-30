@@ -26,10 +26,15 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
-import { EventBus } from '@/utils/network/event.bus';
 import { FloatBadge } from '@/components/common/badge/float';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { DateUtils } from '@/utils/utilities/dates';
+import {
+  IBaseSSE,
+  SSE_EVENTS,
+  SSE_TYPE,
+  SseManager,
+} from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/event.bus';
 
 enum VIEW_NAME {
   TABLE,
@@ -46,7 +51,9 @@ export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
   const [location] = useLocation();
-  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(null);
+  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(
+    null
+  );
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
@@ -55,7 +62,7 @@ export const MemosPage: FunctionComponent = () => {
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
-
+  const loading = useSignal<boolean>(false);
   //notifications
   const [notificationMemo, setNotificationMemo] = useState<number>(0);
   const [showReload, setShowReload] = useState<boolean>(false);
@@ -78,6 +85,7 @@ export const MemosPage: FunctionComponent = () => {
       fetchInitialData();
       fetchSSE();
       selectedMemo();
+      EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
     }
   }, [selectedCompany, location]);
 
@@ -88,19 +96,29 @@ export const MemosPage: FunctionComponent = () => {
       if (id) setHighlightedMemoId(Number(id));
     };
 
-    window.addEventListener('notification-click', handleNotificationClick as EventListener);
+    window.addEventListener(
+      'notification-click',
+      handleNotificationClick as EventListener
+    );
 
     // Get memoId from URL on initial load
     const urlParams = new URLSearchParams(window.location.search);
     const memoId = urlParams.get('notificationId');
     if (memoId) setHighlightedMemoId(Number(memoId));
   };
-  
-  const handleMemoSSE = (chunk: string) => {
-    const data = JSON.parse(chunk);
-    const { name, message } = data[0];
 
-    if (name && message && (name === 'create-parent' || name === 'update' || name === 'update-check')) {
+  const fetchSSE = useCallback(async () => {
+    await SseManager.getQuery(['memo', 'stream', 'history']);
+  }, []);
+
+  const handleMemoSSE = (event: IBaseSSE) => {
+    const { name, message } = event;
+
+    if (
+      name === SSE_EVENTS.CREATE_PARENT ||
+      name === SSE_EVENTS.UPDATE ||
+      name === SSE_EVENTS.UPDATE_CHECK
+    ) {
       const memoIndex = memos.value.findIndex((memo) => memo.id === message.id);
       if (memoIndex < 0) return;
       const memoCopy = memos.value;
@@ -118,23 +136,16 @@ export const MemosPage: FunctionComponent = () => {
       setIsAnimating(true);
       setTimeout(() => setIsAnimating(false), 1000);
     }
-
-    EventBus.emit({
-      id: message.id,
-      icon: '077',
-      redirect: PAGES_LIST_ROUTER.dashboard.memos,
-      type: (name === 'update-check' || name === 'create') ? 'notification' : name,
-      data: (name === 'update-check') ? message.state : message.novelty?.name,
-      label: (name === 'update-check') ? t('notification.memo_state') : t('notification.memo'),
-    });
   };
 
-  const fetchSSE = useCallback(async () => {
-    await MemoService.streamQuery((chunk: string) => handleMemoSSE(chunk));
-  }, []);
-
   const fetchInitialData = async () => {
-    const [responseMemos, responseUsers, responseSummary, responseGroupedByService] = await Promise.all([
+    loading.value = true;
+    const [
+      responseMemos,
+      responseUsers,
+      responseSummary,
+      responseGroupedByService,
+    ] = await Promise.all([
       MemoService.get_all({ page: 1, items: 1000 }),
       UserService.get_all_employee({ items: 20, page: 1 }),
       MemoService.getMemosSummary(),
@@ -152,6 +163,7 @@ export const MemosPage: FunctionComponent = () => {
           format: 'DD/MM/YYYY',
         }),
       }));
+      loading.value = false;
     }
 
     if (responseUsers.getStatus()) {
@@ -319,12 +331,13 @@ export const MemosPage: FunctionComponent = () => {
         </div>
 
         {currentView.value === VIEW_NAME.TABLE && (
-          <Table
+          <Table<Memo>
             data={memos.value}
             columns={getColumns(onClickAction)}
             showExpandableIcon
             pageSize={20}
             selectable
+            loading={loading.value}
             expandable={(row: Memo, column?: string) => (
               <ExpandableMultiple type={column || 'supervisor'} data={row} />
             )}
@@ -336,12 +349,18 @@ export const MemosPage: FunctionComponent = () => {
               contact: false,
               updatedAt: false,
             }}
-            rowClassName={(row: Memo) => row.id === highlightedMemoId ? 'animate-highlight' : ''}
+            rowClassName={(row: Memo) =>
+              row.id === highlightedMemoId ? 'animate-highlight' : ''
+            }
           />
         )}
       </div>
       {currentView.value === VIEW_NAME.CHAT && (
-        <ChatView users={users.value} getUsersHandler={getUsersHandler} memosGroupedByService={memosGroupedByService.value} />
+        <ChatView
+          users={users.value}
+          getUsersHandler={getUsersHandler}
+          memosGroupedByService={memosGroupedByService.value}
+        />
       )}
     </Section>
   );

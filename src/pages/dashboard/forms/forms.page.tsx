@@ -26,17 +26,22 @@ export const FormsPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const responses = useSignal<IResponseResponse[]>([]);
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
-
+  const loading = useSignal<boolean>(false);
   useEffect(() => {
     document.title = t('forms.pageTitle');
     getResponseHandler();
   }, []);
 
   const getResponseHandler = async () => {
+    loading.value = true;
     const response = await FormService.get_response_all();
-    if (!response.getStatus()) return;
+    if (!response.getStatus()) {
+      loading.value = false;
+      return;
+    }
     const data = response.getMany();
     responses.value = data;
+    loading.value = false;
   };
 
   const handleOnClick = async (action: IRowAction) => {
@@ -164,6 +169,7 @@ export const FormsPage: FunctionComponent = () => {
             columns={getColumns(handleOnClick)}
             pageSize={20}
             onClickAction={handleOnClick}
+            loading={loading.value}
           />
         )}
         {(currentView.value === VIEW_NAME.INSPECT ||

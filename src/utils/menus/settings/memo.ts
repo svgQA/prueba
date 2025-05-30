@@ -16,5 +16,23 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
       id: 'novelty',
       show: true,
     },
+    {
+      icon: '115',
+      label: 'Predefined',
+      description: 'Predefinidos',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.memo.predefined.base,
+      id: 'predefined',
+      show: true,
+    },
+    {
+      icon: '115',
+      label: 'Resource',
+      description: 'Recursos',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.memo.resource.base,
+      id: 'resource',
+      show: true,
+    },
   ],
 };

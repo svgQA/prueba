@@ -16,6 +16,7 @@ import {
   setMenu,
 } from '../../store/settings';
 import { PlaceService } from '@/services';
+import { useSignal } from '@preact/signals';
 
 export interface IRowActionPlace {
   id: string;
@@ -26,6 +27,7 @@ export interface IRowActionPlace {
 export const PlacesSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const [places, setPlaces] = useState([]);
+  const loading = useSignal<boolean>(false);
 
   useEffect(() => {
     document.title = 'VX - Place Service';
@@ -33,8 +35,12 @@ export const PlacesSettingPage: FunctionComponent = () => {
   }, []);
 
   const getPlaces = async () => {
+    loading.value = true;
     const request: any = await PlaceService.getPlaces();
-    setPlaces(request.data);
+    if (request.getStatus()) {
+      setPlaces(request.getMany());
+    }
+    loading.value = false;
   };
 
   const redirect = () => {
@@ -97,8 +103,8 @@ export const PlacesSettingPage: FunctionComponent = () => {
           id: false,
         }}
         onClickAction={handleOnClick}
-        unsearch={false}
         isSettingTable
+        loading={loading.value}
       />
     </Section>
   );

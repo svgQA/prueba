@@ -1,3 +1,5 @@
+import { IOption } from '@/components/common/smart-selector/smart-select';
+
 export interface Memo {
   id: number;
   noveltyId?: number;
@@ -49,6 +51,7 @@ export interface Memo {
   user: User;
   messages: number;
   userEdit: any;
+  children: Memo[];
 }
 
 export interface Novelty {
@@ -115,6 +118,11 @@ export interface ExtraData {
     name: string;
     description: string;
   };
+  predefined?: IOption;
+  category?: IOption;
+  resolution?: IOption;
+  duration?: number;
+  time?: string;
 }
 
 export interface Resource {
