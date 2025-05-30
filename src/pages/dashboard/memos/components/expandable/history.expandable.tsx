@@ -525,7 +525,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                 {/* Main Comment Area - Always Visible */}
                 <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4'>
                   <Field<string> name='message'>
-                    {({ input }) => (
+                    {({}) => (
                       <TextArea
                         name='message'
                         placeholder='Escribe un Comentario...'
