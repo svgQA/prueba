@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'preact/hooks';
 import { IFilesMemo, IFile, Memo, Resource, ExtraData } from '../../utils/memos';
 import { Avatar } from '@/components/common/Avatar';
-import SupervisorInfo from './supervisor.expandable';
 import { Badge } from '@/components/common/badge/badge';
 import { MemoService } from '@/services';
 import { File } from '@/components/common/file/file';
 import { TextArea } from '@/components/common/text.area/text.area';
-import { useSignal } from '@preact/signals';
+import { Signal, useSignal } from '@preact/signals';
 import { Button } from '@/components/common/button/button';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
@@ -16,11 +15,11 @@ import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 import { Card } from '@/components/common/card/card';
 import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
-import { Field, Form, useFormState } from 'react-final-form';
-import { ChatMessage } from '../chat.message';
+import { Field, Form } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
 import { DateField } from '@/components/compose/forms';
 import { DateUtils } from '@/utils/utilities/dates';
+import { PredefinedService } from '@/services/shift/predefined';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -29,6 +28,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [message, setMessage] = useState('');
   const [btnLabel, setBtnLabel] = useState('Check In');
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+  const predefined: Signal<IOption[]> = useSignal([]);
 
   useEffect(() => {
     fetchInitialData();
@@ -43,10 +43,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   };
 
   const fetchInitialData = async () => {
-    const [responseMemos] = await Promise.all([
+    const [responseMemos, responsePredefined] = await Promise.all([
       MemoService.getMemosByHistory(memo.id.toString()),
+      PredefinedService.getPredefined(),
     ]);
-
+ 
     if (responseMemos.getStatus()) {
       // memos.value = responseMemos.getMany();
       const memosData = responseMemos.getMany();
@@ -66,6 +67,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           const dateB = new Date(b.updatedAt || b.createdAt || 0);
           return dateA.getTime() - dateB.getTime();
         });
+    }
+
+    if (responsePredefined.getStatus()) {
+      predefined.value = responsePredefined.getMany().map((item: any) => ({
+        label: item.name,
+        value: item.id,
+      }));
     }
 
     getStatus(memo?.state || '');
@@ -579,11 +587,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                                       id='select-predefined'
                                       placeholder='Opciones predefinidas'
                                       label='Opciones predefinidas'
-                                      options={[
-                                        { label: 'Opción 1', value: '1' },
-                                        { label: 'Opción 2', value: '2' },
-                                        { label: 'Opción 3', value: '3' },
-                                      ]}
+                                      options={predefined.value}
                                       menuPortalTarget={document.body}
                                       end={false}
                                     />
