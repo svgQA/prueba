@@ -69,7 +69,7 @@ export class MemoService extends BaseService {
     params: IPagination = { page: 1, items: 400 }
   ) {
     const model: IMakeRequest = {
-      url: ['memo', 'grouped-by-service'],
+      url: ['memo', 'grouped-by-service-memo'],
       params: params as any,
     };
     return await super.make_request(this.name, model);
@@ -80,7 +80,7 @@ export class MemoService extends BaseService {
     params: IPagination = { page: 1, items: 400 }
   ) {
     const model: IMakeRequest = {
-      url: ['memo', 'by-service', serviceId],
+      url: ['memo', 'by-service-memo', serviceId],
       params: params as any,
     };
     return await super.make_request(this.name, model);
