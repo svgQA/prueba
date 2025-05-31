@@ -220,8 +220,8 @@ export const MemosPage: FunctionComponent = () => {
           selected={currentView.value === VIEW_NAME.CHAT}
           icon='418'
         />
-        <Button name='button-change-scheduler' rounded={false} icon='331' />
-        <Button name='button-change-scheduler' rounded={false} icon='314' />
+        {/* <Button name='button-change-scheduler' rounded={false} icon='331' />
+        <Button name='button-change-scheduler' rounded={false} icon='314' /> */}
       </div>
     ),
     [currentView.value]
