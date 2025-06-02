@@ -341,7 +341,7 @@ export const MemosPage: FunctionComponent = () => {
             selectable
             loading={loading.value}
             expandable={(row: Memo, column?: string) => (
-              <ExpandableMultiple type={column || 'supervisor'} data={row} />
+              <ExpandableMultiple type={column} data={row} />
             )}
             visibility={{
               id: false,
@@ -350,6 +350,9 @@ export const MemosPage: FunctionComponent = () => {
               noveltyDate: false,
               contact: false,
               updatedAt: false,
+            }}
+            searchable={{
+              history: false,
             }}
             rowClassName={(row: Memo) =>
               row.id === highlightedMemoId ? 'animate-highlight' : ''
