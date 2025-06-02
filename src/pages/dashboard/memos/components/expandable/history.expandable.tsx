@@ -594,7 +594,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           )}
 
           {/* Dates Section */}
-          <div className='flex items-center gap-2 rounded-lg p-0 shadow-sm h-[40px] min-w-[140px]'>
+          <div className='flex items-center gap-2 rounded-lg p-0 h-[40px] min-w-[140px]'>
             <div className='w-1 h-full bg-primary rounded-full' />
             <div>
               <p className='font-medium text-t-light dark:text-t-dark text-xs'>
@@ -606,7 +606,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
             </div>
           </div>
 
-          <div className='flex items-center gap-2 rounded-lg p-0 shadow-sm h-[40px] min-w-[140px]'>
+          <div className='flex items-center gap-2 rounded-lg p-0 h-[40px] min-w-[140px]'>
             <div className='w-1 h-full bg-primary rounded-full' />
             <div>
               <p className='font-medium text-t-light dark:text-t-dark text-xs'>
