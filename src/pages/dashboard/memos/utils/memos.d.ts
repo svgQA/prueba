@@ -52,6 +52,8 @@ export interface Memo {
   messages: number;
   userEdit: any;
   children: Memo[];
+  relatedShift?: IShiftResponse;
+  relatedShiftId: number;
 }
 
 export interface Novelty {

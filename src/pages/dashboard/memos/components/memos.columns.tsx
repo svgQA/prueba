@@ -30,15 +30,17 @@ export const getColumns = (
 ): CustomColumnDef<Memo>[] => [
   {
     id: 'name',
-    accessorFn: (row) => `${row?.extraData?.client.name}`,
+    // accessorFn:(row) => `${row?.extraData?.client.name}`,
     header: 'Usuario',
+    accessorKey: 'user.name',
     enableGrouping: true,
     cell: (info) => {
-      const name = info.getValue() as string;
+      // const name = info.getValue() as string;
+      const { name, surname } = info.row?.original?.user;
       return (
         <div className='flex items-center gap-2 justify-start'>
           <Avatar name={name} size='sm' square />
-          {name}
+          {name} {surname}
         </div>
       );
     },
@@ -125,15 +127,21 @@ export const getColumns = (
     },
   },
   {
-    id: 'supervisor',
-    accessorKey: 'extraData.company.name',
-    header: 'Supervisor',
+    id: 'shift',
+    // accessorKey: 'relatedShift.employee.name',
+    accessorFn: (row) => `${row?.relatedShift?.employee?.name}`,
+    header: 'Turno',
     cell: (info) => {
-      const supervisor = info.getValue() as string;
+      const relatedShift = info.row.original?.relatedShift;
+      const status = relatedShift?.status ? `(${relatedShift?.status})` : '';
+      const { name, surname } = relatedShift?.employee || {
+        name: '',
+        surname: '',
+      };
       return (
         <div className='flex items-center gap-1 justify-start'>
-          <Avatar name={supervisor} size='sm' square />
-          {supervisor}
+          <Avatar name={name} size='sm' square />
+          {name} {surname} {status}
         </div>
       );
     },
