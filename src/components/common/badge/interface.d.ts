@@ -24,4 +24,5 @@ export interface IFloatBadgeProps extends PropsWithChildren {
   size?: string;
   position?: string;
   color?: string;
+  animate?: boolean;
 }

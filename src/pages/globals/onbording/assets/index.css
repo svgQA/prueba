@@ -6,31 +6,19 @@
   @apply text-white py-2 px-4 rounded focus:outline-none w-36;
 }
 
-/* .onboarding-inputs {
-  @apply w-full p-2 mb-4 rounded border-2 border-b-light-dark dark:border-b-dark-light;
-  input {
-    @apply w-11/12 bg-red-200;
+@keyframes notification-shake {
+  0%,
+  100% {
+    transform: translateX(0);
   }
-} */
-
-/* .onboarding-inputs > input,
-select {
-  @apply w-10/12 bg-white h-full;
-} */
-
-/*
-input,
-select {
-  border: none;
-  outline: none;
+  25% {
+    transform: translateX(-2px) rotate(-5deg);
+  }
+  75% {
+    transform: translateX(2px) rotate(5deg);
+  }
 }
 
-input:focus,
-select:focus {
-  outline: none;
+.animate-notification-shake {
+  animation: notification-shake 0.5s ease-in-out;
 }
-
-input::selection,
-selectselect {
-  background-color: transparent;
-} */
