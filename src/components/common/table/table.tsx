@@ -87,6 +87,7 @@ export const Table = <T,>({
   isSettingTable = false,
   rowClassName,
   loading = false,
+  searchable,
 }: ITableProps<T>) => {
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
     {}
@@ -183,14 +184,16 @@ export const Table = <T,>({
   });
 
   const memoizedLeafColumns = useMemo(() => {
-    return table.getAllLeafColumns().map((column) => {
-      const columnHeader =
-        typeof column.columnDef.header !== 'string'
-          ? column.id
-          : (column.columnDef.header as string);
-      return { label: columnHeader, id: column.id };
-    });
-  }, []);
+    return table.getAllLeafColumns()
+      .filter(column => !searchable || searchable[column.id] !== false)
+      .map((column) => {
+        const columnHeader =
+          typeof column.columnDef.header !== 'string'
+            ? column.id
+            : (column.columnDef.header as string);
+        return { label: columnHeader, id: column.id };
+      });
+  }, [searchable]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -477,10 +480,14 @@ export const Table = <T,>({
                         {expandable && showExpandableIcon && (
                           <div className='flex items-center justify-center h-full max-w-[2.5rem] min-w-[2.5rem]'>
                             <span
-                              // TODO: Toggle expandable row (POSIBLE VOLVER A PONER)
-                              onClick={() => row.toggleExpanded()}
-                              className='vx-icon vx-icon-001 cursor-pointer size-sm'
-                            />
+                              className='absolute top-0 left-0 w-full h-full bg-transparent z-20 cursor-pointer'
+                              data-id='expandable'
+                              data-type='cell'
+                              data-action='click'
+                              data-clickable={true}
+                              data-row-id={row.id}
+                            ></span>
+                            <span className='vx-icon vx-icon-001 cursor-pointer size-sm'/>
                           </div>
                         )}
                         {selectable &&
