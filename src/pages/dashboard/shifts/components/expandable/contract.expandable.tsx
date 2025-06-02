@@ -32,7 +32,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
           <p className='mt-1 pr-4'>{contract.description}</p>
 
           <div className='mt-3'>
-            <Chip label={contract.priority} color='success' />
+            <Chip label={contract.priority} color='success' width='md' />
           </div>
 
           <div className='mt-4'>

@@ -1,3 +1,4 @@
+import { IFile, Resource } from '@/components/common/file/interface';
 import { IOption } from '@/components/common/smart-selector/smart-select';
 
 export interface Memo {
@@ -125,19 +126,6 @@ export interface ExtraData {
   resolution?: IOption;
   duration?: string;
   time?: string;
-}
-
-export interface Resource {
-  files: string | any[] | IFile[];
-  images: string | any[] | IFile[];
-}
-
-export interface IFile {
-  name: string;
-  type: string;
-  uuid: string;
-  area: string;
-  url?: string;
 }
 
 export interface IFilesMemo {

@@ -26,3 +26,22 @@ export interface IFileProps extends IComponentProps {
   disabled?: boolean;
   value: IPresignedRequest[];
 }
+
+export interface Resource {
+  files: string | any[] | IFile[];
+  images: string | any[] | IFile[];
+}
+
+export interface IFile {
+  name: string;
+  type: string;
+  uuid: string;
+  area: string;
+  url?: string;
+}
+
+export interface Attachment {
+  url: string;
+  name: string;
+  type: 'image' | 'file';
+}

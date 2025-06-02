@@ -29,7 +29,7 @@ const ServiceInfo = ({ service }: { service: IService }) => {
           </div>
           <div>
             <p className='mb-1 font-semibold'>Estado</p>
-            <Chip label={service.state} />
+            <Chip label={service.state} width='md' />
           </div>
           <div>
             <p className='mb-1 font-semibold'>Contrato</p>
