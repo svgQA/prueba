@@ -263,7 +263,9 @@ export const MemosPage: FunctionComponent = () => {
   return (
     <Section
       className={
-        currentView.value === VIEW_NAME.CHAT ? 'flex flex-row h-[94.5vh]' : ''
+        currentView.value === VIEW_NAME.CHAT
+          ? 'flex flex-row h-[94.5vh]'
+          : 'mr-3 my-1 relative'
       }
       padding={currentView.value === VIEW_NAME.TABLE}
     >
