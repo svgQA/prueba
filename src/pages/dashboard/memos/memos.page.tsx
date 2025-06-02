@@ -355,6 +355,7 @@ export const MemosPage: FunctionComponent = () => {
           />
         )}
       </div>
+
       {currentView.value === VIEW_NAME.CHAT && (
         <ChatView
           users={users.value}

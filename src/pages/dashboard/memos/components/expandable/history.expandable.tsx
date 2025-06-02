@@ -36,7 +36,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [btnLabel, setBtnLabel] = useState('Check In');
   const [_showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const predefined: Signal<IOption[]> = useSignal([]);
-  const [selectedPredefined, setSelectedPredefined] = useState<IOption | null>(null);
+  const [selectedPredefined, setSelectedPredefined] = useState<IOption | null>(
+    null
+  );
   const [showComment, setShowComment] = useState(false);
 
   useEffect(() => {
@@ -115,8 +117,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
@@ -301,7 +303,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const messageHistory = () => {
     return (
-      <div className='w-[60%] border-r border-b-light-dark dark:border-b-dark-light overflow-y-auto vox-scroll-design'>
+      <div className='w-[60%]'>
         <div className='p-4 space-y-3'>
           {memos.value.map((memo: Memo) => (
             <div key={memo.id} className='flex gap-3'>
@@ -411,137 +413,136 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         </div>
       </div>
     );
-  }
+  };
 
   const messageInput = () => {
     return (
-      <div className='flex flex-col'>
-        <div className='h-full flex flex-col rounded-r-lg'>
-          <Form
-            onSubmit={handleSubmitMessage}
-            render={({ handleSubmit, form }) => (
-              <form
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  await handleSubmit();
-                  form.reset();
-                  setMessage('');
-                  setFiles([]);
-                }}
-                className='flex flex-col h-full'
-              >
+      <div className='w-[40%]'>
+        <Form
+          onSubmit={handleSubmitMessage}
+          render={({ handleSubmit, form }) => (
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                await handleSubmit();
+                form.reset();
+                setMessage('');
+                setFiles([]);
+              }}
+            >
+              {/* Additional Fields */}
+              <div className='flex-1'>
+                {/* Attachments Preview */}
+
+                {files.length > 0 && (
+                  <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-2'>
+                    {files.map((file: any) => showFiles(file))}
+                  </div>
+                )}
+
                 {/* Additional Fields */}
-                <div className='flex-1'>
-                  {/* Attachments Preview */}
-                  {files.length > 0 && (
-                    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-2'>
-                      {files.map((file: any) => showFiles(file))}
+                <div className='grid grid-cols-1 gap-4'>
+                  <div className='p-3'>
+                    <div className='flex items-center gap-2 mb-3'>
+                      <span className='vox-icon size-sm vx-icon-233 text-primary' />
+                      <h4 className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
+                        Formulario de Comentarios
+                      </h4>
                     </div>
-                  )}
+                    <div className='grid grid-cols-2 gap-3'>
+                      <Field<IOption> name='predefined'>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            meta={meta}
+                            name='predefined'
+                            id='select-predefined'
+                            placeholder='Opciones predefinidas'
+                            label='Opciones predefinidas'
+                            options={predefined.value}
+                            menuPortalTarget={document.body}
+                            end={false}
+                            onChange={(value?: IOption) => {
+                              input.onChange(value);
+                              setSelectedPredefined(value || null);
+                            }}
+                          />
+                        )}
+                      </Field>
 
-                  {/* Additional Fields */}
-                  <div className='grid grid-cols-1 gap-4'>
-                    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-3'>
-                      <div className='flex items-center gap-2 mb-3'>
-                        <span className='vox-icon size-sm vx-icon-233 text-primary' />
-                        <h4 className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
-                          Formulario de Comentarios
-                        </h4>
-                      </div>
-                      <div className='grid grid-cols-2 gap-3'>
-                        <Field<IOption> name='predefined'>
-                          {({ input, meta }) => (
-                            <SmartSelector
-                              {...input}
-                              meta={meta}
-                              name='predefined'
-                              id='select-predefined'
-                              placeholder='Opciones predefinidas'
-                              label='Opciones predefinidas'
-                              options={predefined.value}
-                              menuPortalTarget={document.body}
-                              end={false}
-                              onChange={(value?: IOption) => {
-                                input.onChange(value);
-                                setSelectedPredefined(value || null);
-                              }}
-                            />
-                          )}
-                        </Field>
+                      <Field<string> name='duration'>
+                        {({ input }) => (
+                          <Input
+                            {...input}
+                            type='text'
+                            name='duration'
+                            label='Duración'
+                            placeholder=' min, hh:mm'
+                          />
+                        )}
+                      </Field>
+                    </div>
+                    <div className='grid grid-cols-2 gap-3'>
+                      <Field<string> name='date'>
+                        {({ input }) => (
+                          <DateField {...input} name='date' label='Fecha' />
+                        )}
+                      </Field>
 
-                        <Field<string> name='duration'>
-                          {({ input }) => (
-                            <Input
-                              {...input}
-                              type='text'
-                              name='duration'
-                              label='Duración'
-                              placeholder=' min, hh:mm'
-                            />
-                          )}
-                        </Field>
-                      </div>
-                      <div className='grid grid-cols-2 gap-3'>
-                        <Field<string> name='date'>
-                          {({ input }) => (
-                            <DateField
-                              {...input}
-                              name='date'
-                              label='Fecha'
-                            />
-                          )}
-                        </Field>
-
-                        <Field name='attachments'>
-                          {() => (
-                            <File
-                              name='attachments'
-                              onChange={handleAttachmentUpload}
-                              value={[]}
-                              accept='image/*'
-                              multiple={true}
-                              label='Adjuntos'
-                            />
-                          )}
-                        </Field>
-                      </div>
-                      <div className='flex items-center gap-2 mb-2'>
-                        <input
-                          type='checkbox'
-                          id='showComment'
-                          checked={showComment}
-                          onChange={(e) => setShowComment((e.target as HTMLInputElement).checked)}
-                          className='rounded border-gray-300 text-primary focus:ring-primary'
-                        />
-                        <label htmlFor='showComment' className='text-sm text-gray-text-light dark:text-t-dark-light'>
-                          Agregar comentario adicional
-                        </label>
-                      </div>
-                      {showComment ? (
-                        <div className='gap-3 w-full'>
-                          <Field<string> name='message'>
-                            {({ }) => (
-                              <TextArea
-                                label='Comentario'
-                                name='message'
-                                placeholder='Escribe un Comentario...'
-                                value={message}
-                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                                  setMessage((e.target as HTMLTextAreaElement).value)
-                                }
-                              />
-                            )}
-                          </Field>
-                        </div>
-                      ) : (
-                        <div className='gap-3 w-full mt-20' />
-                      )}
+                      <Field name='attachments'>
+                        {() => (
+                          <File
+                            name='attachments'
+                            onChange={handleAttachmentUpload}
+                            value={[]}
+                            accept='image/*'
+                            multiple={true}
+                            label='Adjuntos'
+                          />
+                        )}
+                      </Field>
+                    </div>
+                    <div className='flex items-center gap-2 mb-2'>
+                      <input
+                        type='checkbox'
+                        id='showComment'
+                        checked={showComment}
+                        onChange={(e) =>
+                          setShowComment((e.target as HTMLInputElement).checked)
+                        }
+                        className='rounded border-gray-300 text-primary focus:ring-primary'
+                      />
+                      <label
+                        htmlFor='showComment'
+                        className='text-sm text-gray-text-light dark:text-t-dark-light'
+                      >
+                        Agregar comentario adicional
+                      </label>
+                    </div>
+                    <div
+                      className={`gap-3 w-full ${showComment ? 'visible' : 'invisible'}`}
+                    >
+                      <Field<string> name='message'>
+                        {({}) => (
+                          <TextArea
+                            label='Comentario'
+                            name='message'
+                            placeholder='Escribe un Comentario...'
+                            value={message}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLTextAreaElement>
+                            ) =>
+                              setMessage(
+                                (e.target as HTMLTextAreaElement).value
+                              )
+                            }
+                          />
+                        )}
+                      </Field>
                     </div>
                   </div>
                 </div>
-
-                {/* Submit Button */}
-                <div className='p-4 flex justify-end border-t border-b-light-dark dark:border-b-dark-light bg-b-light-light dark:bg-b-dark-light'>
+                <div className='w-full flex justify-end px-2'>
                   <Button
                     name='memo-send-response'
                     type='submit'
@@ -551,19 +552,17 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     className='w-full'
                   />
                 </div>
-              </form>
-            )}
-          />
-        </div>
+              </div>
+            </form>
+          )}
+        />
       </div>
-    )
-  }
+    );
+  };
 
   return (
-    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm h-[510px]'>
-      {/* Header and Content Combined */}
-      <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-light'>
-        {/* Files Section - Left */}
+    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm h-[500px]'>
+      <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-dark max-h-20'>
         <div className='flex-1 rounded-lg'>
           {memo.resource && showFiles(memo.resource)}
         </div>
@@ -576,7 +575,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               <Button
                 label={btnLabel}
                 icon={
-                  btnLabel === 'SOLVE' || btnLabel === 'RESOLVED' ? '023' : '024'
+                  btnLabel === 'SOLVE' || btnLabel === 'RESOLVED'
+                    ? '023'
+                    : '024'
                 }
                 disabled={btnLabel === 'RESOLVED'}
                 onClick={() =>
@@ -584,7 +585,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     title: btnLabel,
                     message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
                     onConfirm: () => handleCheck(),
-                    onCancel: () => { },
+                    onCancel: () => {},
                   })
                 }
                 name={btnLabel}
@@ -619,7 +620,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         </div>
       </div>
 
-      <div className='flex h-[calc(450px-80px)]'>
+      <div className='flex flex-row'>
         {messageHistory()}
         {messageInput()}
       </div>
