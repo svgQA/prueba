@@ -2,10 +2,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from '../utils/memos';
 
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import {
-  IDropdownAction,
-  DropdownActionsMenu,
-} from '@/components/common/table/components/dropdown.actions.menu';
 import { Badge } from '@/components/common/badge/badge';
 import { Avatar } from '@/components/common/Avatar';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
@@ -26,7 +22,7 @@ type CustomColumnDef<TData> = ColumnDef<TData> &
   NColumnDef<TData>;
 
 export const getColumns = (
-  onClickAction: (params: {
+  _onClickAction: (params: {
     id: string;
     type: string;
     action: ROW_ACTIONS;
@@ -194,38 +190,38 @@ export const getColumns = (
       return <FormattedDate date={String(info.getValue())} format='date' />;
     },
   },
-  {
-    id: 'actions',
-    size: 20,
-    cell: (info) => {
-      const { id } = info.row.original;
-      const actions: IDropdownAction[] = [
-        {
-          label: 'Editar memo',
-          icon: 'vox-icon vx-icon-123 text-primary',
-          onClick: () => {
-            onClickAction({
-              id: String(id),
-              type: 'memo',
-              action: ROW_ACTIONS.UPDATE,
-            });
-          },
-        },
-        {
-          label: 'Eliminar memo',
-          icon: 'vox-icon vx-icon-053 text-red-500',
-          color: 'text-red-600',
-          onClick: () => {
-            onClickAction({
-              id: String(id),
-              type: 'memo',
-              action: ROW_ACTIONS.DELETE,
-            });
-          },
-        },
-      ];
+  // {
+  //   id: 'actions',
+  //   size: 20,
+  //   cell: (info) => {
+  //     const { id } = info.row.original;
+  //     const actions: IDropdownAction[] = [
+  //       {
+  //         label: 'Editar memo',
+  //         icon: 'vox-icon vx-icon-123 text-primary',
+  //         onClick: () => {
+  //           onClickAction({
+  //             id: String(id),
+  //             type: 'memo',
+  //             action: ROW_ACTIONS.UPDATE,
+  //           });
+  //         },
+  //       },
+  //       {
+  //         label: 'Eliminar memo',
+  //         icon: 'vox-icon vx-icon-053 text-red-500',
+  //         color: 'text-red-600',
+  //         onClick: () => {
+  //           onClickAction({
+  //             id: String(id),
+  //             type: 'memo',
+  //             action: ROW_ACTIONS.DELETE,
+  //           });
+  //         },
+  //       },
+  //     ];
 
-      return <DropdownActionsMenu actions={actions} />;
-    },
-  },
+  //     return <DropdownActionsMenu actions={actions} />;
+  //   },
+  // },
 ];

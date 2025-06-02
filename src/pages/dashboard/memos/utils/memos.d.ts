@@ -121,7 +121,7 @@ export interface ExtraData {
   predefined?: IOption;
   category?: IOption;
   resolution?: IOption;
-  duration?: number;
+  duration?: string;
   time?: string;
 }
 
