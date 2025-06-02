@@ -331,7 +331,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     )
                   }
                 >
-                  <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-3'>
+                  <div className='bg-b-light-light dark:bg-b-dark-dark rounded-lg p-3'>
                     <div className='flex items-start gap-3'>
                       <div className='flex-1'>
                         <div className='flex items-center gap-2 mb-2'>
@@ -417,7 +417,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const messageInput = () => {
     return (
-      <div className='w-[40%]'>
+      <div className='w-[40%] border-l border-l-b-light-dark dark:border-l-b-dark-dark mt-2'>
         <Form
           onSubmit={handleSubmitMessage}
           render={({ handleSubmit, form }) => (
