@@ -88,27 +88,11 @@ const SupervisorInfo = ({
       <div className='flex flex-row gap-4 p-3'>
         {/* Primera columna */}
         <div className='w-[30%] flex flex-col gap-4'>
-          {/* Primera fila - Archivos */}
-          <div className='w-full'>
-            {memo?.resource ? showFiles(memo?.resource) : <div>No hay archivos adjuntos</div>}
-          </div>
-
-          {/* Segunda fila - Descripción */}
-          <div className='w-full'>
-            <p className='mb-2 leading-tight text-lg'>{memo?.description}</p>
-          </div>
-
-          {/* Tercera fila - Chips */}
-          <div className='w-full'>
-            <div className='flex flex-wrap gap-1'>
-              <Chip label='Tarea' width='md' />
-              <Chip label='Tarea' width='md' />
-              <Chip label='Tarea' width='md' />
+          {/* Primera fila - Archivos y Botón */}
+          <div className='w-full flex items-center gap-4'>
+            <div className='flex-1'>
+              {memo?.resource ? showFiles(memo?.resource) : <div>No hay archivos adjuntos</div>}
             </div>
-          </div>
-
-          {/* Cuarta fila - Botón Solve */}
-          <div className='w-full'>
             {resolved &&
               memo.state !== 'RESOLVED' &&
               memo.state !== 'CLOSED' && (
@@ -131,6 +115,20 @@ const SupervisorInfo = ({
                   name={btnLabel}
                 />
               )}
+          </div>
+
+          {/* Segunda fila - Descripción */}
+          <div className='w-full'>
+            <p className='mb-2 leading-tight text-lg'>{memo?.description}</p>
+          </div>
+
+          {/* Tercera fila - Chips */}
+          <div className='w-full'>
+            <div className='flex gap-1'>
+              <Chip label='Tarea' width='sm' />
+              <Chip label='Tarea' width='sm' />
+              <Chip label='Tarea' width='sm' />
+            </div>
           </div>
         </div>
 
@@ -208,7 +206,7 @@ const SupervisorInfo = ({
         </div>
 
         {/* Tercera columna - Mapa */}
-        <div className='w-[40%] h-[300px] rounded-lg overflow-hidden'>
+        <div className='w-[40%] h-[250px] rounded-lg overflow-hidden'>
           <MapLibrePointsMap
             name='map-points'
             pointsRef={[
