@@ -184,8 +184,9 @@ export const Table = <T,>({
   });
 
   const memoizedLeafColumns = useMemo(() => {
-    return table.getAllLeafColumns()
-      .filter(column => !searchable || searchable[column.id] !== false)
+    return table
+      .getAllLeafColumns()
+      .filter((column) => !searchable || searchable[column.id] !== false)
       .map((column) => {
         const columnHeader =
           typeof column.columnDef.header !== 'string'
@@ -487,7 +488,7 @@ export const Table = <T,>({
                               data-clickable={true}
                               data-row-id={row.id}
                             ></span>
-                            <span className='vx-icon vx-icon-001 cursor-pointer size-sm'/>
+                            <span className='vx-icon vx-icon-001 cursor-pointer size-sm' />
                           </div>
                         )}
                         {selectable &&
