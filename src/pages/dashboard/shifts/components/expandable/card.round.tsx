@@ -6,12 +6,12 @@ interface CardRoundProps {
 }
 
 export const CardRound = ({ activity }: CardRoundProps) => {
-  const openForm = (formId: number | null) => {
-    if (formId) {
-      // TODO: Open form
-      // console.log(formId);
-    }
-  };
+  // const openForm = (formId: number | null) => {
+  //   if (formId) {
+  //     // TODO: Open form
+  //     // console.log(formId);
+  //   }
+  // };
   return (
     <div className='mt-10 flex items-start justify-between bg-b-light-dark dark:bg-b-dark-dark p-2 rounded-lg h-20 w-fit'>
       <div className='flex items-start flex-1'>

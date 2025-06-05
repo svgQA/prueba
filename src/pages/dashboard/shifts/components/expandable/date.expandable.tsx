@@ -6,7 +6,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import { ShiftService } from '@/services';
 import { Button } from '@/components/common/button/button';
-import { useState, useEffect } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { FormattedDate } from '@/components/compose/forms';
 
 interface ICheckData {
@@ -21,15 +21,6 @@ interface ICheckData {
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   const [checkInData, setCheckInData] = useState(checkIn);
   const [checkOutData, setCheckOutData] = useState(checkOut);
-  // const [shiftData, setShiftData] = useState(shift);
-
-  // // Efecto para actualizar los datos cuando cambian checkIn, checkOut o shift
-  // useEffect(() => {
-  //   setCheckInData(checkIn);
-  //   setCheckOutData(checkOut);
-  //   setShiftData(shift);
-  //   console.log('shiftData', shiftData);
-  // }, [checkIn, checkOut, shift]);
 
   const calculateCheckStatus = (
     checkTime: string,
