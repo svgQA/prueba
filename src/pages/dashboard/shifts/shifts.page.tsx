@@ -598,7 +598,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               icon='044'
               iconSize='sm'
             />
-            <AudioButton />
+            {/* <AudioButton /> */}
           </div>
         </div>
 
@@ -633,6 +633,13 @@ export const ShiftsPage: FunctionalComponent = () => {
               userEmail: false,
               userPhone: false,
               serviceRound: false,
+            }}
+            searchable={{
+              report: false,
+              shift: false,
+              round: false,
+              client: false,
+              duration: false,
             }}
           />
         )}

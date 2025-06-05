@@ -33,9 +33,7 @@ const ServiceInfo = ({ service }: { service: IService }) => {
           </div>
           <div>
             <p className='mb-1 font-semibold'>Contrato</p>
-            <a href='#' className='text-primary capitalize'>
-              {service.contract.name}
-            </a>
+            <p className='text-primary capitalize'>{service.contract.name}</p>
           </div>
         </div>
       </div>
@@ -60,9 +58,7 @@ const ServiceInfo = ({ service }: { service: IService }) => {
           </div>
           <div>
             <p className='mb-1 font-semibold'>Ronda</p>
-            <a href='#' className='text-primary capitalize'>
-              {service.round.name}
-            </a>
+            <p className='text-primary capitalize'>{service.round.name}</p>
           </div>
         </div>
       </div>

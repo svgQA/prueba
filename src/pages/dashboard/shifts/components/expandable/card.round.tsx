@@ -26,7 +26,7 @@ export const CardRound = ({ activity }: CardRoundProps) => {
               )}
               <TextEllipsis text={activity.serviceTask.name} maxWidth='300px' />
             </div>
-            <a
+            {/* <a
               href='#'
               className='flex items-center text-primary'
               onClick={() => openForm(activity.serviceTask.formId)}
@@ -36,7 +36,7 @@ export const CardRound = ({ activity }: CardRoundProps) => {
                 ? `Formulario ${activity.serviceTask.formId}`
                 : 'Sin formulario'}
               <span className='ml-1 vox-icon vx-icon-004 !text-primary'></span>
-            </a>
+            </a> */}
           </div>
 
           {/* Programación y Solución en línea horizontal */}

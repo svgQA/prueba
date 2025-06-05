@@ -40,11 +40,17 @@ const RoundInfo = ({ roundPct }: any) => {
         <Chip label={`Progreso: ${roundPct}%`} color='primary' />
       </div>
 
-      <div className='flex flex-row gap-2 flex-wrap justify-center'>
-        {points.map((point) => (
-          <CardTask key={point.id} point={point} />
-        ))}
-      </div>
+      {points.length === 0 ? (
+        <div className='flex items-center justify-center h-32'>
+          <p className='text-gray-500 dark:text-gray-400'>No hay rondas registradas</p>
+        </div>
+      ) : (
+        <div className='flex flex-row gap-2 flex-wrap justify-center'>
+          {points.map((point) => (
+            <CardTask key={point.id} point={point} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
