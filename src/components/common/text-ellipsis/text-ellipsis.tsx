@@ -1,4 +1,5 @@
 import { JSX } from 'preact';
+import { useRef, useEffect, useState } from 'preact/hooks';
 
 interface TextEllipsisProps {
   text?: string;
@@ -17,17 +18,17 @@ export const TextEllipsis = ({
   lines = 1,
   children,
 }: TextEllipsisProps) => {
-  // const containerRef = useRef<HTMLDivElement>(null);
-  // const isOverflowing = useSignal(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
 
-  /*
   useEffect(() => {
     if (containerRef.current) {
       const element = containerRef.current;
-      isOverflowing.value = element.scrollWidth > element.clientWidth;
+      const isTextOverflowing = element.scrollHeight > element.clientHeight || 
+                              element.scrollWidth > element.clientWidth;
+      setIsOverflowing(isTextOverflowing);
     }
-  }, [text, maxWidth]);
-  */
+  }, [text, maxWidth, children]);
 
   const containerStyle = {
     maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth,
@@ -40,10 +41,10 @@ export const TextEllipsis = ({
 
   return (
     <div
-      // ref={containerRef}
+      ref={containerRef}
       style={containerStyle}
-      className={`${className} ${tooltip ? 'cursor-help' : 'cursor-default'}`}
-      title={tooltip ? text : undefined}
+      className={`${className} ${tooltip && isOverflowing ? 'cursor-help' : 'cursor-default'}`}
+      title={tooltip && isOverflowing ? text : undefined}
     >
       {children || text}
     </div>
