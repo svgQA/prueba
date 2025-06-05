@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import {
-  IFilesMemo,
-  Memo,
-  ExtraData,
-} from '../../utils/memos';
+import { IFilesMemo, Memo, ExtraData } from '../../utils/memos';
 import { Avatar } from '@/components/common/Avatar';
 import { MemoService } from '@/services';
 import { File } from '@/components/common/file/file';

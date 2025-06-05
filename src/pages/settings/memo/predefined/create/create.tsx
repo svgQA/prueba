@@ -3,13 +3,13 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { lengthSize } from '@/utils/utilities';
-import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import { PredefinedService } from '@/services/shift/predefined';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 
 interface FormData {
   name: string;
@@ -62,7 +62,11 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
           return errors;
         }}
         render={({ handleSubmit, form, submitting, pristine }) => (
-          <form onSubmit={handleSubmit} className='space-y-6'>
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-predefined-create'
+          >
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-3'>
               <div class='col-span-3'>
@@ -82,22 +86,14 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
 
             {/* Botonera */}
             <div className='w-full flex-row flex justify-end items-center'>
-              <Button
-                id='btn-clean'
-                name='btn-clean'
-                type='button'
-                label='Limpiar'
-                onClick={() => form.reset()}
-                disabled={submitting || pristine}
-              />
-
-              <Button
-                id='btn-save'
-                name='btn-save'
-                type='submit'
+              <StatusButton
+                onClickClean={() => {
+                  () => form.reset();
+                }}
+                submitting={submitting}
+                pristine={pristine}
+                form='form-predefined-create'
                 label={id ? 'Editar' : 'Guardar'}
-                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-                disabled={submitting}
               />
             </div>
           </form>

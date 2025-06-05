@@ -70,7 +70,11 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
           return errors;
         }}
         render={({ handleSubmit, form, submitting, pristine }) => (
-          <form onSubmit={handleSubmit} className='space-y-6'>
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-place-create'
+          >
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-3'>
               <div class='col-span-3'>

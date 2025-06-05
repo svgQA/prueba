@@ -14,5 +14,5 @@ export const sizeMap: Record<ChipSize, string> = {
   md: 'w-32',
   lg: 'w-40',
   xl: 'w-48',
-  full: 'w-full'
+  full: 'w-full',
 };
