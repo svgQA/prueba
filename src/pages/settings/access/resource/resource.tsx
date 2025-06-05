@@ -38,16 +38,13 @@ export const ResourceSettingPage: FunctionComponent = () => {
 
   return (
     <Section>
-      <div className='flex flex-col gap-1 w-10/12'>
-        <div className='flex justify-between items-center w-full mb-3'>
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible z-20'>
+        <div className='flex flex-row items-center justify-between'>
           <Button
-            onClick={onClickCreate}
-            id='setting-sets'
-            name='setting-sets'
-            type='button'
-            icon='345'
+            name='button-create-resource'
             label='Crear Recursos'
-            className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
+            icon='345'
+            onClick={onClickCreate}
           />
         </div>
       </div>

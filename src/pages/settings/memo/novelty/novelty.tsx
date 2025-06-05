@@ -91,12 +91,6 @@ export const NoveltySettingPage: FunctionComponent = () => {
         data={novelties.value}
         columns={columns}
         pageSize={20}
-        visibility={{
-          name: true,
-          description: true,
-          priority: true,
-          action: true,
-        }}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}
