@@ -6,7 +6,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import { ShiftService } from '@/services';
 import { Button } from '@/components/common/button/button';
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { FormattedDate } from '@/components/compose/forms';
 
 interface ICheckData {
@@ -21,6 +21,15 @@ interface ICheckData {
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   const [checkInData, setCheckInData] = useState(checkIn);
   const [checkOutData, setCheckOutData] = useState(checkOut);
+  // const [shiftData, setShiftData] = useState(shift);
+
+  // // Efecto para actualizar los datos cuando cambian checkIn, checkOut o shift
+  // useEffect(() => {
+  //   setCheckInData(checkIn);
+  //   setCheckOutData(checkOut);
+  //   setShiftData(shift);
+  //   console.log('shiftData', shiftData);
+  // }, [checkIn, checkOut, shift]);
 
   const calculateCheckStatus = (
     checkTime: string,
@@ -112,7 +121,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         longitude={checkInData?.location.lng || -74.106992}
         url={checkInData?.url || ''}
         // disabled={!!checkOutData?.distance}
-        disabled={shift?.status === 'CLOSED'} // TODO: Validar distancia
+        disabled={shift?.status !== 'CREATED'} // Solo permitir check-in si está en estado CREATED
         onCheck={handleCheck}
       />
 
@@ -132,7 +141,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         longitude={checkOutData?.location.lng || -74.106992}
         url={checkOutData?.url || ''}
         // disabled={!checkInData?.distance || !!checkOutData?.distance}
-        disabled={shift?.status === 'OPENED' || shift?.status === 'CREATED'} // TODO: Validar distancia
+        disabled={shift?.status !== 'OPENED'} // Solo permitir check-out si está en estado OPENED
         onCheck={handleCheck}
       />
     </div>

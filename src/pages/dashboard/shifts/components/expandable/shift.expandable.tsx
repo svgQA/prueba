@@ -17,14 +17,16 @@ const ShiftInfo = ({
   end,
 }: ShiftInfoProps) => {
   return (
-    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark p-4 relative'>
+    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm text-t-light dark:text-t-dark p-4 relative'>
       {tasks.length > 0 ? (
         <div>
           <div className='flex items-center justify-between absolute top-0 right-0 w-full'>
             <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
               Actividades del Turno
             </h2>
-            <Chip label={`Progreso: ${activityPct}%`} color='primary' />
+            <div className='flex flex-row gap-2 flex-wrap justify-end'>
+              <Chip label={`Progreso: ${activityPct}%`} color='primary'/>
+            </div>
           </div>
           <div className='flex flex-row gap-2 flex-wrap justify-center'>
             {tasks.map((task: any, index: number) => (
