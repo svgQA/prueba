@@ -140,7 +140,7 @@ export const getColumns = (
       };
       return (
         <div className='flex items-center gap-1 justify-start'>
-          <Avatar name={name} size='sm' square />
+          {/* <Avatar name={name} size='sm' square /> */}
           {name} {surname} {status}
         </div>
       );
