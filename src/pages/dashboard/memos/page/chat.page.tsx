@@ -15,6 +15,7 @@ import { useEffect } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
 import { MemoService } from '@/services';
 import { Memo } from '../utils/memos';
+import { DateUtils } from '@/utils/utilities/dates';
 
 interface ChatMessage {
   message: string;
@@ -160,7 +161,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     if (isService) {
       const response = await MemoService.get_all_by_service_id(chatId);
       if (!response.getStatus()) return;
-      memoByService.value = response.getMany();
+      memoByService.value = response.getMany().map((memo) => ({ ...memo, priority: memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja' }));
     }
   };
 
@@ -264,7 +265,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                     <ChatMessage
                       key={`parent-${index}`}
                       message={`${memo.novelty?.description || ''}`}
-                      isSender={true}
+                      isSender={false}
+                      title={memo.novelty?.name}
+                      resource={memo.resource}
+                      date={memo.updatedAt}
+                      priority={memo.priority}
                     />
                     {/* Submemos */}
                     {memo.children?.map(
@@ -272,8 +277,28 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                         <ChatMessage
                           key={`child-${index}-${childIndex}`}
                           message={`${childMemo.description || ''}`}
-                          isSender={false}
-                        />
+                          isSender={true}
+                          title={childMemo.extraData?.predefined?.label}
+                          resource={childMemo.resource}
+                          date={childMemo.updatedAt}
+                        >
+                          {childMemo.extraData && (
+                            <div className='flex flex-wrap gap-2 text-xs'>
+                              {childMemo.extraData.duration && (
+                                <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
+                                  <span className='vox-icon size-sm vx-icon-236' />
+                                  {'duracion: ' + childMemo.extraData.duration}
+                                </span>
+                              )}
+                              {childMemo.extraData.time && (
+                                <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
+                                  <span className='vox-icon size-sm vx-icon-237' />
+                                  {'fecha: ' + DateUtils.dateToFrontend(childMemo.extraData.time, { format: 'DD/MM/YYYY HH:mm', })}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </ChatMessage>
                       )
                     )}
                   </>
