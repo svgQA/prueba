@@ -11,14 +11,13 @@ import { useWebSocket } from '@/utils/socket';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useSignal } from '@preact/signals';
 import { IMessage } from '@/utils/socket/interface';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
 import { MemoService } from '@/services';
 import { ExtraData, Memo } from '../utils/memos';
 import { DateUtils } from '@/utils/utilities/dates';
 import { Field, Form } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
-import { File } from '@/components/common/file/file';
 import { PredefinedService } from '@/services/shift/predefined';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { DateField } from '@/components/compose/forms';
@@ -71,7 +70,7 @@ const FrequentQuestions = () => {
 export const ChatView: FunctionComponent<ChatViewProps> = ({
   users,
   getUsersHandler,
-  memosGroupedByService,
+  memosGroupedByService
 }) => {
   const { t } = useTranslation();
   const { cognito } = useUserStore();
@@ -84,10 +83,10 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   const viewMode = useSignal<TypeChatView>(TypeChatView.USERS);
   const memoByService = useSignal<any[]>([]);
   const predefined = useSignal<IOption[]>([]);
-  const [selectedPredefined, setSelectedPredefined] = useState<IOption | null>(null);
   const replyToId = useSignal<number | undefined>();
   const replyToMessage = useSignal<{ message: string; title?: string; date?: string | Date } | undefined>();
   const messages = useSignal<string>('');
+  const serviceId = useSignal<string>('');
   useEffect(() => {
     fetchPredefinedOptions();
   }, []);
@@ -238,16 +237,20 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     };
 
     await MemoService.createMemo(newMemo);
+    replyToId.value = undefined;
+    replyToMessage.value = undefined;
+    messages.value = '';
+    handleChatSelect(serviceId.value, true);
   };
 
-  const handleAttachmentUpload = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    if (!target.files?.length) return;
+  // const handleAttachmentUpload = (event: Event) => {
+  //   const target = event.target as HTMLInputElement;
+  //   if (!target.files?.length) return;
 
-    const files = Array.from(target.files);
-    // Aquí puedes manejar los archivos subidos
-    // Por ejemplo, puedes agregarlos a un estado o enviarlos al servidor
-  };
+  //   const files = Array.from(target.files);
+  //   // Aquí puedes manejar los archivos subidos
+  //   // Por ejemplo, puedes agregarlos a un estado o enviarlos al servidor
+  // };
 
   return (
     <>
@@ -304,7 +307,10 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                     lastMessage={service.service.description || ''}
                     time={service.service.time || ''}
                     amount={service.service.unreadCount}
-                    onClick={() => handleChatSelect(service.service.id, true)}
+                    onClick={() => {
+                      handleChatSelect(service.service.id, true)
+                      serviceId.value = service.service.id;
+                    }}
                     isSelected={selectedChat.value === service.service.id}
                   />
                 ))}
@@ -431,7 +437,6 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                                   end={false}
                                   onChange={(value?: IOption) => {
                                     input.onChange(value);
-                                    setSelectedPredefined(value || null);
                                   }}
                                 />
                               )}

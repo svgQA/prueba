@@ -1,7 +1,5 @@
 import { Button } from '@/components/common/button/button';
 import { Signal, useSignal } from '@preact/signals';
-import { Modal } from '@/components/common/modal/modal';
-import { useState } from 'preact/hooks';
 import { FormattedDate } from "@/components/compose/forms";
 
 interface ChatInputProps {
@@ -19,7 +17,7 @@ interface ChatInputProps {
   input: Signal<string>;
 }
 
-export const ChatInput = ({ onSend, onCancelReply, input, disabled = false, children, replyId, replyTo, form }: ChatInputProps) => {
+export const ChatInput = ({ onCancelReply, input, disabled = false, children, replyId, replyTo, form }: ChatInputProps) => {
   const showChildren = useSignal(false);
 
   // const handleSubmit = () => {
@@ -32,6 +30,7 @@ export const ChatInput = ({ onSend, onCancelReply, input, disabled = false, chil
   const handleCancelReply = () => {
     onCancelReply?.();
     input.value = '';
+    showChildren.value = false;
   };
 
   const showReply = () => {
