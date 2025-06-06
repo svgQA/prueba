@@ -11,12 +11,31 @@ interface ChatMessageProps {
   date?: string | Date;
   priority?: any;
   children?: React.ReactNode;
+  id?: number;
+  onReply?: (id: number) => void;
+  isSelected?: boolean;
 }
 
-export const ChatMessage = ({ message, isSender, title, resource, date, priority, children }: ChatMessageProps) => (
-  <div className={`flex flex-col ${isSender ? 'items-end' : 'items-start'} mb-4`}>
+export const ChatMessage = ({ 
+  message, 
+  isSender, 
+  title, 
+  resource, 
+  date, 
+  priority, 
+  children,
+  id,
+  onReply,
+  isSelected 
+}: ChatMessageProps) => (
+  <div 
+    className={`flex flex-col ${isSender ? 'items-end' : 'items-start'} mb-4`}
+    onClick={() => id && onReply?.(id)}
+  >
     <div
-      className={`max-w-[70%] p-3 rounded-lg ${isSender ? 'bg-primary-opacity text-dark border-primary' : 'bg-b-light-light dark:bg-b-dark-light border-b-light-dark'}`}
+      className={`max-w-[70%] p-3 rounded-lg cursor-pointer transition-colors duration-200
+        ${isSelected ? 'ring-2 ring-primary' : ''}
+        ${isSender ? 'bg-primary-opacity text-dark border-primary' : 'bg-b-light-light dark:bg-b-dark-light border-b-light-dark'}`}
     >
       {(title || priority) && (
         <div className='flex justify-between items-center gap-2 mb-2'>

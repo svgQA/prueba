@@ -2,6 +2,7 @@ export interface IMessage {
   from: string;
   to: string;
   message: any;
+  replyTo?: number;
 }
 
 export interface IWebSocketManager {
