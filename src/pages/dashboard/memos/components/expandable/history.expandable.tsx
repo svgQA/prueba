@@ -74,6 +74,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         label: item.name,
         value: item.id,
       }));
+      predefined.value = [...predefined.value, { label: 'Otro', value: 'other' }]
     }
 
     getStatus(memo?.state || '');
@@ -143,7 +144,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     let extraData: ExtraData = { ...memo.extraData } as ExtraData;
 
     if (!message.trim() && !values.predefined) return;
-    if (values.predefined) extraData.predefined = values.predefined;
+    if (values.predefined && values.predefined.value !== 'other') extraData.predefined = values.predefined;
     if (values.duration) extraData.duration = values.duration;
     if (values.date) extraData.time = values.date;
 
@@ -156,12 +157,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       createdAt: DateUtils.dateToBackend(new Date()),
       parentId: lastMemo.id,
       extraData: extraData,
+      resource: (files.value && files.value.length > 0) ? files.value : undefined,
     };
-
-    if (files.value && files.value.length > 0) {
-      newMemo.resource = files.value;
-    }
-
+    
     const response = await MemoService.createMemo(newMemo);
 
     if (response.getStatus()) {
@@ -184,7 +182,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const messageHistory = () => {
     return (
-      <div className='w-[60%] max-h-[400px] overflow-y-auto vox-scroll-design'>
+      <div className={`w-[60%] max-h-[${showComment ? '400px' : '300px'}] overflow-y-auto vox-scroll-design`}>
         <div className='p-4 space-y-3'>
           {memos.value.map((memo: Memo) => (
             <div key={memo.id} className='flex gap-3'>
@@ -339,7 +337,12 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             allowAll={true}
                             onChange={(value?: IOption) => {
                               input.onChange(value);
-                              setSelectedPredefined(value || null);
+                              if (value?.value === 'other') {
+                                setShowComment(true);
+                              } else {
+                                setShowComment(false);
+                                setSelectedPredefined(value || null);
+                              }
                             }}
                           />
                         )}
@@ -378,44 +381,29 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         )}
                       </Field>
                     </div>
-                    <div className='flex items-center gap-2 mb-2'>
-                      <input
-                        type='checkbox'
-                        id='showComment'
-                        checked={showComment}
-                        onChange={(e) =>
-                          setShowComment((e.target as HTMLInputElement).checked)
-                        }
-                        className='rounded border-gray-300 text-primary focus:ring-primary'
-                      />
-                      <label
-                        htmlFor='showComment'
-                        className='text-sm text-gray-text-light dark:text-t-dark-light'
+                    {showComment && (
+                      <div
+                        className='gap-3 w-full'
                       >
-                        Agregar comentario adicional
-                      </label>
-                    </div>
-                    <div
-                      className={`gap-3 w-full ${showComment ? 'visible' : 'invisible'}`}
-                    >
-                      <Field<string> name='message'>
-                        {({}) => (
-                          <TextArea
-                            label='Comentario'
-                            name='message'
-                            placeholder='Escribe un Comentario...'
-                            value={message}
-                            onChange={(
-                              e: React.ChangeEvent<HTMLTextAreaElement>
-                            ) =>
-                              setMessage(
-                                (e.target as HTMLTextAreaElement).value
-                              )
-                            }
-                          />
-                        )}
-                      </Field>
-                    </div>
+                        <Field<string> name='message'>
+                          {({ }) => (
+                            <TextArea
+                              label='Comentario'
+                              name='message'
+                              placeholder='Escribe un Comentario...'
+                              value={message}
+                              onChange={(
+                                e: React.ChangeEvent<HTMLTextAreaElement>
+                              ) =>
+                                setMessage(
+                                  (e.target as HTMLTextAreaElement).value
+                                )
+                              }
+                            />
+                          )}
+                        </Field>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className='w-full flex justify-end px-2'>
@@ -451,7 +439,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   );
 
   return (
-    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm h-[500px]'>
+    <div className={`w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm ${showComment ? 'h-[500px]' : 'h-[400px]'}`}>
       <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-dark max-h-20'>
         <div className='flex-1 rounded-lg'>
           {memo.resource && <ShowFiles resources={memo.resource} />}
