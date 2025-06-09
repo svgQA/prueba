@@ -2,6 +2,7 @@ import { type TargetedEvent } from 'preact/compat';
 import { type IComponentProps } from '@/components/utils/interface';
 import { FieldMetaState } from 'react-final-form';
 import { IPresignedRequest } from '@/types/file';
+import { AllowedAreaTypes } from '@/types';
 
 export interface IFileProps extends IComponentProps {
   onChange?: (event: KeyboardEvent<HTMLInputElement>) => void;
@@ -25,23 +26,16 @@ export interface IFileProps extends IComponentProps {
   multiple?: boolean;
   disabled?: boolean;
   value: IPresignedRequest[];
-}
-
-export interface Resource {
-  files: string | any[] | IFile[];
-  images: string | any[] | IFile[];
-}
-
-export interface IFile {
-  name: string;
-  type: string;
-  uuid: string;
-  area: string;
-  url?: string;
+  area?: AllowedAreaTypes;
 }
 
 export interface Attachment {
   url: string;
   name: string;
   type: 'image' | 'file';
+}
+
+export interface ShowFilesProps {
+  resources: IPresignedRequest[];
+  alertEmpty?: boolean;
 }

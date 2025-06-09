@@ -21,6 +21,7 @@ export const File = ({
   accept,
   value = [],
   disabled,
+  area,
   ...props
 }: IFileProps) => {
   const dataset = useSignal({});
@@ -32,7 +33,7 @@ export const File = ({
 
     isLoading.value = true;
     try {
-      await handleFileChangeWrapper(e, emitChange);
+      await handleFileChangeWrapper(e, emitChange, area);
     } catch {
       ToastManager.error('No se ha podido cargar la imagen');
     } finally {

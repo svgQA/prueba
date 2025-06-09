@@ -1,7 +1,8 @@
-import { IFile, Resource } from '@/components/common/file/interface';
+import { IPresignedRequest, Resource } from '@/components/common/file/interface';
 import { IOption } from '@/components/common/smart-selector/smart-select';
 
 export interface Memo {
+  newMemo: import("/home/tryvoo/proyects/tryvoo/voxline-dashboard/src/types/file/service").IPresignedRequest;
   id: number;
   noveltyId?: number;
   serviceId?: number;
@@ -12,7 +13,7 @@ export interface Memo {
   longitude?: number;
   state?: string;
   priority?: number | string;
-  resource?: Resource;
+  resource?: IPresignedRequest[];
   attachments: any[];
   updatedAt?: string | Date;
   createdAt?: string | Date;
@@ -124,11 +125,6 @@ export interface ExtraData {
   predefined?: IOption;
   category?: IOption;
   resolution?: IOption;
-  duration?: string;
+  duration?: number;
   time?: string;
-}
-
-export interface IFilesMemo {
-  images: IFile[];
-  files: IFile[];
 }

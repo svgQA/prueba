@@ -1,6 +1,6 @@
 import { Badge } from '@/components/common/badge/badge';
 import { Chip } from '@/components/common/chip/chip';
-import { showFiles } from "@/components/common/file/show.file";
+import ShowFiles from '@/components/common/file/show.file';
 import { FormattedDate } from "@/components/compose/forms";
 
 interface ChatMessageProps {
@@ -58,7 +58,7 @@ export const ChatMessage = ({
       <div className='mb-2'>{message}</div>
       {resource && resource.length > 0 && (
         <div className='mt-2 pt-2'>
-          {showFiles(resource)}
+          <ShowFiles resources={resource} />
         </div>
       )}
       {children}
