@@ -36,6 +36,7 @@ export interface Attachment {
 }
 
 export interface ShowFilesProps {
-  resources: IPresignedRequest[];
+  resources?: IPresignedRequest[];
+  removeFile?: (uuid: string) => void;
   alertEmpty?: boolean;
 }

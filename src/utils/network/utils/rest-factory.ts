@@ -7,6 +7,7 @@ export class GenericResponse<T> {
 
   constructor(model: IGenericData) {
     this.status = (model.code >= 200 && model.code < 300) || false;
+    console.log('DIO ESTA PUTA RESPUESTA: ', this.status, model.code);
     const data = this.status ? model.data : [];
     if (Array.isArray(data)) {
       this.data = data;

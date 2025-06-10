@@ -30,10 +30,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const files = useSignal<IPresignedRequest[]>([]);
   const [message, setMessage] = useState('');
   const [btnLabel, setBtnLabel] = useState('Check In');
-  const [_showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const predefined: Signal<IOption[]> = useSignal([]);
-  const [selectedPredefined, setSelectedPredefined] = useState<IOption | null>(null);
-  const [showComment, setShowComment] = useState(false);
 
   useEffect(() => {
     fetchInitialData();
@@ -57,16 +54,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       // memos.value = responseMemos.getMany();
       const memosData = responseMemos.getMany();
       // TODO: Cambiar esto, porque desde back se puede tener
-      memos.value = memosData
-        .map((memo) => ({
-          ...memo,
-          priority:
-            memo.priority === 5
-              ? 'Alta'
-              : memo.priority === 4
-                ? 'Media'
-                : 'Baja',
-        }))
+      memos.value = memosData.map((memo) => ({
+        ...memo,
+        priority:
+          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+      }));
     }
 
     if (responsePredefined.getStatus()) {
@@ -74,7 +66,10 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         label: item.name,
         value: item.id,
       }));
-      predefined.value = [...predefined.value, { label: 'Otro', value: 'other' }]
+      predefined.value = [
+        ...predefined.value,
+        { label: 'Otro', value: 'other' },
+      ];
     }
 
     getStatus(memo?.state || '');
@@ -139,12 +134,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     // }
   };
 
-  const handleSubmitMessage = async (values: any) => {
+  const handleSubmitMessage = async (values: any, form: any) => {
     let lastMemo: Omit<Memo, 'resource'> = memo;
     let extraData: ExtraData = { ...memo.extraData } as ExtraData;
 
     if (!message.trim() && !values.predefined) return;
-    if (values.predefined && values.predefined.value !== 'other') extraData.predefined = values.predefined;
+    if (values.predefined && values.predefined.value !== 'other')
+      extraData.predefined = values.predefined;
     if (values.duration) extraData.duration = values.duration;
     if (values.date) extraData.time = values.date;
 
@@ -152,26 +148,27 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       ...lastMemo,
       description: message.trim() ? message : '...',
       priority:
-        lastMemo.priority === 'Alta' ? 5 : lastMemo.priority === 'Media' ? 4 : 3,
+        lastMemo.priority === 'Alta'
+          ? 5
+          : lastMemo.priority === 'Media'
+            ? 4
+            : 3,
       updatedAt: DateUtils.dateToBackend(new Date()),
       createdAt: DateUtils.dateToBackend(new Date()),
       parentId: lastMemo.id,
       extraData: extraData,
-      resource: (files.value && files.value.length > 0) ? files.value : undefined,
+      resource: files.value && files.value.length > 0 ? files.value : undefined,
     };
-    
+
     const response = await MemoService.createMemo(newMemo);
 
     if (response.getStatus()) {
+      form.reset();
+      files.value = [];
       // Verificar si el memo ya existe antes de agregarlo
       const newMemoData = response.getOne();
-      const exists = memos.value.find((m) => m.id === newMemoData.id);
-      if (!exists) {
-        memos.value = [...memos.value, newMemoData];
-      }
-      files.value = [];
+      memos.value = [...memos.value, newMemoData];
       setMessage('');
-      setShowAdditionalInfo(false);
     }
   };
 
@@ -182,7 +179,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const messageHistory = () => {
     return (
-      <div className={`w-[60%] max-h-[${showComment ? '400px' : '300px'}] overflow-y-auto vox-scroll-design`}>
+      <div
+        className={`w-[60%] max-h-[450px] overflow-y-auto vox-scroll-design`}
+      >
         <div className='p-4 space-y-3'>
           {memos.value.map((memo: Memo) => (
             <div key={memo.id} className='flex gap-3'>
@@ -210,7 +209,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     )
                   }
                 >
-                  <div className='bg-b-light-light dark:bg-b-dark-dark rounded-lg p-3'>
+                  <div className='bg-b-light-light dark:bg-b-dark-dark rounded-lg px-3 py-2'>
                     <div className='flex items-start gap-3'>
                       <div className='flex-1'>
                         <div className='flex items-center gap-2 mb-2'>
@@ -275,7 +274,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                       </div>
                     </div>
                   </div>
-                  {expandedMemoId === memo.id && memo.resource && <ShowFiles resources={memo.resource} />}
+                  {expandedMemoId === memo.id && memo.resource && (
+                    <ShowFiles resources={memo.resource} />
+                  )}
                 </div>
               </div>
             </div>
@@ -292,37 +293,47 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     );
   };
 
+  const removeFile = (uuid: string) => {
+    files.value = files.value.filter((file) => file.uuid !== uuid);
+  };
+
   const messageInput = () => {
     return (
-      <div className='w-[40%] border-l border-l-b-light-dark dark:border-l-b-dark-dark mt-2'>
+      <div
+        className={`w-[40%] max-h-[450px] overflow-y-auto vox-scroll-design border-l border-l-b-light-dark dark:border-l-b-dark-dark mt-2`}
+      >
         <Form
           onSubmit={handleSubmitMessage}
-          render={({ handleSubmit, form }) => (
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                await handleSubmit();
-                form.reset();
-                setMessage('');
-                files.value = [];
-              }}
-            >
+          render={({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
               {/* Additional Fields */}
               <div className='flex-1'>
-                {/* Attachments Preview */}
-
-                {files.value.length > 0 && <ShowFiles resources={files.value} />}
-
                 {/* Additional Fields */}
-                <div className='grid grid-cols-1 gap-4'>
+                <div className='grid grid-cols-1 gap-4 '>
                   <div className='p-3'>
-                    <div className='flex items-center gap-2 mb-3'>
-                      <span className='vox-icon size-sm vx-icon-233 text-primary' />
-                      <h4 className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
-                        Formulario de Comentarios
-                      </h4>
+                    <div className='flex items-center gap-2 flex-row justify-between'>
+                      <div className='flex flex-row gap-2'>
+                        <span className='vox-icon size-sm vx-icon-233 text-primary' />
+                        <h4 className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
+                          Formulario de Comentarios
+                        </h4>
+                      </div>
+                      <Button
+                        name='memo-send-response'
+                        type='submit'
+                        disabled={!message.trim() /* && !selectedPredefined */}
+                        label='Enviar'
+                        icon='311'
+                        className='w-full'
+                      />
                     </div>
-                    <div className='grid grid-cols-2 gap-3'>
+                    <div className='flex flex-row w-full bg-red flex-wrap justify-center gap-2 py-1'>
+                      <ShowFiles
+                        resources={files.value}
+                        removeFile={removeFile}
+                      />
+                    </div>
+                    <div className='grid grid-cols-2 gap-2'>
                       <Field<IOption> name='predefined'>
                         {({ input, meta }) => (
                           <SmartSelector
@@ -337,12 +348,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             allowAll={true}
                             onChange={(value?: IOption) => {
                               input.onChange(value);
+                              /*
                               if (value?.value === 'other') {
                                 setShowComment(true);
                               } else {
                                 setShowComment(false);
                                 setSelectedPredefined(value || null);
                               }
+                              */
                             }}
                           />
                         )}
@@ -360,7 +373,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         )}
                       </Field>
                     </div>
-                    <div className='grid grid-cols-2 gap-3'>
+                    <div className='grid grid-cols-2 gap-2'>
                       <Field<string> name='date'>
                         {({ input }) => (
                           <DateField {...input} name='date' label='Fecha' />
@@ -381,41 +394,33 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         )}
                       </Field>
                     </div>
-                    {showComment && (
-                      <div
-                        className='gap-3 w-full'
-                      >
-                        <Field<string> name='message'>
-                          {({ }) => (
-                            <TextArea
-                              label='Comentario'
-                              name='message'
-                              placeholder='Escribe un Comentario...'
-                              value={message}
-                              onChange={(
-                                e: React.ChangeEvent<HTMLTextAreaElement>
-                              ) =>
-                                setMessage(
-                                  (e.target as HTMLTextAreaElement).value
-                                )
-                              }
-                            />
-                          )}
-                        </Field>
-                      </div>
-                    )}
+                    {/* {showComment && ( */}
+                    <div className='grid grid-cols-1'>
+                      <Field<string> name='message'>
+                        {({}) => (
+                          <TextArea
+                            name='message'
+                            placeholder='Escribe un Comentario...'
+                            value={message}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLTextAreaElement>
+                            ) =>
+                              setMessage(
+                                (e.target as HTMLTextAreaElement).value
+                              )
+                            }
+                          />
+                        )}
+                      </Field>
+                    </div>
+                    {/* )} */}
                   </div>
                 </div>
-                <div className='w-full flex justify-end px-2'>
-                  <Button
-                    name='memo-send-response'
-                    type='submit'
-                    disabled={!message.trim() && !selectedPredefined}
-                    label='Enviar'
-                    icon='311'
-                    className='w-full'
-                  />
-                </div>
+                {/* TODO: Luego continuar con esta idea
+                {files.value.length > 0 && (
+                  <ShowFiles resources={files.value} />
+                )}
+                */}
               </div>
             </form>
           )}
@@ -424,7 +429,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     );
   };
 
-  const showDate = (title: string, date: string | Date, format: 'date' | 'datetime' | 'time') => (
+  const showDate = (
+    title: string,
+    date: string | Date,
+    format: 'date' | 'datetime' | 'time'
+  ) => (
     <div className='flex items-center gap-2 rounded-lg p-0 h-[40px] min-w-[140px]'>
       <div className='w-1 h-full bg-primary rounded-full' />
       <div>
@@ -439,7 +448,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   );
 
   return (
-    <div className={`w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm ${showComment ? 'h-[500px]' : 'h-[400px]'}`}>
+    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm max-h-[450px]'>
       <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-dark max-h-20'>
         <div className='flex-1 rounded-lg'>
           {memo.resource && <ShowFiles resources={memo.resource} />}
@@ -454,8 +463,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                 label={btnLabel}
                 icon={
                   btnLabel === 'SOLVE' || btnLabel === 'RESOLVED'
-                    ? '023'
-                    : '024'
+                    ? '030'
+                    : '032'
                 }
                 disabled={btnLabel === 'RESOLVED'}
                 onClick={() =>
@@ -473,7 +482,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
           {/* Dates Section */}
           {memo.createdAt && showDate('Creación', memo.createdAt, 'datetime')}
-          {memo.updatedAt && memo.createdAt && showDate('Actualización', memo.updatedAt != null ? memo.updatedAt : memo.createdAt, 'datetime')}
+          {memo.updatedAt &&
+            memo.createdAt &&
+            showDate(
+              'Actualización',
+              memo.updatedAt != null ? memo.updatedAt : memo.createdAt,
+              'datetime'
+            )}
         </div>
       </div>
 

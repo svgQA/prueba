@@ -1,13 +1,14 @@
-import { useSignal } from '@preact/signals';
-import { IPresignedRequest } from '@/types/file';
-import { Attachment, ShowFilesProps } from './interface';
+// import { useSignal } from '@preact/signals';
+// import { IPresignedRequest } from '@/types/file';
+import { ShowFilesProps } from './interface';
 // import { default_service_url } from '@/env.config';
 // import { useUserStore } from '@/store/slices';
 
-const showFiles = ({resources, alertEmpty = false}: ShowFilesProps) => {
-  const allAttachments = useSignal<Attachment[]>([]);
+const showFiles = ({ resources = [], removeFile }: ShowFilesProps) => {
+  // const allAttachments = useSignal<Attachment[]>([]);
   // const { tenant, getCompanyId } = useUserStore();
 
+  /*
   const getAttachments = () => {
     resources.forEach((resource: IPresignedRequest) => {
       if (resource) {
@@ -20,7 +21,9 @@ const showFiles = ({resources, alertEmpty = false}: ShowFilesProps) => {
       }
     });
   };
+  */
 
+  /*
   const showAttachmentsFiles = (attachment: Attachment, index: number) => {
     return (
       <a
@@ -37,7 +40,9 @@ const showFiles = ({resources, alertEmpty = false}: ShowFilesProps) => {
       </a>
     );
   };
+  */
 
+  /*
   const showAttachmentsImages = (attachment: Attachment, index: number) => {
     return (
       <div key={index} className='relative group'>
@@ -51,28 +56,46 @@ const showFiles = ({resources, alertEmpty = false}: ShowFilesProps) => {
       </div>
     );
   };
+  */
 
-  getAttachments();
+  // getAttachments();
 
   return (
+    <div className='flex flex-row py-1 w-full gap-2'>
+      {resources.map((file) => (
+        <div
+          className='bg-contain dark:bg-gray-800 w-12 h-12 border rounded-md dark:border-b-dark-dark border-b-light-dark content-center text-center relative'
+          key={file.uuid}
+        >
+          <span className='vox-icon vx-icon-067' />
+          {removeFile && (
+            <span
+              className='absolute vox-icon vx-icon-008 size-sm top-0 right-0 cursor-pointer'
+              onClick={() => removeFile(file.uuid)}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+  /*
     <div className='px-4 py-2'>
       <div className='flex flex-wrap gap-2 rounded-lg p-2'>
-        {allAttachments.value.length > 0 ? (
-          allAttachments.value.map((attachment, index) => 
-            attachment.type === 'image' 
-              ? showAttachmentsImages(attachment, index)
-              : showAttachmentsFiles(attachment, index)
-          )
-        ) : (
-          alertEmpty && (
-            <span className='text-sm text-gray-text-light dark:text-t-dark-light'>
-              No hay archivos adjuntos
-            </span>
-          )
-        )}
+        {allAttachments.value.length > 0
+          ? allAttachments.value.map((attachment, index) =>
+              attachment.type === 'image'
+                ? showAttachmentsImages(attachment, index)
+                : showAttachmentsFiles(attachment, index)
+            )
+          : alertEmpty && (
+              <span className='text-sm text-gray-text-light dark:text-t-dark-light'>
+                No hay archivos adjuntos
+              </span>
+            )}
       </div>
     </div>
   );
+    */
 };
 
 export default showFiles;

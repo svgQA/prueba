@@ -15,6 +15,8 @@ export interface IPresignedRequest {
     | AllowedVideoTypes;
   uuid: string;
   area?: AllowedAreaTypes;
+  icon?: string;
+  file?: string;
 }
 
 export interface IPresignedResponse {

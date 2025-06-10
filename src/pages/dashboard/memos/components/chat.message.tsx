@@ -1,7 +1,7 @@
 import { Badge } from '@/components/common/badge/badge';
 import { Chip } from '@/components/common/chip/chip';
 import ShowFiles from '@/components/common/file/show.file';
-import { FormattedDate } from "@/components/compose/forms";
+import { FormattedDate } from '@/components/compose/forms';
 
 interface ChatMessageProps {
   message: string;
@@ -17,21 +17,21 @@ interface ChatMessageProps {
   status?: string;
 }
 
-export const ChatMessage = ({ 
-  message, 
-  isSender, 
-  title, 
-  resource, 
-  date, 
-  priority, 
+export const ChatMessage = ({
+  message,
+  isSender,
+  title,
+  resource,
+  date,
+  priority,
   children,
   id,
   onReply,
   isSelected,
-  status
+  status,
 }: ChatMessageProps) => {
   return (
-    <div 
+    <div
       className={`flex flex-col ${isSender ? 'items-end' : 'items-start'} mb-4`}
       onClick={() => id && onReply?.(id)}
     >
@@ -42,22 +42,24 @@ export const ChatMessage = ({
       >
         {(title || priority || status) && (
           <div className='flex justify-between items-center gap-2 mb-2'>
-            <div className="flex items-center gap-2">
-              {title && (
-                <Chip
-                  label={title}
-                  width='lg'
-                  icon='123'
-                />
-              )}
+            <div className='flex items-center gap-2'>
+              {title && <Chip label={title} width='lg' icon='123' />}
               {status && (
-                <div className={`w-3.5 h-3.5 rounded-full bg-${status === 'OPENED' ? 'primary' : status === 'RESOLVED' ? 'secondary' : 'ternary'} ring-2 ring-white dark:ring-gray-800 shadow-sm`} />
+                <div
+                  className={`w-3.5 h-3.5 rounded-full bg-${status === 'OPENED' ? 'primary' : status === 'RESOLVED' ? 'secondary' : 'ternary'} ring-2 ring-white dark:ring-gray-800 shadow-sm`}
+                />
               )}
             </div>
             {priority && (
               <Badge
                 label={priority}
-                status={(priority === 'Alta' ? 'error' : priority === 'Media' ? 'warning' : 'success') as 'info' | 'error' | 'warning' | 'success'}
+                status={
+                  (priority === 'Alta'
+                    ? 'error'
+                    : priority === 'Media'
+                      ? 'warning'
+                      : 'success') as 'info' | 'error' | 'warning' | 'success'
+                }
                 outline
               />
             )}

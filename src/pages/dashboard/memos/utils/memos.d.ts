@@ -1,8 +1,11 @@
-import { IPresignedRequest, Resource } from '@/components/common/file/interface';
+import {
+  IPresignedRequest,
+  Resource,
+} from '@/components/common/file/interface';
 import { IOption } from '@/components/common/smart-selector/smart-select';
 
 export interface Memo {
-  newMemo: import("/home/tryvoo/proyects/tryvoo/voxline-dashboard/src/types/file/service").IPresignedRequest;
+  newMemo: import('/home/tryvoo/proyects/tryvoo/voxline-dashboard/src/types/file/service').IPresignedRequest;
   id: number;
   noveltyId?: number;
   serviceId?: number;

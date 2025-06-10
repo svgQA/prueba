@@ -72,7 +72,7 @@ const FrequentQuestions = () => {
 export const ChatView: FunctionComponent<ChatViewProps> = ({
   users,
   getUsersHandler,
-  memosGroupedByService
+  memosGroupedByService,
 }) => {
   const { t } = useTranslation();
   const { cognito } = useUserStore();
@@ -86,7 +86,9 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   const memoByService = useSignal<any[]>([]);
   const predefined = useSignal<IOption[]>([]);
   const replyToId = useSignal<number | undefined>();
-  const replyToMessage = useSignal<{ message: string; title?: string; date?: string | Date } | undefined>();
+  const replyToMessage = useSignal<
+    { message: string; title?: string; date?: string | Date } | undefined
+  >();
   const messages = useSignal<string>('');
   const serviceId = useSignal<string>('');
   const files = useSignal<IPresignedRequest[]>([]);
@@ -168,7 +170,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
       from: cognito,
       to: userSelected.value?.cognitoId,
       message,
-      replyTo: replyId
+      replyTo: replyId,
     };
     wsManager.sendMessage(objMessage);
 
@@ -177,7 +179,12 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     replyToMessage.value = undefined;
   };
 
-  const handleReply = (id: number, message: string, title?: string, date?: string | Date) => {
+  const handleReply = (
+    id: number,
+    message: string,
+    title?: string,
+    date?: string | Date
+  ) => {
     if (replyToId.value === id) {
       replyToId.value = undefined;
       replyToMessage.value = undefined;
@@ -216,7 +223,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     if (isService) {
       const response = await MemoService.get_all_by_service_id(chatId);
       if (!response.getStatus()) return;
-      memoByService.value = response.getMany().map((memo) => ({ ...memo, priority: memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja' }));
+      memoByService.value = response.getMany().map((memo) => ({
+        ...memo,
+        priority:
+          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+      }));
     }
   };
 
@@ -235,7 +246,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         memo.priority === 'Alta' ? 5 : memo.priority === 'Media' ? 4 : 3,
       updatedAt: DateUtils.dateToBackend(new Date()),
       createdAt: DateUtils.dateToBackend(new Date()),
-      resource: (files.value && files.value.length > 0) ? files.value : undefined,
+      resource: files.value && files.value.length > 0 ? files.value : undefined,
       parentId: memo.id,
       extraData: extraData,
     };
@@ -287,33 +298,33 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
             <div className='flex-1 overflow-y-auto vox-scroll-design border-b-light-dark dark:border-b-dark-light'>
               {viewMode.value === 'users'
                 ? users.map((user: IUserResponse) => (
-                  <ChatCard
-                    user={user}
-                    key={`chat-card-${user.cognitoId}`}
-                    id={user.cognitoId}
-                    name={`${user.name} ${user.surname}`}
-                    lastMessage={`${cognito === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
-                    time='10:15'
-                    amount={chats.value[user.cognitoId]?.new}
-                    onClick={handleChatSelect}
-                    isSelected={selectedChat.value === user.cognitoId}
-                  />
-                ))
+                    <ChatCard
+                      user={user}
+                      key={`chat-card-${user.cognitoId}`}
+                      id={user.cognitoId}
+                      name={`${user.name} ${user.surname}`}
+                      lastMessage={`${cognito === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
+                      time='10:15'
+                      amount={chats.value[user.cognitoId]?.new}
+                      onClick={handleChatSelect}
+                      isSelected={selectedChat.value === user.cognitoId}
+                    />
+                  ))
                 : memosGroupedByService.map((service: any) => (
-                  <ChatCard
-                    key={`service-card-${service.service.id}`}
-                    id={service.service.id}
-                    name={service.service.name}
-                    lastMessage={service.service.description || ''}
-                    time={service.service.time || ''}
-                    amount={service.service.unreadCount}
-                    onClick={() => {
-                      handleChatSelect(service.service.id, true)
-                      serviceId.value = service.service.id;
-                    }}
-                    isSelected={selectedChat.value === service.service.id}
-                  />
-                ))}
+                    <ChatCard
+                      key={`service-card-${service.service.id}`}
+                      id={service.service.id}
+                      name={service.service.name}
+                      lastMessage={service.service.description || ''}
+                      time={service.service.time || ''}
+                      amount={service.service.unreadCount}
+                      onClick={() => {
+                        handleChatSelect(service.service.id, true);
+                        serviceId.value = service.service.id;
+                      }}
+                      isSelected={selectedChat.value === service.service.id}
+                    />
+                  ))}
             </div>
             <div className='flex justify-between items-center p-4 border-t border-r dark:border-b-dark-light border-b-light-dark'>
               <Button
@@ -361,19 +372,32 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                       date={memo.updatedAt}
                       priority={memo.priority}
                       id={memo.id}
-                      onReply={(id) => handleReply(id, memo.novelty?.description || '', memo.novelty?.name, memo.updatedAt)}
+                      onReply={(id) =>
+                        handleReply(
+                          id,
+                          memo.novelty?.description || '',
+                          memo.novelty?.name,
+                          memo.updatedAt
+                        )
+                      }
                       isSelected={replyToId.value === memo.id}
                       status={memo.state}
                     >
                       <div className='flex items-center gap-2 text-xs text-gray-500'>
                         <span className='vox-icon size-sm vx-icon-318' />
-                        <span>{memo.user?.name} {memo.user?.surname}</span>
+                        <span>
+                          {memo.user?.name} {memo.user?.surname}
+                        </span>
                         {memo.relatedShiftId && (
                           <>
                             <span className='mx-1'>•</span>
                             <span className='vox-icon size-sm vx-icon-239' />
                             <span>Shift ID: {memo.relatedShiftId}</span>
-                            {memo.user?.isSupervisor && memo.relatedShift && <span className='ml-1'>({memo.relatedShift.name})</span>}
+                            {memo.user?.isSupervisor && memo.relatedShift && (
+                              <span className='ml-1'>
+                                ({memo.relatedShift.name})
+                              </span>
+                            )}
                           </>
                         )}
                       </div>
@@ -400,7 +424,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                               {childMemo.extraData.time && (
                                 <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
                                   <span className='vox-icon size-sm vx-icon-237' />
-                                  {'fecha: ' + DateUtils.dateToFrontend(childMemo.extraData.time, { format: 'DD/MM/YYYY HH:mm', })}
+                                  {'fecha: ' +
+                                    DateUtils.dateToFrontend(
+                                      childMemo.extraData.time,
+                                      { format: 'DD/MM/YYYY HH:mm' }
+                                    )}
                                 </span>
                               )}
                             </div>
@@ -412,10 +440,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 ))}
             </div>
             {viewMode.value === TypeChatView.USERS ? (
-              <ChatInput
-                onSend={handleSendMessage}
-                input={messages}
-              />
+              <ChatInput onSend={handleSendMessage} input={messages} />
             ) : (
               <ChatInput
                 onSend={handleSendMessage}
@@ -470,7 +495,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
                             <Field<string> name='date'>
                               {({ input }) => (
-                                <DateField {...input} name='date' label='Fecha' />
+                                <DateField
+                                  {...input}
+                                  name='date'
+                                  label='Fecha'
+                                />
                               )}
                             </Field>
 

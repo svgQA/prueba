@@ -109,7 +109,9 @@ const SupervisorInfo = ({
         <div className='w-8/12 flex flex-col'>
           <div className='w-full h-3/12 flex flex-row justify-between'>
             <div className='flex-1'>
-              {memo?.resource && <ShowFiles resources={memo.resource} alertEmpty={true} />}
+              {memo?.resource && (
+                <ShowFiles resources={memo.resource} alertEmpty={true} />
+              )}
             </div>
             {resolved &&
               memo.state !== 'RESOLVED' &&
