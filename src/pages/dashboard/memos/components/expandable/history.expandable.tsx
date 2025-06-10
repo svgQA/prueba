@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import { IFilesMemo, Memo, ExtraData } from '../../utils/memos';
+import { Memo, ExtraData } from '../../utils/memos';
 import { Avatar } from '@/components/common/Avatar';
 import { MemoService } from '@/services';
 import { File } from '@/components/common/file/file';
@@ -21,20 +21,18 @@ import { Input } from '@/components/common/input/input';
 import { DateField } from '@/components/compose/forms';
 import { DateUtils } from '@/utils/utilities/dates';
 import { PredefinedService } from '@/services/shift/predefined';
-import { IFile } from '@/components/common/file/interface';
-import { showFiles } from '@/components/common/file/show.file';
+import { IPresignedRequest } from '@/types/file';
+import ShowFiles from '@/components/common/file/show.file';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
   const memos = useSignal<Memo[]>([]);
-  const [files, setFiles] = useState<IFilesMemo[]>([]);
+  const files = useSignal<IPresignedRequest[]>([]);
   const [message, setMessage] = useState('');
   const [btnLabel, setBtnLabel] = useState('Check In');
   const [_showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const predefined: Signal<IOption[]> = useSignal([]);
-  const [selectedPredefined, setSelectedPredefined] = useState<IOption | null>(
-    null
-  );
+  const [selectedPredefined, setSelectedPredefined] = useState<IOption | null>(null);
   const [showComment, setShowComment] = useState(false);
 
   useEffect(() => {
@@ -69,11 +67,6 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                 ? 'Media'
                 : 'Baja',
         }))
-        .sort((a, b) => {
-          const dateA = new Date(a.updatedAt || a.createdAt || 0);
-          const dateB = new Date(b.updatedAt || b.createdAt || 0);
-          return dateA.getTime() - dateB.getTime();
-        });
     }
 
     if (responsePredefined.getStatus()) {
@@ -81,6 +74,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         label: item.name,
         value: item.id,
       }));
+      predefined.value = [...predefined.value, { label: 'Otro', value: 'other' }]
     }
 
     getStatus(memo?.state || '');
@@ -146,29 +140,26 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   };
 
   const handleSubmitMessage = async (values: any) => {
-    if (!message.trim() && !values.predefined) return;
-
+    let lastMemo: Omit<Memo, 'resource'> = memo;
     let extraData: ExtraData = { ...memo.extraData } as ExtraData;
 
-    if (values.predefined) extraData.predefined = values.predefined;
+    if (!message.trim() && !values.predefined) return;
+    if (values.predefined && values.predefined.value !== 'other') extraData.predefined = values.predefined;
     if (values.duration) extraData.duration = values.duration;
     if (values.date) extraData.time = values.date;
 
     const newMemo: Memo = {
-      ...memo,
+      ...lastMemo,
       description: message.trim() ? message : '...',
       priority:
-        memo.priority === 'Alta' ? 5 : memo.priority === 'Media' ? 4 : 3,
+        lastMemo.priority === 'Alta' ? 5 : lastMemo.priority === 'Media' ? 4 : 3,
       updatedAt: DateUtils.dateToBackend(new Date()),
       createdAt: DateUtils.dateToBackend(new Date()),
-      resource: {
-        images: files[files.length - 1]?.images || [],
-        files: files[files.length - 1]?.files || [],
-      },
-      parentId: memo.id,
+      parentId: lastMemo.id,
       extraData: extraData,
+      resource: (files.value && files.value.length > 0) ? files.value : undefined,
     };
-
+    
     const response = await MemoService.createMemo(newMemo);
 
     if (response.getStatus()) {
@@ -178,39 +169,20 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       if (!exists) {
         memos.value = [...memos.value, newMemoData];
       }
-      setFiles([]);
+      files.value = [];
       setMessage('');
       setShowAdditionalInfo(false);
     }
   };
 
   const handleAttachmentUpload = (e: any) => {
-    const type = e.target.type;
-    const fileInput: IFile = e.target.value[0];
-    fileInput.area = 'memo';
-
-    if (type === 'file') {
-      setFiles([
-        ...files,
-        {
-          images: files[files.length - 1]?.images || [],
-          files: [...(files[files.length - 1]?.files || []), fileInput],
-        },
-      ]);
-    } else {
-      setFiles([
-        ...files,
-        {
-          images: [...(files[files.length - 1]?.images || []), fileInput],
-          files: files[files.length - 1]?.files || [],
-        },
-      ]);
-    }
+    const fileInput: IPresignedRequest = e.target.value[0];
+    files.value = [...files.value, fileInput];
   };
 
   const messageHistory = () => {
     return (
-      <div className='w-[60%] max-h-[400px] overflow-y-auto vox-scroll-design'>
+      <div className={`w-[60%] max-h-[${showComment ? '400px' : '300px'}] overflow-y-auto vox-scroll-design`}>
         <div className='p-4 space-y-3'>
           {memos.value.map((memo: Memo) => (
             <div key={memo.id} className='flex gap-3'>
@@ -303,9 +275,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                       </div>
                     </div>
                   </div>
-                  {expandedMemoId === memo.id &&
-                    memo.resource &&
-                    showFiles(memo.resource)}
+                  {expandedMemoId === memo.id && memo.resource && <ShowFiles resources={memo.resource} />}
                 </div>
               </div>
             </div>
@@ -334,18 +304,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                 await handleSubmit();
                 form.reset();
                 setMessage('');
-                setFiles([]);
+                files.value = [];
               }}
             >
               {/* Additional Fields */}
               <div className='flex-1'>
                 {/* Attachments Preview */}
 
-                {files.length > 0 && (
-                  <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-2'>
-                    {files.map((file: any) => showFiles(file))}
-                  </div>
-                )}
+                {files.value.length > 0 && <ShowFiles resources={files.value} />}
 
                 {/* Additional Fields */}
                 <div className='grid grid-cols-1 gap-4'>
@@ -368,10 +334,15 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             label='Opciones predefinidas'
                             options={predefined.value}
                             menuPortalTarget={document.body}
-                            end={false}
+                            allowAll={true}
                             onChange={(value?: IOption) => {
                               input.onChange(value);
-                              setSelectedPredefined(value || null);
+                              if (value?.value === 'other') {
+                                setShowComment(true);
+                              } else {
+                                setShowComment(false);
+                                setSelectedPredefined(value || null);
+                              }
                             }}
                           />
                         )}
@@ -381,7 +352,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         {({ input }) => (
                           <Input
                             {...input}
-                            type='text'
+                            type='number'
                             name='duration'
                             label='Duración'
                             placeholder=' min, hh:mm'
@@ -405,48 +376,34 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             accept='image/*'
                             multiple={true}
                             label='Adjuntos'
+                            area='memo'
                           />
                         )}
                       </Field>
                     </div>
-                    <div className='flex items-center gap-2 mb-2'>
-                      <input
-                        type='checkbox'
-                        id='showComment'
-                        checked={showComment}
-                        onChange={(e) =>
-                          setShowComment((e.target as HTMLInputElement).checked)
-                        }
-                        className='rounded border-gray-300 text-primary focus:ring-primary'
-                      />
-                      <label
-                        htmlFor='showComment'
-                        className='text-sm text-gray-text-light dark:text-t-dark-light'
+                    {showComment && (
+                      <div
+                        className='gap-3 w-full'
                       >
-                        Agregar comentario adicional
-                      </label>
-                    </div>
-                    <div
-                      className={`gap-3 w-full ${showComment ? 'visible' : 'invisible'}`}
-                    >
-                      <Field<string> name='message'>
-                        {({}) => (
-                          <TextArea
-                            label='Comentario'
-                            name='message'
-                            placeholder='Escribe un Comentario...'
-                            value={message}
-                            onChange={(
-                              e: React.ChangeEvent<HTMLTextAreaElement>
-                            ) =>
-                              setMessage(
-                                (e.target as HTMLTextAreaElement).value
-                              )
-                            }
-                          />
-                        )}
-                      </Field>
-                    </div>
+                        <Field<string> name='message'>
+                          {({ }) => (
+                            <TextArea
+                              label='Comentario'
+                              name='message'
+                              placeholder='Escribe un Comentario...'
+                              value={message}
+                              onChange={(
+                                e: React.ChangeEvent<HTMLTextAreaElement>
+                              ) =>
+                                setMessage(
+                                  (e.target as HTMLTextAreaElement).value
+                                )
+                              }
+                            />
+                          )}
+                        </Field>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className='w-full flex justify-end px-2'>
@@ -467,11 +424,25 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     );
   };
 
+  const showDate = (title: string, date: string | Date, format: 'date' | 'datetime' | 'time') => (
+    <div className='flex items-center gap-2 rounded-lg p-0 h-[40px] min-w-[140px]'>
+      <div className='w-1 h-full bg-primary rounded-full' />
+      <div>
+        <p className='font-medium text-t-light dark:text-t-dark text-xs'>
+          {title}
+        </p>
+        <p className='text-xs text-gray-text-light dark:text-t-dark-light'>
+          <FormattedDate date={date} format={format} />
+        </p>
+      </div>
+    </div>
+  );
+
   return (
-    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm h-[500px]'>
+    <div className={`w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm ${showComment ? 'h-[500px]' : 'h-[400px]'}`}>
       <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-dark max-h-20'>
         <div className='flex-1 rounded-lg'>
-          {memo.resource && showFiles(memo.resource)}
+          {memo.resource && <ShowFiles resources={memo.resource} />}
         </div>
 
         {/* Info Section - Right */}
@@ -501,29 +472,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           )}
 
           {/* Dates Section */}
-          <div className='flex items-center gap-2 rounded-lg p-0 h-[40px] min-w-[140px]'>
-            <div className='w-1 h-full bg-primary rounded-full' />
-            <div>
-              <p className='font-medium text-t-light dark:text-t-dark text-xs'>
-                Creación
-              </p>
-              <p className='text-xs text-gray-text-light dark:text-t-dark-light'>
-                <FormattedDate date={memo.createdAt} format='datetime' />
-              </p>
-            </div>
-          </div>
-
-          <div className='flex items-center gap-2 rounded-lg p-0 h-[40px] min-w-[140px]'>
-            <div className='w-1 h-full bg-primary rounded-full' />
-            <div>
-              <p className='font-medium text-t-light dark:text-t-dark text-xs'>
-                Actualización
-              </p>
-              <p className='text-xs text-gray-text-light dark:text-t-dark-light'>
-                <FormattedDate date={memo.updatedAt} format='datetime' />
-              </p>
-            </div>
-          </div>
+          {memo.createdAt && showDate('Creación', memo.createdAt, 'datetime')}
+          {memo.updatedAt && memo.createdAt && showDate('Actualización', memo.updatedAt != null ? memo.updatedAt : memo.createdAt, 'datetime')}
         </div>
       </div>
 

@@ -151,9 +151,7 @@ export const MemosPage: FunctionComponent = () => {
         ...memo,
         priority:
           memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
-          format: 'DD/MM/YYYY',
-        }),
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {format: 'DD/MM/YYYY HH:mm'}),
       }));
       loading.value = false;
     }
