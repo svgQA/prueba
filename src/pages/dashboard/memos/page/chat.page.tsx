@@ -364,7 +364,20 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                       onReply={(id) => handleReply(id, memo.novelty?.description || '', memo.novelty?.name, memo.updatedAt)}
                       isSelected={replyToId.value === memo.id}
                       status={memo.state}
-                    />
+                    >
+                      <div className='flex items-center gap-2 text-xs text-gray-500'>
+                        <span className='vox-icon size-sm vx-icon-318' />
+                        <span>{memo.user?.name} {memo.user?.surname}</span>
+                        {memo.relatedShiftId && (
+                          <>
+                            <span className='mx-1'>•</span>
+                            <span className='vox-icon size-sm vx-icon-239' />
+                            <span>Shift ID: {memo.relatedShiftId}</span>
+                            {memo.user?.isSupervisor && memo.relatedShift && <span className='ml-1'>({memo.relatedShift.name})</span>}
+                          </>
+                        )}
+                      </div>
+                    </ChatMessage>
                     {/* Submemos */}
                     {memo.children?.map(
                       (childMemo: Memo, childIndex: number) => (
