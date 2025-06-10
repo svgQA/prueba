@@ -1,7 +1,7 @@
 import { Badge } from '@/components/common/badge/badge';
 import { Chip } from '@/components/common/chip/chip';
-import { showFiles } from "@/components/common/file/show.file";
-import { FormattedDate } from "@/components/compose/forms";
+import { showFiles } from '@/components/common/file/show.file';
+import { FormattedDate } from '@/components/compose/forms';
 
 interface ChatMessageProps {
   message: string;
@@ -16,19 +16,19 @@ interface ChatMessageProps {
   isSelected?: boolean;
 }
 
-export const ChatMessage = ({ 
-  message, 
-  isSender, 
-  title, 
-  resource, 
-  date, 
-  priority, 
+export const ChatMessage = ({
+  message,
+  isSender,
+  title,
+  resource,
+  date,
+  priority,
   children,
   id,
   onReply,
-  isSelected 
+  isSelected,
 }: ChatMessageProps) => (
-  <div 
+  <div
     className={`flex flex-col ${isSender ? 'items-end' : 'items-start'} mb-4`}
     onClick={() => id && onReply?.(id)}
   >
@@ -39,17 +39,17 @@ export const ChatMessage = ({
     >
       {(title || priority) && (
         <div className='flex justify-between items-center gap-2 mb-2'>
-          {title && (
-            <Chip
-              label={title}
-              width='lg'
-              icon='123'
-            />
-          )}
+          {title && <Chip label={title} width='lg' icon='123' />}
           {priority && (
             <Badge
               label={priority}
-              status={(priority === 'Alta' ? 'error' : priority === 'Media' ? 'warning' : 'success') as 'info' | 'error' | 'warning' | 'success'}
+              status={
+                (priority === 'Alta'
+                  ? 'error'
+                  : priority === 'Media'
+                    ? 'warning'
+                    : 'success') as 'info' | 'error' | 'warning' | 'success'
+              }
               outline
             />
           )}
@@ -57,9 +57,7 @@ export const ChatMessage = ({
       )}
       <div className='mb-2'>{message}</div>
       {resource && resource.length > 0 && (
-        <div className='mt-2 pt-2'>
-          {showFiles(resource)}
-        </div>
+        <div className='mt-2 pt-2'>{showFiles(resource)}</div>
       )}
       {children}
       {date && (

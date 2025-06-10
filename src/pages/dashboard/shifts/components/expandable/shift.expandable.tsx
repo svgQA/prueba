@@ -25,7 +25,7 @@ const ShiftInfo = ({
               Actividades del Turno
             </h2>
             <div className='flex flex-row gap-2 flex-wrap justify-end'>
-              <Chip label={`Progreso: ${activityPct}%`} color='primary'/>
+              <Chip label={`Progreso: ${activityPct}%`} color='primary' />
             </div>
           </div>
           <div className='flex flex-row gap-2 flex-wrap justify-center'>

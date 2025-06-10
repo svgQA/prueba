@@ -24,8 +24,9 @@ export const TextEllipsis = ({
   useEffect(() => {
     if (containerRef.current) {
       const element = containerRef.current;
-      const isTextOverflowing = element.scrollHeight > element.clientHeight || 
-                              element.scrollWidth > element.clientWidth;
+      const isTextOverflowing =
+        element.scrollHeight > element.clientHeight ||
+        element.scrollWidth > element.clientWidth;
       setIsOverflowing(isTextOverflowing);
     }
   }, [text, maxWidth, children]);

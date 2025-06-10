@@ -1,6 +1,6 @@
 import { Button } from '@/components/common/button/button';
 import { Signal, useSignal } from '@preact/signals';
-import { FormattedDate } from "@/components/compose/forms";
+import { FormattedDate } from '@/components/compose/forms';
 
 interface ChatInputProps {
   onSend?: (message: string, replyId?: number) => void;
@@ -17,7 +17,15 @@ interface ChatInputProps {
   input: Signal<string>;
 }
 
-export const ChatInput = ({ onCancelReply, input, disabled = false, children, replyId, replyTo, form }: ChatInputProps) => {
+export const ChatInput = ({
+  onCancelReply,
+  input,
+  disabled = false,
+  children,
+  replyId,
+  replyTo,
+  form,
+}: ChatInputProps) => {
   const showChildren = useSignal(false);
 
   // const handleSubmit = () => {
@@ -70,7 +78,7 @@ export const ChatInput = ({ onCancelReply, input, disabled = false, children, re
     <div>
       <div className='flex flex-col'>
         {replyId && replyTo && showReply()}
-        {showChildren.value && children  && replyId && (
+        {showChildren.value && children && replyId && (
           <div className='flex items-center gap-2 px-4 py-2 bg-b-light-light dark:bg-b-dark-light border-t border-b-light-dark dark:border-b-dark-light'>
             {children}
             <div className='flex-1 flex justify-end'>
@@ -80,15 +88,29 @@ export const ChatInput = ({ onCancelReply, input, disabled = false, children, re
                 id='cancel-reply-btn'
                 name='cancel-reply'
                 type='button'
-                onClick={() => showChildren.value = false}
+                onClick={() => (showChildren.value = false)}
               />
             </div>
           </div>
         )}
 
         <div className='flex items-center gap-2 p-4 border-t dark:border-b-dark-light'>
-          <Button icon='011' rounded id='attach-btn' name='attach' type='button' disabled={disabled || !replyId} />
-          <Button icon='142' rounded id='emoji-btn' name='emoji' type='button' disabled={disabled || !replyId} />
+          <Button
+            icon='011'
+            rounded
+            id='attach-btn'
+            name='attach'
+            type='button'
+            disabled={disabled || !replyId}
+          />
+          <Button
+            icon='142'
+            rounded
+            id='emoji-btn'
+            name='emoji'
+            type='button'
+            disabled={disabled || !replyId}
+          />
           {children && (
             <Button
               icon='311'
@@ -96,13 +118,15 @@ export const ChatInput = ({ onCancelReply, input, disabled = false, children, re
               id='modal-btn'
               name='modal'
               type='button'
-              onClick={() => showChildren.value = !showChildren.value}
+              onClick={() => (showChildren.value = !showChildren.value)}
             />
           )}
           <input
             type='text'
             className='flex-1 py-2 px-4 border dark:border-b-dark-light rounded-full'
-            placeholder={replyId ? 'Type a reply...' : 'Select a message to reply...'}
+            placeholder={
+              replyId ? 'Type a reply...' : 'Select a message to reply...'
+            }
             value={input.value}
             onInput={(e) => (input.value = e.currentTarget.value)}
             disabled={disabled || !replyId}
