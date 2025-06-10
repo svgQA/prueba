@@ -44,7 +44,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
-import { AudioButton } from './audio/socket.button';
+// import { AudioButton } from './audio/socket.button';
 import { getLocation } from '@/utils/utilities/location';
 import {
   IBaseSSE,
@@ -168,6 +168,10 @@ export const ShiftsPage: FunctionalComponent = () => {
       shiftCopy[shiftIndex].status = message.status;
       shiftCopy[shiftIndex].updatedAt = message.updatedAt;
       shifts.value = [...shiftCopy];
+    }
+
+    if (name === SSE_EVENTS.CREATE) {
+      fetchInitialData();
     }
   };
 
@@ -549,6 +553,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
       ToastManager.success(t('shift.expandable.date.success'));
+      fetchInitialData();
     }
   };
 
@@ -598,7 +603,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               icon='044'
               iconSize='sm'
             />
-            <AudioButton />
+            {/* <AudioButton /> */}
           </div>
         </div>
 
@@ -633,6 +638,13 @@ export const ShiftsPage: FunctionalComponent = () => {
               userEmail: false,
               userPhone: false,
               serviceRound: false,
+            }}
+            searchable={{
+              report: false,
+              shift: false,
+              round: false,
+              client: false,
+              duration: false,
             }}
           />
         )}

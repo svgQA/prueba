@@ -31,4 +31,5 @@ export interface ITableProps<T> {
   isSettingTable?: boolean;
   rowClassName?: (row: T) => string;
   loading?: boolean;
+  searchable?: { [key: string]: boolean };
 }

@@ -112,7 +112,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         longitude={checkInData?.location.lng || -74.106992}
         url={checkInData?.url || ''}
         // disabled={!!checkOutData?.distance}
-        disabled={shift?.status === 'CLOSED'} // TODO: Validar distancia
+        disabled={shift?.status !== 'CREATED'} // Solo permitir check-in si está en estado CREATED
         onCheck={handleCheck}
       />
 
@@ -132,7 +132,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         longitude={checkOutData?.location.lng || -74.106992}
         url={checkOutData?.url || ''}
         // disabled={!checkInData?.distance || !!checkOutData?.distance}
-        disabled={shift?.status === 'OPENED' || shift?.status === 'CREATED'} // TODO: Validar distancia
+        disabled={shift?.status !== 'OPENED'} // Solo permitir check-out si está en estado OPENED
         onCheck={handleCheck}
       />
     </div>

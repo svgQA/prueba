@@ -71,7 +71,9 @@ const EmployeeInfo = ({
             </div>
             <div>
               <p className='font-semibold'>Departamento</p>
-              <p>{employee.extraData?.area}</p>
+              <p>
+                {employee.extraData?.area || service.place.municipality.name}
+              </p>
             </div>
             <div>
               <p className='font-semibold'>Fecha de Inicio</p>

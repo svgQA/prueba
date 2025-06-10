@@ -21,6 +21,7 @@ export const File = ({
   accept,
   value = [],
   disabled,
+  area,
   ...props
 }: IFileProps) => {
   const dataset = useSignal({});
@@ -32,7 +33,7 @@ export const File = ({
 
     isLoading.value = true;
     try {
-      await handleFileChangeWrapper(e, emitChange);
+      await handleFileChangeWrapper(e, emitChange, area);
     } catch {
       ToastManager.error('No se ha podido cargar la imagen');
     } finally {
@@ -86,11 +87,11 @@ export const File = ({
   };
 
   return (
-    <div id={id} className='w-full my-1'>
+    <div id={id} className='w-full'>
       <div className='relative'>
         {isLoading.value && (
-          <div className='absolute inset-0 bg-white/50 dark:bg-black/50 z-10 flex items-center justify-center'>
-            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
+          <div className='absolute inset-0 z-10 flex items-center justify-center'>
+            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-primary'></div>
           </div>
         )}
         {label && (
@@ -113,10 +114,10 @@ export const File = ({
           )}
           <input
             className={`px-2 w-full mr-2 bg-transparent rounded-md text-gray-700 dark:text-gray-200
-              ${thin ? '' : 'py-2'} 
-              file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 
-              file:text-sm file:bg-violet-50 dark:file:bg-violet-900/30 
-              file:text-violet-700 dark:file:text-violet-300 
+              ${thin ? '' : 'py-1'}
+              file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0
+              file:text-sm file:bg-violet-50 dark:file:bg-violet-900/30
+              file:text-violet-700 dark:file:text-violet-300
               hover:file:bg-violet-100 dark:hover:file:bg-violet-800/40
               disabled:opacity-50 disabled:cursor-not-allowed`}
             onChange={handleFileChange}

@@ -11,11 +11,13 @@ import { SIDEBAR_MENUS } from '@/utils/menus/sidebar';
 const STORAGE_KEY = 'notifications';
 
 const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [localNotifications, setLocalNotifications] = useState<INotification[]>(
     []
   );
   const [badgeColor, setBadgeColor] = useState('bg-primary');
+  const [shouldAnimate, setShouldAnimate] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [, navigate] = useLocation();
   const [notifications, setNotifications] = useState<INotification[]>([]);
@@ -48,6 +50,11 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
       localStorage.set(STORAGE_KEY, updatedNotifications);
       return updatedNotifications;
     });
+
+    audioRef.current?.play();
+    // Activar animación
+    setShouldAnimate(true);
+    setTimeout(() => setShouldAnimate(false), 500);
   };
 
   useEffect(() => {
@@ -165,7 +172,12 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
 
   return (
     <div className='relative'>
-      <FloatBadge label={allNotifications.length || '0'} color={badgeColor}>
+      <audio ref={audioRef} src='/sound/sound.mp3' preload='auto' />
+      <FloatBadge
+        label={allNotifications.length || '0'}
+        color={badgeColor}
+        animate={shouldAnimate}
+      >
         <Button
           name='user-action'
           icon={icon}

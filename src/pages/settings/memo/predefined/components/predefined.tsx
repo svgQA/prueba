@@ -10,6 +10,18 @@ export const columns: ColumnDef<IPredefined>[] = [
     header: 'ID',
   },
   {
+    id: 'description',
+    accessorKey: 'description',
+    size: 60,
+    header: 'Descripción',
+  },
+  {
+    id: 'type',
+    accessorKey: 'type',
+    size: 60,
+    header: 'Tipo',
+  },
+  {
     id: 'name',
     accessorKey: 'name',
     size: 60,

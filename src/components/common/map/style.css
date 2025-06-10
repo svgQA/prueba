@@ -1,0 +1,12 @@
+.maplibregl-popup-content,
+.maplibregl-popup-content > div {
+  @apply bg-b-white dark:bg-b-dark;
+}
+
+.maplibregl-popup-tip {
+  @apply border-t-b-white dark:!border-t-b-dark;
+}
+
+.maplibregl-popup-close-button {
+  @apply text-t-light dark:text-t-dark absolute right-1 top-0;
+}

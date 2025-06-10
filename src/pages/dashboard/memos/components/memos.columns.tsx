@@ -2,10 +2,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from '../utils/memos';
 
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import {
-  IDropdownAction,
-  DropdownActionsMenu,
-} from '@/components/common/table/components/dropdown.actions.menu';
 import { Badge } from '@/components/common/badge/badge';
 import { Avatar } from '@/components/common/Avatar';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
@@ -26,7 +22,7 @@ type CustomColumnDef<TData> = ColumnDef<TData> &
   NColumnDef<TData>;
 
 export const getColumns = (
-  onClickAction: (params: {
+  _onClickAction: (params: {
     id: string;
     type: string;
     action: ROW_ACTIONS;
@@ -34,15 +30,17 @@ export const getColumns = (
 ): CustomColumnDef<Memo>[] => [
   {
     id: 'name',
-    accessorFn: (row) => `${row?.extraData?.client.name}`,
+    // accessorFn:(row) => `${row?.extraData?.client.name}`,
     header: 'Usuario',
+    accessorKey: 'user.name',
     enableGrouping: true,
     cell: (info) => {
-      const name = info.getValue() as string;
+      // const name = info.getValue() as string;
+      const { name, surname } = info.row?.original?.user;
       return (
         <div className='flex items-center gap-2 justify-start'>
           <Avatar name={name} size='sm' square />
-          {name}
+          {name} {surname}
         </div>
       );
     },
@@ -129,15 +127,21 @@ export const getColumns = (
     },
   },
   {
-    id: 'supervisor',
-    accessorKey: 'extraData.company.name',
-    header: 'Supervisor',
+    id: 'shift',
+    // accessorKey: 'relatedShift.employee.name',
+    accessorFn: (row) => `${row?.relatedShift?.employee?.name}`,
+    header: 'Turno',
     cell: (info) => {
-      const supervisor = info.getValue() as string;
+      const relatedShift = info.row.original?.relatedShift;
+      const status = relatedShift?.status ? `(${relatedShift?.status})` : '';
+      const { name, surname } = relatedShift?.employee || {
+        name: '',
+        surname: '',
+      };
       return (
         <div className='flex items-center gap-1 justify-start'>
-          <Avatar name={supervisor} size='sm' square />
-          {supervisor}
+          {/* <Avatar name={name} size='sm' square /> */}
+          {name} {surname} {status}
         </div>
       );
     },
@@ -194,38 +198,38 @@ export const getColumns = (
       return <FormattedDate date={String(info.getValue())} format='date' />;
     },
   },
-  {
-    id: 'actions',
-    size: 20,
-    cell: (info) => {
-      const { id } = info.row.original;
-      const actions: IDropdownAction[] = [
-        {
-          label: 'Editar memo',
-          icon: 'vox-icon vx-icon-123 text-primary',
-          onClick: () => {
-            onClickAction({
-              id: String(id),
-              type: 'memo',
-              action: ROW_ACTIONS.UPDATE,
-            });
-          },
-        },
-        {
-          label: 'Eliminar memo',
-          icon: 'vox-icon vx-icon-053 text-red-500',
-          color: 'text-red-600',
-          onClick: () => {
-            onClickAction({
-              id: String(id),
-              type: 'memo',
-              action: ROW_ACTIONS.DELETE,
-            });
-          },
-        },
-      ];
+  // {
+  //   id: 'actions',
+  //   size: 20,
+  //   cell: (info) => {
+  //     const { id } = info.row.original;
+  //     const actions: IDropdownAction[] = [
+  //       {
+  //         label: 'Editar memo',
+  //         icon: 'vox-icon vx-icon-123 text-primary',
+  //         onClick: () => {
+  //           onClickAction({
+  //             id: String(id),
+  //             type: 'memo',
+  //             action: ROW_ACTIONS.UPDATE,
+  //           });
+  //         },
+  //       },
+  //       {
+  //         label: 'Eliminar memo',
+  //         icon: 'vox-icon vx-icon-053 text-red-500',
+  //         color: 'text-red-600',
+  //         onClick: () => {
+  //           onClickAction({
+  //             id: String(id),
+  //             type: 'memo',
+  //             action: ROW_ACTIONS.DELETE,
+  //           });
+  //         },
+  //       },
+  //     ];
 
-      return <DropdownActionsMenu actions={actions} />;
-    },
-  },
+  //     return <DropdownActionsMenu actions={actions} />;
+  //   },
+  // },
 ];

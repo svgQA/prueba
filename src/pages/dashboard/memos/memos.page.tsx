@@ -1,11 +1,5 @@
 import { type FunctionComponent } from 'preact';
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-} from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import './utils/memos.css';
 import { useLocation } from 'wouter';
@@ -65,9 +59,7 @@ export const MemosPage: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
   //notifications
   const [notificationMemo, setNotificationMemo] = useState<number>(0);
-  const [showReload, setShowReload] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.title = 'VX - Chat';
@@ -160,7 +152,7 @@ export const MemosPage: FunctionComponent = () => {
         priority:
           memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
         updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
-          format: 'DD/MM/YYYY',
+          format: 'DD/MM/YYYY HH:mm',
         }),
       }));
       loading.value = false;
@@ -220,8 +212,8 @@ export const MemosPage: FunctionComponent = () => {
           selected={currentView.value === VIEW_NAME.CHAT}
           icon='418'
         />
-        <Button name='button-change-scheduler' rounded={false} icon='331' />
-        <Button name='button-change-scheduler' rounded={false} icon='314' />
+        {/* <Button name='button-change-scheduler' rounded={false} icon='331' />
+        <Button name='button-change-scheduler' rounded={false} icon='314' /> */}
       </div>
     ),
     [currentView.value]
@@ -238,32 +230,15 @@ export const MemosPage: FunctionComponent = () => {
 
   const handleReload = async () => {
     setNotificationMemo(0);
-    setShowReload(false);
     await fetchInitialData();
   };
-
-  useEffect(() => {
-    if (!showReload) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        popupRef.current &&
-        !popupRef.current.contains(event.target as Node)
-      ) {
-        setShowReload(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showReload]);
 
   return (
     <Section
       className={
-        currentView.value === VIEW_NAME.CHAT ? 'flex flex-row h-[94.5vh]' : ''
+        currentView.value === VIEW_NAME.CHAT
+          ? 'flex flex-row h-[94.5vh]'
+          : 'mr-3 my-1 relative'
       }
       padding={currentView.value === VIEW_NAME.TABLE}
     >
@@ -306,25 +281,13 @@ export const MemosPage: FunctionComponent = () => {
                 <FloatBadge label={notificationMemo || '0'} color='bg-primary'>
                   <div
                     className={`border border-primary rounded-lg px-4 py-1.5 flex items-center justify-center cursor-pointer transition-all duration-300 ${isAnimating ? 'animate-curtain' : ''}`}
-                    onClick={() => setShowReload(!showReload)}
+                    onClick={handleReload}
                   >
                     <span className='text-sm text-primary pr-2'>
                       Memo nuevo
                     </span>
                   </div>
                 </FloatBadge>
-                {showReload && (
-                  <div
-                    ref={popupRef}
-                    className='absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg p-2 animate-fade-in'
-                  >
-                    <Button
-                      name='button-change-scheduler'
-                      onClick={handleReload}
-                      label='Ver Memo'
-                    />
-                  </div>
-                )}
               </div>
             )}
           </div>
@@ -339,7 +302,7 @@ export const MemosPage: FunctionComponent = () => {
             selectable
             loading={loading.value}
             expandable={(row: Memo, column?: string) => (
-              <ExpandableMultiple type={column || 'supervisor'} data={row} />
+              <ExpandableMultiple type={column} data={row} />
             )}
             visibility={{
               id: false,
@@ -349,12 +312,16 @@ export const MemosPage: FunctionComponent = () => {
               contact: false,
               updatedAt: false,
             }}
+            searchable={{
+              history: false,
+            }}
             rowClassName={(row: Memo) =>
               row.id === highlightedMemoId ? 'animate-highlight' : ''
             }
           />
         )}
       </div>
+
       {currentView.value === VIEW_NAME.CHAT && (
         <ChatView
           users={users.value}
