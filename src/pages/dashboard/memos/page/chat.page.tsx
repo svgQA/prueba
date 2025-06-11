@@ -21,6 +21,8 @@ import { Input } from '@/components/common/input/input';
 import { PredefinedService } from '@/services/shift/predefined';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { DateField } from '@/components/compose/forms';
+import { IPresignedRequest } from '@/types/file';
+import { File } from '@/components/common/file/file';
 
 interface IOption {
   label: string;
@@ -89,6 +91,8 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   >();
   const messages = useSignal<string>('');
   const serviceId = useSignal<string>('');
+  const files = useSignal<IPresignedRequest[]>([]);
+
   useEffect(() => {
     fetchPredefinedOptions();
   }, []);
@@ -242,7 +246,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         memo.priority === 'Alta' ? 5 : memo.priority === 'Media' ? 4 : 3,
       updatedAt: DateUtils.dateToBackend(new Date()),
       createdAt: DateUtils.dateToBackend(new Date()),
-      resource: { images: [], files: [] },
+      resource: files.value && files.value.length > 0 ? files.value : undefined,
       parentId: memo.id,
       extraData: extraData,
     };
@@ -254,14 +258,10 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     handleChatSelect(serviceId.value, true);
   };
 
-  // const handleAttachmentUpload = (event: Event) => {
-  //   const target = event.target as HTMLInputElement;
-  //   if (!target.files?.length) return;
-
-  //   const files = Array.from(target.files);
-  //   // Aquí puedes manejar los archivos subidos
-  //   // Por ejemplo, puedes agregarlos a un estado o enviarlos al servidor
-  // };
+  const handleAttachmentUpload = (e: any) => {
+    const fileInput: IPresignedRequest = e.target.value[0];
+    files.value = [...files.value, fileInput];
+  };
 
   return (
     <>
@@ -381,7 +381,27 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                         )
                       }
                       isSelected={replyToId.value === memo.id}
-                    />
+                      status={memo.state}
+                    >
+                      <div className='flex items-center gap-2 text-xs text-gray-500'>
+                        <span className='vox-icon size-sm vx-icon-318' />
+                        <span>
+                          {memo.user?.name} {memo.user?.surname}
+                        </span>
+                        {memo.relatedShiftId && (
+                          <>
+                            <span className='mx-1'>•</span>
+                            <span className='vox-icon size-sm vx-icon-239' />
+                            <span>Shift ID: {memo.relatedShiftId}</span>
+                            {memo.user?.isSupervisor && memo.relatedShift && (
+                              <span className='ml-1'>
+                                ({memo.relatedShift.name})
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </ChatMessage>
                     {/* Submemos */}
                     {memo.children?.map(
                       (childMemo: Memo, childIndex: number) => (
@@ -465,7 +485,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                               {({ input }) => (
                                 <Input
                                   {...input}
-                                  type='text'
+                                  type='number'
                                   name='duration'
                                   label='Duración'
                                   placeholder=' min, hh:mm'
@@ -479,6 +499,20 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                                   {...input}
                                   name='date'
                                   label='Fecha'
+                                />
+                              )}
+                            </Field>
+
+                            <Field name='attachments'>
+                              {() => (
+                                <File
+                                  name='attachments'
+                                  onChange={handleAttachmentUpload}
+                                  value={[]}
+                                  accept='image/*'
+                                  multiple={true}
+                                  label='Adjuntos'
+                                  area='memo'
                                 />
                               )}
                             </Field>

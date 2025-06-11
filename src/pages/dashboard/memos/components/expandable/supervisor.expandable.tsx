@@ -9,7 +9,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import i18n from '@/i18n';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { DateUtils } from '@/utils/utilities/dates';
-import { showFiles } from '@/components/common/file/show.file';
+import ShowFiles from '@/components/common/file/show.file';
 
 const InfoContainer = ({
   label,
@@ -109,10 +109,8 @@ const SupervisorInfo = ({
         <div className='w-8/12 flex flex-col'>
           <div className='w-full h-3/12 flex flex-row justify-between'>
             <div className='flex-1'>
-              {memo?.resource ? (
-                showFiles(memo?.resource)
-              ) : (
-                <div>No hay archivos adjuntos</div>
+              {memo?.resource && (
+                <ShowFiles resources={memo.resource} alertEmpty={true} />
               )}
             </div>
             {resolved &&
@@ -225,7 +223,7 @@ const SupervisorInfo = ({
         <div className='w-[30%] flex flex-col gap-4'>
           <div className='w-full flex items-center gap-4'>
             <div className='flex-1'>
-              {memo?.resource ? showFiles(memo?.resource) : <div>No hay archivos adjuntos</div>}
+              {memo?.resource && <ShowFiles resources={memo.resource} alertEmpty={true}/>}
             </div>
             {resolved &&
               memo.state !== 'RESOLVED' &&
