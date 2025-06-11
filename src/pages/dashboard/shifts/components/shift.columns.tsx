@@ -28,8 +28,9 @@ export const getColumns = (
       clickable: true,
       accessorKey: 'employee.name',
       size: 180,
-      header: t('shifts.columns.user'),
+      header: t('shift.columns.user'),
       enableGrouping: true,
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const { employee } = info.row.original;
         return (
@@ -54,9 +55,10 @@ export const getColumns = (
       id: 'service',
       accessorKey: 'service.name',
       size: 180,
-      header: t('shifts.columns.service'),
+      header: t('shift.columns.service'),
       clickable: true,
       enableGrouping: true,
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const service = String(info.getValue());
         return <TextEllipsis text={service} maxWidth='250px' />;
@@ -66,8 +68,9 @@ export const getColumns = (
       id: 'contract',
       accessorKey: 'service.contract.name',
       size: 120,
-      header: t('shifts.columns.contract'),
+      header: t('shift.columns.contract'),
       clickable: true,
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const contract = String(info.getValue());
         return <TextEllipsis text={contract} maxWidth='250px' />;
@@ -77,8 +80,9 @@ export const getColumns = (
       id: 'fecha',
       accessorKey: 'start',
       size: 120,
-      header: t('shifts.columns.date'),
+      header: t('shift.columns.date'),
       enableGrouping: false,
+      meta: { headerAlign: 'center' },
       cell: (info) => (
         <FormattedDate date={info.getValue() as string} format='date' />
       ),
@@ -88,7 +92,8 @@ export const getColumns = (
       accessorKey: 'start',
       size: 150,
       clickable: true,
-      header: t('shifts.columns.start'),
+      header: t('shift.columns.start'),
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const rowData = info.row.original;
         return (
@@ -106,7 +111,8 @@ export const getColumns = (
       accessorKey: 'end',
       size: 150,
       clickable: true,
-      header: t('shifts.columns.end'),
+      header: t('shift.columns.end'),
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const rowData = info.row.original;
         return (
@@ -123,14 +129,16 @@ export const getColumns = (
       id: 'status',
       accessorKey: 'status',
       size: 120,
-      header: t('shifts.columns.status'),
+      header: t('shift.columns.status'),
+      meta: { headerAlign: 'center' },
     },
     {
       id: 'duration',
       accessorKey: 'duration',
       size: 120,
-      header: t('shifts.columns.duration'),
+      header: t('shift.columns.duration'),
       clickable: true,
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const rowData = info.row.original;
         const checkInData = rowData.checkIn;
@@ -169,7 +177,8 @@ export const getColumns = (
       id: 'report',
       accessorKey: 'report',
       size: 50,
-      header: t('shifts.columns.report'),
+      header: t('shift.columns.report'),
+      meta: { headerAlign: 'center' },
       cell: (_: any) => <Badge label={`2 → 12h`} outline full size='xs' />,
     },
     {
@@ -177,7 +186,8 @@ export const getColumns = (
       accessorKey: 'activitiesProgress',
       clickable: true,
       size: 50,
-      header: t('shifts.columns.shift'),
+      header: t('shift.columns.shift'),
+      meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const { activityPct } = info.row.original;
         const progress = activityPct;
@@ -198,7 +208,8 @@ export const getColumns = (
       accessorKey: 'activitiesProgress',
       size: 100,
       clickable: true,
-      header: t('shifts.columns.round'),
+      header: t('shift.columns.round'),
+      meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const { roundPct } = info.row.original;
         const progress = roundPct;
@@ -223,8 +234,9 @@ export const getColumns = (
       accessorKey: 'service.contract.client.name',
       size: 120,
       clickable: true,
-      header: t('shifts.columns.client'),
+      header: t('shift.columns.client'),
       enableGrouping: true,
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const client = String(info.getValue());
         return <TextEllipsis text={client} maxWidth='250px' />;
@@ -233,6 +245,7 @@ export const getColumns = (
     {
       id: 'actions',
       size: 10,
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const { id, checkIn, checkOut } = info.row.original;
         const s_id = String(id);

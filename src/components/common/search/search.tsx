@@ -3,6 +3,7 @@ import { useSignal } from '@preact/signals';
 import { IKey, ISearchProps } from './interface';
 import { TargetedEvent } from 'preact/compat';
 import { ColumnFiltersState } from '@tanstack/react-table';
+import { useTranslation } from 'react-i18next';
 
 export const Search = ({
   id,
@@ -16,6 +17,7 @@ export const Search = ({
   grouping,
   disabled = false,
 }: ISearchProps) => {
+  const { t } = useTranslation();
   const inputState = useSignal<string>('');
   const searchArray = useSignal<ColumnFiltersState>(value);
   const selectedKeyIndex = useSignal<number>(-1);
@@ -294,7 +296,7 @@ export const Search = ({
         <input
           ref={inputRef}
           className='w-full px-2 py-1 bg-transparent outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 text-base'
-          placeholder={placeholder || 'Buscar por columna...'}
+          placeholder={placeholder || t('common.search.placeholder')}
           onChange={handleChangeInput}
           onKeyDown={handleKeyPress}
           onFocus={() => {
@@ -320,7 +322,7 @@ export const Search = ({
           onClick={handleClickKeys}
         >
           <h6 className='px-3 py-1 text-xs text-gray-500 dark:text-gray-400 font-medium uppercase'>
-            Filtrar por
+            {t('common.search.filterBy')}
           </h6>
           {keysList}
         </div>

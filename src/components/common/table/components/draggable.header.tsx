@@ -30,7 +30,7 @@ export const DraggableTableHeader = <T,>({
       className='text-center'
     >
       <div
-        className={`flex flex-row justify-start ${header.column.getCanSort() ? 'cursor-pointer select-none' : ''}`}
+        className={`flex flex-row ${(header.column.columnDef.meta as any)?.headerAlign === 'center' ? 'justify-center' : 'justify-start'} ${header.column.getCanSort() ? 'cursor-pointer select-none' : ''}`}
         onClick={header.column.getToggleSortingHandler()}
       >
         {flexRender(header.column.columnDef.header, header.getContext())}

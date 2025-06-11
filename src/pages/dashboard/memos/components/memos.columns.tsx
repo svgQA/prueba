@@ -37,6 +37,7 @@ export const getColumns = (
       header: t('memos.columns.user'),
       accessorKey: 'user.name',
       enableGrouping: true,
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         // const name = info.getValue() as string;
         const { name, surname } = info.row?.original?.user;
@@ -53,6 +54,7 @@ export const getColumns = (
       accessorKey: 'novelty.name',
       header: t('memos.columns.noveltyType'),
       enableGrouping: true,
+      meta: { headerAlign: 'center' },
       getIconGroup: (row: Memo) => {
         if (row.priority === 'Alta') {
           return { icon: '165', color: 'text-error' };
@@ -71,6 +73,7 @@ export const getColumns = (
       header: t('memos.columns.description'),
       size: 200,
       enableGrouping: true,
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const description = info.getValue() as string;
         return <TextEllipsis text={description} maxWidth='300px' />;
@@ -81,6 +84,7 @@ export const getColumns = (
       accessorKey: 'state',
       header: t('memos.columns.status'),
       enableGrouping: true,
+      meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const status = info.getValue() as string;
         let statusText = 'info';
@@ -107,6 +111,7 @@ export const getColumns = (
       accessorKey: 'priority',
       header: t('memos.columns.priority'),
       enableGrouping: true,
+      meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const priority = info.getValue() as string;
         let status = 'info';
@@ -134,6 +139,7 @@ export const getColumns = (
       // accessorKey: 'relatedShift.employee.name',
       accessorFn: (row) => `${row?.relatedShift?.employee?.name}`,
       header: t('memos.columns.shifts'),
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const relatedShift = info.row.original?.relatedShift;
         const status = relatedShift?.status ? `(${relatedShift?.status})` : '';
@@ -173,6 +179,7 @@ export const getColumns = (
       accessorKey: 'messages',
       header: t('memos.columns.history'),
       clickable: true,
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         const value = info.getValue() as string;
         return (
@@ -188,6 +195,7 @@ export const getColumns = (
       id: 'createdAt',
       accessorKey: 'createdAt',
       header: t('memos.columns.date'),
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         return <FormattedDate date={String(info.getValue())} format='date' />;
       },
@@ -197,6 +205,7 @@ export const getColumns = (
       accessorKey: 'updatedAt',
       header: t('memos.columns.updated'),
       enableGrouping: true,
+      meta: { headerAlign: 'center' },
       cell: (info) => {
         return <FormattedDate date={String(info.getValue())} format='date' />;
       },
