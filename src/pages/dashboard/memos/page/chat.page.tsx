@@ -329,108 +329,86 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     </>
   );
 
-  const chatMessageBy = () => (
-    <>
-      {selectedChat.value === '0' && <FrequentQuestions />}
-      {selectedChat.value === '0' && chats.value[selectedChat.value]?.messages.map((msg, index) => (
+  const showChatMemoAndSubMemo = (memo: Memo, index: number) => {
+    return (
+      <>
+        {/* Memo principal */}
         <ChatMessage
-          key={index}
-          message={msg.message}
-          isSender={msg.isSender}
-        />
-      ))}
-      {selectedChat.value !== '0' && viewMode.value == TypeChatView.SERVICES_MEMO && memoByService.value.map((memo: Memo, index) => (
-        <>
-          {/* Memo principal */}
-          <ChatMessage
-            key={`parent-${index}`}
-            message={`${memo.novelty?.description || ''}`}
-            isSender={false}
-            title={memo.novelty?.name}
-            resource={memo.resource}
-            date={memo.updatedAt}
-            priority={memo.priority}
-            id={memo.id}
-            onReply={(id) =>
-              handleReply(
-                id,
-                memo.novelty?.description || '',
-                memo.novelty?.name,
-                memo.updatedAt
-              )
-            }
-            isSelected={replyToId.value === memo.id}
-            status={memo.state}
-          >
-            <div className='flex items-center gap-2 text-xs text-gray-500'>
-              <span className='vox-icon size-sm vx-icon-318' />
-              <span>
-                {memo.user?.name} {memo.user?.surname}
-              </span>
-              {memo.relatedShiftId && (
-                <>
-                  <span className='mx-1'>•</span>
-                  <span className='vox-icon size-sm vx-icon-239' />
-                  <span>Shift ID: {memo.relatedShiftId}</span>
-                  {memo.user?.isSupervisor && memo.relatedShift && (
-                    <span className='ml-1'>
-                      ({memo.relatedShift.name})
-                    </span>
-                  )}
-                </>
-              )}
-            </div>
-          </ChatMessage>
-          {/* Submemos */}
-          {memo.children?.map(
-            (childMemo: Memo, childIndex: number) => (
-              <ChatMessage
-                key={`child-${index}-${childIndex}`}
-                message={`${childMemo.description || ''}`}
-                isSender={true}
-                title={childMemo.extraData?.predefined?.label}
-                resource={childMemo.resource}
-                date={childMemo.updatedAt}
-              >
-                {childMemo.extraData && (
-                  <div className='flex flex-wrap gap-2 text-xs'>
-                    {childMemo.extraData.duration && (
-                      <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
-                        <span className='vox-icon size-sm vx-icon-236' />
-                        {'duracion: ' + childMemo.extraData.duration}
-                      </span>
-                    )}
-                    {childMemo.extraData.time && (
-                      <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
-                        <span className='vox-icon size-sm vx-icon-237' />
-                        {'fecha: ' +
-                          DateUtils.dateToFrontend(
-                            childMemo.extraData.time,
-                            { format: 'DD/MM/YYYY HH:mm' }
-                          )}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </ChatMessage>
-            )
-          )}
-        </>
-      ))}
-      {selectedChat.value !== '0' && viewMode.value == TypeChatView.USERS_MEMO && memoByUser.value.map((memo: Memo, index) => (
-        <ChatMessage
-          key={`user-${index}`}
+          key={`parent-${index}`}
+          message={`${memo.novelty?.description || ''}`}
+          isSender={false}
           title={memo.novelty?.name}
-          message={memo.description || ''}
-          priority={memo.priority}
-          status={memo.state}
           resource={memo.resource}
           date={memo.updatedAt}
-          isSender={false}
-        />
-      ))}
-    </>
-  );
+          priority={memo.priority}
+          id={memo.id}
+          onReply={(id) =>
+            handleReply(
+              id,
+              memo.novelty?.description || '',
+              memo.novelty?.name,
+              memo.updatedAt
+            )
+          }
+          isSelected={replyToId.value === memo.id}
+          status={memo.state}
+        >
+          <div className='flex items-center gap-2 text-xs text-gray-500'>
+            <span className='vox-icon size-sm vx-icon-318' />
+            <span>
+              {memo.user?.name} {memo.user?.surname}
+            </span>
+            {memo.relatedShiftId && (
+              <>
+                <span className='mx-1'>•</span>
+                <span className='vox-icon size-sm vx-icon-239' />
+                <span>Shift ID: {memo.relatedShiftId}</span>
+                {memo.user?.isSupervisor && memo.relatedShift && (
+                  <span className='ml-1'>
+                    ({memo.relatedShift.name})
+                  </span>
+                )}
+              </>
+            )}
+          </div>
+        </ChatMessage>
+        {/* Submemos */}
+        {memo.children?.map(
+          (childMemo: Memo, childIndex: number) => (
+            <ChatMessage
+              key={`child-${index}-${childIndex}`}
+              message={`${childMemo.description || ''}`}
+              isSender={true}
+              title={childMemo.extraData?.predefined?.label}
+              resource={childMemo.resource}
+              date={childMemo.updatedAt}
+            >
+              {childMemo.extraData && (
+                <div className='flex flex-wrap gap-2 text-xs'>
+                  {childMemo.extraData.duration && (
+                    <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
+                      <span className='vox-icon size-sm vx-icon-236' />
+                      {'duracion: ' + childMemo.extraData.duration}
+                    </span>
+                  )}
+                  {childMemo.extraData.time && (
+                    <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
+                      <span className='vox-icon size-sm vx-icon-237' />
+                      {'fecha: ' +
+                        DateUtils.dateToFrontend(
+                          childMemo.extraData.time,
+                          { format: 'DD/MM/YYYY HH:mm' }
+                        )}
+                    </span>
+                  )}
+                </div>
+              )}
+            </ChatMessage>
+          )
+        )}
+      </>
+    )
+  }
 
   const formMinutesByInputs = () => (
     <>
@@ -562,9 +540,21 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
           <div className='w-[70%] flex flex-col'>
             <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
-              {chatMessageBy()}
+              {selectedChat.value === '0' && <FrequentQuestions />}
+              {selectedChat.value === '0' && chats.value[selectedChat.value]?.messages.map((msg, index) => (
+                <ChatMessage
+                  key={index}
+                  message={msg.message}
+                  isSender={msg.isSender}
+                />
+              ))}
+              {selectedChat.value !== '0' && viewMode.value == TypeChatView.SERVICES_MEMO && memoByService.value.map((memo: Memo, index) => showChatMemoAndSubMemo(memo, index))}
+              {selectedChat.value !== '0' && viewMode.value == TypeChatView.USERS_MEMO && memoByUser.value.map((memo: Memo, index) => showChatMemoAndSubMemo(memo, index))}
             </div>
-            {viewMode.value === TypeChatView.USERS ? <ChatInput onSend={handleSendMessage} input={messages} /> : (
+            {
+            viewMode.value === TypeChatView.USERS ? 
+            <ChatInput onSend={handleSendMessage} input={messages} /> : 
+            (
               <ChatInput
                 onSend={handleSendMessage}
                 onCancelReply={handleCancelReply}
@@ -576,7 +566,8 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               >
                 {formMinutesByInputs()}
               </ChatInput>
-            )}
+            )
+            }
           </div>
         </div>
       </div>
