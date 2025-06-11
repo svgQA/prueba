@@ -337,6 +337,11 @@ export const general_en = {
       other: 'OTHER',
       time: '10:15',
       errorMessage: 'The message has a bad structure',
+      view: {
+        users: 'Memo by Users',
+        services: 'Memo by Services',
+        select: 'Select by memo',
+      },
     },
     pagination: {
       previous: 'Previous',
