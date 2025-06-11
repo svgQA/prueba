@@ -124,6 +124,17 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     totalPages.value = viewMode.value === 'users' ? 3 : 1;
   }, [viewMode.value]);
 
+  useEffect(() => {
+    // Reset reply values when view mode changes
+    replyToId.value = undefined;
+    replyToMessage.value = undefined;
+    messages.value = '';
+    files.value = [];
+    // Set selected chat to AI assistant
+    selectedChat.value = '0';
+    userSelected.value = undefined;
+  }, [viewMode.value]);
+
   const handleReceiveMessage = (message: IMessage) => {
     chats.value = addMessageArray(message.from, message);
   };
