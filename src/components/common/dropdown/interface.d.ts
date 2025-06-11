@@ -19,4 +19,5 @@ export interface IDropdownProps extends IComponentProps {
   meta?: FieldMetaState<string>;
   value?: string | number;
   disabled?: boolean;
+  selectedTag?: string;
 }

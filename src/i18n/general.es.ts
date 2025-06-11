@@ -338,6 +338,11 @@ export const general_es = {
       other: 'OTRO',
       time: '10:15',
       errorMessage: 'El mensaje tiene mala estructura',
+      view: {
+        users: 'Memo por Usuarios',
+        services: 'Memo por Servicios',
+        select: 'Seleccionar por memo',
+      },
     },
     pagination: {
       previous: 'Anterior',
