@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from '../utils/memos';
+import { useTranslation } from 'react-i18next';
 
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Badge } from '@/components/common/badge/badge';
@@ -9,7 +10,6 @@ import { NColumnDef } from '@/components/common/table/type';
 import { FloatBadge } from '@/components/common/badge/float';
 import { FormattedDate } from '@/components/compose/forms';
 
-// Define our custom properties
 type CustomColumnProps = {
   iconGroup?: string;
   colorIconGroup?: string;
@@ -27,130 +27,139 @@ export const getColumns = (
     type: string;
     action: ROW_ACTIONS;
   }) => void
-): CustomColumnDef<Memo>[] => [
-  {
-    id: 'name',
-    // accessorFn:(row) => `${row?.extraData?.client.name}`,
-    header: 'Usuario',
-    accessorKey: 'user.name',
-    enableGrouping: true,
-    cell: (info) => {
-      // const name = info.getValue() as string;
-      const { name, surname } = info.row?.original?.user;
-      return (
-        <div className='flex items-center gap-2 justify-start'>
-          <Avatar name={name} size='sm' square />
-          {name} {surname}
-        </div>
-      );
-    },
-  },
-  {
-    id: 'noveltyType',
-    accessorKey: 'novelty.name',
-    header: 'Novedad',
-    enableGrouping: true,
-    getIconGroup: (row: Memo) => {
-      if (row.priority === 'Alta') {
-        return { icon: '165', color: 'text-error' };
-      }
+): CustomColumnDef<Memo>[] => {
+  const { t } = useTranslation();
 
-      if (row.priority === 'Media') {
-        return { icon: '182', color: 'text-caution' };
-      }
+  return [
+    {
+      id: 'name',
+      // accessorFn:(row) => `${row?.extraData?.client.name}`,
+      header: t('memos.columns.user'),
+      accessorKey: 'user.name',
+      enableGrouping: true,
+      meta: { headerAlign: 'center' },
+      cell: (info) => {
+        // const name = info.getValue() as string;
+        const { name, surname } = info.row?.original?.user;
+        return (
+          <div className='flex items-center gap-2 justify-start'>
+            <Avatar name={name} size='sm' square />
+            {name} {surname}
+          </div>
+        );
+      },
+    },
+    {
+      id: 'noveltyType',
+      accessorKey: 'novelty.name',
+      header: t('memos.columns.noveltyType'),
+      enableGrouping: true,
+      meta: { headerAlign: 'center' },
+      getIconGroup: (row: Memo) => {
+        if (row.priority === 'Alta') {
+          return { icon: '165', color: 'text-error' };
+        }
 
-      return { icon: '319', color: 'text-primary' };
-    },
-  },
-  {
-    id: 'description',
-    accessorKey: 'description',
-    header: 'Descripción',
-    size: 200,
-    enableGrouping: true,
-    cell: (info) => {
-      const description = info.getValue() as string;
-      return <TextEllipsis text={description} maxWidth='300px' />;
-    },
-  },
-  {
-    id: 'status',
-    accessorKey: 'state',
-    header: 'Estado',
-    enableGrouping: true,
-    cell: (info: any) => {
-      const status = info.getValue() as string;
-      let statusText = 'info';
-      if (status === 'OPENED') {
-        statusText = 'success';
-      } else if (status === 'CLOSED') {
-        statusText = 'error';
-      } else if (status === 'IN_REVISION') {
-        statusText = 'warning';
-      }
+        if (row.priority === 'Media') {
+          return { icon: '182', color: 'text-caution' };
+        }
 
-      return (
-        <Badge
-          label={status}
-          status={statusText as 'info' | 'error' | 'warning' | 'success'}
-          full
-          outline
-        />
-      );
+        return { icon: '319', color: 'text-primary' };
+      },
     },
-  },
-  {
-    id: 'priority',
-    accessorKey: 'priority',
-    header: 'Prioridad',
-    enableGrouping: true,
-    cell: (info: any) => {
-      const priority = info.getValue() as string;
-      let status = 'info';
-      let label = 'Baja';
-      if (priority === 'Alta') {
-        status = 'error';
-        label = 'Alta';
-      } else if (priority === 'Media') {
-        status = 'warning';
-        label = 'Media';
-      }
+    {
+      id: 'description',
+      accessorKey: 'description',
+      header: t('memos.columns.description'),
+      size: 200,
+      enableGrouping: true,
+      meta: { headerAlign: 'center' },
+      cell: (info) => {
+        const description = info.getValue() as string;
+        return <TextEllipsis text={description} maxWidth='300px' />;
+      },
+    },
+    {
+      id: 'status',
+      accessorKey: 'state',
+      header: t('memos.columns.status'),
+      enableGrouping: true,
+      meta: { headerAlign: 'center' },
+      cell: (info: any) => {
+        const status = info.getValue() as string;
+        let statusText = 'info';
+        if (status === 'OPENED') {
+          statusText = 'success';
+        } else if (status === 'CLOSED') {
+          statusText = 'error';
+        } else if (status === 'IN_REVISION') {
+          statusText = 'warning';
+        }
 
-      return (
-        <Badge
-          label={label}
-          status={status as 'info' | 'error' | 'warning' | 'success'}
-          full
-          outline
-        />
-      );
+        return (
+          <Badge
+            label={status}
+            status={statusText as 'info' | 'error' | 'warning' | 'success'}
+            full
+            outline
+          />
+        );
+      },
     },
-  },
-  {
-    id: 'shift',
-    // accessorKey: 'relatedShift.employee.name',
-    accessorFn: (row) => `${row?.relatedShift?.employee?.name}`,
-    header: 'Turno',
-    cell: (info) => {
-      const relatedShift = info.row.original?.relatedShift;
-      const status = relatedShift?.status ? `(${relatedShift?.status})` : '';
-      const { name, surname } = relatedShift?.employee || {
-        name: '',
-        surname: '',
-      };
-      return (
-        <div className='flex items-center gap-1 justify-start'>
-          {/* <Avatar name={name} size='sm' square /> */}
-          {name} {surname} {status}
-        </div>
-      );
+    {
+      id: 'priority',
+      accessorKey: 'priority',
+      header: t('memos.columns.priority'),
+      enableGrouping: true,
+      meta: { headerAlign: 'center' },
+      cell: (info: any) => {
+        const priority = info.getValue() as string;
+        let status = 'info';
+        let label = 'Baja';
+        if (priority === 'Alta') {
+          status = 'error';
+          label = 'Alta';
+        } else if (priority === 'Media') {
+          status = 'warning';
+          label = 'Media';
+        }
+
+        return (
+          <Badge
+            label={label}
+            status={status as 'info' | 'error' | 'warning' | 'success'}
+            full
+            outline
+          />
+        );
+      },
     },
-  },
-  /*
+    {
+      id: 'shift',
+      // accessorKey: 'relatedShift.employee.name',
+      accessorFn: (row) => `${row?.relatedShift?.employee?.name}`,
+      header: t('memos.columns.shifts'),
+      meta: { headerAlign: 'center' },
+      cell: (info) => {
+        const relatedShift = info.row.original?.relatedShift;
+        const status = relatedShift?.status ? `(${relatedShift?.status})` : '';
+        const { name, surname } = relatedShift?.employee || {
+          name: '',
+          surname: '',
+        };
+        return (
+          <div className='flex items-center gap-1 justify-start'>
+            {/* <Avatar name={name} size='sm' square /> */}
+            {name} {surname} {status}
+          </div>
+        );
+      },
+    },
+    /*
   {
     id: 'updatedBy',
     accessorKey: 'userEdit.name',
-    header: 'Actualizado Por',
+    header: t('memos.columns.name'),
     cell: (info) => {
       const value = info.getValue() as string;
       const displayValue = value?.trim()
@@ -165,71 +174,41 @@ export const getColumns = (
     },
   },
   */
-  {
-    id: 'history',
-    accessorKey: 'messages',
-    header: 'Historial',
-    clickable: true,
-    cell: (info) => {
-      const value = info.getValue() as string;
-      return (
-        <div className='flex items-center gap-1 justify-center'>
-          <FloatBadge label={value || '-'}>
-            <span className='vx-icon vx-icon-113 cursor-pointer'></span>
-          </FloatBadge>
-        </div>
-      );
+    {
+      id: 'history',
+      accessorKey: 'messages',
+      header: t('memos.columns.history'),
+      clickable: true,
+      meta: { headerAlign: 'center' },
+      cell: (info) => {
+        const value = info.getValue() as string;
+        return (
+          <div className='flex items-center gap-1 justify-center'>
+            <FloatBadge label={value || '-'}>
+              <span className='vx-icon vx-icon-113 cursor-pointer'></span>
+            </FloatBadge>
+          </div>
+        );
+      },
     },
-  },
-  {
-    id: 'createdAt',
-    accessorKey: 'createdAt',
-    header: 'Fecha',
-    cell: (info) => {
-      return <FormattedDate date={String(info.getValue())} format='date' />;
+    {
+      id: 'createdAt',
+      accessorKey: 'createdAt',
+      header: t('memos.columns.date'),
+      meta: { headerAlign: 'center' },
+      cell: (info) => {
+        return <FormattedDate date={String(info.getValue())} format='date' />;
+      },
     },
-  },
-  {
-    id: 'updatedAt',
-    accessorKey: 'updatedAt',
-    header: 'Actualizado',
-    enableGrouping: true,
-    cell: (info) => {
-      return <FormattedDate date={String(info.getValue())} format='date' />;
+    {
+      id: 'updatedAt',
+      accessorKey: 'updatedAt',
+      header: t('memos.columns.updated'),
+      enableGrouping: true,
+      meta: { headerAlign: 'center' },
+      cell: (info) => {
+        return <FormattedDate date={String(info.getValue())} format='date' />;
+      },
     },
-  },
-  // {
-  //   id: 'actions',
-  //   size: 20,
-  //   cell: (info) => {
-  //     const { id } = info.row.original;
-  //     const actions: IDropdownAction[] = [
-  //       {
-  //         label: 'Editar memo',
-  //         icon: 'vox-icon vx-icon-123 text-primary',
-  //         onClick: () => {
-  //           onClickAction({
-  //             id: String(id),
-  //             type: 'memo',
-  //             action: ROW_ACTIONS.UPDATE,
-  //           });
-  //         },
-  //       },
-  //       {
-  //         label: 'Eliminar memo',
-  //         icon: 'vox-icon vx-icon-053 text-red-500',
-  //         color: 'text-red-600',
-  //         onClick: () => {
-  //           onClickAction({
-  //             id: String(id),
-  //             type: 'memo',
-  //             action: ROW_ACTIONS.DELETE,
-  //           });
-  //         },
-  //       },
-  //     ];
-
-  //     return <DropdownActionsMenu actions={actions} />;
-  //   },
-  // },
-];
+  ];
+};

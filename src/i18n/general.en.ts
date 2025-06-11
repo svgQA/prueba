@@ -216,21 +216,6 @@ export const general_en = {
     buttons: {
       create: 'Create',
     },
-    columns: {
-      user: 'User',
-      service: 'Service',
-      contract: 'Contract',
-      date: 'Date',
-      start: 'Start',
-      end: 'End',
-      status: 'Status',
-      duration: 'Duration',
-      report: 'Report',
-      shift: 'Shift',
-      round: 'Round',
-      client: 'Client',
-      actions: 'Actions',
-    },
     upsert: {
       successEdit: 'Shift successfully edited!',
       successCreate: 'Shift successfully created!',
@@ -348,21 +333,6 @@ export const general_en = {
       page: 'Page',
       of: 'of',
       next: 'Next',
-    },
-    cards: {
-      totalToday: 'Total Memos Today',
-      unresolved: 'Unresolved Memos',
-      resolved: 'Resolved Memos',
-    },
-    columns: {
-      id: 'ID',
-      name: 'Name',
-      city: 'City',
-      address: 'Address',
-      noveltyType: 'Novelty Type',
-      noveltyDate: 'Novelty Date',
-      contact: 'Contact',
-      priority: 'Priority',
     },
     view: {
       users: 'Users',

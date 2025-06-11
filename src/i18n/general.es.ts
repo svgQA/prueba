@@ -216,21 +216,6 @@ export const general_es = {
     buttons: {
       create: 'Crear',
     },
-    columns: {
-      user: 'Usuario',
-      service: 'Servicio',
-      contract: 'Contrato',
-      date: 'Fecha',
-      start: 'Inicio',
-      end: 'Finalización',
-      status: 'Estado',
-      duration: 'Duración',
-      report: 'Reportes',
-      shift: 'Actividades',
-      round: 'Rondas',
-      client: 'Cliente',
-      actions: 'Acciones',
-    },
     upsert: {
       successEdit: 'Turno editado exitosamente!',
       successCreate: 'Turno creado exitosamente!',
@@ -349,21 +334,6 @@ export const general_es = {
       page: 'Página',
       of: 'de',
       next: 'Siguiente',
-    },
-    cards: {
-      totalToday: 'Memorandos Totales Hoy',
-      unresolved: 'Memorandos sin resolver',
-      resolved: 'Memorandos Resueltos',
-    },
-    columns: {
-      id: 'ID',
-      name: 'Nombre',
-      city: 'Ciudad',
-      address: 'Dirección',
-      noveltyType: 'Tipo Novedad',
-      noveltyDate: 'Fecha Novedad',
-      contact: 'Contacto',
-      priority: 'Prioridad',
     },
     view: {
       users: 'Usuarios',
