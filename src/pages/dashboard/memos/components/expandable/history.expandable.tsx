@@ -180,7 +180,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const messageHistory = () => {
     return (
       <div
-        className={`w-[60%] max-h-[450px] overflow-y-auto vox-scroll-design`}
+        className={`w-[60%] max-h-[300px] overflow-y-auto vox-scroll-design`}
       >
         <div className='p-4 space-y-3'>
           {memos.value.map((memo: Memo) => (
