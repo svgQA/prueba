@@ -13,6 +13,7 @@ import { maps_en, maps_es } from './maps';
 import { history_en, history_es } from './history';
 import { common_en, common_es } from './common';
 import { memos_en, memos_es } from './memos';
+import { role_en, role_es } from './role';
 
 // import { notification_en, notification_es } from './notification';
 // import { shift_en, shift_es } from './shift';
@@ -32,6 +33,7 @@ const resources = {
       ...history_en,
       ...common_en,
       ...memos_en,
+      ...role_en,
       // ...home_en,
     },
   },
@@ -48,6 +50,7 @@ const resources = {
       ...history_es,
       ...common_es,
       ...memos_es,
+      ...role_es,
       // ...home_es,
     },
   },
