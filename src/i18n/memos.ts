@@ -16,6 +16,12 @@ export const memos_es = {
       date: 'Fecha',
       updated: 'Actualizado',
     },
+    pagination: {
+      next: 'Siguiente',
+      previous: 'Anterior',
+      page: 'Página',
+      of: 'de',
+    },
   },
 };
 
@@ -36,6 +42,12 @@ export const memos_en = {
       history: 'History',
       date: 'Date',
       updated: 'Updated',
+    },
+    pagination: {
+      next: 'Next',
+      previous: 'Before',
+      page: 'Page',
+      of: 'of',
     },
   },
 };
