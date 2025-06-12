@@ -27,7 +27,7 @@ import { type IOption } from '@/components/common/multi/interface';
 // import { AreaService } from '@/services/general/area';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { t } from 'i18next';
-
+import { RoleService } from '@/services/general/role';
 interface CreateUserProps {
   onUserCreated?: (user: any) => void;
   user?: IUserResponse;
@@ -35,6 +35,7 @@ interface CreateUserProps {
 
 export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const documentTypes = useSignal<IDocumentTypeResponse[]>([]);
+  const roles = useSignal<IOption[]>([]);
   // const countries = useSignal<ICountryResponse[]>([]);
   // const departments = useSignal<IDepartmentResponse[]>([]);
   // const municipalities = useSignal<IMunicipalityResponse[]>([]);
@@ -57,6 +58,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       getCountries(),
       getCompanies(),
       getDepartments(),
+      getRoles(),
     ]);
     // getCompanies();
     // getDepartments();
@@ -76,6 +78,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const getInitialValues = async (): Promise<void> => {
     if (props.user) {
       const user = props.user;
+      const roles = user.roles?.map((role) => ({
+        label: role.role.name,
+        value: role.role.id,
+      }));
+      console.log('roles =>', roles);
 
       const userCompanies =
         user.companies?.map((comp) => ({
@@ -109,6 +116,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         // externalPlatformId: user.externalPlatformId,
         companies: userCompanies,
         extraData: userExtraData,
+        roles: roles,
       };
 
       // TODO: Luego validar las areas porque estas dependend
@@ -158,6 +166,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     if (!response.getStatus()) return;
     const r_companies = response.getMany();
     companies.value = r_companies;
+  };
+
+  const getRoles = async (): Promise<void> => {
+    const response = await RoleService.getRoles();
+    if (!response.getStatus()) return;
+    roles.value = response.getMany().map((role) => ({
+      label: role.name,
+      value: role.id,
+    }));
   };
 
   // TODO: @Estaban el solo debe asignar a las que tiene acceso,
@@ -510,6 +527,23 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                           },
                         ]}
                         meta={meta}
+                      />
+                    )}
+                  </Field>
+                  <Field<IOption[]> name='roles' validate={required}>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        id='select-roles'
+                        label={t('user.create.form.role')}
+                        icon='231'
+                        options={roles.value}
+                        multiple={true}
+                        allowAll={true}
+                        menuPortalTarget={document.body}
+                        placeholder={t('user.create.form.placeholderRole')}
+                        onChange={() => {}}
                       />
                     )}
                   </Field>
