@@ -38,14 +38,14 @@ module.exports = {
         'blue-dark': '#172554',
       },
       maxHeight: {
-        'general-table': '66vh',
+        'general-table': '90vh',
         'setting-table': '60vh',
         'container-table': '40vh',
       },
       height: {
-        'general-table': '66vh',
+        'general-table': '90vh',
         'setting-table': '60vh',
-        'container-table': '40vh',
+        'container-table': '10vh',
       },
     },
   },

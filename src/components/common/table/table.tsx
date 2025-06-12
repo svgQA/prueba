@@ -791,13 +791,13 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='pb-12 min-h-[30vh] border-2 border-gray-200 dark:border-b-dark-light rounded-lg relative'
+          className='pb-12 min-h-[60vh] border-2 border-gray-200 dark:border-b-dark-light rounded-lg relative'
         >
           <div
             className={`${
               isSettingTable
                 ? 'max-h-setting-table'
-                : 'max-h-general-table h-[535px]'
+                : 'max-h-general-table h-[68vh]'
             } ${data.length > 10 ? 'overflow-auto' : 'overflow-hidden'} relative vox-scroll-design min-h-[20vh]`}
           >
             <table className='elements relative w-full'>
