@@ -15,7 +15,6 @@ import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
-/* import { FrequentQuestion } from './interface'; */
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
@@ -29,10 +28,13 @@ import {
   SseManager,
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
+import { MapPath } from '@/components/common/map/MapPath';
+import { RoutePoint, TrackingService } from '@/services/general/tracking';
 
 enum VIEW_NAME {
   TABLE,
   CHAT,
+  MAP,
 }
 
 const defaultSummary = {
@@ -51,10 +53,15 @@ export const MemosPage: FunctionComponent = () => {
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
+  const routePath = useSignal<RoutePoint[]>([]);
+
+  /**
+   *  TODO: Typiar toda esta mierda
+   */
   const memosGroupedByService = useSignal<any[]>([]);
   const memosGroupedByUser = useSignal<any[]>([]);
 
-  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
+  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.CHAT);
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
   const loading = useSignal<boolean>(false);
@@ -198,9 +205,24 @@ export const MemosPage: FunctionComponent = () => {
     currentView.value = view;
   }, []);
 
+  const onReloadRoute = async () => {
+    const response = await TrackingService.getTracking();
+    if (!response.getStatus()) return;
+    routePath.value = response.getMany();
+  };
+
   const buttonMenu = useMemo(
     () => (
       <div className='flex items-center gap-2'>
+        <Button
+          name='button-change-scheduler'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.CHAT);
+          }}
+          rounded={false}
+          selected={currentView.value === VIEW_NAME.CHAT}
+          icon='418'
+        />
         <Button
           name='button-change-table'
           onClick={() => {
@@ -213,12 +235,20 @@ export const MemosPage: FunctionComponent = () => {
         <Button
           name='button-change-scheduler'
           onClick={() => {
-            handleViewChange(VIEW_NAME.CHAT);
+            handleViewChange(VIEW_NAME.MAP);
           }}
           rounded={false}
-          selected={currentView.value === VIEW_NAME.CHAT}
-          icon='418'
+          selected={currentView.value === VIEW_NAME.MAP}
+          icon='318'
         />
+        {currentView.value === VIEW_NAME.MAP && (
+          <Button
+            name='btn-reload-path'
+            onClick={onReloadRoute}
+            icon='132'
+            rounded={false}
+          />
+        )}
         {/* <Button name='button-change-scheduler' rounded={false} icon='331' />
         <Button name='button-change-scheduler' rounded={false} icon='314' /> */}
       </div>
@@ -249,7 +279,8 @@ export const MemosPage: FunctionComponent = () => {
       }
       padding={currentView.value === VIEW_NAME.TABLE}
     >
-      {currentView.value === VIEW_NAME.TABLE && (
+      {(currentView.value === VIEW_NAME.TABLE ||
+        currentView.value === VIEW_NAME.MAP) && (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
             title={t('memos.cards.totalToday')}
@@ -326,6 +357,12 @@ export const MemosPage: FunctionComponent = () => {
               row.id === highlightedMemoId ? 'animate-highlight' : ''
             }
           />
+        )}
+
+        {currentView.value === VIEW_NAME.MAP && (
+          <div className='p-5 pt-16'>
+            <MapPath route={routePath.value} height='70vh'></MapPath>
+          </div>
         )}
       </div>
 
