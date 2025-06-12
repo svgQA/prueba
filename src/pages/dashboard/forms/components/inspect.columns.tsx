@@ -23,6 +23,7 @@ export const getColumns = (
     accessorKey: 'user',
     id: 'user',
     header: i18n.t('form.columns.user'),
+    meta: { headerAlign: 'center' },
     cell: (info) => {
       const { user } = info.row.original;
       return (
@@ -41,6 +42,7 @@ export const getColumns = (
     accessorKey: 'title',
     id: 'title',
     header: i18n.t('form.columns.title'),
+    meta: { headerAlign: 'center' },
     cell: (info) => {
       const { form } = info.row.original;
       return (
@@ -58,18 +60,21 @@ export const getColumns = (
     accessorKey: 'createdAt',
     id: 'createdAt',
     header: i18n.t('form.columns.createdAt'),
+    meta: { headerAlign: 'center' },
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
     header: i18n.t('form.columns.updatedAt'),
+    meta: { headerAlign: 'center' },
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'status',
     id: 'status',
     header: i18n.t('form.columns.status'),
+    meta: { headerAlign: 'center' },
     cell: (info) => {
       const { status } = info.row.original;
       return <Chip label={status} />;
@@ -77,6 +82,7 @@ export const getColumns = (
   },
   {
     id: 'action',
+    meta: { headerAlign: 'center' },
     size: 30,
     cell: (info) => {
       const { id, status } = info.row.original;

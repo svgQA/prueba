@@ -400,25 +400,5 @@ export const general_en = {
   },
   users: {
     pageTitle: 'VX - Users Service',
-    cards: {
-      total: 'Total Users',
-      totalSubtitle: 'Registered',
-      activeConnection: 'Active Connection',
-      activeSubtitle: 'Connected users',
-      inactiveConnection: 'Inactive Connection',
-      inactiveSubtitle: 'Disconnected users',
-    },
-    columns: {
-      name: 'Name',
-      id: 'ID',
-      email: 'Email',
-      company: 'Company',
-      department: 'Department',
-      city: 'City',
-      connection: 'Connection',
-      taskProgress: 'Task progress',
-      active: 'Active',
-      inactive: 'Inactive',
-    },
   },
 };
