@@ -71,6 +71,7 @@ import { TemplateNotificationEditPage } from './notifications/templateNotificati
 import { ScheduledNotificationEditPage } from './notifications/scheduleNotifications/update/update';
 import { PredefinedSettingPage } from './memo/predefined/predefined';
 import { PredefinedCreateSettingPage } from './memo/predefined/create/create';
+import { GroupCreateSettingPage } from './security/groups/create/create';
 // import { ResourceCreateSettingPage } from './memo/resource/create/create';
 
 export const RoutingContent = memo(() => {
@@ -157,6 +158,12 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.security.groups.to}
           component={lazy(() => Promise.resolve({ default: GroupSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.security.groups.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: GroupCreateSettingPage })
+          )}
         />
         {/* PAYMENT MENU */}
         <Route
@@ -431,7 +438,6 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.update.to}
           component={lazy(() => Promise.resolve({ default: AreaCreatePage }))}
         />
-
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.users.password.to}
           component={lazy(() => Promise.resolve({ default: UserPasswordPage }))}

@@ -5,7 +5,7 @@ import { FormService } from '@/services';
 import { useSignal } from '@preact/signals';
 import { IFormResponse, IFormat } from '@/types/form';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
-import { setReport, updateReport } from '../report/store/report';
+// import { setReport, updateReport } from '../report/store/report';
 import { RESPONSE_MODE_SERVICE, setResponse } from '../response/store/response';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -19,6 +19,8 @@ import { Badge } from '@/components/common/badge/badge';
 import { localStorage } from '@/utils/storage';
 import { FORM_AUTO_SAVE_KEY } from '../create/store/control';
 import { showAlert } from '@/components/common/show-alert/show-alert';
+import { validateResponse } from '@/pages/dashboard/forms/response/store/response';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const FormSettingPage = () => {
   const { t } = useTranslation();
@@ -109,6 +111,10 @@ export const FormSettingPage = () => {
         break;
       }
       case ROW_ACTIONS.RESPONSE: {
+        if (!validateResponse(format.structure)) {
+          ToastManager.error(t('form.error.invalidResponse'));
+          return;
+        }
         const response = await FormService.create_response({
           formId: format.id,
           structure: format.structure,
@@ -122,16 +128,16 @@ export const FormSettingPage = () => {
         return navigateResponse();
       }
       case ROW_ACTIONS.REPORT: {
-        if (!format.report) {
-          updateReport('formId', format.id);
-          return navigateReport();
-        }
-        const response = await FormService.get_report_by_id(format.report.id);
-        if (!response.getStatus()) {
-          updateReport('formId', format.id);
-        } else {
-          setReport(response.getOne());
-        }
+        // if (!format.report) {
+        //   updateReport('formId', format.id);
+        //   return navigateReport();
+        // }
+        // const response = await FormService.get_report_by_id(format.report.id);
+        // if (!response.getStatus()) {
+        //   updateReport('formId', format.id);
+        // } else {
+        //   setReport(response.getOne());
+        // }
         return navigateReport();
       }
       default:

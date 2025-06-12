@@ -14,6 +14,9 @@ export default defineConfig({
       brotliSize: true, // Mostrar tamaño con Brotli
     }),
   ],
+  define: {
+    global: 'globalThis',
+  },
   base: '/',
   clearScreen: false,
   build: {

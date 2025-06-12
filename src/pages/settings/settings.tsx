@@ -11,7 +11,7 @@ import {
 } from '@/store/signals/modals';
 
 import { useSignal } from '@preact/signals';
-import { useCallback, useEffect } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { RoutingContent } from './routing';
 import { IMenu } from '@/components/common/utils/interface';
@@ -32,6 +32,7 @@ export const SettingsModal = () => {
   const { user } = useUserStore();
   const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
   const [_, navigate] = useLocation();
+  const [expand, setExpand] = useState<boolean>(false);
 
   // TODO: Revisar esta parte para cuando se abre y ya existia un menu seleccionado.
   useEffect(() => {
@@ -93,6 +94,7 @@ export const SettingsModal = () => {
       id='setting-modal'
       expandable
       theme
+      setExpandable={setExpand}
       header={
         <div className='flex flex-row w-full items-center justify-between'>
           <MenuButtons goBack={goBack} goForward={goForward} />
@@ -109,7 +111,7 @@ export const SettingsModal = () => {
     >
       <div
         onClick={selectMenu}
-        className='max-w-80 min-w-60 max-h-[90vh] border-r-2 border-gray-50 dark:border-b-dark-light flex flex-col gap-1'
+        className='max-w-80 min-w-60 border-r-2 border-gray-50 dark:border-b-dark-light flex flex-col gap-1'
       >
         <CardSettingUser
           id='user-information'
@@ -122,6 +124,7 @@ export const SettingsModal = () => {
         <MenuList
           menuSettings={menuSettings}
           menuInformationSelected={menuInformationSelected.value}
+          expand={expand}
         />
       </div>
       <div className='w-full'>
@@ -131,7 +134,9 @@ export const SettingsModal = () => {
           title={menuInformationSelected.value.label}
           description={menuInformationSelected.value.description}
         />
-        <div className='relative max-h-[72vh] min-h-[71.5vh] overflow-y-auto overflow-x-hidden vox-scroll-design w-full p-2'>
+        <div
+          className={`${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} relative overflow-y-auto overflow-x-hidden vox-scroll-design w-full p-2`}
+        >
           <RoutingContent />
         </div>
       </div>
