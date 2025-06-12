@@ -59,6 +59,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
         ${unpadded ? 'p-1' : 'p-2'}
         ${rounded ? 'rounded-full' : 'rounded'}
         hover:bg-opacity-70
+        max-h-9
         transition-colors duration-150
         ${borderless ? 'border-none' : 'border border-gray-200 dark:border-gray-700'}
         ${full ? 'w-full' : ''}
@@ -79,7 +80,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
           className={`flex flex-row ${getJustify()} items-center w-full md:w-auto`}
         >
           <p
-            className={`capitalize w-full text-${textAlign} ${textColor} ${big ? 'py-1' : ''}`}
+            className={`capitalize max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis w-full text-${textAlign} ${textColor} ${big ? 'py-1' : ''}`}
           >
             {label}
           </p>

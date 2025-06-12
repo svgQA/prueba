@@ -32,18 +32,18 @@ export const ChatMessage = ({
 }: ChatMessageProps) => {
   return (
     <div
-      className={`flex flex-col ${isSender ? 'items-end' : 'items-start'} mb-4`}
+      className={`flex flex-col ${isSender ? 'items-end' : 'items-start'} mb-4 text-black dark:text-white`}
       onClick={() => id && onReply?.(id)}
     >
       <div
         className={`max-w-[70%] p-3 rounded-lg cursor-pointer transition-colors duration-200
           ${isSelected ? 'ring-2 ring-primary' : ''}
-          ${isSender ? 'bg-primary-opacity text-dark border-primary' : 'bg-b-light-light dark:bg-b-dark-light border-b-light-dark'}`}
+          ${isSender ? 'bg-primary-opacity dark:bg-primary border-primary' : 'bg-b-light-light dark:bg-b-dark-light border-b-light-dark'}`}
       >
         {(title || priority || status) && (
           <div className='flex justify-between items-center gap-2 mb-2'>
             <div className='flex items-center gap-2'>
-              {title && <Chip label={title} width='lg' icon='123' />}
+              {title && <Chip label={title} width='lg' icon='232' />}
               {status && (
                 <div
                   className={`w-3.5 h-3.5 rounded-full bg-${status === 'OPENED' ? 'primary' : status === 'RESOLVED' ? 'secondary' : 'ternary'} ring-2 ring-white dark:ring-gray-800 shadow-sm`}

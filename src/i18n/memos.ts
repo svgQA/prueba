@@ -5,6 +5,19 @@ export const memos_es = {
       unresolved: 'Memorandos sin resolver',
       resolved: 'Memorandos Resueltos',
     },
+    view: {
+      users: 'Usuarios',
+    },
+    chat: {
+      view: {
+        users: 'Usuarios',
+        select: 'Opciones',
+        services: 'Servicios',
+      },
+      aiAssistant: 'Ai asistente',
+      aiDefaultMessage: 'Ai Mensaje',
+      time: '10:00',
+    },
     columns: {
       user: 'Usuario',
       noveltyType: 'Novedad',
@@ -31,6 +44,19 @@ export const memos_en = {
       totalToday: 'Total Memos Today',
       unresolved: 'Unresolved Memos',
       resolved: 'Resolved Memos',
+    },
+    view: {
+      users: 'Users',
+    },
+    chat: {
+      view: {
+        users: 'Users',
+        select: 'Options',
+        services: 'Services',
+      },
+      aiAssistant: 'Ai aiAssistant',
+      aiDefaultMessage: 'Ai Message',
+      time: '10:00',
     },
     columns: {
       user: 'User',
