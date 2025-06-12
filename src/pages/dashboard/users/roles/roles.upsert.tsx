@@ -15,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { IListModuleResponse, RolePermission } from '@/types/role/role.response';
 import { IRoleRequest } from '@/types/role/role.request';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
-import { IOption } from '@/components/common/multi/interface';
 
 type RawPermission = {
   id: number;
