@@ -25,6 +25,7 @@ export const getColumns = (
       id: 'title',
       accessorKey: 'title',
       header: t('history.columns.title'),
+      meta: { headerAlign: 'center' },
       size: 200,
       cell: (info) => (
         <TextEllipsis text={String(info.getValue())} maxWidth='200px' />
@@ -34,6 +35,7 @@ export const getColumns = (
       id: 'description',
       accessorKey: 'description',
       header: t('history.columns.description'),
+      meta: { headerAlign: 'center' },
       size: 250,
       cell: (info) => (
         <TextEllipsis text={String(info.getValue())} maxWidth='250px' />
@@ -43,6 +45,7 @@ export const getColumns = (
       id: 'type',
       accessorKey: 'type',
       header: t('history.columns.type'),
+      meta: { headerAlign: 'center' },
       size: 120,
       cell: (info) => {
         const type = String(info.getValue());
@@ -59,6 +62,7 @@ export const getColumns = (
       id: 'sentAt',
       accessorKey: 'sentAt',
       header: t('history.columns.sentDate'),
+      meta: { headerAlign: 'center' },
       size: 180,
       cell: (info) => {
         return <FormattedDate date={String(info.getValue())} format='human' />;
@@ -68,6 +72,7 @@ export const getColumns = (
       id: 'recipients',
       accessorKey: 'recipients',
       header: t('history.columns.recipients'),
+      meta: { headerAlign: 'center' },
       size: 100,
       cell: (info) => (
         <div className='flex items-center gap-2'>
@@ -81,6 +86,7 @@ export const getColumns = (
       id: 'openRate',
       accessorKey: 'openRate',
       header: t('history.columns.openRate'),
+      meta: { headerAlign: 'center' },
       size: 150,
       cell: (info) => {
         const openRate = Number(info.getValue());
@@ -104,6 +110,7 @@ export const getColumns = (
     },
     {
       id: 'actions',
+      meta: { headerAlign: 'center' },
       size: 20,
       cell: (info) => {
         const { id } = info.row.original;

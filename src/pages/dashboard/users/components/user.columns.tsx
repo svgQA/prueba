@@ -24,7 +24,8 @@ export const getColumns = (
     id: 'name',
     accessorKey: 'name',
     size: 180,
-    header: t('users.columns.name'),
+    header: t('user.columns.name'),
+    meta: { headerAlign: 'center' },
     cell: (info) => {
       const { name, surname, image } = info.row.original;
       return (
@@ -47,19 +48,22 @@ export const getColumns = (
     id: 'cardId',
     accessorKey: 'cardId',
     size: 180,
-    header: t('users.columns.id'),
+    header: t('user.columns.id'),
+    meta: { headerAlign: 'center' },
   },
   {
     id: 'email',
     accessorKey: 'email',
     size: 180,
-    header: t('users.columns.email'),
+    header: t('user.columns.email'),
+    meta: { headerAlign: 'center' },
   },
   {
     id: 'company',
     accessorKey: 'companies',
     size: 180,
-    header: t('users.columns.company'),
+    header: t('user.columns.company'),
+    meta: { headerAlign: 'center' },
     enableGrouping: true,
     cell: (info) => {
       const { companies } = info.row.original;
@@ -79,7 +83,8 @@ export const getColumns = (
     id: 'department',
     accessorKey: 'extraData.state.label',
     size: 180,
-    header: t('users.columns.department'),
+    header: t('user.columns.department'),
+    meta: { headerAlign: 'center' },
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
@@ -91,7 +96,8 @@ export const getColumns = (
     id: 'ciudad',
     accessorKey: 'extraData.city.label',
     size: 180,
-    header: t('users.columns.city'),
+    header: t('user.columns.city'),
+    meta: { headerAlign: 'center' },
     enableGrouping: true,
     cell: (info) => {
       const { extraData } = info.row.original;
@@ -102,7 +108,8 @@ export const getColumns = (
   {
     id: 'conections',
     accessorKey: 'conections',
-    header: 'Conexión',
+    header: t('user.columns.connection'),
+    meta: { headerAlign: 'center' },
     size: 100,
     cell: (info) => {
       const { userType } = info.row.original;
@@ -131,7 +138,8 @@ export const getColumns = (
   },
   {
     id: 'openRate',
-    header: 'Tasa de apertura',
+    header: t('user.columns.taskProgress'),
+    meta: { headerAlign: 'center' },
     size: 150,
     cell: (info) => {
       const { tasks } = info.row.original as {
@@ -169,7 +177,8 @@ export const getColumns = (
   {
     id: 'userType',
     accessorKey: 'userType',
-    header: 'Tipo de usuario',
+    header: t('user.columns.userType'),
+    meta: { headerAlign: 'center' },
     size: 20,
     cell: (info) => {
       return <Chip label={info.getValue() as string} color='gray' />;
@@ -177,6 +186,7 @@ export const getColumns = (
   },
   {
     id: 'actions',
+    meta: { headerAlign: 'center' },
     size: 20,
     cell: (info) => {
       const { id, userType, cognitoId } = info.row.original;

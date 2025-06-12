@@ -795,7 +795,9 @@ export const Table = <T,>({
         >
           <div
             className={`${
-              isSettingTable ? 'max-h-setting-table' : 'max-h-general-table h-[535px]'
+              isSettingTable
+                ? 'max-h-setting-table'
+                : 'max-h-general-table h-[535px]'
             } ${data.length > 10 ? 'overflow-auto' : 'overflow-hidden'} relative vox-scroll-design min-h-[20vh]`}
           >
             <table className='elements relative w-full'>
