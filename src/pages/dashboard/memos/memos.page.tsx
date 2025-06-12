@@ -173,7 +173,7 @@ export const MemosPage: FunctionComponent = () => {
       memosGroupedByService.value = responseGroupedByService.getMany();
     }
 
-    if(responseGroupedByUser.getStatus()){
+    if (responseGroupedByUser.getStatus()) {
       memosGroupedByUser.value = responseGroupedByUser.getMany();
     }
   };

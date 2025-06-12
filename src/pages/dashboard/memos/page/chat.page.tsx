@@ -239,13 +239,21 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     if (view === TypeChatView.SERVICES_MEMO) {
       const response = await MemoService.get_all_by_service_id(id);
       if (!response.getStatus()) return;
-      memoByService.value = response.getMany().map((memo) => ({ ...memo, priority: memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja', }));
+      memoByService.value = response.getMany().map((memo) => ({
+        ...memo,
+        priority:
+          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+      }));
     }
 
     if (view === TypeChatView.USERS_MEMO) {
       const response = await MemoService.get_all_by_user_id(id);
       if (!response.getStatus()) return;
-      memoByUser.value = response.getMany().map((memo) => ({ ...memo, priority: memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja', }));
+      memoByUser.value = response.getMany().map((memo) => ({
+        ...memo,
+        priority:
+          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+      }));
     }
   };
 
@@ -293,49 +301,55 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         isSelected={selectedChat.value === '0'}
       />
       <div className='flex-1 overflow-y-auto vox-scroll-design border-b-light-dark dark:border-b-dark-light'>
-        {viewMode.value === TypeChatView.USERS && users.map((user: IUserResponse) => (
-          <ChatCard
-            user={user}
-            key={`chat-card-${user.cognitoId}`}
-            id={user.cognitoId}
-            name={`${user.name} ${user.surname}`}
-            lastMessage={`${cognito === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
-            time='10:15'
-            amount={chats.value[user.cognitoId]?.new}
-            onClick={handleChatSelect}
-            isSelected={selectedChat.value === user.cognitoId}
-          />
-        ))}
+        {viewMode.value === TypeChatView.USERS &&
+          users.map((user: IUserResponse) => (
+            <ChatCard
+              user={user}
+              key={`chat-card-${user.cognitoId}`}
+              id={user.cognitoId}
+              name={`${user.name} ${user.surname}`}
+              lastMessage={`${cognito === user.cognitoId ? 'SOY YO' : 'OTRO'}`}
+              time='10:15'
+              amount={chats.value[user.cognitoId]?.new}
+              onClick={handleChatSelect}
+              isSelected={selectedChat.value === user.cognitoId}
+            />
+          ))}
 
-        {viewMode.value == TypeChatView.SERVICES_MEMO && memosGroupedByService.map((service: any) => (
-          <ChatCard
-            key={`service-card-${service.service.id}`}
-            id={service.service.id}
-            name={service.service.name}
-            lastMessage={service.service.description || ''}
-            time={service.service.time || ''}
-            amount={service.service.unreadCount}
-            onClick={() => {
-              handleChatSelect(service.service.id, TypeChatView.SERVICES_MEMO);
-            }}
-            isSelected={selectedChat.value === service.service.id}
-          />
-        ))}
+        {viewMode.value == TypeChatView.SERVICES_MEMO &&
+          memosGroupedByService.map((service: any) => (
+            <ChatCard
+              key={`service-card-${service.service.id}`}
+              id={service.service.id}
+              name={service.service.name}
+              lastMessage={service.service.description || ''}
+              time={service.service.time || ''}
+              amount={service.service.unreadCount}
+              onClick={() => {
+                handleChatSelect(
+                  service.service.id,
+                  TypeChatView.SERVICES_MEMO
+                );
+              }}
+              isSelected={selectedChat.value === service.service.id}
+            />
+          ))}
 
-        {viewMode.value == TypeChatView.USERS_MEMO && memosGroupedByUser.map((value: any) => (
-          <ChatCard
-            key={`user-card-${value.user.id}`}
-            id={value.user.id}
-            name={value.user.name}
-            lastMessage={value.user.description || ''}
-            time={value.user.time || ''}
-            amount={value.user.unreadCount}
-            onClick={() => {
-              handleChatSelect(value.user.id, TypeChatView.USERS_MEMO);
-            }}
-            isSelected={selectedChat.value === value.user.id}
-          />
-        ))}
+        {viewMode.value == TypeChatView.USERS_MEMO &&
+          memosGroupedByUser.map((value: any) => (
+            <ChatCard
+              key={`user-card-${value.user.id}`}
+              id={value.user.id}
+              name={value.user.name}
+              lastMessage={value.user.description || ''}
+              time={value.user.time || ''}
+              amount={value.user.unreadCount}
+              onClick={() => {
+                handleChatSelect(value.user.id, TypeChatView.USERS_MEMO);
+              }}
+              isSelected={selectedChat.value === value.user.id}
+            />
+          ))}
       </div>
     </>
   );
@@ -375,51 +389,46 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 <span className='vox-icon size-sm vx-icon-239' />
                 <span>Shift ID: {memo.relatedShiftId}</span>
                 {memo.user?.isSupervisor && memo.relatedShift && (
-                  <span className='ml-1'>
-                    ({memo.relatedShift.name})
-                  </span>
+                  <span className='ml-1'>({memo.relatedShift.name})</span>
                 )}
               </>
             )}
           </div>
         </ChatMessage>
         {/* Submemos */}
-        {memo.children?.map(
-          (childMemo: Memo, childIndex: number) => (
-            <ChatMessage
-              key={`child-${index}-${childIndex}`}
-              message={`${childMemo.description || ''}`}
-              isSender={true}
-              title={childMemo.extraData?.predefined?.label}
-              resource={childMemo.resource}
-              date={childMemo.updatedAt}
-            >
-              {childMemo.extraData && (
-                <div className='flex flex-wrap gap-2 text-xs'>
-                  {childMemo.extraData.duration && (
-                    <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
-                      <span className='vox-icon size-sm vx-icon-236' />
-                      {'duracion: ' + childMemo.extraData.duration}
-                    </span>
-                  )}
-                  {childMemo.extraData.time && (
-                    <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
-                      <span className='vox-icon size-sm vx-icon-237' />
-                      {'fecha: ' +
-                        DateUtils.dateToFrontend(
-                          childMemo.extraData.time,
-                          { format: 'DD/MM/YYYY HH:mm' }
-                        )}
-                    </span>
-                  )}
-                </div>
-              )}
-            </ChatMessage>
-          )
-        )}
+        {memo.children?.map((childMemo: Memo, childIndex: number) => (
+          <ChatMessage
+            key={`child-${index}-${childIndex}`}
+            message={`${childMemo.description || ''}`}
+            isSender={true}
+            title={childMemo.extraData?.predefined?.label}
+            resource={childMemo.resource}
+            date={childMemo.updatedAt}
+          >
+            {childMemo.extraData && (
+              <div className='flex flex-wrap gap-2 text-xs'>
+                {childMemo.extraData.duration && (
+                  <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
+                    <span className='vox-icon size-sm vx-icon-236' />
+                    {'duracion: ' + childMemo.extraData.duration}
+                  </span>
+                )}
+                {childMemo.extraData.time && (
+                  <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
+                    <span className='vox-icon size-sm vx-icon-237' />
+                    {'fecha: ' +
+                      DateUtils.dateToFrontend(childMemo.extraData.time, {
+                        format: 'DD/MM/YYYY HH:mm',
+                      })}
+                  </span>
+                )}
+              </div>
+            )}
+          </ChatMessage>
+        ))}
       </>
-    )
-  }
+    );
+  };
 
   const formMinutesByInputs = () => (
     <>
@@ -467,11 +476,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
                   <Field<string> name='date'>
                     {({ input }) => (
-                      <DateField
-                        {...input}
-                        name='date'
-                        label='Fecha'
-                      />
+                      <DateField {...input} name='date' label='Fecha' />
                     )}
                   </Field>
 
@@ -514,12 +519,23 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 <Dropdown
                   name='view-mode'
                   options={[
-                    { label: t('memos.chat.view.users'), value: TypeChatView.USERS_MEMO, icon: '321' },
-                    { label: t('memos.chat.view.services'), value: TypeChatView.SERVICES_MEMO, icon: '321' },
+                    {
+                      label: t('memos.chat.view.users'),
+                      value: TypeChatView.USERS_MEMO,
+                      icon: '321',
+                    },
+                    {
+                      label: t('memos.chat.view.services'),
+                      value: TypeChatView.SERVICES_MEMO,
+                      icon: '321',
+                    },
                   ]}
                   selectedTag={t('memos.chat.view.select')}
                   onChange={(value) => {
-                    viewMode.value = (value === TypeChatView.USERS_MEMO) ? TypeChatView.USERS_MEMO : TypeChatView.SERVICES_MEMO;
+                    viewMode.value =
+                      value === TypeChatView.USERS_MEMO
+                        ? TypeChatView.USERS_MEMO
+                        : TypeChatView.SERVICES_MEMO;
                   }}
                 />
               </div>
@@ -552,20 +568,28 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           <div className='w-[70%] flex flex-col'>
             <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
               {selectedChat.value === '0' && <FrequentQuestions />}
-              {selectedChat.value === '0' && chats.value[selectedChat.value]?.messages.map((msg, index) => (
-                <ChatMessage
-                  key={index}
-                  message={msg.message}
-                  isSender={msg.isSender}
-                />
-              ))}
-              {selectedChat.value !== '0' && viewMode.value == TypeChatView.SERVICES_MEMO && memoByService.value.map((memo: Memo, index) => showChatMemoAndSubMemo(memo, index))}
-              {selectedChat.value !== '0' && viewMode.value == TypeChatView.USERS_MEMO && memoByUser.value.map((memo: Memo, index) => showChatMemoAndSubMemo(memo, index))}
+              {selectedChat.value === '0' &&
+                chats.value[selectedChat.value]?.messages.map((msg, index) => (
+                  <ChatMessage
+                    key={index}
+                    message={msg.message}
+                    isSender={msg.isSender}
+                  />
+                ))}
+              {selectedChat.value !== '0' &&
+                viewMode.value == TypeChatView.SERVICES_MEMO &&
+                memoByService.value.map((memo: Memo, index) =>
+                  showChatMemoAndSubMemo(memo, index)
+                )}
+              {selectedChat.value !== '0' &&
+                viewMode.value == TypeChatView.USERS_MEMO &&
+                memoByUser.value.map((memo: Memo, index) =>
+                  showChatMemoAndSubMemo(memo, index)
+                )}
             </div>
-            {
-            viewMode.value === TypeChatView.USERS ? 
-            <ChatInput onSend={handleSendMessage} input={messages} /> : 
-            (
+            {viewMode.value === TypeChatView.USERS ? (
+              <ChatInput onSend={handleSendMessage} input={messages} />
+            ) : (
               <ChatInput
                 onSend={handleSendMessage}
                 onCancelReply={handleCancelReply}
@@ -577,8 +601,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               >
                 {formMinutesByInputs()}
               </ChatInput>
-            )
-            }
+            )}
           </div>
         </div>
       </div>
