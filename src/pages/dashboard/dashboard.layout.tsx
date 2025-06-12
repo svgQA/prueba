@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { Route, Router } from 'wouter';
-import { lazy, Suspense, useEffect } from 'preact/compat';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -45,7 +45,8 @@ import { ThemeButton } from '@/components/compose/button';
 import { CompanyService } from '@/services';
 // import { INotification } from '@/components/common/notifications/interface';
 import Notifications from '@/components/common/notifications/notifications';
-// import { EventBus } from '@/utils/network/event.bus';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE, SseManager } from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/event.bus';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -67,9 +68,36 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       // user,
     } = useUserStore();
 
+    const [panicMessage, setPanicMessage] = useState<string | null>(null);
+    const [panicSubTitle, setPanicSubTitle] = useState<string | null>(null);
+    const [isPanicVisible, setIsPanicVisible] = useState(false);
+
     useEffect(() => {
       validateUser();
+      fetchSSE();
+      EventBus.on(SSE_TYPE.PANIC, handlePanicSSE);
     }, []);
+
+    const fetchSSE = useCallback(async () => {
+      await SseManager.getQuery(['memo', 'panic']);
+    }, []);
+
+    const handlePanicSSE = (event: IBaseSSE) => {
+      const { name, message } = event;
+      if (name === SSE_EVENTS.PANIC) {
+        setIsPanicVisible(false);
+        setTimeout(() => {
+          setPanicMessage(message.message);
+          setPanicSubTitle(message.user.name + ' ' + message.user.surname);
+          setIsPanicVisible(true);
+          setTimeout(() => {
+            setIsPanicVisible(false);
+            setPanicMessage(null);
+            setPanicSubTitle(null);
+          }, 3000);
+        }, 100);
+      }
+    };
 
     const validateUser = async () => {
       const result = await hasUserTenant(
@@ -121,8 +149,44 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       }
     };
 
+    const showPanicNotification = () => (
+      <>
+        {isPanicVisible && panicMessage && (
+          <div className="fixed top-4 right-4 z-50 transition-all duration-300 ease-in-out transform translate-y-0 opacity-100">
+            <div className="bg-gradient-to-r from-red-600 to-red-500 text-white px-6 py-4 rounded-xl shadow-xl flex flex-col gap-1 border border-red-400/20 backdrop-blur-sm">
+              <div className="flex items-center gap-3">
+                <span className="vx-icon vx-icon-317 text-white text-xl animate-pulse" />
+                <span className="font-medium">{panicMessage}</span>
+              </div>
+              {panicSubTitle && (
+                <div className="flex items-center pl-8">
+                  <span className="text-sm text-red-100">{panicSubTitle}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        {!isPanicVisible && panicMessage && (
+          <div className="fixed top-4 right-4 z-50 transition-all duration-300 ease-in-out transform -translate-y-4 opacity-0">
+            <div className="bg-gradient-to-r from-red-600 to-red-500 text-white px-6 py-4 rounded-xl shadow-xl flex flex-col gap-1 border border-red-400/20 backdrop-blur-sm">
+              <div className="flex items-center gap-3">
+                <span className="vx-icon vx-icon-317 text-white text-xl animate-pulse" />
+                <span className="font-medium">{panicMessage}</span>
+              </div>
+              {panicSubTitle && (
+                <div className="flex items-center pl-8">
+                  <span className="text-sm text-red-100">{panicSubTitle}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </>
+    );
+
     return (
       <section>
+        {showPanicNotification()}
         {/* <Loading /> */}
         <Sidebar
           id='sidebar'
