@@ -77,6 +77,24 @@ export default defineConfig({
           if (id.includes('socket.io-client')) {
             return '@socket-io-client-base'; // 148.81 kB
           }
+          if (id.includes('jspdf')) {
+            return '@jspdf'; // 148.81 kB
+          }
+          if (id.includes('pdf-lib')) {
+            return '@pdf-lib'; // 148.81 kB
+          }
+          if (id.includes('@pdfme/common')) {
+            return '@pdfme/common'; // 148.81 kB
+          }
+          if (id.includes('@pdfme/generator')) {
+            return '@pdfme/generator';
+          }
+          if (id.includes('@pdfme/schemas')) {
+            return '@pdfme/schemas';
+          }
+          if (id.includes('@pdfme/ui')) {
+            return '@pdfme/ui';
+          }
         },
       },
     },
