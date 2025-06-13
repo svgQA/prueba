@@ -57,10 +57,12 @@ export const TaskForm = ({
 
   // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
 
-  const onSubmit = async (model: FormData) => {
+  const onSubmit = async (model: FormData, form: any) => {
     const { employeeId, serviceId } = model;
     model.employeeId = employeeId?.value;
     model.serviceId = serviceId?.value;
+
+    console.log('TASK: ', model);
 
     const request = taskSelected?.id
       ? await ShiftService.updateActivity(model, taskSelected.id)
@@ -70,7 +72,7 @@ export const TaskForm = ({
     const message = taskSelected?.id
       ? t('shifts.upsert.successEdit')
       : t('shifts.upsert.successCreate');
-
+    form.reset();
     ToastManager.success(message);
     onClose?.();
     posSave?.();
@@ -114,8 +116,8 @@ export const TaskForm = ({
         <Button
           id='btn-form-shift-close'
           name='btn-form-shift-close'
-          type='button'
           label={t('shifts.upsert.buttons.cancel')}
+          type='button'
           onClick={onClose}
           icon='041'
         />
@@ -128,7 +130,6 @@ export const TaskForm = ({
               ? t('shifts.upsert.buttons.edit')
               : t('shifts.upsert.buttons.save')
           }
-          className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
           form='form-shift-update'
           icon='041'
         />
@@ -348,6 +349,7 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
+
                 {/*
                 <div class='col-span-1'>
                   <Field<string> name='externalId'>
@@ -379,6 +381,7 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
+
                 <div class='col-span-2'>
                   <FieldArray<string> name='keywords'>
                     {({ fields }) => {
