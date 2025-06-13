@@ -28,7 +28,7 @@ export const Gauge: FunctionComponent<IGaugeProps> = ({
           strokeLinecap='round'
           style={{
             strokeDasharray: `${2 * Math.PI * 45}`,
-            strokeDashoffset: `${2 * Math.PI * 45 * (1 - progress / 100)}`,
+            strokeDashoffset: `${2 * Math.PI * 45 * (1 - (progress > 100 ? 100 : progress) / 100)}`,
             transform: 'rotate(-90deg)',
             transformOrigin: 'center',
             stroke: color, // Usar el color dinámico para el progreso
