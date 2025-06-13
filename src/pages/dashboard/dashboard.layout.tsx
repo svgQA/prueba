@@ -3,7 +3,6 @@ import { Route, Router } from 'wouter';
 import {
   lazy,
   Suspense,
-  useCallback,
   useEffect,
   useState,
 } from 'preact/compat';
@@ -51,13 +50,6 @@ import { ThemeButton } from '@/components/compose/button';
 import { CompanyService } from '@/services';
 // import { INotification } from '@/components/common/notifications/interface';
 import Notifications from '@/components/common/notifications/notifications';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-  SseManager,
-} from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/event.bus';
 import { RoleService } from '@/services/general/role';
 import { IMenu } from '@/components/common/utils/interface';
 import Panic from '@/components/common/panic/panic';
@@ -84,7 +76,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     const [sidebarMenus, setSidebarMenus] = useState<IMenu[]>([]);
     const [hasSettings, setHasSettings] = useState<boolean>(true);
-
 
     useEffect(() => {
       validateUser();
