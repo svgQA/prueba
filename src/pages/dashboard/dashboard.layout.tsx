@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { Route, Router } from 'wouter';
-import { lazy, Suspense, useEffect } from 'preact/compat';
+import { lazy, Suspense, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -45,7 +45,9 @@ import { ThemeButton } from '@/components/compose/button';
 import { CompanyService } from '@/services';
 // import { INotification } from '@/components/common/notifications/interface';
 import Notifications from '@/components/common/notifications/notifications';
-// import { EventBus } from '@/utils/network/event.bus';
+import { RoleService } from '@/services/general/role';
+import { IMenu } from '@/components/common/utils/interface';
+import Panic from '@/components/common/panic/panic';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -67,8 +69,12 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       // user,
     } = useUserStore();
 
+    const [sidebarMenus, setSidebarMenus] = useState<IMenu[]>([]);
+    const [hasSettings, setHasSettings] = useState<boolean>(true);
+
     useEffect(() => {
       validateUser();
+      getPermissions();
     }, []);
 
     const validateUser = async () => {
@@ -121,6 +127,39 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       }
     };
 
+    const getPermissions = async () => {
+      const request = await RoleService.getPermissions();
+      if (!request.getStatus()) return;
+
+      const permissions = request.getMany();
+
+      if (permissions.length === 0) {
+        setSidebarMenus(SIDEBAR_MENUS);
+        return;
+      }
+      console.log('permissions', permissions);
+
+      const filteredMenu = SIDEBAR_MENUS.filter((option) => {
+        const match = permissions.find(
+          (perm) =>
+            perm.name.trim() === option.key && perm.permissions.state === true
+        );
+        console.log(
+          `🔍 Checking ${option.key}: ${match ? '✅ Match' : '❌ No match'}`
+        );
+        return match;
+      });
+
+      const permissionsSettings = permissions.find(
+        (perm) =>
+          perm.name.trim() === 'settings' && perm.permissions.state === true
+      );
+      setHasSettings(permissionsSettings ? true : false);
+      setSidebarMenus(filteredMenu);
+      console.log('hasSettings', hasSettings);
+      console.log('filteredMenu', filteredMenu);
+    };
+
     return (
       <section>
         {/* <Loading /> */}
@@ -129,8 +168,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           name='sidebar'
           onSettingHandler={toggleSettingModal}
           onHomeHandler={toggleSettingModal}
-          menus={SIDEBAR_MENUS}
+          menus={sidebarMenus}
           isNavigation
+          hasSettings={hasSettings}
           // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
@@ -156,6 +196,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 borderless
               />
               <div className='flex flex-row gap-4 items-center justify-center'>
+                <Panic icon='001'></Panic>
                 <ThemeButton unpadded borderless />
                 {/* <Button
                   name='user-action'
@@ -167,8 +208,16 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <Notifications icon='317' iconSize='xsm' />
                 <Dropdown
                   options={[
-                    { label: 'setting', value: 1, icon: '158' },
-                    { label: 'logout', value: 2, icon: '099' },
+                    {
+                      label: 'setting',
+                      value: 1,
+                      icon: '158',
+                    },
+                    {
+                      label: 'logout',
+                      value: 2,
+                      icon: '099',
+                    },
                   ]}
                   name='user'
                   icon='318'
@@ -189,7 +238,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <Route
                   path={PAGES_LIST.SHIFTS}
                   component={lazy(() =>
-                    Promise.resolve({ default: ShiftsPage })
+                    Promise.resolve({
+                      default: ShiftsPage,
+                    })
                   )}
                 />
                 <Route
@@ -201,7 +252,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <Route
                   path={PAGES_LIST.CORRESPONDENCE}
                   component={lazy(() =>
-                    Promise.resolve({ default: CorrespondencePage })
+                    Promise.resolve({
+                      default: CorrespondencePage,
+                    })
                   )}
                 />
                 <Route
@@ -219,13 +272,17 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <Route
                   path={PAGES_LIST.DEVICES}
                   component={lazy(() =>
-                    Promise.resolve({ default: DevicesPage })
+                    Promise.resolve({
+                      default: DevicesPage,
+                    })
                   )}
                 />
                 <Route
                   path={PAGES_LIST.HISTORY}
                   component={lazy(() =>
-                    Promise.resolve({ default: HistoryNotificationsPage })
+                    Promise.resolve({
+                      default: HistoryNotificationsPage,
+                    })
                   )}
                 />
               </Suspense>

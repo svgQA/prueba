@@ -29,8 +29,6 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
       );
     case 'contract':
       return <ContractInfo contract={service.contract} />;
-    // case 'report':
-    //   return <ReportInfo data={data} />;
     case 'shift':
       return (
         <ShiftInfo
@@ -41,7 +39,13 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
         />
       );
     case 'round':
-      return <RoundInfo roundPct={roundPct} />;
+      return (
+        <RoundInfo
+          roundPct={roundPct}
+          points={service?.round.points}
+          frequency={service?.round.frequency}
+        />
+      );
     case 'time-start':
       return (
         <DateInfo

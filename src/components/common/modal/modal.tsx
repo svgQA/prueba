@@ -17,12 +17,14 @@ export const Modal: FunctionComponent<IModalProps> = ({
   shadowed,
   position = 'fixed',
   theme = false,
+  setExpandable,
 }: IModalProps) => {
   const [expand, setExpand] = useState(false);
 
   const toggleExpand = () => {
     const expanded = !expand;
     setExpand(expanded);
+    setExpandable?.(expanded);
   };
 
   return (

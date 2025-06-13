@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'preact/hooks';
-import { FormService } from '@/services/form/form';
 import { TemplateService } from '@/services/notification/template';
 import { IOption } from '@/components/common/multi/interface';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +11,7 @@ import { Form, Field } from 'react-final-form';
 import { useSignal } from '@preact/signals';
 import { lengthSize } from '@/utils/utilities';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { NotificationService } from '@/services';
+import { NotificationService, TaskService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 
 interface Props {
@@ -35,11 +34,9 @@ export const ManualNotificationForm = ({
   const [templateSelected, setTemplateSelected] = useState<
     IOption | undefined
   >();
-  const [formSelected, setFormSelected] = useState<IOption | undefined>();
-  const [formStructure, setFormStructure] = useState<any>(null);
 
   const templates = useSignal<IOption[]>([]);
-  const forms = useSignal<IOption[]>([]);
+  const tasks = useSignal<IOption[]>([]);
 
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
 
@@ -78,22 +75,27 @@ export const ManualNotificationForm = ({
     if (!hasplayers) return;
 
     const payload: ISendManualNotificationDto = {
-      templateId: values.template?.value,
-      formId: values.form?.value,
-      ...(!templateSelected && {
-        overrideTitle: values.title,
-        overrideDescription: values.description,
-      }),
+      notificationType: values.notificationType.value,
+      ...(values.template?.value && { templateId: values.template.value }),
+      ...(!values.template?.value &&
+        values.task?.value && { taskId: Number(values.task.value) }),
+      ...(!values.template?.value &&
+        !values.task?.value && {
+          overrideTitle: values.title,
+          overrideDescription: values.description,
+        }),
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
-      ...(formStructure && {
-        data: { formId: values.form?.value, formStructure },
-      }),
     };
-    const response = await NotificationService.sendManualNotification(payload);
-    if (response.getStatus()) ToastManager.success('notification.send.success');
+
+    try {
+      await NotificationService.sendManualNotification(payload);
+      ToastManager.success('notification.send.success');
+    } catch {
+      ToastManager.error('notification.send.failure');
+    }
   };
 
   const clearUserSelection = () => setSelectedUserIds([]);
@@ -101,12 +103,12 @@ export const ManualNotificationForm = ({
   useEffect(() => {
     const fetchFormsAndTemplates = async () => {
       try {
-        const [formsResponse, templatesResponse] = await Promise.all([
-          FormService.getSimpleList(),
+        const [TasksResponse, templatesResponse] = await Promise.all([
+          TaskService.getSimplesList(),
           TemplateService.getBasicTemplates(),
         ]);
 
-        if (formsResponse.getStatus()) forms.value = formsResponse.getMany();
+        if (TasksResponse.getStatus()) tasks.value = TasksResponse.getMany();
         if (templatesResponse.getStatus())
           templates.value = templatesResponse.getMany();
       } catch (err) {
@@ -116,14 +118,14 @@ export const ManualNotificationForm = ({
     fetchFormsAndTemplates();
   }, []);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const getFormStructure = async () => {
       if (!formSelected) return;
       const response = await FormService.get_one(Number(formSelected.value));
       if (response.getStatus()) setFormStructure(response.getOne());
     };
     getFormStructure();
-  }, [formSelected]);
+  }, [formSelected]); */
 
   return (
     <Form
@@ -233,17 +235,37 @@ export const ManualNotificationForm = ({
             />
 
             <Field<IOption[]>
-              name='form'
+              name='task'
               render={({ input, meta }) => (
                 <SmartSelector
                   {...input}
                   meta={meta}
-                  options={forms.value}
+                  options={tasks.value}
                   menuPortalTarget={document.body}
-                  placeholder='Selecciona un formulario'
-                  label='Formulario'
+                  placeholder='Selecciona una tarea'
+                  label='Tareas'
                   onChange={(value?: IOption) => {
-                    setFormSelected(value);
+                    input.onChange(value);
+                  }}
+                />
+              )}
+            />
+
+            <Field<IOption>
+              name='notificationType'
+              render={({ input, meta }) => (
+                <SmartSelector
+                  {...input}
+                  meta={meta}
+                  options={[
+                    { label: 'General', value: 'general' },
+                    { label: 'Reporte', value: 'report' },
+                  ]}
+                  menuPortalTarget={document.body}
+                  placeholder='Selecciona tipo'
+                  label='Tipo de notificación'
+                  onChange={(value?: IOption) => {
+                    input.onChange(value);
                   }}
                 />
               )}

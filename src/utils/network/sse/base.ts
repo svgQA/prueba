@@ -6,12 +6,14 @@ export enum SSE_EVENTS {
   UPDATE = 'update',
   CREATE_PARENT = 'create-parent',
   UPDATE_CHECK = 'update-check',
+  PANIC = 'panic',
 }
 
 export enum SSE_TYPE {
   MEMO = 'memos',
   SHIFT = 'shifts',
   ALL = 'all',
+  PANIC = 'panic',
 }
 
 export interface IBaseSSE {

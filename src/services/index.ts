@@ -6,6 +6,7 @@ export * from './general/tenant';
 export * from './general/ia';
 export * from './general/company';
 export * from './general/user';
+export * from './general/tracking';
 
 export * from './shift/gantt';
 export * from './shift/shift';

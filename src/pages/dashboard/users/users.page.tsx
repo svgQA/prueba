@@ -278,23 +278,23 @@ export const UsersPage: FunctionalComponent = () => {
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title={t('users.cards.total')}
+          title={t('user.cards.total')}
           count={totalUsers.value}
-          subtitle={t('users.cards.totalSubtitle')}
+          subtitle={t('user.cards.totalSubtitle')}
           color='text-secondary'
           icon='users'
         />
         <CardData
-          title={t('users.cards.activeConnection')}
+          title={t('user.cards.activeConnection')}
           count={connectedUsers.value}
-          subtitle={t('users.cards.activeSubtitle')}
+          subtitle={t('user.cards.activeSubtitle')}
           color='text-primary'
           icon='user-active'
         />
         <CardData
-          title={t('users.cards.inactiveConnection')}
+          title={t('user.cards.inactiveConnection')}
           count={disconnectedUsers.value}
-          subtitle={t('users.cards.inactiveSubtitle')}
+          subtitle={t('user.cards.inactiveSubtitle')}
           color='text-error'
           icon='user-inactive'
         />

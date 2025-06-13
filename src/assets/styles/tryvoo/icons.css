@@ -1298,8 +1298,12 @@ span.vx-icon.size-xl {
   content: '\023E';
 }
 
-.vx-icon-312::before {
+/* .vx-icon-312::before {
   content: '\023F';
+} */
+
+.vx-icon-312::before {
+  content: '\0021';
 }
 
 .vx-icon-313::before {

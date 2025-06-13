@@ -85,4 +85,39 @@ export class MemoService extends BaseService {
     };
     return await super.make_request(this.name, model);
   }
+
+  static async get_all_by_user(params: IPagination = { page: 1, items: 400 }) {
+    const model: IMakeRequest = {
+      url: ['memo', 'grouped-by-user-memo'],
+      params: params as any,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async get_all_by_user_id(
+    userId: string,
+    params: IPagination = { page: 1, items: 400 }
+  ) {
+    const model: IMakeRequest = {
+      url: ['memo', 'by-user-memo', userId],
+      params: params as any,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async get_all_panic() {
+    const model: IMakeRequest = {
+      url: ['memo', 'panic-all'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  static async changeStatusPanic(id: string) {
+    const model: IMakeRequest = {
+      url: ['memo', 'panic', id],
+      method: REQUEST_METHODS.POST,
+    };
+    return await super.make_request(this.name, model);
+  }
 }

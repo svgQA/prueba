@@ -15,7 +15,6 @@ import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
 import { MemoService, MemosSummary } from '@/services';
-/* import { FrequentQuestion } from './interface'; */
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
@@ -29,10 +28,13 @@ import {
   SseManager,
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
+import { MapPath } from '@/components/common/map/MapPath';
+import { RoutePoint, TrackingService } from '@/services/general/tracking';
 
 enum VIEW_NAME {
   TABLE,
   CHAT,
+  MAP,
 }
 
 const defaultSummary = {
@@ -51,9 +53,15 @@ export const MemosPage: FunctionComponent = () => {
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
-  const memosGroupedByService = useSignal<any[]>([]);
+  const routePath = useSignal<RoutePoint[]>([]);
 
-  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
+  /**
+   *  TODO: Typiar toda esta mierda
+   */
+  const memosGroupedByService = useSignal<any[]>([]);
+  const memosGroupedByUser = useSignal<any[]>([]);
+
+  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.CHAT);
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
   const loading = useSignal<boolean>(false);
@@ -137,11 +145,13 @@ export const MemosPage: FunctionComponent = () => {
       responseUsers,
       responseSummary,
       responseGroupedByService,
+      responseGroupedByUser,
     ] = await Promise.all([
       MemoService.get_all({ page: 1, items: 1000 }),
       UserService.get_all_employee({ items: 20, page: 1 }),
       MemoService.getMemosSummary(),
       MemoService.get_all_by_service(),
+      MemoService.get_all_by_user(),
     ]);
 
     if (responseMemos.getStatus()) {
@@ -169,6 +179,10 @@ export const MemosPage: FunctionComponent = () => {
     if (responseGroupedByService.getStatus()) {
       memosGroupedByService.value = responseGroupedByService.getMany();
     }
+
+    if (responseGroupedByUser.getStatus()) {
+      memosGroupedByUser.value = responseGroupedByUser.getMany();
+    }
   };
 
   // TODO: COrregir esta parte para que solo sea desde un chat list
@@ -191,18 +205,15 @@ export const MemosPage: FunctionComponent = () => {
     currentView.value = view;
   }, []);
 
+  const onReloadRoute = async () => {
+    const response = await TrackingService.getTracking();
+    if (!response.getStatus()) return;
+    routePath.value = response.getMany();
+  };
+
   const buttonMenu = useMemo(
     () => (
       <div className='flex items-center gap-2'>
-        <Button
-          name='button-change-table'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.TABLE);
-          }}
-          rounded={false}
-          selected={currentView.value === VIEW_NAME.TABLE}
-          icon='320'
-        />
         <Button
           name='button-change-scheduler'
           onClick={() => {
@@ -212,6 +223,32 @@ export const MemosPage: FunctionComponent = () => {
           selected={currentView.value === VIEW_NAME.CHAT}
           icon='418'
         />
+        <Button
+          name='button-change-table'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.TABLE);
+          }}
+          rounded={false}
+          selected={currentView.value === VIEW_NAME.TABLE}
+          icon='320'
+        />
+        {/* <Button
+          name='button-change-scheduler'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.MAP);
+          }}
+          rounded={false}
+          selected={currentView.value === VIEW_NAME.MAP}
+          icon='318'
+        /> */}
+        {currentView.value === VIEW_NAME.MAP && (
+          <Button
+            name='btn-reload-path'
+            onClick={onReloadRoute}
+            icon='132'
+            rounded={false}
+          />
+        )}
         {/* <Button name='button-change-scheduler' rounded={false} icon='331' />
         <Button name='button-change-scheduler' rounded={false} icon='314' /> */}
       </div>
@@ -242,7 +279,8 @@ export const MemosPage: FunctionComponent = () => {
       }
       padding={currentView.value === VIEW_NAME.TABLE}
     >
-      {currentView.value === VIEW_NAME.TABLE && (
+      {(currentView.value === VIEW_NAME.TABLE ||
+        currentView.value === VIEW_NAME.MAP) && (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
           <CardData
             title={t('memos.cards.totalToday')}
@@ -320,6 +358,12 @@ export const MemosPage: FunctionComponent = () => {
             }
           />
         )}
+
+        {currentView.value === VIEW_NAME.MAP && (
+          <div className='p-5 pt-16'>
+            <MapPath route={routePath.value} height='70vh'></MapPath>
+          </div>
+        )}
       </div>
 
       {currentView.value === VIEW_NAME.CHAT && (
@@ -327,6 +371,7 @@ export const MemosPage: FunctionComponent = () => {
           users={users.value}
           getUsersHandler={getUsersHandler}
           memosGroupedByService={memosGroupedByService.value}
+          memosGroupedByUser={memosGroupedByUser.value}
         />
       )}
     </Section>

@@ -20,4 +20,5 @@ export const VOS_SERVICES = {
   file: default_service_url,
   notification: default_service_url,
   module: default_service_url,
+  role: default_service_url,
 };

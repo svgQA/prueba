@@ -24,7 +24,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.users.roles.base,
       id: 'roles',
-      show: false,
+      show: true,
     },
     {
       icon: '064',

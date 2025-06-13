@@ -16,6 +16,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
     onChange,
     meta,
     disabled = false,
+    selectedTag = 'No Selected',
   }: IDropdownProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<IDropdownOptions | undefined>(
@@ -155,7 +156,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
               className={`vox-icon vx-icon-${icon} size-${iconSize} ${!isIconOnly ? 'mr-2' : ''}`}
             />
           )}
-          {!isIconOnly && (selected?.[labelTag] || 'No Selected')}
+          {!isIconOnly && (selected?.[labelTag] || selectedTag)}
         </button>
         {meta && meta.touched && meta.error && (
           <span className='text-red-500 text-sm'>{meta.error}</span>

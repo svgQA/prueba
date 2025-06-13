@@ -35,6 +35,14 @@ export const PAGES_LIST_ROUTER = {
         roles: {
           base: '/roles',
           to: '/users/roles',
+          create: {
+            base: '/create',
+            to: '/users/roles/create',
+          },
+          update: {
+            base: '/update',
+            to: '/users/roles/update/:id',
+          },
         },
         groups: {
           base: '/groups',
@@ -264,6 +272,10 @@ export const PAGES_LIST_ROUTER = {
         groups: {
           base: '/groups',
           to: '/security/groups',
+          create: {
+            base: '/grups/create',
+            to: '/security/grups/create',
+          },
         },
       },
       payment: {
