@@ -368,7 +368,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             type='number'
                             name='duration'
                             label='Duración'
-                            placeholder=' min, hh:mm'
+                            placeholder='min'
                           />
                         )}
                       </Field>

@@ -232,7 +232,7 @@ export const MemosPage: FunctionComponent = () => {
           selected={currentView.value === VIEW_NAME.TABLE}
           icon='320'
         />
-        <Button
+        {/* <Button
           name='button-change-scheduler'
           onClick={() => {
             handleViewChange(VIEW_NAME.MAP);
@@ -240,7 +240,7 @@ export const MemosPage: FunctionComponent = () => {
           rounded={false}
           selected={currentView.value === VIEW_NAME.MAP}
           icon='318'
-        />
+        /> */}
         {currentView.value === VIEW_NAME.MAP && (
           <Button
             name='btn-reload-path'

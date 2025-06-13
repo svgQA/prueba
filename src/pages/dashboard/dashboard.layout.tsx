@@ -282,8 +282,16 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <Notifications icon='317' iconSize='xsm' />
                 <Dropdown
                   options={[
-                    { label: 'setting', value: 1, icon: '158' },
-                    { label: 'logout', value: 2, icon: '099' },
+                    {
+                      label: 'setting',
+                      value: 1,
+                      icon: '158',
+                    },
+                    {
+                      label: 'logout',
+                      value: 2,
+                      icon: '099',
+                    },
                   ]}
                   name='user'
                   icon='318'
@@ -304,7 +312,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <Route
                   path={PAGES_LIST.SHIFTS}
                   component={lazy(() =>
-                    Promise.resolve({ default: ShiftsPage })
+                    Promise.resolve({
+                      default: ShiftsPage,
+                    })
                   )}
                 />
                 <Route
@@ -316,7 +326,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <Route
                   path={PAGES_LIST.CORRESPONDENCE}
                   component={lazy(() =>
-                    Promise.resolve({ default: CorrespondencePage })
+                    Promise.resolve({
+                      default: CorrespondencePage,
+                    })
                   )}
                 />
                 <Route
@@ -334,13 +346,17 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <Route
                   path={PAGES_LIST.DEVICES}
                   component={lazy(() =>
-                    Promise.resolve({ default: DevicesPage })
+                    Promise.resolve({
+                      default: DevicesPage,
+                    })
                   )}
                 />
                 <Route
                   path={PAGES_LIST.HISTORY}
                   component={lazy(() =>
-                    Promise.resolve({ default: HistoryNotificationsPage })
+                    Promise.resolve({
+                      default: HistoryNotificationsPage,
+                    })
                   )}
                 />
               </Suspense>

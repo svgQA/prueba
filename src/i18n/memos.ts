@@ -11,12 +11,12 @@ export const memos_es = {
       resolved: 'Memorandos Resueltos',
     },
     view: {
-      users: 'Usuarios',
+      users: 'chats',
     },
     chat: {
       view: {
         users: 'Usuarios',
-        select: 'Agrupar Memos',
+        select: 'Minutas',
         services: 'Servicios',
       },
       aiAssistant: 'Ai asistente',
@@ -56,12 +56,12 @@ export const memos_en = {
       resolved: 'Resolved Memos',
     },
     view: {
-      users: 'Users',
+      users: 'Chats',
     },
     chat: {
       view: {
         users: 'Users',
-        select: 'Memos Group',
+        select: 'Memorandums',
         services: 'Services',
       },
       aiAssistant: 'Ai aiAssistant',
