@@ -73,6 +73,7 @@ import { PredefinedSettingPage } from './memo/predefined/predefined';
 import { PredefinedCreateSettingPage } from './memo/predefined/create/create';
 import { GroupCreateSettingPage } from './security/groups/create/create';
 // import { ResourceCreateSettingPage } from './memo/resource/create/create';
+import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -429,6 +430,14 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.users.roles.to}
           component={lazy(() => Promise.resolve({ default: UserRolesPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.roles.create.to}
+          component={lazy(() => Promise.resolve({ default: RolesUpsertPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.roles.update.to}
+          component={lazy(() => Promise.resolve({ default: RolesUpsertPage }))}
         />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.create.to}

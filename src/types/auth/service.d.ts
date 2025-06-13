@@ -19,9 +19,9 @@ export interface IUserRequest extends IUser {
   companies?: IOption[];
   readonly cardId?: string;
   readonly cardType?: CARD_ID_TYPE;
+  readonly roles?: IOption[];
   extraData?: IExtraData;
 }
-
 export interface IExtraData {
   country?: IOption;
   state?: IOption;
@@ -38,6 +38,14 @@ export interface IRelationCompany {
     name: string;
   };
 }
+
+export interface IRelationRole {
+  role: {
+    id: number;
+    name: string;
+  };
+}
+
 export interface IUserResponse extends IUserRequest {
   id: number;
   playerId?: string;
@@ -47,6 +55,7 @@ export interface IUserResponse extends IUserRequest {
   updatedAt?: Date;
   deletedAt?: Date;
   companies: IRelationCompany[];
+  roles: IRelationRole[];
 }
 
 export interface IJwtPayload {
