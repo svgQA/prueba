@@ -58,6 +58,8 @@ import {
   SseManager,
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
+import { RoleService } from '@/services/general/role';
+import { IMenu } from '@/components/common/utils/interface';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -79,6 +81,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       // user,
     } = useUserStore();
 
+    const [sidebarMenus, setSidebarMenus] = useState<IMenu[]>([]);  
+    const [hasSettings, setHasSettings] = useState<boolean>(true);  
+
     const [panicMessage, setPanicMessage] = useState<string | null>(null);
     const [panicSubTitle, setPanicSubTitle] = useState<string | null>(null);
     const [isPanicVisible, setIsPanicVisible] = useState(false);
@@ -86,6 +91,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     useEffect(() => {
       validateUser();
       fetchSSE();
+      getPermissions();
       EventBus.on(SSE_TYPE.PANIC, handlePanicSSE);
     }, []);
 
@@ -195,6 +201,35 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       </>
     );
 
+    const getPermissions = async () => {
+      const request = await RoleService.getPermissions();
+      if (!request.getStatus()) return;
+
+      const permissions = request.getMany();
+
+      if (permissions.length === 0) {
+        setSidebarMenus(SIDEBAR_MENUS);
+        return;
+      };
+      console.log('permissions', permissions);
+
+      const filteredMenu = SIDEBAR_MENUS.filter(option => {
+        const match = permissions.find(
+          perm => perm.name.trim() === option.key && perm.permissions.state === true
+        );
+        console.log(`🔍 Checking ${option.key}: ${match ? '✅ Match' : '❌ No match'}`);
+        return match;
+      });
+
+      const permissionsSettings = permissions.find(
+        perm => perm.name.trim() === "settings" && perm.permissions.state === true
+      );
+      setHasSettings(permissionsSettings ? true : false);
+      setSidebarMenus(filteredMenu);
+      console.log('hasSettings', hasSettings);
+      console.log('filteredMenu', filteredMenu);
+    };
+
     return (
       <section>
         {showPanicNotification()}
@@ -204,8 +239,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           name='sidebar'
           onSettingHandler={toggleSettingModal}
           onHomeHandler={toggleSettingModal}
-          menus={SIDEBAR_MENUS}
+          menus={sidebarMenus}
           isNavigation
+          hasSettings={hasSettings}
           // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
