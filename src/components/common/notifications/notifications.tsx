@@ -7,18 +7,17 @@ import { localStorage } from '@/utils/storage';
 import { EventBus } from '@/utils/network/event.bus';
 import { IBaseSSE, SSE_TYPE } from '@/utils/network/sse/base';
 import { SIDEBAR_MENUS } from '@/utils/menus/sidebar';
+import ExpanderNotification from './expander.notification';
+import { useSignal } from '@preact/signals';
 
 const STORAGE_KEY = 'notifications';
 
 const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [localNotifications, setLocalNotifications] = useState<INotification[]>(
-    []
-  );
+  const isOpen = useSignal<boolean>(false);
+  const [localNotifications, setLocalNotifications] = useState<INotification[]>([]);
   const [badgeColor, setBadgeColor] = useState('bg-primary');
   const [shouldAnimate, setShouldAnimate] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const [, navigate] = useLocation();
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
@@ -105,24 +104,6 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
     }
   }, [notifications]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
   const handleRedirect = (info: INotification) => {
     if (info.redirect) {
       const updatedNotifications = localNotifications.filter(
@@ -149,7 +130,7 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
         ? `${info.redirect}?notificationId=${info.id}`
         : info.redirect;
       navigate(redirectUrl);
-      setIsOpen(false);
+      isOpen.value = false;
     }
   };
 
@@ -184,19 +165,11 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
           iconSize={iconSize}
           borderless
           unpadded
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => isOpen.value = !isOpen.value}
         />
       </FloatBadge>
-      {isOpen && (
-        <div
-          ref={dropdownRef}
-          className='absolute top-full right-0 mt-2 bg-white dark:bg-b-dark-dark shadow-lg rounded-lg p-2 animate-fade-in border border-gray-200 dark:border-gray-700 w-80 max-h-[300px] overflow-y-auto vox-scroll-design'
-        >
-          {allNotifications.length === 0 ? (
-            <div className='px-4 py-2 text-sm text-gray-500 dark:text-gray-400'>
-              No hay notificaciones
-            </div>
-          ) : (
+        <ExpanderNotification isOpen={isOpen.value}>
+          {allNotifications.length > 0 ? (
             allNotifications.map((notification) => (
               <div
                 key={notification.value}
@@ -217,9 +190,12 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
                 />
               </div>
             ))
-          )}
-        </div>
-      )}
+          ): (
+            <div className='px-4 py-2 text-sm text-gray-500 dark:text-gray-400'>
+              No hay notificaciones
+            </div>
+          ) }
+        </ExpanderNotification>
     </div>
   );
 };

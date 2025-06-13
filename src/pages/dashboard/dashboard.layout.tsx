@@ -3,9 +3,7 @@ import { Route, Router } from 'wouter';
 import {
   lazy,
   Suspense,
-  useCallback,
   useEffect,
-  useState,
 } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
@@ -49,15 +47,8 @@ import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
 import { CompanyService } from '@/services';
-// import { INotification } from '@/components/common/notifications/interface';
 import Notifications from '@/components/common/notifications/notifications';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-  SseManager,
-} from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/event.bus';
+import Panic from '@/components/common/panic/panic';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -79,36 +70,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       // user,
     } = useUserStore();
 
-    const [panicMessage, setPanicMessage] = useState<string | null>(null);
-    const [panicSubTitle, setPanicSubTitle] = useState<string | null>(null);
-    const [isPanicVisible, setIsPanicVisible] = useState(false);
-
     useEffect(() => {
       validateUser();
-      fetchSSE();
-      EventBus.on(SSE_TYPE.PANIC, handlePanicSSE);
     }, []);
-
-    const fetchSSE = useCallback(async () => {
-      await SseManager.getQuery(['memo', 'panic']);
-    }, []);
-
-    const handlePanicSSE = (event: IBaseSSE) => {
-      const { name, message } = event;
-      if (name === SSE_EVENTS.PANIC) {
-        setIsPanicVisible(false);
-        setTimeout(() => {
-          setPanicMessage(message.message);
-          setPanicSubTitle(message.user.name + ' ' + message.user.surname);
-          setIsPanicVisible(true);
-          setTimeout(() => {
-            setIsPanicVisible(false);
-            setPanicMessage(null);
-            setPanicSubTitle(null);
-          }, 3000);
-        }, 100);
-      }
-    };
 
     const validateUser = async () => {
       const result = await hasUserTenant(
@@ -160,44 +124,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       }
     };
 
-    const showPanicNotification = () => (
-      <>
-        {isPanicVisible && panicMessage && (
-          <div className='fixed top-4 right-4 z-50 transition-all duration-300 ease-in-out transform translate-y-0 opacity-100'>
-            <div className='bg-gradient-to-r from-red-600 to-red-500 text-white px-6 py-4 rounded-xl shadow-xl flex flex-col gap-1 border border-red-400/20 backdrop-blur-sm'>
-              <div className='flex items-center gap-3'>
-                <span className='vx-icon vx-icon-317 text-white text-xl animate-pulse' />
-                <span className='font-medium'>{panicMessage}</span>
-              </div>
-              {panicSubTitle && (
-                <div className='flex items-center pl-8'>
-                  <span className='text-sm text-red-100'>{panicSubTitle}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-        {!isPanicVisible && panicMessage && (
-          <div className='fixed top-4 right-4 z-50 transition-all duration-300 ease-in-out transform -translate-y-4 opacity-0'>
-            <div className='bg-gradient-to-r from-red-600 to-red-500 text-white px-6 py-4 rounded-xl shadow-xl flex flex-col gap-1 border border-red-400/20 backdrop-blur-sm'>
-              <div className='flex items-center gap-3'>
-                <span className='vx-icon vx-icon-317 text-white text-xl animate-pulse' />
-                <span className='font-medium'>{panicMessage}</span>
-              </div>
-              {panicSubTitle && (
-                <div className='flex items-center pl-8'>
-                  <span className='text-sm text-red-100'>{panicSubTitle}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </>
-    );
-
     return (
       <section>
-        {showPanicNotification()}
         {/* <Loading /> */}
         <Sidebar
           id='sidebar'
@@ -206,7 +134,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           onHomeHandler={toggleSettingModal}
           menus={SIDEBAR_MENUS}
           isNavigation
-          // onLogout={signOut}
+        // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
           <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
@@ -231,6 +159,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 borderless
               />
               <div className='flex flex-row gap-4 items-center justify-center'>
+                <Panic icon='317' iconSize='xsm' />
                 <ThemeButton unpadded borderless />
                 {/* <Button
                   name='user-action'
