@@ -28,9 +28,9 @@ export interface ISendManualNotificationDto {
    * Filtros para definir los usuarios destinatarios.
    */
   filters?: {
-    userIds?: string[];    // ⬅️ opcional: pueden no seleccionarse
-    shiftToday?: boolean;  // ⬅️ opcional: puede no usarse filtro de turno
-    [key: string]: any;    // ⬅️ flexibilidad para más filtros futuros
+    userIds?: string[]; // ⬅️ opcional: pueden no seleccionarse
+    shiftToday?: boolean; // ⬅️ opcional: puede no usarse filtro de turno
+    [key: string]: any; // ⬅️ flexibilidad para más filtros futuros
   };
 
   /**

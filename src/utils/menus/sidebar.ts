@@ -57,7 +57,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     description: 'este es',
     icon: '140', // 'notify',
     id: 'history',
-    key: "notification"
+    key: 'notification',
   },
   /* {
     label: 'devices',

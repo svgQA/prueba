@@ -141,10 +141,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
   useEffect(() => {
     if (replyToId.value) {
-      const memo = viewMode.value === TypeChatView.SERVICES_MEMO 
-        ? memoByService.value.find(m => m.id === replyToId.value)
-        : memoByUser.value.find(m => m.id === replyToId.value);
-      
+      const memo =
+        viewMode.value === TypeChatView.SERVICES_MEMO
+          ? memoByService.value.find((m) => m.id === replyToId.value)
+          : memoByUser.value.find((m) => m.id === replyToId.value);
+
       if (memo) {
         getStatus(memo.state);
       }
@@ -493,7 +494,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
   const handleCheck = async () => {
     if (!replyToId.value) return;
-    
+
     const position = await getLocation();
     if (!position) return null;
 
