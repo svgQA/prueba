@@ -8,6 +8,7 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
+import { IPaginationUser } from '@/utils/types/user.interface';
 
 export interface IGeneralRequest {
   id?: number;
@@ -57,10 +58,10 @@ export class GeneralService extends BaseService {
     return await super.make_request<IResource>(this.sname, model);
   }
 
-  static async getGroup() {
+  static async getGroup(params: IPaginationUser = { page: 1, items: 500 }) {
     const model: IMakeRequest = {
       url: ['group'],
-      method: REQUEST_METHODS.GET,
+      params: params as any,
     };
     return await super.make_request<any>(this.sname, model);
   }
