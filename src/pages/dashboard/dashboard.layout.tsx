@@ -1,11 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { Route, Router } from 'wouter';
-import {
-  lazy,
-  Suspense,
-  useEffect,
-  useState,
-} from 'preact/compat';
+import { lazy, Suspense, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -176,7 +171,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           menus={sidebarMenus}
           isNavigation
           hasSettings={hasSettings}
-        // onLogout={signOut}
+          // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
           <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>

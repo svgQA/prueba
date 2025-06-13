@@ -1,14 +1,16 @@
 // src/components/PdfmeEditor.tsx
-import { useEffect, useRef, useState } from 'preact/hooks';
-import { Designer } from '@pdfme/ui';
-import { type Template, type Schema, BLANK_A4_PDF } from '@pdfme/common';
-import { text, image, barcodes } from '@pdfme/schemas';
-import { generate } from '@pdfme/generator';
+// import { useEffect, useRef, useState } from 'preact/hooks';
+// import { Designer } from '@pdfme/ui';
+// import { type Template, type Schema, BLANK_A4_PDF } from '@pdfme/common';
+// import { text, image, barcodes } from '@pdfme/schemas';
+// import { generate } from '@pdfme/generator';
 import { Button } from '@/components/common/button/button';
 
 export function PdfmeEditor() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [designer, setDesigner] = useState<Designer | null>(null);
+  // const containerRef = useRef<HTMLDivElement>(null);
+  // const [designer, setDesigner] = useState<Designer | null>(null);
+
+  /*
 
   useEffect(() => {
     const load = async () => {
@@ -42,8 +44,10 @@ export function PdfmeEditor() {
 
     load();
   }, []);
+  */
 
   const handleExport = async () => {
+    /*
     if (!designer) return;
 
     const template = designer.getTemplate();
@@ -58,12 +62,13 @@ export function PdfmeEditor() {
     const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     window.open(url);
+  */
   };
 
   const handleGetSchema = () => {
-    if (!designer) return;
-    const template = designer.getTemplate();
-    console.log('template: ', template);
+    // if (!designer) return;
+    // const template = designer.getTemplate();
+    // console.log('template: ', template);
   };
 
   return (
@@ -82,7 +87,7 @@ export function PdfmeEditor() {
           label='Ver Schema en consola'
         />
       </div>
-      <div ref={containerRef} class='flex-1' />
+      {/* <div ref={containerRef} class='flex-1' /> */}
     </div>
   );
 }

@@ -14,3 +14,12 @@ dist/assets/@lodash-base-DemknnjJ.js                 106.72 kB │ gzip:    39.4
 # Mierdas para revisar
 dist/assets/@pdfme/schemas-Dyaa_4RS.js               962.19 kB │ gzip:   271.54 kB
 dist/assets/@pdfme/ui-BGjCQtBu.js                  4,964.25 kB │ gzip: 1,491.72 kB
+
+
+## INSTALAR
+    "jspdf": "^3.0.1",
+    "pdf-lib": "^1.17.1",
+    "@pdfme/common": "^5.4.0",
+    "@pdfme/generator": "^5.4.0",
+    "@pdfme/schemas": "^5.4.0",
+    "@pdfme/ui": "^5.4.0",
