@@ -1,36 +1,87 @@
 import { type FunctionComponent } from 'preact';
-import { useEffect } from 'preact/hooks';
-import { Form } from 'react-final-form';
+import { useEffect, useState } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
-import { StatusButton } from '@/pages/settings/components/custom.button';
+import { GroupBuilder } from './GroupBuilder';
+import { Group } from './utils/types';
+import { createEmptyGroup } from './utils/utils';
+import { Input } from '@/components/common/input/input';
+import { EquationPreview } from './EquationPreview';
+import { TextArea } from '@/components/common/text.area/text.area';
+import { Button } from '@/components/common/button/button';
+import { useSignal } from '@preact/signals';
+import { GeneralService } from '@/services';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const GroupCreateSettingPage: FunctionComponent = () => {
+  const name = useSignal<string>('');
+  const description = useSignal<string>('');
+
   useEffect(() => {
     document.title = 'Security Group Settings';
   }, []);
-  const onSubmit = async (model: any) => {
-    console.log(model);
+  const [rootGroup, setRootGroup] = useState<Group>(createEmptyGroup());
+
+  const saveGroup = async () => {
+    if (
+      !name.value ||
+      name.value.length < 5 ||
+      !description.value ||
+      name.value.length < 5
+    ) {
+      ToastManager.error('Nombre o descripciòn no cumplen reglas: largo >= 5');
+      return;
+    }
+
+    const response = await GeneralService.createGroup({
+      name: name.value,
+      description: description.value,
+      model: rootGroup,
+    });
+    if (!response.getStatus()) return;
+    name.value = '';
+    description.value = '';
+    setRootGroup(createEmptyGroup());
   };
+
   return (
     <Section>
-      <Form
-        onSubmit={onSubmit}
-        render={({ handleSubmit, form, submitting, pristine }) => (
-          <form onSubmit={handleSubmit} className='space-y-6'>
-            VAMOS A HACER LOS GRUPOS CON DATOS QUEMADOS Y ALGUNAS OPTIONS
-            <div className='w-full flex-row flex justify-end items-center'>
-              <StatusButton
-                onClickClean={() => {
-                  form.reset();
-                }}
-                submitting={submitting}
-                pristine={pristine}
-                form='form-group-create'
-              />
-            </div>
-          </form>
-        )}
-      />
+      <div className='p-4'>
+        <div className='pb-4'>
+          <div className='flex flex-row justify-between items-end gap-3'>
+            <Input
+              name='Nombre'
+              label='Nombre del Grupo'
+              value={name.value}
+              onChange={(e) => (name.value = e.currentTarget.value)}
+            />
+            <Button
+              name='id-save-group'
+              label='save'
+              icon='312'
+              onClick={saveGroup}
+            />
+          </div>
+          <TextArea
+            name='Nombre'
+            label='Descripción'
+            value={description.value}
+            onChange={(e) => (description.value = e.currentTarget.value)}
+          />
+        </div>
+        <EquationPreview filter={rootGroup} />
+        <div class='space-y-4 rounded shadow-md'>
+          <GroupBuilder
+            group={rootGroup}
+            onChange={setRootGroup}
+            onRemove={() => {}}
+          />
+          {/*
+          <pre class='bg-gray-100 dark:bg-b-dark-light text-sm rounded overflow-auto max-h-64 text-gray-800 dark:text-white p-2'>
+            {JSON.stringify(rootGroup, null, 2)}
+          </pre>
+          */}
+        </div>
+      </div>
     </Section>
   );
 };

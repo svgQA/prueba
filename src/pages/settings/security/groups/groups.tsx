@@ -8,50 +8,52 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 
-import { ShiftService } from '@/services/shift/shift';
-import { ToastManager } from '@/utils/toast/toast-manager';
-
 import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { GeneralService } from '@/services';
 
 export const GroupSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
-  const groups = useSignal([]);
+  const groups = useSignal<any[]>([]);
 
   useEffect(() => {
     document.title = 'VX - Activity Service';
-    getActivities();
+    getGroups();
   }, []);
 
-  const getActivities = async () => {};
+  const getGroups = async () => {
+    const response = await GeneralService.getGroup();
+    if (!response.getStatus()) return;
+    groups.value = response.getMany();
+  };
 
   const redirect = () => {
     setMenu({ ...infoMenu.value, label: 'Creacion de Grupo' });
     navigate('/security/grups/create');
   };
 
-  const updateActivity = (id: string) => {
-    console.log('DATA: ', id);
-    // setMenu({ ...infoMenu.value, label: 'Editar turno' });
-    // navigate(`/rounds/activity/update/${id}`);
-  };
+  // const updateActivity = (id: string) => {
+  //   console.log('DATA: ', id);
+  //   // setMenu({ ...infoMenu.value, label: 'Editar turno' });
+  //   // navigate(`/rounds/activity/update/${id}`);
+  // };
 
-  const deleteActivity = async (id: string) => {
-    const request = await ShiftService.deleteActivity(id);
-    if (!request.getStatus()) return;
-    ToastManager.success('Turno eliminado');
-    getActivities();
-  };
+  // const deleteActivity = async (id: string) => {
+  //   const request = await ShiftService.deleteActivity(id);
+  //   if (!request.getStatus()) return;
+  //   ToastManager.success('Turno eliminado');
+  //   getGroups();
+  // };
 
   const handleOnClick = async (action: any) => {
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
-        updateActivity(action.id);
+        // updateActivity(action.id);
         break;
       case ROW_ACTIONS.DELETE:
-        await deleteActivity(action.id);
+        // await deleteActivity(action.id);
         break;
     }
   };

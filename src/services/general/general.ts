@@ -1,4 +1,5 @@
 import { IResource } from '@/pages/settings/access/resource/type';
+import { Group } from '@/pages/settings/security/groups/create/utils/types';
 import { IPresignedRequest, IPresignedResponse } from '@/types/file';
 import { BaseService, IRequestModelOutput } from '@/utils/network';
 import { streamIAResponse } from '@/utils/network/sse.post';
@@ -41,6 +42,27 @@ export class GeneralService extends BaseService {
       data,
     };
     return await super.make_request<IResource>(this.sname, model);
+  }
+
+  static async createGroup(data: {
+    name: string;
+    description: string;
+    model: Group;
+  }) {
+    const model: IMakeRequest = {
+      url: ['group'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<IResource>(this.sname, model);
+  }
+
+  static async getGroup() {
+    const model: IMakeRequest = {
+      url: ['group'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.sname, model);
   }
 
   static async streamQuery(

@@ -1,55 +1,32 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { FormattedDate } from '@/components/compose/forms';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 export const columns: ColumnDef<any>[] = [
   {
-    id: 'id',
-    accessorKey: 'id',
+    id: 'name',
+    accessorKey: 'name',
     size: 60,
-    header: 'Id',
+    header: 'Nombre',
   },
   {
-    id: 'start',
-    accessorKey: 'start',
+    id: 'description',
+    accessorKey: 'description',
     size: 60,
-    header: 'Inicio',
+    header: 'Descripciòn',
     cell: (info) => {
-      return <FormattedDate date={String(info.getValue())} format='datetime' />;
+      return <TextEllipsis text={String(info.getValue())} />;
     },
   },
   {
-    id: 'end',
-    accessorKey: 'end',
+    id: 'createdAt',
+    accessorKey: 'createdAt',
     size: 60,
-    header: 'Fin',
+    header: 'Creado en',
     cell: (info) => {
       return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
-  },
-  {
-    id: 'serviceId',
-    accessorKey: 'serviceId',
-    size: 60,
-    header: 'Servicio',
-  },
-  {
-    id: 'employeedId',
-    accessorKey: 'employeedId',
-    size: 60,
-    header: 'Empleado',
-  },
-  {
-    id: 'status',
-    accessorKey: 'status',
-    size: 60,
-    header: 'Estado',
-  },
-  {
-    id: 'type',
-    accessorKey: 'type',
-    size: 60,
-    header: 'Tipo',
   },
   {
     id: 'actions',

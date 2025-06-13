@@ -1,5 +1,10 @@
 export const memos_es = {
   memos: {
+    frequentQuestions: {
+      question1: '',
+      question2: '',
+      question3: '',
+    },
     cards: {
       totalToday: 'Memorandos Totales Hoy',
       unresolved: 'Memorandos sin resolver',
@@ -11,7 +16,7 @@ export const memos_es = {
     chat: {
       view: {
         users: 'Usuarios',
-        select: 'Opciones',
+        select: 'Agrupar Memos',
         services: 'Servicios',
       },
       aiAssistant: 'Ai asistente',
@@ -40,6 +45,11 @@ export const memos_es = {
 
 export const memos_en = {
   memos: {
+    frequentQuestions: {
+      question1: '',
+      question2: '',
+      question3: '',
+    },
     cards: {
       totalToday: 'Total Memos Today',
       unresolved: 'Unresolved Memos',
@@ -51,7 +61,7 @@ export const memos_en = {
     chat: {
       view: {
         users: 'Users',
-        select: 'Options',
+        select: 'Memos Group',
         services: 'Services',
       },
       aiAssistant: 'Ai aiAssistant',
