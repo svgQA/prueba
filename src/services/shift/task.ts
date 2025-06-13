@@ -41,6 +41,14 @@ export class TaskService extends BaseService {
     return await super.make_request<IOption>(this.name, model);
   }
 
+  static async getSimplesList() {
+    const model: IMakeRequest = {
+      url: ['task', 'simples', 'list'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
   static async getTasks(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['task'],
