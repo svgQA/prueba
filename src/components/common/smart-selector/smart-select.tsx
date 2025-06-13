@@ -233,6 +233,7 @@ export function SmartSelector({
               key={opt.value}
               label={opt.label}
               onDelete={() => handleRemove(opt)}
+              width='lg'
             />
           ))}
         </div>
@@ -278,8 +279,8 @@ export function SmartSelector({
           `}
           />
           {!multiple && selected.length > 0 && (
-            <div className='absolute right-2 top-1/2 -translate-y-1/2'>
-              <div className='relative flex items-center rounded-full border border-slate-300 dark:border-slate-600 py-0 px-2 text-center text-sm transition-all text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 max-w-full h-6'>
+            <div className='absolute top-1/2 -translate-y-1/2 w-full'>
+              <div className='relative flex items-center rounded-full dark:border-slate-600 py-0 px-2 text-center text-sm transition-all text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 max-w-full h-6 justify-between'>
                 <span className='truncate'>{selected[0].label}</span>
                 <span
                   className='right-3 vox-icon vx-icon-192 cursor-pointer size-sm pl-3 flex-shrink-0'

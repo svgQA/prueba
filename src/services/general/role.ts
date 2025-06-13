@@ -46,7 +46,7 @@ export class RoleService extends BaseService {
     };
     return await super.make_request<ICreateRoleResponse>(this.name, model);
   }
- 
+
   static async update(data: IRoleRequest, id: string) {
     const model: IMakeRequest = {
       url: ['role', id],

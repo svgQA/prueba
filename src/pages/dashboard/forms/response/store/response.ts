@@ -103,10 +103,12 @@ export const validateResponse = (model: any): boolean => {
 
     for (const element of page.elements) {
       if (!element.id) return false;
+      if (typeof element.type !== 'number') return false;
 
       if (element.elements && Array.isArray(element.elements)) {
         for (const nestedElement of element.elements) {
           if (!nestedElement.id) return false;
+          if (typeof nestedElement.type !== 'number') return false;
         }
       }
     }

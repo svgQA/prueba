@@ -360,7 +360,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         {/* Memo principal */}
         <ChatMessage
           key={`parent-${index}`}
-          message={`${memo.novelty?.description || ''}`}
+          message={memo.description}
           isSender={false}
           title={memo.novelty?.name}
           resource={memo.resource}
@@ -378,7 +378,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           isSelected={replyToId.value === memo.id}
           status={memo.state}
         >
-          <div className='flex items-center gap-2 text-xs text-gray-500'>
+          <div className='flex items-center gap-2 text-xs my-2'>
             <span className='vox-icon size-sm vx-icon-318' />
             <span>
               {memo.user?.name} {memo.user?.surname}
@@ -399,31 +399,37 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         {memo.children?.map((childMemo: Memo, childIndex: number) => (
           <ChatMessage
             key={`child-${index}-${childIndex}`}
-            message={`${childMemo.description || ''}`}
+            message={childMemo.description}
             isSender={true}
             title={childMemo.extraData?.predefined?.label}
             resource={childMemo.resource}
             date={childMemo.updatedAt}
           >
-            {childMemo.extraData && (
-              <div className='flex flex-wrap gap-2 text-xs'>
-                {childMemo.extraData.duration && (
-                  <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
-                    <span className='vox-icon size-sm vx-icon-236' />
-                    {'duracion: ' + childMemo.extraData.duration}
-                  </span>
-                )}
-                {childMemo.extraData.time && (
-                  <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
-                    <span className='vox-icon size-sm vx-icon-237' />
-                    {'fecha: ' +
-                      DateUtils.dateToFrontend(childMemo.extraData.time, {
-                        format: 'DD/MM/YYYY HH:mm',
-                      })}
-                  </span>
-                )}
-              </div>
-            )}
+            <div className='items-center gap-2 text-xs my-2 flex flex-row'>
+              <span className='vx-icon size-sm vx-icon-318 dark:text-white' />
+              <span>
+                {childMemo.user?.name} {childMemo.user?.surname}
+              </span>
+              {childMemo.extraData && (
+                <>
+                  {childMemo.extraData.duration && (
+                    <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
+                      <span className='vox-icon size-sm vx-icon-236' />
+                      {'duracion: ' + childMemo.extraData.duration}
+                    </span>
+                  )}
+                  {childMemo.extraData.time && (
+                    <span className='flex items-center gap-1 px-2 py-1 rounded-md'>
+                      <span className='vox-icon size-sm vx-icon-237' />
+                      {'fecha: ' +
+                        DateUtils.dateToFrontend(childMemo.extraData.time, {
+                          format: 'DD/MM/YYYY HH:mm',
+                        })}
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
           </ChatMessage>
         ))}
       </>
@@ -508,12 +514,12 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         <div className='flex flex-1 overflow-y-auto border-t border-b-light-dark dark:border-b-dark-light'>
           <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light'>
             <div className='p-4 border-b border-b-light-dark dark:border-b-dark-light'>
-              <div className='flex gap-2'>
+              <div className='flex gap-2 items-center'>
                 <Button
                   name='users'
                   icon='321'
+                  borderless
                   onClick={() => (viewMode.value = TypeChatView.USERS)}
-                  className={`flex-1 ${viewMode.value === TypeChatView.USERS ? 'bg-primary text-white' : 'bg-b-light-dark dark:bg-b-dark-light'}`}
                   label={t('memos.view.users')}
                 />
                 <Dropdown

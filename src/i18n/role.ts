@@ -4,9 +4,9 @@ export const role_es = {
       title: 'Eliminar rol',
       message: '¿Estás seguro de querer eliminar este rol?',
     },
-    new: "Nuevo rol",
+    new: 'Nuevo rol',
     pageTitle: 'Roles',
-    edit: "Editar rol",
+    edit: 'Editar rol',
     deleted: 'Rol eliminado',
     created: 'Rol creado',
     updated: 'Rol actualizado',
@@ -30,8 +30,8 @@ export const role_en = {
       message: 'Are you sure you want to delete this role?',
     },
     pageTitle: 'Roles',
-    new: "New role",
-    edit: "Edit role",
+    new: 'New role',
+    edit: 'Edit role',
     deleted: 'Role deleted',
     created: 'Role created',
     updated: 'Role updated',
@@ -47,4 +47,3 @@ export const role_en = {
     },
   },
 };
-

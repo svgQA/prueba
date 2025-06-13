@@ -19,7 +19,7 @@ export interface IUserRequest extends IUser {
   companies?: IOption[];
   readonly cardId?: string;
   readonly cardType?: CARD_ID_TYPE;
-  readonly roles?: IOption[]
+  readonly roles?: IOption[];
   extraData?: IExtraData;
 }
 export interface IExtraData {
@@ -43,7 +43,7 @@ export interface IRelationRole {
   role: {
     id: number;
     name: string;
-  }
+  };
 }
 
 export interface IUserResponse extends IUserRequest {
