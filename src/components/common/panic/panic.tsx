@@ -1,7 +1,12 @@
 import { useCallback, useEffect } from 'preact/hooks';
 import { IPanic, IPanicProps } from './interface';
 import { EventBus } from '@/utils/network/event.bus';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE, SseManager } from '@/utils/network/sse/base';
+import {
+  IBaseSSE,
+  SSE_EVENTS,
+  SSE_TYPE,
+  SseManager,
+} from '@/utils/network/sse/base';
 import { FloatBadge } from '../badge/float';
 import { Button } from '../button/button';
 import { useSignal } from '@preact/signals';
@@ -9,88 +14,91 @@ import ExpanderNotification from '../notifications/expander.notification';
 import { MemoService } from '@/services';
 
 const Panic = (_panic: IPanicProps) => {
-    const allPanic = useSignal<IPanic[]>([]);
-    const isOpen = useSignal<boolean>(false);
+  const allPanic = useSignal<IPanic[]>([]);
+  const isOpen = useSignal<boolean>(false);
 
-    useEffect(() => {
-        fetchPanic();
-        fetchSSE();
-        EventBus.on(SSE_TYPE.PANIC, handlePanicSSE);
-    }, []);
+  useEffect(() => {
+    fetchPanic();
+    fetchSSE();
+    EventBus.on(SSE_TYPE.PANIC, handlePanicSSE);
+  }, []);
 
-    const fetchSSE = useCallback(async () => await SseManager.getQuery(['memo', 'panic']), []);
+  const fetchSSE = useCallback(
+    async () => await SseManager.getQuery(['memo', 'panic']),
+    []
+  );
 
-    const handlePanicSSE = (event: IBaseSSE) => {
-        if (event.name === SSE_EVENTS.PANIC) {
-            fetchPanic();
-            console.log('event', allPanic.value);
-        }
-    };
-
-    const fetchPanic = async () => {
-        const [responsePanic] = await Promise.all([MemoService.get_all_panic()]);
-
-        if (responsePanic.getStatus()) {
-            allPanic.value = responsePanic.getMany();
-        }
+  const handlePanicSSE = (event: IBaseSSE) => {
+    if (event.name === SSE_EVENTS.PANIC) {
+      fetchPanic();
+      console.log('event', allPanic.value);
     }
+  };
 
-    const handleChangeStatus = async (id: string) => {
-        const response = await MemoService.changeStatusPanic(id);
+  const fetchPanic = async () => {
+    const [responsePanic] = await Promise.all([MemoService.get_all_panic()]);
 
-        if (response.getStatus()) {
-            return;
-        }
+    if (responsePanic.getStatus()) {
+      allPanic.value = responsePanic.getMany();
     }
+  };
 
-    return (
-        <div className='relative'>
-            <FloatBadge
-                label={allPanic.value.length || '0'}
-                color='bg-red-500 text-white'
-                animate={isOpen.value}
+  const handleChangeStatus = async (id: string) => {
+    const response = await MemoService.changeStatusPanic(id);
+
+    if (response.getStatus()) {
+      return;
+    }
+  };
+
+  return (
+    <div className='relative'>
+      <FloatBadge
+        label={allPanic.value.length || '0'}
+        color='bg-red-500 text-white'
+        animate={isOpen.value}
+      >
+        <Button
+          name='user-action'
+          icon='020'
+          iconSize='xsm'
+          borderless
+          unpadded
+          iconColor='text-red-500'
+          onClick={() => (isOpen.value = !isOpen.value)}
+        />
+      </FloatBadge>
+      <ExpanderNotification isOpen={isOpen.value}>
+        {allPanic.value.length > 0 ? (
+          allPanic.value.map((panic: IPanic) => (
+            <div
+              key={panic.id}
+              className='px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-between gap-2'
+              onClick={() => handleChangeStatus(panic.id)}
             >
-                <Button
-                    name='user-action'
-                    icon='020'
-                    iconSize='xsm'
-                    borderless
-                    unpadded
-                    iconColor='text-red-500'
-                    onClick={() => isOpen.value = !isOpen.value}
-                />
-            </FloatBadge>
-            <ExpanderNotification isOpen={isOpen.value}>
-                {allPanic.value.length > 0 ? (
-                    allPanic.value.map((panic: IPanic) => (
-                        <div
-                            key={panic.id}
-                            className='px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-between gap-2'
-                            onClick={() => handleChangeStatus(panic.id)}
-                        >
-                            <div className='flex items-center gap-2'>
-                                <span className='text-sm text-gray-700 dark:text-gray-200'>
-                                    {panic.message}
-                                </span>
-                            </div>
+              <div className='flex items-center gap-2'>
+                <span className='text-sm text-gray-700 dark:text-gray-200'>
+                  {panic.message}
+                </span>
+              </div>
 
-                            {panic.user && (
-                                <div className='flex items-center gap-2'>
-                                    <span className='text-sm text-gray-700 dark:text-gray-200'>
-                                        {panic.user?.name + ' ' + panic.user?.surname}
-                                    </span>
-                                </div>
-                            )}
-                        </div>
-                    ))
-                ) : (
-                    <div className='px-4 py-2 text-sm text-gray-500 dark:text-gray-400'>
-                        No hay notificaciones
-                    </div>
-                )}
-            </ExpanderNotification>
-        </div>
-    );
+              {panic.user && (
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-700 dark:text-gray-200'>
+                    {panic.user?.name + ' ' + panic.user?.surname}
+                  </span>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <div className='px-4 py-2 text-sm text-gray-500 dark:text-gray-400'>
+            No hay notificaciones
+          </div>
+        )}
+      </ExpanderNotification>
+    </div>
+  );
 };
 
 export default Panic;

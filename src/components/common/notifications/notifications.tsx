@@ -15,7 +15,9 @@ const STORAGE_KEY = 'notifications';
 const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const isOpen = useSignal<boolean>(false);
-  const [localNotifications, setLocalNotifications] = useState<INotification[]>([]);
+  const [localNotifications, setLocalNotifications] = useState<INotification[]>(
+    []
+  );
   const [badgeColor, setBadgeColor] = useState('bg-primary');
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [, navigate] = useLocation();
@@ -165,37 +167,37 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
           iconSize={iconSize}
           borderless
           unpadded
-          onClick={() => isOpen.value = !isOpen.value}
+          onClick={() => (isOpen.value = !isOpen.value)}
         />
       </FloatBadge>
-        <ExpanderNotification isOpen={isOpen.value}>
-          {allNotifications.length > 0 ? (
-            allNotifications.map((notification) => (
-              <div
-                key={notification.value}
-                className='px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-between gap-2'
-                onClick={() => handleRedirect(notification)}
-              >
-                <div className='flex items-center gap-2'>
-                  {notification.icon && (
-                    <span className={`vx-icon vx-icon-${notification.icon}`} />
-                  )}
-                  <span className='text-sm text-gray-700 dark:text-gray-200'>
-                    {notification.label}
-                  </span>
-                </div>
-                <span
-                  className='vx-icon vx-icon-053 text-gray-400 hover:text-red-500 transition-colors'
-                  onClick={(e) => handleDelete(notification, e)}
-                />
+      <ExpanderNotification isOpen={isOpen.value}>
+        {allNotifications.length > 0 ? (
+          allNotifications.map((notification) => (
+            <div
+              key={notification.value}
+              className='px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-between gap-2'
+              onClick={() => handleRedirect(notification)}
+            >
+              <div className='flex items-center gap-2'>
+                {notification.icon && (
+                  <span className={`vx-icon vx-icon-${notification.icon}`} />
+                )}
+                <span className='text-sm text-gray-700 dark:text-gray-200'>
+                  {notification.label}
+                </span>
               </div>
-            ))
-          ): (
-            <div className='px-4 py-2 text-sm text-gray-500 dark:text-gray-400'>
-              No hay notificaciones
+              <span
+                className='vx-icon vx-icon-053 text-gray-400 hover:text-red-500 transition-colors'
+                onClick={(e) => handleDelete(notification, e)}
+              />
             </div>
-          ) }
-        </ExpanderNotification>
+          ))
+        ) : (
+          <div className='px-4 py-2 text-sm text-gray-500 dark:text-gray-400'>
+            No hay notificaciones
+          </div>
+        )}
+      </ExpanderNotification>
     </div>
   );
 };

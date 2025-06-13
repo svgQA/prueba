@@ -1,4 +1,3 @@
-
 export interface IPanicProps {
   icon: string;
   iconSize?: 'sm' | 'xsm';
