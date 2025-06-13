@@ -35,6 +35,7 @@ export const Input = <T = string,>({
   onBlur,
   error,
   warning,
+  paddingVertical = 'py-2',
   ...props
 }: IInputProps<T>) => {
   const handleKeyUp = (e: KeyboardEvent) => {
@@ -78,7 +79,7 @@ export const Input = <T = string,>({
         <div className='relative flex-1 py-0.5'>
           <input
             ref={ref}
-            className={`w-full px-3 py-2 rounded
+            className={`w-full px-3 ${paddingVertical} rounded
               bg-white dark:bg-b-dark-dark
               text-gray-700 dark:text-gray-200
               border-gray-300 dark:border-gray-700

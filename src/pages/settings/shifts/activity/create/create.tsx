@@ -6,17 +6,16 @@ import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { ShiftService } from '@/services/shift/shift';
 import { UserService } from '@/services/general/user';
-import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
-// import dayjs from 'dayjs';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
 import { ServiceService } from '@/services';
 import { DateField } from '@/components/compose/forms';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 
 interface ITask {
   start: string;
@@ -119,7 +118,11 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
         }}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting, values, pristine }) => (
-          <form onSubmit={handleSubmit} className='space-y-6'>
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-shift-create'
+          >
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-2 gap-3'>
               <div class='col-span-1'>
@@ -415,22 +418,14 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
 
             {/* Botonera */}
             <div className='w-full flex-row flex justify-end items-center'>
-              <Button
-                id='btn-clean'
-                name='btn-clean'
-                type='button'
-                label='Limpiar'
-                onClick={() => form.reset()}
-                disabled={submitting || pristine}
-              />
-
-              <Button
-                id='btn-save'
-                name='btn-save'
-                type='submit'
+              <StatusButton
+                onClickClean={() => {
+                  form.reset();
+                }}
+                submitting={submitting}
+                pristine={pristine}
+                form='form-shift-create'
                 label={id ? 'Editar' : 'Guardar'}
-                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-                disabled={submitting}
               />
             </div>
           </form>

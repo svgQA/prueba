@@ -272,6 +272,10 @@ export const PAGES_LIST_ROUTER = {
         groups: {
           base: '/groups',
           to: '/security/groups',
+          create: {
+            base: '/grups/create',
+            to: '/security/grups/create',
+          },
         },
       },
       payment: {

@@ -5,14 +5,16 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.security.base;
 export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
   label: 'Security',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  show: true,
   menus: [
     {
       icon: '087',
       label: 'keys',
-      description: 'Devices',
+      description: 'Keys',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.security.keys.base,
       id: 'keys',
+      show: true,
     },
     {
       icon: '007',
@@ -37,6 +39,7 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.security.groups.base,
       id: 'groups',
+      show: true,
     },
   ],
 };

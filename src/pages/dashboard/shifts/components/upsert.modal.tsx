@@ -363,7 +363,23 @@ export const TaskForm = ({
                   </Field>
                 </div>
                 */}
-                <div class='col-span-1 '>
+                <div class='col-span-1'>
+                  <Field
+                    name='timeBefore'
+                    parse={(value) => Number(value) || undefined}
+                  >
+                    {({ input }) => (
+                      <Input
+                        {...input}
+                        id='input-time-before'
+                        name='input-time-before'
+                        type='number'
+                        label={t('shifts.upsert.form.timeBefore')}
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div class='col-span-2'>
                   <FieldArray<string> name='keywords'>
                     {({ fields }) => {
                       const appendElement = () => {
@@ -392,13 +408,14 @@ export const TaskForm = ({
                               onClick={appendElement}
                             />
                           </div>
-                          <div className='flex flex-wrap gap-2'>
+                          <div className='flex flex-wrap gap-2 mt-2'>
                             {values.keywords?.map(
                               (keyword: string, index: number) => (
                                 <Chip
                                   key={`chip-shift-word-${index}`}
                                   label={keyword}
                                   onDelete={() => fields.remove(index)}
+                                  width='lg'
                                 />
                               )
                             )}
@@ -407,23 +424,6 @@ export const TaskForm = ({
                       );
                     }}
                   </FieldArray>
-                </div>
-
-                <div class='col-span-1'>
-                  <Field
-                    name='timeBefore'
-                    parse={(value) => Number(value) || undefined}
-                  >
-                    {({ input }) => (
-                      <Input
-                        {...input}
-                        id='input-time-before'
-                        name='input-time-before'
-                        type='number'
-                        label={t('shifts.upsert.form.timeBefore')}
-                      />
-                    )}
-                  </Field>
                 </div>
               </div>
             </form>

@@ -142,15 +142,14 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const relatedShift = info.row.original?.relatedShift;
-        const status = relatedShift?.status ? `(${relatedShift?.status})` : '';
         const { name, surname } = relatedShift?.employee || {
           name: '',
           surname: '',
         };
         return (
-          <div className='flex items-center gap-1 justify-start'>
-            {/* <Avatar name={name} size='sm' square /> */}
-            {name} {surname} {status}
+          <div className='flex items-center gap-1 justify-between'>
+            {name} {surname}
+            <Badge label={relatedShift?.status} />
           </div>
         );
       },

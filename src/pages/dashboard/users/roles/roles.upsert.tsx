@@ -12,7 +12,10 @@ import { required } from '@/utils/utilities';
 import { RoleService } from '@/services/general/role';
 import { Signal, useSignal } from '@preact/signals';
 import { useEffect, useState } from 'react';
-import { IListModuleResponse, RolePermission } from '@/types/role/role.response';
+import {
+  IListModuleResponse,
+  RolePermission,
+} from '@/types/role/role.response';
 import { IRoleRequest } from '@/types/role/role.request';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 
@@ -42,7 +45,7 @@ export const RolesUpsertPage = () => {
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
   const { id } = useParams(); // Obtiene el id de la URL
   const initialValues: Signal<Partial<IRoleRequest>> = useSignal({});
-  
+
   useEffect(() => {
     getModules();
     setInitialValues();
@@ -53,14 +56,16 @@ export const RolesUpsertPage = () => {
 
     const request = await RoleService.getRoleById(id);
     const role = request.getOne();
-   
+
     initialValues.value = {
       name: role.name,
       id: role.id,
       description: role.description,
     };
 
-    const permissions = role.permissions.map((permission: RolePermission) => permission.permissionId);
+    const permissions = role.permissions.map(
+      (permission: RolePermission) => permission.permissionId
+    );
     setSelectedPermissions(permissions);
   };
 
@@ -75,17 +80,17 @@ export const RolesUpsertPage = () => {
   };
 
   const onSubmit = async (form: IRoleRequest) => {
-    if (!form.name || !form.description ) {
+    if (!form.name || !form.description) {
       ToastManager.error(t('role.form.requiredFields'));
       return;
     }
     if (selectedPermissions.length === 0) {
       ToastManager.error(t('role.form.requiredPermissions'));
       return;
-    } 
-    
+    }
+
     form.permissions = selectedPermissions;
-    let message:string   = '';
+    let message: string = '';
     let request = null;
 
     if (id) {
