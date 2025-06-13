@@ -77,13 +77,15 @@ export const ManualNotificationForm = ({
     const payload: ISendManualNotificationDto = {
       notificationType: values.notificationType.value,
       ...(values.template?.value && { templateId: values.template.value }),
-      ...(!values.template?.value && values.task?.value && { taskId: Number(values.task.value) }),
-      ...(!values.template?.value && !values.task?.value && {
-        overrideTitle: values.title,
-        overrideDescription: values.description,
-      }),
+      ...(!values.template?.value &&
+        values.task?.value && { taskId: Number(values.task.value) }),
+      ...(!values.template?.value &&
+        !values.task?.value && {
+          overrideTitle: values.title,
+          overrideDescription: values.description,
+        }),
       filters: {
-        userIds: selectedUsersFull.map(u => String(u.id)),
+        userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
@@ -95,7 +97,6 @@ export const ManualNotificationForm = ({
       ToastManager.error('notification.send.failure');
     }
   };
-
 
   const clearUserSelection = () => setSelectedUserIds([]);
 

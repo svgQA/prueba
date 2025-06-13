@@ -81,8 +81,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       // user,
     } = useUserStore();
 
-    const [sidebarMenus, setSidebarMenus] = useState<IMenu[]>([]);  
-    const [hasSettings, setHasSettings] = useState<boolean>(true);  
+    const [sidebarMenus, setSidebarMenus] = useState<IMenu[]>([]);
+    const [hasSettings, setHasSettings] = useState<boolean>(true);
 
     const [panicMessage, setPanicMessage] = useState<string | null>(null);
     const [panicSubTitle, setPanicSubTitle] = useState<string | null>(null);
@@ -210,19 +210,23 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       if (permissions.length === 0) {
         setSidebarMenus(SIDEBAR_MENUS);
         return;
-      };
+      }
       console.log('permissions', permissions);
 
-      const filteredMenu = SIDEBAR_MENUS.filter(option => {
+      const filteredMenu = SIDEBAR_MENUS.filter((option) => {
         const match = permissions.find(
-          perm => perm.name.trim() === option.key && perm.permissions.state === true
+          (perm) =>
+            perm.name.trim() === option.key && perm.permissions.state === true
         );
-        console.log(`🔍 Checking ${option.key}: ${match ? '✅ Match' : '❌ No match'}`);
+        console.log(
+          `🔍 Checking ${option.key}: ${match ? '✅ Match' : '❌ No match'}`
+        );
         return match;
       });
 
       const permissionsSettings = permissions.find(
-        perm => perm.name.trim() === "settings" && perm.permissions.state === true
+        (perm) =>
+          perm.name.trim() === 'settings' && perm.permissions.state === true
       );
       setHasSettings(permissionsSettings ? true : false);
       setSidebarMenus(filteredMenu);
