@@ -24,6 +24,7 @@ import { DateField } from '@/components/compose/forms';
 import { IPresignedRequest } from '@/types/file';
 import { File } from '@/components/common/file/file';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
+import ShowFiles from '@/components/common/file/show.file';
 
 interface IOption {
   label: string;
@@ -499,6 +500,12 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                       />
                     )}
                   </Field>
+
+                  {files.value.length > 0 && (
+                    <div className='flex items-center gap-2'>
+                      <ShowFiles resources={files.value} />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
