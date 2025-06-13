@@ -212,19 +212,17 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const { roundPct } = info.row.original;
-        const progress = roundPct;
-
         let progressColor = '#E05858';
 
-        if (progress >= 30 && progress < 70) {
+        if (roundPct >= 30 && roundPct < 70) {
           progressColor = '#FFC772';
-        } else if (progress >= 70) {
+        } else if (roundPct >= 70) {
           progressColor = '#00BDD6';
         }
 
         return (
           <div className='flex flex-row justify-center'>
-            <Gauge progress={progress} color={progressColor} />
+            <Gauge progress={roundPct} color={progressColor} />
           </div>
         );
       },
