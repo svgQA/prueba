@@ -32,6 +32,7 @@ interface IRound {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  points: any[];
 }
 
 interface IPlace {

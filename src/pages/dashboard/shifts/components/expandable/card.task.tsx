@@ -1,45 +1,40 @@
+import { Gauge } from '@/components/common/gauge/gauge';
+
 type Point = {
   id: number;
-  name: string;
-  status: string;
-  statusColor: string;
-  scan: string;
-  distance: string;
+  latitude: number;
+  longitude: number;
+  task: any[];
   form: string;
+  roundHistory: any[];
 };
 
 interface CardTaskProps {
   point: Point;
+  frequency: number;
 }
 
-export const CardTask = ({ point }: CardTaskProps) => {
+export const CardTask = ({ point, frequency }: CardTaskProps) => {
+  const percent = ((point?.roundHistory?.length || 0) / frequency) * 100;
   return (
-    <div className='mt-5 flex flex-col items-center justify-between bg-b-light-dark dark:bg-b-dark-dark rounded-lg p-2'>
-      <div className='flex flex-row items-center justify-between w-full'>
-        <div className='w-32 flex items-center'>
-          <span className='vox-icon vx-icon-324 !text-secondary mr-2'></span>
-          <p>{point.name}</p>
-        </div>
-
-        <div>
-          <span className='vox-icon vx-icon-325 mr-1'></span>
-          <span>{point.scan}</span>
-        </div>
+    <div className='flex flex-col items-center justify-between bg-b-light-dark dark:bg-b-dark-dark rounded-lg p-3'>
+      <div className='flex flex-row justify-between pb-3 w-full items-center px-2'>
+        <p>Point: {point.id}</p>
+        <p>Freq: {frequency}</p>
+        <Gauge progress={percent} />
       </div>
 
-      <div className='flex flex-row items-center justify-between w-full'>
-        <div className='w-40 flex items-center'>
-          <span className='vox-icon vx-icon-329 !text-primary mr-1'></span>
-          <span className='text-xs'>{point.distance}</span>
+      <div className='flex flex-row items-center justify-between w-full justify-wrap max-w-96'>
+        <div className='mx-1 rounded-md w-40 flex items-center flex-col bg-b-light-light text-t-light dark:bg-b-dark-light dark:text-t-dark-light justify-center'>
+          <span className='vox-icon vx-icon-128 !text-primary mr-1'></span>
+          <p className='font-bold text-2xl'>
+            {point?.roundHistory?.length || 0}
+          </p>
         </div>
-
-        {/* <div className='w-45 text-right'>
-          <a href='#' className='flex items-center justify-end text-primary'>
-            <span className='vox-icon vx-icon-306 !text-primary mr-1'></span>
-            {point.form}
-            <span className='ml-1 vox-icon vx-icon-004 !text-primary'></span>
-          </a>
-        </div> */}
+        <div className='mx-1 rounded-md w-40 flex items-center flex-col bg-b-light-light text-t-light dark:bg-b-dark-light dark:text-t-dark-light justify-center'>
+          <span className='vox-icon vx-icon-129 !text-orange-500 mr-1'></span>
+          <p className='font-bold text-2xl'>0</p>
+        </div>
       </div>
     </div>
   );
