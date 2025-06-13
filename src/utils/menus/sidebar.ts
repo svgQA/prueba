@@ -1,6 +1,7 @@
 import { IMenu } from '@/components/common/utils/interface';
 import { PAGES_LIST_ROUTER } from '../routing';
 
+// TODO: Agregar hacer que el id sea el key
 export const SIDEBAR_MENUS: IMenu[] = [
   {
     label: 'memos',
@@ -8,6 +9,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     description: 'este es',
     icon: '077', // '310',
     id: 'memos',
+    key: 'memo',
   },
   {
     label: 'shifts',
@@ -15,6 +17,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     description: 'este es',
     icon: '206', // 'user-tasks',
     id: 'shift',
+    key: 'shift',
   },
   {
     label: 'inspect',
@@ -22,6 +25,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     description: 'este es',
     icon: '064', // 'form',
     id: 'form',
+    key: 'form',
   },
   /*
   {
@@ -45,6 +49,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     description: 'Usuarios de la aplicación',
     icon: '188', // 'user',
     id: 'users-dashoboar-externo',
+    key: 'user',
   },
   {
     label: 'notifications',
@@ -52,6 +57,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     description: 'este es',
     icon: '140', // 'notify',
     id: 'history',
+    key: 'notification',
   },
   /* {
     label: 'devices',

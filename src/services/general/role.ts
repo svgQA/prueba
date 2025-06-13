@@ -62,4 +62,11 @@ export class RoleService extends BaseService {
     };
     return await super.make_request<IRoleByIdResponse>(this.name, model);
   }
+
+  static async getPermissions() {
+    const model: IMakeRequest = {
+      url: ['role', 'permissions', '3'],
+    };
+    return await super.make_request<any>(this.name, model);
+  }
 }
