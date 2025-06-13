@@ -142,13 +142,15 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const relatedShift = info.row.original?.relatedShift;
-        const { name, surname } = relatedShift?.employee || {
+        const { id } = relatedShift?.employee || {
           name: '',
           surname: '',
+          id: '',
         };
         return (
           <div className='flex items-center gap-1 justify-between'>
-            {name} {surname}
+            {/* {name} {surname} */}
+            {id}
             <Badge label={relatedShift?.status} />
           </div>
         );

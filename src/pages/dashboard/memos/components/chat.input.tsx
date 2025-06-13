@@ -95,7 +95,7 @@ export const ChatInput = ({
         )}
 
         <div className='flex items-center gap-2 p-4 border-t dark:border-b-dark-light'>
-          <Button
+          {/* <Button
             icon='011'
             rounded
             id='attach-btn'
@@ -110,7 +110,7 @@ export const ChatInput = ({
             name='emoji'
             type='button'
             disabled={disabled || !replyId}
-          />
+          /> */}
           {children && (
             <Button
               icon='311'
@@ -141,7 +141,7 @@ export const ChatInput = ({
             // onClick={handleSubmit}
             disabled={disabled || !replyId}
           />
-          <Button
+          {/* <Button
             icon='012'
             rounded
             id='voice-btn'
@@ -149,7 +149,7 @@ export const ChatInput = ({
             type='button'
             disabled={disabled || !replyId}
             onClick={handleCancelReply}
-          />
+          /> */}
         </div>
       </div>
     </div>
