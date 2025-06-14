@@ -2,6 +2,7 @@ export const PAGES_LIST_ROUTER = {
   home: '/',
   signin: '/signin',
   signup: '/signup',
+  demo: '/demo',
   dashboard: {
     base: '/dashboard',
     memos: '/',
