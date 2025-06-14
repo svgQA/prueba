@@ -48,6 +48,7 @@ export const user_es = {
       inactive: 'Inactivo',
       role: 'Rol',
       status: 'Estado',
+      userType: 'Tipo de usuario',
       actions: {
         profile: 'Crear acceso',
         edit: 'Editar',
@@ -125,6 +126,7 @@ export const user_es = {
       taskProgress: 'Progreso de tareas',
       role: 'Rol',
       status: 'Estado',
+      userType: 'Tipo de usuario',
     },
     pageTitle: 'Usuarios',
   },
@@ -180,6 +182,7 @@ export const user_en = {
       inactive: 'Inactive',
       role: 'Role',
       status: 'Status',
+      userType: 'User Type',
       actions: {
         profile: 'Create access',
         edit: 'Edit',
