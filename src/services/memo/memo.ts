@@ -120,4 +120,12 @@ export class MemoService extends BaseService {
     };
     return await super.make_request(this.name, model);
   }
+
+  static async get_all_panic_by_user(id: string) {
+    const model: IMakeRequest = {
+      url: ['memo', 'panic-all-by-user', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request(this.name, model);
+  }
 }

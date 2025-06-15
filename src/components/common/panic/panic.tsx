@@ -31,7 +31,6 @@ const Panic = (_panic: IPanicProps) => {
   const handlePanicSSE = (event: IBaseSSE) => {
     if (event.name === SSE_EVENTS.PANIC) {
       fetchPanic();
-      console.log('event', allPanic.value);
     }
   };
 

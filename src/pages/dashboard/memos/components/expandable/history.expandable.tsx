@@ -23,6 +23,8 @@ import { DateUtils } from '@/utils/utilities/dates';
 import { PredefinedService } from '@/services/shift/predefined';
 import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
+import { IPanic } from '@/components/common/panic/interface';
+import { Chip } from '@/components/common/chip/chip';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -31,23 +33,26 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [message, setMessage] = useState('');
   const [btnLabel, setBtnLabel] = useState('Check In');
   const predefined: Signal<IOption[]> = useSignal([]);
+  const panic = useSignal<IPanic[]>([]);
 
   useEffect(() => {
     fetchInitialData();
     EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
+    EventBus.on(SSE_TYPE.PANIC, handleMemoSSE);
   }, []);
 
   const handleMemoSSE = (event: IBaseSSE) => {
     const { name } = event;
-    if (name === SSE_EVENTS.CREATE_PARENT) {
+    if (name === SSE_EVENTS.CREATE_PARENT || name === SSE_EVENTS.PANIC) {
       fetchInitialData();
     }
   };
 
   const fetchInitialData = async () => {
-    const [responseMemos, responsePredefined] = await Promise.all([
+    const [responseMemos, responsePredefined, responsePanic] = await Promise.all([
       MemoService.getMemosByHistory(memo.id.toString()),
       PredefinedService.getPredefined(),
+      MemoService.get_all_panic_by_user(memo.user?.id.toString()),
     ]);
 
     if (responseMemos.getStatus()) {
@@ -70,6 +75,10 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         ...predefined.value,
         { label: 'Otro', value: 'other' },
       ];
+    }
+
+    if (responsePanic.getStatus()) {
+      panic.value = responsePanic.getMany();
     }
 
     getStatus(memo?.state || '');
@@ -102,8 +111,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => {},
-        onCancel: () => {},
+        onConfirm: () => { },
+        onCancel: () => { },
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
@@ -397,7 +406,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     {/* {showComment && ( */}
                     <div className='grid grid-cols-1'>
                       <Field<string> name='message'>
-                        {({}) => (
+                        {({ }) => (
                           <TextArea
                             name='message'
                             placeholder='Escribe un Comentario...'
@@ -454,6 +463,16 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           {memo.resource && <ShowFiles resources={memo.resource} />}
         </div>
 
+        {panic.value.length > 0 && (
+          <div className='flex flex-col gap-2'>
+            {panic.value.map((panicItem: IPanic) => (
+              <div key={panicItem.id} className='flex items-center gap-2'>
+                <Chip label={panicItem.message} width='xl' icon='020' borderColor='border-red-500 dark:border-red-500'/>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Info Section - Right */}
         <div className='flex items-center gap-4'>
           {/* Action Button */}
@@ -472,7 +491,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     title: btnLabel,
                     message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
                     onConfirm: () => handleCheck(),
-                    onCancel: () => {},
+                    onCancel: () => { },
                   })
                 }
                 name={btnLabel}
