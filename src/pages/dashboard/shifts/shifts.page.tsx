@@ -164,9 +164,15 @@ export const ShiftsPage: FunctionalComponent = () => {
         (shift) => Number(shift.id) === Number(message.id)
       );
       if (shiftIndex < 0) return;
-      const shiftCopy = shifts.value;
+      const shiftCopy: IShiftResponse[] = shifts.value;
       shiftCopy[shiftIndex].status = message.status;
       shiftCopy[shiftIndex].updatedAt = message.updatedAt;
+      shiftCopy[shiftIndex].activityPct = message.activityPct;
+      shiftCopy[shiftIndex].roundPct = message.roundPct;
+      shiftCopy[shiftIndex].tasks = message.tasks;
+      shiftCopy[shiftIndex].start = message.start;
+      shiftCopy[shiftIndex].end = message.end;
+      shiftCopy[shiftIndex].service = message.service;
       shifts.value = [...shiftCopy];
     }
 
