@@ -25,6 +25,7 @@ import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
 import { IPanic } from '@/components/common/panic/interface';
 import { Chip } from '@/components/common/chip/chip';
+import { PanicService } from '@/services/memo/panic';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -52,7 +53,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     const [responseMemos, responsePredefined, responsePanic] = await Promise.all([
       MemoService.getMemosByHistory(memo.id.toString()),
       PredefinedService.getPredefined(),
-      MemoService.get_all_panic_by_user(memo.user?.id.toString()),
+      PanicService.get_all_panic_by_user(memo.user?.id.toString()),
     ]);
 
     if (responseMemos.getStatus()) {
