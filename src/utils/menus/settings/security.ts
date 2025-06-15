@@ -35,7 +35,7 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
     {
       icon: '249',
       label: 'groups',
-      description: 'Devices',
+      description: 'Groups',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.security.groups.base,
       id: 'groups',
