@@ -116,14 +116,14 @@ export const FormsPage: FunctionComponent = () => {
           selected={currentView.value === VIEW_NAME.INSPECT}
           icon='418'
         />
-        <Button
+        {/* <Button
           name='button-change-report'
           onClick={() => {
             handleViewChange(VIEW_NAME.REPORT);
           }}
           selected={currentView.value === VIEW_NAME.REPORT}
           icon='012'
-        />
+        /> */}
       </div>
     ),
     [currentView.value]
