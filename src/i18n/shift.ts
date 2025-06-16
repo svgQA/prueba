@@ -3,6 +3,17 @@ export const shift_es = {
     upsert: {
       success: 'Turno creado exitosamente!',
       error: 'Error al crear el turno',
+      newTask: 'Nueva tarea',
+      form: {
+        task: 'Tarea',
+        taskPlaceholder: 'Selecciona una tarea',
+        taskName: 'Nombre de la tarea',
+        taskNamePlaceholder: 'Nombre de la tarea',
+        taskHourStart: 'Hora de inicio de la tarea',
+        taskHourStartPlaceholder: 'Hora de inicio de la tarea',
+        taskDescription: 'Descripción de la tarea',
+        taskDescriptionPlaceholder: 'Descripción de la tarea',
+      },
     },
     table: {
       delete: {
@@ -54,6 +65,17 @@ export const shift_en = {
     upsert: {
       success: 'Shift created successfully!',
       error: 'Error creating shift',
+      newTask: 'New task',
+      form: {
+        task: 'Task',
+        taskPlaceholder: 'Select a task',
+        taskName: 'Task name',
+        taskNamePlaceholder: 'Task name',
+        taskHourStart: 'Task start time',
+        taskHourStartPlaceholder: 'Task start time',
+        taskDescription: 'Task description',
+        taskDescriptionPlaceholder: 'Task description',
+      },
     },
     table: {
       delete: {
