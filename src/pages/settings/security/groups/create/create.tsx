@@ -11,6 +11,7 @@ import { Button } from '@/components/common/button/button';
 import { useSignal } from '@preact/signals';
 import { GeneralService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { navigate } from 'wouter/use-browser-location';
 
 export const GroupCreateSettingPage: FunctionComponent = () => {
   const name = useSignal<string>('');
@@ -41,6 +42,8 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
     name.value = '';
     description.value = '';
     setRootGroup(createEmptyGroup());
+    ToastManager.success('Grupo creado exitosamente');
+    navigate('/security/groups');
   };
 
   return (

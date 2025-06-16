@@ -14,12 +14,21 @@ export interface FormData {
   roundId: number;
   externalId: string;
   keywords: string[];
-  tasks: ITask[];
+  task: ITask;
   timeBefore?: number;
 }
 
 export interface ITask {
-  start: string;
-  status: string;
+  id?: number;
+  hourStart: string;
   description: string;
+  name: string;
+  companyId?: number;
+  formId?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  createdBy?: string;
+  editedBy?: string;
+  deletedBy?: string;
 }

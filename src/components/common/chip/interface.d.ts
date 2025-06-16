@@ -2,6 +2,7 @@ export interface IChipProps {
   label: string;
   icon?: string;
   color?: string;
+  borderColor?: string;
   width?: ChipSize;
   onDelete?: () => void;
 }
