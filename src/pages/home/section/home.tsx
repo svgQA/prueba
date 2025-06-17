@@ -10,15 +10,6 @@ export const HomeHero = () => {
       <div className='container mx-auto min-h-[85vh] md:min-h-[90vh] flex flex-col md:flex-row items-center justify-evenly px-4 sm:px-6 md:px-8 py-10 sm:py-16 md:py-20'>
         <div className='w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left mb-8 md:mb-0 text-white'>
           <div className='max-w-xl'>
-            <button
-              type='button'
-              className='bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl border-none font-bold py-3 px-5'
-              onClick={() => {
-                window.location.href = '/demo';
-              }}
-            >
-              {t('home.goToDemo')}
-            </button>
             <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight'>
               {t('home.title')}
             </h1>

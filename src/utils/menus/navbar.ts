@@ -19,7 +19,7 @@ export const NAVBAR_MENUS: IMenu[] = [
   {
     label: 'navbar.demo', // Clave para traducción
     description: '123',
-    to: PAGES_LIST_ROUTER.dashboard.base,
+    to: PAGES_LIST_ROUTER.demo,
     id: 'demo',
   },
   // {
