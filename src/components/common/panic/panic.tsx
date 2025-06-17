@@ -11,7 +11,7 @@ import { FloatBadge } from '../badge/float';
 import { Button } from '../button/button';
 import { useSignal } from '@preact/signals';
 import ExpanderNotification from '../notifications/expander.notification';
-import { MemoService } from '@/services';
+import { PanicService } from '@/services/memo/panic';
 
 const Panic = (_panic: IPanicProps) => {
   const allPanic = useSignal<IPanic[]>([]);
@@ -24,19 +24,18 @@ const Panic = (_panic: IPanicProps) => {
   }, []);
 
   const fetchSSE = useCallback(
-    async () => await SseManager.getQuery(['memo', 'panic']),
+    async () => await SseManager.getQuery(['panic', 'panic-button']),
     []
   );
 
   const handlePanicSSE = (event: IBaseSSE) => {
     if (event.name === SSE_EVENTS.PANIC) {
       fetchPanic();
-      console.log('event', allPanic.value);
     }
   };
 
   const fetchPanic = async () => {
-    const [responsePanic] = await Promise.all([MemoService.get_all_panic()]);
+    const [responsePanic] = await Promise.all([PanicService.get_all_panic()]);
 
     if (responsePanic.getStatus()) {
       allPanic.value = responsePanic.getMany();
@@ -44,7 +43,7 @@ const Panic = (_panic: IPanicProps) => {
   };
 
   const handleChangeStatus = async (id: string) => {
-    const response = await MemoService.changeStatusPanic(id);
+    const response = await PanicService.changeStatusPanic(id);
 
     if (response.getStatus()) {
       return;

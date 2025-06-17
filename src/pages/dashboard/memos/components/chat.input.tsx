@@ -111,36 +111,62 @@ export const ChatInput = ({
             type='button'
             disabled={disabled || !replyId}
           /> */}
-          {children && (
-            <Button
-              icon='311'
-              rounded
-              id='modal-btn'
-              name='modal'
-              type='button'
-              onClick={() => (showChildren.value = !showChildren.value)}
-            />
+          {children ? (
+            <>
+              <Button
+                icon='311'
+                rounded
+                id='modal-btn'
+                name='modal'
+                type='button'
+                onClick={() => (showChildren.value = !showChildren.value)}
+              />
+
+              <input
+                type='text'
+                className='flex-1 py-2 px-4 border dark:border-b-dark-light rounded-full'
+                placeholder={
+                  replyId ? 'Type a reply...' : 'Select a message to reply...'
+                }
+                value={input.value}
+                onInput={(e) => (input.value = e.currentTarget.value)}
+                disabled={disabled || !replyId}
+              />
+
+              <Button
+                icon='156'
+                rounded
+                id='send-btn'
+                name='send'
+                type='submit'
+                form={form}
+                // onClick={handleSubmit}
+                disabled={disabled || !replyId}
+              />
+            </>
+          ) : (
+            <>
+              <input
+                type='text'
+                className='flex-1 py-2 px-4 border dark:border-b-dark-light rounded-full'
+                placeholder='Type a message'
+                value={input.value}
+                onInput={(e) => (input.value = e.currentTarget.value)}
+                disabled={disabled}
+              />
+
+              <Button
+                icon='156'
+                rounded
+                id='send-btn'
+                name='send'
+                type='submit'
+                form={form}
+                // onClick={handleSubmit}
+                disabled={disabled}
+              />
+            </>
           )}
-          <input
-            type='text'
-            className='flex-1 py-2 px-4 border dark:border-b-dark-light rounded-full'
-            placeholder={
-              replyId ? 'Type a reply...' : 'Select a message to reply...'
-            }
-            value={input.value}
-            onInput={(e) => (input.value = e.currentTarget.value)}
-            disabled={disabled || !replyId}
-          />
-          <Button
-            icon='156'
-            rounded
-            id='send-btn'
-            name='send'
-            type='submit'
-            form={form}
-            // onClick={handleSubmit}
-            disabled={disabled || !replyId}
-          />
           {/* <Button
             icon='012'
             rounded

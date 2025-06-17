@@ -4,11 +4,11 @@ import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 import arrayMutators from 'final-form-arrays';
 import { useSignal } from '@preact/signals';
-import { FormData } from '../interface';
+import { FormData, ITask } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { ServiceService, ShiftService } from '@/services';
+import { ServiceService, ShiftService, TaskService } from '@/services';
 import { Chip } from '@/components/common/chip/chip';
 import { Task, User } from '@/components/compose/gantt/types/public-types';
 import { Badge } from '@/components/common/badge/badge';
@@ -47,6 +47,9 @@ export const TaskForm = ({
   // const services = useSignal<any[]>([]);
   const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
+  const tasks = useSignal<Task[]>([]);
+  const taskSelect = useSignal<ITask>();
+  const isNewTask = useSignal(false);
   // const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>();
   // const tasks = useSignal<ITask[]>([]);
 
@@ -61,8 +64,7 @@ export const TaskForm = ({
     const { employeeId, serviceId } = model;
     model.employeeId = employeeId?.value;
     model.serviceId = serviceId?.value;
-
-    console.log('TASK: ', model);
+    model.task = taskSelect.value as unknown as ITask;
 
     const request = taskSelected?.id
       ? await ShiftService.updateActivity(model, taskSelected.id)
@@ -73,6 +75,7 @@ export const TaskForm = ({
       ? t('shifts.upsert.successEdit')
       : t('shifts.upsert.successCreate');
     form.reset();
+    taskSelect.value = undefined;
     ToastManager.success(message);
     onClose?.();
     posSave?.();
@@ -82,6 +85,13 @@ export const TaskForm = ({
     const request = await ServiceService.getServicesSimpleList();
     if (request.getStatus()) {
       services.value = request.getMany();
+    }
+  }, []);
+
+  const getTasks = useCallback(async () => {
+    const request = await TaskService.getTasks();
+    if (request.getStatus()) {
+      tasks.value = request.getMany();
     }
   }, []);
 
@@ -96,8 +106,8 @@ export const TaskForm = ({
   // }, []);
 
   useEffect(() => {
-    Promise.all([getServices()]);
-  }, [getServices]);
+    Promise.all([getServices(), getTasks()]);
+  }, [getServices, getTasks]);
 
   const required = useCallback(
     (value: any) => (value ? undefined : t('shifts.upsert.required')),
@@ -246,6 +256,66 @@ export const TaskForm = ({
       externalId: '',
     });
   }, [userSelected, taskSelected, timeBeforeSelected]);
+
+  const renderNewTask = useCallback(() => {
+    return (
+      <div className="col-span-2 mt-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+        <h3 className="text-lg font-medium mb-4">{t('shift.upsert.newTask')}</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            id="input-task-name"
+            name="input-task-name"
+            type="text"
+            label={t('shift.upsert.form.taskName')}
+            placeholder={t('shift.upsert.form.taskNamePlaceholder')}
+            value={taskSelect.value?.name}
+            onChange={(e) => {
+              taskSelect.value = {
+                ...taskSelect.value,
+                name: e.currentTarget.value,
+                hourStart: taskSelect.value?.hourStart
+              } as ITask;
+            }}
+          />
+
+          <Input
+            id="input-task-description"
+            name="input-task-description"
+            type="text"
+            label={t('shift.upsert.form.taskDescription')}
+            placeholder={t('shift.upsert.form.taskDescriptionPlaceholder')}
+            value={taskSelect.value?.description}
+            onChange={(e) => {
+              taskSelect.value = {
+                ...taskSelect.value,
+                description: e.currentTarget.value,
+                hourStart: taskSelect.value?.hourStart
+              } as ITask;
+            }}
+          />
+
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              id="input-task-hour-start"
+              name="input-task-hour-start"
+              type="time"
+              label={t('shift.upsert.form.taskHourStart')}
+              placeholder={t('shift.upsert.form.taskHourStartPlaceholder')}
+              value={taskSelect.value?.hourStart}
+              onChange={(e) => {
+                taskSelect.value = {
+                  ...taskSelect.value,
+                  hourStart: e.currentTarget.value,
+                  name: taskSelect.value?.name,
+                  description: taskSelect.value?.description
+                } as unknown as ITask;
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }, [t, taskSelect]);
 
   return (
     <Modal
@@ -428,6 +498,42 @@ export const TaskForm = ({
                     }}
                   </FieldArray>
                 </div>
+
+                <div class='col-span-1'>
+                  <Field<IOption> name='taskId' validate={required}>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        name='taskId'
+                        id='select-task'
+                        placeholder={t('shift.upsert.form.taskPlaceholder')}
+                        label={t('shift.upsert.form.task')}
+                        options={[
+                          ...tasks.value.map((e: any) => ({
+                            value: e.id,
+                            label: e.description,
+                          })),
+                          {
+                            value: 'new',
+                            label: 'Nueva tarea',
+                          }
+                        ]}
+                        onChange={(e: any) => {
+                          if (e.value === 'new') {
+                            isNewTask.value = true;
+                            return;
+                          }
+
+                          taskSelect.value = tasks.value.find((task: any) => task.id === e.value) as unknown as ITask;
+                        }}
+                        menuPortalTarget={document.body}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {isNewTask.value && renderNewTask()}
               </div>
             </form>
           )}
