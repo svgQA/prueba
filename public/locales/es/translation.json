@@ -8,7 +8,8 @@
   "home": {
     "title": "Transforma la Gestión de Operaciones Con Tryvoo",
     "subtitle": "Optimiza la gestión de actividades, recursos y activos, incluso sin conectividad para tus negocios",
-    "demoButton": "Agenda Una Demo Gratis"
+    "demoButton": "Agenda Una Demo Gratis",
+    "goToDemo": "Ir a demo"
   },
   "services": {
     "title": "Nuestros Servicios",
@@ -52,6 +53,29 @@
         "title": "Integración y Personalización",
         "subtitle": "Fácil integración con herramientas ya existentes y una plataforma que se adapta a las necesidades de cada sector."
       }
+    }
+  },
+  "demo": {
+    "pageTitle": "Solicitar Demostración",
+    "pageDescription": "Solicita una demostración personalizada de Tryvoo para tu empresa",
+    "title": "Solicita una demo",
+    "subtitle": "Completa el formulario para solicitar una demostración personalizada",
+    "form": {
+      "fullNameLabel": "Nombre completo",
+      "fullNamePlaceholder": "Ingresa tu nombre completo",
+      "companyLabel": "Empresa",
+      "companyPlaceholder": "Ingresa el nombre de tu empresa",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "phoneLabel": "Teléfono",
+      "phonePlaceholder": "Ingresa tu número telefónico",
+      "preferredDateLabel": "Fecha preferida",
+      "preferredDatePlaceholder": "Selecciona una fecha",
+      "preferredTimeLabel": "Hora preferida",
+      "preferredTimePlaceholder": "Selecciona una hora",
+      "submitButton": "Solicitar Demo",
+      "successMessage": "Tu solicitud ha sido enviada correctamente. Pronto nos pondremos en contacto contigo.",
+      "errorMessage": "Ha ocurrido un error al enviar tu solicitud. Por favor, inténtalo nuevamente."
     }
   }
 }

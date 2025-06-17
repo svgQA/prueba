@@ -3,6 +3,7 @@ export enum PAGES_LIST {
   HOME = '/',
   SIGNIN = '/signin',
   SIGNUP = '/signup',
+  DEMO = '/demo',
   DASHBOARD = '/dashboard',
   SHIFTS = '/shifts',
   ACCESS = '/access',
