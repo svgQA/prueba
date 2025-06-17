@@ -106,21 +106,22 @@ export const getColumns = (
     },
   },
   {
-    id: 'conections',
-    accessorKey: 'conections',
+    id: 'connections',
+    accessorKey: 'connectionStatus',
     header: t('user.columns.connection'),
     meta: { headerAlign: 'center' },
     size: 100,
     cell: (info) => {
       const { userType } = info.row.original;
+      const lastConnection = (info.row.original as any).lastConnection;
       if (userType !== 'CLIENT') {
-        const value = info.getValue() as number;
+        let iconColor: 'success' | 'error' | 'ternary' = 'ternary';
 
-        let iconColor = 'success' as 'success' | 'error' | 'info' | 'warning'; // secondary por defecto
-        if (value >= 1 && value < 3) {
-          iconColor = 'error'; // error
-        } else if (value >= 3) {
-          iconColor = 'info'; // gray-text-light
+        if (lastConnection) {
+          const lastConnectionDate = new Date(lastConnection);
+          const now = new Date();
+          const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          iconColor = (lastConnectionDate >= oneWeekAgo) ? 'success' : 'error';
         }
 
         return (
