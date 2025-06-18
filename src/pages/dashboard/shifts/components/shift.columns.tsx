@@ -6,7 +6,6 @@ import {
   IDropdownAction,
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
-import { Badge } from '@/components/common/badge/badge';
 import { NColumnDef } from '@/components/common/table/type';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { FormattedDate, DateContrast } from '@/components/compose/forms';
@@ -178,8 +177,13 @@ export const getColumns = (
       accessorKey: 'report',
       size: 50,
       header: t('shift.columns.report'),
+      clickable: true,
       meta: { headerAlign: 'center' },
-      cell: (_: any) => <Badge label={`2 → 12h`} outline full size='xs' />,
+      cell: (info) => {
+        const report = info.row.original.report.length.toString();
+        console.log('report', report);
+        return <TextEllipsis text={report} type='report' maxWidth='250px' />;
+      },
     },
     {
       id: 'shift',
