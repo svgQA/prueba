@@ -6,7 +6,6 @@ import {
   IDropdownAction,
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
-import { Badge } from '@/components/common/badge/badge';
 import { NColumnDef } from '@/components/common/table/type';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { FormattedDate, DateContrast } from '@/components/compose/forms';
