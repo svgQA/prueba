@@ -5,6 +5,7 @@ import EmployeeInfo from './expandable/employee.expandable';
 import RoundInfo from './expandable/round.expandable';
 import ServiceInfo from './expandable/service.expandable ';
 import ShiftInfo from './expandable/shift.expandable';
+import ReportInfo from './expandable/report.expandable';
 // import ReportInfo from './expandable/report.expandable';
 
 type Props = {
@@ -13,7 +14,7 @@ type Props = {
 };
 
 const getInfoContent = (type: string, shift: IShiftResponse) => {
-  const { service, employee, activityPct, roundPct, tasks } = shift;
+  const { service, employee, activityPct, roundPct, tasks, report } = shift;
   switch (type) {
     case 'service':
       return <ServiceInfo service={service} />;
@@ -36,6 +37,13 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
           activityPct={activityPct}
           start={shift.start}
           end={shift.end}
+        />
+      );
+    case 'report':
+      return (
+        <ReportInfo
+          reports={report}
+          onViewDetails={r => console.log(r)}
         />
       );
     case 'round':
@@ -70,6 +78,7 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
 };
 
 export const ExpandableMultiple = ({ type, data }: Props) => {
+  console.log('type', type);
   return (
     <div className='info-container'>
       {type && data && getInfoContent(type, data)}

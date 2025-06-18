@@ -87,6 +87,7 @@ interface IService {
   task: {
     description: string;
   };
+  report: IReport[];
   state: string;
   description: string;
   name: string;
@@ -97,6 +98,14 @@ interface IService {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+}
+ interface IReport {
+  id: number
+  shiftId: number
+  description: string
+  requestDate: string | null
+  date: string
+  resource: Array<any>
 }
 
 interface IBreak {
