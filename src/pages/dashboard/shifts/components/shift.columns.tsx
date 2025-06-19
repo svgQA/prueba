@@ -181,8 +181,14 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const report = info.row.original.report.length.toString();
-        console.log('report', report);
-        return <TextEllipsis text={report} type='report' maxWidth='250px' />;
+        console.log('report', info.row.original);
+        return (
+          <div className='inline-flex items-center px-2 py-0.5 text-sm'>
+          <TextEllipsis text={report} type='report' maxWidth='250px' />
+          <span className='mx-1'>→</span>
+          <TextEllipsis text={report} type='report' maxWidth='250px' />
+        </div>
+        );
       },
     },
     {
