@@ -18,7 +18,7 @@ export class PanicService extends BaseService {
 
   static async changeStatusPanic(id: string) {
     const model: IMakeRequest = {
-      url: ['panic', id],
+      url: ['panic','panic-change-status', id],
       method: REQUEST_METHODS.POST,
     };
     return await super.make_request(this.name, model);
