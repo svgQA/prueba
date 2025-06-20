@@ -107,6 +107,9 @@ interface IService {
   requestDate: string | null
   date: string
   resource: Array<any>
+  updatedAt: string 
+  createdAt: string 
+  request: boolean
 }
 
 interface IBreak {
