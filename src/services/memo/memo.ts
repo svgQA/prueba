@@ -103,5 +103,5 @@ export class MemoService extends BaseService {
       params: params as any,
     };
     return await super.make_request(this.name, model);
-  } 
+  }
 }

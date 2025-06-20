@@ -31,7 +31,7 @@ const ATTACHMENT_TYPES = [
   'PHOTO',
   'GENERAL',
 ] as const;
-type AttachmentType = typeof ATTACHMENT_TYPES[number];
+type AttachmentType = (typeof ATTACHMENT_TYPES)[number];
 
 // Opciones para el selector basadas en ATTACHMENT_TYPES
 const typeOptions: IOption[] = ATTACHMENT_TYPES.map((t) => ({
@@ -69,7 +69,13 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
 
   const setInitialValues = async () => {
     if (!id) return;
-    const keys = ['name', 'formId', 'description', 'hourStart', 'attachmentType'] as const;
+    const keys = [
+      'name',
+      'formId',
+      'description',
+      'hourStart',
+      'attachmentType',
+    ] as const;
     const response: any = await TaskService.getTaskById(id);
     if (!response.getStatus()) return;
     const model = response.getOne();
@@ -111,38 +117,48 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
         onSubmit={onSubmit}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting, pristine }) => (
-          <form onSubmit={handleSubmit} className="space-y-6" id="form-settings-shifts">
-            <div className="grid grid-cols-3 gap-3">
-              <div className="col-span-1">
-                <Field<string> name="name" validate={required}>
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-settings-shifts'
+          >
+            <div className='grid grid-cols-3 gap-3'>
+              <div className='col-span-1'>
+                <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
-                    <Input {...input} placeholder="Ingrese nombre..." label="Nombre" meta={meta} type="text" />
+                    <Input
+                      {...input}
+                      placeholder='Ingrese nombre...'
+                      label='Nombre'
+                      meta={meta}
+                      type='text'
+                    />
                   )}
                 </Field>
               </div>
 
-              <div className="col-span-1">
-                <Field name="formId">
+              <div className='col-span-1'>
+                <Field name='formId'>
                   {({ input }) => (
                     <SmartSelector
                       {...input}
-                      placeholder="Seleccione formulario..."
-                      label="Formulario"
-                      icon="252"
+                      placeholder='Seleccione formulario...'
+                      label='Formulario'
+                      icon='252'
                       options={forms.value}
                     />
                   )}
                 </Field>
               </div>
 
-              <div className="col-span-1">
-                <Field<IOption> name="attachmentType" validate={required}>
+              <div className='col-span-1'>
+                <Field<IOption> name='attachmentType' validate={required}>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
-                      placeholder="Seleccione tipo de tarea..."
-                      label="Tipo"
-                      icon="📎"
+                      placeholder='Seleccione tipo de tarea...'
+                      label='Tipo'
+                      icon='📎'
                       options={typeOptions}
                       meta={meta}
                     />

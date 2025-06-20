@@ -28,8 +28,7 @@ export const TextEllipsis = ({
     if (containerRef.current) {
       const el = containerRef.current;
       const overflow =
-        el.scrollHeight > el.clientHeight ||
-        el.scrollWidth > el.clientWidth;
+        el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth;
       setIsOverflowing(overflow);
     }
   }, [text, maxWidth, children]);

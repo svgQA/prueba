@@ -98,15 +98,15 @@ interface IService {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-  promedio: number
+  promedio: number;
 }
- interface IReport {
-  id: number
-  shiftId: number
-  description: string
-  requestDate: string | null
-  date: string
-  resource: Array<any>
+interface IReport {
+  id: number;
+  shiftId: number;
+  description: string;
+  requestDate: string | null;
+  date: string;
+  resource: Array<any>;
 }
 
 interface IBreak {
