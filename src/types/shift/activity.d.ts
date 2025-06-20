@@ -98,6 +98,7 @@ interface IService {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  promedio: number
 }
  interface IReport {
   id: number
@@ -193,6 +194,7 @@ export interface IShiftResponse {
   activityPct: number;
   roundPct: number;
   timeBefore: number;
+  promedio: number;
 }
 
 interface ITaskHistory {

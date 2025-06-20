@@ -100,7 +100,7 @@ export const getColumns = (
             scheduledDate={rowData.start}
             actualDate={rowData.checkIn}
             type='start'
-            // showLocation
+          // showLocation
           />
         );
       },
@@ -119,7 +119,7 @@ export const getColumns = (
             scheduledDate={rowData.end}
             actualDate={rowData.checkOut}
             type='end'
-            // showLocation
+          // showLocation
           />
         );
       },
@@ -181,13 +181,16 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const report = info.row.original.report.length.toString();
+        const promedio = info.row.original.promedio;
+        // 1) Con Math.round
+        const promedioUnDecimal = Math.round(promedio * 10) / 10;
         console.log('report', info.row.original);
         return (
-          <div className='inline-flex items-center px-2 py-0.5 text-sm'>
-          <TextEllipsis text={report} type='report' maxWidth='250px' />
-          <span className='mx-1'>→</span>
-          <TextEllipsis text={report} type='report' maxWidth='250px' />
-        </div>
+          <div className="inline-flex items-center space-x-2 px-4 py-1 text-sm border border-gray-300 rounded-lg whitespace-nowrap">
+            <span>{report} R</span>
+            <span>→</span>
+            <span>{promedioUnDecimal} min</span>
+          </div>
         );
       },
     },
@@ -260,37 +263,37 @@ export const getColumns = (
         const model = checkOut
           ? []
           : [
-              {
-                label: !checkIn ? 'Marcar check-in' : 'Marcar check-out',
-                icon: 'vox-icon vx-icon-312 text-primary',
-                onClick: () => {
-                  onClickAction({
-                    id: s_id,
-                    type: 'shift',
-                    action: !checkIn
-                      ? ROW_ACTIONS.CHECK_IN
-                      : ROW_ACTIONS.CHECK_OUT,
-                  });
-                },
+            {
+              label: !checkIn ? 'Marcar check-in' : 'Marcar check-out',
+              icon: 'vox-icon vx-icon-312 text-primary',
+              onClick: () => {
+                onClickAction({
+                  id: s_id,
+                  type: 'shift',
+                  action: !checkIn
+                    ? ROW_ACTIONS.CHECK_IN
+                    : ROW_ACTIONS.CHECK_OUT,
+                });
               },
-            ];
+            },
+          ];
 
         const uModel =
           checkIn || checkOut
             ? []
             : [
-                {
-                  label: 'Editar turno',
-                  icon: 'vox-icon vx-icon-123 text-primary',
-                  onClick: () => {
-                    onClickAction({
-                      id: s_id,
-                      type: 'shift',
-                      action: ROW_ACTIONS.UPDATE,
-                    });
-                  },
+              {
+                label: 'Editar turno',
+                icon: 'vox-icon vx-icon-123 text-primary',
+                onClick: () => {
+                  onClickAction({
+                    id: s_id,
+                    type: 'shift',
+                    action: ROW_ACTIONS.UPDATE,
+                  });
                 },
-              ];
+              },
+            ];
 
         const actions: IDropdownAction[] = [
           ...uModel,

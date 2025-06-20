@@ -6,7 +6,10 @@ export interface IReport {
   shiftId: number
   description: string
   requestDate: string | null
+  updatedAt: string 
+  createdAt: string 
   date: string
+  request: boolean;
   resource: Array<any>
 }
 
@@ -36,18 +39,25 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
       {/* Lista ligera */}
       <div className="divide-y divide-gray-200">
         {reports.map((report, idx) => {
-          const isRequested = !!report.requestDate
+
+          const isRequested = report.request
+          console.log('report', report)
           const statusLabel = isRequested ? 'Solicitado' : 'No solicitado'
           const statusColorClass = isRequested ? 'text-green-500' : 'text-red-500'
           const statusIcon = isRequested ? 'vx-icon-324' : 'vx-icon-323'
 
-          const reqDate = report.requestDate
+          const reportDate = report.requestDate
             ? DateUtils.dateToFrontend(report.requestDate, {
                 time: true,
                 format: 'DD/MM/YYYY HH:mm',
               })
             : '—'
-          const repDate = DateUtils.dateToFrontend(report.date, {
+          const repDate = DateUtils.dateToFrontend(report.createdAt, {
+            time: true,
+            format: 'DD/MM/YYYY HH:mm',
+          })
+
+          const updateDate = DateUtils.dateToFrontend(report.updatedAt, {
             time: true,
             format: 'DD/MM/YYYY HH:mm',
           })
@@ -67,10 +77,13 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
               {/* Fechas */}
               <div className="col-span-3 space-y-0.5">
                 <p className="leading-tight">
-                  <span className="font-semibold">Solicitud:</span> {reqDate}
+                  <span className="font-semibold">Solicitud:</span> {reportDate }
                 </p>
                 <p className="leading-tight">
-                  <span className="font-semibold">Reporte:</span> {repDate}
+                  <span className="font-semibold">Recibido:</span> {repDate}
+                </p>
+                <p className="leading-tight">
+                  <span className="font-semibold">Reporte:</span> {updateDate}
                 </p>
               </div>
 
