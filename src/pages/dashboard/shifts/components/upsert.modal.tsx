@@ -259,13 +259,15 @@ export const TaskForm = ({
 
   const renderNewTask = useCallback(() => {
     return (
-      <div className="col-span-2 mt-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-        <h3 className="text-lg font-medium mb-4">{t('shift.upsert.newTask')}</h3>
-        <div className="grid grid-cols-2 gap-4">
+      <div className='col-span-2 mt-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg'>
+        <h3 className='text-lg font-medium mb-4'>
+          {t('shift.upsert.newTask')}
+        </h3>
+        <div className='grid grid-cols-2 gap-4'>
           <Input
-            id="input-task-name"
-            name="input-task-name"
-            type="text"
+            id='input-task-name'
+            name='input-task-name'
+            type='text'
             label={t('shift.upsert.form.taskName')}
             placeholder={t('shift.upsert.form.taskNamePlaceholder')}
             value={taskSelect.value?.name}
@@ -273,15 +275,15 @@ export const TaskForm = ({
               taskSelect.value = {
                 ...taskSelect.value,
                 name: e.currentTarget.value,
-                hourStart: taskSelect.value?.hourStart
+                hourStart: taskSelect.value?.hourStart,
               } as ITask;
             }}
           />
 
           <Input
-            id="input-task-description"
-            name="input-task-description"
-            type="text"
+            id='input-task-description'
+            name='input-task-description'
+            type='text'
             label={t('shift.upsert.form.taskDescription')}
             placeholder={t('shift.upsert.form.taskDescriptionPlaceholder')}
             value={taskSelect.value?.description}
@@ -289,16 +291,16 @@ export const TaskForm = ({
               taskSelect.value = {
                 ...taskSelect.value,
                 description: e.currentTarget.value,
-                hourStart: taskSelect.value?.hourStart
+                hourStart: taskSelect.value?.hourStart,
               } as ITask;
             }}
           />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className='grid grid-cols-2 gap-4'>
             <Input
-              id="input-task-hour-start"
-              name="input-task-hour-start"
-              type="time"
+              id='input-task-hour-start'
+              name='input-task-hour-start'
+              type='time'
               label={t('shift.upsert.form.taskHourStart')}
               placeholder={t('shift.upsert.form.taskHourStartPlaceholder')}
               value={taskSelect.value?.hourStart}
@@ -307,7 +309,7 @@ export const TaskForm = ({
                   ...taskSelect.value,
                   hourStart: e.currentTarget.value,
                   name: taskSelect.value?.name,
-                  description: taskSelect.value?.description
+                  description: taskSelect.value?.description,
                 } as unknown as ITask;
               }}
             />
@@ -517,7 +519,7 @@ export const TaskForm = ({
                           {
                             value: 'new',
                             label: 'Nueva tarea',
-                          }
+                          },
                         ]}
                         onChange={(e: any) => {
                           if (e.value === 'new') {
@@ -525,7 +527,9 @@ export const TaskForm = ({
                             return;
                           }
 
-                          taskSelect.value = tasks.value.find((task: any) => task.id === e.value) as unknown as ITask;
+                          taskSelect.value = tasks.value.find(
+                            (task: any) => task.id === e.value
+                          ) as unknown as ITask;
                         }}
                         menuPortalTarget={document.body}
                       />

@@ -41,10 +41,7 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
       );
     case 'report':
       return (
-        <ReportInfo
-          reports={report}
-          onViewDetails={r => console.log(r)}
-        />
+        <ReportInfo reports={report} onViewDetails={(r) => console.log(r)} />
       );
     case 'round':
       return (
@@ -78,7 +75,7 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
 };
 
 export const ExpandableMultiple = ({ type, data }: Props) => {
-  console.log('type', type);
+  console.log('data', data);
   return (
     <div className='info-container'>
       {type && data && getInfoContent(type, data)}

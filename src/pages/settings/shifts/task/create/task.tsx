@@ -1,13 +1,13 @@
 import { Signal, useSignal } from '@preact/signals';
 import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
+import { useEffect } from 'preact/hooks';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
-import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import dayjs from 'dayjs';
 import { FormService, TaskService } from '@/services';
@@ -20,31 +20,48 @@ interface FormData {
   description: string;
   formId: IOption;
   hourStart: string;
+  attachmentType: IOption;
 }
+
+// Valores locales que reflejan los tipos del backend
+const ATTACHMENT_TYPES = [
+  'DOCUMENT',
+  'AUDIO',
+  'VIDEO',
+  'PHOTO',
+  'GENERAL',
+] as const;
+type AttachmentType = (typeof ATTACHMENT_TYPES)[number];
+
+// Opciones para el selector basadas en ATTACHMENT_TYPES
+const typeOptions: IOption[] = ATTACHMENT_TYPES.map((t) => ({
+  value: t,
+  label: t.charAt(0) + t.slice(1).toLowerCase(),
+}));
 
 export const TaskCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const forms = useSignal<IOption[]>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
-  const { id } = useParams(); // Obtiene el id de la URL
+  const { id } = useParams<{ id: string }>();
 
   const onSubmit = async (model: FormData) => {
+    const output = {
+      name: model.name,
+      description: model.description,
+      formId: Number(model.formId.value),
+      hourStart: model.hourStart,
+      attachmentType: model.attachmentType.value as AttachmentType,
+    };
     let request;
     let message: string;
-
-    const output = {
-      ...model,
-      ...(model.formId && { formId: Number(model.formId.value) }),
-    };
-
     if (id) {
       request = await TaskService.updateTask(output, id);
-      message = 'Tarea editado exitosamente!';
+      message = 'Tarea editada exitosamente!';
     } else {
       request = await TaskService.createTask(output);
-      message = 'Tarea creado exitosamente!';
+      message = 'Tarea creada exitosamente!';
     }
-
     if (!request.getStatus()) return;
     ToastManager.success(message);
     navigate('/rounds/task');
@@ -52,26 +69,35 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
 
   const setInitialValues = async () => {
     if (!id) return;
+    const keys = [
+      'name',
+      'formId',
+      'description',
+      'hourStart',
+      'attachmentType',
+    ] as const;
+    const response: any = await TaskService.getTaskById(id);
+    if (!response.getStatus()) return;
+    const model = response.getOne();
 
-    const userKeys = ['name', 'formId', 'description', 'hourStart'] as const;
+    const formIdOption: IOption | undefined = model?.form
+      ? { value: model.form.id, label: model.form.title }
+      : undefined;
 
-    const request: any = await TaskService.getTaskById(id);
-    let formId: IOption | undefined;
+    const attachmentOption: IOption | undefined = model?.attachmentType
+      ? {
+          value: model.attachmentType as AttachmentType,
+          label: (model.attachmentType as string)
+            .charAt(0)
+            .concat((model.attachmentType as string).slice(1).toLowerCase()),
+        }
+      : undefined;
 
-    if (request.getStatus()) {
-      const model = request.getOne();
-      if (model?.form) {
-        formId = {
-          value: model?.form?.id,
-          label: model?.form?.title,
-        };
-      }
-    }
-
-    const model = pick(omitBy(request.model, isNull), userKeys);
+    const picked = pick(omitBy(response.model, isNull), keys);
     initialValues.value = {
-      ...model,
-      formId,
+      ...picked,
+      formId: formIdOption,
+      attachmentType: attachmentOption,
     };
   };
 
@@ -97,7 +123,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
             id='form-settings-shifts'
           >
             <div className='grid grid-cols-3 gap-3'>
-              <div class='col-span-1'>
+              <div className='col-span-1'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
@@ -105,13 +131,13 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                       placeholder='Ingrese nombre...'
                       label='Nombre'
                       meta={meta}
-                      name='name'
                       type='text'
                     />
                   )}
                 </Field>
               </div>
-              <div class='col-span-1'>
+
+              <div className='col-span-1'>
                 <Field name='formId'>
                   {({ input }) => (
                     <SmartSelector
@@ -120,6 +146,21 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                       label='Formulario'
                       icon='252'
                       options={forms.value}
+                    />
+                  )}
+                </Field>
+              </div>
+
+              <div className='col-span-1'>
+                <Field<IOption> name='attachmentType' validate={required}>
+                  {({ input, meta }) => (
+                    <SmartSelector
+                      {...input}
+                      placeholder='Seleccione tipo de tarea...'
+                      label='Tipo'
+                      icon='📎'
+                      options={typeOptions}
+                      meta={meta}
                     />
                   )}
                 </Field>
