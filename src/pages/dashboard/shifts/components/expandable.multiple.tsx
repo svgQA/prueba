@@ -41,10 +41,7 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
       );
     case 'report':
       return (
-        <ReportInfo
-          reports={report}
-          onViewDetails={r => console.log(r)}
-        />
+        <ReportInfo reports={report} onViewDetails={(r) => console.log(r)} />
       );
     case 'round':
       return (
