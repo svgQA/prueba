@@ -21,7 +21,7 @@ export const HomeHero = () => {
                   : 'connectivity for your business'}
               </span>
             </div>
-            <div className='flex justify-center md:justify-start'>
+            <div className='flex justify-center md:justify-start gap-4'>
               <button
                 type='button'
                 className='bg-secondary rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl border-none font-bold py-3 px-5'

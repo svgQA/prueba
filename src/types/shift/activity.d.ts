@@ -87,6 +87,7 @@ interface IService {
   task: {
     description: string;
   };
+  report: IReport[];
   state: string;
   description: string;
   name: string;
@@ -97,6 +98,15 @@ interface IService {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  promedio: number;
+}
+interface IReport {
+  id: number;
+  shiftId: number;
+  description: string;
+  requestDate: string | null;
+  date: string;
+  resource: Array<any>;
 }
 
 interface IBreak {
@@ -184,6 +194,7 @@ export interface IShiftResponse {
   activityPct: number;
   roundPct: number;
   timeBefore: number;
+  promedio: number;
 }
 
 interface ITaskHistory {

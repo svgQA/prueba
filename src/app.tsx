@@ -2,6 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { Route, Router, Switch } from 'wouter';
 import { PAGES_LIST } from '@/utils/routing';
 import { HomeLayout } from '@/pages/home/home.layout';
+import DemoPage from '@/pages/demo';
 import { AWS_AMPLIFY_SETTINGS } from './aws-exports';
 import { AuthAmplifyProps } from './utils/types/auth.interface';
 import { DashboardLayout } from './pages/dashboard/dashboard.layout';
@@ -64,6 +65,7 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
     <section>
       <Switch>
         <Route path={PAGES_LIST.HOME} component={HomeLayout} />
+        <Route path={PAGES_LIST.DEMO} component={DemoPage} />
         <Router base={PAGES_LIST.DASHBOARD}>
           <div className='w-full h-full'>
             <Authenticator.Provider>

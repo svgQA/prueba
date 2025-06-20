@@ -12,7 +12,7 @@ export interface IBadgeProps {
   size?: 'xs' | 'sm' | 'md' | 'lg';
   full?: boolean;
   borderless?: boolean;
-  status?: 'error' | 'success' | 'warning' | 'info';
+  status?: 'error' | 'success' | 'warning' | 'info' | 'ternary';
   outline?: boolean;
   width?: 'w-12' | 'w-16' | 'w-24' | 'w-32' | 'w-48' | 'w-64' | 'w-96';
   onClick?: () => void;

@@ -1,105 +1,128 @@
-import { Chip } from '@/components/common/chip/chip';
+import React from 'react';
+import { DateUtils } from '@/utils/utilities/dates';
 
-const ReportInfo = ({ data = {} }: any) => {
-  const reports = data.reports || [
-    {
-      status: 'Solicitado',
-      statusColor: 'text-green-600',
-      icon: '324',
-      requestDate: '11/04/2024 19:00',
-      reportDate: '11/04/2024 20:00',
-      description: 'Esta es una descripción de prueba, para realizar...',
-      comments: 2,
-      detailsLink: '#',
-    },
-    {
-      status: 'No Solicitado',
-      statusColor: 'text-red-600',
-      icon: '323',
-      requestDate: '11/04/2024 19:00',
-      reportDate: '11/04/2024 20:00',
-      description: 'Esta es una descripción de prueba, para realizar...',
-      comments: 2,
-      detailsLink: '#',
-    },
-    {
-      status: 'Solicitado',
-      statusColor: 'text-green-600',
-      icon: '324',
-      requestDate: '11/04/2024 19:00',
-      reportDate: '11/04/2024 20:00',
-      description: 'Esta es una descripción de prueba, para realizar...',
-      comments: 2,
-      detailsLink: '#',
-    },
-  ];
+export interface IReport {
+  id: number;
+  shiftId: number;
+  description: string;
+  requestDate: string | null;
+  updatedAt?: string;
+  createdAt?: string;
+  date: string;
+  request?: boolean;
+  resource: Array<any>;
+}
+
+interface ReportInfoProps {
+  reports?: IReport[];
+  data?: { reports: IReport[] };
+  onViewDetails: (report: IReport) => void;
+}
+
+const ReportInfo: React.FC<ReportInfoProps> = ({
+  reports: directReports,
+  data,
+  onViewDetails,
+}) => {
+  const reports: IReport[] = directReports ?? data?.reports ?? [];
 
   return (
-    <div className='bg-b-light-dark dark:bg-b-dark-light rounded-lg shadow-sm p-4 w-full text-t-light dark:text-t-dark'>
-      <div className='flex items-center justify-between border-b pb-2 mb-4 border-b-light dark:border-b-dark'>
-        <h2 className='font-medium'>Reportes del Turno</h2>
-        <Chip label={`${reports.length} Reportes`} color='primary' />
+    <div className='bg-white rounded-lg shadow-sm p-4 w-full text-gray-900'>
+      {/* Header */}
+      <div className='flex items-center justify-between pb-2 mb-4 border-b border-gray-200'>
+        <h2 className='text-base font-medium'>Reportes del Turno</h2>
+        <span className='bg-cyan-100 text-cyan-800 text-xs font-semibold px-3 py-1 rounded-full'>
+          {reports.length} Reporte{reports.length !== 1 && 's'}
+        </span>
       </div>
 
-      <div className='space-y-4'>
-        {reports.map((report: any, index: number) => (
-          <div key={index} className='grid grid-cols-12 gap-4 items-center'>
-            {/* Icono */}
-            <div className='col-span-1'>
-              {report.status === 'Solicitado' ? (
+      {/* Lista ligera */}
+      <div className='divide-y divide-gray-200'>
+        {reports.map((report, idx) => {
+          const isRequested = report.request;
+          const statusLabel = isRequested ? 'Solicitado' : 'No solicitado';
+          const statusColorClass = isRequested
+            ? 'text-green-500'
+            : 'text-red-500';
+          const statusIcon = isRequested ? 'vx-icon-324' : 'vx-icon-323';
+
+          const reportDate = report.requestDate
+            ? DateUtils.dateToFrontend(report.requestDate, {
+                time: true,
+                format: 'DD/MM/YYYY HH:mm',
+              })
+            : '—';
+          const repDate = DateUtils.dateToFrontend(report.createdAt, {
+            time: true,
+            format: 'DD/MM/YYYY HH:mm',
+          });
+
+          const updateDate = DateUtils.dateToFrontend(report.updatedAt, {
+            time: true,
+            format: 'DD/MM/YYYY HH:mm',
+          });
+          const attachmentsCount = report.resource?.length ?? 0;
+
+          return (
+            <div
+              key={idx}
+              className='grid grid-cols-12 gap-x-4 items-center py-3 text-sm'
+            >
+              {/* Estado e icono */}
+              <div className='col-span-2 flex items-center space-x-2'>
                 <span
-                  className={`vox-icon vx-icon-${report.icon} !text-secondary`}
+                  className={`vox-icon ${statusIcon} ${statusColorClass}`}
                 ></span>
-              ) : (
-                <span
-                  className={`vox-icon vx-icon-${report.icon} !text-error`}
-                ></span>
-              )}
-            </div>
+                <p className={`${statusColorClass} font-medium`}>
+                  {statusLabel}
+                </p>
+              </div>
 
-            {/* Estado */}
-            <div className='col-span-2'>
-              {report.status === 'Solicitado' ? (
-                <p className='text-secondary'>{report.status}</p>
-              ) : (
-                <p className='text-error'>{report.status}</p>
-              )}
-            </div>
+              {/* Fechas */}
+              <div className='col-span-3 space-y-0.5'>
+                <p className='leading-tight'>
+                  <span className='font-semibold'>Solicitud:</span> {reportDate}
+                </p>
+                <p className='leading-tight'>
+                  <span className='font-semibold'>Recibido:</span> {repDate}
+                </p>
+                <p className='leading-tight'>
+                  <span className='font-semibold'>Reporte:</span> {updateDate}
+                </p>
+              </div>
 
-            {/* Fechas */}
-            <div className='col-span-3'>
-              <p className=''>
-                Solicitud: {report.requestDate.split(' ')[0]}{' '}
-                {report.requestDate.split(' ')[1]}
-              </p>
-              <p className=''>
-                Reporte: {report.reportDate.split(' ')[0]}{' '}
-                {report.reportDate.split(' ')[1]}
-              </p>
-            </div>
+              {/* Descripción */}
+              <div className='col-span-3'>
+                <p className='truncate leading-tight'>{report.description}</p>
+              </div>
 
-            {/* Descripción */}
-            <div className='col-span-3'>
-              <p className='text truncate'>{report.description}</p>
-            </div>
+              {/* Adjuntos */}
+              <div className='col-span-2 flex justify-center'>
+                <div className='flex items-center bg-cyan-100 text-cyan-800 text-xs font-medium px-3 py-1 rounded-full'>
+                  <span className='vox-icon vx-icon-006 mr-1'></span>
+                  {attachmentsCount}
+                </div>
+              </div>
 
-            {/* Comentarios */}
-            <div className='col-span-1 text-center'>
-              <Chip label={`${report.comments} Comentarios`} color='primary' />
+              {/* Ver detalles */}
+              <div className='col-span-2 text-right'>
+                <button
+                  onClick={() => onViewDetails(report)}
+                  className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
+                >
+                  Ver detalles
+                  <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
+                </button>
+              </div>
             </div>
+          );
+        })}
 
-            {/* Ver detalles */}
-            <div className='col-span-2 text-right'>
-              <a
-                href={report.detailsLink}
-                className='text-primary text-xs flex items-center justify-end'
-              >
-                Ver detalles
-                <span className='ml-2 vox-icon vx-icon-004 !text-primary'></span>
-              </a>
-            </div>
+        {reports.length === 0 && (
+          <div className='py-8 text-center text-gray-500'>
+            No hay reportes para mostrar
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
