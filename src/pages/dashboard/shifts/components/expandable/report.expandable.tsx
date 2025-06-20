@@ -53,7 +53,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
       {/* Lista ligera */}
       <div className="divide-y divide-gray-200">
-        {reports.map((report, idx) => {
+        {reports.map((report) => {
           const isRequested = report.request
           const statusLabel = isRequested ? 'Solicitado' : 'No solicitado'
           const statusColorClass = isRequested ? 'text-green-500' : 'text-red-500'
