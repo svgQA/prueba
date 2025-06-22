@@ -1,6 +1,7 @@
 import { type FunctionComponent } from 'preact';
 import { type IBadgeProps } from './interface';
 import { useTranslation } from 'react-i18next';
+import { TextEllipsis } from '../text-ellipsis';
 
 export const Badge: FunctionComponent<IBadgeProps> = ({
   label,
@@ -43,17 +44,15 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
             ? `border ${getStatusColor(status)} bg-transparent`
             : `${borderless ? 'border-none' : 'border border-gray-100 dark:border-gray-700'}
              ${
-               !icon
-                 ? status === 'error'
-                   ? 'bg-error'
-                   : status === 'success'
-                     ? 'bg-secondary'
-                     : status === 'warning'
-                       ? 'bg-orange-500'
-                       : status === 'info'
-                         ? 'bg-primary'
-                         : 'bg-white dark:bg-b-dark-light'
-                 : 'bg-white dark:bg-b-dark-light'
+               status === 'error'
+                 ? 'bg-error'
+                 : status === 'success'
+                   ? 'bg-secondary'
+                   : status === 'warning'
+                     ? 'bg-orange-500'
+                     : status === 'info'
+                       ? 'bg-ternary'
+                       : 'bg-white dark:bg-b-dark-light'
              }`
         }
       `}
@@ -62,12 +61,12 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
       {icon ? (
         <>
           <span
-            className={`vx-icon vx-icon-${icon} size-${size} mr-2 ml-1 ${status === 'error' ? 'text-error' : status === 'success' ? 'text-secondary' : status === 'warning' ? 'text-orange-500' : status === 'info' ? 'text-primary' : ''}`}
+            className={`vx-icon vx-icon-${icon} size-${size} mr-2 ml-1`}
           ></span>
-          <span>{t(label)}</span>
+          <TextEllipsis text={t(label)} maxWidth='150px'></TextEllipsis>
         </>
       ) : (
-        <span>{t(label)}</span>
+        <TextEllipsis text={t(label)} maxWidth='150px'></TextEllipsis>
       )}
       {onRemove && (
         <span
