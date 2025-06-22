@@ -10,7 +10,7 @@ import { NColumnDef } from '@/components/common/table/type';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { FormattedDate, DateContrast } from '@/components/compose/forms';
 import { DateUtils } from '@/utils/utilities/dates';
-import { useTranslation } from 'react-i18next';
+import { Badge } from '@/components/common/badge/badge';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -19,15 +19,13 @@ export const getColumns = (
     action: ROW_ACTIONS;
   }) => void
 ): NColumnDef<IShiftResponse>[] => {
-  const { t } = useTranslation();
-
   return [
     {
       id: 'employee',
       clickable: true,
       accessorKey: 'employee.name',
       size: 180,
-      header: t('shift.columns.user'),
+      header: 'h_user',
       enableGrouping: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
@@ -54,7 +52,7 @@ export const getColumns = (
       id: 'service',
       accessorKey: 'service.name',
       size: 180,
-      header: t('shift.columns.service'),
+      header: 'h_service',
       clickable: true,
       enableGrouping: true,
       meta: { headerAlign: 'center' },
@@ -67,7 +65,7 @@ export const getColumns = (
       id: 'contract',
       accessorKey: 'service.contract.name',
       size: 120,
-      header: t('shift.columns.contract'),
+      header: 'h_contract',
       clickable: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
@@ -79,7 +77,7 @@ export const getColumns = (
       id: 'fecha',
       accessorKey: 'start',
       size: 120,
-      header: t('shift.columns.date'),
+      header: 'h_start',
       enableGrouping: false,
       meta: { headerAlign: 'center' },
       cell: (info) => (
@@ -91,7 +89,7 @@ export const getColumns = (
       accessorKey: 'start',
       size: 150,
       clickable: true,
-      header: t('shift.columns.start'),
+      header: 'h_start',
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const rowData = info.row.original;
@@ -110,7 +108,7 @@ export const getColumns = (
       accessorKey: 'end',
       size: 150,
       clickable: true,
-      header: t('shift.columns.end'),
+      header: 'h_end',
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const rowData = info.row.original;
@@ -128,14 +126,22 @@ export const getColumns = (
       id: 'status',
       accessorKey: 'status',
       size: 120,
-      header: t('shift.columns.status'),
+      header: 'h_status',
       meta: { headerAlign: 'center' },
+      cell: (info) => {
+        const rowData = info.row.original;
+        return (
+          <div className='w-full justify-center flex items-center'>
+            <Badge label={rowData.status} width='w-24' />
+          </div>
+        );
+      },
     },
     {
       id: 'duration',
       accessorKey: 'duration',
       size: 120,
-      header: t('shift.columns.duration'),
+      header: 'h_duration',
       clickable: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
@@ -176,7 +182,7 @@ export const getColumns = (
       id: 'report',
       accessorKey: 'report',
       size: 50,
-      header: t('shift.columns.report'),
+      header: 'h_report',
       clickable: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
@@ -199,7 +205,7 @@ export const getColumns = (
       accessorKey: 'activitiesProgress',
       clickable: true,
       size: 50,
-      header: t('shift.columns.shift'),
+      header: 'h_shift',
       meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const { activityPct } = info.row.original;
@@ -221,7 +227,7 @@ export const getColumns = (
       accessorKey: 'activitiesProgress',
       size: 100,
       clickable: true,
-      header: t('shift.columns.round'),
+      header: 'h_round',
       meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const { roundPct } = info.row.original;
@@ -245,7 +251,7 @@ export const getColumns = (
       accessorKey: 'service.contract.client.name',
       size: 120,
       clickable: true,
-      header: t('shift.columns.client'),
+      header: 'h_client',
       enableGrouping: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
@@ -257,6 +263,7 @@ export const getColumns = (
       id: 'actions',
       size: 10,
       meta: { headerAlign: 'center' },
+      header: 'h_action',
       cell: (info) => {
         const { id, checkIn, checkOut } = info.row.original;
         const s_id = String(id);
@@ -264,7 +271,7 @@ export const getColumns = (
           ? []
           : [
               {
-                label: !checkIn ? 'Marcar check-in' : 'Marcar check-out',
+                label: !checkIn ? 'check_in' : 'check_out',
                 icon: 'vox-icon vx-icon-312 text-primary',
                 onClick: () => {
                   onClickAction({
@@ -283,7 +290,7 @@ export const getColumns = (
             ? []
             : [
                 {
-                  label: 'Editar turno',
+                  label: 'edit',
                   icon: 'vox-icon vx-icon-123 text-primary',
                   onClick: () => {
                     onClickAction({
@@ -299,7 +306,7 @@ export const getColumns = (
           ...uModel,
           ...model,
           {
-            label: 'Eliminar turno',
+            label: 'delete',
             icon: 'vox-icon vx-icon-053 text-red-500',
             color: 'text-red-600',
             onClick: () => {

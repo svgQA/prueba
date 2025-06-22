@@ -1,5 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { type IButtonProps } from './interface';
+import { useTranslation } from 'react-i18next';
 
 export const Button: FunctionComponent<IButtonProps> = ({
   label,
@@ -26,6 +27,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   selectedColor = 'bg-primary',
   mode,
 }: IButtonProps) => {
+  const { t } = useTranslation();
   const getJustify = () => {
     switch (textAlign) {
       case 'left':
@@ -82,7 +84,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
           <p
             className={`capitalize max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis w-full text-${textAlign} ${textColor} ${big ? 'py-1' : ''}`}
           >
-            {label}
+            {t(label)}
           </p>
         </div>
       )}

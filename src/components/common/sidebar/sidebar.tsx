@@ -85,7 +85,8 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   return (
     <nav
       id={`${id}-nav`}
-      className='fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen border-r border-gray-200 dark:border-gray-700 z-20 bg-b-content dark:bg-b-dark'
+      className='fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen dark:border-gray-700 z-20 bg-b-white dark:bg-b-dark-light'
+      // border-r border-gray-200'
     >
       {onHomeHandler && (
         <ul className='flex flex-col items-center'>

@@ -8,13 +8,13 @@ export const columns: ColumnDef<IActivity>[] = [
     id: 'id',
     accessorKey: 'id',
     size: 60,
-    header: 'Id',
+    header: 'h_id',
   },
   {
     id: 'start',
     accessorKey: 'start',
     size: 60,
-    header: 'Inicio',
+    header: 'h_start',
     cell: (info) => {
       return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
@@ -23,7 +23,7 @@ export const columns: ColumnDef<IActivity>[] = [
     id: 'end',
     accessorKey: 'end',
     size: 60,
-    header: 'Fin',
+    header: 'h_end',
     cell: (info) => {
       return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
@@ -32,29 +32,30 @@ export const columns: ColumnDef<IActivity>[] = [
     id: 'serviceId',
     accessorKey: 'serviceId',
     size: 60,
-    header: 'Servicio',
+    header: 'h_service',
   },
   {
     id: 'employeedId',
     accessorKey: 'employeedId',
     size: 60,
-    header: 'Empleado',
+    header: 'h_employee',
   },
   {
     id: 'status',
     accessorKey: 'status',
     size: 60,
-    header: 'Estado',
+    header: 'h_status',
   },
   {
     id: 'type',
     accessorKey: 'type',
     size: 60,
-    header: 'Tipo',
+    header: 'h_type',
   },
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

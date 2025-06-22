@@ -24,7 +24,7 @@ export const getColumns = (
     {
       id: 'title',
       accessorKey: 'title',
-      header: t('history.columns.title'),
+      header: 'h_title',
       meta: { headerAlign: 'center' },
       size: 200,
       cell: (info) => (
@@ -34,7 +34,7 @@ export const getColumns = (
     {
       id: 'description',
       accessorKey: 'description',
-      header: t('history.columns.description'),
+      header: 'h_description',
       meta: { headerAlign: 'center' },
       size: 250,
       cell: (info) => (
@@ -44,7 +44,7 @@ export const getColumns = (
     {
       id: 'type',
       accessorKey: 'type',
-      header: t('history.columns.type'),
+      header: 'h_type',
       meta: { headerAlign: 'center' },
       size: 120,
       cell: (info) => {
@@ -61,7 +61,7 @@ export const getColumns = (
     {
       id: 'sentAt',
       accessorKey: 'sentAt',
-      header: t('history.columns.sentDate'),
+      header: 'h_sent_date',
       meta: { headerAlign: 'center' },
       size: 180,
       cell: (info) => {
@@ -71,7 +71,7 @@ export const getColumns = (
     {
       id: 'recipients',
       accessorKey: 'recipients',
-      header: t('history.columns.recipients'),
+      header: 'h_recipient',
       meta: { headerAlign: 'center' },
       size: 100,
       cell: (info) => (
@@ -85,7 +85,7 @@ export const getColumns = (
     {
       id: 'openRate',
       accessorKey: 'openRate',
-      header: t('history.columns.openRate'),
+      header: 'h_open_rate',
       meta: { headerAlign: 'center' },
       size: 150,
       cell: (info) => {
@@ -112,6 +112,7 @@ export const getColumns = (
       id: 'actions',
       meta: { headerAlign: 'center' },
       size: 20,
+      header: 'h_action',
       cell: (info) => {
         const { id } = info.row.original;
 

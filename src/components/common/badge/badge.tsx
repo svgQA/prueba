@@ -1,5 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { type IBadgeProps } from './interface';
+import { useTranslation } from 'react-i18next';
 
 export const Badge: FunctionComponent<IBadgeProps> = ({
   label,
@@ -13,6 +14,8 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   onRemove,
   onClick,
 }: IBadgeProps) => {
+  if (!label) return null;
+  const { t } = useTranslation();
   const getStatusColor = (status?: string) => {
     switch (status) {
       case 'error':
@@ -38,7 +41,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
         ${
           outline
             ? `border ${getStatusColor(status)} bg-transparent`
-            : `${borderless ? 'border-none' : 'border border-gray-100 dark:border-gray-700'} 
+            : `${borderless ? 'border-none' : 'border border-gray-100 dark:border-gray-700'}
              ${
                !icon
                  ? status === 'error'
@@ -61,10 +64,10 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
           <span
             className={`vx-icon vx-icon-${icon} size-${size} mr-2 ml-1 ${status === 'error' ? 'text-error' : status === 'success' ? 'text-secondary' : status === 'warning' ? 'text-orange-500' : status === 'info' ? 'text-primary' : ''}`}
           ></span>
-          <span>{label}</span>
+          <span>{t(label)}</span>
         </>
       ) : (
-        <span>{label}</span>
+        <span>{t(label)}</span>
       )}
       {onRemove && (
         <span

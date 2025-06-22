@@ -1,6 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Memo } from '../utils/memos';
-import { useTranslation } from 'react-i18next';
 
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Badge } from '@/components/common/badge/badge';
@@ -28,13 +27,11 @@ export const getColumns = (
     action: ROW_ACTIONS;
   }) => void
 ): CustomColumnDef<Memo>[] => {
-  const { t } = useTranslation();
-
   return [
     {
       id: 'name',
       // accessorFn:(row) => `${row?.extraData?.client.name}`,
-      header: t('memos.columns.user'),
+      header: 'h_user',
       accessorKey: 'user.name',
       enableGrouping: true,
       meta: { headerAlign: 'center' },
@@ -52,7 +49,7 @@ export const getColumns = (
     {
       id: 'noveltyType',
       accessorKey: 'novelty.name',
-      header: t('memos.columns.noveltyType'),
+      header: 'h_novelty',
       enableGrouping: true,
       meta: { headerAlign: 'center' },
       getIconGroup: (row: Memo) => {
@@ -70,7 +67,7 @@ export const getColumns = (
     {
       id: 'description',
       accessorKey: 'description',
-      header: t('memos.columns.description'),
+      header: 'h_description',
       size: 200,
       enableGrouping: true,
       meta: { headerAlign: 'center' },
@@ -82,7 +79,7 @@ export const getColumns = (
     {
       id: 'status',
       accessorKey: 'state',
-      header: t('memos.columns.status'),
+      header: 'h_status',
       enableGrouping: true,
       meta: { headerAlign: 'center' },
       cell: (info: any) => {
@@ -109,24 +106,21 @@ export const getColumns = (
     {
       id: 'priority',
       accessorKey: 'priority',
-      header: t('memos.columns.priority'),
+      header: 'h_priority',
       enableGrouping: true,
       meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const priority = info.getValue() as string;
         let status = 'info';
-        let label = 'Baja';
         if (priority === 'Alta') {
           status = 'error';
-          label = 'Alta';
         } else if (priority === 'Media') {
           status = 'warning';
-          label = 'Media';
         }
 
         return (
           <Badge
-            label={label}
+            label={priority}
             status={status as 'info' | 'error' | 'warning' | 'success'}
             full
             outline
@@ -138,21 +132,19 @@ export const getColumns = (
       id: 'shift',
       // accessorKey: 'relatedShift.employee.name',
       accessorFn: (row) => `${row?.relatedShift?.employee?.name}`,
-      header: t('memos.columns.shifts'),
+      header: 'h_shift',
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const relatedShift = info.row.original?.relatedShift;
         const { id } = relatedShift?.employee || {
-          name: '',
-          surname: '',
+          // name: '',
+          // surname: '',
           id: '',
         };
         return (
-          <div className='flex items-center gap-1 justify-between'>
-            {/* {name} {surname} */}
-            {id}
-            <Badge label={relatedShift?.status} />
-          </div>
+          <FloatBadge label={id}>
+            <Badge label={relatedShift?.status} width='w-auto' />
+          </FloatBadge>
         );
       },
     },
@@ -178,7 +170,7 @@ export const getColumns = (
     {
       id: 'history',
       accessorKey: 'messages',
-      header: t('memos.columns.history'),
+      header: 'h_history',
       clickable: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
@@ -195,7 +187,7 @@ export const getColumns = (
     {
       id: 'createdAt',
       accessorKey: 'createdAt',
-      header: t('memos.columns.date'),
+      header: 'h_created',
       meta: { headerAlign: 'center' },
       cell: (info) => {
         return <FormattedDate date={String(info.getValue())} format='date' />;
@@ -204,7 +196,7 @@ export const getColumns = (
     {
       id: 'updatedAt',
       accessorKey: 'updatedAt',
-      header: t('memos.columns.updated'),
+      header: 'h_updated',
       enableGrouping: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {

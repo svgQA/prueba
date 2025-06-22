@@ -1,14 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ButtonAction } from '@/components/common/button/column';
-import { t } from 'i18next';
 
 export const columns: ColumnDef<any>[] = [
   {
     id: 'description',
     accessorKey: 'description',
     size: 180,
-    header: t('user.area.table.description'),
+    header: 'h_description',
     enableGrouping: true,
     cell: (info) => {
       const { description } = info.row.original;
@@ -19,7 +18,7 @@ export const columns: ColumnDef<any>[] = [
     id: 'name',
     accessorKey: 'name',
     size: 180,
-    header: t('user.area.table.name'),
+    header: 'h_name',
     enableGrouping: true,
     cell: (info) => {
       const name = info.getValue() as string;
@@ -29,6 +28,7 @@ export const columns: ColumnDef<any>[] = [
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

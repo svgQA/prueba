@@ -12,6 +12,7 @@ import { Button } from '../button/button';
 import { useSignal } from '@preact/signals';
 import ExpanderNotification from '../notifications/expander.notification';
 import { PanicService } from '@/services/memo/panic';
+import { TextEllipsis } from '../text-ellipsis';
 
 const Panic = (_panic: IPanicProps) => {
   const allPanic = useSignal<IPanic[]>([]);
@@ -51,7 +52,10 @@ const Panic = (_panic: IPanicProps) => {
   };
 
   return (
-    <div className='relative'>
+    <div className='relative flex flex-row justify-center items-center gap-2'>
+      {allPanic.value.length > 0 ? (
+        <TextEllipsis text={allPanic.value[0].message} maxWidth='200px' />
+      ) : null}
       <FloatBadge
         label={allPanic.value.length || '0'}
         color='bg-red-500 text-white'

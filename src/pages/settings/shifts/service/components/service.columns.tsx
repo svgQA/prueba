@@ -8,13 +8,13 @@ export const columns: ColumnDef<IServicio>[] = [
     id: 'id',
     accessorKey: 'id',
     size: 60,
-    header: 'ID',
+    header: 'h_id',
   },
   {
     id: 'name',
     accessorKey: 'name',
     size: 60,
-    header: 'Nombre',
+    header: 'h_name',
     cell: (info) => {
       const name = info.getValue() as string;
       return <TextEllipsis text={name} maxWidth='200px' />;
@@ -24,7 +24,7 @@ export const columns: ColumnDef<IServicio>[] = [
     id: 'description',
     accessorKey: 'description',
     size: 60,
-    header: 'Descripción',
+    header: 'h_description',
     cell: (info) => {
       const description = info.getValue() as string;
       return <TextEllipsis text={description} maxWidth='230px' />;
@@ -34,23 +34,24 @@ export const columns: ColumnDef<IServicio>[] = [
     id: 'roundId',
     accessorKey: 'round.name',
     size: 60,
-    header: 'Ronda',
+    header: 'h_round',
   },
   {
     id: 'contractId',
     accessorKey: 'contract.name',
     size: 60,
-    header: 'Contrato',
+    header: 'h_contract',
   },
   {
     id: 'placeId',
     accessorKey: 'place.name',
     size: 180,
-    header: 'Place',
+    header: 'h_place',
   },
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

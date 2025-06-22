@@ -7,19 +7,19 @@ export const columns: ColumnDef<INovelty>[] = [
     id: 'id',
     accessorKey: 'id',
     size: 60,
-    header: 'ID',
+    header: 'h_id',
   },
   {
     id: 'name',
     accessorKey: 'name',
     size: 60,
-    header: 'Nombre',
+    header: 'h_name',
   },
   {
     id: 'description',
     accessorKey: 'description',
     size: 60,
-    header: 'Descripción',
+    header: 'h_description',
     cell: (info) => {
       const value = info.getValue() as string;
       return (
@@ -35,7 +35,7 @@ export const columns: ColumnDef<INovelty>[] = [
     id: 'priority',
     accessorKey: 'priority',
     size: 180,
-    header: 'prioridad',
+    header: 'h_priority',
     cell: (info) => {
       const value = info.getValue() as string;
       return (
@@ -50,6 +50,7 @@ export const columns: ColumnDef<INovelty>[] = [
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

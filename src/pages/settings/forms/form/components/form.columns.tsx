@@ -3,7 +3,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Avatar } from '@/components/common/Avatar';
-import i18n from '@/i18n';
 import { Button } from '@/components/common/button/button';
 import {
   DropdownActionsMenu,
@@ -21,7 +20,7 @@ export const getColumns = (
   {
     accessorKey: 'title',
     id: 'title',
-    header: i18n.t('form.columns.title'),
+    header: 'h_title',
     size: 300,
     cell: (info) => {
       const { title, description } = info.row.original;
@@ -40,7 +39,7 @@ export const getColumns = (
     accessorKey: 'group',
     id: 'group',
     size: 300,
-    header: i18n.t('form.columns.group'),
+    header: 'h_group',
     cell: (info) => {
       const { group } = info.row.original as any;
       return (
@@ -62,31 +61,32 @@ export const getColumns = (
     accessorKey: 'createdAt',
     id: 'createdAt',
     size: 50,
-    header: i18n.t('form.columns.createdAt'),
+    header: 'h_created',
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
     size: 50,
-    header: i18n.t('form.columns.updatedAt'),
+    header: 'h_updated',
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'category',
     id: 'category',
     size: 250,
-    header: i18n.t('form.columns.category'),
+    header: 'h_category',
     cell: (info) => info.getValue() || '-',
   },
   {
     id: 'action',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id, report } = info.row.original;
       const actions: IDropdownAction[] = [
         {
-          label: i18n.t('form.buttons.update'),
+          label: 'update',
           icon: 'vox-icon vx-icon-123 text-primary',
           onClick: () => {
             onClickAction({
@@ -99,7 +99,7 @@ export const getColumns = (
         ...(report
           ? [
               {
-                label: i18n.t('form.inspect.report'),
+                label: 'report',
                 icon: 'vox-icon vx-icon-143 text-primary',
                 onClick: () => {
                   onClickAction({
@@ -112,7 +112,7 @@ export const getColumns = (
             ]
           : []),
         {
-          label: i18n.t('form.inspect.delete'),
+          label: 'delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
@@ -129,7 +129,7 @@ export const getColumns = (
         <div className='w-full flex justify-center items-center'>
           <Button
             name='continue'
-            label={i18n.t('form.buttons.response')}
+            label='response'
             icon='030'
             unpadded
             onClick={() => {

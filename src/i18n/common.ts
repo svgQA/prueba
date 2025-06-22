@@ -1,4 +1,22 @@
 export const common_es = {
+  OPENED: 'Abierto',
+  CREATED: 'Creado',
+  RESOLVED: 'Resuelto',
+  CLOSED: 'Cerrado',
+  SOLVE: 'Resolver',
+  Baja: 'Baja',
+  Media: 'Media',
+  Alta: 'Alta',
+  ADMIN: 'Administrador',
+  USER: 'Empleado',
+  CLIENT: 'Cliente',
+  ADMIND: 'Administrador',
+  t_memos: 'Memos',
+  t_shifts: 'Turnos',
+  t_inspect: 'Formulario',
+  t_users: 'Usuarios',
+  t_notifications: 'Notificaciones',
+  setting: 'Configuración',
   common: {
     search: {
       placeholder: 'Buscar por columna...',
@@ -8,6 +26,24 @@ export const common_es = {
 };
 
 export const common_en = {
+  OPENED: 'Opened',
+  CREATED: 'Created',
+  RESOLVED: 'Resolved',
+  CLOSED: 'Closed',
+  SOLVE: 'Solve',
+  Baja: 'Low',
+  Media: 'Medium',
+  Alta: 'High',
+  ADMIN: 'Administrator',
+  USER: 'Employee',
+  CLIENT: 'Client',
+  ADMIND: 'Administrator',
+  t_memos: 'Memos',
+  t_shifts: 'Shift',
+  t_inspect: 'Form',
+  t_users: 'User',
+  t_notifications: 'Notifications',
+  setting: 'Settings',
   common: {
     search: {
       placeholder: 'Search by column...',

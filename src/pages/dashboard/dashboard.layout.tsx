@@ -137,7 +137,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         setSidebarMenus(SIDEBAR_MENUS);
         return;
       }
-      console.log('permissions', permissions);
 
       const filteredMenu = SIDEBAR_MENUS.filter((option) => {
         const match = permissions.find(
@@ -167,7 +166,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           id='sidebar'
           name='sidebar'
           onSettingHandler={toggleSettingModal}
-          onHomeHandler={toggleSettingModal}
+          // onHomeHandler={toggleSettingModal}
           menus={sidebarMenus}
           isNavigation
           hasSettings={hasSettings}
@@ -187,6 +186,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
             */}
             <div className='flex flex-row px-6 gap-4 justify-between items-center'>
+              <Panic icon='001'></Panic>
               <LanguageSwitcher borderless />
               <CustomSwitcher
                 options={companies}
@@ -196,7 +196,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 borderless
               />
               <div className='flex flex-row gap-4 items-center justify-center'>
-                <Panic icon='001'></Panic>
                 <ThemeButton unpadded borderless />
                 {/* <Button
                   name='user-action'

@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'preact/compat';
 
 export interface IBadgeProps {
-  label?: string;
+  label: string;
   icon?: string;
   bgColor?: string;
   color?: string;
@@ -14,7 +14,16 @@ export interface IBadgeProps {
   borderless?: boolean;
   status?: 'error' | 'success' | 'warning' | 'info' | 'ternary';
   outline?: boolean;
-  width?: 'w-12' | 'w-16' | 'w-24' | 'w-32' | 'w-48' | 'w-64' | 'w-96';
+  width?:
+    | 'w-12'
+    | 'w-16'
+    | 'w-24'
+    | 'w-32'
+    | 'w-48'
+    | 'w-64'
+    | 'w-96'
+    | 'w-fit'
+    | 'w-auto';
   onClick?: () => void;
   onRemove?: () => void;
 }
