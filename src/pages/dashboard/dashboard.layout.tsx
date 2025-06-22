@@ -24,7 +24,11 @@ import { UsersPage } from './users/users.page';
 /** ***********************************************************************
  * STORE SIGNALS
  ** ***********************************************************************/
-import { toggleSettingModal } from '@/store/signals/modals';
+import {
+  closeLoading,
+  openLoading,
+  toggleSettingModal,
+} from '@/store/signals/modals';
 
 /** ***********************************************************************
  * COMMENTS
@@ -48,6 +52,7 @@ import Notifications from '@/components/common/notifications/notifications';
 import { RoleService } from '@/services/general/role';
 import { IMenu } from '@/components/common/utils/interface';
 import Panic from '@/components/common/panic/panic';
+import { BaseService } from '@/utils/network';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -66,6 +71,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       getLoaded,
       setLoaded,
       cleanUserStore,
+      getTenant,
+      getToken,
+      getCompanyId,
       // user,
     } = useUserStore();
 
@@ -73,8 +81,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const [hasSettings, setHasSettings] = useState<boolean>(true);
 
     useEffect(() => {
+      BaseService.setLoading(openLoading, closeLoading);
+      BaseService.setUser(getTenant, getToken, getCompanyId);
       validateUser();
-      getPermissions();
     }, []);
 
     const validateUser = async () => {
@@ -89,6 +98,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
       if (result) {
         getCompanies();
+        getPermissions();
       }
     };
 
@@ -143,9 +153,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           (perm) =>
             perm.name.trim() === option.key && perm.permissions.state === true
         );
-        console.log(
-          `🔍 Checking ${option.key}: ${match ? '✅ Match' : '❌ No match'}`
-        );
         return match;
       });
 
@@ -155,36 +162,20 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       );
       setHasSettings(permissionsSettings ? true : false);
       setSidebarMenus(filteredMenu);
-      console.log('hasSettings', hasSettings);
-      console.log('filteredMenu', filteredMenu);
     };
 
     return (
       <section>
-        {/* <Loading /> */}
         <Sidebar
           id='sidebar'
           name='sidebar'
           onSettingHandler={toggleSettingModal}
-          // onHomeHandler={toggleSettingModal}
           menus={sidebarMenus}
           isNavigation
           hasSettings={hasSettings}
-          // onLogout={signOut}
         />
         <div className='flex flex-col pl-[4.5rem]'>
           <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
-            {/*
-            <div className='flex flex-row gap-2 items-center ml-56 justify-between'>
-              <Avatar
-                name={user?.name || ''}
-                src={user?.image || ''}
-                size='sm'
-                square
-              />
-              <TextEllipsis text={user?.name || ''} maxWidth='100px' />
-            </div>
-            */}
             <div className='flex flex-row px-6 gap-4 justify-between items-center'>
               <Panic icon='001'></Panic>
               <LanguageSwitcher borderless />
@@ -197,13 +188,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
               />
               <div className='flex flex-row gap-4 items-center justify-center'>
                 <ThemeButton unpadded borderless />
-                {/* <Button
-                  name='user-action'
-                  icon='317'
-                  iconSize='sm'
-                  borderless
-                  unpadded
-                /> */}
                 <Notifications icon='317' iconSize='xsm' />
                 <Dropdown
                   options={[

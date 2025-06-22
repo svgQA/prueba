@@ -13,16 +13,19 @@ import { useSignal } from '@preact/signals';
 import ExpanderNotification from '../notifications/expander.notification';
 import { PanicService } from '@/services/memo/panic';
 import { TextEllipsis } from '../text-ellipsis';
+import { useUserStore } from '@/store/slices';
 
 const Panic = (_panic: IPanicProps) => {
   const allPanic = useSignal<IPanic[]>([]);
+  const { selectedCompany } = useUserStore();
   const isOpen = useSignal<boolean>(false);
 
   useEffect(() => {
+    if (!selectedCompany) return;
     fetchPanic();
     fetchSSE();
     EventBus.on(SSE_TYPE.PANIC, handlePanicSSE);
-  }, []);
+  }, [selectedCompany]);
 
   const fetchSSE = useCallback(
     async () => await SseManager.getQuery(['panic', 'panic-button']),
@@ -36,11 +39,10 @@ const Panic = (_panic: IPanicProps) => {
   };
 
   const fetchPanic = async () => {
-    const [responsePanic] = await Promise.all([PanicService.get_all_panic()]);
+    const responsePanic = await PanicService.get_all_panic();
+    if (!responsePanic.getStatus()) return;
 
-    if (responsePanic.getStatus()) {
-      allPanic.value = responsePanic.getMany();
-    }
+    allPanic.value = responsePanic.getMany();
   };
 
   const handleChangeStatus = async (id: string) => {

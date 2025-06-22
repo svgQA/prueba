@@ -48,7 +48,8 @@ export const getColumns = (
     },
     {
       id: 'noveltyType',
-      accessorKey: 'novelty.name',
+      accessorFn: (row) => `${row?.novelty?.name}`,
+      // accessorKey: 'novelty.name',
       header: 'h_novelty',
       enableGrouping: true,
       meta: { headerAlign: 'center' },

@@ -80,7 +80,7 @@ const components = {
     return (
       <div className='text-center flex flex-col items-center'>
         <Logo title='Tryvoo' slogan='' color='text-primary' />
-        <h3 className='mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl my-2 sm:my-3'>
+        <h3 className='mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl my-2 sm:my-3 text-ternary'>
           {t('login.signIn')}
         </h3>
       </div>
@@ -89,7 +89,7 @@ const components = {
   Footer() {
     return (
       <div className='text-center' style={{ margin: '0.75rem 0' }}>
-        <p className='text-xs sm:text-sm md:text-base'>
+        <p className='text-xs sm:text-sm md:text-base text-ternary'>
           © {new Date().getFullYear()} Tryvoo
         </p>
       </div>
@@ -107,7 +107,7 @@ const components = {
             onClick={() => {
               /*console.log(t('login.forgotPassword'))*/
             }}
-            className='text-xs sm:text-sm font-normal border-0 outline-none focus:outline-none hover:border-0 active:border-0'
+            className='text-xs sm:text-sm font-normal border-0 outline-none focus:outline-none hover:border-0 active:border-0 text-ternary'
           >
             {t('login.forgotPassword')}
           </button>
