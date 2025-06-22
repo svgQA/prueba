@@ -1,5 +1,4 @@
 import { Badge } from '@/components/common/badge/badge';
-import { Chip } from '@/components/common/chip/chip';
 import ShowFiles from '@/components/common/file/show.file';
 import { FormattedDate } from '@/components/compose/forms';
 
@@ -36,15 +35,22 @@ export const ChatMessage = ({
       onClick={() => id && onReply?.(id)}
     >
       <div
-        className={`max-w-[70%] p-3 rounded-lg cursor-pointer transition-colors duration-200 relative
+        className={`max-w-[70%] p-3 rounded-lg cursor-pointer transition-colors duration-200 relative min-w-[350px]
           ${isSelected ? 'ring-2 ring-primary' : ''}
-          ${isSender ? 'bg-primary-opacity dark:bg-primary border-primary' : 'bg-b-light-light dark:bg-b-dark-light border-b-light-dark'}`}
+          ${isSender ? 'bg-primary-opacity dark:bg-gray-600 border-primary' : 'bg-b-light-light dark:bg-b-dark-light border-b-light-dark'}`}
       >
         {(title || status) && (
-          <div className='flex justify-between items-center gap-2 mb-2'>
-            <div className='flex items-center gap-2'>
-              {title && <Chip label={title} width='xl' icon='232' />}
-            </div>
+          <div className='flex items-center gap-2 w-full justify-end'>
+            {title && (
+              <Badge
+                label={title}
+                icon='232'
+                status='info'
+                width='w-auto'
+                borderless
+              />
+            )}
+            {children}
           </div>
         )}
         <div className='mb-2'>{message}</div>
@@ -53,31 +59,26 @@ export const ChatMessage = ({
             <ShowFiles resources={resource} />
           </div>
         )}
-        {children}
-        <div className='text-xs mt-2 pt-2 flex flex-col items-end'>
-          {status && (
-            <div
-              className={`w-3.5 h-3.5 rounded-full bg-${status === 'OPENED' ? 'primary' : status === 'RESOLVED' ? 'secondary' : 'ternary'} ring-2 ring-white dark:ring-gray-800 shadow-sm`}
+        <div className='flex items-center gap-5 text-xs justify-end mt-2'>
+          {priority && (
+            <Badge
+              label={priority}
+              status={
+                (priority === 'Alta'
+                  ? 'error'
+                  : priority === 'Media'
+                    ? 'warning'
+                    : 'success') as 'info' | 'error' | 'warning' | 'success'
+              }
+              outline
             />
           )}
-          <div className='flex items-center justify-between w-full'>
-            <div className='flex items-center gap-2'>
-              {priority && (
-                <Badge
-                  label={priority}
-                  status={
-                    (priority === 'Alta'
-                      ? 'error'
-                      : priority === 'Media'
-                        ? 'warning'
-                        : 'success') as 'info' | 'error' | 'warning' | 'success'
-                  }
-                  outline
-                />
-              )}
-            </div>
-            {date && <FormattedDate date={date} format='datetime' />}
-          </div>
+          {date && <FormattedDate date={date} format='datetime' />}
+          {status && (
+            <div
+              className={`w-3.5 h-3.5 rounded-full bg-${status === 'OPENED' ? 'primary' : status === 'RESOLVED' ? 'secondary' : 'ternary'}`}
+            />
+          )}
         </div>
       </div>
     </div>

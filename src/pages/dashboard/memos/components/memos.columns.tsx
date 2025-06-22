@@ -129,6 +129,7 @@ export const getColumns = (
         );
       },
     },
+    /*
     {
       id: 'shift',
       // accessorKey: 'relatedShift.employee.name',
@@ -149,7 +150,6 @@ export const getColumns = (
         );
       },
     },
-    /*
   {
     id: 'updatedBy',
     accessorKey: 'userEdit.name',

@@ -333,7 +333,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         name='memo-send-response'
                         type='submit'
                         disabled={!message.trim() /* && !selectedPredefined */}
-                        label='Enviar'
+                        label='send'
                         icon='311'
                         className='w-full'
                       />
@@ -461,7 +461,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   return (
     <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm max-h-[450px]'>
       <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-dark max-h-20'>
-        <div className='flex-1 rounded-lg'>
+        <div className='flex-1 rounded-lg ml-5'>
           {memo.resource && <ShowFiles resources={memo.resource} />}
         </div>
 

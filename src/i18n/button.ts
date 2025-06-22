@@ -17,6 +17,7 @@ export const buttons_es = {
   next: 'Siguiente',
   previous: 'Anterior',
   finish: 'Finalizar',
+  send: 'Enviar',
 };
 
 export const buttons_en = {
@@ -38,4 +39,5 @@ export const buttons_en = {
   next: 'Next',
   previous: 'Previous',
   finish: 'Finish',
+  send: 'Send',
 };
