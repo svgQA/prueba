@@ -8,26 +8,26 @@ export const accessColumns: ColumnDef<IAccess>[] = [
     id: 'id',
     accessorKey: 'id',
     size: 60,
-    header: 'ID',
+    header: 'h_id',
   },
   {
     id: 'name',
     accessorKey: 'name',
     size: 180,
-    header: 'Nombre',
+    header: 'h_name',
     // enableGrouping: true, // Agrupación si lo deseas
   },
   {
     id: 'phone',
     accessorKey: 'phone',
     size: 140,
-    header: 'Teléfono',
+    header: 'h_phone',
   },
   {
     id: 'checkIn',
     accessorKey: 'checkIn',
     size: 140,
-    header: 'Hora Ingreso',
+    header: 'h_check_in',
     cell: (info) => {
       return <FormattedDate date={info.getValue() as string} format='time' />;
     },
@@ -36,7 +36,7 @@ export const accessColumns: ColumnDef<IAccess>[] = [
     id: 'checkOut',
     accessorKey: 'checkOut',
     size: 140,
-    header: 'Hora Salida',
+    header: 'h_check_out',
     cell: (info) => {
       return <FormattedDate date={info.getValue() as string} format='time' />;
     },
@@ -45,7 +45,7 @@ export const accessColumns: ColumnDef<IAccess>[] = [
     id: 'houseNumber',
     accessorKey: 'houseNumber',
     size: 140,
-    header: 'Casa/Apto',
+    header: 'h_house_number',
     enableGrouping: true,
   },
   // Lo demás se visualiza en el expansible

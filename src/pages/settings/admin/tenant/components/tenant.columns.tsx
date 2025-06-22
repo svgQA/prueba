@@ -6,7 +6,7 @@ export const columns: ColumnDef<ITenantResponse>[] = [
   {
     accessorKey: 'title',
     id: 'title',
-    header: 'Título',
+    header: 'h_title',
     cell: (info) => {
       const { title, description } = info.row.original;
       return (
@@ -23,13 +23,13 @@ export const columns: ColumnDef<ITenantResponse>[] = [
   {
     accessorKey: 'category',
     id: 'category',
-    header: 'Categoría',
+    header: 'h_category',
     cell: (info) => info.getValue() || '-',
   },
   {
     accessorKey: 'createdAt',
     id: 'createdAt',
-    header: 'Fecha de creación',
+    header: 'h_created',
     cell: (info) => (
       <FormattedDate date={String(info.getValue())} format='relative' />
     ),
@@ -37,7 +37,7 @@ export const columns: ColumnDef<ITenantResponse>[] = [
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
-    header: 'Última actualización',
+    header: 'h_updated',
     cell: (info) => (
       <FormattedDate date={String(info.getValue())} format='relative' />
     ),

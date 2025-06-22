@@ -7,67 +7,67 @@ import { ButtonAction } from '@/components/common/button/column';
 export const columns: ColumnDef<IUserResponse>[] = [
   {
     id: 'name',
-    header: 'Nombre',
+    header: 'h_name',
     accessorFn: (row) => `${row.name} ${row.surname}`,
   },
   {
     id: 'id',
     accessorKey: 'id',
-    header: 'ID',
+    header: 'h_id',
   },
   {
     id: 'email',
     accessorKey: 'email',
-    header: 'Email',
+    header: 'h_email',
   },
   {
     id: 'phone',
     accessorKey: 'phone',
-    header: 'Teléfono',
+    header: 'h_phone',
   },
   {
     id: 'cardId',
     accessorKey: 'cardId',
-    header: 'ID Tarjeta',
+    header: 'h_identification',
   },
   {
     id: 'country',
     accessorFn: (row) => row.extraData?.country,
-    header: 'País',
+    header: 'h_country',
   },
   {
     id: 'state',
     accessorFn: (row) => row.extraData?.state,
-    header: 'Estado',
+    header: 'h_state',
   },
   {
     id: 'city',
     accessorFn: (row) => row.extraData?.city,
-    header: 'Ciudad',
+    header: 'h_city',
   },
   {
     id: 'job',
     accessorFn: (row) => row.extraData?.job,
-    header: 'Trabajo',
+    header: 'h_job',
   },
   {
     id: 'area',
     accessorFn: (row) => row.extraData?.area,
-    header: 'Área',
+    header: 'h_area',
   },
   {
     id: 'sucursal',
     accessorFn: (row) => row.extraData?.sucursal,
-    header: 'Sucursal',
+    header: 'h_sucursal',
   },
   {
     id: 'createdAt',
     accessorKey: 'createdAt',
-    header: 'Fecha de Creación',
+    header: 'h_created',
   },
   {
     id: 'connection',
-    header: 'Conexión',
+    header: 'h_connection',
     cell: () => (
       <div className='flex flex-row justify-center'>
         <Badge label='active' bgColor='bg-primary' icon='067' />
@@ -77,6 +77,7 @@ export const columns: ColumnDef<IUserResponse>[] = [
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id, cognitoId } = info.row.original;
       return (
@@ -86,7 +87,7 @@ export const columns: ColumnDef<IUserResponse>[] = [
               id={id}
               type='form'
               action={ROW_ACTIONS.CREATE}
-              label='Create Account'
+              label='create'
             />
           )}
           <ButtonAction

@@ -15,7 +15,7 @@ export const getColumns = (
   {
     id: 'title',
     accessorKey: 'title',
-    header: 'Título',
+    header: 'h_title',
     size: 180,
     cell: (info) => (
       <span
@@ -29,7 +29,7 @@ export const getColumns = (
   {
     id: 'description',
     accessorKey: 'description',
-    header: 'Descripción',
+    header: 'h_description',
     size: 300,
     cell: (info) => (
       <span
@@ -43,7 +43,7 @@ export const getColumns = (
   {
     id: 'data',
     accessorKey: 'data',
-    header: 'Datos enviados',
+    header: 'h_data',
     size: 220,
     cell: (info) => {
       const value = info.getValue() as Record<string, any>;
@@ -57,7 +57,7 @@ export const getColumns = (
   },
   {
     id: 'actions',
-    header: '',
+    header: 'h_action',
     size: 20,
     cell: (info) => {
       const { id } = info.row.original;

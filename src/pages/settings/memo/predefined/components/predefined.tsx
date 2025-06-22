@@ -7,29 +7,30 @@ export const columns: ColumnDef<IPredefined>[] = [
     id: 'id',
     accessorKey: 'id',
     size: 60,
-    header: 'ID',
+    header: 'h_id',
   },
   {
     id: 'description',
     accessorKey: 'description',
     size: 60,
-    header: 'Descripción',
+    header: 'h_description',
   },
   {
     id: 'type',
     accessorKey: 'type',
     size: 60,
-    header: 'Tipo',
+    header: 'h_type',
   },
   {
     id: 'name',
     accessorKey: 'name',
     size: 60,
-    header: 'Nombre',
+    header: 'h_name',
   },
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

@@ -218,11 +218,11 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             <Button
               name='bnt-create-form'
               type='button'
-              label={t(
+              label={
                 getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE
-                  ? 'form.btn.update'
-                  : 'form.btn.create'
-              )}
+                  ? 'update'
+                  : 'create'
+              }
               icon='212'
               onClick={saveFormat}
             />

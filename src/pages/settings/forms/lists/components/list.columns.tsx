@@ -6,14 +6,14 @@ export const columns: ColumnDef<IListResponse>[] = [
   {
     accessorKey: 'name',
     id: 'name',
-    header: 'Name',
+    header: 'h_name',
     cell: (info) => info.getValue() || '-',
     size: 150,
   },
   {
     accessorKey: 'createdAt',
     id: 'createdAt',
-    header: 'Fecha de creación',
+    header: 'h_created',
     cell: (info) => (
       <FormattedDate date={String(info.getValue())} format='date' />
     ),
@@ -21,6 +21,7 @@ export const columns: ColumnDef<IListResponse>[] = [
   },
   {
     id: 'actions',
+    header: 'h_action',
     size: 10,
     cell: (info) => {
       const { id } = info.row.original;

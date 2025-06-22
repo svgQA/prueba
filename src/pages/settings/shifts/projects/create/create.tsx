@@ -125,7 +125,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         {...input}
                         type='text'
                         placeholder='Ingrese nombre...'
-                        label='Nombre'
+                        label='name'
                         meta={meta}
                       />
                     )}
@@ -138,7 +138,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         {...input}
                         meta={meta}
                         placeholder='Selecione cliente...'
-                        label='Cliente'
+                        label='client'
                         icon='252'
                         options={users.value}
                       />
@@ -170,7 +170,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         min='3'
                         max='300'
                         placeholder='Ingrese Descripción...'
-                        label='Descripción'
+                        label='description'
                         type='text'
                         meta={meta}
                       />
@@ -184,8 +184,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                       <Select
                         {...input}
                         placeholder='Selecione prioridad...'
-                        label='Prioridad'
-                        name='priority'
+                        label='priority'
                         icon='252'
                         options={[
                           { value: 'HIGH', label: 'Alta' },
@@ -202,8 +201,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                       <Select
                         {...input}
                         placeholder='Selecione estado...'
-                        label='Estado'
-                        name='state'
+                        label='status'
                         icon='252'
                         options={[
                           { value: 'IN_PROGRESS', label: 'En progreso' },
@@ -238,7 +236,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                   submitting={submitting}
                   pristine={pristine}
                   form='form-project-create'
-                  label={id ? 'Editar' : 'Guardar'}
+                  label={id ? 'edit' : 'save'}
                 />
               </div>
             </form>

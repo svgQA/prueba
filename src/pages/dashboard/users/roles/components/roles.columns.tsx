@@ -7,17 +7,18 @@ export const columns: ColumnDef<IRole>[] = [
     id: 'name',
     accessorKey: 'name',
     size: 60,
-    header: 'Nombre',
+    header: 'h_name',
   },
   {
     id: 'description',
     accessorKey: 'description',
     size: 60,
-    header: 'Descripción',
+    header: 'h_description',
   },
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

@@ -373,7 +373,7 @@ export const RolesUpsertPage = () => {
                 submitting={submitting}
                 pristine={pristine}
                 form='form-role'
-                label='Guardar'
+                label='save'
               />
             </div>
           </form>

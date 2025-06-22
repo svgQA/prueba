@@ -13,7 +13,7 @@ export const FloatBadge: FunctionComponent<IFloatBadgeProps> = ({
     <div className='relative'>
       {label && (
         <span
-          className={`${size} ${position} ${color} font-bold text-xs absolute rounded-full border border-b-light-dark dark:border-b-dark-light items-center justify-center flex ${
+          className={`${size} ${position} ${color} font-bold text-xs absolute rounded-full border border-b-light-dark dark:border-b-dark-light items-center justify-center flex z-10 w-fit px-1 min-w-5 ${
             animate ? 'animate-notification-shake' : ''
           }`}
         >

@@ -15,6 +15,9 @@ import { common_en, common_es } from './common';
 import { memos_en, memos_es } from './memos';
 import { role_en, role_es } from './role';
 import { demo_en, demo_es } from './demo';
+import { columns_en, columns_es } from './columns';
+import { buttons_en, buttons_es } from './button';
+import { menus_en, menus_es } from './menus';
 
 // import { notification_en, notification_es } from './notification';
 // import { shift_en, shift_es } from './shift';
@@ -36,6 +39,9 @@ const resources = {
       ...memos_en,
       ...role_en,
       ...demo_en,
+      ...columns_en,
+      ...buttons_en,
+      ...menus_en,
       // ...home_en,
     },
   },
@@ -54,6 +60,9 @@ const resources = {
       ...memos_es,
       ...role_es,
       ...demo_es,
+      ...columns_es,
+      ...buttons_es,
+      ...menus_es,
       // ...home_es,
     },
   },

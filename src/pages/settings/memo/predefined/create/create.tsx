@@ -76,7 +76,7 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
                       {...input}
                       type='text'
                       placeholder='Ingrese nombre...'
-                      label='Nombre'
+                      label='name'
                       meta={meta}
                     />
                   )}
@@ -93,7 +93,7 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
                 submitting={submitting}
                 pristine={pristine}
                 form='form-predefined-create'
-                label={id ? 'Editar' : 'Guardar'}
+                label={id ? 'edit' : 'save'}
               />
             </div>
           </form>

@@ -7,23 +7,24 @@ export const columns: ColumnDef<ISchedule>[] = [
     id: 'id',
     accessorKey: 'id',
     size: 60,
-    header: 'ID',
+    header: 'h_id',
   },
   {
     id: 'name',
     accessorKey: 'name',
     size: 60,
-    header: 'Nombre',
+    header: 'h_name',
   },
   {
     id: 'daysAllowed',
     accessorKey: 'daysAllowed',
     size: 60,
-    header: 'Dias configurados',
+    header: 'h_days_allowed',
   },
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

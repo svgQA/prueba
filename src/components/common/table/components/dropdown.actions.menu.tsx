@@ -1,7 +1,6 @@
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
-import { useTranslation } from 'react-i18next';
 
 export interface IDropdownAction {
   label: string;
@@ -19,7 +18,6 @@ export const DropdownActionsMenu = ({
   triggerClassName,
   actions,
 }: DropdownActionsMenuProps) => {
-  const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const triggerRef = useRef<HTMLSpanElement>(null);
   const [position, setPosition] = useState<{ top: number; left: number }>({
@@ -103,7 +101,7 @@ export const DropdownActionsMenu = ({
             <Button
               id='dropdown-cancel'
               name='dropdown-cancel'
-              label={t('form.inspect.cancel')}
+              label='cancel'
               onClick={() => setIsDropdownOpen(false)}
               borderless
               unpadded

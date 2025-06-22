@@ -88,14 +88,14 @@ export const GroupBuilder = ({ group, onChange, onRemove }: Props) => {
         <Button
           name='btn-add-condition'
           rounded={false}
-          label='Condición'
+          label='condition'
           icon='039'
           onClick={addCondition}
         />
         <Button
           name='btn-add-group'
           rounded={false}
-          label='Grupo'
+          label='group'
           icon='039'
           onClick={addGroup}
         />

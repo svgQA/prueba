@@ -8,7 +8,7 @@ export const columns: ColumnDef<Round>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    header: 'Nombre',
+    header: 'h_name',
     enableGrouping: true,
     cell: (info) => {
       const { name } = info.row.original;
@@ -18,7 +18,7 @@ export const columns: ColumnDef<Round>[] = [
   {
     id: 'description',
     accessorKey: 'description',
-    header: 'Descripción',
+    header: 'h_description',
     enableGrouping: true,
     cell: (info) => {
       const { description } = info.row.original;
@@ -28,7 +28,7 @@ export const columns: ColumnDef<Round>[] = [
   {
     id: 'frequency',
     accessorKey: 'frequency',
-    header: 'Frecuencia',
+    header: 'h_frequency',
     enableGrouping: true,
     cell: (info) => {
       const { frequency } = info.row.original;
@@ -38,7 +38,7 @@ export const columns: ColumnDef<Round>[] = [
   {
     id: 'radius',
     accessorKey: 'radius',
-    header: 'Radio',
+    header: 'h_radius',
     enableGrouping: true,
     cell: (info) => {
       const { radius } = info.row.original;
@@ -47,6 +47,7 @@ export const columns: ColumnDef<Round>[] = [
   },
   {
     id: 'actions',
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

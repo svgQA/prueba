@@ -75,7 +75,6 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
 };
 
 export const ExpandableMultiple = ({ type, data }: Props) => {
-  console.log('data', data);
   return (
     <div className='info-container'>
       {type && data && getInfoContent(type, data)}

@@ -1,5 +1,4 @@
 import { Avatar } from '@/components/common/Avatar';
-import { Chip } from '@/components/common/chip/chip';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { ToastManager } from '@/utils/toast/toast-manager';
@@ -8,6 +7,8 @@ import { ShiftService } from '@/services';
 import { Button } from '@/components/common/button/button';
 import { useState } from 'preact/hooks';
 import { FormattedDate } from '@/components/compose/forms';
+import { Badge } from '@/components/common/badge/badge';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 interface ICheckData {
   time: string;
@@ -158,13 +159,13 @@ interface IShiftCardProps {
 }
 
 const ShiftCard = ({
-  title,
+  // title,
   name,
   date,
   time,
   source,
   status,
-  statusColor,
+  // statusColor,
   distance,
   btnLabel,
   shiftId,
@@ -241,13 +242,13 @@ const ShiftCard = ({
     <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-4 p-4'>
       {/* Título */}
       <div>
-        <h2 className='font-medium mb-4'>{title}</h2>
-        <div className='flex flex-col gap-4'>
+        {/* <h2 className='font-medium mb-4'>{title}</h2> */}
+        <div className='flex flex-col gap-4 justify-between h-full'>
           {/* Columna izquierda - Foto y nombre */}
           <div className='flex flex-col items-center mr-4 w-full'>
-            <Avatar icon='023' src={url} />
-            <p className='font-medium text-center'>{name}</p>
-            <Chip label={status} color={statusColor} />
+            <Avatar icon='023' src={url} size='md' />
+            <TextEllipsis text={name} maxWidth='200px'></TextEllipsis>
+            <Badge label={status} status='success' outline />
           </div>
 
           {/* Columna central - Información */}
@@ -291,22 +292,22 @@ const ShiftCard = ({
                 <p>{distance}</p>
               </div>
             </div>
-
-            <Button
-              label={btnLabel}
-              icon={btnLabel === 'Check In' ? '023' : '024'}
-              disabled={disabled}
-              onClick={() =>
-                showAlert({
-                  title: btnLabel,
-                  message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
-                  onConfirm: () => handleCheck(),
-                  onCancel: () => {},
-                })
-              }
-              name={btnLabel}
-            />
           </div>
+
+          <Button
+            label={btnLabel}
+            icon={btnLabel === 'Check In' ? '023' : '024'}
+            disabled={disabled}
+            onClick={() =>
+              showAlert({
+                title: btnLabel,
+                message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
+                onConfirm: () => handleCheck(),
+                onCancel: () => {},
+              })
+            }
+            name={btnLabel}
+          />
         </div>
       </div>
 

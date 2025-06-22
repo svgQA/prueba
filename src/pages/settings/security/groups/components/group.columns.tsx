@@ -8,13 +8,13 @@ export const columns: ColumnDef<any>[] = [
     id: 'name',
     accessorKey: 'name',
     size: 60,
-    header: 'Nombre',
+    header: 'h_name',
   },
   {
     id: 'description',
     accessorKey: 'description',
     size: 60,
-    header: 'Descripciòn',
+    header: 'h_description',
     cell: (info) => {
       return <TextEllipsis text={String(info.getValue())} />;
     },
@@ -23,7 +23,7 @@ export const columns: ColumnDef<any>[] = [
     id: 'createdAt',
     accessorKey: 'createdAt',
     size: 60,
-    header: 'Creado en',
+    header: 'h_created',
     cell: (info) => {
       return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
@@ -31,6 +31,7 @@ export const columns: ColumnDef<any>[] = [
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

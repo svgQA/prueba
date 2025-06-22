@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ITextAreaProps } from './interface';
 
 export const TextArea = ({
@@ -26,6 +27,7 @@ export const TextArea = ({
   warning,
   ...props
 }: ITextAreaProps) => {
+  const { t } = useTranslation();
   return (
     <div id={id} className='w-full my-1'>
       {label && (
@@ -33,7 +35,7 @@ export const TextArea = ({
           for={`${id}-input`}
           className='capitalize block text-sm font-medium text-gray-700 dark:text-gray-200 pb-1'
         >
-          {label}
+          {t(label)}
         </label>
       )}
       <div

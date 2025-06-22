@@ -99,11 +99,8 @@ export const AreaCreatePage: FunctionComponent = () => {
                 id='btn-save'
                 name='btn-save'
                 type='submit'
-                label={
-                  id
-                    ? t('user.area.form.btnUpdate')
-                    : t('user.area.form.btnSave')
-                }
+                label={id ? 'update' : 'save'}
+                icon='022'
                 className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
                 disabled={submitting}
               />

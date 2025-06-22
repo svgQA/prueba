@@ -7,20 +7,20 @@ export const columns: ColumnDef<Place>[] = [
     id: 'id',
     accessorKey: 'id',
     size: 60,
-    header: 'ID',
+    header: 'h_id',
   },
   {
     id: 'name',
     accessorKey: 'name',
     size: 60,
-    header: 'Nombre',
+    header: 'h_name',
     enableGrouping: true,
   },
   {
     id: 'description',
     accessorKey: 'description',
     size: 20,
-    header: 'Descripción',
+    header: 'h_description',
     enableGrouping: true,
     cell: (info) => {
       const description = info.getValue() as string;
@@ -35,23 +35,24 @@ export const columns: ColumnDef<Place>[] = [
     id: 'latitude',
     accessorKey: 'latitude',
     size: 60,
-    header: 'Latitud',
+    header: 'h_latitude',
   },
   {
     id: 'longitude',
     accessorKey: 'longitude',
     size: 60,
-    header: 'Longitud',
+    header: 'h_longitude',
   },
   {
     id: 'address',
     accessorKey: 'address',
     size: 180,
-    header: 'Dirección',
+    header: 'h_address',
   },
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

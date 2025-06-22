@@ -9,13 +9,13 @@ export const columns: ColumnDef<ITask>[] = [
     id: 'id',
     accessorKey: 'id',
     size: 60,
-    header: 'ID',
+    header: 'h_id',
   },
   {
     id: 'description',
     accessorKey: 'description',
     size: 60,
-    header: 'Descripción',
+    header: 'h_description',
     cell: (info) => {
       const description = info.getValue() as string;
       return <TextEllipsis text={description} maxWidth='300px' />;
@@ -25,13 +25,13 @@ export const columns: ColumnDef<ITask>[] = [
     id: 'name',
     accessorKey: 'name',
     size: 60,
-    header: 'Nombre',
+    header: 'h_name',
   },
   {
     id: 'hourStart',
     accessorKey: 'hourStart',
     size: 60,
-    header: 'Hora de inicio',
+    header: 'h_hour_start',
     cell: (info) => {
       return <FormattedDate date={String(info.getValue())} format='time' />;
     },
@@ -40,6 +40,7 @@ export const columns: ColumnDef<ITask>[] = [
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

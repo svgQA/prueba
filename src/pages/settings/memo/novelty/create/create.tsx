@@ -122,7 +122,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                       min='3'
                       max='300'
                       placeholder='Ingrese Descripción...'
-                      label='Descripción'
+                      label='description'
                       type='text'
                       meta={meta}
                     />
@@ -140,7 +140,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                 submitting={submitting}
                 pristine={pristine}
                 form='form-place-create'
-                label={id ? 'Editar' : 'Guardar'}
+                label={id ? 'edit' : 'save'}
               />
             </div>
           </form>

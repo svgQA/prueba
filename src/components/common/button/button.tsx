@@ -1,5 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { type IButtonProps } from './interface';
+import { useTranslation } from 'react-i18next';
 
 export const Button: FunctionComponent<IButtonProps> = ({
   label,
@@ -26,6 +27,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   selectedColor = 'bg-primary',
   mode,
 }: IButtonProps) => {
+  const { t } = useTranslation();
   const getJustify = () => {
     switch (textAlign) {
       case 'left':
@@ -80,16 +82,16 @@ export const Button: FunctionComponent<IButtonProps> = ({
           className={`flex flex-row ${getJustify()} items-center w-full md:w-auto`}
         >
           <p
-            className={`capitalize max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis w-full text-${textAlign} ${textColor} ${big ? 'py-1' : ''}`}
+            className={`capitalize max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis w-full text-${textAlign} ${textColor} ${big ? 'py-1' : ''} ${icon && end ? 'pl-2' : ''}`}
           >
-            {label}
+            {t(label)}
           </p>
         </div>
       )}
 
       {icon && end && (
         <span
-          className={`${mode ? 'text-white' : selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vox-icon vx-icon-${icon} hidden sm:inline ${iconColor} ${label ? 'ml-2' : ''}`}
+          className={`${mode ? 'text-white' : selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vox-icon vx-icon-${icon} hidden sm:inline ${iconColor}`}
         />
       )}
     </button>
