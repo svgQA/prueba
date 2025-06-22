@@ -26,7 +26,7 @@ export const CardData: FunctionalComponent<CardProps> = memo(
               {subtitle}
             </p>
           </div>
-          <div className='w-full overflow-hidden px-3 text-center items-center text-6xl font-bold'>
+          <div className='w-full overflow-hidden px-3 text-center items-center text-5xl font-bold flex justify-center'>
             {count}
           </div>
         </div>

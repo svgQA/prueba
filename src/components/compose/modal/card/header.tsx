@@ -7,7 +7,7 @@ export const CardSettingHeader: FunctionComponent<ICardSettingHeaderProps> = ({
   description,
 }: ICardSettingHeaderProps) => {
   const { t } = useTranslation();
-  const t_title = String(`t_${title}`.toLowerCase());
+  const t_title = String(`m_${title}`.toLowerCase().trim());
   return (
     <div className='px-2 py-3 border-b-2 border-b-gray-50 dark:border-b-dark-light'>
       <div className='flex flex-row items-center h-12'>

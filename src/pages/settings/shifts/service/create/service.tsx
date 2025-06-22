@@ -280,7 +280,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       {...input}
                       meta={meta}
                       placeholder='Seleccione Contrato...'
-                      label='Contrato'
+                      label='contract'
                       id='contractId'
                       icon='241'
                       options={projects.value}
@@ -295,7 +295,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       {...input}
                       meta={meta}
                       placeholder='Seleccione lugar...'
-                      label='Lugar'
+                      label='place'
                       id='placeId'
                       icon='252'
                       options={places.value}
@@ -309,7 +309,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       placeholder='Seleccione ronda...'
-                      label='Ronda'
+                      label='round'
                       id='roundId'
                       icon='252'
                       options={rounds.value}
@@ -325,7 +325,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       min='3'
                       max='300'
                       placeholder='Ingrese Descripción...'
-                      label='Descripción'
+                      label='description'
                       type='text'
                       meta={meta}
                     />
@@ -341,7 +341,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       {...input}
                       meta={meta}
                       options={schedules.value}
-                      label='Horarios disponibles'
+                      label='schedule'
                       id='schedules'
                     />
                   )}
@@ -413,7 +413,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                   id='menu-btn'
                                   name='menu'
                                   type='button'
-                                  label='Eliminar'
+                                  label='delete'
                                   color='text-primary'
                                   onClick={() => fields.remove(index)}
                                 />
@@ -470,7 +470,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                               <Select
                                                 {...input}
                                                 placeholder='Seleccione tarea...'
-                                                label='Tarea'
+                                                label='task'
                                                 name='taskId'
                                                 icon='252'
                                                 optionValue='id'
@@ -527,7 +527,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                                 <Select
                                                   {...input}
                                                   placeholder='Seleccione formulario...'
-                                                  label='Formulario'
+                                                  label='i_form'
                                                   name='formId'
                                                   icon='252'
                                                   optionValue='id'
@@ -553,7 +553,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                                   {...input}
                                                   id='task-name'
                                                   placeholder='Ingrese nombre...'
-                                                  label='Nombre'
+                                                  label='name'
                                                   type='text'
                                                   meta={meta}
                                                 />
@@ -570,7 +570,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                                   {...input}
                                                   id='task-description'
                                                   placeholder='Ingrese Descripción...'
-                                                  label='Descripción'
+                                                  label='description'
                                                   type='text'
                                                   meta={meta}
                                                 />
@@ -591,7 +591,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                                   name='menu'
                                   type='button'
                                   color='text-primary'
-                                  label='Eliminar'
+                                  label='delete'
                                   onClick={() => fields.remove(index)}
                                 />
                               </div>
@@ -612,7 +612,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                 submitting={submitting}
                 pristine={pristine}
                 form='form-service-create'
-                label={id ? 'Editar' : 'Guardar'}
+                label={id ? 'edit' : 'save'}
               />
             </div>
             {/* <pre>{JSON.stringify(values, 0, 2)}</pre>*/}

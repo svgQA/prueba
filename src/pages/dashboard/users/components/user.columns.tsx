@@ -110,8 +110,8 @@ export const getColumns = (
           const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
           iconColor =
             lastConnectionDate >= oneWeekAgo
-              ? 'text-green-500'
-              : 'text-red-500';
+              ? 'text-green-400'
+              : 'text-red-400';
         }
 
         return (

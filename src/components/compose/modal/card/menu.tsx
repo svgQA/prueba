@@ -18,7 +18,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
   }: ICardSettingMenuProps) => {
     const _to = `${base}${settings}`;
     const { t } = useTranslation();
-    const g_label = `g_${label}`;
+    const g_label = `g_${label}`.toLowerCase().trim();
 
     return (
       <Card id={id} name={name} borderless rounded={false} transparent>
@@ -41,7 +41,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
             const name = `setting-menu-${menu.id}-${index}`;
             const to = `${base}${menu.base}${menu.to}`;
 
-            const m_label = `m_${menu.label}`;
+            const m_label = `m_${menu.label}`.toLowerCase().trim();
             return menu.show ? (
               <Link
                 to={to}
@@ -53,7 +53,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
                 className={`${selected.to === to ? 'bg-primary bg-opacity-30 !text-primary' : ''} flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
               >
                 <span className={`vx-icon vx-icon-${menu.icon} size-sm mr-2`} />
-                {m_label}
+                {t(m_label)}
               </Link>
             ) : null;
           })}

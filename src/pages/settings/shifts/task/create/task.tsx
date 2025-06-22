@@ -153,7 +153,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         placeholder='Ingrese nombre...'
-                        label='Nombre'
+                        label='name'
                         meta={meta}
                         type='text'
                       />
@@ -167,7 +167,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         placeholder='Seleccione formulario...'
-                        label='Formulario'
+                        label='i_form'
                         icon='252'
                         options={forms.value}
                       />
@@ -181,7 +181,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         placeholder='Seleccione tipo de tarea...'
-                        label='Tipo de tarea'
+                        label='type_task'
                         icon='📎'
                         options={TASK_TYPE_OPTIONS}
                         meta={meta}
@@ -196,7 +196,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                         <SmartSelector
                           {...input}
                           placeholder='Seleccione tipo de reporte...'
-                          label='Tipo de reporte'
+                          label='type_report'
                           icon='📎'
                           options={ATTACHMENT_OPTIONS}
                           meta={meta}
@@ -244,7 +244,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                         min='3'
                         max='300'
                         placeholder='Ingrese Descripción...'
-                        label='Descripción'
+                        label='description'
                         type='text'
                         meta={meta}
                       />

@@ -122,7 +122,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                       {...input}
                       type='text'
                       placeholder='Ingrese nombre...'
-                      label='Nombre'
+                      label='name'
                       meta={meta}
                     />
                   )}
@@ -151,7 +151,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
               submitting={submitting}
               pristine={pristine}
               form='form-schedule-create'
-              label={id ? 'Editar' : 'Guardar'}
+              label={id ? 'edit' : 'save'}
             />
           </form>
         )}

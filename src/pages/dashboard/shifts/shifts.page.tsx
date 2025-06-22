@@ -418,7 +418,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             name='button-action'
             rounded={false}
             icon='314'
-            label={t('shifts.remoteSupervision')}
+            label='remote'
             onClick={toggleSendModal}
             selected={showSendModal.value}
             disabled={!hasValidPlayer}
@@ -604,7 +604,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             {buttonMenu}
             <Button
               name='button-create-shift'
-              label={t('shifts.buttons.create')}
+              label='create'
               onClick={handleCreacteNewShift}
               icon='044'
               iconSize='sm'

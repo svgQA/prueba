@@ -1,6 +1,6 @@
 import { Avatar } from '@/components/common/Avatar';
+import { Badge } from '@/components/common/badge/badge';
 import { ButtonAction } from '@/components/common/button/column';
-import { Chip } from '@/components/common/chip/chip';
 import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
@@ -62,7 +62,11 @@ export const columns: ColumnDef<IResponseResponse>[] = [
     header: 'h_status',
     cell: (info) => {
       const { status } = info.row.original;
-      return <Chip label={status} />;
+      return (
+        <div className='flex justify-center items-center'>
+          <Badge label={status} />
+        </div>
+      );
     },
   },
   {

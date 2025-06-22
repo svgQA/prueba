@@ -62,12 +62,12 @@ export const PredefinedSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section>
+    <Section className='pt-2'>
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
         <div className='flex flex-row items-center justify-between'>
           <Button
             name='button-create-shift'
-            label='Nuevo Predefinido'
+            label='new'
             icon='039'
             onClick={redirect}
           />

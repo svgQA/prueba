@@ -149,7 +149,7 @@ export const UserPasswordPage: FunctionComponent = () => {
                   submitting={submitting}
                   pristine={pristine}
                   form='form-password-change'
-                  label='Guardar'
+                  label='save'
                 />
               </div>
             </form>

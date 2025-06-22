@@ -94,7 +94,7 @@ export const FormInspectSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section>
+    <Section className='pt-2 py-2'>
       <Table<IResponseResponse>
         data={responses.value}
         columns={columns}
