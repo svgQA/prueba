@@ -42,9 +42,9 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
   };
 
   return (
-    <div className='bg-white rounded-lg shadow-sm p-4 w-full text-gray-900'>
+    <div className='rounded-lg p-4 w-full'>
       {/* Header */}
-      <div className='flex items-center justify-between pb-2 mb-4 border-b border-gray-200'>
+      <div className='flex items-center justify-between pb-2 mb-4'>
         <h2 className='text-base font-medium'>Reportes del Turno</h2>
         <span className='bg-cyan-100 text-cyan-800 text-xs font-semibold px-3 py-1 rounded-full'>
           {reports.length} Reporte{reports.length !== 1 && 's'}

@@ -190,12 +190,13 @@ export const getColumns = (
         const promedio = info.row.original.promedio;
         // 1) Con Math.round
         const promedioUnDecimal = Math.round(promedio * 10) / 10;
-        console.log('report', info.row.original);
         return (
-          <div className='inline-flex items-center space-x-2 px-4 py-1 text-sm border border-gray-300 rounded-lg whitespace-nowrap'>
-            <span>{report} R</span>
-            <span>→</span>
-            <span>{promedioUnDecimal} min</span>
+          <div className='flex w-full justify-center'>
+            <div className='inline-flex items-center space-x-2 px-4 py-1 text-sm border border-gray-300 rounded-lg whitespace-nowrap'>
+              <span>{report} R</span>
+              <span>→</span>
+              <span>{promedioUnDecimal} min</span>
+            </div>
           </div>
         );
       },
