@@ -138,7 +138,6 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting, pristine }) => {
           const values: any = form.getState().values;
-          console.log(values);
           const isReport = values.taskType?.value === 'REPORT';
           return (
             <form

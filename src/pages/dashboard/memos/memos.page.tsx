@@ -82,7 +82,6 @@ export const MemosPage: FunctionComponent = () => {
     // Esto tambien se puede prevenir desde el service, pero pasa que por cada peticicón el responderia
     // con este error
     if (selectedCompany) {
-      console.log('EJECUTANDO MEMOS:');
       fetchInitialData();
       fetchSSE();
       selectedMemo();
