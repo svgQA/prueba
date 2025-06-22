@@ -61,7 +61,7 @@ export const MemosPage: FunctionComponent = () => {
   const memosGroupedByService = useSignal<any[]>([]);
   const memosGroupedByUser = useSignal<any[]>([]);
 
-  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.CHAT);
+  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
   const loading = useSignal<boolean>(false);

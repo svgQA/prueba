@@ -17,14 +17,14 @@ export const getColumns = (
   {
     id: 'title',
     accessorKey: 'overrideTitle',
-    header: 'Título',
+    header: 'h_title',
     size: 200,
     cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
     id: 'description',
     accessorKey: 'overrideDescription',
-    header: 'Descripción',
+    header: 'h_description',
     size: 300,
     cell: (info) => (
       <span
@@ -38,7 +38,7 @@ export const getColumns = (
   {
     id: 'status',
     accessorKey: 'status',
-    header: 'Estado',
+    header: 'h_status',
     size: 140,
     cell: (info) => {
       const value = info.getValue() as string;
@@ -62,7 +62,7 @@ export const getColumns = (
   {
     id: 'sendAt',
     accessorKey: 'sendAt',
-    header: 'Fecha Programada',
+    header: 'h_send_date',
     size: 180,
     cell: (info) => {
       return <FormattedDate date={String(info.getValue())} format='datetime' />;
@@ -71,7 +71,7 @@ export const getColumns = (
   {
     id: 'createdAt',
     accessorKey: 'createdAt',
-    header: 'Fecha de creación',
+    header: 'h_created',
     size: 180,
     cell: (info) => {
       return <FormattedDate date={String(info.getValue())} format='datetime' />;
@@ -80,12 +80,13 @@ export const getColumns = (
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
 
       const actions: IDropdownAction[] = [
         {
-          label: 'Editar programación',
+          label: 'edit',
           icon: 'vox-icon vx-icon-123 text-primary',
           onClick: () => {
             onClickAction({
@@ -96,7 +97,7 @@ export const getColumns = (
           },
         },
         {
-          label: 'Eliminar programación',
+          label: 'delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {

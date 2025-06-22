@@ -1,6 +1,6 @@
 import { Avatar } from '@/components/common/Avatar';
+import { Badge } from '@/components/common/badge/badge';
 import { Button } from '@/components/common/button/button';
-import { Chip } from '@/components/common/chip/chip';
 import { RelativeTime } from '@/components/common/relative/relative';
 import {
   IDropdownAction,
@@ -8,7 +8,6 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
-import i18n from '@/i18n';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
 
@@ -22,7 +21,7 @@ export const getColumns = (
   {
     accessorKey: 'user',
     id: 'user',
-    header: i18n.t('form.columns.user'),
+    header: 'h_user',
     meta: { headerAlign: 'center' },
     cell: (info) => {
       const { user } = info.row.original;
@@ -41,7 +40,7 @@ export const getColumns = (
   {
     accessorKey: 'title',
     id: 'title',
-    header: i18n.t('form.columns.title'),
+    header: 'h_title',
     meta: { headerAlign: 'center' },
     cell: (info) => {
       const { form } = info.row.original;
@@ -59,38 +58,43 @@ export const getColumns = (
   {
     accessorKey: 'createdAt',
     id: 'createdAt',
-    header: i18n.t('form.columns.createdAt'),
+    header: 'h_created',
     meta: { headerAlign: 'center' },
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
-    header: i18n.t('form.columns.updatedAt'),
+    header: 'h_updated',
     meta: { headerAlign: 'center' },
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'status',
     id: 'status',
-    header: i18n.t('form.columns.status'),
+    header: 'h_status',
     meta: { headerAlign: 'center' },
     cell: (info) => {
       const { status } = info.row.original;
-      return <Chip label={status} />;
+      return (
+        <div className='flex justify-center items-center'>
+          <Badge label={status} />
+        </div>
+      );
     },
   },
   {
     id: 'action',
     meta: { headerAlign: 'center' },
     size: 30,
+    header: 'h_action',
     cell: (info) => {
       const { id, status } = info.row.original;
 
       const actions: IDropdownAction[] = [
         status === RESPONSE_STATUS.OPENED
           ? {
-              label: i18n.t('form.inspect.continue'),
+              label: 'continue',
               icon: 'vox-icon vx-icon-030 text-primary',
               onClick: () => {
                 onClickAction({
@@ -101,7 +105,7 @@ export const getColumns = (
               },
             }
           : {
-              label: i18n.t('form.inspect.report'),
+              label: 'report',
               icon: 'vox-icon vx-icon-433 text-primary',
               onClick: () => {
                 onClickAction({
@@ -112,7 +116,7 @@ export const getColumns = (
               },
             },
         {
-          label: i18n.t('form.inspect.delete'),
+          label: 'delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
@@ -130,7 +134,7 @@ export const getColumns = (
           {status === RESPONSE_STATUS.OPENED && (
             <Button
               name='continue'
-              label={i18n.t('form.inspect.continue')}
+              label='continue'
               icon='030'
               unpadded
               onClick={() => {

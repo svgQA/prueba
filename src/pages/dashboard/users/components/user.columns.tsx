@@ -2,16 +2,12 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/common/badge/badge';
 import { IUserResponse } from '@/types/auth/service';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import i18next from 'i18next';
 import {
   IDropdownAction,
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { Avatar } from '@/components/common/Avatar';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
-import { Chip } from '@/components/common/chip/chip';
-// Función para obtener traducciones
-const t = (key: string) => i18next.t(key);
 
 export const getColumns = (
   onClickAction: (params: {
@@ -24,7 +20,7 @@ export const getColumns = (
     id: 'name',
     accessorKey: 'name',
     size: 180,
-    header: t('user.columns.name'),
+    header: 'h_user',
     meta: { headerAlign: 'center' },
     cell: (info) => {
       const { name, surname, image } = info.row.original;
@@ -32,14 +28,6 @@ export const getColumns = (
         <div className='flex items-center gap-2'>
           <Avatar name={name} src={image} size='sm' square />
           <TextEllipsis text={`${name} ${surname}`} maxWidth='250px' />
-          {/*
-          <span
-            className='p-1 size-sm cursor-pointer text-left'
-            // onClick={() => info.row.toggleExpanded()}
-          >
-            {`${name} ${surname}`}
-          </span>
-          */}
         </div>
       );
     },
@@ -48,21 +36,21 @@ export const getColumns = (
     id: 'cardId',
     accessorKey: 'cardId',
     size: 180,
-    header: t('user.columns.id'),
+    header: 'h_identification',
     meta: { headerAlign: 'center' },
   },
   {
     id: 'email',
     accessorKey: 'email',
     size: 180,
-    header: t('user.columns.email'),
+    header: 'h_email',
     meta: { headerAlign: 'center' },
   },
   {
     id: 'company',
     accessorKey: 'companies',
     size: 180,
-    header: t('user.columns.company'),
+    header: 'h_company',
     meta: { headerAlign: 'center' },
     enableGrouping: true,
     cell: (info) => {
@@ -72,7 +60,6 @@ export const getColumns = (
           {companies.map((company) => (
             <div key={company.id} className='flex items-center gap-2'>
               <Avatar name={company.company.name} size='sm' square />
-              {/* <span>{company.company.name}</span> */}
             </div>
           ))}
         </div>
@@ -83,7 +70,7 @@ export const getColumns = (
     id: 'department',
     accessorKey: 'extraData.state.label',
     size: 180,
-    header: t('user.columns.department'),
+    header: 'h_department',
     meta: { headerAlign: 'center' },
     enableGrouping: true,
     cell: (info) => {
@@ -96,7 +83,7 @@ export const getColumns = (
     id: 'ciudad',
     accessorKey: 'extraData.city.label',
     size: 180,
-    header: t('user.columns.city'),
+    header: 'h_city',
     meta: { headerAlign: 'center' },
     enableGrouping: true,
     cell: (info) => {
@@ -108,30 +95,28 @@ export const getColumns = (
   {
     id: 'connections',
     accessorKey: 'connectionStatus',
-    header: t('user.columns.connection'),
+    header: 'h_connection',
     meta: { headerAlign: 'center' },
     size: 100,
     cell: (info) => {
       const { userType } = info.row.original;
       const lastConnection = (info.row.original as any).lastConnection;
       if (userType !== 'CLIENT') {
-        let iconColor: 'success' | 'error' | 'ternary' = 'ternary';
+        let iconColor = 'text-blue-500';
 
         if (lastConnection) {
           const lastConnectionDate = new Date(lastConnection);
           const now = new Date();
           const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          iconColor = lastConnectionDate >= oneWeekAgo ? 'success' : 'error';
+          iconColor =
+            lastConnectionDate >= oneWeekAgo
+              ? 'text-green-400'
+              : 'text-red-400';
         }
 
         return (
-          <div className='flex items-center justify-center gap-2'>
-            <Badge
-              icon='user-status'
-              status={iconColor}
-              size='md'
-              width='w-16'
-            />
+          <div className='flex flex-row justify-center items-center'>
+            <span className={`vx-icon vx-icon-user-status ${iconColor}`} />
           </div>
         );
       }
@@ -139,7 +124,7 @@ export const getColumns = (
   },
   {
     id: 'openRate',
-    header: t('user.columns.taskProgress'),
+    header: 'h_progress',
     meta: { headerAlign: 'center' },
     size: 150,
     cell: (info) => {
@@ -178,16 +163,21 @@ export const getColumns = (
   {
     id: 'userType',
     accessorKey: 'userType',
-    header: t('user.columns.userType'),
+    header: 'h_type',
     meta: { headerAlign: 'center' },
     size: 20,
     cell: (info) => {
-      return <Chip label={info.getValue() as string} color='gray' />;
+      return (
+        <div className='flex justify-center items-center'>
+          <Badge label={info.getValue() as string} />
+        </div>
+      );
     },
   },
   {
     id: 'actions',
     meta: { headerAlign: 'center' },
+    header: 'h_action',
     size: 20,
     cell: (info) => {
       const { id, userType, cognitoId } = info.row.original;
@@ -198,7 +188,7 @@ export const getColumns = (
           ? []
           : [
               {
-                label: t('user.columns.actions.profile'),
+                label: 'profile',
                 icon: 'vox-icon vx-icon-229 text-primary',
                 onClick: () => {
                   onClickAction({
@@ -210,7 +200,7 @@ export const getColumns = (
               },
             ]),
         {
-          label: t('user.columns.actions.edit'),
+          label: 'edit',
           icon: 'vox-icon vx-icon-123 text-primary',
           onClick: () => {
             onClickAction({
@@ -221,7 +211,7 @@ export const getColumns = (
           },
         },
         {
-          label: t('user.columns.actions.delete'),
+          label: 'delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {

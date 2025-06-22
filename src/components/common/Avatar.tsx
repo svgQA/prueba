@@ -44,7 +44,7 @@ export const Avatar: FunctionalComponent<AvatarProps> = ({
     return (
       <div className={classes}>
         <span
-          className={`vx-icon vx-icon-${icon} ${iconSizeMap[size] || 'size-md'} text-gray-500 dark:text-gray-200`}
+          className={`vx-icon vx-icon-${icon} ${iconSizeMap[size] || 'size-md'} text-gray-500 dark:text-gray-200 font-thin`}
         />
       </div>
     );

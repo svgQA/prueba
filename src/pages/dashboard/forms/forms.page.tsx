@@ -110,13 +110,15 @@ export const FormsPage: FunctionComponent = () => {
         />
         <Button
           name='button-change-scheduler'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.INSPECT);
-          }}
+          // onClick={() => {
+          //   handleViewChange(VIEW_NAME.INSPECT);
+          // }}
+          disabled
           selected={currentView.value === VIEW_NAME.INSPECT}
           icon='418'
         />
-        {/* <Button
+        {/*
+        <Button
           name='button-change-report'
           onClick={() => {
             handleViewChange(VIEW_NAME.REPORT);

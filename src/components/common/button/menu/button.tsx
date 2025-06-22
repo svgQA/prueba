@@ -1,11 +1,13 @@
 import { type FunctionComponent } from 'preact';
 import { type IButtonMenuProps } from './interface';
+import { useTranslation } from 'react-i18next';
 
 export const ButtonMenu: FunctionComponent<IButtonMenuProps> = ({
   label,
   icon,
   small,
 }: IButtonMenuProps) => {
+  const { t } = useTranslation();
   return (
     <div
       className={`
@@ -19,15 +21,16 @@ export const ButtonMenu: FunctionComponent<IButtonMenuProps> = ({
       ></span>
       <h6
         className={`
-          ${small ? 'text-2xs' : 'text-xs'}
+          ${small ? 'text-2xs' : 'text-[9px]'}
           capitalize
           truncate
+          font-bold
           overflow-hidden
           whitespace-nowrap
         `}
         title={label}
       >
-        {label}
+        {t(label)}
       </h6>
     </div>
   );

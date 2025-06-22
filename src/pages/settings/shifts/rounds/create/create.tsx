@@ -213,7 +213,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                         {...input}
                         type='text'
                         placeholder='Ingrese nombre...'
-                        label='Nombre'
+                        label='name'
                         meta={meta}
                       />
                     )}
@@ -228,7 +228,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                         {...input}
                         type='text'
                         placeholder='Ingrese descripción...'
-                        label='Descripción'
+                        label='description'
                         meta={meta}
                       />
                     )}
@@ -246,7 +246,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                           id='input-code'
                           {...input}
                           placeholder='Ingrese frecuencia...'
-                          label='Frecuencia'
+                          label='frequency'
                           type='number'
                         />
                       )}
@@ -262,7 +262,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                           id='input-radius'
                           {...input}
                           placeholder='Ingrese radio...'
-                          label='Radio'
+                          label='radius'
                           type='number'
                         />
                       )}
@@ -574,7 +574,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                     submitting={submitting}
                     pristine={true}
                     form='form-round-create'
-                    label={id ? 'Editar' : 'Guardar'}
+                    label={id ? 'edit' : 'save'}
                   />
                 </div>
               </div>

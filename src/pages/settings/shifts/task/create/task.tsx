@@ -26,14 +26,26 @@ interface FormData {
 
 // Valores locales que reflejan los tipos del backend
 // Tipos del backend
-const ATTACHMENT_TYPES = ['DOCUMENT', 'AUDIO', 'VIDEO', 'PHOTO', 'GENERAL', 'FORMS'] as const;
+const ATTACHMENT_TYPES = [
+  'DOCUMENT',
+  'AUDIO',
+  'VIDEO',
+  'PHOTO',
+  'GENERAL',
+  'FORMS',
+] as const;
 type AttachmentType = (typeof ATTACHMENT_TYPES)[number];
-const ATTACHMENT_OPTIONS: IOption[] = ATTACHMENT_TYPES.map(t => ({ value: t, label: t.charAt(0) + t.slice(1).toLowerCase() }));
+const ATTACHMENT_OPTIONS: IOption[] = ATTACHMENT_TYPES.map((t) => ({
+  value: t,
+  label: t.charAt(0) + t.slice(1).toLowerCase(),
+}));
 
 const TASK_TYPES = ['GENERAL', 'REPORT'] as const;
 type TaskType = (typeof TASK_TYPES)[number];
-const TASK_TYPE_OPTIONS: IOption[] = TASK_TYPES.map(t => ({ value: t, label: t.charAt(0) + t.slice(1).toLowerCase() }));
-
+const TASK_TYPE_OPTIONS: IOption[] = TASK_TYPES.map((t) => ({
+  value: t,
+  label: t.charAt(0) + t.slice(1).toLowerCase(),
+}));
 
 export const TaskCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -84,20 +96,20 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
 
     const attachmentOption: IOption | undefined = model?.attachmentType
       ? {
-        value: model.attachmentType as AttachmentType,
-        label: (model.attachmentType as string)
-          .charAt(0)
-          .concat((model.attachmentType as string).slice(1).toLowerCase()),
-      }
+          value: model.attachmentType as AttachmentType,
+          label: (model.attachmentType as string)
+            .charAt(0)
+            .concat((model.attachmentType as string).slice(1).toLowerCase()),
+        }
       : undefined;
 
     const taskOption: IOption | undefined = model?.taskOption
       ? {
-        value: model.taskOption as AttachmentType,
-        label: (model.taskOption as string)
-          .charAt(0)
-          .concat((model.taskOption as string).slice(1).toLowerCase()),
-      }
+          value: model.taskOption as AttachmentType,
+          label: (model.taskOption as string)
+            .charAt(0)
+            .concat((model.taskOption as string).slice(1).toLowerCase()),
+        }
       : undefined;
 
     const picked = pick(omitBy(response.model, isNull), keys);
@@ -126,7 +138,6 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting, pristine }) => {
           const values: any = form.getState().values;
-          console.log(values);
           const isReport = values.taskType?.value === 'REPORT';
           return (
             <form
@@ -141,7 +152,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         placeholder='Ingrese nombre...'
-                        label='Nombre'
+                        label='name'
                         meta={meta}
                         type='text'
                       />
@@ -155,7 +166,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         placeholder='Seleccione formulario...'
-                        label='Formulario'
+                        label='i_form'
                         icon='252'
                         options={forms.value}
                       />
@@ -169,7 +180,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         placeholder='Seleccione tipo de tarea...'
-                        label='Tipo de tarea'
+                        label='type_task'
                         icon='📎'
                         options={TASK_TYPE_OPTIONS}
                         meta={meta}
@@ -184,14 +195,15 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                         <SmartSelector
                           {...input}
                           placeholder='Seleccione tipo de reporte...'
-                          label='Tipo de reporte'
+                          label='type_report'
                           icon='📎'
                           options={ATTACHMENT_OPTIONS}
                           meta={meta}
                         />
                       )}
                     </Field>
-                  </div>)}
+                  </div>
+                )}
 
                 <div class='col-span-1'>
                   <Field<string> name='hourStart' validate={required}>
@@ -231,7 +243,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                         min='3'
                         max='300'
                         placeholder='Ingrese Descripción...'
-                        label='Descripción'
+                        label='description'
                         type='text'
                         meta={meta}
                       />
@@ -250,11 +262,9 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                 />
               </div>
             </form>
-          )
-        }
-        }
+          );
+        }}
       />
     </Section>
   );
-
 };

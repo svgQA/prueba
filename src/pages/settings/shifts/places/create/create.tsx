@@ -250,7 +250,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           {...input}
                           type='text'
                           placeholder='Ingrese nombre...'
-                          label='Nombre'
+                          label='name'
                           icon='123'
                           meta={meta}
                         />
@@ -265,7 +265,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         min='3'
                         max='300'
                         placeholder='Ingrese Descripción...'
-                        label='Descripción'
+                        label='description'
                         type='text'
                         icon='123'
                         meta={meta}
@@ -287,7 +287,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         <Select
                           {...input}
                           placeholder='Selecione tipo...'
-                          label='Tipo'
+                          label='type'
                           name='type'
                           icon='123'
                           options={[
@@ -305,7 +305,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         <Select
                           {...input}
                           placeholder='Selecione estado...'
-                          label='Estado'
+                          label='status'
                           name='state'
                           icon='123'
                           options={[
@@ -324,7 +324,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         placeholder='Ingrese Dirección...'
-                        label='Dirección'
+                        label='address'
                         type='text'
                         icon='123'
                         meta={meta}
@@ -346,7 +346,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         <SmartSelector
                           {...input}
                           placeholder='Selecione país...'
-                          label='País'
+                          label='country'
                           icon='123'
                           options={countries.value}
                           meta={meta}
@@ -359,7 +359,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         <SmartSelector
                           {...input}
                           placeholder='Seleccione Departamento...'
-                          label='Departamento'
+                          label='department'
                           icon='123'
                           options={departments.value}
                           onChange={(e) => {
@@ -380,7 +380,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         <SmartSelector
                           {...input}
                           placeholder='Seleccione Municipio...'
-                          label='Municipio'
+                          label='municipality'
                           icon='123'
                           options={municipalities.value}
                           meta={meta}
@@ -400,7 +400,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           id='input-code'
                           {...input}
                           placeholder='Ingrese un código ZIP...'
-                          label='Código ZIP'
+                          label='zip'
                           icon='123'
                           type='number'
                           meta={meta}
@@ -432,7 +432,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       {({ input, meta }) => (
                         <Input
                           {...input}
-                          label='Latitud'
+                          label='latitude'
                           type='text'
                           meta={meta}
                           onChange={(e) => {
@@ -451,7 +451,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       {({ input, meta }) => (
                         <Input
                           {...input}
-                          label='Longitud'
+                          label='longitude'
                           type='text'
                           meta={meta}
                           onChange={(e) => {
@@ -510,7 +510,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 submitting={submitting}
                 pristine={pristine}
                 form='form-place-create'
-                label={id ? 'Editar' : 'Guardar'}
+                label={id ? 'edit' : 'save'}
               />
             </div>
           </form>

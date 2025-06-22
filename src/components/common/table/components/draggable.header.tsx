@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { flexRender, Header } from '@tanstack/react-table';
 import { getCommonPinningStyles } from './utils';
+import { useTranslation } from 'react-i18next';
 
 interface IDraggableTableHeade<T> {
   header: Header<T, unknown>;
@@ -18,6 +19,9 @@ export const DraggableTableHeader = <T,>({
     id: header.column.id,
   });
 
+  const { t } = useTranslation();
+  const label = String(header.column.columnDef.header || '');
+
   return (
     <th
       ref={setNodeRef}
@@ -33,7 +37,7 @@ export const DraggableTableHeader = <T,>({
         className={`flex flex-row ${(header.column.columnDef.meta as any)?.headerAlign === 'center' ? 'justify-center' : 'justify-start'} ${header.column.getCanSort() ? 'cursor-pointer select-none' : ''}`}
         onClick={header.column.getToggleSortingHandler()}
       >
-        {flexRender(header.column.columnDef.header, header.getContext())}
+        {flexRender(t(label), header.getContext())}
         {/* Este es el icono de la flecha para ejecutar el drag */}
         {/*
         {{

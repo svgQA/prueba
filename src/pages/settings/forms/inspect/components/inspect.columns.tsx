@@ -1,17 +1,16 @@
 import { Avatar } from '@/components/common/Avatar';
+import { Badge } from '@/components/common/badge/badge';
 import { ButtonAction } from '@/components/common/button/column';
-import { Chip } from '@/components/common/chip/chip';
 import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
-import i18n from '@/i18n';
 
 export const columns: ColumnDef<IResponseResponse>[] = [
   {
     accessorKey: 'user',
     id: 'user',
-    header: i18n.t('forms.columns.user'),
+    header: 'h_user',
     cell: (info) => {
       const { user } = info.row.original;
       return (
@@ -29,7 +28,7 @@ export const columns: ColumnDef<IResponseResponse>[] = [
   {
     accessorKey: 'structure',
     id: 'title',
-    header: i18n.t('forms.columns.title'),
+    header: 'h_title',
     cell: (info) => {
       const { form } = info.row.original;
       return (
@@ -48,27 +47,32 @@ export const columns: ColumnDef<IResponseResponse>[] = [
   {
     accessorKey: 'createdAt',
     id: 'createdAt',
-    header: i18n.t('forms.columns.createdAt'),
+    header: 'h_created',
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
-    header: i18n.t('forms.columns.updatedAt'),
+    header: 'h_updated',
     cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'status',
     id: 'status',
-    header: i18n.t('forms.columns.status'),
+    header: 'h_status',
     cell: (info) => {
       const { status } = info.row.original;
-      return <Chip label={status} />;
+      return (
+        <div className='flex justify-center items-center'>
+          <Badge label={status} />
+        </div>
+      );
     },
   },
   {
     id: 'action',
     size: 30,
+    header: 'h_action',
     cell: (info) => {
       const { id, status } = info.row.original;
       return (
@@ -78,13 +82,13 @@ export const columns: ColumnDef<IResponseResponse>[] = [
               id={id}
               type='response'
               action={ROW_ACTIONS.RESPONSE}
-              label={i18n.t('forms.buttons.continue')}
+              label={'continue'}
             />
           ) : (
             <ButtonAction id={id} type='response' action={ROW_ACTIONS.REPORT} />
           )}
           <div>
-            {/* 
+            {/*
             <ButtonAction
               id={id}
               type='response'

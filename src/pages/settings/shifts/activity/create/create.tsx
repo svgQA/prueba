@@ -425,7 +425,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                 submitting={submitting}
                 pristine={pristine}
                 form='form-shift-create'
-                label={id ? 'Editar' : 'Guardar'}
+                label={id ? 'edit' : 'save'}
               />
             </div>
           </form>

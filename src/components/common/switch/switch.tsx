@@ -1,5 +1,6 @@
 import { type FunctionComponent, memo } from 'preact/compat';
 import { type ISwitchProps } from './interface';
+import { useTranslation } from 'react-i18next';
 
 export const Switch: FunctionComponent<ISwitchProps> = memo(
   ({
@@ -12,6 +13,7 @@ export const Switch: FunctionComponent<ISwitchProps> = memo(
     identifier,
     disabled = false,
   }: ISwitchProps) => {
+    const { t } = useTranslation();
     return (
       <label
         class={`inline-flex items-center ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
@@ -50,7 +52,7 @@ export const Switch: FunctionComponent<ISwitchProps> = memo(
         <span
           class={`ms-3 text-sm font-medium ${disabled ? 'text-gray-500 dark:text-gray-500' : 'text-gray-900 dark:text-gray-300'}`}
         >
-          {label}
+          {t(label)}
         </span>
       </label>
     );

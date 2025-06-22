@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { type ISelectProps } from './interface';
 
 export const Select = ({
@@ -21,6 +22,7 @@ export const Select = ({
   error,
   ...props
 }: ISelectProps) => {
+  const { t } = useTranslation();
   return (
     <div id={id} className='w-full my-1'>
       {label && (
@@ -28,7 +30,7 @@ export const Select = ({
           for={`${id}-select`}
           className='capitalize block text-sm font-medium text-gray-700 dark:text-gray-200'
         >
-          {label}
+          {t(label)}
         </label>
       )}
       <div

@@ -30,13 +30,13 @@ export const columns: ColumnDef<IProject>[] = [
     id: 'id',
     accessorKey: 'id',
     size: 60,
-    header: 'ID',
+    header: 'h_id',
   },
   {
     id: 'client',
     accessorKey: 'client',
     size: 120,
-    header: 'Cliente',
+    header: 'h_client',
     cell: (info) => {
       const client = info.getValue() as any;
       return (
@@ -54,13 +54,13 @@ export const columns: ColumnDef<IProject>[] = [
     id: 'name',
     accessorKey: 'name',
     size: 120,
-    header: 'Nombre',
+    header: 'h_name',
   },
   {
     id: 'description',
     accessorKey: 'description',
     size: 120,
-    header: 'Descripción',
+    header: 'h_description',
     cell: (info) => {
       const description = info.getValue() as string;
       return <TextEllipsis text={description} maxWidth='300px' />;
@@ -70,7 +70,7 @@ export const columns: ColumnDef<IProject>[] = [
     id: 'startDate',
     accessorKey: 'startDate',
     size: 70,
-    header: 'Inicio',
+    header: 'h_start',
     cell: (info) => {
       return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
@@ -79,7 +79,7 @@ export const columns: ColumnDef<IProject>[] = [
     id: 'endDate',
     accessorKey: 'endDate',
     size: 70,
-    header: 'Fin',
+    header: 'h_end',
     cell: (info) => {
       return <FormattedDate date={String(info.getValue())} format='datetime' />;
     },
@@ -88,10 +88,13 @@ export const columns: ColumnDef<IProject>[] = [
     id: 'state',
     accessorKey: 'state',
     size: 50,
-    header: 'Estado',
+    header: 'h_status',
     cell: (info) => {
       const value = info.getValue() as string;
-      const state = status.find((sta) => sta.key == value);
+      const state = status.find((sta) => sta.key == value) || {
+        label: '',
+        color: 'info',
+      };
       return (
         <Badge
           label={state?.label}
@@ -107,10 +110,13 @@ export const columns: ColumnDef<IProject>[] = [
     id: 'priority',
     accessorKey: 'priority',
     size: 50,
-    header: 'prioridad',
+    header: 'h_priority',
     cell: (info) => {
       const value = info.getValue() as string;
-      const priority = priorities.find((sta) => sta.key == value);
+      const priority = priorities.find((sta) => sta.key == value) || {
+        label: '',
+        color: 'info',
+      };
       return (
         <Badge
           label={priority?.label}
@@ -125,6 +131,7 @@ export const columns: ColumnDef<IProject>[] = [
   {
     id: 'actions',
     size: 20,
+    header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (

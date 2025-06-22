@@ -395,30 +395,32 @@ export const FormResponseSettingPage: FunctionComponent<
     <section className='pt-5'>
       {getResponse.value && (
         <div className='max-w-4xl mx-auto py-4 px-8 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
-          <div className='w-full flex flex-row justify-between items-center'>
-            <div>
+          <div className='w-full flex flex-col justify-between items-center'>
+            <div className='flex flex-row justify-between w-full'>
               <h1 className='text-2xl font-bold mb-6'>
                 {getResponse.value.label}
               </h1>
-
-              {getResponse.value.description && (
-                <p className='mb-8'>{getResponse.value.description}</p>
-              )}
+              <div className='flex flex-row gap-2'>
+                <Button
+                  type='button'
+                  onClick={finishResponse}
+                  name='btn-finish-response'
+                  icon='137'
+                  label='finish'
+                />
+                <Button
+                  type='button'
+                  onClick={saveResponse}
+                  name='btn-save-response'
+                  icon='134'
+                  label='save'
+                />
+              </div>
             </div>
-            <Button
-              type='button'
-              onClick={finishResponse}
-              name='btn-finish-response'
-              icon='137'
-              label='finish'
-            />
-            <Button
-              type='button'
-              onClick={saveResponse}
-              name='btn-save-response'
-              icon='134'
-              label='save'
-            />
+
+            {getResponse.value.description && (
+              <p className='mb-8'>{getResponse.value.description}</p>
+            )}
           </div>
 
           <div className='mb-6'>

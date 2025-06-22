@@ -4,6 +4,7 @@ import { Link } from 'wouter';
 import { memo } from 'preact/compat';
 import { IMenu } from '@/components/common/utils/interface';
 import { Card } from '@/components/common/card/card';
+import { useTranslation } from 'react-i18next';
 
 export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
   ({
@@ -16,11 +17,14 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
     settings,
   }: ICardSettingMenuProps) => {
     const _to = `${base}${settings}`;
+    const { t } = useTranslation();
+    const g_label = `g_${label}`.toLowerCase().trim();
+
     return (
       <Card id={id} name={name} borderless rounded={false} transparent>
         <div className='flex flex-col mt-2'>
           <div className='flex flex-row items-center justify-between'>
-            <h2 className='capitalize text-sm font-bold mb-1'>{label}</h2>
+            <h2 className='text-sm font-bold mb-1'>{t(g_label)}</h2>
             {settings && (
               <Link to={_to} key={name} id={_to}>
                 <span
@@ -36,6 +40,8 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
           {menus.map((menu: IMenu, index: number) => {
             const name = `setting-menu-${menu.id}-${index}`;
             const to = `${base}${menu.base}${menu.to}`;
+
+            const m_label = `m_${menu.label}`.toLowerCase().trim();
             return menu.show ? (
               <Link
                 to={to}
@@ -44,10 +50,10 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
                 data-label={menu.label}
                 data-description={menu.description}
                 id={menu.id}
-                className={`${selected.to === to ? 'bg-primary bg-opacity-30 !text-primary' : ''} capitalize flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
+                className={`${selected.to === to ? 'bg-primary bg-opacity-30 !text-primary' : ''} flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
               >
                 <span className={`vx-icon vx-icon-${menu.icon} size-sm mr-2`} />
-                {menu.label}
+                {t(m_label)}
               </Link>
             ) : null;
           })}

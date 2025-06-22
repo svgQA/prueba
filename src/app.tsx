@@ -9,10 +9,6 @@ import { DashboardLayout } from './pages/dashboard/dashboard.layout';
 import { Amplify } from 'aws-amplify';
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import { CustomLoginPage } from '@/components/compose/login/custom';
-import { hasUserTenant, useUserStore } from './store/slices';
-import { BaseService } from './utils/network';
-import { closeLoading, openLoading } from './store/signals/modals';
-import { useEffect } from 'preact/hooks';
 import { getIsInErrorState } from './store/signals/service/service.signals';
 import { ModalBaseService } from './components/compose/base-service/base-service';
 Amplify.configure(AWS_AMPLIFY_SETTINGS);
@@ -32,35 +28,6 @@ const AuthenticatedContent = ({ props }: any) => {
 };
 
 export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
-  const {
-    getTenant,
-    getToken,
-    getCompanyId,
-    setToken,
-    setCognito,
-    setTenant,
-    setUser,
-    setLoaded,
-    getLoaded,
-  } = useUserStore();
-
-  useEffect(() => {
-    BaseService.setLoading(openLoading, closeLoading);
-    BaseService.setUser(getTenant, getToken, getCompanyId);
-    validateUser();
-  }, []);
-
-  const validateUser = async () => {
-    const result = await hasUserTenant(
-      setToken,
-      setCognito,
-      setTenant,
-      setUser,
-      getLoaded
-    );
-    setLoaded(result);
-  };
-
   return (
     <section>
       <Switch>

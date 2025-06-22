@@ -1,6 +1,5 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { Memo } from '../../utils/memos';
-import { Chip } from '@/components/common/chip/chip';
 import { Avatar } from '@/components/common/Avatar';
 import { Button } from '@/components/common/button/button';
 import { useEffect, useState } from 'preact/hooks';
@@ -10,6 +9,7 @@ import i18n from '@/i18n';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { DateUtils } from '@/utils/utilities/dates';
 import ShowFiles from '@/components/common/file/show.file';
+import { useTranslation } from 'react-i18next';
 
 const InfoContainer = ({
   label,
@@ -20,11 +20,12 @@ const InfoContainer = ({
   icon?: string;
   header: string;
 }) => {
+  const { t } = useTranslation();
   return (
     <div className='flex items-start gap-2'>
       <Avatar name='CL' size='sm' icon={icon} />
       <div>
-        <p className='font-bold min-h-4'>{header}</p>
+        <p className='font-bold min-h-4'>{t(header)}</p>
         <p className='min-h-4 text-xs'>{label}</p>
       </div>
     </div>
@@ -140,45 +141,45 @@ const SupervisorInfo = ({
             <div className='w-1/2 grid grid-cols-2 gap-1 p-2'>
               <InfoContainer
                 header='Supervisor'
-                label={memo?.extraData?.company.name}
-                icon='123'
+                label={memo?.extraData?.company?.name}
+                icon='321'
               />
               <InfoContainer
                 header='Servicio'
                 label={memo?.novelty?.name}
-                icon='123'
+                icon='432'
               />
               <InfoContainer
                 header='Actualizado'
                 label={DateUtils.dateToFrontend(memo.updatedAt, {
                   format: 'datetime',
                 })}
-                icon='123'
+                icon='067'
               />
               <InfoContainer
                 header='Lugar'
-                label={memo?.extraData?.place.address}
-                icon='123'
+                label={memo?.extraData?.place?.address}
+                icon='151'
               />
               <InfoContainer
                 header='Cliente'
-                label={memo?.extraData?.client.name}
-                icon='123'
+                label={memo?.extraData?.client?.name}
+                icon='045'
               />
               <InfoContainer
                 header='Ciudad'
-                label={memo?.extraData?.city.name}
-                icon='123'
+                label={memo?.extraData?.city?.name}
+                icon='320'
               />
               <InfoContainer
                 header='Compañía'
                 label={memo?.extraData?.company?.name}
-                icon='123'
+                icon='023'
               />
               <InfoContainer
                 header='Dirección'
                 label={memo?.extraData?.place?.address}
-                icon='123'
+                icon='321'
               />
             </div>
             <div className='w-1/2 p-2 flex flex-col justify-between'>
@@ -187,7 +188,7 @@ const SupervisorInfo = ({
                   {memo?.description}
                 </p>
               </div>
-
+              {/*
               <div className='w-full'>
                 <div className='flex gap-1'>
                   <Chip label='Tarea 1' width='sm' icon='123' />
@@ -195,6 +196,7 @@ const SupervisorInfo = ({
                   <Chip label='Tarea 1' width='sm' icon='123' />
                 </div>
               </div>
+              */}
             </div>
           </div>
         </div>
@@ -219,120 +221,6 @@ const SupervisorInfo = ({
             disablePointSelection={true}
           />
         </div>
-        {/*
-        <div className='w-[30%] flex flex-col gap-4'>
-          <div className='w-full flex items-center gap-4'>
-            <div className='flex-1'>
-              {memo?.resource && <ShowFiles resources={memo.resource} alertEmpty={true}/>}
-            </div>
-            {resolved &&
-              memo.state !== 'RESOLVED' &&
-              memo.state !== 'CLOSED' && (
-                <Button
-                  label={btnLabel}
-                  icon={
-                    btnLabel === 'OPENED' || btnLabel === 'SOLVE'
-                      ? '023'
-                      : '024'
-                  }
-                  disabled={btnLabel === 'SOLVE'}
-                  onClick={() =>
-                    showAlert({
-                      title: btnLabel,
-                      message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
-                      onConfirm: () => handleCheck(),
-                      onCancel: () => {},
-                    })
-                  }
-                  name={btnLabel}
-                />
-              )}
-          </div>
-
-          <div className='w-full'>
-            <p className='mb-2 leading-tight text-lg'>{memo?.description}</p>
-          </div>
-
-          <div className='w-full'>
-            <div className='flex gap-1'>
-              <Chip label='Tarea' width='sm' />
-              <Chip label='Tarea' width='sm' />
-              <Chip label='Tarea' width='sm' />
-            </div>
-          </div>
-        </div>
-
-        <div className='w-[30%]'>
-          <div className='flex gap-4'>
-            <div className='w-1/2 space-y-2 mt-7'>
-              <div className='flex items-start gap-2'>
-                <Avatar name='SV' size='sm' />
-                <div>
-                  <p className='font-medium'>Supervisor</p>
-                  <p>{memo?.extraData?.company.name}</p>
-                </div>
-              </div>
-              <div className='flex items-start gap-2'>
-                <Avatar name='SV' size='sm' />
-                <div>
-                  <p className='font-medium'>Servicio</p>
-                  <p>{memo?.novelty?.name}</p>
-                </div>
-              </div>
-              <div className='flex items-start gap-2'>
-                <Avatar name='AU' size='sm' />
-                <div>
-                  <p className='font-medium'>Actualizado</p>
-                  <p>
-                    {DateUtils.dateToFrontend(memo.updatedAt, {
-                      format: 'datetime',
-                    })}
-                  </p>
-                </div>
-              </div>
-              <div className='flex items-start gap-2'>
-                <Avatar name='LG' size='sm' />
-                <div>
-                  <p className='font-medium'>Lugar</p>
-                  <p>{memo?.extraData?.place.address}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className='w-1/2 space-y-2 mt-7'>
-              <div className='flex items-start gap-2'>
-                <Avatar name='CL' size='sm' />
-                <div>
-                  <p className='font-medium'>Cliente</p>
-                  <p>{memo?.extraData?.client.name}</p>
-                </div>
-              </div>
-              <div className='flex items-start gap-2'>
-                <Avatar name='CD' size='sm' />
-                <div>
-                  <p className='font-medium'>Ciudad</p>
-                  <p>{memo?.extraData?.city.name}</p>
-                </div>
-              </div>
-              <div className='flex items-start gap-2'>
-                <Avatar name='CP' size='sm' />
-                <div>
-                  <p className='font-medium'>Compañía</p>
-                  <p>{memo?.extraData?.company?.name}</p>
-                </div>
-              </div>
-              <div className='flex items-start gap-2'>
-                <Avatar name='DR' size='sm' />
-                <div>
-                  <p className='font-medium'>Dirección</p>
-                  <p>{memo?.extraData?.place?.address}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        */}
       </div>
     </div>
   );

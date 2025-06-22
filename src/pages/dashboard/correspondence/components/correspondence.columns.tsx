@@ -14,12 +14,12 @@ export const correspondenceColumns: ColumnDef<ICorrespondence>[] = [
     id: 'sender',
     accessorKey: 'sender',
     size: 160,
-    header: 'Remitente',
+    header: 'h_sender',
   },
   {
     id: 'notificar',
     //accessorKey: 'notificar',
-    header: 'Notificar',
+    header: 'h_notification',
     size: 100,
     cell: (info) => {
       return (
@@ -34,14 +34,14 @@ export const correspondenceColumns: ColumnDef<ICorrespondence>[] = [
     id: 'owner',
     accessorKey: 'owner',
     size: 180,
-    header: 'Propietario',
+    header: 'h_owner',
     enableGrouping: true, // Podemos habilitar grouping por propietario
   },
   {
     id: 'receivedAt',
     accessorKey: 'receivedAt',
     size: 160,
-    header: 'Hora Recibido',
+    header: 'h_received',
     cell: (info) => {
       return (
         <FormattedDate date={info.getValue() as string} format='datetime' />
@@ -52,14 +52,14 @@ export const correspondenceColumns: ColumnDef<ICorrespondence>[] = [
     id: 'houseNumber',
     accessorKey: 'houseNumber',
     size: 140,
-    header: 'Casa/Apto',
+    header: 'h_house_number',
     enableGrouping: true, // Podemos agrupar por ubicación
   },
   {
     id: 'status',
     accessorKey: 'status',
     size: 140,
-    header: 'Estado',
+    header: 'h_status',
     enableGrouping: true,
     cell: (info) => {
       const value = info.getValue() as string;
@@ -80,6 +80,6 @@ export const correspondenceColumns: ColumnDef<ICorrespondence>[] = [
     id: 'whoPickedUp',
     accessorKey: 'whoPickedUp',
     size: 180,
-    header: 'Entregado a...',
+    header: 'h_who_picked_up',
   },
 ];

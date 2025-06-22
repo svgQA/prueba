@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Button } from '../button/button';
 import { type IInputProps } from './interface';
 
@@ -38,6 +39,7 @@ export const Input = <T = string,>({
   paddingVertical = 'py-2',
   ...props
 }: IInputProps<T>) => {
+  const { t } = useTranslation();
   const handleKeyUp = (e: KeyboardEvent) => {
     e.preventDefault();
     if (e.key === 'Enter' && onClick) {
@@ -63,7 +65,7 @@ export const Input = <T = string,>({
           htmlFor={`${id}-input`}
           className='capitalize block text-sm font-medium'
         >
-          {label}
+          {t(label)}
         </label>
       )}
       <div

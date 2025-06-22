@@ -94,7 +94,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
         <div className='flex flex-row items-center justify-between'>
           <Button
             name='button-create-shift'
-            label='Nuevo Servicio'
+            label='new'
             icon='039'
             onClick={redirect}
             className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
