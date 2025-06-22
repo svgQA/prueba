@@ -14,7 +14,11 @@ export const buttons_es = {
   form: 'Formulario',
   type_task: 'Tipo de tarea',
   type_report: 'Tipo de reporte',
+  next: 'Siguiente',
+  previous: 'Anterior',
+  finish: 'Finalizar',
 };
+
 export const buttons_en = {
   continue: 'Continue',
   edit: 'Edit',
@@ -31,4 +35,7 @@ export const buttons_en = {
   i_form: 'Form',
   type_task: 'Task Type',
   type_report: 'Report Type',
+  next: 'Next',
+  previous: 'Previous',
+  finish: 'Finish',
 };

@@ -1,6 +1,6 @@
 import { computed, signal } from '@preact/signals';
 
-const showSettingsModal = signal<boolean>(true);
+const showSettingsModal = signal<boolean>(false);
 
 export const getStatusSettingModal = computed(() => showSettingsModal.value);
 
