@@ -44,6 +44,8 @@ export const columns_es = {
   h_category: 'Categoría',
   h_data: 'Datos',
   h_duration: 'Duración',
+  h_date: 'Fecha',
+  h_time: 'Hora',
 };
 
 export const columns_en = {
@@ -92,4 +94,6 @@ export const columns_en = {
   h_category: 'Category',
   h_data: 'Data',
   h_duration: 'Duration',
+  h_date: 'Date',
+  h_time: 'Time',
 };

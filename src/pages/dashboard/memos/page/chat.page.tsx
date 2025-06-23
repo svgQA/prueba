@@ -89,7 +89,9 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   const totalPages = useSignal<number>(3);
   const selectedChat = useSignal<string>('0');
   const chats = useSignal<Chats>({});
-  const viewMode = useSignal<TypeChatView>(TypeChatView.USERS);
+  const viewMode = useSignal<TypeChatView>(
+    /*TypeChatView.USERS */ TypeChatView.SERVICES_MEMO
+  );
   const memoByService = useSignal<any[]>([]);
   const memoByUser = useSignal<any[]>([]);
   const predefined = useSignal<IOption[]>([]);
@@ -308,6 +310,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
   const chatCardGroupedBy = () => (
     <>
+      {/*
       <ChatCard
         id={'0'}
         name={t('memos.chat.aiAssistant')}
@@ -317,7 +320,9 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         onClick={handleChatSelect}
         isSelected={selectedChat.value === '0'}
       />
+      */}
       <div className='flex-1 overflow-y-auto vox-scroll-design border-b-light-dark dark:border-b-dark-light'>
+        {/*
         {viewMode.value === TypeChatView.USERS &&
           users.map((user: IUserResponse) => (
             <ChatCard
@@ -332,6 +337,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               isSelected={selectedChat.value === user.cognitoId}
             />
           ))}
+        */}
 
         {viewMode.value == TypeChatView.SERVICES_MEMO &&
           memosGroupedByService.map((service: any) => (
@@ -618,6 +624,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light'>
             <div className='p-4 border-b border-b-light-dark dark:border-b-dark-light'>
               <div className='flex gap-2 items-center'>
+                {/*
                 <Button
                   name='users'
                   icon='321'
@@ -625,6 +632,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   onClick={() => (viewMode.value = TypeChatView.USERS)}
                   label={t('memos.view.users')}
                 />
+                */}
                 <Dropdown
                   name='view-mode'
                   options={[
