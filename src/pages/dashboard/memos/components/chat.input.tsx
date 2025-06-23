@@ -1,6 +1,9 @@
 import { Button } from '@/components/common/button/button';
 import { Signal, useSignal } from '@preact/signals';
 import { FormattedDate } from '@/components/compose/forms';
+import { Field } from 'react-final-form';
+import { Input } from '@/components/common/input/input';
+import { lengthSize_10, required } from '@/utils/utilities';
 
 interface ChatInputProps {
   onSend?: (message: string, replyId?: number) => void;
@@ -24,7 +27,7 @@ export const ChatInput = ({
   children,
   replyId,
   replyTo,
-  form,
+  // form,
 }: ChatInputProps) => {
   const showChildren = useSignal(false);
 
@@ -122,6 +125,7 @@ export const ChatInput = ({
                 onClick={() => (showChildren.value = !showChildren.value)}
               />
 
+              {/*
               <input
                 type='text'
                 className='flex-1 py-2 px-4 border dark:border-b-dark-light rounded-full'
@@ -132,6 +136,25 @@ export const ChatInput = ({
                 onInput={(e) => (input.value = e.currentTarget.value)}
                 disabled={disabled || !replyId}
               />
+              */}
+
+              <Field<string> name='description' validate={lengthSize_10}>
+                {({ input, meta }) => (
+                  <Input
+                    {...input}
+                    meta={meta}
+                    type='text'
+                    placeholder='i_memo_description'
+                    disabled={disabled || !replyId}
+                    // options={predefined.value}
+                    // menuPortalTarget={document.body}
+                    // end={false}
+                    // onChange={(value?: IOption) => {
+                    //   input.onChange(value);
+                    // }}
+                  />
+                )}
+              </Field>
 
               <Button
                 icon='156'
@@ -139,13 +162,14 @@ export const ChatInput = ({
                 id='send-btn'
                 name='send'
                 type='submit'
-                form={form}
+                // form={form}
                 // onClick={handleSubmit}
-                disabled={disabled || !replyId}
+                // disabled={disabled || !replyId}
               />
             </>
           ) : (
             <>
+              {/*
               <input
                 type='text'
                 className='flex-1 py-2 px-4 border dark:border-b-dark-light rounded-full'
@@ -154,6 +178,24 @@ export const ChatInput = ({
                 onInput={(e) => (input.value = e.currentTarget.value)}
                 disabled={disabled}
               />
+            */}
+              <Field<string> name='message' validate={required}>
+                {({ input, meta }) => (
+                  <Input
+                    {...input}
+                    meta={meta}
+                    type='text'
+                    placeholder='i_chat_message'
+                    disabled={disabled}
+                    // options={predefined.value}
+                    // menuPortalTarget={document.body}
+                    // end={false}
+                    // onChange={(value?: IOption) => {
+                    //   input.onChange(value);
+                    // }}
+                  />
+                )}
+              </Field>
 
               <Button
                 icon='156'
@@ -161,7 +203,7 @@ export const ChatInput = ({
                 id='send-btn'
                 name='send'
                 type='submit'
-                form={form}
+                // form={form}
                 // onClick={handleSubmit}
                 disabled={disabled}
               />

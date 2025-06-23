@@ -23,6 +23,7 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IRowAction } from '@/components/common/table/interface';
 import { Table } from '@/components/common/table/table';
 import { setUser, USER_MODE_SERVICE } from './store/user.store';
+import { useUserStore } from '@/store/slices';
 
 enum VIEW_NAME {
   TABLE,
@@ -42,6 +43,7 @@ export const UsersPage: FunctionalComponent = () => {
 
   const showSendModal = useSignal<boolean>(false);
   const notificationValidate = useSignal<boolean>(false);
+  const { selectedCompany } = useUserStore();
 
   const [selectedUsers, setSelectedUsers] = useState<IUserResponse[]>([]);
   const [onNotifications, setOnNotifications] = useState(false);
@@ -52,7 +54,6 @@ export const UsersPage: FunctionalComponent = () => {
 
   useEffect(() => {
     document.title = t('users.pageTitle');
-    fetchStats();
   }, []);
 
   useEffect(() => {
@@ -64,6 +65,14 @@ export const UsersPage: FunctionalComponent = () => {
     onNotificationsRef.current = onNotifications;
     setOnNotifications(onNotificationsRef.current);
   }, [onNotifications]);
+
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchStats();
+      getUsers();
+    }
+  }, [selectedCompany, location]);
 
   const fetchStats = async () => {
     const [hasValidResponse, statsResponse] = await Promise.all([
@@ -173,10 +182,6 @@ export const UsersPage: FunctionalComponent = () => {
   );
 
   const users = useSignal<IUserResponse[]>([]);
-
-  useEffect(() => {
-    getUsers();
-  }, []);
 
   const getUsers = async () => {
     loading.value = true;

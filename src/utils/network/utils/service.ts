@@ -94,7 +94,7 @@ export class BaseService {
       const company = this.getCompany();
 
       if (!tenant_header || !tenant) {
-        // console.log('ERROR: ', model.url);
+        console.log('ERROR: ', model.url);
         ToastManager.error('error.not_found_tenant');
         throw new Error('ERROR: not include tenant header');
       }

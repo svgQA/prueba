@@ -77,7 +77,7 @@ export const getColumns = (
       id: 'fecha',
       accessorKey: 'start',
       size: 120,
-      header: 'h_start',
+      header: 'h_date',
       enableGrouping: false,
       meta: { headerAlign: 'center' },
       cell: (info) => (

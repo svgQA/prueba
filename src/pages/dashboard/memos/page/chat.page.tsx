@@ -89,7 +89,9 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   const totalPages = useSignal<number>(3);
   const selectedChat = useSignal<string>('0');
   const chats = useSignal<Chats>({});
-  const viewMode = useSignal<TypeChatView>(TypeChatView.USERS);
+  const viewMode = useSignal<TypeChatView>(
+    /*TypeChatView.USERS */ TypeChatView.SERVICES_MEMO
+  );
   const memoByService = useSignal<any[]>([]);
   const memoByUser = useSignal<any[]>([]);
   const predefined = useSignal<IOption[]>([]);
@@ -274,9 +276,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     }
   };
 
-  const handleSubmitMessage = async (values: any) => {
+  const handleSubmitMessage = async (values: any, form: any) => {
     let memo: Memo = memoByService.value.find((e) => e.id == replyToId.value);
-    let extraData: ExtraData = { ...memo.extraData } as ExtraData;
+    let extraData: ExtraData = memo.extraData
+      ? ({ ...memo.extraData } as ExtraData)
+      : ({} as ExtraData);
 
     if (values.predefined) extraData.predefined = values.predefined;
     if (values.duration) extraData.duration = values.duration;
@@ -284,7 +288,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
     const newMemo: Memo = {
       ...memo,
-      description: messages.value.trim() ? messages.value : '...',
+      description: values.description,
       priority:
         memo.priority === 'Alta' ? 5 : memo.priority === 'Media' ? 4 : 3,
       updatedAt: DateUtils.dateToBackend(new Date()),
@@ -294,11 +298,16 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
       extraData: extraData,
     };
 
-    await MemoService.createMemo(newMemo);
+    const response = await MemoService.createMemo(newMemo);
+    if (!response.getStatus()) {
+      ToastManager.error('Error creando Memo de respuesta');
+      return;
+    }
     replyToId.value = undefined;
     replyToMessage.value = undefined;
     messages.value = '';
     handleChatSelect(selectedChat.value, viewMode.value);
+    form.reset();
   };
 
   const handleAttachmentUpload = (e: any) => {
@@ -308,6 +317,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
   const chatCardGroupedBy = () => (
     <>
+      {/*
       <ChatCard
         id={'0'}
         name={t('memos.chat.aiAssistant')}
@@ -317,7 +327,9 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         onClick={handleChatSelect}
         isSelected={selectedChat.value === '0'}
       />
+      */}
       <div className='flex-1 overflow-y-auto vox-scroll-design border-b-light-dark dark:border-b-dark-light'>
+        {/*
         {viewMode.value === TypeChatView.USERS &&
           users.map((user: IUserResponse) => (
             <ChatCard
@@ -332,6 +344,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               isSelected={selectedChat.value === user.cognitoId}
             />
           ))}
+        */}
 
         {viewMode.value == TypeChatView.SERVICES_MEMO &&
           memosGroupedByService.map((service: any) => (
@@ -512,102 +525,105 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
   const formMinutesByInputs = () => (
     <>
+      {/*
       <Form
         onSubmit={handleSubmitMessage}
         render={({ handleSubmit }) => (
           <form
-            id='chat-input-form'
-            name='chat-input-form'
+            id='chat-input-form-memo'
+            name='chat-input-form-memo'
             onSubmit={handleSubmit}
-          >
-            <div className='grid grid-cols-1 gap-4'>
-              <div className='p-3'>
-                <div className='grid grid-cols-3 gap-3'>
-                  <Field<IOption> name='predefined'>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        name='predefined'
-                        id='select-predefined'
-                        placeholder='Opciones predefinidas'
-                        label='Opciones predefinidas'
-                        options={predefined.value}
-                        menuPortalTarget={document.body}
-                        end={false}
-                        onChange={(value?: IOption) => {
-                          input.onChange(value);
-                        }}
-                      />
-                    )}
-                  </Field>
+          >*/}
+      <div className='grid grid-cols-1 gap-4'>
+        <div className='p-3'>
+          <div className='grid grid-cols-3 gap-3'>
+            <Field<IOption> name='predefined'>
+              {({ input, meta }) => (
+                <SmartSelector
+                  {...input}
+                  meta={meta}
+                  name='predefined'
+                  id='select-predefined'
+                  placeholder='Opciones predefinidas'
+                  label='Opciones predefinidas'
+                  options={predefined.value}
+                  menuPortalTarget={document.body}
+                  end={false}
+                  onChange={(value?: IOption) => {
+                    input.onChange(value);
+                  }}
+                />
+              )}
+            </Field>
 
-                  <Field<string> name='duration'>
-                    {({ input }) => (
-                      <Input
-                        {...input}
-                        type='number'
-                        name='duration'
-                        label='Duración'
-                        placeholder='Min'
-                      />
-                    )}
-                  </Field>
+            <Field<string> name='duration'>
+              {({ input }) => (
+                <Input
+                  {...input}
+                  type='number'
+                  name='duration'
+                  label='Duración'
+                  placeholder='Min'
+                />
+              )}
+            </Field>
 
-                  <Field<string> name='date'>
-                    {({ input }) => (
-                      <DateField {...input} name='date' label='Fecha' />
-                    )}
-                  </Field>
+            <Field<string> name='date'>
+              {({ input }) => (
+                <DateField {...input} name='date' label='Fecha' />
+              )}
+            </Field>
 
-                  <Field name='attachments'>
-                    {() => (
-                      <File
-                        name='attachments'
-                        onChange={handleAttachmentUpload}
-                        value={[]}
-                        accept='image/*'
-                        multiple={true}
-                        label='Adjuntos'
-                        area='memo'
-                      />
-                    )}
-                  </Field>
+            <Field name='attachments'>
+              {() => (
+                <File
+                  name='attachments'
+                  onChange={handleAttachmentUpload}
+                  value={[]}
+                  accept='image/*'
+                  multiple={true}
+                  label='Adjuntos'
+                  area='memo'
+                />
+              )}
+            </Field>
 
-                  {files.value.length > 0 && (
-                    <div className='flex items-center gap-2'>
-                      <ShowFiles resources={files.value} />
-                    </div>
-                  )}
-
-                  {replyToId.value && (
-                    <div className='flex items-center gap-2'>
-                      <Button
-                        label={btnLabel}
-                        icon={
-                          btnLabel === 'SOLVE' || btnLabel === 'RESOLVED'
-                            ? '030'
-                            : '032'
-                        }
-                        disabled={btnLabel === 'RESOLVED'}
-                        onClick={() =>
-                          showAlert({
-                            title: btnLabel,
-                            message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
-                            onConfirm: () => handleCheck(),
-                            onCancel: () => {},
-                          })
-                        }
-                        name={btnLabel}
-                      />
-                    </div>
-                  )}
-                </div>
+            {files.value.length > 0 && (
+              <div className='flex items-center gap-2'>
+                <ShowFiles resources={files.value} />
               </div>
-            </div>
+            )}
+
+            {replyToId.value && (
+              <div className='flex items-center gap-2'>
+                <Button
+                  label={btnLabel}
+                  icon={
+                    btnLabel === 'SOLVE' || btnLabel === 'RESOLVED'
+                      ? '030'
+                      : '032'
+                  }
+                  disabled={btnLabel === 'RESOLVED'}
+                  onClick={() =>
+                    showAlert({
+                      title: btnLabel,
+                      message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
+                      onConfirm: () => handleCheck(),
+                      onCancel: () => {},
+                    })
+                  }
+                  name={btnLabel}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      {/*
           </form>
         )}
       />
+    */}
     </>
   );
 
@@ -618,6 +634,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light'>
             <div className='p-4 border-b border-b-light-dark dark:border-b-dark-light'>
               <div className='flex gap-2 items-center'>
+                {/*
                 <Button
                   name='users'
                   icon='321'
@@ -625,6 +642,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   onClick={() => (viewMode.value = TypeChatView.USERS)}
                   label={t('memos.view.users')}
                 />
+                */}
                 <Dropdown
                   name='view-mode'
                   options={[
@@ -696,21 +714,34 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   showChatMemoAndSubMemo(memo, index)
                 )}
             </div>
+            <Form
+              onSubmit={handleSubmitMessage}
+              render={({ handleSubmit }) => (
+                <form
+                  id='chat-input-form-memo'
+                  name='chat-input-form-memo'
+                  onSubmit={handleSubmit}
+                >
+                  {/*
             {viewMode.value === TypeChatView.USERS ? (
               <ChatInput onSend={handleSendMessage} input={messages} />
             ) : (
-              <ChatInput
-                onSend={handleSendMessage}
-                onCancelReply={handleCancelReply}
-                input={messages}
-                disabled={replyToId.value === undefined}
-                replyId={replyToId.value}
-                replyTo={replyToMessage.value}
-                form='chat-input-form'
-              >
-                {formMinutesByInputs()}
-              </ChatInput>
-            )}
+            */}
+                  <ChatInput
+                    onSend={handleSendMessage}
+                    onCancelReply={handleCancelReply}
+                    input={messages}
+                    disabled={replyToId.value === undefined}
+                    replyId={replyToId.value}
+                    replyTo={replyToMessage.value}
+                    // form='chat-input-form-memo'
+                  >
+                    {formMinutesByInputs()}
+                  </ChatInput>
+                  {/* )} */}
+                </form>
+              )}
+            />
           </div>
         </div>
       </div>

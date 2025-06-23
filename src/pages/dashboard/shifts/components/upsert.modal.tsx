@@ -18,6 +18,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
 import { DateField } from '@/components/compose/forms';
+import { useUserStore } from '@/store/slices';
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -50,6 +51,7 @@ export const TaskForm = ({
   const tasks = useSignal<Task[]>([]);
   const taskSelect = useSignal<ITask>();
   const isNewTask = useSignal(false);
+  const { selectedCompany } = useUserStore();
   // const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>();
   // const tasks = useSignal<ITask[]>([]);
 
@@ -106,8 +108,10 @@ export const TaskForm = ({
   // }, []);
 
   useEffect(() => {
-    Promise.all([getServices(), getTasks()]);
-  }, [getServices, getTasks]);
+    if (selectedCompany) {
+      Promise.all([getServices(), getTasks()]);
+    }
+  }, [selectedCompany, location]);
 
   const required = useCallback(
     (value: any) => (value ? undefined : t('shifts.upsert.required')),

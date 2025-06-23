@@ -53,6 +53,7 @@ import {
   SseManager,
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
+import { useUserStore } from '@/store/slices';
 
 enum VIEW_NAME {
   TABLE,
@@ -95,6 +96,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [hasValidPlayer, setHasValidPlayer] = useState(false);
 
   const loading = useSignal<boolean>(false);
+  const { selectedCompany } = useUserStore();
 
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
   const memoizedServices = useMemo(() => services, [services]);
@@ -140,11 +142,17 @@ export const ShiftsPage: FunctionalComponent = () => {
    */
   useEffect(() => {
     document.title = t('shifts.pageTitle');
-    handleGetShiftSummary();
-    fetchInitialData();
-    fetchSSE();
-    EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
   }, []);
+
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      handleGetShiftSummary();
+      fetchInitialData();
+      fetchSSE();
+      EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
+    }
+  }, [selectedCompany, location]);
 
   // const fetchShifts = async () => {
   //   const response = await ShiftService.get_all({ page: 1, items: 1000 });
