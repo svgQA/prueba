@@ -30,3 +30,11 @@ export const validateOption = (value: IOption) => {
   if (!value || !value.label || !value.value) return 'Campo obligatorio';
   return undefined;
 };
+
+export const lengthSize_10 = (value: string) => {
+  if (!value) return 'Campo obligatorio';
+  if (value && value.length < 10) {
+    return 'El campo debe tener min 10 carácteres';
+  }
+  return undefined;
+};

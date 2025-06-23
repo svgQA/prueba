@@ -37,6 +37,7 @@ export const Input = <T = string,>({
   error,
   warning,
   paddingVertical = 'py-2',
+  rounded,
   ...props
 }: IInputProps<T>) => {
   const { t } = useTranslation();
