@@ -15,6 +15,7 @@ import { Button } from '@/components/common/button/button';
 import { FormResponseSettingPage } from './response/response';
 import { RESPONSE_MODE_SERVICE, setResponse } from './response/store/response';
 import { validateResponse } from '@/pages/settings/forms/response/store/response';
+import { useUserStore } from '@/store/slices';
 
 enum VIEW_NAME {
   TABLE,
@@ -27,10 +28,21 @@ export const FormsPage: FunctionComponent = () => {
   const responses = useSignal<IResponseResponse[]>([]);
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const loading = useSignal<boolean>(false);
+  const { selectedCompany } = useUserStore();
+
   useEffect(() => {
     document.title = t('forms.pageTitle');
-    getResponseHandler();
   }, []);
+
+  useEffect(() => {
+    // TODO: No tocar esta parte, para evitar que se ejecute cuando no hay una compañia seleccionada
+    // Lo cual emite errores innecsarios.
+    // Esto tambien se puede prevenir desde el service, pero pasa que por cada peticicón el responderia
+    // con este error
+    if (selectedCompany) {
+      getResponseHandler();
+    }
+  }, [selectedCompany, location]);
 
   const getResponseHandler = async () => {
     loading.value = true;
