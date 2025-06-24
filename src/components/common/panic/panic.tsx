@@ -32,9 +32,14 @@ const Panic = (_panic: IPanicProps) => {
     []
   );
 
-  const handlePanicSSE = (event: IBaseSSE) => {
+  const handlePanicSSE = async (event: IBaseSSE) => {
     if (event.name === SSE_EVENTS.PANIC) {
-      fetchPanic();
+      await fetchPanic();
+
+      if(event.message.id){
+        const panic = allPanic.value.find((panic) => panic.id === event.message.id);
+        _panic.emitPanic?.(panic as IPanic);
+      }
     }
   };
 
