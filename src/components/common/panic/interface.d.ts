@@ -13,3 +13,9 @@ export interface IPanic {
   date: string;
   status: string;
 }
+
+export interface PanicModalProps {
+  open: boolean;
+  onClose: () => void;
+  panic?: IPanic;
+}

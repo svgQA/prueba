@@ -1,12 +1,8 @@
 import { Modal } from '../modal/modal';
-import { IPanic } from './interface';
+import { PanicModalProps } from './interface';
 import { FunctionComponent } from 'preact';
-
-interface PanicModalProps {
-  open: boolean;
-  onClose: () => void;
-  panic?: IPanic;
-}
+import './panic.style.css';
+import { FormattedDate } from '@/components/compose/forms';
 
 export const PanicModal: FunctionComponent<PanicModalProps> = ({ open, onClose, panic }) => {
   return (
@@ -23,7 +19,7 @@ export const PanicModal: FunctionComponent<PanicModalProps> = ({ open, onClose, 
         </div>
       }
     >
-      <div className='flex flex-col items-center justify-center w-full p-6 gap-4'>
+      <div className='flex flex-col items-center justify-center w-full p-6 gap-4 fade-in-shake'>
         <div className='flex flex-col items-center gap-2'>
           <span className='text-2xl font-bold text-red-600'>
             {panic?.message || 'Mensaje de pánico'}
@@ -35,7 +31,7 @@ export const PanicModal: FunctionComponent<PanicModalProps> = ({ open, onClose, 
           )}
           {panic?.date && (
             <span className='text-sm text-gray-500 dark:text-gray-400'>
-              {new Date(panic.date).toLocaleString()}
+              <FormattedDate date={panic.date} format='datetime' />
             </span>
           )}
         </div>

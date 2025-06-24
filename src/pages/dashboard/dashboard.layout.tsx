@@ -84,6 +84,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const [hasSettings, setHasSettings] = useState<boolean>(true);
     const isModalOpen = useSignal<boolean>(false);
     const modalPanic = useSignal<IPanic | undefined>(undefined);
+    const [modalKey, setModalKey] = useState(0);
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
@@ -186,6 +187,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 icon='001'
                 emitPanic={(panic: IPanic) => {
                   setTimeout(() => {
+                    setModalKey((prev) => prev + 1);
                     modalPanic.value = panic;
                     isModalOpen.value = true;
                   }, 300);
@@ -225,8 +227,12 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           </header>
           {isModalOpen && (
             <PanicModal
+              key={modalKey}
               open={isModalOpen.value}
-              onClose={() => (isModalOpen.value = false, modalPanic.value = undefined)}
+              onClose={() => {
+                isModalOpen.value = false;
+                modalPanic.value = undefined;
+              }}
               panic={modalPanic.value}
             />
           )}

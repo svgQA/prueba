@@ -1,0 +1,24 @@
+@keyframes fadeInShake {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateX(-20px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.02) translateX(10px);
+    }
+
+    80% {
+        transform: scale(0.98) translateX(-5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+    }
+}
+
+.fade-in-shake {
+    animation: fadeInShake 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
