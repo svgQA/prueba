@@ -6,8 +6,9 @@ import { allowedAudioTypesConst, allowedImageTypesConst } from '@/types';
 import AudioPlayer from './components/AudioPlayer';
 import ImageViewer from './components/imageViewer';
 import { useRef, useState, useEffect } from 'react';
+import { Button } from '../button/button';
 
-const showFiles = ({ resources = [], removeFile }: ShowFilesProps) => {
+const showFiles = ({ resources = [], isSender = false, removeFile }: ShowFilesProps) => {
   const { getTenant, getCompanyId } = useUserStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(1);
@@ -44,30 +45,28 @@ const showFiles = ({ resources = [], removeFile }: ShowFilesProps) => {
   return (
     <div className='relative w-full flex justify-center items-center' ref={containerRef}>
       {showLeft && (
-        <button
-          className='absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 dark:bg-gray-900/80 rounded-full p-1 shadow hover:bg-white dark:hover:bg-gray-800 transition'
-          onClick={goLeft}
-          aria-label='Ver anterior'
-        >
-          <span className='vox-icon vx-icon-003' />
-        </button>
+        <Button
+        name='button-change-scheduler'
+        onClick={goLeft}
+        rounded={false}
+        icon='014'
+        ></Button>
       )}
       {showRight && (
-        <button
-          className='absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 dark:bg-gray-900/80 rounded-full p-1 shadow hover:bg-white dark:hover:bg-gray-800 transition'
+        <Button
+          name='button-change-scheduler'
           onClick={goRight}
-          aria-label='Ver siguiente'
-        >
-          <span className='vox-icon vx-icon-004' />
-        </button>
+          rounded={false}
+          icon='015'          
+        ></Button>
       )}
       <div
-        className='flex flex-row flex-nowrap py-1 w-full gap-2 justify-center items-center px-8 overflow-hidden'
+        className={`flex flex-row flex-nowrap py-1 w-full gap-2 ${isSender ? 'justify-end items-end' : 'justify-start items-start'} px-8 overflow-hidden`}
         style={{ minHeight: '3.5rem' }}
       >
         {visibleFiles.map((file) => (
           <div
-            className={`bg-contain dark:bg-gray-800 h-12 border rounded-md dark:border-b-dark-dark border-b-light-dark content-center text-center relative mx-auto
+            className={`bg-contain dark:bg-gray-800 h-12 border rounded-md dark:border-b-dark-dark border-b-light-dark ${isSender ? 'content-end text-end' : 'content-start text-start'} relative
               ${allowedAudioTypesConst.includes(file.type as any) ? 'min-w-[10rem] max-w-[18rem] w-full flex-shrink' : 'min-w-[3rem] max-w-[6rem] flex-shrink-0'}`}
             key={file.uuid}
           >
