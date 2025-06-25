@@ -4,7 +4,11 @@ import { FunctionComponent } from 'preact';
 import './panic.style.css';
 import { FormattedDate } from '@/components/compose/forms';
 
-export const PanicModal: FunctionComponent<PanicModalProps> = ({ open, onClose, panic }) => {
+export const PanicModal: FunctionComponent<PanicModalProps> = ({
+  open,
+  onClose,
+  panic,
+}) => {
   return (
     <Modal
       name='panic-modal'
@@ -14,8 +18,12 @@ export const PanicModal: FunctionComponent<PanicModalProps> = ({ open, onClose, 
       shadowed
       header={
         <div className='flex items-center gap-3'>
-          <span className='text-4xl font-extrabold text-red-600 animate-pulse'>SOS</span>
-          <span className='text-lg font-bold text-red-500'>¡Alerta de Pánico!</span>
+          <span className='text-4xl font-extrabold text-red-600 animate-pulse'>
+            SOS
+          </span>
+          <span className='text-lg font-bold text-red-500'>
+            ¡Alerta de Pánico!
+          </span>
         </div>
       }
     >
@@ -43,4 +51,4 @@ export const PanicModal: FunctionComponent<PanicModalProps> = ({ open, onClose, 
   );
 };
 
-export default PanicModal; 
+export default PanicModal;
