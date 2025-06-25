@@ -14,13 +14,15 @@ export const PanicModal: FunctionComponent<PanicModalProps> = ({
       name='panic-modal'
       open={open}
       onClose={onClose}
-      width='max-w-md'
+      width='min-w-[450px]'
       shadowed
       header={
         <div className='flex items-center gap-3'>
+          {/*
           <span className='text-4xl font-extrabold text-red-600 animate-pulse'>
             SOS
           </span>
+          */}
           <span className='text-lg font-bold text-red-500'>
             ¡Alerta de Pánico!
           </span>
@@ -43,7 +45,7 @@ export const PanicModal: FunctionComponent<PanicModalProps> = ({
             </span>
           )}
         </div>
-        <div className='w-20 h-20 flex items-center justify-center rounded-full bg-red-100 border-4 border-red-500 shadow-lg animate-pulse'>
+        <div className='w-28 h-28 flex items-center justify-center rounded-full bg-red-100 border-4 border-red-500 shadow-lg animate-pulse'>
           <span className='text-3xl font-extrabold text-red-600'>SOS</span>
         </div>
       </div>

@@ -145,10 +145,7 @@ export const FormElement = ({
 
   return (
     <>
-      <tr
-        ref={drop}
-        className='vx-form-question relative bg-white dark:bg-b-dark-dark'
-      >
+      <tr ref={drop} className='vx-form-question relative rounded-2xl'>
         {question.type === ELEMENT_TYPE.SECTION ? (
           <td
             colSpan={2}
@@ -181,12 +178,12 @@ export const FormElement = ({
             {/* INPUT: title element */}
             <td
               onClick={handleSelect}
-              className={`rounded-bl-xl dark:bg-b-dark-dark bg-white flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
+              className={`rounded-bl-xl dark:bg-b-dark-dark flex flex-row relative ${selected ? 'border-main border-2 border-primary before:content-[""] before:absolute before:w-3 before:h-3 before:rounded-full before:bg-primary before:-top-1 before:-left-1 before:z-10 after:content-[""] after:absolute after:w-3 after:h-3 after:rounded-full after:bg-primary after:-bottom-1 after:-right-1 after:z-10' : ''} ${
                 isOver ? 'bg-ternary text-t-dark' : ''
               } ${isDragging ? 'opacity-70' : ''} items-center`}
             >
               {question.section && (
-                <div className='mx-3 w-1 h-6 rounded-lg bg-primary'></div>
+                <div className='mx-3 w-1 h-6 rounded-lg bg-ternary'></div>
               )}
               <div className='flex flex-row w-full items-center'>
                 <span
@@ -209,7 +206,7 @@ export const FormElement = ({
             {/* DROPDOW: select type */}
             <td
               onClick={handleSelect}
-              className='w-3/12 dark:bg-b-dark-dark bg-white'
+              className='w-3/12 dark:bg-b-dark-dark bg-white rounded-br-xl'
             >
               <Select
                 placeholder={t('form.placeholder.type_element')}
