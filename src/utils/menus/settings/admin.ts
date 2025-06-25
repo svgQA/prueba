@@ -5,7 +5,7 @@ const BASE_ADMIN = PAGES_LIST_ROUTER.dashboard.setting.admin.base;
 export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
   label: 'admin',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
-  show: true,
+  show: false,
   menus: [
     {
       icon: '023',
@@ -32,7 +32,7 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
       base: BASE_ADMIN,
       to: PAGES_LIST_ROUTER.dashboard.setting.admin.tenant.base,
       id: 'tenant',
-      show: true,
+      show: false,
     },
   ],
 };
