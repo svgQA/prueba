@@ -1,7 +1,7 @@
-import { type IFileProps } from './interface';
+import { type IFileProps } from './utils/interface';
 import { useSignal } from '@preact/signals';
 import { IPresignedRequest } from '@/types/file';
-import { handleFileChangeWrapper } from './utils';
+import { handleFileChangeWrapper } from './utils/utils';
 import { GeneralService } from '@/services/general/general';
 import { ToastManager } from '@/utils/toast/toast-manager';
 

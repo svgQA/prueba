@@ -1,4 +1,4 @@
-import { handleFileChangeWrapper } from '@/components/common/file/utils';
+import { handleFileChangeWrapper } from '@/components/common/file/utils/utils';
 import { IPresignedRequest } from '@/types/file';
 import { useSignal } from '@preact/signals';
 import { useRef } from 'preact/hooks';
