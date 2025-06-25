@@ -1,10 +1,10 @@
 import { IPresignedRequest } from '@/types/file';
 import { ShowFilesProps } from './utils/interface';
 import { useUserStore } from '@/store/slices';
-import { Avatar } from '../Avatar';
 import { cdn_service_url } from '@/env.config';
 import { allowedAudioTypesConst, allowedImageTypesConst } from '@/types';
 import AudioPlayer from './components/AudioPlayer';
+import ImageViewer from './components/imageViewer';
 
 const showFiles = ({ resources = [], removeFile }: ShowFilesProps) => {
   const { getTenant, getCompanyId } = useUserStore();
@@ -21,7 +21,7 @@ const showFiles = ({ resources = [], removeFile }: ShowFilesProps) => {
           key={file.uuid}
         >
           {allowedImageTypesConst.includes(file.type as any) ? (
-            <Avatar src={getUrl(file)} name='Image' square />
+            <ImageViewer src={getUrl(file)} />
           ) : allowedAudioTypesConst.includes(file.type as any) ? (
             <AudioPlayer src={getUrl(file)} />
           ) : (
