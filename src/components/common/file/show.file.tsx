@@ -67,7 +67,8 @@ const showFiles = ({ resources = [], removeFile }: ShowFilesProps) => {
       >
         {visibleFiles.map((file) => (
           <div
-            className='bg-contain dark:bg-gray-800 h-12 border rounded-md dark:border-b-dark-dark border-b-light-dark content-center text-center relative min-w-[3rem] max-w-[6rem] flex-shrink-0 mx-auto'
+            className={`bg-contain dark:bg-gray-800 h-12 border rounded-md dark:border-b-dark-dark border-b-light-dark content-center text-center relative mx-auto
+              ${allowedAudioTypesConst.includes(file.type as any) ? 'min-w-[10rem] max-w-[18rem] w-full flex-shrink' : 'min-w-[3rem] max-w-[6rem] flex-shrink-0'}`}
             key={file.uuid}
           >
             {allowedImageTypesConst.includes(file.type as any) ? (

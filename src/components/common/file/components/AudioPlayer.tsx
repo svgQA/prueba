@@ -68,18 +68,18 @@ const AudioPlayer = ({ src }: { src: string }) => {
     const showOnlyDuration = !isPlaying && currentTime === 0;
 
     return (
-        <div className="flex items-center gap-2 w-full max-w-xs select-none">
+        <div className="flex items-center gap-2 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg select-none px-1 sm:px-2">
             <audio ref={audioRef} src={src} preload="auto" />
             <button
                 onClick={togglePlay}
                 disabled={isLoading}
-                className={`ml-2 flex items-center justify-center w-7 h-7 rounded-full border border-gray-300 dark:border-gray-600 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50 ${isPlaying ? 'bg-blue-500 text-white shadow animate-pulse' : 'bg-white dark:bg-gray-800 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700'}`}
+                className={`ml-1 sm:ml-2 flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray-300 dark:border-gray-600 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50 ${isPlaying ? 'bg-blue-500 text-white shadow animate-pulse' : 'bg-white dark:bg-gray-800 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700'}`}
                 aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
             >
                 {isPlaying ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
                 ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20" /></svg>
                 )}
             </button>
             <input
@@ -88,11 +88,11 @@ const AudioPlayer = ({ src }: { src: string }) => {
                 max={duration || 0}
                 value={currentTime}
                 onChange={handleProgressChange}
-                className="flex-1 h-1 bg-gray-200 dark:bg-gray-700 rounded-lg accent-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-400 transition-all duration-200 mx-1"
+                className="flex-1 h-1 sm:h-2 bg-gray-200 dark:bg-gray-700 rounded-lg accent-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-400 transition-all duration-200 mx-1"
                 disabled={isLoading}
                 style={{ accentColor: '#3b82f6' }}
             />
-            <span className="text-[10px] font-mono text-gray-400 dark:text-gray-500 w-14 text-center">
+            <span className="hidden xs:inline text-[10px] sm:text-xs font-mono text-gray-400 dark:text-gray-500 w-14 sm:w-16 text-center">
                 {showOnlyDuration ? formatTime(duration) : `${formatTime(currentTime)} / ${formatTime(duration)}`}
             </span>
         </div>
