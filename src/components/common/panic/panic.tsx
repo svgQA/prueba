@@ -36,8 +36,10 @@ const Panic = (_panic: IPanicProps) => {
     if (event.name === SSE_EVENTS.PANIC) {
       await fetchPanic();
 
-      if(event.message.id){
-        const panic = allPanic.value.find((panic) => panic.id === event.message.id);
+      if (event.message.id) {
+        const panic = allPanic.value.find(
+          (panic) => panic.id === event.message.id
+        );
         _panic.emitPanic?.(panic as IPanic);
       }
     }

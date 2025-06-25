@@ -1,4 +1,4 @@
-import { IBaseSSE } from "@/utils/network/sse/base";
+import { IBaseSSE } from '@/utils/network/sse/base';
 
 export interface IPanicProps {
   icon: string;

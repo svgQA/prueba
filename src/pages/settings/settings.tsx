@@ -38,9 +38,11 @@ export const SettingsModal = () => {
   useEffect(() => {
     if (getStatusSettingModal.value) {
       if (!menuInformationSelected.value.to) {
-        const adminMenu = menuSettings.value[0]?.menus.find(
-          (menu) => menu.show
-        );
+        let adminMenu;
+        for (const menus of menuSettings.value) {
+          adminMenu = menus.menus.find((menu) => menu.show);
+          if (adminMenu) break;
+        }
         if (adminMenu) {
           const menuSelected = {
             ...adminMenu,
