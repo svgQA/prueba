@@ -1,8 +1,10 @@
 import { IPresignedRequest } from '@/types/file';
-import { ShowFilesProps } from './interface';
+import { ShowFilesProps } from './utils/interface';
 import { useUserStore } from '@/store/slices';
 import { Avatar } from '../Avatar';
 import { cdn_service_url } from '@/env.config';
+import { allowedAudioTypesConst, allowedImageTypesConst } from '@/types';
+import AudioPlayer from './components/AudioPlayer';
 
 const showFiles = ({ resources = [], removeFile }: ShowFilesProps) => {
   const { getTenant, getCompanyId } = useUserStore();
@@ -18,13 +20,14 @@ const showFiles = ({ resources = [], removeFile }: ShowFilesProps) => {
           className='bg-contain dark:bg-gray-800 h-12 border rounded-md dark:border-b-dark-dark border-b-light-dark content-center text-center relative'
           key={file.uuid}
         >
-          {file.type === 'image/jpeg' ||
-          file.type === 'image/png' ||
-          file.type === 'image/svg+xml' ? (
+          {allowedImageTypesConst.includes(file.type as any) ? (
             <Avatar src={getUrl(file)} name='Image' square />
+          ) : allowedAudioTypesConst.includes(file.type as any) ? (
+            <AudioPlayer src={getUrl(file)} />
           ) : (
             <span className='vox-icon vx-icon-069 px-3' />
           )}
+
           {removeFile && (
             <span
               className='absolute vox-icon vx-icon-008 size-sm top-0 right-0 cursor-pointer'
