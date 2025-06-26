@@ -59,6 +59,7 @@ export interface Memo {
   children: Memo[];
   relatedShift?: IShiftResponse;
   relatedShiftId: number;
+  panicUuid?: string;
 }
 
 export interface Novelty {

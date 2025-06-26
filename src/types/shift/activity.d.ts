@@ -198,6 +198,7 @@ export interface IShiftResponse {
   roundPct: number;
   timeBefore: number;
   promedio: number;
+  resource: any[];
 }
 
 interface ITaskHistory {

@@ -81,7 +81,7 @@ export const ChatInput = ({
     <div className='flex flex-col'>
       {replyId && replyTo && showReply()}
       {showChildren.value && children && replyId && (
-        <div className='flex items-center gap-2 px-4 py-2 bg-b-light-light dark:bg-b-dark-light border-t border-b-light-dark dark:border-b-dark-light bg-blue-200'>
+        <div className='flex items-center gap-2 px-4 py-2 bg-b-light-light dark:bg-b-dark-light border-t border-b-light-dark dark:border-b-dark-light'>
           {children}
           <div className='flex-1 flex justify-end'>
             <Button
