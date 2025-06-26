@@ -41,7 +41,7 @@ export const SendForm = ({ onClose, users, hasplayers }: Props) => {
         />
       </div>
 
-      <ManualNotificationForm users={users} hasplayers={hasplayers} />
+      <ManualNotificationForm users={users} hasplayers={hasplayers}  onClose={onClose}/>
     </div>
   );
 };

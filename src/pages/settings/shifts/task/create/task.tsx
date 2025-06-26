@@ -85,14 +85,14 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
           const isFormReport = isReport && values.attachmentType?.value === 'FORMS';
           return (
             <form onSubmit={handleSubmit} className='space-y-6' id='form-settings-shifts'>
-              <div className='grid grid-cols-3 gap-3'>
+              <div className='grid grid-cols-2 gap-2'>
                 <div className='col-span-1'>
                   <Field<string> name='name' validate={required}>
                     {({ input, meta }) => <Input {...input} placeholder='Nombre...' label='name' meta={meta} type='text' />}
                   </Field>
                 </div>
 
-                <div className='col-span-1'>
+                <div className='col-span-2'>
                   <Field<IOption> name='taskType' validate={required}>
                     {({ input, meta }) => <SmartSelector {...input} placeholder='Tipo de tarea...' label='tipo' options={TASK_TYPE_OPTIONS} meta={meta} />}
                   </Field>
@@ -106,7 +106,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                         {({ input }) => <SmartSelector {...input} placeholder='Seleccione formulario...' label='formulario' icon='📋' options={forms.value} />}
                       </Field>
                     </div>
-                    <div className='col-span-1'>
+                    <div className='col-span-2'>
                       <Field<string> name='hourStart' validate={required}>
                         {({ input, meta }) => {
                           let timeValue = input.value ? dayjs(input.value).format('HH:mm') : '';
