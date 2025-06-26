@@ -1,6 +1,7 @@
 import { Badge } from '@/components/common/badge/badge';
 import { Button } from '@/components/common/button/button';
 import ShowFiles from '@/components/common/file/show.file';
+import { MapPoint } from '@/components/common/map/interface';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { FormattedDate } from '@/components/compose/forms';
 import { MemoService } from '@/services';
@@ -23,6 +24,7 @@ interface ChatMessageProps {
   btrLabel?: string;
   solved?: boolean;
   reload?: () => void;
+  mapPoint?: MapPoint;
 }
 
 export const ChatMessage = ({
@@ -39,6 +41,7 @@ export const ChatMessage = ({
   status,
   solved = false,
   reload,
+  mapPoint
 }: ChatMessageProps) => {
   const { t } = useTranslation();
   const [btnLabel, setBtnLabel] = useState('Check in');
@@ -126,7 +129,7 @@ export const ChatMessage = ({
         <div className='mb-2'>{message}</div>
         {resource && resource.length > 0 && (
           <div className='mt-2 pt-2 w-full'>
-            <ShowFiles resources={resource} isSender={isSender} />
+            <ShowFiles resources={resource} isSender={isSender} mapPoint={mapPoint} />
           </div>
         )}
         <div className='flex items-center gap-5 text-xs justify-end mt-2'>

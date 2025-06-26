@@ -8,11 +8,13 @@ import { ImageViewer } from './components/imageViewer';
 import { useRef, useState, useEffect } from 'react';
 import { Button } from '../button/button';
 import { VideoPlayer } from './components/VideoPlayer';
+import MapViewer from './components/mapViewer';
 
 const showFiles = ({
   resources = [],
   isSender = false,
   removeFile,
+  mapPoint
 }: ShowFilesProps) => {
   const { getTenant, getCompanyId } = useUserStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,7 +74,7 @@ const showFiles = ({
         style={{ minHeight: '3.5rem' }}
       >
         {visibleFiles.map((file) => (
-          <div className='border border-b-light-dark dark:border-b-dark-light rounded-sm py-2 relative' key={file.uuid}>
+          <div className='border border-b-light-dark dark:border-b-dark-light rounded-sm py-2 relative max-h-14' key={file.uuid}>
             {allowedImageTypesConst.includes(file.type as any) ? (
               <ImageViewer src={getUrl(file)} />
             ) : allowedAudioTypesConst.includes(file.type as any) ? (
@@ -94,6 +96,9 @@ const showFiles = ({
             )}
           </div>
         ))}
+        {mapPoint && (
+          <MapViewer mapPoint={mapPoint} />
+        )}
       </div>
       {visibleFiles && (
         <Button
