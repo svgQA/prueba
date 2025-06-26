@@ -42,8 +42,8 @@ export const allowedVideoTypesConst = [
   'video/3gpp',
 ] as const;
 
-export type AllowedAreaTypes = typeof allowedAreaTypesConst[number];
-export type AllowedAudioTypes = typeof allowedAudioTypesConst[number];
-export type AllowedDocumentTypes = typeof allowedDocumentTypesConst[number];
-export type AllowedImageTypes = typeof allowedImageTypesConst[number];
-export type AllowedVideoTypes = typeof allowedVideoTypesConst[number];
+export type AllowedAreaTypes = (typeof allowedAreaTypesConst)[number];
+export type AllowedAudioTypes = (typeof allowedAudioTypesConst)[number];
+export type AllowedDocumentTypes = (typeof allowedDocumentTypesConst)[number];
+export type AllowedImageTypes = (typeof allowedImageTypesConst)[number];
+export type AllowedVideoTypes = (typeof allowedVideoTypesConst)[number];

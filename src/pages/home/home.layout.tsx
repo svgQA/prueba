@@ -11,9 +11,11 @@ import { HomeFooter } from './section/footer';
 import { HomeCarousel } from './section/carousel';
 import { HomeSolutions } from './section/solutions';
 import { HomePlans } from './section/plan';
+import { useTranslation } from 'react-i18next';
 // import { HomeService } from './section/services';
 
 export const HomeLayout: FunctionComponent = () => {
+  const { t } = useTranslation();
   useEffect(() => {
     document.title = 'Voxline';
   }, []);
@@ -31,7 +33,7 @@ export const HomeLayout: FunctionComponent = () => {
         name='voxline-navbar'
         menus={NAVBAR_MENUS}
         onActionHandler={onHandlerNavbarButton}
-        logo={<Logo title='voxline' slogan='make your dreams' />}
+        logo={<Logo slogan={t('slogan')} />}
       />
       <div className='w-full pt-16 bg-gradient-to-r from-cyan-500 to-emerald-400 content-center'>
         {homeMenu === '/' && (

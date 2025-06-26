@@ -26,7 +26,7 @@ import { File } from '@/components/common/file/file';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import ShowFiles from '@/components/common/file/show.file';
 import { showAlert } from '@/components/common/show-alert/show-alert';
-import i18n from '@/i18n';
+import './chat.css';
 
 interface IOption {
   label: string;
@@ -491,17 +491,15 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
     if (error.code === error.PERMISSION_DENIED) {
       showAlert({
-        title: i18n.t('shift.expandable.date.location.title'),
-        message: i18n.t('shift.expandable.date.location.message'),
+        title: t('shift.expandable.date.location.title'),
+        message: t('shift.expandable.date.location.message'),
         onConfirm: () => {},
         onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
-      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
+      ToastManager.error(t('shift.expandable.date.location.gpsMessage'));
     } else {
-      ToastManager.error(
-        i18n.t('shift.expandable.date.location.timeoutMessage')
-      );
+      ToastManager.error(t('shift.expandable.date.location.timeoutMessage'));
     }
   };
 
@@ -628,13 +626,12 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   );
 
   return (
-    <>
-      <div className='w-full flex flex-col h-full'>
-        <div className='flex flex-1 overflow-y-auto border-t border-b-light-dark dark:border-b-dark-light'>
-          <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light'>
-            <div className='p-4 border-b border-b-light-dark dark:border-b-dark-light'>
-              <div className='flex gap-2 items-center'>
-                {/*
+    <div className='w-full flex flex-col h-full'>
+      <div className='flex flex-1 overflow-y-auto border-t border-b-light-dark dark:border-b-dark-light'>
+        <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light'>
+          <div className='p-4 border-b-light-dark dark:border-b-dark-light'>
+            <div className='flex gap-2 items-center'>
+              {/*
                 <Button
                   name='users'
                   icon='321'
@@ -643,108 +640,107 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   label={t('memos.view.users')}
                 />
                 */}
-                <Dropdown
-                  name='view-mode'
-                  options={[
-                    {
-                      label: t('memos.chat.view.users'),
-                      value: TypeChatView.USERS_MEMO,
-                      icon: '321',
-                    },
-                    {
-                      label: t('memos.chat.view.services'),
-                      value: TypeChatView.SERVICES_MEMO,
-                      icon: '321',
-                    },
-                  ]}
-                  selectedTag={t('memos.chat.view.select')}
-                  onChange={(value) => {
-                    viewMode.value =
-                      value === TypeChatView.USERS_MEMO
-                        ? TypeChatView.USERS_MEMO
-                        : TypeChatView.SERVICES_MEMO;
-                  }}
-                />
-              </div>
-            </div>
-            {/* Chat info card grouped by */}
-            {chatCardGroupedBy()}
-            {/* Chat pagination */}
-            <div className='flex justify-between items-center p-4 border-t border-r dark:border-b-dark-light border-b-light-dark'>
-              <Button
-                name={t('memos.pagination.previous')}
-                onClick={handlePrevPage}
-                disabled={currentPage.value === 1}
-                icon='014'
-                label={t('memos.pagination.previous')}
-              />
-              <span className='text-sm text-gray-500'>
-                {t('memos.pagination.page')} {currentPage.value}{' '}
-                {t('memos.pagination.of')} {totalPages.value}
-              </span>
-              <Button
-                name={t('memos.pagination.next')}
-                onClick={handleNextPage}
-                disabled={currentPage.value >= totalPages.value}
-                icon='015'
-                label={t('memos.pagination.next')}
+              <Dropdown
+                name='view-mode'
+                options={[
+                  {
+                    label: t('memos.chat.view.users'),
+                    value: TypeChatView.USERS_MEMO,
+                    icon: '321',
+                  },
+                  {
+                    label: t('memos.chat.view.services'),
+                    value: TypeChatView.SERVICES_MEMO,
+                    icon: '321',
+                  },
+                ]}
+                selectedTag={t('memos.chat.view.select')}
+                onChange={(value) => {
+                  viewMode.value =
+                    value === TypeChatView.USERS_MEMO
+                      ? TypeChatView.USERS_MEMO
+                      : TypeChatView.SERVICES_MEMO;
+                }}
               />
             </div>
           </div>
+          {/* Chat info card grouped by */}
+          {chatCardGroupedBy()}
+          {/* Chat pagination */}
+          <div className='flex justify-between items-center p-4 border-t dark:border-b-dark-light border-b-light-dark'>
+            <Button
+              name={t('memos.pagination.previous')}
+              onClick={handlePrevPage}
+              disabled={currentPage.value === 1}
+              icon='014'
+              label={t('memos.pagination.previous')}
+            />
+            <span className='text-sm text-gray-500'>
+              {t('memos.pagination.page')} {currentPage.value}{' '}
+              {t('memos.pagination.of')} {totalPages.value}
+            </span>
+            <Button
+              name={t('memos.pagination.next')}
+              onClick={handleNextPage}
+              disabled={currentPage.value >= totalPages.value}
+              icon='015'
+              label={t('memos.pagination.next')}
+            />
+          </div>
+        </div>
 
-          <div className='w-[70%] flex flex-col'>
-            <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
-              {selectedChat.value === '0' && <FrequentQuestions />}
-              {selectedChat.value === '0' &&
-                chats.value[selectedChat.value]?.messages.map((msg, index) => (
-                  <ChatMessage
-                    key={index}
-                    message={msg.message}
-                    isSender={msg.isSender}
-                  />
-                ))}
-              {selectedChat.value !== '0' &&
-                viewMode.value == TypeChatView.SERVICES_MEMO &&
-                memoByService.value.map((memo: Memo, index) =>
-                  showChatMemoAndSubMemo(memo, index)
-                )}
-              {selectedChat.value !== '0' &&
-                viewMode.value == TypeChatView.USERS_MEMO &&
-                memoByUser.value.map((memo: Memo, index) =>
-                  showChatMemoAndSubMemo(memo, index)
-                )}
-            </div>
-            <Form
-              onSubmit={handleSubmitMessage}
-              render={({ handleSubmit }) => (
-                <form
-                  id='chat-input-form-memo'
-                  name='chat-input-form-memo'
-                  onSubmit={handleSubmit}
-                >
-                  {/*
+        <div className='w-[70%] flex flex-col h-full container-chat'>
+          <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
+            {selectedChat.value === '0' && <FrequentQuestions />}
+            {selectedChat.value === '0' &&
+              chats.value[selectedChat.value]?.messages.map((msg, index) => (
+                <ChatMessage
+                  key={index}
+                  message={msg.message}
+                  isSender={msg.isSender}
+                />
+              ))}
+            {selectedChat.value !== '0' &&
+              viewMode.value == TypeChatView.SERVICES_MEMO &&
+              memoByService.value.map((memo: Memo, index) =>
+                showChatMemoAndSubMemo(memo, index)
+              )}
+            {selectedChat.value !== '0' &&
+              viewMode.value == TypeChatView.USERS_MEMO &&
+              memoByUser.value.map((memo: Memo, index) =>
+                showChatMemoAndSubMemo(memo, index)
+              )}
+          </div>
+          <Form
+            onSubmit={handleSubmitMessage}
+            render={({ handleSubmit }) => (
+              <form
+                id='chat-input-form-memo'
+                name='chat-input-form-memo'
+                onSubmit={handleSubmit}
+              >
+                {/*
             {viewMode.value === TypeChatView.USERS ? (
               <ChatInput onSend={handleSendMessage} input={messages} />
             ) : (
             */}
-                  <ChatInput
-                    onSend={handleSendMessage}
-                    onCancelReply={handleCancelReply}
-                    input={messages}
-                    disabled={replyToId.value === undefined}
-                    replyId={replyToId.value}
-                    replyTo={replyToMessage.value}
-                    // form='chat-input-form-memo'
-                  >
-                    {formMinutesByInputs()}
-                  </ChatInput>
-                  {/* )} */}
-                </form>
-              )}
-            />
-          </div>
+                <ChatInput
+                  onSend={handleSendMessage}
+                  onCancelReply={handleCancelReply}
+                  input={messages}
+                  disabled={replyToId.value === undefined}
+                  replyId={replyToId.value}
+                  replyTo={replyToMessage.value}
+                  // form='chat-input-form-memo'
+                >
+                  {formMinutesByInputs()}
+                </ChatInput>
+                {/* )} */}
+              </form>
+            )}
+          />
         </div>
       </div>
-    </>
+    </div>
   );
 };

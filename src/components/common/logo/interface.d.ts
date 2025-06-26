@@ -1,5 +1,5 @@
 export interface ILogo {
-  title: string;
+  title?: string;
   slogan: string;
   color?: string;
 }
