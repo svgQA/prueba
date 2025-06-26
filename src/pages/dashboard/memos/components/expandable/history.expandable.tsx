@@ -399,7 +399,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             name='attachments'
                             onChange={handleAttachmentUpload}
                             value={[]}
-                            accept='image/*'
+                            accept='image/*, video/*'
                             multiple={true}
                             label='Adjuntos'
                             area='memo'

@@ -2,11 +2,12 @@ import { IPresignedRequest } from '@/types/file';
 import { ShowFilesProps } from './utils/interface';
 import { useUserStore } from '@/store/slices';
 import { cdn_service_url } from '@/env.config';
-import { allowedAudioTypesConst, allowedImageTypesConst } from '@/types';
+import { allowedAudioTypesConst, allowedImageTypesConst, allowedVideoTypesConst } from '@/types';
 import { AudioPlayer } from './components/AudioPlayer';
 import { ImageViewer } from './components/imageViewer';
 import { useRef, useState, useEffect } from 'react';
 import { Button } from '../button/button';
+import { VideoPlayer } from './components/VideoPlayer';
 
 const showFiles = ({
   resources = [],
@@ -84,6 +85,8 @@ const showFiles = ({
               <ImageViewer src={getUrl(file)} />
             ) : allowedAudioTypesConst.includes(file.type as any) ? (
               <AudioPlayer src={getUrl(file)} square />
+            ) : allowedVideoTypesConst.includes(file.type as any) ? (
+              <VideoPlayer src={getUrl(file)} />
             ) : (
               <span className='vox-icon vx-icon-069 px-3' />
             )}

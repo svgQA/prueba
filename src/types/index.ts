@@ -37,6 +37,7 @@ export const allowedImageTypesConst = [
 ] as const;
 
 export const allowedVideoTypesConst = [
+  'video/mp4',
   'video/mpeg',
   'video/ogg',
   'video/3gpp',
