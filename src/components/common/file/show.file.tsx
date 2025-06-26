@@ -2,11 +2,12 @@ import { IPresignedRequest } from '@/types/file';
 import { ShowFilesProps } from './utils/interface';
 import { useUserStore } from '@/store/slices';
 import { cdn_service_url } from '@/env.config';
-import { allowedAudioTypesConst, allowedImageTypesConst } from '@/types';
+import { allowedAudioTypesConst, allowedDocumentTypesConst, allowedImageTypesConst, allowedVideoTypesConst } from '@/types';
 import { AudioPlayer } from './components/AudioPlayer';
 import { ImageViewer } from './components/imageViewer';
 import { useRef, useState, useEffect } from 'react';
 import { Button } from '../button/button';
+import { VideoPlayer } from './components/VideoPlayer';
 
 const showFiles = ({
   resources = [],
@@ -47,8 +48,7 @@ const showFiles = ({
   const showLeft = startIdx > 0;
   const showRight = startIdx + visibleCount < resources.length;
   const goLeft = () => setStartIdx((prev) => Math.max(0, prev - 1));
-  const goRight = () =>
-    setStartIdx((prev) => Math.min(resources.length - visibleCount, prev + 1));
+  const goRight = () => setStartIdx((prev) => Math.min(resources.length - visibleCount, prev + 1));
   const visibleFiles = resources.slice(startIdx, startIdx + visibleCount);
 
   return (
@@ -56,22 +56,15 @@ const showFiles = ({
       className='relative w-full flex justify-center items-center'
       ref={containerRef}
     >
-      {showLeft && (
+      {visibleFiles && (
         <Button
           name='button-change-scheduler'
           onClick={goLeft}
-          icon='014'
+          icon='003'
           borderless
           square
-        ></Button>
-      )}
-      {showRight && (
-        <Button
-          name='button-change-scheduler'
-          onClick={goRight}
-          icon='015'
-          borderless
-          square
+          transparent
+          disabled={!showLeft}
         ></Button>
       )}
       <div
@@ -79,11 +72,16 @@ const showFiles = ({
         style={{ minHeight: '3.5rem' }}
       >
         {visibleFiles.map((file) => (
-          <div key={file.uuid}>
+          <div className='border border-b-light-dark dark:border-b-dark-light rounded-sm py-2 relative' key={file.uuid}>
             {allowedImageTypesConst.includes(file.type as any) ? (
               <ImageViewer src={getUrl(file)} />
             ) : allowedAudioTypesConst.includes(file.type as any) ? (
               <AudioPlayer src={getUrl(file)} square />
+            ) : allowedVideoTypesConst.includes(file.type as any) ? (
+              <VideoPlayer src={getUrl(file)} />
+            ) : allowedDocumentTypesConst.includes(file.type as any) ? (
+              // <span className='vox-icon vx-icon-103 px-3' />
+              <span className='vox-icon vx-icon-064 px-3' />
             ) : (
               <span className='vox-icon vx-icon-069 px-3' />
             )}
@@ -97,6 +95,17 @@ const showFiles = ({
           </div>
         ))}
       </div>
+      {visibleFiles && (
+        <Button
+          name='button-change-scheduler'
+          onClick={goRight}
+          icon='004'
+          borderless
+          square
+          transparent
+          disabled={!showRight}
+        ></Button>
+      )}
     </div>
   );
 };

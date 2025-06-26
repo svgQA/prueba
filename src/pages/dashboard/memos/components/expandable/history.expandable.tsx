@@ -24,8 +24,8 @@ import { PredefinedService } from '@/services/shift/predefined';
 import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
 import { IPanic } from '@/components/common/panic/interface';
-import { Chip } from '@/components/common/chip/chip';
 import { PanicService } from '@/services/memo/panic';
+import { Badge } from '@/components/common/badge/badge';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -113,8 +113,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => {},
-        onCancel: () => {},
+        onConfirm: () => { },
+        onCancel: () => { },
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
@@ -399,7 +399,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             name='attachments'
                             onChange={handleAttachmentUpload}
                             value={[]}
-                            accept='image/*'
+                            accept='image/*, video/*'
                             multiple={true}
                             label='Adjuntos'
                             area='memo'
@@ -410,7 +410,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     {/* {showComment && ( */}
                     <div className='grid grid-cols-1'>
                       <Field<string> name='message'>
-                        {({}) => (
+                        {({ }) => (
                           <TextArea
                             name='message'
                             placeholder='Escribe un Comentario...'
@@ -469,11 +469,12 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
         {panic.value.length > 0 && (
           <div className='flex flex-col gap-2'>
-            <Chip
-              label={panic.value.length + ' - ' + panic.value[0].message}
-              width='full'
+            <Badge
+              label='panic_button'
               icon='020'
-              borderColor='border-red-500 dark:border-red-500'
+              status='error'
+              full
+              outline
             />
           </div>
         )}
@@ -496,7 +497,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     title: btnLabel,
                     message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
                     onConfirm: () => handleCheck(),
-                    onCancel: () => {},
+                    onCancel: () => { },
                   })
                 }
                 name={btnLabel}

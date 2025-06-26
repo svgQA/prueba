@@ -11,7 +11,7 @@ import { useWebSocket } from '@/utils/socket';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useSignal } from '@preact/signals';
 import { IMessage } from '@/utils/socket/interface';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
 import { MemoService } from '@/services';
 import { ExtraData, Memo } from '../utils/memos';
@@ -25,7 +25,6 @@ import { IPresignedRequest } from '@/types/file';
 import { File } from '@/components/common/file/file';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import ShowFiles from '@/components/common/file/show.file';
-import { showAlert } from '@/components/common/show-alert/show-alert';
 import './chat.css';
 
 interface IOption {
@@ -101,7 +100,6 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   >();
   const messages = useSignal<string>('');
   const files = useSignal<IPresignedRequest[]>([]);
-  const [btnLabel, setBtnLabel] = useState('Check In');
 
   useEffect(() => {
     fetchPredefinedOptions();
@@ -140,19 +138,6 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     selectedChat.value = '0';
     userSelected.value = undefined;
   }, [viewMode.value]);
-
-  useEffect(() => {
-    if (replyToId.value) {
-      const memo =
-        viewMode.value === TypeChatView.SERVICES_MEMO
-          ? memoByService.value.find((m) => m.id === replyToId.value)
-          : memoByUser.value.find((m) => m.id === replyToId.value);
-
-      if (memo) {
-        getStatus(memo.state);
-      }
-    }
-  }, [replyToId.value, memoByService.value, memoByUser.value]);
 
   const handleReceiveMessage = (message: IMessage) => {
     chats.value = addMessageArray(message.from, message);
@@ -277,9 +262,10 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   };
 
   const handleSubmitMessage = async (values: any, form: any) => {
-    let memo: Memo = memoByService.value.find((e) => e.id == replyToId.value);
-    let extraData: ExtraData = memo.extraData
-      ? ({ ...memo.extraData } as ExtraData)
+    let memo: Memo = (TypeChatView.SERVICES_MEMO === viewMode.value) ? memoByService.value.find((e) => e.id == replyToId.value) : memoByUser.value.find((e) => e.id == replyToId.value);
+    if (!memo) ToastManager.error('No existe un memo con el Id que seleccionaste');
+    let extraData: ExtraData = memo?.extraData
+      ? ({ ...memo?.extraData } as ExtraData)
       : ({} as ExtraData);
 
     if (values.predefined) extraData.predefined = values.predefined;
@@ -390,7 +376,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         {/* Memo principal */}
         <ChatMessage
           key={`parent-${index}`}
-          message={memo.description}
+          message={memo.panicUuid ? t(memo.description) : memo.description}
           isSender={false}
           title={memo.novelty?.name}
           resource={memo.resource}
@@ -407,6 +393,8 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           }
           isSelected={replyToId.value === memo.id}
           status={memo.state}
+          solved={memo.state === 'OPENED' || memo.state === 'IN_REVISION' || memo.state === 'CREATED'}
+          reload={() => handleChatSelect(selectedChat.value, viewMode.value)}
         >
           <div className='flex items-center gap-2 text-xs my-2'>
             <span className='vox-icon size-sm vx-icon-318' />
@@ -429,7 +417,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         {memo.children?.map((childMemo: Memo, childIndex: number) => (
           <ChatMessage
             key={`child-${index}-${childIndex}`}
-            message={childMemo.description}
+            message={childMemo.panicUuid ? t(childMemo.description) : childMemo.description}
             isSender={true}
             title={childMemo.extraData?.predefined?.label}
             resource={childMemo.resource}
@@ -464,61 +452,6 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         ))}
       </>
     );
-  };
-
-  const getStatus = (state: string) => {
-    const statesToSolve = new Set(['OPENED', 'IN_REVISION', 'CREATED']);
-    const status = statesToSolve.has(state) ? 'SOLVE' : 'RESOLVED';
-    setBtnLabel(status);
-  };
-
-  const getLocation = async () => {
-    try {
-      const position = await new Promise<GeolocationPosition>(
-        (resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        }
-      );
-      return position;
-    } catch (error) {
-      getErrorGeolocation(error as GeolocationPositionError);
-      return null;
-    }
-  };
-
-  const getErrorGeolocation = (error: GeolocationPositionError) => {
-    if (!(error instanceof GeolocationPositionError)) return;
-
-    if (error.code === error.PERMISSION_DENIED) {
-      showAlert({
-        title: t('shift.expandable.date.location.title'),
-        message: t('shift.expandable.date.location.message'),
-        onConfirm: () => {},
-        onCancel: () => {},
-      });
-    } else if (error.code === error.POSITION_UNAVAILABLE) {
-      ToastManager.error(t('shift.expandable.date.location.gpsMessage'));
-    } else {
-      ToastManager.error(t('shift.expandable.date.location.timeoutMessage'));
-    }
-  };
-
-  const handleCheck = async () => {
-    if (!replyToId.value) return;
-
-    const position = await getLocation();
-    if (!position) return null;
-
-    const checkData = {
-      latitude: position.coords.latitude.toString(),
-      longitude: position.coords.longitude.toString(),
-      date: new Date().toISOString(),
-      platform: 'web',
-      type: btnLabel === 'SOLVE' ? 'SOLVE' : 'RESOLVED',
-    };
-
-    await MemoService.createCheck(checkData, replyToId.value);
-    handleChatSelect(selectedChat.value, viewMode.value);
   };
 
   const formMinutesByInputs = () => (
@@ -589,29 +522,6 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
             {files.value.length > 0 && (
               <div className='flex items-center gap-2'>
                 <ShowFiles resources={files.value} />
-              </div>
-            )}
-
-            {replyToId.value && (
-              <div className='flex items-center gap-2'>
-                <Button
-                  label={btnLabel}
-                  icon={
-                    btnLabel === 'SOLVE' || btnLabel === 'RESOLVED'
-                      ? '030'
-                      : '032'
-                  }
-                  disabled={btnLabel === 'RESOLVED'}
-                  onClick={() =>
-                    showAlert({
-                      title: btnLabel,
-                      message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
-                      onConfirm: () => handleCheck(),
-                      onCancel: () => {},
-                    })
-                  }
-                  name={btnLabel}
-                />
               </div>
             )}
           </div>
@@ -731,7 +641,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   disabled={replyToId.value === undefined}
                   replyId={replyToId.value}
                   replyTo={replyToMessage.value}
-                  // form='chat-input-form-memo'
+                // form='chat-input-form-memo'
                 >
                   {formMinutesByInputs()}
                 </ChatInput>
