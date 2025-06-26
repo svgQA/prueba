@@ -24,7 +24,6 @@ const MapViewer = ({ mapPoint }: { mapPoint?: MapPoint }) => {
 
     return (
         <Viewer posterSpan={posterSpan} infoExpanded={infoExpanded} ></Viewer>
-
     );
 };
 
