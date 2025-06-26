@@ -9,9 +9,6 @@ import { FormattedDate } from '@/components/compose/forms';
 import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { IPresignedRequest } from '@/types/file';
-import { ImageViewer } from '@/components/common/file/components/imageViewer';
-import { cdn_service_url } from '@/env.config';
-import { useUserStore } from '@/store/slices';
 import ShowFiles from '@/components/common/file/show.file';
 import { Avatar } from '@/components/common/Avatar';
 
@@ -180,12 +177,6 @@ const ShiftCard = ({
   disabled,
   onCheck,
 }: IShiftCardProps) => {
-  const { getTenant, getCompanyId } = useUserStore();
-
-  const getUrl = (file: IPresignedRequest) => {
-    return `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
-  };
-
   const getLocation = async () => {
     try {
       const position = await new Promise<GeolocationPosition>(

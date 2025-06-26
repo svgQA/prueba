@@ -19,7 +19,6 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
-import { FloatBadge } from '@/components/common/badge/float';
 import { DateUtils } from '@/utils/utilities/dates';
 import {
   IBaseSSE,

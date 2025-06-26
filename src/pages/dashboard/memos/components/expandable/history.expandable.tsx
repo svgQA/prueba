@@ -24,7 +24,6 @@ import { PredefinedService } from '@/services/shift/predefined';
 import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
 import { IPanic } from '@/components/common/panic/interface';
-import { Chip } from '@/components/common/chip/chip';
 import { PanicService } from '@/services/memo/panic';
 import { Badge } from '@/components/common/badge/badge';
 
