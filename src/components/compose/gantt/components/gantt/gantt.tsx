@@ -758,7 +758,10 @@ const GanttComponent: ComponentType<GanttProps> = ({
           selectedUsers={selectedUsers}
           users={users}
           onDateSubmit={handleDateSubmit}
-          onReloadSignal={onReloadSignal}
+          onReloadSignal={() => {
+            setSelectedUsers(new Set());
+            onReloadSignal?.();
+          }}
         />
 
         {!unsearch && (

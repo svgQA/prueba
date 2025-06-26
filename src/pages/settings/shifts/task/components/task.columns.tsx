@@ -11,7 +11,7 @@ export const columns: ColumnDef<ITask>[] = [
     size: 60,
     header: 'h_id',
   },
-  
+
   {
     id: 'name',
     accessorKey: 'name',

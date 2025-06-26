@@ -5,11 +5,12 @@ import { FieldArray } from 'react-final-form-arrays';
 import arrayMutators from 'final-form-arrays';
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
-import { required } from '@/utils/utilities';
+import { required, validate_min_len } from '@/utils/utilities';
 import { IOption } from '@/components/common/multi/interface';
 import { ShiftService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { DateUtils } from '@/utils/utilities/dates';
 
 interface ReplicateModalProps {
   selectedUsers: Set<string | number>;
@@ -54,13 +55,17 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
   const [showDateForm, setShowDateForm] = useState(false);
   if (selectedUsers.size === 0) return null;
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: FormValues, form: any) => {
+    values.endDate = DateUtils.dateToBackend(values.endDate);
+    values.startDate = DateUtils.dateToBackend(values.startDate);
+
     const response = await ShiftService.setReplicateV2(values);
     if (!response.getStatus()) {
       ToastManager.error('Error replicating shifts');
       return;
     }
     ToastManager.success('Shifts replicated successfully');
+    form.reset();
     setShowDateForm((prev) => !prev);
     onReloadSignal?.();
   };
@@ -119,7 +124,11 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
               }
 
               return (
-                <form onSubmit={handleSubmit} className='space-y-4 relative'>
+                <form
+                  onSubmit={handleSubmit}
+                  className='space-y-4 relative'
+                  id='replicate-form-id'
+                >
                   <div className='grid grid-cols-2 gap-4'>
                     <Field<string> name='startDate' validate={required}>
                       {({ input, meta }) => (
@@ -188,7 +197,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                                   <div className='relative'>
                                     <Field<IOption[]>
                                       name={`${name}.replacementUserId`}
-                                      validate={required}
+                                      validate={validate_min_len(1)}
                                     >
                                       {({ input, meta }) => (
                                         <SmartSelector
@@ -215,20 +224,23 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
 
                   <div className='flex justify-end gap-2 items-center'>
                     <Button
-                      id='btn-cancel'
-                      name='btn-cancel'
-                      type='button'
-                      label='Cancelar'
-                      onClick={() => setShowDateForm(false)}
-                      disabled={submitting}
-                    />
-                    <Button
                       id='btn-submit'
                       name='btn-submit'
                       type='submit'
-                      label='Crear'
+                      label='save'
+                      icon='332'
                       mode='primary'
+                      form='replicate-form-id'
                       disabled={submitting || pristine}
+                    />
+                    <Button
+                      id='btn-cancel'
+                      name='btn-cancel'
+                      type='button'
+                      label='cancel'
+                      icon='231'
+                      onClick={() => setShowDateForm(false)}
+                      disabled={submitting}
                     />
                   </div>
                 </form>
