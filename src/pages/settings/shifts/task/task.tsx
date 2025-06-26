@@ -19,8 +19,8 @@ import { TaskService } from '@/services';
 
 export interface ITask {
   id: number;
-  description: string;
   status: string;
+  description: string;
   formId: number;
   start: string;
 }

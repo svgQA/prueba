@@ -207,7 +207,7 @@ export const general_es = {
   shifts: {
     pageTitle: 'VX - Servicio de Turnos',
     confirmDelete: '¿Está seguro de eliminar {{name}}?',
-    remoteSupervision: 'Supervisión Remota',
+    remoteSupervision: 'Notificationes /  Supervision',
     cards: {
       totalToday: 'Turnos Totales Hoy',
       inProgress: 'Turnos En Curso',
