@@ -37,7 +37,7 @@ export const TaskSettingPage: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
 
   useEffect(() => {
-    document.title = 'VX - Task Service';
+    document.title = 'TR - Task Service';
     getTasks();
   }, []);
 

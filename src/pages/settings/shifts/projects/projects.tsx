@@ -38,7 +38,7 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   const projects: Signal<IProject[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
   useEffect(() => {
-    document.title = 'VX - Project Service';
+    document.title = 'TR - Project Service';
     getProjects();
   }, []);
 

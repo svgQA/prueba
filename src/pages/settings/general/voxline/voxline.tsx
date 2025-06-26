@@ -3,7 +3,7 @@ import { useEffect } from 'preact/hooks';
 
 export const VoxlineSettingPage: FunctionComponent = () => {
   useEffect(() => {
-    document.title = 'Voxline Settings';
+    document.title = 'TR Settings';
   }, []);
-  return <section>VOXLINE</section>;
+  return <section>Tryvoo</section>;
 };

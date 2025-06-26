@@ -4,7 +4,7 @@ import { useEffect } from 'preact/hooks';
 
 export const DevicesPage: FunctionComponent = () => {
   useEffect(() => {
-    document.title = 'VX - Devices Service';
+    document.title = 'TR - Devices Service';
   }, []);
   return <Section padding>Devices</Section>;
 };

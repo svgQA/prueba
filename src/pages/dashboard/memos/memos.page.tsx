@@ -70,7 +70,7 @@ export const MemosPage: FunctionComponent = () => {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
   useEffect(() => {
-    document.title = 'VX - Chat';
+    document.title = 'TR - Chat';
     return () => {
       wsManager.removeListener('memos');
     };

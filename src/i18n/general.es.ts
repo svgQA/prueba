@@ -205,7 +205,7 @@ export const general_es = {
     forgotPassword: '¿Olvidó su contraseña?',
   },
   shifts: {
-    pageTitle: 'VX - Servicio de Turnos',
+    pageTitle: 'TR - Servicio de Turnos',
     confirmDelete: '¿Está seguro de eliminar {{name}}?',
     remoteSupervision: 'Notificationes /  Supervision',
     cards: {
@@ -308,8 +308,8 @@ export const general_es = {
     },
   },
   memos: {
-    title: 'VX - Chat',
-    pageTitle: 'VX - Servicio de Memorandos',
+    title: 'TR - Chat',
+    pageTitle: 'TR - Servicio de Memorandos',
     frequentQuestions: {
       title: 'Preguntas Frecuentes',
       question1: '¿Cómo puedo empezar un nuevo proyecto?',
@@ -341,7 +341,7 @@ export const general_es = {
     },
   },
   forms: {
-    pageTitle: 'VX - Servicio de Formularios',
+    pageTitle: 'TR - Servicio de Formularios',
     cards: {
       total: 'Total Formularios',
       subtitle: 'Formularios creados',
@@ -364,7 +364,7 @@ export const general_es = {
     },
   },
   history: {
-    pageTitle: 'VX - Historial de Notificaciones',
+    pageTitle: 'TR - Historial de Notificaciones',
     title: 'Historial de notificaciones',
     buttons: {
       all: 'Todas',
@@ -404,6 +404,6 @@ export const general_es = {
     },
   },
   users: {
-    pageTitle: 'VX - Servicio de Usuarios',
+    pageTitle: 'TR - Servicio de Usuarios',
   },
 };
