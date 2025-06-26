@@ -285,6 +285,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                       </div>
                     </div>
                   </div>
+                </div>
+                <div>
                   {expandedMemoId === memo.id && memo.resource && (
                     <ShowFiles resources={memo.resource} />
                   )}
@@ -467,16 +469,12 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
         {panic.value.length > 0 && (
           <div className='flex flex-col gap-2'>
-            {panic.value.map((panicItem: IPanic) => (
-              <div key={panicItem.id} className='flex items-center gap-2'>
-                <Chip
-                  label={panicItem.message}
-                  width='xl'
-                  icon='020'
-                  borderColor='border-red-500 dark:border-red-500'
-                />
-              </div>
-            ))}
+            <Chip
+              label={panic.value.length + ' - ' + panic.value[0].message}
+              width='full'
+              icon='020'
+              borderColor='border-red-500 dark:border-red-500'
+            />
           </div>
         )}
 

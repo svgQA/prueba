@@ -83,6 +83,7 @@ export const MemosPage: FunctionComponent = () => {
       fetchSSE();
       selectedMemo();
       EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
+      EventBus.on(SSE_TYPE.PANIC, handleMemoSSE);
     }
   }, [selectedCompany, location]);
 
@@ -128,7 +129,7 @@ export const MemosPage: FunctionComponent = () => {
       memos.value = [...memoCopy];
     }
 
-    if (name && message && name === 'create') {
+    if (name === SSE_EVENTS.CREATE || name === SSE_EVENTS.PANIC) {
       setNotificationMemo((prevCount) => prevCount + 1);
       setIsAnimating(true);
       setTimeout(() => setIsAnimating(false), 1000);

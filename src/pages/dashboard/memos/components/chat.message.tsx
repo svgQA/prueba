@@ -55,8 +55,8 @@ export const ChatMessage = ({
         )}
         <div className='mb-2'>{message}</div>
         {resource && resource.length > 0 && (
-          <div className='mt-2 pt-2'>
-            <ShowFiles resources={resource} />
+          <div className='mt-2 pt-2 w-full'>
+            <ShowFiles resources={resource} isSender={isSender} />
           </div>
         )}
         <div className='flex items-center gap-5 text-xs justify-end mt-2'>

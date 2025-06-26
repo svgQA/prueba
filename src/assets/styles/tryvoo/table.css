@@ -2,7 +2,7 @@ table.elements {
   @apply w-full overflow-x-auto;
   thead {
     th {
-      @apply h-11 dark:bg-b-dark-light bg-b-light-light shadow-black;
+      @apply h-11 dark:bg-b-dark-light bg-b-light-light shadow-[0_4px_6px_-4px_rgba(0,0,0,0.1)] shadow-white dark:shadow-gray-800;
       &:first-child {
         @apply rounded-tl-lg;
       }

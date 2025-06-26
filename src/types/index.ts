@@ -3,25 +3,47 @@ export interface IPagination {
   items: number;
 }
 
-export type AllowedAreaTypes = 'form' | 'memo' | 'report' | 'shift' | 'user';
+export const allowedAreaTypesConst = [
+  'form',
+  'memo',
+  'report',
+  'shift',
+  'user',
+] as const;
 
-export type AllowedAudioTypes =
-  | 'audio/mp3'
-  | 'audio/wav'
-  | 'audio/midi'
-  | 'audio/ogg'
-  | 'audio/3gpp'
-  | 'audio/aac'
-  | 'audio/m4a'
-  | 'audio/mpeg';
+export const allowedAudioTypesConst = [
+  'audio/mp3',
+  'audio/wav',
+  'audio/midi',
+  'audio/ogg',
+  'audio/3gpp',
+  'audio/aac',
+  'audio/m4a',
+  'audio/mpeg',
+] as const;
 
-export type AllowedDocumentTypes =
-  | 'text/csv'
-  | 'application/pdf'
-  | 'application/msword'
-  | 'application/vnd.ms-excel'
-  | 'text/plain';
+export const allowedDocumentTypesConst = [
+  'text/csv',
+  'application/pdf',
+  'application/msword',
+  'application/vnd.ms-excel',
+  'text/plain',
+] as const;
 
-export type AllowedImageTypes = 'image/jpeg' | 'image/png' | 'image/svg+xml';
+export const allowedImageTypesConst = [
+  'image/jpeg',
+  'image/png',
+  'image/svg+xml',
+] as const;
 
-export type AllowedVideoTypes = 'video/mpeg' | 'video/ogg' | 'video/3gpp';
+export const allowedVideoTypesConst = [
+  'video/mpeg',
+  'video/ogg',
+  'video/3gpp',
+] as const;
+
+export type AllowedAreaTypes = (typeof allowedAreaTypesConst)[number];
+export type AllowedAudioTypes = (typeof allowedAudioTypesConst)[number];
+export type AllowedDocumentTypes = (typeof allowedDocumentTypesConst)[number];
+export type AllowedImageTypes = (typeof allowedImageTypesConst)[number];
+export type AllowedVideoTypes = (typeof allowedVideoTypesConst)[number];

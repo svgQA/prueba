@@ -814,6 +814,7 @@ export const Table = <T,>({
                         left: '0',
                         zIndex: 1,
                       }}
+                      className='shadow-white dark:shadow-gray-800 shadow-[0_4px_6px_-4px_rgba(0,0,0,0.1)]'
                     >
                       {selectable && onNotifications && hasNotifications && (
                         <div className='flex items-center justify-center h-full max-w-[2.5rem] min-w-[2.5rem]'>
@@ -853,6 +854,8 @@ export const Table = <T,>({
                             name='setting'
                             icon='168'
                             square
+                            borderless
+                            transparent
                             onClick={handleSettingToggle}
                           />
                           <div

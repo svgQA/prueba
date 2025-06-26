@@ -26,6 +26,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   square = false,
   selectedColor = 'bg-primary',
   mode,
+  transparent = false,
 }: IButtonProps) => {
   const { t } = useTranslation();
   const getJustify = () => {
@@ -43,9 +44,11 @@ export const Button: FunctionComponent<IButtonProps> = ({
     if (mode) {
       return `bg-${mode} text-white`;
     }
-    return selected
-      ? `${selectedColor} text-white`
-      : 'bg-white dark:bg-b-dark-dark text-primary dark:text-gray-200';
+    return transparent
+      ? 'bg-transparent'
+      : selected
+        ? `${selectedColor} text-white`
+        : 'bg-white dark:bg-b-dark-dark text-primary dark:text-gray-200';
   };
 
   return (

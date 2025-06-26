@@ -188,11 +188,11 @@ export const FormCreateSettingPage: FunctionComponent = () => {
         />
       </div>
       <div class='flex-grow min-h-[78vh] p-3'>
-        <div className='flex flex-row w-full items-center mb-4 gap-5 pr-12'>
+        <div className='flex flex-row w-[93%] items-center mb-4 gap-5 justify-between'>
           <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer'>
             <span className='vx-icon vx-upload text-gray-400 text-2xl' />
           </div>
-          <div className='flex flex-row w-10/12 justify-between items-center px-2 gap-3'>
+          <div className='flex flex-row w-full justify-between items-center gap-3'>
             <div className='flex flex-col gap-1 w-full'>
               <Input
                 type='text'
@@ -228,13 +228,13 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             />
           </div>
         </div>
-        <div className='flex flex-row w-full items-center mb-4 gap-5 pr-8 justify-end'>
-          <div className='max-w-64'>
+        <div className='flex flex-row w-[93%] items-center mb-4 gap-5 justify-end'>
+          <div className='max-w-64 h-5'>
             {getHasUnsavedChanges.value && (
               <Badge
                 outline
                 status={isAutoSaving ? 'info' : 'warning'}
-                label={isAutoSaving ? 'Auto-saving...' : 'Unsaved changes'}
+                label={isAutoSaving ? 'saving' : 'unsaved'}
                 full
               />
             )}
@@ -242,7 +242,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
         </div>
         <div className='flex flex-col w-[98%] 2xl:max-w-[60vw]'>
           {getForm.value.pages.map((page) => (
-            <div key={page.id} className='w-full mb-5'>
+            <div key={page.id} className='w-full mb-5 rounded-2xl'>
               <Input
                 type='text'
                 placeholder={t('form.placeholder.title_page')}

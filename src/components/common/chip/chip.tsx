@@ -12,7 +12,7 @@ export const Chip: FunctionComponent<IChipProps> = ({
     <div
       class={`relative justify-between flex items-center rounded-full border ${borderColor} py-1 px-3 text-center text-sm transition-all text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 ${sizeMap[width]}`}
     >
-      <span class='truncate'>{label}</span>
+      <span class='truncate mr-3'>{label}</span>
       {icon && <span className={`vox-icon vx-icon-${icon} size-sm`}></span>}
       {onDelete && (
         <span

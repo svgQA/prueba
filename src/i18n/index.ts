@@ -18,6 +18,8 @@ import { demo_en, demo_es } from './demo';
 import { columns_en, columns_es } from './columns';
 import { buttons_en, buttons_es } from './button';
 import { menus_en, menus_es } from './menus';
+import { hero_en, hero_es } from './hero';
+import { placeholder_en, placeholder_es } from './placeholder';
 
 // import { notification_en, notification_es } from './notification';
 // import { shift_en, shift_es } from './shift';
@@ -42,6 +44,8 @@ const resources = {
       ...columns_en,
       ...buttons_en,
       ...menus_en,
+      ...hero_en,
+      ...placeholder_en,
       // ...home_en,
     },
   },
@@ -63,6 +67,8 @@ const resources = {
       ...columns_es,
       ...buttons_es,
       ...menus_es,
+      ...hero_es,
+      ...placeholder_es,
       // ...home_es,
     },
   },
