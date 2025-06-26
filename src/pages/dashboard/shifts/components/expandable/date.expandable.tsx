@@ -1,4 +1,3 @@
-import { Avatar } from '@/components/common/Avatar';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { ToastManager } from '@/utils/toast/toast-manager';
@@ -9,14 +8,20 @@ import { useState } from 'preact/hooks';
 import { FormattedDate } from '@/components/compose/forms';
 import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { IPresignedRequest } from '@/types/file';
+import { ImageViewer } from '@/components/common/file/components/imageViewer';
+import { cdn_service_url } from '@/env.config';
+import { useUserStore } from '@/store/slices';
+import ShowFiles from '@/components/common/file/show.file';
+import { Avatar } from '@/components/common/Avatar';
 
 interface ICheckData {
   time: string;
   platform: string;
   distance?: string;
   location: { lat: string; lng: string };
-  url: string;
   type: string;
+  file: IPresignedRequest[]
 }
 
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
@@ -111,7 +116,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         shiftId={shift?.id || 0}
         latitude={checkInData?.location.lat || 4.649251}
         longitude={checkInData?.location.lng || -74.106992}
-        url={checkInData?.url || ''}
+        file={checkInData?.file || []}
         // disabled={!!checkOutData?.distance}
         disabled={shift?.status !== 'CREATED'} // Solo permitir check-in si está en estado CREATED
         onCheck={handleCheck}
@@ -131,7 +136,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         shiftId={shift?.id || 0}
         latitude={checkOutData?.location.lat || 4.649251}
         longitude={checkOutData?.location.lng || -74.106992}
-        url={checkOutData?.url || ''}
+        file={checkOutData?.file || []}
         // disabled={!checkInData?.distance || !!checkOutData?.distance}
         disabled={shift?.status !== 'OPENED'} // Solo permitir check-out si está en estado OPENED
         onCheck={handleCheck}
@@ -153,7 +158,7 @@ interface IShiftCardProps {
   distance?: string;
   latitude: number;
   longitude: number;
-  url: string;
+  file: IPresignedRequest[];
   disabled: boolean;
   onCheck: (checkData: ICheckData) => void;
 }
@@ -171,10 +176,16 @@ const ShiftCard = ({
   shiftId,
   latitude,
   longitude,
-  url,
+  file,
   disabled,
   onCheck,
 }: IShiftCardProps) => {
+  const { getTenant, getCompanyId } = useUserStore();
+
+  const getUrl = (file: IPresignedRequest) => {
+    return `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
+  };
+
   const getLocation = async () => {
     try {
       const position = await new Promise<GeolocationPosition>(
@@ -196,8 +207,8 @@ const ShiftCard = ({
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => {},
-        onCancel: () => {},
+        onConfirm: () => { },
+        onCancel: () => { },
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
@@ -233,7 +244,7 @@ const ShiftCard = ({
           lat: checkData.latitude,
           lng: checkData.longitude,
         },
-        url: '',
+        file: []
       });
     }
   };
@@ -246,7 +257,7 @@ const ShiftCard = ({
         <div className='flex flex-col gap-4 justify-between h-full'>
           {/* Columna izquierda - Foto y nombre */}
           <div className='flex flex-col items-center mr-4 w-full'>
-            <Avatar icon='023' src={url} size='md' />
+            {file.length ? <ShowFiles resources={file} /> : <Avatar icon='023' size='md' />}
             <TextEllipsis text={name} maxWidth='200px'></TextEllipsis>
             <Badge label={status} status='success' outline />
           </div>
@@ -259,7 +270,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Fecha</p>
-                <FormattedDate date={date} format='datetime' />
+                <FormattedDate date={date} format='date' />
               </div>
             </div>
 
@@ -267,19 +278,15 @@ const ShiftCard = ({
               <div className='flex-shrink-0 mr-2'>
                 <span className='!text-primary vox-icon size-sm vx-icon-325'></span>
               </div>
-              <div>
-                <p className='font-semibold'>Hora</p>
-                <FormattedDate date={time} format='time' />
-              </div>
-            </div>
-
-            <div className='flex items-center'>
-              <div className='flex-shrink-0 mr-2'>
-                <span className='!text-primary vox-icon size-sm vx-icon-326'></span>
-              </div>
-              <div>
-                <p className='font-semibold'>Fuente</p>
-                <p>{source}</p>
+              <div className='flex flex-row justify-between w-full'>
+                <div>
+                  <p className='font-semibold'>Hora</p>
+                  <FormattedDate date={time} format='time' />
+                </div>
+                <div>
+                  <p className='font-semibold'>Fuente</p>
+                  <p>{source}</p>
+                </div>
               </div>
             </div>
 
@@ -289,7 +296,7 @@ const ShiftCard = ({
               </div>
               <div>
                 <p className='font-semibold'>Distancia</p>
-                <p>{distance}</p>
+                <p>{(Number(distance) / 1000).toFixed(2)} Km</p>
               </div>
             </div>
           </div>
@@ -303,7 +310,7 @@ const ShiftCard = ({
                 title: btnLabel,
                 message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
                 onConfirm: () => handleCheck(),
-                onCancel: () => {},
+                onCancel: () => { },
               })
             }
             name={btnLabel}
@@ -314,7 +321,7 @@ const ShiftCard = ({
       {/* Columna derecha - Mapa */}
       <div className='flex-1 w-full max-h-96 overflow-hidden'>
         <MapLibrePointsMap
-          sendPoints={() => {}}
+          sendPoints={() => { }}
           name='Map'
           center={{
             lat: latitude,
@@ -338,7 +345,7 @@ const ShiftCard = ({
           radius={50}
           draggable={true}
           width='100%'
-          clickPoint={() => {}}
+          clickPoint={() => { }}
         />
       </div>
     </div>

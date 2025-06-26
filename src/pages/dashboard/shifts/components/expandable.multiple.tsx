@@ -17,7 +17,7 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
   const { service, employee, activityPct, roundPct, tasks, report } = shift;
   switch (type) {
     case 'service':
-      return <ServiceInfo service={service} />;
+      return <ServiceInfo service={service} shift={shift} />;
     case 'employee':
       return (
         <EmployeeInfo
