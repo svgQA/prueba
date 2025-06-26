@@ -11,6 +11,13 @@ export const columns: ColumnDef<ITask>[] = [
     size: 60,
     header: 'h_id',
   },
+  
+  {
+    id: 'name',
+    accessorKey: 'name',
+    size: 60,
+    header: 'h_name',
+  },
   {
     id: 'description',
     accessorKey: 'description',
@@ -20,12 +27,6 @@ export const columns: ColumnDef<ITask>[] = [
       const description = info.getValue() as string;
       return <TextEllipsis text={description} maxWidth='300px' />;
     },
-  },
-  {
-    id: 'name',
-    accessorKey: 'name',
-    size: 60,
-    header: 'h_name',
   },
   {
     id: 'hourStart',

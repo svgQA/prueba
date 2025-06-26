@@ -4,7 +4,7 @@ export const buttons_es = {
   delete: 'Eliminar',
   cancel: 'Cancelar',
   create: 'Crear',
-  remote: 'Supervisión Remota',
+  remote: 'Notificaciones / Supervisión',
   save: 'Guardar',
   description: 'Descripción',
   condition: 'Condición',

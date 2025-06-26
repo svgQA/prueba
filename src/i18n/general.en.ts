@@ -207,7 +207,7 @@ export const general_en = {
   shifts: {
     pageTitle: 'VX - Shift Service',
     confirmDelete: 'Are you sure you want to delete {{name}}?',
-    remoteSupervision: 'Remote Supervision',
+    remoteSupervision: 'Notification / Supervision',
     cards: {
       totalToday: 'Total Shifts Today',
       inProgress: 'Shifts In Progress',
