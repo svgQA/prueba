@@ -68,7 +68,7 @@ export const MemosPage: FunctionComponent = () => {
   const notificationBannerRef = useRef<{ startBannerAnimation: () => void }>(null);
 
   useEffect(() => {
-    document.title = 'VX - Chat';
+    document.title = 'TR - Chat';
     return () => {
       wsManager.removeListener('memos');
     };

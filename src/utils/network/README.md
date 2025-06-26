@@ -1,6 +1,6 @@
 # Network Utilities
 
-Utilidades para manejo de red en la aplicación Voxline Dashboard. Incluye un sistema de eventos, manejo de SSE (Server-Sent Events) y una base para servicios HTTP.
+Utilidades para manejo de red en la aplicación Tryvoo Dashboard. Incluye un sistema de eventos, manejo de SSE (Server-Sent Events) y una base para servicios HTTP.
 
 ## 📦 EventBus
 

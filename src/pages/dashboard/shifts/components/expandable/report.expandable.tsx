@@ -63,9 +63,9 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
           const reportDate = report.requestDate
             ? DateUtils.dateToFrontend(report.requestDate, {
-              time: true,
-              format: 'DD/MM/YYYY HH:mm',
-            })
+                time: true,
+                format: 'DD/MM/YYYY HH:mm',
+              })
             : '—';
           const repDate = DateUtils.dateToFrontend(report.createdAt, {
             time: true,
@@ -91,22 +91,23 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                 </div>
 
                 {/* Fechas */}
-                <div className="col-span-3 space-y-0.5">
+                <div className='col-span-3 space-y-0.5'>
                   {isRequested && (
                     <>
-                      <p className="leading-tight">
-                        <span className="font-semibold">Solicitud:</span> {reportDate}
+                      <p className='leading-tight'>
+                        <span className='font-semibold'>Solicitud:</span>{' '}
+                        {reportDate}
                       </p>
-                      <p className="leading-tight">
-                        <span className="font-semibold">Recibido:</span> {repDate}
+                      <p className='leading-tight'>
+                        <span className='font-semibold'>Recibido:</span>{' '}
+                        {repDate}
                       </p>
                     </>
                   )}
-                  <p className="leading-tight">
-                    <span className="font-semibold">Reporte:</span> {updateDate}
+                  <p className='leading-tight'>
+                    <span className='font-semibold'>Reporte:</span> {updateDate}
                   </p>
                 </div>
-
 
                 {/* Descripción */}
                 <div className='col-span-3'>

@@ -25,7 +25,7 @@ export const TemplateNotificationPage = () => {
   };
 
   useEffect(() => {
-    document.title = 'VX - Plantillas de notificaciones';
+    document.title = 'TR - Plantillas de notificaciones';
     fetchTemplates();
   }, []);
 

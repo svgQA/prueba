@@ -216,7 +216,7 @@ export const Search = ({
               }}
             >
               <span className='px-2 mr-1 font-medium text-sm capitalize'>
-                {key.label}:
+                {t(key.label)}:
               </span>
               <span className='text-sm font-normal'>{inputState.value}</span>
             </div>

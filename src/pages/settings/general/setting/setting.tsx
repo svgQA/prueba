@@ -50,7 +50,7 @@ export const GeneralSettingPage: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    document.title = 'VX - App Settings';
+    document.title = 'TR - App Settings';
     getSettings();
   }, []);
 

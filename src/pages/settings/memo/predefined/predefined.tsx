@@ -20,7 +20,7 @@ export const PredefinedSettingPage: FunctionComponent = () => {
   const predefined: Signal<IPredefined[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
   useEffect(() => {
-    document.title = 'VX - Predefined Service';
+    document.title = 'TR - Predefined Service';
     getPredefined();
   }, []);
 

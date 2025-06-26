@@ -205,7 +205,7 @@ export const general_en = {
     forgotPassword: 'Forgot your password?',
   },
   shifts: {
-    pageTitle: 'VX - Shift Service',
+    pageTitle: 'TR - Shift Service',
     confirmDelete: 'Are you sure you want to delete {{name}}?',
     remoteSupervision: 'Notification / Supervision',
     cards: {
@@ -307,8 +307,8 @@ export const general_en = {
     },
   },
   memos: {
-    title: 'VX - Chat',
-    pageTitle: 'VX - Memos Service',
+    title: 'TR - Chat',
+    pageTitle: 'TR - Memos Service',
     frequentQuestions: {
       title: 'Frequent Questions',
       question1: 'How can I start a new project?',
@@ -340,7 +340,7 @@ export const general_en = {
     },
   },
   forms: {
-    pageTitle: 'VX - Forms Service',
+    pageTitle: 'TR - Forms Service',
     cards: {
       total: 'Total Forms',
       subtitle: 'Created forms',
@@ -359,7 +359,7 @@ export const general_en = {
     },
   },
   history: {
-    pageTitle: 'VX - Notification History',
+    pageTitle: 'TR - Notification History',
     title: 'Notification history',
     buttons: {
       all: 'All',
@@ -399,6 +399,6 @@ export const general_en = {
     },
   },
   users: {
-    pageTitle: 'VX - Users Service',
+    pageTitle: 'TR - Users Service',
   },
 };

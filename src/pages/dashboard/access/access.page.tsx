@@ -13,7 +13,7 @@ export const AccesPage: FunctionalComponent = () => {
   const [data, setData] = useState<IAccess[]>([]);
 
   useEffect(() => {
-    document.title = 'VX - Access Service';
+    document.title = 'TR - Access Service';
 
     // Cargamos los datos ficticios
     setData(accesData);

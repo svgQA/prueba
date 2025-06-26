@@ -30,7 +30,7 @@ export const UserSettingsPage: FunctionComponent = () => {
     allow_update_profile: false,
   });
   useEffect(() => {
-    document.title = 'VX - User Settings';
+    document.title = 'TR - User Settings';
     getModules();
   }, []);
 

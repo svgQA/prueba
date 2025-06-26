@@ -83,7 +83,7 @@ export function SmartSelector({
     setSearch(''); // Limpiar búsqueda
     setSelectedIndex(0); // Reiniciar índice
     setFocused(false); // Cerrar el dropdown después de seleccionar
-    onChange?.(option);
+    // onChange?.(option);
   };
 
   const handleRemove = (option: IOption) => {
