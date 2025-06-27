@@ -25,7 +25,7 @@ const MapViewer = ({ mapPoint }: { mapPoint?: MapPoint }) => {
     dark:bg-gray-800/60 text-gray-700 dark:text-gray-200 font-bold overflow-hidden rounded-md
     '
     >
-      <span className='vox-icon vx-icon-064 px-3' />
+      <span className='vx-icon vx-icon-321 px-3' />
     </div>
   );
 
