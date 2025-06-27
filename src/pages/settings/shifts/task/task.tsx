@@ -19,8 +19,8 @@ import { TaskService } from '@/services';
 
 export interface ITask {
   id: number;
-  description: string;
   status: string;
+  description: string;
   formId: number;
   start: string;
 }
@@ -37,7 +37,7 @@ export const TaskSettingPage: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
 
   useEffect(() => {
-    document.title = 'VX - Task Service';
+    document.title = 'TR - Task Service';
     getTasks();
   }, []);
 

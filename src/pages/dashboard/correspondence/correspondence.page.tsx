@@ -14,7 +14,7 @@ export const CorrespondencePage: FunctionalComponent = () => {
   const [data, setData] = useState<ICorrespondence[]>([]);
 
   useEffect(() => {
-    document.title = 'VX - Correspondencia Service';
+    document.title = 'TR - Correspondencia Service';
     // Cargamos datos ficticios
     setData(correspondenceData);
   }, []);

@@ -3,6 +3,7 @@ import { type IComponentProps } from '@/components/utils/interface';
 import { FieldMetaState } from 'react-final-form';
 import { IPresignedRequest } from '@/types/file';
 import { AllowedAreaTypes } from '@/types';
+import { MapPoint } from '../../map/interface';
 
 export interface IFileProps extends IComponentProps {
   onChange?: (event: KeyboardEvent<HTMLInputElement>) => void;
@@ -37,6 +38,8 @@ export interface Attachment {
 
 export interface ShowFilesProps {
   resources?: IPresignedRequest[];
+  isSender?: boolean;
   removeFile?: (uuid: string) => void;
   alertEmpty?: boolean;
+  mapPoint?: MapPoint;
 }

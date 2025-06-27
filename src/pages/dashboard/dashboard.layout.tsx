@@ -54,6 +54,9 @@ import { IMenu } from '@/components/common/utils/interface';
 import Panic from '@/components/common/panic/panic';
 import { BaseService } from '@/utils/network';
 import { setAllPermissions } from '@/store/signals/access/permission';
+import { useSignal } from '@preact/signals';
+import PanicModal from '@/components/common/panic/panic.modal';
+import { IPanic } from '@/components/common/panic/interface';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -80,6 +83,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     const [sidebarMenus, setSidebarMenus] = useState<IMenu[]>([]);
     const [hasSettings, setHasSettings] = useState<boolean>(true);
+    const isModalOpen = useSignal<boolean>(false);
+    const modalPanic = useSignal<IPanic | undefined>(undefined);
+    const [modalKey, setModalKey] = useState(0);
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
@@ -178,7 +184,16 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         <div className='flex flex-col pl-[4.5rem]'>
           <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
             <div className='flex flex-row px-6 gap-4 justify-between items-center'>
-              <Panic icon='001'></Panic>
+              <Panic
+                icon='001'
+                emitPanic={(panic: IPanic) => {
+                  setTimeout(() => {
+                    setModalKey((prev) => prev + 1);
+                    modalPanic.value = panic;
+                    isModalOpen.value = true;
+                  }, 300);
+                }}
+              />
               <LanguageSwitcher borderless />
               <CustomSwitcher
                 options={companies}
@@ -211,6 +226,17 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
               </div>
             </div>
           </header>
+          {isModalOpen && (
+            <PanicModal
+              key={modalKey}
+              open={isModalOpen.value}
+              onClose={() => {
+                isModalOpen.value = false;
+                modalPanic.value = undefined;
+              }}
+              panic={modalPanic.value}
+            />
+          )}
           <WebSocketProvider>
             <Router>
               <Suspense fallback={<div></div>}>

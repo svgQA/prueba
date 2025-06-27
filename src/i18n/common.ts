@@ -1,6 +1,7 @@
 export const common_es = {
   OPENED: 'Abierto',
   CREATED: 'Creado',
+  CANCELED: 'Cancelado',
   RESOLVED: 'Resuelto',
   CLOSED: 'Cerrado',
   SOLVE: 'Resolver',
@@ -28,6 +29,7 @@ export const common_es = {
 export const common_en = {
   OPENED: 'Opened',
   CREATED: 'Created',
+  CANCELED: 'Canceled',
   RESOLVED: 'Resolved',
   CLOSED: 'Closed',
   SOLVE: 'Solve',

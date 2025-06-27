@@ -9,6 +9,7 @@ import { IBaseSSE, SSE_TYPE } from '@/utils/network/sse/base';
 import { SIDEBAR_MENUS } from '@/utils/menus/sidebar';
 import ExpanderNotification from './expander.notification';
 import { useSignal } from '@preact/signals';
+import { Badge } from '../badge/badge';
 
 const STORAGE_KEY = 'notifications';
 
@@ -39,8 +40,9 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
 
     let newNotification = {
       id: String(notifications.length + 1),
-      label: type + ' ' + notification,
+      label: type,
       value: message,
+      status: notification,
       icon: SIDEBAR_MENUS.find((menu) => menu.label === type)?.icon,
       redirect: SIDEBAR_MENUS.find((menu) => menu.label === type)?.to,
     };
@@ -178,13 +180,21 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
               className='px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-between gap-2'
               onClick={() => handleRedirect(notification)}
             >
-              <div className='flex items-center gap-2'>
+              <div className='flex justify-between items-center gap-2 w-full'>
                 {notification.icon && (
                   <span className={`vx-icon vx-icon-${notification.icon}`} />
                 )}
-                <span className='text-sm text-gray-700 dark:text-gray-200'>
-                  {notification.label}
-                </span>
+                <div className='flex flex-row justify-between w-full'>
+                  <span className='text-sm text-gray-700 dark:text-gray-200'>
+                    {notification.label}
+                  </span>
+                  <Badge
+                    label={notification.status || ''}
+                    outline
+                    status='warning'
+                    width='w-20'
+                  />
+                </div>
               </div>
               <span
                 className='vx-icon vx-icon-053 text-gray-400 hover:text-red-500 transition-colors'

@@ -608,7 +608,7 @@ export const MapLibrePointsMap = ({
           position: location,
         });
         popup.remove();
-        ToastManager.success(t('maps.connect.success_location_restored'));
+        // ToastManager.success(t('maps.connect.success_location_restored'));
       });
     }
 

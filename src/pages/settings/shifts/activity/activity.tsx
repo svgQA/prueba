@@ -37,7 +37,7 @@ export const ActivitySettingPage: FunctionComponent = () => {
   const activity: Signal<IActivity[]> = useSignal([]);
 
   useEffect(() => {
-    document.title = 'VX - Activity Service';
+    document.title = 'TR - Activity Service';
     getActivities();
   }, []);
 

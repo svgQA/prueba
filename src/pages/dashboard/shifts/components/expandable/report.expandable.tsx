@@ -92,13 +92,18 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
                 {/* Fechas */}
                 <div className='col-span-3 space-y-0.5'>
-                  <p className='leading-tight'>
-                    <span className='font-semibold'>Solicitud:</span>{' '}
-                    {reportDate}
-                  </p>
-                  <p className='leading-tight'>
-                    <span className='font-semibold'>Recibido:</span> {repDate}
-                  </p>
+                  {isRequested && (
+                    <>
+                      <p className='leading-tight'>
+                        <span className='font-semibold'>Solicitud:</span>{' '}
+                        {reportDate}
+                      </p>
+                      <p className='leading-tight'>
+                        <span className='font-semibold'>Recibido:</span>{' '}
+                        {repDate}
+                      </p>
+                    </>
+                  )}
                   <p className='leading-tight'>
                     <span className='font-semibold'>Reporte:</span> {updateDate}
                   </p>

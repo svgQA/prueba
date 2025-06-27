@@ -10,4 +10,5 @@ export interface INotification extends IOption {
   name?: string;
   id?: string;
   redirect?: string;
+  status?: string;
 }

@@ -96,6 +96,12 @@ export const ganttDateRange = (
     }
   }
 
+  if (newStartDate > newEndDate) {
+    const cpDate = newStartDate;
+    newStartDate = newEndDate;
+    newEndDate = cpDate;
+  }
+
   switch (viewMode) {
     case ViewMode.Month:
       newStartDate = addToDate(newStartDate, -1 * preStepsCount, 'month');

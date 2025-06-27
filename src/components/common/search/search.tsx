@@ -216,7 +216,7 @@ export const Search = ({
               }}
             >
               <span className='px-2 mr-1 font-medium text-sm capitalize'>
-                {key.label}:
+                {t(key.label)}:
               </span>
               <span className='text-sm font-normal'>{inputState.value}</span>
             </div>
@@ -242,13 +242,13 @@ export const Search = ({
           <div key={keyName} className='relative'>
             <div
               data-name={keyName}
-              className='flex items-center h-7 px-2 py-1 bg-primary-opacity text-primary rounded-xl cursor-pointer gap-1 transition-all hover:bg-primary-opacity-2 text-sm'
+              className='flex items-center h-7 px-2 py-1 bg-primary-opacity dark:bg-ternary dark:text-white text-primary rounded-xl cursor-pointer gap-1 transition-all hover:bg-primary-opacity-2 text-sm'
             >
               <span className='font-medium'>
-                {keyLabel}: {String(item.value)}
+                <strong>{t(keyLabel)}</strong>: {String(item.value)}
               </span>
               <span
-                className='ml-1 text-primary hover:text-ternary cursor-pointer flex items-center justify-center w-4 h-4 rounded-full hover:bg-primary-opacity-2'
+                className='ml-1 hover:text-ternary cursor-pointer flex items-center justify-center w-4 h-4 rounded-full hover:bg-primary-opacity-2'
                 onClick={(e) => {
                   e.stopPropagation();
                   setFilter(searchArray.value.filter((f) => f.id !== item.id));
@@ -283,7 +283,8 @@ export const Search = ({
   return (
     <div
       id={id}
-      className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700 shadow-sm focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200'
+      className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700 shadow-sm'
+      // focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200
     >
       <span className='vox-icon vx-icon-153 text-gray-500 dark:text-gray-400' />
       <div

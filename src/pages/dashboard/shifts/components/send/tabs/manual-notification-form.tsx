@@ -17,6 +17,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 interface Props {
   users?: any[];
   hasplayers?: boolean;
+  onClose?: () => void;
 }
 
 interface UserBasicInformation {
@@ -29,6 +30,7 @@ interface UserBasicInformation {
 export const ManualNotificationForm = ({
   users: externalUsers = [],
   hasplayers,
+  onClose,
 }: Props) => {
   const { t } = useTranslation();
   const [templateSelected, setTemplateSelected] = useState<
@@ -39,7 +41,10 @@ export const ManualNotificationForm = ({
   const tasks = useSignal<IOption[]>([]);
 
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
-
+  const [sendToGeneral, setSendToGeneral] = useState<boolean>(false);
+  const [notificationType, setNotificationType] = useState<
+    'GENERAL' | 'REPORT'
+  >('GENERAL');
   const [search, setSearch] = useState<string>('');
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [selectedUsersFull, setSelectedUsersFull] = useState<
@@ -53,6 +58,12 @@ export const ManualNotificationForm = ({
       .includes(search.toLowerCase());
     return sendToShiftToday ? match && u.hasShiftToday : match;
   });
+
+  // Filtrado de tareas según tipo
+  const filteredTasks =
+    notificationType === 'REPORT'
+      ? tasks.value.filter((opt) => (opt as any).type === 'REPORT')
+      : tasks.value;
 
   useEffect(() => {
     setSelectedUserIds(usersWithPlayerId.map((u) => u.id));
@@ -75,7 +86,7 @@ export const ManualNotificationForm = ({
     if (!hasplayers) return;
 
     const payload: ISendManualNotificationDto = {
-      notificationType: values.notificationType.value,
+      notificationType: notificationType.toLowerCase(),
       ...(values.template?.value && { templateId: values.template.value }),
       ...(!values.template?.value &&
         values.task?.value && { taskId: Number(values.task.value) }),
@@ -84,14 +95,19 @@ export const ManualNotificationForm = ({
           overrideTitle: values.title,
           overrideDescription: values.description,
         }),
+      // TODO: Deje comentado esto, porque me daba conflicto con lo anterio
+      // Jaider determina cual es el correcto.
+      // overrideTitle: values.title ?? "",
+      // overrideDescription: values.description ?? "",
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
-
+    // Enviar la notificación manualmente a los usuario
     try {
-      await NotificationService.sendManualNotification(payload);
+      const result = await NotificationService.sendManualNotification(payload);
+      result.getStatus() ? onClose?.() : null; // Si se envio correctament
       ToastManager.success('notification.send.success');
     } catch {
       ToastManager.error('notification.send.failure');
@@ -107,7 +123,6 @@ export const ManualNotificationForm = ({
           TaskService.getSimplesList(),
           TemplateService.getBasicTemplates(),
         ]);
-
         if (TasksResponse.getStatus()) tasks.value = TasksResponse.getMany();
         if (templatesResponse.getStatus())
           templates.value = templatesResponse.getMany();
@@ -135,6 +150,21 @@ export const ManualNotificationForm = ({
           onSubmit={handleSubmit}
           className='space-y-6 w-full max-w-5xl mx-auto p-1'
         >
+          <div className='flex items-center text-gray-700 dark:text-gray-200'>
+            <Switch
+              name='switch-send-to-general'
+              backgroundColor='bg-gray-300 dark:bg-gray-600'
+              value={sendToGeneral}
+              onChange={(e) => {
+                const checked = e.currentTarget.checked;
+                setSendToGeneral(checked);
+                setSendToShiftToday(checked);
+                setNotificationType(checked ? 'REPORT' : 'GENERAL');
+              }}
+              label='¿Esta es una solicitud de reporte a la central?'
+            />
+          </div>
+
           <div className='space-y-2'>
             <input
               type='text'
@@ -173,15 +203,19 @@ export const ManualNotificationForm = ({
             </div>
 
             <div className='flex items-center justify-between mt-2'>
-              <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
-                <Switch
-                  name='switch-send-to-shift-today'
-                  backgroundColor='bg-gray-300 dark:bg-gray-600'
-                  value={sendToShiftToday}
-                  onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
-                  label='Solo con turno activo'
-                />
-              </div>
+              {sendToGeneral && (
+                <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
+                  <Switch
+                    name='switch-send-to-shift-today'
+                    backgroundColor='bg-gray-300 dark:bg-gray-600'
+                    value={sendToShiftToday}
+                    onChange={(e) =>
+                      setSendToShiftToday(e.currentTarget.checked)
+                    }
+                    label='Solo con turno activo'
+                  />
+                </div>
+              )}
 
               {selectedUserIds.length > 0 && (
                 <Button
@@ -233,43 +267,24 @@ export const ManualNotificationForm = ({
                 />
               )}
             />
-
-            <Field<IOption[]>
-              name='task'
-              render={({ input, meta }) => (
-                <SmartSelector
-                  {...input}
-                  meta={meta}
-                  options={tasks.value}
-                  menuPortalTarget={document.body}
-                  placeholder='Selecciona una tarea'
-                  label='Tareas'
-                  onChange={(value?: IOption) => {
-                    input.onChange(value);
-                  }}
-                />
-              )}
-            />
-
-            <Field<IOption>
-              name='notificationType'
-              render={({ input, meta }) => (
-                <SmartSelector
-                  {...input}
-                  meta={meta}
-                  options={[
-                    { label: 'General', value: 'general' },
-                    { label: 'Reporte', value: 'report' },
-                  ]}
-                  menuPortalTarget={document.body}
-                  placeholder='Selecciona tipo'
-                  label='Tipo de notificación'
-                  onChange={(value?: IOption) => {
-                    input.onChange(value);
-                  }}
-                />
-              )}
-            />
+            {!templateSelected && (
+              <Field<IOption[]>
+                name='task'
+                render={({ input, meta }) => (
+                  <SmartSelector
+                    {...input}
+                    meta={meta}
+                    options={filteredTasks}
+                    menuPortalTarget={document.body}
+                    placeholder='Selecciona una tarea'
+                    label='Tareas'
+                    onChange={(value?: IOption) => {
+                      input.onChange(value);
+                    }}
+                  />
+                )}
+              />
+            )}
           </div>
 
           {!templateSelected && (

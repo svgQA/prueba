@@ -20,7 +20,7 @@ export const ScheduledNotificationForm = () => {
   const [formValues, setFormValues] = useState<any>(null);
 
   useEffect(() => {
-    document.title = 'VX - Programar Nueva Notificación';
+    document.title = 'TR - Programar Nueva Notificación';
     const fetchTemplates = async () => {
       const response = await TemplateService.getTemplates();
       if (!response.getStatus()) return;

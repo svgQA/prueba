@@ -33,7 +33,7 @@ export const NoveltySettingPage: FunctionComponent = () => {
   const novelties: Signal<INovelty[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
   useEffect(() => {
-    document.title = 'VX - Novelty Service';
+    document.title = 'TR - Novelty Service';
     getNovelties();
   }, []);
 

@@ -24,8 +24,8 @@ import { PredefinedService } from '@/services/shift/predefined';
 import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
 import { IPanic } from '@/components/common/panic/interface';
-import { Chip } from '@/components/common/chip/chip';
 import { PanicService } from '@/services/memo/panic';
+import { Badge } from '@/components/common/badge/badge';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -285,6 +285,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                       </div>
                     </div>
                   </div>
+                </div>
+                <div>
                   {expandedMemoId === memo.id && memo.resource && (
                     <ShowFiles resources={memo.resource} />
                   )}
@@ -397,7 +399,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             name='attachments'
                             onChange={handleAttachmentUpload}
                             value={[]}
-                            accept='image/*'
+                            accept='image/*, video/*'
                             multiple={true}
                             label='Adjuntos'
                             area='memo'
@@ -467,16 +469,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
         {panic.value.length > 0 && (
           <div className='flex flex-col gap-2'>
-            {panic.value.map((panicItem: IPanic) => (
-              <div key={panicItem.id} className='flex items-center gap-2'>
-                <Chip
-                  label={panicItem.message}
-                  width='xl'
-                  icon='020'
-                  borderColor='border-red-500 dark:border-red-500'
-                />
-              </div>
-            ))}
+            <Badge
+              label='panic_button'
+              icon='020'
+              status='error'
+              full
+              outline
+            />
           </div>
         )}
 

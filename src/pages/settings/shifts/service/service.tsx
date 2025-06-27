@@ -35,7 +35,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
   const novelties: Signal<IServicio[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
   useEffect(() => {
-    document.title = 'VX - Servie Service';
+    document.title = 'TR - Servie Service';
     getServices();
   }, []);
 

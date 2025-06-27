@@ -19,7 +19,7 @@ export const GroupSettingPage: FunctionComponent = () => {
   const groups = useSignal<any[]>([]);
 
   useEffect(() => {
-    document.title = 'VX - Activity Service';
+    document.title = 'TR - Activity Service';
     getGroups();
   }, []);
 
