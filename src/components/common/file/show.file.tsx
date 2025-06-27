@@ -91,8 +91,7 @@ const showFiles = ({
               <AudioPlayer src={getUrl(file)} square />
             ) : allowedVideoTypesConst.includes(file.type as any) ? (
               <VideoPlayer src={getUrl(file)} />
-            ) : allowedDocumentTypesConst.includes(file.type as any) ? (
-              // <span className='vox-icon vx-icon-064 px-3' />
+            ) : file.type === 'application/json' ? (
               <MapPathViewer src={getUrl(file)} />
             ) : (
               <span className='vox-icon vx-icon-069 px-3' />

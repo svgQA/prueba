@@ -1,4 +1,3 @@
-import { useEffect } from 'preact/hooks';
 import { MapPath } from '../../map/MapPath';
 import Viewer from './viewer';
 import { useSignal } from '@preact/signals';
@@ -8,11 +7,9 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 const MapPathViewer = ({ src }: { src: string }) => {
   const points = useSignal<RoutePoint[]>([]);
 
-  useEffect(() => {
-    getData(src);
-  }, []);
+  const getData = async () => {
+    if (!src) return;
 
-  const getData = async (src: string) => {
     try {
       const response = await fetch(src);
       const data = await response.json();
@@ -29,8 +26,9 @@ const MapPathViewer = ({ src }: { src: string }) => {
 
   return (
     <Viewer
-      posterSpan={<span className='vox-icon vx-icon-064 px-3' />}
+      posterSpan={<span className='vox-icon vx-icon-321 px-3' />}
       infoExpanded={<MapPath route={points.value} width='80%' />}
+      click={getData}
     />
   );
 };
