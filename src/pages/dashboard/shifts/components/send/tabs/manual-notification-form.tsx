@@ -17,6 +17,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 interface Props {
   users?: any[];
   hasplayers?: boolean;
+  onClose?: () => void;
 }
 
 interface UserBasicInformation {
@@ -29,6 +30,7 @@ interface UserBasicInformation {
 export const ManualNotificationForm = ({
   users: externalUsers = [],
   hasplayers,
+  onClose,
 }: Props) => {
   const { t } = useTranslation();
   const [templateSelected, setTemplateSelected] = useState<
@@ -93,15 +95,19 @@ export const ManualNotificationForm = ({
           overrideTitle: values.title,
           overrideDescription: values.description,
         }),
+      // TODO: Deje comentado esto, porque me daba conflicto con lo anterio
+      // Jaider determina cual es el correcto.
+      // overrideTitle: values.title ?? "",
+      // overrideDescription: values.description ?? "",
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
-    console.log(payload);
     // Enviar la notificación manualmente a los usuario
     try {
-      await NotificationService.sendManualNotification(payload);
+      const result = await NotificationService.sendManualNotification(payload);
+      result.getStatus() ? onClose?.() : null; // Si se envio correctament
       ToastManager.success('notification.send.success');
     } catch {
       ToastManager.error('notification.send.failure');

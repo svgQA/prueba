@@ -122,7 +122,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                   </Field>
                 </div>
 
-                <div className='col-span-1'>
+                <div className='col-span-2'>
                   <Field<IOption> name='taskType' validate={required}>
                     {({ input, meta }) => (
                       <SmartSelector
@@ -152,7 +152,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                         )}
                       </Field>
                     </div>
-                    <div className='col-span-1'>
+                    <div className='col-span-2'>
                       <Field<string> name='hourStart' validate={required}>
                         {({ input, meta }) => {
                           let timeValue = input.value
