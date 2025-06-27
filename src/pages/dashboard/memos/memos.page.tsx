@@ -1,5 +1,11 @@
 import { type FunctionComponent } from 'preact';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import './utils/memos.css';
 import { useLocation } from 'wouter';
@@ -28,7 +34,7 @@ import {
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 import { MapPath } from '@/components/common/map/MapPath';
-import { RoutePoint, TrackingService } from '@/services/general/tracking';
+import { RoutePoint } from '@/services/general/tracking';
 import NotificationBanner from '@/components/common/notifications/notification.banner';
 
 enum VIEW_NAME {
@@ -65,7 +71,9 @@ export const MemosPage: FunctionComponent = () => {
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
   const loading = useSignal<boolean>(false);
-  const notificationBannerRef = useRef<{ startBannerAnimation: () => void }>(null);
+  const notificationBannerRef = useRef<{ startBannerAnimation: () => void }>(
+    null
+  );
 
   useEffect(() => {
     document.title = 'TR - Chat';
@@ -198,11 +206,13 @@ export const MemosPage: FunctionComponent = () => {
     currentView.value = view;
   }, []);
 
+  /*
   const onReloadRoute = async () => {
     const response = await TrackingService.getTracking();
     if (!response.getStatus()) return;
     routePath.value = response.getMany();
   };
+  */
 
   const buttonMenu = useMemo(
     () => (
@@ -233,7 +243,7 @@ export const MemosPage: FunctionComponent = () => {
           rounded={false}
           selected={currentView.value === VIEW_NAME.MAP}
           icon='318'
-        /> */}
+        />
         {currentView.value === VIEW_NAME.MAP && (
           <Button
             name='btn-reload-path'
@@ -242,6 +252,7 @@ export const MemosPage: FunctionComponent = () => {
             rounded={false}
           />
         )}
+        */}
         {/* <Button name='button-change-scheduler' rounded={false} icon='331' />
         <Button name='button-change-scheduler' rounded={false} icon='314' /> */}
       </div>
@@ -269,32 +280,32 @@ export const MemosPage: FunctionComponent = () => {
     >
       {(currentView.value === VIEW_NAME.TABLE ||
         currentView.value === VIEW_NAME.MAP) && (
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-            <CardData
-              title={t('memos.cards.totalToday')}
-              count={summary.value.total}
-              subtitle=''
-              color='t-dark'
-              icon='328' // 328
-            />
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+          <CardData
+            title={t('memos.cards.totalToday')}
+            count={summary.value.total}
+            subtitle=''
+            color='t-dark'
+            icon='328' // 328
+          />
 
-            <CardData
-              title={t('memos.cards.unresolved')}
-              count={calculatePercentage(summary.value.in_progress)}
-              subtitle=''
-              color='t-dark'
-              icon='311' // 311
-            />
+          <CardData
+            title={t('memos.cards.unresolved')}
+            count={calculatePercentage(summary.value.in_progress)}
+            subtitle=''
+            color='t-dark'
+            icon='311' // 311
+          />
 
-            <CardData
-              title={t('memos.cards.resolved')}
-              count={calculatePercentage(summary.value.completed)}
-              subtitle=''
-              color='t-dark'
-              icon='312' // 312
-            />
-          </div>
-        )}
+          <CardData
+            title={t('memos.cards.resolved')}
+            count={calculatePercentage(summary.value.completed)}
+            subtitle=''
+            color='t-dark'
+            icon='312' // 312
+          />
+        </div>
+      )}
 
       <div
         className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}
@@ -302,7 +313,11 @@ export const MemosPage: FunctionComponent = () => {
         <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 top-0 pl-1'>
           <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
-            <NotificationBanner ref={notificationBannerRef} message='Memo nuevo' reload={fetchInitialData} />
+            <NotificationBanner
+              ref={notificationBannerRef}
+              message='Memo nuevo'
+              reload={fetchInitialData}
+            />
           </div>
         </div>
 

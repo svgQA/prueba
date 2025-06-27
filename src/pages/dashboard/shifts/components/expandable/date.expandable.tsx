@@ -18,7 +18,7 @@ interface ICheckData {
   distance?: string;
   location: { lat: string; lng: string };
   type: string;
-  file: IPresignedRequest[]
+  file: IPresignedRequest[];
 }
 
 const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
@@ -198,8 +198,8 @@ const ShiftCard = ({
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
@@ -235,7 +235,7 @@ const ShiftCard = ({
           lat: checkData.latitude,
           lng: checkData.longitude,
         },
-        file: []
+        file: [],
       });
     }
   };
@@ -248,7 +248,11 @@ const ShiftCard = ({
         <div className='flex flex-col gap-4 justify-between h-full'>
           {/* Columna izquierda - Foto y nombre */}
           <div className='flex flex-col items-center mr-4 w-full'>
-            {file.length ? <ShowFiles resources={file} /> : <Avatar icon='023' size='md' />}
+            {file.length ? (
+              <ShowFiles resources={file} />
+            ) : (
+              <Avatar icon='023' size='md' />
+            )}
             <TextEllipsis text={name} maxWidth='200px'></TextEllipsis>
             <Badge label={status} status='success' outline />
           </div>
@@ -301,7 +305,7 @@ const ShiftCard = ({
                 title: btnLabel,
                 message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
                 onConfirm: () => handleCheck(),
-                onCancel: () => { },
+                onCancel: () => {},
               })
             }
             name={btnLabel}
@@ -312,7 +316,7 @@ const ShiftCard = ({
       {/* Columna derecha - Mapa */}
       <div className='flex-1 w-full max-h-96 overflow-hidden'>
         <MapLibrePointsMap
-          sendPoints={() => { }}
+          sendPoints={() => {}}
           name='Map'
           center={{
             lat: latitude,
@@ -336,7 +340,7 @@ const ShiftCard = ({
           radius={50}
           draggable={true}
           width='100%'
-          clickPoint={() => { }}
+          clickPoint={() => {}}
         />
       </div>
     </div>

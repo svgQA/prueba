@@ -20,7 +20,10 @@ const Panic = (_panic: IPanicProps) => {
   const allPanic = useSignal<IPanic[]>([]);
   const { selectedCompany } = useUserStore();
   const isOpen = useSignal<boolean>(false);
-  const notificationBannerRef = useRef<{ startBannerAnimation: () => void, closeBanner: () => void }>(null);
+  const notificationBannerRef = useRef<{
+    startBannerAnimation: () => void;
+    closeBanner: () => void;
+  }>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -41,7 +44,9 @@ const Panic = (_panic: IPanicProps) => {
 
       if (event.message.id) {
         notificationBannerRef.current?.startBannerAnimation();
-        const panic = allPanic.value.find((panic) => panic.id === event.message.id);
+        const panic = allPanic.value.find(
+          (panic) => panic.id === event.message.id
+        );
         _panic.emitPanic?.(panic as IPanic);
       }
     }
@@ -62,7 +67,11 @@ const Panic = (_panic: IPanicProps) => {
 
   return (
     <div className='relative flex flex-row justify-center items-center gap-2'>
-      <NotificationBanner ref={notificationBannerRef} message='panic_button' color='error' />
+      <NotificationBanner
+        ref={notificationBannerRef}
+        message='panic_button'
+        color='error'
+      />
       <FloatBadge
         label={allPanic.value.length || '0'}
         color='bg-red-500 text-white'

@@ -70,8 +70,8 @@ export const ChatMessage = ({
       showAlert({
         title: t('shift.expandable.date.location.title'),
         message: t('shift.expandable.date.location.message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(t('shift.expandable.date.location.gpsMessage'));
@@ -97,7 +97,7 @@ export const ChatMessage = ({
     reload?.();
   };
 
-  (status && solved) && getStatus(status);
+  status && solved && getStatus(status);
 
   return (
     <div
@@ -145,7 +145,7 @@ export const ChatMessage = ({
                     title: btnLabel,
                     message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
                     onConfirm: () => handleCheck(),
-                    onCancel: () => { },
+                    onCancel: () => {},
                   })
                 }
                 name={btnLabel}

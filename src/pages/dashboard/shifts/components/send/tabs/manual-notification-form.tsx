@@ -40,7 +40,9 @@ export const ManualNotificationForm = ({
 
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
   const [sendToGeneral, setSendToGeneral] = useState<boolean>(false);
-  const [notificationType, setNotificationType] = useState<'GENERAL' | 'REPORT'>('GENERAL');
+  const [notificationType, setNotificationType] = useState<
+    'GENERAL' | 'REPORT'
+  >('GENERAL');
   const [search, setSearch] = useState<string>('');
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [selectedUsersFull, setSelectedUsersFull] = useState<
@@ -56,9 +58,10 @@ export const ManualNotificationForm = ({
   });
 
   // Filtrado de tareas según tipo
-  const filteredTasks = notificationType === 'REPORT'
-    ? tasks.value.filter(opt => (opt as any).type === 'REPORT')
-    : tasks.value;
+  const filteredTasks =
+    notificationType === 'REPORT'
+      ? tasks.value.filter((opt) => (opt as any).type === 'REPORT')
+      : tasks.value;
 
   useEffect(() => {
     setSelectedUserIds(usersWithPlayerId.map((u) => u.id));
@@ -81,21 +84,21 @@ export const ManualNotificationForm = ({
     if (!hasplayers) return;
 
     const payload: ISendManualNotificationDto = {
-      notificationType: notificationType.toLowerCase() ,
+      notificationType: notificationType.toLowerCase(),
       ...(values.template?.value && { templateId: values.template.value }),
       ...(!values.template?.value &&
         values.task?.value && { taskId: Number(values.task.value) }),
       ...(!values.template?.value &&
         !values.task?.value && {
-        overrideTitle: values.title,
-        overrideDescription: values.description,
-      }),
+          overrideTitle: values.title,
+          overrideDescription: values.description,
+        }),
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
-console.log(payload);
+    console.log(payload);
     // Enviar la notificación manualmente a los usuario
     try {
       await NotificationService.sendManualNotification(payload);
@@ -194,17 +197,19 @@ console.log(payload);
             </div>
 
             <div className='flex items-center justify-between mt-2'>
-
               {sendToGeneral && (
                 <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
                   <Switch
                     name='switch-send-to-shift-today'
                     backgroundColor='bg-gray-300 dark:bg-gray-600'
                     value={sendToShiftToday}
-                    onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
+                    onChange={(e) =>
+                      setSendToShiftToday(e.currentTarget.checked)
+                    }
                     label='Solo con turno activo'
                   />
-                </div>)}
+                </div>
+              )}
 
               {selectedUserIds.length > 0 && (
                 <Button
@@ -272,9 +277,8 @@ console.log(payload);
                     }}
                   />
                 )}
-              />)}
-
-
+              />
+            )}
           </div>
 
           {!templateSelected && (

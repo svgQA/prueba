@@ -4,7 +4,13 @@ import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import ShowFiles from '@/components/common/file/show.file';
 import { Badge } from '@/components/common/badge/badge';
 
-const ServiceInfo = ({ service, shift }: { service: IService; shift: IShiftResponse }) => {
+const ServiceInfo = ({
+  service,
+  shift,
+}: {
+  service: IService;
+  shift: IShiftResponse;
+}) => {
   const points = useSignal<any>([
     {
       id: 1,
@@ -81,13 +87,13 @@ const ServiceInfo = ({ service, shift }: { service: IService; shift: IShiftRespo
           <Badge
             label={`Radio: ${service.place.radius || 50}m`}
             color='primary'
-            status='info' 
+            status='info'
             outline
           />
         </div>
         <div className='relative w-full h-56'>
           <MapLibrePointsMap
-            sendPoints={() => { }}
+            sendPoints={() => {}}
             name='Map'
             center={{
               lat: service.place.latitude,
@@ -102,7 +108,7 @@ const ServiceInfo = ({ service, shift }: { service: IService; shift: IShiftRespo
             radius={service.place.radius || 50}
             draggable={true}
             height='100%'
-            clickPoint={() => { }}
+            clickPoint={() => {}}
             disablePointSelection={true}
           />
         </div>

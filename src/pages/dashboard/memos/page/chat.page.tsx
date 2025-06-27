@@ -262,8 +262,12 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   };
 
   const handleSubmitMessage = async (values: any, form: any) => {
-    let memo: Memo = (TypeChatView.SERVICES_MEMO === viewMode.value) ? memoByService.value.find((e) => e.id == replyToId.value) : memoByUser.value.find((e) => e.id == replyToId.value);
-    if (!memo) ToastManager.error('No existe un memo con el Id que seleccionaste');
+    let memo: Memo =
+      TypeChatView.SERVICES_MEMO === viewMode.value
+        ? memoByService.value.find((e) => e.id == replyToId.value)
+        : memoByUser.value.find((e) => e.id == replyToId.value);
+    if (!memo)
+      ToastManager.error('No existe un memo con el Id que seleccionaste');
     let extraData: ExtraData = memo?.extraData
       ? ({ ...memo?.extraData } as ExtraData)
       : ({} as ExtraData);
@@ -393,7 +397,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           }
           isSelected={replyToId.value === memo.id}
           status={memo.state}
-          solved={memo.state === 'OPENED' || memo.state === 'IN_REVISION' || memo.state === 'CREATED'}
+          solved={
+            memo.state === 'OPENED' ||
+            memo.state === 'IN_REVISION' ||
+            memo.state === 'CREATED'
+          }
           reload={() => handleChatSelect(selectedChat.value, viewMode.value)}
         >
           <div className='flex items-center gap-2 text-xs my-2'>
@@ -417,7 +425,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         {memo.children?.map((childMemo: Memo, childIndex: number) => (
           <ChatMessage
             key={`child-${index}-${childIndex}`}
-            message={childMemo.panicUuid ? t(childMemo.description) : childMemo.description}
+            message={
+              childMemo.panicUuid
+                ? t(childMemo.description)
+                : childMemo.description
+            }
             isSender={true}
             title={childMemo.extraData?.predefined?.label}
             resource={childMemo.resource}
@@ -641,7 +653,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   disabled={replyToId.value === undefined}
                   replyId={replyToId.value}
                   replyTo={replyToMessage.value}
-                // form='chat-input-form-memo'
+                  // form='chat-input-form-memo'
                 >
                   {formMinutesByInputs()}
                 </ChatInput>

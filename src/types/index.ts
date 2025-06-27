@@ -28,7 +28,7 @@ export const allowedDocumentTypesConst = [
   'application/msword',
   'application/vnd.ms-excel',
   'text/plain',
-  'application/json'
+  'application/json',
 ] as const;
 
 export const allowedImageTypesConst = [
