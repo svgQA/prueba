@@ -19,11 +19,34 @@ import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
 import { DateField } from '@/components/compose/forms';
 import { useUserStore } from '@/store/slices';
+
 import {
   convertBlocksToCells,
   getSelectedHoursByDay,
 } from '@/pages/settings/shifts/schedule/utils';
 import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
+import dayjs from 'dayjs';
+
+type TimeBlock = {
+  start: number;
+  end: number;
+};
+
+type DaySchedule = {
+  day: string;
+  dayIndex: number;
+  blocks: TimeBlock[];
+};
+
+type Schedule = {
+  days: DaySchedule[];
+  daysAllowed: string[];
+};
+
+type ScheduleItem = {
+  schedule: Schedule;
+};
+
 // import dayjs from 'dayjs';
 // import { getSelectedHoursByDay } from '@/pages/settings/shifts/schedule/utils';
 // import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
@@ -71,6 +94,7 @@ export const TaskForm = ({
     (_, i) => START_HOUR + i
   );
 
+  const schedules = useSignal<any[]>([]);
   const inputKeywords = useSignal('');
   const [selectedCells, setSelectedCells] = useState<any>([]);
   // const services = useSignal<any[]>([]);
@@ -91,6 +115,18 @@ export const TaskForm = ({
   // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
 
   const onSubmit = async (model: any, form: any) => {
+
+    const isInSchedule = isStartAndEndInSchedules(
+      DateUtils.dateToInput(model.start),
+      DateUtils.dateToInput(model.end),
+      schedules.value
+    );
+    
+    if (!isInSchedule) {
+      ToastManager.warning(t('shift.upsert.errorSchedule'));
+      return;
+    }
+
     const {
       task,
       employeeId,
@@ -411,8 +447,10 @@ export const TaskForm = ({
 
   const onChangeService = async (id: number) => {
     const response = await ServiceService.getServiceById(String(id));
+    console.log('response', response);
     if (!response.getStatus()) return;
     const model = response.getOne();
+    schedules.value = model?.schedules || [];
     const schedule = model?.schedules[0]?.schedule;
     if (!schedule) return;
     const days = schedule.days.reduce(
@@ -427,6 +465,38 @@ export const TaskForm = ({
     // @ts-ignore
     setSelectedCells(convertBlocksToCells(days));
   };
+
+  const isStartAndEndInSchedules = (
+    startDateStr: string,
+    endDateStr: string,
+    schedules: ScheduleItem[]
+  ): boolean => {
+  
+    const start = dayjs.utc(startDateStr);
+    const end = dayjs.utc(endDateStr);
+  
+    return schedules.some(({ schedule }) => {
+      const checkTime = (date: dayjs.Dayjs) => {
+        const dayIndex = date.day();
+        console.log('dayIndex', dayIndex);
+        const dayName = daysOfWeek[dayIndex];
+  
+        if (!schedule.daysAllowed.includes(dayName)) return false;
+  
+        const scheduleDay = schedule.days.find(d => d.dayIndex === dayIndex);
+        if (!scheduleDay) return false;
+  
+        const hourDecimal = date.hour() + date.minute() / 60;
+  
+        // Ajuste: usamos <= en lugar de <
+        return scheduleDay.blocks.some(
+          block => hourDecimal >= block.start && hourDecimal <= block.end
+        );
+      };
+  
+      return checkTime(start) && checkTime(end);
+    });
+  }
 
   return (
     <Modal

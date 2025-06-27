@@ -4,6 +4,7 @@ export const shift_es = {
       success: 'Turno creado exitosamente!',
       error: 'Error al crear el turno',
       newTask: 'Nueva tarea',
+      errorSchedule: 'El turno no se puede crear porque las fechas no están disponibles en el horario',
       form: {
         task: 'Tarea',
         taskPlaceholder: 'Selecciona una tarea',
@@ -66,6 +67,7 @@ export const shift_en = {
       success: 'Shift created successfully!',
       error: 'Error creating shift',
       newTask: 'New task',
+      errorSchedule: 'The shift cannot be created because the dates are not available in the schedule',
       form: {
         task: 'Task',
         taskPlaceholder: 'Select a task',
