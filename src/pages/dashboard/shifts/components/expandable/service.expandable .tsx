@@ -3,6 +3,7 @@ import { useSignal } from '@preact/signals';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import ShowFiles from '@/components/common/file/show.file';
 import { Badge } from '@/components/common/badge/badge';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 const ServiceInfo = ({
   service,
@@ -36,11 +37,14 @@ const ServiceInfo = ({
         <div className='space-y-4'>
           <div>
             <p className='mb-1 font-semibold'>Nombre del Servicio</p>
-            <p>{service.description}</p>
+            <TextEllipsis
+              text={service.description}
+              maxWidth='500px'
+            ></TextEllipsis>
           </div>
           {shift.resource && (
             <div className='w-40'>
-              <p className='mb-1 font-semibold'>Archivos</p>
+              {/* <p className='mb-1 font-semibold'>Archivos</p> */}
               <ShowFiles resources={shift.resource} />
             </div>
           )}

@@ -1,4 +1,4 @@
-import { Chip } from '@/components/common/chip/chip';
+import { Badge } from '@/components/common/badge/badge';
 import { FormattedDate } from '@/components/compose/forms';
 import { IPlace, IService, IUser } from '@/types/shift/activity';
 
@@ -29,7 +29,7 @@ const EmployeeInfo = ({
             {employee?.name} {employee?.surname}
           </h3>
           <p>{'Operativo'}</p>
-          <Chip label='Activo' color='success' />
+          <Badge label='Activo' status='success' outline />
         </div>
 
         {/* Información Personal */}

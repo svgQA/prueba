@@ -26,6 +26,7 @@ import { File } from '@/components/common/file/file';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import ShowFiles from '@/components/common/file/show.file';
 import './chat.css';
+import { MapPoint } from '@/components/common/map/interface';
 
 interface IOption {
   label: string;
@@ -403,6 +404,12 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
             memo.state === 'CREATED'
           }
           reload={() => handleChatSelect(selectedChat.value, viewMode.value)}
+          mapPoint={
+            {
+              id: memo.id,
+              position: { lat: memo?.latitude || 0, lng: memo?.longitude || 0 },
+            } as MapPoint
+          }
         >
           <div className='flex items-center gap-2 text-xs my-2'>
             <span className='vox-icon size-sm vx-icon-318' />
@@ -434,6 +441,15 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
             title={childMemo.extraData?.predefined?.label}
             resource={childMemo.resource}
             date={childMemo.updatedAt}
+            mapPoint={
+              {
+                id: memo.id,
+                position: {
+                  lat: memo?.latitude || 0,
+                  lng: memo?.longitude || 0,
+                },
+              } as MapPoint
+            }
           >
             <div className='items-center gap-2 text-xs my-2 flex flex-row'>
               <span className='vx-icon size-sm vx-icon-318 dark:text-white' />

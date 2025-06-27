@@ -13,11 +13,14 @@ import { ImageViewer } from './components/imageViewer';
 import { useRef, useState, useEffect } from 'react';
 import { Button } from '../button/button';
 import { VideoPlayer } from './components/VideoPlayer';
+import MapViewer from './components/mapViewer';
+import MapPathViewer from './components/mapPathViewer';
 
 const showFiles = ({
   resources = [],
   isSender = false,
   removeFile,
+  mapPoint,
 }: ShowFilesProps) => {
   const { getTenant, getCompanyId } = useUserStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -79,7 +82,7 @@ const showFiles = ({
       >
         {visibleFiles.map((file) => (
           <div
-            className='border border-b-light-dark dark:border-b-dark-light rounded-sm py-2 relative'
+            className='border border-b-light-dark dark:border-b-dark-light rounded-sm py-2 relative max-h-14'
             key={file.uuid}
           >
             {allowedImageTypesConst.includes(file.type as any) ? (
@@ -89,8 +92,8 @@ const showFiles = ({
             ) : allowedVideoTypesConst.includes(file.type as any) ? (
               <VideoPlayer src={getUrl(file)} />
             ) : allowedDocumentTypesConst.includes(file.type as any) ? (
-              // <span className='vox-icon vx-icon-103 px-3' />
-              <span className='vox-icon vx-icon-064 px-3' />
+              // <span className='vox-icon vx-icon-064 px-3' />
+              <MapPathViewer src={getUrl(file)} />
             ) : (
               <span className='vox-icon vx-icon-069 px-3' />
             )}
@@ -103,6 +106,7 @@ const showFiles = ({
             )}
           </div>
         ))}
+        {mapPoint && <MapViewer mapPoint={mapPoint} />}
       </div>
       {visibleFiles && (
         <Button
