@@ -4,7 +4,6 @@ import { useUserStore } from '@/store/slices';
 import { cdn_service_url } from '@/env.config';
 import {
   allowedAudioTypesConst,
-  allowedDocumentTypesConst,
   allowedImageTypesConst,
   allowedVideoTypesConst,
 } from '@/types';
