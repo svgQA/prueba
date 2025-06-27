@@ -19,6 +19,12 @@ import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
 import { DateField } from '@/components/compose/forms';
 import { useUserStore } from '@/store/slices';
+import {
+  convertBlocksToCells,
+  getSelectedHoursByDay,
+} from '@/pages/settings/shifts/schedule/utils';
+import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
+// import dayjs from 'dayjs';
 // import { getSelectedHoursByDay } from '@/pages/settings/shifts/schedule/utils';
 // import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
 
@@ -34,8 +40,8 @@ interface ITaskFormProps {
   externalSelected?: string;
 }
 
-// const START_HOUR = 0;
-// const END_HOUR = 24;
+const START_HOUR = 0;
+const END_HOUR = 24;
 
 export const TaskForm = ({
   closed,
@@ -49,7 +55,7 @@ export const TaskForm = ({
   externalSelected,
 }: ITaskFormProps) => {
   const { t } = useTranslation();
-  /*
+
   const daysOfWeek = [
     'Domingo',
     'Lunes',
@@ -64,9 +70,9 @@ export const TaskForm = ({
     { length: END_HOUR - START_HOUR + 1 },
     (_, i) => START_HOUR + i
   );
-  */
 
   const inputKeywords = useSignal('');
+  const [selectedCells, setSelectedCells] = useState<any>([]);
   // const services = useSignal<any[]>([]);
   const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
@@ -101,6 +107,12 @@ export const TaskForm = ({
     delete model.task_name;
     delete model.task_description;
     delete model.task_time;
+
+    // TODO: Hacer la validaciòn de los horarios
+    // const fecha_start = dayjs(model.start);
+    // const start_day = fecha_start.format('dddd');
+    // const fecha_end = dayjs(model.end);
+    // const start_end = fecha_end.format('dddd');
 
     // TODO: Agregar lo de formulario
     const task_output =
@@ -400,7 +412,20 @@ export const TaskForm = ({
   const onChangeService = async (id: number) => {
     const response = await ServiceService.getServiceById(String(id));
     if (!response.getStatus()) return;
-    console.log(response.getOne());
+    const model = response.getOne();
+    const schedule = model?.schedules[0]?.schedule;
+    if (!schedule) return;
+    const days = schedule.days.reduce(
+      (acc: any, day: any) => {
+        acc[day.day] = day.blocks.map((block: any) => {
+          return { start: block.start, end: block.end };
+        });
+        return acc;
+      },
+      {} as { [key: string]: { start: number; end: number }[] }
+    );
+    // @ts-ignore
+    setSelectedCells(convertBlocksToCells(days));
   };
 
   return (
@@ -414,8 +439,7 @@ export const TaskForm = ({
       footer={footerContent}
     >
       <div className='px-4 py-6 flex flex-col w-full'>
-        {/*
-        {false && (
+        {selectedCells && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-3 justify-center'>
               {getSelectedHoursByDay(daysOfWeek, hours, selectedCells).map(
@@ -426,7 +450,6 @@ export const TaskForm = ({
             </ul>
           </div>
         )}
-      */}
         <Form
           onSubmit={onSubmit}
           initialValues={initialValues}
@@ -476,34 +499,11 @@ export const TaskForm = ({
                             const id = Number(e.value);
                             onChangeService(id);
                           }
+                          if (!e) {
+                            setSelectedCells([]);
+                          }
                           input.onChange(e);
                         }}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div class='col-span-1'>
-                  <Field<string> name='type' validate={required}>
-                    {({ input, meta }) => (
-                      <Select
-                        {...input}
-                        meta={meta}
-                        id='select-type'
-                        name='select-type'
-                        placeholder={t('shifts.upsert.form.typePlaceholder')}
-                        label={t('shifts.upsert.form.type')}
-                        icon='252'
-                        options={[
-                          {
-                            value: 'EXTERNAL',
-                            label: t('shifts.upsert.form.typeOptions.external'),
-                          },
-                          {
-                            value: 'INTERNAL',
-                            label: t('shifts.upsert.form.typeOptions.internal'),
-                          },
-                        ]}
                       />
                     )}
                   </Field>
@@ -540,6 +540,31 @@ export const TaskForm = ({
                   </Field>
                 </div>
                 */}
+                <div class='col-span-1'>
+                  <Field<string> name='type' validate={required}>
+                    {({ input, meta }) => (
+                      <Select
+                        {...input}
+                        meta={meta}
+                        id='select-type'
+                        name='select-type'
+                        placeholder={t('shifts.upsert.form.typePlaceholder')}
+                        label={t('shifts.upsert.form.type')}
+                        icon='252'
+                        options={[
+                          {
+                            value: 'EXTERNAL',
+                            label: t('shifts.upsert.form.typeOptions.external'),
+                          },
+                          {
+                            value: 'INTERNAL',
+                            label: t('shifts.upsert.form.typeOptions.internal'),
+                          },
+                        ]}
+                      />
+                    )}
+                  </Field>
+                </div>
                 <div class='col-span-1'>
                   <Field
                     name='timeBefore'
