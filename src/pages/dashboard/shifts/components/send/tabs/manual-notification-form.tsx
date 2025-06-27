@@ -56,7 +56,7 @@ export const ManualNotificationForm = ({
     const match = `${u.name} ${u.email}`
       .toLowerCase()
       .includes(search.toLowerCase());
-    return sendToShiftToday ? match && u.hasShiftToday : match;
+    return sendToShiftToday ? match && !u.hasShiftToday : match;
   });
 
   // Filtrado de tareas según tipo
