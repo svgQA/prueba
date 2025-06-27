@@ -24,8 +24,8 @@ import { PredefinedService } from '@/services/shift/predefined';
 import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
 import { IPanic } from '@/components/common/panic/interface';
-import { Chip } from '@/components/common/chip/chip';
 import { PanicService } from '@/services/memo/panic';
+import { Badge } from '@/components/common/badge/badge';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -285,6 +285,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                       </div>
                     </div>
                   </div>
+                </div>
+                <div>
                   {expandedMemoId === memo.id && memo.resource && (
                     <ShowFiles resources={memo.resource} />
                   )}
@@ -323,27 +325,22 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                 <div className='grid grid-cols-1 gap-4 '>
                   <div className='p-3'>
                     <div className='flex items-center gap-2 flex-row justify-between'>
-                      <div className='flex flex-row gap-2'>
-                        <span className='vox-icon size-sm vx-icon-233 text-primary' />
-                        <h4 className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
-                          Formulario de Comentarios
-                        </h4>
+                      <div className='flex flex-row w-full bg-red flex-wrap justify-center gap-2'>
+                        <ShowFiles
+                          resources={files.value}
+                          removeFile={removeFile}
+                        />
                       </div>
                       <Button
                         name='memo-send-response'
                         type='submit'
                         disabled={!message.trim() /* && !selectedPredefined */}
-                        label='Enviar'
+                        label='send'
                         icon='311'
                         className='w-full'
                       />
                     </div>
-                    <div className='flex flex-row w-full bg-red flex-wrap justify-center gap-2 py-1'>
-                      <ShowFiles
-                        resources={files.value}
-                        removeFile={removeFile}
-                      />
-                    </div>
+
                     <div className='grid grid-cols-2 gap-2'>
                       <Field<IOption> name='predefined'>
                         {({ input, meta }) => (
@@ -397,7 +394,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             name='attachments'
                             onChange={handleAttachmentUpload}
                             value={[]}
-                            accept='image/*'
+                            accept='image/*, video/*'
                             multiple={true}
                             label='Adjuntos'
                             area='memo'
@@ -461,22 +458,19 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   return (
     <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm max-h-[450px]'>
       <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-dark max-h-20'>
-        <div className='flex-1 rounded-lg'>
+        <div className='flex-1 rounded-lg ml-5'>
           {memo.resource && <ShowFiles resources={memo.resource} />}
         </div>
 
         {panic.value.length > 0 && (
           <div className='flex flex-col gap-2'>
-            {panic.value.map((panicItem: IPanic) => (
-              <div key={panicItem.id} className='flex items-center gap-2'>
-                <Chip
-                  label={panicItem.message}
-                  width='xl'
-                  icon='020'
-                  borderColor='border-red-500 dark:border-red-500'
-                />
-              </div>
-            ))}
+            <Badge
+              label='panic_button'
+              icon='020'
+              status='error'
+              full
+              outline
+            />
           </div>
         )}
 

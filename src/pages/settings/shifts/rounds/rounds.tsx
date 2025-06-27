@@ -36,7 +36,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   };
 
   useEffect(() => {
-    document.title = 'VX - Round Service';
+    document.title = 'TR - Round Service';
     getRounds();
   }, []);
 

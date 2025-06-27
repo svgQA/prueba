@@ -1,9 +1,17 @@
-import { IService } from '@/types/shift/activity';
+import { IService, IShiftResponse } from '@/types/shift/activity';
 import { useSignal } from '@preact/signals';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
-import { Chip } from '@/components/common/chip/chip';
+import ShowFiles from '@/components/common/file/show.file';
+import { Badge } from '@/components/common/badge/badge';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
-const ServiceInfo = ({ service }: { service: IService }) => {
+const ServiceInfo = ({
+  service,
+  shift,
+}: {
+  service: IService;
+  shift: IShiftResponse;
+}) => {
   const points = useSignal<any>([
     {
       id: 1,
@@ -18,23 +26,36 @@ const ServiceInfo = ({ service }: { service: IService }) => {
     <div className='flex flex-row gap-6'>
       {/* Detalles del Servicio */}
       <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm text-t-light dark:text-t-dark'>
-        <h4 className='font-semibold mb-3 flex items-center'>
-          <span className='!text-primary mr-2 vox-icon size-sm vx-icon-341'></span>
-          Detalles del Servicio
-        </h4>
+        <div className='flex flex-row items-center justify-between mb-3'>
+          <h4 className='font-semibold mb-3 flex items-center'>
+            <span className='!text-primary mr-2 vox-icon size-sm vx-icon-341'></span>
+            Detalles del Servicio
+          </h4>
+          <Badge label={service.state} status='info' outline />
+        </div>
+
         <div className='space-y-4'>
           <div>
             <p className='mb-1 font-semibold'>Nombre del Servicio</p>
-            <p>{service.description}</p>
+            <TextEllipsis
+              text={service.description}
+              maxWidth='500px'
+            ></TextEllipsis>
           </div>
-          <div>
-            <p className='mb-1 font-semibold'>Estado</p>
-            <Chip label={service.state} width='md' />
-          </div>
+          {shift.resource && (
+            <div className='w-40'>
+              {/* <p className='mb-1 font-semibold'>Archivos</p> */}
+              <ShowFiles resources={shift.resource} />
+            </div>
+          )}
           <div>
             <p className='mb-1 font-semibold'>Contrato</p>
             <p className='text-primary capitalize'>{service.contract.name}</p>
           </div>
+          {/* <div className='flex flex-row items-center justify-between mb-3'>
+            <h4 className='font-semibold'>Contrato</h4>
+              <p className='text-primary capitalize'>{service.contract.name}</p>
+          </div> */}
         </div>
       </div>
 
@@ -67,9 +88,11 @@ const ServiceInfo = ({ service }: { service: IService }) => {
       <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-3 flex-1 shadow-sm text-t-light dark:text-t-dark'>
         <div className='flex flex-row items-center justify-between mb-3'>
           <h4 className='font-semibold'>Área de cobertura</h4>
-          <Chip
+          <Badge
             label={`Radio: ${service.place.radius || 50}m`}
             color='primary'
+            status='info'
+            outline
           />
         </div>
         <div className='relative w-full h-56'>

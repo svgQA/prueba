@@ -55,7 +55,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   const getSelected = useMemo(
     () => (to: string) =>
       to === location
-        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+        ? 'bg-primary-opacity dark:bg-blue-900/50'
         : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700',
     [location]
   );

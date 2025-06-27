@@ -1,6 +1,9 @@
 import { Button } from '@/components/common/button/button';
 import { Signal, useSignal } from '@preact/signals';
 import { FormattedDate } from '@/components/compose/forms';
+import { Field } from 'react-final-form';
+import { Input } from '@/components/common/input/input';
+import { lengthSize_10, required } from '@/utils/utilities';
 
 interface ChatInputProps {
   onSend?: (message: string, replyId?: number) => void;
@@ -24,7 +27,7 @@ export const ChatInput = ({
   children,
   replyId,
   replyTo,
-  form,
+  // form,
 }: ChatInputProps) => {
   const showChildren = useSignal(false);
 
@@ -75,27 +78,26 @@ export const ChatInput = ({
   };
 
   return (
-    <div>
-      <div className='flex flex-col'>
-        {replyId && replyTo && showReply()}
-        {showChildren.value && children && replyId && (
-          <div className='flex items-center gap-2 px-4 py-2 bg-b-light-light dark:bg-b-dark-light border-t border-b-light-dark dark:border-b-dark-light'>
-            {children}
-            <div className='flex-1 flex justify-end'>
-              <Button
-                icon='053'
-                rounded
-                id='cancel-reply-btn'
-                name='cancel-reply'
-                type='button'
-                onClick={() => (showChildren.value = false)}
-              />
-            </div>
+    <div className='flex flex-col'>
+      {replyId && replyTo && showReply()}
+      {showChildren.value && children && replyId && (
+        <div className='flex items-center gap-2 px-4 py-2 bg-b-light-light dark:bg-b-dark-light border-t border-b-light-dark dark:border-b-dark-light'>
+          {children}
+          <div className='flex-1 flex justify-end'>
+            <Button
+              icon='053'
+              rounded
+              id='cancel-reply-btn'
+              name='cancel-reply'
+              type='button'
+              onClick={() => (showChildren.value = false)}
+            />
           </div>
-        )}
+        </div>
+      )}
 
-        <div className='flex items-center gap-2 p-4 border-t dark:border-b-dark-light'>
-          {/* <Button
+      <div className='flex items-center gap-2 mx-5 px-3 py-2 mb-2 bg-white dark:bg-b-dark-dark rounded-full mt-1'>
+        {/* <Button
             icon='011'
             rounded
             id='attach-btn'
@@ -111,17 +113,19 @@ export const ChatInput = ({
             type='button'
             disabled={disabled || !replyId}
           /> */}
-          {children ? (
-            <>
-              <Button
-                icon='311'
-                rounded
-                id='modal-btn'
-                name='modal'
-                type='button'
-                onClick={() => (showChildren.value = !showChildren.value)}
-              />
+        {children ? (
+          <>
+            <Button
+              icon='311'
+              rounded
+              id='modal-btn'
+              name='modal'
+              type='button'
+              borderless
+              onClick={() => (showChildren.value = !showChildren.value)}
+            />
 
+            {/*
               <input
                 type='text'
                 className='flex-1 py-2 px-4 border dark:border-b-dark-light rounded-full'
@@ -132,20 +136,42 @@ export const ChatInput = ({
                 onInput={(e) => (input.value = e.currentTarget.value)}
                 disabled={disabled || !replyId}
               />
+              */}
+            <Field<string> name='description' validate={lengthSize_10}>
+              {({ input, meta }) => (
+                <Input
+                  {...input}
+                  meta={meta}
+                  type='text'
+                  placeholder='p_memo_description'
+                  disabled={disabled || !replyId}
+                  borderless
+                  float
+                  // options={predefined.value}
+                  // menuPortalTarget={document.body}
+                  // end={false}
+                  // onChange={(value?: IOption) => {
+                  //   input.onChange(value);
+                  // }}
+                />
+              )}
+            </Field>
 
-              <Button
-                icon='156'
-                rounded
-                id='send-btn'
-                name='send'
-                type='submit'
-                form={form}
-                // onClick={handleSubmit}
-                disabled={disabled || !replyId}
-              />
-            </>
-          ) : (
-            <>
+            <Button
+              icon='156'
+              rounded
+              id='send-btn'
+              name='send'
+              type='submit'
+              borderless
+              // form={form}
+              // onClick={handleSubmit}
+              // disabled={disabled || !replyId}
+            />
+          </>
+        ) : (
+          <>
+            {/*
               <input
                 type='text'
                 className='flex-1 py-2 px-4 border dark:border-b-dark-light rounded-full'
@@ -154,20 +180,38 @@ export const ChatInput = ({
                 onInput={(e) => (input.value = e.currentTarget.value)}
                 disabled={disabled}
               />
+            */}
+            <Field<string> name='message' validate={required}>
+              {({ input, meta }) => (
+                <Input
+                  {...input}
+                  meta={meta}
+                  type='text'
+                  placeholder='i_chat_message'
+                  disabled={disabled}
+                  // options={predefined.value}
+                  // menuPortalTarget={document.body}
+                  // end={false}
+                  // onChange={(value?: IOption) => {
+                  //   input.onChange(value);
+                  // }}
+                />
+              )}
+            </Field>
 
-              <Button
-                icon='156'
-                rounded
-                id='send-btn'
-                name='send'
-                type='submit'
-                form={form}
-                // onClick={handleSubmit}
-                disabled={disabled}
-              />
-            </>
-          )}
-          {/* <Button
+            <Button
+              icon='156'
+              rounded
+              id='send-btn'
+              name='send'
+              type='submit'
+              // form={form}
+              // onClick={handleSubmit}
+              disabled={disabled}
+            />
+          </>
+        )}
+        {/* <Button
             icon='012'
             rounded
             id='voice-btn'
@@ -176,7 +220,6 @@ export const ChatInput = ({
             disabled={disabled || !replyId}
             onClick={handleCancelReply}
           /> */}
-        </div>
       </div>
     </div>
   );

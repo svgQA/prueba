@@ -1,19 +1,20 @@
 import { IOption } from '@/components/common/multi/interface';
+import i18n from '@/i18n';
 
 export const required = (value: unknown) =>
-  value ? undefined : 'Campo obligatorio';
+  value ? undefined : i18n.t('required_field');
 
-export const validateExactLength = (length: number) => (value: string) => {
-  if (value && value.length !== length) {
-    return `El campo debe tener exactamente ${length} caracteres.`;
+export const validateExactLength = (len: number) => (value: string) => {
+  if (value && value.length !== len) {
+    return `${i18n.t('eql_len')} ${len}`;
   }
   return undefined;
 };
 
 export const lengthSize = (min: number, max: number) => (value: string) => {
-  if (!value) return 'Campo obligatorio';
+  if (!value) return i18n.t('required_field');
   if (value && (value.length < min || value.length > max)) {
-    return `El campo debe tener exactamente min ${min} y max ${max} caracteres.`;
+    return `${i18n.t('ran_len')} ${min} - ${max}`;
   }
   return undefined;
 };
@@ -27,6 +28,24 @@ export const validatePhone = (value: string) => {
 };
 
 export const validateOption = (value: IOption) => {
-  if (!value || !value.label || !value.value) return 'Campo obligatorio';
+  if (!value || !value.label || !value.value) return i18n.t('required_field');
+  return undefined;
+};
+
+export const validate_min_len =
+  (min: number) =>
+  (value: IOption[]): string | undefined => {
+    if (!value) return i18n.t('required_field');
+    if (value && value.length < min) {
+      return `${i18n.t('min_len')} ${min}`;
+    }
+    return undefined;
+  };
+
+export const lengthSize_10 = (value: string) => {
+  if (!value) return i18n.t('required_field');
+  if (value && value.length < 10) {
+    return `${i18n.t('min_len')} ${10}`;
+  }
   return undefined;
 };

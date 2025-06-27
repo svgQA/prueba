@@ -10,6 +10,7 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { getColumns } from './components/history.columns';
 import { useTranslation } from 'react-i18next';
 import { NotificationHistoryService } from '@/services';
+import { useUserStore } from '@/store/slices';
 
 export const HistoryNotificationsPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -18,10 +19,18 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
   const openRate = useSignal<number>(0);
   const notificationsThisMonth = useSignal<number>(0);
   const loading = useSignal<boolean>(false);
+  const { selectedCompany } = useUserStore();
+
   useEffect(() => {
     document.title = t('history.pageTitle');
-    fetchAll();
-  }, [t]);
+  }, []);
+
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchAll();
+    }
+  }, [selectedCompany, location]);
 
   const fetchAll = async () => {
     await Promise.all([fetchNotifications(), fetchDashboardStats()]);

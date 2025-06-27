@@ -1,101 +1,128 @@
-// import { useSignal } from '@preact/signals';
-// import { IPresignedRequest } from '@/types/file';
-import { ShowFilesProps } from './interface';
-// import { default_service_url } from '@/env.config';
-// import { useUserStore } from '@/store/slices';
+import { IPresignedRequest } from '@/types/file';
+import { ShowFilesProps } from './utils/interface';
+import { useUserStore } from '@/store/slices';
+import { cdn_service_url } from '@/env.config';
+import {
+  allowedAudioTypesConst,
+  allowedImageTypesConst,
+  allowedVideoTypesConst,
+} from '@/types';
+import { AudioPlayer } from './components/AudioPlayer';
+import { ImageViewer } from './components/imageViewer';
+import { useRef, useState, useEffect } from 'react';
+import { Button } from '../button/button';
+import { VideoPlayer } from './components/VideoPlayer';
+import MapViewer from './components/mapViewer';
+import MapPathViewer from './components/mapPathViewer';
 
-const showFiles = ({ resources = [], removeFile }: ShowFilesProps) => {
-  // const allAttachments = useSignal<Attachment[]>([]);
-  // const { tenant, getCompanyId } = useUserStore();
+const showFiles = ({
+  resources = [],
+  isSender = false,
+  removeFile,
+  mapPoint,
+}: ShowFilesProps) => {
+  const { getTenant, getCompanyId } = useUserStore();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visibleCount, setVisibleCount] = useState(1);
+  const [startIdx, setStartIdx] = useState(0);
 
-  /*
-  const getAttachments = () => {
-    resources.forEach((resource: IPresignedRequest) => {
-      if (resource) {
-        allAttachments.value.push({
-          url: `/files/${resource.area}/${resource.uuid}/${resource.name}`,
-          // url: `${default_service_url}/files/${tenant}/${getCompanyId()}/${resource.area}/${resource.uuid}/${resource.name}`,
-          name: resource.name,
-          type: resource.type.startsWith('image/') ? 'image' : 'file',
-        });
-      }
-    });
+  const getUrl = (file: IPresignedRequest) => {
+    return `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
   };
-  */
 
-  /*
-  const showAttachmentsFiles = (attachment: Attachment, index: number) => {
-    return (
-      <a
-        key={index}
-        href={attachment.url}
-        target='_blank'
-        rel='noopener noreferrer'
-        className='flex items-center ml-2 p-2 bg-b-light-dark dark:bg-b-dark rounded-lg selection:transition-colors shadow-sm'
-      >
-        <span className='vox-icon size-sm vx-icon-311 px-2' />
-        <span className='truncate max-w-[150px] text-t-light dark:text-t-dark text-xs'>
-          {attachment.name}
-        </span>
-      </a>
+  useEffect(() => {
+    const handleResize = () => {
+      const el = containerRef.current;
+      if (!el) return;
+      const fileWidth = 80;
+      const count = Math.max(1, Math.floor(el.offsetWidth / fileWidth));
+      setVisibleCount(count);
+      setStartIdx((prev) =>
+        Math.min(prev, Math.max(0, resources.length - count))
+      );
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [resources.length]);
+
+  useEffect(() => {
+    setStartIdx((prev) =>
+      Math.min(prev, Math.max(0, resources.length - visibleCount))
     );
-  };
-  */
+  }, [resources.length, visibleCount]);
 
-  /*
-  const showAttachmentsImages = (attachment: Attachment, index: number) => {
-    return (
-      <div key={index} className='relative group'>
-        <img
-          src={attachment.url}
-          alt={attachment.name}
-          className='h-16 w-16 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity shadow-sm'
-          onClick={() => window.open(attachment.url, '_blank')}
-        />
-        <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg' />
-      </div>
-    );
-  };
-  */
-
-  // getAttachments();
+  const showLeft = startIdx > 0;
+  const showRight = startIdx + visibleCount < resources.length;
+  const goLeft = () => setStartIdx((prev) => Math.max(0, prev - 1));
+  const goRight = () =>
+    setStartIdx((prev) => Math.min(resources.length - visibleCount, prev + 1));
+  const visibleFiles = resources.slice(startIdx, startIdx + visibleCount);
 
   return (
-    <div className='flex flex-row py-1 w-full gap-2'>
-      {resources.map((file) => (
-        <div
-          className='bg-contain dark:bg-gray-800 w-12 h-12 border rounded-md dark:border-b-dark-dark border-b-light-dark content-center text-center relative'
-          key={file.uuid}
-        >
-          <span className='vox-icon vx-icon-067' />
-          {removeFile && (
-            <span
-              className='absolute vox-icon vx-icon-008 size-sm top-0 right-0 cursor-pointer'
-              onClick={() => removeFile(file.uuid)}
-            />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-  /*
-    <div className='px-4 py-2'>
-      <div className='flex flex-wrap gap-2 rounded-lg p-2'>
-        {allAttachments.value.length > 0
-          ? allAttachments.value.map((attachment, index) =>
-              attachment.type === 'image'
-                ? showAttachmentsImages(attachment, index)
-                : showAttachmentsFiles(attachment, index)
-            )
-          : alertEmpty && (
-              <span className='text-sm text-gray-text-light dark:text-t-dark-light'>
-                No hay archivos adjuntos
-              </span>
+    <div
+      className='relative w-full flex justify-center items-center'
+      ref={containerRef}
+    >
+      {visibleFiles && resources.length > 0 && (
+        <Button
+          name='button-change-scheduler'
+          onClick={goLeft}
+          icon='003'
+          borderless
+          square
+          transparent
+          disabled={!showLeft}
+        ></Button>
+      )}
+      <div
+        className={`flex flex-row flex-nowrap py-1 w-full gap-2 ${isSender ? 'justify-end items-center' : 'justify-start items-center'} px-8 overflow-hidden`}
+        style={{ minHeight: '3.5rem' }}
+      >
+        {visibleFiles.map((file) => (
+          <div
+            className='
+            border border-b-light-dark dark:border-b-dark-light py-2 relative max-h-14 bg-gray-200
+            dark:bg-gray-800/60 text-gray-700 dark:text-gray-200 font-bold overflow-hidden rounded-md
+            flex flex-row justify-center items-center
+            '
+            key={file.uuid}
+          >
+            {allowedImageTypesConst.includes(file.type as any) ? (
+              <ImageViewer src={getUrl(file)} />
+            ) : allowedAudioTypesConst.includes(file.type as any) ? (
+              <AudioPlayer src={getUrl(file)} square />
+            ) : allowedVideoTypesConst.includes(file.type as any) ? (
+              <VideoPlayer src={getUrl(file)} />
+            ) : file.type === 'application/json' ? (
+              <MapPathViewer src={getUrl(file)} />
+            ) : (
+              <span className='vox-icon vx-icon-069 px-3' />
             )}
+
+            {removeFile && (
+              <span
+                className='absolute vox-icon vx-icon-008 size-sm top-0 right-0 cursor-pointer'
+                onClick={() => removeFile(file.uuid)}
+              />
+            )}
+          </div>
+        ))}
+        {mapPoint && <MapViewer mapPoint={mapPoint} />}
       </div>
+      {visibleFiles && resources.length > 0 && (
+        <Button
+          name='button-change-scheduler'
+          onClick={goRight}
+          icon='004'
+          borderless
+          square
+          transparent
+          disabled={!showRight}
+        ></Button>
+      )}
     </div>
   );
-    */
 };
 
 export default showFiles;

@@ -11,7 +11,7 @@ import { useWebSocket } from '@/utils/socket';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useSignal } from '@preact/signals';
 import { IMessage } from '@/utils/socket/interface';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
 import { MemoService } from '@/services';
 import { ExtraData, Memo } from '../utils/memos';
@@ -25,8 +25,8 @@ import { IPresignedRequest } from '@/types/file';
 import { File } from '@/components/common/file/file';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import ShowFiles from '@/components/common/file/show.file';
-import { showAlert } from '@/components/common/show-alert/show-alert';
-import i18n from '@/i18n';
+import './chat.css';
+import { MapPoint } from '@/components/common/map/interface';
 
 interface IOption {
   label: string;
@@ -89,7 +89,9 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   const totalPages = useSignal<number>(3);
   const selectedChat = useSignal<string>('0');
   const chats = useSignal<Chats>({});
-  const viewMode = useSignal<TypeChatView>(TypeChatView.USERS);
+  const viewMode = useSignal<TypeChatView>(
+    /*TypeChatView.USERS */ TypeChatView.SERVICES_MEMO
+  );
   const memoByService = useSignal<any[]>([]);
   const memoByUser = useSignal<any[]>([]);
   const predefined = useSignal<IOption[]>([]);
@@ -99,7 +101,6 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   >();
   const messages = useSignal<string>('');
   const files = useSignal<IPresignedRequest[]>([]);
-  const [btnLabel, setBtnLabel] = useState('Check In');
 
   useEffect(() => {
     fetchPredefinedOptions();
@@ -138,19 +139,6 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     selectedChat.value = '0';
     userSelected.value = undefined;
   }, [viewMode.value]);
-
-  useEffect(() => {
-    if (replyToId.value) {
-      const memo =
-        viewMode.value === TypeChatView.SERVICES_MEMO
-          ? memoByService.value.find((m) => m.id === replyToId.value)
-          : memoByUser.value.find((m) => m.id === replyToId.value);
-
-      if (memo) {
-        getStatus(memo.state);
-      }
-    }
-  }, [replyToId.value, memoByService.value, memoByUser.value]);
 
   const handleReceiveMessage = (message: IMessage) => {
     chats.value = addMessageArray(message.from, message);
@@ -274,9 +262,16 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     }
   };
 
-  const handleSubmitMessage = async (values: any) => {
-    let memo: Memo = memoByService.value.find((e) => e.id == replyToId.value);
-    let extraData: ExtraData = { ...memo.extraData } as ExtraData;
+  const handleSubmitMessage = async (values: any, form: any) => {
+    let memo: Memo =
+      TypeChatView.SERVICES_MEMO === viewMode.value
+        ? memoByService.value.find((e) => e.id == replyToId.value)
+        : memoByUser.value.find((e) => e.id == replyToId.value);
+    if (!memo)
+      ToastManager.error('No existe un memo con el Id que seleccionaste');
+    let extraData: ExtraData = memo?.extraData
+      ? ({ ...memo?.extraData } as ExtraData)
+      : ({} as ExtraData);
 
     if (values.predefined) extraData.predefined = values.predefined;
     if (values.duration) extraData.duration = values.duration;
@@ -284,7 +279,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
     const newMemo: Memo = {
       ...memo,
-      description: messages.value.trim() ? messages.value : '...',
+      description: values.description,
       priority:
         memo.priority === 'Alta' ? 5 : memo.priority === 'Media' ? 4 : 3,
       updatedAt: DateUtils.dateToBackend(new Date()),
@@ -294,11 +289,16 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
       extraData: extraData,
     };
 
-    await MemoService.createMemo(newMemo);
+    const response = await MemoService.createMemo(newMemo);
+    if (!response.getStatus()) {
+      ToastManager.error('Error creando Memo de respuesta');
+      return;
+    }
     replyToId.value = undefined;
     replyToMessage.value = undefined;
     messages.value = '';
     handleChatSelect(selectedChat.value, viewMode.value);
+    form.reset();
   };
 
   const handleAttachmentUpload = (e: any) => {
@@ -308,6 +308,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
   const chatCardGroupedBy = () => (
     <>
+      {/*
       <ChatCard
         id={'0'}
         name={t('memos.chat.aiAssistant')}
@@ -317,7 +318,9 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         onClick={handleChatSelect}
         isSelected={selectedChat.value === '0'}
       />
+      */}
       <div className='flex-1 overflow-y-auto vox-scroll-design border-b-light-dark dark:border-b-dark-light'>
+        {/*
         {viewMode.value === TypeChatView.USERS &&
           users.map((user: IUserResponse) => (
             <ChatCard
@@ -332,6 +335,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               isSelected={selectedChat.value === user.cognitoId}
             />
           ))}
+        */}
 
         {viewMode.value == TypeChatView.SERVICES_MEMO &&
           memosGroupedByService.map((service: any) => (
@@ -377,7 +381,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         {/* Memo principal */}
         <ChatMessage
           key={`parent-${index}`}
-          message={memo.description}
+          message={memo.panicUuid ? t(memo.description) : memo.description}
           isSender={false}
           title={memo.novelty?.name}
           resource={memo.resource}
@@ -394,6 +398,18 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           }
           isSelected={replyToId.value === memo.id}
           status={memo.state}
+          solved={
+            memo.state === 'OPENED' ||
+            memo.state === 'IN_REVISION' ||
+            memo.state === 'CREATED'
+          }
+          reload={() => handleChatSelect(selectedChat.value, viewMode.value)}
+          mapPoint={
+            {
+              id: memo.id,
+              position: { lat: memo?.latitude || 0, lng: memo?.longitude || 0 },
+            } as MapPoint
+          }
         >
           <div className='flex items-center gap-2 text-xs my-2'>
             <span className='vox-icon size-sm vx-icon-318' />
@@ -416,11 +432,24 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         {memo.children?.map((childMemo: Memo, childIndex: number) => (
           <ChatMessage
             key={`child-${index}-${childIndex}`}
-            message={childMemo.description}
+            message={
+              childMemo.panicUuid
+                ? t(childMemo.description)
+                : childMemo.description
+            }
             isSender={true}
             title={childMemo.extraData?.predefined?.label}
             resource={childMemo.resource}
             date={childMemo.updatedAt}
+            mapPoint={
+              {
+                id: memo.id,
+                position: {
+                  lat: memo?.latitude || 0,
+                  lng: memo?.longitude || 0,
+                },
+              } as MapPoint
+            }
           >
             <div className='items-center gap-2 text-xs my-2 flex flex-row'>
               <span className='vx-icon size-sm vx-icon-318 dark:text-white' />
@@ -453,171 +482,94 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     );
   };
 
-  const getStatus = (state: string) => {
-    const statesToSolve = new Set(['OPENED', 'IN_REVISION', 'CREATED']);
-    const status = statesToSolve.has(state) ? 'SOLVE' : 'RESOLVED';
-    setBtnLabel(status);
-  };
-
-  const getLocation = async () => {
-    try {
-      const position = await new Promise<GeolocationPosition>(
-        (resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        }
-      );
-      return position;
-    } catch (error) {
-      getErrorGeolocation(error as GeolocationPositionError);
-      return null;
-    }
-  };
-
-  const getErrorGeolocation = (error: GeolocationPositionError) => {
-    if (!(error instanceof GeolocationPositionError)) return;
-
-    if (error.code === error.PERMISSION_DENIED) {
-      showAlert({
-        title: i18n.t('shift.expandable.date.location.title'),
-        message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => {},
-        onCancel: () => {},
-      });
-    } else if (error.code === error.POSITION_UNAVAILABLE) {
-      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
-    } else {
-      ToastManager.error(
-        i18n.t('shift.expandable.date.location.timeoutMessage')
-      );
-    }
-  };
-
-  const handleCheck = async () => {
-    if (!replyToId.value) return;
-
-    const position = await getLocation();
-    if (!position) return null;
-
-    const checkData = {
-      latitude: position.coords.latitude.toString(),
-      longitude: position.coords.longitude.toString(),
-      date: new Date().toISOString(),
-      platform: 'web',
-      type: btnLabel === 'SOLVE' ? 'SOLVE' : 'RESOLVED',
-    };
-
-    await MemoService.createCheck(checkData, replyToId.value);
-    handleChatSelect(selectedChat.value, viewMode.value);
-  };
-
   const formMinutesByInputs = () => (
     <>
+      {/*
       <Form
         onSubmit={handleSubmitMessage}
         render={({ handleSubmit }) => (
           <form
-            id='chat-input-form'
-            name='chat-input-form'
+            id='chat-input-form-memo'
+            name='chat-input-form-memo'
             onSubmit={handleSubmit}
-          >
-            <div className='grid grid-cols-1 gap-4'>
-              <div className='p-3'>
-                <div className='grid grid-cols-3 gap-3'>
-                  <Field<IOption> name='predefined'>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        name='predefined'
-                        id='select-predefined'
-                        placeholder='Opciones predefinidas'
-                        label='Opciones predefinidas'
-                        options={predefined.value}
-                        menuPortalTarget={document.body}
-                        end={false}
-                        onChange={(value?: IOption) => {
-                          input.onChange(value);
-                        }}
-                      />
-                    )}
-                  </Field>
+          >*/}
+      <div className='grid grid-cols-1 gap-4'>
+        <div className='p-3'>
+          <div className='grid grid-cols-3 gap-3'>
+            <Field<IOption> name='predefined'>
+              {({ input, meta }) => (
+                <SmartSelector
+                  {...input}
+                  meta={meta}
+                  name='predefined'
+                  id='select-predefined'
+                  placeholder='Opciones predefinidas'
+                  label='Opciones predefinidas'
+                  options={predefined.value}
+                  menuPortalTarget={document.body}
+                  end={false}
+                  onChange={(value?: IOption) => {
+                    input.onChange(value);
+                  }}
+                />
+              )}
+            </Field>
 
-                  <Field<string> name='duration'>
-                    {({ input }) => (
-                      <Input
-                        {...input}
-                        type='number'
-                        name='duration'
-                        label='Duración'
-                        placeholder='Min'
-                      />
-                    )}
-                  </Field>
+            <Field<string> name='duration'>
+              {({ input }) => (
+                <Input
+                  {...input}
+                  type='number'
+                  name='duration'
+                  label='Duración'
+                  placeholder='Min'
+                />
+              )}
+            </Field>
 
-                  <Field<string> name='date'>
-                    {({ input }) => (
-                      <DateField {...input} name='date' label='Fecha' />
-                    )}
-                  </Field>
+            <Field<string> name='date'>
+              {({ input }) => (
+                <DateField {...input} name='date' label='Fecha' />
+              )}
+            </Field>
 
-                  <Field name='attachments'>
-                    {() => (
-                      <File
-                        name='attachments'
-                        onChange={handleAttachmentUpload}
-                        value={[]}
-                        accept='image/*'
-                        multiple={true}
-                        label='Adjuntos'
-                        area='memo'
-                      />
-                    )}
-                  </Field>
+            <Field name='attachments'>
+              {() => (
+                <File
+                  name='attachments'
+                  onChange={handleAttachmentUpload}
+                  value={[]}
+                  accept='image/*'
+                  multiple={true}
+                  label='Adjuntos'
+                  area='memo'
+                />
+              )}
+            </Field>
 
-                  {files.value.length > 0 && (
-                    <div className='flex items-center gap-2'>
-                      <ShowFiles resources={files.value} />
-                    </div>
-                  )}
-
-                  {replyToId.value && (
-                    <div className='flex items-center gap-2'>
-                      <Button
-                        label={btnLabel}
-                        icon={
-                          btnLabel === 'SOLVE' || btnLabel === 'RESOLVED'
-                            ? '030'
-                            : '032'
-                        }
-                        disabled={btnLabel === 'RESOLVED'}
-                        onClick={() =>
-                          showAlert({
-                            title: btnLabel,
-                            message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
-                            onConfirm: () => handleCheck(),
-                            onCancel: () => {},
-                          })
-                        }
-                        name={btnLabel}
-                      />
-                    </div>
-                  )}
-                </div>
+            {files.value.length > 0 && (
+              <div className='flex items-center gap-2'>
+                <ShowFiles resources={files.value} />
               </div>
-            </div>
+            )}
+          </div>
+        </div>
+      </div>
+      {/*
           </form>
         )}
       />
+    */}
     </>
   );
 
   return (
-    <>
-      <div className='w-full flex flex-col h-full'>
-        <div className='flex flex-1 overflow-y-auto border-t border-b-light-dark dark:border-b-dark-light'>
-          <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light'>
-            <div className='p-4 border-b border-b-light-dark dark:border-b-dark-light'>
-              <div className='flex gap-2 items-center'>
+    <div className='w-full flex flex-col h-full'>
+      <div className='flex flex-1 overflow-y-auto border-t border-b-light-dark dark:border-b-dark-light'>
+        <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light'>
+          <div className='p-4 border-b-light-dark dark:border-b-dark-light'>
+            <div className='flex gap-2 items-center'>
+              {/*
                 <Button
                   name='users'
                   icon='321'
@@ -625,95 +577,108 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   onClick={() => (viewMode.value = TypeChatView.USERS)}
                   label={t('memos.view.users')}
                 />
-                <Dropdown
-                  name='view-mode'
-                  options={[
-                    {
-                      label: t('memos.chat.view.users'),
-                      value: TypeChatView.USERS_MEMO,
-                      icon: '321',
-                    },
-                    {
-                      label: t('memos.chat.view.services'),
-                      value: TypeChatView.SERVICES_MEMO,
-                      icon: '321',
-                    },
-                  ]}
-                  selectedTag={t('memos.chat.view.select')}
-                  onChange={(value) => {
-                    viewMode.value =
-                      value === TypeChatView.USERS_MEMO
-                        ? TypeChatView.USERS_MEMO
-                        : TypeChatView.SERVICES_MEMO;
-                  }}
-                />
-              </div>
-            </div>
-            {/* Chat info card grouped by */}
-            {chatCardGroupedBy()}
-            {/* Chat pagination */}
-            <div className='flex justify-between items-center p-4 border-t border-r dark:border-b-dark-light border-b-light-dark'>
-              <Button
-                name={t('memos.pagination.previous')}
-                onClick={handlePrevPage}
-                disabled={currentPage.value === 1}
-                icon='014'
-                label={t('memos.pagination.previous')}
-              />
-              <span className='text-sm text-gray-500'>
-                {t('memos.pagination.page')} {currentPage.value}{' '}
-                {t('memos.pagination.of')} {totalPages.value}
-              </span>
-              <Button
-                name={t('memos.pagination.next')}
-                onClick={handleNextPage}
-                disabled={currentPage.value >= totalPages.value}
-                icon='015'
-                label={t('memos.pagination.next')}
+                */}
+              <Dropdown
+                name='view-mode'
+                options={[
+                  {
+                    label: t('memos.chat.view.users'),
+                    value: TypeChatView.USERS_MEMO,
+                    icon: '321',
+                  },
+                  {
+                    label: t('memos.chat.view.services'),
+                    value: TypeChatView.SERVICES_MEMO,
+                    icon: '321',
+                  },
+                ]}
+                selectedTag={t('memos.chat.view.select')}
+                onChange={(value) => {
+                  viewMode.value =
+                    value === TypeChatView.USERS_MEMO
+                      ? TypeChatView.USERS_MEMO
+                      : TypeChatView.SERVICES_MEMO;
+                }}
               />
             </div>
           </div>
+          {/* Chat info card grouped by */}
+          {chatCardGroupedBy()}
+          {/* Chat pagination */}
+          <div className='flex justify-between items-center p-4 border-t dark:border-b-dark-light border-b-light-dark'>
+            <Button
+              name={t('memos.pagination.previous')}
+              onClick={handlePrevPage}
+              disabled={currentPage.value === 1}
+              icon='014'
+              label={t('memos.pagination.previous')}
+            />
+            <span className='text-sm text-gray-500'>
+              {t('memos.pagination.page')} {currentPage.value}{' '}
+              {t('memos.pagination.of')} {totalPages.value}
+            </span>
+            <Button
+              name={t('memos.pagination.next')}
+              onClick={handleNextPage}
+              disabled={currentPage.value >= totalPages.value}
+              icon='015'
+              label={t('memos.pagination.next')}
+            />
+          </div>
+        </div>
 
-          <div className='w-[70%] flex flex-col'>
-            <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
-              {selectedChat.value === '0' && <FrequentQuestions />}
-              {selectedChat.value === '0' &&
-                chats.value[selectedChat.value]?.messages.map((msg, index) => (
-                  <ChatMessage
-                    key={index}
-                    message={msg.message}
-                    isSender={msg.isSender}
-                  />
-                ))}
-              {selectedChat.value !== '0' &&
-                viewMode.value == TypeChatView.SERVICES_MEMO &&
-                memoByService.value.map((memo: Memo, index) =>
-                  showChatMemoAndSubMemo(memo, index)
-                )}
-              {selectedChat.value !== '0' &&
-                viewMode.value == TypeChatView.USERS_MEMO &&
-                memoByUser.value.map((memo: Memo, index) =>
-                  showChatMemoAndSubMemo(memo, index)
-                )}
-            </div>
+        <div className='w-[70%] flex flex-col h-full container-chat'>
+          <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
+            {selectedChat.value === '0' && <FrequentQuestions />}
+            {selectedChat.value === '0' &&
+              chats.value[selectedChat.value]?.messages.map((msg, index) => (
+                <ChatMessage
+                  key={index}
+                  message={msg.message}
+                  isSender={msg.isSender}
+                />
+              ))}
+            {selectedChat.value !== '0' &&
+              viewMode.value == TypeChatView.SERVICES_MEMO &&
+              memoByService.value.map((memo: Memo, index) =>
+                showChatMemoAndSubMemo(memo, index)
+              )}
+            {selectedChat.value !== '0' &&
+              viewMode.value == TypeChatView.USERS_MEMO &&
+              memoByUser.value.map((memo: Memo, index) =>
+                showChatMemoAndSubMemo(memo, index)
+              )}
+          </div>
+          <Form
+            onSubmit={handleSubmitMessage}
+            render={({ handleSubmit }) => (
+              <form
+                id='chat-input-form-memo'
+                name='chat-input-form-memo'
+                onSubmit={handleSubmit}
+              >
+                {/*
             {viewMode.value === TypeChatView.USERS ? (
               <ChatInput onSend={handleSendMessage} input={messages} />
             ) : (
-              <ChatInput
-                onSend={handleSendMessage}
-                onCancelReply={handleCancelReply}
-                input={messages}
-                disabled={replyToId.value === undefined}
-                replyId={replyToId.value}
-                replyTo={replyToMessage.value}
-                form='chat-input-form'
-              >
-                {formMinutesByInputs()}
-              </ChatInput>
+            */}
+                <ChatInput
+                  onSend={handleSendMessage}
+                  onCancelReply={handleCancelReply}
+                  input={messages}
+                  disabled={replyToId.value === undefined}
+                  replyId={replyToId.value}
+                  replyTo={replyToMessage.value}
+                  // form='chat-input-form-memo'
+                >
+                  {formMinutesByInputs()}
+                </ChatInput>
+                {/* )} */}
+              </form>
             )}
-          </div>
+          />
         </div>
       </div>
-    </>
+    </div>
   );
 };

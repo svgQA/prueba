@@ -30,7 +30,7 @@ export const ShiftSettingPage: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    document.title = 'VX - Shift Settings';
+    document.title = 'TR - Shift Settings';
     getSettings();
   }, []);
 

@@ -7,6 +7,7 @@ export interface IDropdownAction {
   icon: string;
   color?: string;
   onClick?: () => void;
+  keyName?: string;
 }
 
 interface DropdownActionsMenuProps {
@@ -79,6 +80,7 @@ export const DropdownActionsMenu = ({
             <div className='flex flex-col gap-1 px-2'>
               {actions.map((action, idx) => (
                 <Button
+                  keyName={action.keyName}
                   key={idx}
                   id={`dropdown-action-${idx}`}
                   name={`dropdown-action-${idx}`}

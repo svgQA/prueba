@@ -37,6 +37,8 @@ export const Input = <T = string,>({
   error,
   warning,
   paddingVertical = 'py-2',
+  rounded,
+  float,
   ...props
 }: IInputProps<T>) => {
   const { t } = useTranslation();
@@ -59,7 +61,7 @@ export const Input = <T = string,>({
   };
 
   return (
-    <div id={id} className='w-full mt-1'>
+    <div id={id} className='w-full mt-1 relative'>
       {label && (
         <label
           htmlFor={`${id}-input`}
@@ -81,11 +83,11 @@ export const Input = <T = string,>({
         <div className='relative flex-1 py-0.5'>
           <input
             ref={ref}
+            // focus:ring-blue-500 dark:focus:ring-blue-400
             className={`w-full px-3 ${paddingVertical} rounded
               bg-white dark:bg-b-dark-dark
               text-gray-700 dark:text-gray-200
               border-gray-300 dark:border-gray-700
-              focus:ring-blue-500 dark:focus:ring-blue-400
               ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
               ${
                 type === 'number'
@@ -117,7 +119,7 @@ export const Input = <T = string,>({
             min={min}
             max={max}
             id={`${id}-input`}
-            placeholder={placeholder}
+            placeholder={t(placeholder || '')}
             pattern={pattern}
             required={required}
             tabIndex={tabIndex}
@@ -158,7 +160,11 @@ export const Input = <T = string,>({
         )}
       </div>
       {meta && meta.touched && meta.error && (
-        <span className='text-red-500 text-sm'>{meta.error}</span>
+        <span
+          className={`text-red-500 text-sm ${float ? 'absolute top-1/4 right-0' : ''}`}
+        >
+          {meta.error}
+        </span>
       )}
       {error && <span className='text-red-500 text-sm'>{error}</span>}
       {warning && <span className='text-yellow-500 text-sm'>{warning}</span>}

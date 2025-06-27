@@ -17,7 +17,7 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const loading = useSignal<boolean>(false);
   useEffect(() => {
-    document.title = 'VX - Notificaciones Programadas';
+    document.title = 'TR - Notificaciones Programadas';
     fetchNotifications();
   }, []);
 

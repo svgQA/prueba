@@ -44,11 +44,11 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
     },
     {
       icon: '195',
-      label: 'App Voxline',
+      label: 'App Tryvoo',
       description: 'Company',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.voxline.base,
-      id: 'voxline',
+      id: 'tryvoo',
     },
     {
       icon: '117',

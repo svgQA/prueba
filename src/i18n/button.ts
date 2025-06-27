@@ -4,8 +4,10 @@ export const buttons_es = {
   delete: 'Eliminar',
   cancel: 'Cancelar',
   create: 'Crear',
-  remote: 'Supervisión Remota',
+  remote: 'Notificaciones / Supervisión',
   save: 'Guardar',
+  unsaved: 'No guardado',
+  saving: 'Guardando...',
   description: 'Descripción',
   condition: 'Condición',
   group: 'Grupo',
@@ -17,6 +19,7 @@ export const buttons_es = {
   next: 'Siguiente',
   previous: 'Anterior',
   finish: 'Finalizar',
+  send: 'Enviar',
 };
 
 export const buttons_en = {
@@ -27,6 +30,8 @@ export const buttons_en = {
   create: 'Create',
   remote: 'Remote Supervision',
   save: 'Save',
+  unsaved: 'Unsaved',
+  saving: 'Saving...',
   description: 'Description',
   condition: 'Condition',
   group: 'Group',
@@ -38,4 +43,5 @@ export const buttons_en = {
   next: 'Next',
   previous: 'Previous',
   finish: 'Finish',
+  send: 'Send',
 };

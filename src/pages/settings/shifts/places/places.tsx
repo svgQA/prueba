@@ -30,7 +30,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
 
   useEffect(() => {
-    document.title = 'VX - Place Service';
+    document.title = 'TR - Place Service';
     getPlaces();
   }, []);
 
