@@ -90,11 +90,8 @@ export const ManualNotificationForm = ({
       ...(values.template?.value && { templateId: values.template.value }),
       ...(!values.template?.value &&
         values.task?.value && { taskId: Number(values.task.value) }),
-      ...(!values.template?.value &&
-        !values.task?.value && {
-          overrideTitle: values.title,
-          overrideDescription: values.description,
-        }),
+      overrideTitle: values.title,
+      overrideDescription: values.description,
       // TODO: Deje comentado esto, porque me daba conflicto con lo anterio
       // Jaider determina cual es el correcto.
       // overrideTitle: values.title ?? "",
