@@ -65,8 +65,6 @@ const ReportInfo: React.FC<ReportInfoProps> = ({ reports: directReports, data, o
 
           const buttonLabel = isExpanded ? 'Ocultar detalles' : 'Ver detalles';
 
-          const typeLabel = hasForm ? report.form?.title : hasAttachments ? `Archivos: ${report.resource.length}` : '';
-
           return (
             <React.Fragment key={report.id}>
               <div className="grid grid-cols-12 gap-x-4 items-center py-3 text-sm">
