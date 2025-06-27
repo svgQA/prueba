@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'preact/hooks';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 import { IPanic, IPanicProps } from './interface';
 import { EventBus } from '@/utils/network/event.bus';
 import {
@@ -12,13 +12,19 @@ import { Button } from '../button/button';
 import { useSignal } from '@preact/signals';
 import ExpanderNotification from '../notifications/expander.notification';
 import { PanicService } from '@/services/memo/panic';
-import { TextEllipsis } from '../text-ellipsis';
 import { useUserStore } from '@/store/slices';
+import NotificationBanner from '../notifications/notification.banner';
+import { useTranslation } from 'react-i18next';
 
 const Panic = (_panic: IPanicProps) => {
   const allPanic = useSignal<IPanic[]>([]);
   const { selectedCompany } = useUserStore();
   const isOpen = useSignal<boolean>(false);
+  const notificationBannerRef = useRef<{
+    startBannerAnimation: () => void;
+    closeBanner: () => void;
+  }>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!selectedCompany) return;
@@ -37,6 +43,7 @@ const Panic = (_panic: IPanicProps) => {
       await fetchPanic();
 
       if (event.message.id) {
+        notificationBannerRef.current?.startBannerAnimation();
         const panic = allPanic.value.find(
           (panic) => panic.id === event.message.id
         );
@@ -54,17 +61,17 @@ const Panic = (_panic: IPanicProps) => {
 
   const handleChangeStatus = async (id: string) => {
     const response = await PanicService.changeStatusPanic(id);
-
-    if (response.getStatus()) {
-      return;
-    }
+    if (!response.getStatus()) return;
+    notificationBannerRef.current?.closeBanner();
   };
 
   return (
     <div className='relative flex flex-row justify-center items-center gap-2'>
-      {allPanic.value.length > 0 ? (
-        <TextEllipsis text={allPanic.value[0].message} maxWidth='200px' />
-      ) : null}
+      <NotificationBanner
+        ref={notificationBannerRef}
+        message='panic_button'
+        color='error'
+      />
       <FloatBadge
         label={allPanic.value.length || '0'}
         color='bg-red-500 text-white'
@@ -90,7 +97,7 @@ const Panic = (_panic: IPanicProps) => {
             >
               <div className='flex items-center gap-2'>
                 <span className='text-sm text-gray-700 dark:text-gray-200'>
-                  {panic.message}
+                  {t('panic_button')}
                 </span>
               </div>
 

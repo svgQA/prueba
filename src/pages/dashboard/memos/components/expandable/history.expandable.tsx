@@ -24,8 +24,8 @@ import { PredefinedService } from '@/services/shift/predefined';
 import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
 import { IPanic } from '@/components/common/panic/interface';
-import { Chip } from '@/components/common/chip/chip';
 import { PanicService } from '@/services/memo/panic';
+import { Badge } from '@/components/common/badge/badge';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -325,11 +325,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                 <div className='grid grid-cols-1 gap-4 '>
                   <div className='p-3'>
                     <div className='flex items-center gap-2 flex-row justify-between'>
-                      <div className='flex flex-row gap-2'>
-                        <span className='vox-icon size-sm vx-icon-233 text-primary' />
-                        <h4 className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
-                          Formulario de Comentarios
-                        </h4>
+                      <div className='flex flex-row w-full bg-red flex-wrap justify-center gap-2'>
+                        <ShowFiles
+                          resources={files.value}
+                          removeFile={removeFile}
+                        />
                       </div>
                       <Button
                         name='memo-send-response'
@@ -340,12 +340,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         className='w-full'
                       />
                     </div>
-                    <div className='flex flex-row w-full bg-red flex-wrap justify-center gap-2 py-1'>
-                      <ShowFiles
-                        resources={files.value}
-                        removeFile={removeFile}
-                      />
-                    </div>
+
                     <div className='grid grid-cols-2 gap-2'>
                       <Field<IOption> name='predefined'>
                         {({ input, meta }) => (
@@ -399,7 +394,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             name='attachments'
                             onChange={handleAttachmentUpload}
                             value={[]}
-                            accept='image/*'
+                            accept='image/*, video/*'
                             multiple={true}
                             label='Adjuntos'
                             area='memo'
@@ -469,11 +464,12 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
         {panic.value.length > 0 && (
           <div className='flex flex-col gap-2'>
-            <Chip
-              label={panic.value.length + ' - ' + panic.value[0].message}
-              width='full'
+            <Badge
+              label='panic_button'
               icon='020'
-              borderColor='border-red-500 dark:border-red-500'
+              status='error'
+              full
+              outline
             />
           </div>
         )}

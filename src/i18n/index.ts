@@ -20,6 +20,7 @@ import { buttons_en, buttons_es } from './button';
 import { menus_en, menus_es } from './menus';
 import { hero_en, hero_es } from './hero';
 import { placeholder_en, placeholder_es } from './placeholder';
+import { validation_en, validation_es } from './validation';
 
 // import { notification_en, notification_es } from './notification';
 // import { shift_en, shift_es } from './shift';
@@ -46,6 +47,7 @@ const resources = {
       ...menus_en,
       ...hero_en,
       ...placeholder_en,
+      ...validation_en,
       // ...home_en,
     },
   },
@@ -69,6 +71,7 @@ const resources = {
       ...menus_es,
       ...hero_es,
       ...placeholder_es,
+      ...validation_es,
       // ...home_es,
     },
   },

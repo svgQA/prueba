@@ -36,7 +36,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
 
   useEffect(() => {
-    document.title = 'VX - Schedule Service';
+    document.title = 'TR - Schedule Service';
     getSchedules();
   }, []);
 

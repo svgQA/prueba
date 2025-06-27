@@ -142,7 +142,8 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
           id={`${id}-dropdown-button`}
           name={name}
           disabled={disabled}
-          class={`focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center transition-colors duration-150
+          // focus:ring-4 focus:outline-none
+          className={`font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center transition-colors duration-150
             bg-white dark:bg-b-dark-dark
             text-gray-700 dark:text-gray-200
             border border-gray-200 dark:border-gray-700

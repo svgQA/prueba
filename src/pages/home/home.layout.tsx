@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 export const HomeLayout: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'Voxline';
+    document.title = 'Tryvoo';
   }, []);
 
   const [homeMenu, setHomeMenu] = useState<string>('/');

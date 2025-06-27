@@ -23,11 +23,24 @@ interface FormData {
   taskType: IOption;
 }
 
-const ATTACHMENT_TYPES = ['DOCUMENT', 'AUDIO', 'VIDEO', 'PHOTO', 'GENERAL', 'FORMS'] as const;
-const ATTACHMENT_OPTIONS: IOption[] = ATTACHMENT_TYPES.map(t => ({ value: t, label: t.charAt(0) + t.slice(1).toLowerCase() }));
+const ATTACHMENT_TYPES = [
+  'DOCUMENT',
+  'AUDIO',
+  'VIDEO',
+  'PHOTO',
+  'GENERAL',
+  'FORMS',
+] as const;
+const ATTACHMENT_OPTIONS: IOption[] = ATTACHMENT_TYPES.map((t) => ({
+  value: t,
+  label: t.charAt(0) + t.slice(1).toLowerCase(),
+}));
 
 const TASK_TYPES = ['GENERAL', 'REPORT'] as const;
-const TASK_TYPE_OPTIONS: IOption[] = TASK_TYPES.map(t => ({ value: t, label: t.charAt(0) + t.slice(1).toLowerCase() }));
+const TASK_TYPE_OPTIONS: IOption[] = TASK_TYPES.map((t) => ({
+  value: t,
+  label: t.charAt(0) + t.slice(1).toLowerCase(),
+}));
 
 export const TaskCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -39,7 +52,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     const output: any = {
       name: model.name,
       description: model.description,
-      type: model.taskType.value as string
+      type: model.taskType.value as string,
     };
     if (model.taskType.value === 'GENERAL') {
       output.formId = Number(model.formId.value);
@@ -64,14 +77,18 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     navigate('/rounds/task');
   };
 
-  const setInitialValues = async () => { /* ...igual a antes...*/ };
+  const setInitialValues = async () => {
+    /* ...igual a antes...*/
+  };
   const getFormsHandler = async () => {
     const response = await FormService.getSimpleList();
     if (!response.getStatus()) return;
     forms.value = response.getMany();
   };
 
-  useEffect(() => { Promise.all([getFormsHandler(), setInitialValues()]); }, []);
+  useEffect(() => {
+    Promise.all([getFormsHandler(), setInitialValues()]);
+  }, []);
 
   return (
     <Section>
@@ -82,19 +99,40 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
           const values: any = form.getState().values;
           const isGeneral = values.taskType?.value === 'GENERAL';
           const isReport = values.taskType?.value === 'REPORT';
-          const isFormReport = isReport && values.attachmentType?.value === 'FORMS';
+          const isFormReport =
+            isReport && values.attachmentType?.value === 'FORMS';
           return (
-            <form onSubmit={handleSubmit} className='space-y-6' id='form-settings-shifts'>
-              <div className='grid grid-cols-2 gap-2'>
+            <form
+              onSubmit={handleSubmit}
+              className='space-y-6'
+              id='form-settings-shifts'
+            >
+              <div className='grid grid-cols-3 gap-3'>
                 <div className='col-span-1'>
                   <Field<string> name='name' validate={required}>
-                    {({ input, meta }) => <Input {...input} placeholder='Nombre...' label='name' meta={meta} type='text' />}
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder='Nombre...'
+                        label='name'
+                        meta={meta}
+                        type='text'
+                      />
+                    )}
                   </Field>
                 </div>
 
                 <div className='col-span-2'>
                   <Field<IOption> name='taskType' validate={required}>
-                    {({ input, meta }) => <SmartSelector {...input} placeholder='Tipo de tarea...' label='tipo' options={TASK_TYPE_OPTIONS} meta={meta} />}
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        placeholder='Tipo de tarea...'
+                        label='tipo'
+                        options={TASK_TYPE_OPTIONS}
+                        meta={meta}
+                      />
+                    )}
                   </Field>
                 </div>
 
@@ -103,22 +141,48 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                   <>
                     <div className='col-span-1'>
                       <Field name='formId'>
-                        {({ input }) => <SmartSelector {...input} placeholder='Seleccione formulario...' label='formulario' icon='📋' options={forms.value} />}
+                        {({ input }) => (
+                          <SmartSelector
+                            {...input}
+                            placeholder='Seleccione formulario...'
+                            label='formulario'
+                            icon='📋'
+                            options={forms.value}
+                          />
+                        )}
                       </Field>
                     </div>
                     <div className='col-span-2'>
                       <Field<string> name='hourStart' validate={required}>
                         {({ input, meta }) => {
-                          let timeValue = input.value ? dayjs(input.value).format('HH:mm') : '';
+                          let timeValue = input.value
+                            ? dayjs(input.value).format('HH:mm')
+                            : '';
                           return (
-                            <Input {...input} type='time' id='task-start' label='Hora inicio' meta={meta} value={timeValue}
-                              onChange={e => {
-                                const [h, m] = (e.target as HTMLInputElement).value.split(':');
-                                input.onChange(dayjs().hour(parseInt(h)).minute(parseInt(m)).second(0).millisecond(0).toISOString());
+                            <Input
+                              {...input}
+                              type='time'
+                              id='task-start'
+                              label='Hora inicio'
+                              meta={meta}
+                              value={timeValue}
+                              onChange={(e) => {
+                                const [h, m] = (
+                                  e.target as HTMLInputElement
+                                ).value.split(':');
+                                input.onChange(
+                                  dayjs()
+                                    .hour(parseInt(h))
+                                    .minute(parseInt(m))
+                                    .second(0)
+                                    .millisecond(0)
+                                    .toISOString()
+                                );
                               }}
                             />
                           );
-                        }}</Field>
+                        }}
+                      </Field>
                     </div>
                   </>
                 )}
@@ -127,7 +191,16 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                 {isReport && (
                   <div className='col-span-1'>
                     <Field<IOption> name='attachmentType' validate={required}>
-                      {({ input, meta }) => <SmartSelector {...input} placeholder='Tipo de reporte...' label='reporte' icon='📎' options={ATTACHMENT_OPTIONS} meta={meta} />}
+                      {({ input, meta }) => (
+                        <SmartSelector
+                          {...input}
+                          placeholder='Tipo de reporte...'
+                          label='reporte'
+                          icon='📎'
+                          options={ATTACHMENT_OPTIONS}
+                          meta={meta}
+                        />
+                      )}
                     </Field>
                   </div>
                 )}
@@ -136,20 +209,43 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
                 {isFormReport && (
                   <div className='col-span-1'>
                     <Field name='formId'>
-                      {({ input }) => <SmartSelector {...input} placeholder='Seleccione formulario...' label='formulario' icon='📋' options={forms.value} />}
+                      {({ input }) => (
+                        <SmartSelector
+                          {...input}
+                          placeholder='Seleccione formulario...'
+                          label='formulario'
+                          icon='📋'
+                          options={forms.value}
+                        />
+                      )}
                     </Field>
                   </div>
                 )}
 
                 <div className='col-span-3'>
                   <Field<string> name='description' validate={required}>
-                    {({ input, meta }) => <TextArea {...input} minLength={3} maxLength={300} placeholder='Descripción...' label='description' meta={meta} type="text" />}
+                    {({ input, meta }) => (
+                      <TextArea
+                        {...input}
+                        minLength={3}
+                        maxLength={300}
+                        placeholder='Descripción...'
+                        label='description'
+                        meta={meta}
+                        type='text'
+                      />
+                    )}
                   </Field>
                 </div>
               </div>
 
               <div className='w-full flex justify-end items-center'>
-                <StatusButton onClickClean={() => form.reset()} submitting={submitting} pristine={pristine} form='form-settings-shifts' />
+                <StatusButton
+                  onClickClean={() => form.reset()}
+                  submitting={submitting}
+                  pristine={pristine}
+                  form='form-settings-shifts'
+                />
               </div>
             </form>
           );

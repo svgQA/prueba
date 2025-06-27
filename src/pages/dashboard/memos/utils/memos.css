@@ -20,17 +20,6 @@
   }
 }
 
-@keyframes curtain {
-  0% {
-    clip-path: inset(0 100% 0 0);
-    opacity: 0;
-  }
-  100% {
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
-  }
-}
-
 @keyframes highlightRow {
   0% {
     background-color: rgb(229 231 235); /* bg-gray-200 */
@@ -55,10 +44,6 @@
 
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out forwards;
-}
-
-.animate-curtain {
-  animation: curtain 0.5s ease-out forwards;
 }
 
 .animate-highlight {

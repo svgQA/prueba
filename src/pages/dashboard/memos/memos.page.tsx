@@ -1,5 +1,11 @@
 import { type FunctionComponent } from 'preact';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import './utils/memos.css';
 import { useLocation } from 'wouter';
@@ -19,7 +25,6 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
-import { FloatBadge } from '@/components/common/badge/float';
 import { DateUtils } from '@/utils/utilities/dates';
 import {
   IBaseSSE,
@@ -29,7 +34,8 @@ import {
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 import { MapPath } from '@/components/common/map/MapPath';
-import { RoutePoint, TrackingService } from '@/services/general/tracking';
+import { RoutePoint } from '@/services/general/tracking';
+import NotificationBanner from '@/components/common/notifications/notification.banner';
 
 enum VIEW_NAME {
   TABLE,
@@ -65,12 +71,12 @@ export const MemosPage: FunctionComponent = () => {
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
   const loading = useSignal<boolean>(false);
-  //notifications
-  const [notificationMemo, setNotificationMemo] = useState<number>(0);
-  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const notificationBannerRef = useRef<{ startBannerAnimation: () => void }>(
+    null
+  );
 
   useEffect(() => {
-    document.title = 'VX - Chat';
+    document.title = 'TR - Chat';
     return () => {
       wsManager.removeListener('memos');
     };
@@ -83,7 +89,6 @@ export const MemosPage: FunctionComponent = () => {
       fetchSSE();
       selectedMemo();
       EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
-      EventBus.on(SSE_TYPE.PANIC, handleMemoSSE);
     }
   }, [selectedCompany, location]);
 
@@ -129,10 +134,8 @@ export const MemosPage: FunctionComponent = () => {
       memos.value = [...memoCopy];
     }
 
-    if (name === SSE_EVENTS.CREATE || name === SSE_EVENTS.PANIC) {
-      setNotificationMemo((prevCount) => prevCount + 1);
-      setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 1000);
+    if (name === SSE_EVENTS.CREATE) {
+      notificationBannerRef.current?.startBannerAnimation();
     }
   };
 
@@ -203,11 +206,13 @@ export const MemosPage: FunctionComponent = () => {
     currentView.value = view;
   }, []);
 
+  /*
   const onReloadRoute = async () => {
     const response = await TrackingService.getTracking();
     if (!response.getStatus()) return;
     routePath.value = response.getMany();
   };
+  */
 
   const buttonMenu = useMemo(
     () => (
@@ -238,7 +243,7 @@ export const MemosPage: FunctionComponent = () => {
           rounded={false}
           selected={currentView.value === VIEW_NAME.MAP}
           icon='318'
-        /> */}
+        />
         {currentView.value === VIEW_NAME.MAP && (
           <Button
             name='btn-reload-path'
@@ -247,6 +252,7 @@ export const MemosPage: FunctionComponent = () => {
             rounded={false}
           />
         )}
+        */}
         {/* <Button name='button-change-scheduler' rounded={false} icon='331' />
         <Button name='button-change-scheduler' rounded={false} icon='314' /> */}
       </div>
@@ -261,11 +267,6 @@ export const MemosPage: FunctionComponent = () => {
   }) => {
     // console.log('Acción seleccionada:', params);
     // Aquí abres modales, haces navigations, etc.
-  };
-
-  const handleReload = async () => {
-    setNotificationMemo(0);
-    await fetchInitialData();
   };
 
   return (
@@ -312,20 +313,11 @@ export const MemosPage: FunctionComponent = () => {
         <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 top-0 pl-1'>
           <div className='flex flex-row items-center justify-between'>
             {buttonMenu}
-            {notificationMemo > 0 && (
-              <div className='ml-3 relative'>
-                <FloatBadge label={notificationMemo || '0'} color='bg-primary'>
-                  <div
-                    className={`border border-primary rounded-lg px-4 py-1.5 flex items-center justify-center cursor-pointer transition-all duration-300 ${isAnimating ? 'animate-curtain' : ''}`}
-                    onClick={handleReload}
-                  >
-                    <span className='text-sm text-primary pr-2'>
-                      Memo nuevo
-                    </span>
-                  </div>
-                </FloatBadge>
-              </div>
-            )}
+            <NotificationBanner
+              ref={notificationBannerRef}
+              message='Memo nuevo'
+              reload={fetchInitialData}
+            />
           </div>
         </div>
 

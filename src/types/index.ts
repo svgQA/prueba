@@ -28,6 +28,7 @@ export const allowedDocumentTypesConst = [
   'application/msword',
   'application/vnd.ms-excel',
   'text/plain',
+  'application/json',
 ] as const;
 
 export const allowedImageTypesConst = [
@@ -37,6 +38,7 @@ export const allowedImageTypesConst = [
 ] as const;
 
 export const allowedVideoTypesConst = [
+  'video/mp4',
   'video/mpeg',
   'video/ogg',
   'video/3gpp',

@@ -75,7 +75,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({ reports: directReports, data, o
                 </div>
 
                 {/* Fechas */}
-                <div className="col-span-3 space-y-0.5">
+                <div className='col-span-3 space-y-0.5'>
                   {isRequested && (
                     <>
                       <p className="leading-tight">

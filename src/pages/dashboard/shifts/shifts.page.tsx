@@ -110,10 +110,17 @@ export const ShiftsPage: FunctionalComponent = () => {
     users: [],
   });
 
-  const handleViewMode = (viewMode: ViewMode = ViewMode.QuarterDay) => {
-    setGanttShifts({ startDate, endDate, users: [] });
-    setView(viewMode);
-    getGanttHandler(viewMode);
+  const handleViewMode = async (viewMode: ViewMode = ViewMode.QuarterDay) => {
+    if (currentView.value === VIEW_NAME.SCHEDULER) {
+      setView(viewMode);
+      setGanttShifts({ startDate, endDate, users: [] });
+      getGanttHandler(viewMode);
+    }
+    if (currentView.value === VIEW_NAME.TABLE) {
+      const response = await ShiftService.get_all({ page: 1, items: 1000 });
+      if (!response.getStatus()) return;
+      shifts.value = response.getMany();
+    }
   };
 
   const getGanttHandler = async (viewMode?: ViewMode) => {
@@ -612,6 +619,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             {buttonMenu}
             <Button
               name='button-create-shift'
+              keyName='upsert'
               label='create'
               onClick={handleCreacteNewShift}
               icon='044'

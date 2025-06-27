@@ -1,6 +1,7 @@
 export const common_es = {
   OPENED: 'Abierto',
   CREATED: 'Creado',
+  CANCELED: 'Cancelado',
   RESOLVED: 'Resuelto',
   CLOSED: 'Cerrado',
   SOLVE: 'Resolver',
@@ -17,6 +18,10 @@ export const common_es = {
   t_users: 'Usuarios',
   t_notifications: 'Notificaciones',
   setting: 'Configuración',
+  country: 'País',
+  department: 'Departamento',
+  city: 'Ciudad',
+  municipality: 'Municipio',
   common: {
     search: {
       placeholder: 'Buscar por columna...',
@@ -28,6 +33,7 @@ export const common_es = {
 export const common_en = {
   OPENED: 'Opened',
   CREATED: 'Created',
+  CANCELED: 'Canceled',
   RESOLVED: 'Resolved',
   CLOSED: 'Closed',
   SOLVE: 'Solve',
@@ -44,6 +50,10 @@ export const common_en = {
   t_users: 'User',
   t_notifications: 'Notifications',
   setting: 'Settings',
+  country: 'Country',
+  department: 'Department',
+  city: 'City',
+  municipality: 'Municipality',
   common: {
     search: {
       placeholder: 'Search by column...',

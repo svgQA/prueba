@@ -83,11 +83,11 @@ export const Input = <T = string,>({
         <div className='relative flex-1 py-0.5'>
           <input
             ref={ref}
+            // focus:ring-blue-500 dark:focus:ring-blue-400
             className={`w-full px-3 ${paddingVertical} rounded
               bg-white dark:bg-b-dark-dark
               text-gray-700 dark:text-gray-200
               border-gray-300 dark:border-gray-700
-              focus:ring-blue-500 dark:focus:ring-blue-400
               ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
               ${
                 type === 'number'

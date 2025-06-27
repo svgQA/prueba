@@ -4,7 +4,7 @@ import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 import arrayMutators from 'final-form-arrays';
 import { useSignal } from '@preact/signals';
-import { FormData, ITask } from '../interface';
+import { FormData, IShiftRequest, ITask } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
@@ -19,6 +19,14 @@ import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
 import { DateField } from '@/components/compose/forms';
 import { useUserStore } from '@/store/slices';
+import {
+  convertBlocksToCells,
+  getSelectedHoursByDay,
+} from '@/pages/settings/shifts/schedule/utils';
+import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
+// import dayjs from 'dayjs';
+// import { getSelectedHoursByDay } from '@/pages/settings/shifts/schedule/utils';
+// import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -32,6 +40,9 @@ interface ITaskFormProps {
   externalSelected?: string;
 }
 
+const START_HOUR = 0;
+const END_HOUR = 24;
+
 export const TaskForm = ({
   closed,
   onClose,
@@ -44,12 +55,29 @@ export const TaskForm = ({
   externalSelected,
 }: ITaskFormProps) => {
   const { t } = useTranslation();
+
+  const daysOfWeek = [
+    'Domingo',
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+  ];
+
+  const hours = Array.from(
+    { length: END_HOUR - START_HOUR + 1 },
+    (_, i) => START_HOUR + i
+  );
+
   const inputKeywords = useSignal('');
+  const [selectedCells, setSelectedCells] = useState<any>([]);
   // const services = useSignal<any[]>([]);
   const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
-  const tasks = useSignal<Task[]>([]);
-  const taskSelect = useSignal<ITask>();
+  const tasks = useSignal<ITask[]>([]);
+  // const taskSelect = useSignal<ITask>();
   const isNewTask = useSignal(false);
   const { selectedCompany } = useUserStore();
   // const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>();
@@ -62,22 +90,63 @@ export const TaskForm = ({
 
   // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
 
-  const onSubmit = async (model: FormData, form: any) => {
-    const { employeeId, serviceId } = model;
-    model.employeeId = employeeId?.value;
-    model.serviceId = serviceId?.value;
-    model.task = taskSelect.value as unknown as ITask;
+  const onSubmit = async (model: any, form: any) => {
+    const {
+      task,
+      employeeId,
+      serviceId,
+      task_name,
+      task_description,
+      task_time,
+    } = model;
+
+    const model_task = tasks.value.find(
+      (_task: ITask) => _task.id === task?.value
+    );
+
+    delete model.task_name;
+    delete model.task_description;
+    delete model.task_time;
+
+    // TODO: Hacer la validaciòn de los horarios
+    // const fecha_start = dayjs(model.start);
+    // const start_day = fecha_start.format('dddd');
+    // const fecha_end = dayjs(model.end);
+    // const start_end = fecha_end.format('dddd');
+
+    // TODO: Agregar lo de formulario
+    const task_output =
+      model_task && !task_name
+        ? {
+            id: model_task.id,
+            name: model_task.name,
+            description: model_task.description,
+            hourStart: model_task.hourStart,
+            type: model_task.type,
+          }
+        : {
+            name: task_name,
+            description: task_description,
+            hourStart: task_time,
+            type: 'GENERAL',
+          };
+
+    const request_model: IShiftRequest = {
+      ...model,
+      employeeId: employeeId?.value,
+      serviceId: serviceId?.value,
+      task: task_output,
+    };
 
     const request = taskSelected?.id
-      ? await ShiftService.updateActivity(model, taskSelected.id)
-      : await ShiftService.createActivity(model);
+      ? await ShiftService.updateActivity(request_model, taskSelected.id)
+      : await ShiftService.createActivity(request_model);
 
     if (!request.getStatus()) return;
     const message = taskSelected?.id
       ? t('shifts.upsert.successEdit')
       : t('shifts.upsert.successCreate');
     form.reset();
-    taskSelect.value = undefined;
     ToastManager.success(message);
     onClose?.();
     posSave?.();
@@ -115,7 +184,7 @@ export const TaskForm = ({
 
   const required = useCallback(
     (value: any) => (value ? undefined : t('shifts.upsert.required')),
-    [t]
+    []
   );
 
   const preventKeyDown = useCallback((e: KeyboardEvent) => {
@@ -149,7 +218,7 @@ export const TaskForm = ({
         />
       </div>
     ),
-    [taskSelected, onClose, t]
+    [taskSelected, onClose]
   );
 
   const headerContent = useMemo(
@@ -160,7 +229,7 @@ export const TaskForm = ({
           : t('shifts.upsert.createShift')}
       </h3>
     ),
-    [taskSelected, t]
+    [taskSelected]
   );
 
   const renderTaskCard = useCallback(
@@ -263,65 +332,101 @@ export const TaskForm = ({
 
   const renderNewTask = useCallback(() => {
     return (
-      <div className='col-span-2 mt-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg'>
+      <div className='col-span-2 mt-4 border-t pt-3 border-gray-200 dark:border-gray-700'>
         <h3 className='text-lg font-medium mb-4'>
           {t('shift.upsert.newTask')}
         </h3>
         <div className='grid grid-cols-2 gap-4'>
-          <Input
-            id='input-task-name'
-            name='input-task-name'
-            type='text'
-            label={t('shift.upsert.form.taskName')}
-            placeholder={t('shift.upsert.form.taskNamePlaceholder')}
-            value={taskSelect.value?.name}
-            onChange={(e) => {
-              taskSelect.value = {
-                ...taskSelect.value,
-                name: e.currentTarget.value,
-                hourStart: taskSelect.value?.hourStart,
-              } as ITask;
-            }}
-          />
+          <Field<string> name='task_name' validate={required}>
+            {({ input, meta }) => (
+              <Input
+                {...input}
+                id='input-task-name'
+                // name='input-task-name'
+                type='text'
+                meta={meta}
+                label={t('shift.upsert.form.taskName')}
+                placeholder={t('shift.upsert.form.taskNamePlaceholder')}
+                // value={taskSelect.value?.name}
+                // onChange={(e) => c
+                //   taskSelect.value = {
+                //     ...taskSelect.value,
+                //     // hourStart: taskSelect.value?.hourStart,
+                //     name: e.currentTarget.value,
+                //   } as ITask;
+                // }}
+              />
+            )}
+          </Field>
 
-          <Input
-            id='input-task-description'
-            name='input-task-description'
-            type='text'
-            label={t('shift.upsert.form.taskDescription')}
-            placeholder={t('shift.upsert.form.taskDescriptionPlaceholder')}
-            value={taskSelect.value?.description}
-            onChange={(e) => {
-              taskSelect.value = {
-                ...taskSelect.value,
-                description: e.currentTarget.value,
-                hourStart: taskSelect.value?.hourStart,
-              } as ITask;
-            }}
-          />
-
-          <div className='grid grid-cols-2 gap-4'>
-            <Input
-              id='input-task-hour-start'
-              name='input-task-hour-start'
-              type='time'
-              label={t('shift.upsert.form.taskHourStart')}
-              placeholder={t('shift.upsert.form.taskHourStartPlaceholder')}
-              value={taskSelect.value?.hourStart}
-              onChange={(e) => {
-                taskSelect.value = {
-                  ...taskSelect.value,
-                  hourStart: e.currentTarget.value,
-                  name: taskSelect.value?.name,
-                  description: taskSelect.value?.description,
-                } as unknown as ITask;
-              }}
-            />
-          </div>
+          <Field<string> name='task_description' validate={required}>
+            {({ input, meta }) => (
+              <Input
+                {...input}
+                id='input-task-description'
+                // name='input-task-description'
+                type='text'
+                meta={meta}
+                label={t('shift.upsert.form.taskDescription')}
+                placeholder={t('shift.upsert.form.taskDescriptionPlaceholder')}
+                // value={taskSelect.value?.description}
+                // onChange={(e) => {
+                //   taskSelect.value = {
+                //     ...taskSelect.value,
+                //     // hourStart: taskSelect.value?.hourStart,
+                //     description: e.currentTarget.value,
+                //   } as ITask;
+                // }}
+              />
+            )}
+          </Field>
+        </div>
+        <div className='grid grid-cols-2'>
+          <Field<string> name='task_time' validate={required}>
+            {({ input, meta }) => (
+              <Input
+                {...input}
+                id='input-task-hour-start'
+                // name='input-task-hour-start'
+                type='time'
+                meta={meta}
+                label={t('shift.upsert.form.taskHourStart')}
+                placeholder={t('shift.upsert.form.taskHourStartPlaceholder')}
+                // value={taskSelect.value?.hourStart}
+                // onChange={(e) => {
+                //   taskSelect.value = {
+                //     ...taskSelect.value,
+                //     // name: taskSelect.value?.name,
+                //     // description: taskSelect.value?.description,
+                //     hourStart: e.currentTarget.value,
+                //   } as unknown as ITask;
+                // }}
+              />
+            )}
+          </Field>
         </div>
       </div>
     );
-  }, [t, taskSelect]);
+  }, []);
+
+  const onChangeService = async (id: number) => {
+    const response = await ServiceService.getServiceById(String(id));
+    if (!response.getStatus()) return;
+    const model = response.getOne();
+    const schedule = model?.schedules[0]?.schedule;
+    if (!schedule) return;
+    const days = schedule.days.reduce(
+      (acc: any, day: any) => {
+        acc[day.day] = day.blocks.map((block: any) => {
+          return { start: block.start, end: block.end };
+        });
+        return acc;
+      },
+      {} as { [key: string]: { start: number; end: number }[] }
+    );
+    // @ts-ignore
+    setSelectedCells(convertBlocksToCells(days));
+  };
 
   return (
     <Modal
@@ -334,6 +439,17 @@ export const TaskForm = ({
       footer={footerContent}
     >
       <div className='px-4 py-6 flex flex-col w-full'>
+        {selectedCells && (
+          <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
+            <ul className='flex flex-wrap gap-3 justify-center'>
+              {getSelectedHoursByDay(daysOfWeek, hours, selectedCells).map(
+                (daySelection) => (
+                  <DataSchedule daySelection={daySelection} />
+                )
+              )}
+            </ul>
+          </div>
+        )}
         <Form
           onSubmit={onSubmit}
           initialValues={initialValues}
@@ -366,7 +482,64 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
+                <div class='col-span-1'>
+                  <Field<IOption> name='serviceId' validate={required}>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        name='serviceId'
+                        id='select-service'
+                        placeholder={t('shifts.upsert.form.servicePlaceholder')}
+                        label={t('shifts.upsert.form.service')}
+                        options={services.value}
+                        menuPortalTarget={document.body}
+                        onChange={(e) => {
+                          if (e?.value) {
+                            const id = Number(e.value);
+                            onChangeService(id);
+                          }
+                          if (!e) {
+                            setSelectedCells([]);
+                          }
+                          input.onChange(e);
+                        }}
+                      />
+                    )}
+                  </Field>
+                </div>
 
+                <div class='col-span-1'>
+                  <DateField
+                    name='start'
+                    label={t('shifts.upsert.form.startDate')}
+                    validate={required}
+                  />
+                </div>
+
+                <div class='col-span-1'>
+                  <DateField
+                    name='end'
+                    label={t('shifts.upsert.form.endDate')}
+                    validate={required}
+                  />
+                </div>
+
+                {/*
+                <div class='col-span-1'>
+                  <Field<string> name='externalId'>
+                    {({ input }) => (
+                      <Input
+                        {...input}
+                        id='input-external-id'
+                        name='input-external-id'
+                        type='text'
+                        label={t('shifts.upsert.form.externalCode')}
+                      />
+                    )}
+                  </Field>
+                </div>
+                */}
                 <div class='col-span-1'>
                   <Field<string> name='type' validate={required}>
                     {({ input, meta }) => (
@@ -392,55 +565,6 @@ export const TaskForm = ({
                     )}
                   </Field>
                 </div>
-
-                <div class='col-span-1'>
-                  <DateField
-                    name='start'
-                    label={t('shifts.upsert.form.startDate')}
-                    validate={required}
-                  />
-                </div>
-
-                <div class='col-span-1'>
-                  <DateField
-                    name='end'
-                    label={t('shifts.upsert.form.endDate')}
-                    validate={required}
-                  />
-                </div>
-
-                <div class='col-span-1'>
-                  <Field<IOption> name='serviceId' validate={required}>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        name='serviceId'
-                        id='select-service'
-                        placeholder={t('shifts.upsert.form.servicePlaceholder')}
-                        label={t('shifts.upsert.form.service')}
-                        options={services.value}
-                        menuPortalTarget={document.body}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                {/*
-                <div class='col-span-1'>
-                  <Field<string> name='externalId'>
-                    {({ input }) => (
-                      <Input
-                        {...input}
-                        id='input-external-id'
-                        name='input-external-id'
-                        type='text'
-                        label={t('shifts.upsert.form.externalCode')}
-                      />
-                    )}
-                  </Field>
-                </div>
-                */}
                 <div class='col-span-1'>
                   <Field
                     name='timeBefore'
@@ -450,7 +574,6 @@ export const TaskForm = ({
                       <Input
                         {...input}
                         id='input-time-before'
-                        name='input-time-before'
                         type='number'
                         label={t('shifts.upsert.form.timeBefore')}
                       />
@@ -505,40 +628,39 @@ export const TaskForm = ({
                   </FieldArray>
                 </div>
 
-                <div class='col-span-1'>
-                  <Field<IOption> name='taskId' validate={required}>
+                <div class='col-span-2 flex flex-row justify-between items-end'>
+                  <Field<IOption> name='task'>
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        name='taskId'
                         id='select-task'
                         placeholder={t('shift.upsert.form.taskPlaceholder')}
                         label={t('shift.upsert.form.task')}
+                        disabled={isNewTask.value}
                         options={[
                           ...tasks.value.map((e: any) => ({
                             value: e.id,
                             label: e.description,
                           })),
-                          {
-                            value: 'new',
-                            label: 'Nueva tarea',
-                          },
                         ]}
-                        onChange={(e: any) => {
-                          if (e.value === 'new') {
-                            isNewTask.value = true;
-                            return;
-                          }
-
-                          taskSelect.value = tasks.value.find(
-                            (task: any) => task.id === e.value
-                          ) as unknown as ITask;
-                        }}
+                        // onChange={(e: any) => {
+                        //   taskSelect.value = tasks.value.find(
+                        //     (task: any) => task.id === e.value
+                        //   ) as unknown as ITask;
+                        // }}
                         menuPortalTarget={document.body}
                       />
                     )}
                   </Field>
+                  <div className='py-1.5 mx-3'>
+                    <Button
+                      name='btn-create-task'
+                      icon={isNewTask.value ? '124' : '123'}
+                      square
+                      onClick={() => (isNewTask.value = !isNewTask.value)}
+                    />
+                  </div>
                 </div>
 
                 {isNewTask.value && renderNewTask()}
