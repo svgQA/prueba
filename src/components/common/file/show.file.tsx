@@ -2,7 +2,12 @@ import { IPresignedRequest } from '@/types/file';
 import { ShowFilesProps } from './utils/interface';
 import { useUserStore } from '@/store/slices';
 import { cdn_service_url } from '@/env.config';
-import { allowedAudioTypesConst, allowedDocumentTypesConst, allowedImageTypesConst, allowedVideoTypesConst } from '@/types';
+import {
+  allowedAudioTypesConst,
+  allowedDocumentTypesConst,
+  allowedImageTypesConst,
+  allowedVideoTypesConst,
+} from '@/types';
 import { AudioPlayer } from './components/AudioPlayer';
 import { ImageViewer } from './components/imageViewer';
 import { useRef, useState, useEffect } from 'react';
@@ -15,7 +20,7 @@ const showFiles = ({
   resources = [],
   isSender = false,
   removeFile,
-  mapPoint
+  mapPoint,
 }: ShowFilesProps) => {
   const { getTenant, getCompanyId } = useUserStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -51,7 +56,8 @@ const showFiles = ({
   const showLeft = startIdx > 0;
   const showRight = startIdx + visibleCount < resources.length;
   const goLeft = () => setStartIdx((prev) => Math.max(0, prev - 1));
-  const goRight = () => setStartIdx((prev) => Math.min(resources.length - visibleCount, prev + 1));
+  const goRight = () =>
+    setStartIdx((prev) => Math.min(resources.length - visibleCount, prev + 1));
   const visibleFiles = resources.slice(startIdx, startIdx + visibleCount);
 
   return (
@@ -75,7 +81,10 @@ const showFiles = ({
         style={{ minHeight: '3.5rem' }}
       >
         {visibleFiles.map((file) => (
-          <div className='border border-b-light-dark dark:border-b-dark-light rounded-sm py-2 relative max-h-14' key={file.uuid}>
+          <div
+            className='border border-b-light-dark dark:border-b-dark-light rounded-sm py-2 relative max-h-14'
+            key={file.uuid}
+          >
             {allowedImageTypesConst.includes(file.type as any) ? (
               <ImageViewer src={getUrl(file)} />
             ) : allowedAudioTypesConst.includes(file.type as any) ? (
@@ -84,7 +93,7 @@ const showFiles = ({
               <VideoPlayer src={getUrl(file)} />
             ) : allowedDocumentTypesConst.includes(file.type as any) ? (
               // <span className='vox-icon vx-icon-064 px-3' />
-              <MapPathViewer src={getUrl(file)}/>
+              <MapPathViewer src={getUrl(file)} />
             ) : (
               <span className='vox-icon vx-icon-069 px-3' />
             )}
@@ -97,9 +106,7 @@ const showFiles = ({
             )}
           </div>
         ))}
-        {mapPoint && (
-          <MapViewer mapPoint={mapPoint} />
-        )}
+        {mapPoint && <MapViewer mapPoint={mapPoint} />}
       </div>
       {visibleFiles && (
         <Button

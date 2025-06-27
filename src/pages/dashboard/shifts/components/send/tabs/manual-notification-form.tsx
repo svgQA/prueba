@@ -30,7 +30,7 @@ interface UserBasicInformation {
 export const ManualNotificationForm = ({
   users: externalUsers = [],
   hasplayers,
-  onClose
+  onClose,
 }: Props) => {
   const { t } = useTranslation();
   const [templateSelected, setTemplateSelected] = useState<
@@ -42,7 +42,9 @@ export const ManualNotificationForm = ({
 
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
   const [sendToGeneral, setSendToGeneral] = useState<boolean>(false);
-  const [notificationType, setNotificationType] = useState<'GENERAL' | 'REPORT'>('GENERAL');
+  const [notificationType, setNotificationType] = useState<
+    'GENERAL' | 'REPORT'
+  >('GENERAL');
   const [search, setSearch] = useState<string>('');
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [selectedUsersFull, setSelectedUsersFull] = useState<
@@ -58,9 +60,10 @@ export const ManualNotificationForm = ({
   });
 
   // Filtrado de tareas según tipo
-  const filteredTasks = notificationType === 'REPORT'
-    ? tasks.value.filter(opt => (opt as any).type === 'REPORT')
-    : tasks.value;
+  const filteredTasks =
+    notificationType === 'REPORT'
+      ? tasks.value.filter((opt) => (opt as any).type === 'REPORT')
+      : tasks.value;
 
   useEffect(() => {
     setSelectedUserIds(usersWithPlayerId.map((u) => u.id));
@@ -87,8 +90,15 @@ export const ManualNotificationForm = ({
       ...(values.template?.value && { templateId: values.template.value }),
       ...(!values.template?.value &&
         values.task?.value && { taskId: Number(values.task.value) }),
-      overrideTitle: values.title ?? "",
-      overrideDescription: values.description ?? "",
+      ...(!values.template?.value &&
+        !values.task?.value && {
+          overrideTitle: values.title,
+          overrideDescription: values.description,
+        }),
+      // TODO: Deje comentado esto, porque me daba conflicto con lo anterio
+      // Jaider determina cual es el correcto.
+      // overrideTitle: values.title ?? "",
+      // overrideDescription: values.description ?? "",
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
@@ -193,17 +203,19 @@ export const ManualNotificationForm = ({
             </div>
 
             <div className='flex items-center justify-between mt-2'>
-
               {sendToGeneral && (
                 <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
                   <Switch
                     name='switch-send-to-shift-today'
                     backgroundColor='bg-gray-300 dark:bg-gray-600'
                     value={sendToShiftToday}
-                    onChange={(e) => setSendToShiftToday(e.currentTarget.checked)}
+                    onChange={(e) =>
+                      setSendToShiftToday(e.currentTarget.checked)
+                    }
                     label='Solo con turno activo'
                   />
-                </div>)}
+                </div>
+              )}
 
               {selectedUserIds.length > 0 && (
                 <Button
@@ -271,9 +283,8 @@ export const ManualNotificationForm = ({
                     }}
                   />
                 )}
-              />)}
-
-
+              />
+            )}
           </div>
 
           {!templateSelected && (

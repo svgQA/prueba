@@ -41,7 +41,7 @@ export const ChatMessage = ({
   status,
   solved = false,
   reload,
-  mapPoint
+  mapPoint,
 }: ChatMessageProps) => {
   const { t } = useTranslation();
   const [btnLabel, setBtnLabel] = useState('Check in');
@@ -73,8 +73,8 @@ export const ChatMessage = ({
       showAlert({
         title: t('shift.expandable.date.location.title'),
         message: t('shift.expandable.date.location.message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(t('shift.expandable.date.location.gpsMessage'));
@@ -100,7 +100,7 @@ export const ChatMessage = ({
     reload?.();
   };
 
-  (status && solved) && getStatus(status);
+  status && solved && getStatus(status);
 
   return (
     <div
@@ -129,7 +129,11 @@ export const ChatMessage = ({
         <div className='mb-2'>{message}</div>
         {resource && resource.length > 0 && (
           <div className='mt-2 pt-2 w-full'>
-            <ShowFiles resources={resource} isSender={isSender} mapPoint={mapPoint} />
+            <ShowFiles
+              resources={resource}
+              isSender={isSender}
+              mapPoint={mapPoint}
+            />
           </div>
         )}
         <div className='flex items-center gap-5 text-xs justify-end mt-2'>
@@ -148,7 +152,7 @@ export const ChatMessage = ({
                     title: btnLabel,
                     message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
                     onConfirm: () => handleCheck(),
-                    onCancel: () => { },
+                    onCancel: () => {},
                   })
                 }
                 name={btnLabel}

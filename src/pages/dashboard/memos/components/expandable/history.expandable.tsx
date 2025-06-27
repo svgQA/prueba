@@ -113,8 +113,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
@@ -410,7 +410,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     {/* {showComment && ( */}
                     <div className='grid grid-cols-1'>
                       <Field<string> name='message'>
-                        {({ }) => (
+                        {({}) => (
                           <TextArea
                             name='message'
                             placeholder='Escribe un Comentario...'
@@ -497,7 +497,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     title: btnLabel,
                     message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
                     onConfirm: () => handleCheck(),
-                    onCancel: () => { },
+                    onCancel: () => {},
                   })
                 }
                 name={btnLabel}
