@@ -1,4 +1,5 @@
 import { IOption } from '@/components/common/multi/interface';
+import { Task } from '@/components/compose/gantt';
 
 export interface FormData {
   start: string;
@@ -14,8 +15,12 @@ export interface FormData {
   roundId: number;
   externalId: string;
   keywords: string[];
-  task: ITask;
+  task: IOption;
   timeBefore?: number;
+}
+
+export interface IShiftRequest extends FormData {
+  task?: ITask;
 }
 
 export interface ITask {
@@ -25,6 +30,7 @@ export interface ITask {
   name: string;
   companyId?: number;
   formId?: number;
+  type: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
