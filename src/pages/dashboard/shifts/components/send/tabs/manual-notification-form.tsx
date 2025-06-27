@@ -17,6 +17,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 interface Props {
   users?: any[];
   hasplayers?: boolean;
+  onClose?: () => void;
 }
 
 interface UserBasicInformation {
@@ -29,6 +30,7 @@ interface UserBasicInformation {
 export const ManualNotificationForm = ({
   users: externalUsers = [],
   hasplayers,
+  onClose
 }: Props) => {
   const { t } = useTranslation();
   const [templateSelected, setTemplateSelected] = useState<
@@ -81,24 +83,21 @@ export const ManualNotificationForm = ({
     if (!hasplayers) return;
 
     const payload: ISendManualNotificationDto = {
-      notificationType: notificationType.toLowerCase() ,
+      notificationType: notificationType.toLowerCase(),
       ...(values.template?.value && { templateId: values.template.value }),
       ...(!values.template?.value &&
         values.task?.value && { taskId: Number(values.task.value) }),
-      ...(!values.template?.value &&
-        !values.task?.value && {
-        overrideTitle: values.title,
-        overrideDescription: values.description,
-      }),
+      overrideTitle: values.title ?? "",
+      overrideDescription: values.description ?? "",
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
-console.log(payload);
     // Enviar la notificación manualmente a los usuario
     try {
-      await NotificationService.sendManualNotification(payload);
+      const result = await NotificationService.sendManualNotification(payload);
+      result.getStatus() ? onClose?.() : null; // Si se envio correctament
       ToastManager.success('notification.send.success');
     } catch {
       ToastManager.error('notification.send.failure');
