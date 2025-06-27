@@ -46,7 +46,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   const allowButton = useMemo(() => {
     if (keyName === '') return true;
     const permissions = getCurrentPermissions();
-    if (!permissions) return true;
+    if (Object.keys(permissions).length === 0) return true;
     return permissions[keyName];
   }, [keyName]);
 

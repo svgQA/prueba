@@ -13,6 +13,7 @@ import { lengthSize } from '@/utils/utilities';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
 import { NotificationService, TaskService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { TaskCreateSettingPage } from '@/pages/settings/shifts/task/create/task';
 
 interface Props {
   users?: any[];
@@ -51,12 +52,12 @@ export const ManualNotificationForm = ({
     UserBasicInformation[]
   >([]);
   const usersWithPlayerId = externalUsers.filter((u) => !!u.playerId);
-
+  const showInlineCreate = useSignal(false);
   const filteredUsers = usersWithPlayerId.filter((u) => {
     const match = `${u.name} ${u.email}`
       .toLowerCase()
       .includes(search.toLowerCase());
-    return sendToShiftToday ? match && u.hasShiftToday : match;
+    return sendToShiftToday ? match && !u.hasShiftToday : match;
   });
 
   // Filtrado de tareas según tipo
@@ -264,25 +265,42 @@ export const ManualNotificationForm = ({
                 />
               )}
             />
-            {!templateSelected && (
-              <Field<IOption[]>
-                name='task'
-                render={({ input, meta }) => (
-                  <SmartSelector
-                    {...input}
-                    meta={meta}
-                    options={filteredTasks}
-                    menuPortalTarget={document.body}
-                    placeholder='Selecciona una tarea'
-                    label='Tareas'
-                    onChange={(value?: IOption) => {
-                      input.onChange(value);
-                    }}
-                  />
-                )}
-              />
-            )}
+            <div className="flex items-center space-x-2">
+              {!templateSelected && (
+                <Field<IOption>
+                  name="task"
+                  render={({ input, meta }) => (
+                    <SmartSelector
+                      {...input}
+                      meta={meta}
+                      options={filteredTasks}
+                      menuPortalTarget={document.body}
+                      placeholder="Selecciona una tarea"
+                      label="Tareas"
+                      onChange={(value?: IOption) => input.onChange(value)}
+                    />
+                  )}
+                />
+              )}
+              <div className="flex mt-5">
+                {/* Botón '+' alineado con selector */}
+                <Button
+                  name="btn-create-task"
+                  icon="039"
+                  square
+                  onClick={() => (showInlineCreate.value = !showInlineCreate.value)}
+                  aria-label="Crear tarea"
+                />
+              </div>
+            </div>
           </div>
+
+          {/* Sección extra inline sin modal */}
+          {showInlineCreate.value && (
+            <div className=" flex items-center p-4 border rounded-lg bg-gray-50">
+              <TaskCreateSettingPage />
+            </div>
+          )}
 
           {!templateSelected && (
             <div className='flex flex-col gap-2'>
