@@ -27,5 +27,6 @@ export interface IButtonProps extends IComponentProps {
   square?: boolean;
   selectedColor?: string;
   mode?: 'primary' | 'secondary' | 'ternary' | 'danger';
+  keyName?: string;
   transparent?: boolean;
 }

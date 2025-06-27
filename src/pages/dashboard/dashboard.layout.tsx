@@ -53,6 +53,7 @@ import { RoleService } from '@/services/general/role';
 import { IMenu } from '@/components/common/utils/interface';
 import Panic from '@/components/common/panic/panic';
 import { BaseService } from '@/utils/network';
+import { setAllPermissions } from '@/store/signals/access/permission';
 import { useSignal } from '@preact/signals';
 import PanicModal from '@/components/common/panic/panic.modal';
 import { IPanic } from '@/components/common/panic/interface';
@@ -153,7 +154,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         setSidebarMenus(SIDEBAR_MENUS);
         return;
       }
-
+      setAllPermissions(permissions);
       const filteredMenu = SIDEBAR_MENUS.filter((option) => {
         const match = permissions.find(
           (perm) =>
