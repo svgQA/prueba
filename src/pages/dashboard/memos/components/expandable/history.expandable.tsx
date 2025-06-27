@@ -325,11 +325,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                 <div className='grid grid-cols-1 gap-4 '>
                   <div className='p-3'>
                     <div className='flex items-center gap-2 flex-row justify-between'>
-                      <div className='flex flex-row gap-2'>
-                        <span className='vox-icon size-sm vx-icon-233 text-primary' />
-                        <h4 className='text-sm font-medium text-gray-text-light dark:text-t-dark-light'>
-                          Formulario de Comentarios
-                        </h4>
+                      <div className='flex flex-row w-full bg-red flex-wrap justify-center gap-2'>
+                        <ShowFiles
+                          resources={files.value}
+                          removeFile={removeFile}
+                        />
                       </div>
                       <Button
                         name='memo-send-response'
@@ -340,12 +340,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         className='w-full'
                       />
                     </div>
-                    <div className='flex flex-row w-full bg-red flex-wrap justify-center gap-2 py-1'>
-                      <ShowFiles
-                        resources={files.value}
-                        removeFile={removeFile}
-                      />
-                    </div>
+
                     <div className='grid grid-cols-2 gap-2'>
                       <Field<IOption> name='predefined'>
                         {({ input, meta }) => (

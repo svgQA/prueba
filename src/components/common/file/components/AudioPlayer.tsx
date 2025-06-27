@@ -7,18 +7,18 @@ interface AudioAvatarPlayerProps {
   square?: boolean;
 }
 
-const sizeMap = {
-  sm: 'min-w-8 max-w-8 min-h-8 max-h-8 text-base',
-  md: 'min-w-12 max-w-12 min-h-12 max-h-12 text-xl',
-  lg: 'min-w-20 max-w-20 min-h-20 max-h-20 text-3xl',
-  xl: 'min-w-32 max-w-32 min-h-32 max-h-32 text-5xl',
-  auto: 'w-full h-full',
-};
+// const sizeMap = {
+//   sm: 'min-w-8 max-w-8 min-h-8 max-h-8 text-base',
+//   md: 'min-w-12 max-w-12 min-h-12 max-h-12 text-xl',
+//   lg: 'min-w-20 max-w-20 min-h-20 max-h-20 text-3xl',
+//   xl: 'min-w-32 max-w-32 min-h-32 max-h-32 text-5xl',
+//   auto: 'w-full h-full',
+// };
 
 export const AudioPlayer = ({
   src,
-  size = 'md',
-  square = false,
+  // size = 'md',
+  // square = false,
 }: AudioAvatarPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -48,13 +48,13 @@ export const AudioPlayer = ({
     isPlaying ? audio.pause() : audio.play();
   };
 
-  const shapeClass = square ? 'rounded' : 'rounded-full';
-  const baseClasses = `
-    flex items-center justify-center ${shapeClass} overflow-hidden relative bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold
-    ${sizeMap[size] || sizeMap.md} cursor-pointer select-none`;
+  // const shapeClass = square ? 'rounded' : 'rounded-full';
+  // const baseClasses = `
+  //   flex items-center justify-center ${shapeClass} overflow-hidden relative bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold
+  //   ${sizeMap[size] || sizeMap.md} cursor-pointer select-none`;
 
   return (
-    <div onClick={togglePlay} className={baseClasses}>
+    <div onClick={togglePlay}>
       <audio ref={audioRef} src={src} preload='auto' />
 
       <div className='absolute inset-0 bg-black/10 flex items-center justify-center'>

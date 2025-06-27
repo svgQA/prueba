@@ -4,7 +4,6 @@ import { useUserStore } from '@/store/slices';
 import { cdn_service_url } from '@/env.config';
 import {
   allowedAudioTypesConst,
-  allowedDocumentTypesConst,
   allowedImageTypesConst,
   allowedVideoTypesConst,
 } from '@/types';
@@ -65,7 +64,7 @@ const showFiles = ({
       className='relative w-full flex justify-center items-center'
       ref={containerRef}
     >
-      {visibleFiles && (
+      {visibleFiles && resources.length > 0 && (
         <Button
           name='button-change-scheduler'
           onClick={goLeft}
@@ -77,12 +76,16 @@ const showFiles = ({
         ></Button>
       )}
       <div
-        className={`flex flex-row flex-nowrap py-1 w-full gap-2 ${isSender ? 'justify-end items-end' : 'justify-start items-start'} px-8 overflow-hidden`}
+        className={`flex flex-row flex-nowrap py-1 w-full gap-2 ${isSender ? 'justify-end items-center' : 'justify-start items-center'} px-8 overflow-hidden`}
         style={{ minHeight: '3.5rem' }}
       >
         {visibleFiles.map((file) => (
           <div
-            className='border border-b-light-dark dark:border-b-dark-light rounded-sm py-2 relative max-h-14'
+            className='
+            border border-b-light-dark dark:border-b-dark-light py-2 relative max-h-14 bg-gray-200
+            dark:bg-gray-800/60 text-gray-700 dark:text-gray-200 font-bold overflow-hidden rounded-md
+            flex flex-row justify-center items-center
+            '
             key={file.uuid}
           >
             {allowedImageTypesConst.includes(file.type as any) ? (
@@ -91,8 +94,7 @@ const showFiles = ({
               <AudioPlayer src={getUrl(file)} square />
             ) : allowedVideoTypesConst.includes(file.type as any) ? (
               <VideoPlayer src={getUrl(file)} />
-            ) : allowedDocumentTypesConst.includes(file.type as any) ? (
-              // <span className='vox-icon vx-icon-064 px-3' />
+            ) : file.type === 'application/json' ? (
               <MapPathViewer src={getUrl(file)} />
             ) : (
               <span className='vox-icon vx-icon-069 px-3' />
@@ -108,7 +110,7 @@ const showFiles = ({
         ))}
         {mapPoint && <MapViewer mapPoint={mapPoint} />}
       </div>
-      {visibleFiles && (
+      {visibleFiles && resources.length > 0 && (
         <Button
           name='button-change-scheduler'
           onClick={goRight}

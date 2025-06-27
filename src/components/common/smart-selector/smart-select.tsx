@@ -3,6 +3,7 @@ import { useField } from 'react-final-form';
 import { createPortal } from 'preact/compat';
 import { FieldMetaState } from 'react-final-form';
 import { Chip } from '../chip/chip';
+import { useTranslation } from 'react-i18next';
 
 export interface IOption {
   label: string;
@@ -46,6 +47,7 @@ export function SmartSelector({
   icon,
   end = false,
 }: SmartSelectorProps) {
+  const { t } = useTranslation();
   const { input } = useField<IOption[] | IOption | string>(name);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -83,7 +85,7 @@ export function SmartSelector({
     setSearch(''); // Limpiar búsqueda
     setSelectedIndex(0); // Reiniciar índice
     setFocused(false); // Cerrar el dropdown después de seleccionar
-    // onChange?.(option);
+    onChange?.(option);
   };
 
   const handleRemove = (option: IOption) => {
@@ -223,7 +225,7 @@ export function SmartSelector({
           for={`${id}-input`}
           class={`block text-sm font-medium ${multiple ? 'mb-2' : 'mb-1'}`}
         >
-          {label}
+          {t(label)}
         </label>
       )}
       {multiple && (
@@ -267,11 +269,11 @@ export function SmartSelector({
             }}
             autoComplete='off'
             onFocus={() => !disabled && setFocused(true)}
+            // focus:ring-blue-500 dark:focus:ring-blue-400
             className={`w-full px-3 py-2 rounded
             !bg-white dark:!bg-b-dark-dark
             text-gray-700 dark:text-gray-200
             border-gray-300 dark:border-gray-700
-            focus:ring-blue-500 dark:focus:ring-blue-400
             appearance-none
             ${disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}
             ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}

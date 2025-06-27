@@ -4,12 +4,16 @@ interface IViewerProps {
   posterSpan: React.ReactNode;
   infoExpanded: React.ReactNode;
   close?: () => void;
+  click?: () => void;
 }
 
-const Viewer = ({ posterSpan, infoExpanded, close }: IViewerProps) => {
+const Viewer = ({ posterSpan, infoExpanded, close, click }: IViewerProps) => {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 
-  const openViewer = () => setIsViewerOpen(true);
+  const openViewer = () => {
+    setIsViewerOpen(true);
+    click?.();
+  };
 
   const closeViewer = () => {
     setIsViewerOpen(false);
