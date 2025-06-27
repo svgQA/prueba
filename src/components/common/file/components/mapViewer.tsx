@@ -19,7 +19,12 @@ const MapViewer = ({ mapPoint }: { mapPoint?: MapPoint }) => {
   );
 
   const posterSpan = (
-    <div className='border border-b-light-dark dark:border-b-dark-light rounded-sm py-2 relative'>
+    <div
+      className='
+    border border-b-light-dark dark:border-b-dark-light py-2 relative max-h-14 bg-gray-200
+    dark:bg-gray-800/60 text-gray-700 dark:text-gray-200 font-bold overflow-hidden rounded-md
+    '
+    >
       <span className='vox-icon vx-icon-064 px-3' />
     </div>
   );

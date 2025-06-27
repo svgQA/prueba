@@ -19,6 +19,8 @@ import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
 import { DateField } from '@/components/compose/forms';
 import { useUserStore } from '@/store/slices';
+// import { getSelectedHoursByDay } from '@/pages/settings/shifts/schedule/utils';
+// import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -32,6 +34,9 @@ interface ITaskFormProps {
   externalSelected?: string;
 }
 
+// const START_HOUR = 0;
+// const END_HOUR = 24;
+
 export const TaskForm = ({
   closed,
   onClose,
@@ -44,6 +49,23 @@ export const TaskForm = ({
   externalSelected,
 }: ITaskFormProps) => {
   const { t } = useTranslation();
+  /*
+  const daysOfWeek = [
+    'Domingo',
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+  ];
+
+  const hours = Array.from(
+    { length: END_HOUR - START_HOUR + 1 },
+    (_, i) => START_HOUR + i
+  );
+  */
+
   const inputKeywords = useSignal('');
   // const services = useSignal<any[]>([]);
   const services = useSignal<IOption[]>([]);
@@ -375,6 +397,12 @@ export const TaskForm = ({
     );
   }, []);
 
+  const onChangeService = async (id: number) => {
+    const response = await ServiceService.getServiceById(String(id));
+    if (!response.getStatus()) return;
+    console.log(response.getOne());
+  };
+
   return (
     <Modal
       open={!!closed}
@@ -386,6 +414,19 @@ export const TaskForm = ({
       footer={footerContent}
     >
       <div className='px-4 py-6 flex flex-col w-full'>
+        {/*
+        {false && (
+          <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
+            <ul className='flex flex-wrap gap-3 justify-center'>
+              {getSelectedHoursByDay(daysOfWeek, hours, selectedCells).map(
+                (daySelection) => (
+                  <DataSchedule daySelection={daySelection} />
+                )
+              )}
+            </ul>
+          </div>
+        )}
+      */}
         <Form
           onSubmit={onSubmit}
           initialValues={initialValues}
@@ -414,6 +455,29 @@ export const TaskForm = ({
                         placeholder={t(
                           'shifts.upsert.form.employeePlaceholder'
                         )}
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div class='col-span-1'>
+                  <Field<IOption> name='serviceId' validate={required}>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        name='serviceId'
+                        id='select-service'
+                        placeholder={t('shifts.upsert.form.servicePlaceholder')}
+                        label={t('shifts.upsert.form.service')}
+                        options={services.value}
+                        menuPortalTarget={document.body}
+                        onChange={(e) => {
+                          if (e?.value) {
+                            const id = Number(e.value);
+                            onChangeService(id);
+                          }
+                          input.onChange(e);
+                        }}
                       />
                     )}
                   </Field>
@@ -459,23 +523,6 @@ export const TaskForm = ({
                     label={t('shifts.upsert.form.endDate')}
                     validate={required}
                   />
-                </div>
-
-                <div class='col-span-1'>
-                  <Field<IOption> name='serviceId' validate={required}>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        name='serviceId'
-                        id='select-service'
-                        placeholder={t('shifts.upsert.form.servicePlaceholder')}
-                        label={t('shifts.upsert.form.service')}
-                        options={services.value}
-                        menuPortalTarget={document.body}
-                      />
-                    )}
-                  </Field>
                 </div>
 
                 {/*
