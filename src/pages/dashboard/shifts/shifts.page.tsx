@@ -619,6 +619,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             {buttonMenu}
             <Button
               name='button-create-shift'
+              keyName='upsert'
               label='create'
               onClick={handleCreacteNewShift}
               icon='044'

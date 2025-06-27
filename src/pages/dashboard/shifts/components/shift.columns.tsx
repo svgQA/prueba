@@ -274,6 +274,7 @@ export const getColumns = (
               {
                 label: !checkIn ? 'check_in' : 'check_out',
                 icon: 'vox-icon vx-icon-312 text-primary',
+                keyName: 'check',
                 onClick: () => {
                   onClickAction({
                     id: s_id,
@@ -292,6 +293,7 @@ export const getColumns = (
             : [
                 {
                   label: 'edit',
+                  keyName: 'upsert',
                   icon: 'vox-icon vx-icon-123 text-primary',
                   onClick: () => {
                     onClickAction({
@@ -308,6 +310,7 @@ export const getColumns = (
           ...model,
           {
             label: 'delete',
+            keyName: 'delete',
             icon: 'vox-icon vx-icon-053 text-red-500',
             color: 'text-red-600',
             onClick: () => {
