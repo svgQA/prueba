@@ -91,7 +91,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section>
+    <Section className='w-full'>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
