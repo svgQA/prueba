@@ -1,4 +1,4 @@
-import { signal } from "@preact/signals";
+import { signal } from '@preact/signals';
 
 interface IPermission {
   name: string;
@@ -7,22 +7,23 @@ interface IPermission {
 const currentPermissions = signal<{ [key: string]: string }>({});
 const allPermissions = signal<IPermission[]>([]);
 
-
 export const getCurrentPermissions = () => {
   return currentPermissions.value;
 };
 
 export const setCurrentPermissionsByName = (name: string) => {
-  if(allPermissions.value.length === 0) return;
+  if (allPermissions.value.length === 0) return;
 
-  const permiso = allPermissions.value.find((permission) => permission.name === name);
+  const permiso = allPermissions.value.find(
+    (permission) => permission.name === name
+  );
   currentPermissions.value = permiso?.permissions || {};
 
   console.log('currentPermissions', currentPermissions.value);
 };
 
 export const setCurrentPermissionsBySubName = (subName: string) => {
-  if(allPermissions.value.length === 0) return;
+  if (allPermissions.value.length === 0) return;
 
   console.log('subName', subName);
 };

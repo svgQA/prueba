@@ -56,7 +56,7 @@ export const common_en = {
   municipality: 'Municipality',
   common: {
     search: {
-      placeholder: 'Search by column...',
+      placeholder: 'Search...',
       filterBy: 'Filter by',
     },
   },

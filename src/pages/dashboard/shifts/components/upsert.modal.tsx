@@ -115,13 +115,12 @@ export const TaskForm = ({
   // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
 
   const onSubmit = async (model: any, form: any) => {
-
     const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
       schedules.value
     );
-    
+
     if (!isInSchedule) {
       ToastManager.warning(t('shift.upsert.errorSchedule'));
       return;
@@ -471,32 +470,31 @@ export const TaskForm = ({
     endDateStr: string,
     schedules: ScheduleItem[]
   ): boolean => {
-  
     const start = dayjs.utc(startDateStr);
     const end = dayjs.utc(endDateStr);
-  
+
     return schedules.some(({ schedule }) => {
       const checkTime = (date: dayjs.Dayjs) => {
         const dayIndex = date.day();
         console.log('dayIndex', dayIndex);
         const dayName = daysOfWeek[dayIndex];
-  
+
         if (!schedule.daysAllowed.includes(dayName)) return false;
-  
-        const scheduleDay = schedule.days.find(d => d.dayIndex === dayIndex);
+
+        const scheduleDay = schedule.days.find((d) => d.dayIndex === dayIndex);
         if (!scheduleDay) return false;
-  
+
         const hourDecimal = date.hour() + date.minute() / 60;
-  
+
         // Ajuste: usamos <= en lugar de <
         return scheduleDay.blocks.some(
-          block => hourDecimal >= block.start && hourDecimal <= block.end
+          (block) => hourDecimal >= block.start && hourDecimal <= block.end
         );
       };
-  
+
       return checkTime(start) && checkTime(end);
     });
-  }
+  };
 
   return (
     <Modal
