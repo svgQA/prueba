@@ -265,31 +265,33 @@ export const ManualNotificationForm = ({
                 />
               )}
             />
-            <div className="flex items-center space-x-2">
+            <div className='flex items-center space-x-2'>
               {!templateSelected && (
                 <Field<IOption>
-                  name="task"
+                  name='task'
                   render={({ input, meta }) => (
                     <SmartSelector
                       {...input}
                       meta={meta}
                       options={filteredTasks}
                       menuPortalTarget={document.body}
-                      placeholder="Selecciona una tarea"
-                      label="Tareas"
+                      placeholder='Selecciona una tarea'
+                      label='Tareas'
                       onChange={(value?: IOption) => input.onChange(value)}
                     />
                   )}
                 />
               )}
-              <div className="flex mt-5">
+              <div className='flex mt-5'>
                 {/* Botón '+' alineado con selector */}
                 <Button
-                  name="btn-create-task"
-                  icon="039"
+                  name='btn-create-task'
+                  icon='039'
                   square
-                  onClick={() => (showInlineCreate.value = !showInlineCreate.value)}
-                  aria-label="Crear tarea"
+                  onClick={() =>
+                    (showInlineCreate.value = !showInlineCreate.value)
+                  }
+                  aria-label='Crear tarea'
                 />
               </div>
             </div>
@@ -297,7 +299,7 @@ export const ManualNotificationForm = ({
 
           {/* Sección extra inline sin modal */}
           {showInlineCreate.value && (
-            <div className=" flex items-center p-4 border rounded-lg bg-gray-50">
+            <div className=' flex items-center p-4 border rounded-lg bg-gray-50'>
               <TaskCreateSettingPage />
             </div>
           )}

@@ -46,9 +46,9 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
     case 'round':
       return (
         <RoundInfo
-          roundPct={roundPct}
-          points={service?.round.points}
-          frequency={service?.round.frequency}
+          shift={shift.id}
+          round={service?.round?.id}
+          frequency={service?.round?.frequency}
         />
       );
     case 'time-start':

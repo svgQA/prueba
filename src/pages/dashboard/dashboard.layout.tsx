@@ -57,6 +57,7 @@ import { setAllPermissions } from '@/store/signals/access/permission';
 import { useSignal } from '@preact/signals';
 import PanicModal from '@/components/common/panic/panic.modal';
 import { IPanic } from '@/components/common/panic/interface';
+// import { IconsModal } from '../globals/icons/icons';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -302,6 +303,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
         <SettingsModal />
         <ToastContainer />
+        {/* <IconsModal /> */}
       </section>
     );
   }
