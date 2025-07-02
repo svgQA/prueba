@@ -26,8 +26,10 @@ import ShowFiles from '@/components/common/file/show.file';
 import { IPanic } from '@/components/common/panic/interface';
 import { PanicService } from '@/services/memo/panic';
 import { Badge } from '@/components/common/badge/badge';
+import { useTranslation } from 'react-i18next';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
+  const { t } = useTranslation();
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
   const memos = useSignal<Memo[]>([]);
   const files = useSignal<IPresignedRequest[]>([]);
@@ -297,7 +299,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           {memos.value.length === 0 && (
             <div className='flex justify-center items-center h-20'>
               <p className='text-gray-text-light dark:text-t-dark-light text-sm'>
-                No hay Comentarios
+                {t('memos.history.comment')}
               </p>
             </div>
           )}
@@ -349,8 +351,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             meta={meta}
                             name='predefined'
                             id='select-predefined'
-                            placeholder='Opciones predefinidas'
-                            label='Opciones predefinidas'
+                            placeholder='p_predefined'
+                            label='p_predefined'
                             options={predefined.value}
                             menuPortalTarget={document.body}
                             allowAll={true}
@@ -375,7 +377,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             {...input}
                             type='number'
                             name='duration'
-                            label='Duración'
+                            label='h_duration'
                             placeholder='min'
                           />
                         )}
@@ -384,7 +386,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     <div className='grid grid-cols-2 gap-2'>
                       <Field<string> name='date'>
                         {({ input }) => (
-                          <DateField {...input} name='date' label='Fecha' />
+                          <DateField {...input} name='date' label='h_date' />
                         )}
                       </Field>
 
@@ -396,7 +398,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                             value={[]}
                             accept='image/*, video/*'
                             multiple={true}
-                            label='Adjuntos'
+                            label='h_attachment'
                             area='memo'
                           />
                         )}
@@ -408,7 +410,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         {({}) => (
                           <TextArea
                             name='message'
-                            placeholder='Escribe un Comentario...'
+                            placeholder='p_comment'
                             value={message}
                             onChange={(
                               e: React.ChangeEvent<HTMLTextAreaElement>
@@ -446,7 +448,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       <div className='w-1 h-full bg-primary rounded-full' />
       <div>
         <p className='font-medium text-t-light dark:text-t-dark text-xs'>
-          {title}
+          {t(title)}
         </p>
         <p className='text-xs text-gray-text-light dark:text-t-dark-light'>
           <FormattedDate date={date} format={format} />
@@ -501,11 +503,12 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           )}
 
           {/* Dates Section */}
-          {memo.createdAt && showDate('Creación', memo.createdAt, 'datetime')}
+          {memo.createdAt &&
+            showDate('memos.history.created', memo.createdAt, 'datetime')}
           {memo.updatedAt &&
             memo.createdAt &&
             showDate(
-              'Actualización',
+              'memos.history.updated',
               memo.updatedAt != null ? memo.updatedAt : memo.createdAt,
               'datetime'
             )}
