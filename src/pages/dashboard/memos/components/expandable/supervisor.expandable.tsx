@@ -39,6 +39,7 @@ const SupervisorInfo = ({
   memo: Memo;
   resolved?: boolean;
 }) => {
+  const { t } = useTranslation();
   const [btnLabel, setBtnLabel] = useState('Check In');
 
   const getStatus = (state: string) => {
@@ -140,44 +141,44 @@ const SupervisorInfo = ({
           <div className='w-full h-9/12 flex'>
             <div className='w-1/2 grid grid-cols-2 gap-1 p-2'>
               <InfoContainer
-                header='Supervisor'
+                header={t('memos.supervisor.supervisor')}
                 label={memo?.extraData?.company?.name}
                 icon='321'
               />
               <InfoContainer
-                header='Servicio'
+                header={t('memos.supervisor.service')}
                 label={memo?.novelty?.name}
                 icon='432'
               />
               <InfoContainer
-                header='Actualizado'
+                header={t('memos.supervisor.updated')}
                 label={DateUtils.dateToFrontend(memo.updatedAt, {
                   format: 'datetime',
                 })}
                 icon='067'
               />
               <InfoContainer
-                header='Lugar'
+                header={t('memos.supervisor.place')}
                 label={memo?.extraData?.place?.address}
                 icon='151'
               />
               <InfoContainer
-                header='Cliente'
+                header={t('memos.supervisor.client')}
                 label={memo?.extraData?.client?.name}
                 icon='045'
               />
               <InfoContainer
-                header='Ciudad'
+                header={t('memos.supervisor.city')}
                 label={memo?.extraData?.city?.name}
                 icon='320'
               />
               <InfoContainer
-                header='Compañía'
+                header={t('memos.supervisor.company')}
                 label={memo?.extraData?.company?.name}
                 icon='023'
               />
               <InfoContainer
-                header='Dirección'
+                header={t('memos.supervisor.address')}
                 label={memo?.extraData?.place?.address}
                 icon='321'
               />

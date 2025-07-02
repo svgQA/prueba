@@ -42,7 +42,7 @@ export const Gauge: FunctionComponent<IGaugeProps> = ({
           textAnchor='middle'
           style={{ fontSize: '26px' }}
         >
-          {progress}%
+          {progress.toFixed(1)}%
         </text>
       </svg>
     </div>
