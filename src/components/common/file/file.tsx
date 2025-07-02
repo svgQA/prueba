@@ -4,7 +4,7 @@ import { IPresignedRequest } from '@/types/file';
 import { handleFileChangeWrapper } from './utils/utils';
 import { GeneralService } from '@/services/general/general';
 import { ToastManager } from '@/utils/toast/toast-manager';
-
+import { useTranslation } from 'react-i18next';
 export const File = ({
   id,
   name,
@@ -24,6 +24,7 @@ export const File = ({
   area,
   ...props
 }: IFileProps) => {
+  const { t } = useTranslation();
   const dataset = useSignal({});
   const isLoading = useSignal(false);
 
@@ -99,7 +100,7 @@ export const File = ({
             for={`${id}-input`}
             className='capitalize block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200'
           >
-            {label}
+            {t(label)}
           </label>
         )}
         <div

@@ -258,7 +258,7 @@ export function SmartSelector({
             name={name}
             id={`${id}-input`}
             value={search}
-            placeholder={placeholder}
+            placeholder={placeholder ? t(placeholder) : ''}
             disabled={disabled}
             onInput={(e) => {
               const value = (e.currentTarget as HTMLInputElement).value;
