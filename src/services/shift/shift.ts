@@ -52,6 +52,13 @@ export class ShiftService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
+  static async getRoundHistory<T = any>(shiftId: number, roundId: number) {
+    const model: IMakeRequest = {
+      url: ['activity', 'history', `${roundId}`, `${shiftId}`],
+    };
+    return await super.make_request<T>(this.name, model);
+  }
+
   /**
    * Gets a summary of shifts including total count, in progress and completed
    * @returns Summary object with total, progress and completed counts
