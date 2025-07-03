@@ -26,6 +26,8 @@ import { Switch } from '@/components/common/switch/switch';
 import { Ranking } from '@/components/common/ranking/ranking';
 import { responseValidation } from '@/pages/settings/forms/create/utils/validation';
 import { AudioRecorder } from '@/components/common/audio/Audio.Recorder';
+import { Signature } from '@/components/common/signature/signature';
+import { QrCode } from '@/components/common/qr/qrCode';
 
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
@@ -313,7 +315,7 @@ export const FormResponseSettingPage: FunctionComponent<
           </div>
         );
 
-      case ELEMENT_TYPE.AUDIO: 
+      case ELEMENT_TYPE.AUDIO:
         return (
           <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <AudioRecorder
@@ -328,6 +330,36 @@ export const FormResponseSettingPage: FunctionComponent<
             />
           </div>
         );
+
+      case ELEMENT_TYPE.SIGNATURE:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Signature
+              name={element.id}
+              onChange={handleInputChange}
+              data-page={page}
+              value={element.value}
+              label={element.label}
+              data-section={section}
+              disabled={disabled}
+            />
+          </div>
+        );
+
+      // case ELEMENT_TYPE.QR:
+      //   return (
+      //     <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+      //       <QrCode
+      //         name={element.id}
+      //         onChange={handleInputChange}
+      //         data-page={page}
+      //         value={element.value}
+      //         label={element.label}
+      //         data-section={section}
+      //         disabled={disabled}
+      //       />
+      //     </div>
+      //   );
 
       default:
         return (
@@ -455,7 +487,7 @@ export const FormResponseSettingPage: FunctionComponent<
             )}
           </div>
 
-          {!(currentPage === getResponse.value.pages.length - 1) &&(
+          {!(currentPage === getResponse.value.pages.length - 1) && (
             <div className='flex justify-between items-center'>
               <Button
                 name='btn-response-prev'
