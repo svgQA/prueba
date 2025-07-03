@@ -196,12 +196,12 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: FormCreateSettingPage })
           )}
         />
-        <Route
+        {/* <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to}
           component={lazy(() =>
             Promise.resolve({ default: FormInspectSettingPage })
           )}
-        />
+        /> */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.response.to}
           component={lazy(() =>

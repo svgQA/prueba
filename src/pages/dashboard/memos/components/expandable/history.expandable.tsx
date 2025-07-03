@@ -187,6 +187,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const handleAttachmentUpload = (e: any) => {
     const fileInput: IPresignedRequest = e.target.value[0];
+    console.log('fileInput', fileInput);
     files.value = [...files.value, fileInput];
   };
 

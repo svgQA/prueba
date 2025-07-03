@@ -21,6 +21,7 @@ import { FORM_AUTO_SAVE_KEY } from '../create/store/control';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { validateResponse } from '@/pages/dashboard/forms/response/store/response';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { closeSettingModal } from '@/store/signals/modals/settings/settings.signal';
 
 export const FormSettingPage = () => {
   const { t } = useTranslation();
@@ -66,6 +67,7 @@ export const FormSettingPage = () => {
   };
 
   const navigateResponse = () => {
+    /**
     const menu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.response.to,
       label: 'response',
@@ -73,6 +75,9 @@ export const FormSettingPage = () => {
     };
     appendHistory(menu);
     navigate(menu.to);
+     **/
+    navigate(PAGES_LIST_ROUTER.dashboard.form);
+    closeSettingModal();
   };
 
   const redirect = (model?: IFormat) => {

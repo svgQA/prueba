@@ -25,6 +25,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { Switch } from '@/components/common/switch/switch';
 import { Ranking } from '@/components/common/ranking/ranking';
 import { responseValidation } from '@/pages/settings/forms/create/utils/validation';
+import { AudioRecorder } from '@/components/common/audio/Audio.Recorder';
 
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
@@ -64,8 +65,11 @@ export const FormResponseSettingPage: FunctionComponent<
     section?: string
   ) => {
     if (element.invisible) return;
+    // const disabled =
+    //   getResponseMode.value?.hold || element.disable || !element.assigned;
+
     const disabled =
-      getResponseMode.value?.hold || element.disable || !element.assigned;
+      getResponseMode.value?.hold || element.disable;
     switch (element.type) {
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
@@ -209,6 +213,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               accept='image/*'
               disabled={disabled}
+              area='form'
             />
           </div>
         );
@@ -224,6 +229,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               accept=':not(image/*),.pdf,.doc,.docx,.txt,.xls,.xlsx,.csv'
               disabled={disabled}
+              area='form'
             />
           </div>
         );
@@ -306,6 +312,23 @@ export const FormResponseSettingPage: FunctionComponent<
             />
           </div>
         );
+
+      case ELEMENT_TYPE.AUDIO: 
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <AudioRecorder
+              name={element.id}
+              onChange={handleInputChange}
+              data-page={page}
+              value={element.value}
+              label={element.label}
+              data-section={section}
+              disabled={disabled}
+              area='form'
+            />
+          </div>
+        );
+
       default:
         return (
           <div className='bg-b-light dark:bg-b-dark p-3 my-3'>
@@ -432,27 +455,30 @@ export const FormResponseSettingPage: FunctionComponent<
             )}
           </div>
 
-          <div className='flex justify-between items-center'>
-            <Button
-              name='btn-response-prev'
-              type='button'
-              label='previus'
-              icon='003'
-              onClick={prevPage}
-            />
-            <span className='text-sm'>
-              Page {currentPage + 1} of {getResponse.value.pages.length}
-            </span>
-            <Button
-              name='btn-response-next'
-              type='button'
-              label='next'
-              icon='004'
-              end
-              disabled={currentPage === getResponse.value.pages.length - 1}
-              onClick={postPage}
-            />
-          </div>
+          {!(currentPage === getResponse.value.pages.length - 1) &&(
+            <div className='flex justify-between items-center'>
+              <Button
+                name='btn-response-prev'
+                type='button'
+                label='previus'
+                icon='003'
+                onClick={prevPage}
+              />
+              <span className='text-sm'>
+                Page {currentPage + 1} of {getResponse.value.pages.length}
+              </span>
+              <Button
+                name='btn-response-next'
+                type='button'
+                label='next'
+                icon='004'
+                end
+                disabled={currentPage === getResponse.value.pages.length - 1}
+                onClick={postPage}
+              />
+            </div>
+          )}
+
         </div>
       )}
     </section>
