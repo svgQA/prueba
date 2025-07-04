@@ -17,7 +17,7 @@ import NotificationBanner from '../notifications/notification.banner';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '../Avatar';
 import { useLocation } from 'wouter';
-import { PAGES_LIST } from '@/utils/routing';
+// import { PAGES_LIST } from '@/utils/routing';
 
 const Panic = (_panic: IPanicProps) => {
   const allPanic = useSignal<IPanic[]>([]);
