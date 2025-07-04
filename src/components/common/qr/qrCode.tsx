@@ -275,6 +275,7 @@ export const QrCode = ({
                 level='M'
                 fgColor='#000000'
                 bgColor='#FFFFFF'
+                title='QR Code'
               />
             </div>
             <Button
