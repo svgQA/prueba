@@ -391,7 +391,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           onReply={(id) =>
             handleReply(
               id,
-              memo.novelty?.description || '',
+              memo.description || '',
               memo.novelty?.name,
               memo.updatedAt
             )
@@ -607,22 +607,27 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           {/* Chat pagination */}
           <div className='flex justify-between items-center p-4 border-t dark:border-b-dark-light border-b-light-dark'>
             <Button
-              name={t('memos.pagination.previous')}
+              // TODO: Los name no se traducen
+              name='btn-chat-prev'
               onClick={handlePrevPage}
               disabled={currentPage.value === 1}
               icon='014'
-              label={t('memos.pagination.previous')}
+              // El button ya tiene traduccion interna por
+              // eso se puede utilizar todo asi
+              // y mirar las traducciones en /i18n/button.ts
+              label='prev'
+              borderless
             />
             <span className='text-sm text-gray-500'>
-              {t('memos.pagination.page')} {currentPage.value}{' '}
-              {t('memos.pagination.of')} {totalPages.value}
+              {t('page')} {currentPage.value} {t('of')} {totalPages.value}
             </span>
             <Button
-              name={t('memos.pagination.next')}
+              name='btn-chat-next'
               onClick={handleNextPage}
               disabled={currentPage.value >= totalPages.value}
               icon='015'
-              label={t('memos.pagination.next')}
+              label='next'
+              borderless
             />
           </div>
         </div>

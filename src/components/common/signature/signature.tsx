@@ -200,7 +200,8 @@ export const Signature = ({
           className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm'
           onClick={handleSave}
           disabled={locked || resources.length > 0}
-          label='guardar'
+          icon='146'
+          label='save'
         />
         <Button
           name='btn-clear-signature'
@@ -208,7 +209,8 @@ export const Signature = ({
           className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm'
           onClick={handleClear}
           disabled={disabled || locked || resources.length > 0}
-          label='Limpiar'
+          icon='425'
+          label='clean'
         />
       </div>
       {resources.length > 0 && (

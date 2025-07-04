@@ -239,18 +239,6 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         </div>
                         {memo.extraData && (
                           <div className='flex flex-wrap gap-2 text-xs text-t-light dark:text-t-dark'>
-                            {/* {memo.extraData.category && (
-                                <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
-                                  <span className='vox-icon size-sm vx-icon-234 text-primary' />
-                                  {memo.extraData.category.label}
-                                </span>
-                              )}
-                              {memo.extraData.resolution && (
-                                <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
-                                  <span className='vox-icon size-sm vx-icon-235 text-primary' />
-                                  {memo.extraData.resolution.label}
-                                </span>
-                              )} */}
                             {memo.extraData.duration && (
                               <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
                                 <span className='vox-icon size-sm vx-icon-236 text-primary' />
@@ -460,13 +448,13 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   return (
     <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm max-h-[450px]'>
-      <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-dark max-h-20'>
-        <div className='flex-1 rounded-lg ml-5'>
+      <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-dark max-h-20 w-full'>
+        <div className='flex-1 rounded-lg ml-5 w-7/12'>
           {memo.resource && <ShowFiles resources={memo.resource} />}
         </div>
 
-        {panic.value.length > 0 && (
-          <div className='flex flex-col gap-2'>
+        <div className='flex flex-col gap-2 w-2/12'>
+          {panic.value.length > 0 && (
             <Badge
               label='panic_button'
               icon='020'
@@ -474,11 +462,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               full
               outline
             />
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Info Section - Right */}
-        <div className='flex items-center gap-4'>
+        <div className='flex items-center gap-4 w-3/12'>
           {/* Action Button */}
           {memo.state != 'IN_REVISION' && memo.state != 'CREATED' && (
             <div className='flex items-center h-[72px]'>
