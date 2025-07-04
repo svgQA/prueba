@@ -88,6 +88,7 @@ export const TaskForm = ({
   const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
   const schedules = useSignal<any[]>([]);
+  const [tasksResponse, setTasksResponse] = useState<ITask[]>([]);
   const tasks = useSignal<ITask[]>([]);
   const relatedShifts = useSignal<any[]>([]);
 
@@ -127,44 +128,66 @@ export const TaskForm = ({
     delete model.task_description;
     delete model.task_time;
 
-    // TODO: Hacer la validaciòn de los horarios
-    // const fecha_start = dayjs(model.start);
-    // const start_day = fecha_start.format('dddd');
-    // const fecha_end = dayjs(model.end);
-    // const start_end = fecha_end.format('dddd');
-
-    // TODO: Agregar lo de formulario
-    const task_output =
+    const selectedTask: ITask | null =
       model_task && !task_name
         ? {
             id: model_task.id,
             name: model_task.name,
             description: model_task.description,
             hourStart: model_task.hourStart,
-            type: model_task.type,
+            type: model_task.type || 'GENERAL',
+            check: false,
           }
-        : {
+        : null;
+
+    const manualTask: ITask | null =
+      (!model_task || task_name) && task_name
+        ? {
             name: task_name,
             description: task_description,
             hourStart: task_time,
             type: 'GENERAL',
-          };
+            check: false,
+          }
+        : null;
+
+    const serviceTasks: ITask[] = tasksResponse?.length
+      ? tasksResponse.map((t) => ({
+          id: t.id,
+          name: t.name,
+          description: t.description,
+          hourStart: t.hourStart,
+          type: t.type || 'GENERAL',
+          check: false,
+        }))
+      : [];
+
+    const allTasks: ITask[] = [
+      ...serviceTasks,
+      ...(selectedTask ? [selectedTask] : []),
+      ...(manualTask ? [manualTask] : []),
+    ];
 
     const request_model: IShiftRequest = {
       ...model,
       employeeId: employeeId?.value,
       serviceId: serviceId?.value,
-      task: task_output,
+      task: allTasks,
     };
 
     const request = taskSelected?.id
       ? await ShiftService.updateActivity(request_model, taskSelected.id)
       : await ShiftService.createActivity(request_model);
 
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) {
+      ToastManager.error('No se puede realizar la acciòn');
+      return;
+    }
+
     const message = taskSelected?.id
       ? t('shifts.upsert.successEdit')
       : t('shifts.upsert.successCreate');
+
     form.reset();
     ToastManager.success(message);
     onClose?.();
@@ -371,6 +394,8 @@ export const TaskForm = ({
     const response = await ServiceService.getServiceById(String(id));
     if (!response.getStatus()) return;
     const model = response.getOne();
+    console.log('DATA: ', model);
+    setTasksResponse(model.tasks || []);
     schedules.value = model?.schedules || [];
     const schedule = model?.schedules[0]?.schedule;
     if (!schedule) return;
@@ -387,6 +412,15 @@ export const TaskForm = ({
     setSelectedCells(convertBlocksToCells(days));
   };
 
+  const cleanServiceSelected = () => {
+    setSelectedCells([]);
+    setTasksResponse([]);
+  };
+
+  // const cleanRelatedShift = () => {
+  //   relatedShifts.value = [];
+  // };
+
   return (
     <Modal
       open={!!closed}
@@ -397,7 +431,7 @@ export const TaskForm = ({
       header={headerContent}
       footer={footerContent}
     >
-      <div className='px-4 py-6 flex flex-col w-full'>
+      <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
         {selectedCells && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-1 justify-center'>
@@ -458,14 +492,35 @@ export const TaskForm = ({
               onChangeService={onChangeService}
               users={users}
               services={services.value}
-              setSelectedCells={setSelectedCells}
+              cleanServiceSelected={cleanServiceSelected}
               tasks={tasks}
             />
           )}
         />
-        <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
-          {userSelected?.tasks.map(renderTaskCard)}
-        </div>
+
+        {tasksResponse?.length > 0 && (
+          <div className='mt-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
+            <ul className='flex flex-wrap gap-1 justify-center'>
+              {tasksResponse.map((task) => (
+                <li
+                  key={`card-task-${task.id}`}
+                  className='w-52 text-xs p-2 rounded-md  bg-b-light-dark dark:bg-b-dark-dark min-w-[150px]'
+                >
+                  <div className='font-semibold text-primary mb-1'>
+                    {task.name}
+                  </div>
+                  <TextEllipsis text={task.description} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {userSelected && userSelected.tasks && (
+          <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
+            {userSelected?.tasks.map(renderTaskCard)}
+          </div>
+        )}
       </div>
     </Modal>
   );

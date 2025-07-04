@@ -20,7 +20,7 @@ export const ShiftFormContent = ({
   onChangeService,
   users,
   services,
-  setSelectedCells,
+  cleanServiceSelected,
   tasks,
 }: any) => {
   const { t } = useTranslation();
@@ -31,11 +31,8 @@ export const ShiftFormContent = ({
 
   const renderNewTask = useCallback(() => {
     return (
-      <div className='col-span-2 mt-4 border-t pt-3 border-gray-200 dark:border-gray-700'>
-        <h3 className='text-lg font-medium mb-4'>
-          {t('shift.upsert.newTask')}
-        </h3>
-        <div className='grid grid-cols-2 gap-4'>
+      <div className='grid grid-cols-2 gap-4 mt-4 border-t pt-3 border-gray-200 dark:border-gray-700 w-full'>
+        <div>
           <Field<string> name='task_name' validate={required}>
             {({ input, meta }) => (
               <Input
@@ -48,7 +45,25 @@ export const ShiftFormContent = ({
               />
             )}
           </Field>
+        </div>
 
+        <div>
+          <Field<string> name='task_time' validate={required}>
+            {({ input, meta }) => (
+              <Input
+                {...input}
+                id='input-task-hour-start'
+                type='time'
+                unicon
+                meta={meta}
+                label={t('shift.upsert.form.taskHourStart')}
+                placeholder={t('shift.upsert.form.taskHourStartPlaceholder')}
+              />
+            )}
+          </Field>
+        </div>
+
+        <div className='col-span-2'>
           <Field<string> name='task_description' validate={required}>
             {({ input, meta }) => (
               <Input
@@ -58,20 +73,6 @@ export const ShiftFormContent = ({
                 meta={meta}
                 label={t('shift.upsert.form.taskDescription')}
                 placeholder={t('shift.upsert.form.taskDescriptionPlaceholder')}
-              />
-            )}
-          </Field>
-        </div>
-        <div className='grid grid-cols-2'>
-          <Field<string> name='task_time' validate={required}>
-            {({ input, meta }) => (
-              <Input
-                {...input}
-                id='input-task-hour-start'
-                type='time'
-                meta={meta}
-                label={t('shift.upsert.form.taskHourStart')}
-                placeholder={t('shift.upsert.form.taskHourStartPlaceholder')}
               />
             )}
           </Field>
@@ -128,7 +129,7 @@ export const ShiftFormContent = ({
                     onChangeService(id);
                   }
                   if (!e) {
-                    setSelectedCells([]);
+                    cleanServiceSelected();
                   }
                   input.onChange(e);
                 }}
@@ -266,8 +267,7 @@ export const ShiftFormContent = ({
             />
           </div>
         </div>
-
-        {isNewTask.value && renderNewTask()}
+        <div className='col-span-2'>{isNewTask.value && renderNewTask()}</div>
       </div>
     </form>
   );
