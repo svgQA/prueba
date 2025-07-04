@@ -4,4 +4,5 @@ export interface QrProps {
     label?: string;
     disabled?: boolean;
     value: any;
+    page: string | undefined
 }

@@ -15,6 +15,7 @@ export const AudioRecorder = ({
     label,
     disabled,
     area,
+    page
 }: AudioRecorderProps) => {
     const [recording, setRecording] = useState(false);
     const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
@@ -67,12 +68,17 @@ export const AudioRecorder = ({
 
     const emitChange = (dataset: any, file: IPresignedRequest) => {
         setResources(prev => [...prev, file]);
+        let realDataset = dataset;
+
+        if ((dataset == null || dataset == undefined)) {
+                realDataset = { page };
+        }
 
         onChange?.({
             target: {
                 name: name,
                 type: 'file',
-                dataset: dataset,
+                dataset: realDataset,
                 value: [...value, file],
             }
         });

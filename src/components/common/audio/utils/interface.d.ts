@@ -5,4 +5,5 @@ export interface AudioRecorderProps {
     disabled?: boolean;
     value: IPresignedRequest[];
     area?: AllowedAreaTypes;
+    page: string | undefined
 }

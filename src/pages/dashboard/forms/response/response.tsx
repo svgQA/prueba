@@ -333,7 +333,7 @@ export const FormResponseSettingPage: FunctionComponent<
             <AudioRecorder
               name={element.id}
               onChange={handleInputChange}
-              data-page={page}
+              page={page}
               value={element.value}
               label={element.label}
               data-section={section}
@@ -366,7 +366,7 @@ export const FormResponseSettingPage: FunctionComponent<
             <QrCode
               name={element.id}
               onChange={handleInputChange}
-              data-page={page}
+              page={page}
               value={element.value}
               label={element.label}
               data-section={section}

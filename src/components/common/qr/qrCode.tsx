@@ -3,14 +3,19 @@ import QRCode from "react-qr-code";
 import { useRef, useState, useEffect } from "preact/hooks";
 import { Button } from "../button/button";
 import { Html5Qrcode } from "html5-qrcode";
+import { IPresignedRequest } from "@/types/file";
+import ShowFiles from '@/components/common/file/show.file';
+import { DateUtils } from '@/utils/utilities/dates';
+import { handleFileSaveWrapper } from "../file/utils/utils";
 
-export const QrCode = ({ value, name, label, disabled, onChange }: QrProps) => {
+export const QrCode = ({ value, name, label, disabled, onChange, page }: QrProps) => {
     const [scannedValue, setScannedValue] = useState<string | null>(null);
     const [scanning, setScanning] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
     const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
     const qrRegionId = "qr-reader-region";
+    const [resources, setResources] = useState<IPresignedRequest[]>(Array.isArray(value) ? value : []);
 
     useEffect(() => {
         // Cleanup on unmount
@@ -66,7 +71,7 @@ export const QrCode = ({ value, name, label, disabled, onChange }: QrProps) => {
                         } as any);
                     }
                 },
-                (err) => {
+                (_err) => {
                     // Opcional: puedes mostrar errores de escaneo aquí
                 }
             );
@@ -117,6 +122,70 @@ export const QrCode = ({ value, name, label, disabled, onChange }: QrProps) => {
         if (scannedValue && isUrl(scannedValue)) {
             window.open(scannedValue, '_blank');
         }
+    };
+
+    // Utilidad para convertir un SVG a PNG usando un canvas auxiliar
+    const svgToPngFile = async (svgElement: SVGSVGElement, filename: string) => {
+        const serializer = new XMLSerializer();
+        const svgString = serializer.serializeToString(svgElement);
+        const svg64 = btoa(unescape(encodeURIComponent(svgString)));
+        const image64 = 'data:image/svg+xml;base64,' + svg64;
+        return new Promise<File>((resolve) => {
+            const img = new window.Image();
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                canvas.width = svgElement.width.baseVal.value || 128;
+                canvas.height = svgElement.height.baseVal.value || 128;
+                const ctx = canvas.getContext('2d');
+                ctx!.fillStyle = '#fff';
+                ctx!.fillRect(0, 0, canvas.width, canvas.height);
+                ctx!.drawImage(img, 0, 0);
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        resolve(new File([blob], filename, { type: 'image/png' }));
+                    }
+                }, 'image/png');
+            };
+            img.src = image64;
+        });
+    };
+
+    const handleSaveQr = async () => {
+        const svg = document.querySelector('.qr-preview svg') as SVGSVGElement;
+        if (!svg) return;
+        const filename = `${DateUtils.dateToBackend(new Date())}-qr.png`;
+        const file = await svgToPngFile(svg, filename);
+        if (!file) return;
+
+        await handleFileSaveWrapper(
+            file,
+            `${DateUtils.dateToBackend(new Date())}-qr.png`,
+            'image/png',
+            emitChange,
+            'form'
+        );
+    };
+
+    const emitChange = (dataset: any, file: any) => {
+        setResources(prev => [...prev, file]);
+        const safeValue = Array.isArray(value) ? value : [];
+        let realDataset = dataset;
+
+        if ((dataset == null || dataset == undefined)) {
+                realDataset = { page };
+        }
+        onChange?.({
+            target: {
+                name: name,
+                type: 'file',
+                dataset: realDataset,
+                value: [...safeValue, file],
+            },
+        });
+    };
+
+    const handleRemove = (uuid: string) => {
+        setResources(prev => prev.filter((file) => file.uuid !== uuid));
     };
 
     return (
@@ -171,7 +240,7 @@ export const QrCode = ({ value, name, label, disabled, onChange }: QrProps) => {
                     <div className="bg-gray-50 p-3 rounded text-sm break-all">
                         {scannedValue}
                     </div>
-                    <div className="mt-4 flex flex-col items-center">
+                    <div className="mt-4 flex flex-col items-center qr-preview">
                         <div className="bg-white p-3 rounded border">
                             <QRCode
                                 value={scannedValue}
@@ -181,9 +250,18 @@ export const QrCode = ({ value, name, label, disabled, onChange }: QrProps) => {
                                 bgColor="#FFFFFF"
                             />
                         </div>
+                        <Button
+                            name="btn-save-qr"
+                            type="button"
+                            className="mt-2 px-3 py-1 bg-primary text-white rounded"
+                            onClick={handleSaveQr}
+                            label="Guardar QR"
+                            disabled={disabled}
+                        />
                     </div>
                 </div>
             )}
+            {resources.length > 0 && <ShowFiles resources={resources} removeFile={handleRemove} />}
         </div>
     );
 };
