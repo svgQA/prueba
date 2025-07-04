@@ -24,8 +24,8 @@ export const handleFileChangeWrapper = async (
     file.name,
     file.type,
     onChange,
-    area || "form",
-    e,
+    area || 'form',
+    e
   );
 };
 
@@ -35,7 +35,7 @@ export const handleFileSaveWrapper = async (
   type: any,
   onChange: (dataset: any, images: IPresignedRequest) => any,
   area?: AllowedAreaTypes,
-  e?: React.ChangeEvent<HTMLInputElement>,
+  e?: React.ChangeEvent<HTMLInputElement>
 ) => {
   const model: IPresignedRequest = {
     name: name,
@@ -54,24 +54,24 @@ export const handleFileSaveWrapper = async (
   const urlModel = response.getOne();
 
   await fetch(urlModel.url, {
-    method: "PUT",
+    method: 'PUT',
     body: file,
     headers: {
-      "Content-Type": file.type,
+      'Content-Type': file.type,
     },
   });
-  onChange(e && e.target instanceof HTMLInputElement ? e.target.dataset : undefined, model);
+  onChange(
+    e && e.target instanceof HTMLInputElement ? e.target.dataset : undefined,
+    model
+  );
 };
 
-export const uploadFiles = async (
-  file: any,
-  url: string,
-) => {
+export const uploadFiles = async (file: any, url: string) => {
   await fetch(url, {
-    method: "PUT",
+    method: 'PUT',
     body: file,
     headers: {
-      "Content-Type": file.type,
+      'Content-Type': file.type,
     },
   });
-}
+};

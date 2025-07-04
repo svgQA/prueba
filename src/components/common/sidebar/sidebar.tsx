@@ -8,7 +8,7 @@ import { ButtonMenu } from '../button/menu/button';
 import {
   // closeOnBoardingModal,
   getStatusSettingModal,
-  getRedirectSettingModal
+  getRedirectSettingModal,
 } from '@/store/signals/modals';
 import { useSignal } from '@preact/signals';
 // import { CompanyItem } from './company';
@@ -43,7 +43,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
         if (firstMenu)
           if (firstMenu) {
             menuSelected.value = firstMenu.to;
-            if(getRedirectSettingModal.value){
+            if (getRedirectSettingModal.value) {
               return navigate(getRedirectSettingModal.value);
             }
             navigate(firstMenu.to);

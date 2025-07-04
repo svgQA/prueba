@@ -116,14 +116,14 @@ export const TaskForm = ({
   // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
 
   const onSubmit = async (model: any, form: any) => {
-    console.log("📤 Modelo recibido del formulario:", model);
+    console.log('📤 Modelo recibido del formulario:', model);
 
     const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
       schedules.value
     );
-    console.log("📅 ¿Está dentro del horario permitido?:", isInSchedule);
+    console.log('📅 ¿Está dentro del horario permitido?:', isInSchedule);
 
     if (!isInSchedule) {
       ToastManager.warning(t('shift.upsert.errorSchedule'));
@@ -142,7 +142,7 @@ export const TaskForm = ({
     const model_task = tasks.value.find(
       (_task: ITask) => _task.id === task?.value
     );
-    console.log("🔍 Tarea seleccionada del formulario:", model_task);
+    console.log('🔍 Tarea seleccionada del formulario:', model_task);
 
     delete model.task_name;
     delete model.task_description;
@@ -151,35 +151,35 @@ export const TaskForm = ({
     const selectedTask: ITask | null =
       model_task && !task_name
         ? {
-          id: model_task.id,
-          name: model_task.name,
-          description: model_task.description,
-          hourStart: model_task.hourStart,
-          type: model_task.type || 'GENERAL',
-          check: false,
-        }
+            id: model_task.id,
+            name: model_task.name,
+            description: model_task.description,
+            hourStart: model_task.hourStart,
+            type: model_task.type || 'GENERAL',
+            check: false,
+          }
         : null;
 
     const manualTask: ITask | null =
       (!model_task || task_name) && task_name
         ? {
-          name: task_name,
-          description: task_description,
-          hourStart: task_time,
-          type: 'GENERAL',
-          check: false,
-        }
+            name: task_name,
+            description: task_description,
+            hourStart: task_time,
+            type: 'GENERAL',
+            check: false,
+          }
         : null;
 
     const serviceTasks: ITask[] = tasksResponse?.length
       ? tasksResponse.map((t) => ({
-        id: t.id,
-        name: t.name,
-        description: t.description,
-        hourStart: t.hourStart,
-        type: t.type || 'GENERAL',
-        check: false,
-      }))
+          id: t.id,
+          name: t.name,
+          description: t.description,
+          hourStart: t.hourStart,
+          type: t.type || 'GENERAL',
+          check: false,
+        }))
       : [];
 
     const allTasks: ITask[] = [
@@ -188,7 +188,7 @@ export const TaskForm = ({
       ...(manualTask ? [manualTask] : []),
     ];
 
-    console.log("📦 Tareas combinadas (task array):", allTasks);
+    console.log('📦 Tareas combinadas (task array):', allTasks);
 
     const request_model: IShiftRequest = {
       ...model,
@@ -197,16 +197,16 @@ export const TaskForm = ({
       task: allTasks,
     };
 
-    console.log("📤 Payload final a enviar:", request_model);
+    console.log('📤 Payload final a enviar:', request_model);
 
     const request = taskSelected?.id
       ? await ShiftService.updateActivity(request_model, taskSelected.id)
       : await ShiftService.createActivity(request_model);
 
-    console.log("✅ Respuesta del servicio:", request);
+    console.log('✅ Respuesta del servicio:', request);
 
     if (!request.getStatus()) {
-      console.warn("❌ Error en el servicio: getStatus() retornó falso");
+      console.warn('❌ Error en el servicio: getStatus() retornó falso');
       return;
     }
 
@@ -219,7 +219,6 @@ export const TaskForm = ({
     onClose?.();
     posSave?.();
   };
-
 
   const getServices = useCallback(async () => {
     const request = await ServiceService.getServicesSimpleList();
@@ -416,14 +415,14 @@ export const TaskForm = ({
                 meta={meta}
                 label={t('shift.upsert.form.taskName')}
                 placeholder={t('shift.upsert.form.taskNamePlaceholder')}
-              // value={taskSelect.value?.name}
-              // onChange={(e) => c
-              //   taskSelect.value = {
-              //     ...taskSelect.value,
-              //     // hourStart: taskSelect.value?.hourStart,
-              //     name: e.currentTarget.value,
-              //   } as ITask;
-              // }}
+                // value={taskSelect.value?.name}
+                // onChange={(e) => c
+                //   taskSelect.value = {
+                //     ...taskSelect.value,
+                //     // hourStart: taskSelect.value?.hourStart,
+                //     name: e.currentTarget.value,
+                //   } as ITask;
+                // }}
               />
             )}
           </Field>
@@ -438,14 +437,14 @@ export const TaskForm = ({
                 meta={meta}
                 label={t('shift.upsert.form.taskDescription')}
                 placeholder={t('shift.upsert.form.taskDescriptionPlaceholder')}
-              // value={taskSelect.value?.description}
-              // onChange={(e) => {
-              //   taskSelect.value = {
-              //     ...taskSelect.value,
-              //     // hourStart: taskSelect.value?.hourStart,
-              //     description: e.currentTarget.value,
-              //   } as ITask;
-              // }}
+                // value={taskSelect.value?.description}
+                // onChange={(e) => {
+                //   taskSelect.value = {
+                //     ...taskSelect.value,
+                //     // hourStart: taskSelect.value?.hourStart,
+                //     description: e.currentTarget.value,
+                //   } as ITask;
+                // }}
               />
             )}
           </Field>
@@ -461,15 +460,15 @@ export const TaskForm = ({
                 meta={meta}
                 label={t('shift.upsert.form.taskHourStart')}
                 placeholder={t('shift.upsert.form.taskHourStartPlaceholder')}
-              // value={taskSelect.value?.hourStart}
-              // onChange={(e) => {
-              //   taskSelect.value = {
-              //     ...taskSelect.value,
-              //     // name: taskSelect.value?.name,
-              //     // description: taskSelect.value?.description,
-              //     hourStart: e.currentTarget.value,
-              //   } as unknown as ITask;
-              // }}
+                // value={taskSelect.value?.hourStart}
+                // onChange={(e) => {
+                //   taskSelect.value = {
+                //     ...taskSelect.value,
+                //     // name: taskSelect.value?.name,
+                //     // description: taskSelect.value?.description,
+                //     hourStart: e.currentTarget.value,
+                //   } as unknown as ITask;
+                // }}
               />
             )}
           </Field>
@@ -541,7 +540,7 @@ export const TaskForm = ({
       header={headerContent}
       footer={footerContent}
     >
-      <div className="px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto">
+      <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto'>
         {selectedCells && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-3 justify-center'>
@@ -783,12 +782,14 @@ export const TaskForm = ({
                   key={`card-task-${task.id}`}
                   className='rounded-lg border border-gray-300 p-4 shadow-sm bg-white dark:bg-gray-900'
                 >
-                  <div className='font-semibold text-base mb-1'>{task.name}</div>
+                  <div className='font-semibold text-base mb-1'>
+                    {task.name}
+                  </div>
                   <div className='text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap'>
                     {task.description}
                   </div>
                 </div>
-              ))} 
+              ))}
             </div>
           </>
         )}
