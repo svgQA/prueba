@@ -17,6 +17,7 @@ export const columns_es = {
   h_end: 'Fin',
   h_report: 'Reporte',
   h_round: 'Ronda',
+  h_task: 'Tareas',
   h_identification: 'Identificador',
   h_email: 'Correo electrónico',
   h_company: 'Empresa',
@@ -46,8 +47,7 @@ export const columns_es = {
   h_duration: 'Duración',
   h_date: 'Fecha',
   h_time: 'Hora',
-  h_attachment: 'Adjunto',
-  h_task: 'Tareas',
+  h_attachment: 'Adjunto'
 };
 
 export const columns_en = {
@@ -69,6 +69,7 @@ export const columns_en = {
   h_end: 'End',
   h_report: 'Report',
   h_round: 'Round',
+  h_task: 'Tasks',
   h_identification: 'Identifier',
   h_email: 'Email',
   h_company: 'Company',
@@ -98,6 +99,5 @@ export const columns_en = {
   h_duration: 'Duration',
   h_date: 'Date',
   h_time: 'Time',
-  h_attachment: 'Attachment',
-  h_task: 'Tasks',
+  h_attachment: 'Attachment'
 };

@@ -15,6 +15,9 @@ import { PanicService } from '@/services/memo/panic';
 import { useUserStore } from '@/store/slices';
 import NotificationBanner from '../notifications/notification.banner';
 import { useTranslation } from 'react-i18next';
+import { Avatar } from '../Avatar';
+import { useLocation } from 'wouter';
+// import { PAGES_LIST } from '@/utils/routing';
 
 const Panic = (_panic: IPanicProps) => {
   const allPanic = useSignal<IPanic[]>([]);
@@ -25,6 +28,7 @@ const Panic = (_panic: IPanicProps) => {
     closeBanner: () => void;
   }>(null);
   const { t } = useTranslation();
+  const [_, navigate] = useLocation();
 
   useEffect(() => {
     if (!selectedCompany) return;
@@ -65,6 +69,16 @@ const Panic = (_panic: IPanicProps) => {
     notificationBannerRef.current?.closeBanner();
   };
 
+  const handleRedirect = async (panicId: string, event: MouseEvent) => {
+    event.stopPropagation();
+    navigate('/');
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('go-to-panic-table', { detail: { id: panicId } }));
+      isOpen.value = false;
+    }, 500);
+    await handleChangeStatus(panicId);
+  };
+
   return (
     <div className='relative flex flex-row justify-center items-center gap-2'>
       <NotificationBanner
@@ -92,22 +106,38 @@ const Panic = (_panic: IPanicProps) => {
           allPanic.value.map((panic: IPanic) => (
             <div
               key={panic.id}
-              className='px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-between gap-2'
-              onClick={() => handleChangeStatus(panic.id)}
+              className='px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-between gap-1'
             >
-              <div className='flex items-center gap-2'>
-                <span className='text-sm text-gray-700 dark:text-gray-200'>
-                  {t('panic_button')}
-                </span>
-              </div>
-
               {panic.user && (
+                <div className='flex flex-col items-center gap-2'>
+                  <Avatar
+                    name={panic.user?.name + ' ' + panic.user?.surname}
+                    src={panic.user?.image}
+                    size='sm'
+                    square
+                  />
+                  <span className='text-xs text-gray-700 dark:text-gray-200'>{panic.user?.name + ' ' + panic.user?.surname}</span>
+                </div>
+              )}
+              <span
+                className='text-sm item-center text-gray-700 dark:text-gray-200'
+                onClick={() => handleChangeStatus(panic.id)}
+              >
+                {t('panic_button')}
+              </span>
+
+              {/* {panic.user && (
                 <div className='flex items-center gap-2'>
                   <span className='text-sm text-gray-700 dark:text-gray-200'>
                     {panic.user?.name + ' ' + panic.user?.surname}
                   </span>
                 </div>
-              )}
+              )} */}
+
+              <span
+                className='vx-icon vx-icon-061 text-gray-400 hover:text-red-500 transition-colors'
+                onClick={(e) => handleRedirect(panic.id, e)}
+              />
             </div>
           ))
         ) : (

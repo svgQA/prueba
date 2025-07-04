@@ -6,6 +6,7 @@ import RoundInfo from './expandable/round.expandable';
 import ServiceInfo from './expandable/service.expandable ';
 import ShiftInfo from './expandable/shift.expandable';
 import ReportInfo from './expandable/report.expandable';
+import TaskInfo from './expandable/task.expandable';
 // import ReportInfo from './expandable/report.expandable';
 
 type Props = {
@@ -14,7 +15,10 @@ type Props = {
 };
 
 const getInfoContent = (type: string, shift: IShiftResponse) => {
-  const { service, employee, activityPct, roundPct, tasks, report } = shift;
+  const { service, employee, activityPct, roundPct, tasks, report, task } = shift;
+
+  console.log('tasks', task);
+
   switch (type) {
     case 'service':
       return <ServiceInfo service={service} shift={shift} />;
@@ -42,6 +46,10 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
     case 'report':
       return (
         <ReportInfo reports={report} onViewDetails={(r) => console.log(r)} />
+      );
+    case 'task':
+      return (
+        <TaskInfo shiftId={Number(shift.id)} tasks={task} />
       );
     case 'round':
       return (
