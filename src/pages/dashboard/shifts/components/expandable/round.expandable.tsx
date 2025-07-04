@@ -54,7 +54,11 @@ const RoundInfo = ({
             return (
               <div
                 key={`point-${index}-${shift}`}
-                className='flex flex-col border p-2 rounded-lg border-b-light-dark dark:border-b-dark-dark'
+                className='
+                flex flex-col border p-2 rounded-lg
+                border-gray-200 dark:border-b-dark-dark
+                bg-gray-50 dark:bg-b-dark text-gray-700 dark:text-gray-300
+                '
               >
                 <div className='flex flex-row justify-between gap-1'>
                   <Badge label={`Punto: ${point.point}`} status='info' />
@@ -66,7 +70,7 @@ const RoundInfo = ({
                     <span className='font-thin text-sm text-center'>
                       Escaneos
                     </span>
-                    <div className='bg-b-light-light dark:bg-b-dark-dark flex flex-col justify-center items-center px-2 rounded-md h-full'>
+                    <div className='flex flex-col justify-center items-center px-2 rounded-md h-full'>
                       <div className='text-green-300'>
                         <span className='vx-icon vx-icon-037' />
                         <strong className='text-2xl px-3'>

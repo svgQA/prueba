@@ -56,9 +56,12 @@ export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
   const [location] = useLocation();
-  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(null);
-  const [highlightedPanicMemoId, setHighlightedPanicMemoId] = useState<string | null>(null);
-
+  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(
+    null
+  );
+  const [highlightedPanicMemoId, setHighlightedPanicMemoId] = useState<
+    string | null
+  >(null);
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
@@ -102,10 +105,16 @@ export const MemosPage: FunctionComponent = () => {
       setHighlightedPanicMemoId(String(event.detail.id));
     };
 
-    window.addEventListener('go-to-panic-table', handleGoToPanicTable as EventListener);
+    window.addEventListener(
+      'go-to-panic-table',
+      handleGoToPanicTable as EventListener
+    );
 
     return () => {
-      window.removeEventListener('go-to-panic-table', handleGoToPanicTable as EventListener);
+      window.removeEventListener(
+        'go-to-panic-table',
+        handleGoToPanicTable as EventListener
+      );
     };
   }, []);
 
@@ -177,8 +186,11 @@ export const MemosPage: FunctionComponent = () => {
     if (responseMemos.getStatus()) {
       memos.value = responseMemos.getMany().map((memo: Memo) => ({
         ...memo,
-        priority: memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm', }),
+        priority:
+          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
+          format: 'DD/MM/YYYY HH:mm',
+        }),
       }));
       loading.value = false;
     }
@@ -202,8 +214,11 @@ export const MemosPage: FunctionComponent = () => {
     if (responseMemoPanic.getStatus()) {
       panic.value = responseMemoPanic.getMany().map((memo: Memo) => ({
         ...memo,
-        priority: memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm', }),
+        priority:
+          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
+          format: 'DD/MM/YYYY HH:mm',
+        }),
       }));
       loading.value = false;
     }
@@ -311,33 +326,34 @@ export const MemosPage: FunctionComponent = () => {
       padding={currentView.value === VIEW_NAME.TABLE}
     >
       {(currentView.value === VIEW_NAME.TABLE ||
-        currentView.value === VIEW_NAME.MAP || currentView.value === VIEW_NAME.PANIC) && (
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-            <CardData
-              title={t('memos.cards.totalToday')}
-              count={summary.value.total}
-              subtitle=''
-              color='t-dark'
-              icon='328' // 328
-            />
+        currentView.value === VIEW_NAME.MAP ||
+        currentView.value === VIEW_NAME.PANIC) && (
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+          <CardData
+            title={t('memos.cards.totalToday')}
+            count={summary.value.total}
+            subtitle=''
+            color='t-dark'
+            icon='328' // 328
+          />
 
-            <CardData
-              title={t('memos.cards.unresolved')}
-              count={calculatePercentage(summary.value.in_progress)}
-              subtitle=''
-              color='t-dark'
-              icon='311' // 311
-            />
+          <CardData
+            title={t('memos.cards.unresolved')}
+            count={calculatePercentage(summary.value.in_progress)}
+            subtitle=''
+            color='t-dark'
+            icon='311' // 311
+          />
 
-            <CardData
-              title={t('memos.cards.resolved')}
-              count={calculatePercentage(summary.value.completed)}
-              subtitle=''
-              color='t-dark'
-              icon='312' // 312
-            />
-          </div>
-        )}
+          <CardData
+            title={t('memos.cards.resolved')}
+            count={calculatePercentage(summary.value.completed)}
+            subtitle=''
+            color='t-dark'
+            icon='312' // 312
+          />
+        </div>
+      )}
 
       <div
         className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}
@@ -405,7 +421,9 @@ export const MemosPage: FunctionComponent = () => {
               history: false,
             }}
             rowClassName={(row: Memo) =>
-              row.panicUuid === highlightedPanicMemoId ? 'animate-highlight' : ''
+              row.panicUuid === highlightedPanicMemoId
+                ? 'animate-highlight'
+                : ''
             }
           />
         )}

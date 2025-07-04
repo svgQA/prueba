@@ -98,7 +98,7 @@ export const getColumns = (
             scheduledDate={rowData.start}
             actualDate={rowData.checkIn}
             type='start'
-          // showLocation
+            // showLocation
           />
         );
       },
@@ -117,7 +117,7 @@ export const getColumns = (
             scheduledDate={rowData.end}
             actualDate={rowData.checkOut}
             type='end'
-          // showLocation
+            // showLocation
           />
         );
       },
@@ -202,28 +202,6 @@ export const getColumns = (
       },
     },
     {
-      id: 'shift',
-      accessorKey: 'activitiesProgress',
-      clickable: true,
-      size: 50,
-      header: 'h_shift',
-      meta: { headerAlign: 'center' },
-      cell: (info: any) => {
-        const { activityPct } = info.row.original;
-        const progress = activityPct;
-
-        let progressColor = '#E05858';
-
-        if (progress >= 30 && progress < 70) {
-          progressColor = '#FFC772';
-        } else if (progress >= 70) {
-          progressColor = '#00BDD6';
-        }
-
-        return <Gauge progress={progress} color={progressColor} />;
-      },
-    },
-    {
       id: 'task',
       accessorKey: 'activitiesProgress',
       size: 50,
@@ -232,21 +210,21 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const taskData = info.row.original.task;
-    
+
         const tasks = Array.isArray(taskData) ? taskData : [];
-    
+
         const total = tasks.length;
         const completed = tasks.filter((t) => t.check === true).length;
         const progress = total > 0 ? (completed / total) * 100 : 0;
-    
+
         let progressColor = '#E05858'; // rojo
-    
+
         if (progress >= 30 && progress < 70) {
           progressColor = '#FFC772'; // amarillo
         } else if (progress >= 70) {
           progressColor = '#00BDD6'; // verde
         }
-    
+
         return (
           <div className='flex flex-col justify-center items-center'>
             <Gauge progress={progress} color={progressColor} />
@@ -302,39 +280,39 @@ export const getColumns = (
         const model = checkOut
           ? []
           : [
-            {
-              label: !checkIn ? 'check_in' : 'check_out',
-              icon: 'vox-icon vx-icon-312 text-primary',
-              keyName: 'check',
-              onClick: () => {
-                onClickAction({
-                  id: s_id,
-                  type: 'shift',
-                  action: !checkIn
-                    ? ROW_ACTIONS.CHECK_IN
-                    : ROW_ACTIONS.CHECK_OUT,
-                });
+              {
+                label: !checkIn ? 'check_in' : 'check_out',
+                icon: 'vox-icon vx-icon-312 text-primary',
+                keyName: 'check',
+                onClick: () => {
+                  onClickAction({
+                    id: s_id,
+                    type: 'shift',
+                    action: !checkIn
+                      ? ROW_ACTIONS.CHECK_IN
+                      : ROW_ACTIONS.CHECK_OUT,
+                  });
+                },
               },
-            },
-          ];
+            ];
 
         const uModel =
           checkIn || checkOut
             ? []
             : [
-              {
-                label: 'edit',
-                keyName: 'upsert',
-                icon: 'vox-icon vx-icon-123 text-primary',
-                onClick: () => {
-                  onClickAction({
-                    id: s_id,
-                    type: 'shift',
-                    action: ROW_ACTIONS.UPDATE,
-                  });
+                {
+                  label: 'edit',
+                  keyName: 'upsert',
+                  icon: 'vox-icon vx-icon-123 text-primary',
+                  onClick: () => {
+                    onClickAction({
+                      id: s_id,
+                      type: 'shift',
+                      action: ROW_ACTIONS.UPDATE,
+                    });
+                  },
                 },
-              },
-            ];
+              ];
 
         const actions: IDropdownAction[] = [
           ...uModel,
