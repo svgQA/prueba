@@ -117,19 +117,19 @@ export const TaskForm = ({
 
   const onSubmit = async (model: any, form: any) => {
     console.log("📤 Modelo recibido del formulario:", model);
-  
+
     const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
       schedules.value
     );
     console.log("📅 ¿Está dentro del horario permitido?:", isInSchedule);
-  
+
     if (!isInSchedule) {
       ToastManager.warning(t('shift.upsert.errorSchedule'));
       return;
     }
-  
+
     const {
       task,
       employeeId,
@@ -138,88 +138,88 @@ export const TaskForm = ({
       task_description,
       task_time,
     } = model;
-  
+
     const model_task = tasks.value.find(
       (_task: ITask) => _task.id === task?.value
     );
     console.log("🔍 Tarea seleccionada del formulario:", model_task);
-  
+
     delete model.task_name;
     delete model.task_description;
     delete model.task_time;
-  
+
     const selectedTask: ITask | null =
       model_task && !task_name
         ? {
-            id: model_task.id,
-            name: model_task.name,
-            description: model_task.description,
-            hourStart: model_task.hourStart,
-            type: model_task.type || 'GENERAL',
-            check: false,
-          }
+          id: model_task.id,
+          name: model_task.name,
+          description: model_task.description,
+          hourStart: model_task.hourStart,
+          type: model_task.type || 'GENERAL',
+          check: false,
+        }
         : null;
-  
+
     const manualTask: ITask | null =
       (!model_task || task_name) && task_name
         ? {
-            name: task_name,
-            description: task_description,
-            hourStart: task_time,
-            type: 'GENERAL',
-            check: false,
-          }
+          name: task_name,
+          description: task_description,
+          hourStart: task_time,
+          type: 'GENERAL',
+          check: false,
+        }
         : null;
-  
+
     const serviceTasks: ITask[] = tasksResponse?.length
       ? tasksResponse.map((t) => ({
-          id: t.id,
-          name: t.name,
-          description: t.description,
-          hourStart: t.hourStart,
-          type: t.type || 'GENERAL',
-          check: false,
-        }))
+        id: t.id,
+        name: t.name,
+        description: t.description,
+        hourStart: t.hourStart,
+        type: t.type || 'GENERAL',
+        check: false,
+      }))
       : [];
-  
+
     const allTasks: ITask[] = [
       ...serviceTasks,
       ...(selectedTask ? [selectedTask] : []),
       ...(manualTask ? [manualTask] : []),
     ];
-  
+
     console.log("📦 Tareas combinadas (task array):", allTasks);
-  
+
     const request_model: IShiftRequest = {
       ...model,
       employeeId: employeeId?.value,
       serviceId: serviceId?.value,
       task: allTasks,
     };
-  
+
     console.log("📤 Payload final a enviar:", request_model);
-  
+
     const request = taskSelected?.id
       ? await ShiftService.updateActivity(request_model, taskSelected.id)
       : await ShiftService.createActivity(request_model);
-  
+
     console.log("✅ Respuesta del servicio:", request);
-  
+
     if (!request.getStatus()) {
       console.warn("❌ Error en el servicio: getStatus() retornó falso");
       return;
     }
-  
+
     const message = taskSelected?.id
       ? t('shifts.upsert.successEdit')
       : t('shifts.upsert.successCreate');
-  
+
     form.reset();
     ToastManager.success(message);
     onClose?.();
     posSave?.();
   };
-  
+
 
   const getServices = useCallback(async () => {
     const request = await ServiceService.getServicesSimpleList();
@@ -541,7 +541,7 @@ export const TaskForm = ({
       header={headerContent}
       footer={footerContent}
     >
-      <div className='px-4 py-6 flex flex-col w-full'>
+      <div className="px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto">
         {selectedCells && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-3 justify-center'>
@@ -772,12 +772,12 @@ export const TaskForm = ({
           )}
         />
 
-        {/* {tasksResponse?.length > 0 && (
+        {tasksResponse?.length > 0 && (
           <>
             <div className='w-full text-center mt-4  mb-2 font-semibold text-lg'>
               Tareas asignadas al servicio seleccionado:
             </div>
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-60 overflow-y-auto vox-scroll-design px-4'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 vox-scroll-design px-4'>
               {tasksResponse.map((task) => (
                 <div
                   key={`card-task-${task.id}`}
@@ -788,10 +788,10 @@ export const TaskForm = ({
                     {task.description}
                   </div>
                 </div>
-              ))}
+              ))} 
             </div>
           </>
-        )} */}
+        )}
         <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
           {userSelected?.tasks.map(renderTaskCard)}
         </div>
