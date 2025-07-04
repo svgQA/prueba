@@ -169,6 +169,7 @@ export interface IShiftResponse {
   break: IBreak[];
   report: IReport[];
   bane;
+  task: TaskItemShift[];
   checkIn: {
     time: string;
     location: {
@@ -219,4 +220,11 @@ export interface ITask {
   status: string;
   description: string;
   formId: number;
+}
+
+export interface TaskItemShift {
+  id: number;
+  description: string;
+  hourStart: string;
+  check: boolean;
 }
