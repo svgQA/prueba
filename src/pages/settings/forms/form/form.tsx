@@ -76,8 +76,7 @@ export const FormSettingPage = () => {
     appendHistory(menu);
     navigate(menu.to);
      **/
-    navigate(PAGES_LIST_ROUTER.dashboard.form);
-    closeSettingModal();
+    closeSettingModal('/forms');
   };
 
   const redirect = (model?: IFormat) => {
