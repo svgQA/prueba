@@ -16,6 +16,8 @@ import { useUserStore } from '@/store/slices';
 import NotificationBanner from '../notifications/notification.banner';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '../Avatar';
+import { useLocation } from 'wouter';
+import { PAGES_LIST } from '@/utils/routing';
 
 const Panic = (_panic: IPanicProps) => {
   const allPanic = useSignal<IPanic[]>([]);
@@ -26,6 +28,7 @@ const Panic = (_panic: IPanicProps) => {
     closeBanner: () => void;
   }>(null);
   const { t } = useTranslation();
+  const [_, navigate] = useLocation();
 
   useEffect(() => {
     if (!selectedCompany) return;
@@ -66,10 +69,14 @@ const Panic = (_panic: IPanicProps) => {
     notificationBannerRef.current?.closeBanner();
   };
 
-  const handleRedirect = (panicId: string, event: MouseEvent) => {
+  const handleRedirect = async (panicId: string, event: MouseEvent) => {
     event.stopPropagation();
-    handleChangeStatus(panicId);
-
+    navigate('/');
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('go-to-panic-table', { detail: { id: panicId } }));
+      isOpen.value = false;
+    }, 500);
+    await handleChangeStatus(panicId);
   };
 
   return (

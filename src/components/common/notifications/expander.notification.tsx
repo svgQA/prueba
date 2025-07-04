@@ -12,9 +12,9 @@ const ExpanderNotification = ({
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Sincroniza el estado interno solo cuando isOpen pasa a true
+  // Sincroniza el estado interno con la prop isOpen
   useEffect(() => {
-    if (isOpen) setOpen(true);
+    setOpen(isOpen);
   }, [isOpen]);
 
   useEffect(() => {
