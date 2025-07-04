@@ -15,7 +15,8 @@ type Props = {
 };
 
 const getInfoContent = (type: string, shift: IShiftResponse) => {
-  const { service, employee, activityPct, roundPct, tasks, report, task } = shift;
+  const { service, employee, activityPct, roundPct, tasks, report, task } =
+    shift;
 
   console.log('tasks', task);
 
@@ -48,9 +49,7 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
         <ReportInfo reports={report} onViewDetails={(r) => console.log(r)} />
       );
     case 'task':
-      return (
-        <TaskInfo shiftId={Number(shift.id)} tasks={task} />
-      );
+      return <TaskInfo shiftId={Number(shift.id)} tasks={task} />;
     case 'round':
       return (
         <RoundInfo

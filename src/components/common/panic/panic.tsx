@@ -73,7 +73,9 @@ const Panic = (_panic: IPanicProps) => {
     event.stopPropagation();
     navigate('/');
     setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('go-to-panic-table', { detail: { id: panicId } }));
+      window.dispatchEvent(
+        new CustomEvent('go-to-panic-table', { detail: { id: panicId } })
+      );
       isOpen.value = false;
     }, 500);
     await handleChangeStatus(panicId);
@@ -116,7 +118,9 @@ const Panic = (_panic: IPanicProps) => {
                     size='sm'
                     square
                   />
-                  <span className='text-xs text-gray-700 dark:text-gray-200'>{panic.user?.name + ' ' + panic.user?.surname}</span>
+                  <span className='text-xs text-gray-700 dark:text-gray-200'>
+                    {panic.user?.name + ' ' + panic.user?.surname}
+                  </span>
                 </div>
               )}
               <span

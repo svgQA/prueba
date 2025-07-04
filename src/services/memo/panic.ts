@@ -34,7 +34,9 @@ export class PanicService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async get_all_memo_panic(params: IPagination = { page: 1, items: 400 }) {
+  static async get_all_memo_panic(
+    params: IPagination = { page: 1, items: 400 }
+  ) {
     const model: IMakeRequest = {
       url: ['panic', 'memo', 'table'],
       params: params as any,
