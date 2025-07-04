@@ -1,7 +1,4 @@
-import { Input } from '@/components/common/input/input';
-import { Select } from '@/components/common/select/select';
-import { Field, Form } from 'react-final-form';
-import { FieldArray } from 'react-final-form-arrays';
+import { Form } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { useSignal } from '@preact/signals';
 import { FormData, IShiftRequest, ITask } from '../interface';
@@ -9,23 +6,22 @@ import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { ServiceService, ShiftService, TaskService } from '@/services';
-import { Chip } from '@/components/common/chip/chip';
 import { Task, User } from '@/components/compose/gantt/types/public-types';
 import { Badge } from '@/components/common/badge/badge';
 import { IOption } from '@/components/common/multi/interface';
-import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
-import { DateField } from '@/components/compose/forms';
 import { useUserStore } from '@/store/slices';
 
 import {
-  convertBlocksToCells,
   getSelectedHoursByDay,
+  convertBlocksToCells,
 } from '@/pages/settings/shifts/schedule/utils';
 import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
 import dayjs from 'dayjs';
+import { ShiftFormContent } from './shift.form';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 type TimeBlock = {
   start: number;
@@ -47,10 +43,6 @@ type ScheduleItem = {
   schedule: Schedule;
 };
 
-// import dayjs from 'dayjs';
-// import { getSelectedHoursByDay } from '@/pages/settings/shifts/schedule/utils';
-// import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
-
 interface ITaskFormProps {
   closed?: boolean;
   onClose?: () => void;
@@ -65,6 +57,19 @@ interface ITaskFormProps {
 
 const START_HOUR = 0;
 const END_HOUR = 24;
+const hours = Array.from(
+  { length: END_HOUR - START_HOUR + 1 },
+  (_, i) => START_HOUR + i
+);
+const daysOfWeek = [
+  'Domingo',
+  'Lunes',
+  'Martes',
+  'Miércoles',
+  'Jueves',
+  'Viernes',
+  'Sábado',
+];
 
 export const TaskForm = ({
   closed,
@@ -79,42 +84,22 @@ export const TaskForm = ({
 }: ITaskFormProps) => {
   const { t } = useTranslation();
 
-  const daysOfWeek = [
-    'Domingo',
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-  ];
-
-  const hours = Array.from(
-    { length: END_HOUR - START_HOUR + 1 },
-    (_, i) => START_HOUR + i
-  );
-
-  const schedules = useSignal<any[]>([]);
-  const inputKeywords = useSignal('');
   const [selectedCells, setSelectedCells] = useState<any>([]);
-  // const services = useSignal<any[]>([]);
   const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
+  const schedules = useSignal<any[]>([]);
+  const [tasksResponse, setTasksResponse] = useState<ITask[]>([]);
   const tasks = useSignal<ITask[]>([]);
-  // const taskSelect = useSignal<ITask>();
-  const isNewTask = useSignal(false);
+  const relatedShifts = useSignal<any[]>([]);
+
   const { selectedCompany } = useUserStore();
-  // const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>();
-  // const tasks = useSignal<ITask[]>([]);
-
-  // const setTasks = (serviceId: number) => {
-  //   // const service = services.value.find((service) => service.id === serviceId);
-  //   // tasks.value = service?.task || [];
-  // };
-
-  // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
-
   const onSubmit = async (model: any, form: any) => {
+    if (relatedShifts.value.length > 0) {
+      ToastManager.error(
+        'No se puede crear el turno porque existen otros en el mismo rango'
+      );
+      return;
+    }
     const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
@@ -143,44 +128,66 @@ export const TaskForm = ({
     delete model.task_description;
     delete model.task_time;
 
-    // TODO: Hacer la validaciòn de los horarios
-    // const fecha_start = dayjs(model.start);
-    // const start_day = fecha_start.format('dddd');
-    // const fecha_end = dayjs(model.end);
-    // const start_end = fecha_end.format('dddd');
-
-    // TODO: Agregar lo de formulario
-    const task_output =
+    const selectedTask: ITask | null =
       model_task && !task_name
         ? {
             id: model_task.id,
             name: model_task.name,
             description: model_task.description,
             hourStart: model_task.hourStart,
-            type: model_task.type,
+            type: model_task.type || 'GENERAL',
+            check: false,
           }
-        : {
+        : null;
+
+    const manualTask: ITask | null =
+      (!model_task || task_name) && task_name
+        ? {
             name: task_name,
             description: task_description,
             hourStart: task_time,
             type: 'GENERAL',
-          };
+            check: false,
+          }
+        : null;
+
+    const serviceTasks: ITask[] = tasksResponse?.length
+      ? tasksResponse.map((t) => ({
+          id: t.id,
+          name: t.name,
+          description: t.description,
+          hourStart: t.hourStart,
+          type: t.type || 'GENERAL',
+          check: false,
+        }))
+      : [];
+
+    const allTasks: ITask[] = [
+      ...serviceTasks,
+      ...(selectedTask ? [selectedTask] : []),
+      ...(manualTask ? [manualTask] : []),
+    ];
 
     const request_model: IShiftRequest = {
       ...model,
       employeeId: employeeId?.value,
       serviceId: serviceId?.value,
-      task: task_output,
+      task: allTasks,
     };
 
     const request = taskSelected?.id
       ? await ShiftService.updateActivity(request_model, taskSelected.id)
       : await ShiftService.createActivity(request_model);
 
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) {
+      ToastManager.error('No se puede realizar la acciòn');
+      return;
+    }
+
     const message = taskSelected?.id
       ? t('shifts.upsert.successEdit')
       : t('shifts.upsert.successCreate');
+
     form.reset();
     ToastManager.success(message);
     onClose?.();
@@ -201,32 +208,11 @@ export const TaskForm = ({
     }
   }, []);
 
-  // const getUsers = useCallback(async () => {
-  //   const request = await UserService.get_all_employee();
-  //   if (request.getStatus()) {
-  //     users.value = request.getMany().map((user: any) => ({
-  //       ...user,
-  //       fullname: `${user.name} ${user.surname}`,
-  //     }));
-  //   }
-  // }, []);
-
   useEffect(() => {
     if (selectedCompany) {
       Promise.all([getServices(), getTasks()]);
     }
   }, [selectedCompany, location]);
-
-  const required = useCallback(
-    (value: any) => (value ? undefined : t('shifts.upsert.required')),
-    []
-  );
-
-  const preventKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-    }
-  }, []);
 
   const footerContent = useMemo(
     () => (
@@ -365,90 +351,51 @@ export const TaskForm = ({
     });
   }, [userSelected, taskSelected, timeBeforeSelected]);
 
-  const renderNewTask = useCallback(() => {
-    return (
-      <div className='col-span-2 mt-4 border-t pt-3 border-gray-200 dark:border-gray-700'>
-        <h3 className='text-lg font-medium mb-4'>
-          {t('shift.upsert.newTask')}
-        </h3>
-        <div className='grid grid-cols-2 gap-4'>
-          <Field<string> name='task_name' validate={required}>
-            {({ input, meta }) => (
-              <Input
-                {...input}
-                id='input-task-name'
-                // name='input-task-name'
-                type='text'
-                meta={meta}
-                label={t('shift.upsert.form.taskName')}
-                placeholder={t('shift.upsert.form.taskNamePlaceholder')}
-                // value={taskSelect.value?.name}
-                // onChange={(e) => c
-                //   taskSelect.value = {
-                //     ...taskSelect.value,
-                //     // hourStart: taskSelect.value?.hourStart,
-                //     name: e.currentTarget.value,
-                //   } as ITask;
-                // }}
-              />
-            )}
-          </Field>
+  const isStartAndEndInSchedules = (
+    startDateStr: string,
+    endDateStr: string,
+    schedules: ScheduleItem[]
+  ): boolean => {
+    const start = dayjs.utc(startDateStr);
+    const end = dayjs.utc(endDateStr);
 
-          <Field<string> name='task_description' validate={required}>
-            {({ input, meta }) => (
-              <Input
-                {...input}
-                id='input-task-description'
-                // name='input-task-description'
-                type='text'
-                meta={meta}
-                label={t('shift.upsert.form.taskDescription')}
-                placeholder={t('shift.upsert.form.taskDescriptionPlaceholder')}
-                // value={taskSelect.value?.description}
-                // onChange={(e) => {
-                //   taskSelect.value = {
-                //     ...taskSelect.value,
-                //     // hourStart: taskSelect.value?.hourStart,
-                //     description: e.currentTarget.value,
-                //   } as ITask;
-                // }}
-              />
-            )}
-          </Field>
-        </div>
-        <div className='grid grid-cols-2'>
-          <Field<string> name='task_time' validate={required}>
-            {({ input, meta }) => (
-              <Input
-                {...input}
-                id='input-task-hour-start'
-                // name='input-task-hour-start'
-                type='time'
-                meta={meta}
-                label={t('shift.upsert.form.taskHourStart')}
-                placeholder={t('shift.upsert.form.taskHourStartPlaceholder')}
-                // value={taskSelect.value?.hourStart}
-                // onChange={(e) => {
-                //   taskSelect.value = {
-                //     ...taskSelect.value,
-                //     // name: taskSelect.value?.name,
-                //     // description: taskSelect.value?.description,
-                //     hourStart: e.currentTarget.value,
-                //   } as unknown as ITask;
-                // }}
-              />
-            )}
-          </Field>
-        </div>
-      </div>
-    );
-  }, []);
+    return schedules.some(({ schedule }) => {
+      const checkTime = (date: dayjs.Dayjs) => {
+        const dayIndex = date.day();
+        const dayName = daysOfWeek[dayIndex];
+
+        if (!schedule.daysAllowed.includes(dayName)) return false;
+
+        const scheduleDay = schedule.days.find((d) => d.dayIndex === dayIndex);
+        if (!scheduleDay) return false;
+
+        const hourDecimal = date.hour() + date.minute() / 60;
+        return scheduleDay.blocks.some(
+          (block) => hourDecimal >= block.start && hourDecimal <= block.end
+        );
+      };
+
+      return checkTime(start) && checkTime(end);
+    });
+  };
+
+  const onChangeShift = async (id: number, start: string, end: string) => {
+    const response = await ShiftService.get_related({
+      id,
+      start: DateUtils.dateToBackend(start),
+      end: DateUtils.dateToBackend(end),
+    });
+    if (!response.getStatus()) return;
+    const outputs = response.getMany();
+    relatedShifts.value = outputs;
+  };
 
   const onChangeService = async (id: number) => {
     const response = await ServiceService.getServiceById(String(id));
-    console.log('response', response);
     if (!response.getStatus()) return;
     const model = response.getOne();
+    console.log('DATA: ', model);
+    setTasksResponse(model.tasks || []);
     schedules.value = model?.schedules || [];
     const schedule = model?.schedules[0]?.schedule;
     if (!schedule) return;
@@ -465,36 +412,14 @@ export const TaskForm = ({
     setSelectedCells(convertBlocksToCells(days));
   };
 
-  const isStartAndEndInSchedules = (
-    startDateStr: string,
-    endDateStr: string,
-    schedules: ScheduleItem[]
-  ): boolean => {
-    const start = dayjs.utc(startDateStr);
-    const end = dayjs.utc(endDateStr);
-
-    return schedules.some(({ schedule }) => {
-      const checkTime = (date: dayjs.Dayjs) => {
-        const dayIndex = date.day();
-        console.log('dayIndex', dayIndex);
-        const dayName = daysOfWeek[dayIndex];
-
-        if (!schedule.daysAllowed.includes(dayName)) return false;
-
-        const scheduleDay = schedule.days.find((d) => d.dayIndex === dayIndex);
-        if (!scheduleDay) return false;
-
-        const hourDecimal = date.hour() + date.minute() / 60;
-
-        // Ajuste: usamos <= en lugar de <
-        return scheduleDay.blocks.some(
-          (block) => hourDecimal >= block.start && hourDecimal <= block.end
-        );
-      };
-
-      return checkTime(start) && checkTime(end);
-    });
+  const cleanServiceSelected = () => {
+    setSelectedCells([]);
+    setTasksResponse([]);
   };
+
+  // const cleanRelatedShift = () => {
+  //   relatedShifts.value = [];
+  // };
 
   return (
     <Modal
@@ -506,15 +431,51 @@ export const TaskForm = ({
       header={headerContent}
       footer={footerContent}
     >
-      <div className='px-4 py-6 flex flex-col w-full'>
+      <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
         {selectedCells && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
-            <ul className='flex flex-wrap gap-3 justify-center'>
+            <ul className='flex flex-wrap gap-1 justify-center'>
               {getSelectedHoursByDay(daysOfWeek, hours, selectedCells).map(
                 (daySelection) => (
                   <DataSchedule daySelection={daySelection} />
                 )
               )}
+            </ul>
+          </div>
+        )}
+        {relatedShifts.value.length > 0 && (
+          <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
+            <ul className='flex flex-wrap gap-1 justify-center'>
+              {relatedShifts.value.map((shift) => (
+                <li
+                  key={shift.id}
+                  className='w-52 text-xs p-2 rounded-md border bg-b-light-dark dark:bg-b-dark-dark  border-red-500 min-w-[150px]'
+                >
+                  <div className='flex flex-row justify-between items-center'>
+                    <TextEllipsis
+                      text={shift?.service?.name}
+                      maxWidth='100px'
+                    ></TextEllipsis>
+                    <span className='rounded-full h-3 w-3 bg-primary'></span>
+                  </div>
+                  <div className='flex flex-row justify-between'>
+                    <strong>Start: </strong>
+                    <p>
+                      {DateUtils.dateToFrontend(shift.start, {
+                        time: true,
+                        mode: '12',
+                      })}
+                    </p>
+                  </div>
+                  <div className='flex flex-row justify-between'>
+                    <strong>end: </strong>
+                    {DateUtils.dateToFrontend(shift.end, {
+                      time: true,
+                      mode: '12',
+                    })}
+                  </div>
+                </li>
+              ))}
             </ul>
           </div>
         )}
@@ -524,221 +485,42 @@ export const TaskForm = ({
           mutators={{
             ...arrayMutators,
           }}
-          render={({ handleSubmit, values }) => (
-            <form
-              onSubmit={handleSubmit}
-              className='space-y-6'
-              id='form-shift-update'
-              onKeyDown={preventKeyDown}
-            >
-              <div className='grid grid-cols-2 gap-3 z-50 grid-cols-en'>
-                <div class='col-span-1'>
-                  <Field<IOption> name='employeeId' validate={required}>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        name='employeeId'
-                        id='select-employeeId'
-                        label='Empleado'
-                        options={users || []}
-                        menuPortalTarget={document.body}
-                        placeholder={t(
-                          'shifts.upsert.form.employeePlaceholder'
-                        )}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field<IOption> name='serviceId' validate={required}>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        name='serviceId'
-                        id='select-service'
-                        placeholder={t('shifts.upsert.form.servicePlaceholder')}
-                        label={t('shifts.upsert.form.service')}
-                        options={services.value}
-                        menuPortalTarget={document.body}
-                        onChange={(e) => {
-                          if (e?.value) {
-                            const id = Number(e.value);
-                            onChangeService(id);
-                          }
-                          if (!e) {
-                            setSelectedCells([]);
-                          }
-                          input.onChange(e);
-                        }}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div class='col-span-1'>
-                  <DateField
-                    name='start'
-                    label={t('shifts.upsert.form.startDate')}
-                    validate={required}
-                  />
-                </div>
-
-                <div class='col-span-1'>
-                  <DateField
-                    name='end'
-                    label={t('shifts.upsert.form.endDate')}
-                    validate={required}
-                  />
-                </div>
-
-                {/*
-                <div class='col-span-1'>
-                  <Field<string> name='externalId'>
-                    {({ input }) => (
-                      <Input
-                        {...input}
-                        id='input-external-id'
-                        name='input-external-id'
-                        type='text'
-                        label={t('shifts.upsert.form.externalCode')}
-                      />
-                    )}
-                  </Field>
-                </div>
-                */}
-                <div class='col-span-1'>
-                  <Field<string> name='type' validate={required}>
-                    {({ input, meta }) => (
-                      <Select
-                        {...input}
-                        meta={meta}
-                        id='select-type'
-                        name='select-type'
-                        placeholder={t('shifts.upsert.form.typePlaceholder')}
-                        label={t('shifts.upsert.form.type')}
-                        icon='252'
-                        options={[
-                          {
-                            value: 'EXTERNAL',
-                            label: t('shifts.upsert.form.typeOptions.external'),
-                          },
-                          {
-                            value: 'INTERNAL',
-                            label: t('shifts.upsert.form.typeOptions.internal'),
-                          },
-                        ]}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div class='col-span-1'>
-                  <Field
-                    name='timeBefore'
-                    parse={(value) => Number(value) || undefined}
-                  >
-                    {({ input }) => (
-                      <Input
-                        {...input}
-                        id='input-time-before'
-                        type='number'
-                        label={t('shifts.upsert.form.timeBefore')}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div class='col-span-2'>
-                  <FieldArray<string> name='keywords'>
-                    {({ fields }) => {
-                      const appendElement = () => {
-                        if (inputKeywords.value.trim() === '') return;
-                        fields.push(inputKeywords.value);
-                        inputKeywords.value = '';
-                      };
-                      return (
-                        <div className='flex flex-col'>
-                          <div className='flex items-center rounded-md'>
-                            <Input
-                              id='input-keywords'
-                              name='input-keywords'
-                              value={inputKeywords.value}
-                              type='keywords'
-                              onChange={(e) =>
-                                (inputKeywords.value = e.currentTarget.value)
-                              }
-                              placeholder={t(
-                                'shifts.upsert.form.keywordPlaceholder'
-                              )}
-                              button
-                              label={t('shifts.upsert.form.keywords')}
-                              buttonIcon='044'
-                              onKeyUp={appendElement}
-                              onClick={appendElement}
-                            />
-                          </div>
-                          <div className='flex flex-wrap gap-2 mt-2'>
-                            {values.keywords?.map(
-                              (keyword: string, index: number) => (
-                                <Chip
-                                  key={`chip-shift-word-${index}`}
-                                  label={keyword}
-                                  onDelete={() => fields.remove(index)}
-                                  width='lg'
-                                />
-                              )
-                            )}
-                          </div>
-                        </div>
-                      );
-                    }}
-                  </FieldArray>
-                </div>
-
-                <div class='col-span-2 flex flex-row justify-between items-end'>
-                  <Field<IOption> name='task'>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        id='select-task'
-                        placeholder={t('shift.upsert.form.taskPlaceholder')}
-                        label={t('shift.upsert.form.task')}
-                        disabled={isNewTask.value}
-                        options={[
-                          ...tasks.value.map((e: any) => ({
-                            value: e.id,
-                            label: e.description,
-                          })),
-                        ]}
-                        // onChange={(e: any) => {
-                        //   taskSelect.value = tasks.value.find(
-                        //     (task: any) => task.id === e.value
-                        //   ) as unknown as ITask;
-                        // }}
-                        menuPortalTarget={document.body}
-                      />
-                    )}
-                  </Field>
-                  <div className='py-1.5 mx-3'>
-                    <Button
-                      name='btn-create-task'
-                      icon={isNewTask.value ? '124' : '123'}
-                      square
-                      onClick={() => (isNewTask.value = !isNewTask.value)}
-                    />
-                  </div>
-                </div>
-
-                {isNewTask.value && renderNewTask()}
-              </div>
-            </form>
+          render={(formProps) => (
+            <ShiftFormContent
+              {...formProps}
+              onChangeShift={onChangeShift}
+              onChangeService={onChangeService}
+              users={users}
+              services={services.value}
+              cleanServiceSelected={cleanServiceSelected}
+              tasks={tasks}
+            />
           )}
         />
-        <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
-          {userSelected?.tasks.map(renderTaskCard)}
-        </div>
+
+        {tasksResponse?.length > 0 && (
+          <div className='mt-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
+            <ul className='flex flex-wrap gap-1 justify-center'>
+              {tasksResponse.map((task) => (
+                <li
+                  key={`card-task-${task.id}`}
+                  className='w-52 text-xs p-2 rounded-md  bg-b-light-dark dark:bg-b-dark-dark min-w-[150px]'
+                >
+                  <div className='font-semibold text-primary mb-1'>
+                    {task.name}
+                  </div>
+                  <TextEllipsis text={task.description} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {userSelected && userSelected.tasks && (
+          <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
+            {userSelected?.tasks.map(renderTaskCard)}
+          </div>
+        )}
       </div>
     </Modal>
   );

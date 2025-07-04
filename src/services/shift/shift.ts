@@ -17,6 +17,12 @@ export type ShiftSummary = {
   completed: number;
 };
 
+export type RelatedShifts = {
+  id: number;
+  start: string | Date;
+  end: string | Date;
+};
+
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';
   static async get_all(params: IPagination = { page: 1, items: 400 }) {
@@ -25,6 +31,15 @@ export class ShiftService extends BaseService {
       params: params as any,
     };
     return await super.make_request<IShiftResponse>(this.name, model);
+  }
+
+  static async get_related(data: RelatedShifts) {
+    const model: IMakeRequest = {
+      url: ['activity/user/related'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
   }
 
   static async get_shift(id: string | number) {

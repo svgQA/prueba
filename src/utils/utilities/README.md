@@ -52,13 +52,11 @@ const customFormat = DateUtils.dateToFrontend('2024-03-20T19:30:00.000Z', {
 ## 🎯 Reglas de Uso
 
 1. **SIEMPRE** usar `dateToBackend` para:
-
    - Enviar fechas al servidor
    - Guardar fechas en la base de datos
    - Comparar fechas en el backend
 
 2. **SIEMPRE** usar `dateToFrontend` para:
-
    - Mostrar fechas en la interfaz
    - Formatear fechas para el usuario
    - Mostrar horas en componentes
@@ -428,19 +426,16 @@ const formData = {
 ## 📝 Mejores Prácticas con Componentes
 
 1. **SIEMPRE** usar `DateField` para campos de fecha en formularios
-
    - Maneja automáticamente la conversión UTC
    - Proporciona validación consistente
    - Mantiene el formato correcto en el input
 
 2. **SIEMPRE** usar `FormattedDate` para mostrar fechas
-
    - Maneja automáticamente la zona horaria
    - Proporciona formatos consistentes
    - Facilita cambios globales de formato
 
 3. **SIEMPRE** usar `DateContrast` para comparar fechas
-
    - Maneja automáticamente las comparaciones UTC
    - Proporciona estados visuales consistentes
    - Incluye soporte para ubicaciones

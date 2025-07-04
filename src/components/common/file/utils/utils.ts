@@ -19,9 +19,27 @@ export const handleFileChangeWrapper = async (
   if (!files || !files[0]) return;
   const file = files[0];
 
+  await handleFileSaveWrapper(
+    file,
+    file.name,
+    file.type,
+    onChange,
+    area || 'form',
+    e
+  );
+};
+
+export const handleFileSaveWrapper = async (
+  file: any,
+  name: string,
+  type: any,
+  onChange: (dataset: any, images: IPresignedRequest) => any,
+  area?: AllowedAreaTypes,
+  e?: React.ChangeEvent<HTMLInputElement>
+) => {
   const model: IPresignedRequest = {
-    name: file.name,
-    type: file.type as
+    name: name,
+    type: type as
       | AllowedAudioTypes
       | AllowedImageTypes
       | AllowedVideoTypes
@@ -42,5 +60,18 @@ export const handleFileChangeWrapper = async (
       'Content-Type': file.type,
     },
   });
-  onChange(e.target.dataset, model);
+  onChange(
+    e && e.target instanceof HTMLInputElement ? e.target.dataset : undefined,
+    model
+  );
+};
+
+export const uploadFiles = async (file: any, url: string) => {
+  await fetch(url, {
+    method: 'PUT',
+    body: file,
+    headers: {
+      'Content-Type': file.type,
+    },
+  });
 };

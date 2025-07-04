@@ -25,6 +25,9 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { Switch } from '@/components/common/switch/switch';
 import { Ranking } from '@/components/common/ranking/ranking';
 import { responseValidation } from '@/pages/settings/forms/create/utils/validation';
+import { AudioRecorder } from '@/components/common/audio/Audio.Recorder';
+import { Signature } from '@/components/common/signature/signature';
+import { QrCode } from '@/components/common/qr/qrCode';
 
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
@@ -47,6 +50,7 @@ export const FormResponseSettingPage: FunctionComponent<
   const handleInputChange = (
     e: TargetedEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
+    console.log('handleInputChange', e);
     const model = handleChange(e);
     if (!model.page) return;
     updateResponse(
@@ -66,6 +70,8 @@ export const FormResponseSettingPage: FunctionComponent<
     if (element.invisible) return;
     const disabled =
       getResponseMode.value?.hold || element.disable || !element.assigned;
+    const required = element.required;
+
     switch (element.type) {
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
@@ -111,6 +117,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               error={element.value_error}
+              required={required}
             />
           </div>
         );
@@ -128,6 +135,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               error={element.value_error}
+              required={required}
             />
           </div>
         );
@@ -146,6 +154,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               error={element.value_error}
+              required={required}
             />
           </div>
         );
@@ -164,6 +173,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               error={element.value_error}
+              required={required}
             />
           </div>
         );
@@ -179,6 +189,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-page={page}
               data-section={section}
               disabled={disabled}
+              required={required}
             />
           </div>
         );
@@ -194,6 +205,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-page={page}
               data-section={section}
               disabled={disabled}
+              required={required}
             />
           </div>
         );
@@ -209,6 +221,8 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               accept='image/*'
               disabled={disabled}
+              area='form'
+              required={required}
             />
           </div>
         );
@@ -224,6 +238,8 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               accept=':not(image/*),.pdf,.doc,.docx,.txt,.xls,.xlsx,.csv'
               disabled={disabled}
+              area='form'
+              required={required}
             />
           </div>
         );
@@ -238,6 +254,7 @@ export const FormResponseSettingPage: FunctionComponent<
               disabled={disabled}
               data-page={page}
               data-section={section}
+              // required={required}
             />
           </div>
         );
@@ -267,6 +284,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               dataPage={page}
               dataSection={section}
+              // required={required}
             />
           </div>
         );
@@ -285,6 +303,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               data-page={page}
               data-section={section}
+              required={required}
             />
           </div>
         );
@@ -303,9 +322,60 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               data-page={page}
               data-section={section}
+              required={required}
             />
           </div>
         );
+
+      case ELEMENT_TYPE.AUDIO:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <AudioRecorder
+              name={element.id}
+              onChange={handleInputChange}
+              page={page}
+              value={element.value}
+              label={element.label}
+              data-section={section}
+              disabled={disabled}
+              area='form'
+              // required={required}
+            />
+          </div>
+        );
+
+      case ELEMENT_TYPE.SIGNATURE:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Signature
+              name={element.id}
+              onChange={handleInputChange}
+              data-page={page}
+              value={element.value}
+              label={element.label}
+              data-section={section}
+              disabled={disabled}
+              // required={required}
+            />
+          </div>
+        );
+
+      case ELEMENT_TYPE.QR:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <QrCode
+              name={element.id}
+              onChange={handleInputChange}
+              page={page}
+              value={element.value}
+              label={element.label}
+              data-section={section}
+              disabled={disabled}
+              // required={required}
+            />
+          </div>
+        );
+
       default:
         return (
           <div className='bg-b-light dark:bg-b-dark p-3 my-3'>
@@ -319,6 +389,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               data-page={page}
               data-section={section}
+              // required={required}
             />
           </div>
         );
@@ -356,6 +427,7 @@ export const FormResponseSettingPage: FunctionComponent<
 
   const saveResponse = async () => {
     if (!getResponse.value) return;
+    console.log('saveResponse', getResponse.value);
 
     // TODO: No borrar esta parte que es para guardar donde se puede dejar como se quiera
     // el formulario
@@ -432,27 +504,29 @@ export const FormResponseSettingPage: FunctionComponent<
             )}
           </div>
 
-          <div className='flex justify-between items-center'>
-            <Button
-              name='btn-response-prev'
-              type='button'
-              label='previus'
-              icon='003'
-              onClick={prevPage}
-            />
-            <span className='text-sm'>
-              Page {currentPage + 1} of {getResponse.value.pages.length}
-            </span>
-            <Button
-              name='btn-response-next'
-              type='button'
-              label='next'
-              icon='004'
-              end
-              disabled={currentPage === getResponse.value.pages.length - 1}
-              onClick={postPage}
-            />
-          </div>
+          {!(currentPage === getResponse.value.pages.length - 1) && (
+            <div className='flex justify-between items-center'>
+              <Button
+                name='btn-response-prev'
+                type='button'
+                label='previus'
+                icon='003'
+                onClick={prevPage}
+              />
+              <span className='text-sm'>
+                Page {currentPage + 1} of {getResponse.value.pages.length}
+              </span>
+              <Button
+                name='btn-response-next'
+                type='button'
+                label='next'
+                icon='004'
+                end
+                disabled={currentPage === getResponse.value.pages.length - 1}
+                onClick={postPage}
+              />
+            </div>
+          )}
         </div>
       )}
     </section>

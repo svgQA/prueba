@@ -144,19 +144,16 @@ ToastManager.warning('system.high_load');
 ## 📝 Mejores Prácticas
 
 1. **Mensajes**
-
    - Usar siempre claves de i18n en lugar de strings directos
    - Mantener mensajes concisos y claros
    - Usar el tipo de toast apropiado para cada situación
 
 2. **Errores**
-
    - Usar `ToastManager.error` con objetos VoxError para errores de API
    - Proporcionar mensajes de error específicos y útiles
    - Incluir detalles relevantes en el CustomToast
 
 3. **Frecuencia**
-
    - No sobrecargar al usuario con demasiados toasts
    - Agrupar mensajes relacionados cuando sea posible
    - Usar duraciones apropiadas según la importancia
@@ -168,13 +165,11 @@ ToastManager.warning('system.high_load');
 ## ⚠️ Consideraciones
 
 1. **Rendimiento**
-
    - Los toasts se limpian automáticamente
    - No acumular demasiados toasts simultáneos
    - Considerar la duración según la importancia del mensaje
 
 2. **Accesibilidad**
-
    - Los toasts son visibles y legibles en ambos temas
    - Incluir mensajes descriptivos para lectores de pantalla
    - Permitir interacción con el teclado

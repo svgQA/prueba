@@ -82,7 +82,7 @@ const showFiles = ({
         {visibleFiles.map((file) => (
           <div
             className='
-            border border-b-light-dark dark:border-b-dark-light py-2 relative max-h-14 bg-gray-200
+            border border-b-light-dark dark:border-b-dark-light py-4 w-full relative max-h-14 bg-gray-200
             dark:bg-gray-800/60 text-gray-700 dark:text-gray-200 font-bold overflow-hidden rounded-md
             flex flex-row justify-center items-center
             '
