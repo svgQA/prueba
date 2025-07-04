@@ -119,11 +119,17 @@ export const Signature = ({ name, onChange, value, label, disabled, ...props }: 
     const emitChange = (dataset: any, file: any) => {
         setResources(prev => [...prev, file]);
         const safeValue = Array.isArray(value) ? value : [];
+        let realDataset = dataset;
+
+        if ((dataset == null || dataset == undefined) && canvasRef.current) {
+            realDataset = { ...canvasRef.current.dataset };
+        }
+
         onChange?.({
             target: {
                 name: name,
                 type: 'file',
-                dataset: dataset,
+                dataset: realDataset,
                 value: [...safeValue, file],
             },
         });
