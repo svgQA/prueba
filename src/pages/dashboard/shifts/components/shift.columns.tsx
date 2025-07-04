@@ -206,7 +206,7 @@ export const getColumns = (
       accessorKey: 'activitiesProgress',
       clickable: true,
       size: 50,
-      header: 'h_task',
+      header: 'h_shift',
       meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const { activityPct } = info.row.original;
