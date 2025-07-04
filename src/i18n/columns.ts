@@ -47,6 +47,7 @@ export const columns_es = {
   h_date: 'Fecha',
   h_time: 'Hora',
   h_attachment: 'Adjunto',
+  h_task: 'Tareas',
 };
 
 export const columns_en = {
@@ -98,4 +99,5 @@ export const columns_en = {
   h_date: 'Date',
   h_time: 'Time',
   h_attachment: 'Attachment',
+  h_task: 'Tasks',
 };
