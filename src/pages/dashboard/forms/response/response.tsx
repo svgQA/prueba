@@ -464,7 +464,7 @@ export const FormResponseSettingPage: FunctionComponent<
   };
 
   return (
-    <section className='pt-5'>
+    <section className='pt-5 max-h-[72vh] overflow-auto vox-scroll-design'>
       {getResponse.value && (
         <div className='max-w-4xl mx-auto py-4 px-8 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
           <div className='w-full flex flex-col justify-between items-center'>

@@ -20,6 +20,8 @@ export const buttons_es = {
   previous: 'Anterior',
   finish: 'Finalizar',
   send: 'Enviar',
+  page: 'Página',
+  of: 'de',
 };
 
 export const buttons_en = {
@@ -44,4 +46,6 @@ export const buttons_en = {
   previous: 'Previous',
   finish: 'Finish',
   send: 'Send',
+  page: 'Page',
+  of: 'of',
 };
