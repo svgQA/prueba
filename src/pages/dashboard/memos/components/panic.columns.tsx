@@ -64,8 +64,8 @@ export const getColumnsPanic = (
         return { icon: '319', color: 'text-primary' };
       },
       cell: () => {
-        return <>{t('panic_button')}</>
-      }
+        return <>{t('panic_button')}</>;
+      },
     },
     {
       id: 'description',
@@ -76,11 +76,13 @@ export const getColumnsPanic = (
       meta: { headerAlign: 'center' },
       cell: (_info) => {
         // const description = info.getValue() as string;
-        return <TextEllipsis
-          text='El sistema registró una activación del botón de pánico.'
-          // text={description}
-          maxWidth='300px'
-        />;
+        return (
+          <TextEllipsis
+            text='El sistema registró una activación del botón de pánico.'
+            // text={description}
+            maxWidth='300px'
+          />
+        );
       },
     },
     {
