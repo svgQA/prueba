@@ -70,7 +70,7 @@ export const FormResponseSettingPage: FunctionComponent<
     if (element.invisible) return;
     const disabled =
       getResponseMode.value?.hold || element.disable || !element.assigned;
-      const required = element.required;
+    const required = element.required;
 
     switch (element.type) {
       case ELEMENT_TYPE.SECTION:
@@ -527,7 +527,6 @@ export const FormResponseSettingPage: FunctionComponent<
               />
             </div>
           )}
-
         </div>
       )}
     </section>

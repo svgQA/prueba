@@ -7,13 +7,14 @@ export const getStatusSettingModal = computed(() => showSettingsModal.value);
 export const getRedirectSettingModal = computed(() => redirectSettings.value);
 
 export const closeSettingModal = (redirect?: string) => {
-  showSettingsModal.value = false
+  showSettingsModal.value = false;
   redirectSettings.value = redirect;
-}
+};
 
 export const openSettingModal = () => {
   showSettingsModal.value = true;
   redirectSettings.value = undefined;
 };
 
-export const toggleSettingModal = () => (showSettingsModal.value = !showSettingsModal.value);
+export const toggleSettingModal = () =>
+  (showSettingsModal.value = !showSettingsModal.value);

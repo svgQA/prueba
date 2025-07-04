@@ -166,6 +166,7 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
                         longitude: item.longitude,
                       })}
                       viewBox={`0 0 512 512`}
+                      title='QR Code'
                     />
                   </div>
                   <div className='hidden print:block text-center mt-2'>

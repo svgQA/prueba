@@ -100,6 +100,7 @@ export const TaskForm = ({
   // const services = useSignal<any[]>([]);
   const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
+  const [tasksResponse, setTasksResponse] = useState<ITask[]>([]);
   const tasks = useSignal<ITask[]>([]);
   // const taskSelect = useSignal<ITask>();
   const isNewTask = useSignal(false);
@@ -115,11 +116,14 @@ export const TaskForm = ({
   // const [selectedEmployees, setSelectedEmployees] = useState<IOption[]>([]);
 
   const onSubmit = async (model: any, form: any) => {
+    console.log('📤 Modelo recibido del formulario:', model);
+
     const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
       schedules.value
     );
+    console.log('📅 ¿Está dentro del horario permitido?:', isInSchedule);
 
     if (!isInSchedule) {
       ToastManager.warning(t('shift.upsert.errorSchedule'));
@@ -138,49 +142,78 @@ export const TaskForm = ({
     const model_task = tasks.value.find(
       (_task: ITask) => _task.id === task?.value
     );
+    console.log('🔍 Tarea seleccionada del formulario:', model_task);
 
     delete model.task_name;
     delete model.task_description;
     delete model.task_time;
 
-    // TODO: Hacer la validaciòn de los horarios
-    // const fecha_start = dayjs(model.start);
-    // const start_day = fecha_start.format('dddd');
-    // const fecha_end = dayjs(model.end);
-    // const start_end = fecha_end.format('dddd');
-
-    // TODO: Agregar lo de formulario
-    const task_output =
+    const selectedTask: ITask | null =
       model_task && !task_name
         ? {
             id: model_task.id,
             name: model_task.name,
             description: model_task.description,
             hourStart: model_task.hourStart,
-            type: model_task.type,
+            type: model_task.type || 'GENERAL',
+            check: false,
           }
-        : {
+        : null;
+
+    const manualTask: ITask | null =
+      (!model_task || task_name) && task_name
+        ? {
             name: task_name,
             description: task_description,
             hourStart: task_time,
             type: 'GENERAL',
-          };
+            check: false,
+          }
+        : null;
+
+    const serviceTasks: ITask[] = tasksResponse?.length
+      ? tasksResponse.map((t) => ({
+          id: t.id,
+          name: t.name,
+          description: t.description,
+          hourStart: t.hourStart,
+          type: t.type || 'GENERAL',
+          check: false,
+        }))
+      : [];
+
+    const allTasks: ITask[] = [
+      ...serviceTasks,
+      ...(selectedTask ? [selectedTask] : []),
+      ...(manualTask ? [manualTask] : []),
+    ];
+
+    console.log('📦 Tareas combinadas (task array):', allTasks);
 
     const request_model: IShiftRequest = {
       ...model,
       employeeId: employeeId?.value,
       serviceId: serviceId?.value,
-      task: task_output,
+      task: allTasks,
     };
+
+    console.log('📤 Payload final a enviar:', request_model);
 
     const request = taskSelected?.id
       ? await ShiftService.updateActivity(request_model, taskSelected.id)
       : await ShiftService.createActivity(request_model);
 
-    if (!request.getStatus()) return;
+    console.log('✅ Respuesta del servicio:', request);
+
+    if (!request.getStatus()) {
+      console.warn('❌ Error en el servicio: getStatus() retornó falso');
+      return;
+    }
+
     const message = taskSelected?.id
       ? t('shifts.upsert.successEdit')
       : t('shifts.upsert.successCreate');
+
     form.reset();
     ToastManager.success(message);
     onClose?.();
@@ -446,9 +479,10 @@ export const TaskForm = ({
 
   const onChangeService = async (id: number) => {
     const response = await ServiceService.getServiceById(String(id));
-    console.log('response', response);
+
     if (!response.getStatus()) return;
     const model = response.getOne();
+    setTasksResponse(model.tasks || []);
     schedules.value = model?.schedules || [];
     const schedule = model?.schedules[0]?.schedule;
     if (!schedule) return;
@@ -506,7 +540,7 @@ export const TaskForm = ({
       header={headerContent}
       footer={footerContent}
     >
-      <div className='px-4 py-6 flex flex-col w-full'>
+      <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto'>
         {selectedCells && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-3 justify-center'>
@@ -736,6 +770,29 @@ export const TaskForm = ({
             </form>
           )}
         />
+
+        {tasksResponse?.length > 0 && (
+          <>
+            <div className='w-full text-center mt-4  mb-2 font-semibold text-lg'>
+              Tareas asignadas al servicio seleccionado:
+            </div>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 vox-scroll-design px-4'>
+              {tasksResponse.map((task) => (
+                <div
+                  key={`card-task-${task.id}`}
+                  className='rounded-lg border border-gray-300 p-4 shadow-sm bg-white dark:bg-gray-900'
+                >
+                  <div className='font-semibold text-base mb-1'>
+                    {task.name}
+                  </div>
+                  <div className='text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap'>
+                    {task.description}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
         <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
           {userSelected?.tasks.map(renderTaskCard)}
         </div>

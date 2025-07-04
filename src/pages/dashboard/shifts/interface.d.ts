@@ -37,4 +37,5 @@ export interface ITask {
   createdBy?: string;
   editedBy?: string;
   deletedBy?: string;
+  check?: boolean;
 }
