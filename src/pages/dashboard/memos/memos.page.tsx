@@ -298,7 +298,7 @@ export const MemosPage: FunctionComponent = () => {
       padding={currentView.value === VIEW_NAME.TABLE}
     >
       {(currentView.value === VIEW_NAME.TABLE ||
-        currentView.value === VIEW_NAME.MAP) && (
+        currentView.value === VIEW_NAME.MAP || currentView.value === VIEW_NAME.PANIC) && (
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
             <CardData
               title={t('memos.cards.totalToday')}
