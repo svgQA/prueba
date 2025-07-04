@@ -304,10 +304,10 @@ export const PAGES_LIST_ROUTER = {
           base: '/analytic',
           to: '/form/analytic',
         },
-        inspect: {
-          base: '/inspect',
-          to: '/form/inspect',
-        },
+        // inspect: {
+        //   base: '/inspect',
+        //   to: '/form/inspect',
+        // },
         response: {
           base: '/response',
           to: '/form/response',
