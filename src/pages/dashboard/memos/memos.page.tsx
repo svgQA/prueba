@@ -56,9 +56,9 @@ export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
   const [location] = useLocation();
-  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(
-    null
-  );
+  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(null);
+  const [highlightedPanicMemoId, setHighlightedPanicMemoId] = useState<string | null>(null);
+
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
@@ -95,6 +95,19 @@ export const MemosPage: FunctionComponent = () => {
       EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
     }
   }, [selectedCompany, location]);
+
+  useEffect(() => {
+    const handleGoToPanicTable = (event: CustomEvent) => {
+      currentView.value = VIEW_NAME.PANIC;
+      setHighlightedPanicMemoId(String(event.detail.id));
+    };
+
+    window.addEventListener('go-to-panic-table', handleGoToPanicTable as EventListener);
+
+    return () => {
+      window.removeEventListener('go-to-panic-table', handleGoToPanicTable as EventListener);
+    };
+  }, []);
 
   const selectedMemo = () => {
     // Add event listener for notification clicks
@@ -392,7 +405,7 @@ export const MemosPage: FunctionComponent = () => {
               history: false,
             }}
             rowClassName={(row: Memo) =>
-              row.id === highlightedMemoId ? 'animate-highlight' : ''
+              row.panicUuid === highlightedPanicMemoId ? 'animate-highlight' : ''
             }
           />
         )}
