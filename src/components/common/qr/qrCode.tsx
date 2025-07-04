@@ -1,13 +1,26 @@
 import { QrProps } from "./interface";
-// import QRCode from "react-qr-code";
-import { useRef, useState } from "preact/hooks";
+import QRCode from "react-qr-code";
+import { useRef, useState, useEffect } from "preact/hooks";
 import { Button } from "../button/button";
+import { Html5Qrcode } from "html5-qrcode";
 
 export const QrCode = ({ value, name, label, disabled, onChange }: QrProps) => {
     const [scannedValue, setScannedValue] = useState<string | null>(null);
     const [scanning, setScanning] = useState(false);
-    const videoRef = useRef<HTMLVideoElement>(null);
     const [error, setError] = useState<string | null>(null);
+    const [copied, setCopied] = useState(false);
+    const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
+    const qrRegionId = "qr-reader-region";
+
+    useEffect(() => {
+        // Cleanup on unmount
+        return () => {
+            if (html5QrCodeRef.current) {
+                try { html5QrCodeRef.current.stop(); } catch { }
+                try { html5QrCodeRef.current.clear(); } catch { }
+            }
+        };
+    }, []);
 
     const handleStartScan = async () => {
         if (!window.confirm('¿Deseas activar la cámara para escanear un código QR?')) {
@@ -16,71 +29,95 @@ export const QrCode = ({ value, name, label, disabled, onChange }: QrProps) => {
         setError(null);
         setScanning(true);
         setScannedValue(null);
+        setCopied(false);
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-            if (videoRef.current) {
-                videoRef.current.srcObject = stream;
-                videoRef.current.play();
-            }
-            // BarcodeDetector API
-            let barcodeDetector = null;
-            try {
-                barcodeDetector = window && (window as any).BarcodeDetector ? new (window as any).BarcodeDetector({ formats: ['qr_code'] }) : null;
-            } catch (err) {
-                barcodeDetector = null;
-            }
-            if (!barcodeDetector) {
-                console.warn('BarcodeDetector no está disponible en este navegador:', window.navigator.userAgent);
-                setError("Este navegador no soporta escaneo QR nativo. Intenta recargar la página, actualizar Chrome, Edge o Safari, o habilitar los flags experimentales de BarcodeDetector.");
+            if (!Html5Qrcode.getCameras) {
+                setError("No se pudo acceder a la cámara: API no soportada");
                 setScanning(false);
-                stream.getTracks().forEach((track: any) => track.stop());
                 return;
             }
-            const detect = async () => {
-                if (!videoRef.current) return;
-                const canvas = document.createElement('canvas');
-                canvas.width = videoRef.current.videoWidth;
-                canvas.height = videoRef.current.videoHeight;
-                const ctx = canvas.getContext('2d');
-                if (!ctx) return;
-                ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const barcodes = await barcodeDetector.detect(imageData);
-                if (barcodes.length > 0) {
-                    const code = barcodes[0].rawValue;
-                    setScannedValue(code);
+            const cameras = await Html5Qrcode.getCameras();
+            if (!cameras || cameras.length === 0) {
+                setError("No se encontró ninguna cámara disponible");
+                setScanning(false);
+                return;
+            }
+            const cameraId = cameras[0].id;
+            html5QrCodeRef.current = new Html5Qrcode(qrRegionId);
+            await html5QrCodeRef.current.start(
+                cameraId,
+                {
+                    fps: 10,
+                    qrbox: { width: 220, height: 220 },
+                },
+                (decodedText) => {
+                    setScannedValue(decodedText);
                     setScanning(false);
-                    stream.getTracks().forEach((track: any) => track.stop());
+                    if (html5QrCodeRef.current) {
+                        html5QrCodeRef.current.stop();
+                        html5QrCodeRef.current.clear();
+                    }
                     if (onChange) {
                         onChange({
                             target: {
                                 name,
-                                value: code,
+                                value: decodedText,
                             },
                         } as any);
                     }
-                    return;
+                },
+                (err) => {
+                    // Opcional: puedes mostrar errores de escaneo aquí
                 }
-                if (scanning) {
-                    requestAnimationFrame(detect);
-                }
-            };
-            requestAnimationFrame(detect);
-        } catch (e) {
-            setError("No se pudo acceder a la cámara");
+            );
+        } catch (e: any) {
+            setError("No se pudo acceder a la cámara: " + e.message);
             setScanning(false);
         }
     };
 
     const handleStopScan = () => {
         setScanning(false);
-        if (videoRef.current && videoRef.current.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            stream.getTracks().forEach((track) => track.stop());
+        if (html5QrCodeRef.current) {
+            try { html5QrCodeRef.current.stop(); } catch { }
+            try { html5QrCodeRef.current.clear(); } catch { }
         }
     };
 
-    const qrToShow = scannedValue || value;
+    const handleCopy = async () => {
+        if (scannedValue) {
+            try {
+                await navigator.clipboard.writeText(scannedValue);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            } catch (err) {
+                // Fallback para navegadores que no soportan clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = scannedValue;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            }
+        }
+    };
+
+    const isUrl = (text: string) => {
+        try {
+            new URL(text);
+            return true;
+        } catch {
+            return false;
+        }
+    };
+
+    const handleOpenUrl = () => {
+        if (scannedValue && isUrl(scannedValue)) {
+            window.open(scannedValue, '_blank');
+        }
+    };
 
     return (
         <div className='w-full h-full flex flex-col items-center'>
@@ -97,8 +134,8 @@ export const QrCode = ({ value, name, label, disabled, onChange }: QrProps) => {
             )}
             {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
             {scanning && (
-                <div className="mb-2">
-                    <video ref={videoRef} style={{ width: 220, height: 220, borderRadius: 8 }} />
+                <div className="mb-2 flex flex-col items-center">
+                    <div id={qrRegionId} style={{ width: 220, height: 220, borderRadius: 8, overflow: 'hidden' }} />
                     <Button
                         name="btn-response-qr-cancel"
                         type="button"
@@ -108,10 +145,44 @@ export const QrCode = ({ value, name, label, disabled, onChange }: QrProps) => {
                     />
                 </div>
             )}
-
-            {qrToShow && (
-                // <QRCode value={typeof qrToShow === 'string' ? qrToShow : JSON.stringify(qrToShow)} size={128} />
-                <div className='animate-wave1 rounded-full h-4 w-4 border-b-2 border-primary'></div>
+            {scannedValue && (
+                <div className="mt-4 p-4 border rounded-lg bg-white shadow-sm w-full max-w-sm">
+                    <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-bold text-green-600">✓ QR Detectado</h3>
+                        <div className="flex gap-2">
+                            <Button
+                                name="btn-copy-qr"
+                                type="button"
+                                className="px-2 py-1 bg-blue-500 text-white text-xs rounded"
+                                onClick={handleCopy}
+                                label={copied ? 'Copiado!' : 'Copiar'}
+                            />
+                            {isUrl(scannedValue) && (
+                                <Button
+                                    name="btn-open-url"
+                                    type="button"
+                                    className="px-2 py-1 bg-green-500 text-white text-xs rounded"
+                                    onClick={handleOpenUrl}
+                                    label='Abrir'
+                                />
+                            )}
+                        </div>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded text-sm break-all">
+                        {scannedValue}
+                    </div>
+                    <div className="mt-4 flex flex-col items-center">
+                        <div className="bg-white p-3 rounded border">
+                            <QRCode
+                                value={scannedValue}
+                                size={128}
+                                level="M"
+                                fgColor="#000000"
+                                bgColor="#FFFFFF"
+                            />
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

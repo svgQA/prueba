@@ -27,7 +27,7 @@ import { Ranking } from '@/components/common/ranking/ranking';
 import { responseValidation } from '@/pages/settings/forms/create/utils/validation';
 import { AudioRecorder } from '@/components/common/audio/Audio.Recorder';
 import { Signature } from '@/components/common/signature/signature';
-// import { QrCode } from '@/components/common/qr/qrCode';
+import { QrCode } from '@/components/common/qr/qrCode';
 
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
@@ -50,6 +50,7 @@ export const FormResponseSettingPage: FunctionComponent<
   const handleInputChange = (
     e: TargetedEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
+    console.log('handleInputChange', e);
     const model = handleChange(e);
     if (!model.page) return;
     updateResponse(
@@ -67,11 +68,10 @@ export const FormResponseSettingPage: FunctionComponent<
     section?: string
   ) => {
     if (element.invisible) return;
-    // const disabled =
-    //   getResponseMode.value?.hold || element.disable || !element.assigned;
-
     const disabled =
-      getResponseMode.value?.hold || element.disable;
+      getResponseMode.value?.hold || element.disable || !element.assigned;
+      const required = element.required;
+
     switch (element.type) {
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
@@ -117,6 +117,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               error={element.value_error}
+              required={required}
             />
           </div>
         );
@@ -134,6 +135,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               error={element.value_error}
+              required={required}
             />
           </div>
         );
@@ -152,6 +154,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               error={element.value_error}
+              required={required}
             />
           </div>
         );
@@ -170,6 +173,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               error={element.value_error}
+              required={required}
             />
           </div>
         );
@@ -185,6 +189,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-page={page}
               data-section={section}
               disabled={disabled}
+              required={required}
             />
           </div>
         );
@@ -200,6 +205,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-page={page}
               data-section={section}
               disabled={disabled}
+              required={required}
             />
           </div>
         );
@@ -216,6 +222,7 @@ export const FormResponseSettingPage: FunctionComponent<
               accept='image/*'
               disabled={disabled}
               area='form'
+              required={required}
             />
           </div>
         );
@@ -232,6 +239,7 @@ export const FormResponseSettingPage: FunctionComponent<
               accept=':not(image/*),.pdf,.doc,.docx,.txt,.xls,.xlsx,.csv'
               disabled={disabled}
               area='form'
+              required={required}
             />
           </div>
         );
@@ -246,6 +254,7 @@ export const FormResponseSettingPage: FunctionComponent<
               disabled={disabled}
               data-page={page}
               data-section={section}
+              // required={required}
             />
           </div>
         );
@@ -275,6 +284,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               dataPage={page}
               dataSection={section}
+              // required={required}
             />
           </div>
         );
@@ -293,6 +303,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               data-page={page}
               data-section={section}
+              required={required}
             />
           </div>
         );
@@ -311,6 +322,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               data-page={page}
               data-section={section}
+              required={required}
             />
           </div>
         );
@@ -327,6 +339,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               area='form'
+              // required={required}
             />
           </div>
         );
@@ -342,24 +355,26 @@ export const FormResponseSettingPage: FunctionComponent<
               label={element.label}
               data-section={section}
               disabled={disabled}
+              // required={required}
             />
           </div>
         );
 
-      // case ELEMENT_TYPE.QR:
-      //   return (
-      //     <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
-      //       <QrCode
-      //         name={element.id}
-      //         onChange={handleInputChange}
-      //         data-page={page}
-      //         value={element.value}
-      //         label={element.label}
-      //         data-section={section}
-      //         disabled={disabled}
-      //       />
-      //     </div>
-      //   );
+      case ELEMENT_TYPE.QR:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <QrCode
+              name={element.id}
+              onChange={handleInputChange}
+              data-page={page}
+              value={element.value}
+              label={element.label}
+              data-section={section}
+              disabled={disabled}
+              // required={required}
+            />
+          </div>
+        );
 
       default:
         return (
@@ -374,6 +389,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               data-page={page}
               data-section={section}
+              // required={required}
             />
           </div>
         );
@@ -411,6 +427,7 @@ export const FormResponseSettingPage: FunctionComponent<
 
   const saveResponse = async () => {
     if (!getResponse.value) return;
+    console.log('saveResponse', getResponse.value);
 
     // TODO: No borrar esta parte que es para guardar donde se puede dejar como se quiera
     // el formulario
