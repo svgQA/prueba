@@ -36,11 +36,14 @@ import { EventBus } from '@/utils/network/event.bus';
 import { MapPath } from '@/components/common/map/MapPath';
 import { RoutePoint } from '@/services/general/tracking';
 import NotificationBanner from '@/components/common/notifications/notification.banner';
+import { PanicService } from '@/services/memo/panic';
+import { getColumnsPanic } from './components/panic.columns';
 
 enum VIEW_NAME {
   TABLE,
   CHAT,
   MAP,
+  PANIC,
 }
 
 const defaultSummary = {
@@ -74,6 +77,7 @@ export const MemosPage: FunctionComponent = () => {
   const notificationBannerRef = useRef<{ startBannerAnimation: () => void }>(
     null
   );
+  const panic = useSignal<Memo[]>([]);
 
   useEffect(() => {
     document.title = 'TR - Chat';
@@ -147,24 +151,21 @@ export const MemosPage: FunctionComponent = () => {
       responseSummary,
       responseGroupedByService,
       responseGroupedByUser,
+      responseMemoPanic,
     ] = await Promise.all([
       MemoService.get_all({ page: 1, items: 1000 }),
       UserService.get_all_employee({ items: 20, page: 1 }),
       MemoService.getMemosSummary(),
       MemoService.get_all_by_service(),
       MemoService.get_all_by_user(),
+      PanicService.get_all_memo_panic({ page: 1, items: 1000 }),
     ]);
 
     if (responseMemos.getStatus()) {
-      const memosData = responseMemos.getMany();
-      // TODO: Cambiar esto, porque desde back se puede tener
-      memos.value = memosData.map((memo) => ({
+      memos.value = responseMemos.getMany().map((memo: Memo) => ({
         ...memo,
-        priority:
-          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
-          format: 'DD/MM/YYYY HH:mm',
-        }),
+        priority: memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm', }),
       }));
       loading.value = false;
     }
@@ -183,6 +184,15 @@ export const MemosPage: FunctionComponent = () => {
 
     if (responseGroupedByUser.getStatus()) {
       memosGroupedByUser.value = responseGroupedByUser.getMany();
+    }
+
+    if (responseMemoPanic.getStatus()) {
+      panic.value = responseMemoPanic.getMany().map((memo: Memo) => ({
+        ...memo,
+        priority: memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm', }),
+      }));
+      loading.value = false;
     }
   };
 
@@ -235,6 +245,15 @@ export const MemosPage: FunctionComponent = () => {
           selected={currentView.value === VIEW_NAME.TABLE}
           icon='320'
         />
+        <Button
+          name='button-change-panic'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.PANIC);
+          }}
+          rounded={false}
+          selected={currentView.value === VIEW_NAME.PANIC}
+          icon='020'
+        />
         {/* <Button
           name='button-change-scheduler'
           onClick={() => {
@@ -279,33 +298,33 @@ export const MemosPage: FunctionComponent = () => {
       padding={currentView.value === VIEW_NAME.TABLE}
     >
       {(currentView.value === VIEW_NAME.TABLE ||
-        currentView.value === VIEW_NAME.MAP) && (
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-          <CardData
-            title={t('memos.cards.totalToday')}
-            count={summary.value.total}
-            subtitle=''
-            color='t-dark'
-            icon='328' // 328
-          />
+        currentView.value === VIEW_NAME.MAP || currentView.value === VIEW_NAME.PANIC) && (
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+            <CardData
+              title={t('memos.cards.totalToday')}
+              count={summary.value.total}
+              subtitle=''
+              color='t-dark'
+              icon='328' // 328
+            />
 
-          <CardData
-            title={t('memos.cards.unresolved')}
-            count={calculatePercentage(summary.value.in_progress)}
-            subtitle=''
-            color='t-dark'
-            icon='311' // 311
-          />
+            <CardData
+              title={t('memos.cards.unresolved')}
+              count={calculatePercentage(summary.value.in_progress)}
+              subtitle=''
+              color='t-dark'
+              icon='311' // 311
+            />
 
-          <CardData
-            title={t('memos.cards.resolved')}
-            count={calculatePercentage(summary.value.completed)}
-            subtitle=''
-            color='t-dark'
-            icon='312' // 312
-          />
-        </div>
-      )}
+            <CardData
+              title={t('memos.cards.resolved')}
+              count={calculatePercentage(summary.value.completed)}
+              subtitle=''
+              color='t-dark'
+              icon='312' // 312
+            />
+          </div>
+        )}
 
       <div
         className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}
@@ -339,6 +358,35 @@ export const MemosPage: FunctionComponent = () => {
               noveltyDate: false,
               contact: false,
               updatedAt: false,
+            }}
+            searchable={{
+              history: false,
+            }}
+            rowClassName={(row: Memo) =>
+              row.id === highlightedMemoId ? 'animate-highlight' : ''
+            }
+          />
+        )}
+
+        {currentView.value === VIEW_NAME.PANIC && (
+          <Table<Memo>
+            data={panic.value}
+            columns={getColumnsPanic(onClickAction)}
+            showExpandableIcon
+            pageSize={20}
+            selectable
+            loading={loading.value}
+            expandable={(row: Memo, column?: string) => (
+              <ExpandableMultiple type={column} data={row} />
+            )}
+            visibility={{
+              id: false,
+              city: false,
+              address: false,
+              noveltyDate: false,
+              contact: false,
+              updatedAt: false,
+              history: false,
             }}
             searchable={{
               history: false,
