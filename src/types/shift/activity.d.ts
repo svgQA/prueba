@@ -224,6 +224,7 @@ export interface ITask {
 
 export interface TaskItemShift {
   id: number;
+  name: string;
   description: string;
   hourStart: string;
   check: boolean;
