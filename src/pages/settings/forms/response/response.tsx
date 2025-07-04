@@ -16,8 +16,8 @@ import {
   updateResponse,
 } from './store/response';
 import { FormService } from '@/services';
-import { useLocation } from 'wouter';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
+// import { useLocation } from 'wouter';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { File } from '@/components/common/file/file';
 import { Input } from '@/components/common/input/input';
 import { Select } from '@/components/common/select/select';
@@ -31,7 +31,7 @@ import { Ranking } from '@/components/common/ranking/ranking';
 export const FormResponseSettingPage: FunctionComponent = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [_, navigate] = useLocation();
+  // const [_, navigate] = useLocation();
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev: any) =>
@@ -366,7 +366,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
       getResponseMode.value.id
     );
     if (!response.getStatus()) return;
-    navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
+    // navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
   };
 
   const finishResponse = async () => {
@@ -383,7 +383,7 @@ export const FormResponseSettingPage: FunctionComponent = () => {
       getResponseMode.value.id
     );
     if (!response.getStatus()) return;
-    navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
+    // navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to);
   };
 
   return (

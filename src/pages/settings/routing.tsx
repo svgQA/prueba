@@ -3,7 +3,7 @@ import { memo } from 'preact/compat';
 import { Route, Router } from 'wouter';
 import { Suspense, lazy } from 'preact/compat';
 
-import { FormInspectSettingPage } from './forms/inspect/inspect';
+// import { FormInspectSettingPage } from './forms/inspect/inspect';
 import { FormResponseSettingPage } from './forms/response/response';
 import { UserCreateSettingPage } from './general/user/create/create';
 import { AnalyticAdminSettingPage } from './admin/analytic/analytic';

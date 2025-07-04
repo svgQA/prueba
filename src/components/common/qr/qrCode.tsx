@@ -1,5 +1,5 @@
 import { QrProps } from "./interface";
-import QRCode from "react-qr-code";
+// import QRCode from "react-qr-code";
 import { useRef, useState } from "preact/hooks";
 import { Button } from "../button/button";
 

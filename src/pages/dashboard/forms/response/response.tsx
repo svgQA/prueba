@@ -27,7 +27,7 @@ import { Ranking } from '@/components/common/ranking/ranking';
 import { responseValidation } from '@/pages/settings/forms/create/utils/validation';
 import { AudioRecorder } from '@/components/common/audio/Audio.Recorder';
 import { Signature } from '@/components/common/signature/signature';
-import { QrCode } from '@/components/common/qr/qrCode';
+// import { QrCode } from '@/components/common/qr/qrCode';
 
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
