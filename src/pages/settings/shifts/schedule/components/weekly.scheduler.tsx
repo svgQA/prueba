@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './style.css';
 import { DataSchedule } from './data.schedule';
 import { getSelectedHoursByDay } from '../utils';
-
+import { useTranslation } from 'react-i18next';
 // Props para pasar los datos y las funciones de actualización
 interface WeeklySchedulerProps {
   startHour?: number;
@@ -26,6 +26,7 @@ const WeeklyScheduler = ({
   hours,
 }: WeeklySchedulerProps) => {
   const [isSelecting, setIsSelecting] = useState(false);
+  const { t } = useTranslation();
   const [startSelection, setStartSelection] = useState<{
     day: number;
     hour: number;
@@ -97,7 +98,7 @@ const WeeklyScheduler = ({
             className='px-4 bg-primary text-white rounded-md hover:bg-primary'
             onClick={() => onClearSelection()}
           >
-            Limpiar selección
+            {t('schedule.cleanSelection')}
           </button>
         )}
       </div>
