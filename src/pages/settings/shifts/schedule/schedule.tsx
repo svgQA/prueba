@@ -14,15 +14,16 @@ import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
-import { DataSchedule, DaySelection } from './components/data.schedule';
+import { DataSchedule } from './components/data.schedule';
 import { ScheduleService } from '@/services';
 import { useTranslation } from 'react-i18next';
+import { ICScheduleRequest, IDay } from '@/types/shift/shift.request';
 
 export interface ISchedule {
   id: number;
   name: string;
   daysAllowed: string[];
-  days: any;
+  days: IDay[];
 }
 
 export interface IRowActionPlace {
@@ -58,7 +59,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       id: 'schedule-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Creación de horarios' });
+    setMenu({ ...infoMenu.value, label: t('schedule.createSchedule') });
     navigate('/rounds/schedule/create');
   };
 
@@ -69,7 +70,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       id: 'schedule-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Editar horarios' });
+    setMenu({ ...infoMenu.value, label: t('schedule.editSchedule') });
     navigate(`/rounds/schedule/update/${id}`);
   };
 
@@ -107,10 +108,10 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       <Table<ISchedule>
         data={schedules.value}
         columns={columns}
-        expandable={(row: any) => {
+        expandable={(row: ICScheduleRequest) => {
           return (
             <ul className='flex flex-wrap justify-center gap-x-2'>
-              {row.days.map((dayInfo: DaySelection) => (
+              {row.days.map((dayInfo: IDay) => (
                 <DataSchedule daySelection={dayInfo} />
               ))}
             </ul>

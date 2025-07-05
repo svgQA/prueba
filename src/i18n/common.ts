@@ -18,6 +18,13 @@ export const common_es = {
   city: 'Ciudad',
   municipality: 'Municipio',
   change_password: 'Cambiar Contraseña',
+  monday: 'Lunes',
+  tuesday: 'Martes',
+  wednesday: 'Miércoles',
+  thursday: 'Jueves',
+  friday: 'Viernes',
+  saturday: 'Sábado',
+  sunday: 'Domingo',
 };
 
 export const common_en = {
@@ -40,4 +47,11 @@ export const common_en = {
   city: 'City',
   municipality: 'Municipality',
   change_password: 'Change Password',
+  monday: 'Monday',
+  tuesday: 'Tuesday',
+  wednesday: 'Wednesday',
+  thursday: 'Thursday',
+  friday: 'Friday',
+  saturday: 'Saturday',
+  sunday: 'Sunday',
 };

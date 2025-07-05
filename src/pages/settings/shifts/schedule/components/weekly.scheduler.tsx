@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
 import './style.css';
+import React, { useState } from 'react';
 import { DataSchedule } from './data.schedule';
 import { getSelectedHoursByDay } from '../utils';
+import { useTranslation } from 'react-i18next';
+import { DayOfWeek } from '../type';
 
-// Props para pasar los datos y las funciones de actualización
 interface WeeklySchedulerProps {
   startHour?: number;
   endHour?: number;
@@ -12,7 +13,7 @@ interface WeeklySchedulerProps {
   selectedCells: { [key: string]: boolean };
   onClearSelection: () => void;
   onCellChange: (newCells: { [key: string]: boolean }) => void;
-  daysOfWeek: string[];
+  daysOfWeek: DayOfWeek[];
   hours: number[];
 }
 
@@ -25,6 +26,7 @@ const WeeklyScheduler = ({
   daysOfWeek,
   hours,
 }: WeeklySchedulerProps) => {
+  const { t } = useTranslation();
   const [isSelecting, setIsSelecting] = useState(false);
   const [startSelection, setStartSelection] = useState<{
     day: number;
@@ -97,7 +99,7 @@ const WeeklyScheduler = ({
             className='px-4 bg-primary text-white rounded-md hover:bg-primary'
             onClick={() => onClearSelection()}
           >
-            Limpiar selección
+            {t('schedule.cleanSelection')}
           </button>
         )}
       </div>
@@ -125,7 +127,7 @@ const WeeklyScheduler = ({
             key={index}
             className='p-3 text-center font-bold text-sm sticky top-0 z-10 border-l border-b-light-dark dark:border-b-dark-light'
           >
-            {day}
+            {t(day.label)}
           </div>
         ))}
 

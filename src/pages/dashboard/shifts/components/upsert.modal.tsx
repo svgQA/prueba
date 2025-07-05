@@ -22,6 +22,7 @@ import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.s
 import dayjs from 'dayjs';
 import { ShiftFormContent } from './shift.form';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { DAYS_OF_WEEK, HOURS } from '@/pages/settings/shifts/schedule/constant';
 
 type TimeBlock = {
   start: number;
@@ -55,22 +56,6 @@ interface ITaskFormProps {
   externalSelected?: string;
 }
 
-const START_HOUR = 0;
-const END_HOUR = 24;
-const hours = Array.from(
-  { length: END_HOUR - START_HOUR + 1 },
-  (_, i) => START_HOUR + i
-);
-const daysOfWeek = [
-  'Domingo',
-  'Lunes',
-  'Martes',
-  'Miércoles',
-  'Jueves',
-  'Viernes',
-  'Sábado',
-];
-
 export const TaskForm = ({
   closed,
   onClose,
@@ -83,7 +68,6 @@ export const TaskForm = ({
   externalSelected,
 }: ITaskFormProps) => {
   const { t } = useTranslation();
-
   const [selectedCells, setSelectedCells] = useState<any>([]);
   const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
@@ -98,6 +82,7 @@ export const TaskForm = ({
       ToastManager.error('s_replicate_duplicate_range_error');
       return;
     }
+
     const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
@@ -353,10 +338,10 @@ export const TaskForm = ({
 
     return schedules.some(({ schedule }) => {
       const checkTime = (date: dayjs.Dayjs) => {
-        const dayIndex = date.day();
-        const dayName = daysOfWeek[dayIndex];
+        const dayIndex = date.day() + 1;
+        const dayName = DAYS_OF_WEEK[dayIndex];
 
-        if (!schedule.daysAllowed.includes(dayName)) return false;
+        if (!schedule.daysAllowed.includes(dayName.value)) return false;
 
         const scheduleDay = schedule.days.find((d) => d.dayIndex === dayIndex);
         if (!scheduleDay) return false;
@@ -408,10 +393,6 @@ export const TaskForm = ({
     setTasksResponse([]);
   };
 
-  // const cleanRelatedShift = () => {
-  //   relatedShifts.value = [];
-  // };
-
   return (
     <Modal
       open={!!closed}
@@ -426,7 +407,7 @@ export const TaskForm = ({
         {selectedCells && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-1 justify-center'>
-              {getSelectedHoursByDay(daysOfWeek, hours, selectedCells).map(
+              {getSelectedHoursByDay(DAYS_OF_WEEK, HOURS, selectedCells).map(
                 (daySelection) => (
                   <DataSchedule daySelection={daySelection} />
                 )

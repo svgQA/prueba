@@ -12,59 +12,44 @@ import { convertBlocksToCells, getSelectedHoursByDay } from '../utils';
 import { ICScheduleRequest } from '@/types/shift/shift.request';
 import { ScheduleService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
-
-const START_HOUR = 0;
-const END_HOUR = 24;
+import { useTranslation } from 'react-i18next';
+import { DAYS_OF_WEEK, HOURS } from '../constant';
+import { DaySelectedModel } from '../type';
 
 export const ScheduleCreateSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
-  const { id } = useParams(); // Obtiene el id de la URL
+  const { id } = useParams();
 
-  const daysOfWeek = [
-    'Domingo',
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-  ];
-
-  const hours = Array.from(
-    { length: END_HOUR - START_HOUR + 1 },
-    (_, i) => START_HOUR + i
-  );
-
-  // Estado compartido para las celdas seleccionadas
   const selectedCells = useSignal<{ [key: string]: boolean }>({});
-
-  // Función para limpiar la selección - EXACTAMENTE LA MISMA que usará el botón interno
   const handleClearSelection = () => {
     selectedCells.value = {};
   };
 
-  // Función para actualizar las celdas seleccionadas
   const handleCellChange = (newCells: { [key: string]: boolean }) => {
     selectedCells.value = newCells;
   };
 
   const onSubmit = async (model: ICScheduleRequest) => {
-    const hoursByDay = getSelectedHoursByDay(
-      daysOfWeek,
-      hours,
+    const hoursByDay: DaySelectedModel[] = getSelectedHoursByDay(
+      DAYS_OF_WEEK,
+      HOURS,
       selectedCells.value
     ).filter((day) => day.blocks.length > 0);
-    model.daysAllowed = hoursByDay.map((day) => day.day);
+
+    model.daysAllowed = hoursByDay.map((day) => day.day.label);
     model.days = hoursByDay;
 
     let request;
-    let message: string = id ? 's_updated_success' : 's_created_success';
+    let message = '';
 
     if (id) {
       request = await ScheduleService.updateSchedule(model, id);
+      message = 's_updated_success';
     } else {
       request = await ScheduleService.createSchedule(model);
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;
@@ -119,8 +104,8 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                     <Input
                       {...input}
                       type='text'
-                      placeholder='Ingrese nombre...'
-                      label='name'
+                      placeholder={t('schedule.namePlaceholder')}
+                      label={t('schedule.name')}
                       meta={meta}
                     />
                   )}
@@ -135,8 +120,8 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                   selectedCells={selectedCells.value}
                   onClearSelection={handleClearSelection}
                   onCellChange={handleCellChange}
-                  daysOfWeek={daysOfWeek}
-                  hours={hours}
+                  daysOfWeek={DAYS_OF_WEEK}
+                  hours={HOURS}
                 />
               </div>
             </div>
@@ -149,7 +134,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
               submitting={submitting}
               pristine={pristine}
               form='form-schedule-create'
-              label={id ? 'edit' : 'save'}
+              label={id ? t('schedule.edit') : t('schedule.save')}
             />
           </form>
         )}
