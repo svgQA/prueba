@@ -42,6 +42,8 @@ export const shift_es = {
         checkSuccess: 'A tiempo',
         checkEarly: 'Temprano',
         checkError: 'Tarde',
+        checkPending: 'Pendiente',
+        message: '¿Está seguro de que desea realizar el',
       },
     },
     columns: {
@@ -87,6 +89,8 @@ export const shift_en = {
         message: 'Are you sure you want to delete the shift?',
         success: 'Shift deleted successfully!',
         error: 'Error deleting shift',
+        warning:
+          'The shift cannot be deleted because it is already in progress or completed',
       },
     },
     expandable: {
@@ -103,6 +107,8 @@ export const shift_en = {
         checkSuccess: 'On time',
         checkEarly: 'Early',
         checkError: 'Late',
+        checkPending: 'Pending',
+        message: 'Are you sure you want to perform the',
       },
     },
     columns: {

@@ -19,30 +19,30 @@ import {
   convertBlocksToCells,
 } from '@/pages/settings/shifts/schedule/utils';
 import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
-import dayjs from 'dayjs';
+//import dayjs from 'dayjs';
 import { ShiftFormContent } from './shift.form';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { DAYS_OF_WEEK, HOURS } from '@/pages/settings/shifts/schedule/constant';
 
-type TimeBlock = {
-  start: number;
-  end: number;
-};
+//type TimeBlock = {
+//  start: number;
+//  end: number;
+//};
 
-type DaySchedule = {
-  day: string;
-  dayIndex: number;
-  blocks: TimeBlock[];
-};
+//type DaySchedule = {
+//  day: string;
+//  dayIndex: number;
+//  blocks: TimeBlock[];
+//};
 
-type Schedule = {
-  days: DaySchedule[];
-  daysAllowed: string[];
-};
+//type Schedule = {
+//  days: DaySchedule[];
+//  daysAllowed: string[];
+//};
 
-type ScheduleItem = {
-  schedule: Schedule;
-};
+//type ScheduleItem = {
+//  schedule: Schedule;
+//};
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -82,7 +82,7 @@ export const TaskForm = ({
       ToastManager.error('s_replicate_duplicate_range_error');
       return;
     }
-
+    /*
     const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
@@ -93,6 +93,7 @@ export const TaskForm = ({
       ToastManager.warning('s_updated_error');
       return;
     }
+    */
 
     const {
       task,
@@ -328,6 +329,7 @@ export const TaskForm = ({
     });
   }, [userSelected, taskSelected, timeBeforeSelected]);
 
+  /*
   const isStartAndEndInSchedules = (
     startDateStr: string,
     endDateStr: string,
@@ -355,6 +357,7 @@ export const TaskForm = ({
       return checkTime(start) && checkTime(end);
     });
   };
+  */
 
   const onChangeShift = async (id: number, start: string, end: string) => {
     const response = await ShiftService.get_related({

@@ -578,6 +578,18 @@ export const ShiftsPage: FunctionalComponent = () => {
     }
   };
 
+  const checkItem = async (check: any, row: any) => {
+    const updatedRow = { ...row };
+    if (check.type === 'CHECK_IN') {
+      updatedRow.checkIn = check;
+    } else {
+      updatedRow.checkOut = check;
+    }
+
+    shifts.value = shifts.value.map((shift) =>
+      shift.id === row.id ? updatedRow : shift
+    );
+  };
   const deleteShift = async (id: string) => {
     const response = await ShiftService.deleteActivity(id);
     if (!response.getStatus()) return;
@@ -648,7 +660,15 @@ export const ShiftsPage: FunctionalComponent = () => {
               setSelectedUsers(validUsers as any);
             }}
             expandable={(row: IShiftResponse, column?: string) => {
-              return <ExpandableMultiple type={column} data={row} />;
+              return (
+                <ExpandableMultiple
+                  onCheck={(check) => {
+                    checkItem(check, row);
+                  }}
+                  type={column}
+                  data={row}
+                />
+              );
             }}
             visibility={{
               servicePlaceAddress: false,

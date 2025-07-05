@@ -17,20 +17,7 @@ import {
 import { DataSchedule } from './components/data.schedule';
 import { ScheduleService } from '@/services';
 import { useTranslation } from 'react-i18next';
-import { ICScheduleRequest, IDay } from '@/types/shift/shift.request';
-
-export interface ISchedule {
-  id: number;
-  name: string;
-  daysAllowed: string[];
-  days: IDay[];
-}
-
-export interface IRowActionPlace {
-  id: string;
-  type: string;
-  action: ROW_ACTIONS;
-}
+import { IDay, IRowActionPlace, ISchedule } from '@/types/shift/shift.request';
 
 export const ScheduleSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -108,7 +95,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       <Table<ISchedule>
         data={schedules.value}
         columns={columns}
-        expandable={(row: ICScheduleRequest) => {
+        expandable={(row: ISchedule) => {
           return (
             <ul className='flex flex-wrap justify-center gap-x-2'>
               {row.days.map((dayInfo: IDay) => (
