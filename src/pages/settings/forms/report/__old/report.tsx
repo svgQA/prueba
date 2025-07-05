@@ -14,12 +14,14 @@ import { Button } from '@/components/common/button/button';
 import { TabContainer } from '@/components/common/tab/container';
 import { Tab } from '@/components/common/tab/tab';
 import { handleChange } from '@/components/utils/input';
+import { useTranslation } from 'react-i18next';
 
 export const FormReportSettingPage = () => {
+  const { t } = useTranslation();
   const [_, navigate] = useLocation();
 
   useEffect(() => {
-    document.title = 'Forms Create Report';
+    document.title = t('p_report');
   }, []);
 
   const handleInputChange = (

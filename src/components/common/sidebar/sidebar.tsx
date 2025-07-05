@@ -138,7 +138,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
             onClick={onSettingHandler}
             className='cursor-pointer p-1 mt-1 hover:disabled rounded-sm text-gray-700 dark:text-gray-200'
           >
-            <ButtonMenu name='vx-setting-button' label='setting' icon='159' />
+            <ButtonMenu name='vx-setting-button' label='t_setting' icon='159' />
           </span>
         )}
 

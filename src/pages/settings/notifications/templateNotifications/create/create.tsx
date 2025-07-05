@@ -35,7 +35,7 @@ export const TemplateCreateForm = () => {
     const { title, description, formId, taskSelector } = values;
 
     if (!title?.trim() || !description?.trim()) {
-      ToastManager.warning('Título y descripción son obligatorios');
+      ToastManager.warning('s_title_and_sub_required');
       return;
     }
 
@@ -54,10 +54,10 @@ export const TemplateCreateForm = () => {
     setLoading(false);
 
     if (res.getStatus()) {
-      ToastManager.success('Plantilla creada exitosamente');
+      ToastManager.success('s_created_success');
       redirectToList();
     } else {
-      ToastManager.error('Error al crear plantilla');
+      ToastManager.error('s_deleted_error');
     }
   };
 

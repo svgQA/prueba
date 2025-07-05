@@ -95,9 +95,7 @@ export const TaskForm = ({
   const { selectedCompany } = useUserStore();
   const onSubmit = async (model: any, form: any) => {
     if (relatedShifts.value.length > 0) {
-      ToastManager.error(
-        'No se puede crear el turno porque existen otros en el mismo rango'
-      );
+      ToastManager.error('s_replicate_duplicate_range_error');
       return;
     }
     const isInSchedule = isStartAndEndInSchedules(
@@ -107,7 +105,7 @@ export const TaskForm = ({
     );
 
     if (!isInSchedule) {
-      ToastManager.warning(t('shift.upsert.errorSchedule'));
+      ToastManager.warning('s_updated_error');
       return;
     }
 
@@ -185,8 +183,8 @@ export const TaskForm = ({
     }
 
     const message = taskSelected?.id
-      ? t('shifts.upsert.successEdit')
-      : t('shifts.upsert.successCreate');
+      ? 's_updated_success'
+      : 's_created_success';
 
     form.reset();
     ToastManager.success(message);
@@ -243,13 +241,7 @@ export const TaskForm = ({
   );
 
   const headerContent = useMemo(
-    () => (
-      <h3>
-        {taskSelected
-          ? t('shifts.upsert.editShift')
-          : t('shifts.upsert.createShift')}
-      </h3>
-    ),
+    () => <h3>{taskSelected ? 's_updated_success' : 's_created_success'}</h3>,
     [taskSelected]
   );
 
@@ -394,7 +386,6 @@ export const TaskForm = ({
     const response = await ServiceService.getServiceById(String(id));
     if (!response.getStatus()) return;
     const model = response.getOne();
-    console.log('DATA: ', model);
     setTasksResponse(model.tasks || []);
     schedules.value = model?.schedules || [];
     const schedule = model?.schedules[0]?.schedule;

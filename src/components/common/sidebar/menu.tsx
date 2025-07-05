@@ -15,7 +15,6 @@ export const MenuItem = memo<IMenuItem>(
   ({ menu, isNavigation, getSelected }: IMenuItem) => {
     const id = `menu-${menu.label}`.toLowerCase();
 
-    const label = String('t_' + menu.label);
     return isNavigation ? (
       <Link
         to={menu.to}
@@ -23,13 +22,13 @@ export const MenuItem = memo<IMenuItem>(
         onClick={() => setPermissions(menu.key || '')}
         className={`p-1 mt-1 hover:disabled rounded-sm ${getSelected(menu.to)}`}
       >
-        <ButtonMenu name={menu.to} label={label} icon={menu.icon} />
+        <ButtonMenu name={menu.to} label={menu.label} icon={menu.icon} />
       </Link>
     ) : (
       <a
         className={`p-1 mt-1 bg-opacity-20 rounded-sm ${getSelected(menu.to)}`}
       >
-        <ButtonMenu name={menu.to} label={label} icon={menu.icon} />
+        <ButtonMenu name={menu.to} label={menu.label} icon={menu.icon} />
       </a>
     );
   }

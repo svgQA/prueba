@@ -9,12 +9,14 @@ import { CardData } from '@/components/compose/cards'; // Ajusta ruta si es dist
 import { ExpandableCorrespondence } from '@/components/compose/table/expandable/correspondence'; // Ajusta ruta si es distinto
 import { ICorrespondence, correspondenceData } from './utils';
 import { correspondenceColumns } from './components/correspondence.columns';
+import { useTranslation } from 'react-i18next';
 
 export const CorrespondencePage: FunctionalComponent = () => {
+  const { t } = useTranslation();
   const [data, setData] = useState<ICorrespondence[]>([]);
 
   useEffect(() => {
-    document.title = 'TR - Correspondencia Service';
+    document.title = t('p_correspondence');
     // Cargamos datos ficticios
     setData(correspondenceData);
   }, []);

@@ -44,10 +44,10 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
 
     if (id) {
       request = await ContractService.updateProject(output, id);
-      message = 'Contrato editado exitosamente!';
+      message = 's_updated_success';
     } else {
       request = await ContractService.createProject(output);
-      message = 'Contrato creado exitosamente!';
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;

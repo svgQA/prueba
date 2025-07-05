@@ -12,22 +12,12 @@ export const common_es = {
   USER: 'Empleado',
   CLIENT: 'Cliente',
   ADMIND: 'Administrador',
-  t_memos: 'Memos',
-  t_shifts: 'Turnos',
-  t_inspect: 'Formulario',
-  t_users: 'Usuarios',
-  t_notifications: 'Notificaciones',
   setting: 'Configuración',
   country: 'País',
   department: 'Departamento',
   city: 'Ciudad',
   municipality: 'Municipio',
-  common: {
-    search: {
-      placeholder: 'Buscar por columna...',
-      filterBy: 'Filtrar por',
-    },
-  },
+  change_password: 'Cambiar Contraseña',
 };
 
 export const common_en = {
@@ -44,20 +34,10 @@ export const common_en = {
   USER: 'Employee',
   CLIENT: 'Client',
   ADMIND: 'Administrator',
-  t_memos: 'Memos',
-  t_shifts: 'Shift',
-  t_inspect: 'Form',
-  t_users: 'User',
-  t_notifications: 'Notifications',
   setting: 'Settings',
   country: 'Country',
   department: 'Department',
   city: 'City',
   municipality: 'Municipality',
-  common: {
-    search: {
-      placeholder: 'Search...',
-      filterBy: 'Filter by',
-    },
-  },
+  change_password: 'Change Password',
 };

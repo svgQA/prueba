@@ -71,10 +71,10 @@ export const ShiftForm = ({
       id: taskSelected?.id,
     });
     if (!response.getStatus()) {
-      ToastManager.error('Error al replicar el turno');
+      ToastManager.error('s_replicated_error');
       return;
     }
-    ToastManager.success('Turno replicado exitosamente');
+    ToastManager.success('s_replicated_success');
     toggleReplicateClick();
     replicateDate.value = '';
     onClose?.();
@@ -85,10 +85,10 @@ export const ShiftForm = ({
     if (!taskSelected?.id) return;
     const response = await ShiftService.deleteActivity(taskSelected?.id);
     if (!response.getStatus()) {
-      ToastManager.error('Error al eliminar el turno');
+      ToastManager.error('s_deleted_error');
       return;
     }
-    ToastManager.success('Turno eliminado exitosamente');
+    ToastManager.success('s_deleted_success');
     onClose?.();
     posAction?.();
   };
@@ -99,7 +99,7 @@ export const ShiftForm = ({
 
   const handleAcceptReplicate = () => {
     if (!replicateDate.value) {
-      ToastManager.error('Debe seleccionar una fecha');
+      ToastManager.error('s_must_select');
       return;
     }
     setReplicateHandler(DateUtils.dateToBackend(replicateDate.value));

@@ -10,6 +10,7 @@ import { useSignal, Signal } from '@preact/signals';
 import { IShiftSetting } from '@/types/settings';
 import { ModuleService } from '@/services';
 import { StatusButton } from '../../components/custom.button';
+import { useTranslation } from 'react-i18next';
 
 export const ShiftSettingPage: FunctionComponent = () => {
   const settingsIds = useSignal<{ shift: number }>({ shift: 0 });
@@ -29,8 +30,9 @@ export const ShiftSettingPage: FunctionComponent = () => {
     create_shift: false,
   });
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Shift Settings';
+    document.title = t('p_setting');
     getSettings();
   }, []);
 
@@ -60,7 +62,7 @@ export const ShiftSettingPage: FunctionComponent = () => {
       settingsIds.value.shift
     );
     if (response.getStatus()) {
-      ToastManager.success('settings.shifts.success');
+      ToastManager.success('s_updated_success');
     }
   };
 

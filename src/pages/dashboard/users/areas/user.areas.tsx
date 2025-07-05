@@ -24,7 +24,7 @@ export const UserAreasPage: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
 
   useEffect(() => {
-    document.title = t('user.area.title');
+    document.title = t('p_area');
     fetchAreas();
   }, []);
 
@@ -45,7 +45,7 @@ export const UserAreasPage: FunctionComponent = () => {
   const deleteArea = async (id: number) => {
     const request = await UserService.deleteArea(id);
     if (!request.getStatus()) return;
-    ToastManager.success(t('user.area.delete'));
+    ToastManager.success('s_deleted_success');
     fetchAreas();
   };
 

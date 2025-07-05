@@ -14,13 +14,15 @@ import { Button } from '@/components/common/button/button';
 import { useLocation } from 'wouter';
 import { appendHistory } from '../../store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { useTranslation } from 'react-i18next';
 
 export const UserSettingPage: FunctionComponent = () => {
   const users = useSignal<IUserResponse[]>([]);
   const [_, navigate] = useLocation();
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'User Settings';
+    document.title = t('p_setting');
     getUsersHandler();
   }, []);
 
@@ -33,7 +35,7 @@ export const UserSettingPage: FunctionComponent = () => {
   const deletePlace = async (id: number) => {
     const request = await UserService.delete(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Usuario eliminado');
+    ToastManager.success('s_deleted_success');
     getUsersHandler();
   };
 

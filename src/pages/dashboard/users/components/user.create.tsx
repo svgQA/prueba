@@ -231,16 +231,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
 
   const onSubmit = async (user: IUserRequest) => {
     let request;
-    let message =
-      getUserMode.value.mode === USER_MODE_SERVICE.UPDATE
-        ? t('user.create.update')
-        : t('user.create.success');
+    let message = '';
 
-    if (getUserMode.value.mode === USER_MODE_SERVICE.UPDATE && user.id) {
+    if (user.id) {
       request = await UserService.update(user, user.id);
-    } else if (getUserMode.value.mode === USER_MODE_SERVICE.CREATE) {
+      message = 's_updated_success';
+    } else {
       request = await UserService.create(user);
-    } else return;
+      message = 's_created_success';
+    }
 
     if (!request.getStatus()) return;
     props.onUserCreated?.(request.getOne());

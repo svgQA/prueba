@@ -11,13 +11,15 @@ import { appendHistory } from '../../store/settings';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { SchedulerService } from '@/services/notification/schedule';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { useTranslation } from 'react-i18next';
 
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
   const [_, navigate] = useLocation();
   const loading = useSignal<boolean>(false);
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Notificaciones Programadas';
+    document.title = t('p_programmed');
     fetchNotifications();
   }, []);
 
@@ -59,10 +61,10 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
     const res = await SchedulerService.deleteScheduledNotification(id);
     if (res.getStatus()) {
-      ToastManager.success('Notificación eliminada correctamente');
+      ToastManager.success('s_deleted_success');
       fetchNotifications();
     } else {
-      ToastManager.error('Error al eliminar la notificación');
+      ToastManager.error('s_deleted_error');
     }
   };
 
@@ -87,14 +89,17 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
   };
 
   return (
-    <Section>
+    <Section className='pt-2'>
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <Button
-          name='new-scheduled-notification'
-          label='+ Nueva Programación'
-          className='bg-primary text-white p-2'
-          onClick={redirect}
-        />
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-scheduled-notification'
+            label='new'
+            icon='039'
+            onClick={() => redirect()}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
+        </div>
       </div>
 
       <Table<INotificationScheduledItem>

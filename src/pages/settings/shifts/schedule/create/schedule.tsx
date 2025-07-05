@@ -59,9 +59,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
     model.days = hoursByDay;
 
     let request;
-    let message: string = id
-      ? 'Horario editado exitosamente!'
-      : 'Horario creado exitosamente!';
+    let message: string = id ? 's_updated_success' : 's_created_success';
 
     if (id) {
       request = await ScheduleService.updateSchedule(model, id);

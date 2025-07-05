@@ -68,7 +68,7 @@ export const FormElement = ({
     const isURL = urlPattern.test(event);
 
     if (!isURL) {
-      ToastManager.error('No es una url valida!');
+      ToastManager.error('s_url_error');
       return;
     }
     const headers = {
@@ -90,14 +90,14 @@ export const FormElement = ({
               typeof item === 'object' && 'label' in item && 'value' in item
           )
         ) {
-          ToastManager.error('La estructura de datos no es válida');
+          ToastManager.error('s_structure_error');
           return;
         }
-        ToastManager.success('Los datos tienen una buena estructura.');
+        ToastManager.success('s_estructure_success');
         updateForm(question.id, page, section)('options', data.slice(0, 10));
       })
       .catch(() => {
-        ToastManager.error('Error al obtener los datos');
+        ToastManager.error('s_getted_error');
       });
   };
 

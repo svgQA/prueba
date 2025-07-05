@@ -57,10 +57,10 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
 
     if (!id) {
       request = await ShiftService.createActivity(model);
-      message = 'Turno creado exitosamente!';
+      message = 's_created_success';
     } else {
       request = await ShiftService.updateActivity(model, id);
-      message = 'Turno editado exitosamente!';
+      message = 's_updated_success';
     }
 
     if (!request.getStatus()) return;

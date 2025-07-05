@@ -16,6 +16,7 @@ import {
 } from '../../store/settings';
 import { DataSchedule, DaySelection } from './components/data.schedule';
 import { ScheduleService } from '@/services';
+import { useTranslation } from 'react-i18next';
 
 export interface ISchedule {
   id: number;
@@ -35,8 +36,9 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   const schedules: Signal<ISchedule[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Schedule Service';
+    document.title = t('p_schedule');
     getSchedules();
   }, []);
 
@@ -74,7 +76,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   const deleteSchedule = async (id: string) => {
     const request = await ScheduleService.deleteSchedule(id);
     if (!request.getStatus()) return;
-    ToastManager.success('horario eliminado');
+    ToastManager.success('s_deleted_success');
     getSchedules();
   };
 

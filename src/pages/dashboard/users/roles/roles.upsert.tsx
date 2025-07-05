@@ -81,11 +81,11 @@ export const RolesUpsertPage = () => {
 
   const onSubmit = async (form: IRoleRequest) => {
     if (!form.name || !form.description) {
-      ToastManager.error(t('role.form.requiredFields'));
+      ToastManager.error('s_some_required');
       return;
     }
     if (selectedPermissions.length === 0) {
-      ToastManager.error(t('role.form.requiredPermissions'));
+      ToastManager.error('s_must_some_selected');
       return;
     }
 
@@ -95,10 +95,10 @@ export const RolesUpsertPage = () => {
 
     if (id) {
       request = await RoleService.update(form, id);
-      message = t('role.updated');
+      message = 's_updated_success';
     } else {
       request = await RoleService.create(form);
-      message = t('role.created');
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;

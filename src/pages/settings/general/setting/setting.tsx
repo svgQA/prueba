@@ -50,7 +50,7 @@ export const GeneralSettingPage: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    document.title = 'TR - App Settings';
+    document.title = t('p_setting');
     getSettings();
   }, []);
 
@@ -108,7 +108,7 @@ export const GeneralSettingPage: FunctionComponent = () => {
       settingsIds.value.app
     );
     if (response.getStatus()) {
-      ToastManager.success(t('settings.general.success'));
+      ToastManager.success('s_created_success');
     }
   };
 
@@ -118,7 +118,7 @@ export const GeneralSettingPage: FunctionComponent = () => {
       settingsIds.value.general
     );
     if (response.getStatus()) {
-      ToastManager.success(t('settings.general.success'));
+      ToastManager.success('s_created_success');
     }
   };
 

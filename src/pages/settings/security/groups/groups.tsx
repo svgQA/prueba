@@ -13,13 +13,15 @@ import {
   setMenu,
 } from '../../store/settings';
 import { GeneralService } from '@/services';
+import { useTranslation } from 'react-i18next';
 
 export const GroupSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const groups = useSignal<any[]>([]);
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Activity Service';
+    document.title = t('p_activity');
     getGroups();
   }, []);
 
@@ -43,7 +45,7 @@ export const GroupSettingPage: FunctionComponent = () => {
   // const deleteActivity = async (id: string) => {
   //   const request = await ShiftService.deleteActivity(id);
   //   if (!request.getStatus()) return;
-  //   ToastManager.success('Turno eliminado');
+  //   ToastManager.success('s_deleted_success');
   //   getGroups();
   // };
 

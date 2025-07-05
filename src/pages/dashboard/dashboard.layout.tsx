@@ -17,7 +17,7 @@ import { DevicesPage } from './devices/devices.page';
 import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
 import { ShiftsPage } from './shifts/shifts.page';
-import { AccesPage } from './access/access.page';
+import { AccessPage } from './access/access.page';
 import { CorrespondencePage } from './correspondence/correspondence.page';
 import { UsersPage } from './users/users.page';
 
@@ -57,8 +57,7 @@ import { setAllPermissions } from '@/store/signals/access/permission';
 import { useSignal } from '@preact/signals';
 import PanicModal from '@/components/common/panic/panic.modal';
 import { IPanic } from '@/components/common/panic/interface';
-// import { IconsModal } from '../globals/icons/icons';
-// import { IconsModal } from '../globals/icons/icons';
+import { IconsModal } from '../globals/icons/icons';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -258,7 +257,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <Route
                   path={PAGES_LIST.ACCESS}
                   component={lazy(() =>
-                    Promise.resolve({ default: AccesPage })
+                    Promise.resolve({ default: AccessPage })
                   )}
                 />
                 <Route
@@ -304,7 +303,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
         <SettingsModal />
         <ToastContainer />
-        {/* <IconsModal /> */}
+        <IconsModal />
       </section>
     );
   }

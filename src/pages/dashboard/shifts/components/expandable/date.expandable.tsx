@@ -202,11 +202,9 @@ const ShiftCard = ({
         onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
-      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
+      ToastManager.error('s_gps_error');
     } else {
-      ToastManager.error(
-        i18n.t('shift.expandable.date.location.timeoutMessage')
-      );
+      ToastManager.error('s_gps_timeout');
     }
   };
 

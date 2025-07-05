@@ -3,15 +3,15 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 const base = PAGES_LIST_ROUTER.dashboard.setting.shifts.base;
 export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
-  label: 'Shifts',
+  label: 'g_shift',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   settings: PAGES_LIST_ROUTER.dashboard.setting.shifts.settings,
   show: true,
   menus: [
     {
       icon: '142',
-      label: 'Rounds',
-      description: 'Rondas',
+      label: 'm_round',
+      description: 'd_round',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.base,
       id: 'rounds',
@@ -19,8 +19,8 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
     },
     {
       icon: '103',
-      label: 'Places',
-      description: 'Lugares',
+      label: 'm_place',
+      description: 'd_place',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.places.base,
       id: 'places',
@@ -28,8 +28,8 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
     },
     {
       icon: '064',
-      label: 'Contracts',
-      description: 'Contratos',
+      label: 'm_contract',
+      description: 'd_contract',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.projects.base,
       id: 'contracts',
@@ -37,8 +37,8 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
     },
     {
       icon: '092',
-      label: 'Tasks',
-      description: 'Tareas',
+      label: 'm_task',
+      description: 'd_task',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.task.base,
       id: 'tasks',
@@ -46,8 +46,8 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
     },
     {
       icon: '050',
-      label: 'schedule',
-      description: 'Horarios',
+      label: 'm_schedule',
+      description: 'd_schedule',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.base,
       id: 'schedule',
@@ -55,16 +55,16 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
     },
     {
       icon: '191',
-      label: 'Shifts',
-      description: 'Turnos',
+      label: 'm_shift',
+      description: 'd_shift',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.activity.base,
       id: 'shifts',
     },
     {
       icon: '090',
-      label: 'Services',
-      description: 'Servicios',
+      label: 'm_service',
+      description: 'd_service',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.base,
       id: 'services',

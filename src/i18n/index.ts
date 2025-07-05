@@ -21,6 +21,10 @@ import { menus_en, menus_es } from './menus';
 import { hero_en, hero_es } from './hero';
 import { placeholder_en, placeholder_es } from './placeholder';
 import { validation_en, validation_es } from './validation';
+import { header_en, header_es } from './header';
+import { label_en, label_es } from './label';
+import { toast_en, toast_es } from './toast';
+import { page_en, page_es } from './page';
 
 // import { notification_en, notification_es } from './notification';
 // import { shift_en, shift_es } from './shift';
@@ -48,6 +52,10 @@ const resources = {
       ...hero_en,
       ...placeholder_en,
       ...validation_en,
+      ...header_en,
+      ...label_en,
+      ...toast_en,
+      ...page_en,
       // ...home_en,
     },
   },
@@ -72,6 +80,10 @@ const resources = {
       ...hero_es,
       ...placeholder_es,
       ...validation_es,
+      ...header_es,
+      ...label_es,
+      ...toast_es,
+      ...page_es,
       // ...home_es,
     },
   },

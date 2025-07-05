@@ -30,10 +30,10 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
 
     if (id) {
       request = await NoveltyService.updateNovelty(model, id);
-      message = 'Novedad editado exitosamente!';
+      message = 's_updated_success';
     } else {
       request = await NoveltyService.createNovelty(model);
-      message = 'Novedad creado exitosamente!';
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;

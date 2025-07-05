@@ -3,14 +3,14 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 const BASE_ADMIN = PAGES_LIST_ROUTER.dashboard.setting.admin.base;
 export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
-  label: 'admin',
+  label: 'g_admin',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: false,
   menus: [
     {
       icon: '023',
-      label: 'analytic',
-      description: 'analytic',
+      label: 'm_analytic',
+      description: 'd_analytic',
       base: BASE_ADMIN,
       to: PAGES_LIST_ROUTER.dashboard.setting.admin.analytic.base,
       id: 'analytic',
@@ -18,8 +18,8 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
     },
     {
       icon: '054',
-      label: 'database',
-      description: 'database',
+      label: 'm_database',
+      description: 'd_database',
       base: BASE_ADMIN,
       to: PAGES_LIST_ROUTER.dashboard.setting.admin.database.base,
       id: 'database',
@@ -27,8 +27,8 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
     },
     {
       icon: '088',
-      label: 'Tenants',
-      description: 'tenant',
+      label: 'm_tenant',
+      description: 'd_tenant',
       base: BASE_ADMIN,
       to: PAGES_LIST_ROUTER.dashboard.setting.admin.tenant.base,
       id: 'tenant',

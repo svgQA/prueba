@@ -31,7 +31,7 @@ export const FormsPage: FunctionComponent = () => {
   const { selectedCompany } = useUserStore();
 
   useEffect(() => {
-    document.title = t('forms.pageTitle');
+    document.title = t('p_form');
   }, []);
 
   useEffect(() => {
@@ -59,12 +59,12 @@ export const FormsPage: FunctionComponent = () => {
     );
 
     if (!response?.structure) {
-      ToastManager.error(t('form.error.notExistResponse'));
+      ToastManager.error('s_not_exist');
       return;
     }
 
     if (!validateResponse(response.structure)) {
-      ToastManager.error(t('form.error.invalidResponse'));
+      ToastManager.error('s_structure_error');
       return;
     }
 
@@ -92,7 +92,7 @@ export const FormsPage: FunctionComponent = () => {
         break;
       }
       default: {
-        ToastManager.error(t('form.error.not_exist_option'));
+        ToastManager.error('s_not_exist');
       }
     }
   };

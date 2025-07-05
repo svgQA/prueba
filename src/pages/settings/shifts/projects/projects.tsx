@@ -16,6 +16,7 @@ import {
 } from '../../store/settings';
 import { ContractService } from '@/services';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
+import { useTranslation } from 'react-i18next';
 
 export interface IProject {
   id: number;
@@ -37,8 +38,9 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const projects: Signal<IProject[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Project Service';
+    document.title = t('p_project');
     getProjects();
   }, []);
 
@@ -76,7 +78,7 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   const deleteProject = async (id: string) => {
     const request = await ContractService.deleteProject(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Lugar contrato');
+    ToastManager.success('s_deleted_success');
     getProjects();
   };
 

@@ -16,6 +16,7 @@ import {
   setMenu,
 } from '../../store/settings';
 import { ServiceService } from '@/services';
+import { useTranslation } from 'react-i18next';
 
 export interface IServicio {
   id: number;
@@ -34,8 +35,9 @@ export const ServiceSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const novelties: Signal<IServicio[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Servie Service';
+    document.title = t('p_service');
     getServices();
   }, []);
 
@@ -73,7 +75,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
   const deleteNovelty = async (id: string) => {
     const request = await ServiceService.deleteService(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Servicio eliminado');
+    ToastManager.success('s_deleted_success');
     getServices();
   };
 

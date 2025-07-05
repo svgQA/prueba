@@ -7,6 +7,7 @@ import { useEffect, useRef } from 'preact/hooks';
 import { HistoryCard } from './components/history.card';
 import { Input } from '@/components/common/input/input';
 import { FileCard } from './components/file.card';
+import { useTranslation } from 'react-i18next';
 
 export const IASettingPage: FunctionComponent = () => {
   const model_status = useSignal<IModelStatus | null>(null);
@@ -20,8 +21,9 @@ export const IASettingPage: FunctionComponent = () => {
   const testMessage = useSignal<string>('');
   const testResponse = useSignal<string>('');
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'IA Settings';
+    document.title = t('p_setting');
     get_config_model();
   }, []);
 

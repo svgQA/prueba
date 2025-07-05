@@ -1,9 +1,11 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
+import { useTranslation } from 'react-i18next';
 
 export const ModulesSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'Modules Settings';
+    document.title = t('p_setting');
   }, []);
   return <section>MODULES</section>;
 };

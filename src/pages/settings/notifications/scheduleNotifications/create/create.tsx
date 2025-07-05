@@ -11,6 +11,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { IOption } from '@/components/common/smart-selector/smart-select';
+import { useTranslation } from 'react-i18next';
 
 export const ScheduledNotificationForm = () => {
   const [templates, setTemplates] = useState<IOption[]>([]);
@@ -19,8 +20,9 @@ export const ScheduledNotificationForm = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formValues, setFormValues] = useState<any>(null);
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Programar Nueva Notificación';
+    document.title = t('p_programmed');
     const fetchTemplates = async () => {
       const response = await TemplateService.getTemplates();
       if (!response.getStatus()) return;
@@ -56,12 +58,12 @@ export const ScheduledNotificationForm = () => {
     } = values;
 
     if (!templateId || typeof templateId !== 'string') {
-      ToastManager.warning('Debes seleccionar una plantilla obligatoriamente.');
+      ToastManager.warning('s_select_template');
       return;
     }
 
     if (!sendAt || typeof sendAt !== 'string') {
-      ToastManager.warning('Debes indicar la fecha de envío.');
+      ToastManager.warning('s_select_date');
       return;
     }
 
@@ -84,10 +86,10 @@ export const ScheduledNotificationForm = () => {
     setPendingSubmission(false);
 
     if (res.getStatus()) {
-      ToastManager.success('Notificación programada exitosamente');
+      ToastManager.success('s_created_success');
       redirectToList();
     } else {
-      ToastManager.error('Error al programar notificación');
+      ToastManager.error('s_created_error');
     }
   };
 

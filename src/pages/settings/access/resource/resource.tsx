@@ -8,15 +8,17 @@ import { useResourceStore } from '@/store/slices/optimusAccess/access.slice'; //
 import { useSignal } from '@preact/signals';
 import { IResource } from './type';
 import { GeneralService } from '@/services';
+import { useTranslation } from 'react-i18next';
 
 export const ResourceSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const [_, navigate] = useLocation();
   const resources = useSignal<IResource[]>([]);
 
   const { setSelectedResource } = useResourceStore(); // Usamos el estado global
 
   useEffect(() => {
-    document.title = 'Resources Settings';
+    document.title = t('p_resource');
     getResources();
   }, []);
 
@@ -31,24 +33,25 @@ export const ResourceSettingPage: FunctionComponent = () => {
     navigate('/access/createResource'); // Redirigimos a la página de edición
   };
 
-  const onClickCreate = () => {
+  const redirect = () => {
     handleEdit('', '', '');
     navigate('/access/createResource');
   };
 
   return (
-    <Section>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible z-20'>
+    <Section className='pt-2'>
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
         <div className='flex flex-row items-center justify-between'>
           <Button
-            name='button-create-resource'
-            label='Crear Recursos'
-            icon='345'
-            onClick={onClickCreate}
+            name='button-create-shift'
+            label='new'
+            icon='039'
+            onClick={() => redirect()}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
           />
         </div>
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mt-16'>
         {resources.value.map((data) => (
           <CardAccess
             title={data.name}

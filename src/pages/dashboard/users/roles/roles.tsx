@@ -34,7 +34,7 @@ export const UserRolesPage: FunctionComponent = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = t('role.pageTitle');
+    document.title = t('p_roles');
     getRoles();
   }, []);
 
@@ -56,7 +56,7 @@ export const UserRolesPage: FunctionComponent = () => {
   const deleteRole = async (id: number) => {
     const request = await RoleService.deleteRole(id);
     if (!request.getStatus()) return;
-    ToastManager.success(t('role.deleted'));
+    ToastManager.success('s_deleted_success');
     getRoles();
   };
 

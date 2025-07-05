@@ -12,13 +12,15 @@ import { useSignal } from '@preact/signals';
 import { GeneralService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { navigate } from 'wouter/use-browser-location';
+import { useTranslation } from 'react-i18next';
 
 export const GroupCreateSettingPage: FunctionComponent = () => {
   const name = useSignal<string>('');
   const description = useSignal<string>('');
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'Security Group Settings';
+    document.title = t('p_group');
   }, []);
   const [rootGroup, setRootGroup] = useState<Group>(createEmptyGroup());
 
@@ -42,7 +44,7 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
     name.value = '';
     description.value = '';
     setRootGroup(createEmptyGroup());
-    ToastManager.success('Grupo creado exitosamente');
+    ToastManager.success('s_created_success');
     navigate('/security/groups');
   };
 

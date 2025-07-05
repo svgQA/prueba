@@ -78,9 +78,9 @@ export const ChatMessage = ({
         onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
-      ToastManager.error(t('shift.expandable.date.location.gpsMessage'));
+      ToastManager.error('s_gps_error');
     } else {
-      ToastManager.error(t('shift.expandable.date.location.timeoutMessage'));
+      ToastManager.error('s_gps_timeout');
     }
   };
 

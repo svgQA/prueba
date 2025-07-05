@@ -28,10 +28,10 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
 
     if (id) {
       request = await PredefinedService.updatePredefined(model, id);
-      message = 'Predefinido editado exitosamente!';
+      message = 's_updated_success';
     } else {
       request = await PredefinedService.createPredefined(model);
-      message = 'Predefinido creado exitosamente!';
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;
