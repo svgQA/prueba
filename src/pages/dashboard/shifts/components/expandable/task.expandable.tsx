@@ -3,6 +3,7 @@ import { Badge } from '@/components/common/badge/badge';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { formatDate } from './contract.expandable';
 import { TaskItemShift } from '@/types/shift/activity';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   shiftId: number;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const TaskInfo = ({ shiftId, tasks }: Props) => {
+  const { t } = useTranslation();
   const [grouped, setGrouped] = useState<Record<string, TaskItemShift[]>>({});
   const [overallProgress, setOverallProgress] = useState<number>(0);
 
@@ -35,14 +37,14 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
     <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm text-t-light dark:text-t-dark py-2 px-4 relative'>
       <div className='flex items-center justify-between absolute top-0 right-0 w-full'>
         <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
-          Tareas del Turno
+          {t('shift.expandable.task.title')}
         </h2>
       </div>
 
       {Object.entries(grouped).length === 0 ? (
         <div className='flex items-center justify-center h-32'>
           <p className='text-gray-500 dark:text-gray-400'>
-            No hay tareas asignadas
+            {t('shift.expandable.task.empty')}
           </p>
         </div>
       ) : (
@@ -58,7 +60,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
               >
                 <div className='flex flex-row justify-between items-center mb-3 px-1'>
                   <div className='text-xs text-gray-600 dark:text-gray-400'>
-                    {completed} / {total} completadas
+                    {completed} / {total} {t('shift.expandable.task.completed')}
                   </div>
                   <Badge label={formatDate(date)} status='info' />
                 </div>
@@ -97,7 +99,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
                   >
                     <Gauge progress={overallProgress} size={20} color='teal' />
                     <p className='text-sm text-gray-600 dark:text-gray-400 mt-2 text-center'>
-                      Progreso general
+                      {t('shift.expandable.task.overall')}
                       <br />
                       {Math.round(overallProgress)}%
                     </p>

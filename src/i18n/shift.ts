@@ -29,6 +29,19 @@ export const shift_es = {
     },
     expandable: {
       date: {
+        pending: 'Pendiente',
+        shiftStart: 'Inicio del Turno',
+        shiftEnd: 'Finalización del Turno',
+        info: {
+          date: 'Fecha',
+          time: 'Hora',
+          source: 'Fuente',
+          distance: 'Distancia',
+        },
+        buttons: {
+          checkIn: 'Check In',
+          checkOut: 'Check Out',
+        },
         location: {
           title: 'Permiso denegado',
           message:
@@ -38,10 +51,117 @@ export const shift_es = {
           timeoutMessage:
             'Se agotó el tiempo de espera para obtener la ubicación. Por favor intente nuevamente.',
         },
-        success: 'Check realizado correctamente',
         checkSuccess: 'A tiempo',
         checkEarly: 'Temprano',
         checkError: 'Tarde',
+        success: 'Check realizado correctamente',
+      },
+      employee: {
+        operative: 'Operativo',
+        infoPerson: 'Información personal',
+        identification: 'Identificación',
+        phone: 'Teléfono',
+        email: 'Correo',
+        address: 'Dirección',
+        city: 'Ciudad',
+        infoEnterprice: 'Información de la empresa',
+        company: 'Empresa',
+        department: 'Departamento',
+        dataStart: 'Fecha de inicio',
+        statistics: 'Estadísticas Turno',
+        activities: 'Actividades',
+        shifts: 'Turnos',
+      },
+      service: {
+        title: 'Detalles del Servicio',
+        status: {
+          info: 'Información',
+        },
+        serviceName: 'Nombre del Servicio',
+        contract: 'Contrato',
+        location: {
+          title: 'Ubicación y Descripción',
+          name: 'Ubicación',
+          description: 'Descripción',
+        },
+        round: 'Ronda',
+        coverage: {
+          title: 'Área de cobertura',
+          radius: 'Radio: {{value}}m',
+        },
+      },
+      round: {
+        title: 'Rondas del Turno',
+        empty: 'No hay rondas registradas',
+        point: 'Punto',
+        frequency: 'Frec',
+        scans: 'Escaneos',
+        percentage: 'Porcentaje',
+      },
+      task: {
+        title: 'Tareas del Turno',
+        empty: 'No hay tareas asignadas',
+        completed: 'completadas',
+        overall: 'Progreso general',
+      },
+      report: {
+        title: 'Reportes del Turno',
+        count: {
+          singular: 'Reporte',
+          plural: 'Reportes',
+        },
+        status: {
+          requested: 'Solicitado',
+          notRequested: 'No solicitado',
+        },
+        dates: {
+          request: 'Solicitud',
+          received: 'Recibido',
+          report: 'Reporte',
+        },
+        form: {
+          title: 'Formulario',
+          category: 'Categoría',
+          description: 'Descripción',
+          noCategory: 'Sin categoría',
+          viewDetails: 'Ver detalles',
+          hideDetails: 'Ocultar detalles',
+          viewForm: 'Ver reporte de formulario',
+        },
+        empty: 'No hay reportes para mostrar',
+        attachments: 'Archivos adjuntos',
+      },
+      shift: {
+        title: 'Actividades del Turno',
+        empty: 'No hay actividades para mostrar',
+        progress: 'Progreso',
+      },
+      card: {
+        round: {
+          pending: 'Pendiente',
+          schedule: 'Programación',
+          solution: 'Solución',
+          form: 'Formulario',
+          noForm: 'Sin formulario',
+        },
+        task: {
+          point: 'Point',
+          frequency: 'Freq',
+        },
+      },
+      contract: {
+        client: 'Cliente',
+        status: 'Estado',
+        dates: {
+          start: 'Fecha de inicio',
+          end: 'Fecha de finalización',
+        },
+        metrics: {
+          completedShifts: 'Turnos completados',
+          totalHours: 'Horas totales',
+          totalShifts: 'Total de turnos',
+          completion: 'Cumplimiento',
+        },
       },
     },
     columns: {
@@ -91,18 +211,139 @@ export const shift_en = {
     },
     expandable: {
       date: {
+        pending: 'Pending',
+        shiftStart: 'Shift Start',
+        shiftEnd: 'Shift End',
+        info: {
+          date: 'Date',
+          time: 'Time',
+          source: 'Source',
+          distance: 'Distance',
+        },
+        buttons: {
+          checkIn: 'Check In',
+          checkOut: 'Check Out',
+        },
         location: {
           title: 'Permission denied',
           message:
             'It is necessary to approve access to the location to perform the check. Please enable location permissions in your browser.',
-          gpsMessage: 'Please enable GPS on your device.',
+          gpsMessage:
+            'Could not get location. Please verify that GPS is enabled.',
           timeoutMessage:
             'The timeout has expired to get the location. Please try again.',
         },
-        success: 'Check performed successfully',
         checkSuccess: 'On time',
         checkEarly: 'Early',
         checkError: 'Late',
+        success: 'Check performed successfully',
+      },
+      employee: {
+        operative: 'Operative',
+        infoPerson: 'Personal information',
+        identification: 'Identification',
+        phone: 'Phone',
+        email: 'Email',
+        address: 'Address',
+        city: 'City',
+        infoEnterprice: 'Enterprise information',
+        company: 'Company',
+        department: 'Department',
+        dataStart: 'Start date',
+        statistics: 'Shift statistics',
+        activities: 'Activities',
+        shifts: 'Shifts',
+      },
+      service: {
+        title: 'Service Details',
+        status: {
+          info: 'Information',
+        },
+        serviceName: 'Service Name',
+        contract: 'Contract',
+        location: {
+          title: 'Location and Description',
+          name: 'Location',
+          description: 'Description',
+        },
+        round: 'Round',
+        coverage: {
+          title: 'Coverage Area',
+          radius: 'Radius: {{value}}m',
+        },
+      },
+      round: {
+        title: 'Shift Rounds',
+        empty: 'No rounds registered',
+        point: 'Point',
+        frequency: 'Freq',
+        scans: 'Scans',
+        percentage: 'Percentage',
+      },
+      task: {
+        title: 'Shift Tasks',
+        empty: 'No tasks assigned',
+        completed: 'completed',
+        overall: 'Overall Progress',
+      },
+      report: {
+        title: 'Shift Reports',
+        count: {
+          singular: 'Report',
+          plural: 'Reports',
+        },
+        status: {
+          requested: 'Requested',
+          notRequested: 'Not Requested',
+        },
+        dates: {
+          request: 'Request',
+          received: 'Received',
+          report: 'Report',
+        },
+        form: {
+          title: 'Form',
+          category: 'Category',
+          description: 'Description',
+          noCategory: 'No category',
+          viewDetails: 'View details',
+          hideDetails: 'Hide details',
+          viewForm: 'View form report',
+        },
+        empty: 'No reports to show',
+        attachments: 'Attachments',
+      },
+      shift: {
+        title: 'Shift Activities',
+        empty: 'No activities to show',
+        progress: 'Progress',
+      },
+      card: {
+        round: {
+          pending: 'Pending',
+          schedule: 'Schedule',
+          solution: 'Solution',
+          form: 'Form',
+          noForm: 'No form',
+        },
+        task: {
+          point: 'Point',
+          frequency: 'Freq',
+        },
+      },
+      contract: {
+        client: 'Client',
+        status: 'Status',
+        dates: {
+          start: 'Start date',
+          end: 'End date',
+        },
+        metrics: {
+          completedShifts: 'Completed shifts',
+          totalHours: 'Total hours',
+          totalShifts: 'Total shifts',
+          completion: 'Completion',
+        },
       },
     },
     columns: {

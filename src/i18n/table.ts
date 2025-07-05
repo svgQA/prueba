@@ -10,6 +10,12 @@ export const table_es = {
       history: 'Historial',
       date: 'Fecha',
     },
+    filters: {
+      rows: 'Filas por página',
+      from: 'de',
+      elements: 'elementos',
+      page: 'página',
+    },
   },
 };
 
@@ -24,6 +30,12 @@ export const table_en = {
       shifts: 'Shifts',
       history: 'History',
       date: 'Date',
+    },
+    filters: {
+      rows: 'Rows per page',
+      from: 'from',
+      elements: 'elements',
+      page: 'page',
     },
   },
 };

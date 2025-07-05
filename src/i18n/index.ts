@@ -21,6 +21,7 @@ import { menus_en, menus_es } from './menus';
 import { hero_en, hero_es } from './hero';
 import { placeholder_en, placeholder_es } from './placeholder';
 import { validation_en, validation_es } from './validation';
+import { table_en, table_es } from './table';
 
 // import { notification_en, notification_es } from './notification';
 // import { shift_en, shift_es } from './shift';
@@ -48,6 +49,7 @@ const resources = {
       ...hero_en,
       ...placeholder_en,
       ...validation_en,
+      ...table_en,
       // ...home_en,
     },
   },
@@ -72,6 +74,7 @@ const resources = {
       ...hero_es,
       ...placeholder_es,
       ...validation_es,
+      ...table_es,
       // ...home_es,
     },
   },
