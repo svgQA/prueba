@@ -16,6 +16,7 @@ import {
 } from '../../store/settings';
 import { DataSchedule, DaySelection } from './components/data.schedule';
 import { ScheduleService } from '@/services';
+import { useTranslation } from 'react-i18next';
 
 export interface ISchedule {
   id: number;
@@ -34,9 +35,9 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const schedules: Signal<ISchedule[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
-
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Schedule Service';
+    document.title = t('schedule.title');
     getSchedules();
   }, []);
 
@@ -56,7 +57,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       id: 'schedule-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Creación de horarios' });
+    setMenu({ ...infoMenu.value, label: t('schedule.createSchedule') });
     navigate('/rounds/schedule/create');
   };
 
@@ -67,14 +68,14 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       id: 'schedule-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Editar horarios' });
+    setMenu({ ...infoMenu.value, label: t('schedule.editSchedule') });
     navigate(`/rounds/schedule/update/${id}`);
   };
 
   const deleteSchedule = async (id: string) => {
     const request = await ScheduleService.deleteSchedule(id);
     if (!request.getStatus()) return;
-    ToastManager.success('horario eliminado');
+    ToastManager.success(t('schedule.deleteSchedule'));
     getSchedules();
   };
 
