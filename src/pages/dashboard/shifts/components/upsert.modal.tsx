@@ -99,13 +99,13 @@ export const TaskForm = ({
       );
       return;
     }
-    /*  const isInSchedule = isStartAndEndInSchedules(
+    const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
       schedules.value
     );
-
-    if (!isInSchedule) {
+    console.log('isInSchedule ==>', isInSchedule);
+    /* if (!isInSchedule) {
       ToastManager.warning(t('shift.upsert.errorSchedule'));
       return;
     }*/
