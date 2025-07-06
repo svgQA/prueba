@@ -58,10 +58,6 @@ type Schedule = {
   daysAllowed: string[];
 };
 
-type ScheduleItem = {
-  schedule: Schedule;
-};
-
 export const TaskForm = ({
   closed,
   onClose,
@@ -84,6 +80,7 @@ export const TaskForm = ({
   const tasks = useSignal<ITask[]>([]);
   const relatedShifts = useSignal<any[]>([]);
   const forms = useSignal<any[]>([]);
+  const currentSchedule = useSignal<any>(null);
 
   useEffect(() => {
     if (selectedCompany) {
@@ -102,11 +99,10 @@ export const TaskForm = ({
     const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
-      schedules.value
+      currentSchedule.value
     );
-
     if (!isInSchedule) {
-      ToastManager.warning('s_updated_error');
+      ToastManager.warning('s_updated_error_schedule');
       return;
     }
 
@@ -266,6 +262,7 @@ export const TaskForm = ({
     const { schedule } = schedules.value.find(
       (value) => value.scheduleId === id
     );
+    currentSchedule.value = schedule;
     const days = schedule.days.reduce(
       (acc: any, day: any) => {
         acc[day.day] = day.blocks.map((block: any) => {
@@ -301,29 +298,34 @@ export const TaskForm = ({
   const isStartAndEndInSchedules = (
     startDateStr: string,
     endDateStr: string,
-    schedules: ScheduleItem[]
+    currentSchedule: Schedule
   ): boolean => {
     const start = dayjs.utc(startDateStr);
     const end = dayjs.utc(endDateStr);
+    const checkTime = (date: dayjs.Dayjs) => {
+      const dayIndex = date.day();
+      const dayName = DAYS_OF_WEEK.find((day) => day.position === dayIndex);
+      if (
+        !currentSchedule.daysAllowed.some(
+          (d) => d.toLowerCase() === (dayName?.value || '').toLowerCase()
+        )
+      ) {
+        return false;
+      }
 
-    return schedules.some(({ schedule }) => {
-      const checkTime = (date: dayjs.Dayjs) => {
-        const dayIndex = date.day() + 1;
-        const dayName = DAYS_OF_WEEK[dayIndex];
+      const scheduleDay = currentSchedule.days.find(
+        (d: DaySchedule) => d.dayIndex === dayIndex
+      );
+      if (!scheduleDay) return false;
 
-        if (!schedule.daysAllowed.includes(dayName.value)) return false;
+      const hourDecimal = date.hour() + date.minute() / 60;
+      return scheduleDay.blocks.some(
+        (block: TimeBlock) =>
+          hourDecimal >= block.start && hourDecimal <= block.end
+      );
+    };
 
-        const scheduleDay = schedule.days.find((d) => d.dayIndex === dayIndex);
-        if (!scheduleDay) return false;
-
-        const hourDecimal = date.hour() + date.minute() / 60;
-        return scheduleDay.blocks.some(
-          (block) => hourDecimal >= block.start && hourDecimal <= block.end
-        );
-      };
-
-      return checkTime(start) && checkTime(end);
-    });
+    return checkTime(start) && checkTime(end);
   };
 
   return (

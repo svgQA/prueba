@@ -52,8 +52,8 @@ export const ShiftFormContent = ({
       id='form-shift-create-update'
       onKeyDown={preventKeyDown}
     >
-      <div className='grid grid-cols-4 gap-3 z-50 grid-cols-en'>
-        <div class='col-span-2'>
+      <div className='grid grid-cols-2 gap-3 z-50 grid-cols-en'>
+        <div class='col-span-1'>
           <Field<IOption> name='employeeId' validate={required}>
             {({ input, meta }) => (
               <SmartSelector
@@ -69,7 +69,7 @@ export const ShiftFormContent = ({
             )}
           </Field>
         </div>
-        <div class='col-span-2'>
+        <div class='col-span-1'>
           <Field<IOption> name='serviceId' validate={required}>
             {({ input, meta }) => (
               <SmartSelector
@@ -95,7 +95,7 @@ export const ShiftFormContent = ({
             )}
           </Field>
         </div>
-        <div class='col-span-2'>
+        <div class='col-span-1'>
           <Field<IOption> name='scheduleId' validate={required}>
             {({ input, meta }) => (
               <SmartSelector
@@ -121,7 +121,7 @@ export const ShiftFormContent = ({
             )}
           </Field>
         </div>
-        <div class='col-span-2'>
+        <div class='col-span-1'>
           <Field<string> name='type' validate={required}>
             {({ input, meta }) => (
               <Select
@@ -147,11 +147,11 @@ export const ShiftFormContent = ({
           </Field>
         </div>
 
-        <div class='col-span-2'>
+        <div class='col-span-1'>
           <DateField name='start' label='h_date_start' validate={required} />
         </div>
 
-        <div class='col-span-2'>
+        <div class='col-span-1'>
           <DateField name='end' label='h_date_end' validate={required} />
         </div>
 
