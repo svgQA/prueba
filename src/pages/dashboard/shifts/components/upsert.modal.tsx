@@ -28,6 +28,7 @@ import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { DAYS_OF_WEEK, HOURS } from '@/pages/settings/shifts/schedule/constant';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { TaskCard } from './task.card';
+import dayjs from 'dayjs';
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -40,6 +41,22 @@ interface ITaskFormProps {
   timeBeforeSelected?: number;
   externalSelected?: string;
 }
+
+type TimeBlock = {
+  start: number;
+  end: number;
+};
+
+type DaySchedule = {
+  day: string;
+  dayIndex: number;
+  blocks: TimeBlock[];
+};
+
+type Schedule = {
+  days: DaySchedule[];
+  daysAllowed: string[];
+};
 
 export const TaskForm = ({
   closed,
@@ -63,6 +80,7 @@ export const TaskForm = ({
   const tasks = useSignal<ITask[]>([]);
   const relatedShifts = useSignal<any[]>([]);
   const forms = useSignal<any[]>([]);
+  const currentSchedule = useSignal<any>(null);
 
   useEffect(() => {
     if (selectedCompany) {
@@ -76,18 +94,17 @@ export const TaskForm = ({
       return;
     }
     const { employeeId, serviceId } = model;
-    /*
-		const isInSchedule = isStartAndEndInSchedules(
-		  DateUtils.dateToInput(model.start),
-		  DateUtils.dateToInput(model.end),
-		  schedules.value
-		);
+    console.log(model, tasks.value);
 
-		if (!isInSchedule) {
-		  ToastManager.warning('s_updated_error');
-		  return;
-		}
-		*/
+    const isInSchedule = isStartAndEndInSchedules(
+      DateUtils.dateToInput(model.start),
+      DateUtils.dateToInput(model.end),
+      currentSchedule.value
+    );
+    if (!isInSchedule) {
+      ToastManager.warning('s_updated_error_schedule');
+      return;
+    }
 
     // const model_task = tasks.value.find(
     //   (_task: ITask) => _task.id === task?.value
@@ -225,16 +242,19 @@ export const TaskForm = ({
     const model = response.getOne();
 
     if (model.tasks && model.tasks.length > 0) {
-      // MSG: Update tasks message
-      // TODO: Agregar solo las propiedades necesarias
       onTaskAdd(model.tasks, 1);
     }
 
     const length = model.schedules.length;
     if (length < 1) return;
+    schedules.value = model.schedules;
+  };
 
-    schedules.value = model.scchedule;
-    const schedule = model.schedules[length - 1].schedule;
+  const onChangeSchedule = async (id: number) => {
+    const { schedule } = schedules.value.find(
+      (value) => value.scheduleId === id
+    );
+    currentSchedule.value = schedule;
     const days = schedule.days.reduce(
       (acc: any, day: any) => {
         acc[day.day] = day.blocks.map((block: any) => {
@@ -244,7 +264,6 @@ export const TaskForm = ({
       },
       {} as { [key: string]: { start: number; end: number }[] }
     );
-    // @ts-ignore
     setSelectedCells(convertBlocksToCells(days));
   };
 
@@ -278,6 +297,39 @@ export const TaskForm = ({
   const isNewTask = useSignal(false);
   const onToggleTask = () => {
     isNewTask.value = !isNewTask.value;
+  };
+
+  const isStartAndEndInSchedules = (
+    startDateStr: string,
+    endDateStr: string,
+    currentSchedule: Schedule
+  ): boolean => {
+    const start = dayjs.utc(startDateStr);
+    const end = dayjs.utc(endDateStr);
+    const checkTime = (date: dayjs.Dayjs) => {
+      const dayIndex = date.day();
+      const dayName = DAYS_OF_WEEK.find((day) => day.position === dayIndex);
+      if (
+        !currentSchedule.daysAllowed.some(
+          (d) => d.toLowerCase() === (dayName?.value || '').toLowerCase()
+        )
+      ) {
+        return false;
+      }
+
+      const scheduleDay = currentSchedule.days.find(
+        (d: DaySchedule) => d.dayIndex === dayIndex
+      );
+      if (!scheduleDay) return false;
+
+      const hourDecimal = date.hour() + date.minute() / 60;
+      return scheduleDay.blocks.some(
+        (block: TimeBlock) =>
+          hourDecimal >= block.start && hourDecimal <= block.end
+      );
+    };
+
+    return checkTime(start) && checkTime(end);
   };
 
   return (
@@ -354,7 +406,12 @@ export const TaskForm = ({
               onToggleTask={onToggleTask}
               users={users}
               services={services.value}
+              schedules={schedules.value.map((value: any) => ({
+                value: value.schedule.id,
+                label: value.schedule.name,
+              }))}
               cleanServiceSelected={cleanServiceSelected}
+              onChangeSchedule={onChangeSchedule}
               tasks={tasks}
             />
           )}

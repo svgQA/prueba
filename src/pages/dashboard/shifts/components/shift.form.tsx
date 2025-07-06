@@ -15,8 +15,10 @@ interface Props {
   values: any;
   onChangeShift: (id: number, start: string, end: string) => void;
   onChangeService: (id: number) => void;
+  onChangeSchedule: (id: number) => void;
   users?: IOption[];
   services?: IOption[];
+  schedules?: IOption[];
   tasks: any;
   cleanServiceSelected: any;
   onToggleTask?: () => void;
@@ -26,8 +28,10 @@ export const ShiftFormContent = ({
   handleSubmit,
   onChangeShift,
   onChangeService,
+  onChangeSchedule,
   users,
   services = [],
+  schedules = [],
   cleanServiceSelected,
   tasks,
   onToggleTask,
@@ -91,15 +95,32 @@ export const ShiftFormContent = ({
             )}
           </Field>
         </div>
-
         <div class='col-span-1'>
-          <DateField name='start' label='h_date_start' validate={required} />
+          <Field<IOption> name='scheduleId' validate={required}>
+            {({ input, meta }) => (
+              <SmartSelector
+                {...input}
+                meta={meta}
+                id='select-schedule'
+                placeholder='p_select'
+                label='h_schedule'
+                icon='094'
+                options={schedules}
+                menuPortalTarget={document.body}
+                onChange={(e) => {
+                  if (e?.value) {
+                    const id = Number(e.value);
+                    onChangeSchedule(id);
+                  }
+                  if (!e) {
+                    cleanServiceSelected();
+                  }
+                  input.onChange(e);
+                }}
+              />
+            )}
+          </Field>
         </div>
-
-        <div class='col-span-1'>
-          <DateField name='end' label='h_date_end' validate={required} />
-        </div>
-
         <div class='col-span-1'>
           <Field<string> name='type' validate={required}>
             {({ input, meta }) => (
@@ -124,6 +145,14 @@ export const ShiftFormContent = ({
               />
             )}
           </Field>
+        </div>
+
+        <div class='col-span-1'>
+          <DateField name='start' label='h_date_start' validate={required} />
+        </div>
+
+        <div class='col-span-1'>
+          <DateField name='end' label='h_date_end' validate={required} />
         </div>
 
         <div class='col-span-1'>
@@ -158,7 +187,7 @@ export const ShiftFormContent = ({
           />
         </div>
 
-        <div class='col-span-1'>
+        <div class='col-span-2'>
           <Field<IOption> name='task'>
             {({ input, meta }) => (
               <SmartSelector
