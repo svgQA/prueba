@@ -16,6 +16,7 @@ import {
   setMenu,
 } from '../../store/settings';
 import { ServiceService } from '@/services';
+import { useTranslation } from 'react-i18next';
 
 export interface IServicio {
   id: number;
@@ -34,8 +35,9 @@ export const ServiceSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const novelties: Signal<IServicio[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Servie Service';
+    document.title = t('p_service');
     getServices();
   }, []);
 
@@ -55,7 +57,8 @@ export const ServiceSettingPage: FunctionComponent = () => {
       id: 'service-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Creacion de servicio' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/rounds/service/create');
   };
 
@@ -66,14 +69,15 @@ export const ServiceSettingPage: FunctionComponent = () => {
       id: 'service-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Editar servicio' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/rounds/service/update/${id}`);
   };
 
   const deleteNovelty = async (id: string) => {
     const request = await ServiceService.deleteService(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Servicio eliminado');
+    ToastManager.success('s_deleted_success');
     getServices();
   };
 

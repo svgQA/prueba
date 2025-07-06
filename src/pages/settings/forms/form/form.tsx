@@ -116,7 +116,7 @@ export const FormSettingPage = () => {
       }
       case ROW_ACTIONS.RESPONSE: {
         if (!validateResponse(format.structure)) {
-          ToastManager.error(t('form.error.invalidResponse'));
+          ToastManager.error('s_structure_error');
           return;
         }
         const response = await FormService.create_response({
@@ -175,15 +175,15 @@ export const FormSettingPage = () => {
   };
 
   return (
-    <Section>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-50'>
-        <div className='flex flex-row items-center justify-between gap-2'>
+    <Section className='pt-2'>
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
           <Button
             name='button-create-shift'
             label='new'
             icon='039'
             onClick={handleContinueCreatingForm}
-            className='px-6 py-1 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
           />
           {hasUnfinishedForm && (
             <div

@@ -17,7 +17,6 @@ import { RoutingContent } from './routing';
 import { IMenu } from '@/components/common/utils/interface';
 import { Modal } from '@/components/common/modal/modal';
 import { MenuButtons } from './components/header';
-import { Search } from '@/components/common/search/search';
 import { MenuList } from './components/menu';
 import {
   appendHistory,
@@ -98,9 +97,9 @@ export const SettingsModal = () => {
       theme
       setExpandable={setExpand}
       header={
-        <div className='flex flex-row w-full items-center justify-between'>
+        <div className='flex flex-row w-full items-center justify-between px-3'>
           <MenuButtons goBack={goBack} goForward={goForward} />
-          <LanguageSwitcher />
+          {/*
           <div className='ml-5 flex flex-row w-9/12'>
             <Search
               id='search-general'
@@ -108,6 +107,8 @@ export const SettingsModal = () => {
               placeholder='Search'
             />
           </div>
+          */}
+          <LanguageSwitcher />
         </div>
       }
     >

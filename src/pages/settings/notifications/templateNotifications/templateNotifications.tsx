@@ -10,6 +10,7 @@ import { getColumns } from './components/template.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useSignal } from '@preact/signals';
+import { useTranslation } from 'react-i18next';
 
 export const TemplateNotificationPage = () => {
   const [templates, setTemplates] = useState<any[]>([]);
@@ -24,8 +25,9 @@ export const TemplateNotificationPage = () => {
     loading.value = false;
   };
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Plantillas de notificaciones';
+    document.title = t('p_template');
     fetchTemplates();
   }, []);
 
@@ -60,7 +62,7 @@ export const TemplateNotificationPage = () => {
     const res = await TemplateService.deleteTemplate(id);
     if (!res.getStatus()) return;
 
-    ToastManager.success('Plantilla eliminada correctamente');
+    ToastManager.success('s_deleted_success');
     fetchTemplates();
   };
 
@@ -76,14 +78,17 @@ export const TemplateNotificationPage = () => {
   };
 
   return (
-    <Section>
+    <Section className='pt-2'>
       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <Button
-          name='create-template'
-          label='+ Nueva Plantilla'
-          className='bg-primary text-white p-2'
-          onClick={redirect}
-        />
+        <div className='flex flex-row items-center justify-between'>
+          <Button
+            name='button-create-template'
+            label='new'
+            icon='039'
+            onClick={() => redirect()}
+            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
+          />
+        </div>
       </div>
 
       <Table<any>

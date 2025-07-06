@@ -32,9 +32,9 @@ export const CardCompany = ({ company, onEdit }: ICardCompanyProps) => {
         </div>
 
         {/* Description */}
-        <p className='text-sm dark:text-gray-200 text-gray-800 mb-4 line-clamp-2'>
+        <span className='text-sm dark:text-gray-200 text-gray-800 mb-4 line-clamp-2'>
           <TextEllipsis text={company.description} maxWidth='250px' />
-        </p>
+        </span>
 
         {/* Contact Info */}
         <div className='space-y-2'>

@@ -3,14 +3,14 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 const base = PAGES_LIST_ROUTER.dashboard.setting.forms.base;
 export const MODAL_SETTING_FORM: IModalSidebarMenu = {
-  label: 'formularios',
+  label: 'g_form',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
   menus: [
     {
       icon: '094',
-      label: 'Forms',
-      description: 'Forms',
+      label: 'm_form',
+      description: 'd_form',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.form.base,
       id: 'form-create',
@@ -27,8 +27,8 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
     // },
     {
       icon: '028',
-      label: 'analytic',
-      description: 'Responses',
+      label: 'm_analytic',
+      description: 'd_analytic',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.base,
       id: 'form-analytic',

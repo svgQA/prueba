@@ -15,6 +15,7 @@ import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
+import { useTranslation } from 'react-i18next';
 
 export interface IActivity {
   id: number;
@@ -36,8 +37,9 @@ export const ActivitySettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const activity: Signal<IActivity[]> = useSignal([]);
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Activity Service';
+    document.title = t('p_service');
     getActivities();
   }, []);
 
@@ -47,19 +49,21 @@ export const ActivitySettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de turno' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/rounds/activity/create');
   };
 
   const updateActivity = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar turno' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/rounds/activity/update/${id}`);
   };
 
   const deleteActivity = async (id: string) => {
     const request = await ShiftService.deleteActivity(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Turno eliminado');
+    ToastManager.success('s_deleted_success');
     getActivities();
   };
 

@@ -83,7 +83,7 @@ export const MemosPage: FunctionComponent = () => {
   const panic = useSignal<Memo[]>([]);
 
   useEffect(() => {
-    document.title = 'TR - Chat';
+    document.title = t('p_chat');
     return () => {
       wsManager.removeListener('memos');
     };
@@ -280,7 +280,7 @@ export const MemosPage: FunctionComponent = () => {
           }}
           rounded={false}
           selected={currentView.value === VIEW_NAME.PANIC}
-          icon='020'
+          icon='359'
         />
         {/* <Button
           name='button-change-scheduler'
@@ -323,7 +323,7 @@ export const MemosPage: FunctionComponent = () => {
           ? 'flex flex-row h-[94.5vh]'
           : 'mr-3 my-1 relative'
       }
-      padding={currentView.value === VIEW_NAME.TABLE}
+      padding={currentView.value !== VIEW_NAME.CHAT}
     >
       {(currentView.value === VIEW_NAME.TABLE ||
         currentView.value === VIEW_NAME.MAP ||

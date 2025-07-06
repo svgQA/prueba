@@ -14,6 +14,7 @@ import {
   setMenu,
 } from '../../store/settings';
 import { NoveltyService } from '@/services';
+import { useTranslation } from 'react-i18next';
 
 export interface INovelty {
   id: number;
@@ -32,8 +33,9 @@ export const NoveltySettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const novelties: Signal<INovelty[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Novelty Service';
+    document.title = t('p_novelty');
     getNovelties();
   }, []);
 
@@ -47,19 +49,21 @@ export const NoveltySettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de novedad' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/memo/novelty/create');
   };
 
   const update = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar novedad' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/memo/novelty/update/${id}`);
   };
 
   const deleteNovelty = async (id: string) => {
     const request = await NoveltyService.deleteNovelty(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Novedad eliminado');
+    ToastManager.success('s_deleted_success');
     getNovelties();
   };
 

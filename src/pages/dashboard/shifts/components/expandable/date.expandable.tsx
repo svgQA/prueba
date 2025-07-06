@@ -133,7 +133,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         status={checkInStatus.value.message || ''}
         statusColor={checkInStatus.value.color || ''}
         distance={checkInData?.distance || ''}
-        btnLabel={t('shift.expandable.date.buttons.checkIn')}
+        btnLabel='Check In' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
         latitude={checkInData?.location.lat || 4.649251}
         longitude={checkInData?.location.lng || -74.106992}
@@ -152,7 +152,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         status={checkOutStatus.value.message || ''}
         statusColor={checkOutStatus.value.color || ''}
         distance={checkOutData?.distance || ''}
-        btnLabel={t('shift.expandable.date.buttons.checkOut')}
+        btnLabel='Check Out' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
         latitude={checkOutData?.location.lat || 4.649251}
         longitude={checkOutData?.location.lng || -74.106992}
@@ -225,9 +225,9 @@ const ShiftCard = ({
         onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
-      ToastManager.error(t('shift.expandable.date.location.gpsMessage'));
+      ToastManager.error('s_gps_error');
     } else {
-      ToastManager.error(t('shift.expandable.date.location.timeoutMessage'));
+      ToastManager.error('s_gps_timeout');
     }
   };
 
@@ -240,10 +240,7 @@ const ShiftCard = ({
       longitude: position.coords.longitude.toString(),
       date: new Date().toISOString(),
       platform: 'web',
-      type:
-        btnLabel === t('shift.expandable.date.buttons.checkIn')
-          ? 'CHECK_IN'
-          : 'CHECK_OUT',
+      type: btnLabel === 'Check In' ? 'CHECK_IN' : 'CHECK_OUT',
     };
 
     const response = await ShiftService.createCheck(checkData, shiftId);
@@ -328,11 +325,7 @@ const ShiftCard = ({
 
           <Button
             label={btnLabel}
-            icon={
-              btnLabel === t('shift.expandable.date.buttons.checkIn')
-                ? '023'
-                : '024'
-            }
+            icon={btnLabel === 'Check In' ? '023' : '024'}
             disabled={disabled}
             onClick={() =>
               showAlert({

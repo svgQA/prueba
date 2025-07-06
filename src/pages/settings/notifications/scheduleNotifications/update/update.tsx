@@ -136,11 +136,11 @@ export const ScheduledNotificationEditPage = () => {
             } catch (_) {}
           }}
         />
-        <div className='flex justify-end'>
+        <div className='w-full flex justify-end items-center'>
           <Button
             name='save-scheduled'
-            label='Guardar cambios'
-            className='bg-primary text-white p-2'
+            label='save'
+            icon='022'
             onClick={handleSubmit}
             disabled={loading}
           />

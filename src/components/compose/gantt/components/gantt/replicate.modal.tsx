@@ -200,7 +200,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                                       validate={validate_min_len(1)}
                                     >
                                       {({ input, meta }) => (
-                                        <SmartSelector
+                                        <SmartSelector<IOption[]>
                                           {...input}
                                           meta={meta}
                                           name={`${name}.replacementUserId`}

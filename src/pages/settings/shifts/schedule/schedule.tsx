@@ -14,30 +14,19 @@ import {
   menuInformationSelected as infoMenu,
   setMenu,
 } from '../../store/settings';
-import { DataSchedule, DaySelection } from './components/data.schedule';
+import { DataSchedule } from './components/data.schedule';
 import { ScheduleService } from '@/services';
 import { useTranslation } from 'react-i18next';
-
-export interface ISchedule {
-  id: number;
-  name: string;
-  daysAllowed: string[];
-  days: any;
-}
-
-export interface IRowActionPlace {
-  id: string;
-  type: string;
-  action: ROW_ACTIONS;
-}
+import { IDay, IRowActionPlace, ISchedule } from '@/types/shift/shift.request';
 
 export const ScheduleSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const schedules: Signal<ISchedule[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
+
   const { t } = useTranslation();
   useEffect(() => {
-    document.title = t('schedule.title');
+    document.title = t('p_schedule');
     getSchedules();
   }, []);
 
@@ -57,7 +46,8 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       id: 'schedule-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: t('schedule.createSchedule') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/rounds/schedule/create');
   };
 
@@ -68,14 +58,15 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       id: 'schedule-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: t('schedule.editSchedule') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/rounds/schedule/update/${id}`);
   };
 
   const deleteSchedule = async (id: string) => {
     const request = await ScheduleService.deleteSchedule(id);
     if (!request.getStatus()) return;
-    ToastManager.success(t('schedule.deleteSchedule'));
+    ToastManager.success('s_deleted_success');
     getSchedules();
   };
 
@@ -106,10 +97,10 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       <Table<ISchedule>
         data={schedules.value}
         columns={columns}
-        expandable={(row: any) => {
+        expandable={(row: ISchedule) => {
           return (
             <ul className='flex flex-wrap justify-center gap-x-2'>
-              {row.days.map((dayInfo: DaySelection) => (
+              {row.days.map((dayInfo: IDay) => (
                 <DataSchedule daySelection={dayInfo} />
               ))}
             </ul>

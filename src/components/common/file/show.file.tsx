@@ -27,7 +27,9 @@ const showFiles = ({
   const [startIdx, setStartIdx] = useState(0);
 
   const getUrl = (file: IPresignedRequest) => {
-    return `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
+    const validation = `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
+    console.log('URL: -> ', validation);
+    return validation;
   };
 
   useEffect(() => {

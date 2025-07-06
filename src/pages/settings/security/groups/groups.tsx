@@ -13,13 +13,15 @@ import {
   setMenu,
 } from '../../store/settings';
 import { GeneralService } from '@/services';
+import { useTranslation } from 'react-i18next';
 
 export const GroupSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const groups = useSignal<any[]>([]);
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Activity Service';
+    document.title = t('p_activity');
     getGroups();
   }, []);
 
@@ -30,20 +32,21 @@ export const GroupSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de Grupo' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/security/grups/create');
   };
 
   // const updateActivity = (id: string) => {
   //   console.log('DATA: ', id);
-  //   // setMenu({ ...infoMenu.value, label: 'Editar turno' });
+  //   // setMenu({ ...infoMenu.value, label: 'edit' });
   //   // navigate(`/rounds/activity/update/${id}`);
   // };
 
   // const deleteActivity = async (id: string) => {
   //   const request = await ShiftService.deleteActivity(id);
   //   if (!request.getStatus()) return;
-  //   ToastManager.success('Turno eliminado');
+  //   ToastManager.success('s_deleted_success');
   //   getGroups();
   // };
 

@@ -17,6 +17,8 @@ import {
 } from '../../store/settings';
 import { PlaceService } from '@/services';
 import { useSignal } from '@preact/signals';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { useTranslation } from 'react-i18next';
 
 export interface IRowActionPlace {
   id: string;
@@ -29,8 +31,9 @@ export const PlacesSettingPage: FunctionComponent = () => {
   const [places, setPlaces] = useState([]);
   const loading = useSignal<boolean>(false);
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Place Service';
+    document.title = t('p_place');
     getPlaces();
   }, []);
 
@@ -51,13 +54,14 @@ export const PlacesSettingPage: FunctionComponent = () => {
     };
     navigate(menu.to);
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Creacion de lugar' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
   };
 
   const deletePlace = async (id: string) => {
     const request = await PlaceService.deletePlace(id);
     if (!request.getStatus()) return;
-    // ToastManager.success('Lugar eliminado');
+    ToastManager.success('s_deleted_success');
     getPlaces();
   };
 
@@ -68,7 +72,8 @@ export const PlacesSettingPage: FunctionComponent = () => {
       id: 'places-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Editar lugar' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/rounds/places/update/${id}`);
   };
   const handleOnClick = async (action: IRowActionPlace | any) => {

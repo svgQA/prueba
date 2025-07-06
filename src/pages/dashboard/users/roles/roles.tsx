@@ -34,7 +34,7 @@ export const UserRolesPage: FunctionComponent = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = t('role.pageTitle');
+    document.title = t('p_roles');
     getRoles();
   }, []);
 
@@ -44,19 +44,21 @@ export const UserRolesPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: t('role.new') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/users/roles/create');
   };
 
   const updateRole = (id: string) => {
-    setMenu({ ...infoMenu.value, label: t('role.edit') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/users/roles/update/${id}`);
   };
 
   const deleteRole = async (id: number) => {
     const request = await RoleService.deleteRole(id);
     if (!request.getStatus()) return;
-    ToastManager.success(t('role.deleted'));
+    ToastManager.success('s_deleted_success');
     getRoles();
   };
 

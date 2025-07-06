@@ -3,12 +3,12 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 const base = PAGES_LIST_ROUTER.dashboard.setting.access.base;
 export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
-  label: 'Access',
+  label: 'g_access',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   menus: [
     {
       icon: '096',
-      label: 'Resources',
+      label: 'm_resource',
       description: 'Devices',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.access.resource.base,
@@ -17,7 +17,7 @@ export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
     },
     {
       icon: '096',
-      label: 'Sets',
+      label: 'm_device',
       description: 'Devices',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.access.sets.base,
@@ -26,7 +26,7 @@ export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
     },
     {
       icon: '096',
-      label: 'Places',
+      label: 'm_place',
       description: 'Devices',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.access.place.base,
@@ -35,7 +35,7 @@ export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
     },
     {
       icon: '096',
-      label: 'Information',
+      label: 'm_info',
       description: 'Devices',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.access.information.base,

@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { ISchedule } from '../schedule';
+import { ISchedule } from '@/types/shift/shift.request';
 import i18n from '@/i18n';
 export const columns: ColumnDef<ISchedule>[] = [
   {
@@ -23,7 +23,7 @@ export const columns: ColumnDef<ISchedule>[] = [
     cell: (info) => {
       const { daysAllowed } = info.row.original;
       return daysAllowed
-        .map((day) => i18n.t(`schedule.${day.toLowerCase()}`))
+        .map((day) => i18n.t(`${day.toLowerCase()}`))
         .join(', ');
     },
   },

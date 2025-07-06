@@ -84,7 +84,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     let request;
     let message: string;
     if (!points.value.length) {
-      return ToastManager.warning('Ingrese puntos en el mapa');
+      return ToastManager.warning('s_insert_points');
     } else {
       model.points = points.value.map(
         (point: {
@@ -109,10 +109,10 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
     if (id) {
       request = await RoundService.updateRound(model, id);
-      message = 'Ronda editada exitosamente!';
+      message = 's_updated_success';
     } else {
       request = await RoundService.createRound(model);
-      message = 'Ronda creada exitosamente!';
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;

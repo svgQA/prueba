@@ -39,6 +39,8 @@ export const columns_es = {
   h_client: 'Cliente',
   h_hour_start: 'Hora de inicio',
   h_hour_end: 'Hora de fin',
+  h_date_start: 'Fecha de inicio',
+  h_date_end: 'Fecha de fin',
   h_days_allowed: 'Días permitidos',
   h_place: 'Lugar',
   h_group: 'Grupo',
@@ -48,6 +50,8 @@ export const columns_es = {
   h_date: 'Fecha',
   h_time: 'Hora',
   h_attachment: 'Adjunto',
+  h_time_before: 'Tiempo Antes',
+  h_employee: 'Empleado',
 };
 
 export const columns_en = {
@@ -89,8 +93,10 @@ export const columns_en = {
   h_latitude: 'Latitude',
   h_longitude: 'Longitude',
   h_client: 'Client',
-  h_hour_start: 'Hour Start',
-  h_hour_end: 'Hour End',
+  h_hour_start: 'Start Hour',
+  h_hour_end: 'End Hour',
+  h_date_start: 'Start Date',
+  h_date_end: 'End Date',
   h_days_allowed: 'Days Allowed',
   h_place: 'Place',
   h_group: 'Group',
@@ -100,4 +106,6 @@ export const columns_en = {
   h_date: 'Date',
   h_time: 'Time',
   h_attachment: 'Attachment',
+  h_time_before: 'Time Before',
+  h_employee: 'Employee',
 };

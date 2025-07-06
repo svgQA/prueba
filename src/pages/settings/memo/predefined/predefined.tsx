@@ -14,13 +14,15 @@ import {
 } from '../../store/settings';
 import { IPredefined, IRowActionPlace } from './utils/predefined.d';
 import { PredefinedService } from '@/services/shift/predefined';
+import { useTranslation } from 'react-i18next';
 
 export const PredefinedSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const predefined: Signal<IPredefined[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Predefined Service';
+    document.title = t('p_predefined');
     getPredefined();
   }, []);
 
@@ -34,19 +36,21 @@ export const PredefinedSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de predefinido' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/memo/predefined/create');
   };
 
   const update = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar predefinido' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/memo/predefined/update/${id}`);
   };
 
   const deletePredefined = async (id: string) => {
     const request = await PredefinedService.deletePredefined(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Predefinido eliminado');
+    ToastManager.success('s_deleted_success');
     getPredefined();
   };
 

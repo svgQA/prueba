@@ -52,7 +52,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   const [isAutoSaving, setIsAutoSaving] = useState(false);
 
   useEffect(() => {
-    document.title = 'Forms Create Settings';
+    document.title = t('p_setting');
   }, []);
 
   useEffect(() => {

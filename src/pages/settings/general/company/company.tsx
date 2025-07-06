@@ -3,7 +3,6 @@ import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { ICompanyResponse } from '@/utils/types/company.interface';
 import { useSignal } from '@preact/signals';
-import { Button } from '@/components/common/button/button';
 import { CompanyService } from '@/services';
 import { CardCompany } from './component/card.company';
 import { Form, Field } from 'react-final-form';
@@ -15,6 +14,8 @@ import {
   IUCompanyRequest,
 } from '@/utils/types/company.interface';
 import { useUserStore } from '@/store/slices/access/user.slice';
+import { Section } from '@/components/common/section/section';
+import { useTranslation } from 'react-i18next';
 
 export const CompanySettingPage: FunctionComponent = () => {
   const { setCompanies } = useUserStore();
@@ -30,9 +31,9 @@ export const CompanySettingPage: FunctionComponent = () => {
     address: '',
     identification: '',
   };
-
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'Company Settings';
+    document.title = t('p_setting');
     loadCompanies();
   }, []);
 
@@ -56,9 +57,9 @@ export const CompanySettingPage: FunctionComponent = () => {
     resetForm(true, true, company);
   };
 
-  const handleAdd = () => {
-    resetForm(!showForm.value);
-  };
+  // const handleAdd = () => {
+  //   resetForm(!showForm.value);
+  // };
 
   const resetForm = (
     show: boolean = false,
@@ -81,28 +82,24 @@ export const CompanySettingPage: FunctionComponent = () => {
       response = await CompanyService.createCompany(values as ICCompanyRequest);
     }
     if (!response.getStatus()) return;
-    ToastManager.success(
-      isEditing
-        ? 'Empresa actualizada correctamente'
-        : 'Empresa creada correctamente'
-    );
+    ToastManager.success(isEditing ? 's_updated_success' : 's_created_success');
     resetForm(false);
     loadCompanies();
   };
 
   return (
-    <div className='h-full overflow-y-auto vox-scroll-design p-5 w-full relative'>
-      <div className='flex flex-row justify-between'>
-        <div className='flex flex-row gap-2 justify-center flex-wrap'>
-          {companies.value.map((company) => (
-            <CardCompany
-              key={company.id}
-              company={company}
-              onEdit={() => handleEdit(company)}
-            />
-          ))}
-        </div>
-        {showForm.value && (
+    <Section className='pt-2'>
+      <div className='h-full overflow-y-auto vox-scroll-design p-5 w-full relative pt-16'>
+        <div className='flex flex-row justify-between'>
+          <div className='flex flex-row gap-2 justify-center flex-wrap'>
+            {companies.value.map((company) => (
+              <CardCompany
+                key={company.id}
+                company={company}
+                onEdit={() => handleEdit(company)}
+              />
+            ))}
+          </div>
           <div className='min-w-[500px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
             <Form<ICCompanyRequest | IUCompanyRequest>
               onSubmit={onSubmit}
@@ -204,11 +201,8 @@ export const CompanySettingPage: FunctionComponent = () => {
               )}
             />
           </div>
-        )}
-        <div className='absolute top-0 right-0'>
-          <Button name='company-setting-add' icon='039' onClick={handleAdd} />
         </div>
       </div>
-    </div>
+    </Section>
   );
 };

@@ -18,6 +18,7 @@ import {
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { RoundService } from '@/services';
 import { useSignal } from '@preact/signals';
+import { useTranslation } from 'react-i18next';
 
 export const RoundsSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -31,12 +32,14 @@ export const RoundsSettingPage: FunctionComponent = () => {
       id: 'rounds-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Creación de ronda' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/round/create');
   };
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Round Service';
+    document.title = t('p_round');
     getRounds();
   }, []);
 
@@ -72,7 +75,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   const deleteRound = async (id: string) => {
     const request = await RoundService.deleteRound(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Ronda eliminado');
+    ToastManager.success('s_deleted_success');
     getRounds();
   };
 
@@ -83,7 +86,8 @@ export const RoundsSettingPage: FunctionComponent = () => {
       id: 'rounds-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Editar ronda' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/round/update/${id}`);
   };
 

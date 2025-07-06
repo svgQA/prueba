@@ -13,61 +13,46 @@ import { ICScheduleRequest } from '@/types/shift/shift.request';
 import { ScheduleService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useTranslation } from 'react-i18next';
-const START_HOUR = 0;
-const END_HOUR = 24;
+import { DAYS_OF_WEEK, HOURS } from '../constant';
+import { DaySelectedModel } from '../type';
 
 export const ScheduleCreateSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
-  const { id } = useParams(); // Obtiene el id de la URL
-  const { t } = useTranslation();
+  const { id } = useParams();
 
-  const daysOfWeek = [
-    { value: 'monday', label: t('schedule.monday') },
-    { value: 'tuesday', label: t('schedule.tuesday') },
-    { value: 'wednesday', label: t('schedule.wednesday') },
-    { value: 'thursday', label: t('schedule.thursday') },
-    { value: 'friday', label: t('schedule.friday') },
-    { value: 'saturday', label: t('schedule.saturday') },
-    { value: 'sunday', label: t('schedule.sunday') },
-  ];
-
-  const hours = Array.from(
-    { length: END_HOUR - START_HOUR + 1 },
-    (_, i) => START_HOUR + i
-  );
-
-  // Estado compartido para las celdas seleccionadas
   const selectedCells = useSignal<{ [key: string]: boolean }>({});
-
-  // Función para limpiar la selección - EXACTAMENTE LA MISMA que usará el botón interno
   const handleClearSelection = () => {
     selectedCells.value = {};
   };
 
-  // Función para actualizar las celdas seleccionadas
   const handleCellChange = (newCells: { [key: string]: boolean }) => {
     selectedCells.value = newCells;
   };
 
   const onSubmit = async (model: ICScheduleRequest) => {
-    const hoursByDay = getSelectedHoursByDay(
-      daysOfWeek.map((day) => day.label),
-      hours,
+    const hoursByDay: DaySelectedModel[] = getSelectedHoursByDay(
+      DAYS_OF_WEEK,
+      HOURS,
       selectedCells.value
     ).filter((day) => day.blocks.length > 0);
-    model.daysAllowed = hoursByDay.map((day) => day.day);
-    model.days = hoursByDay;
+
+    model.daysAllowed = hoursByDay.map((day) => day.day.label);
+    model.days = hoursByDay.map((day) => ({
+      ...day,
+      day: day.day.value,
+    }));
 
     let request;
-    let message: string = id
-      ? t('schedule.successEdit')
-      : t('schedule.successCreate');
+    let message = '';
 
     if (id) {
       request = await ScheduleService.updateSchedule(model, id);
+      message = 's_updated_success';
     } else {
       request = await ScheduleService.createSchedule(model);
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;
@@ -87,9 +72,10 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
       daysAllowed: model.daysAllowed,
       days: model.days,
     };
+
     const days = model.days.reduce(
       (acc, day) => {
-        acc[day.day] = day.blocks.map((block) => {
+        acc[day.day as string] = day.blocks.map((block) => {
           return { start: block.start, end: block.end };
         });
         return acc;
@@ -138,8 +124,8 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                   selectedCells={selectedCells.value}
                   onClearSelection={handleClearSelection}
                   onCellChange={handleCellChange}
-                  daysOfWeek={daysOfWeek.map((day) => day.label)}
-                  hours={hours}
+                  daysOfWeek={DAYS_OF_WEEK}
+                  hours={HOURS}
                 />
               </div>
             </div>

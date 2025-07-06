@@ -22,7 +22,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
   const { selectedCompany } = useUserStore();
 
   useEffect(() => {
-    document.title = t('history.pageTitle');
+    document.title = t('p_history');
   }, []);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
       const res = await NotificationHistoryService.getNotificationList();
       notifications.value = res;
     } catch (error) {
-      ToastManager.error(t('history.errors.loadHistory'));
+      ToastManager.error('s_loading_error');
     } finally {
       loading.value = false;
     }
@@ -55,14 +55,14 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
       openRate.value = stats.openRate;
       notificationsThisMonth.value = stats.notificationsOfMonth;
     } catch (error) {
-      ToastManager.error(t('history.errors.loadStats'));
+      ToastManager.error('s_loading_error');
     }
   };
 
   /* const handleRunCron = async () => {
     try {
       await NotificationHistoryService.runSchedulerTask();
-      ToastManager.success(t('history.success.cronExecuted'));
+      ToastManager.success('s_execute_success');
       await fetchAll();
     } catch (error) {
       ToastManager.error(t('history.errors.cronExecution'));

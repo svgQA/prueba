@@ -5,17 +5,14 @@ import { TenantService } from '@/services/general/tenant';
 import { IInstance } from '@/utils/network/types';
 import { useSignal } from '@preact/signals';
 import { InstanceCard } from '@/components/compose/cards/instance.card';
-// import { tenantData } from './utils/tenant.data';
-// import { ITenantResponse } from '@/types/tenant';
-// import { CardData } from '@/components/compose/cards';
-// import { Table } from '@/components/common/table/table';
-// import { columns } from './components/tenant.columns';
+import { useTranslation } from 'react-i18next';
 
 export const TenantSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const instances = useSignal<IInstance[]>([]);
 
   useEffect(() => {
-    document.title = 'Tenant Settings';
+    document.title = t('p_setting');
     getTenant();
   }, []);
 

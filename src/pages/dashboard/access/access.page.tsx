@@ -8,14 +8,14 @@ import { IAccess, accesData } from './utils';
 import { accessColumns } from './components/access.columns';
 import { ExpandableAccess } from '@/components/compose/table/expandable/access';
 import { CardData } from '@/components/compose/cards';
+import { useTranslation } from 'react-i18next';
 
-export const AccesPage: FunctionalComponent = () => {
+export const AccessPage: FunctionalComponent = () => {
+  const { t } = useTranslation();
   const [data, setData] = useState<IAccess[]>([]);
 
   useEffect(() => {
-    document.title = 'TR - Access Service';
-
-    // Cargamos los datos ficticios
+    document.title = t('p_access');
     setData(accesData);
   }, []);
 

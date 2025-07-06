@@ -96,17 +96,21 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       municipalityId: Number(model.municipalityId.value),
       ...(model.description == '' ? {} : { description: model.description }),
       code: Number(model.code),
+      zipCode: model.zipCode,
     };
 
     let request: any;
+    let message = '';
     if (!id) {
       request = await PlaceService.createPlace(data);
+      message = 's_created_success';
     } else {
       request = await PlaceService.updatePlace(data, id);
+      message = 's_updated_success';
     }
     if (!request.getStatus()) return;
 
-    ToastManager.success('Accion con exito');
+    ToastManager.success(message);
     navigate('/rounds/places');
   };
 
@@ -145,6 +149,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       latitude: 0,
       longitude: 0,
     };
+
     let departmentId = {
       value: 0,
       label: 'Seleccione un departamento',
@@ -354,7 +359,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       )}
                     </Field>
 
-                    <Field<IOption> name='departmentId' validate={required}>
+                    <Field<string> name='departmentId' validate={required}>
                       {({ input, meta }) => (
                         <SmartSelector
                           {...input}
@@ -363,7 +368,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           icon='123'
                           options={departments.value}
                           onChange={(e) => {
-                            if (e?.value) {
+                            if (e && e.value) {
                               onChangeDeparment(Number(e.value));
                             }
                             input.onChange(e);
@@ -385,7 +390,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           options={municipalities.value}
                           meta={meta}
                           onChange={(e) => {
-                            if (e?.value) {
+                            if (e && e.value) {
                               setPosition(Number(e.value));
                             }
                             input.onChange(e);

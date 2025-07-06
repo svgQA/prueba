@@ -35,7 +35,7 @@ export const TemplateCreateForm = () => {
     const { title, description, formId, taskSelector } = values;
 
     if (!title?.trim() || !description?.trim()) {
-      ToastManager.warning('Título y descripción son obligatorios');
+      ToastManager.warning('s_title_and_sub_required');
       return;
     }
 
@@ -54,10 +54,10 @@ export const TemplateCreateForm = () => {
     setLoading(false);
 
     if (res.getStatus()) {
-      ToastManager.success('Plantilla creada exitosamente');
+      ToastManager.success('s_created_success');
       redirectToList();
     } else {
-      ToastManager.error('Error al crear plantilla');
+      ToastManager.error('s_deleted_error');
     }
   };
 
@@ -106,7 +106,7 @@ export const TemplateCreateForm = () => {
             <div>
               <h3 className='text-md font-semibold mb-2'>Contenido</h3>
 
-              <div className='border rounded p-4 mb-4'>
+              <div className='rounded p-4 mb-4'>
                 <div className='flex items-center justify-between mb-2'>
                   <span className='font-medium flex items-center gap-2'>
                     <span className='vox-icon vx-icon-168 text-base' />
@@ -132,7 +132,7 @@ export const TemplateCreateForm = () => {
                 />
               </div>
 
-              <div className='border rounded p-4'>
+              <div className='rounded p-4'>
                 <div className='flex items-center justify-between mb-2'>
                   <span className='font-medium flex items-center gap-2'>
                     <span className='vox-icon vx-icon-169 text-base' />
@@ -166,16 +166,17 @@ export const TemplateCreateForm = () => {
 
             <div className='flex justify-end gap-4 pt-4'>
               <Button
-                name='cancel-template'
-                label='Cancelar'
-                className='bg-white text-grey p-2'
+                name='cancel-create-scheduled'
+                label='cancel'
+                icon='023'
                 onClick={redirectToList}
               />
               <Button
-                name='create-template'
-                label={loading ? 'Creando...' : 'Crear Plantilla'}
-                className='bg-primary text-white p-2'
+                name='submit-create-scheduled'
+                label='save'
                 type='submit'
+                icon='022'
+                disabled={loading}
               />
             </div>
           </form>

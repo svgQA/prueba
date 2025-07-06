@@ -16,7 +16,7 @@ export const CreateInformationSettingPage: FunctionComponent = () => {
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     if (file) {
-      ToastManager.success('Archivo seleccionado');
+      ToastManager.success('s_selected_success');
     }
   };
 

@@ -24,7 +24,7 @@ export const UserAreasPage: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
 
   useEffect(() => {
-    document.title = t('user.area.title');
+    document.title = t('p_area');
     fetchAreas();
   }, []);
 
@@ -38,19 +38,21 @@ export const UserAreasPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: t('user.area.create') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/users/areas/create');
   };
 
   const deleteArea = async (id: number) => {
     const request = await UserService.deleteArea(id);
     if (!request.getStatus()) return;
-    ToastManager.success(t('user.area.delete'));
+    ToastManager.success('s_deleted_success');
     fetchAreas();
   };
 
   const editArea = (id: string) => {
-    setMenu({ ...infoMenu.value, label: t('user.area.edit') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/users/areas/update/${id}`);
   };
 

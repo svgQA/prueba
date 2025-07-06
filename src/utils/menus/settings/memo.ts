@@ -9,8 +9,8 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
   menus: [
     {
       icon: '067',
-      label: 'Novelty',
-      description: 'Novedades',
+      label: 'm_novelty',
+      description: 'd_novelty',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.base,
       id: 'novelty',
@@ -18,8 +18,8 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
     },
     {
       icon: '115',
-      label: 'Predefined',
-      description: 'Predefinidos',
+      label: 'm_predefined',
+      description: 'd_predefined',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.memo.predefined.base,
       id: 'predefined',
@@ -27,8 +27,8 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
     },
     {
       icon: '115',
-      label: 'Resource',
-      description: 'Recursos',
+      label: 'm_resource',
+      description: 'd_resource',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.memo.resource.base,
       id: 'resource',

@@ -43,10 +43,10 @@ export const CreateResourceSettingPage: FunctionComponent = () => {
     };
     const response = await GeneralService.createResource(output);
     if (!response.getStatus()) {
-      ToastManager.error('Error creando recurso');
+      ToastManager.error('s_created_error');
       return;
     }
-    ToastManager.success('Recurso creado con exito');
+    ToastManager.success('s_created_success');
     navigate('/memo/resource');
   };
 

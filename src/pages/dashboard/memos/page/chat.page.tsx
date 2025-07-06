@@ -183,7 +183,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
   const handleSendMessage = (message: string, replyId?: number) => {
     if (!cognito || !userSelected.value?.cognitoId) {
-      ToastManager.error('El mensaje tiene mala estructura');
+      ToastManager.error('s_structure_error');
       return;
     }
     const objMessage: IMessage = {
@@ -267,8 +267,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
       TypeChatView.SERVICES_MEMO === viewMode.value
         ? memoByService.value.find((e) => e.id == replyToId.value)
         : memoByUser.value.find((e) => e.id == replyToId.value);
-    if (!memo)
-      ToastManager.error('No existe un memo con el Id que seleccionaste');
+    if (!memo) ToastManager.error('s_not_found');
     let extraData: ExtraData = memo?.extraData
       ? ({ ...memo?.extraData } as ExtraData)
       : ({} as ExtraData);
@@ -291,7 +290,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
     const response = await MemoService.createMemo(newMemo);
     if (!response.getStatus()) {
-      ToastManager.error('Error creando Memo de respuesta');
+      ToastManager.error('s_created_error');
       return;
     }
     replyToId.value = undefined;

@@ -106,9 +106,9 @@ export const ManualNotificationForm = ({
     try {
       const result = await NotificationService.sendManualNotification(payload);
       result.getStatus() ? onClose?.() : null; // Si se envio correctament
-      ToastManager.success('notification.send.success');
+      ToastManager.success('s_send_success');
     } catch {
-      ToastManager.error('notification.send.failure');
+      ToastManager.error('s_send_error');
     }
   };
 
@@ -125,7 +125,7 @@ export const ManualNotificationForm = ({
         if (templatesResponse.getStatus())
           templates.value = templatesResponse.getMany();
       } catch (err) {
-        ToastManager.error('notification.send.error_loading_forms_templates');
+        ToastManager.error('s_send_error');
       }
     };
     fetchFormsAndTemplates();

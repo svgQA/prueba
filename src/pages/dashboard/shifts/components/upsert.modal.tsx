@@ -22,6 +22,7 @@ import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.s
 //import dayjs from 'dayjs';
 import { ShiftFormContent } from './shift.form';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { DAYS_OF_WEEK, HOURS } from '@/pages/settings/shifts/schedule/constant';
 
 //type TimeBlock = {
 //  start: number;
@@ -55,13 +56,6 @@ interface ITaskFormProps {
   externalSelected?: string;
 }
 
-const START_HOUR = 0;
-const END_HOUR = 24;
-const hours = Array.from(
-  { length: END_HOUR - START_HOUR + 1 },
-  (_, i) => START_HOUR + i
-);
-
 export const TaskForm = ({
   closed,
   onClose,
@@ -74,15 +68,6 @@ export const TaskForm = ({
   externalSelected,
 }: ITaskFormProps) => {
   const { t } = useTranslation();
-  const daysOfWeek = [
-    { value: 'monday', label: t('schedule.monday') },
-    { value: 'tuesday', label: t('schedule.tuesday') },
-    { value: 'wednesday', label: t('schedule.wednesday') },
-    { value: 'thursday', label: t('schedule.thursday') },
-    { value: 'friday', label: t('schedule.friday') },
-    { value: 'saturday', label: t('schedule.saturday') },
-    { value: 'sunday', label: t('schedule.sunday') },
-  ];
   const [selectedCells, setSelectedCells] = useState<any>([]);
   const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
@@ -92,23 +77,24 @@ export const TaskForm = ({
   const relatedShifts = useSignal<any[]>([]);
 
   const { selectedCompany } = useUserStore();
+
   const onSubmit = async (model: any, form: any) => {
     if (relatedShifts.value.length > 0) {
-      ToastManager.error(
-        'No se puede crear el turno porque existen otros en el mismo rango'
-      );
+      ToastManager.error('s_replicate_duplicate_range_error');
       return;
     }
-    /* const isInSchedule = isStartAndEndInSchedules(
+    /*
+    const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
       schedules.value
     );
-    console.log('isInSchedule ==>', isInSchedule);
-    /* if (!isInSchedule) {
-      ToastManager.warning(t('shift.upsert.errorSchedule'));
+
+    if (!isInSchedule) {
+      ToastManager.warning('s_updated_error');
       return;
-      }*/
+    }
+    */
 
     const {
       task,
@@ -179,13 +165,13 @@ export const TaskForm = ({
       : await ShiftService.createActivity(request_model);
 
     if (!request.getStatus()) {
-      ToastManager.error('No se puede realizar la acciòn');
+      ToastManager.error('s_upload_error');
       return;
     }
 
     const message = taskSelected?.id
-      ? t('shifts.upsert.successEdit')
-      : t('shifts.upsert.successCreate');
+      ? 's_updated_success'
+      : 's_created_success';
 
     form.reset();
     ToastManager.success(message);
@@ -242,13 +228,7 @@ export const TaskForm = ({
   );
 
   const headerContent = useMemo(
-    () => (
-      <h3>
-        {taskSelected
-          ? t('shifts.upsert.editShift')
-          : t('shifts.upsert.createShift')}
-      </h3>
-    ),
+    () => <h3>{taskSelected ? t('udpate') : t('create')}</h3>,
     [taskSelected]
   );
 
@@ -350,7 +330,8 @@ export const TaskForm = ({
     });
   }, [userSelected, taskSelected, timeBeforeSelected]);
 
-  /* const isStartAndEndInSchedules = (
+  /*
+  const isStartAndEndInSchedules = (
     startDateStr: string,
     endDateStr: string,
     schedules: ScheduleItem[]
@@ -361,7 +342,7 @@ export const TaskForm = ({
     return schedules.some(({ schedule }) => {
       const checkTime = (date: dayjs.Dayjs) => {
         const dayIndex = date.day() + 1;
-        const dayName = daysOfWeek[dayIndex];
+        const dayName = DAYS_OF_WEEK[dayIndex];
 
         if (!schedule.daysAllowed.includes(dayName.value)) return false;
 
@@ -394,11 +375,15 @@ export const TaskForm = ({
     const response = await ServiceService.getServiceById(String(id));
     if (!response.getStatus()) return;
     const model = response.getOne();
-    console.log('DATA: ', model);
     setTasksResponse(model.tasks || []);
-    schedules.value = model?.schedules || [];
-    const schedule = model?.schedules[0]?.schedule;
-    if (!schedule) return;
+    const length = model.schedules.length;
+    // TODO: Joshua -> si algo aqui estan todos los scheduler que ese serivicio
+    // queda es mostrarlos y permitir que el usuario seleccione cual quiere
+    // aplicar a ese turno.
+    if (length < 1) return;
+    // TODO: en esta signal estan guardados los schedules de este service
+    schedules.value = model.scchedule;
+    const schedule = model.schedules[length - 1].schedule;
     const days = schedule.days.reduce(
       (acc: any, day: any) => {
         acc[day.day] = day.blocks.map((block: any) => {
@@ -410,17 +395,12 @@ export const TaskForm = ({
     );
     // @ts-ignore
     setSelectedCells(convertBlocksToCells(days));
-    console.log('selectedCells ==>', selectedCells);
   };
 
   const cleanServiceSelected = () => {
     setSelectedCells([]);
     setTasksResponse([]);
   };
-
-  // const cleanRelatedShift = () => {
-  //   relatedShifts.value = [];
-  // };
 
   return (
     <Modal
@@ -436,13 +416,11 @@ export const TaskForm = ({
         {selectedCells && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-1 justify-center'>
-              {getSelectedHoursByDay(
-                daysOfWeek.map((day) => day.label),
-                hours,
-                selectedCells
-              ).map((daySelection) => (
-                <DataSchedule daySelection={daySelection} />
-              ))}
+              {getSelectedHoursByDay(DAYS_OF_WEEK, HOURS, selectedCells).map(
+                (daySelection) => (
+                  <DataSchedule daySelection={daySelection} />
+                )
+              )}
             </ul>
           </div>
         )}

@@ -11,6 +11,7 @@ import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useLocation } from 'wouter';
+import { useTranslation } from 'react-i18next';
 
 interface IFormData {
   userId: IOption;
@@ -19,6 +20,7 @@ interface IFormData {
 }
 
 export const UserPasswordPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const users = useSignal<IOption[]>([]);
   const [_, navigate] = useLocation();
 
@@ -32,7 +34,7 @@ export const UserPasswordPage: FunctionComponent = () => {
       !values.newPassword ||
       !values.confirmPassword
     ) {
-      ToastManager.error('Todos los campos son requeridos');
+      ToastManager.error('s_all_required');
       return;
     }
     const response = await UserService.changePassword(
@@ -42,10 +44,10 @@ export const UserPasswordPage: FunctionComponent = () => {
     );
 
     if (response.getStatus()) {
-      ToastManager.success('Contraseña actualizada exitosamente!');
+      ToastManager.success('s_updated_success');
       navigate('/settings/users');
     } else {
-      ToastManager.error('Error al actualizar la contraseña');
+      ToastManager.error('s_udpated_error');
     }
   };
 
@@ -57,14 +59,15 @@ export const UserPasswordPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='space-y-6'>
-        <div className='mb-4'>
+    <Section className='pt-2 px-40'>
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
           <h1 className='text-2xl font-bold text-primary'>
-            Cambio de Contraseña
+            {t('change_password')}
           </h1>
         </div>
-
+      </div>
+      <div className='flex flex-col justify-center mt-16'>
         <Form
           onSubmit={onSubmit}
           initialValues={{}}
@@ -80,11 +83,9 @@ export const UserPasswordPage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
-                        id='userId'
                         meta={meta}
-                        name='userId'
-                        label='Usuario'
-                        placeholder='Seleccione un usuario...'
+                        label='g_user'
+                        placeholder='p_select'
                         options={users.value}
                       />
                     )}
@@ -104,14 +105,12 @@ export const UserPasswordPage: FunctionComponent = () => {
                   >
                     {({ input, meta }) => (
                       <Input
+                        {...input}
                         id='newPassword'
-                        name='newPassword'
                         type='password'
-                        placeholder='Ingrese la nueva contraseña...'
+                        placeholder='p_new_password'
                         meta={meta}
-                        label='Nueva Contraseña'
-                        value={input.value}
-                        onChange={input.onChange}
+                        label='m_password'
                         autoComplete='new-password'
                       />
                     )}
@@ -129,14 +128,12 @@ export const UserPasswordPage: FunctionComponent = () => {
                   >
                     {({ input, meta }) => (
                       <Input
+                        {...input}
                         id='confirmPassword'
-                        name='confirmPassword'
                         type='password'
-                        placeholder='Confirmar contraseña...'
-                        label='Confirmar Contraseña'
-                        value={input.value}
+                        placeholder='p_confirm_password'
+                        label='p_confirm_password'
                         meta={meta}
-                        onChange={input.onChange}
                         autoComplete='new-password'
                       />
                     )}

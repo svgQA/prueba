@@ -30,7 +30,7 @@ export const UserSettingsPage: FunctionComponent = () => {
     allow_update_profile: false,
   });
   useEffect(() => {
-    document.title = 'TR - User Settings';
+    document.title = t('p_setting');
     getModules();
   }, []);
 
@@ -40,7 +40,7 @@ export const UserSettingsPage: FunctionComponent = () => {
       settingsIds.value.user
     );
     if (response.getStatus()) {
-      ToastManager.success('settings.users.success');
+      ToastManager.success('s_updated_success');
     }
   };
 

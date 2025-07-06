@@ -148,7 +148,7 @@ export const ShiftsPage: FunctionalComponent = () => {
    * Handle the useEffect hook for the document title and shift retrieval.
    */
   useEffect(() => {
-    document.title = t('shifts.pageTitle');
+    document.title = t('p_shift');
   }, []);
 
   useEffect(() => {
@@ -283,7 +283,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     handleViewChange(VIEW_NAME.TABLE);
 
     if (!hasValidPlayerRef.current) {
-      ToastManager.warning(t('notification.nobody_have_player_id'));
+      ToastManager.warning('s_there_are_not_player_id');
       return;
     }
 
@@ -296,7 +296,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
     // ✅ Siguientes veces: solo abre el modal (sin toggle)
     if (selectedUsers.length === 0) {
-      ToastManager.warning(t('notification.select_at_least_one_employee'));
+      ToastManager.warning('s_must_some_selected');
       setOnNotifications(false);
       onNotificationsRef.current = false;
       return;
@@ -530,13 +530,13 @@ export const ShiftsPage: FunctionalComponent = () => {
         );
 
         if (!shift) {
-          ToastManager.error(t('shift.table.delete.error'));
+          ToastManager.error('s_deleted_error');
           return;
         }
 
         const status = shift.status as unknown as SHIFT_STATUS;
         if (status !== SHIFT_STATUS.CREATED) {
-          ToastManager.warning(t('shift.table.delete.warning'));
+          ToastManager.warning('shift.table.delete.warning');
           return;
         }
 
@@ -559,7 +559,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const handleCheck = async (type: string, shiftId: number) => {
     const position = await getLocation();
     if (!position) {
-      ToastManager.error(t('Error al obtener la ubicación'));
+      ToastManager.error('s_gps_error');
       return;
     }
 
@@ -573,7 +573,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
-      ToastManager.success(t('shift.expandable.date.success'));
+      ToastManager.success('s_created_success');
       fetchInitialData();
     }
   };
@@ -593,7 +593,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const deleteShift = async (id: string) => {
     const response = await ShiftService.deleteActivity(id);
     if (!response.getStatus()) return;
-    ToastManager.success(t('shift.table.delete.success'));
+    ToastManager.success('s_deleted_success');
     fetchInitialData();
   };
 

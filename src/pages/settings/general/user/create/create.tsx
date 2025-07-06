@@ -8,10 +8,12 @@ import { getUserMode, USER_MODE_SERVICE } from './store/user';
 import { navigate } from 'wouter/use-browser-location';
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
+import { useTranslation } from 'react-i18next';
 
 export const UserCreateSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'User Create Settings';
+    document.title = t('p_setting');
     getDocumentTypes();
   }, []);
 

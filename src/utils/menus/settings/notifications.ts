@@ -3,14 +3,14 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 const base = PAGES_LIST_ROUTER.dashboard.setting.shifts.base;
 export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
-  label: 'Notificaciones',
+  label: 'g_notification',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
   menus: [
     {
       icon: '050',
-      label: 'Notificaciones programadas',
-      description: 'Gestiona las notificaciones programadas',
+      label: 'm_programmed',
+      description: 'd_programmed',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.notifications
         .scheduledNotification.base,
@@ -19,8 +19,8 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
     },
     {
       icon: '040',
-      label: 'Templates',
-      description: 'Gestionar plantillas de notificaciones',
+      label: 'm_template',
+      description: 'd_template',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
         .base,

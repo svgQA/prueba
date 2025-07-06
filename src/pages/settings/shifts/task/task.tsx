@@ -16,6 +16,7 @@ import {
   setMenu,
 } from '../../store/settings';
 import { TaskService } from '@/services';
+import { useTranslation } from 'react-i18next';
 
 export interface ITask {
   id: number;
@@ -36,8 +37,9 @@ export const TaskSettingPage: FunctionComponent = () => {
   const tasks: Signal<ITask[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Task Service';
+    document.title = t('p_task');
     getTasks();
   }, []);
 
@@ -57,7 +59,8 @@ export const TaskSettingPage: FunctionComponent = () => {
       id: 'tasks-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Creacion de tarea' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/rounds/task/create');
   };
 
@@ -68,14 +71,15 @@ export const TaskSettingPage: FunctionComponent = () => {
       id: 'tasks-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Editar tarea' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/rounds/task/update/${id}`);
   };
 
   const deleteTask = async (id: string) => {
     const request = await TaskService.deleteTask(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Tarea eliminado');
+    ToastManager.success('s_deleted_success');
     getTasks();
   };
 
