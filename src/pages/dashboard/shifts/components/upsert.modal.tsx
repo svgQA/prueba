@@ -28,6 +28,7 @@ import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { DAYS_OF_WEEK, HOURS } from '@/pages/settings/shifts/schedule/constant';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { TaskCard } from './task.card';
+import dayjs from 'dayjs';
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -40,6 +41,26 @@ interface ITaskFormProps {
   timeBeforeSelected?: number;
   externalSelected?: string;
 }
+
+type TimeBlock = {
+  start: number;
+  end: number;
+};
+
+type DaySchedule = {
+  day: string;
+  dayIndex: number;
+  blocks: TimeBlock[];
+};
+
+type Schedule = {
+  days: DaySchedule[];
+  daysAllowed: string[];
+};
+
+type ScheduleItem = {
+  schedule: Schedule;
+};
 
 export const TaskForm = ({
   closed,
@@ -77,18 +98,17 @@ export const TaskForm = ({
     }
     const { employeeId, serviceId } = model;
     console.log(model, tasks.value);
-    /*
-		const isInSchedule = isStartAndEndInSchedules(
-		  DateUtils.dateToInput(model.start),
-		  DateUtils.dateToInput(model.end),
-		  schedules.value
-		);
 
-		if (!isInSchedule) {
-		  ToastManager.warning('s_updated_error');
-		  return;
-		}
-		*/
+    const isInSchedule = isStartAndEndInSchedules(
+      DateUtils.dateToInput(model.start),
+      DateUtils.dateToInput(model.end),
+      schedules.value
+    );
+
+    if (!isInSchedule) {
+      ToastManager.warning('s_updated_error');
+      return;
+    }
 
     // const model_task = tasks.value.find(
     //   (_task: ITask) => _task.id === task?.value
@@ -239,10 +259,13 @@ export const TaskForm = ({
 
     const length = model.schedules.length;
     if (length < 1) return;
+    schedules.value = model.schedules;
+  };
 
-    /* TODO: Mierda de Scheduler */
-    schedules.value = model.scchedule;
-    const schedule = model.schedules[length - 1].schedule;
+  const onChangeSchedule = async (id: number) => {
+    const { schedule } = schedules.value.find(
+      (value) => value.scheduleId === id
+    );
     const days = schedule.days.reduce(
       (acc: any, day: any) => {
         acc[day.day] = day.blocks.map((block: any) => {
@@ -252,10 +275,8 @@ export const TaskForm = ({
       },
       {} as { [key: string]: { start: number; end: number }[] }
     );
-    // @ts-ignore
     setSelectedCells(convertBlocksToCells(days));
   };
-
   const cleanServiceSelected = () => {
     setSelectedCells([]);
     // Tener cuidado solo limpiar las del servicio.
@@ -275,6 +296,34 @@ export const TaskForm = ({
   const isNewTask = useSignal(false);
   const onToggleTask = () => {
     isNewTask.value = !isNewTask.value;
+  };
+
+  const isStartAndEndInSchedules = (
+    startDateStr: string,
+    endDateStr: string,
+    schedules: ScheduleItem[]
+  ): boolean => {
+    const start = dayjs.utc(startDateStr);
+    const end = dayjs.utc(endDateStr);
+
+    return schedules.some(({ schedule }) => {
+      const checkTime = (date: dayjs.Dayjs) => {
+        const dayIndex = date.day() + 1;
+        const dayName = DAYS_OF_WEEK[dayIndex];
+
+        if (!schedule.daysAllowed.includes(dayName.value)) return false;
+
+        const scheduleDay = schedule.days.find((d) => d.dayIndex === dayIndex);
+        if (!scheduleDay) return false;
+
+        const hourDecimal = date.hour() + date.minute() / 60;
+        return scheduleDay.blocks.some(
+          (block) => hourDecimal >= block.start && hourDecimal <= block.end
+        );
+      };
+
+      return checkTime(start) && checkTime(end);
+    });
   };
 
   return (
@@ -351,7 +400,12 @@ export const TaskForm = ({
               onToggleTask={onToggleTask}
               users={users}
               services={services.value}
+              schedules={schedules.value.map((value: any) => ({
+                value: value.schedule.id,
+                label: value.schedule.name,
+              }))}
               cleanServiceSelected={cleanServiceSelected}
+              onChangeSchedule={onChangeSchedule}
               tasks={tasks}
             />
           )}
