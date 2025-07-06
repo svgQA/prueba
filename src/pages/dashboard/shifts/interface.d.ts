@@ -24,13 +24,13 @@ export interface IShiftRequest extends FormData {
 }
 
 export interface ITask {
-  id?: number;
-  hourStart: string;
-  description: string;
+  id?: number | string;
+  hourStart?: string;
+  description?: string;
   name: string;
   companyId?: number;
   formId?: number;
-  type: string;
+  type: string | IOption;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -38,4 +38,9 @@ export interface ITask {
   editedBy?: string;
   deletedBy?: string;
   check?: boolean;
+  status?: string;
+  progress?: number;
+  styles?: any;
+  start?: string | Date;
+  end?: string | Date;
 }

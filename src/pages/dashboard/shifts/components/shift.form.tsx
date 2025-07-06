@@ -2,85 +2,38 @@ import { Field } from 'react-final-form';
 import { useShiftWatcher } from '../utils/wath.hook';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { useTranslation } from 'react-i18next';
-import { FieldArray } from 'react-final-form-arrays';
 import { Input } from '@/components/common/input/input';
 import { useSignal } from '@preact/signals';
-import { Chip } from '@/components/common/chip/chip';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
-import { Button } from '@/components/common/button/button';
 import { useCallback } from 'preact/hooks';
 import { DateField } from '@/components/compose/forms';
+import { MultipleInput } from '@/components/common/multi/multi';
+
+interface Props {
+  handleSubmit: (model: any) => void;
+  values: any;
+  onChangeShift: (id: number, start: string, end: string) => void;
+  onChangeService: (id: number) => void;
+  users?: IOption[];
+  services?: IOption[];
+  tasks: any;
+  cleanServiceSelected: any;
+  onToggleTask?: () => void;
+}
 
 export const ShiftFormContent = ({
   handleSubmit,
-  values,
   onChangeShift,
   onChangeService,
   users,
-  services,
+  services = [],
   cleanServiceSelected,
   tasks,
-}: any) => {
-  const { t } = useTranslation();
-  const inputKeywords = useSignal('');
-  const isNewTask = useSignal(false);
-
+  onToggleTask,
+}: Props) => {
+  const inputKeywords = useSignal<IOption[]>([]);
   useShiftWatcher(onChangeShift);
-
-  const renderNewTask = useCallback(() => {
-    return (
-      <div className='grid grid-cols-2 gap-4 mt-4 border-t pt-3 border-gray-200 dark:border-gray-700 w-full'>
-        <div>
-          <Field<string> name='task_name' validate={required}>
-            {({ input, meta }) => (
-              <Input
-                {...input}
-                id='input-task-name'
-                type='text'
-                meta={meta}
-                label='h_name'
-                placeholder='p_write'
-              />
-            )}
-          </Field>
-        </div>
-
-        <div>
-          <Field<string> name='task_time' validate={required}>
-            {({ input, meta }) => (
-              <Input
-                {...input}
-                id='input-task-hour-start'
-                type='time'
-                unicon
-                icon='325'
-                meta={meta}
-                label='h_time'
-              />
-            )}
-          </Field>
-        </div>
-
-        <div className='col-span-2'>
-          <Field<string> name='task_description' validate={required}>
-            {({ input, meta }) => (
-              <Input
-                {...input}
-                id='input-task-description'
-                type='text'
-                icon='123'
-                meta={meta}
-                label='description'
-                placeholder='p_write'
-              />
-            )}
-          </Field>
-        </div>
-      </div>
-    );
-  }, []);
 
   const preventKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -92,7 +45,7 @@ export const ShiftFormContent = ({
     <form
       onSubmit={handleSubmit}
       className='space-y-6'
-      id='form-shift-update'
+      id='form-shift-create-update'
       onKeyDown={preventKeyDown}
     >
       <div className='grid grid-cols-2 gap-3 z-50 grid-cols-en'>
@@ -172,6 +125,7 @@ export const ShiftFormContent = ({
             )}
           </Field>
         </div>
+
         <div class='col-span-1'>
           <Field
             name='timeBefore'
@@ -189,59 +143,33 @@ export const ShiftFormContent = ({
           </Field>
         </div>
 
-        <div class='col-span-2'>
-          <FieldArray<string> name='keywords'>
-            {({ fields }) => {
-              const appendElement = () => {
-                if (inputKeywords.value.trim() === '') return;
-                fields.push(inputKeywords.value);
-                inputKeywords.value = '';
-              };
-              return (
-                <div className='flex flex-col'>
-                  <div className='flex items-center rounded-md'>
-                    <Input
-                      id='input-keywords'
-                      name='input-keywords'
-                      value={inputKeywords.value}
-                      type='keywords'
-                      onChange={(e) =>
-                        (inputKeywords.value = e.currentTarget.value)
-                      }
-                      placeholder={t('shifts.upsert.form.keywordPlaceholder')}
-                      button
-                      label={t('shifts.upsert.form.keywords')}
-                      buttonIcon='044'
-                      onKeyUp={appendElement}
-                      onClick={appendElement}
-                    />
-                  </div>
-                  <div className='flex flex-wrap gap-2 mt-2'>
-                    {values.keywords?.map((keyword: string, index: number) => (
-                      <Chip
-                        key={`chip-shift-word-${index}`}
-                        label={keyword}
-                        onDelete={() => fields.remove(index)}
-                        width='lg'
-                      />
-                    ))}
-                  </div>
-                </div>
-              );
+        <div class='col-span-1'>
+          <MultipleInput
+            id='input-keywords'
+            value={inputKeywords.value}
+            onChange={(value: IOption[], _name?: string) => {
+              inputKeywords.value = value;
             }}
-          </FieldArray>
+            placeholder='p_select'
+            label='l_keywords'
+            buttonIcon='044'
+            icon='086'
+            bottom
+          />
         </div>
 
-        <div class='col-span-2 flex flex-row justify-between items-end'>
+        <div class='col-span-1'>
           <Field<IOption> name='task'>
             {({ input, meta }) => (
               <SmartSelector
                 {...input}
                 meta={meta}
                 id='select-task'
-                placeholder={t('shift.upsert.form.taskPlaceholder')}
-                label={t('shift.upsert.form.task')}
-                disabled={isNewTask.value}
+                placeholder='p_select'
+                label='h_task'
+                button
+                buttonIcon='044'
+                icon='086'
                 options={[
                   ...tasks.value.map((e: any) => ({
                     value: e.id,
@@ -249,19 +177,11 @@ export const ShiftFormContent = ({
                   })),
                 ]}
                 menuPortalTarget={document.body}
+                onClick={onToggleTask}
               />
             )}
           </Field>
-          <div className='py-1.5 mx-3'>
-            <Button
-              name='btn-create-task'
-              icon={isNewTask.value ? '124' : '123'}
-              square
-              onClick={() => (isNewTask.value = !isNewTask.value)}
-            />
-          </div>
         </div>
-        <div className='col-span-2'>{isNewTask.value && renderNewTask()}</div>
       </div>
     </form>
   );

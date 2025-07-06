@@ -4,6 +4,7 @@ import { createPortal } from 'preact/compat';
 import { FieldMetaState } from 'react-final-form';
 import { Chip } from '../chip/chip';
 import { useTranslation } from 'react-i18next';
+import { Button } from '../button/button';
 
 export interface IOption {
   label: string;
@@ -31,6 +32,10 @@ interface SmartSelectorProps<T = IOption> {
   icon?: string;
   end?: boolean;
   borderless?: boolean;
+  onClick?: (event: MouseEvent) => void;
+  buttonIcon?: string;
+  buttonType?: 'button' | 'submit';
+  button?: boolean;
 }
 
 export function SmartSelector<T = IOption>({
@@ -48,6 +53,10 @@ export function SmartSelector<T = IOption>({
   icon,
   end = false,
   borderless = false,
+  onClick,
+  buttonIcon = '123',
+  buttonType = 'button',
+  button = false,
 }: SmartSelectorProps<T>) {
   const { t } = useTranslation();
   const { input } = useField<IOption[] | IOption | string>(name);
@@ -245,6 +254,13 @@ export function SmartSelector<T = IOption>({
     </div>
   );
 
+  const handleButtonClick = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setFocused(false);
+    onClick?.(e);
+  };
+
   return (
     <div ref={wrapperRef} class='relative w-full'>
       {label && (
@@ -291,9 +307,9 @@ export function SmartSelector<T = IOption>({
             onInput={(e) => {
               const value = (e.currentTarget as HTMLInputElement).value;
               setSearch(value);
-              if (value.length > 0) {
-                setFocused(true);
-              }
+              // if (value.length > 0) {
+              //   setFocused(true);
+              // }
             }}
             autoComplete='off'
             onFocus={() => !disabled && setFocused(true)}
@@ -320,11 +336,26 @@ export function SmartSelector<T = IOption>({
             </div>
           )}
         </div>
-        {end && icon && <span className={`vox-icon vx-icon-${icon} px-2`} />}
+        {button && (
+          <div className='border-l dark:border-gray-600 border-b-light-dark'>
+            <Button
+              onClick={handleButtonClick}
+              name='btn-input-action'
+              icon={buttonIcon}
+              type={buttonType}
+              rounded
+              borderless
+              transparent
+            />
+          </div>
+        )}
+        {!button && end && icon && (
+          <span className={`vox-icon vx-icon-${icon} px-2`} />
+        )}
       </div>
 
       {meta && meta.touched && meta.error && (
-        <div class='text-sm text-red-600 mt-1'>{meta.error}</div>
+        <div class='text-sm text-red-600 mt-1'>{t(meta.error)}</div>
       )}
       {/*
       {focused &&

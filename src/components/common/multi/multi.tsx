@@ -8,7 +8,7 @@ export const MultipleInput = ({
   onSelect,
   onChange,
   label,
-  name,
+  name = 'multiple-input',
   id,
   icon,
   buttonIcon = '123',
@@ -27,13 +27,12 @@ export const MultipleInput = ({
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Enter' && inputValue) {
-        // e.preventDefault(); // Prevent form submission
         // e.stopPropagation();
         e.preventDefault(); // Prevent form submission
         let index: number | string = 0;
         if (Array.isArray(value) && value.length > 0) {
           const position = value.length - 1;
-          const _value = value[position].value;
+          const _value = value[position]?.value;
           if (typeof _value === 'number') {
             index = _value + 1;
           } else {
@@ -63,36 +62,37 @@ export const MultipleInput = ({
   }, []);
 
   const defaultChips = useMemo(
-    () =>
-      Array.isArray(value) && value.length > 0 ? (
-        <div
-          className={`${scrollable ? 'max-w-3xl overflow-auto vox-scroll-design py-1' : 'flex-wrap'} flex gap-1 justify-center bg-b-dark rounded-full`}
-        >
-          {value.map((item, index) => {
-            const total = ellipse || value.length;
-            return index < total ? (
-              getElement ? (
-                <div className='relative border rounded-md flex flex-col border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'>
-                  <span
-                    className='absolute z-10 right-2 top-0.5 vox-icon vx-icon-192 size-sm cursor-pointer'
-                    onClick={() => handleDelete(item.value)}
-                  ></span>
-                  {getElement(item, index)}
-                </div>
-              ) : (
-                <Chip
-                  key={item.value}
-                  label={item.label}
-                  onDelete={() => handleDelete(item.value)}
-                />
-              )
-            ) : null;
-          })}
-          {(ellipse || Infinity) < value.length && (
-            <span className='vox-icon vx-icon-085' />
-          )}
-        </div>
-      ) : null,
+    () => (
+      <div className='flex flex-row gap-1 min-h-8  max-w-96 overflow-auto vox-scroll-design py-1 shadow-inner'>
+        {Array.isArray(value) && value.length > 0 ? (
+          <>
+            {value.map((item, index) => {
+              const total = ellipse || value.length;
+              return index < total ? (
+                getElement ? (
+                  <div className='relative border rounded-md flex flex-col border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'>
+                    <span
+                      className='absolute z-10 right-2 top-0.5 vox-icon vx-icon-192 size-sm cursor-pointer'
+                      onClick={() => handleDelete(item.value)}
+                    ></span>
+                    {getElement(item, index)}
+                  </div>
+                ) : (
+                  <Chip
+                    key={item.value}
+                    label={item.label}
+                    onDelete={() => handleDelete(item.value)}
+                  />
+                )
+              ) : null;
+            })}
+            {(ellipse || Infinity) < value.length && (
+              <span className='vox-icon vx-icon-085' />
+            )}
+          </>
+        ) : null}
+      </div>
+    ),
     [value, handleDelete]
   );
 

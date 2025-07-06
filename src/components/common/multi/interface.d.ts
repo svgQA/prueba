@@ -11,14 +11,14 @@ export interface IOption {
 
 export interface IMultiProps {
   label?: string;
-  name: string;
+  name?: string;
   icon?: string;
+  onChange: (value: IOption[] | ITask[], name?: string) => void;
   buttonIcon?: string;
   buttonType?: 'button' | 'submit';
   id?: string;
   value?: IOption[] | ITask[];
   bottom?: boolean;
-  onChange: (value: IOption[], name: string) => void;
   placeholder?: string;
   onSelect?: () => void;
   getElement?: (value: IOption, index: number) => VNode;

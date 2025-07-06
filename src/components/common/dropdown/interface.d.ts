@@ -5,6 +5,7 @@ export interface IDropdownOptions extends IOption {
   value: number | string;
   name?: string;
   id?: string;
+  icon?: string;
 }
 export type DropdownOptionsKeys = keyof IDropdownOptions;
 
@@ -20,4 +21,6 @@ export interface IDropdownProps extends IComponentProps {
   value?: string | number;
   disabled?: boolean;
   selectedTag?: string;
+  borderless?: boolean;
+  placeholder?: string;
 }

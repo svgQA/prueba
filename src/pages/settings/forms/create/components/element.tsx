@@ -59,7 +59,8 @@ export const FormElement = ({
     }),
   });
 
-  const onChangeMulty = (value: IOption[], name: string) => {
+  const onChangeMulty = (value: IOption[], name?: string) => {
+    if (!name) return;
     updateForm(question.id, page, section)(name, value);
   };
 

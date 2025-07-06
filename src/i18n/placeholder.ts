@@ -9,6 +9,7 @@ export const placeholder_es = {
   p_new_password: 'New Password',
   p_write: 'Escribe...',
   min: 'minutos',
+  p_general_search: 'Buscar por columnas',
 };
 
 export const placeholder_en = {
@@ -22,4 +23,5 @@ export const placeholder_en = {
   p_write: 'Write ...',
   p_new_password: 'New Password',
   min: 'minutes',
+  p_general_search: 'Search by columns',
 };
