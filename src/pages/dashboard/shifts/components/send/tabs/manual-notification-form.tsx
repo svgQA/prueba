@@ -13,7 +13,7 @@ import { lengthSize } from '@/utils/utilities';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
 import { NotificationService, TaskService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { TaskCreateSettingPage } from '@/pages/settings/shifts/task/create/task';
+import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 
 interface Props {
   users?: any[];
@@ -102,14 +102,11 @@ export const ManualNotificationForm = ({
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
-    // Enviar la notificación manualmente a los usuario
-    try {
-      const result = await NotificationService.sendManualNotification(payload);
-      result.getStatus() ? onClose?.() : null; // Si se envio correctament
-      ToastManager.success('s_send_success');
-    } catch {
-      ToastManager.error('s_send_error');
-    }
+    const result = await NotificationService.sendManualNotification(payload);
+
+    if (!result.getStatus()) return;
+    ToastManager.success('s_send_success');
+    onClose?.();
   };
 
   const clearUserSelection = () => setSelectedUserIds([]);
@@ -201,8 +198,8 @@ export const ManualNotificationForm = ({
             </div>
 
             <div className='flex items-center justify-between mt-2'>
-              {sendToGeneral && (
-                <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
+              <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
+                {sendToGeneral && (
                   <Switch
                     name='switch-send-to-shift-today'
                     backgroundColor='bg-gray-300 dark:bg-gray-600'
@@ -212,8 +209,8 @@ export const ManualNotificationForm = ({
                     }
                     label='Solo con turno activo'
                   />
-                </div>
-              )}
+                )}
+              </div>
 
               {selectedUserIds.length > 0 && (
                 <Button
@@ -278,30 +275,22 @@ export const ManualNotificationForm = ({
                       placeholder='Selecciona una tarea'
                       label='Tareas'
                       onChange={(value?: IOption) => input.onChange(value)}
+                      button
+                      buttonIcon='039'
+                      buttonType='button'
+                      onClick={() =>
+                        (showInlineCreate.value = !showInlineCreate.value)
+                      }
                     />
                   )}
                 />
               )}
-              <div className='flex mt-5'>
-                {/* Botón '+' alineado con selector */}
-                <Button
-                  name='btn-create-task'
-                  icon='039'
-                  square
-                  onClick={() =>
-                    (showInlineCreate.value = !showInlineCreate.value)
-                  }
-                  aria-label='Crear tarea'
-                />
-              </div>
             </div>
           </div>
 
-          {/* Sección extra inline sin modal */}
+          {/* TODO: Jaider ver lo de este extra tarea */}
           {showInlineCreate.value && (
-            <div className=' flex items-center p-4 border rounded-lg bg-gray-50'>
-              <TaskCreateSettingPage />
-            </div>
+            <TaskFormCreate onSubmit={() => {}} forms={[]} add icon='146' />
           )}
 
           {!templateSelected && (

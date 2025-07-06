@@ -11,6 +11,7 @@ interface Props {
   onSubmit: (values: Record<string, any>) => void;
   forms: IOption[];
   add?: boolean;
+  icon?: string;
 }
 
 export const TaskFormCreate = ({
@@ -18,6 +19,7 @@ export const TaskFormCreate = ({
   onSubmit,
   forms,
   add = false,
+  icon = '044',
 }: Props) => {
   return (
     <Form
@@ -152,7 +154,7 @@ export const TaskFormCreate = ({
                         label='description'
                         placeholder='p_write'
                         button
-                        buttonIcon='044'
+                        buttonIcon={icon}
                         buttonType='submit'
                         buttonForm='form-settings-task-create'
                       />

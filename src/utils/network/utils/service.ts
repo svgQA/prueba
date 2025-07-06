@@ -1,5 +1,5 @@
 import { VOX_DEFAULT_PATH, VOS_SERVICES } from './constants';
-import { IMakeRequest, REQUEST_METHODS, UNAUTHORIZED } from '../interface';
+import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
 import { company_header, tenant_header } from '@/env.config';
@@ -168,11 +168,9 @@ export class BaseService {
 
       if (!response.ok) {
         const result = (await response.json()) as VoxError;
-        if (result.code === UNAUTHORIZED) {
+        if (Number(result.code) === 401) {
           setIsInErrorState(true);
           setTypeOfError('authorization');
-        } else {
-          ToastManager.error(result);
         }
         return new GenericResponse<T>({
           code: response?.status,

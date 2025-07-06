@@ -57,6 +57,6 @@ export type VoxError = {
   timestamp: string;
   url: string;
   message: string;
-  code: string;
+  code: string | number;
   data: Error;
 };

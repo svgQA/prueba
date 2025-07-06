@@ -1,7 +1,10 @@
+import { cdn_service_url } from '@/env.config';
+import { useUserStore } from '@/store/slices';
+import { IPresignedRequest } from '@/types/file';
 import { FunctionalComponent } from 'preact';
 
 interface AvatarProps {
-  src?: string;
+  src?: string | IPresignedRequest;
   name?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'auto';
   className?: string;
@@ -33,6 +36,11 @@ export const Avatar: FunctionalComponent<AvatarProps> = ({
   square = false,
   icon,
 }) => {
+  const { getTenant, getCompanyId } = useUserStore();
+  const getUrl = (file: IPresignedRequest) => {
+    const validation = `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
+    return validation;
+  };
   const shape = square ? 'rounded' : 'rounded-full';
   const classes = `
     flex items-center justify-center ${shape} bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold overflow-hidden text-center
@@ -50,10 +58,21 @@ export const Avatar: FunctionalComponent<AvatarProps> = ({
     );
   }
 
-  if (src) {
+  if (typeof src === 'string') {
     return (
       <img
         src={src}
+        alt={name || 'avatar'}
+        className={classes + ' object-cover'}
+        loading='lazy'
+      />
+    );
+  }
+
+  if (typeof src === 'object' && src.uuid) {
+    return (
+      <img
+        src={getUrl(src)}
         alt={name || 'avatar'}
         className={classes + ' object-cover'}
         loading='lazy'
