@@ -14,6 +14,7 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { DateUtils } from '@/utils/utilities/dates';
+import { useTranslation } from 'react-i18next';
 
 interface FormData {
   name: string;
@@ -44,6 +45,7 @@ const TASK_TYPE_OPTIONS: IOption[] = TASK_TYPES.map((t) => ({
 }));
 
 export const TaskCreateSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const [_, navigate] = useLocation();
   const forms = useSignal<IOption[]>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
@@ -57,7 +59,9 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     };
 
     if (output.type === 'GENERAL') {
-      output.formId = model.formId?.value ? Number(model.formId.value) : null;
+      output.formId = model.formId?.value
+        ? Number(model.formId.value)
+        : undefined;
       output.hourStart = DateUtils.dateToBackend(model.hourStart);
     } else if (output.type === 'REPORT') {
       if (model.attachmentType.value === 'FORMS') {
@@ -73,7 +77,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     } else {
       const request = await TaskService.createTask(output);
       if (!request.getStatus()) return;
-      ToastManager.success('s_create_success');
+      ToastManager.success('s_created_success');
     }
     navigate('/rounds/task');
   };
@@ -105,172 +109,179 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section className='w-full'>
-      <Form
-        onSubmit={onSubmit}
-        initialValues={initialValues.value}
-        render={({ handleSubmit, form, submitting, pristine }) => {
-          const values: any = form.getState().values;
-          const isGeneral = values.type?.value === 'GENERAL';
-          const isReport = values.type?.value === 'REPORT';
-          const isFormReport =
-            isReport && values.attachmentType?.value === 'FORMS';
-          return (
-            <form
-              onSubmit={handleSubmit}
-              className='space-y-6'
-              id='form-settings-shifts'
-            >
-              <div className='grid grid-cols-2 gap-3'>
-                <div className='col-span-1'>
-                  <Field<string> name='name' validate={required}>
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        placeholder='h_name'
-                        label='h_name'
-                        meta={meta}
-                        icon='120'
-                        type='text'
-                      />
-                    )}
-                  </Field>
-                </div>
+    <Section className='pt-2 px-40'>
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <h1 className='text-2xl font-bold text-primary'>{t('l_new_task')}</h1>
+        </div>
+      </div>
+      <div className='flex flex-col justify-center mt-16'>
+        <Form
+          onSubmit={onSubmit}
+          initialValues={initialValues.value}
+          render={({ handleSubmit, form, submitting, pristine }) => {
+            const values: any = form.getState().values;
+            const isGeneral = values.type?.value === 'GENERAL';
+            const isReport = values.type?.value === 'REPORT';
+            const isFormReport =
+              isReport && values.attachmentType?.value === 'FORMS';
+            return (
+              <form
+                onSubmit={handleSubmit}
+                className='space-y-6'
+                id='form-settings-shifts'
+              >
+                <div className='grid grid-cols-2 gap-3'>
+                  <div className='col-span-1'>
+                    <Field<string> name='name' validate={required}>
+                      {({ input, meta }) => (
+                        <Input
+                          {...input}
+                          placeholder='h_name'
+                          label='h_name'
+                          meta={meta}
+                          icon='120'
+                          type='text'
+                        />
+                      )}
+                    </Field>
+                  </div>
 
-                <div className='col-span-1'>
-                  <Field<IOption> name='type' validate={required}>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        placeholder='p_select'
-                        label='h_type'
-                        icon='454'
-                        options={TASK_TYPE_OPTIONS}
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
+                  <div className='col-span-1'>
+                    <Field<IOption> name='type' validate={required}>
+                      {({ input, meta }) => (
+                        <SmartSelector
+                          {...input}
+                          placeholder='p_select'
+                          label='h_type'
+                          icon='454'
+                          options={TASK_TYPE_OPTIONS}
+                          meta={meta}
+                        />
+                      )}
+                    </Field>
+                  </div>
 
-                {/* GENERAL: Form selector y hora inicio */}
-                {isGeneral && (
-                  <>
+                  {/* GENERAL: Form selector y hora inicio */}
+                  {isGeneral && (
+                    <>
+                      <div className='col-span-1'>
+                        <Field name='formId'>
+                          {({ input }) => (
+                            <SmartSelector
+                              {...input}
+                              placeholder='p_select'
+                              label='i_form'
+                              icon='206'
+                              options={forms.value}
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div className='col-span-1'>
+                        <Field<string> name='hourStart' validate={required}>
+                          {({ input, meta }) => {
+                            let timeValue = input.value
+                              ? dayjs(input.value).format('HH:mm')
+                              : '';
+                            return (
+                              <Input
+                                {...input}
+                                type='time'
+                                id='task-start'
+                                label='h_time'
+                                meta={meta}
+                                unicon
+                                icon='325'
+                                value={timeValue}
+                                onChange={(e) => {
+                                  const [h, m] = (
+                                    e.target as HTMLInputElement
+                                  ).value.split(':');
+                                  input.onChange(
+                                    dayjs()
+                                      .hour(parseInt(h))
+                                      .minute(parseInt(m))
+                                      .second(0)
+                                      .millisecond(0)
+                                      .toISOString()
+                                  );
+                                }}
+                              />
+                            );
+                          }}
+                        </Field>
+                      </div>
+                    </>
+                  )}
+
+                  {/* REPORT: Attachment type */}
+                  {isReport && (
                     <div className='col-span-1'>
-                      <Field name='formId'>
-                        {({ input }) => (
+                      <Field<IOption> name='attachmentType'>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            placeholder='p_select'
+                            label='h_report'
+                            icon='452'
+                            options={ATTACHMENT_OPTIONS}
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  )}
+
+                  {/* REPORT + FORMS: Form selector */}
+                  {isFormReport && (
+                    <div className='col-span-1'>
+                      <Field<IOption> name='formId' validate={required}>
+                        {({ input, meta }) => (
                           <SmartSelector
                             {...input}
                             placeholder='p_select'
                             label='i_form'
                             icon='206'
+                            meta={meta}
                             options={forms.value}
                           />
                         )}
                       </Field>
                     </div>
-                    <div className='col-span-1'>
-                      <Field<string> name='hourStart' validate={required}>
-                        {({ input, meta }) => {
-                          let timeValue = input.value
-                            ? dayjs(input.value).format('HH:mm')
-                            : '';
-                          return (
-                            <Input
-                              {...input}
-                              type='time'
-                              id='task-start'
-                              label='h_time'
-                              meta={meta}
-                              unicon
-                              icon='325'
-                              value={timeValue}
-                              onChange={(e) => {
-                                const [h, m] = (
-                                  e.target as HTMLInputElement
-                                ).value.split(':');
-                                input.onChange(
-                                  dayjs()
-                                    .hour(parseInt(h))
-                                    .minute(parseInt(m))
-                                    .second(0)
-                                    .millisecond(0)
-                                    .toISOString()
-                                );
-                              }}
-                            />
-                          );
-                        }}
-                      </Field>
-                    </div>
-                  </>
-                )}
+                  )}
 
-                {/* REPORT: Attachment type */}
-                {isReport && (
-                  <div className='col-span-1'>
-                    <Field<IOption> name='attachmentType'>
+                  <div className='col-span-2'>
+                    <Field<string> name='description' validate={required}>
                       {({ input, meta }) => (
-                        <SmartSelector
+                        <TextArea
                           {...input}
-                          placeholder='p_select'
-                          label='h_reporte'
-                          icon='452'
-                          options={ATTACHMENT_OPTIONS}
+                          minLength={3}
+                          maxLength={300}
+                          placeholder='Descripción...'
+                          label='description'
                           meta={meta}
+                          icon='288'
+                          type='text'
                         />
                       )}
                     </Field>
                   </div>
-                )}
-
-                {/* REPORT + FORMS: Form selector */}
-                {isFormReport && (
-                  <div className='col-span-1'>
-                    <Field<IOption> name='formId' validate={required}>
-                      {({ input, meta }) => (
-                        <SmartSelector<IOption>
-                          {...input}
-                          placeholder='p_select'
-                          label='i_form'
-                          icon='206'
-                          meta={meta}
-                          options={forms.value}
-                        />
-                      )}
-                    </Field>
-                  </div>
-                )}
-
-                <div className='col-span-2'>
-                  <Field<string> name='description' validate={required}>
-                    {({ input, meta }) => (
-                      <TextArea
-                        {...input}
-                        minLength={3}
-                        maxLength={300}
-                        placeholder='Descripción...'
-                        label='description'
-                        meta={meta}
-                        icon='288'
-                        type='text'
-                      />
-                    )}
-                  </Field>
                 </div>
-              </div>
 
-              <div className='w-full flex justify-end items-center'>
-                <StatusButton
-                  onClickClean={() => form.reset()}
-                  submitting={submitting}
-                  pristine={pristine}
-                  form='form-settings-shifts'
-                />
-              </div>
-            </form>
-          );
-        }}
-      />
+                <div className='w-full flex justify-end items-center'>
+                  <StatusButton
+                    onClickClean={() => form.reset()}
+                    submitting={submitting}
+                    pristine={pristine}
+                    form='form-settings-shifts'
+                  />
+                </div>
+              </form>
+            );
+          }}
+        />
+      </div>
     </Section>
   );
 };

@@ -221,20 +221,18 @@ export const ScheduledNotificationForm = () => {
               />
             </div>
 
-            <div className='col-span-2 flex justify-end gap-2 mt-6'>
+            <div className='flex justify-end gap-4 pt-4'>
               <Button
                 name='cancel-create-scheduled'
-                label='Cancelar'
+                label='cancel'
+                icon='023'
                 onClick={redirectToList}
-                borderless
               />
               <Button
                 name='submit-create-scheduled'
-                label={
-                  pendingSubmission ? 'Enviando...' : 'Programar Notificación'
-                }
+                label='save'
                 type='submit'
-                className='bg-primary text-white hover:bg-primary-opacity'
+                icon='022'
                 disabled={pendingSubmission}
               />
             </div>

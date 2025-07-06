@@ -32,13 +32,14 @@ export const GroupSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de Grupo' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/security/grups/create');
   };
 
   // const updateActivity = (id: string) => {
   //   console.log('DATA: ', id);
-  //   // setMenu({ ...infoMenu.value, label: 'Editar turno' });
+  //   // setMenu({ ...infoMenu.value, label: 'edit' });
   //   // navigate(`/rounds/activity/update/${id}`);
   // };
 

@@ -3,6 +3,8 @@ export const common_es = {
   CREATED: 'Creado',
   CANCELED: 'Cancelado',
   RESOLVED: 'Resuelto',
+  INTERNAL: 'Interno',
+  EXTERNAL: 'Externo',
   CLOSED: 'Cerrado',
   SOLVE: 'Resolver',
   Baja: 'Baja',
@@ -25,6 +27,9 @@ export const common_es = {
   friday: 'Viernes',
   saturday: 'Sábado',
   sunday: 'Domingo',
+  create: 'Crear',
+  update: 'Actualizar',
+  'Invalid Date': 'No aplicable',
 };
 
 export const common_en = {
@@ -32,6 +37,8 @@ export const common_en = {
   CREATED: 'Created',
   CANCELED: 'Canceled',
   RESOLVED: 'Resolved',
+  INTERNAL: 'Internal',
+  EXTERNAL: 'External',
   CLOSED: 'Closed',
   SOLVE: 'Solve',
   Baja: 'Low',
@@ -54,4 +61,7 @@ export const common_en = {
   friday: 'Friday',
   saturday: 'Saturday',
   sunday: 'Sunday',
+  create: 'Create',
+  update: 'Update',
+  'Invalid Date': 'Not applicable',
 };

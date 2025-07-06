@@ -44,12 +44,14 @@ export const UserRolesPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: t('role.new') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/users/roles/create');
   };
 
   const updateRole = (id: string) => {
-    setMenu({ ...infoMenu.value, label: t('role.edit') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/users/roles/update/${id}`);
   };
 

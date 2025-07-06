@@ -77,6 +77,7 @@ export const TaskForm = ({
   const relatedShifts = useSignal<any[]>([]);
 
   const { selectedCompany } = useUserStore();
+
   const onSubmit = async (model: any, form: any) => {
     if (relatedShifts.value.length > 0) {
       ToastManager.error('s_replicate_duplicate_range_error');
@@ -164,7 +165,7 @@ export const TaskForm = ({
       : await ShiftService.createActivity(request_model);
 
     if (!request.getStatus()) {
-      ToastManager.error('No se puede realizar la acciòn');
+      ToastManager.error('s_upload_error');
       return;
     }
 
@@ -227,7 +228,7 @@ export const TaskForm = ({
   );
 
   const headerContent = useMemo(
-    () => <h3>{taskSelected ? 's_updated_success' : 's_created_success'}</h3>,
+    () => <h3>{taskSelected ? t('udpate') : t('create')}</h3>,
     [taskSelected]
   );
 
@@ -375,9 +376,14 @@ export const TaskForm = ({
     if (!response.getStatus()) return;
     const model = response.getOne();
     setTasksResponse(model.tasks || []);
-    schedules.value = model?.schedules || [];
-    const schedule = model?.schedules[0]?.schedule;
-    if (!schedule) return;
+    const length = model.schedules.length;
+    // TODO: Joshua -> si algo aqui estan todos los scheduler que ese serivicio
+    // queda es mostrarlos y permitir que el usuario seleccione cual quiere
+    // aplicar a ese turno.
+    if (length < 1) return;
+    // TODO: en esta signal estan guardados los schedules de este service
+    schedules.value = model.scchedule;
+    const schedule = model.schedules[length - 1].schedule;
     const days = schedule.days.reduce(
       (acc: any, day: any) => {
         acc[day.day] = day.blocks.map((block: any) => {

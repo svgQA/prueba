@@ -57,7 +57,8 @@ export const ServiceSettingPage: FunctionComponent = () => {
       id: 'service-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Creacion de servicio' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/rounds/service/create');
   };
 
@@ -68,7 +69,8 @@ export const ServiceSettingPage: FunctionComponent = () => {
       id: 'service-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Editar servicio' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/rounds/service/update/${id}`);
   };
 

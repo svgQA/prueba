@@ -59,7 +59,8 @@ export const TaskSettingPage: FunctionComponent = () => {
       id: 'tasks-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Creacion de tarea' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/rounds/task/create');
   };
 
@@ -70,7 +71,8 @@ export const TaskSettingPage: FunctionComponent = () => {
       id: 'tasks-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Editar tarea' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/rounds/task/update/${id}`);
   };
 

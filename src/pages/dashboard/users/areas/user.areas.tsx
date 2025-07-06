@@ -38,7 +38,8 @@ export const UserAreasPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: t('user.area.create') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/users/areas/create');
   };
 
@@ -50,7 +51,8 @@ export const UserAreasPage: FunctionComponent = () => {
   };
 
   const editArea = (id: string) => {
-    setMenu({ ...infoMenu.value, label: t('user.area.edit') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/users/areas/update/${id}`);
   };
 

@@ -49,12 +49,14 @@ export const ActivitySettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de turno' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/rounds/activity/create');
   };
 
   const updateActivity = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar turno' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/rounds/activity/update/${id}`);
   };
 

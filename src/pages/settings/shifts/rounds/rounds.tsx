@@ -32,7 +32,8 @@ export const RoundsSettingPage: FunctionComponent = () => {
       id: 'rounds-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Creación de ronda' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/round/create');
   };
 
@@ -85,7 +86,8 @@ export const RoundsSettingPage: FunctionComponent = () => {
       id: 'rounds-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Editar ronda' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/round/update/${id}`);
   };
 

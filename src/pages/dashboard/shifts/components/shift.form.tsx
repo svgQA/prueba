@@ -40,8 +40,8 @@ export const ShiftFormContent = ({
                 id='input-task-name'
                 type='text'
                 meta={meta}
-                label={t('shift.upsert.form.taskName')}
-                placeholder={t('shift.upsert.form.taskNamePlaceholder')}
+                label='h_name'
+                placeholder='p_write'
               />
             )}
           </Field>
@@ -55,9 +55,9 @@ export const ShiftFormContent = ({
                 id='input-task-hour-start'
                 type='time'
                 unicon
+                icon='325'
                 meta={meta}
-                label={t('shift.upsert.form.taskHourStart')}
-                placeholder={t('shift.upsert.form.taskHourStartPlaceholder')}
+                label='h_time'
               />
             )}
           </Field>
@@ -70,9 +70,10 @@ export const ShiftFormContent = ({
                 {...input}
                 id='input-task-description'
                 type='text'
+                icon='123'
                 meta={meta}
-                label={t('shift.upsert.form.taskDescription')}
-                placeholder={t('shift.upsert.form.taskDescriptionPlaceholder')}
+                label='description'
+                placeholder='p_write'
               />
             )}
           </Field>
@@ -101,12 +102,12 @@ export const ShiftFormContent = ({
               <SmartSelector
                 {...input}
                 meta={meta}
-                name='employeeId'
                 id='select-employeeId'
-                label={t('shifts.upsert.form.employee')}
+                icon='191'
+                label='h_employee'
                 options={users || []}
                 menuPortalTarget={document.body}
-                placeholder={t('shifts.upsert.form.employeePlaceholder')}
+                placeholder='p_select'
               />
             )}
           </Field>
@@ -117,10 +118,10 @@ export const ShiftFormContent = ({
               <SmartSelector
                 {...input}
                 meta={meta}
-                name='serviceId'
                 id='select-service'
-                placeholder={t('shifts.upsert.form.servicePlaceholder')}
-                label={t('shifts.upsert.form.service')}
+                placeholder='p_select'
+                label='h_service'
+                icon='094'
                 options={services}
                 menuPortalTarget={document.body}
                 onChange={(e) => {
@@ -139,19 +140,11 @@ export const ShiftFormContent = ({
         </div>
 
         <div class='col-span-1'>
-          <DateField
-            name='start'
-            label={t('shifts.upsert.form.startDate')}
-            validate={required}
-          />
+          <DateField name='start' label='h_date_start' validate={required} />
         </div>
 
         <div class='col-span-1'>
-          <DateField
-            name='end'
-            label={t('shifts.upsert.form.endDate')}
-            validate={required}
-          />
+          <DateField name='end' label='h_date_end' validate={required} />
         </div>
 
         <div class='col-span-1'>
@@ -162,17 +155,17 @@ export const ShiftFormContent = ({
                 meta={meta}
                 id='select-type'
                 name='select-type'
-                placeholder={t('shifts.upsert.form.typePlaceholder')}
-                label={t('shifts.upsert.form.type')}
+                placeholder='p_select'
+                label='h_type'
                 icon='252'
                 options={[
                   {
                     value: 'EXTERNAL',
-                    label: t('shifts.upsert.form.typeOptions.external'),
+                    label: 'EXTERNAL',
                   },
                   {
                     value: 'INTERNAL',
-                    label: t('shifts.upsert.form.typeOptions.internal'),
+                    label: 'INTERNAL',
                   },
                 ]}
               />
@@ -189,7 +182,8 @@ export const ShiftFormContent = ({
                 {...input}
                 id='input-time-before'
                 type='number'
-                label={t('shifts.upsert.form.timeBefore')}
+                icon='325'
+                label='h_time_before'
               />
             )}
           </Field>

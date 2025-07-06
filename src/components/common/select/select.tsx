@@ -62,7 +62,7 @@ export const Select = ({
           disabled={disabled}
           {...props}
         >
-          <option value=''>{placeholder}</option>
+          <option value=''>{t(placeholder || '')}</option>
           {options?.map((option) => (
             <option key={option[optionValue]} value={option[optionValue]}>
               {option[optionLabel]}

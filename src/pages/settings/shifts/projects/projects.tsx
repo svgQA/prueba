@@ -60,7 +60,8 @@ export const ProjectsSettingPage: FunctionComponent = () => {
       id: 'projects-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Creacion de contrato' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/rounds/project/create');
   };
 
@@ -71,7 +72,8 @@ export const ProjectsSettingPage: FunctionComponent = () => {
       id: 'projects-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: 'Editar contrato' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/rounds/project/edit/${id}`);
   };
 

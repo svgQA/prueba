@@ -39,7 +39,10 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
     ).filter((day) => day.blocks.length > 0);
 
     model.daysAllowed = hoursByDay.map((day) => day.day.label);
-    model.days = hoursByDay;
+    model.days = hoursByDay.map((day) => ({
+      ...day,
+      day: day.day.value,
+    }));
 
     let request;
     let message = '';
@@ -69,9 +72,10 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
       daysAllowed: model.daysAllowed,
       days: model.days,
     };
+
     const days = model.days.reduce(
       (acc, day) => {
-        acc[day.day] = day.blocks.map((block) => {
+        acc[day.day as string] = day.blocks.map((block) => {
           return { start: block.start, end: block.end };
         });
         return acc;

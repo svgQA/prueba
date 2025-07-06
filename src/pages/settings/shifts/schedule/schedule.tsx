@@ -46,7 +46,8 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       id: 'schedule-create',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: t('schedule.createSchedule') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'create' });
     navigate('/rounds/schedule/create');
   };
 
@@ -57,7 +58,8 @@ export const ScheduleSettingPage: FunctionComponent = () => {
       id: 'schedule-update',
     };
     appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: t('schedule.editSchedule') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/rounds/schedule/update/${id}`);
   };
 

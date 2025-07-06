@@ -1,5 +1,7 @@
+import { DayOfWeek } from '@/pages/settings/shifts/schedule/type';
+
 export interface IDay {
-  day: DayOfWeek;
+  day: DayOfWeek | string;
   dayIndex: number;
   blocks: IBlock[];
 }
