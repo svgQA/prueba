@@ -1,6 +1,7 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { ToastManager } from '@/utils/toast/toast-manager';
+//import i18n from '@/i18n';
 
 import { ShiftService } from '@/services';
 import { Button } from '@/components/common/button/button';
@@ -124,7 +125,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
     <div class='flex gap-6 justify-center'>
       {/* Inicio del Turno */}
       <ShiftCard
-        title='Inicio del Turno'
+        title={t('shift.expandable.date.shiftStart')}
         name={employeeName}
         date={checkInData?.time || ''}
         time={checkInData?.time || ''}
@@ -132,19 +133,18 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         status={checkInStatus.value.message || ''}
         statusColor={checkInStatus.value.color || ''}
         distance={checkInData?.distance || ''}
-        btnLabel='Check In'
+        btnLabel={t('shift.expandable.date.buttons.checkIn')}
         shiftId={shift?.id || 0}
         latitude={checkInData?.location.lat || 4.649251}
         longitude={checkInData?.location.lng || -74.106992}
         file={checkInData?.file || []}
-        // disabled={!!checkOutData?.distance}
-        disabled={shift?.status !== 'CREATED'} // Solo permitir check-in si está en estado CREATED
+        disabled={shift?.status !== 'CREATED'}
         onCheck={handleCheck}
       />
 
       {/* Finalización del Turno */}
       <ShiftCard
-        title='Finalización del Turno'
+        title={t('shift.expandable.date.shiftEnd')}
         name={employeeName}
         date={checkOutData?.time || ''}
         time={checkOutData?.time || ''}
@@ -152,13 +152,12 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         status={checkOutStatus.value.message || ''}
         statusColor={checkOutStatus.value.color || ''}
         distance={checkOutData?.distance || ''}
-        btnLabel='Check Out'
+        btnLabel={t('shift.expandable.date.buttons.checkOut')}
         shiftId={shift?.id || 0}
         latitude={checkOutData?.location.lat || 4.649251}
         longitude={checkOutData?.location.lng || -74.106992}
         file={checkOutData?.file || []}
-        // disabled={!checkInData?.distance || !!checkOutData?.distance}
-        disabled={shift?.status !== 'OPENED'} // Solo permitir check-out si está en estado OPENED
+        disabled={shift?.status !== 'OPENED'}
         onCheck={handleCheck}
       />
     </div>
@@ -241,7 +240,10 @@ const ShiftCard = ({
       longitude: position.coords.longitude.toString(),
       date: new Date().toISOString(),
       platform: 'web',
-      type: btnLabel === 'Check In' ? 'CHECK_IN' : 'CHECK_OUT',
+      type:
+        btnLabel === t('shift.expandable.date.buttons.checkIn')
+          ? 'CHECK_IN'
+          : 'CHECK_OUT',
     };
 
     const response = await ShiftService.createCheck(checkData, shiftId);
@@ -264,9 +266,7 @@ const ShiftCard = ({
 
   return (
     <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-4 p-4'>
-      {/* Título */}
       <div>
-        {/* <h2 className='font-medium mb-4'>{title}</h2> */}
         <div className='flex flex-col gap-4 justify-between h-full'>
           {/* Columna izquierda - Foto y nombre */}
           <div className='flex flex-col items-center mr-4 w-full'>
@@ -286,7 +286,9 @@ const ShiftCard = ({
                 <span className='!text-primary vox-icon size-sm vx-icon-323'></span>
               </div>
               <div>
-                <p className='font-semibold'>Fecha</p>
+                <p className='font-semibold'>
+                  {t('shift.expandable.date.info.date')}
+                </p>
                 <FormattedDate date={date} format='date' />
               </div>
             </div>
@@ -297,11 +299,15 @@ const ShiftCard = ({
               </div>
               <div className='flex flex-row justify-between w-full'>
                 <div>
-                  <p className='font-semibold'>Hora</p>
+                  <p className='font-semibold'>
+                    {t('shift.expandable.date.info.time')}
+                  </p>
                   <FormattedDate date={time} format='time' />
                 </div>
                 <div>
-                  <p className='font-semibold'>Fuente</p>
+                  <p className='font-semibold'>
+                    {t('shift.expandable.date.info.source')}
+                  </p>
                   <p>{source}</p>
                 </div>
               </div>
@@ -312,7 +318,9 @@ const ShiftCard = ({
                 <span className='!text-primary vox-icon size-sm vx-icon-326'></span>
               </div>
               <div>
-                <p className='font-semibold'>Distancia</p>
+                <p className='font-semibold'>
+                  {t('shift.expandable.date.info.distance')}
+                </p>
                 <p>{(Number(distance) / 1000).toFixed(2)} Km</p>
               </div>
             </div>
@@ -320,7 +328,11 @@ const ShiftCard = ({
 
           <Button
             label={btnLabel}
-            icon={btnLabel === 'Check In' ? '023' : '024'}
+            icon={
+              btnLabel === t('shift.expandable.date.buttons.checkIn')
+                ? '023'
+                : '024'
+            }
             disabled={disabled}
             onClick={() =>
               showAlert({
@@ -345,7 +357,6 @@ const ShiftCard = ({
             lng: longitude,
           }}
           pointsAmount={1}
-          // pointsRef={points.value}
           pointsRef={[
             {
               id: 1,

@@ -129,7 +129,7 @@ const SupervisorInfo = ({
                   onClick={() =>
                     showAlert({
                       title: btnLabel,
-                      message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
+                      message: `${t('message.confirm')} ${btnLabel}`,
                       onConfirm: () => handleCheck(),
                       onCancel: () => {},
                     })

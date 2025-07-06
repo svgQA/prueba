@@ -1,4 +1,5 @@
 import { Gauge } from '@/components/common/gauge/gauge';
+import { useTranslation } from 'react-i18next';
 
 type Point = {
   id: number;
@@ -15,12 +16,17 @@ interface CardTaskProps {
 }
 
 export const CardTask = ({ point, frequency }: CardTaskProps) => {
+  const { t } = useTranslation();
   const percent = ((point?.roundHistory?.length || 0) / frequency) * 100;
   return (
     <div className='flex flex-col items-center justify-between bg-b-light-dark dark:bg-b-dark-dark rounded-lg p-3'>
       <div className='flex flex-row justify-between pb-3 w-full items-center px-2'>
-        <p>Point: {point.id}</p>
-        <p>Freq: {frequency}</p>
+        <p>
+          {t('shift.expandable.card.task.point')}: {point.id}
+        </p>
+        <p>
+          {t('shift.expandable.card.task.frequency')}: {frequency}
+        </p>
         <Gauge progress={percent} />
       </div>
 

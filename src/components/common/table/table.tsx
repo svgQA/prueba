@@ -53,6 +53,7 @@ import { useSignal } from '@preact/signals';
 import { Button } from '../button/button';
 import { DraggableTableHeader } from './components/draggable.header';
 import { ROW_ACTIONS } from './enum';
+import { useTranslation } from 'react-i18next';
 
 const SkeletonRow = ({ columns }: { columns: number }) => {
   return (
@@ -89,6 +90,7 @@ export const Table = <T,>({
   loading = false,
   searchable,
 }: ITableProps<T>) => {
+  const { t } = useTranslation();
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
     {}
   );
@@ -627,7 +629,7 @@ export const Table = <T,>({
     return (
       <div className='flex items-center justify-between py-2 px-4 rounded-lg'>
         <div className='flex items-center gap-2'>
-          <span>Filas por página:</span>
+          <span>{t('table.filters.rows')}:</span>
           <div className='relative'>
             <select
               value={currentPageSize}
@@ -661,8 +663,9 @@ export const Table = <T,>({
           </div>
           <span>
             {currentPage * currentPageSize + 1}-
-            {Math.min((currentPage + 1) * currentPageSize, data.length)} de{' '}
-            {data.length} elementos
+            {Math.min((currentPage + 1) * currentPageSize, data.length)}{' '}
+            {t('table.filters.from')} {data.length}{' '}
+            {t('table.filters.elements')}
           </span>
         </div>
 
@@ -756,11 +759,11 @@ export const Table = <T,>({
         </div>
 
         <div className='text-sm flex items-center gap-2 px-2'>
-          Página
+          {t('table.filters.page')}:
           <div className='inline-block border rounded-md px-3 py-1 min-w-[40px] text-center border-b-light-dark dark:border-b-darkt'>
             {currentPage + 1}
           </div>
-          de {totalPages}
+          {t('table.filters.from')} {totalPages}
         </div>
       </div>
     );
