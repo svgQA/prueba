@@ -12,7 +12,7 @@ import { convertBlocksToCells, getSelectedHoursByDay } from '../utils';
 import { ICScheduleRequest } from '@/types/shift/shift.request';
 import { ScheduleService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
-
+import { useTranslation } from 'react-i18next';
 const START_HOUR = 0;
 const END_HOUR = 24;
 
@@ -20,15 +20,16 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
+  const { t } = useTranslation();
 
   const daysOfWeek = [
-    'Domingo',
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
+    { value: 'monday', label: t('schedule.monday') },
+    { value: 'tuesday', label: t('schedule.tuesday') },
+    { value: 'wednesday', label: t('schedule.wednesday') },
+    { value: 'thursday', label: t('schedule.thursday') },
+    { value: 'friday', label: t('schedule.friday') },
+    { value: 'saturday', label: t('schedule.saturday') },
+    { value: 'sunday', label: t('schedule.sunday') },
   ];
 
   const hours = Array.from(
@@ -51,7 +52,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
   const onSubmit = async (model: ICScheduleRequest) => {
     const hoursByDay = getSelectedHoursByDay(
-      daysOfWeek,
+      daysOfWeek.map((day) => day.label),
       hours,
       selectedCells.value
     ).filter((day) => day.blocks.length > 0);
@@ -60,8 +61,8 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
     let request;
     let message: string = id
-      ? 'Horario editado exitosamente!'
-      : 'Horario creado exitosamente!';
+      ? t('schedule.successEdit')
+      : t('schedule.successCreate');
 
     if (id) {
       request = await ScheduleService.updateSchedule(model, id);
@@ -121,8 +122,8 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                     <Input
                       {...input}
                       type='text'
-                      placeholder='Ingrese nombre...'
-                      label='name'
+                      placeholder={t('schedule.namePlaceholder')}
+                      label={t('schedule.name')}
                       meta={meta}
                     />
                   )}
@@ -137,7 +138,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                   selectedCells={selectedCells.value}
                   onClearSelection={handleClearSelection}
                   onCellChange={handleCellChange}
-                  daysOfWeek={daysOfWeek}
+                  daysOfWeek={daysOfWeek.map((day) => day.label)}
                   hours={hours}
                 />
               </div>
@@ -151,7 +152,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
               submitting={submitting}
               pristine={pristine}
               form='form-schedule-create'
-              label={id ? 'edit' : 'save'}
+              label={id ? t('schedule.edit') : t('schedule.save')}
             />
           </form>
         )}

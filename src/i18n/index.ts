@@ -23,6 +23,7 @@ import { placeholder_en, placeholder_es } from './placeholder';
 import { validation_en, validation_es } from './validation';
 import { table_en, table_es } from './table';
 
+import { schedule_en, schedule_es } from './schedule';
 // import { notification_en, notification_es } from './notification';
 // import { shift_en, shift_es } from './shift';
 // import { home_en, home_es } from './home';
@@ -50,6 +51,7 @@ const resources = {
       ...placeholder_en,
       ...validation_en,
       ...table_en,
+      ...schedule_en,
       // ...home_en,
     },
   },
@@ -75,6 +77,7 @@ const resources = {
       ...placeholder_es,
       ...validation_es,
       ...table_es,
+      ...schedule_es,
       // ...home_es,
     },
   },

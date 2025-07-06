@@ -19,29 +19,29 @@ import {
   convertBlocksToCells,
 } from '@/pages/settings/shifts/schedule/utils';
 import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
-import dayjs from 'dayjs';
+//import dayjs from 'dayjs';
 import { ShiftFormContent } from './shift.form';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 
-type TimeBlock = {
-  start: number;
-  end: number;
-};
+//type TimeBlock = {
+//  start: number;
+//  end: number;
+//};
 
-type DaySchedule = {
-  day: string;
-  dayIndex: number;
-  blocks: TimeBlock[];
-};
+//type DaySchedule = {
+//  day: string;
+//  dayIndex: number;
+//  blocks: TimeBlock[];
+//};
 
-type Schedule = {
-  days: DaySchedule[];
-  daysAllowed: string[];
-};
+//type Schedule = {
+//  days: DaySchedule[];
+//  daysAllowed: string[];
+//};
 
-type ScheduleItem = {
-  schedule: Schedule;
-};
+//type ScheduleItem = {
+//  schedule: Schedule;
+//};
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -61,15 +61,6 @@ const hours = Array.from(
   { length: END_HOUR - START_HOUR + 1 },
   (_, i) => START_HOUR + i
 );
-const daysOfWeek = [
-  'Domingo',
-  'Lunes',
-  'Martes',
-  'Miércoles',
-  'Jueves',
-  'Viernes',
-  'Sábado',
-];
 
 export const TaskForm = ({
   closed,
@@ -83,7 +74,15 @@ export const TaskForm = ({
   externalSelected,
 }: ITaskFormProps) => {
   const { t } = useTranslation();
-
+  const daysOfWeek = [
+    { value: 'monday', label: t('schedule.monday') },
+    { value: 'tuesday', label: t('schedule.tuesday') },
+    { value: 'wednesday', label: t('schedule.wednesday') },
+    { value: 'thursday', label: t('schedule.thursday') },
+    { value: 'friday', label: t('schedule.friday') },
+    { value: 'saturday', label: t('schedule.saturday') },
+    { value: 'sunday', label: t('schedule.sunday') },
+  ];
   const [selectedCells, setSelectedCells] = useState<any>([]);
   const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
@@ -100,16 +99,16 @@ export const TaskForm = ({
       );
       return;
     }
-    const isInSchedule = isStartAndEndInSchedules(
+    /* const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
       schedules.value
     );
-
-    if (!isInSchedule) {
+    console.log('isInSchedule ==>', isInSchedule);
+    /* if (!isInSchedule) {
       ToastManager.warning(t('shift.upsert.errorSchedule'));
       return;
-    }
+      }*/
 
     const {
       task,
@@ -351,7 +350,7 @@ export const TaskForm = ({
     });
   }, [userSelected, taskSelected, timeBeforeSelected]);
 
-  const isStartAndEndInSchedules = (
+  /* const isStartAndEndInSchedules = (
     startDateStr: string,
     endDateStr: string,
     schedules: ScheduleItem[]
@@ -361,10 +360,10 @@ export const TaskForm = ({
 
     return schedules.some(({ schedule }) => {
       const checkTime = (date: dayjs.Dayjs) => {
-        const dayIndex = date.day();
+        const dayIndex = date.day() + 1;
         const dayName = daysOfWeek[dayIndex];
 
-        if (!schedule.daysAllowed.includes(dayName)) return false;
+        if (!schedule.daysAllowed.includes(dayName.value)) return false;
 
         const scheduleDay = schedule.days.find((d) => d.dayIndex === dayIndex);
         if (!scheduleDay) return false;
@@ -378,6 +377,7 @@ export const TaskForm = ({
       return checkTime(start) && checkTime(end);
     });
   };
+  */
 
   const onChangeShift = async (id: number, start: string, end: string) => {
     const response = await ShiftService.get_related({
@@ -410,6 +410,7 @@ export const TaskForm = ({
     );
     // @ts-ignore
     setSelectedCells(convertBlocksToCells(days));
+    console.log('selectedCells ==>', selectedCells);
   };
 
   const cleanServiceSelected = () => {
@@ -435,11 +436,13 @@ export const TaskForm = ({
         {selectedCells && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-1 justify-center'>
-              {getSelectedHoursByDay(daysOfWeek, hours, selectedCells).map(
-                (daySelection) => (
-                  <DataSchedule daySelection={daySelection} />
-                )
-              )}
+              {getSelectedHoursByDay(
+                daysOfWeek.map((day) => day.label),
+                hours,
+                selectedCells
+              ).map((daySelection) => (
+                <DataSchedule daySelection={daySelection} />
+              ))}
             </ul>
           </div>
         )}
