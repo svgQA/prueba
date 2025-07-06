@@ -76,7 +76,6 @@ export const TaskForm = ({
       return;
     }
     const { employeeId, serviceId } = model;
-    console.log(model, tasks.value);
     /*
 		const isInSchedule = isStartAndEndInSchedules(
 		  DateUtils.dateToInput(model.start),
@@ -93,13 +92,12 @@ export const TaskForm = ({
     // const model_task = tasks.value.find(
     //   (_task: ITask) => _task.id === task?.value
     // );
-    const allTasks: ITask[] = [];
 
     const request_model: IShiftRequest = {
       ...model,
       employeeId: employeeId?.value,
       serviceId: serviceId?.value,
-      task: allTasks,
+      task: tasksResponse,
     };
 
     const request = taskSelected?.id
@@ -119,6 +117,7 @@ export const TaskForm = ({
     ToastManager.success(message);
     onClose?.();
     posSave?.();
+    setTasksResponse([]);
   };
 
   const getServices = useCallback(async () => {
@@ -228,19 +227,12 @@ export const TaskForm = ({
     if (model.tasks && model.tasks.length > 0) {
       // MSG: Update tasks message
       // TODO: Agregar solo las propiedades necesarias
-      setTasksResponse(
-        model.tasks.map((task: any, index: number) => ({
-          id: index,
-          t: 1,
-          ...task,
-        }))
-      );
+      onTaskAdd(model.tasks, 1);
     }
 
     const length = model.schedules.length;
     if (length < 1) return;
 
-    /* TODO: Mierda de Scheduler */
     schedules.value = model.scchedule;
     const schedule = model.schedules[length - 1].schedule;
     const days = schedule.days.reduce(
@@ -256,20 +248,31 @@ export const TaskForm = ({
     setSelectedCells(convertBlocksToCells(days));
   };
 
-  const cleanServiceSelected = () => {
-    setSelectedCells([]);
-    // Tener cuidado solo limpiar las del servicio.
-    setTasksResponse([]);
+  const onTaskAdd = (model: any, t: number = 2) => {
+    const size = tasksResponse.length + 1;
+    const task = Array.isArray(model)
+      ? model.map((task: any, index: number) => ({
+          t,
+          ...task.task,
+          id: size + index,
+        }))
+      : [
+          {
+            t,
+            id: size,
+            ...model,
+            hourStart: DateUtils.createUTCDateFromHour(
+              model.hourStart || '00:00'
+            ),
+          },
+        ];
+    setTasksResponse((prevTasks) => [...prevTasks, ...task]);
   };
 
-  const onTaskAdd = (model: any) => {
-    const task = {
-      id: tasksResponse.length + 1,
-      t: 2,
-      ...model,
-      hourStart: DateUtils.createUTCDateFromHour(model.hourStart),
-    };
-    setTasksResponse((prevTasks) => [...prevTasks, task]);
+  const cleanServiceSelected = () => {
+    setSelectedCells([]);
+    //@ts-ignore
+    setTasksResponse(tasksResponse.filter((task) => task.t === 2));
   };
 
   const isNewTask = useSignal(false);
@@ -366,14 +369,23 @@ export const TaskForm = ({
         {tasksResponse?.length > 0 && (
           <div className='mt-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-1 justify-center'>
-              {tasksResponse.map((task) => (
+              {tasksResponse.map((task, index) => (
                 <li
-                  key={`card-task-${task.name}-${task.id}`}
+                  key={`card-task-${task.id}-${index}`}
                   className='w-52 text-xs p-2 rounded-md  bg-b-light-dark dark:bg-b-dark-dark min-w-[150px] relative'
                 >
                   {/* @ts-ignore */}
-                  <span>{t((task.type as IOption)?.value | task.type)}</span>
-                  <p className='font-semibold text-primary mb-1'>{task.name}</p>
+                  <span className='absolute top-0 right-0 px-2 py-0.5 bg-ternary rounded-bl-md'>
+                    {t(
+                      typeof task.type === 'string'
+                        ? task.type
+                        : (task.type.value as string)
+                    )}
+                  </span>
+                  <div className='flex flex-row justify-between mt-4'>
+                    <TextEllipsis text={task.name} className='text-primary' />
+                    <p>{DateUtils.hourToFrontend(task.hourStart || '')}</p>
+                  </div>
                   <TextEllipsis text={task.description} />
                 </li>
               ))}
