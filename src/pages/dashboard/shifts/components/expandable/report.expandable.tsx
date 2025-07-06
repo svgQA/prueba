@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DateUtils } from '@/utils/utilities/dates';
 import ShowFiles from '@/components/common/file/show.file';
+import { useTranslation } from 'react-i18next';
 
 export interface IReport {
   id: number;
@@ -31,6 +32,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
   data,
   onViewDetails,
 }) => {
+  const { t } = useTranslation();
   const reports: IReport[] = directReports ?? data?.reports ?? [];
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
@@ -43,16 +45,23 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
     <div className='rounded-lg p-4 w-full'>
       {/* Header */}
       <div className='flex items-center justify-between pb-2 mb-4'>
-        <h2 className='text-base font-medium'>Reportes del Turno</h2>
+        <h2 className='text-base font-medium'>
+          {t('shift.expandable.report.title')}
+        </h2>
         <span className='bg-cyan-100 text-cyan-800 text-xs font-semibold px-3 py-1 rounded-full'>
-          {reports.length} Reporte{reports.length !== 1 && 's'}
+          {reports.length}{' '}
+          {reports.length === 1
+            ? t('shift.expandable.report.count.singular')
+            : t('shift.expandable.report.count.plural')}
         </span>
       </div>
 
       <div className='divide-y divide-gray-200'>
         {reports.map((report) => {
           const isRequested = report.request;
-          const statusLabel = isRequested ? 'Solicitado' : 'No solicitado';
+          const statusLabel = isRequested
+            ? t('shift.expandable.report.status.requested')
+            : t('shift.expandable.report.status.notRequested');
           const statusColor = isRequested ? 'text-green-500' : 'text-red-500';
           const statusIcon = isRequested ? 'vx-icon-324' : 'vx-icon-323';
 
@@ -76,7 +85,9 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
           const showToggle = hasAttachments || hasForm;
           const isExpanded = expandedId === report.id;
 
-          const buttonLabel = isExpanded ? 'Ocultar detalles' : 'Ver detalles';
+          const buttonLabel = isExpanded
+            ? t('shift.expandable.report.form.hideDetails')
+            : t('shift.expandable.report.form.viewDetails');
 
           return (
             <React.Fragment key={report.id}>
@@ -94,17 +105,23 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                   {isRequested && (
                     <>
                       <p className='leading-tight'>
-                        <span className='font-semibold'>Solicitud:</span>{' '}
+                        <span className='font-semibold'>
+                          {t('shift.expandable.report.dates.request')}:
+                        </span>{' '}
                         {requestDate}
                       </p>
                       <p className='leading-tight'>
-                        <span className='font-semibold'>Recibido:</span>{' '}
+                        <span className='font-semibold'>
+                          {t('shift.expandable.report.dates.received')}:
+                        </span>{' '}
                         {receivedDate}
                       </p>
                     </>
                   )}
                   <p className='leading-tight'>
-                    <span className='font-semibold'>Reporte:</span>{' '}
+                    <span className='font-semibold'>
+                      {t('shift.expandable.report.dates.report')}:
+                    </span>{' '}
                     {updatedDate}
                   </p>
                 </div>
@@ -118,7 +135,9 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                     </div>
                   ) : hasForm ? (
                     <p className='text-sm'>
-                      <span className='font-semibold'>Formulario:</span>{' '}
+                      <span className='font-semibold'>
+                        {t('shift.expandable.report.form.title')}:
+                      </span>{' '}
                       {report.form?.title}
                     </p>
                   ) : null}
@@ -154,15 +173,22 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
               {isExpanded && !hasAttachments && hasForm && (
                 <div className='p-4 bg-gray-50 grid grid-cols-4 items-center gap-x-4'>
                   <p className='text-sm'>
-                    <span className='font-semibold'>Título:</span>{' '}
+                    <span className='font-semibold'>
+                      {t('shift.expandable.report.form.title')}:
+                    </span>{' '}
                     {report.form?.title}
                   </p>
                   <p className='text-sm'>
-                    <span className='font-semibold'>Categoría:</span>{' '}
-                    {report.form?.category ?? 'Sin categoría'}
+                    <span className='font-semibold'>
+                      {t('shift.expandable.report.form.category')}:
+                    </span>{' '}
+                    {report.form?.category ??
+                      t('shift.expandable.report.form.noCategory')}
                   </p>
                   <p className='text-sm'>
-                    <span className='font-semibold'>Descripción:</span>{' '}
+                    <span className='font-semibold'>
+                      {t('shift.expandable.report.form.description')}:
+                    </span>{' '}
                     {report.form?.description}
                   </p>
                   <div className='text-right'>
@@ -170,7 +196,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                       onClick={() => toggleDetails(report)}
                       className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
                     >
-                      Ver reporte de formulario
+                      {t('shift.expandable.report.form.viewForm')}
                       <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
                     </button>
                   </div>
@@ -182,7 +208,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
         {reports.length === 0 && (
           <div className='py-8 text-center text-gray-500'>
-            No hay reportes para mostrar
+            {t('shift.expandable.report.empty')}
           </div>
         )}
       </div>

@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+// Eliminar
 import { general_en } from './general.en';
 import { general_es } from './general.es';
 import { error_en, error_es } from './error';
@@ -18,6 +19,8 @@ import { hero_en, hero_es } from './hero';
 
 // Revisar
 import { schedule_en, schedule_es } from './schedule';
+import { table_en, table_es } from './table';
+
 // Validos
 import { common_en, common_es } from './common';
 import { buttons_en, buttons_es } from './button';
@@ -33,6 +36,17 @@ import { page_en, page_es } from './page';
 const resources = {
   en: {
     translation: {
+      ...common_en,
+      ...buttons_en,
+      ...columns_en,
+      ...menus_en,
+      ...placeholder_en,
+      ...validation_en,
+      ...header_en,
+      ...label_en,
+      ...toast_en,
+      ...page_en,
+      // Posible Delete
       ...general_en,
       ...error_en,
       ...form_en,
@@ -42,26 +56,27 @@ const resources = {
       ...user_en,
       ...maps_en,
       ...history_en,
-      ...common_en,
       ...memos_en,
       ...role_en,
       ...demo_en,
-      ...columns_en,
-      ...buttons_en,
-      ...menus_en,
       ...hero_en,
-      ...placeholder_en,
-      ...validation_en,
-      ...header_en,
-      ...label_en,
-      ...toast_en,
-      ...page_en,
+      ...table_en,
       ...schedule_en,
-      // ...home_en,
     },
   },
   es: {
     translation: {
+      ...common_es,
+      ...buttons_es,
+      ...columns_es,
+      ...menus_es,
+      ...placeholder_es,
+      ...validation_es,
+      ...header_es,
+      ...label_es,
+      ...toast_es,
+      ...page_es,
+      // Posible Delete
       ...general_es,
       ...error_es,
       ...form_es,
@@ -71,22 +86,12 @@ const resources = {
       ...user_es,
       ...maps_es,
       ...history_es,
-      ...common_es,
       ...memos_es,
       ...role_es,
       ...demo_es,
-      ...columns_es,
-      ...buttons_es,
-      ...menus_es,
       ...hero_es,
-      ...placeholder_es,
-      ...validation_es,
-      ...header_es,
-      ...label_es,
-      ...toast_es,
-      ...page_es,
+      ...table_es,
       ...schedule_es,
-      // ...home_es,
     },
   },
 };

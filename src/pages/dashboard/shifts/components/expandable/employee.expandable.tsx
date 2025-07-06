@@ -1,6 +1,7 @@
 import { Badge } from '@/components/common/badge/badge';
 import { FormattedDate } from '@/components/compose/forms';
 import { IPlace, IService, IUser } from '@/types/shift/activity';
+import { useTranslation } from 'react-i18next';
 
 const EmployeeInfo = ({
   employee,
@@ -15,6 +16,7 @@ const EmployeeInfo = ({
   roundPct: number;
   service: IService;
 }) => {
+  const { t } = useTranslation();
   return (
     <>
       <div className='flex flex-row gap-6'>
@@ -28,7 +30,7 @@ const EmployeeInfo = ({
           <h3 className='text-base font-medium'>
             {employee?.name} {employee?.surname}
           </h3>
-          <p>{'Operativo'}</p>
+          <p>{t('shift.expandable.employee.operative')}</p>
           <Badge label='Activo' status='success' outline />
         </div>
 
@@ -36,23 +38,31 @@ const EmployeeInfo = ({
         <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='mr-2 !text-primary size-sm vox-icon vx-icon-308'></span>
-            Información Personal
+            {t('shift.expandable.employee.infoPerson')}
           </h4>
           <div className='grid grid-cols-2 gap-y-2'>
             <div>
-              <p className='font-semibold'>Identificación</p>
+              <p className='font-semibold'>
+                {t('shift.expandable.employee.identification')}
+              </p>
               <p>{employee.cardId}</p>
             </div>
             <div>
-              <p className='font-semibold'>Teléfono</p>
+              <p className='font-semibold'>
+                {t('shift.expandable.employee.phone')}
+              </p>
               <p>{employee.phone}</p>
             </div>
             <div>
-              <p className='font-semibold'>Correo</p>
+              <p className='font-semibold'>
+                {t('shift.expandable.employee.email')}
+              </p>
               <p>{employee.email}</p>
             </div>
             <div>
-              <p className='font-semibold'>Ciudad</p>
+              <p className='font-semibold'>
+                {t('shift.expandable.employee.city')}
+              </p>
               <p>{place.municipality.name}</p>
             </div>
           </div>
@@ -62,21 +72,27 @@ const EmployeeInfo = ({
         <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='!text-primary mr-2 vox-icon size-sm vx-icon-195'></span>
-            Información de la empresa
+            {t('shift.expandable.employee.infoEnterprice')}
           </h4>
           <div className='grid grid-cols-2 gap-y-2'>
             <div>
-              <p className='font-semibold'>Compañía</p>
+              <p className='font-semibold'>
+                {t('shift.expandable.employee.company')}
+              </p>
               <p>{service.contract.company?.name}</p>
             </div>
             <div>
-              <p className='font-semibold'>Departamento</p>
+              <p className='font-semibold'>
+                {t('shift.expandable.employee.department')}
+              </p>
               <p>
                 {employee.extraData?.area || service.place.municipality.name}
               </p>
             </div>
             <div>
-              <p className='font-semibold'>Fecha de Inicio</p>
+              <p className='font-semibold'>
+                {t('shift.expandable.employee.dataStart')}
+              </p>
               <FormattedDate
                 date={service.contract.startDate}
                 format='datetime'
@@ -88,11 +104,17 @@ const EmployeeInfo = ({
         {/* Estadísticas */}
         <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
-            Estadísticas Turno
+            {t('shift.expandable.employee.statistics')}
           </h4>
           <div className='flex justify-around'>
-            <StatCircle title='Actividades' percentage={activityPct} />
-            <StatCircle title='Rondas' percentage={roundPct} />
+            <StatCircle
+              title={t('shift.expandable.employee.activities')}
+              percentage={activityPct}
+            />
+            <StatCircle
+              title={t('shift.expandable.employee.shifts')}
+              percentage={roundPct}
+            />
           </div>
         </div>
       </div>
