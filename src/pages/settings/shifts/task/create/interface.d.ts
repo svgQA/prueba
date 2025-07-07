@@ -18,4 +18,5 @@ export interface ITask {
   styles?: any;
   start?: string | Date;
   end?: string | Date;
+  attachmentType: string;
 }

@@ -19,9 +19,7 @@ interface Props {
   users?: IOption[];
   services?: IOption[];
   schedules?: IOption[];
-  tasks: any;
   cleanServiceSelected: any;
-  onToggleTask?: () => void;
 }
 
 export const ShiftFormContent = ({
@@ -33,8 +31,6 @@ export const ShiftFormContent = ({
   services = [],
   schedules = [],
   cleanServiceSelected,
-  tasks,
-  onToggleTask,
 }: Props) => {
   const inputKeywords = useSignal<IOption[]>([]);
   useShiftWatcher(onChangeShift);
@@ -176,7 +172,7 @@ export const ShiftFormContent = ({
 
         <div class='col-span-1'>
           <MultipleInput
-            id='input-keywords'
+            name='input-keywords'
             value={inputKeywords.value}
             onChange={(value: IOption[], _name?: string) => {
               inputKeywords.value = value;
@@ -189,6 +185,7 @@ export const ShiftFormContent = ({
           />
         </div>
 
+        {/*
         <div class='col-span-2'>
           <Field<IOption> name='task'>
             {({ input, meta }) => (
@@ -213,6 +210,7 @@ export const ShiftFormContent = ({
             )}
           </Field>
         </div>
+        */}
       </div>
     </form>
   );

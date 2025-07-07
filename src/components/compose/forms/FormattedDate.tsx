@@ -36,7 +36,7 @@ export const FormattedDate = ({
         return DateUtils.dateToFrontend(date, { format: 'DD/MM/YYYY HH:mm' });
 
       case 'time':
-        return DateUtils.hourToFrontend(date);
+        return DateUtils.hourToFrontend(date as string);
 
       case 'relative':
         return DateUtils.getRelativeTime(date);

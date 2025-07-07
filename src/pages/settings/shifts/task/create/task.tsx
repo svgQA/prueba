@@ -23,34 +23,18 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const [_, navigate] = useLocation();
   const forms = useSignal<IOption[]>([]);
+
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams<{ id: string }>();
 
   const onSubmit = async (model: Record<string, any>) => {
-    const output: any = {
-      name: model.name,
-      description: model.description,
-      type: model.type.value as string,
-    };
-
-    if (output.type === 'GENERAL') {
-      output.formId = model.formId?.value
-        ? Number(model.formId.value)
-        : undefined;
-      output.hourStart = DateUtils.createUTCDateFromHour(model.hourStart);
-    } else if (output.type === 'REPORT') {
-      if (model.attachmentType.value === 'FORMS') {
-        output.formId = Number(model.formId.value);
-      }
-      output.attachmentType = model.attachmentType.value;
-    }
-
+    console.log(model);
     if (id) {
-      const request = await TaskService.updateTask(output, id);
+      const request = await TaskService.updateTask(model, id);
       if (!request.getStatus()) return;
       ToastManager.success('s_update_success');
     } else {
-      const request = await TaskService.createTask(output);
+      const request = await TaskService.createTask(model);
       if (!request.getStatus()) return;
       ToastManager.success('s_created_success');
     }
@@ -101,6 +85,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
           onSubmit={onSubmit}
           forms={forms.value}
           initialValues={initialValues.value}
+          append
         />
       </div>
     </Section>

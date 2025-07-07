@@ -11,7 +11,7 @@ import { Form, Field } from 'react-final-form';
 import { useSignal } from '@preact/signals';
 import { lengthSize } from '@/utils/utilities';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { FormService, NotificationService, TaskService } from '@/services';
+import { NotificationService, TaskService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
@@ -62,12 +62,6 @@ export const ManualNotificationForm = ({
     return sendToShiftToday ? match && !u.hasShiftToday : match;
   });
 
-  // Filtrado de tareas según tipo
-  const filteredTasks =
-    notificationType === 'REPORT'
-      ? tasks.value.filter((opt) => (opt as any).type === 'REPORT')
-      : tasks.value;
-
   useEffect(() => {
     setSelectedUserIds(usersWithPlayerId.map((u) => u.id));
   }, [externalUsers]);
@@ -85,17 +79,11 @@ export const ManualNotificationForm = ({
     setSelectedUsersFull(finalUsers);
   }, [selectedUserIds, usersWithPlayerId]);
 
-  const forms = useSignal<IOption[]>([]);
   const getInitData = useCallback(async () => {
-    const [request_form, request_task, request_template] = await Promise.all([
-      FormService.getSimpleList(),
+    const [request_task, request_template] = await Promise.all([
       TaskService.getSimplesList(),
       TemplateService.getBasicTemplates(),
     ]);
-
-    if (request_form.getStatus()) {
-      forms.value = request_form.getMany();
-    }
 
     if (request_task.getStatus()) {
       tasks.value = request_task.getMany();
@@ -109,6 +97,21 @@ export const ManualNotificationForm = ({
   const handleSubmit = async (values: any) => {
     if (!hasplayers) return;
 
+    const output = {
+      ...values,
+      tasks: tasksResponse.value,
+    };
+
+    // JAIDER: Este es el objeto para enviar a backend
+    console.log(output);
+    /*
+     * const result = await NotificationService.sendManualNotification(output);
+     * if (!result.getStatus()) return;
+     * ToastManager.success('s_send_success');
+     * onClose?.();
+     */
+
+    /* DELETE: Posibllemente eliminar esto */
     const payload: ISendManualNotificationDto = {
       notificationType: notificationType.toLowerCase(),
       ...(values.template?.value && { templateId: values.template.value }),
@@ -126,6 +129,7 @@ export const ManualNotificationForm = ({
     if (!result.getStatus()) return;
     ToastManager.success('s_send_success');
     onClose?.();
+    /* DELETE: Posibllemente eliminar esto */
   };
 
   const clearUserSelection = () => setSelectedUserIds([]);
@@ -135,7 +139,7 @@ export const ManualNotificationForm = ({
   }, []);
 
   const onTaskAdd = (model: any) => {
-    tasksResponse.value = [model];
+    tasksResponse.value = [...tasksResponse.value, model];
     showInlineCreate.value = false;
   };
 
@@ -247,7 +251,7 @@ export const ManualNotificationForm = ({
             )}
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+          <div className='w-full'>
             <Field<IOption[]>
               name='template'
               render={({ input, meta }) => (
@@ -264,38 +268,12 @@ export const ManualNotificationForm = ({
                 />
               )}
             />
-            <div className='flex items-center space-x-2'>
-              {!templateSelected && (
-                <Field<IOption>
-                  name='task'
-                  render={({ input, meta }) => (
-                    <SmartSelector
-                      {...input}
-                      meta={meta}
-                      options={filteredTasks}
-                      menuPortalTarget={document.body}
-                      placeholder='Selecciona una tarea'
-                      label='Tareas'
-                      onChange={(value?: IOption) => input.onChange(value)}
-                      button
-                      buttonIcon='039'
-                      buttonType='button'
-                      onClick={() =>
-                        (showInlineCreate.value = !showInlineCreate.value)
-                      }
-                    />
-                  )}
-                />
-              )}
-            </div>
           </div>
 
           <TaskFormCreate
             onSubmit={onTaskAdd}
-            forms={forms.value}
             add
-            append={showInlineCreate.value}
-            icon='146'
+            selector
             taskList={tasksResponse.value}
           />
 

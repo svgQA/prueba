@@ -5,12 +5,7 @@ import { FormData, IShiftRequest } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import {
-  FormService,
-  ServiceService,
-  ShiftService,
-  TaskService,
-} from '@/services';
+import { ServiceService, ShiftService } from '@/services';
 import { Task, User } from '@/components/compose/gantt/types/public-types';
 import { IOption } from '@/components/common/multi/interface';
 import { ToastManager } from '@/utils/toast/toast-manager';
@@ -64,14 +59,13 @@ export const TaskForm = ({
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
   const schedules = useSignal<any[]>([]);
   const [tasksResponse, setTasksResponse] = useState<ITask[]>([]);
-  const tasks = useSignal<ITask[]>([]);
   const relatedShifts = useSignal<any[]>([]);
-  const forms = useSignal<IOption[]>([]);
+
   const currentSchedule = useSignal<any>(null);
 
   useEffect(() => {
     if (selectedCompany) {
-      Promise.all([getServices(), getTasks(), getForms()]);
+      Promise.all([getServices()]);
     }
   }, [selectedCompany, location]);
 
@@ -122,20 +116,6 @@ export const TaskForm = ({
     const request = await ServiceService.getServicesSimpleList();
     if (request.getStatus()) {
       services.value = request.getMany();
-    }
-  }, []);
-
-  const getTasks = useCallback(async () => {
-    const request = await TaskService.getTasks();
-    if (request.getStatus()) {
-      tasks.value = request.getMany();
-    }
-  }, []);
-
-  const getForms = useCallback(async () => {
-    const request = await FormService.getSimpleList();
-    if (request.getStatus()) {
-      forms.value = request.getMany();
     }
   }, []);
 
@@ -289,7 +269,6 @@ export const TaskForm = ({
     const size = tasksResponse.length + 1;
     const task = _onTaskAddWithId(model, size, t);
     setTasksResponse((prevTasks) => [...prevTasks, ...task]);
-    isNewTask.value = false;
   };
 
   const cleanServiceSelected = () => {
@@ -298,10 +277,14 @@ export const TaskForm = ({
     setTasksResponse(tasksResponse.filter((task) => task.t === 2));
   };
 
-  const isNewTask = useSignal(false);
-  const onToggleTask = () => {
-    isNewTask.value = !isNewTask.value;
-  };
+  const schedulesOptions = useMemo(
+    () =>
+      schedules.value.map((value: any) => ({
+        value: value.schedule.id,
+        label: value.schedule.name,
+      })),
+    [schedules.value]
+  );
 
   return (
     <Modal
@@ -351,7 +334,7 @@ export const TaskForm = ({
                     </p>
                   </div>
                   <div className='flex flex-row justify-between'>
-                    <strong>end: </strong>
+                    <strong>{t('h_end_date')}: </strong>
                     {DateUtils.dateToFrontend(shift.end, {
                       time: true,
                       mode: '12',
@@ -374,27 +357,20 @@ export const TaskForm = ({
               {...formProps}
               onChangeShift={onChangeShift}
               onChangeService={onChangeService}
-              onToggleTask={onToggleTask}
               users={users}
               services={services.value}
-              schedules={schedules.value.map((value: any) => ({
-                value: value.schedule.id,
-                label: value.schedule.name,
-              }))}
+              schedules={schedulesOptions}
               cleanServiceSelected={cleanServiceSelected}
               onChangeSchedule={onChangeSchedule}
-              tasks={tasks}
             />
           )}
         />
 
         <TaskFormCreate
           onSubmit={onTaskAdd}
-          forms={forms.value}
-          append={isNewTask.value}
           taskList={tasksResponse}
           add
-          icon='146'
+          selector
         />
 
         {/*
