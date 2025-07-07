@@ -30,13 +30,16 @@ import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { isStartAndEndInSchedules } from './validation';
 import { _onTaskAddWithId } from '@/pages/settings/shifts/task/create/utils';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
+import { Label } from '@aws-amplify/ui-react';
+import { start } from 'node:repl';
 
 interface ITaskFormProps {
   closed?: boolean;
   onClose?: () => void;
   posSave?: () => void;
-  userSelected?: User;
-  taskSelected?: Task;
+  // userSelected?: User;
+  // taskSelected?: Task;
+  shiftId?: number | string;
   users?: IOption[];
   keywordsSelected?: string[];
   timeBeforeSelected?: number;
@@ -46,8 +49,7 @@ interface ITaskFormProps {
 export const TaskForm = ({
   closed,
   onClose,
-  userSelected,
-  taskSelected,
+  shiftId,
   posSave,
   users,
   keywordsSelected,
@@ -97,21 +99,20 @@ export const TaskForm = ({
       task: tasksResponse,
     };
 
-    const request = taskSelected?.id
-      ? await ShiftService.updateActivity(request_model, taskSelected.id)
-      : await ShiftService.createActivity(request_model);
-
-    if (!request.getStatus()) {
-      ToastManager.error('s_upload_error');
-      return;
+    if (shiftId) {
+      const response = await ShiftService.updateActivity(
+        request_model,
+        shiftId
+      );
+      if (!response.getStatus()) return;
+      ToastManager.success('s_updated_success');
+    } else {
+      const response = await ShiftService.createActivity(request_model);
+      if (!response.getStatus()) return;
+      ToastManager.success('s_created_success');
     }
 
-    const message = taskSelected?.id
-      ? 's_updated_success'
-      : 's_created_success';
-
     form.reset();
-    ToastManager.success(message);
     onClose?.();
     posSave?.();
     setTasksResponse([]);
@@ -151,15 +152,49 @@ export const TaskForm = ({
         <Button
           name='btn-form-shift-save'
           type='submit'
-          label={taskSelected ? 'edit' : 'save'}
+          label={shiftId ? 'edit' : 'save'}
           form='form-shift-create-update'
           icon='041'
         />
       </div>
     ),
-    [taskSelected, onClose]
+    [onClose]
   );
 
+  useEffect(() => {
+    if (shiftId) {
+      getInitialData();
+    }
+  }, [shiftId]);
+
+  const getInitialData = async () => {
+    if (!shiftId) return;
+    const response = await ShiftService.get_shift(shiftId);
+    if (!response.getStatus()) return;
+    const model = response.getOne();
+
+    const initialData = {
+      employeeId: {
+        value: model.employee.name,
+        label: model.employee.id,
+      },
+      serviceId: {
+        value: model.service.name,
+        label: model.service.id,
+      },
+      type: {
+        value: model.type,
+        label: model.type,
+      },
+      start: model.start,
+      end: model.end,
+      timeBefore: model.timeBefore,
+      keywords: [],
+    };
+    console.log(response.getOne());
+  };
+
+  /*
   useEffect(() => {
     if (taskSelected) {
       const selectedService = services.value.find(
@@ -204,6 +239,7 @@ export const TaskForm = ({
       externalId: '',
     });
   }, [userSelected, taskSelected, timeBeforeSelected]);
+  */
 
   const onChangeShift = async (id: number, start: string, end: string) => {
     const response = await ShiftService.get_related({
@@ -213,7 +249,9 @@ export const TaskForm = ({
     });
     if (!response.getStatus()) return;
     const outputs = response.getMany();
-    relatedShifts.value = outputs;
+    relatedShifts.value = shiftId
+      ? outputs.filter((shift) => shift.id !== shiftId)
+      : outputs;
   };
 
   const onChangeService = async (id: number) => {
@@ -272,7 +310,7 @@ export const TaskForm = ({
       name='modal-shift-updsert'
       width='w-2/3'
       position='fixed'
-      header={<h3>{taskSelected ? t('udpate') : t('create')}</h3>}
+      header={<h3>{shiftId ? t('udpate') : t('create')}</h3>}
       footer={footerContent}
     >
       <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
@@ -304,7 +342,7 @@ export const TaskForm = ({
                     <span className='rounded-full h-3 w-3 bg-primary'></span>
                   </div>
                   <div className='flex flex-row justify-between'>
-                    <strong>Start: </strong>
+                    <strong>{t('h_start_date')}: </strong>
                     <p>
                       {DateUtils.dateToFrontend(shift.start, {
                         time: true,

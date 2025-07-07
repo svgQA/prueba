@@ -725,8 +725,9 @@ export const ShiftsPage: FunctionalComponent = () => {
         closed={showUpsertModal.value}
         onClose={handleCloseUpsertModal}
         posSave={handleViewMode}
-        userSelected={userSelected}
-        taskSelected={taskSelected}
+        shiftId={userSelected?.id || taskSelected?.id}
+        // userSelected={userSelected}
+        // taskSelected={taskSelected}
         users={users}
         keywordsSelected={keywordsSelected}
         timeBeforeSelected={timeBeforeSelected}
