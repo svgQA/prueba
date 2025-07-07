@@ -1,7 +1,6 @@
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
-import { useLocation } from 'wouter';
 import { columns } from './components/service.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -10,13 +9,9 @@ import { useSignal, Signal } from '@preact/signals';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { appendHistory } from '../../store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
-
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../store/settings';
 import { ServiceService } from '@/services';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@/utils/utilities/navigation';
 
 export interface IServicio {
   id: number;
@@ -32,7 +27,8 @@ export interface IRowActionPlace {
 }
 
 export const ServiceSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  const { redirectSettings } = useNavigation();
+
   const novelties: Signal<IServicio[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
   const { t } = useTranslation();
@@ -51,27 +47,21 @@ export const ServiceSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.create.to,
-      label: 'create',
-      id: 'service-create',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'create' });
-    navigate('/rounds/service/create');
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      '/rounds/service/create',
+      'create',
+      'service-create'
+    );
   };
 
   const update = (id: string) => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.update.to,
-      label: 'update',
-      id: 'service-update',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/rounds/service/update/${id}`);
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      `/rounds/service/update/${id}`,
+      'edit',
+      'service-update'
+    );
   };
 
   const deleteNovelty = async (id: string) => {
