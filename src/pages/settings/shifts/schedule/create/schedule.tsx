@@ -5,7 +5,7 @@ import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import WeeklyScheduler from '../components/weekly.scheduler';
 import { convertBlocksToCells, getSelectedHoursByDay } from '../utils';
@@ -15,10 +15,11 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useTranslation } from 'react-i18next';
 import { DAYS_OF_WEEK, HOURS } from '../constant';
 import { DaySelectedModel } from '../type';
+import { useNavigation } from '@/utils/utilities/navigation';
 
 export const ScheduleCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
-  const [_, navigate] = useLocation();
+  const { navigateUpsert } = useNavigation();
   const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
   const { id } = useParams();
 
@@ -57,7 +58,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate('/rounds/schedule');
+    navigateUpsert('/rounds/schedule');
   };
 
   const setInitialValues = async () => {
