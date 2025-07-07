@@ -1,7 +1,6 @@
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
-import { useLocation } from 'wouter';
 import { Place } from './utils/places';
 import { columns } from './components/places.columns';
 import { Table } from '@/components/common/table/table';
@@ -9,16 +8,11 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect, useState } from 'preact/hooks';
 // import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
-import { appendHistory } from '../../store/settings';
-
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../store/settings';
 import { PlaceService } from '@/services';
 import { useSignal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@/utils/utilities/navigation';
 
 export interface IRowActionPlace {
   id: string;
@@ -27,9 +21,9 @@ export interface IRowActionPlace {
 }
 
 export const PlacesSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
   const [places, setPlaces] = useState([]);
   const loading = useSignal<boolean>(false);
+  const { redirectSettings } = useNavigation();
 
   const { t } = useTranslation();
   useEffect(() => {
@@ -47,15 +41,12 @@ export const PlacesSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.placesCreate.to,
-      label: 'create',
-      id: 'places-create',
-    };
-    navigate(menu.to);
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'create' });
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      '/rounds/places/create',
+      'create',
+      'places-create'
+    );
   };
 
   const deletePlace = async (id: string) => {
@@ -66,15 +57,12 @@ export const PlacesSettingPage: FunctionComponent = () => {
   };
 
   const update = (id: string) => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.placesUpdate.to,
-      label: 'update',
-      id: 'places-update',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/rounds/places/update/${id}`);
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      `/rounds/places/update/${id}`,
+      'edit',
+      'places-update'
+    );
   };
   const handleOnClick = async (action: IRowActionPlace | any) => {
     switch (action.action) {
