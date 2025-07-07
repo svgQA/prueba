@@ -1,36 +1,36 @@
-import dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { DaySchedule, Schedule, TimeBlock } from './types';
 import { DAYS_OF_WEEK } from '@/pages/settings/shifts/schedule/constant';
+import { DateUtils } from '@/utils/utilities/dates';
+
+const checkTime = (date: Dayjs, schedule: Schedule) => {
+  const day_of_week = date.day();
+  const day_name = DAYS_OF_WEEK.find((day) => day.position === day_of_week);
+  if (!day_name) return false;
+
+  const _exist_day = schedule.daysAllowed.some((day) => day === day_name.value);
+  if (!_exist_day) return false;
+
+  const _schedule_hours = schedule.days.find(
+    (d: DaySchedule) => d.dayIndex === day_name.position
+  )?.blocks;
+  if (!_schedule_hours) return false;
+
+  const _hour = date.hour();
+  const validation = _schedule_hours.some((block: TimeBlock) => {
+    return _hour >= block.start && _hour < block.end;
+  });
+
+  return validation;
+};
 
 export const isStartAndEndInSchedules = (
-  startDateStr: string,
-  endDateStr: string,
+  str_start: string,
+  str_end: string,
   currentSchedule: Schedule
 ): boolean => {
-  const start = dayjs.utc(startDateStr);
-  const end = dayjs.utc(endDateStr);
+  const _start = DateUtils._dateToFrontend(str_start);
+  const _end = DateUtils._dateToFrontend(str_end);
 
-  const checkTime = (date: dayjs.Dayjs) => {
-    const dayIndex = date.day();
-    const dayName = DAYS_OF_WEEK.find((day) => day.position === dayIndex);
-    if (
-      !currentSchedule.daysAllowed.some(
-        (d) => d.toLowerCase() === (dayName?.value || '').toLowerCase()
-      )
-    ) {
-      return false;
-    }
-
-    const scheduleDay = currentSchedule.days.find(
-      (d: DaySchedule) => d.dayIndex === dayIndex
-    );
-    if (!scheduleDay) return false;
-    const hourDecimal = date.hour() + date.minute() / 60;
-    return scheduleDay.blocks.some(
-      (block: TimeBlock) =>
-        hourDecimal >= block.start && hourDecimal <= block.end
-    );
-  };
-
-  return checkTime(start) && checkTime(end);
+  return checkTime(_start, currentSchedule) && checkTime(_end, currentSchedule);
 };

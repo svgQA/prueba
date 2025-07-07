@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import duration from 'dayjs/plugin/duration';
@@ -81,7 +81,6 @@ export class DateUtils {
    */
   static hourToFrontend(dateUTC: string): string {
     const date = this.createDateFromHour(dateUTC, true);
-    console.log('FECHAS: ', date);
     return this.fromUTCToLocal(date, 'HH:mm');
   }
 
@@ -95,6 +94,10 @@ export class DateUtils {
     return dayjs.utc(dateUTC).tz(DateUtils.timeZone).format(format);
   }
 
+  static _dateToFrontend(dateInput?: string | Date): Dayjs {
+    return dayjs.utc(dateInput).tz(DateUtils.timeZone);
+  }
+
   static dateToFrontend(
     dateInput?: string | Date,
     options?: {
@@ -104,7 +107,6 @@ export class DateUtils {
     }
   ): string {
     if (!dateInput) return '';
-
     if (options?.format) {
       return this.fromUTCToLocal(dateInput, options.format);
     }

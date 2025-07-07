@@ -6,7 +6,6 @@ import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { ServiceService, ShiftService } from '@/services';
-import { Task, User } from '@/components/compose/gantt/types/public-types';
 import { IOption } from '@/components/common/multi/interface';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
@@ -30,8 +29,9 @@ interface ITaskFormProps {
   closed?: boolean;
   onClose?: () => void;
   posSave?: () => void;
-  userSelected?: User;
-  taskSelected?: Task;
+  // userSelected?: User;
+  // taskSelected?: Task;
+  shiftId?: number | string;
   users?: IOption[];
   keywordsSelected?: string[];
   timeBeforeSelected?: number;
@@ -41,13 +41,9 @@ interface ITaskFormProps {
 export const TaskForm = ({
   closed,
   onClose,
-  userSelected,
-  taskSelected,
+  shiftId,
   posSave,
   users,
-  keywordsSelected,
-  timeBeforeSelected,
-  externalSelected,
 }: ITaskFormProps) => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
@@ -61,6 +57,12 @@ export const TaskForm = ({
 
   const currentSchedule = useSignal<any>(null);
 
+  const handleOnClose = useCallback(() => {
+    setTasksResponse([]);
+    setInitialValues({});
+    onClose && onClose();
+  }, []);
+
   useEffect(() => {
     if (selectedCompany) {
       Promise.all([getServices()]);
@@ -72,10 +74,10 @@ export const TaskForm = ({
       ToastManager.error('s_replicate_duplicate_range_error');
       return;
     }
-    const { employeeId, serviceId } = model;
+
     const isInSchedule = isStartAndEndInSchedules(
-      DateUtils.dateToInput(model.start),
-      DateUtils.dateToInput(model.end),
+      model.start,
+      model.end,
       currentSchedule.value
     );
 
@@ -83,7 +85,9 @@ export const TaskForm = ({
       ToastManager.warning('s_updated_error_schedule');
       return;
     }
+    delete model.scheduleId;
 
+    const { employeeId, serviceId } = model;
     const request_model: IShiftRequest = {
       ...model,
       employeeId: employeeId?.value,
@@ -91,24 +95,22 @@ export const TaskForm = ({
       task: tasksResponse,
     };
 
-    const request = taskSelected?.id
-      ? await ShiftService.updateActivity(request_model, taskSelected.id)
-      : await ShiftService.createActivity(request_model);
-
-    if (!request.getStatus()) {
-      ToastManager.error('s_upload_error');
-      return;
+    if (shiftId) {
+      const response = await ShiftService.updateActivity(
+        request_model,
+        shiftId
+      );
+      if (!response.getStatus()) return;
+      ToastManager.success('s_updated_success');
+    } else {
+      const response = await ShiftService.createActivity(request_model);
+      if (!response.getStatus()) return;
+      ToastManager.success('s_created_success');
     }
 
-    const message = taskSelected?.id
-      ? 's_updated_success'
-      : 's_created_success';
-
     form.reset();
-    ToastManager.success(message);
-    onClose?.();
+    handleOnClose();
     posSave?.();
-    setTasksResponse([]);
   };
 
   const getServices = useCallback(async () => {
@@ -125,65 +127,49 @@ export const TaskForm = ({
           name='btn-form-shift-close'
           label='cancel'
           type='button'
-          onClick={onClose}
+          onClick={handleOnClose}
           icon='041'
         />
         <Button
           name='btn-form-shift-save'
           type='submit'
-          label={taskSelected ? 'edit' : 'save'}
+          label={shiftId ? 'edit' : 'save'}
           form='form-shift-create-update'
           icon='041'
         />
       </div>
     ),
-    [taskSelected, onClose]
+    []
   );
 
   useEffect(() => {
-    if (taskSelected) {
-      const selectedService = services.value.find(
-        (service) => service.value === Number(taskSelected.serviceId)
-      );
-      const selectedUser = users?.find(
-        (user) => user.value === Number(taskSelected.userId)
-      );
-      setInitialValues({
-        employeeId: selectedUser || '',
-        start: taskSelected.start?.toString(),
-        end: taskSelected.end?.toString(),
-        serviceId: selectedService || '',
-        type: taskSelected.type,
-        keywords: keywordsSelected,
-        timeBefore: timeBeforeSelected,
-        externalId: externalSelected,
-      });
-      return;
+    if (shiftId) {
+      getInitialData();
     }
-    if (userSelected) {
-      // setSelectedEmployeeId(userSelected.id?.toString());
-      setInitialValues({
-        employeeId: userSelected.id,
-        start: '',
-        end: '',
-        serviceId: '',
-        type: 'INTERNAL',
-        timeBefore: 0,
-        externalId: '',
-      });
-      return;
-    }
-    // setSelectedEmployeeId('');
+  }, [shiftId]);
+
+  const getInitialData = async () => {
+    if (!shiftId) return;
+    const response = await ShiftService.get_shift(shiftId);
+    if (!response.getStatus()) return;
+    const model = response.getOne();
     setInitialValues({
-      employeeId: '',
-      start: '',
-      end: '',
-      serviceId: '',
-      type: 'INTERNAL',
-      timeBefore: 0,
-      externalId: '',
+      employeeId: {
+        value: model.employee.id,
+        label: model.employee.name,
+      },
+      serviceId: {
+        value: model.service.id,
+        label: model.service.name,
+      },
+      type: model.type,
+      start: model.start,
+      end: model.end,
+      timeBefore: model.timeBefore,
+      // keywords: model.keywords.map((data) => ({ value: data, label: data })),
     });
-  }, [userSelected, taskSelected, timeBeforeSelected]);
+    onTaskAdd(model.task);
+  };
 
   const onChangeShift = async (id: number, start: string, end: string) => {
     const response = await ShiftService.get_related({
@@ -193,7 +179,9 @@ export const TaskForm = ({
     });
     if (!response.getStatus()) return;
     const outputs = response.getMany();
-    relatedShifts.value = outputs;
+    relatedShifts.value = shiftId
+      ? outputs.filter((shift) => shift.id !== shiftId)
+      : outputs;
   };
 
   const onChangeService = async (id: number) => {
@@ -251,11 +239,11 @@ export const TaskForm = ({
   return (
     <Modal
       open={!!closed}
-      onClose={onClose}
+      onClose={handleOnClose}
       name='modal-shift-updsert'
       width='w-2/3'
       position='fixed'
-      header={<h3>{taskSelected ? t('udpate') : t('create')}</h3>}
+      header={<h3>{shiftId ? t('udpate') : t('create')}</h3>}
       footer={footerContent}
     >
       <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
@@ -334,16 +322,6 @@ export const TaskForm = ({
           add
           selector
         />
-
-        {/*
-        {userSelected && userSelected.tasks && (
-          <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
-            {userSelected?.tasks.map((task) => (
-              <TaskCard task={task}></TaskCard>
-            ))}
-          </div>
-        )}
-        */}
       </div>
     </Modal>
   );
