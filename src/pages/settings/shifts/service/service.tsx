@@ -7,7 +7,6 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
-import { appendHistory } from '../../store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { ServiceService } from '@/services';
 import { useTranslation } from 'react-i18next';
