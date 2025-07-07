@@ -9,11 +9,14 @@ export const _onTaskAddSimple = (model: any) => {
 
 export const _onTaskAddWithId = (model: any, len: number, id: number) => {
   const task = Array.isArray(model)
-    ? model.map((task: any, index: number) => ({
-        t: id,
-        ...task.task,
-        id: len + index,
-      }))
+    ? model.map((task: any, index: number) => {
+        const data = task.task ? task.task : task;
+        return {
+          t: id,
+          ...data,
+          id: len + index,
+        };
+      })
     : [
         {
           t: id,

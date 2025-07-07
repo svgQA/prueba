@@ -23,6 +23,7 @@ interface Props {
   forms?: IOption[];
   selector?: boolean;
   append?: boolean;
+  onDelete?: (id: string) => void;
 }
 
 export const TaskFormCreate = ({
@@ -35,6 +36,7 @@ export const TaskFormCreate = ({
   className = '',
   forms,
   append = false,
+  onDelete,
 }: Props) => {
   const { selectedCompany } = useUserStore();
   const onAppend = useSignal<boolean>(append);
@@ -105,9 +107,19 @@ export const TaskFormCreate = ({
     onAppend.value = false;
   };
 
+  const eventDelete = (event: MouseEvent) => {
+    event.stopPropagation();
+    const target = event.target as HTMLElement;
+    if (target.nodeName === 'A' || target.nodeName === 'SPAN') {
+      const id = target.getAttribute('data-id');
+      if (!id) return;
+      onDelete && onDelete(id);
+    }
+  };
+
   return (
     <>
-      <div className={className}>
+      <div className={className} onClick={eventDelete}>
         <Form
           onSubmit={onChange}
           initialValues={initialValues}
