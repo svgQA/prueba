@@ -72,8 +72,8 @@ export const OnBoardingSteps = ({
           {({ input, meta }) => (
             <Input
               {...input}
-              placeholder='Teléfono'
-              label='Teléfono'
+              placeholder='write'
+              label='h_phone'
               name='ob-input-admin-phone'
               id='ob-input-admin-phone'
               type='tel'

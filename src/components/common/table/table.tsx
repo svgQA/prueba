@@ -629,7 +629,7 @@ export const Table = <T,>({
     return (
       <div className='flex items-center justify-between py-2 px-4 rounded-lg'>
         <div className='flex items-center gap-2'>
-          <span>{t('table.filters.rows')}:</span>
+          <span>{t('filter_by')}:</span>
           <div className='relative'>
             <select
               value={currentPageSize}
@@ -664,8 +664,7 @@ export const Table = <T,>({
           <span>
             {currentPage * currentPageSize + 1}-
             {Math.min((currentPage + 1) * currentPageSize, data.length)}{' '}
-            {t('table.filters.from')} {data.length}{' '}
-            {t('table.filters.elements')}
+            {t('from')} {data.length} {t('elements')}
           </span>
         </div>
 
@@ -759,11 +758,11 @@ export const Table = <T,>({
         </div>
 
         <div className='text-sm flex items-center gap-2 px-2'>
-          {t('table.filters.page')}:
+          {t('page')}:
           <div className='inline-block border rounded-md px-3 py-1 min-w-[40px] text-center border-b-light-dark dark:border-b-darkt'>
             {currentPage + 1}
           </div>
-          {t('table.filters.from')} {totalPages}
+          {t('of')} {totalPages}
         </div>
       </div>
     );

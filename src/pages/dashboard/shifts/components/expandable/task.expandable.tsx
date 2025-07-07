@@ -37,15 +37,13 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
     <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm text-t-light dark:text-t-dark py-2 px-4 relative'>
       <div className='flex items-center justify-between absolute top-0 right-0 w-full'>
         <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
-          {t('shift.expandable.task.title')}
+          {t('h_task')}
         </h2>
       </div>
 
       {Object.entries(grouped).length === 0 ? (
         <div className='flex items-center justify-center h-32'>
-          <p className='text-gray-500 dark:text-gray-400'>
-            {t('shift.expandable.task.empty')}
-          </p>
+          <p className='text-gray-500 dark:text-gray-400'>{t('empty')}</p>
         </div>
       ) : (
         <div className='flex flex-row gap-6 justify-start overflow-x-auto px-2 pb-4 w-full'>
@@ -60,7 +58,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
               >
                 <div className='flex flex-row justify-between items-center mb-3 px-1'>
                   <div className='text-xs text-gray-600 dark:text-gray-400'>
-                    {completed} / {total} {t('shift.expandable.task.completed')}
+                    {completed} / {total} {t('l_completed')}
                   </div>
                   <Badge label={formatDate(date)} status='info' />
                 </div>
@@ -99,7 +97,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
                   >
                     <Gauge progress={overallProgress} size={20} color='teal' />
                     <p className='text-sm text-gray-600 dark:text-gray-400 mt-2 text-center'>
-                      {t('shift.expandable.task.overall')}
+                      {t('l_overall')}
                       <br />
                       {Math.round(overallProgress)}%
                     </p>

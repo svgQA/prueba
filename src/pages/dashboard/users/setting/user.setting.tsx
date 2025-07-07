@@ -141,7 +141,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_departments'
                       name='allow_departments'
-                      label={t('setting.user.departments')}
+                      label='h_department'
                       value={input.checked}
                       onChange={input.onChange}
                     />

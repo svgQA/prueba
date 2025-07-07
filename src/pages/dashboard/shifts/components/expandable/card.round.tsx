@@ -46,7 +46,7 @@ export const CardRound = ({ activity }: CardRoundProps) => {
             <div className='flex items-center gap-1'>
               <span className='vox-icon vx-icon-325'></span>
               <span>
-                {t('shift.expandable.card.round.schedule')}:{' '}
+                {t('h_schedule')}:{' '}
                 <FormattedDate
                   date={activity.serviceTask.hourStart}
                   format='datetime'
@@ -58,7 +58,7 @@ export const CardRound = ({ activity }: CardRoundProps) => {
               <div className='flex items-center gap-1'>
                 <span className='vox-icon vx-icon-325'></span>
                 <span>
-                  {t('shift.expandable.card.round.solution')}:{' '}
+                  {t('h_solves')}:{' '}
                   <FormattedDate date={activity.date} format='datetime' />
                 </span>
               </div>
