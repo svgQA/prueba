@@ -51,6 +51,7 @@ export const MapLibrePointsMap = ({
   const [userLocation, setUserLocation] = useState<MapPoint | null>(null);
   const watchIdRef = useRef<number | null>(null);
   const { t } = useTranslation();
+  const lastSentPointsRef = useRef<string>(JSON.stringify([]));
 
   // Map style configuration
   /*
@@ -139,13 +140,21 @@ export const MapLibrePointsMap = ({
   }, [pointsRef, isMapReady]);
 
   // Update markers and send points to parent
-  useEffect(() => {
+   // Update markers and send points to parent
+   useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
 
     // Always update markers when points change
     updateMarkers();
     // Only send non-user points to parent
-    sendPoints(points.filter((p) => p.id !== -1));
+    // sendPoints(points.filter((p) => p.id !== -1));
+    // Solo enviar si los puntos realmente cambiaron
+    const filteredPoints = points.filter((p) => p.id !== -1);
+    const filteredPointsStr = JSON.stringify(filteredPoints);
+    if (lastSentPointsRef.current !== filteredPointsStr) {
+      sendPoints(filteredPoints);
+      lastSentPointsRef.current = filteredPointsStr;
+    }
 
     // Ajustar el zoom para mostrar todos los puntos
     if (points.length > 0) {
@@ -165,13 +174,15 @@ export const MapLibrePointsMap = ({
       if (userLocation) {
         bounds.extend([userLocation.position.lng, userLocation.position.lat]);
       }
-
       // Ajustar el mapa para mostrar todos los puntos con un padding
       mapRef.current.fitBounds(bounds, {
         padding: 50,
         maxZoom: 12, //15
         duration: 1000,
       });
+    } else {
+      mapRef.current.setCenter([center.lng, center.lat]);
+      mapRef.current.setZoom(12);
     }
   }, [points, isMapReady]);
 

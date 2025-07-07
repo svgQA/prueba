@@ -74,9 +74,12 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
 
   const sendPointsRef = (data: any) => {
-    if (!data.length) return;
-    const { lat, lng } = data[0].position;
     points.value = data;
+    if (!data.length) {
+      currentLocation.value = undefined;
+      return;
+    }
+    const { lat, lng } = data[0].position;
     currentLocation.value = { lat, lng };
     return { lat, lng };
   };
