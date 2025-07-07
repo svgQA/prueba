@@ -675,13 +675,23 @@ export const MapLibrePointsMap = ({
 
   // Edit marker coordinates by ID
   const editMarkerById = (id: number): void => {
-    const newLat = Number.parseFloat(editCoords.lat);
-    const newLng = Number.parseFloat(editCoords.lng);
+    // Permitir tanto punto como coma como separador decimal
+    const latStr = editCoords.lat.replace(',', '.');
+    const lngStr = editCoords.lng.replace(',', '.');
+    const newLat = Number.parseFloat(latStr);
+    const newLng = Number.parseFloat(lngStr);
 
+    // Validar que sean números
     if (isNaN(newLat) || isNaN(newLng)) {
       ToastManager.error(t('maps.connect.error_point'));
       return;
     }
+
+    // Validar rango de latitud y longitud
+    // if (newLat < -90 || newLat > 90 || newLng < -180 || newLng > 180) {
+    //   ToastManager.error(t('maps.connect.error_point'));
+    //   return;
+    // }
 
     setPoints((prevPoints) =>
       prevPoints.map((point) =>
