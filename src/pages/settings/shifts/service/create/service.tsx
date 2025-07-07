@@ -4,7 +4,7 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { required } from '@/utils/utilities';
 import { Section } from '@/components/common/section/section';
-import { useParams } from 'wouter';
+import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import { TextArea } from '@/components/common/text.area/text.area';
@@ -26,6 +26,7 @@ import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { TaskFormCreate } from '../../task/create/task.form';
 import { ITask } from '../../task/create/interface';
 import { _onTaskAddSimple } from '../../task/create/utils';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 interface FormData {
   name: string;
@@ -39,7 +40,7 @@ interface FormData {
 }
 
 export const ServiceCreateSettingPage: FunctionComponent = () => {
-  // const [_, navigate] = useLocation();
+  const [_, navigate] = useLocation();
   const schedules: Signal<IOption[]> = useSignal([]);
   const projects: Signal<IOption[]> = useSignal([]);
   const places: Signal<IOption[]> = useSignal([]);
@@ -62,11 +63,6 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       contractId: Number(model.contractId?.value),
     };
 
-    // TODO: Joshua Deje comentado el send, solo es descomentar y debe funcionar
-    // pero ahi podes ver las estructura que genera: SOLO es para rematar.
-    console.log('OUTPUT: ', output);
-
-    /*
     if (id) {
       const response = await ServiceService.updateService(output, id);
       if (!response.getStatus()) return;
@@ -78,7 +74,6 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     }
 
     navigate('/rounds/service/');
-    */
   };
 
   const getProjects = async () => {

@@ -79,13 +79,12 @@ export const TaskForm = ({
       return;
     }
     const { employeeId, serviceId } = model;
-    console.log(model, tasks.value);
-
     const isInSchedule = isStartAndEndInSchedules(
       DateUtils.dateToInput(model.start),
       DateUtils.dateToInput(model.end),
       currentSchedule.value
     );
+
     if (!isInSchedule) {
       ToastManager.warning('s_updated_error_schedule');
       return;
