@@ -27,6 +27,7 @@ export const menus_es = {
   g_notification: 'Notificaciones',
   m_programmed: 'Programadas',
   m_template: 'Plantillas',
+  m_module: 'Módulos',
 };
 
 export const menus_en = {
@@ -39,6 +40,7 @@ export const menus_en = {
   m_group: 'Groups',
   g_user: 'Users',
   m_area: 'Areas',
+  m_module: 'Modules',
   m_role: 'Roles',
   m_password: 'Password',
   g_shift: 'Shifts',

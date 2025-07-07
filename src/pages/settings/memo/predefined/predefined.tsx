@@ -15,6 +15,7 @@ import {
 import { IPredefined, IRowActionPlace } from './utils/predefined.d';
 import { PredefinedService } from '@/services/shift/predefined';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export const PredefinedSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -23,8 +24,15 @@ export const PredefinedSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_predefined');
-    getPredefined();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getPredefined();
+    }
+  }, [selectedCompany, location]);
 
   const getPredefined = async () => {
     loading.value = true;

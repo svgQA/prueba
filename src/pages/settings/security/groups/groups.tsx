@@ -14,6 +14,7 @@ import {
 } from '../../store/settings';
 import { GeneralService } from '@/services';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export const GroupSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
@@ -22,8 +23,15 @@ export const GroupSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_activity');
-    getGroups();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getGroups();
+    }
+  }, [selectedCompany, location]);
 
   const getGroups = async () => {
     const response = await GeneralService.getGroup();

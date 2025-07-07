@@ -15,6 +15,7 @@ import {
 import { RoleService } from '@/services/general/role';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export interface IRole {
   id: number;
@@ -35,8 +36,15 @@ export const UserRolesPage: FunctionComponent = () => {
 
   useEffect(() => {
     document.title = t('p_roles');
-    getRoles();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getRoles();
+    }
+  }, [selectedCompany, location]);
 
   const getRoles = async () => {
     const request: any = await RoleService.getRoles();

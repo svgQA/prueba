@@ -22,6 +22,7 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { validateResponse } from '@/pages/dashboard/forms/response/store/response';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { closeSettingModal } from '@/store/signals/modals/settings/settings.signal';
+import { useUserStore } from '@/store/slices';
 
 export const FormSettingPage = () => {
   const { t } = useTranslation();
@@ -29,10 +30,18 @@ export const FormSettingPage = () => {
   const [_, navigate] = useLocation();
   const [hasUnfinishedForm, setHasUnfinishedForm] = useState(false);
   const loading = useSignal<boolean>(false);
+
   useEffect(() => {
-    getFormsHandler();
-    checkUnfinishedForm();
+    document.title = t('p_forms');
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      Promise.all([getFormsHandler(), checkUnfinishedForm()]);
+    }
+  }, [selectedCompany, location]);
 
   const checkUnfinishedForm = () => {
     const savedData = localStorage.get<IFormat>(FORM_AUTO_SAVE_KEY);

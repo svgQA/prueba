@@ -20,6 +20,7 @@ import { Preview } from './preview';
 import { useTranslation } from 'react-i18next';
 import { StatusButton } from '../../components/custom.button';
 import { ColorPicker } from '@/components/common/color-picker/color-picker';
+import { useUserStore } from '@/store/slices';
 
 export const GeneralSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -51,8 +52,15 @@ export const GeneralSettingPage: FunctionComponent = () => {
 
   useEffect(() => {
     document.title = t('p_setting');
-    getSettings();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getSettings();
+    }
+  }, [selectedCompany, location]);
 
   const getSettings = async () => {
     const [responseApp, responseGeneral] = await Promise.all([

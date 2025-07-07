@@ -9,6 +9,7 @@ import { useSignal } from '@preact/signals';
 import { IResource } from './type';
 import { GeneralService } from '@/services';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export const ResourceSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -19,8 +20,15 @@ export const ResourceSettingPage: FunctionComponent = () => {
 
   useEffect(() => {
     document.title = t('p_resource');
-    getResources();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getResources();
+    }
+  }, [selectedCompany, location]);
 
   const getResources = async () => {
     const response = await GeneralService.resource();

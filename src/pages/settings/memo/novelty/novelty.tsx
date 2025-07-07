@@ -15,6 +15,7 @@ import {
 } from '../../store/settings';
 import { NoveltyService } from '@/services';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export interface INovelty {
   id: number;
@@ -36,8 +37,15 @@ export const NoveltySettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_novelty');
-    getNovelties();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getNovelties();
+    }
+  }, [selectedCompany, location]);
 
   const getNovelties = async () => {
     loading.value = true;

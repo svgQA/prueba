@@ -11,6 +11,7 @@ import { ContractService } from '@/services';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 export interface IProject {
   id: number;
@@ -35,8 +36,15 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_project');
-    getProjects();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getProjects();
+    }
+  }, [selectedCompany, location]);
 
   const getProjects = async () => {
     loading.value = true;

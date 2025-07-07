@@ -13,6 +13,7 @@ import { ScheduleService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { IDay, IRowActionPlace, ISchedule } from '@/types/shift/shift.request';
 import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 export const ScheduleSettingPage: FunctionComponent = () => {
   const { redirectSettings } = useNavigation();
@@ -22,8 +23,15 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_schedule');
-    getSchedules();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getSchedules();
+    }
+  }, [selectedCompany, location]);
 
   const getSchedules = async () => {
     loading.value = true;

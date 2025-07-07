@@ -43,7 +43,7 @@ import { ResourceSettingPage } from './access/resource/resource';
 import { SetsSettingPage } from './access/sets/sets';
 import { InformationSettingPage } from './access/information/information';
 import { PlaceSettingPage } from './access/places/places';
-import { CreateResourceSettingPage } from './access/resource/create/createResource';
+import { CreateResourceSettingPage } from './access/resource/create/create';
 import { CreateSetsSettingPage } from './access/sets/createSets/createSets';
 import { CreatePlacesSettingPage } from './access/places/createPlaces/createPlaces';
 import { CreateInformationSettingPage } from './access/information/createInfo/createInfo';

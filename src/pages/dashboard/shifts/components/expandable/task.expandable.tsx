@@ -4,6 +4,7 @@ import { Gauge } from '@/components/common/gauge/gauge';
 import { formatDate } from './contract.expandable';
 import { TaskItemShift } from '@/types/shift/activity';
 import { useTranslation } from 'react-i18next';
+import { TaskCard } from '@/pages/settings/shifts/task/create/task.card';
 
 interface Props {
   shiftId: number;
@@ -63,43 +64,25 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
                   <Badge label={formatDate(date)} status='info' />
                 </div>
 
-                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 w-full'>
-                  {list.map((task, i) => (
-                    <div
-                      key={`task-${task.id}-${i}`}
-                      className='flex flex-col justify-center px-3 py-2 rounded-md border text-sm w-full
-                                    border-gray-200 dark:border-b-dark-dark
-                                    bg-gray-50 dark:bg-b-dark text-gray-700 dark:text-gray-300'
-                    >
-                      <div className='flex flex-row justify-between items-start gap-2'>
-                        <span className='font-medium break-words'>
-                          {task.name}
-                        </span>
-                        <span
-                          className={`text-xs ${task.check ? 'text-green-600' : 'text-yellow-500'}`}
-                        >
-                          {task.check ? '✅' : '⏳'}
-                        </span>
-                      </div>
-                      {task.description && (
-                        <div className='text-xs text-gray-500 dark:text-gray-400 mt-1 break-words whitespace-pre-wrap'>
-                          {task.description}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-
-                  {/* Gauge como la cuarta columna */}
+                <div className='flex flex-row gap-2 w-full'>
+                  <div className='flex flex-row gap-1 flex-wrap w-3/4 justify-center items-center'>
+                    {list.map((task: any, i) => (
+                      <TaskCard
+                        task={task}
+                        key={`task-selected-${i}`}
+                        remove={false}
+                        state
+                      />
+                    ))}
+                  </div>
                   <div
-                    className='flex flex-col justify-center items-center px-3 py-2 rounded-md border w-full
+                    className='flex flex-col justify-center items-center px-3 py-2 rounded-md border w-1/4
                                   border-gray-200 dark:border-b-dark-dark
                                   bg-gray-50 dark:bg-b-dark text-gray-700 dark:text-gray-300'
                   >
                     <Gauge progress={overallProgress} size={20} color='teal' />
                     <p className='text-sm text-gray-600 dark:text-gray-400 mt-2 text-center'>
                       {t('l_overall')}
-                      <br />
-                      {Math.round(overallProgress)}%
                     </p>
                   </div>
                 </div>

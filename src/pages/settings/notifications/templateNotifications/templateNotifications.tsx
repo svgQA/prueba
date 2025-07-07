@@ -11,11 +11,26 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useSignal } from '@preact/signals';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export const TemplateNotificationPage = () => {
   const [templates, setTemplates] = useState<any[]>([]);
   const [_, navigate] = useLocation();
   const loading = useSignal<boolean>(false);
+
+  const { t } = useTranslation();
+  useEffect(() => {
+    document.title = t('p_template');
+  }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchTemplates();
+    }
+  }, [selectedCompany, location]);
+
   const fetchTemplates = async () => {
     loading.value = true;
     const res = await TemplateService.getTemplates();
@@ -24,12 +39,6 @@ export const TemplateNotificationPage = () => {
     }
     loading.value = false;
   };
-
-  const { t } = useTranslation();
-  useEffect(() => {
-    document.title = t('p_template');
-    fetchTemplates();
-  }, []);
 
   const redirect = () => {
     const menu = {

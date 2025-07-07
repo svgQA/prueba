@@ -6,7 +6,11 @@ import {
 import { MODAL_SIDEBAR_MENUS } from '@/utils/menus';
 
 import {
+  getMenuSelectedStorage,
+  getModalStatusStorage,
   getStatusSettingModal,
+  openSettingModal,
+  setMenuSelecteStorage,
   toggleSettingModal,
 } from '@/store/signals/modals';
 
@@ -53,11 +57,19 @@ export const SettingsModal = () => {
       } else {
         navigate(menuInformationSelected.value.to);
       }
+    } else {
+      const stage = getModalStatusStorage();
+      if (stage) {
+        const menuSelected = getMenuSelectedStorage();
+        setMenu(menuSelected as IMenu);
+        openSettingModal();
+      }
     }
   }, [getStatusSettingModal.value]);
 
   const setMenuSelected = (menu: IMenu) => {
     setMenu(menu);
+    setMenuSelecteStorage(menu);
     navigate(menu.to);
   };
 
