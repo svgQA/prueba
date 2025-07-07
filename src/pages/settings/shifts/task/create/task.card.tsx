@@ -9,7 +9,11 @@ export const TaskCard = ({ task }: { task: ITask }) => {
   return (
     <li className='w-52 text-xs p-2 rounded-bl-2xl bg-b-light-dark dark:bg-b-dark-dark min-w-[150px] relative'>
       {/* @ts-ignore */}
-      <span className='absolute top-0 right-0 px-2 py-0.5 bg-ternary rounded-bl-md'>
+      <span
+        data-id={task.id}
+        className='vx-icon vx-icon-335 cursor-pointer absolute top-0 right-1 size-sm'
+      ></span>
+      <span className='absolute top-0 left-0 px-2 py-0.5 bg-ternary rounded-br-md'>
         {t(
           typeof task?.type === 'string'
             ? task?.type
@@ -18,7 +22,7 @@ export const TaskCard = ({ task }: { task: ITask }) => {
       </span>
       <div className='flex flex-row justify-between mt-4'>
         <TextEllipsis text={task.name} className='text-primary' />
-        <p>{DateUtils.hourToFrontend(task.hourStart || '00:00')}</p>
+        <p>{DateUtils.dateToFrontend(task.hourStart, { format: 'hh:mm A' })}</p>
       </div>
       <TextEllipsis text={task.description} />
     </li>

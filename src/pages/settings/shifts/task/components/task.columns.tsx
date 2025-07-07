@@ -29,6 +29,11 @@ export const columns: ColumnDef<ITask>[] = [
     },
   },
   {
+    id: 'type',
+    accessorKey: 'type',
+    header: 'h_type',
+  },
+  {
     id: 'hourStart',
     accessorKey: 'hourStart',
     size: 60,

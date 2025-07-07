@@ -12,7 +12,6 @@ import arrayMutators from 'final-form-arrays';
 import { Input } from '@/components/common/input/input';
 import {
   ContractService,
-  FormService,
   PlaceService,
   RoundService,
   ScheduleService,
@@ -47,15 +46,12 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const rounds: Signal<IOption[]> = useSignal([]);
 
   const tasks = useSignal([]);
-  const forms: Signal<IOption[]> = useSignal([]);
-
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams();
 
   const onSubmit = async (model: FormData) => {
     model.tasks = tasksResponse.value;
     model.hasRound = !!model.roundId;
-
     const output = {
       ...model,
       placeId: Number(model.placeId?.value),
@@ -94,12 +90,6 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     rounds.value = request.getMany();
   };
 
-  const getFormsHandler = async () => {
-    const response = await FormService.getSimpleList();
-    if (!response.getStatus()) return;
-    forms.value = response.getMany();
-  };
-
   const getTasks = async () => {
     const request: any = await TaskService.getTasks();
     if (!request.getStatus()) return;
@@ -124,7 +114,6 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       'priority',
       'schedules',
       'overtimes',
-      'task',
     ] as const;
 
     const response = await ServiceService.getServiceById(id);
@@ -185,7 +174,6 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       getRounds(),
       getProjects(),
       getSchedules(),
-      getFormsHandler(),
     ]);
     setInitialValues();
   };
@@ -201,7 +189,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section>
+    <Section className='p-4'>
       <Form
         mutators={{
           ...arrayMutators,
@@ -214,6 +202,16 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
             className='space-y-6'
             id='form-service-create'
           >
+            {/* Botonera */}
+            <div className='w-full flex-row flex justify-end items-center'>
+              <StatusButton
+                onClickClean={() => form.reset()}
+                submitting={submitting}
+                pristine={pristine}
+                form='form-service-create'
+                label={id ? 'edit' : 'save'}
+              />
+            </div>
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-2'>
               <div class='col-span-2'>
@@ -305,110 +303,16 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              {/*
-              <div class='col-span-2'>
-                <ExpansionPanel title='Turnos extra'>
-                  <FieldArray name='overtimes'>
-                    {({ fields }) => (
-                      <div>
-                        <div className='flex items-center justify-between my-2'>
-                          <h3 className='text-lg font-medium text-gray-900 dark:text-white'>
-                            Añadir turnos extra
-                          </h3>
-                          <Button
-                            icon='044'
-                            square
-                            id='menu-btn'
-                            name='menu'
-                            type='button'
-                            color='text-primary'
-                            onClick={() => fields.push({})}
-                          />
-                        </div>
-
-                        {fields.map((name, index) => (
-                          <div
-                            key={index}
-                            className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden'
-                          >
-                            <div className='bg-gray-50 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600'>
-                              <h2 className='text-lg font-medium text-gray-900 dark:text-white'>
-                                Turno extra #{index + 1}
-                              </h2>
-                            </div>
-
-                            <div className='p-4'>
-                              <div className='grid grid-cols-3 gap-4'>
-                                <div>
-                                  <DateField
-                                    name={`${name}.start`}
-                                    label={t('shifts.date')}
-                                    validate={required}
-                                  />
-                                </div>
-
-                                <div>
-                                  <DateField
-                                    name={`${name}.end`}
-                                    label={t('shifts.date')}
-                                    validate={required}
-                                    format='time'
-                                  />
-                                </div>
-
-                                <div>
-                                  <DateField
-                                    name={`${name}.end`}
-                                    label={t('shifts.date')}
-                                    validate={required}
-                                    format='time'
-                                  />
-                                </div>
-                              </div>
-
-                              <div className='mt-4 flex justify-end'>
-                                <Button
-                                  icon='044'
-                                  id='menu-btn'
-                                  name='menu'
-                                  type='button'
-                                  label='delete'
-                                  color='text-primary'
-                                  onClick={() => fields.remove(index)}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </FieldArray>
-                </ExpansionPanel>
-              </div>
-              */}
               <div class='col-span-2'>
                 <TaskFormCreate
                   onSubmit={onTaskAdd}
-                  forms={forms.value}
-                  append
                   taskList={tasksResponse.value}
                   add
+                  selector
                   divisor={false}
                   className='rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light w-full'
-                  icon='039'
                 />
               </div>
-            </div>
-
-            {/* Botonera */}
-            <div className='w-full flex-row flex justify-end items-center'>
-              <StatusButton
-                onClickClean={() => form.reset()}
-                submitting={submitting}
-                pristine={pristine}
-                form='form-service-create'
-                label={id ? 'edit' : 'save'}
-              />
             </div>
           </form>
         )}
