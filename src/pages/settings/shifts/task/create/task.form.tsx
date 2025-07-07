@@ -209,7 +209,7 @@ export const TaskFormCreate = ({
       )}
 
       {taskList && taskList.length > 0 && (
-        <div className='p-2 bg-b-light dark:bg-b-dark-light'>
+        <div className='mt-1 rounded-lg p-2 bg-b-light dark:bg-b-dark-light'>
           <ul className='flex flex-wrap gap-1 justify-center'>
             {taskList.map((task, index) => (
               <TaskCard task={task} key={`task-selected-${index}`} />
