@@ -4,7 +4,7 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { required } from '@/utils/utilities';
 import { Section } from '@/components/common/section/section';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import { TextArea } from '@/components/common/text.area/text.area';
@@ -26,6 +26,7 @@ import { TaskFormCreate } from '../../task/create/task.form';
 import { ITask } from '../../task/create/interface';
 import { _onTaskAddSimple } from '../../task/create/utils';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { useNavigation } from '@/utils/utilities/navigation';
 
 interface FormData {
   name: string;
@@ -39,7 +40,7 @@ interface FormData {
 }
 
 export const ServiceCreateSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  const { navigateUpsert } = useNavigation();
   const schedules: Signal<IOption[]> = useSignal([]);
   const projects: Signal<IOption[]> = useSignal([]);
   const places: Signal<IOption[]> = useSignal([]);
@@ -68,8 +69,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       if (!response.getStatus()) return;
       ToastManager.success('s_created_success');
     }
-
-    navigate('/rounds/service/');
+    navigateUpsert('/rounds/service/');
   };
 
   const getProjects = async () => {

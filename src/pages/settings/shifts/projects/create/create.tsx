@@ -7,7 +7,7 @@ import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import { UserService } from '@/services/general/user';
@@ -16,6 +16,7 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { DateField } from '@/components/compose/forms/DateField';
+import { useNavigation } from '@/utils/utilities/navigation';
 
 interface FormData {
   name: string;
@@ -28,10 +29,10 @@ interface FormData {
 }
 
 export const ProjectCreateSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
   const users = useSignal<IOption[]>([]);
+  const { navigateUpsert } = useNavigation();
 
   const onSubmit = async (model: FormData) => {
     let request;
@@ -52,7 +53,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate('/rounds/projects');
+    navigateUpsert('/rounds/projects');
   };
 
   const getUsers = async () => {

@@ -7,7 +7,7 @@ import { required, lengthSize } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { Section } from '@/components/common/section/section';
 import { useEffect, useState } from 'preact/hooks';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { PlaceService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
@@ -16,7 +16,7 @@ import { composeValidators, validateNumber } from '@/utils/validators';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
-
+import { useNavigation } from '@/utils/utilities/navigation';
 interface SelectOption extends IOption {
   latitude: string;
   longitude: string;
@@ -47,13 +47,13 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const departments = useSignal<IOption[]>([]);
   const municipalities = useSignal<SelectOption[]>([]);
   const countries = useSignal<IOption[]>([]);
+  const { navigateUpsert } = useNavigation();
 
   const municipalityLocation = useSignal<ILocation>();
   const points = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
 
   const { id } = useParams(); // Obtiene el id de la URL
-  const [_, navigate] = useLocation();
 
   const sendPointsRef = (data: any) => {
     if (!data.length) return;
@@ -111,7 +111,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     if (!request.getStatus()) return;
 
     ToastManager.success(message);
-    navigate('/rounds/places');
+    navigateUpsert('/rounds/places');
   };
 
   const onChangeDeparment = async (departmentId: number) => {

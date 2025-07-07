@@ -1,21 +1,17 @@
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
-import { useLocation } from 'wouter';
 import { columns } from './components/activity.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { ShiftService } from '@/services/shift/shift';
 import { ToastManager } from '@/utils/toast/toast-manager';
 
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../store/settings';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@/utils/utilities/navigation';
 
 export interface IActivity {
   id: number;
@@ -34,7 +30,7 @@ export interface IRowActionPlace {
 }
 
 export const ActivitySettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  const { redirectSettings } = useNavigation();
   const activity: Signal<IActivity[]> = useSignal([]);
 
   const { t } = useTranslation();
@@ -49,15 +45,21 @@ export const ActivitySettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'create' });
-    navigate('/rounds/activity/create');
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      '/rounds/activity/create',
+      'create',
+      'activity-create'
+    );
   };
 
   const updateActivity = (id: string) => {
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/rounds/activity/update/${id}`);
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      `/rounds/activity/update/${id}`,
+      'edit',
+      'activity-update'
+    );
   };
 
   const deleteActivity = async (id: string) => {

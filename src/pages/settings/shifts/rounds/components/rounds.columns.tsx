@@ -32,7 +32,7 @@ export const columns: ColumnDef<Round>[] = [
     enableGrouping: true,
     cell: (info) => {
       const { frequency } = info.row.original;
-      return <Badge label={String(frequency)} />;
+      return <Badge label={String(frequency || '')} />;
     },
   },
   {
@@ -42,7 +42,7 @@ export const columns: ColumnDef<Round>[] = [
     enableGrouping: true,
     cell: (info) => {
       const { radius } = info.row.original;
-      return <Badge label={String(radius)} />;
+      return <Badge label={String(radius || '')} />;
     },
   },
   {
