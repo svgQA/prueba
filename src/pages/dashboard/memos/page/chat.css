@@ -9,7 +9,7 @@
 
 .dark .container-chat {
   background-image: radial-gradient(
-    rgba(255, 255, 255, 0.05) 1px,
+    rgba(255, 255, 255, 0.05) 1.3px,
     transparent 0
   );
 }

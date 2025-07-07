@@ -2,6 +2,7 @@ import { type FunctionComponent } from 'preact';
 import { useState, useCallback, useEffect, useRef } from 'preact/hooks';
 import { memo } from 'preact/compat';
 import { IDropdownOptions, type IDropdownProps } from './interface';
+import { useTranslation } from 'react-i18next';
 
 export const Dropdown: FunctionComponent<IDropdownProps> = memo(
   ({
@@ -16,8 +17,10 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
     onChange,
     meta,
     disabled = false,
-    selectedTag = 'No Selected',
+    placeholder,
+    borderless = false,
   }: IDropdownProps) => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<IDropdownOptions | undefined>(
       () => {
@@ -88,7 +91,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
                   className={`vox-icon vx-icon-${element.icon} size-sm mr-2`}
                 />
               )}
-              {element[labelTag]}
+              {t(element[labelTag] as string)}
             </li>
           );
         }),
@@ -122,7 +125,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
       }
     }, [isOpen]);
 
-    const isIconOnly = !label && icon;
+    const isIconOnly = !placeholder && icon;
 
     return (
       <div
@@ -134,7 +137,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
             for={`${id}-input`}
             className='capitalize block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200'
           >
-            {label}
+            {t(label)}
           </label>
         )}
         <button
@@ -146,7 +149,7 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
           className={`font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center transition-colors duration-150
             bg-white dark:bg-b-dark-dark
             text-gray-700 dark:text-gray-200
-            border border-gray-200 dark:border-gray-700
+            ${borderless ? 'border-none' : 'border border-gray-200 dark:border-gray-700'}
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
             ${isIconOnly ? 'border-none justify-center hover:bg-gray-100 dark:hover:bg-gray-700' : 'w-full focus:ring-blue-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
           type='button'
@@ -157,16 +160,22 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
               className={`vox-icon vx-icon-${icon} size-${iconSize} ${!isIconOnly ? 'mr-2' : ''}`}
             />
           )}
-          {!isIconOnly && (selected?.[labelTag] || selectedTag)}
+          {selected?.icon && (
+            <span
+              className={`vox-icon vx-icon-${selected?.icon as string} size-sm mr-2`}
+            />
+          )}
+          {!isIconOnly &&
+            t((selected?.[labelTag] || t(placeholder || '')) as string)}
         </button>
         {meta && meta.touched && meta.error && (
-          <span className='text-red-500 text-sm'>{meta.error}</span>
+          <span className='text-red-500 text-sm'>{t(meta.error)}</span>
         )}
         <div
           id={`${id}-dropdown`}
           className={`${isIconOnly ? 'w-fit' : 'w-full'} z-10 ${isOpen ? '' : 'hidden'} absolute rounded-lg shadow-lg
             bg-white dark:bg-b-dark-dark
-            border border-gray-200 dark:border-gray-700
+            ${borderless ? 'border-none' : 'border border-gray-200 dark:border-gray-700'}
             ${dropdownPosition === 'left' ? 'right-0' : 'left-0'}`}
         >
           <ul className='py-2 text-sm' onClick={selectElement}>

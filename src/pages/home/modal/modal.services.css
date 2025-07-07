@@ -2,9 +2,11 @@
   @apply visible;
 }
 
+/*
 .navbar-services-button > div {
   transition: visibility 0.3s ease-in-out;
 }
+*/
 
 /* Estilos para el scroll suave */
 html {
@@ -15,9 +17,11 @@ html {
 .group:hover > div {
   visibility: visible;
   opacity: 1;
+  /*
   transition:
     visibility 0s,
     opacity 0.3s linear;
+    */
 }
 
 .group > div {

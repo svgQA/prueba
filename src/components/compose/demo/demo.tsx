@@ -167,7 +167,7 @@ export const DemoForm = () => {
               htmlFor='phone'
               className='block text-sm font-medium text-gray-700'
             >
-              {t('demo.form.phoneLabel')}
+              {t('h_phone')}
             </label>
             <input
               type='tel'

@@ -29,11 +29,11 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
   const [checkOutData, setCheckOutData] = useState(checkOut);
 
   const checkInStatus = useSignal<{ message: string; color: string }>({
-    message: t('shift.expandable.date.checkPending'),
+    message: t('l_check_pending'),
     color: 'bg-gray-200 text-gray-700',
   });
   const checkOutStatus = useSignal<{ message: string; color: string }>({
-    message: t('shift.expandable.date.checkPending'),
+    message: t('l_check_pending'),
     color: 'bg-gray-200 text-gray-700',
   });
 
@@ -44,7 +44,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
   ) => {
     if (!checkTime)
       return {
-        message: t('shift.expandable.date.checkPending'),
+        message: t('l_check_pending'),
         color: 'bg-gray-200 text-gray-700',
       };
 
@@ -57,12 +57,12 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       // Para check in, es tarde si llega después de la hora programada
       if (diffMinutes > 0) {
         return {
-          message: t('shift.expandable.date.checkError'),
+          message: t('l_check_error'),
           color: 'bg-red-200 text-red-700',
         };
       } else {
         return {
-          message: t('shift.expandable.date.checkSuccess'),
+          message: t('l_check_success'),
           color: 'bg-green-200 text-green-700',
         };
       }
@@ -70,12 +70,12 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       // Para check out, es temprano si sale antes de la hora programada
       if (diffMinutes < 0) {
         return {
-          message: t('shift.expandable.date.checkSuccess'),
+          message: t('l_check_success'),
           color: 'bg-green-200 text-green-700',
         };
       } else {
         return {
-          message: t('shift.expandable.date.checkError'),
+          message: t('l_check_error'),
           color: 'bg-red-200 text-red-700',
         };
       }
@@ -283,9 +283,7 @@ const ShiftCard = ({
                 <span className='!text-primary vox-icon size-sm vx-icon-323'></span>
               </div>
               <div>
-                <p className='font-semibold'>
-                  {t('shift.expandable.date.info.date')}
-                </p>
+                <p className='font-semibold'>{t('h_date')}</p>
                 <FormattedDate date={date} format='date' />
               </div>
             </div>
@@ -296,15 +294,11 @@ const ShiftCard = ({
               </div>
               <div className='flex flex-row justify-between w-full'>
                 <div>
-                  <p className='font-semibold'>
-                    {t('shift.expandable.date.info.time')}
-                  </p>
+                  <p className='font-semibold'>{t('h_time')}</p>
                   <FormattedDate date={time} format='time' />
                 </div>
                 <div>
-                  <p className='font-semibold'>
-                    {t('shift.expandable.date.info.source')}
-                  </p>
+                  <p className='font-semibold'>{t('h_resource')}</p>
                   <p>{source}</p>
                 </div>
               </div>
@@ -315,9 +309,7 @@ const ShiftCard = ({
                 <span className='!text-primary vox-icon size-sm vx-icon-326'></span>
               </div>
               <div>
-                <p className='font-semibold'>
-                  {t('shift.expandable.date.info.distance')}
-                </p>
+                <p className='font-semibold'>{t('h_distance')}</p>
                 <p>{(Number(distance) / 1000).toFixed(2)} Km</p>
               </div>
             </div>

@@ -29,7 +29,7 @@ const ShiftInfo = ({
             </h2>
             <div className='flex flex-row gap-2 flex-wrap justify-end'>
               <Chip
-                label={`${t('shift.expandable.shift.progress')}: ${activityPct}%`}
+                label={`${t('h_progress')}: ${activityPct}%`}
                 color='primary'
               />
             </div>
@@ -55,7 +55,7 @@ const ShiftInfo = ({
         </div>
       ) : (
         <div className='flex justify-center items-center min-h-[100px]'>
-          <p className='text-gray-500'>{t('shift.expandable.shift.empty')}</p>
+          <p className='text-gray-500'>{t('empty')}</p>
         </div>
       )}
     </div>

@@ -354,8 +354,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder={t('user.create.placeholder.phone')}
-                        label={t('user.create.form.phone')}
+                        placeholder={'h_phone'}
+                        label={'h_phone'}
                         type='tel'
                         meta={meta}
                         icon='231'
@@ -431,8 +431,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         {...input}
                         meta={meta}
                         id='country'
-                        label={t('user.create.form.country')}
-                        placeholder={t('user.create.placeholder.country')}
+                        label='h_country'
+                        placeholder='p_select'
                         icon='321'
                         options={countries.value}
                       />
@@ -448,8 +448,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         {...input}
                         meta={meta}
                         id='departmentId'
-                        label={t('user.create.form.department')}
-                        placeholder={t('user.create.placeholder.department')}
+                        label='h_department'
+                        placeholder='p_select'
                         icon='321'
                         options={departments.value}
                         onChange={(e) => {

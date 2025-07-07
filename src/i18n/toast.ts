@@ -6,6 +6,8 @@ export const toast_es = {
   s_replicated_success: 'Repetido con éxito',
   s_created_error: 'Error al crear',
   s_updated_error: 'Error al actualizar',
+  s_updated_error_schedule:
+    'La fecha inicio y fin no están en el horario seleccionado',
   s_deleted_error: 'Error al eliminar',
   s_send_error: 'Error al enviar',
   s_upload_error: 'Error al subir',
@@ -49,6 +51,8 @@ export const toast_en = {
   s_replicated_success: 'Replicated successfully',
   s_created_error: 'Error creating',
   s_updated_error: 'Error updating',
+  s_updated_error_schedule:
+    'The start and end date are not in the selected schedule',
   s_deleted_error: 'Error deleting',
   s_send_error: 'Error sending',
   s_upload_error: 'Error uploading',

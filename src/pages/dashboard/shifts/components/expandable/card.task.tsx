@@ -22,11 +22,9 @@ export const CardTask = ({ point, frequency }: CardTaskProps) => {
     <div className='flex flex-col items-center justify-between bg-b-light-dark dark:bg-b-dark-dark rounded-lg p-3'>
       <div className='flex flex-row justify-between pb-3 w-full items-center px-2'>
         <p>
-          {t('shift.expandable.card.task.point')}: {point.id}
+          {t('h_point')}: {point.id}
         </p>
-        <p>
-          {t('shift.expandable.card.task.frequency')}: {frequency}
-        </p>
+        <p>Freq: {frequency}</p>
         <Gauge progress={percent} />
       </div>
 

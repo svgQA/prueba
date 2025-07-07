@@ -26,7 +26,7 @@ const InfoContainer = ({
       <Avatar name='CL' size='sm' icon={icon} />
       <div>
         <p className='font-bold min-h-4'>{t(header)}</p>
-        <p className='min-h-4 text-xs'>{label}</p>
+        <p className='min-h-4 text-xs'>{t(label || '')}</p>
       </div>
     </div>
   );
@@ -139,34 +139,34 @@ const SupervisorInfo = ({
           <div className='w-full h-9/12 flex'>
             <div className='w-1/2 grid grid-cols-2 gap-1 p-2'>
               <InfoContainer
-                header={t('memos.supervisor.supervisor')}
+                header='h_supervisor'
                 label={memo?.extraData?.company?.name}
                 icon='321'
               />
               <InfoContainer
-                header={t('memos.supervisor.service')}
+                header='h_service'
                 label={memo?.novelty?.name}
                 icon='432'
               />
               <InfoContainer
-                header={t('memos.supervisor.updated')}
+                header='h_updated'
                 label={DateUtils.dateToFrontend(memo.updatedAt, {
                   format: 'datetime',
                 })}
                 icon='067'
               />
               <InfoContainer
-                header={t('memos.supervisor.place')}
-                label={memo?.extraData?.place?.address}
+                header='h_place'
+                label={memo?.extraData?.place?.address || ''}
                 icon='151'
               />
               <InfoContainer
-                header={t('memos.supervisor.client')}
+                header='h_client'
                 label={memo?.extraData?.client?.name}
                 icon='045'
               />
               <InfoContainer
-                header={t('memos.supervisor.city')}
+                header={t('h_city')}
                 label={memo?.extraData?.city?.name}
                 icon='320'
               />
@@ -176,7 +176,7 @@ const SupervisorInfo = ({
                 icon='023'
               />
               <InfoContainer
-                header={t('memos.supervisor.address')}
+                header='h_address'
                 label={memo?.extraData?.place?.address}
                 icon='321'
               />

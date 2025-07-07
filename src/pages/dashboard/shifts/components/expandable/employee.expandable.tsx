@@ -30,7 +30,7 @@ const EmployeeInfo = ({
           <h3 className='text-base font-medium'>
             {employee?.name} {employee?.surname}
           </h3>
-          <p>{t('shift.expandable.employee.operative')}</p>
+          <p>{t('operative')}</p>
           <Badge label='Activo' status='success' outline />
         </div>
 
@@ -38,31 +38,23 @@ const EmployeeInfo = ({
         <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='mr-2 !text-primary size-sm vox-icon vx-icon-308'></span>
-            {t('shift.expandable.employee.infoPerson')}
+            {t('l_personal_info')}
           </h4>
           <div className='grid grid-cols-2 gap-y-2'>
             <div>
-              <p className='font-semibold'>
-                {t('shift.expandable.employee.identification')}
-              </p>
+              <p className='font-semibold'>{t('identification')}</p>
               <p>{employee.cardId}</p>
             </div>
             <div>
-              <p className='font-semibold'>
-                {t('shift.expandable.employee.phone')}
-              </p>
+              <p className='font-semibold'>{t('h_phone')}</p>
               <p>{employee.phone}</p>
             </div>
             <div>
-              <p className='font-semibold'>
-                {t('shift.expandable.employee.email')}
-              </p>
+              <p className='font-semibold'>{t('h_email')}</p>
               <p>{employee.email}</p>
             </div>
             <div>
-              <p className='font-semibold'>
-                {t('shift.expandable.employee.city')}
-              </p>
+              <p className='font-semibold'>{t('h_city')}</p>
               <p>{place.municipality.name}</p>
             </div>
           </div>
@@ -72,27 +64,21 @@ const EmployeeInfo = ({
         <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='!text-primary mr-2 vox-icon size-sm vx-icon-195'></span>
-            {t('shift.expandable.employee.infoEnterprice')}
+            {t('l_business_info')}
           </h4>
           <div className='grid grid-cols-2 gap-y-2'>
             <div>
-              <p className='font-semibold'>
-                {t('shift.expandable.employee.company')}
-              </p>
+              <p className='font-semibold'>{t('company')}</p>
               <p>{service.contract.company?.name}</p>
             </div>
             <div>
-              <p className='font-semibold'>
-                {t('shift.expandable.employee.department')}
-              </p>
+              <p className='font-semibold'>{t('h_department')}</p>
               <p>
                 {employee.extraData?.area || service.place.municipality.name}
               </p>
             </div>
             <div>
-              <p className='font-semibold'>
-                {t('shift.expandable.employee.dataStart')}
-              </p>
+              <p className='font-semibold'>{t('h_date_start')}</p>
               <FormattedDate
                 date={service.contract.startDate}
                 format='datetime'
@@ -104,17 +90,11 @@ const EmployeeInfo = ({
         {/* Estadísticas */}
         <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
-            {t('shift.expandable.employee.statistics')}
+            {t('l_statistics')}
           </h4>
           <div className='flex justify-around'>
-            <StatCircle
-              title={t('shift.expandable.employee.activities')}
-              percentage={activityPct}
-            />
-            <StatCircle
-              title={t('shift.expandable.employee.shifts')}
-              percentage={roundPct}
-            />
+            <StatCircle title={t('l_activity')} percentage={activityPct} />
+            <StatCircle title={t('h_round')} percentage={roundPct} />
           </div>
         </div>
       </div>

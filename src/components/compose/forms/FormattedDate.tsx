@@ -1,6 +1,5 @@
 import { ComponentChildren } from 'preact';
 import { DateUtils } from '@/utils/utilities/dates';
-import { useTranslation } from 'react-i18next';
 
 type DateFormat = 'human' | 'date' | 'datetime' | 'time' | 'relative';
 type TimeZone = 'local' | 'utc';
@@ -23,7 +22,6 @@ export const FormattedDate = ({
   emptyValue = '-',
 }: FormattedDateProps) => {
   if (!date) return <span className={className}>{emptyValue}</span>;
-  const { t } = useTranslation();
   const formatDate = (): string => {
     switch (format) {
       case 'human':
@@ -38,7 +36,7 @@ export const FormattedDate = ({
         return DateUtils.dateToFrontend(date, { format: 'DD/MM/YYYY HH:mm' });
 
       case 'time':
-        return DateUtils.dateToFrontend(date, { format: 'HH:mm' });
+        return DateUtils.hourToFrontend(date);
 
       case 'relative':
         return DateUtils.getRelativeTime(date);
@@ -51,5 +49,5 @@ export const FormattedDate = ({
   const formattedDate: string =
     timeZone === 'utc' ? DateUtils.dateToBackend(date) : formatDate();
 
-  return <span className={className}>{children || t(formattedDate)}</span>;
+  return <span className={className}>{children || formattedDate}</span>;
 };

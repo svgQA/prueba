@@ -25,8 +25,9 @@ export const Input = <T = string,>({
   button,
   onClick,
   normal,
-  buttonIcon = '123',
-  buttonType = 'button',
+  buttonIcon,
+  buttonType,
+  buttonForm,
   disabled,
   readOnly, // ✅ agregado
   ref,
@@ -147,14 +148,17 @@ export const Input = <T = string,>({
           )}
         </div>
         {button && (
-          <Button
-            onClick={() => onClick?.(value)}
-            name='btn-input-action'
-            icon={buttonIcon}
-            type={buttonType}
-            rounded
-            borderless
-          />
+          <div className='border-l dark:border-gray-600 border-b-light-dark'>
+            <Button
+              onClick={() => onClick?.(value)}
+              name='btn-input-action'
+              icon={buttonIcon}
+              type={buttonType}
+              rounded
+              borderless
+              transparent
+            />
+          </div>
         )}
         {!button && end && icon && (
           <span className={`vox-icon vx-icon-${icon}`} />
@@ -164,11 +168,11 @@ export const Input = <T = string,>({
         <span
           className={`text-red-500 text-sm ${float ? 'absolute top-1/4 right-0' : ''}`}
         >
-          {meta.error}
+          {t(meta.error)}
         </span>
       )}
-      {error && <span className='text-red-500 text-sm'>{error}</span>}
-      {warning && <span className='text-yellow-500 text-sm'>{warning}</span>}
+      {error && <span className='text-red-500 text-sm'>{t(error)}</span>}
+      {warning && <span className='text-yellow-500 text-sm'>{t(warning)}</span>}
     </div>
   );
 };

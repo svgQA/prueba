@@ -350,8 +350,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       {({ input, meta }) => (
                         <SmartSelector
                           {...input}
-                          placeholder='Selecione país...'
-                          label='country'
+                          placeholder='p_select'
+                          label='h_country'
                           icon='123'
                           options={countries.value}
                           meta={meta}
@@ -363,8 +363,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       {({ input, meta }) => (
                         <SmartSelector
                           {...input}
-                          placeholder='Seleccione Departamento...'
-                          label='department'
+                          placeholder='p_select'
+                          label='h_department'
                           icon='123'
                           options={departments.value}
                           onChange={(e) => {

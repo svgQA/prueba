@@ -29,6 +29,26 @@ export class DateUtils {
   }
 
   /**
+   * Crea una fecha UTC ISO combinando la hora dada ('HH:mm') con la fecha actual en la zona horaria configurada.
+   * @param hourString Hora en formato 'HH:mm' (o 'HH:mm:ss')
+   * @returns ISO string en UTC: 'YYYY-MM-DDTHH:mm:00.000Z'
+   */
+  static createUTCDateFromHour(hourString: string): string {
+    const [hour, minute, second = '0'] = hourString.split(':').map(Number);
+
+    // Usa la fecha actual en la zona horaria configurada
+    const localToday = dayjs()
+      .tz(DateUtils.timeZone)
+      .set('hour', hour)
+      .set('minute', minute)
+      .set('second', +second)
+      .set('millisecond', 0);
+
+    // Retorna la fecha en formato UTC ISO
+    return localToday.utc().toISOString();
+  }
+
+  /**
    * Convierte una fecha local a string ISO UTC para backend.
    */
   static toUTCISOStringFromLocal(
@@ -41,11 +61,49 @@ export class DateUtils {
     return dayjs(dateInput).utc().toISOString();
   }
 
+  static createDateFromHour(
+    hourString: string,
+    baseDate?: string | Date
+  ): string {
+    const [hour, minute] = hourString.split(':').map(Number);
+    const base = baseDate
+      ? dayjs(baseDate).tz(DateUtils.timeZone)
+      : dayjs().tz(DateUtils.timeZone);
+
+    const date = base
+      .set('hour', hour)
+      .set('minute', minute)
+      .set('second', 0)
+      .set('millisecond', 0);
+
+    return date.utc().toISOString();
+  }
+
   static dateToBackend(
     dateInput: string | Date,
     format: 'time' | 'date' = 'date'
   ): string {
     return this.toUTCISOStringFromLocal(dateInput, format);
+  }
+
+  /**
+   * Toma una hora en formato UTC (como '1970-01-01T18:23:00.000Z'),
+   * extrae la hora y la aplica sobre la fecha actual en la zona horaria configurada,
+   * devolviendo la hora local correcta en formato "HH:mm".
+   */
+  static hourToFrontend(dateUTC: string | Date): string {
+    const utc = dayjs.utc(dateUTC);
+
+    // Combinar fecha actual con hora/minutos de entrada
+    const todayUtcWithTime = dayjs
+      .utc()
+      .set('hour', utc.hour())
+      .set('minute', utc.minute())
+      .set('second', utc.second())
+      .set('millisecond', 0);
+
+    // Convertir a hora local del entorno
+    return todayUtcWithTime.local().format('HH:mm');
   }
 
   static dateToFrontend(

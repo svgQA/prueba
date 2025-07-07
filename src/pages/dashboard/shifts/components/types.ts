@@ -1,3 +1,19 @@
+export type Schedule = {
+  days: DaySchedule[];
+  daysAllowed: string[];
+};
+
+export type TimeBlock = {
+  start: number;
+  end: number;
+};
+
+export type DaySchedule = {
+  day: string;
+  dayIndex: number;
+  blocks: TimeBlock[];
+};
+
 export type User = {
   id: string;
   lat: number;

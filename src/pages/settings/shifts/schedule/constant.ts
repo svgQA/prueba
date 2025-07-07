@@ -1,13 +1,13 @@
 import { DayOfWeek } from './type';
 
 export const DAYS_OF_WEEK: DayOfWeek[] = [
-  { value: 'monday', label: 'monday' },
-  { value: 'tuesday', label: 'tuesday' },
-  { value: 'wednesday', label: 'wednesday' },
-  { value: 'thursday', label: 'thursday' },
-  { value: 'friday', label: 'friday' },
-  { value: 'saturday', label: 'saturday' },
-  { value: 'sunday', label: 'sunday' },
+  { value: 'monday', label: 'monday', position: 1 },
+  { value: 'tuesday', label: 'tuesday', position: 2 },
+  { value: 'wednesday', label: 'wednesday', position: 3 },
+  { value: 'thursday', label: 'thursday', position: 4 },
+  { value: 'friday', label: 'friday', position: 5 },
+  { value: 'saturday', label: 'saturday', position: 6 },
+  { value: 'sunday', label: 'sunday', position: 0 },
 ];
 
 export const START_HOUR = 0;
