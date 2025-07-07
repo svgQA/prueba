@@ -11,9 +11,9 @@ export const TaskCard = ({ task }: { task: ITask }) => {
       {/* @ts-ignore */}
       <span className='absolute top-0 right-0 px-2 py-0.5 bg-ternary rounded-bl-md'>
         {t(
-          typeof task.type === 'string'
-            ? task.type
-            : (task.type.value as string)
+          typeof task?.type === 'string'
+            ? task?.type
+            : (task?.type?.value as string)
         )}
       </span>
       <div className='flex flex-row justify-between mt-4'>

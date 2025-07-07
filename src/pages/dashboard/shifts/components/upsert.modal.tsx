@@ -80,8 +80,8 @@ export const TaskForm = ({
     }
     const { employeeId, serviceId } = model;
     const isInSchedule = isStartAndEndInSchedules(
-      model.start,
-      model.end,
+      DateUtils.dateToInput(model.start),
+      DateUtils.dateToInput(model.end),
       currentSchedule.value
     );
 
