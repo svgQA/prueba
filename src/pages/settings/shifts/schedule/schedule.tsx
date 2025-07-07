@@ -1,7 +1,6 @@
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
-import { useLocation } from 'wouter';
 import { columns } from './components/schedule.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -9,18 +8,14 @@ import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
-import { appendHistory } from '../../store/settings';
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../store/settings';
 import { DataSchedule } from './components/data.schedule';
 import { ScheduleService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { IDay, IRowActionPlace, ISchedule } from '@/types/shift/shift.request';
+import { useNavigation } from '@/utils/utilities/navigation';
 
 export const ScheduleSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  const { redirectSettings } = useNavigation();
   const schedules: Signal<ISchedule[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
 
@@ -40,27 +35,21 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.create.to,
-      label: 'create',
-      id: 'schedule-create',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'create' });
-    navigate('/rounds/schedule/create');
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      '/rounds/schedule/create',
+      'create',
+      'schedule-create'
+    );
   };
 
   const update = (id: string) => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.update.to,
-      label: 'update',
-      id: 'schedule-update',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/rounds/schedule/update/${id}`);
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      `/rounds/schedule/update/${id}`,
+      'update',
+      'schedule-update'
+    );
   };
 
   const deleteSchedule = async (id: string) => {
