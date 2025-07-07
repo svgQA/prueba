@@ -1,22 +1,16 @@
 import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
-import { useLocation } from 'wouter';
 import { columns } from './components/project.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { appendHistory } from '../../store/settings';
-
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../store/settings';
 import { ContractService } from '@/services';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@/utils/utilities/navigation';
 
 export interface IProject {
   id: number;
@@ -35,7 +29,7 @@ export interface IRowActionPlace {
 }
 
 export const ProjectsSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  const { redirectSettings } = useNavigation();
   const projects: Signal<IProject[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
   const { t } = useTranslation();
@@ -54,27 +48,21 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   };
 
   const redirect = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.projectCreate.to,
-      label: 'create',
-      id: 'projects-create',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'create' });
-    navigate('/rounds/project/create');
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      '/rounds/project/create',
+      'create',
+      'project-create'
+    );
   };
 
   const editProject = (id: string) => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.projectUpdate.to,
-      label: 'update',
-      id: 'projects-update',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/rounds/project/edit/${id}`);
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      `/rounds/project/edit/${id}`,
+      'edit',
+      'project-update'
+    );
   };
 
   const deleteProject = async (id: string) => {
