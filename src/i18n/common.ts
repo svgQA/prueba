@@ -39,6 +39,8 @@ export const common_es = {
   show: 'Mostrar',
   received: 'Recibido',
   empty: 'Vacío',
+  area: 'Área',
+  profile: 'Perfil',
 };
 
 export const common_en = {
@@ -86,4 +88,6 @@ export const common_en = {
   'Invalid Date': 'Not applicable',
   received: 'Received',
   empty: 'Empty',
+  area: 'Area',
+  profile: 'Profile',
 };

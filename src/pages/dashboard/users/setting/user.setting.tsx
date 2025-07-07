@@ -12,6 +12,7 @@ import { Field } from 'react-final-form';
 import { Form } from 'react-final-form';
 import { useTranslation } from 'react-i18next';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { useUserStore } from '@/store/slices';
 
 export const UserSettingsPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -29,10 +30,18 @@ export const UserSettingsPage: FunctionComponent = () => {
     allow_update_password: false,
     allow_update_profile: false,
   });
+
   useEffect(() => {
     document.title = t('p_setting');
-    getModules();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getModules();
+    }
+  }, [selectedCompany, location]);
 
   const onSubmit = async (values: IUserSetting) => {
     const response = await ModuleService.setUserSetting(
@@ -65,15 +74,15 @@ export const UserSettingsPage: FunctionComponent = () => {
             onSubmit={handleSubmit}
             className='space-y-6'
           >
-            <h2 className='text-lg font-bold'>{t('setting.user.general')}</h2>
+            <h2 className='text-lg font-bold'>{t('setting')}</h2>
             <div className='grid grid-cols-1 gap-3'>
               <div className='col-span-3'>
                 <Field<string> name='name'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      label={t('setting.user.name')}
-                      placeholder={t('setting.user.name_placeholder')}
+                      label={t('h_name')}
+                      placeholder={t('p_write')}
                       type='text'
                       meta={meta}
                     />
@@ -81,7 +90,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                 </Field>
               </div>
             </div>
-            <h2 className='text-lg font-bold'>{t('setting.user.modules')}</h2>
+            <h2 className='text-lg font-bold'>{t('m_module')}</h2>
             <div className='grid grid-cols-7 gap-4 flex-wrap'>
               <div className='col-span-1'>
                 <Field name='allow_areas' type='checkbox'>
@@ -89,7 +98,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_areas'
                       name='allow_areas'
-                      label={t('setting.user.areas')}
+                      label={t('area')}
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -102,7 +111,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_roles'
                       name='allow_roles'
-                      label={t('setting.user.roles')}
+                      label={t('m_role')}
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -115,7 +124,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_users'
                       name='allow_users'
-                      label={t('setting.user.users')}
+                      label={t('h_user')}
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -128,7 +137,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_groups'
                       name='allow_groups'
-                      label={t('setting.user.groups')}
+                      label={t('group')}
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -154,7 +163,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_positions'
                       name='allow_positions'
-                      label={t('setting.user.positions')}
+                      label={t('h_location')}
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -167,7 +176,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_permissions'
                       name='allow_permissions'
-                      label={t('setting.user.permissions')}
+                      label={t('h_permission')}
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -176,7 +185,7 @@ export const UserSettingsPage: FunctionComponent = () => {
               </div>
             </div>
 
-            <h2 className='text-lg font-bold'>{t('setting.user.profile')}</h2>
+            <h2 className='text-lg font-bold'>{t('profile')}</h2>
             <div className='grid grid-cols-1 gap-3'>
               <div className='col-span-3'>
                 <Field name='allow_update_password' type='checkbox'>
@@ -184,7 +193,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_update_password'
                       name='allow_update_password'
-                      label={t('setting.user.update_password')}
+                      label={t('m_password')}
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -197,7 +206,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_update_profile'
                       name='allow_update_profile'
-                      label={t('setting.user.update_profile')}
+                      label={t('update')}
                       value={input.checked}
                       onChange={input.onChange}
                     />
