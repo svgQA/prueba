@@ -3,6 +3,7 @@ import { FieldRenderProps } from 'react-final-form';
 import { IOption } from '../smart-selector/smart-select';
 import { Input } from '../input/input';
 import { useState, useEffect } from 'preact/hooks';
+import { useTranslation } from 'react-i18next';
 
 interface IScheduleSelectorProps {
   name: string;
@@ -31,6 +32,7 @@ export const ScheduleSelector: FunctionComponent<IScheduleSelectorProps> = ({
   error,
   warning,
 }) => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [selectedValues, setSelectedValues] = useState<IOption[]>([]);
 
@@ -63,7 +65,7 @@ export const ScheduleSelector: FunctionComponent<IScheduleSelectorProps> = ({
   };
 
   return (
-    <div className='w-full mt-1'>
+    <div className='w-full'>
       {label && (
         <label
           for={`${id}-input`}
@@ -72,67 +74,62 @@ export const ScheduleSelector: FunctionComponent<IScheduleSelectorProps> = ({
           {label}
         </label>
       )}
-      <div className='rounded-lg shadow-sm p-4 bg-b-light-light dark:bg-b-dark-light w-full'>
-        <div className='flex items-center gap-4 mb-3'>
-          <div className='flex-1'>
-            <Input
-              name='search'
-              type='text'
-              value={search}
-              label='Buscar'
-              icon='123'
-              onChange={(e) => {
-                setSearch(e.currentTarget.value);
-              }}
-              placeholder='Escribe para buscar...'
-            />
-          </div>
-        </div>
+      <div className='rounded-lg shadow-sm p-3 py-5 bg-b-light-light dark:bg-b-dark-light w-full'>
+        <Input
+          name='search_scheduler'
+          type='text'
+          value={search}
+          icon='123'
+          onChange={(e) => {
+            setSearch(e.currentTarget.value);
+          }}
+          placeholder='p_search_scheduler'
+        />
 
-        <div className='max-h-[300px] overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-b-dark-dark p-4 vox-scroll-design'>
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3'>
-            {filteredOptions.map((option) => {
-              const selected = isSelected(option.value);
-              return (
-                <label
-                  key={option.value}
-                  className={`flex items-start p-3 rounded-lg cursor-pointer transition-colors duration-200
+        {filteredOptions && filteredOptions.length > 0 && (
+          <div className='max-h-[300px] overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-b-dark-dark p-4 vox-scroll-design mt-3'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3'>
+              {filteredOptions.map((option) => {
+                const selected = isSelected(option.value);
+                return (
+                  <label
+                    key={option.value}
+                    className={`flex items-start p-3 rounded-lg cursor-pointer transition-colors duration-200
                     ${
                       selected
                         ? 'bg-primary/10 dark:bg-primary/20 border-primary dark:border-primary'
-                        : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b-light-light dark:border-b-dark-light'
+                        : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b-light-light dark:border-b-dark-light bg-b-light-light dark:bg-b-dark-light'
                     }
                     border-2 h-full`}
-                >
-                  <input
-                    type='checkbox'
-                    name={name}
-                    className='w-4 h-4 mt-1 rounded border-gray-300 dark:border-gray-600
-                      text-primary focus:ring-primary
-                      dark:bg-gray-700 dark:checked:bg-primary'
-                    checked={selected}
-                    onChange={(e) =>
-                      handleChange(option, e.currentTarget.checked)
-                    }
-                    onBlur={onBlur}
-                    onFocus={onFocus}
-                  />
-                  <div className='ml-3 flex-1 min-w-0'>
-                    <div className='text-sm font-medium text-gray-900 dark:text-gray-100 truncate'>
-                      {option.label}
+                  >
+                    <input
+                      type='checkbox'
+                      name={name}
+                      className='sr-only'
+                      checked={selected}
+                      onChange={(e) =>
+                        handleChange(option, e.currentTarget.checked)
+                      }
+                      onBlur={onBlur}
+                      onFocus={onFocus}
+                    />
+                    <div className='ml-3 flex-1 min-w-0'>
+                      <div className='text-sm font-medium text-gray-900 dark:text-gray-100 truncate'>
+                        {option.label}
+                      </div>
                     </div>
-                  </div>
-                </label>
-              );
-            })}
+                  </label>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       {meta && meta.touched && meta.error && (
-        <span className='text-red-500 text-sm'>{meta.error}</span>
+        <span className='text-red-500 text-sm'>{t(meta.error)}</span>
       )}
-      {error && <span className='text-red-500 text-sm'>{error}</span>}
-      {warning && <span className='text-yellow-500 text-sm'>{warning}</span>}
+      {error && <span className='text-red-500 text-sm'>{t(error)}</span>}
+      {warning && <span className='text-yellow-500 text-sm'>{t(warning)}</span>}
     </div>
   );
 };

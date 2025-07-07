@@ -95,6 +95,7 @@ export const ShiftFormContent = ({
             )}
           </Field>
         </div>
+
         <div class='col-span-1'>
           <Field<IOption> name='scheduleId' validate={required}>
             {({ input, meta }) => (
@@ -121,6 +122,7 @@ export const ShiftFormContent = ({
             )}
           </Field>
         </div>
+
         <div class='col-span-1'>
           <Field<string> name='type' validate={required}>
             {({ input, meta }) => (

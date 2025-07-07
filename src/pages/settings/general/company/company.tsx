@@ -186,17 +186,19 @@ export const CompanySettingPage: FunctionComponent = () => {
                       </Field>
                     </div>
                   </div>
-                  <StatusButton
-                    onClickClean={() => {
-                      form.reset();
-                      if (isEditing) {
-                        resetForm(false);
-                      }
-                    }}
-                    submitting={submitting}
-                    pristine={pristine}
-                    form='form-company'
-                  />
+                  <div className='mt-2'>
+                    <StatusButton
+                      onClickClean={() => {
+                        form.reset();
+                        if (isEditing) {
+                          resetForm(false);
+                        }
+                      }}
+                      submitting={submitting}
+                      pristine={pristine}
+                      form='form-company'
+                    />
+                  </div>
                 </form>
               )}
             />

@@ -63,7 +63,7 @@ export const MultipleInput = ({
 
   const defaultChips = useMemo(
     () => (
-      <div className='flex flex-row gap-1 min-h-8  max-w-96 overflow-auto vox-scroll-design py-1 shadow-inner'>
+      <div className='flex flex-row gap-1 max-w-96 overflow-auto vox-scroll-design'>
         {Array.isArray(value) && value.length > 0 ? (
           <>
             {value.map((item, index) => {
@@ -98,7 +98,7 @@ export const MultipleInput = ({
 
   return (
     <div className='w-full flex flex-col gap-1 items-center'>
-      {!bottom && defaultChips}
+      {!bottom && <div className='min-h-8'>{defaultChips}</div>}
       <div className='flex flex-row justify-between items-end w-full'>
         <Input
           {...options}
@@ -119,7 +119,7 @@ export const MultipleInput = ({
           buttonType={buttonType}
         />
       </div>
-      {bottom && defaultChips}
+      {bottom && <div className='min-h-8'>{defaultChips}</div>}
     </div>
   );
 };

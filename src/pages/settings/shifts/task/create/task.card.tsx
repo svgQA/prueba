@@ -1,10 +1,29 @@
-import { Badge } from '@/components/common/badge/badge';
-import { ITask } from '../interface';
+// import { Badge } from '@/components/common/badge/badge';
+import { ITask } from './interface';
 import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 export const TaskCard = ({ task }: { task: ITask }) => {
   const { t } = useTranslation();
+  return (
+    <li className='w-52 text-xs p-2 rounded-bl-2xl bg-b-light-dark dark:bg-b-dark-dark min-w-[150px] relative'>
+      {/* @ts-ignore */}
+      <span className='absolute top-0 right-0 px-2 py-0.5 bg-ternary rounded-bl-md'>
+        {t(
+          typeof task.type === 'string'
+            ? task.type
+            : (task.type.value as string)
+        )}
+      </span>
+      <div className='flex flex-row justify-between mt-4'>
+        <TextEllipsis text={task.name} className='text-primary' />
+        <p>{DateUtils.hourToFrontend(task.hourStart || '00:00')}</p>
+      </div>
+      <TextEllipsis text={task.description} />
+    </li>
+  );
+  /*
   return (
     <div
       key={task.id}
@@ -54,4 +73,5 @@ export const TaskCard = ({ task }: { task: ITask }) => {
       </div>
     </div>
   );
+  */
 };

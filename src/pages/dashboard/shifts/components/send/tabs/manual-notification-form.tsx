@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useCallback } from 'preact/hooks';
 import { TemplateService } from '@/services/notification/template';
 import { IOption } from '@/components/common/multi/interface';
 import { useTranslation } from 'react-i18next';
@@ -11,9 +11,10 @@ import { Form, Field } from 'react-final-form';
 import { useSignal } from '@preact/signals';
 import { lengthSize } from '@/utils/utilities';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { NotificationService, TaskService } from '@/services';
+import { FormService, NotificationService, TaskService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
+import { ITask } from '@/pages/settings/shifts/task/create/interface';
 
 interface Props {
   users?: any[];
@@ -40,6 +41,7 @@ export const ManualNotificationForm = ({
 
   const templates = useSignal<IOption[]>([]);
   const tasks = useSignal<IOption[]>([]);
+  const tasksResponse = useSignal<ITask[]>([]);
 
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
   const [sendToGeneral, setSendToGeneral] = useState<boolean>(false);
@@ -83,6 +85,27 @@ export const ManualNotificationForm = ({
     setSelectedUsersFull(finalUsers);
   }, [selectedUserIds, usersWithPlayerId]);
 
+  const forms = useSignal<IOption[]>([]);
+  const getInitData = useCallback(async () => {
+    const [request_form, request_task, request_template] = await Promise.all([
+      FormService.getSimpleList(),
+      TaskService.getSimplesList(),
+      TemplateService.getBasicTemplates(),
+    ]);
+
+    if (request_form.getStatus()) {
+      forms.value = request_form.getMany();
+    }
+
+    if (request_task.getStatus()) {
+      tasks.value = request_task.getMany();
+    }
+
+    if (request_template.getStatus()) {
+      templates.value = request_template.getMany();
+    }
+  }, []);
+
   const handleSubmit = async (values: any) => {
     if (!hasplayers) return;
 
@@ -93,10 +116,6 @@ export const ManualNotificationForm = ({
         values.task?.value && { taskId: Number(values.task.value) }),
       overrideTitle: values.title,
       overrideDescription: values.description,
-      // TODO: Deje comentado esto, porque me daba conflicto con lo anterio
-      // Jaider determina cual es el correcto.
-      // overrideTitle: values.title ?? "",
-      // overrideDescription: values.description ?? "",
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
@@ -112,30 +131,13 @@ export const ManualNotificationForm = ({
   const clearUserSelection = () => setSelectedUserIds([]);
 
   useEffect(() => {
-    const fetchFormsAndTemplates = async () => {
-      try {
-        const [TasksResponse, templatesResponse] = await Promise.all([
-          TaskService.getSimplesList(),
-          TemplateService.getBasicTemplates(),
-        ]);
-        if (TasksResponse.getStatus()) tasks.value = TasksResponse.getMany();
-        if (templatesResponse.getStatus())
-          templates.value = templatesResponse.getMany();
-      } catch (err) {
-        ToastManager.error('s_send_error');
-      }
-    };
-    fetchFormsAndTemplates();
+    getInitData();
   }, []);
 
-  /* useEffect(() => {
-    const getFormStructure = async () => {
-      if (!formSelected) return;
-      const response = await FormService.get_one(Number(formSelected.value));
-      if (response.getStatus()) setFormStructure(response.getOne());
-    };
-    getFormStructure();
-  }, [formSelected]); */
+  const onTaskAdd = (model: any) => {
+    tasksResponse.value = [model];
+    showInlineCreate.value = false;
+  };
 
   return (
     <Form
@@ -288,10 +290,14 @@ export const ManualNotificationForm = ({
             </div>
           </div>
 
-          {/* TODO: Jaider ver lo de este extra tarea */}
-          {showInlineCreate.value && (
-            <TaskFormCreate onSubmit={() => {}} forms={[]} add icon='146' />
-          )}
+          <TaskFormCreate
+            onSubmit={onTaskAdd}
+            forms={forms.value}
+            add
+            append={showInlineCreate.value}
+            icon='146'
+            taskList={tasksResponse.value}
+          />
 
           {!templateSelected && (
             <div className='flex flex-col gap-2'>
@@ -322,6 +328,7 @@ export const ManualNotificationForm = ({
               />
             </div>
           )}
+
           <div className='flex justify-end'>
             <Button
               label='Enviar notificacion'

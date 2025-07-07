@@ -1,7 +1,7 @@
 import { Form } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { useSignal } from '@preact/signals';
-import { FormData, IShiftRequest, ITask } from '../interface';
+import { FormData, IShiftRequest } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
@@ -27,8 +27,9 @@ import { ShiftFormContent } from './shift.form';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { DAYS_OF_WEEK, HOURS } from '@/pages/settings/shifts/schedule/constant';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
-import { TaskCard } from './task.card';
-import dayjs from 'dayjs';
+import { isStartAndEndInSchedules } from './validation';
+import { _onTaskAddWithId } from '@/pages/settings/shifts/task/create/utils';
+import { ITask } from '@/pages/settings/shifts/task/create/interface';
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -41,22 +42,6 @@ interface ITaskFormProps {
   timeBeforeSelected?: number;
   externalSelected?: string;
 }
-
-type TimeBlock = {
-  start: number;
-  end: number;
-};
-
-type DaySchedule = {
-  day: string;
-  dayIndex: number;
-  blocks: TimeBlock[];
-};
-
-type Schedule = {
-  days: DaySchedule[];
-  daysAllowed: string[];
-};
 
 export const TaskForm = ({
   closed,
@@ -79,7 +64,7 @@ export const TaskForm = ({
   const [tasksResponse, setTasksResponse] = useState<ITask[]>([]);
   const tasks = useSignal<ITask[]>([]);
   const relatedShifts = useSignal<any[]>([]);
-  const forms = useSignal<any[]>([]);
+  const forms = useSignal<IOption[]>([]);
   const currentSchedule = useSignal<any>(null);
 
   useEffect(() => {
@@ -105,10 +90,6 @@ export const TaskForm = ({
       ToastManager.warning('s_updated_error_schedule');
       return;
     }
-
-    // const model_task = tasks.value.find(
-    //   (_task: ITask) => _task.id === task?.value
-    // );
 
     const request_model: IShiftRequest = {
       ...model,
@@ -269,23 +250,9 @@ export const TaskForm = ({
 
   const onTaskAdd = (model: any, t: number = 2) => {
     const size = tasksResponse.length + 1;
-    const task = Array.isArray(model)
-      ? model.map((task: any, index: number) => ({
-          t,
-          ...task.task,
-          id: size + index,
-        }))
-      : [
-          {
-            t,
-            id: size,
-            ...model,
-            hourStart: DateUtils.createUTCDateFromHour(
-              model.hourStart || '00:00'
-            ),
-          },
-        ];
+    const task = _onTaskAddWithId(model, size, t);
     setTasksResponse((prevTasks) => [...prevTasks, ...task]);
+    isNewTask.value = false;
   };
 
   const cleanServiceSelected = () => {
@@ -297,39 +264,6 @@ export const TaskForm = ({
   const isNewTask = useSignal(false);
   const onToggleTask = () => {
     isNewTask.value = !isNewTask.value;
-  };
-
-  const isStartAndEndInSchedules = (
-    startDateStr: string,
-    endDateStr: string,
-    currentSchedule: Schedule
-  ): boolean => {
-    const start = dayjs.utc(startDateStr);
-    const end = dayjs.utc(endDateStr);
-    const checkTime = (date: dayjs.Dayjs) => {
-      const dayIndex = date.day();
-      const dayName = DAYS_OF_WEEK.find((day) => day.position === dayIndex);
-      if (
-        !currentSchedule.daysAllowed.some(
-          (d) => d.toLowerCase() === (dayName?.value || '').toLowerCase()
-        )
-      ) {
-        return false;
-      }
-
-      const scheduleDay = currentSchedule.days.find(
-        (d: DaySchedule) => d.dayIndex === dayIndex
-      );
-      if (!scheduleDay) return false;
-
-      const hourDecimal = date.hour() + date.minute() / 60;
-      return scheduleDay.blocks.some(
-        (block: TimeBlock) =>
-          hourDecimal >= block.start && hourDecimal <= block.end
-      );
-    };
-
-    return checkTime(start) && checkTime(end);
   };
 
   return (
@@ -417,39 +351,16 @@ export const TaskForm = ({
           )}
         />
 
-        {isNewTask.value && (
-          <div className='flex flex-col justify-center mt-4 border-t dark:border-t-light-dark py-2'>
-            <TaskFormCreate onSubmit={onTaskAdd} forms={forms.value} add />
-          </div>
-        )}
+        <TaskFormCreate
+          onSubmit={onTaskAdd}
+          forms={forms.value}
+          append={isNewTask.value}
+          taskList={tasksResponse}
+          add
+          icon='146'
+        />
 
-        {tasksResponse?.length > 0 && (
-          <div className='mt-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
-            <ul className='flex flex-wrap gap-1 justify-center'>
-              {tasksResponse.map((task, index) => (
-                <li
-                  key={`card-task-${task.id}-${index}`}
-                  className='w-52 text-xs p-2 rounded-md  bg-b-light-dark dark:bg-b-dark-dark min-w-[150px] relative'
-                >
-                  {/* @ts-ignore */}
-                  <span className='absolute top-0 right-0 px-2 py-0.5 bg-ternary rounded-bl-md'>
-                    {t(
-                      typeof task.type === 'string'
-                        ? task.type
-                        : (task.type.value as string)
-                    )}
-                  </span>
-                  <div className='flex flex-row justify-between mt-4'>
-                    <TextEllipsis text={task.name} className='text-primary' />
-                    <p>{DateUtils.hourToFrontend(task.hourStart || '')}</p>
-                  </div>
-                  <TextEllipsis text={task.description} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
+        {/*
         {userSelected && userSelected.tasks && (
           <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
             {userSelected?.tasks.map((task) => (
@@ -457,6 +368,7 @@ export const TaskForm = ({
             ))}
           </div>
         )}
+        */}
       </div>
     </Modal>
   );
