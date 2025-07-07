@@ -7,8 +7,8 @@ export const isStartAndEndInSchedules = (
   endDateStr: string,
   currentSchedule: Schedule
 ): boolean => {
-  const start = dayjs(startDateStr).utc();
-  const end = dayjs(endDateStr).utc();
+  const start = dayjs.utc(startDateStr);
+  const end = dayjs.utc(endDateStr);
 
   const checkTime = (date: dayjs.Dayjs) => {
     const dayIndex = date.day();
@@ -25,7 +25,6 @@ export const isStartAndEndInSchedules = (
       (d: DaySchedule) => d.dayIndex === dayIndex
     );
     if (!scheduleDay) return false;
-
     const hourDecimal = date.hour() + date.minute() / 60;
     return scheduleDay.blocks.some(
       (block: TimeBlock) =>
