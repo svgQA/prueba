@@ -7,7 +7,7 @@ import { Button } from '@/components/common/button/button';
 import { Section } from '@/components/common/section/section';
 import { useEffect } from 'preact/hooks';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
 import arrayMutators from 'final-form-arrays';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
@@ -25,6 +25,7 @@ import {
 } from '@/services';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { StatusButton } from '@/pages/settings/components/custom.button';
+import { useNavigation } from '@/utils/utilities/navigation';
 
 interface IPoint {
   latitude: number;
@@ -63,7 +64,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const showHelp = useSignal<boolean>(false);
   const tasks = useSignal<ITask[]>([]);
   const { id } = useParams(); // Obtiene el id de la URL
-  const [_, navigate] = useLocation();
+  const { navigateUpsert } = useNavigation();
   const forms = useSignal<any[]>([]);
 
   const getFormsHandler = async () => {
@@ -118,7 +119,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     if (!request.getStatus()) return;
     ToastManager.success(message);
 
-    navigate('/rounds');
+    navigateUpsert('/rounds');
   };
   const getTasks = async () => {
     const response = await TaskService.getTasks();

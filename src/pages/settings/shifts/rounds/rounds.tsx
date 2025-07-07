@@ -4,37 +4,27 @@ import { IRowAction } from '@/components/common/table/interface.d';
 import { Table } from '@/components/common/table/table';
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { useLocation } from 'wouter';
 import { Round } from './utils/rounds';
 import { columns } from './components/rounds.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ExpandableRounds } from '@/components/compose/table/expandable/rounds';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
-import { appendHistory } from '../../store/settings';
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { RoundService } from '@/services';
 import { useSignal } from '@preact/signals';
 import { useTranslation } from 'react-i18next';
-
+import { useNavigation } from '@/utils/utilities/navigation';
 export const RoundsSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
   const [rounds, setRounds] = useState([]);
   const loading = useSignal<boolean>(false);
-
+  const { redirectSettings } = useNavigation();
   const redirect = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.to,
-      label: 'create',
-      id: 'rounds-create',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'create' });
-    navigate('/round/create');
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      '/round/create',
+      'create',
+      'rounds-create'
+    );
   };
 
   const { t } = useTranslation();
@@ -80,15 +70,12 @@ export const RoundsSettingPage: FunctionComponent = () => {
   };
 
   const editProject = (id: string) => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.update.to,
-      label: 'update',
-      id: 'rounds-update',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/round/update/${id}`);
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      `/round/update/${id}`,
+      'edit',
+      'rounds-update'
+    );
   };
 
   const handleOnClick = async (action: IRowAction | any) => {
