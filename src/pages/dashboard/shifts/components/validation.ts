@@ -8,7 +8,8 @@ export const isStartAndEndInSchedules = (
   currentSchedule: Schedule
 ): boolean => {
   const start = dayjs(startDateStr).utc();
-  const end = dayjs.utc(endDateStr);
+  const end = dayjs(endDateStr).utc();
+
   const checkTime = (date: dayjs.Dayjs) => {
     const dayIndex = date.day();
     const dayName = DAYS_OF_WEEK.find((day) => day.position === dayIndex);
