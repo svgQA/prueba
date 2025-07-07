@@ -14,6 +14,7 @@ import { RoundService } from '@/services';
 import { useSignal } from '@preact/signals';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 export const RoundsSettingPage: FunctionComponent = () => {
   const [rounds, setRounds] = useState([]);
   const loading = useSignal<boolean>(false);
@@ -30,8 +31,15 @@ export const RoundsSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_round');
-    getRounds();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getRounds();
+    }
+  }, [selectedCompany, location]);
 
   const getRounds = async () => {
     loading.value = true;

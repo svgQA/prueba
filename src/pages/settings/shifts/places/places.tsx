@@ -13,6 +13,7 @@ import { useSignal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 export interface IRowActionPlace {
   id: string;
@@ -28,8 +29,15 @@ export const PlacesSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_place');
-    getPlaces();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getPlaces();
+    }
+  }, [selectedCompany, location]);
 
   const getPlaces = async () => {
     loading.value = true;

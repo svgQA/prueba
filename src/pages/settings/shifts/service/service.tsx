@@ -11,6 +11,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { ServiceService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 export interface IServicio {
   id: number;
@@ -33,8 +34,15 @@ export const ServiceSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_service');
-    getServices();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getServices();
+    }
+  }, [selectedCompany, location]);
 
   const getServices = async () => {
     loading.value = true;

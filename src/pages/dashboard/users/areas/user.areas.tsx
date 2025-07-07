@@ -17,6 +17,7 @@ import {
   setMenu,
 } from '@/pages/settings/store/settings';
 import { showAlert } from '@/components/common/show-alert/show-alert';
+import { useUserStore } from '@/store/slices';
 export const UserAreasPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const areas = useSignal<IUserAreaResponse[]>([]);
@@ -25,8 +26,15 @@ export const UserAreasPage: FunctionComponent = () => {
 
   useEffect(() => {
     document.title = t('p_area');
-    fetchAreas();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchAreas();
+    }
+  }, [selectedCompany, location]);
 
   const fetchAreas = async () => {
     loading.value = true;

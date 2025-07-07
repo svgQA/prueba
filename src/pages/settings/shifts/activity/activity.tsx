@@ -12,6 +12,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 export interface IActivity {
   id: number;
@@ -36,8 +37,15 @@ export const ActivitySettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_service');
-    getActivities();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getActivities();
+    }
+  }, [selectedCompany, location]);
 
   const getActivities = async () => {
     const request: any = await ShiftService.getActivities();

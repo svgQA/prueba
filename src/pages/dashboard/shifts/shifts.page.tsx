@@ -96,7 +96,6 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [hasValidPlayer, setHasValidPlayer] = useState(false);
 
   const loading = useSignal<boolean>(false);
-  const { selectedCompany } = useUserStore();
 
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
   const memoizedServices = useMemo(() => services, [services]);
@@ -109,6 +108,24 @@ export const ShiftsPage: FunctionalComponent = () => {
     endDate,
     users: [],
   });
+
+  /**
+   * Handle the useEffect hook for the document title and shift retrieval.
+   */
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    document.title = t('p_shift');
+  }, []);
+
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      handleGetShiftSummary();
+      fetchInitialData();
+      fetchSSE();
+      EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
+    }
+  }, [selectedCompany, location]);
 
   const handleViewMode = async (viewMode: ViewMode = ViewMode.QuarterDay) => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -143,23 +160,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     );
     setHasValidPlayer(result);
   }, [shifts.value]);
-
-  /**
-   * Handle the useEffect hook for the document title and shift retrieval.
-   */
-  useEffect(() => {
-    document.title = t('p_shift');
-  }, []);
-
-  useEffect(() => {
-    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
-    if (selectedCompany) {
-      handleGetShiftSummary();
-      fetchInitialData();
-      fetchSSE();
-      EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
-    }
-  }, [selectedCompany, location]);
 
   // const fetchShifts = async () => {
   //   const response = await ShiftService.get_all({ page: 1, items: 1000 });

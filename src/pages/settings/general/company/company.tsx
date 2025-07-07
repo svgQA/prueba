@@ -23,7 +23,7 @@ export const CompanySettingPage: FunctionComponent = () => {
   const companies = useSignal<ICompanyResponse[]>([]);
   const showForm = useSignal(false);
   const isEditing = useSignal(false);
-  const selectedCompany = useSignal<ICompanyResponse | null>(null);
+  const _selectedCompany = useSignal<ICompanyResponse | null>(null);
 
   const initialFormValues: ICCompanyRequest = {
     name: '',
@@ -32,10 +32,18 @@ export const CompanySettingPage: FunctionComponent = () => {
     identification: '',
   };
   const { t } = useTranslation();
+
   useEffect(() => {
     document.title = t('p_setting');
-    loadCompanies();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      loadCompanies();
+    }
+  }, [selectedCompany, location]);
 
   const loadCompanies = async () => {
     const [responseGeneral, responseList] = await Promise.all([
@@ -57,25 +65,21 @@ export const CompanySettingPage: FunctionComponent = () => {
     resetForm(true, true, company);
   };
 
-  // const handleAdd = () => {
-  //   resetForm(!showForm.value);
-  // };
-
   const resetForm = (
     show: boolean = false,
     isEdit: boolean = false,
     company: ICompanyResponse | null = null
   ) => {
-    selectedCompany.value = company;
+    _selectedCompany.value = company;
     isEditing.value = isEdit;
     showForm.value = show;
   };
 
   const onSubmit = async (values: ICCompanyRequest | IUCompanyRequest) => {
     let response;
-    if (isEditing && selectedCompany.value) {
+    if (isEditing && _selectedCompany.value) {
       response = await CompanyService.updateCompany(
-        selectedCompany.value.id,
+        _selectedCompany.value.id,
         values as IUCompanyRequest
       );
     } else {
@@ -104,17 +108,18 @@ export const CompanySettingPage: FunctionComponent = () => {
             <Form<ICCompanyRequest | IUCompanyRequest>
               onSubmit={onSubmit}
               initialValues={
-                selectedCompany.value
+                _selectedCompany.value
                   ? {
-                      name: selectedCompany.value?.name,
-                      description: selectedCompany.value?.description,
-                      address: selectedCompany.value?.address || '',
+                      name: _selectedCompany.value?.name,
+                      description: _selectedCompany.value?.description,
+                      address: _selectedCompany.value?.address || '',
                       identification:
-                        selectedCompany.value?.identification || '',
+                        _selectedCompany.value?.identification || '',
                     }
                   : initialFormValues
               }
               validate={(values) => {
+                // TODO: Traducir errores en i18n validations using underscore
                 const errors: Partial<ICCompanyRequest> = {};
                 if (!values.name || values.name.length < 4)
                   errors.name = 'Nombre requerido (mínimo 4 caracteres)';

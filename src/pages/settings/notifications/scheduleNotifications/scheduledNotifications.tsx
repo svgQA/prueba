@@ -12,6 +12,7 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { SchedulerService } from '@/services/notification/schedule';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
@@ -20,8 +21,15 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_programmed');
-    fetchNotifications();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchNotifications();
+    }
+  }, [selectedCompany, location]);
 
   const fetchNotifications = async () => {
     loading.value = true;

@@ -12,6 +12,7 @@ import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useLocation } from 'wouter';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 interface IFormData {
   userId: IOption;
@@ -24,9 +25,13 @@ export const UserPasswordPage: FunctionComponent = () => {
   const users = useSignal<IOption[]>([]);
   const [_, navigate] = useLocation();
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    getUsers();
-  }, []);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getUsers();
+    }
+  }, [selectedCompany, location]);
 
   const onSubmit = async (values: IFormData) => {
     if (

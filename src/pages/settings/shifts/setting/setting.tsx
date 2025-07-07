@@ -11,6 +11,7 @@ import { IShiftSetting } from '@/types/settings';
 import { ModuleService } from '@/services';
 import { StatusButton } from '../../components/custom.button';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export const ShiftSettingPage: FunctionComponent = () => {
   const settingsIds = useSignal<{ shift: number }>({ shift: 0 });
@@ -33,8 +34,15 @@ export const ShiftSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_setting');
-    getSettings();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getSettings();
+    }
+  }, [selectedCompany, location]);
 
   const getSettings = async () => {
     const response = await ModuleService.getShiftSetting();
