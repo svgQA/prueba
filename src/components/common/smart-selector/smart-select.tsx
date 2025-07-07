@@ -16,7 +16,7 @@ const ALL_OPTION: IOption = {
   value: 0,
 };
 
-interface SmartSelectorProps<T = IOption> {
+interface Props<T = IOption> {
   name: string;
   options: IOption[];
   multiple?: boolean;
@@ -57,7 +57,7 @@ export function SmartSelector<T = IOption>({
   buttonIcon = '123',
   buttonType = 'button',
   button = false,
-}: SmartSelectorProps<T>) {
+}: Props<T>) {
   const { t } = useTranslation();
   const { input } = useField<IOption[] | IOption | string>(name);
   const wrapperRef = useRef<HTMLDivElement>(null);
