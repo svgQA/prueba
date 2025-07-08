@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DateUtils } from '@/utils/utilities/dates';
 import ShowFiles from '@/components/common/file/show.file';
 import { useTranslation } from 'react-i18next';
+import { TaskCard } from '@/pages/settings/shifts/task/create/task.card';
 
 export interface IReport {
   id: number;
@@ -19,6 +20,7 @@ export interface IReport {
     title: string;
     category: string;
   };
+  task?: any;
 }
 
 interface ReportInfoProps {
@@ -42,15 +44,16 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
   };
 
   return (
-    <div className='rounded-lg p-4 w-full'>
+    <div className='rounded-lg  w-full'>
       {/* Header */}
-      <div className='flex items-center justify-between pb-2 mb-4'>
-        <h2 className='text-base font-medium'>{t('h_report')}</h2>
-        <span className='bg-cyan-100 text-cyan-800 text-xs font-semibold px-3 py-1 rounded-full'>
-          {reports.length}{' '}
-          {reports.length === 1 ? t('h_report') : `${t('h_report')}s`}
-        </span>
+      <div className='relative'>
+        <div className='absolute right-0'>
+          <span className='bg-cyan-100 text-cyan-800 text-xs font-semibold px-3 py-1 rounded-full'>
+            {reports.length} {reports.length === 1 ? t('h_report') : `${t('h_report')}s`}
+          </span>
+        </div>
       </div>
+
 
       <div className='divide-y divide-gray-200'>
         {reports.map((report) => {
@@ -61,9 +64,9 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
           const requestDate = report.requestDate
             ? DateUtils.dateToFrontend(report.requestDate, {
-                time: true,
-                format: 'DD/MM/YYYY HH:mm',
-              })
+              time: true,
+              format: 'DD/MM/YYYY HH:mm',
+            })
             : '—';
           const receivedDate = DateUtils.dateToFrontend(report.createdAt, {
             time: true,
@@ -78,107 +81,108 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
           const hasForm = !!report.form;
           const showToggle = hasAttachments || hasForm;
           const isExpanded = expandedId === report.id;
-
           const buttonLabel = isExpanded ? t('hide') : t('show');
 
           return (
             <React.Fragment key={report.id}>
-              <div className='grid grid-cols-12 gap-x-4 items-center py-3 text-sm'>
-                {/* Estado */}
-                <div className='col-span-2 flex items-center space-x-2'>
-                  <span
-                    className={`vox-icon ${statusIcon} ${statusColor}`}
-                  ></span>
-                  <p className={`${statusColor} font-medium`}>{statusLabel}</p>
-                </div>
+              <div className='w-full overflow-x-auto'>
+                <div className='min-w-[1000px] grid grid-cols-12 gap-x-2 items-center py-2 text-sm'>
+                  {/* Estado */}
+                  <div className='col-span-2 flex items-center space-x-2'>
+                    <span className={`vox-icon ${statusIcon} ${statusColor}`}></span>
+                    <p className={`${statusColor} font-medium`}>{statusLabel}</p>
+                  </div>
 
-                {/* Fechas */}
-                <div className='col-span-3 space-y-0.5'>
-                  {isRequested && (
-                    <>
-                      <p className='leading-tight'>
-                        <span className='font-semibold'>{t('requested')}:</span>{' '}
-                        {requestDate}
-                      </p>
-                      <p className='leading-tight'>
-                        <span className='font-semibold'>{t('received')}:</span>{' '}
-                        {receivedDate}
-                      </p>
-                    </>
-                  )}
-                  <p className='leading-tight'>
-                    <span className='font-semibold'>{t('h_report')}:</span>{' '}
-                    {updatedDate}
-                  </p>
-                </div>
+                  {/* Fechas */}
+                  <div className='col-span-3 space-y-0.5'>
+                    {isRequested && (
+                      <>
+                        <p className='leading-tight'>
+                          <span className='font-semibold'>{t('requested')}:</span> {requestDate}
+                        </p>
+                        <p className='leading-tight'>
+                          <span className='font-semibold'>{t('received')}:</span> {receivedDate}
+                        </p>
+                      </>
+                    )}
+                    <p className='leading-tight'>
+                      <span className='font-semibold'>{t('h_report')}:</span> {updatedDate}
+                    </p>
+                  </div>
 
-                {/* Tipo (titulo o archivos) */}
-                <div className='col-span-2'>
-                  {hasAttachments ? (
-                    <div className='flex items-center bg-cyan-100 text-cyan-800 text-xs font-medium px-2 py-1 rounded-full w-12'>
-                      <span className='vox-icon vx-icon-006 mr-1'></span>
-                      {report.resource.length}
+                  {/* Archivos o formulario */}
+                  <div className='col-span-2'>
+                    {hasAttachments ? (
+                      <div className='flex items-center bg-cyan-100 text-cyan-800 text-xs font-medium px-2 py-1 rounded-full w-12'>
+                        <span className='vox-icon vx-icon-006 mr-1'></span>
+                        {report.resource.length}
+                      </div>
+                    ) : hasForm ? (
+                      <p className='text-sm'>
+                        <span className='font-semibold'>{t('h_title')}:</span>{' '}
+                        {report.form?.title}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  {/* Descripción */}
+                  <div className='col-span-2'>
+                    <p className='truncate leading-tight'>{report.description}</p>
+                  </div>
+
+                  {/* Tarea */}
+                  <div className='col-span-2'>
+                    {report.task && <TaskCard task={report.task} />}
+                  </div>
+
+                  {/* Botón */}
+                  {showToggle && (
+                    <div className='col-span-1 text-right'>
+                      <button
+                        onClick={() => toggleDetails(report)}
+                        className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
+                      >
+                        {buttonLabel}
+                        <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
+                      </button>
                     </div>
-                  ) : hasForm ? (
+                  )}
+                </div>
+
+                {/* Archivos */}
+                {isExpanded && hasAttachments && (
+                  <div className='p-4 bg-gray-50'>
+                    <ShowFiles resources={report.resource} />
+                  </div>
+                )}
+
+                {/* Formulario */}
+                {isExpanded && !hasAttachments && hasForm && (
+                  <div className='p-4 bg-gray-50 grid grid-cols-4 items-center gap-x-4'>
                     <p className='text-sm'>
                       <span className='font-semibold'>{t('h_title')}:</span>{' '}
                       {report.form?.title}
                     </p>
-                  ) : null}
-                </div>
-
-                {/* Descripción */}
-                <div className='col-span-3'>
-                  <p className='truncate leading-tight'>{report.description}</p>
-                </div>
-
-                {/* Botón ver/ocultar */}
-                {showToggle && (
-                  <div className='col-span-2 text-right'>
-                    <button
-                      onClick={() => toggleDetails(report)}
-                      className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
-                    >
-                      {buttonLabel}
-                      <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
-                    </button>
+                    <p className='text-sm'>
+                      <span className='font-semibold'>{t('h_category')}:</span>{' '}
+                      {report.form?.category ?? `No ${t('h_category')}`}
+                    </p>
+                    <p className='text-sm'>
+                      <span className='font-semibold'>{t('description')}:</span>{' '}
+                      {report.form?.description}
+                    </p>
+                    <div className='text-right'>
+                      <button
+                        onClick={() => toggleDetails(report)}
+                        className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
+                      >
+                        {t('show')}
+                        <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
-
-              {/* Detalle expandido: archivos */}
-              {isExpanded && hasAttachments && (
-                <div className='p-4 bg-gray-50'>
-                  <ShowFiles resources={report.resource} />
-                </div>
-              )}
-
-              {/* Detalle expandido: formulario */}
-              {isExpanded && !hasAttachments && hasForm && (
-                <div className='p-4 bg-gray-50 grid grid-cols-4 items-center gap-x-4'>
-                  <p className='text-sm'>
-                    <span className='font-semibold'>{t('h_title')}:</span>{' '}
-                    {report.form?.title}
-                  </p>
-                  <p className='text-sm'>
-                    <span className='font-semibold'>{t('h_category')}:</span>{' '}
-                    {report.form?.category ?? `No ${t('h_category')}`}
-                  </p>
-                  <p className='text-sm'>
-                    <span className='font-semibold'>{t('description')}:</span>{' '}
-                    {report.form?.description}
-                  </p>
-                  <div className='text-right'>
-                    <button
-                      onClick={() => toggleDetails(report)}
-                      className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
-                    >
-                      {t('show')}
-                      <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
-                    </button>
-                  </div>
-                </div>
-              )}
             </React.Fragment>
           );
         })}
