@@ -277,7 +277,7 @@ export const ManualNotificationForm = ({
                   placeholder='Selecciona una plantilla'
                   label='Plantilla'
                   onChange={(value?: IOption) => {
-                    infoTemplate(value);
+                    if (value) infoTemplate(value);
                   }}
                 />
               )}
@@ -291,7 +291,7 @@ export const ManualNotificationForm = ({
             taskList={tasksResponse.value}
             disabled={templateSelected ? true : false}
           />
-          
+
           <div className='flex flex-col gap-2'>
             <Field<string>
               name='title'

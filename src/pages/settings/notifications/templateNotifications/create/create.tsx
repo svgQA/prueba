@@ -19,7 +19,7 @@ export const TemplateCreateForm = () => {
   const [useTasks, _setUseTasks] = useState(false);
   const [forms, setForms] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, _setLoading] = useState(false);
   const [_, navigate] = useLocation();
 
   const redirectToList = () => {
