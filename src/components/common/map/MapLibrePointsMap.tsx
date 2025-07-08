@@ -40,7 +40,7 @@ export const MapLibrePointsMap = ({
     lat: '',
     lng: '',
   });
-  const [editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({
+  const [_editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({
     lat: '',
     lng: '',
   });

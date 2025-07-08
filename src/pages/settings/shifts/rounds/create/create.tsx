@@ -74,10 +74,17 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     forms.value = response.getMany();
   };
 
+  let lastPointsSerialized = JSON.stringify([]);
+
   const sendPointsRef = (data: any) => {
+    const serialized = JSON.stringify(data);
+    if (serialized === lastPointsSerialized) return; // Solo actualiza si realmente cambió
+
+    points.value = data;
+    lastPointsSerialized = serialized;
+
     if (!data.length) return;
     const { lat, lng } = data[0].position;
-    points.value = data;
     currentLocation.value = { lat, lng };
     return { lat, lng };
   };
