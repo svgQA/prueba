@@ -34,9 +34,11 @@ export class DateUtils {
    * @returns ISO string en UTC: 'YYYY-MM-DDTHH:mm:00.000Z'
    */
   static createDateFromHour(
-    hourString: string = '00:00',
+    hourString: string = '1970-01-01T24:00:00.000Z',
     back = false
   ): string {
+    if(!hourString)
+      return "23:59";
     const timeOnlyMatch = hourString.match(/T(\d{2}:\d{2}(?::\d{2})?)/);
     const timeOnly = timeOnlyMatch ? timeOnlyMatch[1] : hourString;
     const [hour, minute, second = '0'] = timeOnly.split(':').map(Number);

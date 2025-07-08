@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'preact/hooks';
-import { TemplateService } from '@/services/notification/template';
 import { IOption } from '@/components/common/multi/interface';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/common/button/button';
@@ -11,10 +10,11 @@ import { Form, Field } from 'react-final-form';
 import { useSignal } from '@preact/signals';
 import { lengthSize } from '@/utils/utilities';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { NotificationService, TaskService } from '@/services';
+import { NotificationService, TaskService, TemplateService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
+import { _onTaskAddWithId } from '@/pages/settings/shifts/task/create/utils';
 
 interface Props {
   users?: any[];
@@ -139,8 +139,22 @@ export const ManualNotificationForm = ({
   }, []);
 
   const onTaskAdd = (model: any) => {
-    tasksResponse.value = [...tasksResponse.value, model];
+    if (Array.isArray(model)) {
+      tasksResponse.value = [...tasksResponse.value, ...model];
+    } else {
+      tasksResponse.value = [...tasksResponse.value, model];
+    }
     showInlineCreate.value = false;
+  };
+
+  const infoTemplate = async (value: IOption) => {
+    setTemplateSelected(value);
+    console.log(value);
+    const responseTemplate = await TemplateService.getTemplateById(String(value.value));
+    if (!responseTemplate.getStatus()) return;
+    const model = responseTemplate.getOne();
+    const task = _onTaskAddWithId(model.tasks, 0, 2);
+    onTaskAdd(task);
   };
 
   return (
@@ -263,7 +277,7 @@ export const ManualNotificationForm = ({
                   placeholder='Selecciona una plantilla'
                   label='Plantilla'
                   onChange={(value?: IOption) => {
-                    setTemplateSelected(value);
+                    infoTemplate(value);
                   }}
                 />
               )}
@@ -275,37 +289,36 @@ export const ManualNotificationForm = ({
             add
             selector
             taskList={tasksResponse.value}
+            disabled={templateSelected ? true : false}
           />
-
-          {!templateSelected && (
-            <div className='flex flex-col gap-2'>
-              <Field<string>
-                name='title'
-                validate={lengthSize(5, 50)}
-                render={({ input, meta }) => (
-                  <Input
-                    {...input}
-                    label={t('shifts.notifications.customTitle')}
-                    meta={meta}
-                    type='text'
-                  />
-                )}
-              />
-              <Field<string>
-                name='description'
-                validate={lengthSize(5, 200)}
-                render={({ input, meta }) => (
-                  <TextArea
-                    {...input}
-                    name='input-custom-description'
-                    label={t('shifts.notifications.customDescription')}
-                    meta={meta}
-                    type='text'
-                  />
-                )}
-              />
-            </div>
-          )}
+          
+          <div className='flex flex-col gap-2'>
+            <Field<string>
+              name='title'
+              validate={lengthSize(5, 50)}
+              render={({ input, meta }) => (
+                <Input
+                  {...input}
+                  label={t('shifts.notifications.customTitle')}
+                  meta={meta}
+                  type='text'
+                />
+              )}
+            />
+            <Field<string>
+              name='description'
+              validate={lengthSize(5, 200)}
+              render={({ input, meta }) => (
+                <TextArea
+                  {...input}
+                  name='input-custom-description'
+                  label={t('shifts.notifications.customDescription')}
+                  meta={meta}
+                  type='text'
+                />
+              )}
+            />
+          </div>
 
           <div className='flex justify-end'>
             <Button

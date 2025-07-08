@@ -24,6 +24,8 @@ interface Props {
   selector?: boolean;
   append?: boolean;
   onDelete?: (id: string) => void;
+  type?: 'REPORT' | 'GENERAL';
+  disabled?: boolean;
 }
 
 export const TaskFormCreate = ({
@@ -37,6 +39,8 @@ export const TaskFormCreate = ({
   forms,
   append = false,
   onDelete,
+  type,
+  disabled = false
 }: Props) => {
   const { selectedCompany } = useUserStore();
   const onAppend = useSignal<boolean>(append);
@@ -76,6 +80,7 @@ export const TaskFormCreate = ({
   const onChange = (value: any, form?: any) => {
     if (!value) return;
     let _task: ITask | undefined = undefined;
+    console.log(value.hourStart);
     if (form) {
       _task = {
         id: value.id,
@@ -90,6 +95,7 @@ export const TaskFormCreate = ({
       // TODO: esta mierda no me gusta.
       const find = tasks.value.find((task) => task.id === value.value);
       if (!find) return;
+      console.log(find.hourStart);
       _task = {
         id: find.id,
         name: find.name,
@@ -117,6 +123,11 @@ export const TaskFormCreate = ({
     }
   };
 
+  const filteredTasks = tasks.value.filter((t) =>
+    type ? t.type === type : true
+  );
+
+
   return (
     <>
       <div className={className} onClick={eventDelete}>
@@ -143,17 +154,17 @@ export const TaskFormCreate = ({
                     button
                     buttonIcon='219'
                     icon='086'
-                    options={[
-                      ...tasks.value.map((e: any) => ({
-                        value: e.id,
-                        label: e.description,
-                      })),
-                    ]}
+                    options={filteredTasks.map((e) => ({
+                      value: e.id ?? '',
+                      label: e.description ?? 'Sin descripción',
+                    }))}                    
                     menuPortalTarget={document.body}
                     onClick={onToggleTask}
                     onChange={onChange}
+                    disabled={disabled}
                   />
                 )}
+
                 {onAppend.value && (
                   <div
                     className={`flex flex-col justify-center ${divisor ? 'border-t dark:border-t-light-dark py-2' : ''}`}
