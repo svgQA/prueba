@@ -304,6 +304,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     files.value = files.value.filter((file) => file.uuid !== uuid);
   };
 
+  const getDurationInMinutes = (start: string | Date, end: string | Date) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const diffMs = endDate.getTime() - startDate.getTime();
+    const diffMinutes = Math.floor(diffMs / 60000); // 1 minuto = 60,000 ms
+    return diffMinutes;
+  };
+
   const messageInput = () => {
     return (
       <div
@@ -311,6 +319,17 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       >
         <Form
           onSubmit={handleSubmitMessage}
+          initialValues={{
+            date: DateUtils.dateToFrontend(new Date(), { format: 'DD/MM/YYYY HH:mm' }),
+            duration: (memos.value.length > 0 && memos.value[memos.value.length - 1]?.createdAt && memo.updatedAt)
+              ? getDurationInMinutes(
+                  memos.value[memos.value.length - 1].createdAt as Date | string,
+                  memo.updatedAt
+                )
+              : (memo.createdAt && memo.updatedAt
+                ? getDurationInMinutes(memo.createdAt, memo.updatedAt)
+                : null),
+          }}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit} id='form-message-memo'>
               <div className='flex-1'>
