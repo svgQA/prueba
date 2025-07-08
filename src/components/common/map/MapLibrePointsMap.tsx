@@ -26,7 +26,7 @@ export const MapLibrePointsMap = ({
   draggable = true,
   width = '100%',
   height = '500px',
-  clickPoint = () => {},
+  clickPoint = () => { },
   radius,
   disablePointSelection = false,
   adminUser = false,
@@ -44,6 +44,7 @@ export const MapLibrePointsMap = ({
     lat: '',
     lng: '',
   });
+  const editCoordsRef = useRef<{ lat: string; lng: string }>({ lat: '', lng: '' });
   const [isMapReady, setIsMapReady] = useState(false);
   // const [activeMarker, setActiveMarker] = useState<number | null>(null);
   const [activePopup, setActivePopup] = useState<maplibregl.Popup | null>(null);
@@ -140,8 +141,8 @@ export const MapLibrePointsMap = ({
   }, [pointsRef, isMapReady]);
 
   // Update markers and send points to parent
-   // Update markers and send points to parent
-   useEffect(() => {
+  // Update markers and send points to parent
+  useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
 
     // Always update markers when points change
@@ -241,9 +242,9 @@ export const MapLibrePointsMap = ({
     const a =
       Math.sin(latDiffRad / 2) * Math.sin(latDiffRad / 2) +
       Math.cos(lat1Rad) *
-        Math.cos(lat2Rad) *
-        Math.sin(lngDiffRad / 2) *
-        Math.sin(lngDiffRad / 2);
+      Math.cos(lat2Rad) *
+      Math.sin(lngDiffRad / 2) *
+      Math.sin(lngDiffRad / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = earthRadius * c;
     return distance > 1000;
@@ -336,6 +337,7 @@ export const MapLibrePointsMap = ({
       activePopup.remove();
       setActivePopup(null);
     }
+    setIsMarkerClick(false);
     // setActiveMarker(null);
   }, [activePopup]);
 
@@ -521,6 +523,10 @@ export const MapLibrePointsMap = ({
       lat: point.position.lat.toString(),
       lng: point.position.lng.toString(),
     });
+    editCoordsRef.current = {
+      lat: point.position.lat.toString(),
+      lng: point.position.lng.toString(),
+    };
     clickPoint?.(point);
 
     const popupNode = document.createElement('div');
@@ -535,10 +541,9 @@ export const MapLibrePointsMap = ({
           <label class="text-sm mb-1 mt-2">Longitude</label>
           <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>
-        ${
-          disablePointSelection
-            ? ''
-            : `
+        ${disablePointSelection
+        ? ''
+        : `
           <div class="flex justify-between mt-2">
             <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
               Delete
@@ -546,18 +551,17 @@ export const MapLibrePointsMap = ({
             <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
               Update
             </button>
-            ${
-              id === -1
-                ? `
+            ${id === -1
+          ? `
             <button id="btn-restore" class="bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-2 rounded">
               Restore Location
             </button>
             `
-                : ''
-            }
+          : ''
+        }
           </div>
           `
-        }
+      }
       </div>
     `;
 
@@ -584,17 +588,21 @@ export const MapLibrePointsMap = ({
     const restoreButton = popupNode.querySelector('#btn-restore');
 
     editLatInput.addEventListener('input', (e) => {
+      const value = (e.target as HTMLInputElement).value;
       setEditCoords((prev) => ({
         ...prev,
-        lat: (e.target as HTMLInputElement).value,
+        lat: value,
       }));
+      editCoordsRef.current.lat = value;
     });
 
     editLngInput.addEventListener('input', (e) => {
+      const value = (e.target as HTMLInputElement).value;
       setEditCoords((prev) => ({
         ...prev,
-        lng: (e.target as HTMLInputElement).value,
+        lng: value,
       }));
+      editCoordsRef.current.lng = value;
     });
 
     if (deleteButton) {
@@ -671,13 +679,14 @@ export const MapLibrePointsMap = ({
     });
 
     closeActivePopup();
+    setIsMarkerClick(false);
   };
 
   // Edit marker coordinates by ID
   const editMarkerById = (id: number): void => {
     // Permitir tanto punto como coma como separador decimal
-    const latStr = editCoords.lat.replace(',', '.');
-    const lngStr = editCoords.lng.replace(',', '.');
+    const latStr = editCoordsRef.current.lat.replace(',', '.');
+    const lngStr = editCoordsRef.current.lng.replace(',', '.');
     const newLat = Number.parseFloat(latStr);
     const newLng = Number.parseFloat(lngStr);
 
@@ -688,20 +697,40 @@ export const MapLibrePointsMap = ({
     }
 
     // Validar rango de latitud y longitud
-    // if (newLat < -90 || newLat > 90 || newLng < -180 || newLng > 180) {
-    //   ToastManager.error(t('maps.connect.error_point'));
-    //   return;
-    // }
+    if (newLat < -90 || newLat > 90 || newLng < -180 || newLng > 180) {
+      ToastManager.error(t('maps.connect.error_point'));
+      return;
+    }
 
-    setPoints((prevPoints) =>
+    // Si es el punto del usuario (admin), actualizar userLocation
+    if (id === -1) {
+      setUserLocation((prev) => ({
+        ...prev!,
+        position: { lat: newLat, lng: newLng },
+      }));
+    } else {
+      // Para puntos normales
+      setPoints((prevPoints) =>
+        prevPoints.map((point) =>
+          point.id === id
+            ? { ...point, position: { lat: newLat, lng: newLng } }
+            : point
+        )
+      );
+    }
+
+    /**
+     setPoints((prevPoints) =>
       prevPoints.map((point) =>
         point.id === id
           ? { ...point, position: { lat: newLat, lng: newLng } }
           : point
       )
     );
+     */
 
     closeActivePopup();
+    setIsMarkerClick(false);
     ToastManager.success(t('maps.connect.success_point'));
   };
 
