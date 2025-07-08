@@ -1,13 +1,13 @@
 import { useRef, useState, useEffect } from 'preact/hooks';
 import { FloatBadge } from '../badge/float';
 import { Button } from '../button/button';
-import { INotification, INotificationsProps } from './interface';
+import { INotification, INotificationsProps } from './utils/interface';
 import { useLocation } from 'wouter';
 import { localStorage } from '@/utils/storage';
 import { EventBus } from '@/utils/network/event.bus';
 import { IBaseSSE, SSE_TYPE } from '@/utils/network/sse/base';
 import { SIDEBAR_MENUS } from '@/utils/menus/sidebar';
-import ExpanderNotification from './expander.notification';
+import ExpanderNotification from './components/expander.notification';
 import { useSignal } from '@preact/signals';
 import { Badge } from '../badge/badge';
 
@@ -40,11 +40,12 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
 
     let newNotification = {
       id: String(notifications.length + 1),
+      id_message: message?.id,
       label: type,
       value: message,
       status: notification,
       icon: SIDEBAR_MENUS.find((menu) => menu.label === type)?.icon,
-      redirect: SIDEBAR_MENUS.find((menu) => menu.label === type)?.to,
+      redirect: SIDEBAR_MENUS.find((menu) => menu.id === type)?.to,
     };
 
     setNotifications((prevNotifications) => {
@@ -122,18 +123,14 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
       }
 
       // Emit custom event for notification click
-      if (info.id) {
+      if (info.id_message) {
         const event = new CustomEvent('notification-click', {
-          detail: { id: info.id },
+          detail: { id: info.id_message },
         });
         window.dispatchEvent(event);
       }
 
-      // Añadir el ID como parámetro de consulta si existe
-      const redirectUrl = info.id
-        ? `${info.redirect}?notificationId=${info.id}`
-        : info.redirect;
-      navigate(redirectUrl);
+      navigate(info.id_message ? `${info.redirect}?notificationId=${info.id_message}` : info.redirect);
       isOpen.value = false;
     }
   };
@@ -174,7 +171,7 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
       </FloatBadge>
       <ExpanderNotification isOpen={isOpen.value}>
         {allNotifications.length > 0 ? (
-          allNotifications.map((notification) => (
+          allNotifications.map((notification: any) => (
             <div
               key={notification.value}
               className='px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-between gap-2'
