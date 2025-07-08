@@ -53,6 +53,8 @@ export const MapLibrePointsMap = ({
   const watchIdRef = useRef<number | null>(null);
   const { t } = useTranslation();
   const lastSentPointsRef = useRef<string>(JSON.stringify([]));
+  // Agregar ref para detectar interacción del usuario
+  const userInteractedRef = useRef(false);
 
   // Map style configuration
   /*
@@ -102,6 +104,14 @@ export const MapLibrePointsMap = ({
     });
 
     const map = mapRef.current;
+
+    // Listeners para detectar interacción del usuario
+    map.on('zoomstart', () => {
+      userInteractedRef.current = true;
+    });
+    map.on('dragstart', () => {
+      userInteractedRef.current = true;
+    });
 
     // Wait for the map to be fully loaded
     map.on('load', () => {
@@ -157,33 +167,40 @@ export const MapLibrePointsMap = ({
       lastSentPointsRef.current = filteredPointsStr;
     }
 
-    // Ajustar el zoom para mostrar todos los puntos
-    if (points.length > 0) {
-      const bounds = new maplibregl.LngLatBounds();
+    // Ajustar el zoom para mostrar todos los puntos SOLO si el usuario NO ha interactuado
+    if (!userInteractedRef.current) {
+      if (points.length > 0) {
+        const bounds = new maplibregl.LngLatBounds();
 
-      // Agregar todos los puntos al bounds
-      points.forEach((point) => {
-        bounds.extend([point.position.lng, point.position.lat]);
-      });
+        // Agregar todos los puntos al bounds
+        points.forEach((point) => {
+          bounds.extend([point.position.lng, point.position.lat]);
+        });
 
-      // Si hay un punto radial, incluirlo también
-      if (radialPoint) {
-        bounds.extend([radialPoint.position.lng, radialPoint.position.lat]);
+        // Si hay un punto radial, incluirlo también
+        if (radialPoint) {
+          bounds.extend([radialPoint.position.lng, radialPoint.position.lat]);
+        }
+
+        // Si hay ubicación del usuario, incluirla también
+        if (userLocation) {
+          bounds.extend([userLocation.position.lng, userLocation.position.lat]);
+        }
+        // Ajustar el mapa para mostrar todos los puntos con un padding
+        mapRef.current.fitBounds(bounds, {
+          padding: 50,
+          maxZoom: 12, //15
+          duration: 1000,
+        });
+      } else {
+        mapRef.current.setCenter([center.lng, center.lat]);
+        mapRef.current.setZoom(12);
       }
+    }
 
-      // Si hay ubicación del usuario, incluirla también
-      if (userLocation) {
-        bounds.extend([userLocation.position.lng, userLocation.position.lat]);
-      }
-      // Ajustar el mapa para mostrar todos los puntos con un padding
-      mapRef.current.fitBounds(bounds, {
-        padding: 50,
-        maxZoom: 12, //15
-        duration: 1000,
-      });
-    } else {
-      mapRef.current.setCenter([center.lng, center.lat]);
-      mapRef.current.setZoom(12);
+    // Si se limpian todos los puntos, reiniciar el flag para permitir autoajuste la próxima vez
+    if (points.length === 0) {
+      userInteractedRef.current = false;
     }
   }, [points, isMapReady]);
 
