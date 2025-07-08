@@ -96,14 +96,6 @@ export const ManualNotificationForm = ({
 
   const handleSubmit = async (values: any) => {
     if (!hasplayers) return;
-
-    const output = {
-      ...values,
-      tasks: tasksResponse.value,
-    };
-
-    // JAIDER: Este es el objeto para enviar a backend
-    console.log(output);
     /*
      * const result = await NotificationService.sendManualNotification(output);
      * if (!result.getStatus()) return;
@@ -119,11 +111,14 @@ export const ManualNotificationForm = ({
         values.task?.value && { taskId: Number(values.task.value) }),
       overrideTitle: values.title,
       overrideDescription: values.description,
+      tasks: tasksResponse.value,
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
+
+    console.log(payload);
     const result = await NotificationService.sendManualNotification(payload);
 
     if (!result.getStatus()) return;
