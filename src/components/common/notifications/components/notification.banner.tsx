@@ -1,6 +1,6 @@
 import { useState, useImperativeHandle } from 'preact/hooks';
 import { forwardRef } from 'preact/compat';
-import { FloatBadge } from '../badge/float';
+import { FloatBadge } from '../../badge/float';
 import { useTranslation } from 'react-i18next';
 
 interface INotificationBannerProps {
