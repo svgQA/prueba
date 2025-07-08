@@ -26,6 +26,7 @@ import {
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useNavigation } from '@/utils/utilities/navigation';
+import { HelpTooltip } from '@/components/common/help-tooltip';
 
 interface IPoint {
   latitude: number;
@@ -98,14 +99,14 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         }) => {
           const model = point.tasks
             ? {
-                latitude: point.position.lat,
-                longitude: point.position.lng,
-                task: point.tasks,
-              }
+              latitude: point.position.lat,
+              longitude: point.position.lng,
+              task: point.tasks,
+            }
             : {
-                latitude: point.position.lat,
-                longitude: point.position.lng,
-              };
+              latitude: point.position.lat,
+              longitude: point.position.lng,
+            };
           return model;
         }
       );
@@ -241,6 +242,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
                 <div className='grid grid-cols-2 gap-4'>
                   <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Frecuencia</label>
+                      <HelpTooltip 
+                        title="Frecuencia" 
+                        content="La frecuencia determina cada cuántos días se debe realizar esta ronda. Por ejemplo: 1 = diario, 7 = semanal, 30 = mensual."
+                      />
+                    </div>
                     <Field
                       name='frequency'
                       parse={(value) => (value ? Number(value) : undefined)}
@@ -250,13 +258,20 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                           id='input-code'
                           {...input}
                           placeholder='Ingrese frecuencia...'
-                          label='frequency'
+                          label=''
                           type='number'
                         />
                       )}
                     </Field>
                   </div>
                   <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Radio</label>
+                      <HelpTooltip 
+                        title="Radio" 
+                        content="El radio define la distancia máxima (en metros) desde cada punto de la ronda donde se considera que el trabajador está en la ubicación correcta para completar las tareas."
+                      />
+                    </div>
                     <Field
                       name='radius'
                       parse={(value) => (value ? Number(value) : undefined)}
@@ -266,7 +281,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                           id='input-radius'
                           {...input}
                           placeholder='Ingrese radio...'
-                          label='radius'
+                          label=''
                           type='number'
                         />
                       )}
@@ -310,8 +325,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                                       format={(value) =>
                                         value
                                           ? dayjs(value).format(
-                                              'YYYY-MM-DD HH:mm'
-                                            )
+                                            'YYYY-MM-DD HH:mm'
+                                          )
                                           : ''
                                       }
                                     >
@@ -565,7 +580,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   draggable={true}
                   width='100%'
                   height='500px'
-                  clickPoint={() => {}}
+                  clickPoint={() => { }}
                 />
 
                 {/* Botonera */}
