@@ -69,7 +69,7 @@ export const Avatar: FunctionalComponent<AvatarProps> = ({
     );
   }
 
-  if (typeof src === 'object' && src.uuid) {
+  if (src !== null && typeof src === 'object' && src.uuid) {
     return (
       <img
         src={getUrl(src)}

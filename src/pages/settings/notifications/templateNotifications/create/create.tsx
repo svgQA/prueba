@@ -19,7 +19,7 @@ export const TemplateCreateForm = () => {
   const [useTasks, _setUseTasks] = useState(false);
   const [forms, setForms] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, _setLoading] = useState(false);
   const [_, navigate] = useLocation();
 
   const redirectToList = () => {
@@ -36,48 +36,20 @@ export const TemplateCreateForm = () => {
   const handleSubmit = async (values: any) => {
     const output = {
       ...values,
-      tasks: tasksResponse.value,
+      tasks: Array.isArray(tasksResponse.value) ? tasksResponse.value : [],
     };
-
-    // JAIDER: Este es el objeto para enviar a backend
-    console.log(output);
-    /*
-     * const result = await TemplateService.createTemplate(output);
-     * if (!result.getStatus()) return;
-     * ToastManager.success('s_send_success');
-     * onClose?.();
-     */
-
-    /* DELETE: Posibllemente eliminar esto */
-    const { title, description, formId, taskSelector } = values;
-
-    if (!title?.trim() || !description?.trim()) {
-      ToastManager.warning('s_title_and_sub_required');
+  
+    console.log('🟢 Payload para backend:', output);
+  
+    const result = await TemplateService.createTemplate(output);
+    if (!result.getStatus()) {
+      ToastManager.error('s_created_error');
       return;
     }
-
-    const payload: any = {
-      title: title.trim(),
-      description: description.trim(),
-      data: {},
-    };
-
-    if (useForm && formId) payload.data.formId = formId;
-    if (useTasks && taskSelector?.value)
-      payload.data.taskId = taskSelector.value;
-
-    setLoading(true);
-    const res = await TemplateService.createTemplate(payload);
-    setLoading(false);
-
-    if (res.getStatus()) {
-      ToastManager.success('s_created_success');
-      redirectToList();
-    } else {
-      ToastManager.error('s_deleted_error');
-    }
-    /* DELETE: Posibllemente eliminar esto */
+  
+    ToastManager.success('s_send_success');
   };
+  
   useEffect(() => {
     const fetchForms = async () => {
       const res = await FormService.getSimpleList();
@@ -132,6 +104,7 @@ export const TemplateCreateForm = () => {
                 taskList={tasksResponse.value}
                 add
                 selector
+                type='REPORT'
               />
             </div>
 
