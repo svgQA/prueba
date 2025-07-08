@@ -26,7 +26,7 @@ export const MapLibrePointsMap = ({
   draggable = true,
   width = '100%',
   height = '500px',
-  clickPoint = () => {},
+  clickPoint = () => { },
   radius,
   disablePointSelection = false,
   adminUser = false,
@@ -40,10 +40,11 @@ export const MapLibrePointsMap = ({
     lat: '',
     lng: '',
   });
-  const [editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({
+  const [_editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({
     lat: '',
     lng: '',
   });
+  const editCoordsRef = useRef<{ lat: string; lng: string }>({ lat: '', lng: '' });
   const [isMapReady, setIsMapReady] = useState(false);
   // const [activeMarker, setActiveMarker] = useState<number | null>(null);
   const [activePopup, setActivePopup] = useState<maplibregl.Popup | null>(null);
@@ -52,6 +53,8 @@ export const MapLibrePointsMap = ({
   const watchIdRef = useRef<number | null>(null);
   const { t } = useTranslation();
   const lastSentPointsRef = useRef<string>(JSON.stringify([]));
+  // Agregar ref para detectar interacción del usuario
+  const userInteractedRef = useRef(false);
 
   // Map style configuration
   /*
@@ -102,6 +105,14 @@ export const MapLibrePointsMap = ({
 
     const map = mapRef.current;
 
+    // Listeners para detectar interacción del usuario
+    map.on('zoomstart', () => {
+      userInteractedRef.current = true;
+    });
+    map.on('dragstart', () => {
+      userInteractedRef.current = true;
+    });
+
     // Wait for the map to be fully loaded
     map.on('load', () => {
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
@@ -140,8 +151,8 @@ export const MapLibrePointsMap = ({
   }, [pointsRef, isMapReady]);
 
   // Update markers and send points to parent
-   // Update markers and send points to parent
-   useEffect(() => {
+  // Update markers and send points to parent
+  useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
 
     // Always update markers when points change
@@ -156,33 +167,40 @@ export const MapLibrePointsMap = ({
       lastSentPointsRef.current = filteredPointsStr;
     }
 
-    // Ajustar el zoom para mostrar todos los puntos
-    if (points.length > 0) {
-      const bounds = new maplibregl.LngLatBounds();
+    // Ajustar el zoom para mostrar todos los puntos SOLO si el usuario NO ha interactuado
+    if (!userInteractedRef.current) {
+      if (points.length > 0) {
+        const bounds = new maplibregl.LngLatBounds();
 
-      // Agregar todos los puntos al bounds
-      points.forEach((point) => {
-        bounds.extend([point.position.lng, point.position.lat]);
-      });
+        // Agregar todos los puntos al bounds
+        points.forEach((point) => {
+          bounds.extend([point.position.lng, point.position.lat]);
+        });
 
-      // Si hay un punto radial, incluirlo también
-      if (radialPoint) {
-        bounds.extend([radialPoint.position.lng, radialPoint.position.lat]);
+        // Si hay un punto radial, incluirlo también
+        if (radialPoint) {
+          bounds.extend([radialPoint.position.lng, radialPoint.position.lat]);
+        }
+
+        // Si hay ubicación del usuario, incluirla también
+        if (userLocation) {
+          bounds.extend([userLocation.position.lng, userLocation.position.lat]);
+        }
+        // Ajustar el mapa para mostrar todos los puntos con un padding
+        mapRef.current.fitBounds(bounds, {
+          padding: 50,
+          maxZoom: 12, //15
+          duration: 1000,
+        });
+      } else {
+        mapRef.current.setCenter([center.lng, center.lat]);
+        mapRef.current.setZoom(12);
       }
+    }
 
-      // Si hay ubicación del usuario, incluirla también
-      if (userLocation) {
-        bounds.extend([userLocation.position.lng, userLocation.position.lat]);
-      }
-      // Ajustar el mapa para mostrar todos los puntos con un padding
-      mapRef.current.fitBounds(bounds, {
-        padding: 50,
-        maxZoom: 12, //15
-        duration: 1000,
-      });
-    } else {
-      mapRef.current.setCenter([center.lng, center.lat]);
-      mapRef.current.setZoom(12);
+    // Si se limpian todos los puntos, reiniciar el flag para permitir autoajuste la próxima vez
+    if (points.length === 0) {
+      userInteractedRef.current = false;
     }
   }, [points, isMapReady]);
 
@@ -241,9 +259,9 @@ export const MapLibrePointsMap = ({
     const a =
       Math.sin(latDiffRad / 2) * Math.sin(latDiffRad / 2) +
       Math.cos(lat1Rad) *
-        Math.cos(lat2Rad) *
-        Math.sin(lngDiffRad / 2) *
-        Math.sin(lngDiffRad / 2);
+      Math.cos(lat2Rad) *
+      Math.sin(lngDiffRad / 2) *
+      Math.sin(lngDiffRad / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = earthRadius * c;
     return distance > 1000;
@@ -336,6 +354,7 @@ export const MapLibrePointsMap = ({
       activePopup.remove();
       setActivePopup(null);
     }
+    setIsMarkerClick(false);
     // setActiveMarker(null);
   }, [activePopup]);
 
@@ -521,6 +540,10 @@ export const MapLibrePointsMap = ({
       lat: point.position.lat.toString(),
       lng: point.position.lng.toString(),
     });
+    editCoordsRef.current = {
+      lat: point.position.lat.toString(),
+      lng: point.position.lng.toString(),
+    };
     clickPoint?.(point);
 
     const popupNode = document.createElement('div');
@@ -535,10 +558,9 @@ export const MapLibrePointsMap = ({
           <label class="text-sm mb-1 mt-2">Longitude</label>
           <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>
-        ${
-          disablePointSelection
-            ? ''
-            : `
+        ${disablePointSelection
+        ? ''
+        : `
           <div class="flex justify-between mt-2">
             <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
               Delete
@@ -546,18 +568,17 @@ export const MapLibrePointsMap = ({
             <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
               Update
             </button>
-            ${
-              id === -1
-                ? `
+            ${id === -1
+          ? `
             <button id="btn-restore" class="bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-2 rounded">
               Restore Location
             </button>
             `
-                : ''
-            }
+          : ''
+        }
           </div>
           `
-        }
+      }
       </div>
     `;
 
@@ -584,17 +605,21 @@ export const MapLibrePointsMap = ({
     const restoreButton = popupNode.querySelector('#btn-restore');
 
     editLatInput.addEventListener('input', (e) => {
+      const value = (e.target as HTMLInputElement).value;
       setEditCoords((prev) => ({
         ...prev,
-        lat: (e.target as HTMLInputElement).value,
+        lat: value,
       }));
+      editCoordsRef.current.lat = value;
     });
 
     editLngInput.addEventListener('input', (e) => {
+      const value = (e.target as HTMLInputElement).value;
       setEditCoords((prev) => ({
         ...prev,
-        lng: (e.target as HTMLInputElement).value,
+        lng: value,
       }));
+      editCoordsRef.current.lng = value;
     });
 
     if (deleteButton) {
@@ -671,27 +696,58 @@ export const MapLibrePointsMap = ({
     });
 
     closeActivePopup();
+    setIsMarkerClick(false);
   };
 
   // Edit marker coordinates by ID
   const editMarkerById = (id: number): void => {
-    const newLat = Number.parseFloat(editCoords.lat);
-    const newLng = Number.parseFloat(editCoords.lng);
+    // Permitir tanto punto como coma como separador decimal
+    const latStr = editCoordsRef.current.lat.replace(',', '.');
+    const lngStr = editCoordsRef.current.lng.replace(',', '.');
+    const newLat = Number.parseFloat(latStr);
+    const newLng = Number.parseFloat(lngStr);
 
+    // Validar que sean números
     if (isNaN(newLat) || isNaN(newLng)) {
       ToastManager.error(t('maps.connect.error_point'));
       return;
     }
 
-    setPoints((prevPoints) =>
+    // Validar rango de latitud y longitud
+    if (newLat < -90 || newLat > 90 || newLng < -180 || newLng > 180) {
+      ToastManager.error(t('maps.connect.error_point'));
+      return;
+    }
+
+    // Si es el punto del usuario (admin), actualizar userLocation
+    if (id === -1) {
+      setUserLocation((prev) => ({
+        ...prev!,
+        position: { lat: newLat, lng: newLng },
+      }));
+    } else {
+      // Para puntos normales
+      setPoints((prevPoints) =>
+        prevPoints.map((point) =>
+          point.id === id
+            ? { ...point, position: { lat: newLat, lng: newLng } }
+            : point
+        )
+      );
+    }
+
+    /**
+     setPoints((prevPoints) =>
       prevPoints.map((point) =>
         point.id === id
           ? { ...point, position: { lat: newLat, lng: newLng } }
           : point
       )
     );
+     */
 
     closeActivePopup();
+    setIsMarkerClick(false);
     ToastManager.success(t('maps.connect.success_point'));
   };
 
