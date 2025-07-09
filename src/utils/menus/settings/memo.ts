@@ -6,6 +6,7 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
   label: 'Memo',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
+  id: 'memo:state',
   menus: [
     {
       icon: '067',
@@ -13,7 +14,7 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
       description: 'd_novelty',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.base,
-      id: 'novelty',
+      id: 'memo:novelties:state',
       show: true,
     },
     {
@@ -22,7 +23,7 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
       description: 'd_predefined',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.memo.predefined.base,
-      id: 'predefined',
+      id: 'memo:predefined:state',
       show: true,
     },
     {
@@ -31,7 +32,7 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
       description: 'd_resource',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.memo.resource.base,
-      id: 'resource',
+      id: 'memo:resources:state',
       show: true,
     },
   ],

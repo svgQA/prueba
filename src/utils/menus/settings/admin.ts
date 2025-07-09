@@ -6,6 +6,7 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
   label: 'g_admin',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: false,
+  id: 'admin:state',
   menus: [
     {
       icon: '023',
@@ -13,7 +14,7 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
       description: 'd_analytic',
       base: BASE_ADMIN,
       to: PAGES_LIST_ROUTER.dashboard.setting.admin.analytic.base,
-      id: 'analytic',
+      id: 'admin:analytic:state',
       show: false,
     },
     {
@@ -22,7 +23,7 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
       description: 'd_database',
       base: BASE_ADMIN,
       to: PAGES_LIST_ROUTER.dashboard.setting.admin.database.base,
-      id: 'database',
+      id: 'admin:database:state',
       show: false,
     },
     {
@@ -31,7 +32,7 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
       description: 'd_tenant',
       base: BASE_ADMIN,
       to: PAGES_LIST_ROUTER.dashboard.setting.admin.tenant.base,
-      id: 'tenant',
+      id: 'admin:tenant:state',
       show: false,
     },
   ],

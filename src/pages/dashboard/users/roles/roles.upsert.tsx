@@ -14,18 +14,13 @@ import { Signal, useSignal } from '@preact/signals';
 import { useEffect, useState } from 'react';
 import {
   IListModuleResponse,
+  IPermission,
   RolePermission,
 } from '@/types/role/role.response';
 import { IRoleRequest } from '@/types/role/role.request';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 
-type RawPermission = {
-  id: number;
-  name: string;
-  description: string;
-  key: string;
-  level: number;
-};
+interface RawPermission extends Omit<IPermission, 'moduleId'> {}
 
 type PermissionTree = {
   key: string;
@@ -47,8 +42,7 @@ export const RolesUpsertPage = () => {
   const initialValues: Signal<Partial<IRoleRequest>> = useSignal({});
 
   useEffect(() => {
-    getModules();
-    setInitialValues();
+    Promise.all([getModules(), setInitialValues()]);
   }, []);
 
   const setInitialValues = async () => {

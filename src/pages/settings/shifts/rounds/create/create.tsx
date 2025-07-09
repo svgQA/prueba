@@ -103,14 +103,14 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         }) => {
           const model = point.tasks
             ? {
-              latitude: point.position.lat,
-              longitude: point.position.lng,
-              task: point.tasks,
-            }
+                latitude: point.position.lat,
+                longitude: point.position.lng,
+                task: point.tasks,
+              }
             : {
-              latitude: point.position.lat,
-              longitude: point.position.lng,
-            };
+                latitude: point.position.lat,
+                longitude: point.position.lng,
+              };
           return model;
         }
       );
@@ -246,11 +246,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
                 <div className='grid grid-cols-2 gap-4'>
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Frecuencia</label>
-                      <HelpTooltip 
-                        title="Frecuencia" 
-                        content="La frecuencia determina cada cuántos días se debe realizar esta ronda. Por ejemplo: 1 = diario, 7 = semanal, 30 = mensual."
+                    <div className='flex items-center gap-2 mb-2'>
+                      <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                        Frecuencia
+                      </label>
+                      <HelpTooltip
+                        title='Frecuencia'
+                        content='La frecuencia determina cada cuántos días se debe realizar esta ronda. Por ejemplo: 1 = diario, 7 = semanal, 30 = mensual.'
                       />
                     </div>
                     <Field
@@ -269,11 +271,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                     </Field>
                   </div>
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Radio</label>
-                      <HelpTooltip 
-                        title="Radio" 
-                        content="El radio define la distancia máxima (en metros) desde cada punto de la ronda donde se considera que el trabajador está en la ubicación correcta para completar las tareas."
+                    <div className='flex items-center gap-2 mb-2'>
+                      <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                        Radio
+                      </label>
+                      <HelpTooltip
+                        title='Radio'
+                        content='El radio define la distancia máxima (en metros) desde cada punto de la ronda donde se considera que el trabajador está en la ubicación correcta para completar las tareas.'
                       />
                     </div>
                     <Field
@@ -329,8 +333,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                                       format={(value) =>
                                         value
                                           ? dayjs(value).format(
-                                            'YYYY-MM-DD HH:mm'
-                                          )
+                                              'YYYY-MM-DD HH:mm'
+                                            )
                                           : ''
                                       }
                                     >
@@ -584,7 +588,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   draggable={true}
                   width='100%'
                   height='500px'
-                  clickPoint={() => { }}
+                  clickPoint={() => {}}
                 />
 
                 {/* Botonera */}

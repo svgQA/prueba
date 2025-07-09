@@ -5,8 +5,13 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.users.base;
 export const MODAL_SETTING_USER: IModalSidebarMenu = {
   label: 'g_user',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
-  settings: PAGES_LIST_ROUTER.dashboard.setting.users.settings.to,
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.users.settings.to,
+    label: 'setting',
+    id: 'user:tools:state',
+  },
   show: true,
+  id: 'user:state',
   menus: [
     {
       icon: '142',
@@ -14,7 +19,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       description: 'd_area',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.users.areas.base,
-      id: 'areas',
+      id: 'user:areas:state',
       show: true,
     },
     {
@@ -23,7 +28,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       description: 'd_role',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.users.roles.base,
-      id: 'roles',
+      id: 'user:roles:state',
       show: true,
     },
     {
@@ -32,7 +37,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       description: 'd_grup',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.users.groups.base,
-      id: 'groups',
+      id: 'user:groups:state',
       show: false,
     },
     {
@@ -41,7 +46,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       description: 'd_password',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.users.password.base,
-      id: 'password',
+      id: 'user:password:state',
       show: true,
     },
   ],

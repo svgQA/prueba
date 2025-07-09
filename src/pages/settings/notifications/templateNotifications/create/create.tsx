@@ -38,18 +38,18 @@ export const TemplateCreateForm = () => {
       ...values,
       tasks: Array.isArray(tasksResponse.value) ? tasksResponse.value : [],
     };
-  
+
     console.log('🟢 Payload para backend:', output);
-  
+
     const result = await TemplateService.createTemplate(output);
     if (!result.getStatus()) {
       ToastManager.error('s_created_error');
       return;
     }
-  
+
     ToastManager.success('s_send_success');
   };
-  
+
   useEffect(() => {
     const fetchForms = async () => {
       const res = await FormService.getSimpleList();

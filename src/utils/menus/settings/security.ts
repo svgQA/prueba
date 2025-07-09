@@ -6,6 +6,7 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
   label: 'g_security',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
+  id: 'security:state',
   menus: [
     {
       icon: '087',
@@ -13,7 +14,7 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
       description: 'd_key',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.security.keys.base,
-      id: 'keys',
+      id: 'security:keys:state',
       show: false,
     },
     {
@@ -22,7 +23,7 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
       description: 'd_user',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.security.users.base,
-      id: 'users',
+      id: 'security:users:state',
     },
     {
       icon: '161',
@@ -30,7 +31,7 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
       description: 'd_role',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.security.roles.base,
-      id: 'roles',
+      id: 'security:roles:state',
     },
     {
       icon: '249',
@@ -38,7 +39,7 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
       description: 'd_group',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.security.groups.base,
-      id: 'groups',
+      id: 'security:groups:state',
       show: true,
     },
   ],

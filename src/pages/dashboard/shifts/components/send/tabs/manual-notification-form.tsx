@@ -145,7 +145,9 @@ export const ManualNotificationForm = ({
   const infoTemplate = async (value: IOption) => {
     setTemplateSelected(value);
     console.log(value);
-    const responseTemplate = await TemplateService.getTemplateById(String(value.value));
+    const responseTemplate = await TemplateService.getTemplateById(
+      String(value.value)
+    );
     if (!responseTemplate.getStatus()) return;
     const model = responseTemplate.getOne();
     const task = _onTaskAddWithId(model.tasks, 0, 2);

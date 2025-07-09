@@ -5,8 +5,13 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.shifts.base;
 export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
   label: 'g_shift',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
-  settings: PAGES_LIST_ROUTER.dashboard.setting.shifts.settings,
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.shifts.settings,
+    label: 'setting',
+    id: 'shift:tools:state',
+  },
   show: true,
+  id: 'shift:state',
   menus: [
     {
       icon: '142',
@@ -14,7 +19,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       description: 'd_round',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.base,
-      id: 'rounds',
+      id: 'shift:rounds:state',
       show: true,
     },
     {
@@ -23,7 +28,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       description: 'd_place',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.places.base,
-      id: 'places',
+      id: 'shift:places:state',
       show: true,
     },
     {
@@ -32,7 +37,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       description: 'd_contract',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.projects.base,
-      id: 'contracts',
+      id: 'shift:contracts:state',
       show: true,
     },
     {
@@ -41,7 +46,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       description: 'd_task',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.task.base,
-      id: 'tasks',
+      id: 'shift:tasks:state',
       show: true,
     },
     {
@@ -50,7 +55,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       description: 'd_schedule',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.base,
-      id: 'schedule',
+      id: 'shift:schedules:state',
       show: true,
     },
     {
@@ -67,7 +72,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       description: 'd_service',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.shifts.service.base,
-      id: 'services',
+      id: 'shift:services:state',
       show: true,
     },
   ],

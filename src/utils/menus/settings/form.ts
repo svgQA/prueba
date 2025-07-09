@@ -6,6 +6,7 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
   label: 'g_form',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
+  id: 'forms:state',
   menus: [
     {
       icon: '094',
@@ -13,7 +14,7 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
       description: 'd_form',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.form.base,
-      id: 'form-create',
+      id: 'forms:form:state',
       show: true,
     },
     // {
@@ -31,7 +32,7 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
       description: 'd_analytic',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.base,
-      id: 'form-analytic',
+      id: 'forms:analytic:state',
     },
   ],
 };

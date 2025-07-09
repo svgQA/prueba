@@ -30,7 +30,6 @@ export interface IDeleteRoleResponse {
 export interface IListModuleResponse {
   id: number;
   name: string;
-
   description: string;
   key: string;
   level: number;
@@ -50,4 +49,12 @@ export interface IPermission {
   moduleId: number;
   key: string;
   level: number;
+}
+
+interface IPermissionSec {
+  [module: string]: {
+    name: string;
+    label: string;
+    permissions: { [key: string]: string };
+  };
 }

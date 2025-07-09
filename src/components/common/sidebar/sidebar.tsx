@@ -4,15 +4,13 @@ import { type ISidebarProps } from './interface';
 import { useEffect, useMemo } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { ButtonMenu } from '../button/menu/button';
-// import { useUserStore } from '@/store/slices';
 import {
-  // closeOnBoardingModal,
   getStatusSettingModal,
   getRedirectSettingModal,
 } from '@/store/signals/modals';
 import { useSignal } from '@preact/signals';
-// import { CompanyItem } from './company';
 import { MenuItem } from './menu';
+import { validateModuleState } from '@/store/signals/access/permission';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
   id,
@@ -21,20 +19,9 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   onHomeHandler,
   isNavigation = false,
   onHandlerClick,
-  hasSettings,
-  // onLogout,
 }: ISidebarProps) => {
   const [location, navigate] = useLocation();
   const menuSelected = useSignal<string | null>('');
-  // const { companies, setSelected } = useUserStore();
-
-  // const setCompanySelected = useMemo(
-  //   () => (company: string) => {
-  //     setSelected(company);
-  //     closeOnBoardingModal();
-  //   },
-  //   [setSelected]
-  // );
 
   useEffect(() => {
     if (!getStatusSettingModal.value) {
@@ -85,12 +72,10 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
     [isNavigation, onHandlerClick]
   );
 
-  // const onAssistant = () => {};
   return (
     <nav
       id={`${id}-nav`}
-      className='fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen dark:border-gray-700 z-20 bg-b-white dark:bg-b-dark-light'
-      // border-r border-gray-200'
+      className='fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen dark:border-gray-700 z-20 bg-b-white dark:bg-b-dark-light max-w-16 min-w-16'
     >
       {onHomeHandler && (
         <ul className='flex flex-col items-center'>
@@ -103,37 +88,20 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
         className='flex flex-col justify-between capitalize'
         onClick={selectMenu}
       >
-        {menus.map((menu) => (
-          <MenuItem
-            key={menu.to}
-            menu={menu}
-            isNavigation={isNavigation}
-            getSelected={getSelected}
-          />
-        ))}
+        {menus.map(
+          (menu) =>
+            validateModuleState(menu.id) && (
+              <MenuItem
+                key={menu.to}
+                menu={menu}
+                isNavigation={isNavigation}
+                getSelected={getSelected}
+              />
+            )
+        )}
       </ul>
       <ul className='flex flex-col justify-between capitalize'>
-        {/*
-        <div className='relative group'>
-          <a className='cursor-pointer'>
-            <ButtonMenu name='vx-company-button' label='company' icon='281' />
-          </a>
-          {companies && companies.length > 1 && (
-            <div className='absolute z-50 left-16 p-3 bottom-0 hidden group-hover:block w-52'>
-              <div className='border-2 rounded-md dark:border-b-dark-light'>
-                {companies.map((company) => (
-                  <CompanyItem
-                    key={company.id}
-                    company={company}
-                    setCompanySelected={setCompanySelected}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-        */}
-        {hasSettings && (
+        {validateModuleState('setting') && (
           <span
             onClick={onSettingHandler}
             className='cursor-pointer p-1 mt-1 hover:disabled rounded-sm text-gray-700 dark:text-gray-200'
@@ -141,14 +109,6 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
             <ButtonMenu name='vx-setting-button' label='t_setting' icon='159' />
           </span>
         )}
-
-        {/*
-        {onLogout && (
-          <span onClick={onLogout} className='cursor-pointer'>
-            <ButtonMenu name='vx-logout-button' label='logout' icon='225' />
-          </span>
-        )}
-        */}
       </ul>
     </nav>
   );

@@ -5,6 +5,7 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.sales.base;
 export const MODAL_SETTING_SALES: IModalSidebarMenu = {
   label: 'g_sales',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  id: 'sales:state',
   menus: [
     {
       icon: '167',
@@ -12,7 +13,7 @@ export const MODAL_SETTING_SALES: IModalSidebarMenu = {
       description: 'd_sales',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.sales.sales.base,
-      id: 'solopor-sales',
+      id: 'sales:sale:state',
     },
   ],
 };

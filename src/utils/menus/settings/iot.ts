@@ -5,6 +5,7 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.iot.base;
 export const MODAL_SETTING_IOT: IModalSidebarMenu = {
   label: 'g_iot',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  id: 'iot:state',
   menus: [
     {
       icon: '247',
@@ -12,7 +13,7 @@ export const MODAL_SETTING_IOT: IModalSidebarMenu = {
       description: 'd_device',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.iot.devices.base,
-      id: 'iot-devices',
+      id: 'iot:devices:state',
     },
     {
       icon: '246',
@@ -20,7 +21,7 @@ export const MODAL_SETTING_IOT: IModalSidebarMenu = {
       description: 'd_iot',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.iot.iot.base,
-      id: 'iot',
+      id: 'iot:iot:state',
     },
     {
       icon: '080',
@@ -28,7 +29,7 @@ export const MODAL_SETTING_IOT: IModalSidebarMenu = {
       description: 'd_channel',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.iot.channels.base,
-      id: 'iot-channels',
+      id: 'iot:channels:state',
     },
   ],
 };

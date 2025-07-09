@@ -40,7 +40,7 @@ export const TaskFormCreate = ({
   append = false,
   onDelete,
   type,
-  disabled = false
+  disabled = false,
 }: Props) => {
   const { selectedCompany } = useUserStore();
   const onAppend = useSignal<boolean>(append);
@@ -80,7 +80,6 @@ export const TaskFormCreate = ({
   const onChange = (value: any, form?: any) => {
     if (!value) return;
     let _task: ITask | undefined = undefined;
-    console.log(value.hourStart);
     if (form) {
       _task = {
         id: value.id,
@@ -95,7 +94,6 @@ export const TaskFormCreate = ({
       // TODO: esta mierda no me gusta.
       const find = tasks.value.find((task) => task.id === value.value);
       if (!find) return;
-      console.log(find.hourStart);
       _task = {
         id: find.id,
         name: find.name,
@@ -127,7 +125,6 @@ export const TaskFormCreate = ({
     type ? t.type === type : true
   );
 
-
   return (
     <>
       <div className={className} onClick={eventDelete}>
@@ -157,7 +154,7 @@ export const TaskFormCreate = ({
                     options={filteredTasks.map((e) => ({
                       value: e.id ?? '',
                       label: e.description ?? 'Sin descripción',
-                    }))}                    
+                    }))}
                     menuPortalTarget={document.body}
                     onClick={onToggleTask}
                     onChange={onChange}

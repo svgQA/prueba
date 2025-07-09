@@ -5,27 +5,20 @@ import { memo } from 'preact/compat';
 import { IMenu } from '@/components/common/utils/interface';
 import { Card } from '@/components/common/card/card';
 import { useTranslation } from 'react-i18next';
+import { validateSettingModuleState } from '@/store/signals/access/permission';
 
 export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
-  ({
-    id,
-    name,
-    menus,
-    label,
-    base,
-    selected,
-    settings,
-  }: ICardSettingMenuProps) => {
-    const _to = `${base}${settings}`;
+  ({ id, menus, label, base, selected, setting }: ICardSettingMenuProps) => {
+    const _to = `${base}${setting?.to || ''}`;
     const { t } = useTranslation();
 
     return (
-      <Card id={id} name={name} borderless rounded={false} transparent>
+      <Card id={id} name={id} borderless rounded={false} transparent>
         <div className='flex flex-col mt-2'>
           <div className='flex flex-row items-center justify-between'>
             <h2 className='text-sm font-bold mb-1'>{t(label)}</h2>
-            {settings && (
-              <Link to={_to} key={name} id={_to}>
+            {setting && validateSettingModuleState(setting.id) && (
+              <Link to={_to} id={_to}>
                 <span
                   className='vox-icon vx-icon-168 size-sm cursor-pointer'
                   data-to={_to}
@@ -36,18 +29,17 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
               </Link>
             )}
           </div>
-          {menus.map((menu: IMenu, index: number) => {
-            const name = `setting-menu-${menu.id}-${index}`;
+          {menus.map((menu: IMenu) => {
             const to = `${base}${menu.base}${menu.to}`;
-            return menu.show ? (
+            return menu.show && validateSettingModuleState(menu.id) ? (
               <Link
                 to={to}
-                key={name}
+                key={menu.id}
                 data-to={to}
                 data-label={menu.label}
                 data-description={menu.description}
                 id={menu.id}
-                className={`${selected.to === to ? 'bg-primary bg-opacity-30 !text-primary' : ''} flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
+                className={`${selected.id === menu.id ? 'bg-primary bg-opacity-30 !text-primary' : ''} flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
               >
                 <span className={`vx-icon vx-icon-${menu.icon} size-sm mr-2`} />
                 {t(menu.label)}
@@ -58,5 +50,5 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
       </Card>
     );
   },
-  (prevProps, nextProps) => prevProps.selected.to === nextProps.selected.to
+  (prevProps, nextProps) => prevProps.selected.id === nextProps.selected.id
 );

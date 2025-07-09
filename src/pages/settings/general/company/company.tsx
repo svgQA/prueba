@@ -93,9 +93,9 @@ export const CompanySettingPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2'>
-      <div className='h-full overflow-y-auto vox-scroll-design p-5 w-full relative pt-16'>
-        <div className='flex flex-row justify-between'>
-          <div className='flex flex-row gap-2 justify-center flex-wrap'>
+      <div className='p-5 w-full relative pt-16'>
+        <div className='flex flex-row justify-between relative gap-2 items-center'>
+          <div className='flex flex-row gap-2 justify-center flex-wrap overflow-y-auto vox-scroll-design h-[60vh]'>
             {companies.value.map((company) => (
               <CardCompany
                 key={company.id}
@@ -104,7 +104,7 @@ export const CompanySettingPage: FunctionComponent = () => {
               />
             ))}
           </div>
-          <div className='min-w-[500px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
+          <div className='min-w-[500px] h-[350px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
             <Form<ICCompanyRequest | IUCompanyRequest>
               onSubmit={onSubmit}
               initialValues={
