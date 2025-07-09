@@ -1,1 +1,1 @@
-export { HelpTooltip } from './help-tooltip'; 
+export { HelpTooltip } from './help-tooltip';

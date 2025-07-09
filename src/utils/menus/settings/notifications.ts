@@ -6,6 +6,7 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
   label: 'g_notification',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
+  id: 'notification:state',
   menus: [
     {
       icon: '050',
@@ -15,7 +16,7 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.notifications
         .scheduledNotification.base,
       show: true,
-      id: 'scheduled-notifications',
+      id: 'notification:scheduled:state',
     },
     {
       icon: '040',
@@ -24,7 +25,7 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
         .base,
-      id: 'template-notifications',
+      id: 'notification:template:state',
       show: true,
     },
   ],

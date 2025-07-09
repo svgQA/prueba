@@ -28,7 +28,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
 
   const onSubmit = async (model: Record<string, any>) => {
-    console.log(model);
+    // console.log(model);
     if (id) {
       const request = await TaskService.updateTask(model, id);
       if (!request.getStatus()) return;

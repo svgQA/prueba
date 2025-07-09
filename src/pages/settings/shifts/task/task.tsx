@@ -17,6 +17,7 @@ import {
 } from '../../store/settings';
 import { TaskService } from '@/services';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export interface ITask {
   id: number;
@@ -40,8 +41,15 @@ export const TaskSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_task');
-    getTasks();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getTasks();
+    }
+  }, [selectedCompany, location]);
 
   const getTasks = async () => {
     loading.value = true;

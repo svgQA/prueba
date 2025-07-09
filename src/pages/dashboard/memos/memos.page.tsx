@@ -57,8 +57,12 @@ export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
   const [location] = useLocation();
-  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(null);
-  const [highlightedPanicMemoId, setHighlightedPanicMemoId] = useState<string | null>(null);
+  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(
+    null
+  );
+  const [highlightedPanicMemoId, setHighlightedPanicMemoId] = useState<
+    string | null
+  >(null);
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
@@ -74,7 +78,9 @@ export const MemosPage: FunctionComponent = () => {
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
   const loading = useSignal<boolean>(false);
-  const notificationBannerRef = useRef<{ startBannerAnimation: () => void }>(null);
+  const notificationBannerRef = useRef<{ startBannerAnimation: () => void }>(
+    null
+  );
   const panic = useSignal<Memo[]>([]);
 
   useEffect(() => {
@@ -103,7 +109,7 @@ export const MemosPage: FunctionComponent = () => {
       currentView.value = VIEW_NAME.PANIC;
       setHighlightedPanicMemoId(String(id));
     });
-  }
+  };
 
   const fetchSSE = useCallback(async () => {
     await SseManager.getQuery(['memo', 'stream', 'history']);
@@ -297,32 +303,32 @@ export const MemosPage: FunctionComponent = () => {
       {(currentView.value === VIEW_NAME.TABLE ||
         currentView.value === VIEW_NAME.MAP ||
         currentView.value === VIEW_NAME.PANIC) && (
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-            <CardData
-              title={t('memos.cards.totalToday')}
-              count={summary.value.total}
-              subtitle=''
-              color='t-dark'
-              icon='328' // 328
-            />
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+          <CardData
+            title={t('memos.cards.totalToday')}
+            count={summary.value.total}
+            subtitle=''
+            color='t-dark'
+            icon='328' // 328
+          />
 
-            <CardData
-              title={t('memos.cards.unresolved')}
-              count={calculatePercentage(summary.value.in_progress)}
-              subtitle=''
-              color='t-dark'
-              icon='311' // 311
-            />
+          <CardData
+            title={t('memos.cards.unresolved')}
+            count={calculatePercentage(summary.value.in_progress)}
+            subtitle=''
+            color='t-dark'
+            icon='311' // 311
+          />
 
-            <CardData
-              title={t('memos.cards.resolved')}
-              count={calculatePercentage(summary.value.completed)}
-              subtitle=''
-              color='t-dark'
-              icon='312' // 312
-            />
-          </div>
-        )}
+          <CardData
+            title={t('memos.cards.resolved')}
+            count={calculatePercentage(summary.value.completed)}
+            subtitle=''
+            color='t-dark'
+            icon='312' // 312
+          />
+        </div>
+      )}
 
       <div
         className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}
@@ -389,7 +395,11 @@ export const MemosPage: FunctionComponent = () => {
             searchable={{
               history: false,
             }}
-            rowClassName={(row: Memo) => row.panicUuid === highlightedPanicMemoId ? 'animate-highlight' : ''}
+            rowClassName={(row: Memo) =>
+              row.panicUuid === highlightedPanicMemoId
+                ? 'animate-highlight'
+                : ''
+            }
           />
         )}
 

@@ -64,7 +64,7 @@ export const DateContrast = ({
 
     if (!actualDate?.location) return 'default';
     return DateUtils.getTimeStatus(
-      actualDate.time,
+      actualDate.time as string,
       scheduledDate,
       type,
       toleranceMinutes

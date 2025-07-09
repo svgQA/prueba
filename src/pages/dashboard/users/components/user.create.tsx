@@ -82,7 +82,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         label: role.role.name,
         value: role.role.id,
       }));
-      console.log('roles =>', roles);
+      // console.log('roles =>', roles);
 
       const userCompanies =
         user.companies?.map((comp) => ({

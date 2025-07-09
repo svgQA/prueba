@@ -11,8 +11,10 @@ import {
   IListModuleResponse,
   ICreateRoleResponse,
   IRoleByIdResponse,
+  IPermissionSec,
 } from '@/types/role/role.response';
 import { IRoleRequest } from '@/types/role/role.request';
+
 export class RoleService extends BaseService {
   static name: VoxServices = 'role';
   static async getRoles(params: IPagination = { page: 1, items: 1000 }) {
@@ -65,8 +67,12 @@ export class RoleService extends BaseService {
 
   static async getPermissions() {
     const model: IMakeRequest = {
-      url: ['role', 'permissions', '3'],
+      url: ['role/permission/list'],
     };
-    return await super.make_request<any>(this.name, model);
+    return await super.make_request<ModulePermissionsMap>(this.name, model);
   }
+}
+
+export interface ModulePermissionsMap {
+  model: IPermissionSec;
 }

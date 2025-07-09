@@ -84,7 +84,7 @@ export const DemoForm = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     // Aquí iría la lógica para enviar la solicitud de demo
-    console.log('Formulario enviado:', formData);
+    // console.log('Formulario enviado:', formData);
     // Limpiamos el formulario después de enviar
     setFormData({
       fullName: '',

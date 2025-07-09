@@ -26,7 +26,7 @@ export const MapLibrePointsMap = ({
   draggable = true,
   width = '100%',
   height = '500px',
-  clickPoint = () => { },
+  clickPoint = () => {},
   radius,
   disablePointSelection = false,
   adminUser = false,
@@ -44,7 +44,10 @@ export const MapLibrePointsMap = ({
     lat: '',
     lng: '',
   });
-  const editCoordsRef = useRef<{ lat: string; lng: string }>({ lat: '', lng: '' });
+  const editCoordsRef = useRef<{ lat: string; lng: string }>({
+    lat: '',
+    lng: '',
+  });
   const [isMapReady, setIsMapReady] = useState(false);
   // const [activeMarker, setActiveMarker] = useState<number | null>(null);
   const [activePopup, setActivePopup] = useState<maplibregl.Popup | null>(null);
@@ -259,9 +262,9 @@ export const MapLibrePointsMap = ({
     const a =
       Math.sin(latDiffRad / 2) * Math.sin(latDiffRad / 2) +
       Math.cos(lat1Rad) *
-      Math.cos(lat2Rad) *
-      Math.sin(lngDiffRad / 2) *
-      Math.sin(lngDiffRad / 2);
+        Math.cos(lat2Rad) *
+        Math.sin(lngDiffRad / 2) *
+        Math.sin(lngDiffRad / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = earthRadius * c;
     return distance > 1000;
@@ -558,9 +561,10 @@ export const MapLibrePointsMap = ({
           <label class="text-sm mb-1 mt-2">Longitude</label>
           <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>
-        ${disablePointSelection
-        ? ''
-        : `
+        ${
+          disablePointSelection
+            ? ''
+            : `
           <div class="flex justify-between mt-2">
             <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
               Delete
@@ -568,17 +572,18 @@ export const MapLibrePointsMap = ({
             <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
               Update
             </button>
-            ${id === -1
-          ? `
+            ${
+              id === -1
+                ? `
             <button id="btn-restore" class="bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-2 rounded">
               Restore Location
             </button>
             `
-          : ''
-        }
+                : ''
+            }
           </div>
           `
-      }
+        }
       </div>
     `;
 

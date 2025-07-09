@@ -49,11 +49,11 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
       <div className='relative'>
         <div className='absolute right-0'>
           <span className='bg-cyan-100 text-cyan-800 text-xs font-semibold px-3 py-1 rounded-full'>
-            {reports.length} {reports.length === 1 ? t('h_report') : `${t('h_report')}s`}
+            {reports.length}{' '}
+            {reports.length === 1 ? t('h_report') : `${t('h_report')}s`}
           </span>
         </div>
       </div>
-
 
       <div className='divide-y divide-gray-200'>
         {reports.map((report) => {
@@ -64,9 +64,9 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
           const requestDate = report.requestDate
             ? DateUtils.dateToFrontend(report.requestDate, {
-              time: true,
-              format: 'DD/MM/YYYY HH:mm',
-            })
+                time: true,
+                format: 'DD/MM/YYYY HH:mm',
+              })
             : '—';
           const receivedDate = DateUtils.dateToFrontend(report.createdAt, {
             time: true,
@@ -89,8 +89,12 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                 <div className='min-w-[1000px] grid grid-cols-12 gap-x-2 items-center py-2 text-sm'>
                   {/* Estado */}
                   <div className='col-span-2 flex items-center space-x-2'>
-                    <span className={`vox-icon ${statusIcon} ${statusColor}`}></span>
-                    <p className={`${statusColor} font-medium`}>{statusLabel}</p>
+                    <span
+                      className={`vox-icon ${statusIcon} ${statusColor}`}
+                    ></span>
+                    <p className={`${statusColor} font-medium`}>
+                      {statusLabel}
+                    </p>
                   </div>
 
                   {/* Fechas */}
@@ -98,15 +102,22 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                     {isRequested && (
                       <>
                         <p className='leading-tight'>
-                          <span className='font-semibold'>{t('requested')}:</span> {requestDate}
+                          <span className='font-semibold'>
+                            {t('requested')}:
+                          </span>{' '}
+                          {requestDate}
                         </p>
                         <p className='leading-tight'>
-                          <span className='font-semibold'>{t('received')}:</span> {receivedDate}
+                          <span className='font-semibold'>
+                            {t('received')}:
+                          </span>{' '}
+                          {receivedDate}
                         </p>
                       </>
                     )}
                     <p className='leading-tight'>
-                      <span className='font-semibold'>{t('h_report')}:</span> {updatedDate}
+                      <span className='font-semibold'>{t('h_report')}:</span>{' '}
+                      {updatedDate}
                     </p>
                   </div>
 
@@ -127,7 +138,9 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
                   {/* Descripción */}
                   <div className='col-span-2'>
-                    <p className='truncate leading-tight'>{report.description}</p>
+                    <p className='truncate leading-tight'>
+                      {report.description}
+                    </p>
                   </div>
 
                   {/* Tarea */}

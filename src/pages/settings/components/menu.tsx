@@ -1,22 +1,28 @@
-import { CardSettingMenu } from '@/components/compose/modal';
+import { IMenu } from '@/components/common/utils/interface';
+import { CardSettingMenu, IModalSidebarMenu } from '@/components/compose/modal';
+import { validateSettingModuleState } from '@/store/signals/access/permission';
 import { memo } from 'preact/compat';
 
+interface Props {
+  menuSettings: IModalSidebarMenu[];
+  menuInformationSelected: IMenu;
+  expand: boolean;
+}
+
 export const MenuList = memo(
-  ({ menuSettings, menuInformationSelected, expand }: any) => (
+  ({ menuSettings, menuInformationSelected, expand }: Props) => (
     <div
       className={`vox-scroll-design ${expand ? 'max-h-[98vh]' : 'max-h-[69vh]'} overflow-y-scroll px-4 flex flex-col gap-2 py-4`}
     >
-      {menuSettings.value.map((menu: any) => {
-        const name = `${menu.label}-menus`;
-        return menu.show ? (
+      {menuSettings.map((menu: IModalSidebarMenu) => {
+        return menu.show && validateSettingModuleState(menu.id) ? (
           <CardSettingMenu
-            key={name}
-            id={name}
-            name={name}
+            key={menu.id}
+            id={menu.id}
             base={menu.base}
             label={menu.label}
             menus={menu.menus}
-            settings={menu.settings}
+            setting={menu.setting}
             selected={menuInformationSelected}
           />
         ) : null;

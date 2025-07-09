@@ -5,6 +5,7 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.payment.base;
 export const MODAL_SETTING_PAYMENT: IModalSidebarMenu = {
   label: 'g_payment',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  id: 'payment:state',
   menus: [
     {
       icon: '056',
@@ -12,7 +13,7 @@ export const MODAL_SETTING_PAYMENT: IModalSidebarMenu = {
       description: 'd_payment',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.payment.payment.base,
-      id: 'payment',
+      id: 'payment:payment:state',
     },
     {
       icon: '029',
@@ -20,7 +21,7 @@ export const MODAL_SETTING_PAYMENT: IModalSidebarMenu = {
       description: 'd_history',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.payment.history.base,
-      id: 'history',
+      id: 'payment:history:state',
     },
   ],
 };

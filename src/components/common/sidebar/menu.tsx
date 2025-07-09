@@ -2,15 +2,13 @@ import { memo } from 'preact/compat';
 import { Link } from 'wouter';
 import { ButtonMenu } from '../button/menu/button';
 import { IMenu } from '../utils/interface';
-import { setCurrentPermissionsByName } from '@/store/signals/access/permission';
+
 interface IMenuItem {
   menu: IMenu;
   isNavigation: boolean;
   getSelected: (to: string) => string;
 }
-const setPermissions = (key: string) => {
-  setCurrentPermissionsByName(key);
-};
+
 export const MenuItem = memo<IMenuItem>(
   ({ menu, isNavigation, getSelected }: IMenuItem) => {
     const id = `menu-${menu.label}`.toLowerCase();
@@ -19,7 +17,6 @@ export const MenuItem = memo<IMenuItem>(
       <Link
         to={menu.to}
         key={id}
-        onClick={() => setPermissions(menu.key || '')}
         className={`p-1 mt-1 hover:disabled rounded-sm ${getSelected(menu.to)}`}
       >
         <ButtonMenu name={menu.to} label={menu.label} icon={menu.icon} />

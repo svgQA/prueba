@@ -5,8 +5,13 @@ const base = PAGES_LIST_ROUTER.dashboard.setting.setting.base;
 export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
   label: 'g_general',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
-  settings: PAGES_LIST_ROUTER.dashboard.setting.setting.settings,
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.setting.settings,
+    label: 'setting',
+    id: 'general:tools:state',
+  },
   show: true,
+  id: 'general:state',
   menus: [
     {
       icon: '007',
@@ -14,7 +19,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       description: 'd_user',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.user.base,
-      id: 'user',
+      id: 'general:user:state',
       show: false,
     },
     {
@@ -23,7 +28,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       description: 'd_company',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.company.base,
-      id: 'company',
+      id: 'general:company:state',
       show: true,
     },
     {
@@ -32,7 +37,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       description: 'd_module',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.modules.base,
-      id: 'modules',
+      id: 'general:modules:state',
     },
     {
       icon: '160',
@@ -40,7 +45,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       description: 'd_integration',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.integration.base,
-      id: 'integrations',
+      id: 'general:integration:state',
     },
     {
       icon: '195',
@@ -48,7 +53,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       description: 'd_app',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.voxline.base,
-      id: 'tryvoo',
+      id: 'general:tryvoo:state',
     },
     {
       icon: '117',
@@ -56,7 +61,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       description: 'd_solo',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.setting.solo.base,
-      id: 'solopor',
+      id: 'general:solopor:state',
     },
   ],
 };

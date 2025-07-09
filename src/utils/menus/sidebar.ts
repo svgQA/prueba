@@ -8,7 +8,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     to: PAGES_LIST_ROUTER.dashboard.memos,
     description: 'd_memo',
     icon: '077', // '310',
-    id: 'memos',
+    id: 'memo',
     key: 'memo',
   },
   {
@@ -48,7 +48,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     to: PAGES_LIST_ROUTER.dashboard.users,
     description: 'd_user',
     icon: '188', // 'user',
-    id: 'users-dashoboar-externo',
+    id: 'user',
     key: 'user',
   },
   {
@@ -56,7 +56,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     to: PAGES_LIST_ROUTER.dashboard.history,
     description: 'd_notification',
     icon: '140', // 'notify',
-    id: 'history',
+    id: 'notification',
     key: 'notification',
   },
   /* {

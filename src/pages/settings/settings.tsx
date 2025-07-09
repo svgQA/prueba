@@ -1,8 +1,4 @@
-import {
-  CardSettingHeader,
-  CardSettingUser,
-  IModalSidebarMenu,
-} from '@/components/compose/modal';
+import { CardSettingHeader, CardSettingUser } from '@/components/compose/modal';
 import { MODAL_SIDEBAR_MENUS } from '@/utils/menus';
 
 import {
@@ -14,7 +10,6 @@ import {
   toggleSettingModal,
 } from '@/store/signals/modals';
 
-import { useSignal } from '@preact/signals';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { RoutingContent } from './routing';
@@ -33,7 +28,6 @@ import { useUserStore } from '@/store/slices';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 export const SettingsModal = () => {
   const { user } = useUserStore();
-  const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
   const [_, navigate] = useLocation();
   const [expand, setExpand] = useState<boolean>(false);
 
@@ -42,7 +36,7 @@ export const SettingsModal = () => {
     if (getStatusSettingModal.value) {
       if (!menuInformationSelected.value.to) {
         let adminMenu;
-        for (const menus of menuSettings.value) {
+        for (const menus of MODAL_SIDEBAR_MENUS) {
           adminMenu = menus.menus.find((menu) => menu.show);
           if (adminMenu) break;
         }
@@ -91,7 +85,6 @@ export const SettingsModal = () => {
       const to = target.getAttribute('data-to');
       const label = target.getAttribute('data-label');
       const description = target.getAttribute('data-description');
-
       const id = target.getAttribute('id');
       if (!to || !label || !description || !id) return;
       const menuSelected = { to, description, label, id };
@@ -137,7 +130,7 @@ export const SettingsModal = () => {
           rol={user?.userType || ''}
         />
         <MenuList
-          menuSettings={menuSettings}
+          menuSettings={MODAL_SIDEBAR_MENUS}
           menuInformationSelected={menuInformationSelected.value}
           expand={expand}
         />
