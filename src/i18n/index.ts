@@ -13,6 +13,7 @@ import { notification_en, notification_es } from './notification';
 import { maps_en, maps_es } from './maps';
 import { history_en, history_es } from './history';
 import { memos_en, memos_es } from './memos';
+import { panic_en, panic_es } from './panic';
 import { role_en, role_es } from './role';
 import { demo_en, demo_es } from './demo';
 import { hero_en, hero_es } from './hero';
@@ -59,6 +60,7 @@ const resources = {
       ...maps_en,
       ...history_en,
       ...memos_en,
+      ...panic_en,
       ...role_en,
       ...demo_en,
       ...hero_en,
@@ -90,6 +92,7 @@ const resources = {
       ...maps_es,
       ...history_es,
       ...memos_es,
+      ...panic_es,
       ...role_es,
       ...demo_es,
       ...hero_es,

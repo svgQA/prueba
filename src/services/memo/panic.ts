@@ -6,6 +6,7 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
+import { MemosSummary } from './memo';
 
 export class PanicService extends BaseService {
   static name: VoxServices = 'memo';
@@ -42,5 +43,18 @@ export class PanicService extends BaseService {
       params: params as any,
     };
     return await super.make_request<Memo>(this.name, model);
+  }
+
+  /**
+   * Gets a summary of panic including total count, in progress and completed
+   * @returns Summary object with total, progress and completed counts
+   */
+  static async getPanicSummary() {
+    const model: IMakeRequest = {
+      url: ['panic', 'summary', 'stats'],
+      method: REQUEST_METHODS.GET,
+    };
+
+    return await super.make_request<MemosSummary>(this.name, model);
   }
 }
