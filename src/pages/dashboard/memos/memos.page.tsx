@@ -150,7 +150,7 @@ export const MemosPage: FunctionComponent = () => {
       responseGroupedByService,
       responseGroupedByUser,
       responseMemoPanic,
-      responseSummaryPanic
+      responseSummaryPanic,
     ] = await Promise.all([
       MemoService.get_all({ page: 1, items: 1000 }),
       UserService.get_all_employee({ items: 20, page: 1 }),
@@ -158,7 +158,7 @@ export const MemosPage: FunctionComponent = () => {
       MemoService.get_all_by_service(),
       MemoService.get_all_by_user(),
       PanicService.get_all_memo_panic({ page: 1, items: 1000 }),
-      PanicService.getPanicSummary()
+      PanicService.getPanicSummary(),
     ]);
 
     if (responseMemos.getStatus()) {
@@ -285,7 +285,7 @@ export const MemosPage: FunctionComponent = () => {
   );
 
   /**
-   * 
+   *
    * @returns cards
    */
   const renderCardsInfo = (summary: MemosSummary, type: string = 'memos') => (
@@ -347,8 +347,11 @@ export const MemosPage: FunctionComponent = () => {
       }
       padding={currentView.value !== VIEW_NAME.CHAT}
     >
-      {(currentView.value === VIEW_NAME.TABLE || currentView.value === VIEW_NAME.MAP) && renderCardsInfo(summary.value)}
-      {currentView.value === VIEW_NAME.PANIC && renderCardsInfo(summaryPanic.value, 'panic')}
+      {(currentView.value === VIEW_NAME.TABLE ||
+        currentView.value === VIEW_NAME.MAP) &&
+        renderCardsInfo(summary.value)}
+      {currentView.value === VIEW_NAME.PANIC &&
+        renderCardsInfo(summaryPanic.value, 'panic')}
 
       <div
         className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}

@@ -177,7 +177,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 borderless
               />
               <div className='flex flex-row gap-4 items-center justify-center'>
-                <ThemeButton unpadded borderless />
+                <ThemeButton unpadded />
                 <Notifications icon='317' iconSize='xsm' />
                 <Dropdown
                   options={[

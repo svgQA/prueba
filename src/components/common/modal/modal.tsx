@@ -42,7 +42,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
           <div class='flex flex-row w-full items-center px-2.5'>
             <div className='flex flex-row w-full items-center'>{header}</div>
             <div className='flex items-center justify-end gap-2'>
-              {theme && <ThemeButton rounded borderless />}
+              {theme && <ThemeButton rounded />}
               {expandable && (
                 <Button
                   id='setting-expand'
@@ -51,6 +51,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
                   type='button'
                   rounded
                   borderless
+                  transparent
                   icon={expand ? '276' : '058'}
                 />
               )}
@@ -63,6 +64,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
                   type='button'
                   rounded
                   icon='192'
+                  transparent
                   borderless
                 ></Button>
               )}

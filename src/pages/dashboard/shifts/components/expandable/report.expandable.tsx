@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { DateUtils } from '@/utils/utilities/dates';
 import ShowFiles from '@/components/common/file/show.file';
 import { useTranslation } from 'react-i18next';
 import { TaskCard } from '@/pages/settings/shifts/task/create/task.card';
 import { FormService } from '@/services';
 import { FormResponseSettingPage } from '@/pages/dashboard/forms/response/response';
-import { setResponse, RESPONSE_MODE_SERVICE } from '@/pages/dashboard/forms/response/store/response';
+import {
+  setResponse,
+  RESPONSE_MODE_SERVICE,
+} from '@/pages/dashboard/forms/response/store/response';
+import { FormattedDate } from '@/components/compose/forms';
+import { Badge } from '@/components/common/badge/badge';
 export interface IReport {
   id: number;
   shiftId: number;
@@ -42,7 +46,6 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
   const [selectedFormId, setSelectedFormId] = useState<number | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-
   const toggleDetails = (report: IReport) => {
     setExpandedId(expandedId === report.id ? null : report.id);
     onViewDetails?.(report);
@@ -58,53 +61,36 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
     }
     if (!report?.responseId) return;
     const response = await FormService.get_one_response(report?.responseId);
-    console.log(response)
     if (response.getStatus()) {
       const structure = response.getOne()?.structure;
       setSelectedFormId(report.form.id);
 
       setResponse(
-        { mode: RESPONSE_MODE_SERVICE.UPDATE, id: report?.responseId, hold: true },
+        {
+          mode: RESPONSE_MODE_SERVICE.UPDATE,
+          id: report?.responseId,
+          hold: true,
+        },
         structure
       );
     }
   };
 
-
-
   return (
-    <div className='rounded-lg  w-full'>
+    <div className='rounded-lg w-full relative max-h-[300px] overflow-y-auto vox-scroll-design'>
       {/* Header */}
-      <div className='relative'>
-        <div className='absolute right-0'>
-          <span className='bg-cyan-100 text-cyan-800 text-xs font-semibold px-3 py-1 rounded-full'>
-            {reports.length}{' '}
-            {reports.length === 1 ? t('h_report') : `${t('h_report')}s`}
-          </span>
-        </div>
+      <div className='absolute top-1 right-4'>
+        <Badge
+          label={'h_report'}
+          status='info'
+          icon='324'
+          count={reports.length}
+        />
       </div>
 
-      <div className='divide-y divide-gray-200'>
+      <div className='divide-y dark:divide-b-dark-light divide-b-light-dark'>
         {reports.map((report) => {
           const isRequested = report.request;
-          const statusLabel = isRequested ? t('requested') : t('no_requested');
-          const statusColor = isRequested ? 'text-green-500' : 'text-red-500';
-          const statusIcon = isRequested ? 'vx-icon-324' : 'vx-icon-323';
-
-          const requestDate = report.requestDate
-            ? DateUtils.dateToFrontend(report.requestDate, {
-              time: true,
-              format: 'DD/MM/YYYY HH:mm',
-            })
-            : '—';
-          const receivedDate = DateUtils.dateToFrontend(report.createdAt, {
-            time: true,
-            format: 'DD/MM/YYYY HH:mm',
-          });
-          const updatedDate = DateUtils.dateToFrontend(report.updatedAt, {
-            time: true,
-            format: 'DD/MM/YYYY HH:mm',
-          });
 
           const hasAttachments = report.resource?.length > 0;
           const hasForm = !!report.form;
@@ -118,36 +104,36 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                 <div className='min-w-[1000px] grid grid-cols-12 gap-x-2 items-center py-2 text-sm'>
                   {/* Estado */}
                   <div className='col-span-2 flex items-center space-x-2'>
-                    <span
-                      className={`vox-icon ${statusIcon} ${statusColor}`}
-                    ></span>
-                    <p className={`${statusColor} font-medium`}>
-                      {statusLabel}
-                    </p>
+                    <Badge
+                      label={isRequested ? 'requested' : 'no_requested'}
+                      outline
+                      status={isRequested ? 'info' : 'warning'}
+                      icon='324'
+                    />
                   </div>
 
                   {/* Fechas */}
-                  <div className='col-span-3 space-y-0.5'>
+                  <div className='col-span-3 space-y-0.5 flex flex-row gap-2'>
                     {isRequested && (
                       <>
-                        <p className='leading-tight'>
+                        <div className='flex flex-col'>
                           <span className='font-semibold'>
                             {t('requested')}:
-                          </span>{' '}
-                          {requestDate}
-                        </p>
-                        <p className='leading-tight'>
+                          </span>
+                          <FormattedDate date={report.requestDate} />
+                        </div>
+                        <div className='flex flex-col'>
                           <span className='font-semibold'>
                             {t('received')}:
-                          </span>{' '}
-                          {receivedDate}
-                        </p>
+                          </span>
+                          <FormattedDate date={report.createdAt} />
+                        </div>
                       </>
                     )}
-                    <p className='leading-tight'>
+                    <div className='flex flex-col'>
                       <span className='font-semibold'>{t('h_report')}:</span>{' '}
-                      {updatedDate}
-                    </p>
+                      <FormattedDate date={report.updatedAt} />
+                    </div>
                   </div>
 
                   {/* Archivos o formulario */}
@@ -174,7 +160,9 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
                   {/* Tarea */}
                   <div className='col-span-2'>
-                    {report.task && <TaskCard task={report.task} />}
+                    {report.task && (
+                      <TaskCard task={report.task} remove={false} />
+                    )}
                   </div>
 
                   {/* Botón */}
@@ -208,11 +196,15 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                           {report.form?.title}
                         </p>
                         <p className='text-sm'>
-                          <span className='font-semibold'>{t('h_category')}:</span>{' '}
+                          <span className='font-semibold'>
+                            {t('h_category')}:
+                          </span>{' '}
                           {report.form?.category ?? `No ${t('h_category')}`}
                         </p>
                         <p className='text-sm'>
-                          <span className='font-semibold'>{t('description')}:</span>{' '}
+                          <span className='font-semibold'>
+                            {t('description')}:
+                          </span>{' '}
                           {report.form?.description}
                         </p>
                         <div className='text-right'>
@@ -232,7 +224,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                             setSelectedFormId(null);
                             setExpandedId(null);
                           }}
-                          type="VIEW"
+                          type='VIEW'
                         />
 
                         <div className='text-right mt-2'>
@@ -247,8 +239,6 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                     )}
                   </div>
                 )}
-
-
               </div>
             </React.Fragment>
           );
