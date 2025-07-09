@@ -13,20 +13,14 @@ import { useTranslation } from 'react-i18next';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { Button } from '@/components/common/button/button';
 import { FormResponseSettingPage } from './response/response';
-import { RESPONSE_MODE_SERVICE, setResponse } from './response/store/response';
+import { RESPONSE_MODE_SERVICE, setResponse, VIEW_NAME , currentView} from './response/store/response';
 import { validateResponse } from '@/pages/settings/forms/response/store/response';
 import { useUserStore } from '@/store/slices';
 
-enum VIEW_NAME {
-  TABLE,
-  INSPECT,
-  REPORT,
-}
 
 export const FormsPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const responses = useSignal<IResponseResponse[]>([]);
-  const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const loading = useSignal<boolean>(false);
   const { selectedCompany } = useUserStore();
 
