@@ -130,7 +130,11 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
         window.dispatchEvent(event);
       }
 
-      navigate(info.id_message ? `${info.redirect}?notificationId=${info.id_message}` : info.redirect);
+      navigate(
+        info.id_message
+          ? `${info.redirect}?notificationId=${info.id_message}`
+          : info.redirect
+      );
       isOpen.value = false;
     }
   };

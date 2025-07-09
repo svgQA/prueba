@@ -118,7 +118,7 @@ export const ManualNotificationForm = ({
       },
     };
 
-    console.log(payload);
+    // console.log(payload);
     const result = await NotificationService.sendManualNotification(payload);
 
     if (!result.getStatus()) return;
@@ -144,7 +144,7 @@ export const ManualNotificationForm = ({
 
   const infoTemplate = async (value: IOption) => {
     setTemplateSelected(value);
-    console.log(value);
+    // console.log(value);
     const responseTemplate = await TemplateService.getTemplateById(
       String(value.value)
     );

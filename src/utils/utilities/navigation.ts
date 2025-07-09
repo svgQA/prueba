@@ -28,7 +28,7 @@ export const useNavigation = () => {
     label: string,
     id: string
   ) => {
-    console.log(`${base}${path}`);
+    // console.log(`${base}${path}`);
     const menu = {
       to: `${base}${path}`,
       label,

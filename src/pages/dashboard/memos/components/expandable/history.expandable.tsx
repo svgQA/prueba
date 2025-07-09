@@ -185,7 +185,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const handleAttachmentUpload = (e: any) => {
     const fileInput: IPresignedRequest = e.target.value[0];
-    console.log('fileInput', fileInput);
+    // console.log('fileInput', fileInput);
     files.value = [...files.value, fileInput];
   };
 
@@ -211,7 +211,10 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                       'Unknown User'}
                   </span>
                   <span className='text-xs text-gray-text-light dark:text-t-dark-light'>
-                    <FormattedDate date={memo.updatedAt} format='datetime' />
+                    <FormattedDate
+                      date={memo.updatedAt as string}
+                      format='datetime'
+                    />
                   </span>
                 </div>
                 <div className='bg-b-light-light dark:bg-b-dark-dark rounded-lg px-3 py-2 relative'>
@@ -320,15 +323,22 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         <Form
           onSubmit={handleSubmitMessage}
           initialValues={{
-            date: DateUtils.dateToFrontend(new Date(), { format: 'DD/MM/YYYY HH:mm' }),
-            duration: (memos.value.length > 0 && memos.value[memos.value.length - 1]?.createdAt && memo.updatedAt)
-              ? getDurationInMinutes(
-                  memos.value[memos.value.length - 1].createdAt as Date | string,
-                  memo.updatedAt
-                )
-              : (memo.createdAt && memo.updatedAt
-                ? getDurationInMinutes(memo.createdAt, memo.updatedAt)
-                : null),
+            date: DateUtils.dateToFrontend(new Date(), {
+              format: 'DD/MM/YYYY HH:mm',
+            }),
+            duration:
+              memos.value.length > 0 &&
+              memos.value[memos.value.length - 1]?.createdAt &&
+              memo.updatedAt
+                ? getDurationInMinutes(
+                    memos.value[memos.value.length - 1].createdAt as
+                      | Date
+                      | string,
+                    memo.updatedAt
+                  )
+                : memo.createdAt && memo.updatedAt
+                  ? getDurationInMinutes(memo.createdAt, memo.updatedAt)
+                  : null,
           }}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit} id='form-message-memo'>

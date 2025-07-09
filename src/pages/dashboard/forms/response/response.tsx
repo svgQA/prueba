@@ -50,7 +50,7 @@ export const FormResponseSettingPage: FunctionComponent<
   const handleInputChange = (
     e: TargetedEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    console.log('handleInputChange', e);
+    // console.log('handleInputChange', e);
     const model = handleChange(e);
     if (!model.page) return;
     updateResponse(
@@ -427,7 +427,7 @@ export const FormResponseSettingPage: FunctionComponent<
 
   const saveResponse = async () => {
     if (!getResponse.value) return;
-    console.log('saveResponse', getResponse.value);
+    // console.log('saveResponse', getResponse.value);
 
     // TODO: No borrar esta parte que es para guardar donde se puede dejar como se quiera
     // el formulario

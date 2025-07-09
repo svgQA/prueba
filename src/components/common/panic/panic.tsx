@@ -69,7 +69,11 @@ const Panic = (_panic: IPanicProps) => {
     notificationBannerRef.current?.closeBanner();
   };
 
-  const handleRedirect = async (panicId: string, event: MouseEvent, panicUuId: string) => {
+  const handleRedirect = async (
+    panicId: string,
+    event: MouseEvent,
+    panicUuId: string
+  ) => {
     event.stopPropagation();
 
     if (panicUuId) {

@@ -39,7 +39,7 @@ export const TemplateCreateForm = () => {
       tasks: Array.isArray(tasksResponse.value) ? tasksResponse.value : [],
     };
 
-    console.log('🟢 Payload para backend:', output);
+    // console.log('🟢 Payload para backend:', output);
 
     const result = await TemplateService.createTemplate(output);
     if (!result.getStatus()) {
