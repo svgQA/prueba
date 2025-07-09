@@ -14,7 +14,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
   id: 'shift:state',
   menus: [
     {
-      icon: '142',
+      icon: '138',
       label: 'm_round',
       description: 'd_round',
       base,

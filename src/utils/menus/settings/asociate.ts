@@ -13,7 +13,7 @@ export const MODAL_SETTING_ASSOCIATE: IModalSidebarMenu = {
       description: 'd_resource',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.asociate.resources.base,
-      id: 'asociate:resources',
+      id: 'asociate:resource:state',
     },
   ],
 };

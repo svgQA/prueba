@@ -219,141 +219,155 @@ export const RolesUpsertPage = () => {
                       key={module.id}
                       subtitle={module.description}
                     >
-                      <div className='border rounded-lg p-4'>
+                      <div className='border rounded-lg p-4 border-b-light-dark dark:border-b-dark-light'>
                         <div className='ml-6 space-y-2'>
-                          {module.permissionsGrouped?.flat.map((permission) => (
-                            <Field
-                              key={permission.id}
-                              name={`permission_${permission.id}`}
-                              type='checkbox'
-                              render={({ input }) => (
-                                <div className='flex items-center'>
-                                  <input
-                                    {...input}
-                                    type='checkbox'
-                                    className='h-4 w-4 rounded border-gray-300'
-                                    checked={selectedPermissions.includes(
-                                      permission.id
-                                    )}
-                                    onChange={(e) =>
-                                      handlePermissionToggle(
-                                        permission.id,
-                                        e.currentTarget.checked
-                                      )
-                                    }
-                                  />
-                                  <label className='ml-2 flex flex-col'>
-                                    <span className='text-sm font-medium'>
-                                      {permission.name}
-                                    </span>
-                                    <span className='text-xs text-gray-500'>
-                                      {permission.description}
-                                    </span>
-                                    <span className='text-xs text-gray-500'>
-                                      <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
-                                        {permission.key}
-                                      </span>
-                                    </span>
-                                  </label>
+                          <div className='flex flex-row flex-wrap gap-2 justify-center py-2'>
+                            {module.permissionsGrouped?.flat.map(
+                              (permission) => (
+                                <Field
+                                  key={permission.id}
+                                  name={`permission_${permission.id}`}
+                                  type='checkbox'
+                                  render={({ input }) => (
+                                    <div className='flex items-center'>
+                                      <input
+                                        {...input}
+                                        type='checkbox'
+                                        className='h-4 w-4 rounded border-gray-300'
+                                        checked={selectedPermissions.includes(
+                                          permission.id
+                                        )}
+                                        onChange={(e) =>
+                                          handlePermissionToggle(
+                                            permission.id,
+                                            e.currentTarget.checked
+                                          )
+                                        }
+                                      />
+                                      <label className='ml-2 flex flex-col'>
+                                        <span className='text-sm font-medium'>
+                                          {permission.name}
+                                        </span>
+                                        <span className='text-xs text-gray-500'>
+                                          {permission.description}
+                                        </span>
+                                        <span className='text-xs text-gray-500'>
+                                          <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
+                                            {permission.key}
+                                          </span>
+                                        </span>
+                                      </label>
+                                    </div>
+                                  )}
+                                />
+                              )
+                            )}
+                          </div>
+                          <div
+                            className={`flex flex-row flex-wrap py-2 justify-center w-full ${module.permissionsGrouped?.tree.length ? 'border-t' : ''} border-b-light-dark dark:border-b-dark-light`}
+                          >
+                            {module.permissionsGrouped?.tree.map((group) => (
+                              <div
+                                key={group.key}
+                                className='py-2 mx-1 px-2 min-w-[400px] divide-y divide-b-light-dark dark:divide-b-dark-light'
+                              >
+                                <div className='font-medium text-sm mb-2'>
+                                  {t(`m_${group.key}`)}
                                 </div>
-                              )}
-                            />
-                          ))}
-                          {module.permissionsGrouped?.tree.map((group) => (
-                            <div key={group.key} className='ml-4'>
-                              <div className='font-medium text-sm mb-2'>
-                                {group.key}
-                              </div>
-                              {group.children.map((child: PermissionTree) => (
-                                <div key={child.key} className='ml-4 mb-2'>
-                                  {child.permission && (
-                                    <Field
-                                      key={child.permission.id}
-                                      name={`permission_${child.permission.id}`}
-                                      type='checkbox'
-                                      render={({ input }) => (
-                                        <div className='flex items-center'>
-                                          <input
-                                            {...input}
-                                            type='checkbox'
-                                            className='h-4 w-4 rounded border-gray-300'
-                                            checked={selectedPermissions.includes(
-                                              child.permission?.id || 0
-                                            )}
-                                            onChange={(e) =>
-                                              handlePermissionToggle(
-                                                child.permission?.id || 0,
-                                                e.currentTarget.checked
-                                              )
-                                            }
-                                          />
-                                          <label className='ml-2 flex flex-col'>
-                                            <span className='text-sm font-medium'>
-                                              {child.permission?.name}
-                                            </span>
-                                            <span className='text-xs text-gray-500'>
-                                              {child.permission?.description}
-                                            </span>
-                                            <span className='text-xs text-gray-500'>
-                                              <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
-                                                {child.permission?.key}
+                                {group.children.map((child: PermissionTree) => (
+                                  <div key={child.key} className='ml-4 mb-2'>
+                                    {child.permission && (
+                                      <Field
+                                        key={child.permission.id}
+                                        name={`permission_${child.permission.id}`}
+                                        type='checkbox'
+                                        render={({ input }) => (
+                                          <div className='flex items-center'>
+                                            <input
+                                              {...input}
+                                              type='checkbox'
+                                              className='h-4 w-4 rounded border-gray-300'
+                                              checked={selectedPermissions.includes(
+                                                child.permission?.id || 0
+                                              )}
+                                              onChange={(e) =>
+                                                handlePermissionToggle(
+                                                  child.permission?.id || 0,
+                                                  e.currentTarget.checked
+                                                )
+                                              }
+                                            />
+                                            <label className='ml-2 flex flex-col'>
+                                              <span className='text-sm font-medium'>
+                                                {child.permission?.name}
                                               </span>
-                                            </span>
-                                          </label>
-                                        </div>
-                                      )}
-                                    />
-                                  )}
-                                  {child.children?.map(
-                                    (subChild: PermissionTree) => (
-                                      <div key={subChild.key} className='ml-4'>
-                                        <Field
-                                          key={subChild.permission?.id}
-                                          name={`permission_${subChild.permission?.id}`}
-                                          type='checkbox'
-                                          render={({ input }) => (
-                                            <div className='flex items-center'>
-                                              <input
-                                                {...input}
-                                                type='checkbox'
-                                                className='h-4 w-4 rounded border-gray-300'
-                                                checked={selectedPermissions.includes(
-                                                  subChild.permission?.id || 0
-                                                )}
-                                                onChange={(e) =>
-                                                  handlePermissionToggle(
-                                                    subChild.permission?.id ||
-                                                      0,
-                                                    e.currentTarget.checked
-                                                  )
-                                                }
-                                              />
-                                              <label className='ml-2 flex flex-col'>
-                                                <span className='text-sm font-medium'>
-                                                  {subChild.permission?.name}
+                                              <span className='text-xs text-gray-500'>
+                                                {child.permission?.description}
+                                              </span>
+                                              <span className='text-xs text-gray-500'>
+                                                <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
+                                                  {child.permission?.key}
                                                 </span>
-                                                <span className='text-xs text-gray-500'>
-                                                  {
-                                                    subChild.permission
-                                                      ?.description
+                                              </span>
+                                            </label>
+                                          </div>
+                                        )}
+                                      />
+                                    )}
+                                    {child.children?.map(
+                                      (subChild: PermissionTree) => (
+                                        <div
+                                          key={subChild.key}
+                                          className='ml-4'
+                                        >
+                                          <Field
+                                            key={subChild.permission?.id}
+                                            name={`permission_${subChild.permission?.id}`}
+                                            type='checkbox'
+                                            render={({ input }) => (
+                                              <div className='flex items-center'>
+                                                <input
+                                                  {...input}
+                                                  type='checkbox'
+                                                  className='h-4 w-4 rounded border-gray-300'
+                                                  checked={selectedPermissions.includes(
+                                                    subChild.permission?.id || 0
+                                                  )}
+                                                  onChange={(e) =>
+                                                    handlePermissionToggle(
+                                                      subChild.permission?.id ||
+                                                        0,
+                                                      e.currentTarget.checked
+                                                    )
                                                   }
-                                                </span>
-                                                <span className='text-xs text-gray-500'>
-                                                  <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
-                                                    {subChild.permission?.key}
+                                                />
+                                                <label className='ml-2 flex flex-col'>
+                                                  <span className='text-sm font-medium'>
+                                                    {subChild.permission?.name}
                                                   </span>
-                                                </span>
-                                              </label>
-                                            </div>
-                                          )}
-                                        />
-                                      </div>
-                                    )
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          ))}
+                                                  <span className='text-xs text-gray-500'>
+                                                    {
+                                                      subChild.permission
+                                                        ?.description
+                                                    }
+                                                  </span>
+                                                  <span className='text-xs text-gray-500'>
+                                                    <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
+                                                      {subChild.permission?.key}
+                                                    </span>
+                                                  </span>
+                                                </label>
+                                              </div>
+                                            )}
+                                          />
+                                        </div>
+                                      )
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </ExpansionPanel>
