@@ -4,8 +4,8 @@ import { DateUtils, ValidDate } from '@/utils/utilities/dates';
 type DateFormat = 'human' | 'date' | 'datetime' | 'time' | 'relative';
 type TimeZone = 'local' | 'utc';
 
-interface FormattedDateProps {
-  date: ValidDate;
+interface Props {
+  date?: ValidDate | null;
   format?: DateFormat;
   timeZone?: TimeZone;
   className?: string;
@@ -20,8 +20,8 @@ export const FormattedDate = ({
   className,
   children,
   emptyValue = '--:--',
-}: FormattedDateProps) => {
-  if (!date || date === 'null') return emptyValue;
+}: Props) => {
+  if (!date || date === null || date === 'null') return emptyValue;
 
   const formatDate = (): string => {
     switch (format) {

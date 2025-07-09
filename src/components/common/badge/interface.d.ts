@@ -12,6 +12,7 @@ export interface IBadgeProps {
   size?: 'xs' | 'sm' | 'md' | 'lg';
   full?: boolean;
   borderless?: boolean;
+  count?: number;
   status?: 'error' | 'success' | 'warning' | 'info' | 'ternary';
   outline?: boolean;
   width?:

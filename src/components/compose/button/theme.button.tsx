@@ -4,13 +4,11 @@ import { getTheme, setTheme, toggleTheme } from './signal.theme';
 import { localStorage } from '@/utils/storage';
 interface IThemeButtonProps {
   unpadded?: boolean;
-  borderless?: boolean;
   rounded?: boolean;
 }
 
 export const ThemeButton = ({
   unpadded = false,
-  borderless = false,
   rounded = false,
 }: IThemeButtonProps) => {
   useEffect(() => {
@@ -50,8 +48,9 @@ export const ThemeButton = ({
       rounded={rounded}
       icon='301'
       padding='px-1'
-      borderless={borderless}
+      borderless
       iconSize='xsm'
+      transparent
       unpadded={unpadded}
     />
   );

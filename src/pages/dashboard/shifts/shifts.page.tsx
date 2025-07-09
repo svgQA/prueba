@@ -150,8 +150,10 @@ export const ShiftsPage: FunctionalComponent = () => {
     setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
   };
 
-  // Efecto que observa shifts.value
-  // Ineficiente a morir.
+  /*
+   * TODO: Arreglar esta mierda.
+   * Efecto que observa shifts.value Ineficiente a morir.
+   */
   useEffect(() => {
     const result = shifts.value.some(
       (shift: any) =>
@@ -160,12 +162,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     );
     setHasValidPlayer(result);
   }, [shifts.value]);
-
-  // const fetchShifts = async () => {
-  //   const response = await ShiftService.get_all({ page: 1, items: 1000 });
-  //   if (!response.getStatus()) return;
-  //   hifts.value(response.getMany());
-  // };
 
   const fetchSSE = useCallback(async () => {
     await SseManager.getQuery(['activity', 'stream', 'check']);

@@ -255,7 +255,7 @@ export const FormResponseSettingPage: FunctionComponent<
               disabled={disabled}
               data-page={page}
               data-section={section}
-            // required={required}
+              // required={required}
             />
           </div>
         );
@@ -285,7 +285,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               dataPage={page}
               dataSection={section}
-            // required={required}
+              // required={required}
             />
           </div>
         );
@@ -340,7 +340,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               area='form'
-            // required={required}
+              // required={required}
             />
           </div>
         );
@@ -356,7 +356,7 @@ export const FormResponseSettingPage: FunctionComponent<
               label={element.label}
               data-section={section}
               disabled={disabled}
-            // required={required}
+              // required={required}
             />
           </div>
         );
@@ -372,7 +372,7 @@ export const FormResponseSettingPage: FunctionComponent<
               label={element.label}
               data-section={section}
               disabled={disabled}
-            // required={required}
+              // required={required}
             />
           </div>
         );
@@ -390,7 +390,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               data-page={page}
               data-section={section}
-            // required={required}
+              // required={required}
             />
           </div>
         );
@@ -473,7 +473,7 @@ export const FormResponseSettingPage: FunctionComponent<
               <h1 className='text-2xl font-bold mb-6'>
                 {getResponse.value.label}
               </h1>
-              {type !== "VIEW" &&
+              {type !== 'VIEW' && (
                 <div className='flex flex-row gap-2'>
                   <Button
                     type='button'
@@ -489,8 +489,8 @@ export const FormResponseSettingPage: FunctionComponent<
                     icon='134'
                     label='save'
                   />
-                </div>}
-
+                </div>
+              )}
             </div>
 
             {getResponse.value.description && (

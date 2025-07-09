@@ -9,6 +9,8 @@ export const MenuButtons = memo(({ goBack, goForward }: any) => (
       onClick={goBack}
       type='button'
       rounded
+      transparent
+      borderless
       icon='003'
     />
     <Button
@@ -17,6 +19,8 @@ export const MenuButtons = memo(({ goBack, goForward }: any) => (
       onClick={goForward}
       type='button'
       rounded
+      transparent
+      borderless
       icon='004'
     />
   </div>

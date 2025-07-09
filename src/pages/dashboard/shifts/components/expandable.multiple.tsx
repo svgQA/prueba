@@ -90,7 +90,7 @@ const getInfoContent = (
 
 export const ExpandableMultiple = ({ type, data, onCheck }: Props) => {
   return (
-    <div className='info-container'>
+    <div className='info-container border-b-2 dark:border-b-dark-light'>
       {type && data && getInfoContent(type, data, onCheck)}
     </div>
   );

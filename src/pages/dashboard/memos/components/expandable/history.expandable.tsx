@@ -53,7 +53,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     }
 
     if (name === SSE_EVENTS.UPDATE_CHECK) {
-      if(memo.id !== Number(message.id)) return
+      if (memo.id !== Number(message.id)) return;
       status.value = message.state;
     }
   };
@@ -122,8 +122,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error('s_gps_error');
@@ -335,21 +335,24 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
             }),
             duration:
               memos.value.length > 0 &&
-                memos.value[memos.value.length - 1]?.createdAt &&
-                memo.updatedAt
+              memos.value[memos.value.length - 1]?.createdAt &&
+              memo.updatedAt
                 ? getDurationInMinutes(
-                  memos.value[memos.value.length - 1].createdAt as
-                  | Date
-                  | string,
-                  memo.updatedAt
-                )
+                    memos.value[memos.value.length - 1].createdAt as
+                      | Date
+                      | string,
+                    memo.updatedAt
+                  )
                 : memo.createdAt && memo.updatedAt
                   ? getDurationInMinutes(memo.createdAt, memo.updatedAt)
                   : null,
           }}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit} id='form-message-memo'>
-              <fieldset disabled={disable} style={{ border: 0, padding: 0, margin: 0 }}>
+              <fieldset
+                disabled={disable}
+                style={{ border: 0, padding: 0, margin: 0 }}
+              >
                 <div className='flex-1'>
                   <div className='grid grid-cols-1 gap-4 '>
                     <div className='p-3'>
@@ -410,7 +413,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         className={`grid ${files.value.length > 0 ? 'grid-cols-2' : 'grid-cols-1'}`}
                       >
                         <Field<string> name='message'>
-                          {({ }) => (
+                          {({}) => (
                             <TextArea
                               name='message'
                               placeholder='p_comment'
@@ -491,7 +494,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     title: status.value || 'CREATED',
                     message: `${t('message.confirm')} ${status.value}`,
                     onConfirm: () => handleCheck(),
-                    onCancel: () => { },
+                    onCancel: () => {},
                   })
                 }
               />
