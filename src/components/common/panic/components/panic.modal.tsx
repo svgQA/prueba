@@ -1,8 +1,8 @@
-import { Modal } from '../modal/modal';
-import { PanicModalProps } from './interface';
 import { FunctionComponent } from 'preact';
-import './panic.style.css';
 import { FormattedDate } from '@/components/compose/forms';
+import { Modal } from '../../modal/modal';
+import { PanicModalProps } from '../utils/interface';
+import '../utils/panic.style.css';
 
 export const PanicModal: FunctionComponent<PanicModalProps> = ({
   open,

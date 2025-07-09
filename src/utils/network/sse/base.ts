@@ -10,7 +10,7 @@ export enum SSE_EVENTS {
 }
 
 export enum SSE_TYPE {
-  MEMO = 'memos',
+  MEMO = 'memo',
   SHIFT = 'shift',
   ALL = 'all',
   PANIC = 'panic',
