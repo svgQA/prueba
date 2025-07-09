@@ -37,6 +37,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [btnLabel, setBtnLabel] = useState('Check In');
   const predefined: Signal<IOption[]> = useSignal([]);
   const panic = useSignal<IPanic[]>([]);
+  const disable = memo.state === 'RESOLVED';
 
   useEffect(() => {
     fetchInitialData();
@@ -342,97 +343,91 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           }}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit} id='form-message-memo'>
-              <div className='flex-1'>
-                <div className='grid grid-cols-1 gap-4 '>
-                  <div className='p-3'>
-                    <div className='grid grid-cols-2 gap-2'>
-                      <Field<IOption> name='predefined'>
-                        {({ input, meta }) => (
-                          <SmartSelector
-                            {...input}
-                            meta={meta}
-                            name='predefined'
-                            id='select-predefined'
-                            placeholder='p_predefined'
-                            label='p_predefined'
-                            options={predefined.value}
-                            menuPortalTarget={document.body}
-                            allowAll={true}
-                            onChange={(value?: IOption) => {
-                              input.onChange(value);
-                              /*
-                              if (value?.value === 'other') {
-                                setShowComment(true);
-                              } else {
-                                setShowComment(false);
-                                setSelectedPredefined(value || null);
+              <fieldset disabled={disable} style={{ border: 0, padding: 0, margin: 0 }}>
+                <div className='flex-1'>
+                  <div className='grid grid-cols-1 gap-4 '>
+                    <div className='p-3'>
+                      <div className='grid grid-cols-2 gap-2'>
+                        <Field<IOption> name='predefined'>
+                          {({ input, meta }) => (
+                            <SmartSelector
+                              {...input}
+                              meta={meta}
+                              name='predefined'
+                              id='select-predefined'
+                              placeholder='p_predefined'
+                              label='p_predefined'
+                              options={predefined.value}
+                              menuPortalTarget={document.body}
+                              allowAll={true}
+                              onChange={(value?: IOption) => {
+                                input.onChange(value);
+                              }}
+                            />
+                          )}
+                        </Field>
+
+                        <Field<string> name='duration'>
+                          {({ input }) => (
+                            <Input
+                              {...input}
+                              type='number'
+                              name='duration'
+                              label='h_duration'
+                              placeholder='min'
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div className='grid grid-cols-2 gap-2'>
+                        <Field<string> name='date'>
+                          {({ input }) => (
+                            <DateField {...input} name='date' label='h_date' />
+                          )}
+                        </Field>
+
+                        <Field name='attachments'>
+                          {() => (
+                            <File
+                              name='attachments'
+                              onChange={handleAttachmentUpload}
+                              value={[]}
+                              accept='image/*, video/*'
+                              multiple={true}
+                              label='h_attachment'
+                              area='memo'
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div
+                        className={`grid ${files.value.length > 0 ? 'grid-cols-2' : 'grid-cols-1'}`}
+                      >
+                        <Field<string> name='message'>
+                          {({}) => (
+                            <TextArea
+                              name='message'
+                              placeholder='p_comment'
+                              value={message}
+                              onChange={(
+                                e: React.ChangeEvent<HTMLTextAreaElement>
+                              ) =>
+                                setMessage(
+                                  (e.target as HTMLTextAreaElement).value
+                                )
                               }
-                              */
-                            }}
-                          />
-                        )}
-                      </Field>
-
-                      <Field<string> name='duration'>
-                        {({ input }) => (
-                          <Input
-                            {...input}
-                            type='number'
-                            name='duration'
-                            label='h_duration'
-                            placeholder='min'
-                          />
-                        )}
-                      </Field>
-                    </div>
-                    <div className='grid grid-cols-2 gap-2'>
-                      <Field<string> name='date'>
-                        {({ input }) => (
-                          <DateField {...input} name='date' label='h_date' />
-                        )}
-                      </Field>
-
-                      <Field name='attachments'>
-                        {() => (
-                          <File
-                            name='attachments'
-                            onChange={handleAttachmentUpload}
-                            value={[]}
-                            accept='image/*, video/*'
-                            multiple={true}
-                            label='h_attachment'
-                            area='memo'
-                          />
-                        )}
-                      </Field>
-                    </div>
-                    <div
-                      className={`grid ${files.value.length > 0 ? 'grid-cols-2' : 'grid-cols-1'}`}
-                    >
-                      <Field<string> name='message'>
-                        {({}) => (
-                          <TextArea
-                            name='message'
-                            placeholder='p_comment'
-                            value={message}
-                            onChange={(
-                              e: React.ChangeEvent<HTMLTextAreaElement>
-                            ) =>
-                              setMessage(
-                                (e.target as HTMLTextAreaElement).value
-                              )
-                            }
-                          />
-                        )}
-                      </Field>
-                      <ShowFiles
-                        resources={files.value}
-                        removeFile={removeFile}
-                      />
+                            />
+                          )}
+                        </Field>
+                        <ShowFiles
+                          resources={files.value}
+                          removeFile={removeFile}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </fieldset>
             </form>
           )}
         />
@@ -515,7 +510,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
             name='memo-send-response'
             form='form-message-memo'
             type='submit'
-            disabled={!message.trim() /* && !selectedPredefined */}
+            disabled={disable || !message.trim() /* && !selectedPredefined */}
             label='send'
             icon='311'
           />

@@ -231,15 +231,6 @@ export const MemosPage: FunctionComponent = () => {
     () => (
       <div className='flex items-center gap-2'>
         <Button
-          name='button-change-scheduler'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.CHAT);
-          }}
-          rounded={false}
-          selected={currentView.value === VIEW_NAME.CHAT}
-          icon='418'
-        />
-        <Button
           name='button-change-table'
           onClick={() => {
             handleViewChange(VIEW_NAME.TABLE);
@@ -247,6 +238,15 @@ export const MemosPage: FunctionComponent = () => {
           rounded={false}
           selected={currentView.value === VIEW_NAME.TABLE}
           icon='320'
+        />
+        <Button
+          name='button-change-scheduler'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.CHAT);
+          }}
+          rounded={false}
+          selected={currentView.value === VIEW_NAME.CHAT}
+          icon='418'
         />
         <Button
           name='button-change-panic'
