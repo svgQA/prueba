@@ -38,6 +38,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const predefined: Signal<IOption[]> = useSignal([]);
   const panic = useSignal<IPanic[]>([]);
   const disable = memo.state === 'RESOLVED';
+  const status = useSignal<string | undefined>(memo.state);
 
   useEffect(() => {
     fetchInitialData();
@@ -46,9 +47,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   }, []);
 
   const handleMemoSSE = (event: IBaseSSE) => {
-    const { name } = event;
+    const { name, message } = event;
     if (name === SSE_EVENTS.CREATE_PARENT || name === SSE_EVENTS.PANIC) {
       fetchInitialData();
+    }
+
+    if (name === SSE_EVENTS.UPDATE_CHECK) {
+      if(memo.id !== Number(message.id)) return
+      status.value = message.state;
     }
   };
 
@@ -116,8 +122,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       showAlert({
         title: i18n.t('shift.expandable.date.location.title'),
         message: i18n.t('shift.expandable.date.location.message'),
-        onConfirm: () => {},
-        onCancel: () => {},
+        onConfirm: () => { },
+        onCancel: () => { },
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error('s_gps_error');
@@ -329,14 +335,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
             }),
             duration:
               memos.value.length > 0 &&
-              memos.value[memos.value.length - 1]?.createdAt &&
-              memo.updatedAt
+                memos.value[memos.value.length - 1]?.createdAt &&
+                memo.updatedAt
                 ? getDurationInMinutes(
-                    memos.value[memos.value.length - 1].createdAt as
-                      | Date
-                      | string,
-                    memo.updatedAt
-                  )
+                  memos.value[memos.value.length - 1].createdAt as
+                  | Date
+                  | string,
+                  memo.updatedAt
+                )
                 : memo.createdAt && memo.updatedAt
                   ? getDurationInMinutes(memo.createdAt, memo.updatedAt)
                   : null,
@@ -404,7 +410,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         className={`grid ${files.value.length > 0 ? 'grid-cols-2' : 'grid-cols-1'}`}
                       >
                         <Field<string> name='message'>
-                          {({}) => (
+                          {({ }) => (
                             <TextArea
                               name='message'
                               placeholder='p_comment'
@@ -473,25 +479,21 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         </div>
 
         <div className='flex items-center gap-4 w-4/12 flex-row justify-between px-3'>
-          {memo.state != 'IN_REVISION' && memo.state != 'CREATED' && (
+          {status.value != 'IN_REVISION' && status.value != 'CREATED' && (
             <div className='flex items-center h-[72px]'>
               <Button
-                label={btnLabel}
-                icon={
-                  btnLabel === 'SOLVE' || btnLabel === 'RESOLVED'
-                    ? '030'
-                    : '032'
-                }
-                disabled={btnLabel === 'RESOLVED'}
+                name='btn-check-memo'
+                label={status.value === 'OPENED' ? 'SOLVE' : 'RESOLVED'}
+                icon='030'
+                disabled={status.value === 'RESOLVED'}
                 onClick={() =>
                   showAlert({
-                    title: btnLabel,
-                    message: `${t('message.confirm')} ${btnLabel}`,
+                    title: status.value || 'CREATED',
+                    message: `${t('message.confirm')} ${status.value}`,
                     onConfirm: () => handleCheck(),
-                    onCancel: () => {},
+                    onCancel: () => { },
                   })
                 }
-                name={btnLabel}
               />
             </div>
           )}

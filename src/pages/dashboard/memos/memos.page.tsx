@@ -82,6 +82,7 @@ export const MemosPage: FunctionComponent = () => {
     null
   );
   const panic = useSignal<Memo[]>([]);
+  const summaryPanic = useSignal<MemosSummary>(defaultSummary);
 
   useEffect(() => {
     document.title = t('p_chat');
@@ -115,7 +116,7 @@ export const MemosPage: FunctionComponent = () => {
     await SseManager.getQuery(['memo', 'stream', 'history']);
   }, []);
 
-  const handleMemoSSE = (event: IBaseSSE) => {
+  const handleMemoSSE = async (event: IBaseSSE) => {
     const { name, message } = event;
 
     if (
@@ -125,7 +126,7 @@ export const MemosPage: FunctionComponent = () => {
     ) {
       const memoIndex = memos.value.findIndex((memo) => memo.id === message.id);
       if (memoIndex < 0) return;
-      const memoCopy = memos.value;
+      const memoCopy: Memo[] = memos.value;
       memoCopy[memoIndex].messages = message.messages;
       memoCopy[memoIndex].state = message.state;
       memoCopy[memoIndex].userEdit = message.userEdit;
@@ -149,6 +150,7 @@ export const MemosPage: FunctionComponent = () => {
       responseGroupedByService,
       responseGroupedByUser,
       responseMemoPanic,
+      responseSummaryPanic
     ] = await Promise.all([
       MemoService.get_all({ page: 1, items: 1000 }),
       UserService.get_all_employee({ items: 20, page: 1 }),
@@ -156,6 +158,7 @@ export const MemosPage: FunctionComponent = () => {
       MemoService.get_all_by_service(),
       MemoService.get_all_by_user(),
       PanicService.get_all_memo_panic({ page: 1, items: 1000 }),
+      PanicService.getPanicSummary()
     ]);
 
     if (responseMemos.getStatus()) {
@@ -196,6 +199,10 @@ export const MemosPage: FunctionComponent = () => {
         }),
       }));
       loading.value = false;
+    }
+
+    if (responseSummaryPanic.getStatus()) {
+      summaryPanic.value = responseSummaryPanic.getOne();
     }
   };
 
@@ -282,6 +289,36 @@ export const MemosPage: FunctionComponent = () => {
     [currentView.value]
   );
 
+  /**
+   * 
+   * @returns cards
+   */
+  const renderCardsInfo = (summary: MemosSummary, type: string = 'memos') => (
+    <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+      <CardData
+        title={t(type + '.cards.totalToday')}
+        count={summary.total}
+        subtitle=''
+        color='t-dark'
+        icon='328' // 328
+      />
+      <CardData
+        title={t(type + '.cards.unresolved')}
+        count={calculatePercentage(summary.in_progress)}
+        subtitle=''
+        color='t-dark'
+        icon='311' // 311
+      />
+      <CardData
+        title={t(type + '.cards.resolved')}
+        count={calculatePercentage(summary.completed)}
+        subtitle=''
+        color='t-dark'
+        icon='312' // 312
+      />
+    </div>
+  );
+
   const onClickAction = (_: {
     id: string;
     type: string;
@@ -300,35 +337,8 @@ export const MemosPage: FunctionComponent = () => {
       }
       padding={currentView.value !== VIEW_NAME.CHAT}
     >
-      {(currentView.value === VIEW_NAME.TABLE ||
-        currentView.value === VIEW_NAME.MAP ||
-        currentView.value === VIEW_NAME.PANIC) && (
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-          <CardData
-            title={t('memos.cards.totalToday')}
-            count={summary.value.total}
-            subtitle=''
-            color='t-dark'
-            icon='328' // 328
-          />
-
-          <CardData
-            title={t('memos.cards.unresolved')}
-            count={calculatePercentage(summary.value.in_progress)}
-            subtitle=''
-            color='t-dark'
-            icon='311' // 311
-          />
-
-          <CardData
-            title={t('memos.cards.resolved')}
-            count={calculatePercentage(summary.value.completed)}
-            subtitle=''
-            color='t-dark'
-            icon='312' // 312
-          />
-        </div>
-      )}
+      {(currentView.value === VIEW_NAME.TABLE || currentView.value === VIEW_NAME.MAP) && renderCardsInfo(summary.value)}
+      {currentView.value === VIEW_NAME.PANIC && renderCardsInfo(summaryPanic.value, 'panic')}
 
       <div
         className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}
