@@ -35,9 +35,10 @@ import {
 import { EventBus } from '@/utils/network/event.bus';
 import { MapPath } from '@/components/common/map/MapPath';
 import { RoutePoint } from '@/services/general/tracking';
-import NotificationBanner from '@/components/common/notifications/notification.banner';
+import NotificationBanner from '@/components/common/notifications/components/notification.banner';
 import { PanicService } from '@/services/memo/panic';
 import { getColumnsPanic } from './components/panic.columns';
+import { handleNotificationEvent } from '@/components/common/notifications/components/notification.event';
 
 enum VIEW_NAME {
   TABLE,
@@ -56,12 +57,8 @@ export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
   const [location] = useLocation();
-  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(
-    null
-  );
-  const [highlightedPanicMemoId, setHighlightedPanicMemoId] = useState<
-    string | null
-  >(null);
+  const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(null);
+  const [highlightedPanicMemoId, setHighlightedPanicMemoId] = useState<string | null>(null);
 
   const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
@@ -77,9 +74,7 @@ export const MemosPage: FunctionComponent = () => {
   const memos = useSignal<Memo[]>([]);
   const summary = useSignal<MemosSummary>(defaultSummary);
   const loading = useSignal<boolean>(false);
-  const notificationBannerRef = useRef<{ startBannerAnimation: () => void }>(
-    null
-  );
+  const notificationBannerRef = useRef<{ startBannerAnimation: () => void }>(null);
   const panic = useSignal<Memo[]>([]);
 
   useEffect(() => {
@@ -94,47 +89,21 @@ export const MemosPage: FunctionComponent = () => {
     if (selectedCompany) {
       fetchInitialData();
       fetchSSE();
-      selectedMemo();
+      selectedNotifier();
       EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
     }
   }, [selectedCompany, location]);
 
-  useEffect(() => {
-    const handleGoToPanicTable = (event: CustomEvent) => {
+  const selectedNotifier = () => {
+    handleNotificationEvent('notification-click', (id: any) => {
+      currentView.value = VIEW_NAME.TABLE;
+      setHighlightedMemoId(Number(id));
+    });
+    handleNotificationEvent('go-to-panic-table', (id: any) => {
       currentView.value = VIEW_NAME.PANIC;
-      setHighlightedPanicMemoId(String(event.detail.id));
-    };
-
-    window.addEventListener(
-      'go-to-panic-table',
-      handleGoToPanicTable as EventListener
-    );
-
-    return () => {
-      window.removeEventListener(
-        'go-to-panic-table',
-        handleGoToPanicTable as EventListener
-      );
-    };
-  }, []);
-
-  const selectedMemo = () => {
-    // Add event listener for notification clicks
-    const handleNotificationClick = (event: CustomEvent) => {
-      const { id } = event.detail;
-      if (id) setHighlightedMemoId(Number(id));
-    };
-
-    window.addEventListener(
-      'notification-click',
-      handleNotificationClick as EventListener
-    );
-
-    // Get memoId from URL on initial load
-    const urlParams = new URLSearchParams(window.location.search);
-    const memoId = urlParams.get('notificationId');
-    if (memoId) setHighlightedMemoId(Number(memoId));
-  };
+      setHighlightedPanicMemoId(String(id));
+    });
+  }
 
   const fetchSSE = useCallback(async () => {
     await SseManager.getQuery(['memo', 'stream', 'history']);
@@ -328,32 +297,32 @@ export const MemosPage: FunctionComponent = () => {
       {(currentView.value === VIEW_NAME.TABLE ||
         currentView.value === VIEW_NAME.MAP ||
         currentView.value === VIEW_NAME.PANIC) && (
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-          <CardData
-            title={t('memos.cards.totalToday')}
-            count={summary.value.total}
-            subtitle=''
-            color='t-dark'
-            icon='328' // 328
-          />
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+            <CardData
+              title={t('memos.cards.totalToday')}
+              count={summary.value.total}
+              subtitle=''
+              color='t-dark'
+              icon='328' // 328
+            />
 
-          <CardData
-            title={t('memos.cards.unresolved')}
-            count={calculatePercentage(summary.value.in_progress)}
-            subtitle=''
-            color='t-dark'
-            icon='311' // 311
-          />
+            <CardData
+              title={t('memos.cards.unresolved')}
+              count={calculatePercentage(summary.value.in_progress)}
+              subtitle=''
+              color='t-dark'
+              icon='311' // 311
+            />
 
-          <CardData
-            title={t('memos.cards.resolved')}
-            count={calculatePercentage(summary.value.completed)}
-            subtitle=''
-            color='t-dark'
-            icon='312' // 312
-          />
-        </div>
-      )}
+            <CardData
+              title={t('memos.cards.resolved')}
+              count={calculatePercentage(summary.value.completed)}
+              subtitle=''
+              color='t-dark'
+              icon='312' // 312
+            />
+          </div>
+        )}
 
       <div
         className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}
@@ -420,11 +389,7 @@ export const MemosPage: FunctionComponent = () => {
             searchable={{
               history: false,
             }}
-            rowClassName={(row: Memo) =>
-              row.panicUuid === highlightedPanicMemoId
-                ? 'animate-highlight'
-                : ''
-            }
+            rowClassName={(row: Memo) => row.panicUuid === highlightedPanicMemoId ? 'animate-highlight' : ''}
           />
         )}
 

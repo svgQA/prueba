@@ -10,10 +10,10 @@ import {
 import { FloatBadge } from '../badge/float';
 import { Button } from '../button/button';
 import { useSignal } from '@preact/signals';
-import ExpanderNotification from '../notifications/expander.notification';
+import ExpanderNotification from '../notifications/components/expander.notification';
 import { PanicService } from '@/services/memo/panic';
 import { useUserStore } from '@/store/slices';
-import NotificationBanner from '../notifications/notification.banner';
+import NotificationBanner from '../notifications/components/notification.banner';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '../Avatar';
 import { useLocation } from 'wouter';
@@ -69,16 +69,19 @@ const Panic = (_panic: IPanicProps) => {
     notificationBannerRef.current?.closeBanner();
   };
 
-  const handleRedirect = async (panicId: string, event: MouseEvent) => {
+  const handleRedirect = async (panicId: string, event: MouseEvent, panicUuId: string) => {
     event.stopPropagation();
-    navigate('/');
-    setTimeout(() => {
-      window.dispatchEvent(
-        new CustomEvent('go-to-panic-table', { detail: { id: panicId } })
-      );
-      isOpen.value = false;
-    }, 500);
+
+    if (panicUuId) {
+      const eventEmit = new CustomEvent('go-to-panic-table', {
+        detail: { id: panicUuId },
+      });
+      window.dispatchEvent(eventEmit);
+    }
+
+    navigate(panicUuId ? `/?notificationId=${panicUuId}` : '/');
     await handleChangeStatus(panicId);
+    isOpen.value = false;
   };
 
   return (
@@ -140,7 +143,7 @@ const Panic = (_panic: IPanicProps) => {
 
               <span
                 className='vx-icon vx-icon-061 text-gray-400 hover:text-red-500 transition-colors'
-                onClick={(e) => handleRedirect(panic.id, e)}
+                onClick={(e) => handleRedirect(panic.id, e, panic?.uuid)}
               />
             </div>
           ))

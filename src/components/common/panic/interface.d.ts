@@ -12,6 +12,7 @@ export interface IPanic {
   user: any;
   date: string;
   status: string;
+  uuid: string;
 }
 
 export interface PanicModalProps {
