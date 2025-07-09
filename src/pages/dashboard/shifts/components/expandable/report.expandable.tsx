@@ -3,7 +3,6 @@ import ShowFiles from '@/components/common/file/show.file';
 import { useTranslation } from 'react-i18next';
 import { TaskCard } from '@/pages/settings/shifts/task/create/task.card';
 import { FormService } from '@/services';
-import { FormResponseSettingPage } from '@/pages/dashboard/forms/response/response';
 import {
   setResponse,
   RESPONSE_MODE_SERVICE,
