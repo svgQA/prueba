@@ -217,11 +217,6 @@ export const MemosPage: FunctionComponent = () => {
     users.value = response.getMany();
   };
 
-  const calculatePercentage = (value: number): string => {
-    if (summary.value.total === 0) return '0%';
-    return `${Math.round((value / summary.value.total) * 100)}%`;
-  };
-
   const handleViewChange = useCallback((view: VIEW_NAME) => {
     currentView.value = view;
   }, []);
@@ -304,20 +299,35 @@ export const MemosPage: FunctionComponent = () => {
       />
       <CardData
         title={t(type + '.cards.unresolved')}
-        count={calculatePercentage(summary.in_progress)}
+        count={calculatePercentage(summary)}
         subtitle=''
         color='t-dark'
         icon='311' // 311
       />
       <CardData
         title={t(type + '.cards.resolved')}
-        count={calculatePercentage(summary.completed)}
+        count={calculatePercentage(summary, true)}
         subtitle=''
         color='t-dark'
         icon='312' // 312
       />
     </div>
   );
+
+  /**
+   * 
+   * @param summary 
+   * @param isResolve
+   * @returns 
+   */
+  const calculatePercentage = (summary: MemosSummary, isResolve: boolean = false): string => {
+    const inProgress = summary.in_progress || 0;
+    const completed = summary.completed || 0;
+    const total = inProgress + completed;
+    if (total === 0) return '0%';
+    const value = isResolve ? completed : inProgress;
+    return `${Math.round((value / total) * 100)}%`;
+  };
 
   const onClickAction = (_: {
     id: string;

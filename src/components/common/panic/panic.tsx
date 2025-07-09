@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'preact/hooks';
-import { IPanic, IPanicProps } from './interface';
+import { IPanic, IPanicProps } from './utils/interface';
 import { EventBus } from '@/utils/network/event.bus';
 import {
   IBaseSSE,
@@ -16,8 +16,8 @@ import { useUserStore } from '@/store/slices';
 import NotificationBanner from '../notifications/components/notification.banner';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '../Avatar';
+// import { handleSendNotificationEvent } from '../notifications/components/notification.event';
 import { useLocation } from 'wouter';
-// import { PAGES_LIST } from '@/utils/routing';
 
 const Panic = (_panic: IPanicProps) => {
   const allPanic = useSignal<IPanic[]>([]);
@@ -28,7 +28,7 @@ const Panic = (_panic: IPanicProps) => {
     closeBanner: () => void;
   }>(null);
   const { t } = useTranslation();
-  const [_, navigate] = useLocation();
+  const [, navigate] = useLocation();
 
   useEffect(() => {
     if (!selectedCompany) return;
@@ -75,7 +75,6 @@ const Panic = (_panic: IPanicProps) => {
     panicUuId: string
   ) => {
     event.stopPropagation();
-
     if (panicUuId) {
       const eventEmit = new CustomEvent('go-to-panic-table', {
         detail: { id: panicUuId },
@@ -84,6 +83,8 @@ const Panic = (_panic: IPanicProps) => {
     }
 
     navigate(panicUuId ? `/?notificationId=${panicUuId}` : '/');
+    // handleSendNotificationEvent(panicUuId, 'go-to-panic-table', t);
+    // navigate('/');
     await handleChangeStatus(panicId);
     isOpen.value = false;
   };
