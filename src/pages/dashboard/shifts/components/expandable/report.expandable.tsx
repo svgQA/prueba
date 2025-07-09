@@ -3,11 +3,14 @@ import { DateUtils } from '@/utils/utilities/dates';
 import ShowFiles from '@/components/common/file/show.file';
 import { useTranslation } from 'react-i18next';
 import { TaskCard } from '@/pages/settings/shifts/task/create/task.card';
-
+import { FormService } from '@/services';
+import { FormResponseSettingPage } from '@/pages/dashboard/forms/response/response';
+import { setResponse, RESPONSE_MODE_SERVICE } from '@/pages/dashboard/forms/response/store/response';
 export interface IReport {
   id: number;
   shiftId: number;
   description: string;
+  responseId: string;
   requestDate: string | null;
   updatedAt: string;
   createdAt: string;
@@ -36,12 +39,38 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 }) => {
   const { t } = useTranslation();
   const reports: IReport[] = directReports ?? data?.reports ?? [];
+  const [selectedFormId, setSelectedFormId] = useState<number | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+
 
   const toggleDetails = (report: IReport) => {
     setExpandedId(expandedId === report.id ? null : report.id);
     onViewDetails?.(report);
   };
+
+  const toggleDetailsForm = async (report: IReport) => {
+    if (!report.form?.id) return;
+
+    // Si ya estaba abierto, lo cerramos
+    if (selectedFormId === report.form.id) {
+      setSelectedFormId(null);
+      return;
+    }
+    if (!report?.responseId) return;
+    const response = await FormService.get_one_response(report?.responseId);
+    console.log(response)
+    if (response.getStatus()) {
+      const structure = response.getOne()?.structure;
+      setSelectedFormId(report.form.id);
+
+      setResponse(
+        { mode: RESPONSE_MODE_SERVICE.UPDATE, id: report?.responseId, hold: true },
+        structure
+      );
+    }
+  };
+
+
 
   return (
     <div className='rounded-lg  w-full'>
@@ -64,9 +93,9 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
           const requestDate = report.requestDate
             ? DateUtils.dateToFrontend(report.requestDate, {
-                time: true,
-                format: 'DD/MM/YYYY HH:mm',
-              })
+              time: true,
+              format: 'DD/MM/YYYY HH:mm',
+            })
             : '—';
           const receivedDate = DateUtils.dateToFrontend(report.createdAt, {
             time: true,
@@ -171,30 +200,55 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
                 {/* Formulario */}
                 {isExpanded && !hasAttachments && hasForm && (
-                  <div className='p-4 bg-gray-50 grid grid-cols-4 items-center gap-x-4'>
-                    <p className='text-sm'>
-                      <span className='font-semibold'>{t('h_title')}:</span>{' '}
-                      {report.form?.title}
-                    </p>
-                    <p className='text-sm'>
-                      <span className='font-semibold'>{t('h_category')}:</span>{' '}
-                      {report.form?.category ?? `No ${t('h_category')}`}
-                    </p>
-                    <p className='text-sm'>
-                      <span className='font-semibold'>{t('description')}:</span>{' '}
-                      {report.form?.description}
-                    </p>
-                    <div className='text-right'>
-                      <button
-                        onClick={() => toggleDetails(report)}
-                        className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
-                      >
-                        {t('show')}
-                        <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
-                      </button>
-                    </div>
+                  <div className='p-4 bg-gray-50'>
+                    {selectedFormId !== report.form?.id ? (
+                      <div className='grid grid-cols-4 items-center gap-x-4'>
+                        <p className='text-sm'>
+                          <span className='font-semibold'>{t('h_title')}:</span>{' '}
+                          {report.form?.title}
+                        </p>
+                        <p className='text-sm'>
+                          <span className='font-semibold'>{t('h_category')}:</span>{' '}
+                          {report.form?.category ?? `No ${t('h_category')}`}
+                        </p>
+                        <p className='text-sm'>
+                          <span className='font-semibold'>{t('description')}:</span>{' '}
+                          {report.form?.description}
+                        </p>
+                        <div className='text-right'>
+                          <button
+                            onClick={() => toggleDetailsForm(report)}
+                            className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
+                          >
+                            {t('show')}
+                            <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <FormResponseSettingPage
+                          posFinishAction={() => {
+                            setSelectedFormId(null);
+                            setExpandedId(null);
+                          }}
+                          type="VIEW"
+                        />
+
+                        <div className='text-right mt-2'>
+                          <button
+                            onClick={() => toggleDetailsForm(report)}
+                            className='text-cyan-600 text-xs hover:underline'
+                          >
+                            {t('hide')}
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
+
+
               </div>
             </React.Fragment>
           );

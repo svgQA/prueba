@@ -31,11 +31,12 @@ import { QrCode } from '@/components/common/qr/qrCode';
 
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
+  type?: string;
 }
 
 export const FormResponseSettingPage: FunctionComponent<
   IFormResponseSettingPageProps
-> = ({ posFinishAction }: IFormResponseSettingPageProps) => {
+> = ({ posFinishAction, type }: IFormResponseSettingPageProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
 
@@ -254,7 +255,7 @@ export const FormResponseSettingPage: FunctionComponent<
               disabled={disabled}
               data-page={page}
               data-section={section}
-              // required={required}
+            // required={required}
             />
           </div>
         );
@@ -284,7 +285,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               dataPage={page}
               dataSection={section}
-              // required={required}
+            // required={required}
             />
           </div>
         );
@@ -339,7 +340,7 @@ export const FormResponseSettingPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               area='form'
-              // required={required}
+            // required={required}
             />
           </div>
         );
@@ -355,7 +356,7 @@ export const FormResponseSettingPage: FunctionComponent<
               label={element.label}
               data-section={section}
               disabled={disabled}
-              // required={required}
+            // required={required}
             />
           </div>
         );
@@ -371,7 +372,7 @@ export const FormResponseSettingPage: FunctionComponent<
               label={element.label}
               data-section={section}
               disabled={disabled}
-              // required={required}
+            // required={required}
             />
           </div>
         );
@@ -389,7 +390,7 @@ export const FormResponseSettingPage: FunctionComponent<
               error={element.value_error}
               data-page={page}
               data-section={section}
-              // required={required}
+            // required={required}
             />
           </div>
         );
@@ -472,22 +473,24 @@ export const FormResponseSettingPage: FunctionComponent<
               <h1 className='text-2xl font-bold mb-6'>
                 {getResponse.value.label}
               </h1>
-              <div className='flex flex-row gap-2'>
-                <Button
-                  type='button'
-                  onClick={finishResponse}
-                  name='btn-finish-response'
-                  icon='137'
-                  label='finish'
-                />
-                <Button
-                  type='button'
-                  onClick={saveResponse}
-                  name='btn-save-response'
-                  icon='134'
-                  label='save'
-                />
-              </div>
+              {type !== "VIEW" &&
+                <div className='flex flex-row gap-2'>
+                  <Button
+                    type='button'
+                    onClick={finishResponse}
+                    name='btn-finish-response'
+                    icon='137'
+                    label='finish'
+                  />
+                  <Button
+                    type='button'
+                    onClick={saveResponse}
+                    name='btn-save-response'
+                    icon='134'
+                    label='save'
+                  />
+                </div>}
+
             </div>
 
             {getResponse.value.description && (
