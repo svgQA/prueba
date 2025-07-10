@@ -10,6 +10,8 @@ import { SIDEBAR_MENUS } from '@/utils/menus/sidebar';
 import ExpanderNotification from './components/expander.notification';
 import { useSignal } from '@preact/signals';
 import { Badge } from '../badge/badge';
+// import { handleSendNotificationEvent } from './components/notification.event';
+// import { useTranslation } from 'react-i18next';
 
 const STORAGE_KEY = 'notifications';
 
@@ -23,6 +25,7 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [, navigate] = useLocation();
   const [notifications, setNotifications] = useState<INotification[]>([]);
+  // const { t } = useTranslation();
 
   useEffect(() => {
     const storedNotifications = localStorage.get<INotification[]>(STORAGE_KEY);
@@ -56,7 +59,6 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
     });
 
     audioRef.current?.play();
-    // Activar animación
     setShouldAnimate(true);
     setTimeout(() => setShouldAnimate(false), 500);
   };
@@ -110,33 +112,32 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
   }, [notifications]);
 
   const handleRedirect = (info: INotification) => {
-    if (info.redirect) {
-      const updatedNotifications = localNotifications.filter(
-        (n) => n.value !== info.value
-      );
-      setLocalNotifications(updatedNotifications);
-      localStorage.set(STORAGE_KEY, updatedNotifications);
+    if (!info.redirect) return;
+    const updatedNotifications = localNotifications.filter(
+      (n) => n.value !== info.value
+    );
+    setLocalNotifications(updatedNotifications);
+    localStorage.set(STORAGE_KEY, updatedNotifications);
+    const index = notifications.indexOf(info);
+    if (index > -1) notifications.splice(index, 1);
 
-      const index = notifications.indexOf(info);
-      if (index > -1) {
-        notifications.splice(index, 1);
-      }
-
-      // Emit custom event for notification click
-      if (info.id_message) {
-        const event = new CustomEvent('notification-click', {
-          detail: { id: info.id_message },
-        });
-        window.dispatchEvent(event);
-      }
-
-      navigate(
-        info.id_message
-          ? `${info.redirect}?notificationId=${info.id_message}`
-          : info.redirect
-      );
-      isOpen.value = false;
+    // Emit custom event for notification click
+    if (info.id_message) {
+      const event = new CustomEvent('notification-click', {
+        detail: { id: info.id_message },
+      });
+      window.dispatchEvent(event);
     }
+
+    navigate(
+      info.id_message
+        ? `${info.redirect}?notificationId=${info.id_message}`
+        : info.redirect
+    );
+
+    // handleSendNotificationEvent(info.id_message, 'notification-click', t);
+    // navigate(info.redirect);
+    isOpen.value = false;
   };
 
   const handleDelete = (info: INotification, event: MouseEvent) => {

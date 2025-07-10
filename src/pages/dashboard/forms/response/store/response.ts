@@ -11,6 +11,13 @@ interface IResponseMode {
   id?: string;
   hold?: boolean;
 }
+export enum VIEW_NAME {
+  TABLE,
+  INSPECT,
+  REPORT,
+}
+
+export const currentView = signal<VIEW_NAME>(VIEW_NAME.TABLE);
 
 const response = signal<IResponse>();
 const responseMode = signal<IResponseMode>();

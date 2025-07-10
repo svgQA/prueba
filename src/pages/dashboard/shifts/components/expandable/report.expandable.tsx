@@ -3,13 +3,15 @@ import ShowFiles from '@/components/common/file/show.file';
 import { useTranslation } from 'react-i18next';
 import { TaskCard } from '@/pages/settings/shifts/task/create/task.card';
 import { FormService } from '@/services';
-import { FormResponseSettingPage } from '@/pages/dashboard/forms/response/response';
 import {
   setResponse,
   RESPONSE_MODE_SERVICE,
+  VIEW_NAME,
+  currentView,
 } from '@/pages/dashboard/forms/response/store/response';
 import { FormattedDate } from '@/components/compose/forms';
 import { Badge } from '@/components/common/badge/badge';
+import { useLocation } from 'wouter';
 export interface IReport {
   id: number;
   shiftId: number;
@@ -45,6 +47,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
   const reports: IReport[] = directReports ?? data?.reports ?? [];
   const [selectedFormId, setSelectedFormId] = useState<number | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [_, navigate] = useLocation();
 
   const toggleDetails = (report: IReport) => {
     setExpandedId(expandedId === report.id ? null : report.id);
@@ -74,6 +77,9 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
         structure
       );
     }
+
+    currentView.value = VIEW_NAME.REPORT; // o VIEW_NAME.INSPECT
+    navigate('/forms');
   };
 
   return (
@@ -189,54 +195,33 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                 {/* Formulario */}
                 {isExpanded && !hasAttachments && hasForm && (
                   <div className='p-4 bg-gray-50'>
-                    {selectedFormId !== report.form?.id ? (
-                      <div className='grid grid-cols-4 items-center gap-x-4'>
-                        <p className='text-sm'>
-                          <span className='font-semibold'>{t('h_title')}:</span>{' '}
-                          {report.form?.title}
-                        </p>
-                        <p className='text-sm'>
-                          <span className='font-semibold'>
-                            {t('h_category')}:
-                          </span>{' '}
-                          {report.form?.category ?? `No ${t('h_category')}`}
-                        </p>
-                        <p className='text-sm'>
-                          <span className='font-semibold'>
-                            {t('description')}:
-                          </span>{' '}
-                          {report.form?.description}
-                        </p>
-                        <div className='text-right'>
-                          <button
-                            onClick={() => toggleDetailsForm(report)}
-                            className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
-                          >
-                            {t('show')}
-                            <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
-                          </button>
-                        </div>
+                    <div className='grid grid-cols-4 items-center gap-x-4'>
+                      <p className='text-sm'>
+                        <span className='font-semibold'>{t('h_title')}:</span>{' '}
+                        {report.form?.title}
+                      </p>
+                      <p className='text-sm'>
+                        <span className='font-semibold'>
+                          {t('h_category')}:
+                        </span>{' '}
+                        {report.form?.category ?? `No ${t('h_category')}`}
+                      </p>
+                      <p className='text-sm'>
+                        <span className='font-semibold'>
+                          {t('description')}:
+                        </span>{' '}
+                        {report.form?.description}
+                      </p>
+                      <div className='text-right'>
+                        <button
+                          onClick={() => toggleDetailsForm(report)}
+                          className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
+                        >
+                          {t('show')}
+                          <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
+                        </button>
                       </div>
-                    ) : (
-                      <div>
-                        <FormResponseSettingPage
-                          posFinishAction={() => {
-                            setSelectedFormId(null);
-                            setExpandedId(null);
-                          }}
-                          type='VIEW'
-                        />
-
-                        <div className='text-right mt-2'>
-                          <button
-                            onClick={() => toggleDetailsForm(report)}
-                            className='text-cyan-600 text-xs hover:underline'
-                          >
-                            {t('hide')}
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                    </div>
                   </div>
                 )}
               </div>

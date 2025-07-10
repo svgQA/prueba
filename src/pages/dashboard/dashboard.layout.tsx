@@ -52,8 +52,8 @@ import Panic from '@/components/common/panic/panic';
 import { BaseService } from '@/utils/network';
 import { setAllPermissions } from '@/store/signals/access/permission';
 import { useSignal } from '@preact/signals';
-import PanicModal from '@/components/common/panic/panic.modal';
-import { IPanic } from '@/components/common/panic/interface';
+import PanicModal from '@/components/common/panic/components/panic.modal';
+import { IPanic } from '@/components/common/panic/utils/interface';
 
 import { IconsModal } from '../globals/icons/icons';
 /** ***********************************************************************
