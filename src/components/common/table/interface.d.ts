@@ -14,6 +14,7 @@ export interface IRowAction {
 
 export interface ITableProps<T> {
   data: T[];
+  absolute?: boolean;
   columns: ColumnDef<T>[];
   pageSize?: number;
   expandable?: (row: T, currentColumnName?: string) => VNode; // Aquí row es el dato original, no hace falta Row<T> si no lo usas

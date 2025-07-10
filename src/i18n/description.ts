@@ -15,6 +15,8 @@ export const description_es = {
   d_resource: '',
   d_programmed: '',
   d_template: '',
+  d_novelty: '',
+  d_create: '',
 };
 
 export const description_en = {
@@ -34,4 +36,6 @@ export const description_en = {
   d_resource: '',
   d_programmed: '',
   d_template: '',
+  d_novelty: '',
+  d_create: '',
 };

@@ -33,6 +33,10 @@ export const UserPasswordPage: FunctionComponent = () => {
     }
   }, [selectedCompany, location]);
 
+  useEffect(() => {
+    document.title = t('p_password');
+  }, []);
+
   const onSubmit = async (values: IFormData) => {
     if (
       !values.userId.value ||
@@ -82,6 +86,13 @@ export const UserPasswordPage: FunctionComponent = () => {
               className='space-y-6'
               id='form-password-change'
             >
+              <StatusButton
+                onClickClean={() => form.reset()}
+                submitting={submitting}
+                pristine={pristine}
+                form='form-password-change'
+                label='save'
+              />
               <div className='grid grid-cols-1 gap-4'>
                 <div className='col-span-1'>
                   <Field<IOption> name='userId'>
@@ -144,15 +155,6 @@ export const UserPasswordPage: FunctionComponent = () => {
                     )}
                   </Field>
                 </div>
-              </div>
-              <div className='flex justify-end space-x-4'>
-                <StatusButton
-                  onClickClean={() => form.reset()}
-                  submitting={submitting}
-                  pristine={pristine}
-                  form='form-password-change'
-                  label='save'
-                />
               </div>
             </form>
           )}

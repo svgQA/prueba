@@ -55,7 +55,7 @@ import { useSignal } from '@preact/signals';
 import PanicModal from '@/components/common/panic/components/panic.modal';
 import { IPanic } from '@/components/common/panic/utils/interface';
 
-import { IconsModal } from '../globals/icons/icons';
+// import { IconsModal } from '../globals/icons/icons';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -276,7 +276,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
         <SettingsModal />
         <ToastContainer />
-        <IconsModal />
+        {/* <IconsModal /> */}
       </section>
     );
   }

@@ -1,5 +1,5 @@
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
 import { columns } from './components/predefined';
@@ -43,12 +43,6 @@ export const PredefinedSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const redirect = () => {
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'create' });
-    navigate('/memo/predefined/create');
-  };
-
   const update = (id: string) => {
     // OJO: No traducir, dejar asi los setMenu
     setMenu({ ...infoMenu.value, label: 'edit' });
@@ -74,31 +68,16 @@ export const PredefinedSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={redirect}
-          />
-        </div>
-      </div>
+    <>
       <Table<IPredefined>
         data={predefined.value}
         columns={columns}
         pageSize={20}
-        visibility={{
-          name: true,
-          description: true,
-          priority: true,
-          action: true,
-        }}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}
+        absolute
       />
-    </Section>
+    </>
   );
 };

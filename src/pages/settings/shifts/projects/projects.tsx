@@ -1,5 +1,5 @@
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { columns } from './components/project.columns';
 import { Table } from '@/components/common/table/table';
@@ -55,14 +55,14 @@ export const ProjectsSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const redirect = () => {
-    redirectSettings(
-      PAGES_LIST_ROUTER.dashboard.setting.base,
-      '/rounds/project/create',
-      'create',
-      'project-create'
-    );
-  };
+  // const redirect = () => {
+  //   redirectSettings(
+  //     PAGES_LIST_ROUTER.dashboard.setting.base,
+  //     '/rounds/project/create',
+  //     'create',
+  //     'project-create'
+  //   );
+  // };
 
   const editProject = (id: string) => {
     redirectSettings(
@@ -92,18 +92,7 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={redirect}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
-        </div>
-      </div>
+    <>
       <Table<IProject>
         data={projects.value}
         columns={columns}
@@ -114,7 +103,8 @@ export const ProjectsSettingPage: FunctionComponent = () => {
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}
+        absolute
       />
-    </Section>
+    </>
   );
 };

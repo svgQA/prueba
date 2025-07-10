@@ -310,10 +310,6 @@ export const Search = ({
         />
       </div>
 
-      {table && (
-        <div className='h-6 w-px bg-b-light-dark dark:bg-gray-700 mx-2' />
-      )}
-
       {(table || grouping) && group && <>{group}</>}
 
       {keys.length > 0 && isDropdownOpen.value && (

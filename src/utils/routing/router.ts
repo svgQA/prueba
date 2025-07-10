@@ -109,118 +109,118 @@ export const PAGES_LIST_ROUTER = {
         },
       },
       shifts: {
-        base: '/rounds',
-        settings: '/rounds/settings',
+        base: '/shifts',
+        settings: '/shifts/settings',
         service: {
           base: '/service',
-          to: '/rounds/service',
+          to: '/shifts/service',
           create: {
             base: '/service/create',
-            to: '/rounds/service/create',
+            to: '/shifts/service/create',
           },
           update: {
             base: '/service/update',
-            to: '/rounds/service/update/:id',
+            to: '/shifts/service/update/:id',
           },
         },
         schedule: {
           base: '/schedule',
-          to: '/rounds/schedule',
+          to: '/shifts/schedule',
           create: {
             base: '/schedule/create',
-            to: '/rounds/schedule/create',
+            to: '/shifts/schedule/create',
           },
           update: {
             base: '/schedule/update',
-            to: '/rounds/schedule/update/:id',
+            to: '/shifts/schedule/update/:id',
           },
         },
         task: {
           base: '/task',
-          to: '/rounds/task',
+          to: '/shifts/task',
           create: {
             base: '/task/create',
-            to: '/rounds/task/create',
+            to: '/shifts/task/create',
           },
           update: {
             base: '/task/update',
-            to: '/rounds/task/update/:id',
+            to: '/shifts/task/update/:id',
           },
         },
         rounds: {
-          base: '/',
-          to: '/rounds',
-        },
-        create: {
-          base: '/create',
-          to: '/round/create',
-        },
-        update: {
-          base: '/update',
-          to: '/round/update/:id',
+          base: '/rounds',
+          to: '/shifts/rounds',
+          create: {
+            base: '/create',
+            to: '/shifts/rounds/create',
+          },
+          update: {
+            base: '/update',
+            to: '/shifts/round/update/:id',
+          },
         },
         places: {
           base: '/places',
-          to: '/rounds/places',
-        },
-        placesCreate: {
-          base: '/places/create',
-          to: '/rounds/places/create',
-        },
-        placesUpdate: {
-          base: '/places/create',
-          to: '/rounds/places/update/:id',
+          to: '/shifts/places',
+          create: {
+            base: '/places/create',
+            to: '/shifts/places/create',
+          },
+          update: {
+            base: '/places/create',
+            to: '/shifts/places/update/:id',
+          },
         },
         activity: {
           base: '/activity',
-          to: '/rounds/activity',
+          to: '/shifts/activity',
+          create: {
+            base: '/activity/create',
+            to: '/shifts/activity/create',
+          },
+          update: {
+            base: '/activity/update',
+            to: '/shifts/activity/update/:id',
+          },
         },
-        activityCreate: {
-          base: '/activity/create',
-          to: '/rounds/activity/create',
-        },
-        activityUpdate: {
-          base: '/activity/update',
-          to: '/rounds/activity/update/:id',
-        },
-        projects: {
+        project: {
           base: '/projects',
-          to: '/rounds/projects',
-        },
-        projectCreate: {
-          base: '/project/create',
-          to: '/rounds/project/create',
-        },
-        projectUpdate: {
-          base: '/project/edit',
-          to: '/rounds/project/edit/:id',
+          to: '/shifts/projects',
+          create: {
+            base: '/projects/create',
+            to: '/shifts/projects/create',
+          },
+          update: {
+            base: '/project/edit',
+            to: '/shifts/project/edit/:id',
+          },
         },
       },
-      notifications: {
-        scheduledNotification: {
-          base: '/scheduledNotifications',
-          to: '/rounds/scheduledNotifications',
-
+      notification: {
+        base: '/notification',
+        settings: '/notification/settings',
+        scheduled: {
+          base: '/scheduled',
+          to: '/notification/scheduled',
           create: {
-            base: '/notifications/scheduledNotifications/create',
-            to: '/rounds/notifications/scheduledNotifications/create',
+            base: '/scheduled/create',
+            to: '/notification/scheduled/create',
           },
           update: {
-            base: '/notifications/scheduledNotifications/update',
-            to: '/rounds/notifications/scheduledNotifications/update/:id',
+            base: '/scheduled/update/:id',
+            to: '/notification/scheduled/update/:id',
           },
         },
-        templateNotification: {
-          base: '/templateNotifications',
-          to: '/rounds/templateNotifications',
-
+        template: {
+          base: '/template',
+          to: '/notification/template',
           create: {
-            base: '/notifications/templateNotifications/create',
-            to: '/rounds/notifications/templateNotifications/create',
+            base: '/template/create',
+            to: '/notification/template/create',
           },
           update: {
-            base: '/notifications/templateNotifications/update',
-            to: '/rounds/notifications/templateNotifications/update/:id',
+            base: '/template/update/:id',
+            to: '/notification/template/update/:id',
           },
         },
       },
@@ -231,7 +231,7 @@ export const PAGES_LIST_ROUTER = {
           base: '/',
           to: '/setting',
         },
-        userCreate: {
+        create: {
           base: '/user/create',
           to: '/setting/user/create',
         },
@@ -274,8 +274,8 @@ export const PAGES_LIST_ROUTER = {
           base: '/groups',
           to: '/security/groups',
           create: {
-            base: '/grups/create',
-            to: '/security/grups/create',
+            base: '/groups/create',
+            to: '/security/groups/create',
           },
         },
       },
@@ -291,18 +291,19 @@ export const PAGES_LIST_ROUTER = {
         },
       },
       forms: {
-        base: '/form',
+        base: '/forms',
+        settings: '/forms/settings',
         form: {
-          base: '/',
-          to: '/form',
-        },
-        create: {
-          base: '/create',
-          to: '/form/create',
+          base: '',
+          to: '/forms',
+          create: {
+            base: '/create',
+            to: '/forms/create',
+          },
         },
         analytic: {
           base: '/analytic',
-          to: '/form/analytic',
+          to: '/forms/analytic',
         },
         // inspect: {
         //   base: '/inspect',
@@ -310,15 +311,15 @@ export const PAGES_LIST_ROUTER = {
         // },
         response: {
           base: '/response',
-          to: '/form/response',
+          to: '/forms/response',
         },
         list: {
           base: '/list',
-          to: '/form/list',
+          to: '/forms/list',
         },
         report: {
           base: '/report',
-          to: '/form/report',
+          to: '/forms/report',
         },
       },
       asociate: {
@@ -333,34 +334,35 @@ export const PAGES_LIST_ROUTER = {
         resource: {
           base: '/',
           to: '/access',
+          create: {
+            base: '/create',
+            to: '/access/create',
+          },
         },
         sets: {
           base: '/sets',
           to: '/access/sets',
+
+          create: {
+            base: '/create',
+            to: '/access/create',
+          },
         },
         place: {
           base: '/place',
           to: '/access/place',
+          create: {
+            base: '/create',
+            to: '/access/create',
+          },
         },
         information: {
           base: '/information',
           to: '/access/information',
-        },
-        createResource: {
-          base: '/create',
-          to: '/access/createResource',
-        },
-        createSets: {
-          base: '/create',
-          to: '/access/createSets',
-        },
-        createPlaces: {
-          base: '/create',
-          to: '/access/createPlaces',
-        },
-        createInformation: {
-          base: '/create',
-          to: '/access/createInformation',
+          create: {
+            base: '/create',
+            to: '/access/create',
+          },
         },
       },
       ia: {

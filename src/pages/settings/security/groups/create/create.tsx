@@ -22,6 +22,7 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = t('p_group');
   }, []);
+
   const [rootGroup, setRootGroup] = useState<Group>(createEmptyGroup());
 
   const saveGroup = async () => {

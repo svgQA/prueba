@@ -13,6 +13,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
 import { useSignal } from '@preact/signals';
+import { useUserStore } from '@/store/slices';
 
 export const TemplateCreateForm = () => {
   const [useForm, _setUseForm] = useState(false);
@@ -24,8 +25,7 @@ export const TemplateCreateForm = () => {
 
   const redirectToList = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
-        .to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notification.template.to,
       label: 'notificaciones',
       id: 'template-notifications',
     };
@@ -50,21 +50,22 @@ export const TemplateCreateForm = () => {
     ToastManager.success('s_send_success');
   };
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
     const fetchForms = async () => {
       const res = await FormService.getSimpleList();
       if (res.getStatus()) setForms(res.getMany());
     };
-    if (useForm && forms.length === 0) fetchForms();
-  }, [useForm]);
+    if (useForm && forms.length === 0 && selectedCompany) fetchForms();
+  }, [useForm, selectedCompany]);
 
   useEffect(() => {
     const fetchTasks = async () => {
       const res = await TaskService.getSimpleList();
       if (res.getStatus()) setTasks(res.getMany());
     };
-    if (useTasks && tasks.length === 0) fetchTasks();
-  }, [useTasks]);
+    if (useTasks && tasks.length === 0 && selectedCompany) fetchTasks();
+  }, [useTasks, selectedCompany]);
 
   const tasksResponse = useSignal<ITask[]>([]);
   const onTaskAdd = (model: any) => {
@@ -72,11 +73,26 @@ export const TemplateCreateForm = () => {
   };
 
   return (
-    <div className='w-full px-4 sm:px-6'>
+    <>
       <Form
         onSubmit={handleSubmit}
         render={({ handleSubmit, values }) => (
           <form className='space-y-6 w-full' onSubmit={handleSubmit}>
+            <div className='flex justify-end gap-4 absolute top-14 right-2'>
+              <Button
+                name='cancel-create-scheduled'
+                label='cancel'
+                icon='023'
+                onClick={redirectToList}
+              />
+              <Button
+                name='submit-create-scheduled'
+                label='save'
+                type='submit'
+                icon='022'
+                disabled={loading}
+              />
+            </div>
             <Input
               name='title'
               id='template-title'
@@ -107,25 +123,9 @@ export const TemplateCreateForm = () => {
                 type='REPORT'
               />
             </div>
-
-            <div className='flex justify-end gap-4 pt-4'>
-              <Button
-                name='cancel-create-scheduled'
-                label='cancel'
-                icon='023'
-                onClick={redirectToList}
-              />
-              <Button
-                name='submit-create-scheduled'
-                label='save'
-                type='submit'
-                icon='022'
-                disabled={loading}
-              />
-            </div>
           </form>
         )}
       />
-    </div>
+    </>
   );
 };
