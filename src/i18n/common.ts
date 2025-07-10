@@ -41,6 +41,7 @@ export const common_es = {
   empty: 'Vacío',
   area: 'Área',
   profile: 'Perfil',
+  instructions: 'Instrucciones',
 };
 
 export const common_en = {
@@ -90,4 +91,5 @@ export const common_en = {
   empty: 'Empty',
   area: 'Area',
   profile: 'Profile',
+  instructions: 'Instructions',
 };
