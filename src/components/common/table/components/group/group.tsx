@@ -46,14 +46,17 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
 
   return (
     <div ref={dropdownRef} className={`relative ${className}`}>
-      <Button
-        name='group-none-filter'
-        onClick={() => setIsOpen(!isOpen)}
-        icon='231'
-        square
-        borderless
-      />
-
+      <div className='flex flex-row justify-between items-center'>
+        <div className='h-6 w-px bg-b-light-dark dark:bg-gray-700 mx-2' />
+        <Button
+          name='group-none-filter'
+          onClick={() => setIsOpen(!isOpen)}
+          icon='231'
+          square
+          transparent
+          borderless
+        />
+      </div>
       {isOpen && (
         <div className='absolute right-0 mt-1 w-48 bg-white dark:bg-b-dark-dark rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50'>
           <button

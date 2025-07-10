@@ -58,9 +58,9 @@ export enum PAGES_LIST {
   SETTING_ACCESS_SETS = '/setting/access/sets',
   SETTING_ACCESS_PLACES = '/setting/access/place',
   SETTING_ACCESS_INFORMATION = '/setting/access/information',
-  SETTING_ACCESS_CREATERESOURSE = '/setting/access/createResource',
-  SETTING_ACCESS_CREATESETS = '/setting/access/createSets',
-  SETTING_ACCESS_CREATEPLACES = '/setting/access/createPlaces',
+  SETTING_ACCESS_CREATERESOURSE = '/setting/access/create',
+  SETTING_ACCESS_CREATESETS = '/setting/access/create',
+  SETTING_ACCESS_CREATEPLACES = '/setting/access/create',
   SETTING_ACCESS_CREATEINFO = '/setting/access/createInformation',
   FALLBACK = '*',
 }

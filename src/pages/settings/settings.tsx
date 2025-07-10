@@ -129,21 +129,16 @@ export const SettingsModal = () => {
           image={user?.image || ''}
           rol={user?.userType || ''}
         />
-        <MenuList
-          menuSettings={MODAL_SIDEBAR_MENUS}
-          menuInformationSelected={menuInformationSelected.value}
-          expand={expand}
-        />
+        <MenuList menuSettings={MODAL_SIDEBAR_MENUS} expand={expand} />
       </div>
-      <div className='w-full'>
-        <CardSettingHeader
-          id='setting-header'
-          name='setting-header'
-          title={menuInformationSelected.value.label}
-          description={menuInformationSelected.value.description}
-        />
+      <div
+        className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'}`}
+        onClick={selectMenu}
+      >
+        <CardSettingHeader id='setting-header' name='setting-header' />
         <div
-          className={`${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} relative overflow-y-auto overflow-x-hidden vox-scroll-design w-full p-2`}
+          // className={`${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} relative overflow-y-auto overflow-x-hidden vox-scroll-design w-full p-2 bg-red-300`}
+          className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-dark'
         >
           <RoutingContent />
         </div>

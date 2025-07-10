@@ -17,6 +17,7 @@ import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { DateField } from '@/components/compose/forms/DateField';
 import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 interface FormData {
   name: string;
@@ -95,9 +96,13 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
     };
   };
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    Promise.all([getUsers(), setInitialValues()]);
-  }, []);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      Promise.all([getUsers(), setInitialValues()]);
+    }
+  }, [selectedCompany, location]);
 
   return (
     <Section className='pt-2'>

@@ -3,7 +3,7 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
@@ -91,7 +91,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section>
+    <>
       <Form<ICScheduleRequest>
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -101,6 +101,16 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
             id='form-schedule-create'
             className='space-y-6'
           >
+            <StatusButton
+              onClickClean={() => {
+                handleClearSelection();
+                form.reset();
+              }}
+              submitting={submitting}
+              pristine={pristine}
+              form='form-schedule-create'
+              label={id ? t('schedule.edit') : t('schedule.save')}
+            />
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-1'>
               <div className='col-span-1 px-5'>
@@ -130,20 +140,9 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                 />
               </div>
             </div>
-
-            <StatusButton
-              onClickClean={() => {
-                handleClearSelection();
-                form.reset();
-              }}
-              submitting={submitting}
-              pristine={pristine}
-              form='form-schedule-create'
-              label={id ? t('schedule.edit') : t('schedule.save')}
-            />
           </form>
         )}
       />
-    </Section>
+    </>
   );
 };

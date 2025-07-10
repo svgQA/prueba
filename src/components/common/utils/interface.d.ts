@@ -9,5 +9,6 @@ export interface IMenu {
   id: string;
   show?: boolean;
   new?: boolean;
+  ncreate?: boolean;
   key?: string;
 }

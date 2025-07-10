@@ -17,6 +17,7 @@ import { ServiceService } from '@/services';
 import { DateField } from '@/components/compose/forms';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 interface ITask {
   start: string;
@@ -107,9 +108,14 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
     await setInitialValues();
   };
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    main();
-  }, []);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      main();
+    }
+  }, [selectedCompany, location]);
+
   return (
     <Section>
       <Form

@@ -1,5 +1,5 @@
 import { IMenu } from '@/components/common/utils/interface';
-import { signal } from '@preact/signals';
+import { computed, signal } from '@preact/signals';
 
 export const historyLocation = signal<IMenu[]>([]);
 export const currentPosition = signal<number>(0);
@@ -9,6 +9,11 @@ export const menuInformationSelected = signal<IMenu>({
   to: '',
   id: '',
 });
+
+export const computedCreateMenu = computed(() => ({
+  link: `${menuInformationSelected.value.to}/create`,
+  id: menuInformationSelected.value.id,
+}));
 
 export const setMenu = (menu: IMenu) => {
   menuInformationSelected.value = menu;

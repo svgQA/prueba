@@ -17,7 +17,4 @@ export interface ICardSettingUserProps extends IComponentProps {
   rol: string;
 }
 
-export interface ICardSettingHeaderProps extends IComponentProps {
-  title: string;
-  description?: string;
-}
+export interface ICardSettingHeaderProps extends IComponentProps {}
