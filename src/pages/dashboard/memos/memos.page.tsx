@@ -315,12 +315,15 @@ export const MemosPage: FunctionComponent = () => {
   );
 
   /**
-   * 
-   * @param summary 
+   *
+   * @param summary
    * @param isResolve
-   * @returns 
+   * @returns
    */
-  const calculatePercentage = (summary: MemosSummary, isResolve: boolean = false): string => {
+  const calculatePercentage = (
+    summary: MemosSummary,
+    isResolve: boolean = false
+  ): string => {
     const inProgress = summary.in_progress || 0;
     const completed = summary.completed || 0;
     const total = inProgress + completed;

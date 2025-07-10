@@ -201,11 +201,15 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                         {report.form?.title}
                       </p>
                       <p className='text-sm'>
-                        <span className='font-semibold'>{t('h_category')}:</span>{' '}
+                        <span className='font-semibold'>
+                          {t('h_category')}:
+                        </span>{' '}
                         {report.form?.category ?? `No ${t('h_category')}`}
                       </p>
                       <p className='text-sm'>
-                        <span className='font-semibold'>{t('description')}:</span>{' '}
+                        <span className='font-semibold'>
+                          {t('description')}:
+                        </span>{' '}
                         {report.form?.description}
                       </p>
                       <div className='text-right'>
@@ -220,7 +224,6 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                     </div>
                   </div>
                 )}
-
               </div>
             </React.Fragment>
           );
