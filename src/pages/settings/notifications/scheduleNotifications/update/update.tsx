@@ -2,7 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { useParams, useLocation } from 'wouter';
 import { SchedulerService } from '@/services';
 import { IScheduleNotificationDto } from '@/types/notification/IScheduleNotificationDto';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { Button } from '@/components/common/button/button';
@@ -53,7 +53,16 @@ export const ScheduledNotificationEditPage = () => {
   };
 
   return (
-    <Section>
+    <>
+      <div className='flex justify-end gap-4 absolute top-14 right-2'>
+        <Button
+          name='save-scheduled'
+          label='save'
+          icon='022'
+          onClick={handleSubmit}
+          disabled={loading}
+        />
+      </div>
       <h2 className='text-xl font-bold mb-4'>Editar Notificación Programada</h2>
       <div className='space-y-4'>
         <Input
@@ -136,16 +145,7 @@ export const ScheduledNotificationEditPage = () => {
             } catch (_) {}
           }}
         />
-        <div className='w-full flex justify-end items-center'>
-          <Button
-            name='save-scheduled'
-            label='save'
-            icon='022'
-            onClick={handleSubmit}
-            disabled={loading}
-          />
-        </div>
       </div>
-    </Section>
+    </>
   );
 };

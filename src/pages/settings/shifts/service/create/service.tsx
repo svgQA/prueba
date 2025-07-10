@@ -70,7 +70,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       if (!response.getStatus()) return;
       ToastManager.success('s_created_success');
     }
-    navigateUpsert('/rounds/service/');
+    navigateUpsert('/shifts/service');
   };
 
   const getProjects = async () => {

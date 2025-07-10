@@ -54,7 +54,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigateUpsert('/rounds/projects');
+    navigateUpsert('/shifts/projects');
   };
 
   const getUsers = async () => {

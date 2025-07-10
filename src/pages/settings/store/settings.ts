@@ -1,4 +1,5 @@
 import { IMenu } from '@/components/common/utils/interface';
+import { NEW_BLACK_LIST } from '@/utils/menus';
 import { computed, signal } from '@preact/signals';
 
 export const historyLocation = signal<IMenu[]>([]);
@@ -14,6 +15,10 @@ export const computedCreateMenu = computed(() => ({
   link: `${menuInformationSelected.value.to}/create`,
   id: menuInformationSelected.value.id,
 }));
+
+export const computedValidateBlackList = computed(
+  () => !NEW_BLACK_LIST.includes(menuInformationSelected.value.id)
+);
 
 export const setMenu = (menu: IMenu) => {
   menuInformationSelected.value = menu;

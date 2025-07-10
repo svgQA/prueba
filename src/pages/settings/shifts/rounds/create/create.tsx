@@ -131,7 +131,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     if (!request.getStatus()) return;
     ToastManager.success(message);
 
-    navigateUpsert('/rounds');
+    navigateUpsert('/shifts/rounds');
   };
 
   /*

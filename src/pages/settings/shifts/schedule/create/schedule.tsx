@@ -58,7 +58,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigateUpsert('/rounds/schedule');
+    navigateUpsert('/shifts/schedule');
   };
 
   const setInitialValues = async () => {

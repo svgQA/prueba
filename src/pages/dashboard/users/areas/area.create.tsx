@@ -38,7 +38,7 @@ export const AreaCreatePage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate('/users/areas/');
+    navigate('/users/areas');
   };
 
   const setInitialValues = async () => {

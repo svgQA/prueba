@@ -3,6 +3,7 @@ import { type ICardSettingHeaderProps } from './interface';
 import { useTranslation } from 'react-i18next';
 import {
   computedCreateMenu,
+  computedValidateBlackList,
   menuInformationSelected,
 } from '@/pages/settings/store/settings';
 import { Link } from 'wouter';
@@ -13,7 +14,7 @@ export const CardSettingHeader: FunctionComponent<
   const { t } = useTranslation();
   return (
     <div className='px-2 flex flex-col w-1/2 py-2'>
-      <div className='flex flex-col bg-b-dark-light w-80 rounded-br-2xl px-3'>
+      <div className='flex flex-col bg-b-dark-light py-0.5 w-80 rounded-br-2xl px-3'>
         <h3 className='text-xl font-bold text-pretty'>
           {t(menuInformationSelected.value.label)}
         </h3>
@@ -21,19 +22,26 @@ export const CardSettingHeader: FunctionComponent<
           {t(menuInformationSelected.value.description || '')}
         </p>
       </div>
-      <div className='w-fit rounded-md bg-red-400 flex items-center mt-2'>
-        <Link
-          to={computedCreateMenu.value.link}
-          data-to={computedCreateMenu.value.link}
-          data-label='create'
-          data-description='d_create'
-          id={computedCreateMenu.value.id}
-          className='bg-ternary w-full px-4 py-1 rounded-md'
-        >
-          <span className='vx-icon vx-icon-045 size-sm mr-2 h-full' />
-          {t('new')}
-        </Link>
+      <div className='w-fit rounded-md flex items-center mt-2 h-8'>
+        {computedValidateBlackList.value && (
+          <Link
+            to={computedCreateMenu.value.link}
+            data-to={computedCreateMenu.value.link}
+            data-label='create'
+            data-description='d_create'
+            id={computedCreateMenu.value.id}
+            className='bg-ternary w-full px-4 py-1 rounded-md'
+          >
+            <span className='vx-icon vx-icon-045 size-sm mr-2 h-full' />
+            {t('new')}
+          </Link>
+        )}
       </div>
+      {/*
+      <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
+        {computedCreateMenu.value.id}
+      </span>
+      */}
     </div>
   );
 };

@@ -67,7 +67,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigateUpsert('/rounds/activity');
+    navigateUpsert('/shifts/activity');
   };
 
   const setInitialValues = async () => {

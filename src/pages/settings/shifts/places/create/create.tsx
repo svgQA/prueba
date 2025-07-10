@@ -112,7 +112,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     if (!request.getStatus()) return;
 
     ToastManager.success(message);
-    navigateUpsert('/rounds/places');
+    navigateUpsert('/shifts/places');
   };
 
   const onChangeDeparment = async (departmentId: number) => {

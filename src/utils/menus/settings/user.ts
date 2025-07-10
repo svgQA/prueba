@@ -48,7 +48,6 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.users.password.base,
       id: 'user:password:state',
       show: true,
-      ncreate: true,
     },
   ],
 };
