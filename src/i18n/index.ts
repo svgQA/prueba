@@ -34,6 +34,7 @@ import { label_en, label_es } from './label';
 import { toast_en, toast_es } from './toast';
 import { page_en, page_es } from './page';
 import { description_en, description_es } from './description';
+import { message_en, message_es } from './message';
 
 const resources = {
   en: {
@@ -49,6 +50,7 @@ const resources = {
       ...toast_en,
       ...page_en,
       ...description_en,
+      ...message_en,
       // Posible Delete
       ...general_en,
       ...error_en,
@@ -81,6 +83,7 @@ const resources = {
       ...toast_es,
       ...page_es,
       ...description_es,
+      ...message_es,
       // Posible Delete
       ...general_es,
       ...error_es,

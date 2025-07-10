@@ -886,33 +886,36 @@ export const MapLibrePointsMap = ({
   return (
     <>
       {allowManualPoint && (
-        <div className='flex flex-row items-end justify-between gap-x-2 py-1'>
-          <Input
-            name='latitude'
-            placeholder='6.246631'
-            label='Latitud'
-            type='number'
-            value={coords.lat}
-            onChange={(e) => handleInputChange(e, 'lat')}
-          />
+        <div className='flex flex-row gap-2 items-center justify-center w-full pb-1'>
+          <div className='flex flex-row items-end justify-between gap-x-2 py-1 w-full'>
+            <Input
+              name='latitude'
+              placeholder='6.246631'
+              label='Latitud'
+              type='number'
+              value={coords.lat}
+              onChange={(e) => handleInputChange(e, 'lat')}
+            />
 
-          <Input
-            name='longitude'
-            placeholder='-75.581775'
-            label='Longitud'
-            type='number'
-            value={coords.lng}
-            onChange={(e) => handleInputChange(e, 'lng')}
-          />
-
-          <Button
-            id='btn-add'
-            name='btn-add'
-            type='button'
-            onClick={addManualPoint}
-            label='Añadir'
-            icon='123'
-          />
+            <Input
+              name='longitude'
+              placeholder='-75.581775'
+              label='Longitud'
+              type='number'
+              value={coords.lng}
+              onChange={(e) => handleInputChange(e, 'lng')}
+            />
+          </div>
+          <div className='pt-5'>
+            <Button
+              id='btn-add'
+              name='btn-add'
+              type='button'
+              onClick={addManualPoint}
+              label='Añadir'
+              icon='039'
+            />
+          </div>
         </div>
       )}
       {/*
