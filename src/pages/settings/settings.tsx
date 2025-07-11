@@ -19,6 +19,7 @@ import { MenuButtons } from './components/header';
 import { MenuList } from './components/menu';
 import {
   appendHistory,
+  computedCreateMenu,
   currentPosition,
   historyLocation,
   menuInformationSelected,
@@ -62,6 +63,7 @@ export const SettingsModal = () => {
   }, [getStatusSettingModal.value]);
 
   const setMenuSelected = (menu: IMenu) => {
+    if (!menu || !menu.to) return;
     setMenu(menu);
     setMenuSelecteStorage(menu);
     navigate(menu.to);
@@ -87,6 +89,7 @@ export const SettingsModal = () => {
       const description = target.getAttribute('data-description');
       const id = target.getAttribute('id');
       if (!to || !label || !description || !id) return;
+      if (id === computedCreateMenu.value.id) return;
       const menuSelected = { to, description, label, id };
       appendHistory(menuSelected, setMenuSelected);
     }
@@ -119,7 +122,7 @@ export const SettingsModal = () => {
     >
       <div
         onClick={selectMenu}
-        className='max-w-80 min-w-60 border-r-2 border-gray-50 dark:border-b-dark-light flex flex-col gap-1'
+        className='max-w-80 min-w-60 border-r-2 border-r-b-light-light dark:border-b-dark-light flex flex-col gap-1'
       >
         <CardSettingUser
           id='user-information'
@@ -138,7 +141,7 @@ export const SettingsModal = () => {
         <CardSettingHeader id='setting-header' name='setting-header' />
         <div
           // className={`${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} relative overflow-y-auto overflow-x-hidden vox-scroll-design w-full p-2 bg-red-300`}
-          className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-dark'
+          className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'
         >
           <RoutingContent />
         </div>

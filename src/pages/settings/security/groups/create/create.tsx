@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { GroupBuilder } from './GroupBuilder';
 import { Group } from './utils/types';
 import { createEmptyGroup } from './utils/utils';
@@ -50,8 +50,16 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section>
-      <div className='p-4'>
+    <>
+      <div className='flex justify-end gap-4 absolute top-14 right-2'>
+        <Button
+          name='id-save-group'
+          label='save'
+          icon='312'
+          onClick={saveGroup}
+        />
+      </div>
+      <div className='px-4'>
         <div className='pb-4'>
           <div className='flex flex-row justify-between items-end gap-3'>
             <Input
@@ -59,12 +67,6 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
               label='name'
               value={name.value}
               onChange={(e) => (name.value = e.currentTarget.value)}
-            />
-            <Button
-              name='id-save-group'
-              label='save'
-              icon='312'
-              onClick={saveGroup}
             />
           </div>
           <TextArea
@@ -75,7 +77,7 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
           />
         </div>
         <EquationPreview filter={rootGroup} />
-        <div class='space-y-4 rounded shadow-md'>
+        <div class='space-y-4 rounded'>
           <GroupBuilder
             group={rootGroup}
             onChange={setRootGroup}
@@ -88,6 +90,6 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
           */}
         </div>
       </div>
-    </Section>
+    </>
   );
 };
