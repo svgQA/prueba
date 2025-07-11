@@ -81,7 +81,7 @@ export const TaskSettingPage: FunctionComponent = () => {
     appendHistory(menu);
     // OJO: No traducir, dejar asi los setMenu
     setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/rounds/task/update/${id}`);
+    navigate(`/shifts/task/update/${id}`);
   };
 
   const deleteTask = async (id: string) => {

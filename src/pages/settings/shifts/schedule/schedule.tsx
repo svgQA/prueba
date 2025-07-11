@@ -54,7 +54,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   const update = (id: string) => {
     redirectSettings(
       PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/rounds/schedule/update/${id}`,
+      `/shifts/schedule/update/${id}`,
       'update',
       'schedule-update'
     );

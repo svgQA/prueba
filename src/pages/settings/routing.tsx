@@ -525,14 +525,14 @@ export const RoutingContent = memo(() => {
         {/* NOTIFICATIONS MENU */}
         {/* SCHEDULED OPTIONS */}
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.notification.template.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.to}
           component={lazy(() =>
             Promise.resolve({ default: ScheduledNotificationsPage })
           )}
         />
         <Route
           path={
-            PAGES_LIST_ROUTER.dashboard.setting.notification.template.create.to
+            PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.create.to
           }
           component={lazy(() =>
             Promise.resolve({ default: ScheduledNotificationForm })
@@ -540,7 +540,7 @@ export const RoutingContent = memo(() => {
         />
         <Route
           path={
-            PAGES_LIST_ROUTER.dashboard.setting.notification.template.update.to
+            PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.update.to
           }
           component={lazy(() =>
             Promise.resolve({ default: ScheduledNotificationEditPage })
@@ -548,14 +548,14 @@ export const RoutingContent = memo(() => {
         />
         {/* TEMPLATE OPTIONS */}
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.notification.template.to}
           component={lazy(() =>
             Promise.resolve({ default: TemplateNotificationPage })
           )}
         />
         <Route
           path={
-            PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.create.to
+            PAGES_LIST_ROUTER.dashboard.setting.notification.template.create.to
           }
           component={lazy(() =>
             Promise.resolve({ default: TemplateCreateForm })

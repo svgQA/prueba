@@ -67,7 +67,7 @@ export const ProjectsSettingPage: FunctionComponent = () => {
   const editProject = (id: string) => {
     redirectSettings(
       PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/rounds/project/edit/${id}`,
+      `/shifts/project/edit/${id}`,
       'edit',
       'project-update'
     );

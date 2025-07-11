@@ -1,10 +1,10 @@
 // import { Button } from '@/components/common/button/button';
-// import {
-//   menuInformationSelected as infoMenu,
-//   setMenu,
-// } from '../../store/settings';
+import {
+  menuInformationSelected as infoMenu,
+  setMenu,
+} from '../../store/settings';
 // import { Section } from '@/components/common/section/section';
-// import { useLocation } from 'wouter';
+import { useLocation } from 'wouter';
 import { FunctionComponent } from 'preact';
 import { columns } from './components/group.columns';
 import { Table } from '@/components/common/table/table';
@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
 
 export const GroupSettingPage: FunctionComponent = () => {
-  // const [_, navigate] = useLocation();
+  const [_, navigate] = useLocation();
   const groups = useSignal<any[]>([]);
 
   const { t } = useTranslation();
@@ -45,11 +45,11 @@ export const GroupSettingPage: FunctionComponent = () => {
   //   navigate('/security/groups/create');
   // };
 
-  // const updateActivity = (id: string) => {
-  //   console.log('DATA: ', id);
-  //   // setMenu({ ...infoMenu.value, label: 'edit' });
-  //   // navigate(`/rounds/activity/update/${id}`);
-  // };
+  const updateActivity = (id: string) => {
+    // console.log('DATA: ', id);
+    setMenu({ ...infoMenu.value, label: 'edit' });
+    navigate(`/security/groups/update/${id}`);
+  };
 
   // const deleteActivity = async (id: string) => {
   //   const request = await ShiftService.deleteActivity(id);
@@ -61,7 +61,7 @@ export const GroupSettingPage: FunctionComponent = () => {
   const handleOnClick = async (action: any) => {
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
-        // updateActivity(action.id);
+        updateActivity(action.id);
         break;
       case ROW_ACTIONS.DELETE:
         // await deleteActivity(action.id);

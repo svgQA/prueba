@@ -216,7 +216,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             icon='064'
           />
         </div>
-        <div class='flex-grow p-3 min-h-[65vh] max-h-[65vh] overflow-y-auto vox-scroll-design'>
+        <div class='flex-grow p-3 min-h-[65vh] max-h-[68vh] overflow-y-auto vox-scroll-design'>
           <div className='flex flex-row w-[96%] items-center mb-4 gap-5 justify-between'>
             <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer'>
               <span className='vx-icon vx-upload text-gray-400 text-2xl' />

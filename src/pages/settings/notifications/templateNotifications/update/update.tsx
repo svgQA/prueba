@@ -44,7 +44,7 @@ export const TemplateNotificationEditPage = () => {
 
     if (res.getStatus()) {
       alert('Plantilla actualizada correctamente');
-      navigate('/dashboard/setting/notifications/template-notification');
+      navigate('/notification/template');
     } else {
       alert('Error al actualizar la plantilla');
     }
@@ -57,6 +57,7 @@ export const TemplateNotificationEditPage = () => {
           name='save-template'
           label='Guardar'
           className='bg-primary text-white p-2'
+          icon='022'
           onClick={handleSubmit}
           disabled={loading}
         />
@@ -64,7 +65,7 @@ export const TemplateNotificationEditPage = () => {
       <h2 className='text-xl font-bold mb-4'>
         Editar Plantilla de Notificación
       </h2>
-      <div className='space-y-4'>
+      <div className='grip grid-cols-2'>
         <Input
           name='title'
           label='Título'
