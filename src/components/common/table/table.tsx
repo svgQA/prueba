@@ -544,7 +544,7 @@ export const Table = <T,>({
                       <tr>
                         <td
                           colSpan={row.getVisibleCells().length + 1}
-                          className='p-2'
+                          className='p-2 border-b-2 dark:border-b-dark-light dark:bg-b-dark-light bg-b-light-light'
                         >
                           {expandable &&
                             expandable(row.original, selectedCells[row.id])}

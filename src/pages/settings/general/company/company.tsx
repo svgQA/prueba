@@ -14,7 +14,7 @@ import {
   IUCompanyRequest,
 } from '@/utils/types/company.interface';
 import { useUserStore } from '@/store/slices/access/user.slice';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { useTranslation } from 'react-i18next';
 
 export const CompanySettingPage: FunctionComponent = () => {
@@ -92,9 +92,9 @@ export const CompanySettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='p-5 w-full relative pt-16'>
-        <div className='flex flex-row justify-between relative gap-2 items-center'>
+    <>
+      <div className='p-5 w-full'>
+        <div className='flex flex-row justify-between gap-2 items-start'>
           <div className='flex flex-row gap-2 justify-center flex-wrap overflow-y-auto vox-scroll-design h-[60vh]'>
             {companies.value.map((company) => (
               <CardCompany
@@ -137,6 +137,17 @@ export const CompanySettingPage: FunctionComponent = () => {
                   className='h-full flex flex-col justify-between'
                   id='form-company'
                 >
+                  <StatusButton
+                    onClickClean={() => {
+                      form.reset();
+                      if (isEditing) {
+                        resetForm(false);
+                      }
+                    }}
+                    submitting={submitting}
+                    pristine={pristine}
+                    form='form-company'
+                  />
                   <div className='flex flex-col justify-between gap-4'>
                     <h2 className='text-2xl font-bold'>
                       {isEditing ? 'Editar Empresa' : 'Nueva Empresa'}
@@ -191,25 +202,12 @@ export const CompanySettingPage: FunctionComponent = () => {
                       </Field>
                     </div>
                   </div>
-                  <div className='mt-2'>
-                    <StatusButton
-                      onClickClean={() => {
-                        form.reset();
-                        if (isEditing) {
-                          resetForm(false);
-                        }
-                      }}
-                      submitting={submitting}
-                      pristine={pristine}
-                      form='form-company'
-                    />
-                  </div>
                 </form>
               )}
             />
           </div>
         </div>
       </div>
-    </Section>
+    </>
   );
 };

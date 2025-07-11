@@ -5,7 +5,7 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useLocation, useParams } from 'wouter';
 import { Form } from 'react-final-form';
 import { Field } from 'react-final-form';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
 // import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
@@ -20,6 +20,8 @@ import {
 import { IRoleRequest } from '@/types/role/role.request';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 import { useUserStore } from '@/store/slices';
+import { setMenu } from '@/pages/settings/store/settings';
+import { MODAL_SETTING_USER } from '@/utils/menus/settings/user';
 
 interface RawPermission extends Omit<IPermission, 'moduleId'> {}
 
@@ -102,7 +104,8 @@ export const RolesUpsertPage = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate(PAGES_LIST_ROUTER.dashboard.setting.users.roles.to);
+    setMenu(MODAL_SETTING_USER.menus[1]);
+    navigate('/users/roles');
   };
 
   const getModules = async () => {
