@@ -38,7 +38,6 @@ const EmployeeInfo = ({
         <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='mr-2 !text-primary size-sm vox-icon vx-icon-308'></span>
-            {t('l_personal_info')}
           </h4>
           <div className='grid grid-cols-2 gap-y-2'>
             <div>
