@@ -35,7 +35,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
   }, [tasks]);
 
   return (
-    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm text-t-light dark:text-t-dark py-2 px-4 relative'>
+    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm text-t-light dark:text-t-dark relative'>
       <div className='flex items-center justify-between absolute top-0 right-0 w-full'>
         <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
           {t('h_task')}
@@ -55,9 +55,9 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
             return (
               <div
                 key={`task-info-${idx}-${shiftId}`}
-                className='flex flex-col p-8 w-full '
+                className='flex flex-col w-full '
               >
-                <div className='flex flex-row justify-between items-center mb-3 px-1'>
+                <div className='flex flex-row justify-between items-center mb-3 px-1 ml-14'>
                   <div className='text-xs text-gray-600 dark:text-gray-400'>
                     {completed} / {total} {t('l_completed')}
                   </div>
@@ -65,7 +65,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
                 </div>
 
                 <div className='flex flex-row gap-2 w-full'>
-                  <div className='flex flex-row gap-1 flex-wrap w-3/4 justify-center items-center'>
+                  <div className='flex flex-row gap-1 flex-wrap w-10/12 justify-center items-center'>
                     {list.map((task: any, i) => (
                       <TaskCard
                         task={task}
@@ -76,7 +76,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
                     ))}
                   </div>
                   <div
-                    className='flex flex-col justify-center items-center px-3 py-2 rounded-md border w-1/4
+                    className='flex flex-col justify-center items-center px-3 py-2 rounded-md border w-2/12
                                   border-gray-200 dark:border-b-dark-dark
                                   bg-gray-50 dark:bg-b-dark text-gray-700 dark:text-gray-300'
                   >

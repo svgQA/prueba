@@ -46,7 +46,6 @@ export const GroupSettingPage: FunctionComponent = () => {
   // };
 
   const updateActivity = (id: string) => {
-    // console.log('DATA: ', id);
     setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/security/groups/update/${id}`);
   };
