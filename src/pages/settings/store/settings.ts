@@ -20,6 +20,10 @@ export const computedValidateBlackList = computed(
   () => !NEW_BLACK_LIST.includes(menuInformationSelected.value.id)
 );
 
+export const computedValidateNewMenu = computed(
+  () => !menuInformationSelected.value.id.includes('create')
+);
+
 export const setMenu = (menu: IMenu) => {
   menuInformationSelected.value = menu;
 };
@@ -30,6 +34,7 @@ export const appendHistory = (menu: IMenu, action?: (menu: IMenu) => void) => {
   const position = currentPosition.value;
   if (last?.to === menu.to) {
     currentPosition.value = position + 1;
+    action?.(menu);
     return;
   }
 

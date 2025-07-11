@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
   computedCreateMenu,
   computedValidateBlackList,
+  computedValidateNewMenu,
   menuInformationSelected,
 } from '@/pages/settings/store/settings';
 import { Link } from 'wouter';
@@ -14,7 +15,7 @@ export const CardSettingHeader: FunctionComponent<
   const { t } = useTranslation();
   return (
     <div className='px-2 flex flex-col w-1/2 py-2'>
-      <div className='flex flex-col dark:bg-b-dark-light bg-b-light-dark py-0.5 w-80 rounded-br-2xl px-3'>
+      <div className='flex flex-col dark:bg-b-dark-light bg-b-light-light py-0.5 w-80 rounded-br-2xl px-3'>
         <h3 className='text-xl font-bold text-pretty'>
           {t(menuInformationSelected.value.label)}
         </h3>
@@ -23,13 +24,13 @@ export const CardSettingHeader: FunctionComponent<
         </p>
       </div>
       <div className='w-fit rounded-md flex items-center mt-2 h-8'>
-        {computedValidateBlackList.value && (
+        {computedValidateBlackList.value && computedValidateNewMenu.value && (
           <Link
             to={computedCreateMenu.value.link}
             data-to={computedCreateMenu.value.link}
             data-label='create'
             data-description='d_create'
-            id={computedCreateMenu.value.id}
+            id={`${computedCreateMenu.value.id}:create`}
             className='bg-ternary w-full px-4 py-1 rounded-md'
           >
             <span className='vx-icon vx-icon-045 size-sm mr-2 h-full' />
