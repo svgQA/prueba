@@ -36,7 +36,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       label: 'm_contract',
       description: 'd_contract',
       base,
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.projects.base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.project.base,
       id: 'shift:contracts:state',
       show: true,
     },

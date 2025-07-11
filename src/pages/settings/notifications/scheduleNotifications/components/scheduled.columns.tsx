@@ -62,7 +62,7 @@ export const getColumns = (
   {
     id: 'sendAt',
     accessorKey: 'sendAt',
-    header: 'h_send_date',
+    header: 'h_sent_date',
     size: 180,
     cell: (info) => {
       return <FormattedDate date={String(info.getValue())} format='datetime' />;

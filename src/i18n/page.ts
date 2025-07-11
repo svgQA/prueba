@@ -21,7 +21,7 @@ export const page_es = {
   p_novelty: 'TY Novedad',
   // p_predefined: 'TY Predefinido',
   p_predefined: ' TY Acciones',
-  p_programed: 'TY Programadas',
+  p_programmed: 'TY Programadas',
   p_template: 'TY Plantilla',
   p_optimus: 'TY Optimus',
   p_payment: 'TY Pagos',
@@ -34,6 +34,8 @@ export const page_es = {
   p_round: 'TY Rondas',
   p_schedule: 'TY Horarios',
   p_task: 'TY Tareas',
+  p_service: 'TY Servicios',
+  p_password: 'TY Cambiar Contraseña',
 };
 
 export const page_en = {
@@ -57,9 +59,10 @@ export const page_en = {
   p_iot: 'TY IoT',
   p_channel: 'TY Channel',
   p_novelty: 'TY Novelty',
+  p_service: 'TY Sevices',
   // p_predefined: 'TY Predefined',
   p_predefined: 'TY Actions',
-  p_programed: 'TY Programed',
+  p_programmed: 'TY Programed',
   p_template: 'TY Template',
   p_optimus: 'TY Optimus',
   p_payment: 'TY Payment',
@@ -72,4 +75,5 @@ export const page_en = {
   p_round: 'TY Rounds',
   p_schedule: 'TY Schedules',
   p_task: 'TY Tasks',
+  p_password: 'TY Change Password',
 };

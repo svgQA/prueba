@@ -14,6 +14,7 @@ export const label_es = {
   l_check_error: 'Error en el check',
   l_check_success: 'Check exitoso',
   l_filter_by: 'Filtrar por',
+  l_form_continue: 'Continuar con el formulario',
   filter_by: 'Filas',
 };
 
@@ -33,5 +34,6 @@ export const label_en = {
   l_check_error: 'Check error',
   l_check_success: 'Check success',
   l_filter_by: 'Filter by',
+  l_form_continue: 'Continue with form',
   filter_by: 'Rows',
 };

@@ -4,7 +4,7 @@ import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
 // import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { useEffect } from 'preact/hooks';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useParams } from 'wouter';
@@ -28,6 +28,7 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useNavigation } from '@/utils/utilities/navigation';
 import { HelpTooltip } from '@/components/common/help-tooltip';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 // import { TaskFormCreate } from '../../task/create/task.form';
 // import { IOption } from '@/components/common/multi/interface';
 
@@ -130,7 +131,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     if (!request.getStatus()) return;
     ToastManager.success(message);
 
-    navigateUpsert('/rounds');
+    navigateUpsert('/shifts/rounds');
   };
 
   /*
@@ -202,10 +203,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
   */
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    created();
-    // Promise.all([created(), getTasks()]);
-  }, []);
+    if (selectedCompany) {
+      created();
+      // Promise.all([created(), getTasks()]);
+    }
+  }, [selectedCompany, location]);
 
   /*
   const onTaskAdd = (task: any, index: number) => {
@@ -215,7 +219,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   */
 
   return (
-    <Section>
+    <>
       <Form
         onSubmit={onSubmit}
         mutators={{
@@ -223,11 +227,17 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         }}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting }) => (
-          <form
-            onSubmit={handleSubmit}
-            className='space-y-6'
-            id='form-round-create'
-          >
+          <form onSubmit={handleSubmit} id='form-round-create'>
+            <StatusButton
+              onClickClean={() => {
+                form.reset();
+                resetMarket();
+              }}
+              submitting={submitting}
+              pristine={true}
+              form='form-round-create'
+              label={id ? 'edit' : 'save'}
+            />
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid md:grid-cols-2 gap-6'>
               <div className='space-y-4'>
@@ -575,25 +585,11 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   height='500px'
                   clickPoint={() => {}}
                 />
-
-                {/* Botonera */}
-                <div className='w-full flex-row flex justify-end items-center mt-2 absolute top-2 right-2'>
-                  <StatusButton
-                    onClickClean={() => {
-                      form.reset();
-                      resetMarket();
-                    }}
-                    submitting={submitting}
-                    pristine={true}
-                    form='form-round-create'
-                    label={id ? 'edit' : 'save'}
-                  />
-                </div>
               </div>
             </div>
           </form>
         )}
       />
-    </Section>
+    </>
   );
 };

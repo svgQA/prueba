@@ -304,7 +304,7 @@ export const TaskFormCreate = ({
                       </div>
                     </div>
                     {!add && (
-                      <div className='w-full flex justify-end items-center mt-3'>
+                      <div className='w-full flex justify-end items-center mt-3 relative'>
                         <StatusButton
                           onClickClean={() => form.reset()}
                           submitting={submitting}

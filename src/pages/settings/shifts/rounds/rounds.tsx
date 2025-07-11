@@ -1,5 +1,5 @@
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { IRowAction } from '@/components/common/table/interface.d';
 import { Table } from '@/components/common/table/table';
 import { type FunctionComponent } from 'preact';
@@ -19,14 +19,14 @@ export const RoundsSettingPage: FunctionComponent = () => {
   const [rounds, setRounds] = useState([]);
   const loading = useSignal<boolean>(false);
   const { redirectSettings } = useNavigation();
-  const redirect = () => {
-    redirectSettings(
-      PAGES_LIST_ROUTER.dashboard.setting.base,
-      '/round/create',
-      'create',
-      'rounds-create'
-    );
-  };
+  // const redirect = () => {
+  //   redirectSettings(
+  //     PAGES_LIST_ROUTER.dashboard.setting.base,
+  //     '/round/create',
+  //     'create',
+  //     'rounds-create'
+  //   );
+  // };
 
   const { t } = useTranslation();
   useEffect(() => {
@@ -98,18 +98,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={() => redirect()}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
-        </div>
-      </div>
+    <>
       <Table<Round>
         showExpandableIcon={true}
         data={rounds}
@@ -122,8 +111,9 @@ export const RoundsSettingPage: FunctionComponent = () => {
         onClickAction={handleOnClick}
         unsearch={false}
         isSettingTable
+        absolute
         loading={loading.value}
       />
-    </Section>
+    </>
   );
 };
