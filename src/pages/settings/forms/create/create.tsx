@@ -37,22 +37,29 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { formValidation } from './utils/validation';
 import { IFormError, IPageError } from '@/types/form/error.type';
 import { useLocation } from 'wouter';
-import { FormService } from '@/services';
+import { FormService, GeneralService } from '@/services';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { Badge } from '@/components/common/badge/badge';
 import { localStorage } from '@/utils/storage';
-
+import { MultiSelect } from './MultiSelect';
+import { useSignal } from '@preact/signals';
 const AUTO_SAVE_INTERVAL = 4000; // 4 seconds
-
+interface IMultiSelect {
+  id: number;
+  name: string;
+}
 export const FormCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const [_, navigate] = useLocation();
   const [isAutoSaving, setIsAutoSaving] = useState(false);
+  const group = useSignal<number[]>(getForm.value.groups);
+  const smartGroups = useSignal<{ name: string; id: number }[]>([]);
 
   useEffect(() => {
     document.title = t('p_setting');
+    getGroups();
   }, []);
 
   useEffect(() => {
@@ -106,6 +113,12 @@ export const FormCreateSettingPage: FunctionComponent = () => {
     }
   };
 
+  const getGroups = async () => {
+    const response = await GeneralService.getGroup();
+    if (!response.getStatus()) return;
+    smartGroups.value = response.getMany();
+  };
+
   const saveFormat = async () => {
     const [message, error] = formValidation(getForm.value);
     if (error) {
@@ -116,6 +129,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       title: getForm.value.label,
       description: getForm.value.description || '',
       structure: getForm.value,
+      smart_groups: group.value,
     };
     if (getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE) {
       if (!getFormMode.value.id) return;
@@ -227,6 +241,19 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               onClick={saveFormat}
             />
           </div>
+        </div>
+        <div className='w-full'>
+          <label className='block mb-2 text-sm font-medium text-gray-700'>
+            Grupos inteligentes
+          </label>
+          <MultiSelect<IMultiSelect>
+            options={smartGroups.value}
+            selectedIds={group.value}
+            onChange={(selectedIds) => (group.value = selectedIds as number[])}
+            getLabel={(item) => item.name}
+            getId={(item) => item.id}
+            placeholder='Seleccione uno o más grupos inteligentes'
+          />
         </div>
         <div className='flex flex-row w-[93%] items-center mb-4 gap-5 justify-end'>
           <div className='max-w-64 h-5'>

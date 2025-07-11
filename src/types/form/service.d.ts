@@ -9,6 +9,7 @@ export interface IFormRequest {
   description: string;
   category?: string;
   report?: { id: number };
+  smart_groups?: number[];
 }
 
 export interface IFormResponse extends IFormRequest {
@@ -17,6 +18,14 @@ export interface IFormResponse extends IFormRequest {
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
+  groups: IGroups[];
+}
+
+interface IGroups {
+  group: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface UResponseRequest extends Omit<IResponseRequest, 'formId'> {}
