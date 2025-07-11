@@ -41,18 +41,20 @@ export const getColumns = (
     size: 300,
     header: 'h_group',
     cell: (info) => {
-      const { group } = info.row.original as any;
+      const { groups } = info.row.original as any;
       return (
-        <div className='flex items-center'>
-          <Avatar
-            name={group?.name || 'group'}
-            src={group?.image}
-            size='sm'
-            square
-          />
-          <div className='flex flex-col ml-3'>
-            <div className='font-bold'>{group?.name || 'group'}</div>
-          </div>
+        <div className='flex items-center gap-2'>
+          {groups?.map((val: { group: { name: string; image: string } }, index: number) => (
+            <div key={index} className='flex items-center'>
+              <Avatar
+                name={val.group.name}
+                src={val.group.image}
+                size='sm'
+                square
+                toolTipLabel={val.group.name}
+              />
+            </div>
+          ))}
         </div>
       );
     },
