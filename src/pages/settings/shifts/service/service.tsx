@@ -65,7 +65,7 @@ export const ServiceSettingPage: FunctionComponent = () => {
   const update = (id: string) => {
     redirectSettings(
       PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/rounds/service/update/${id}`,
+      `/shifts/service/update/${id}`,
       'edit',
       'service-update'
     );

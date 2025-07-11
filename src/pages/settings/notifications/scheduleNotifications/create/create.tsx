@@ -3,7 +3,7 @@ import { Form } from 'react-final-form';
 // import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
-import { TextArea } from '@/components/common/text.area/text.area';
+// import { TextArea } from '@/components/common/text.area/text.area';
 import { useLocation } from 'wouter';
 import { appendHistory } from '@/pages/settings/store/settings';
 import { SchedulerService, TemplateService } from '@/services';
@@ -103,10 +103,6 @@ export const ScheduledNotificationForm = () => {
 
   return (
     <>
-      <h2 className='text-xl font-semibold mb-6'>
-        Detalles de la Notificación
-      </h2>
-
       {showConfirmModal && (
         <div className='fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center'>
           <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-md'>
@@ -168,18 +164,17 @@ export const ScheduledNotificationForm = () => {
               id='overrideTitle'
               name='overrideTitle'
               type='text'
-              label='Título *'
+              label='h_name'
               placeholder='Ingrese el título de la notificación...'
               value={values.overrideTitle || ''}
               onChange={(e) => (values.overrideTitle = e.currentTarget.value)}
             />
 
-            <TextArea
+            <Input
               id='overrideDescription'
               name='overrideDescription'
-              label='Descripción *'
-              placeholder='Ingrese una descripción...'
-              className='col-span-2'
+              label='description'
+              placeholder='p_write'
               value={values.overrideDescription || ''}
               onChange={(e: any) =>
                 (values.overrideDescription = e.currentTarget.value)

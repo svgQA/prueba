@@ -1,9 +1,8 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { Form, Field } from 'react-final-form';
 import { CardAccess } from '@/components/compose/cards/company/cardAccess';
-import { useLocation } from 'wouter';
 import { Signal, useSignal } from '@preact/signals';
 import { IResource } from './type';
 import { GeneralService } from '@/services';
@@ -19,7 +18,6 @@ import { useResourceStore } from '@/store/slices/optimusAccess/access.slice';
 
 export const ResourceMemoSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
-  const [_, navigate] = useLocation();
   const resources = useSignal<IResource[]>([]);
 
   useEffect(() => {
@@ -38,8 +36,9 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
     if (!response.getStatus()) return;
     resources.value = response.getMany();
   };
+
   const { setSelectedResource } = useResourceStore();
-  const onSubmit = async (values: IResource) => {
+  const onSubmit = async (values: IResource, form: any) => {
     const output = {
       ...values,
       type: values.type || 'WHATSAPP',
@@ -52,12 +51,13 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
       return;
     }
     ToastManager.success('s_created_success');
-    navigate('/memo/resource');
+    getResources();
+    form?.reset();
   };
 
   const handleEdit = (title: string, subtitle: string, imageUrl: string) => {
     setSelectedResource({ title, subtitle, imageUrl }); // Guardamos en el estado global
-    navigate('/access/createResource'); // Redirigimos a la página de edición
+    // navigate('/access/createResource'); // Redirigimos a la página de edición
   };
 
   const initialValues: Signal<Partial<IResource>> = useSignal({
@@ -65,8 +65,8 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
   });
 
   return (
-    <Section className='pt-2 w-full flex flex-row'>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mt-16 w-8/12'>
+    <>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mt-16 w-8/12 px-3'>
         {resources.value.map((data) => (
           <CardAccess
             title={data.name}
@@ -80,12 +80,21 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
         ))}
       </div>
       <div className='w-4/12'>
-        <div className='dark:bg-b-dark-light bg-b-light-dark p-2 rounded-md'>
+        <div className='dark:bg-b-dark-light bg-b-light-light p-5 rounded-md'>
           <Form
             onSubmit={onSubmit}
             initialValues={initialValues.value}
             render={({ handleSubmit, form, submitting, pristine }) => (
               <form onSubmit={handleSubmit} id='form-resource-create'>
+                <StatusButton
+                  onClickClean={() => {
+                    form.reset({ type: 'WHATSAPP' });
+                  }}
+                  submitting={submitting}
+                  pristine={pristine}
+                  form='form-resource-create'
+                  label={'Guardar'}
+                />
                 <div className='flex flex-col gap-4'>
                   {/* Title field - full width */}
                   <div className='w-full'>
@@ -173,24 +182,12 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                       </Field>
                     </div>
                   </div>
-
-                  <div className='flex justify-end mt-6'>
-                    <StatusButton
-                      onClickClean={() => {
-                        form.reset({ type: 'WHATSAPP' });
-                      }}
-                      submitting={submitting}
-                      pristine={pristine}
-                      form='form-resource-create'
-                      label={'Guardar'}
-                    />
-                  </div>
                 </div>
               </form>
             )}
           />
         </div>
       </div>
-    </Section>
+    </>
   );
 };

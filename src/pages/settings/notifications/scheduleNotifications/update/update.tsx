@@ -46,7 +46,7 @@ export const ScheduledNotificationEditPage = () => {
 
     if (res.getStatus()) {
       alert('Notificación actualizada correctamente');
-      navigate('/dashboard/setting/notifications/scheduled'); // Ajusta según tu router
+      navigate('/notification/scheduled'); // Ajusta según tu router
     } else {
       alert('Error al actualizar la notificación');
     }
@@ -63,22 +63,27 @@ export const ScheduledNotificationEditPage = () => {
           disabled={loading}
         />
       </div>
-      <h2 className='text-xl font-bold mb-4'>Editar Notificación Programada</h2>
-      <div className='space-y-4'>
-        <Input
-          label='Título'
-          name='overrideTitle'
-          value={form.overrideTitle || ''}
-          onChange={(e) => handleChange('overrideTitle', e.currentTarget.value)}
-        />
-        <TextArea
-          label='Descripción'
-          name='overrideDescription'
-          value={form.overrideDescription || ''}
-          onChange={(e) =>
-            handleChange('overrideDescription', e.currentTarget.value)
-          }
-        />
+      <div className='space-y-4 grid grid-cols-2'>
+        <div className='col-span-1'>
+          <Input
+            label='h_name'
+            name='overrideTitle'
+            value={form.overrideTitle || ''}
+            onChange={(e) =>
+              handleChange('overrideTitle', e.currentTarget.value)
+            }
+          />
+        </div>
+        <div className='col-span-1'>
+          <Input
+            label='description'
+            name='overrideDescription'
+            value={form.overrideDescription || ''}
+            onChange={(e) =>
+              handleChange('overrideDescription', e.currentTarget.value)
+            }
+          />
+        </div>
         <Input
           label='Fecha de envío'
           name='sendAt'

@@ -11,10 +11,14 @@ import { Button } from '@/components/common/button/button';
 import { useSignal } from '@preact/signals';
 import { GeneralService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { navigate } from 'wouter/use-browser-location';
+// TODO: Ver esto, porque este lo hace de forma absoluta
+// import { navigate } from 'wouter/use-browser-location';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'wouter';
 
 export const GroupCreateSettingPage: FunctionComponent = () => {
+  // Este lo hace de forma relativa
+  const [_, navigate] = useLocation();
   const name = useSignal<string>('');
   const description = useSignal<string>('');
 

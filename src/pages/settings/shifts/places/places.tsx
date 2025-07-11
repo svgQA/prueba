@@ -67,7 +67,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
   const update = (id: string) => {
     redirectSettings(
       PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/rounds/places/update/${id}`,
+      `/shifts/places/update/${id}`,
       'edit',
       'places-update'
     );

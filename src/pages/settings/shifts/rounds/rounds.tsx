@@ -80,7 +80,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   const editProject = (id: string) => {
     redirectSettings(
       PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/round/update/${id}`,
+      `/shifts/rounds/update/${id}`,
       'edit',
       'rounds-update'
     );

@@ -6,7 +6,7 @@ import { useSignal } from '@preact/signals';
 import { Table } from '@/components/common/table/table';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
 import { getColumns } from './components/scheduled.columns';
-import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { SchedulerService } from '@/services/notification/schedule';
@@ -54,7 +54,7 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
   const editScheduled = (id: string) => {
     const menu = {
-      to: `${PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.update.to.replace(':id', id)}`,
+      to: `/notification/scheduled/update/${id}`,
       label: 'update',
       id: 'scheduled-update',
     };

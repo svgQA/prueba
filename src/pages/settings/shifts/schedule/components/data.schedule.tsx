@@ -14,7 +14,7 @@ export const DataSchedule: FunctionComponent<DataScheduleProps> = ({
   return (
     <li
       key={(daySelection.day as DayOfWeek).value}
-      className={`text-xs p-2 rounded-md border bg-b-light-dark dark:bg-b-dark-dark  border-b-light-light dark:border-b-dark-light ${
+      className={`text-xs p-2 rounded-md border bg-b-light-dark dark:bg-b-dark-dark  border-b-light-light dark:border-b-dark-light max-h-[90px] overflow-hidden ${
         daySelection?.blocks?.length > 0 ? 'bg-muted/30' : ''
       } min-w-[150px]`}
     >

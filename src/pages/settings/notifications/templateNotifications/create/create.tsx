@@ -39,8 +39,6 @@ export const TemplateCreateForm = () => {
       tasks: Array.isArray(tasksResponse.value) ? tasksResponse.value : [],
     };
 
-    // console.log('🟢 Payload para backend:', output);
-
     const result = await TemplateService.createTemplate(output);
     if (!result.getStatus()) {
       ToastManager.error('s_created_error');
@@ -48,6 +46,7 @@ export const TemplateCreateForm = () => {
     }
 
     ToastManager.success('s_send_success');
+    redirectToList();
   };
 
   const { selectedCompany } = useUserStore();

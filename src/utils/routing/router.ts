@@ -156,7 +156,7 @@ export const PAGES_LIST_ROUTER = {
           },
           update: {
             base: '/update',
-            to: '/shifts/round/update/:id',
+            to: '/shifts/rounds/update/:id',
           },
         },
         places: {

@@ -12,13 +12,13 @@ import { convertBlocksToCells, getSelectedHoursByDay } from '../utils';
 import { ICScheduleRequest } from '@/types/shift/shift.request';
 import { ScheduleService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { DAYS_OF_WEEK, HOURS } from '../constant';
 import { DaySelectedModel } from '../type';
 import { useNavigation } from '@/utils/utilities/navigation';
 
 export const ScheduleCreateSettingPage: FunctionComponent = () => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const { navigateUpsert } = useNavigation();
   const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
   const { id } = useParams();
@@ -99,7 +99,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
           <form
             onSubmit={handleSubmit}
             id='form-schedule-create'
-            className='space-y-6'
+            className='space-y-1'
           >
             <StatusButton
               onClickClean={() => {
@@ -109,7 +109,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
               submitting={submitting}
               pristine={pristine}
               form='form-schedule-create'
-              label={id ? t('schedule.edit') : t('schedule.save')}
+              label={id ? 'edit' : 'save'}
             />
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-1'>
@@ -119,14 +119,14 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                     <Input
                       {...input}
                       type='text'
-                      placeholder={t('schedule.namePlaceholder')}
-                      label={t('schedule.name')}
+                      placeholder='p_write'
+                      label='h_name'
                       meta={meta}
                     />
                   )}
                 </Field>
               </div>
-              <div className='col-span-1'>
+              <div className='col-span-1 max-h-[61vh] overflow-y-auto vox-scroll-design'>
                 <WeeklyScheduler
                   startHour={0}
                   endHour={24}
