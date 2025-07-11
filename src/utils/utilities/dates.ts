@@ -43,8 +43,9 @@ export class DateUtils {
     const timeOnly = timeOnlyMatch ? timeOnlyMatch[1] : hourString;
     const [hour, minute, second = '0'] = timeOnly.split(':').map(Number);
 
-    const localToday = dayjs()
-      .tz(DateUtils.timeZone)
+    const localToday = dayjs
+      .utc()
+      // .tz(DateUtils.timeZone)
       .set('hour', hour)
       .set('minute', minute)
       .set('second', +second)
@@ -53,6 +54,7 @@ export class DateUtils {
     if (back) {
       return localToday.utc().toISOString();
     }
+
     return localToday.format();
   }
 
