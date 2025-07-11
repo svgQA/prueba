@@ -214,6 +214,9 @@ export const FormSettingPage = () => {
         isSettingTable
         loading={loading.value}
         absolute
+        visibility={{
+          category: false,
+        }}
       />
     </>
   );
