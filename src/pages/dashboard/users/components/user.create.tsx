@@ -49,7 +49,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
 
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
   const image = useSignal<IPresignedRequest[]>([]);
-
+  const requiredRole = useSignal<boolean>(true);
   useEffect(() => {
     // applyAllData();
     Promise.all([
@@ -509,6 +509,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         label={t('user.create.form.userType.label')}
                         name='userType'
                         icon='231'
+                        onChange={(e) => {
+                          requiredRole.value =
+                            e.currentTarget.value !== 'CLIENT';
+                          input.onChange(e);
+                        }}
                         optionValue='id'
                         optionLabel='name'
                         options={[
@@ -529,7 +534,10 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                       />
                     )}
                   </Field>
-                  <Field<IOption[]> name='roles' validate={required}>
+                  <Field<IOption[]>
+                    name='roles'
+                    validate={requiredRole.value ? required : undefined}
+                  >
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
