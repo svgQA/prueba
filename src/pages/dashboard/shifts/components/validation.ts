@@ -12,11 +12,11 @@ const checkTime = (date: Dayjs, schedule: Schedule) => {
   if (!_exist_day) return false;
 
   const _schedule_hours = schedule.days.find(
-    (d: DaySchedule) => d.dayIndex === day_name.position
+    (d: DaySchedule) => DAYS_OF_WEEK[d.dayIndex]?.position === day_name.position
   )?.blocks;
   if (!_schedule_hours) return false;
-
   const _hour = date.hour();
+
   const validation = _schedule_hours.some((block: TimeBlock) => {
     return _hour >= block.start && _hour < block.end;
   });
@@ -27,10 +27,9 @@ const checkTime = (date: Dayjs, schedule: Schedule) => {
 export const isStartAndEndInSchedules = (
   str_start: string,
   str_end: string,
-  currentSchedule: Schedule
+  schedule: Schedule
 ): boolean => {
   const _start = DateUtils._dateToFrontend(str_start);
   const _end = DateUtils._dateToFrontend(str_end);
-
-  return checkTime(_start, currentSchedule) && checkTime(_end, currentSchedule);
+  return checkTime(_start, schedule) && checkTime(_end, schedule);
 };
