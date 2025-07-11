@@ -30,6 +30,7 @@ const buildInitFormat = (): IFormat => ({
   label: '',
   description: '',
   pages: [getInitPage()],
+  groups: [],
 });
 
 interface IFormMode {

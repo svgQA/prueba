@@ -102,6 +102,7 @@ export const FormSettingPage = () => {
   const handleOnClick = async (action: IRowAction) => {
     const format = forms.value.find((format) => format.id == action.id);
     if (!format?.structure) throw Error(t('form.error.general'));
+    const groups = format.groups?.map((group) => group.group.id) || [];
     switch (action.action) {
       case ROW_ACTIONS.UPDATE: {
         const menu = {
@@ -112,7 +113,7 @@ export const FormSettingPage = () => {
         appendHistory(menu);
         setFormat(
           { mode: FORMAT_MODE_SERVICE.UPDATE, id: format.id },
-          format.structure
+          { ...format.structure, groups: groups }
         );
         navigate(menu.to);
         break;
