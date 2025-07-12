@@ -84,5 +84,9 @@ export const Avatar: FunctionalComponent<AvatarProps> = ({
     );
   }
 
-  return <div className={classes} title={toolTipLabel}>{initial}</div>;
+  return (
+    <div className={classes} title={toolTipLabel}>
+      {initial}
+    </div>
+  );
 };

@@ -44,17 +44,22 @@ export const getColumns = (
       const { groups } = info.row.original as any;
       return (
         <div className='flex items-center gap-2'>
-          {groups?.map((val: { group: { name: string; image: string } }, index: number) => (
-            <div key={index} className='flex items-center'>
-              <Avatar
-                name={val.group.name}
-                src={val.group.image}
-                size='sm'
-                square
-                toolTipLabel={val.group.name}
-              />
-            </div>
-          ))}
+          {groups?.map(
+            (
+              val: { group: { name: string; image: string } },
+              index: number
+            ) => (
+              <div key={index} className='flex items-center'>
+                <Avatar
+                  name={val.group.name}
+                  src={val.group.image}
+                  size='sm'
+                  square
+                  toolTipLabel={val.group.name}
+                />
+              </div>
+            )
+          )}
         </div>
       );
     },
