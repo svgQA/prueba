@@ -94,7 +94,6 @@ export const ManualNotificationForm = ({
     }
   }, []);
 
-
   const handleSubmit = async (values: any) => {
     if (!hasplayers) return;
     /*

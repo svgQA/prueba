@@ -224,7 +224,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     />
                   </span>
                 </div>
-                <div className='bg-b-light-light dark:bg-b-dark-dark rounded-lg px-3 py-2 relative'>
+                <div className='rounded-lg px-3 py-2 relative'>
                   {memo.resource && memo.resource.length > 0 && (
                     <div className='absolute top-0 right-0'>
                       <Button
@@ -463,8 +463,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   );
 
   return (
-    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm max-h-[450px]'>
-      <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-dark max-h-20 w-full'>
+    <div className='w-full rounded-lg bg-b-white-light max-h-[450px]'>
+      <div className='flex items-center justify-between gap-1 border-b border-b-light-dark dark:border-b-dark max-h-20 w-full dark:bg-b-dark-dark bg-b-light-dark rounded-lg'>
         <div className='flex-1 rounded-lg ml-5 w-7/12'>
           {memo.resource && <ShowFiles resources={memo.resource} />}
         </div>
@@ -483,22 +483,20 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
         <div className='flex items-center gap-4 w-4/12 flex-row justify-between px-3'>
           {status.value != 'IN_REVISION' && status.value != 'CREATED' && (
-            <div className='flex items-center h-[72px]'>
-              <Button
-                name='btn-check-memo'
-                label={status.value === 'OPENED' ? 'SOLVE' : 'RESOLVED'}
-                icon='030'
-                disabled={status.value === 'RESOLVED'}
-                onClick={() =>
-                  showAlert({
-                    title: status.value || 'CREATED',
-                    message: `${t('message.confirm')} ${status.value}`,
-                    onConfirm: () => handleCheck(),
-                    onCancel: () => {},
-                  })
-                }
-              />
-            </div>
+            <Button
+              name='btn-check-memo'
+              label={status.value === 'OPENED' ? 'SOLVE' : 'RESOLVED'}
+              icon='030'
+              disabled={status.value === 'RESOLVED'}
+              onClick={() =>
+                showAlert({
+                  title: status.value || 'CREATED',
+                  message: `${t('message.confirm')} ${status.value}`,
+                  onConfirm: () => handleCheck(),
+                  onCancel: () => {},
+                })
+              }
+            />
           )}
 
           {memo.createdAt &&
