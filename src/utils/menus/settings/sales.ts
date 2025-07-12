@@ -13,7 +13,7 @@ export const MODAL_SETTING_SALES: IModalSidebarMenu = {
       description: 'd_sales',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.sales.sales.base,
-      id: 'sales:sale:state',
+      id: 'sales:sales:state',
     },
   ],
 };

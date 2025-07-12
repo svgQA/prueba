@@ -1,5 +1,5 @@
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { Place } from './utils/places';
 import { columns } from './components/places.columns';
@@ -48,14 +48,14 @@ export const PlacesSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const redirect = () => {
-    redirectSettings(
-      PAGES_LIST_ROUTER.dashboard.setting.base,
-      '/rounds/places/create',
-      'create',
-      'places-create'
-    );
-  };
+  // const redirect = () => {
+  //   redirectSettings(
+  //     PAGES_LIST_ROUTER.dashboard.setting.base,
+  //     '/rounds/places/create',
+  //     'create',
+  //     'places-create'
+  //   );
+  // };
 
   const deletePlace = async (id: string) => {
     const request = await PlaceService.deletePlace(id);
@@ -67,7 +67,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
   const update = (id: string) => {
     redirectSettings(
       PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/rounds/places/update/${id}`,
+      `/shifts/places/update/${id}`,
       'edit',
       'places-update'
     );
@@ -84,18 +84,7 @@ export const PlacesSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={redirect}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
-        </div>
-      </div>
+    <>
       <Table<Place>
         data={places}
         columns={columns}
@@ -106,7 +95,8 @@ export const PlacesSettingPage: FunctionComponent = () => {
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}
+        absolute
       />
-    </Section>
+    </>
   );
 };

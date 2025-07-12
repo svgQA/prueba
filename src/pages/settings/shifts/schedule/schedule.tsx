@@ -1,5 +1,5 @@
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { columns } from './components/schedule.columns';
 import { Table } from '@/components/common/table/table';
@@ -42,19 +42,19 @@ export const ScheduleSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const redirect = () => {
-    redirectSettings(
-      PAGES_LIST_ROUTER.dashboard.setting.base,
-      '/rounds/schedule/create',
-      'create',
-      'schedule-create'
-    );
-  };
+  // const redirect = () => {
+  //   redirectSettings(
+  //     PAGES_LIST_ROUTER.dashboard.setting.base,
+  //     '/rounds/schedule/create',
+  //     'create',
+  //     'schedule-create'
+  //   );
+  // };
 
   const update = (id: string) => {
     redirectSettings(
       PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/rounds/schedule/update/${id}`,
+      `/shifts/schedule/update/${id}`,
       'update',
       'schedule-update'
     );
@@ -79,18 +79,7 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={redirect}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
-        </div>
-      </div>
+    <>
       <Table<ISchedule>
         data={schedules.value}
         columns={columns}
@@ -105,13 +94,12 @@ export const ScheduleSettingPage: FunctionComponent = () => {
         }}
         visibility={{
           id: false,
-          name: true,
-          daysAllowed: true,
         }}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}
+        absolute
       />
-    </Section>
+    </>
   );
 };

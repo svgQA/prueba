@@ -2,7 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { useParams, useLocation } from 'wouter';
 import { SchedulerService } from '@/services';
 import { IScheduleNotificationDto } from '@/types/notification/IScheduleNotificationDto';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { Button } from '@/components/common/button/button';
@@ -46,30 +46,44 @@ export const ScheduledNotificationEditPage = () => {
 
     if (res.getStatus()) {
       alert('Notificación actualizada correctamente');
-      navigate('/dashboard/setting/notifications/scheduled'); // Ajusta según tu router
+      navigate('/notification/scheduled'); // Ajusta según tu router
     } else {
       alert('Error al actualizar la notificación');
     }
   };
 
   return (
-    <Section>
-      <h2 className='text-xl font-bold mb-4'>Editar Notificación Programada</h2>
-      <div className='space-y-4'>
-        <Input
-          label='Título'
-          name='overrideTitle'
-          value={form.overrideTitle || ''}
-          onChange={(e) => handleChange('overrideTitle', e.currentTarget.value)}
+    <>
+      <div className='flex justify-end gap-4 absolute top-14 right-2'>
+        <Button
+          name='save-scheduled'
+          label='save'
+          icon='022'
+          onClick={handleSubmit}
+          disabled={loading}
         />
-        <TextArea
-          label='Descripción'
-          name='overrideDescription'
-          value={form.overrideDescription || ''}
-          onChange={(e) =>
-            handleChange('overrideDescription', e.currentTarget.value)
-          }
-        />
+      </div>
+      <div className='space-y-4 grid grid-cols-2'>
+        <div className='col-span-1'>
+          <Input
+            label='h_name'
+            name='overrideTitle'
+            value={form.overrideTitle || ''}
+            onChange={(e) =>
+              handleChange('overrideTitle', e.currentTarget.value)
+            }
+          />
+        </div>
+        <div className='col-span-1'>
+          <Input
+            label='description'
+            name='overrideDescription'
+            value={form.overrideDescription || ''}
+            onChange={(e) =>
+              handleChange('overrideDescription', e.currentTarget.value)
+            }
+          />
+        </div>
         <Input
           label='Fecha de envío'
           name='sendAt'
@@ -136,16 +150,7 @@ export const ScheduledNotificationEditPage = () => {
             } catch (_) {}
           }}
         />
-        <div className='w-full flex justify-end items-center'>
-          <Button
-            name='save-scheduled'
-            label='save'
-            icon='022'
-            onClick={handleSubmit}
-            disabled={loading}
-          />
-        </div>
       </div>
-    </Section>
+    </>
   );
 };

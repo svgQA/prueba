@@ -1,5 +1,5 @@
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
 import { columns } from './components/task.columns';
@@ -60,17 +60,17 @@ export const TaskSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const redirect = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.task.create.to,
-      label: 'create',
-      id: 'tasks-create',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'create' });
-    navigate('/rounds/task/create');
-  };
+  // const redirect = () => {
+  //   const menu = {
+  //     to: PAGES_LIST_ROUTER.dashboard.setting.shifts.task.create.to,
+  //     label: 'create',
+  //     id: 'tasks-create',
+  //   };
+  //   appendHistory(menu);
+  //   // OJO: No traducir, dejar asi los setMenu
+  //   setMenu({ ...infoMenu.value, label: 'create' });
+  //   navigate('/rounds/task/create');
+  // };
 
   const update = (id: string) => {
     const menu = {
@@ -81,7 +81,7 @@ export const TaskSettingPage: FunctionComponent = () => {
     appendHistory(menu);
     // OJO: No traducir, dejar asi los setMenu
     setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/rounds/task/update/${id}`);
+    navigate(`/shifts/task/update/${id}`);
   };
 
   const deleteTask = async (id: string) => {
@@ -103,28 +103,18 @@ export const TaskSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={redirect}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
-        </div>
-      </div>
+    <>
       <Table<ITask>
         data={tasks.value}
         columns={columns}
         visibility={{
           id: false,
         }}
+        absolute
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}
       />
-    </Section>
+    </>
   );
 };

@@ -21,9 +21,9 @@ export const FormPhoneViewer = () => {
   return (
     <div className='flex flex-col absolute -top-64 mt-3'>
       <div className='absolute z-40 top-5 left-1/2 transform -translate-x-1/2 w-24 h-1 rounded-full bg-b-dark-light' />
-      <div className='relative border-b-dark-light border-2 flex flex-col shadow-lg bg-b-dark rounded-2xl w-[340px] h-[667px] px-2 pt-10 pb-4'>
-        <div className='bg-b-light h-full rounded-xl overflow-hidden vox-scroll-design text-t-light px-4 flex flex-col'>
-          <div className='flex flex-col items-center justify-center rounded-md py-2'>
+      <div className='relative border-b-dark-light border-2 flex flex-col shadow-lg bg-b-dark dark:bg-b-dark-dark rounded-2xl w-[340px] h-[667px] px-2 pt-10 pb-4'>
+        <div className='bg-b-light dark:bg-b-dark-light h-full rounded-xl overflow-hidden vox-scroll-design text-t-light px-4 flex flex-col'>
+          <div className='flex flex-col items-center justify-center rounded-md py-2 text-t-light dark:text-t-dark'>
             <h3 className='font-bold text-xl'>
               {getForm.value.label ? getForm.value.label : 'Form Title'}
             </h3>
@@ -33,7 +33,7 @@ export const FormPhoneViewer = () => {
                 : 'Form Description'}
             </p>
           </div>
-          <div className='flex flex-col h-full w-full overflow-hidden'>
+          <div className='flex flex-col h-full w-full overflow-hidden text-t-light dark:text-t-dark'>
             <div
               ref={pagesRef}
               className='flex transition-transform duration-300 h-full w-full'

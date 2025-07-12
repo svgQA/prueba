@@ -3,6 +3,8 @@ import { ShiftService } from '@/services';
 import { Badge } from '@/components/common/badge/badge';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { useTranslation } from 'react-i18next';
+import MapViewer from '@/components/common/file/components/mapViewer';
+import { Button } from '@/components/common/button/button';
 
 interface PointStatus {
   point: string | number;
@@ -39,8 +41,12 @@ const RoundInfo = ({
     <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm text-t-light dark:text-t-dark py-2 relative'>
       <div className='flex items-center justify-between absolute top-0 right-0 w-full'>
         <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
-          {t('h_title')}
+          {t('h_round')}
         </h2>
+        <MapViewer
+          mapPoint={{ id: 1, position: { lat: 1, lng: 2 } }}
+          clickable={<Button name='btn-map-viewer' icon='289'></Button>}
+        />
       </div>
       {points.length === 0 ? (
         <div className='flex items-center justify-center h-32'>

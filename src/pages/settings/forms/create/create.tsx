@@ -37,23 +37,37 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { formValidation } from './utils/validation';
 import { IFormError, IPageError } from '@/types/form/error.type';
 import { useLocation } from 'wouter';
-import { FormService } from '@/services';
+import { FormService, GeneralService } from '@/services';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
-import { TextArea } from '@/components/common/text.area/text.area';
+// import { TextArea } from '@/components/common/text.area/text.area';
 import { Badge } from '@/components/common/badge/badge';
 import { localStorage } from '@/utils/storage';
-
+import { MultiSelect } from './MultiSelect';
+import { useSignal } from '@preact/signals';
+import { useUserStore } from '@/store/slices';
 const AUTO_SAVE_INTERVAL = 4000; // 4 seconds
-
+interface IMultiSelect {
+  id: number;
+  name: string;
+}
 export const FormCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const [_, navigate] = useLocation();
   const [isAutoSaving, setIsAutoSaving] = useState(false);
+  const group = useSignal<number[]>(getForm.value.groups);
+  const smartGroups = useSignal<{ name: string; id: number }[]>([]);
 
   useEffect(() => {
     document.title = t('p_setting');
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    if (selectedCompany) {
+      getGroups();
+    }
+  }, [selectedCompany, location]);
 
   useEffect(() => {
     let timeoutId: number;
@@ -106,6 +120,12 @@ export const FormCreateSettingPage: FunctionComponent = () => {
     }
   };
 
+  const getGroups = async () => {
+    const response = await GeneralService.getGroup();
+    if (!response.getStatus()) return;
+    smartGroups.value = response.getMany();
+  };
+
   const saveFormat = async () => {
     const [message, error] = formValidation(getForm.value);
     if (error) {
@@ -116,6 +136,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       title: getForm.value.label,
       description: getForm.value.description || '',
       structure: getForm.value,
+      smart_groups: group.value,
     };
     if (getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE) {
       if (!getFormMode.value.id) return;
@@ -166,131 +187,145 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <section className='flex flex-row'>
-      <div class='sticky top-1/2 -translate-y-1/2 h-44 flex flex-col gap-2'>
-        <FormButton
-          onClick={addLelement}
-          color='bg-ternary'
-          label='element'
-          icon='245'
-        />
-        <FormButton
-          onClick={addLsection}
-          color='bg-primary'
-          label='section'
-          icon='274'
-        />
-        <FormButton
-          onClick={addPage}
-          color='bg-ternary'
-          label='page'
-          icon='064'
+    <>
+      <div className='absolute top-14 right-2'>
+        <Button
+          name='bnt-create-form'
+          type='button'
+          label={
+            getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE
+              ? 'update'
+              : 'create'
+          }
+          icon='212'
+          onClick={saveFormat}
         />
       </div>
-      <div class='flex-grow min-h-[78vh] p-3'>
-        <div className='flex flex-row w-[93%] items-center mb-4 gap-5 justify-between'>
-          <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer'>
-            <span className='vx-icon vx-upload text-gray-400 text-2xl' />
-          </div>
-          <div className='flex flex-row w-full justify-between items-center gap-3'>
-            <div className='flex flex-col gap-1 w-full'>
-              <Input
-                type='text'
-                placeholder={t('form.placeholder.title')}
-                name='label'
-                icon='245'
-                id={`in-form-${getForm.value.id}-format-title`}
-                value={getForm.value.label}
-                onChange={handleFormatInputChange}
-                error={(getForm.value as IFormError).label_error}
-              />
-              <TextArea
-                type='text'
-                placeholder={t('form.placeholder.description')}
-                name='description'
-                icon='123'
-                id={`in-form-${getForm.value.id}-format-description`}
-                value={getForm.value.description}
-                onChange={handleFormatInputChange}
-                error={(getForm.value as IFormError).description_error}
-              />
+      <section className='flex flex-row relative'>
+        <div class='sticky top-1/2 -translate-y-1/2 h-10 flex flex-col gap-2'>
+          <FormButton
+            onClick={addLelement}
+            color='bg-ternary'
+            label='element'
+            icon='245'
+          />
+          <FormButton
+            onClick={addLsection}
+            color='bg-primary'
+            label='section'
+            icon='274'
+          />
+          <FormButton
+            onClick={addPage}
+            color='bg-ternary'
+            label='page'
+            icon='064'
+          />
+        </div>
+        <div class='flex-grow px-3 pb-3 min-h-[65vh] max-h-[68vh] overflow-y-auto vox-scroll-design'>
+          <div className='flex flex-row w-[96%] items-center border-b-2 border-b-light-light dark:border-b-dark-light py-2 gap-5 justify-between'>
+            <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer'>
+              <span className='vx-icon vx-upload text-gray-400 text-2xl' />
             </div>
-            <Button
-              name='bnt-create-form'
-              type='button'
-              label={
-                getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE
-                  ? 'update'
-                  : 'create'
-              }
-              icon='212'
-              onClick={saveFormat}
-            />
-          </div>
-        </div>
-        <div className='flex flex-row w-[93%] items-center mb-4 gap-5 justify-end'>
-          <div className='max-w-64 h-5'>
-            {getHasUnsavedChanges.value && (
-              <Badge
-                outline
-                status={isAutoSaving ? 'info' : 'warning'}
-                label={isAutoSaving ? 'saving' : 'unsaved'}
-                full
-              />
-            )}
-          </div>
-        </div>
-        <div className='flex flex-col w-[98%] 2xl:max-w-[60vw]'>
-          {getForm.value.pages.map((page) => (
-            <div key={page.id} className='w-full mb-5 rounded-2xl'>
-              <Input
-                type='text'
-                placeholder={t('form.placeholder.title_page')}
-                name='label'
-                id={`in-form-${page.id}-page-title`}
-                data-pageid={page.id}
-                value={page.label}
-                onChange={handlePageInputChange}
-                icon='064'
-                error={(page as IPageError).pages_error}
-              />
-              <div className='mt-2 w-full rounded-xl border-2 border-b-light-light dark:border-b-dark-light'>
-                <table class='w-full text-left px-2'>
-                  <thead className='border-b-2 border-b-light-light dark:border-b-dark-light'>
-                    <tr>
-                      <th className='py-1 px-2 rounded-tl-md'>
-                        {t('form.field.question')}
-                      </th>
-                      <th className='py-1 rounded-tr-md'>
-                        {t('form.field.type')}
-                      </th>
-                    </tr>
-                  </thead>
-                  <DndProvider backend={HTML5Backend}>
-                    <tbody>
-                      {page.elements.map((element, index) => (
-                        <FormElement
-                          key={element.id}
-                          question={element}
-                          page={page.id}
-                          index={index}
-                          selected={validateSelectedElement(element.id)}
-                          onSelect={handleSelect}
-                          onDelete={removeElement}
-                        />
-                      ))}
-                    </tbody>
-                  </DndProvider>
-                </table>
+            <div className='flex flex-row w-full justify-between items-center gap-3'>
+              <div className='flex flex-col gap-1 w-full'>
+                <Input
+                  type='text'
+                  placeholder={t('form.placeholder.title')}
+                  name='label'
+                  icon='245'
+                  id={`in-form-${getForm.value.id}-format-title`}
+                  value={getForm.value.label}
+                  onChange={handleFormatInputChange}
+                  error={(getForm.value as IFormError).label_error}
+                />
+                <Input
+                  type='text'
+                  placeholder={t('form.placeholder.description')}
+                  name='description'
+                  icon='123'
+                  id={`in-form-${getForm.value.id}-format-description`}
+                  value={getForm.value.description}
+                  onChange={handleFormatInputChange}
+                  error={(getForm.value as IFormError).description_error}
+                />
+                <MultiSelect<IMultiSelect>
+                  options={smartGroups.value}
+                  selectedIds={group.value}
+                  onChange={(selectedIds) =>
+                    (group.value = selectedIds as number[])
+                  }
+                  getLabel={(item) => item.name}
+                  getId={(item) => item.id}
+                  placeholder='Seleccione uno o más grupos inteligentes'
+                />
               </div>
             </div>
-          ))}
+          </div>
+          <div className='flex flex-row w-[96%] items-center my-3 gap-5 justify-end'>
+            <div className='max-w-64 h-5'>
+              {getHasUnsavedChanges.value && (
+                <Badge
+                  outline
+                  status={isAutoSaving ? 'info' : 'warning'}
+                  label={isAutoSaving ? 'saving' : 'unsaved'}
+                  full
+                />
+              )}
+            </div>
+          </div>
+          <div className='flex flex-col w-[96%] 2xl:max-w-[60vw]'>
+            {getForm.value.pages.map((page) => (
+              <div key={page.id} className='w-full mb-5 rounded-2xl'>
+                <Input
+                  type='text'
+                  placeholder={t('form.placeholder.title_page')}
+                  name='label'
+                  id={`in-form-${page.id}-page-title`}
+                  data-pageid={page.id}
+                  value={page.label}
+                  onChange={handlePageInputChange}
+                  icon='064'
+                  error={(page as IPageError).pages_error}
+                />
+                <div className='mt-2 w-full rounded-xl border-2 border-b-light-light dark:border-b-dark-light'>
+                  <table class='w-full text-left px-2'>
+                    <thead className='border-b-2 border-b-light-light dark:border-b-dark-light'>
+                      <tr>
+                        <th className='py-1 px-2 rounded-tl-md'>
+                          {t('form.field.question')}
+                        </th>
+                        <th className='py-1 rounded-tr-md'>
+                          {t('form.field.type')}
+                        </th>
+                      </tr>
+                    </thead>
+                    <DndProvider backend={HTML5Backend}>
+                      <tbody>
+                        {page.elements.map((element, index) => (
+                          <FormElement
+                            key={element.id}
+                            question={element}
+                            page={page.id}
+                            index={index}
+                            selected={validateSelectedElement(element.id)}
+                            onSelect={handleSelect}
+                            onDelete={removeElement}
+                          />
+                        ))}
+                      </tbody>
+                    </DndProvider>
+                  </table>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-      <div class='sticky top-1/2 -translate-y-1/2 h-44 w-[400px] justify-center hidden 2xl:flex'>
-        <FormPhoneViewer />
-      </div>
-      <ListFormModal onSelected={onSelectedList} />
-    </section>
+        <div class='sticky top-1/2 w-[400px] justify-center hidden 2xl:flex bg-blue-400 h-fit'>
+          <FormPhoneViewer />
+        </div>
+        <ListFormModal onSelected={onSelectedList} />
+      </section>
+    </>
   );
 };

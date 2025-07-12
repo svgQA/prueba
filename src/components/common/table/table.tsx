@@ -89,6 +89,7 @@ export const Table = <T,>({
   rowClassName,
   loading = false,
   searchable,
+  absolute = false,
 }: ITableProps<T>) => {
   const { t } = useTranslation();
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
@@ -543,7 +544,7 @@ export const Table = <T,>({
                       <tr>
                         <td
                           colSpan={row.getVisibleCells().length + 1}
-                          className='p-2'
+                          className='p-2 border-b-2 dark:border-b-dark-light dark:bg-b-dark-light bg-b-light-light'
                         >
                           {expandable &&
                             expandable(row.original, selectedCells[row.id])}
@@ -771,7 +772,9 @@ export const Table = <T,>({
   return (
     <>
       {/* sticky top-[3.4rem] z-[8] */}
-      <div className='w-full py-1 pb-3 flex items-center justify-end'>
+      <div
+        className={`py-1 pb-3 flex items-center justify-end ${absolute ? 'absolute top-10 right-2 w-1/2' : 'w-full'}`}
+      >
         {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (
           <Search
@@ -798,7 +801,7 @@ export const Table = <T,>({
           <div
             className={`${
               isSettingTable
-                ? 'max-h-setting-table'
+                ? 'max-h-setting-table min-h-setting-table'
                 : 'max-h-general-table h-[68vh]'
             } ${data.length > 10 ? 'overflow-auto' : 'overflow-hidden'} relative vox-scroll-design min-h-[20vh]`}
           >

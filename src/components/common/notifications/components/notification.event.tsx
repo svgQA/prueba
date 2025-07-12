@@ -1,4 +1,4 @@
-import { ToastManager } from "@/utils/toast/toast-manager";
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 export const handleNotificationEvent = (
   eventName: string,
@@ -16,11 +16,11 @@ export const handleNotificationEvent = (
 };
 
 export const handleSendNotificationEvent = (
-  eventId: any, 
+  eventId: any,
   eventName: string,
-  t: (key: string) => string,
+  t: (key: string) => string
 ) => {
-    if(!eventId) ToastManager.error(t('notification.error_redirect'));
-    const eventEmit = new CustomEvent(eventName, { detail: { id: eventId }, });
-    window.dispatchEvent(eventEmit);
+  if (!eventId) ToastManager.error(t('notification.error_redirect'));
+  const eventEmit = new CustomEvent(eventName, { detail: { id: eventId } });
+  window.dispatchEvent(eventEmit);
 };

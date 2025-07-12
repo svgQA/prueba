@@ -4,7 +4,7 @@ import { Route, Router } from 'wouter';
 import { Suspense, lazy } from 'preact/compat';
 
 // import { FormInspectSettingPage } from './forms/inspect/inspect';
-import { FormResponseSettingPage } from './forms/response/response';
+// import { FormResponseSettingPage } from './forms/response/response';
 import { UserCreateSettingPage } from './general/user/create/create';
 import { AnalyticAdminSettingPage } from './admin/analytic/analytic';
 import { DatabaseSettingPage } from './admin/database/database';
@@ -22,7 +22,7 @@ import { GroupSettingPage } from './security/groups/groups';
 import { PaymentHistorySettingPage } from './payment/history/history';
 import { PaymentSettingPage } from './payment/payment/payment';
 import { FormSettingPage } from './forms/form/form';
-import { FormAnalyticSettingPage } from './forms/analytic/analytic';
+// import { FormAnalyticSettingPage } from './forms/analytic/analytic';
 import { FormCreateSettingPage } from './forms/create/create';
 import { FormReportSettingPage } from './forms/report/report';
 import { DevicesSettingPage } from './iot/devices/devices';
@@ -74,6 +74,7 @@ import { PredefinedCreateSettingPage } from './memo/predefined/create/create';
 import { GroupCreateSettingPage } from './security/groups/create/create';
 // import { ResourceCreateSettingPage } from './memo/resource/create/create';
 import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
+import { ResourceMemoSettingPage } from './memo/resource/resource';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -110,7 +111,8 @@ export const RoutingContent = memo(() => {
           component={lazy(() => Promise.resolve({ default: UserSettingPage }))}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.setting.userCreate.to}
+          // userCreate
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.create.to}
           component={lazy(() =>
             Promise.resolve({ default: UserCreateSettingPage })
           )}
@@ -185,30 +187,34 @@ export const RoutingContent = memo(() => {
           component={lazy(() => Promise.resolve({ default: FormSettingPage }))}
         />
         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.form.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: FormCreateSettingPage })
+          )}
+        />
+        {/*
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.to}
           component={lazy(() =>
             Promise.resolve({ default: FormAnalyticSettingPage })
           )}
         />
+        */}
+        {/*
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.forms.create.to}
-          component={lazy(() =>
-            Promise.resolve({ default: FormCreateSettingPage })
-          )}
-        />
-        {/* <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.to}
           component={lazy(() =>
             Promise.resolve({ default: FormInspectSettingPage })
           )}
-        /> */}
+        />
+        */}
+        {/*
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.response.to}
           component={lazy(() =>
             Promise.resolve({ default: FormResponseSettingPage })
           )}
         />
-        {/*
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.list.to}
           component={lazy(() =>
@@ -256,13 +262,13 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.create.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.create.to}
           component={lazy(() =>
             Promise.resolve({ default: RoundCreateSettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.update.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.update.to}
           component={lazy(() =>
             Promise.resolve({ default: RoundCreateSettingPage })
           )}
@@ -274,13 +280,13 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.placesCreate.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.places.create.to}
           component={lazy(() =>
             Promise.resolve({ default: PlaceCreateSettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.placesUpdate.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.places.update.to}
           component={lazy(() =>
             Promise.resolve({ default: PlaceCreateSettingPage })
           )}
@@ -292,35 +298,36 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.activityCreate.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.activity.create.to}
           component={lazy(() =>
             Promise.resolve({ default: ActivityCreateSettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.activityUpdate.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.activity.update.to}
           component={lazy(() =>
             Promise.resolve({ default: ActivityCreateSettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.projects.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.project.to}
           component={lazy(() =>
             Promise.resolve({ default: ProjectsSettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.projectCreate.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.project.create.to}
           component={lazy(() =>
             Promise.resolve({ default: ProjectCreateSettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.projectUpdate.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.shifts.project.update.to}
           component={lazy(() =>
             Promise.resolve({ default: ProjectCreateSettingPage })
           )}
         />
+        {/* MEMO */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.to}
           component={lazy(() =>
@@ -348,7 +355,7 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.memo.resource.to}
           component={lazy(() =>
-            Promise.resolve({ default: ResourceSettingPage })
+            Promise.resolve({ default: ResourceMemoSettingPage })
           )}
         />
         <Route
@@ -490,25 +497,27 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.access.createResource.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.resource.create.to}
           component={lazy(() =>
             Promise.resolve({ default: CreateResourceSettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.access.createSets.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.sets.create.to}
           component={lazy(() =>
             Promise.resolve({ default: CreateSetsSettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.access.createPlaces.to}
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.place.create.to}
           component={lazy(() =>
             Promise.resolve({ default: CreatePlacesSettingPage })
           )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.access.createInformation.to}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.access.information.create.to
+          }
           component={lazy(() =>
             Promise.resolve({ default: CreateInformationSettingPage })
           )}
@@ -516,18 +525,14 @@ export const RoutingContent = memo(() => {
         {/* NOTIFICATIONS MENU */}
         {/* SCHEDULED OPTIONS */}
         <Route
-          path={
-            PAGES_LIST_ROUTER.dashboard.setting.notifications
-              .scheduledNotification.to
-          }
+          path={PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.to}
           component={lazy(() =>
             Promise.resolve({ default: ScheduledNotificationsPage })
           )}
         />
         <Route
           path={
-            PAGES_LIST_ROUTER.dashboard.setting.notifications
-              .scheduledNotification.create.to
+            PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.create.to
           }
           component={lazy(() =>
             Promise.resolve({ default: ScheduledNotificationForm })
@@ -535,8 +540,7 @@ export const RoutingContent = memo(() => {
         />
         <Route
           path={
-            PAGES_LIST_ROUTER.dashboard.setting.notifications
-              .scheduledNotification.update.to
+            PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.update.to
           }
           component={lazy(() =>
             Promise.resolve({ default: ScheduledNotificationEditPage })
@@ -544,18 +548,14 @@ export const RoutingContent = memo(() => {
         />
         {/* TEMPLATE OPTIONS */}
         <Route
-          path={
-            PAGES_LIST_ROUTER.dashboard.setting.notifications
-              .templateNotification.to
-          }
+          path={PAGES_LIST_ROUTER.dashboard.setting.notification.template.to}
           component={lazy(() =>
             Promise.resolve({ default: TemplateNotificationPage })
           )}
         />
         <Route
           path={
-            PAGES_LIST_ROUTER.dashboard.setting.notifications
-              .templateNotification.create.to
+            PAGES_LIST_ROUTER.dashboard.setting.notification.template.create.to
           }
           component={lazy(() =>
             Promise.resolve({ default: TemplateCreateForm })
@@ -563,8 +563,7 @@ export const RoutingContent = memo(() => {
         />
         <Route
           path={
-            PAGES_LIST_ROUTER.dashboard.setting.notifications
-              .templateNotification.update.to
+            PAGES_LIST_ROUTER.dashboard.setting.notification.template.update.to
           }
           component={lazy(() =>
             Promise.resolve({ default: TemplateNotificationEditPage })

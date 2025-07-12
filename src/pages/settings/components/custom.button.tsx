@@ -16,26 +16,28 @@ export const StatusButton = ({
   label = 'save',
 }: StatusButtonProps) => {
   return (
-    <div className='w-full flex-row flex justify-end items-center gap-4'>
-      <Button
-        id='btn-clean'
-        name='btn-clean'
-        type='button'
-        label='clean'
-        icon='023'
-        onClick={onClickClean}
-        disabled={submitting || pristine}
-      />
+    <div className='flex justify-end space-x-4 absolute top-14 right-2'>
+      <div className='w-full flex-row flex justify-end items-center gap-4'>
+        <Button
+          id='btn-clean'
+          name='btn-clean'
+          type='button'
+          label='clean'
+          icon='023'
+          onClick={onClickClean}
+          disabled={submitting || pristine}
+        />
 
-      <Button
-        id='btn-save'
-        name='btn-save'
-        type='submit'
-        label={label}
-        form={form}
-        icon='022'
-        disabled={submitting}
-      />
+        <Button
+          id='btn-save'
+          name='btn-save'
+          type='submit'
+          label={label}
+          form={form}
+          icon='022'
+          disabled={submitting}
+        />
+      </div>
     </div>
   );
 };

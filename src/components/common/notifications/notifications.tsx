@@ -113,14 +113,16 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
 
   const handleRedirect = (info: INotification) => {
     if (!info.redirect) return;
-    const updatedNotifications = localNotifications.filter((n) => n.value !== info.value);
+    const updatedNotifications = localNotifications.filter(
+      (n) => n.value !== info.value
+    );
     setLocalNotifications(updatedNotifications);
     localStorage.set(STORAGE_KEY, updatedNotifications);
     const index = notifications.indexOf(info);
     if (index > -1) notifications.splice(index, 1);
 
-     // Emit custom event for notification click
-     if (info.id_message) {
+    // Emit custom event for notification click
+    if (info.id_message) {
       const event = new CustomEvent('notification-click', {
         detail: { id: info.id_message },
       });

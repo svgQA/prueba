@@ -27,6 +27,7 @@ import { ITask } from '../../task/create/interface';
 import { _onTaskAddSimple } from '../../task/create/utils';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 interface FormData {
   name: string;
@@ -69,7 +70,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       if (!response.getStatus()) return;
       ToastManager.success('s_created_success');
     }
-    navigateUpsert('/rounds/service/');
+    navigateUpsert('/shifts/service');
   };
 
   const getProjects = async () => {
@@ -178,9 +179,13 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     setInitialValues();
   };
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    getAllData();
-  }, []);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getAllData();
+    }
+  }, [selectedCompany, location]);
 
   const tasksResponse = useSignal<ITask[]>([]);
   const onTaskAdd = (model: any) => {
@@ -202,16 +207,13 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
             className='space-y-6'
             id='form-service-create'
           >
-            {/* Botonera */}
-            <div className='w-full flex-row flex justify-end items-center'>
-              <StatusButton
-                onClickClean={() => form.reset()}
-                submitting={submitting}
-                pristine={pristine}
-                form='form-service-create'
-                label={id ? 'edit' : 'save'}
-              />
-            </div>
+            <StatusButton
+              onClickClean={() => form.reset()}
+              submitting={submitting}
+              pristine={pristine}
+              form='form-service-create'
+              label={id ? 'edit' : 'save'}
+            />
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-2'>
               <div class='col-span-2'>

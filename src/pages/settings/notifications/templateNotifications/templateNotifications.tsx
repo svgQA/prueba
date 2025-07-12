@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'preact/hooks';
-import { Section } from '@/components/common/section/section';
-import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
 import { TemplateService } from '@/services';
 import { Table } from '@/components/common/table/table';
 import { useLocation } from 'wouter';
-import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
 import { getColumns } from './components/template.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -20,7 +20,7 @@ export const TemplateNotificationPage = () => {
 
   const { t } = useTranslation();
   useEffect(() => {
-    document.title = t('p_template');
+    document.title = t('p_programmed');
   }, []);
 
   const { selectedCompany } = useUserStore();
@@ -40,25 +40,22 @@ export const TemplateNotificationPage = () => {
     loading.value = false;
   };
 
-  const redirect = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
-        .create.to,
-      label: 'create',
-      id: 'template-create',
-    };
-    appendHistory(menu);
-    navigate(menu.to);
-  };
+  // const redirect = () => {
+  //   const menu = {
+  //     to: PAGES_LIST_ROUTER.dashboard.setting.notification.template
+  //       .create.to,
+  //     label: 'create',
+  //     id: 'template-create',
+  //   };
+  //   appendHistory(menu);
+  //   navigate(menu.to);
+  // };
 
   const editTemplate = (id: string) => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.update.to.replace(
-        ':id',
-        id
-      ),
+      to: `/notification/template/update/${id}`,
       label: 'update',
-      id: 'template-update',
+      id: 'notification:update:state',
     };
     appendHistory(menu);
     navigate(menu.to);
@@ -87,26 +84,15 @@ export const TemplateNotificationPage = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-template'
-            label='new'
-            icon='039'
-            onClick={() => redirect()}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
-        </div>
-      </div>
-
+    <>
       <Table<any>
         data={templates}
         columns={getColumns(handleOnClick)}
         pageSize={10}
         isSettingTable
         loading={loading.value}
+        absolute
       />
-    </Section>
+    </>
   );
 };

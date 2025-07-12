@@ -39,7 +39,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
       ToastManager.success('s_created_success');
     }
 
-    navigate('/rounds/task');
+    navigate('/shifts/task');
   };
 
   const setInitialValues = useCallback(async () => {

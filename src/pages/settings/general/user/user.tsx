@@ -59,7 +59,7 @@ export const UserSettingPage: FunctionComponent = () => {
 
   const redirect = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.setting.userCreate.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.setting.user.to,
       label: 'create',
       id: 'user-create',
     };

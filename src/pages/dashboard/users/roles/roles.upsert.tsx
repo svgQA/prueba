@@ -1,13 +1,13 @@
 import { Input } from '@/components/common/input/input';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useLocation, useParams } from 'wouter';
 import { Form } from 'react-final-form';
 import { Field } from 'react-final-form';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
-import { TextArea } from '@/components/common/text.area/text.area';
+// import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
 import { RoleService } from '@/services/general/role';
 import { Signal, useSignal } from '@preact/signals';
@@ -19,6 +19,9 @@ import {
 } from '@/types/role/role.response';
 import { IRoleRequest } from '@/types/role/role.request';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
+import { useUserStore } from '@/store/slices';
+import { setMenu } from '@/pages/settings/store/settings';
+import { MODAL_SETTING_USER } from '@/utils/menus/settings/user';
 
 interface RawPermission extends Omit<IPermission, 'moduleId'> {}
 
@@ -41,9 +44,13 @@ export const RolesUpsertPage = () => {
   const { id } = useParams(); // Obtiene el id de la URL
   const initialValues: Signal<Partial<IRoleRequest>> = useSignal({});
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    Promise.all([getModules(), setInitialValues()]);
-  }, []);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      Promise.all([getModules(), setInitialValues()]);
+    }
+  }, [selectedCompany, location]);
 
   const setInitialValues = async () => {
     if (!id) return;
@@ -97,7 +104,8 @@ export const RolesUpsertPage = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate(PAGES_LIST_ROUTER.dashboard.setting.users.roles.to);
+    setMenu(MODAL_SETTING_USER.menus[1]);
+    navigate('/users/roles');
   };
 
   const getModules = async () => {
@@ -170,13 +178,20 @@ export const RolesUpsertPage = () => {
   }
 
   return (
-    <Section className='pt-2'>
+    <>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting, pristine }) => (
-          <form onSubmit={handleSubmit} className='space-y-6' id='form-role'>
-            <div className='grid grid-cols-1 gap-4'>
+          <form onSubmit={handleSubmit} className='space-y-1' id='form-role'>
+            <StatusButton
+              onClickClean={() => form.reset()}
+              submitting={submitting}
+              pristine={pristine}
+              form='form-role'
+              label='save'
+            />
+            <div className='grid grid-cols-2 gap-4'>
               <div className='col-span-1'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
@@ -196,31 +211,31 @@ export const RolesUpsertPage = () => {
               <div className='col-span-1'>
                 <Field<string> name='description' validate={required}>
                   {({ input, meta }) => (
-                    <TextArea
+                    <Input
                       {...input}
                       id='description'
-                      name='description'
-                      placeholder={t('role.form.placeholderDescription')}
+                      placeholder={'p_write'}
                       meta={meta}
                       type='text'
-                      label={t('role.form.description')}
-                      multiline
-                      rows={4}
+                      label={'description'}
                     />
                   )}
                 </Field>
               </div>
-              <div className='col-span-1'>
-                <h3 className='text-lg font-medium mb-4'>Módulos:</h3>
-                <div className='space-y-4'>
-                  {modules.value?.map((module) => (
-                    <ExpansionPanel
-                      title={module.name}
-                      key={module.id}
-                      subtitle={module.description}
-                    >
-                      <div className='border rounded-lg p-4'>
-                        <div className='ml-6 space-y-2'>
+            </div>
+
+            <div className='col-span-2  max-h-[65vh] overflow-x-hidden vox-scroll-design'>
+              <h3 className='text-lg font-medium mb-4'>Módulos:</h3>
+              <div className='space-y-4'>
+                {modules.value?.map((module) => (
+                  <ExpansionPanel
+                    title={module.name}
+                    key={module.id}
+                    subtitle={module.description}
+                  >
+                    <div className='border rounded-lg p-4 border-b-light-dark dark:border-b-dark-light'>
+                      <div className='ml-6 space-y-2'>
+                        <div className='flex flex-row flex-wrap gap-2 justify-center py-2'>
                           {module.permissionsGrouped?.flat.map((permission) => (
                             <Field
                               key={permission.id}
@@ -259,10 +274,17 @@ export const RolesUpsertPage = () => {
                               )}
                             />
                           ))}
+                        </div>
+                        <div
+                          className={`flex flex-row flex-wrap py-2 justify-center w-full ${module.permissionsGrouped?.tree.length ? 'border-t' : ''} border-b-light-dark dark:border-b-dark-light`}
+                        >
                           {module.permissionsGrouped?.tree.map((group) => (
-                            <div key={group.key} className='ml-4'>
+                            <div
+                              key={group.key}
+                              className='py-2 mx-1 px-2 min-w-[400px] divide-y divide-b-light-dark dark:divide-b-dark-light'
+                            >
                               <div className='font-medium text-sm mb-2'>
-                                {group.key}
+                                {t(`m_${group.key}`)}
                               </div>
                               {group.children.map((child: PermissionTree) => (
                                 <div key={child.key} className='ml-4 mb-2'>
@@ -356,24 +378,15 @@ export const RolesUpsertPage = () => {
                           ))}
                         </div>
                       </div>
-                    </ExpansionPanel>
-                  ))}
-                </div>
+                    </div>
+                  </ExpansionPanel>
+                ))}
               </div>
-            </div>
-            <div className='flex justify-end space-x-4'>
-              <StatusButton
-                onClickClean={() => form.reset()}
-                submitting={submitting}
-                pristine={pristine}
-                form='form-role'
-                label='save'
-              />
             </div>
           </form>
         )}
       />
-    </Section>
+    </>
   );
 };
 
