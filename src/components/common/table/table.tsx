@@ -801,9 +801,10 @@ export const Table = <T,>({
           <div
             className={`${
               isSettingTable
-                ? 'max-h-setting-table min-h-setting-table'
-                : 'max-h-general-table h-[68vh]'
-            } ${data.length > 10 ? 'overflow-auto' : 'overflow-hidden'} relative vox-scroll-design min-h-[20vh]`}
+                ? 'max-h-setting-table min-h-setting-table h-[62vh]'
+                : 'max-h-general-table h-[65vh]'
+            } overflow-auto vox-scroll-design`}
+            // ${data.length > 10 ? 'overflow-auto' : 'overflow-hidden'} relative vox-scroll-design min-h-[20vh]`}
           >
             <table className='elements relative w-full'>
               <thead>
