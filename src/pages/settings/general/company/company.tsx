@@ -62,7 +62,9 @@ export const CompanySettingPage: FunctionComponent = () => {
   };
 
   const handleEdit = (company: ICompanyResponse) => {
-    resetForm(true, true, company);
+    company.id === _selectedCompany.value?.id
+      ? resetForm(true, false, null)
+      : resetForm(true, true, company);
   };
 
   const resetForm = (
@@ -100,11 +102,12 @@ export const CompanySettingPage: FunctionComponent = () => {
               <CardCompany
                 key={company.id}
                 company={company}
+                selected={company.id === _selectedCompany.value?.id}
                 onEdit={() => handleEdit(company)}
               />
             ))}
           </div>
-          <div className='min-w-[500px] h-[350px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
+          <div className='min-w-[500px] h-[250px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
             <Form<ICCompanyRequest | IUCompanyRequest>
               onSubmit={onSubmit}
               initialValues={
@@ -144,13 +147,15 @@ export const CompanySettingPage: FunctionComponent = () => {
                         resetForm(false);
                       }
                     }}
+                    clear
+                    lock={!isEditing.value}
                     submitting={submitting}
                     pristine={pristine}
                     form='form-company'
                   />
                   <div className='flex flex-col justify-between gap-4'>
                     <h2 className='text-2xl font-bold'>
-                      {isEditing ? 'Editar Empresa' : 'Nueva Empresa'}
+                      {isEditing.value ? 'Editar Empresa' : 'Nueva Empresa'}
                     </h2>
                     <div className='grid grid-cols-2 gap-4'>
                       <Field<string> name='name'>
