@@ -153,7 +153,8 @@ export const TaskFormCreate = ({
                     icon='086'
                     options={filteredTasks.map((e) => ({
                       value: e.id ?? '',
-                      label: e.description ?? 'Sin descripción',
+                      // label: e.description ?? 'Sin descripción',
+                      label: e.name ?? 'Sin descripción',
                     }))}
                     menuPortalTarget={document.body}
                     onClick={onToggleTask}
