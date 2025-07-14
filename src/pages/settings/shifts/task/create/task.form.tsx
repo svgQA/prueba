@@ -111,15 +111,15 @@ export const TaskFormCreate = ({
     onAppend.value = false;
   };
 
-  const eventDelete = (event: MouseEvent) => {
-    event.stopPropagation();
-    const target = event.target as HTMLElement;
-    if (target.nodeName === 'A' || target.nodeName === 'SPAN') {
-      const id = target.getAttribute('data-id');
-      if (!id) return;
-      onDelete && onDelete(id);
-    }
-  };
+  // const eventDelete = (event: MouseEvent) => {
+  //   event.stopPropagation();
+  //   const target = event.target as HTMLElement;
+  //   if (target.nodeName === 'A' || target.nodeName === 'SPAN') {
+  //     const id = target.getAttribute('data-id');
+  //     if (!id) return;
+  //     onDelete && onDelete(id);
+  //   }
+  // };
 
   const filteredTasks = tasks.value.filter((t) =>
     type ? t.type === type : true
@@ -127,7 +127,10 @@ export const TaskFormCreate = ({
 
   return (
     <>
-      <div className={className} onClick={eventDelete}>
+      <div
+        className={className}
+        // onClick={eventDelete}
+      >
         <Form
           onSubmit={onChange}
           initialValues={initialValues}
@@ -320,7 +323,7 @@ export const TaskFormCreate = ({
                   <div className='mt-1 rounded-lg p-2 bg-b-light dark:bg-b-dark-light'>
                     <ul className='flex flex-wrap gap-1 justify-center'>
                       {taskList.map((task, index) => (
-                        <TaskCard task={task} key={`task-selected-${index}`} />
+                        <TaskCard task={task} key={`task-selected-${index}`} onDelete={onDelete} />
                       ))}
                     </ul>
                   </div>

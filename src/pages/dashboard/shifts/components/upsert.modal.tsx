@@ -221,6 +221,10 @@ export const TaskForm = ({
     setTasksResponse((prevTasks) => [...prevTasks, ...task]);
   };
 
+  const onTaskDelete = (id: string) => {
+    setTasksResponse(tasksResponse.filter((task) => task.id !== id));
+  };
+
   const cleanServiceSelected = () => {
     setSelectedCells([]);
     //@ts-ignore
@@ -319,6 +323,7 @@ export const TaskForm = ({
         <TaskFormCreate
           onSubmit={onTaskAdd}
           taskList={tasksResponse}
+          onDelete={onTaskDelete}
           add
           selector
         />
