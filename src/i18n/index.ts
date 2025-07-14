@@ -35,6 +35,7 @@ import { toast_en, toast_es } from './toast';
 import { page_en, page_es } from './page';
 import { description_en, description_es } from './description';
 import { message_en, message_es } from './message';
+import { smartGroup_en, smartGroup_es } from './smart-group';
 
 const resources = {
   en: {
@@ -68,6 +69,7 @@ const resources = {
       ...hero_en,
       ...table_en,
       ...schedule_en,
+      ...smartGroup_en,
     },
   },
   es: {
@@ -101,6 +103,7 @@ const resources = {
       ...hero_es,
       ...table_es,
       ...schedule_es,
+      ...smartGroup_es,
     },
   },
 };

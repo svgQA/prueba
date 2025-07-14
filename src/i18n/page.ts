@@ -36,6 +36,7 @@ export const page_es = {
   p_task: 'TY Tareas',
   p_service: 'TY Servicios',
   p_password: 'TY Cambiar Contraseña',
+  p_smart_group: 'TY Grupos inteligentes',
 };
 
 export const page_en = {
@@ -76,4 +77,5 @@ export const page_en = {
   p_schedule: 'TY Schedules',
   p_task: 'TY Tasks',
   p_password: 'TY Change Password',
+  p_smart_group: 'TY Smart Groups',
 };

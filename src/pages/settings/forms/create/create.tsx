@@ -121,7 +121,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   };
 
   const getGroups = async () => {
-    const response = await GeneralService.getGroup();
+    const response = await GeneralService.getSmartGroups();
     if (!response.getStatus()) return;
     smartGroups.value = response.getMany();
   };
