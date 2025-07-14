@@ -8,13 +8,13 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
-import { appendHistory } from '../../store/settings';
+import { appendHistory } from '../../../../utils/hooks/store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
 
 import {
   menuInformationSelected as infoMenu,
   setMenu,
-} from '../../store/settings';
+} from '../../../../utils/hooks/store/settings';
 import { TaskService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';

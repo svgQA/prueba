@@ -8,7 +8,7 @@ import { FormService } from '@/services/form/form';
 import { TaskService } from '@/services';
 import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
-import { appendHistory } from '@/pages/settings/store/settings';
+import { appendHistory } from '@/utils/hooks/store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';

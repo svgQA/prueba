@@ -7,7 +7,7 @@ import { Table } from '@/components/common/table/table';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
 import { getColumns } from './components/scheduled.columns';
 // import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
-import { appendHistory } from '../../store/settings';
+import { appendHistory } from '../../../../utils/hooks/store/settings';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { SchedulerService } from '@/services/notification/schedule';
 import { ToastManager } from '@/utils/toast/toast-manager';

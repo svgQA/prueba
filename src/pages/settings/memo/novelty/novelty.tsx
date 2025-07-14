@@ -12,7 +12,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import {
   menuInformationSelected as infoMenu,
   setMenu,
-} from '../../store/settings';
+} from '../../../../utils/hooks/store/settings';
 import { NoveltyService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';

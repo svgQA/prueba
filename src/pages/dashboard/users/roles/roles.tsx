@@ -1,21 +1,15 @@
-// import { Button } from '@/components/common/button/button';
-// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
-import { useLocation } from 'wouter';
 import { columns } from './components/roles.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../../settings/store/settings';
 import { RoleService } from '@/services/general/role';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
+import { useNavigation } from '@/utils/hooks/navigation';
 
 export interface IRole {
   id: number;
@@ -30,9 +24,9 @@ export interface IRowActionPlace {
 }
 
 export const UserRolesPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
   const roles: Signal<IRole[]> = useSignal([]);
   const { t } = useTranslation();
+  const { go } = useNavigation();
 
   useEffect(() => {
     document.title = t('p_role');
@@ -51,16 +45,12 @@ export const UserRolesPage: FunctionComponent = () => {
     roles.value = request.data;
   };
 
-  // const redirect = () => {
-  //   // OJO: No traducir, dejar asi los setMenu
-  //   setMenu({ ...infoMenu.value, label: 'create' });
-  //   navigate('/users/roles/create');
-  // };
-
   const updateRole = (id: string) => {
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/users/roles/update/${id}`);
+    go({
+      to: `/users/roles/update/${id}`,
+      label: 'edit',
+      id: 'roles:update:state',
+    });
   };
 
   const deleteRole = async (id: number) => {

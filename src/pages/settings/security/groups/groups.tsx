@@ -1,10 +1,3 @@
-// import { Button } from '@/components/common/button/button';
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../store/settings';
-// import { Section } from '@/components/common/section/section';
-import { useLocation } from 'wouter';
 import { FunctionComponent } from 'preact';
 import { columns } from './components/group.columns';
 import { Table } from '@/components/common/table/table';
@@ -15,9 +8,10 @@ import { useSignal } from '@preact/signals';
 import { GeneralService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
+import { useNavigation } from '@/utils/hooks/navigation';
 
 export const GroupSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  const { go } = useNavigation();
   const groups = useSignal<any[]>([]);
 
   const { t } = useTranslation();
@@ -31,7 +25,7 @@ export const GroupSettingPage: FunctionComponent = () => {
     if (selectedCompany) {
       getGroups();
     }
-  }, [selectedCompany, location]);
+  }, [selectedCompany]);
 
   const getGroups = async () => {
     const response = await GeneralService.getGroup();
@@ -39,23 +33,13 @@ export const GroupSettingPage: FunctionComponent = () => {
     groups.value = response.getMany();
   };
 
-  // const redirect = () => {
-  //   // OJO: No traducir, dejar asi los setMenu
-  //   setMenu({ ...infoMenu.value, label: 'create' });
-  //   navigate('/security/groups/create');
-  // };
-
   const updateActivity = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/security/groups/update/${id}`);
+    go({
+      to: `/security/groups/update/${id}`,
+      label: 'edit',
+      id: 'security:groups:state:update',
+    });
   };
-
-  // const deleteActivity = async (id: string) => {
-  //   const request = await ShiftService.deleteActivity(id);
-  //   if (!request.getStatus()) return;
-  //   ToastManager.success('s_deleted_success');
-  //   getGroups();
-  // };
 
   const handleOnClick = async (action: any) => {
     switch (action.action) {

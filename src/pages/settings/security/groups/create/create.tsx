@@ -1,6 +1,5 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-// import { Section } from '@/components/common/section/section';
 import { GroupBuilder } from './GroupBuilder';
 import { Group } from './utils/types';
 import { createEmptyGroup } from './utils/utils';
@@ -14,15 +13,14 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 // TODO: Ver esto, porque este lo hace de forma absoluta
 // import { navigate } from 'wouter/use-browser-location';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'wouter';
+import { useNavigation } from '@/utils/hooks/navigation';
 
 export const GroupCreateSettingPage: FunctionComponent = () => {
-  // Este lo hace de forma relativa
-  const [_, navigate] = useLocation();
   const name = useSignal<string>('');
   const description = useSignal<string>('');
-
+  const { go } = useNavigation();
   const { t } = useTranslation();
+
   useEffect(() => {
     document.title = t('p_group');
   }, []);
@@ -50,7 +48,11 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
     description.value = '';
     setRootGroup(createEmptyGroup());
     ToastManager.success('s_created_success');
-    navigate('/security/groups');
+    go({
+      to: '/security/groups',
+      label: 'groups',
+      id: 'security:groups:state',
+    });
   };
 
   return (
@@ -87,11 +89,6 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
             onChange={setRootGroup}
             onRemove={() => {}}
           />
-          {/*
-          <pre class='bg-gray-100 dark:bg-b-dark-light text-sm rounded overflow-auto max-h-64 text-gray-800 dark:text-white p-2'>
-            {JSON.stringify(rootGroup, null, 2)}
-          </pre>
-          */}
         </div>
       </div>
     </>

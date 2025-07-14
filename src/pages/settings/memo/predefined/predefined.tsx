@@ -11,7 +11,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import {
   menuInformationSelected as infoMenu,
   setMenu,
-} from '../../store/settings';
+} from '../../../../utils/hooks/store/settings';
 import { IPredefined, IRowActionPlace } from './utils/predefined.d';
 import { PredefinedService } from '@/services/shift/predefined';
 import { useTranslation } from 'react-i18next';

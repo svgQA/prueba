@@ -14,7 +14,7 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { IRowAction } from '@/components/common/table/interface.d';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Table } from '@/components/common/table/table';
-import { appendHistory } from '../../store/settings';
+import { appendHistory } from '../../../../utils/hooks/store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
 import { Section } from '@/components/common/section/section';

@@ -5,7 +5,7 @@ import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 // import { TextArea } from '@/components/common/text.area/text.area';
 import { useLocation } from 'wouter';
-import { appendHistory } from '@/pages/settings/store/settings';
+import { appendHistory } from '@/utils/hooks/store/settings';
 import { SchedulerService, TemplateService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';

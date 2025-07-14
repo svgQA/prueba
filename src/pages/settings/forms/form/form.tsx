@@ -11,7 +11,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { FORMAT_MODE_SERVICE, setFormat } from '../create/store/question';
 import { Table } from '@/components/common/table/table';
-import { appendHistory } from '../../store/settings';
+import { appendHistory } from '../../../../utils/hooks/store/settings';
 // import { Section } from '@/components/common/section/section';
 // import { Button } from '@/components/common/button/button';
 import { useTranslation } from 'react-i18next';
