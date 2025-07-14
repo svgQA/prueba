@@ -64,6 +64,7 @@ export const columns_es = {
   h_distance: 'Distancia',
   h_supervisor: 'Supervisor',
   h_scans: 'Escaneos',
+  h_device: 'Dispositivo',
 };
 
 export const columns_en = {
@@ -132,4 +133,5 @@ export const columns_en = {
   h_time_before: 'Time Before',
   h_employee: 'Employee',
   h_scans: 'Scans',
+  h_device: 'Device',
 };
