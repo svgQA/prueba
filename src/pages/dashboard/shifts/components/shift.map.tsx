@@ -7,6 +7,7 @@ import { ColumnFiltersState } from '@tanstack/react-table';
 import { Shift, User } from './types';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useTranslation } from 'react-i18next';
+import MapLibreShowPoints from '@/components/common/map/MapLibreShowPoints';
 
 const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   const { t } = useTranslation();
@@ -200,7 +201,15 @@ const handle_user_disconnected = (user: { id: string }) => {
         )}
       </div>
 
-      <MapLibrePointsMap
+      {/* <MapLibrePointsMap
+        name='map-points'
+        pointsRef={mapPoints}
+        sendPoints={() => {}}
+        height='78vh'
+        disablePointSelection={true}
+        adminUser={true}
+      /> */}
+      <MapLibreShowPoints
         name='map-points'
         pointsRef={mapPoints}
         sendPoints={() => {}}

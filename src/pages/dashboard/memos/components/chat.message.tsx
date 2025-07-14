@@ -2,7 +2,7 @@ import { Badge } from '@/components/common/badge/badge';
 import { Button } from '@/components/common/button/button';
 import MapViewer from '@/components/common/file/components/mapViewer';
 import ShowFiles from '@/components/common/file/show.file';
-import { MapPoint } from '@/components/common/map/interface';
+import { MapPoint } from '@/components/common/map/utils/interface';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { FormattedDate } from '@/components/compose/forms';
 import { MemoService } from '@/services';

@@ -1,4 +1,4 @@
-import { MapPoint } from '../../map/interface';
+import { MapPoint } from '../../map/utils/interface';
 import MapLibrePointsMap from '../../map/MapLibrePointsMap';
 import Viewer from './viewer';
 
