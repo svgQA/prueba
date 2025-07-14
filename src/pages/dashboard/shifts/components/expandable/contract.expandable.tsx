@@ -4,8 +4,10 @@ import { ContractService } from '@/services';
 import { useSignal } from '@preact/signals';
 import { IProjectMetricsResponse } from '@/types/contract/contract.response';
 import { Badge } from '@/components/common/badge/badge';
+import { useTranslation } from 'react-i18next';
 
 const ContractInfo = ({ contract }: { contract: IContract }) => {
+  const { t } = useTranslation();
   const metrics = useSignal<IProjectMetricsResponse>({
     completedShifts: 0,
     completionPercentage: 0,
@@ -34,7 +36,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
           </div>
           <p className='mt-1 pr-4'>{contract.description}</p>
           <div className='mt-4'>
-            <p className='font-semibold'>Cliente</p>
+            <p className='font-semibold'>{t('h_client')}</p>
             <div className='flex items-center mt-1'>
               <div className='flex-shrink-0 mr-2'>
                 <span className='!text-primary vox-icon size-sm vx-icon-308'></span>
@@ -50,7 +52,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
         <div className='col-span-8'>
           {/* Estado */}
           <div className='flex justify-between items-center pb-2 mb-4 border-b border-b-light-light dark:border-b-dark-light w-full'>
-            <p className='font-semibold '>Estado</p>
+            <p className='font-semibold'>{t('h_status')}</p>
             <Badge label={contract.state} status='info' outline />
           </div>
 
@@ -63,7 +65,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   <span className='!text-primary vox-icon size-sm vx-icon-195'></span>
                 </div>
                 <div>
-                  <p className='font-semibold'>Fecha de inicio</p>
+                  <p className='font-semibold'>{t('h_date_start')}</p>
                   <p>{formatDate(contract.startDate)}</p>
                 </div>
               </div>
@@ -73,7 +75,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   <span className='!text-primary vox-icon size-sm vx-icon-195'></span>
                 </div>
                 <div>
-                  <p className='font-semibold'>Fecha de finalización</p>
+                  <p className='font-semibold'>{t('h_date_end')}</p>
                   <p>{formatDate(contract.endDate)}</p>
                 </div>
               </div>
@@ -87,7 +89,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                     <span className='!text-secondary vox-icon size-sm vx-icon-308'></span>
                   </div>
                   <div>
-                    <p className='font-semibold'>Turnos completados</p>
+                    <p className='font-semibold'>{t('l_completed')}</p>
                     <p>{metrics.value.completedShifts}</p>
                   </div>
                 </div>
@@ -97,7 +99,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                     <span className='!text-primary vox-icon size-sm vx-icon-308'></span>
                   </div>
                   <div>
-                    <p className='font-semibold'>Horas totales</p>
+                    <p className='font-semibold'>{t('l_total_hours')}</p>
                     <p>{metrics.value.totalHours}</p>
                   </div>
                 </div>
@@ -107,7 +109,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                     <span className='text-error vox-icon size-sm vx-icon-308'></span>
                   </div>
                   <div>
-                    <p className='font-semibold'>Total de turnos</p>
+                    <p className='font-semibold'>{t('l_total_shifts')}</p>
                     <p>{metrics.value.totalShifts}</p>
                   </div>
                 </div>
@@ -117,7 +119,7 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                     <span className='!text-secondary vox-icon size-sm vx-icon-308'></span>
                   </div>
                   <div>
-                    <p className='font-semibold'>Cumplimiento</p>
+                    <p className='font-semibold'>{t('l_completed')}</p>
                     <p>{metrics.value.completionPercentage.toFixed(2)}%</p>
                   </div>
                 </div>

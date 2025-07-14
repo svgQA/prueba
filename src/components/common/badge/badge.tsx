@@ -14,6 +14,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   width = 'w-32',
   onRemove,
   onClick,
+  count,
 }: IBadgeProps) => {
   if (!label) return null;
   const { t } = useTranslation();
@@ -63,10 +64,16 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
           <span
             className={`vx-icon vx-icon-${icon} size-${size} mr-2 ml-1`}
           ></span>
-          <TextEllipsis text={t(label)} maxWidth='150px'></TextEllipsis>
+          <TextEllipsis
+            text={count ? `${count} ${t(label)}` : t(label)}
+            maxWidth='150px'
+          ></TextEllipsis>
         </>
       ) : (
-        <TextEllipsis text={t(label)} maxWidth='150px'></TextEllipsis>
+        <TextEllipsis
+          text={count ? `${count} ${t(label)}` : t(label)}
+          maxWidth='150px'
+        ></TextEllipsis>
       )}
       {onRemove && (
         <span

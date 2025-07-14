@@ -183,7 +183,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
   const handleSendMessage = (message: string, replyId?: number) => {
     if (!cognito || !userSelected.value?.cognitoId) {
-      ToastManager.error('El mensaje tiene mala estructura');
+      ToastManager.error('s_structure_error');
       return;
     }
     const objMessage: IMessage = {
@@ -267,8 +267,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
       TypeChatView.SERVICES_MEMO === viewMode.value
         ? memoByService.value.find((e) => e.id == replyToId.value)
         : memoByUser.value.find((e) => e.id == replyToId.value);
-    if (!memo)
-      ToastManager.error('No existe un memo con el Id que seleccionaste');
+    if (!memo) ToastManager.error('s_not_found');
     let extraData: ExtraData = memo?.extraData
       ? ({ ...memo?.extraData } as ExtraData)
       : ({} as ExtraData);
@@ -291,7 +290,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
     const response = await MemoService.createMemo(newMemo);
     if (!response.getStatus()) {
-      ToastManager.error('Error creando Memo de respuesta');
+      ToastManager.error('s_created_error');
       return;
     }
     replyToId.value = undefined;
@@ -319,7 +318,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
         isSelected={selectedChat.value === '0'}
       />
       */}
-      <div className='flex-1 overflow-y-auto vox-scroll-design border-b-light-dark dark:border-b-dark-light'>
+      <div className='flex-1 overflow-y-auto vox-scroll-design border-b-light-dark dark:border-b-dark-light w-full'>
         {/*
         {viewMode.value === TypeChatView.USERS &&
           users.map((user: IUserResponse) => (
@@ -566,7 +565,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   return (
     <div className='w-full flex flex-col h-full'>
       <div className='flex flex-1 overflow-y-auto border-t border-b-light-dark dark:border-b-dark-light'>
-        <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light'>
+        <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light bg max-w-96'>
           <div className='p-4 border-b-light-dark dark:border-b-dark-light'>
             <div className='flex gap-2 items-center'>
               {/*
@@ -580,19 +579,21 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 */}
               <Dropdown
                 name='view-mode'
+                borderless
+                icon='001'
+                placeholder='Select option'
                 options={[
                   {
-                    label: t('memos.chat.view.users'),
+                    label: 'h_user',
                     value: TypeChatView.USERS_MEMO,
-                    icon: '321',
+                    icon: '006',
                   },
                   {
-                    label: t('memos.chat.view.services'),
+                    label: 'h_service',
                     value: TypeChatView.SERVICES_MEMO,
-                    icon: '321',
+                    icon: '094',
                   },
                 ]}
-                selectedTag={t('memos.chat.view.select')}
                 onChange={(value) => {
                   viewMode.value =
                     value === TypeChatView.USERS_MEMO

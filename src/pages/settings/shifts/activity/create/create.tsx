@@ -8,7 +8,7 @@ import { ShiftService } from '@/services/shift/shift';
 import { UserService } from '@/services/general/user';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import arrayMutators from 'final-form-arrays';
@@ -16,6 +16,8 @@ import { FieldArray } from 'react-final-form-arrays';
 import { ServiceService } from '@/services';
 import { DateField } from '@/components/compose/forms';
 import { StatusButton } from '@/pages/settings/components/custom.button';
+import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 interface ITask {
   start: string;
@@ -39,11 +41,11 @@ interface FormData {
 }
 
 export const ActivityCreateSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const inputKeywords = useSignal('');
   const services = useSignal([]);
   const users = useSignal([]);
+  const { navigateUpsert } = useNavigation();
 
   const { id } = useParams(); // Obtiene el id de la URL
 
@@ -57,15 +59,15 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
 
     if (!id) {
       request = await ShiftService.createActivity(model);
-      message = 'Turno creado exitosamente!';
+      message = 's_created_success';
     } else {
       request = await ShiftService.updateActivity(model, id);
-      message = 'Turno editado exitosamente!';
+      message = 's_updated_success';
     }
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate('/rounds/activity');
+    navigateUpsert('/shifts/activity');
   };
 
   const setInitialValues = async () => {
@@ -106,9 +108,14 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
     await setInitialValues();
   };
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    main();
-  }, []);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      main();
+    }
+  }, [selectedCompany, location]);
+
   return (
     <Section>
       <Form

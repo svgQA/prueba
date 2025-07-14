@@ -2,7 +2,6 @@ import { Field } from 'react-final-form';
 import { DateUtils } from '@/utils/utilities/dates';
 import { required } from '@/utils/utilities';
 import { Input } from '@/components/common/input/input';
-import { useTranslation } from 'react-i18next';
 interface DateFieldProps {
   name: string;
   label: string;
@@ -11,6 +10,7 @@ interface DateFieldProps {
   meta?: any;
   validate?: (value: any) => any;
   format?: 'time' | 'date';
+  placeholder?: string;
 }
 
 export const DateField = ({
@@ -20,8 +20,8 @@ export const DateField = ({
   id,
   validate,
   format = 'date',
+  placeholder,
 }: DateFieldProps) => {
-  const { t } = useTranslation();
   return (
     <Field<string>
       name={name}
@@ -36,8 +36,11 @@ export const DateField = ({
             id={id || `input-${name}`}
             name={`input-${name}`}
             type='datetime-local'
-            label={label ? t(label) : ''}
+            label={label}
             meta={meta}
+            unicon
+            icon='325'
+            placeholder={placeholder}
           />
         );
       }}

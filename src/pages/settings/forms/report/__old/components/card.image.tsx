@@ -30,7 +30,7 @@ export const CardDropzone = ({
     try {
       await handleFileChangeWrapper(e, emitChange, 'report');
     } catch (error) {
-      ToastManager.error('No se ha podido cargar la imagen');
+      ToastManager.error('s_upload_error');
     } finally {
       isLoading.value = false;
       e.target.value = '';

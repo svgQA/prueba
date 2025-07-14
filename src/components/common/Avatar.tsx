@@ -1,13 +1,17 @@
+import { cdn_service_url } from '@/env.config';
+import { useUserStore } from '@/store/slices';
+import { IPresignedRequest } from '@/types/file';
 import { FunctionalComponent } from 'preact';
 
 interface AvatarProps {
-  src?: string;
+  src?: string | IPresignedRequest;
   name?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'auto';
   className?: string;
   square?: boolean;
   icon?: string;
   iconSize?: 'sm' | 'md' | 'lg' | 'xl' | 'auto';
+  toolTipLabel?: string;
 }
 
 const sizeMap = {
@@ -31,18 +35,24 @@ export const Avatar: FunctionalComponent<AvatarProps> = ({
   size = 'md',
   className = '',
   square = false,
+  toolTipLabel = '',
   icon,
 }) => {
+  const { getTenant, getCompanyId } = useUserStore();
+  const getUrl = (file: IPresignedRequest) => {
+    const validation = `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
+    return validation;
+  };
   const shape = square ? 'rounded' : 'rounded-full';
   const classes = `
     flex items-center justify-center ${shape} bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold overflow-hidden text-center
-    ${sizeMap[size] || sizeMap.md} ${className} ${icon ? 'px-6' : ''}
+    ${sizeMap[size] || sizeMap.md} ${className} ${icon ? 'px-6' : ''} ${toolTipLabel ? 'cursor-pointer' : ''}
   `;
   const initial = name ? name.trim().charAt(0).toUpperCase() : '';
 
   if (icon) {
     return (
-      <div className={classes}>
+      <div className={classes} title={toolTipLabel}>
         <span
           className={`vx-icon vx-icon-${icon} ${iconSizeMap[size] || 'size-md'} text-gray-500 dark:text-gray-200 font-thin`}
         />
@@ -50,16 +60,33 @@ export const Avatar: FunctionalComponent<AvatarProps> = ({
     );
   }
 
-  if (src) {
+  if (typeof src === 'string') {
     return (
       <img
         src={src}
         alt={name || 'avatar'}
         className={classes + ' object-cover'}
         loading='lazy'
+        title={toolTipLabel}
       />
     );
   }
 
-  return <div className={classes}>{initial}</div>;
+  if (src !== null && typeof src === 'object' && src.uuid) {
+    return (
+      <img
+        src={getUrl(src)}
+        alt={name || 'avatar'}
+        className={classes + ' object-cover'}
+        loading='lazy'
+        title={toolTipLabel}
+      />
+    );
+  }
+
+  return (
+    <div className={classes} title={toolTipLabel}>
+      {initial}
+    </div>
+  );
 };

@@ -1,25 +1,36 @@
 import { FunctionComponent, useEffect } from 'react';
-import { Section } from '@/components/common/section/section';
-import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
 import { useLocation } from 'wouter';
 import { useSignal } from '@preact/signals';
 import { Table } from '@/components/common/table/table';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
 import { getColumns } from './components/scheduled.columns';
-import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { SchedulerService } from '@/services/notification/schedule';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
   const [_, navigate] = useLocation();
   const loading = useSignal<boolean>(false);
+  const { t } = useTranslation();
+
   useEffect(() => {
-    document.title = 'TR - Notificaciones Programadas';
-    fetchNotifications();
+    document.title = t('p_template');
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchNotifications();
+    }
+  }, [selectedCompany, location]);
 
   const fetchNotifications = async () => {
     loading.value = true;
@@ -30,20 +41,20 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const redirect = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
-        .scheduledNotification.create.to,
-      label: 'create',
-      id: 'scheduled-create',
-    };
-    navigate(menu.to);
-    appendHistory(menu);
-  };
+  // const redirect = () => {
+  //   const menu = {
+  //     to: PAGES_LIST_ROUTER.dashboard.setting.notifications
+  //       .scheduledNotification.create.to,
+  //     label: 'create',
+  //     id: 'scheduled-create',
+  //   };
+  //   navigate(menu.to);
+  //   appendHistory(menu);
+  // };
 
   const editScheduled = (id: string) => {
     const menu = {
-      to: `${PAGES_LIST_ROUTER.dashboard.setting.notifications.scheduledNotification.update.to.replace(':id', id)}`,
+      to: `/notification/scheduled/update/${id}`,
       label: 'update',
       id: 'scheduled-update',
     };
@@ -59,10 +70,10 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
 
     const res = await SchedulerService.deleteScheduledNotification(id);
     if (res.getStatus()) {
-      ToastManager.success('Notificación eliminada correctamente');
+      ToastManager.success('s_deleted_success');
       fetchNotifications();
     } else {
-      ToastManager.error('Error al eliminar la notificación');
+      ToastManager.error('s_deleted_error');
     }
   };
 
@@ -87,23 +98,16 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
   };
 
   return (
-    <Section>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <Button
-          name='new-scheduled-notification'
-          label='+ Nueva Programación'
-          className='bg-primary text-white p-2'
-          onClick={redirect}
-        />
-      </div>
-
+    <>
       <Table<INotificationScheduledItem>
         data={notifications.value}
         columns={getColumns(onClickAction)}
         pageSize={10}
+        isSettingTable
         showExpandableIcon={false}
         loading={loading.value}
+        absolute
       />
-    </Section>
+    </>
   );
 };

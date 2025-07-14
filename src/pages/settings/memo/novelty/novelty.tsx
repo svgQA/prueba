@@ -1,5 +1,5 @@
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
 import { columns } from './components/novelty.columns';
@@ -14,6 +14,8 @@ import {
   setMenu,
 } from '../../store/settings';
 import { NoveltyService } from '@/services';
+import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export interface INovelty {
   id: number;
@@ -32,10 +34,18 @@ export const NoveltySettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const novelties: Signal<INovelty[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Novelty Service';
-    getNovelties();
+    document.title = t('p_novelty');
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getNovelties();
+    }
+  }, [selectedCompany, location]);
 
   const getNovelties = async () => {
     loading.value = true;
@@ -46,20 +56,16 @@ export const NoveltySettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de novedad' });
-    navigate('/memo/novelty/create');
-  };
-
   const update = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar novedad' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/memo/novelty/update/${id}`);
   };
 
   const deleteNovelty = async (id: string) => {
     const request = await NoveltyService.deleteNovelty(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Novedad eliminado');
+    ToastManager.success('s_deleted_success');
     getNovelties();
   };
 
@@ -75,18 +81,7 @@ export const NoveltySettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={redirect}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
-        </div>
-      </div>
+    <>
       <Table<INovelty>
         data={novelties.value}
         columns={columns}
@@ -94,7 +89,8 @@ export const NoveltySettingPage: FunctionComponent = () => {
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}
+        absolute
       />
-    </Section>
+    </>
   );
 };

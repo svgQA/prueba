@@ -4,6 +4,7 @@ import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import ShowFiles from '@/components/common/file/show.file';
 import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { useTranslation } from 'react-i18next';
 
 const ServiceInfo = ({
   service,
@@ -12,6 +13,7 @@ const ServiceInfo = ({
   service: IService;
   shift: IShiftResponse;
 }) => {
+  const { t } = useTranslation();
   const points = useSignal<any>([
     {
       id: 1,
@@ -29,14 +31,14 @@ const ServiceInfo = ({
         <div className='flex flex-row items-center justify-between mb-3'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='!text-primary mr-2 vox-icon size-sm vx-icon-341'></span>
-            Detalles del Servicio
+            {t('h_service')}
           </h4>
           <Badge label={service.state} status='info' outline />
         </div>
 
         <div className='space-y-4'>
           <div>
-            <p className='mb-1 font-semibold'>Nombre del Servicio</p>
+            <p className='mb-1 font-semibold'>{t('h_name')}</p>
             <TextEllipsis
               text={service.description}
               maxWidth='500px'
@@ -49,7 +51,7 @@ const ServiceInfo = ({
             </div>
           )}
           <div>
-            <p className='mb-1 font-semibold'>Contrato</p>
+            <p className='mb-1 font-semibold'>{t('h_contract')}</p>
             <p className='text-primary capitalize'>{service.contract.name}</p>
           </div>
           {/* <div className='flex flex-row items-center justify-between mb-3'>
@@ -63,22 +65,22 @@ const ServiceInfo = ({
       <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm text-t-light dark:text-t-dark'>
         <h4 className='font-semibold mb-3 flex items-center'>
           <span className='!text-primary mr-2 vox-icon size-sm vx-icon-103'></span>
-          Ubicación y Descripción
+          {t('h_location')}
         </h4>
         <div className='space-y-4'>
           <div>
-            <p className='mb-1 font-semibold'>Ubicación</p>
+            <p className='mb-1 font-semibold'>{t('h_location')}</p>
             <div className='flex items-center'>
               <span className='!text-primary mr-2 vox-icon size-sm vx-icon-351'></span>
               <p>{service.place.name}</p>
             </div>
           </div>
           <div>
-            <p className='mb-1 font-semibold'>Descripción</p>
+            <p className='mb-1 font-semibold'>{t('h_description')}</p>
             <p>{service.place.description}</p>
           </div>
           <div>
-            <p className='mb-1 font-semibold'>Ronda</p>
+            <p className='mb-1 font-semibold'>{t('h_round')}</p>
             <p className='text-primary capitalize'>{service.round.name}</p>
           </div>
         </div>
@@ -87,9 +89,11 @@ const ServiceInfo = ({
       {/* Área de cobertura */}
       <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-3 flex-1 shadow-sm text-t-light dark:text-t-dark'>
         <div className='flex flex-row items-center justify-between mb-3'>
-          <h4 className='font-semibold'>Área de cobertura</h4>
+          <h4 className='font-semibold'>{t('h_coverage')}</h4>
           <Badge
-            label={`Radio: ${service.place.radius || 50}m`}
+            label={t('h_radius', {
+              value: service.place.radius || 50,
+            })}
             color='primary'
             status='info'
             outline

@@ -1,18 +1,14 @@
 import { Signal, useSignal } from '@preact/signals';
-import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
-import { useEffect } from 'preact/hooks';
-import { Input } from '@/components/common/input/input';
-import { TextArea } from '@/components/common/text.area/text.area';
-import { required } from '@/utils/utilities';
+import { useCallback, useEffect } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
-import dayjs from 'dayjs';
 import { FormService, TaskService } from '@/services';
-import { StatusButton } from '@/pages/settings/components/custom.button';
 import { IOption } from '@/components/common/multi/interface';
-import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { DateUtils } from '@/utils/utilities/dates';
+import { useTranslation } from 'react-i18next';
+import { TaskFormCreate } from './task.form';
 
 interface FormData {
   name: string;
@@ -20,66 +16,53 @@ interface FormData {
   formId: IOption;
   hourStart: string;
   attachmentType: IOption;
-  taskType: IOption;
+  type: IOption;
 }
 
-const ATTACHMENT_TYPES = [
-  'DOCUMENT',
-  'AUDIO',
-  'VIDEO',
-  'PHOTO',
-  'GENERAL',
-  'FORMS',
-] as const;
-const ATTACHMENT_OPTIONS: IOption[] = ATTACHMENT_TYPES.map((t) => ({
-  value: t,
-  label: t.charAt(0) + t.slice(1).toLowerCase(),
-}));
-
-const TASK_TYPES = ['GENERAL', 'REPORT'] as const;
-const TASK_TYPE_OPTIONS: IOption[] = TASK_TYPES.map((t) => ({
-  value: t,
-  label: t.charAt(0) + t.slice(1).toLowerCase(),
-}));
-
 export const TaskCreateSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const [_, navigate] = useLocation();
   const forms = useSignal<IOption[]>([]);
+
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams<{ id: string }>();
 
-  const onSubmit = async (model: FormData) => {
-    const output: any = {
-      name: model.name,
-      description: model.description,
-      type: model.taskType.value as string,
-    };
-    if (model.taskType.value === 'GENERAL') {
-      output.formId = Number(model.formId.value);
-      output.hourStart = model.hourStart;
-    } else if (model.taskType.value === 'REPORT') {
-      if (model.attachmentType.value === 'FORMS') {
-        output.formId = Number(model.formId.value);
-      }
-      output.attachmentType = model.attachmentType.value;
-    }
-    let request;
-    let message: string;
+  const onSubmit = async (model: Record<string, any>) => {
+    // console.log(model);
     if (id) {
-      request = await TaskService.updateTask(output, id);
-      message = 'Tarea editada exitosamente!';
+      const request = await TaskService.updateTask(model, id);
+      if (!request.getStatus()) return;
+      ToastManager.success('s_update_success');
     } else {
-      request = await TaskService.createTask(output);
-      message = 'Tarea creada exitosamente!';
+      const request = await TaskService.createTask(model);
+      if (!request.getStatus()) return;
+      ToastManager.success('s_created_success');
     }
-    if (!request.getStatus()) return;
-    ToastManager.success(message);
-    navigate('/rounds/task');
+
+    navigate('/shifts/task');
   };
 
-  const setInitialValues = async () => {
-    /* ...igual a antes...*/
-  };
+  const setInitialValues = useCallback(async () => {
+    if (!id) return;
+
+    const request = await TaskService.getTaskById(id);
+    if (!request.getStatus()) return;
+    const task = request.getOne();
+
+    const form = task.formId
+      ? forms.value.find((_f) => _f.value === task.formId)
+      : undefined;
+    initialValues.value = {
+      ...task,
+      hourStart: DateUtils.hourToFrontend(task.hourStart),
+      formId: form,
+      type: {
+        value: task.type,
+        label: task.type,
+      },
+    };
+  }, [id]);
+
   const getFormsHandler = async () => {
     const response = await FormService.getSimpleList();
     if (!response.getStatus()) return;
@@ -91,166 +74,20 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section className='w-full'>
-      <Form
-        onSubmit={onSubmit}
-        initialValues={initialValues.value}
-        render={({ handleSubmit, form, submitting, pristine }) => {
-          const values: any = form.getState().values;
-          const isGeneral = values.taskType?.value === 'GENERAL';
-          const isReport = values.taskType?.value === 'REPORT';
-          const isFormReport =
-            isReport && values.attachmentType?.value === 'FORMS';
-          return (
-            <form
-              onSubmit={handleSubmit}
-              className='space-y-6'
-              id='form-settings-shifts'
-            >
-              <div className='grid grid-cols-3 gap-3'>
-                <div className='col-span-1'>
-                  <Field<string> name='name' validate={required}>
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        placeholder='Nombre...'
-                        label='name'
-                        meta={meta}
-                        type='text'
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div className='col-span-2'>
-                  <Field<IOption> name='taskType' validate={required}>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        placeholder='Tipo de tarea...'
-                        label='tipo'
-                        options={TASK_TYPE_OPTIONS}
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                {/* GENERAL: Form selector y hora inicio */}
-                {isGeneral && (
-                  <>
-                    <div className='col-span-1'>
-                      <Field name='formId'>
-                        {({ input }) => (
-                          <SmartSelector
-                            {...input}
-                            placeholder='Seleccione formulario...'
-                            label='formulario'
-                            icon='📋'
-                            options={forms.value}
-                          />
-                        )}
-                      </Field>
-                    </div>
-                    <div className='col-span-2'>
-                      <Field<string> name='hourStart' validate={required}>
-                        {({ input, meta }) => {
-                          let timeValue = input.value
-                            ? dayjs(input.value).format('HH:mm')
-                            : '';
-                          return (
-                            <Input
-                              {...input}
-                              type='time'
-                              id='task-start'
-                              label='Hora inicio'
-                              meta={meta}
-                              value={timeValue}
-                              onChange={(e) => {
-                                const [h, m] = (
-                                  e.target as HTMLInputElement
-                                ).value.split(':');
-                                input.onChange(
-                                  dayjs()
-                                    .hour(parseInt(h))
-                                    .minute(parseInt(m))
-                                    .second(0)
-                                    .millisecond(0)
-                                    .toISOString()
-                                );
-                              }}
-                            />
-                          );
-                        }}
-                      </Field>
-                    </div>
-                  </>
-                )}
-
-                {/* REPORT: Attachment type */}
-                {isReport && (
-                  <div className='col-span-1'>
-                    <Field<IOption> name='attachmentType' validate={required}>
-                      {({ input, meta }) => (
-                        <SmartSelector
-                          {...input}
-                          placeholder='Tipo de reporte...'
-                          label='reporte'
-                          icon='📎'
-                          options={ATTACHMENT_OPTIONS}
-                          meta={meta}
-                        />
-                      )}
-                    </Field>
-                  </div>
-                )}
-
-                {/* REPORT + FORMS: Form selector */}
-                {isFormReport && (
-                  <div className='col-span-1'>
-                    <Field name='formId'>
-                      {({ input }) => (
-                        <SmartSelector
-                          {...input}
-                          placeholder='Seleccione formulario...'
-                          label='formulario'
-                          icon='📋'
-                          options={forms.value}
-                        />
-                      )}
-                    </Field>
-                  </div>
-                )}
-
-                <div className='col-span-3'>
-                  <Field<string> name='description' validate={required}>
-                    {({ input, meta }) => (
-                      <TextArea
-                        {...input}
-                        minLength={3}
-                        maxLength={300}
-                        placeholder='Descripción...'
-                        label='description'
-                        meta={meta}
-                        type='text'
-                      />
-                    )}
-                  </Field>
-                </div>
-              </div>
-
-              <div className='w-full flex justify-end items-center'>
-                <StatusButton
-                  onClickClean={() => form.reset()}
-                  submitting={submitting}
-                  pristine={pristine}
-                  form='form-settings-shifts'
-                />
-              </div>
-            </form>
-          );
-        }}
-      />
+    <Section className='pt-2 px-40'>
+      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-row items-center justify-between'>
+          <h1 className='text-2xl font-bold text-primary'>{t('l_new_task')}</h1>
+        </div>
+      </div>
+      <div className='flex flex-col justify-center mt-16'>
+        <TaskFormCreate
+          onSubmit={onSubmit}
+          forms={forms.value}
+          initialValues={initialValues.value}
+          append
+        />
+      </div>
     </Section>
   );
 };

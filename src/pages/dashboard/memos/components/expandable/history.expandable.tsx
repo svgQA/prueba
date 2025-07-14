@@ -23,7 +23,7 @@ import { DateUtils } from '@/utils/utilities/dates';
 import { PredefinedService } from '@/services/shift/predefined';
 import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
-import { IPanic } from '@/components/common/panic/interface';
+import { IPanic } from '@/components/common/panic/utils/interface';
 import { PanicService } from '@/services/memo/panic';
 import { Badge } from '@/components/common/badge/badge';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +37,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [btnLabel, setBtnLabel] = useState('Check In');
   const predefined: Signal<IOption[]> = useSignal([]);
   const panic = useSignal<IPanic[]>([]);
+  const disable = memo.state === 'RESOLVED';
+  const status = useSignal<string | undefined>(memo.state);
 
   useEffect(() => {
     fetchInitialData();
@@ -45,9 +47,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   }, []);
 
   const handleMemoSSE = (event: IBaseSSE) => {
-    const { name } = event;
+    const { name, message } = event;
     if (name === SSE_EVENTS.CREATE_PARENT || name === SSE_EVENTS.PANIC) {
       fetchInitialData();
+    }
+
+    if (name === SSE_EVENTS.UPDATE_CHECK) {
+      if (memo.id !== Number(message.id)) return;
+      status.value = message.state;
     }
   };
 
@@ -119,11 +126,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
-      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
+      ToastManager.error('s_gps_error');
     } else {
-      ToastManager.error(
-        i18n.t('shift.expandable.date.location.timeoutMessage')
-      );
+      ToastManager.error('s_gps_timeout');
     }
   };
 
@@ -187,14 +192,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const handleAttachmentUpload = (e: any) => {
     const fileInput: IPresignedRequest = e.target.value[0];
-    console.log('fileInput', fileInput);
+    // console.log('fileInput', fileInput);
     files.value = [...files.value, fileInput];
   };
 
   const messageHistory = () => {
     return (
       <div
-        className={`w-[60%] max-h-[300px] overflow-y-auto vox-scroll-design`}
+        className={`w-[60%] max-h-[250px] overflow-y-auto vox-scroll-design`}
       >
         <div className='p-4 space-y-3'>
           {memos.value.map((memo: Memo) => (
@@ -213,75 +218,83 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                       'Unknown User'}
                   </span>
                   <span className='text-xs text-gray-text-light dark:text-t-dark-light'>
-                    <FormattedDate date={memo.updatedAt} format='datetime' />
+                    <FormattedDate
+                      date={memo.updatedAt as string}
+                      format='datetime'
+                    />
                   </span>
                 </div>
-                <div
-                  onClick={() =>
-                    setExpandedMemoId(
-                      expandedMemoId === memo.id ? null : memo.id
-                    )
-                  }
-                >
-                  <div className='bg-b-light-light dark:bg-b-dark-dark rounded-lg px-3 py-2'>
-                    <div className='flex items-start gap-3'>
-                      <div className='flex-1'>
-                        <div className='flex items-center gap-2 mb-2'>
-                          <span className='text-sm text-t-light dark:text-t-dark'>
-                            {memo.extraData?.predefined?.label}
-                          </span>
-                        </div>
-                        <div className='flex items-center gap-2 mb-2'>
-                          <span className='vox-icon size-sm vx-icon-113 text-primary' />
-                          <span className='text-sm text-t-light dark:text-t-dark'>
-                            {memo.description}
-                          </span>
-                        </div>
-                        {memo.extraData && (
-                          <div className='flex flex-wrap gap-2 text-xs text-t-light dark:text-t-dark'>
-                            {memo.extraData.duration && (
-                              <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
-                                <span className='vox-icon size-sm vx-icon-236 text-primary' />
-                                {memo.extraData.duration}
-                              </span>
-                            )}
-                            {memo.extraData.time && (
-                              <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
-                                <span className='vox-icon size-sm vx-icon-237 text-primary' />
-                                {DateUtils.dateToFrontend(memo.extraData.time, {
-                                  format: 'DD/MM/YYYY HH:mm',
-                                })}
-                              </span>
-                            )}
-                          </div>
-                        )}
-                        {memo.attachments && memo.attachments.length > 0 && (
-                          <div className='mt-2 flex flex-wrap gap-2'>
-                            {memo.attachments.map((attachment, idx) => (
-                              <a
-                                key={idx}
-                                href={attachment.url}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
-                              >
-                                <span className='vox-icon size-sm vx-icon-311 px-1' />
-                                <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
-                                  {attachment.name}
-                                </span>
-                              </a>
-                            ))}
-                          </div>
-                        )}
+                <div className='rounded-lg px-3 py-2 relative'>
+                  {memo.resource && memo.resource.length > 0 && (
+                    <div className='absolute top-0 right-0'>
+                      <Button
+                        name='memo-expand-data'
+                        transparent
+                        icon='321'
+                        borderless
+                        onClick={() =>
+                          setExpandedMemoId(
+                            expandedMemoId === memo.id ? null : memo.id
+                          )
+                        }
+                      ></Button>
+                    </div>
+                  )}
+                  <div className='flex items-start gap-3'>
+                    <div className='flex-1'>
+                      <div className='flex items-center gap-2 mb-2'>
+                        <span className='text-sm text-t-light dark:text-t-dark'>
+                          {memo.extraData?.predefined?.label}
+                        </span>
                       </div>
+                      <div className='flex items-center gap-2 mb-2'>
+                        <span className='vox-icon size-sm vx-icon-113 text-primary' />
+                        <span className='text-sm text-t-light dark:text-t-dark'>
+                          {memo.description}
+                        </span>
+                      </div>
+                      {memo.extraData && (
+                        <div className='flex flex-wrap gap-2 text-xs text-t-light dark:text-t-dark'>
+                          {memo.extraData.duration && (
+                            <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
+                              <span className='vox-icon size-sm vx-icon-236 text-primary' />
+                              {memo.extraData.duration}
+                            </span>
+                          )}
+                          {memo.extraData.time && (
+                            <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
+                              <span className='vox-icon size-sm vx-icon-237 text-primary' />
+                              {DateUtils.dateToFrontend(memo.extraData.time, {
+                                format: 'DD/MM/YYYY HH:mm',
+                              })}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      {memo.attachments && memo.attachments.length > 0 && (
+                        <div className='mt-2 flex flex-wrap gap-2'>
+                          {memo.attachments.map((attachment, idx) => (
+                            <a
+                              key={idx}
+                              href={attachment.url}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
+                            >
+                              <span className='vox-icon size-sm vx-icon-311 px-1' />
+                              <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
+                                {attachment.name}
+                              </span>
+                            </a>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
-                <div>
-                  {expandedMemoId === memo.id && memo.resource && (
-                    <ShowFiles resources={memo.resource} />
-                  )}
-                </div>
+                {expandedMemoId === memo.id && memo.resource && (
+                  <ShowFiles resources={memo.resource} />
+                )}
               </div>
             </div>
           ))}
@@ -301,126 +314,129 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     files.value = files.value.filter((file) => file.uuid !== uuid);
   };
 
+  const getDurationInMinutes = (start: string | Date, end: string | Date) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const diffMs = endDate.getTime() - startDate.getTime();
+    const diffMinutes = Math.floor(diffMs / 60000); // 1 minuto = 60,000 ms
+    return diffMinutes;
+  };
+
   const messageInput = () => {
     return (
       <div
-        className={`w-[40%] max-h-[450px] overflow-y-auto vox-scroll-design border-l border-l-b-light-dark dark:border-l-b-dark-dark mt-2`}
+        className={`w-[40%] max-h-[250px] overflow-y-hidden border-l border-l-b-light-dark dark:border-l-b-dark-dark`}
       >
         <Form
           onSubmit={handleSubmitMessage}
+          initialValues={{
+            date: DateUtils.dateToFrontend(new Date(), {
+              format: 'DD/MM/YYYY HH:mm',
+            }),
+            duration:
+              memos.value.length > 0 &&
+              memos.value[memos.value.length - 1]?.createdAt &&
+              memo.updatedAt
+                ? getDurationInMinutes(
+                    memos.value[memos.value.length - 1].createdAt as
+                      | Date
+                      | string,
+                    memo.updatedAt
+                  )
+                : memo.createdAt && memo.updatedAt
+                  ? getDurationInMinutes(memo.createdAt, memo.updatedAt)
+                  : null,
+          }}
           render={({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              {/* Additional Fields */}
-              <div className='flex-1'>
-                {/* Additional Fields */}
-                <div className='grid grid-cols-1 gap-4 '>
-                  <div className='p-3'>
-                    <div className='flex items-center gap-2 flex-row justify-between'>
-                      <div className='flex flex-row w-full bg-red flex-wrap justify-center gap-2'>
+            <form onSubmit={handleSubmit} id='form-message-memo'>
+              <fieldset
+                disabled={disable}
+                style={{ border: 0, padding: 0, margin: 0 }}
+              >
+                <div className='flex-1'>
+                  <div className='grid grid-cols-1 gap-4 '>
+                    <div className='p-3'>
+                      <div className='grid grid-cols-2 gap-2'>
+                        <Field<IOption> name='predefined'>
+                          {({ input, meta }) => (
+                            <SmartSelector
+                              {...input}
+                              meta={meta}
+                              name='predefined'
+                              id='select-predefined'
+                              placeholder='p_predefined'
+                              label='p_predefined'
+                              options={predefined.value}
+                              menuPortalTarget={document.body}
+                              allowAll={true}
+                              onChange={(value?: IOption) => {
+                                input.onChange(value);
+                              }}
+                            />
+                          )}
+                        </Field>
+
+                        <Field<string> name='duration'>
+                          {({ input }) => (
+                            <Input
+                              {...input}
+                              type='number'
+                              name='duration'
+                              label='h_duration'
+                              placeholder='min'
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div className='grid grid-cols-2 gap-2'>
+                        <Field<string> name='date'>
+                          {({ input }) => (
+                            <DateField {...input} name='date' label='h_date' />
+                          )}
+                        </Field>
+
+                        <Field name='attachments'>
+                          {() => (
+                            <File
+                              name='attachments'
+                              onChange={handleAttachmentUpload}
+                              value={[]}
+                              accept='image/*, video/*'
+                              multiple={true}
+                              label='h_attachment'
+                              area='memo'
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div
+                        className={`grid ${files.value.length > 0 ? 'grid-cols-2' : 'grid-cols-1'}`}
+                      >
+                        <Field<string> name='message'>
+                          {({}) => (
+                            <TextArea
+                              name='message'
+                              placeholder='p_comment'
+                              value={message}
+                              onChange={(
+                                e: React.ChangeEvent<HTMLTextAreaElement>
+                              ) =>
+                                setMessage(
+                                  (e.target as HTMLTextAreaElement).value
+                                )
+                              }
+                            />
+                          )}
+                        </Field>
                         <ShowFiles
                           resources={files.value}
                           removeFile={removeFile}
                         />
                       </div>
-                      <Button
-                        name='memo-send-response'
-                        type='submit'
-                        disabled={!message.trim() /* && !selectedPredefined */}
-                        label='send'
-                        icon='311'
-                        className='w-full'
-                      />
                     </div>
-
-                    <div className='grid grid-cols-2 gap-2'>
-                      <Field<IOption> name='predefined'>
-                        {({ input, meta }) => (
-                          <SmartSelector
-                            {...input}
-                            meta={meta}
-                            name='predefined'
-                            id='select-predefined'
-                            placeholder='p_predefined'
-                            label='p_predefined'
-                            options={predefined.value}
-                            menuPortalTarget={document.body}
-                            allowAll={true}
-                            onChange={(value?: IOption) => {
-                              input.onChange(value);
-                              /*
-                              if (value?.value === 'other') {
-                                setShowComment(true);
-                              } else {
-                                setShowComment(false);
-                                setSelectedPredefined(value || null);
-                              }
-                              */
-                            }}
-                          />
-                        )}
-                      </Field>
-
-                      <Field<string> name='duration'>
-                        {({ input }) => (
-                          <Input
-                            {...input}
-                            type='number'
-                            name='duration'
-                            label='h_duration'
-                            placeholder='min'
-                          />
-                        )}
-                      </Field>
-                    </div>
-                    <div className='grid grid-cols-2 gap-2'>
-                      <Field<string> name='date'>
-                        {({ input }) => (
-                          <DateField {...input} name='date' label='h_date' />
-                        )}
-                      </Field>
-
-                      <Field name='attachments'>
-                        {() => (
-                          <File
-                            name='attachments'
-                            onChange={handleAttachmentUpload}
-                            value={[]}
-                            accept='image/*, video/*'
-                            multiple={true}
-                            label='h_attachment'
-                            area='memo'
-                          />
-                        )}
-                      </Field>
-                    </div>
-                    {/* {showComment && ( */}
-                    <div className='grid grid-cols-1'>
-                      <Field<string> name='message'>
-                        {({}) => (
-                          <TextArea
-                            name='message'
-                            placeholder='p_comment'
-                            value={message}
-                            onChange={(
-                              e: React.ChangeEvent<HTMLTextAreaElement>
-                            ) =>
-                              setMessage(
-                                (e.target as HTMLTextAreaElement).value
-                              )
-                            }
-                          />
-                        )}
-                      </Field>
-                    </div>
-                    {/* )} */}
                   </div>
                 </div>
-                {/* TODO: Luego continuar con esta idea
-                {files.value.length > 0 && (
-                  <ShowFiles resources={files.value} />
-                )}
-                */}
-              </div>
+              </fieldset>
             </form>
           )}
         />
@@ -447,8 +463,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   );
 
   return (
-    <div className='w-full rounded-lg bg-b-white-light dark:bg-b-dark-light border border-b-light-dark dark:border-b-dark-light shadow-sm max-h-[450px]'>
-      <div className='flex items-center justify-between gap-4 p-0 border-b border-b-light-dark dark:border-b-dark-dark max-h-20 w-full'>
+    <div className='w-full rounded-lg bg-b-white-light max-h-[450px]'>
+      <div className='flex items-center justify-between gap-1 border-b border-b-light-dark dark:border-b-dark max-h-20 w-full dark:bg-b-dark-dark bg-b-light-dark rounded-lg'>
         <div className='flex-1 rounded-lg ml-5 w-7/12'>
           {memo.resource && <ShowFiles resources={memo.resource} />}
         </div>
@@ -465,33 +481,24 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           )}
         </div>
 
-        {/* Info Section - Right */}
-        <div className='flex items-center gap-4 w-3/12'>
-          {/* Action Button */}
-          {memo.state != 'IN_REVISION' && memo.state != 'CREATED' && (
-            <div className='flex items-center h-[72px]'>
-              <Button
-                label={btnLabel}
-                icon={
-                  btnLabel === 'SOLVE' || btnLabel === 'RESOLVED'
-                    ? '030'
-                    : '032'
-                }
-                disabled={btnLabel === 'RESOLVED'}
-                onClick={() =>
-                  showAlert({
-                    title: btnLabel,
-                    message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
-                    onConfirm: () => handleCheck(),
-                    onCancel: () => {},
-                  })
-                }
-                name={btnLabel}
-              />
-            </div>
+        <div className='flex items-center gap-4 w-4/12 flex-row justify-between px-3'>
+          {status.value != 'IN_REVISION' && status.value != 'CREATED' && (
+            <Button
+              name='btn-check-memo'
+              label={status.value === 'OPENED' ? 'SOLVE' : 'RESOLVED'}
+              icon='030'
+              disabled={status.value === 'RESOLVED'}
+              onClick={() =>
+                showAlert({
+                  title: status.value || 'CREATED',
+                  message: `${t('message.confirm')} ${status.value}`,
+                  onConfirm: () => handleCheck(),
+                  onCancel: () => {},
+                })
+              }
+            />
           )}
 
-          {/* Dates Section */}
           {memo.createdAt &&
             showDate('memos.history.created', memo.createdAt, 'datetime')}
           {memo.updatedAt &&
@@ -501,6 +508,15 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               memo.updatedAt != null ? memo.updatedAt : memo.createdAt,
               'datetime'
             )}
+
+          <Button
+            name='memo-send-response'
+            form='form-message-memo'
+            type='submit'
+            disabled={disable || !message.trim() /* && !selectedPredefined */}
+            label='send'
+            icon='311'
+          />
         </div>
       </div>
 

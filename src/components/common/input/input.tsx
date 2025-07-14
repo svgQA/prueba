@@ -25,8 +25,9 @@ export const Input = <T = string,>({
   button,
   onClick,
   normal,
-  buttonIcon = '123',
-  buttonType = 'button',
+  buttonIcon,
+  buttonType,
+  buttonForm,
   disabled,
   readOnly, // ✅ agregado
   ref,
@@ -36,7 +37,6 @@ export const Input = <T = string,>({
   onBlur,
   error,
   warning,
-  paddingVertical = 'py-2',
   rounded,
   float,
   unicon,
@@ -62,7 +62,7 @@ export const Input = <T = string,>({
   };
 
   return (
-    <div id={id} className='w-full mt-1 relative'>
+    <div id={id} className='w-full relative'>
       {label && (
         <label
           htmlFor={`${id}-input`}
@@ -74,7 +74,7 @@ export const Input = <T = string,>({
       <div
         className={`
           ${borderless ? '' : 'border border-gray-200 dark:border-gray-700'}
-          rounded flex flex-row items-center w-full
+          rounded-lg flex flex-row items-center w-full
           bg-white dark:bg-b-dark-dark
         `}
       >
@@ -85,10 +85,11 @@ export const Input = <T = string,>({
           <input
             ref={ref}
             // focus:ring-blue-500 dark:focus:ring-blue-400
-            className={`w-full px-3 ${paddingVertical} rounded
+            className={`w-full px-3 ${isDateTimeInput ? 'py-[7px]' : 'py-2'}
               bg-white dark:bg-b-dark-dark
               text-gray-700 dark:text-gray-200
               border-gray-300 dark:border-gray-700
+              appearance-none
               ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
               ${
                 type === 'number'
@@ -147,14 +148,17 @@ export const Input = <T = string,>({
           )}
         </div>
         {button && (
-          <Button
-            onClick={() => onClick?.(value)}
-            name='btn-input-action'
-            icon={buttonIcon}
-            type={buttonType}
-            rounded
-            borderless
-          />
+          <div className='border-l dark:border-gray-600 border-b-light-dark'>
+            <Button
+              onClick={() => onClick?.(value)}
+              name='btn-input-action'
+              icon={buttonIcon}
+              type={buttonType}
+              rounded
+              borderless
+              transparent
+            />
+          </div>
         )}
         {!button && end && icon && (
           <span className={`vox-icon vx-icon-${icon}`} />
@@ -164,11 +168,11 @@ export const Input = <T = string,>({
         <span
           className={`text-red-500 text-sm ${float ? 'absolute top-1/4 right-0' : ''}`}
         >
-          {meta.error}
+          {t(meta.error)}
         </span>
       )}
-      {error && <span className='text-red-500 text-sm'>{error}</span>}
-      {warning && <span className='text-yellow-500 text-sm'>{warning}</span>}
+      {error && <span className='text-red-500 text-sm'>{t(error)}</span>}
+      {warning && <span className='text-yellow-500 text-sm'>{t(warning)}</span>}
     </div>
   );
 };

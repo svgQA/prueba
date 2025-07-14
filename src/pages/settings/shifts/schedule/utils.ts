@@ -1,8 +1,10 @@
+import { DayOfWeek, DaySelectedModel } from './type';
+
 export const getSelectedHoursByDay = (
-  daysOfWeek: string[],
+  daysOfWeek: DayOfWeek[],
   hours: number[],
   selectedCells: { [key: string]: boolean }
-) => {
+): DaySelectedModel[] => {
   const selectedHoursByDay = daysOfWeek.map((_, dayIndex) => {
     // Obtener todas las horas seleccionadas para el día
     const selectedHours = hours.filter((hour) => {

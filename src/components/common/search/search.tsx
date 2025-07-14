@@ -297,7 +297,7 @@ export const Search = ({
         <input
           ref={inputRef}
           className='w-full px-2 py-1 bg-transparent outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 text-base'
-          placeholder={placeholder || t('common.search.placeholder')}
+          placeholder={placeholder || t('p_general_search')}
           onChange={handleChangeInput}
           onKeyDown={handleKeyPress}
           onFocus={() => {
@@ -309,10 +309,6 @@ export const Search = ({
           disabled={disabled}
         />
       </div>
-
-      {table && (
-        <div className='h-6 w-px bg-b-light-dark dark:bg-gray-700 mx-2' />
-      )}
 
       {(table || grouping) && group && <>{group}</>}
 

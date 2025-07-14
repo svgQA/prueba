@@ -22,7 +22,7 @@ export interface ISendManualNotificationDto {
   /**
    * ID de la tarea asociada (opcional).
    */
-  taskId?: string; // Solo referencia de formulario (opcional)
+  tasks?: string[]; // Solo referencia de formulario (opcional)
 
   /**
    * Filtros para definir los usuarios destinatarios.

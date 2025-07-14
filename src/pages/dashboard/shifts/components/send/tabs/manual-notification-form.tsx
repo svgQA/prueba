@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'preact/hooks';
-import { TemplateService } from '@/services/notification/template';
+import { useState, useEffect, useCallback } from 'preact/hooks';
 import { IOption } from '@/components/common/multi/interface';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/common/button/button';
@@ -11,9 +10,11 @@ import { Form, Field } from 'react-final-form';
 import { useSignal } from '@preact/signals';
 import { lengthSize } from '@/utils/utilities';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { NotificationService, TaskService } from '@/services';
+import { NotificationService, TaskService, TemplateService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { TaskCreateSettingPage } from '@/pages/settings/shifts/task/create/task';
+import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
+import { ITask } from '@/pages/settings/shifts/task/create/interface';
+import { _onTaskAddWithId } from '@/pages/settings/shifts/task/create/utils';
 
 interface Props {
   users?: any[];
@@ -40,6 +41,7 @@ export const ManualNotificationForm = ({
 
   const templates = useSignal<IOption[]>([]);
   const tasks = useSignal<IOption[]>([]);
+  const tasksResponse = useSignal<ITask[]>([]);
 
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
   const [sendToGeneral, setSendToGeneral] = useState<boolean>(false);
@@ -60,12 +62,6 @@ export const ManualNotificationForm = ({
     return sendToShiftToday ? match && !u.hasShiftToday : match;
   });
 
-  // Filtrado de tareas según tipo
-  const filteredTasks =
-    notificationType === 'REPORT'
-      ? tasks.value.filter((opt) => (opt as any).type === 'REPORT')
-      : tasks.value;
-
   useEffect(() => {
     setSelectedUserIds(usersWithPlayerId.map((u) => u.id));
   }, [externalUsers]);
@@ -83,9 +79,31 @@ export const ManualNotificationForm = ({
     setSelectedUsersFull(finalUsers);
   }, [selectedUserIds, usersWithPlayerId]);
 
+  const getInitData = useCallback(async () => {
+    const [request_task, request_template] = await Promise.all([
+      TaskService.getSimplesList(),
+      TemplateService.getBasicTemplates(),
+    ]);
+
+    if (request_task.getStatus()) {
+      tasks.value = request_task.getMany();
+    }
+
+    if (request_template.getStatus()) {
+      templates.value = request_template.getMany();
+    }
+  }, []);
+
   const handleSubmit = async (values: any) => {
     if (!hasplayers) return;
+    /*
+     * const result = await NotificationService.sendManualNotification(output);
+     * if (!result.getStatus()) return;
+     * ToastManager.success('s_send_success');
+     * onClose?.();
+     */
 
+    /* DELETE: Posibllemente eliminar esto */
     const payload: ISendManualNotificationDto = {
       notificationType: notificationType.toLowerCase(),
       ...(values.template?.value && { templateId: values.template.value }),
@@ -93,52 +111,48 @@ export const ManualNotificationForm = ({
         values.task?.value && { taskId: Number(values.task.value) }),
       overrideTitle: values.title,
       overrideDescription: values.description,
-      // TODO: Deje comentado esto, porque me daba conflicto con lo anterio
-      // Jaider determina cual es el correcto.
-      // overrideTitle: values.title ?? "",
-      // overrideDescription: values.description ?? "",
+      tasks: tasksResponse.value,
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
-    // Enviar la notificación manualmente a los usuario
-    try {
-      const result = await NotificationService.sendManualNotification(payload);
-      result.getStatus() ? onClose?.() : null; // Si se envio correctament
-      ToastManager.success('notification.send.success');
-    } catch {
-      ToastManager.error('notification.send.failure');
-    }
+
+    // console.log(payload);
+    const result = await NotificationService.sendManualNotification(payload);
+
+    if (!result.getStatus()) return;
+    ToastManager.success('s_send_success');
+    onClose?.();
+    /* DELETE: Posibllemente eliminar esto */
   };
 
   const clearUserSelection = () => setSelectedUserIds([]);
 
   useEffect(() => {
-    const fetchFormsAndTemplates = async () => {
-      try {
-        const [TasksResponse, templatesResponse] = await Promise.all([
-          TaskService.getSimplesList(),
-          TemplateService.getBasicTemplates(),
-        ]);
-        if (TasksResponse.getStatus()) tasks.value = TasksResponse.getMany();
-        if (templatesResponse.getStatus())
-          templates.value = templatesResponse.getMany();
-      } catch (err) {
-        ToastManager.error('notification.send.error_loading_forms_templates');
-      }
-    };
-    fetchFormsAndTemplates();
+    getInitData();
   }, []);
 
-  /* useEffect(() => {
-    const getFormStructure = async () => {
-      if (!formSelected) return;
-      const response = await FormService.get_one(Number(formSelected.value));
-      if (response.getStatus()) setFormStructure(response.getOne());
-    };
-    getFormStructure();
-  }, [formSelected]); */
+  const onTaskAdd = (model: any) => {
+    if (Array.isArray(model)) {
+      tasksResponse.value = [...tasksResponse.value, ...model];
+    } else {
+      tasksResponse.value = [...tasksResponse.value, model];
+    }
+    showInlineCreate.value = false;
+  };
+
+  const infoTemplate = async (value: IOption) => {
+    setTemplateSelected(value);
+    // console.log(value);
+    const responseTemplate = await TemplateService.getTemplateById(
+      String(value.value)
+    );
+    if (!responseTemplate.getStatus()) return;
+    const model = responseTemplate.getOne();
+    const task = _onTaskAddWithId(model.tasks, 0, 2);
+    onTaskAdd(task);
+  };
 
   return (
     <Form
@@ -201,8 +215,8 @@ export const ManualNotificationForm = ({
             </div>
 
             <div className='flex items-center justify-between mt-2'>
-              {sendToGeneral && (
-                <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
+              <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
+                {sendToGeneral && (
                   <Switch
                     name='switch-send-to-shift-today'
                     backgroundColor='bg-gray-300 dark:bg-gray-600'
@@ -212,8 +226,8 @@ export const ManualNotificationForm = ({
                     }
                     label='Solo con turno activo'
                   />
-                </div>
-              )}
+                )}
+              </div>
 
               {selectedUserIds.length > 0 && (
                 <Button
@@ -248,7 +262,7 @@ export const ManualNotificationForm = ({
             )}
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+          <div className='w-full'>
             <Field<IOption[]>
               name='template'
               render={({ input, meta }) => (
@@ -260,79 +274,50 @@ export const ManualNotificationForm = ({
                   placeholder='Selecciona una plantilla'
                   label='Plantilla'
                   onChange={(value?: IOption) => {
-                    setTemplateSelected(value);
+                    if (value) infoTemplate(value);
                   }}
                 />
               )}
             />
-            <div className='flex items-center space-x-2'>
-              {!templateSelected && (
-                <Field<IOption>
-                  name='task'
-                  render={({ input, meta }) => (
-                    <SmartSelector
-                      {...input}
-                      meta={meta}
-                      options={filteredTasks}
-                      menuPortalTarget={document.body}
-                      placeholder='Selecciona una tarea'
-                      label='Tareas'
-                      onChange={(value?: IOption) => input.onChange(value)}
-                    />
-                  )}
-                />
-              )}
-              <div className='flex mt-5'>
-                {/* Botón '+' alineado con selector */}
-                <Button
-                  name='btn-create-task'
-                  icon='039'
-                  square
-                  onClick={() =>
-                    (showInlineCreate.value = !showInlineCreate.value)
-                  }
-                  aria-label='Crear tarea'
-                />
-              </div>
-            </div>
           </div>
 
-          {/* Sección extra inline sin modal */}
-          {showInlineCreate.value && (
-            <div className=' flex items-center p-4 border rounded-lg bg-gray-50'>
-              <TaskCreateSettingPage />
-            </div>
-          )}
+          <TaskFormCreate
+            onSubmit={onTaskAdd}
+            add
+            selector
+            taskList={tasksResponse.value}
+            disabled={templateSelected ? true : false}
+            type={sendToGeneral ? 'REPORT' : 'GENERAL'}
+          />
 
-          {!templateSelected && (
-            <div className='flex flex-col gap-2'>
-              <Field<string>
-                name='title'
-                validate={lengthSize(5, 50)}
-                render={({ input, meta }) => (
-                  <Input
-                    {...input}
-                    label={t('shifts.notifications.customTitle')}
-                    meta={meta}
-                    type='text'
-                  />
-                )}
-              />
-              <Field<string>
-                name='description'
-                validate={lengthSize(5, 200)}
-                render={({ input, meta }) => (
-                  <TextArea
-                    {...input}
-                    name='input-custom-description'
-                    label={t('shifts.notifications.customDescription')}
-                    meta={meta}
-                    type='text'
-                  />
-                )}
-              />
-            </div>
-          )}
+          <div className='flex flex-col gap-2'>
+            <Field<string>
+              name='title'
+              validate={lengthSize(5, 50)}
+              render={({ input, meta }) => (
+                <Input
+                  {...input}
+                  label={t('shifts.notifications.customTitle')}
+                  meta={meta}
+                  type='text'
+                />
+              )}
+            />
+            <Field<string>
+              name='description'
+              validate={lengthSize(5, 200)}
+              render={({ input, meta }) => (
+                <TextArea
+                  {...input}
+                  name='input-custom-description'
+                  label={t('shifts.notifications.customDescription')}
+                  meta={meta}
+                  type='text'
+                />
+              )}
+            />
+          </div>
+
           <div className='flex justify-end'>
             <Button
               label='Enviar notificacion'

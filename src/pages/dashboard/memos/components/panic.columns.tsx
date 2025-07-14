@@ -78,7 +78,7 @@ export const getColumnsPanic = (
         // const description = info.getValue() as string;
         return (
           <TextEllipsis
-            text='El sistema registró una activación del botón de pánico.'
+            text={t('panic_description')}
             // text={description}
             maxWidth='300px'
           />

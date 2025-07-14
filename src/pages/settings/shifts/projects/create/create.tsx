@@ -7,7 +7,7 @@ import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import { UserService } from '@/services/general/user';
@@ -16,6 +16,8 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { DateField } from '@/components/compose/forms/DateField';
+import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 interface FormData {
   name: string;
@@ -28,10 +30,10 @@ interface FormData {
 }
 
 export const ProjectCreateSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
   const users = useSignal<IOption[]>([]);
+  const { navigateUpsert } = useNavigation();
 
   const onSubmit = async (model: FormData) => {
     let request;
@@ -44,15 +46,15 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
 
     if (id) {
       request = await ContractService.updateProject(output, id);
-      message = 'Contrato editado exitosamente!';
+      message = 's_updated_success';
     } else {
       request = await ContractService.createProject(output);
-      message = 'Contrato creado exitosamente!';
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate('/rounds/projects');
+    navigateUpsert('/shifts/projects');
   };
 
   const getUsers = async () => {
@@ -94,9 +96,13 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
     };
   };
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    Promise.all([getUsers(), setInitialValues()]);
-  }, []);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      Promise.all([getUsers(), setInitialValues()]);
+    }
+  }, [selectedCompany, location]);
 
   return (
     <Section className='pt-2'>

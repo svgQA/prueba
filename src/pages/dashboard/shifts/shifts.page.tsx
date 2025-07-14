@@ -96,7 +96,6 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [hasValidPlayer, setHasValidPlayer] = useState(false);
 
   const loading = useSignal<boolean>(false);
-  const { selectedCompany } = useUserStore();
 
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
   const memoizedServices = useMemo(() => services, [services]);
@@ -109,6 +108,24 @@ export const ShiftsPage: FunctionalComponent = () => {
     endDate,
     users: [],
   });
+
+  /**
+   * Handle the useEffect hook for the document title and shift retrieval.
+   */
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    document.title = t('p_shift');
+  }, []);
+
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      handleGetShiftSummary();
+      fetchInitialData();
+      fetchSSE();
+      EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
+    }
+  }, [selectedCompany, location]);
 
   const handleViewMode = async (viewMode: ViewMode = ViewMode.QuarterDay) => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -133,8 +150,10 @@ export const ShiftsPage: FunctionalComponent = () => {
     setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
   };
 
-  // Efecto que observa shifts.value
-  // Ineficiente a morir.
+  /*
+   * TODO: Arreglar esta mierda.
+   * Efecto que observa shifts.value Ineficiente a morir.
+   */
   useEffect(() => {
     const result = shifts.value.some(
       (shift: any) =>
@@ -143,29 +162,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     );
     setHasValidPlayer(result);
   }, [shifts.value]);
-
-  /**
-   * Handle the useEffect hook for the document title and shift retrieval.
-   */
-  useEffect(() => {
-    document.title = t('shifts.pageTitle');
-  }, []);
-
-  useEffect(() => {
-    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
-    if (selectedCompany) {
-      handleGetShiftSummary();
-      fetchInitialData();
-      fetchSSE();
-      EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
-    }
-  }, [selectedCompany, location]);
-
-  // const fetchShifts = async () => {
-  //   const response = await ShiftService.get_all({ page: 1, items: 1000 });
-  //   if (!response.getStatus()) return;
-  //   hifts.value(response.getMany());
-  // };
 
   const fetchSSE = useCallback(async () => {
     await SseManager.getQuery(['activity', 'stream', 'check']);
@@ -283,7 +279,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     handleViewChange(VIEW_NAME.TABLE);
 
     if (!hasValidPlayerRef.current) {
-      ToastManager.warning(t('notification.nobody_have_player_id'));
+      ToastManager.warning('s_there_are_not_player_id');
       return;
     }
 
@@ -296,7 +292,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
     // ✅ Siguientes veces: solo abre el modal (sin toggle)
     if (selectedUsers.length === 0) {
-      ToastManager.warning(t('notification.select_at_least_one_employee'));
+      ToastManager.warning('s_must_some_selected');
       setOnNotifications(false);
       onNotificationsRef.current = false;
       return;
@@ -530,13 +526,13 @@ export const ShiftsPage: FunctionalComponent = () => {
         );
 
         if (!shift) {
-          ToastManager.error(t('shift.table.delete.error'));
+          ToastManager.error('s_deleted_error');
           return;
         }
 
         const status = shift.status as unknown as SHIFT_STATUS;
         if (status !== SHIFT_STATUS.CREATED) {
-          ToastManager.warning(t('shift.table.delete.warning'));
+          ToastManager.warning('shift.table.delete.warning');
           return;
         }
 
@@ -559,7 +555,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const handleCheck = async (type: string, shiftId: number) => {
     const position = await getLocation();
     if (!position) {
-      ToastManager.error(t('Error al obtener la ubicación'));
+      ToastManager.error('s_gps_error');
       return;
     }
 
@@ -573,15 +569,27 @@ export const ShiftsPage: FunctionalComponent = () => {
 
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
-      ToastManager.success(t('shift.expandable.date.success'));
+      ToastManager.success('s_created_success');
       fetchInitialData();
     }
   };
 
+  const checkItem = async (check: any, row: any) => {
+    const updatedRow = { ...row };
+    if (check.type === 'CHECK_IN') {
+      updatedRow.checkIn = check;
+    } else {
+      updatedRow.checkOut = check;
+    }
+
+    shifts.value = shifts.value.map((shift) =>
+      shift.id === row.id ? updatedRow : shift
+    );
+  };
   const deleteShift = async (id: string) => {
     const response = await ShiftService.deleteActivity(id);
     if (!response.getStatus()) return;
-    ToastManager.success(t('shift.table.delete.success'));
+    ToastManager.success('s_deleted_success');
     fetchInitialData();
   };
 
@@ -648,7 +656,15 @@ export const ShiftsPage: FunctionalComponent = () => {
               setSelectedUsers(validUsers as any);
             }}
             expandable={(row: IShiftResponse, column?: string) => {
-              return <ExpandableMultiple type={column} data={row} />;
+              return (
+                <ExpandableMultiple
+                  onCheck={(check) => {
+                    checkItem(check, row);
+                  }}
+                  type={column}
+                  data={row}
+                />
+              );
             }}
             visibility={{
               servicePlaceAddress: false,
@@ -705,8 +721,9 @@ export const ShiftsPage: FunctionalComponent = () => {
         closed={showUpsertModal.value}
         onClose={handleCloseUpsertModal}
         posSave={handleViewMode}
-        userSelected={userSelected}
-        taskSelected={taskSelected}
+        shiftId={userSelected?.id || taskSelected?.id}
+        // userSelected={userSelected}
+        // taskSelected={taskSelected}
         users={users}
         keywordsSelected={keywordsSelected}
         timeBeforeSelected={timeBeforeSelected}

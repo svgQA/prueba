@@ -1,13 +1,11 @@
 import { Form } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { useSignal } from '@preact/signals';
-import { FormData, IShiftRequest, ITask } from '../interface';
+import { FormData, IShiftRequest } from '../interface';
 import { Modal } from '@/components/common/modal/modal';
 import { Button } from '@/components/common/button/button';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { ServiceService, ShiftService, TaskService } from '@/services';
-import { Task, User } from '@/components/compose/gantt/types/public-types';
-import { Badge } from '@/components/common/badge/badge';
+import { ServiceService, ShiftService } from '@/services';
 import { IOption } from '@/components/common/multi/interface';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
@@ -19,177 +17,99 @@ import {
   convertBlocksToCells,
 } from '@/pages/settings/shifts/schedule/utils';
 import { DataSchedule } from '@/pages/settings/shifts/schedule/components/data.schedule';
-import dayjs from 'dayjs';
 import { ShiftFormContent } from './shift.form';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
-
-type TimeBlock = {
-  start: number;
-  end: number;
-};
-
-type DaySchedule = {
-  day: string;
-  dayIndex: number;
-  blocks: TimeBlock[];
-};
-
-type Schedule = {
-  days: DaySchedule[];
-  daysAllowed: string[];
-};
-
-type ScheduleItem = {
-  schedule: Schedule;
-};
+import { DAYS_OF_WEEK, HOURS } from '@/pages/settings/shifts/schedule/constant';
+import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
+import { isStartAndEndInSchedules } from './validation';
+import { _onTaskAddWithId } from '@/pages/settings/shifts/task/create/utils';
+import { ITask } from '@/pages/settings/shifts/task/create/interface';
 
 interface ITaskFormProps {
   closed?: boolean;
   onClose?: () => void;
   posSave?: () => void;
-  userSelected?: User;
-  taskSelected?: Task;
+  // userSelected?: User;
+  // taskSelected?: Task;
+  shiftId?: number | string;
   users?: IOption[];
   keywordsSelected?: string[];
   timeBeforeSelected?: number;
   externalSelected?: string;
 }
 
-const START_HOUR = 0;
-const END_HOUR = 24;
-const hours = Array.from(
-  { length: END_HOUR - START_HOUR + 1 },
-  (_, i) => START_HOUR + i
-);
-
 export const TaskForm = ({
   closed,
   onClose,
-  userSelected,
-  taskSelected,
+  shiftId,
   posSave,
   users,
-  keywordsSelected,
-  timeBeforeSelected,
-  externalSelected,
 }: ITaskFormProps) => {
   const { t } = useTranslation();
-  const daysOfWeek = [
-    { value: 'monday', label: t('schedule.monday') },
-    { value: 'tuesday', label: t('schedule.tuesday') },
-    { value: 'wednesday', label: t('schedule.wednesday') },
-    { value: 'thursday', label: t('schedule.thursday') },
-    { value: 'friday', label: t('schedule.friday') },
-    { value: 'saturday', label: t('schedule.saturday') },
-    { value: 'sunday', label: t('schedule.sunday') },
-  ];
+  const { selectedCompany } = useUserStore();
+
   const [selectedCells, setSelectedCells] = useState<any>([]);
   const services = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<Partial<FormData>>({});
   const schedules = useSignal<any[]>([]);
   const [tasksResponse, setTasksResponse] = useState<ITask[]>([]);
-  const tasks = useSignal<ITask[]>([]);
   const relatedShifts = useSignal<any[]>([]);
 
-  const { selectedCompany } = useUserStore();
+  const currentSchedule = useSignal<any>(null);
+
+  const handleOnClose = useCallback(() => {
+    setTasksResponse([]);
+    setInitialValues({});
+    onClose && onClose();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCompany) {
+      Promise.all([getServices()]);
+    }
+  }, [selectedCompany, location]);
+
   const onSubmit = async (model: any, form: any) => {
     if (relatedShifts.value.length > 0) {
-      ToastManager.error(
-        'No se puede crear el turno porque existen otros en el mismo rango'
-      );
+      ToastManager.error('s_replicate_duplicate_range_error');
       return;
     }
+
     const isInSchedule = isStartAndEndInSchedules(
-      DateUtils.dateToInput(model.start),
-      DateUtils.dateToInput(model.end),
-      schedules.value
+      model.start,
+      model.end,
+      currentSchedule.value
     );
-    console.log('isInSchedule ==>', isInSchedule);
-    /* if (!isInSchedule) {
-      ToastManager.warning(t('shift.upsert.errorSchedule'));
+
+    if (!isInSchedule) {
+      ToastManager.warning('s_updated_error_schedule');
       return;
-    }*/
+    }
+    delete model.scheduleId;
 
-    const {
-      task,
-      employeeId,
-      serviceId,
-      task_name,
-      task_description,
-      task_time,
-    } = model;
-
-    const model_task = tasks.value.find(
-      (_task: ITask) => _task.id === task?.value
-    );
-
-    delete model.task_name;
-    delete model.task_description;
-    delete model.task_time;
-
-    const selectedTask: ITask | null =
-      model_task && !task_name
-        ? {
-            id: model_task.id,
-            name: model_task.name,
-            description: model_task.description,
-            hourStart: model_task.hourStart,
-            type: model_task.type || 'GENERAL',
-            check: false,
-          }
-        : null;
-
-    const manualTask: ITask | null =
-      (!model_task || task_name) && task_name
-        ? {
-            name: task_name,
-            description: task_description,
-            hourStart: task_time,
-            type: 'GENERAL',
-            check: false,
-          }
-        : null;
-
-    const serviceTasks: ITask[] = tasksResponse?.length
-      ? tasksResponse.map((t) => ({
-          id: t.id,
-          name: t.name,
-          description: t.description,
-          hourStart: t.hourStart,
-          type: t.type || 'GENERAL',
-          check: false,
-        }))
-      : [];
-
-    const allTasks: ITask[] = [
-      ...serviceTasks,
-      ...(selectedTask ? [selectedTask] : []),
-      ...(manualTask ? [manualTask] : []),
-    ];
-
+    const { employeeId, serviceId } = model;
     const request_model: IShiftRequest = {
       ...model,
       employeeId: employeeId?.value,
       serviceId: serviceId?.value,
-      task: allTasks,
+      task: tasksResponse,
     };
 
-    const request = taskSelected?.id
-      ? await ShiftService.updateActivity(request_model, taskSelected.id)
-      : await ShiftService.createActivity(request_model);
-
-    if (!request.getStatus()) {
-      ToastManager.error('No se puede realizar la acciòn');
-      return;
+    if (shiftId) {
+      const response = await ShiftService.updateActivity(
+        request_model,
+        shiftId
+      );
+      if (!response.getStatus()) return;
+      ToastManager.success('s_updated_success');
+    } else {
+      const response = await ShiftService.createActivity(request_model);
+      if (!response.getStatus()) return;
+      ToastManager.success('s_created_success');
     }
 
-    const message = taskSelected?.id
-      ? t('shifts.upsert.successEdit')
-      : t('shifts.upsert.successCreate');
-
     form.reset();
-    ToastManager.success(message);
-    onClose?.();
+    handleOnClose();
     posSave?.();
   };
 
@@ -200,182 +120,55 @@ export const TaskForm = ({
     }
   }, []);
 
-  const getTasks = useCallback(async () => {
-    const request = await TaskService.getTasks();
-    if (request.getStatus()) {
-      tasks.value = request.getMany();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (selectedCompany) {
-      Promise.all([getServices(), getTasks()]);
-    }
-  }, [selectedCompany, location]);
-
   const footerContent = useMemo(
     () => (
       <div className='flex justify-end items-center gap-2 p-4'>
         <Button
-          id='btn-form-shift-close'
           name='btn-form-shift-close'
-          label={t('shifts.upsert.buttons.cancel')}
+          label='cancel'
           type='button'
-          onClick={onClose}
+          onClick={handleOnClose}
           icon='041'
         />
         <Button
-          id='btn-form-shift-save'
           name='btn-form-shift-save'
           type='submit'
-          label={
-            taskSelected
-              ? t('shifts.upsert.buttons.edit')
-              : t('shifts.upsert.buttons.save')
-          }
-          form='form-shift-update'
+          label={shiftId ? 'edit' : 'save'}
+          form='form-shift-create-update'
           icon='041'
         />
-      </div>
-    ),
-    [taskSelected, onClose]
-  );
-
-  const headerContent = useMemo(
-    () => (
-      <h3>
-        {taskSelected
-          ? t('shifts.upsert.editShift')
-          : t('shifts.upsert.createShift')}
-      </h3>
-    ),
-    [taskSelected]
-  );
-
-  const renderTaskCard = useCallback(
-    (task: Task) => (
-      <div
-        key={task.id}
-        className='dark:bg-b-dark-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 w-64'
-      >
-        <div className='flex justify-between items-center mb-3'>
-          <h3 className='font-medium text-gray-900 dark:text-white truncate'>
-            {task.name}
-          </h3>
-          <Badge
-            label={task.status}
-            bgColor={
-              task.status === 'CLOSED'
-                ? 'bg-red-200'
-                : task.status === 'CREATED'
-                  ? 'bg-green-200'
-                  : 'bg-gray-200'
-            }
-          />
-        </div>
-
-        <div className='space-y-2'>
-          <div className='flex justify-between text-sm text-gray-500 dark:text-gray-400'>
-            <span>{t('shifts.upsert.taskCard.progress')}</span>
-            <span>{task.progress | 0}%</span>
-          </div>
-
-          <div className='w-full bg-gray-200 rounded-full h-2'>
-            <div
-              className='bg-blue-500 h-2 rounded-full'
-              style={{
-                width: `${task.progress | 0}%`,
-                backgroundColor: task.styles?.progressColor,
-              }}
-            ></div>
-          </div>
-          <div className='flex justify-center items-center text-xs text-center text-gray-500 dark:text-gray-400 mt-2 w-full'>
-            <div>
-              <i className='fas fa-calendar-alt mx-1'></i>
-              {DateUtils.dateToFrontend(task.start, { mode: '12' })}
-            </div>
-            <div>
-              <i className='fas fa-flag-checkered mx-1'></i>
-              {DateUtils.dateToFrontend(task.end, { mode: '12' })}
-            </div>
-          </div>
-        </div>
       </div>
     ),
     []
   );
 
   useEffect(() => {
-    if (taskSelected) {
-      const selectedService = services.value.find(
-        (service) => service.value === Number(taskSelected.serviceId)
-      );
-      const selectedUser = users?.find(
-        (user) => user.value === Number(taskSelected.userId)
-      );
-      setInitialValues({
-        employeeId: selectedUser || '',
-        start: taskSelected.start?.toString(),
-        end: taskSelected.end?.toString(),
-        serviceId: selectedService || '',
-        type: taskSelected.type,
-        keywords: keywordsSelected,
-        timeBefore: timeBeforeSelected,
-        externalId: externalSelected,
-      });
-      return;
+    if (shiftId) {
+      getInitialData();
     }
-    if (userSelected) {
-      // setSelectedEmployeeId(userSelected.id?.toString());
-      setInitialValues({
-        employeeId: userSelected.id,
-        start: '',
-        end: '',
-        serviceId: '',
-        type: 'INTERNAL',
-        timeBefore: 0,
-        externalId: '',
-      });
-      return;
-    }
-    // setSelectedEmployeeId('');
+  }, [shiftId]);
+
+  const getInitialData = async () => {
+    if (!shiftId) return;
+    const response = await ShiftService.get_shift(shiftId);
+    if (!response.getStatus()) return;
+    const model = response.getOne();
     setInitialValues({
-      employeeId: '',
-      start: '',
-      end: '',
-      serviceId: '',
-      type: 'INTERNAL',
-      timeBefore: 0,
-      externalId: '',
+      employeeId: {
+        value: model.employee.id,
+        label: model.employee.name,
+      },
+      serviceId: {
+        value: model.service.id,
+        label: model.service.name,
+      },
+      type: model.type,
+      start: model.start,
+      end: model.end,
+      timeBefore: model.timeBefore,
+      // keywords: model.keywords.map((data) => ({ value: data, label: data })),
     });
-  }, [userSelected, taskSelected, timeBeforeSelected]);
-
-  const isStartAndEndInSchedules = (
-    startDateStr: string,
-    endDateStr: string,
-    schedules: ScheduleItem[]
-  ): boolean => {
-    const start = dayjs.utc(startDateStr);
-    const end = dayjs.utc(endDateStr);
-
-    return schedules.some(({ schedule }) => {
-      const checkTime = (date: dayjs.Dayjs) => {
-        const dayIndex = date.day() + 1;
-        const dayName = daysOfWeek[dayIndex];
-
-        if (!schedule.daysAllowed.includes(dayName.value)) return false;
-
-        const scheduleDay = schedule.days.find((d) => d.dayIndex === dayIndex);
-        if (!scheduleDay) return false;
-
-        const hourDecimal = date.hour() + date.minute() / 60;
-        return scheduleDay.blocks.some(
-          (block) => hourDecimal >= block.start && hourDecimal <= block.end
-        );
-      };
-
-      return checkTime(start) && checkTime(end);
-    });
+    onTaskAdd(model.task);
   };
 
   const onChangeShift = async (id: number, start: string, end: string) => {
@@ -386,18 +179,30 @@ export const TaskForm = ({
     });
     if (!response.getStatus()) return;
     const outputs = response.getMany();
-    relatedShifts.value = outputs;
+    relatedShifts.value = shiftId
+      ? outputs.filter((shift) => shift.id !== shiftId)
+      : outputs;
   };
 
   const onChangeService = async (id: number) => {
     const response = await ServiceService.getServiceById(String(id));
     if (!response.getStatus()) return;
     const model = response.getOne();
-    console.log('DATA: ', model);
-    setTasksResponse(model.tasks || []);
-    schedules.value = model?.schedules || [];
-    const schedule = model?.schedules[0]?.schedule;
-    if (!schedule) return;
+
+    if (model.tasks && model.tasks.length > 0) {
+      onTaskAdd(model.tasks, 1);
+    }
+
+    const length = model.schedules.length;
+    if (length < 1) return;
+    schedules.value = model.schedules;
+  };
+
+  const onChangeSchedule = async (id: number) => {
+    const { schedule } = schedules.value.find(
+      (value) => value.scheduleId === id
+    );
+    currentSchedule.value = schedule;
     const days = schedule.days.reduce(
       (acc: any, day: any) => {
         acc[day.day] = day.blocks.map((block: any) => {
@@ -407,44 +212,53 @@ export const TaskForm = ({
       },
       {} as { [key: string]: { start: number; end: number }[] }
     );
-    // @ts-ignore
     setSelectedCells(convertBlocksToCells(days));
-    console.log('selectedCells ==>', selectedCells);
+  };
+
+  const onTaskAdd = (model: any, t: number = 2) => {
+    const size = tasksResponse.length + 1;
+    const task = _onTaskAddWithId(model, size, t);
+    setTasksResponse((prevTasks) => [...prevTasks, ...task]);
   };
 
   const cleanServiceSelected = () => {
     setSelectedCells([]);
-    setTasksResponse([]);
+    //@ts-ignore
+    setTasksResponse(tasksResponse.filter((task) => task.t === 2));
   };
 
-  // const cleanRelatedShift = () => {
-  //   relatedShifts.value = [];
-  // };
+  const schedulesOptions = useMemo(
+    () =>
+      schedules.value.map((value: any) => ({
+        value: value.schedule.id,
+        label: value.schedule.name,
+      })),
+    [schedules.value]
+  );
 
   return (
     <Modal
       open={!!closed}
-      onClose={onClose}
+      onClose={handleOnClose}
       name='modal-shift-updsert'
       width='w-2/3'
       position='fixed'
-      header={headerContent}
+      header={<h3>{shiftId ? t('udpate') : t('create')}</h3>}
       footer={footerContent}
     >
       <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
         {selectedCells && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-1 justify-center'>
-              {getSelectedHoursByDay(
-                daysOfWeek.map((day) => day.label),
-                hours,
-                selectedCells
-              ).map((daySelection) => (
-                <DataSchedule daySelection={daySelection} />
-              ))}
+              {getSelectedHoursByDay(DAYS_OF_WEEK, HOURS, selectedCells).map(
+                (daySelection) => (
+                  <DataSchedule daySelection={daySelection} />
+                )
+              )}
             </ul>
           </div>
         )}
+
         {relatedShifts.value.length > 0 && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-1 justify-center'>
@@ -461,7 +275,7 @@ export const TaskForm = ({
                     <span className='rounded-full h-3 w-3 bg-primary'></span>
                   </div>
                   <div className='flex flex-row justify-between'>
-                    <strong>Start: </strong>
+                    <strong>{t('h_start_date')}: </strong>
                     <p>
                       {DateUtils.dateToFrontend(shift.start, {
                         time: true,
@@ -470,7 +284,7 @@ export const TaskForm = ({
                     </p>
                   </div>
                   <div className='flex flex-row justify-between'>
-                    <strong>end: </strong>
+                    <strong>{t('h_end_date')}: </strong>
                     {DateUtils.dateToFrontend(shift.end, {
                       time: true,
                       mode: '12',
@@ -481,6 +295,7 @@ export const TaskForm = ({
             </ul>
           </div>
         )}
+
         <Form
           onSubmit={onSubmit}
           initialValues={initialValues}
@@ -494,35 +309,19 @@ export const TaskForm = ({
               onChangeService={onChangeService}
               users={users}
               services={services.value}
+              schedules={schedulesOptions}
               cleanServiceSelected={cleanServiceSelected}
-              tasks={tasks}
+              onChangeSchedule={onChangeSchedule}
             />
           )}
         />
 
-        {tasksResponse?.length > 0 && (
-          <div className='mt-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
-            <ul className='flex flex-wrap gap-1 justify-center'>
-              {tasksResponse.map((task) => (
-                <li
-                  key={`card-task-${task.id}`}
-                  className='w-52 text-xs p-2 rounded-md  bg-b-light-dark dark:bg-b-dark-dark min-w-[150px]'
-                >
-                  <div className='font-semibold text-primary mb-1'>
-                    {task.name}
-                  </div>
-                  <TextEllipsis text={task.description} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {userSelected && userSelected.tasks && (
-          <div className='mt-4 flex flex-row flex-wrap gap-4 w-full justify-center p-4 max-h-60 overflow-y-auto vox-scroll-design'>
-            {userSelected?.tasks.map(renderTaskCard)}
-          </div>
-        )}
+        <TaskFormCreate
+          onSubmit={onTaskAdd}
+          taskList={tasksResponse}
+          add
+          selector
+        />
       </div>
     </Modal>
   );

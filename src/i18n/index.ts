@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+// Eliminar
 import { general_en } from './general.en';
 import { general_es } from './general.es';
 import { error_en, error_es } from './error';
@@ -11,24 +12,46 @@ import { user_en, user_es } from './user';
 import { notification_en, notification_es } from './notification';
 import { maps_en, maps_es } from './maps';
 import { history_en, history_es } from './history';
-import { common_en, common_es } from './common';
 import { memos_en, memos_es } from './memos';
+import { panic_en, panic_es } from './panic';
 import { role_en, role_es } from './role';
 import { demo_en, demo_es } from './demo';
-import { columns_en, columns_es } from './columns';
-import { buttons_en, buttons_es } from './button';
-import { menus_en, menus_es } from './menus';
 import { hero_en, hero_es } from './hero';
+
+// Revisar
+import { schedule_en, schedule_es } from './schedule';
+import { table_en, table_es } from './table';
+
+// Validos
+import { common_en, common_es } from './common';
+import { buttons_en, buttons_es } from './button';
+import { columns_en, columns_es } from './columns';
+import { menus_en, menus_es } from './menus';
 import { placeholder_en, placeholder_es } from './placeholder';
 import { validation_en, validation_es } from './validation';
-import { schedule_en, schedule_es } from './schedule';
-// import { notification_en, notification_es } from './notification';
-// import { shift_en, shift_es } from './shift';
-// import { home_en, home_es } from './home';
+import { header_en, header_es } from './header';
+import { label_en, label_es } from './label';
+import { toast_en, toast_es } from './toast';
+import { page_en, page_es } from './page';
+import { description_en, description_es } from './description';
+import { message_en, message_es } from './message';
 
 const resources = {
   en: {
     translation: {
+      ...common_en,
+      ...buttons_en,
+      ...columns_en,
+      ...menus_en,
+      ...placeholder_en,
+      ...validation_en,
+      ...header_en,
+      ...label_en,
+      ...toast_en,
+      ...page_en,
+      ...description_en,
+      ...message_en,
+      // Posible Delete
       ...general_en,
       ...error_en,
       ...form_en,
@@ -38,22 +61,30 @@ const resources = {
       ...user_en,
       ...maps_en,
       ...history_en,
-      ...common_en,
       ...memos_en,
+      ...panic_en,
       ...role_en,
       ...demo_en,
-      ...columns_en,
-      ...buttons_en,
-      ...menus_en,
       ...hero_en,
-      ...placeholder_en,
-      ...validation_en,
+      ...table_en,
       ...schedule_en,
-      // ...home_en,
     },
   },
   es: {
     translation: {
+      ...common_es,
+      ...buttons_es,
+      ...columns_es,
+      ...menus_es,
+      ...placeholder_es,
+      ...validation_es,
+      ...header_es,
+      ...label_es,
+      ...toast_es,
+      ...page_es,
+      ...description_es,
+      ...message_es,
+      // Posible Delete
       ...general_es,
       ...error_es,
       ...form_es,
@@ -63,18 +94,13 @@ const resources = {
       ...user_es,
       ...maps_es,
       ...history_es,
-      ...common_es,
       ...memos_es,
+      ...panic_es,
       ...role_es,
       ...demo_es,
-      ...columns_es,
-      ...buttons_es,
-      ...menus_es,
       ...hero_es,
-      ...placeholder_es,
-      ...validation_es,
+      ...table_es,
       ...schedule_es,
-      // ...home_es,
     },
   },
 };

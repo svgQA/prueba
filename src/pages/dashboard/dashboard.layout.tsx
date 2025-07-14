@@ -17,7 +17,7 @@ import { DevicesPage } from './devices/devices.page';
 import { FormsPage } from './forms/forms.page';
 import { MemosPage } from './memos/memos.page';
 import { ShiftsPage } from './shifts/shifts.page';
-import { AccesPage } from './access/access.page';
+import { AccessPage } from './access/access.page';
 import { CorrespondencePage } from './correspondence/correspondence.page';
 import { UsersPage } from './users/users.page';
 
@@ -41,30 +41,26 @@ import { HistoryNotificationsPage } from './history/history.page';
 import { WebSocketProvider } from '@/utils/socket';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
-// import { Loading } from '@/components/common/loading/loading';
 import { hasUserTenant, useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
 import { CompanyService } from '@/services';
-// import { INotification } from '@/components/common/notifications/interface';
 import Notifications from '@/components/common/notifications/notifications';
 import { RoleService } from '@/services/general/role';
-import { IMenu } from '@/components/common/utils/interface';
 import Panic from '@/components/common/panic/panic';
 import { BaseService } from '@/utils/network';
 import { setAllPermissions } from '@/store/signals/access/permission';
 import { useSignal } from '@preact/signals';
-import PanicModal from '@/components/common/panic/panic.modal';
-import { IPanic } from '@/components/common/panic/interface';
-// import { IconsModal } from '../globals/icons/icons';
+import PanicModal from '@/components/common/panic/components/panic.modal';
+import { IPanic } from '@/components/common/panic/utils/interface';
+
 // import { IconsModal } from '../globals/icons/icons';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    // const [notifications, setNotifications] = useState<INotification[]>([]);
     const {
       setCompanies,
       companies,
@@ -80,11 +76,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       getTenant,
       getToken,
       getCompanyId,
-      // user,
     } = useUserStore();
 
-    const [sidebarMenus, setSidebarMenus] = useState<IMenu[]>([]);
-    const [hasSettings, setHasSettings] = useState<boolean>(true);
     const isModalOpen = useSignal<boolean>(false);
     const modalPanic = useSignal<IPanic | undefined>(undefined);
     const [modalKey, setModalKey] = useState(0);
@@ -106,8 +99,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setLoaded(result);
 
       if (result) {
-        getCompanies();
-        getPermissions();
+        Promise.all([getCompanies(), getPermissions()]);
       }
     };
 
@@ -150,27 +142,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       const request = await RoleService.getPermissions();
       if (!request.getStatus()) return;
 
-      const permissions = request.getMany();
-
-      if (permissions.length === 0) {
-        setSidebarMenus(SIDEBAR_MENUS);
-        return;
-      }
-      setAllPermissions(permissions);
-      const filteredMenu = SIDEBAR_MENUS.filter((option) => {
-        const match = permissions.find(
-          (perm) =>
-            perm.name.trim() === option.key && perm.permissions.state === true
-        );
-        return match;
-      });
-
-      const permissionsSettings = permissions.find(
-        (perm) =>
-          perm.name.trim() === 'settings' && perm.permissions.state === true
-      );
-      setHasSettings(permissionsSettings ? true : false);
-      setSidebarMenus(filteredMenu);
+      const permissions = request.getOne();
+      setAllPermissions(permissions.model);
     };
 
     return (
@@ -179,9 +152,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           id='sidebar'
           name='sidebar'
           onSettingHandler={toggleSettingModal}
-          menus={sidebarMenus}
+          menus={SIDEBAR_MENUS}
           isNavigation
-          hasSettings={hasSettings}
         />
         <div className='flex flex-col pl-[4.5rem]'>
           <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
@@ -205,7 +177,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 borderless
               />
               <div className='flex flex-row gap-4 items-center justify-center'>
-                <ThemeButton unpadded borderless />
+                <ThemeButton unpadded />
                 <Notifications icon='317' iconSize='xsm' />
                 <Dropdown
                   options={[
@@ -258,7 +230,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <Route
                   path={PAGES_LIST.ACCESS}
                   component={lazy(() =>
-                    Promise.resolve({ default: AccesPage })
+                    Promise.resolve({ default: AccessPage })
                   )}
                 />
                 <Route

@@ -1,6 +1,7 @@
 import { Badge } from '@/components/common/badge/badge';
 import { FormattedDate } from '@/components/compose/forms';
 import { IPlace, IService, IUser } from '@/types/shift/activity';
+import { useTranslation } from 'react-i18next';
 
 const EmployeeInfo = ({
   employee,
@@ -15,6 +16,7 @@ const EmployeeInfo = ({
   roundPct: number;
   service: IService;
 }) => {
+  const { t } = useTranslation();
   return (
     <>
       <div className='flex flex-row gap-6'>
@@ -28,7 +30,7 @@ const EmployeeInfo = ({
           <h3 className='text-base font-medium'>
             {employee?.name} {employee?.surname}
           </h3>
-          <p>{'Operativo'}</p>
+          <p>{t('operative')}</p>
           <Badge label='Activo' status='success' outline />
         </div>
 
@@ -36,23 +38,23 @@ const EmployeeInfo = ({
         <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='mr-2 !text-primary size-sm vox-icon vx-icon-308'></span>
-            Información Personal
+            {t('l_personal_info')}
           </h4>
           <div className='grid grid-cols-2 gap-y-2'>
             <div>
-              <p className='font-semibold'>Identificación</p>
+              <p className='font-semibold'>{t('identification')}</p>
               <p>{employee.cardId}</p>
             </div>
             <div>
-              <p className='font-semibold'>Teléfono</p>
+              <p className='font-semibold'>{t('h_phone')}</p>
               <p>{employee.phone}</p>
             </div>
             <div>
-              <p className='font-semibold'>Correo</p>
+              <p className='font-semibold'>{t('h_email')}</p>
               <p>{employee.email}</p>
             </div>
             <div>
-              <p className='font-semibold'>Ciudad</p>
+              <p className='font-semibold'>{t('h_city')}</p>
               <p>{place.municipality.name}</p>
             </div>
           </div>
@@ -62,21 +64,21 @@ const EmployeeInfo = ({
         <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
             <span className='!text-primary mr-2 vox-icon size-sm vx-icon-195'></span>
-            Información de la empresa
+            {t('l_business_info')}
           </h4>
           <div className='grid grid-cols-2 gap-y-2'>
             <div>
-              <p className='font-semibold'>Compañía</p>
+              <p className='font-semibold'>{t('company')}</p>
               <p>{service.contract.company?.name}</p>
             </div>
             <div>
-              <p className='font-semibold'>Departamento</p>
+              <p className='font-semibold'>{t('h_department')}</p>
               <p>
                 {employee.extraData?.area || service.place.municipality.name}
               </p>
             </div>
             <div>
-              <p className='font-semibold'>Fecha de Inicio</p>
+              <p className='font-semibold'>{t('h_date_start')}</p>
               <FormattedDate
                 date={service.contract.startDate}
                 format='datetime'
@@ -88,11 +90,11 @@ const EmployeeInfo = ({
         {/* Estadísticas */}
         <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
           <h4 className='font-semibold mb-3 flex items-center'>
-            Estadísticas Turno
+            {t('l_statistics')}
           </h4>
           <div className='flex justify-around'>
-            <StatCircle title='Actividades' percentage={activityPct} />
-            <StatCircle title='Rondas' percentage={roundPct} />
+            <StatCircle title={t('l_activity')} percentage={activityPct} />
+            <StatCircle title={t('h_round')} percentage={roundPct} />
           </div>
         </div>
       </div>

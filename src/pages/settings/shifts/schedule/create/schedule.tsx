@@ -3,76 +3,62 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import WeeklyScheduler from '../components/weekly.scheduler';
 import { convertBlocksToCells, getSelectedHoursByDay } from '../utils';
 import { ICScheduleRequest } from '@/types/shift/shift.request';
 import { ScheduleService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
-import { useTranslation } from 'react-i18next';
-const START_HOUR = 0;
-const END_HOUR = 24;
+// import { useTranslation } from 'react-i18next';
+import { DAYS_OF_WEEK, HOURS } from '../constant';
+import { DaySelectedModel } from '../type';
+import { useNavigation } from '@/utils/utilities/navigation';
 
 export const ScheduleCreateSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  // const { t } = useTranslation();
+  const { navigateUpsert } = useNavigation();
   const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
-  const { id } = useParams(); // Obtiene el id de la URL
-  const { t } = useTranslation();
+  const { id } = useParams();
 
-  const daysOfWeek = [
-    { value: 'monday', label: t('schedule.monday') },
-    { value: 'tuesday', label: t('schedule.tuesday') },
-    { value: 'wednesday', label: t('schedule.wednesday') },
-    { value: 'thursday', label: t('schedule.thursday') },
-    { value: 'friday', label: t('schedule.friday') },
-    { value: 'saturday', label: t('schedule.saturday') },
-    { value: 'sunday', label: t('schedule.sunday') },
-  ];
-
-  const hours = Array.from(
-    { length: END_HOUR - START_HOUR + 1 },
-    (_, i) => START_HOUR + i
-  );
-
-  // Estado compartido para las celdas seleccionadas
   const selectedCells = useSignal<{ [key: string]: boolean }>({});
-
-  // Función para limpiar la selección - EXACTAMENTE LA MISMA que usará el botón interno
   const handleClearSelection = () => {
     selectedCells.value = {};
   };
 
-  // Función para actualizar las celdas seleccionadas
   const handleCellChange = (newCells: { [key: string]: boolean }) => {
     selectedCells.value = newCells;
   };
 
   const onSubmit = async (model: ICScheduleRequest) => {
-    const hoursByDay = getSelectedHoursByDay(
-      daysOfWeek.map((day) => day.label),
-      hours,
+    const hoursByDay: DaySelectedModel[] = getSelectedHoursByDay(
+      DAYS_OF_WEEK,
+      HOURS,
       selectedCells.value
     ).filter((day) => day.blocks.length > 0);
-    model.daysAllowed = hoursByDay.map((day) => day.day);
-    model.days = hoursByDay;
+
+    model.daysAllowed = hoursByDay.map((day) => day.day.label);
+    model.days = hoursByDay.map((day) => ({
+      ...day,
+      day: day.day.value,
+    }));
 
     let request;
-    let message: string = id
-      ? t('schedule.successEdit')
-      : t('schedule.successCreate');
+    let message = '';
 
     if (id) {
       request = await ScheduleService.updateSchedule(model, id);
+      message = 's_updated_success';
     } else {
       request = await ScheduleService.createSchedule(model);
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate('/rounds/schedule');
+    navigateUpsert('/shifts/schedule');
   };
 
   const setInitialValues = async () => {
@@ -87,9 +73,10 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
       daysAllowed: model.daysAllowed,
       days: model.days,
     };
+
     const days = model.days.reduce(
       (acc, day) => {
-        acc[day.day] = day.blocks.map((block) => {
+        acc[day.day as string] = day.blocks.map((block) => {
           return { start: block.start, end: block.end };
         });
         return acc;
@@ -104,7 +91,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section>
+    <>
       <Form<ICScheduleRequest>
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -112,38 +99,8 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
           <form
             onSubmit={handleSubmit}
             id='form-schedule-create'
-            className='space-y-6'
+            className='space-y-1'
           >
-            {/** FORMULARIO PRINCIPAL */}
-            <div className='grid grid-cols-1'>
-              <div className='col-span-1 px-5'>
-                <Field<string> name='name' validate={required}>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      type='text'
-                      placeholder={t('schedule.namePlaceholder')}
-                      label={t('schedule.name')}
-                      meta={meta}
-                    />
-                  )}
-                </Field>
-              </div>
-              <div className='col-span-1'>
-                <WeeklyScheduler
-                  startHour={0}
-                  endHour={24}
-                  title=''
-                  clearSelection={false}
-                  selectedCells={selectedCells.value}
-                  onClearSelection={handleClearSelection}
-                  onCellChange={handleCellChange}
-                  daysOfWeek={daysOfWeek.map((day) => day.label)}
-                  hours={hours}
-                />
-              </div>
-            </div>
-
             <StatusButton
               onClickClean={() => {
                 handleClearSelection();
@@ -152,11 +109,40 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
               submitting={submitting}
               pristine={pristine}
               form='form-schedule-create'
-              label={id ? t('schedule.edit') : t('schedule.save')}
+              label={id ? 'edit' : 'save'}
             />
+            {/** FORMULARIO PRINCIPAL */}
+            <div className='grid grid-cols-1'>
+              <div className='col-span-1 px-5'>
+                <Field<string> name='name' validate={required}>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      type='text'
+                      placeholder='p_write'
+                      label='h_name'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div className='col-span-1 max-h-[61vh] overflow-y-auto vox-scroll-design'>
+                <WeeklyScheduler
+                  startHour={0}
+                  endHour={24}
+                  title=''
+                  clearSelection={false}
+                  selectedCells={selectedCells.value}
+                  onClearSelection={handleClearSelection}
+                  onCellChange={handleCellChange}
+                  daysOfWeek={DAYS_OF_WEEK}
+                  hours={HOURS}
+                />
+              </div>
+            </div>
           </form>
         )}
       />
-    </Section>
+    </>
   );
 };

@@ -80,10 +80,10 @@ export const TextArea = ({
         )}
       </div>
       {meta && meta.touched && meta.error && (
-        <span className='text-red-500 text-sm'>{meta.error}</span>
+        <span className='text-red-500 text-sm'>{t(meta.error)}</span>
       )}
-      {error && <span className='text-red-500 text-sm'>{error}</span>}
-      {warning && <span className='text-yellow-500 text-sm'>{warning}</span>}
+      {error && <span className='text-red-500 text-sm'>{t(error)}</span>}
+      {warning && <span className='text-yellow-500 text-sm'>{t(warning)}</span>}
     </div>
   );
 };

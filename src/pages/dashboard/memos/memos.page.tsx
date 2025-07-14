@@ -35,9 +35,10 @@ import {
 import { EventBus } from '@/utils/network/event.bus';
 import { MapPath } from '@/components/common/map/MapPath';
 import { RoutePoint } from '@/services/general/tracking';
-import NotificationBanner from '@/components/common/notifications/notification.banner';
+import NotificationBanner from '@/components/common/notifications/components/notification.banner';
 import { PanicService } from '@/services/memo/panic';
 import { getColumnsPanic } from './components/panic.columns';
+import { handleNotificationEvent } from '@/components/common/notifications/components/notification.event';
 
 enum VIEW_NAME {
   TABLE,
@@ -81,9 +82,10 @@ export const MemosPage: FunctionComponent = () => {
     null
   );
   const panic = useSignal<Memo[]>([]);
+  const summaryPanic = useSignal<MemosSummary>(defaultSummary);
 
   useEffect(() => {
-    document.title = 'TR - Chat';
+    document.title = t('p_chat');
     return () => {
       wsManager.removeListener('memos');
     };
@@ -94,53 +96,27 @@ export const MemosPage: FunctionComponent = () => {
     if (selectedCompany) {
       fetchInitialData();
       fetchSSE();
-      selectedMemo();
+      selectedNotifier();
       EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
     }
   }, [selectedCompany, location]);
 
-  useEffect(() => {
-    const handleGoToPanicTable = (event: CustomEvent) => {
+  const selectedNotifier = () => {
+    handleNotificationEvent('notification-click', (id: any) => {
+      currentView.value = VIEW_NAME.TABLE;
+      setHighlightedMemoId(Number(id));
+    });
+    handleNotificationEvent('go-to-panic-table', (id: any) => {
       currentView.value = VIEW_NAME.PANIC;
-      setHighlightedPanicMemoId(String(event.detail.id));
-    };
-
-    window.addEventListener(
-      'go-to-panic-table',
-      handleGoToPanicTable as EventListener
-    );
-
-    return () => {
-      window.removeEventListener(
-        'go-to-panic-table',
-        handleGoToPanicTable as EventListener
-      );
-    };
-  }, []);
-
-  const selectedMemo = () => {
-    // Add event listener for notification clicks
-    const handleNotificationClick = (event: CustomEvent) => {
-      const { id } = event.detail;
-      if (id) setHighlightedMemoId(Number(id));
-    };
-
-    window.addEventListener(
-      'notification-click',
-      handleNotificationClick as EventListener
-    );
-
-    // Get memoId from URL on initial load
-    const urlParams = new URLSearchParams(window.location.search);
-    const memoId = urlParams.get('notificationId');
-    if (memoId) setHighlightedMemoId(Number(memoId));
+      setHighlightedPanicMemoId(String(id));
+    });
   };
 
   const fetchSSE = useCallback(async () => {
     await SseManager.getQuery(['memo', 'stream', 'history']);
   }, []);
 
-  const handleMemoSSE = (event: IBaseSSE) => {
+  const handleMemoSSE = async (event: IBaseSSE) => {
     const { name, message } = event;
 
     if (
@@ -150,7 +126,7 @@ export const MemosPage: FunctionComponent = () => {
     ) {
       const memoIndex = memos.value.findIndex((memo) => memo.id === message.id);
       if (memoIndex < 0) return;
-      const memoCopy = memos.value;
+      const memoCopy: Memo[] = memos.value;
       memoCopy[memoIndex].messages = message.messages;
       memoCopy[memoIndex].state = message.state;
       memoCopy[memoIndex].userEdit = message.userEdit;
@@ -174,6 +150,7 @@ export const MemosPage: FunctionComponent = () => {
       responseGroupedByService,
       responseGroupedByUser,
       responseMemoPanic,
+      responseSummaryPanic,
     ] = await Promise.all([
       MemoService.get_all({ page: 1, items: 1000 }),
       UserService.get_all_employee({ items: 20, page: 1 }),
@@ -181,6 +158,7 @@ export const MemosPage: FunctionComponent = () => {
       MemoService.get_all_by_service(),
       MemoService.get_all_by_user(),
       PanicService.get_all_memo_panic({ page: 1, items: 1000 }),
+      PanicService.getPanicSummary(),
     ]);
 
     if (responseMemos.getStatus()) {
@@ -222,6 +200,10 @@ export const MemosPage: FunctionComponent = () => {
       }));
       loading.value = false;
     }
+
+    if (responseSummaryPanic.getStatus()) {
+      summaryPanic.value = responseSummaryPanic.getOne();
+    }
   };
 
   // TODO: COrregir esta parte para que solo sea desde un chat list
@@ -233,11 +215,6 @@ export const MemosPage: FunctionComponent = () => {
     });
     if (!response.getStatus()) return;
     users.value = response.getMany();
-  };
-
-  const calculatePercentage = (value: number): string => {
-    if (summary.value.total === 0) return '0%';
-    return `${Math.round((value / summary.value.total) * 100)}%`;
   };
 
   const handleViewChange = useCallback((view: VIEW_NAME) => {
@@ -256,15 +233,6 @@ export const MemosPage: FunctionComponent = () => {
     () => (
       <div className='flex items-center gap-2'>
         <Button
-          name='button-change-scheduler'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.CHAT);
-          }}
-          rounded={false}
-          selected={currentView.value === VIEW_NAME.CHAT}
-          icon='418'
-        />
-        <Button
           name='button-change-table'
           onClick={() => {
             handleViewChange(VIEW_NAME.TABLE);
@@ -274,13 +242,22 @@ export const MemosPage: FunctionComponent = () => {
           icon='320'
         />
         <Button
+          name='button-change-scheduler'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.CHAT);
+          }}
+          rounded={false}
+          selected={currentView.value === VIEW_NAME.CHAT}
+          icon='418'
+        />
+        <Button
           name='button-change-panic'
           onClick={() => {
             handleViewChange(VIEW_NAME.PANIC);
           }}
           rounded={false}
           selected={currentView.value === VIEW_NAME.PANIC}
-          icon='020'
+          icon='359'
         />
         {/* <Button
           name='button-change-scheduler'
@@ -307,6 +284,54 @@ export const MemosPage: FunctionComponent = () => {
     [currentView.value]
   );
 
+  /**
+   *
+   * @returns cards
+   */
+  const renderCardsInfo = (summary: MemosSummary, type: string = 'memos') => (
+    <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+      <CardData
+        title={t(type + '.cards.totalToday')}
+        count={summary.total}
+        subtitle=''
+        color='t-dark'
+        icon='328' // 328
+      />
+      <CardData
+        title={t(type + '.cards.unresolved')}
+        count={calculatePercentage(summary)}
+        subtitle=''
+        color='t-dark'
+        icon='311' // 311
+      />
+      <CardData
+        title={t(type + '.cards.resolved')}
+        count={calculatePercentage(summary, true)}
+        subtitle=''
+        color='t-dark'
+        icon='312' // 312
+      />
+    </div>
+  );
+
+  /**
+   *
+   * @param summary
+   * @param isResolve
+   * @returns
+   */
+  const calculatePercentage = (
+    summary: MemosSummary,
+    isResolve: boolean = false
+  ): string => {
+    const inProgress = summary.in_progress || 0;
+    const completed = summary.completed || 0;
+    const total = inProgress + completed;
+    if (total === 0) return '0%';
+    const value = isResolve ? completed : inProgress;
+    return `${Math.round((value / total) * 100)}%`;
+  };
+
   const onClickAction = (_: {
     id: string;
     type: string;
@@ -323,37 +348,13 @@ export const MemosPage: FunctionComponent = () => {
           ? 'flex flex-row h-[94.5vh]'
           : 'mr-3 my-1 relative'
       }
-      padding={currentView.value === VIEW_NAME.TABLE}
+      padding={currentView.value !== VIEW_NAME.CHAT}
     >
       {(currentView.value === VIEW_NAME.TABLE ||
-        currentView.value === VIEW_NAME.MAP ||
-        currentView.value === VIEW_NAME.PANIC) && (
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-          <CardData
-            title={t('memos.cards.totalToday')}
-            count={summary.value.total}
-            subtitle=''
-            color='t-dark'
-            icon='328' // 328
-          />
-
-          <CardData
-            title={t('memos.cards.unresolved')}
-            count={calculatePercentage(summary.value.in_progress)}
-            subtitle=''
-            color='t-dark'
-            icon='311' // 311
-          />
-
-          <CardData
-            title={t('memos.cards.resolved')}
-            count={calculatePercentage(summary.value.completed)}
-            subtitle=''
-            color='t-dark'
-            icon='312' // 312
-          />
-        </div>
-      )}
+        currentView.value === VIEW_NAME.MAP) &&
+        renderCardsInfo(summary.value)}
+      {currentView.value === VIEW_NAME.PANIC &&
+        renderCardsInfo(summaryPanic.value, 'panic')}
 
       <div
         className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}

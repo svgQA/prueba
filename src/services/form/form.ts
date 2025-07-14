@@ -47,7 +47,7 @@ export class FormService extends BaseService {
     return await super.make_request<IFormResponse>(this.sname, model);
   }
 
-  static async get_all(params: IPagination = { page: 1, items: 10 }) {
+  static async get_all(params: IPagination = { page: 1, items: 10000 }) {
     const model: IMakeRequest = {
       url: ['form'],
       params: params as any,
@@ -162,5 +162,13 @@ export class FormService extends BaseService {
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<IOption>(this.sname, model);
+  }
+
+  static async get_one_response(id: string) {
+    const model: IMakeRequest = {
+      url: ['response', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<IFormResponse>(this.sname, model);
   }
 }

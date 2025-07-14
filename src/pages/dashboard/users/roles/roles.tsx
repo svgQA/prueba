@@ -1,5 +1,5 @@
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
 import { columns } from './components/roles.columns';
@@ -15,6 +15,7 @@ import {
 import { RoleService } from '@/services/general/role';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export interface IRole {
   id: number;
@@ -34,29 +35,38 @@ export const UserRolesPage: FunctionComponent = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = t('role.pageTitle');
-    getRoles();
+    document.title = t('p_role');
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getRoles();
+    }
+  }, [selectedCompany, location]);
 
   const getRoles = async () => {
     const request: any = await RoleService.getRoles();
     roles.value = request.data;
   };
 
-  const redirect = () => {
-    setMenu({ ...infoMenu.value, label: t('role.new') });
-    navigate('/users/roles/create');
-  };
+  // const redirect = () => {
+  //   // OJO: No traducir, dejar asi los setMenu
+  //   setMenu({ ...infoMenu.value, label: 'create' });
+  //   navigate('/users/roles/create');
+  // };
 
   const updateRole = (id: string) => {
-    setMenu({ ...infoMenu.value, label: t('role.edit') });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/users/roles/update/${id}`);
   };
 
   const deleteRole = async (id: number) => {
     const request = await RoleService.deleteRole(id);
     if (!request.getStatus()) return;
-    ToastManager.success(t('role.deleted'));
+    ToastManager.success('s_deleted_success');
     getRoles();
   };
 
@@ -79,18 +89,7 @@ export const UserRolesPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={redirect}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
-        </div>
-      </div>
+    <>
       <Table<IRole>
         data={roles.value}
         columns={columns}
@@ -101,7 +100,8 @@ export const UserRolesPage: FunctionComponent = () => {
         }}
         onClickAction={handleOnClick}
         isSettingTable
+        absolute
       />
-    </Section>
+    </>
   );
 };

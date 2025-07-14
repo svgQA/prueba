@@ -1,46 +1,26 @@
+import { IPermissionSec } from '@/types/role/role.response';
 import { signal } from '@preact/signals';
 
-interface IPermission {
-  name: string;
-  permissions: { [key: string]: string };
-}
 const currentPermissions = signal<{ [key: string]: string }>({});
-const allPermissions = signal<IPermission[]>([]);
+export const allPermissions = signal<IPermissionSec>({});
 
 export const getCurrentPermissions = () => {
   return currentPermissions.value;
 };
 
-export const setCurrentPermissionsByName = (name: string) => {
-  if (allPermissions.value.length === 0) return;
-
-  const permiso = allPermissions.value.find(
-    (permission) => permission.name === name
+export const validateModuleState = (name: string) => {
+  return (
+    allPermissions.value[name] && allPermissions.value[name].permissions?.state
   );
-  currentPermissions.value = permiso?.permissions || {};
-
-  console.log('currentPermissions', currentPermissions.value);
 };
 
-export const setCurrentPermissionsBySubName = (subName: string) => {
-  if (allPermissions.value.length === 0) return;
-
-  console.log('subName', subName);
+export const validateSettingModuleState = (name: string) => {
+  return (
+    allPermissions.value.setting &&
+    allPermissions.value.setting.permissions[name]
+  );
 };
 
-export const clearCurrentPermissions = () => {
-  currentPermissions.value = {};
-};
-
-export const getAllPermissions = () => {
-  return allPermissions.value;
-};
-
-export const setAllPermissions = (permissions: IPermission[]) => {
+export const setAllPermissions = (permissions: IPermissionSec) => {
   allPermissions.value = permissions;
-  console.log('allPermissions', allPermissions.value);
-};
-
-export const clearAllPermissions = () => {
-  allPermissions.value = [];
 };

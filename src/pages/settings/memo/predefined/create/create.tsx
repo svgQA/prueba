@@ -3,7 +3,7 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { lengthSize } from '@/utils/utilities';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
@@ -28,10 +28,10 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
 
     if (id) {
       request = await PredefinedService.updatePredefined(model, id);
-      message = 'Predefinido editado exitosamente!';
+      message = 's_updated_success';
     } else {
       request = await PredefinedService.createPredefined(model);
-      message = 'Predefinido creado exitosamente!';
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;
@@ -52,7 +52,7 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section>
+    <>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -64,12 +64,21 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
         render={({ handleSubmit, form, submitting, pristine }) => (
           <form
             onSubmit={handleSubmit}
-            className='space-y-6'
+            className='space-y-1'
             id='form-predefined-create'
           >
+            <StatusButton
+              onClickClean={() => {
+                () => form.reset();
+              }}
+              submitting={submitting}
+              pristine={pristine}
+              form='form-predefined-create'
+              label={id ? 'edit' : 'save'}
+            />
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-3'>
-              <div class='col-span-3'>
+              <div class='col-span-4'>
                 <Field<string> name='name' validate={lengthSize(5, 30)}>
                   {({ input, meta }) => (
                     <Input
@@ -83,22 +92,9 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
             </div>
-
-            {/* Botonera */}
-            <div className='w-full flex-row flex justify-end items-center'>
-              <StatusButton
-                onClickClean={() => {
-                  () => form.reset();
-                }}
-                submitting={submitting}
-                pristine={pristine}
-                form='form-predefined-create'
-                label={id ? 'edit' : 'save'}
-              />
-            </div>
           </form>
         )}
       />
-    </Section>
+    </>
   );
 };

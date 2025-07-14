@@ -44,7 +44,7 @@ export const PlannerView: FunctionalComponent<{
           const parsedShifts = fixTruncatedJSONArray(accumulatedResponse);
           setShifts(parsedShifts);
           setIsStreaming(false);
-          ToastManager.success('Stream completado');
+          ToastManager.success('f_stream_finish');
         },
         (_) => {
           setIsStreaming(false);

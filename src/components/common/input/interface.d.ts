@@ -23,6 +23,7 @@ export interface IInputProps<T> extends IComponentProps {
   rounded?: boolean;
   float?: boolean;
   unicon?: boolean;
+  buttonForm?: string;
   type?:
     | 'text'
     | 'password'
@@ -41,6 +42,7 @@ export interface IInputProps<T> extends IComponentProps {
     | 'checkbox';
   meta?: FieldMetaState<T>;
   end?: boolean;
+  buttonForm?: string;
   borderless?: boolean;
   tabIndex?: number;
   thin?: boolean;

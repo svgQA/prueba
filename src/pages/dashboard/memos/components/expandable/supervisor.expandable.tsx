@@ -10,6 +10,7 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { DateUtils } from '@/utils/utilities/dates';
 import ShowFiles from '@/components/common/file/show.file';
 import { useTranslation } from 'react-i18next';
+import { useSignal } from '@preact/signals';
 
 const InfoContainer = ({
   label,
@@ -26,21 +27,16 @@ const InfoContainer = ({
       <Avatar name='CL' size='sm' icon={icon} />
       <div>
         <p className='font-bold min-h-4'>{t(header)}</p>
-        <p className='min-h-4 text-xs'>{label}</p>
+        <p className='min-h-4 text-xs'>{t(label || '')}</p>
       </div>
     </div>
   );
 };
 
-const SupervisorInfo = ({
-  memo,
-  resolved = false,
-}: {
-  memo: Memo;
-  resolved?: boolean;
-}) => {
+const SupervisorInfo = ({ memo }: { memo: Memo }) => {
   const { t } = useTranslation();
   const [btnLabel, setBtnLabel] = useState('Check In');
+  const status = useSignal<string | undefined>(memo.state);
 
   const getStatus = (state: string) => {
     const statesToSolve = new Set(['IN_REVISION', 'CREATED']);
@@ -77,11 +73,9 @@ const SupervisorInfo = ({
         onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
-      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
+      ToastManager.error('s_gps_error');
     } else {
-      ToastManager.error(
-        i18n.t('shift.expandable.date.location.timeoutMessage')
-      );
+      ToastManager.error('s_gps_timeout');
     }
   };
 
@@ -106,69 +100,63 @@ const SupervisorInfo = ({
   };
 
   return (
-    <div className='w-full bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm p-3 text-b-dark-light dark:text-b-light-dark'>
+    <div className='w-full rounded-lg shadow-sm'>
       <div className='flex flex-row gap-4 w-full'>
         <div className='w-8/12 flex flex-col'>
-          <div className='w-full h-3/12 flex flex-row justify-between'>
+          <div className='flex items-center justify-between gap-1 border-b border-b-light-dark dark:border-b-dark max-h-20 w-full dark:bg-b-dark-dark bg-b-light-dark rounded-lg px-5'>
             <div className='flex-1'>
               {memo?.resource && (
                 <ShowFiles resources={memo.resource} alertEmpty={true} />
               )}
             </div>
-            {resolved &&
-              memo.state !== 'RESOLVED' &&
-              memo.state !== 'CLOSED' && (
-                <Button
-                  label={btnLabel}
-                  icon={
-                    btnLabel === 'OPENED' || btnLabel === 'SOLVE'
-                      ? '023'
-                      : '024'
-                  }
-                  disabled={btnLabel === 'SOLVE'}
-                  onClick={() =>
-                    showAlert({
-                      title: btnLabel,
-                      message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
-                      onConfirm: () => handleCheck(),
-                      onCancel: () => {},
-                    })
-                  }
-                  name={btnLabel}
-                />
-              )}
+            {status.value != 'IN_REVISION' && status.value != 'CREATED' && (
+              <Button
+                name='btn-check-memo'
+                label={status.value === 'OPENED' ? 'SOLVE' : 'RESOLVED'}
+                icon='030'
+                disabled={status.value === 'RESOLVED'}
+                onClick={() =>
+                  showAlert({
+                    title: status.value || 'CREATED',
+                    message: `${t('message.confirm')} ${status.value}`,
+                    onConfirm: () => handleCheck(),
+                    onCancel: () => {},
+                  })
+                }
+              />
+            )}
           </div>
           <div className='w-full h-9/12 flex'>
             <div className='w-1/2 grid grid-cols-2 gap-1 p-2'>
               <InfoContainer
-                header={t('memos.supervisor.supervisor')}
+                header='h_supervisor'
                 label={memo?.extraData?.company?.name}
                 icon='321'
               />
               <InfoContainer
-                header={t('memos.supervisor.service')}
+                header='h_service'
                 label={memo?.novelty?.name}
                 icon='432'
               />
               <InfoContainer
-                header={t('memos.supervisor.updated')}
+                header='h_updated'
                 label={DateUtils.dateToFrontend(memo.updatedAt, {
                   format: 'datetime',
                 })}
                 icon='067'
               />
               <InfoContainer
-                header={t('memos.supervisor.place')}
-                label={memo?.extraData?.place?.address}
+                header='h_place'
+                label={memo?.extraData?.place?.address || ''}
                 icon='151'
               />
               <InfoContainer
-                header={t('memos.supervisor.client')}
+                header='h_client'
                 label={memo?.extraData?.client?.name}
                 icon='045'
               />
               <InfoContainer
-                header={t('memos.supervisor.city')}
+                header={t('h_city')}
                 label={memo?.extraData?.city?.name}
                 icon='320'
               />
@@ -178,7 +166,7 @@ const SupervisorInfo = ({
                 icon='023'
               />
               <InfoContainer
-                header={t('memos.supervisor.address')}
+                header='h_address'
                 label={memo?.extraData?.place?.address}
                 icon='321'
               />

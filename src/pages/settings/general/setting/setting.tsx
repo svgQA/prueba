@@ -20,6 +20,7 @@ import { Preview } from './preview';
 import { useTranslation } from 'react-i18next';
 import { StatusButton } from '../../components/custom.button';
 import { ColorPicker } from '@/components/common/color-picker/color-picker';
+import { useUserStore } from '@/store/slices';
 
 export const GeneralSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -50,9 +51,16 @@ export const GeneralSettingPage: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    document.title = 'TR - App Settings';
-    getSettings();
+    document.title = t('p_setting');
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getSettings();
+    }
+  }, [selectedCompany, location]);
 
   const getSettings = async () => {
     const [responseApp, responseGeneral] = await Promise.all([
@@ -108,7 +116,7 @@ export const GeneralSettingPage: FunctionComponent = () => {
       settingsIds.value.app
     );
     if (response.getStatus()) {
-      ToastManager.success(t('settings.general.success'));
+      ToastManager.success('s_created_success');
     }
   };
 
@@ -118,7 +126,7 @@ export const GeneralSettingPage: FunctionComponent = () => {
       settingsIds.value.general
     );
     if (response.getStatus()) {
-      ToastManager.success(t('settings.general.success'));
+      ToastManager.success('s_created_success');
     }
   };
 

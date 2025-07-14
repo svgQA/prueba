@@ -25,6 +25,7 @@ export const FormInspectSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const loading = useSignal<boolean>(false);
   useEffect(() => {
+    document.title = t('p_form');
     getResponseHandler();
   }, []);
 
@@ -54,13 +55,13 @@ export const FormInspectSettingPage: FunctionComponent = () => {
 
     if (!response?.structure) {
       if (!response?.structure) {
-        ToastManager.error(t('form.error.notExistResponse'));
+        ToastManager.error('s_structure_error');
         return;
       }
     }
 
     if (!validateResponse(response.structure)) {
-      ToastManager.error(t('form.error.invalidResponse'));
+      ToastManager.error('s_structure_error');
       return;
     }
 

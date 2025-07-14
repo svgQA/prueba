@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'preact/hooks';
 import { Form } from 'react-final-form';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
-import { TextArea } from '@/components/common/text.area/text.area';
+// import { TextArea } from '@/components/common/text.area/text.area';
 import { useLocation } from 'wouter';
 import { appendHistory } from '@/pages/settings/store/settings';
 import { SchedulerService, TemplateService } from '@/services';
@@ -11,6 +11,8 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { IOption } from '@/components/common/smart-selector/smart-select';
+import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export const ScheduledNotificationForm = () => {
   const [templates, setTemplates] = useState<IOption[]>([]);
@@ -19,24 +21,32 @@ export const ScheduledNotificationForm = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formValues, setFormValues] = useState<any>(null);
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Programar Nueva Notificación';
-    const fetchTemplates = async () => {
-      const response = await TemplateService.getTemplates();
-      if (!response.getStatus()) return;
-      const formatted = response.getMany().map((tpl: any) => ({
-        label: tpl.title,
-        value: tpl.id,
-      }));
-      setTemplates(formatted);
-    };
-    fetchTemplates();
+    document.title = t('p_programmed');
   }, []);
+
+  const fetchTemplates = async () => {
+    const response = await TemplateService.getTemplates();
+    if (!response.getStatus()) return;
+    const formatted = response.getMany().map((tpl: any) => ({
+      label: tpl.title,
+      value: tpl.id,
+    }));
+    setTemplates(formatted);
+  };
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchTemplates();
+    }
+  }, [selectedCompany, location]);
 
   const redirectToList = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications
-        .scheduledNotification.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.to,
       label: 'notificaciones',
       id: 'template-notifications',
     };
@@ -56,12 +66,12 @@ export const ScheduledNotificationForm = () => {
     } = values;
 
     if (!templateId || typeof templateId !== 'string') {
-      ToastManager.warning('Debes seleccionar una plantilla obligatoriamente.');
+      ToastManager.warning('s_select_template');
       return;
     }
 
     if (!sendAt || typeof sendAt !== 'string') {
-      ToastManager.warning('Debes indicar la fecha de envío.');
+      ToastManager.warning('s_select_date');
       return;
     }
 
@@ -84,19 +94,15 @@ export const ScheduledNotificationForm = () => {
     setPendingSubmission(false);
 
     if (res.getStatus()) {
-      ToastManager.success('Notificación programada exitosamente');
+      ToastManager.success('s_created_success');
       redirectToList();
     } else {
-      ToastManager.error('Error al programar notificación');
+      ToastManager.error('s_created_error');
     }
   };
 
   return (
-    <Section padding>
-      <h2 className='text-xl font-semibold mb-6'>
-        Detalles de la Notificación
-      </h2>
-
+    <>
       {showConfirmModal && (
         <div className='fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center'>
           <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-md'>
@@ -139,22 +145,36 @@ export const ScheduledNotificationForm = () => {
         }}
         render={({ handleSubmit, values }) => (
           <form onSubmit={handleSubmit} className='grid grid-cols-2 gap-4'>
+            <div className='flex justify-end gap-4 absolute top-14 right-2'>
+              <Button
+                name='cancel-create-scheduled'
+                label='cancel'
+                icon='023'
+                onClick={redirectToList}
+              />
+              <Button
+                name='submit-create-scheduled'
+                label='save'
+                type='submit'
+                icon='022'
+                disabled={pendingSubmission}
+              />
+            </div>
             <Input
               id='overrideTitle'
               name='overrideTitle'
               type='text'
-              label='Título *'
+              label='h_name'
               placeholder='Ingrese el título de la notificación...'
               value={values.overrideTitle || ''}
               onChange={(e) => (values.overrideTitle = e.currentTarget.value)}
             />
 
-            <TextArea
+            <Input
               id='overrideDescription'
               name='overrideDescription'
-              label='Descripción *'
-              placeholder='Ingrese una descripción...'
-              className='col-span-2'
+              label='description'
+              placeholder='p_write'
               value={values.overrideDescription || ''}
               onChange={(e: any) =>
                 (values.overrideDescription = e.currentTarget.value)
@@ -218,28 +238,10 @@ export const ScheduledNotificationForm = () => {
                 }}
               />
             </div>
-
-            <div className='col-span-2 flex justify-end gap-2 mt-6'>
-              <Button
-                name='cancel-create-scheduled'
-                label='Cancelar'
-                onClick={redirectToList}
-                borderless
-              />
-              <Button
-                name='submit-create-scheduled'
-                label={
-                  pendingSubmission ? 'Enviando...' : 'Programar Notificación'
-                }
-                type='submit'
-                className='bg-primary text-white hover:bg-primary-opacity'
-                disabled={pendingSubmission}
-              />
-            </div>
           </form>
         )}
       />
-    </Section>
+    </>
   );
 };
 

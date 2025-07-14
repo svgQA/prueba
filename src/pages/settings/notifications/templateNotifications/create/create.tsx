@@ -3,7 +3,6 @@ import { Form } from 'react-final-form';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
-import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { TemplateService } from '@/services';
 import { FormService } from '@/services/form/form';
 import { TaskService } from '@/services';
@@ -11,19 +10,22 @@ import { useLocation } from 'wouter';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '@/pages/settings/store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
+import { ITask } from '@/pages/settings/shifts/task/create/interface';
+import { useSignal } from '@preact/signals';
+import { useUserStore } from '@/store/slices';
 
 export const TemplateCreateForm = () => {
-  const [useForm, setUseForm] = useState(false);
-  const [useTasks, setUseTasks] = useState(false);
+  const [useForm, _setUseForm] = useState(false);
+  const [useTasks, _setUseTasks] = useState(false);
   const [forms, setForms] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, _setLoading] = useState(false);
   const [_, navigate] = useLocation();
 
   const redirectToList = () => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
-        .to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.notification.template.to,
       label: 'notificaciones',
       id: 'template-notifications',
     };
@@ -32,57 +34,64 @@ export const TemplateCreateForm = () => {
   };
 
   const handleSubmit = async (values: any) => {
-    const { title, description, formId, taskSelector } = values;
+    const output = {
+      ...values,
+      tasks: Array.isArray(tasksResponse.value) ? tasksResponse.value : [],
+    };
 
-    if (!title?.trim() || !description?.trim()) {
-      ToastManager.warning('Título y descripción son obligatorios');
+    const result = await TemplateService.createTemplate(output);
+    if (!result.getStatus()) {
+      ToastManager.error('s_created_error');
       return;
     }
 
-    const payload: any = {
-      title: title.trim(),
-      description: description.trim(),
-      data: {},
-    };
-
-    if (useForm && formId) payload.data.formId = formId;
-    if (useTasks && taskSelector?.value)
-      payload.data.taskId = taskSelector.value;
-
-    setLoading(true);
-    const res = await TemplateService.createTemplate(payload);
-    setLoading(false);
-
-    if (res.getStatus()) {
-      ToastManager.success('Plantilla creada exitosamente');
-      redirectToList();
-    } else {
-      ToastManager.error('Error al crear plantilla');
-    }
+    ToastManager.success('s_send_success');
+    redirectToList();
   };
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
     const fetchForms = async () => {
       const res = await FormService.getSimpleList();
       if (res.getStatus()) setForms(res.getMany());
     };
-    if (useForm && forms.length === 0) fetchForms();
-  }, [useForm]);
+    if (useForm && forms.length === 0 && selectedCompany) fetchForms();
+  }, [useForm, selectedCompany]);
 
   useEffect(() => {
     const fetchTasks = async () => {
       const res = await TaskService.getSimpleList();
       if (res.getStatus()) setTasks(res.getMany());
     };
-    if (useTasks && tasks.length === 0) fetchTasks();
-  }, [useTasks]);
+    if (useTasks && tasks.length === 0 && selectedCompany) fetchTasks();
+  }, [useTasks, selectedCompany]);
+
+  const tasksResponse = useSignal<ITask[]>([]);
+  const onTaskAdd = (model: any) => {
+    tasksResponse.value = [...tasksResponse.value, model];
+  };
 
   return (
-    <div className='w-full px-4 sm:px-6'>
+    <>
       <Form
         onSubmit={handleSubmit}
         render={({ handleSubmit, values }) => (
           <form className='space-y-6 w-full' onSubmit={handleSubmit}>
+            <div className='flex justify-end gap-4 absolute top-14 right-2'>
+              <Button
+                name='cancel-create-scheduled'
+                label='cancel'
+                icon='023'
+                onClick={redirectToList}
+              />
+              <Button
+                name='submit-create-scheduled'
+                label='save'
+                type='submit'
+                icon='022'
+                disabled={loading}
+              />
+            </div>
             <Input
               name='title'
               id='template-title'
@@ -105,82 +114,17 @@ export const TemplateCreateForm = () => {
 
             <div>
               <h3 className='text-md font-semibold mb-2'>Contenido</h3>
-
-              <div className='border rounded p-4 mb-4'>
-                <div className='flex items-center justify-between mb-2'>
-                  <span className='font-medium flex items-center gap-2'>
-                    <span className='vox-icon vx-icon-168 text-base' />
-                    Agregar Formulario
-                  </span>
-                  <input
-                    type='checkbox'
-                    checked={useForm}
-                    onChange={() => setUseForm(!useForm)}
-                    className='h-4 w-4'
-                  />
-                </div>
-
-                <SmartSelector
-                  id='form-selector'
-                  name='formId'
-                  options={forms}
-                  placeholder='Seleccione un formulario...'
-                  disabled={!useForm}
-                  onChange={(option) => {
-                    values.formId = option?.value;
-                  }}
-                />
-              </div>
-
-              <div className='border rounded p-4'>
-                <div className='flex items-center justify-between mb-2'>
-                  <span className='font-medium flex items-center gap-2'>
-                    <span className='vox-icon vx-icon-169 text-base' />
-                    Agregar Tareas
-                  </span>
-                  <input
-                    type='checkbox'
-                    checked={useTasks}
-                    onChange={() => setUseTasks(!useTasks)}
-                    className='h-4 w-4'
-                  />
-                </div>
-
-                <div className='flex gap-2 flex-col'>
-                  <SmartSelector
-                    id='task-selector'
-                    name='taskSelector'
-                    options={tasks.map((task) => ({
-                      label: task.description,
-                      value: task.id,
-                    }))}
-                    placeholder='Buscar tarea por descripción...'
-                    disabled={!useTasks}
-                    onChange={(option) => {
-                      values.taskSelector = option;
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className='flex justify-end gap-4 pt-4'>
-              <Button
-                name='cancel-template'
-                label='Cancelar'
-                className='bg-white text-grey p-2'
-                onClick={redirectToList}
-              />
-              <Button
-                name='create-template'
-                label={loading ? 'Creando...' : 'Crear Plantilla'}
-                className='bg-primary text-white p-2'
-                type='submit'
+              <TaskFormCreate
+                onSubmit={onTaskAdd}
+                taskList={tasksResponse.value}
+                add
+                selector
+                type='REPORT'
               />
             </div>
           </form>
         )}
       />
-    </div>
+    </>
   );
 };

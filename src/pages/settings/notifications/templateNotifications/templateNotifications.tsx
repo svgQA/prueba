@@ -1,20 +1,36 @@
 import { useEffect, useState } from 'preact/hooks';
-import { Section } from '@/components/common/section/section';
-import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
 import { TemplateService } from '@/services';
 import { Table } from '@/components/common/table/table';
 import { useLocation } from 'wouter';
-import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { appendHistory } from '../../store/settings';
 import { getColumns } from './components/template.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useSignal } from '@preact/signals';
+import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export const TemplateNotificationPage = () => {
   const [templates, setTemplates] = useState<any[]>([]);
   const [_, navigate] = useLocation();
   const loading = useSignal<boolean>(false);
+
+  const { t } = useTranslation();
+  useEffect(() => {
+    document.title = t('p_programmed');
+  }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchTemplates();
+    }
+  }, [selectedCompany, location]);
+
   const fetchTemplates = async () => {
     loading.value = true;
     const res = await TemplateService.getTemplates();
@@ -24,30 +40,22 @@ export const TemplateNotificationPage = () => {
     loading.value = false;
   };
 
-  useEffect(() => {
-    document.title = 'TR - Plantillas de notificaciones';
-    fetchTemplates();
-  }, []);
-
-  const redirect = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification
-        .create.to,
-      label: 'create',
-      id: 'template-create',
-    };
-    appendHistory(menu);
-    navigate(menu.to);
-  };
+  // const redirect = () => {
+  //   const menu = {
+  //     to: PAGES_LIST_ROUTER.dashboard.setting.notification.template
+  //       .create.to,
+  //     label: 'create',
+  //     id: 'template-create',
+  //   };
+  //   appendHistory(menu);
+  //   navigate(menu.to);
+  // };
 
   const editTemplate = (id: string) => {
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.notifications.templateNotification.update.to.replace(
-        ':id',
-        id
-      ),
+      to: `/notification/template/update/${id}`,
       label: 'update',
-      id: 'template-update',
+      id: 'notification:update:state',
     };
     appendHistory(menu);
     navigate(menu.to);
@@ -60,7 +68,7 @@ export const TemplateNotificationPage = () => {
     const res = await TemplateService.deleteTemplate(id);
     if (!res.getStatus()) return;
 
-    ToastManager.success('Plantilla eliminada correctamente');
+    ToastManager.success('s_deleted_success');
     fetchTemplates();
   };
 
@@ -76,23 +84,15 @@ export const TemplateNotificationPage = () => {
   };
 
   return (
-    <Section>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <Button
-          name='create-template'
-          label='+ Nueva Plantilla'
-          className='bg-primary text-white p-2'
-          onClick={redirect}
-        />
-      </div>
-
+    <>
       <Table<any>
         data={templates}
         columns={getColumns(handleOnClick)}
         pageSize={10}
         isSettingTable
         loading={loading.value}
+        absolute
       />
-    </Section>
+    </>
   );
 };

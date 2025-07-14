@@ -5,9 +5,9 @@ import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { required, lengthSize } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { useEffect, useState } from 'preact/hooks';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { PlaceService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
@@ -16,7 +16,8 @@ import { composeValidators, validateNumber } from '@/utils/validators';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
-
+import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 interface SelectOption extends IOption {
   latitude: string;
   longitude: string;
@@ -47,13 +48,13 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const departments = useSignal<IOption[]>([]);
   const municipalities = useSignal<SelectOption[]>([]);
   const countries = useSignal<IOption[]>([]);
+  const { navigateUpsert } = useNavigation();
 
   const municipalityLocation = useSignal<ILocation>();
   const points = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
 
   const { id } = useParams(); // Obtiene el id de la URL
-  const [_, navigate] = useLocation();
 
   const sendPointsRef = (data: any) => {
     if (!data.length) return;
@@ -96,18 +97,22 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       municipalityId: Number(model.municipalityId.value),
       ...(model.description == '' ? {} : { description: model.description }),
       code: Number(model.code),
+      zipCode: model.zipCode,
     };
 
     let request: any;
+    let message = '';
     if (!id) {
       request = await PlaceService.createPlace(data);
+      message = 's_created_success';
     } else {
       request = await PlaceService.updatePlace(data, id);
+      message = 's_updated_success';
     }
     if (!request.getStatus()) return;
 
-    ToastManager.success('Accion con exito');
-    navigate('/rounds/places');
+    ToastManager.success(message);
+    navigateUpsert('/shifts/places');
   };
 
   const onChangeDeparment = async (departmentId: number) => {
@@ -145,6 +150,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       latitude: 0,
       longitude: 0,
     };
+
     let departmentId = {
       value: 0,
       label: 'Seleccione un departamento',
@@ -201,321 +207,323 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     sendPointsRef([{ id: 1, position: { lat: latitude, lng: longitude } }]);
   };
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    Promise.all([setInitialValues(), fetchDepartments(1), getCountries()]);
-  }, []);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      Promise.all([setInitialValues(), fetchDepartments(1), getCountries()]);
+    }
+  }, [selectedCompany, location]);
 
   return (
-    <Section>
+    <>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting, pristine }) => (
-          <form
-            onSubmit={handleSubmit}
-            className='space-y-2'
-            id='form-place-create'
-          >
-            <div className='grid grid-cols-1 xl:grid-cols-2 gap-2'>
-              {/* Información Básica */}
-              <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
-                <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                  Información Básica
-                </h3>
-                <div className='grid grid-cols-1 gap-4'>
-                  <div className='grid grid-cols-2 gap-3'>
-                    <Field<string>
-                      name='code'
-                      validate={composeValidators(required, validateNumber)}
-                    >
-                      {({ input, meta }) => (
-                        <Input
-                          id='input-code'
-                          {...input}
-                          placeholder='Ingrese un codigo...'
-                          label='Codigo'
-                          type='number'
-                          icon='123'
-                          meta={meta}
-                        />
-                      )}
-                    </Field>
-
-                    <Field<string>
-                      name='name'
-                      validate={composeValidators(required, lengthSize(3, 30))}
-                    >
-                      {({ input, meta }) => (
-                        <Input
-                          {...input}
-                          type='text'
-                          placeholder='Ingrese nombre...'
-                          label='name'
-                          icon='123'
-                          meta={meta}
-                        />
-                      )}
-                    </Field>
-                  </div>
-
-                  <Field<string> name='description'>
-                    {({ input, meta }) => (
-                      <TextArea
-                        {...input}
-                        min='3'
-                        max='300'
-                        placeholder='Ingrese Descripción...'
-                        label='description'
-                        type='text'
-                        icon='123'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-              </div>
-
-              {/* Información de Ubicación */}
-              <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
-                <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                  Información de Ubicación
-                </h3>
-                <div className='grid grid-cols-1 gap-4'>
-                  <div className='grid grid-cols-2 gap-3'>
-                    <Field<string> name='type' validate={required}>
-                      {({ input, meta }) => (
-                        <Select
-                          {...input}
-                          placeholder='Selecione tipo...'
-                          label='type'
-                          name='type'
-                          icon='123'
-                          options={[
-                            { value: 'INDUSTRIAL', label: 'Industrial' },
-                            { value: 'RESIDENTIAL', label: 'Residencial' },
-                            { value: 'OTHER', label: 'Otro' },
-                          ]}
-                          meta={meta}
-                        />
-                      )}
-                    </Field>
-
-                    <Field<string> name='state' validate={required}>
-                      {({ input, meta }) => (
-                        <Select
-                          {...input}
-                          placeholder='Selecione estado...'
-                          label='status'
-                          name='state'
-                          icon='123'
-                          options={[
-                            { value: 'ACTIVE', label: 'Activo' },
-                            { value: 'INACTIVE', label: 'Inactivo' },
-                            { value: 'UNCER_REVIEW', label: 'Revisión' },
-                          ]}
-                          meta={meta}
-                        />
-                      )}
-                    </Field>
-                  </div>
-
-                  <Field<string> name='address' validate={required}>
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        placeholder='Ingrese Dirección...'
-                        label='address'
-                        type='text'
-                        icon='123'
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
-              </div>
-
-              {/* Información de País y Departamento */}
-              <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
-                <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                  Información de País y Departamento
-                </h3>
-                <div className='grid grid-cols-1 gap-4'>
-                  <div className='grid grid-cols-1 xl:grid-cols-2 gap-3'>
-                    <Field<IOption> name='countryId' validate={required}>
-                      {({ input, meta }) => (
-                        <SmartSelector
-                          {...input}
-                          placeholder='Selecione país...'
-                          label='country'
-                          icon='123'
-                          options={countries.value}
-                          meta={meta}
-                        />
-                      )}
-                    </Field>
-
-                    <Field<IOption> name='departmentId' validate={required}>
-                      {({ input, meta }) => (
-                        <SmartSelector
-                          {...input}
-                          placeholder='Seleccione Departamento...'
-                          label='department'
-                          icon='123'
-                          options={departments.value}
-                          onChange={(e) => {
-                            if (e?.value) {
-                              onChangeDeparment(Number(e.value));
-                            }
-                            input.onChange(e);
-                          }}
-                          meta={meta}
-                        />
-                      )}
-                    </Field>
-                  </div>
-
-                  <div className='grid grid-cols-1 xl:grid-cols-2 gap-3'>
-                    <Field<string> name='municipalityId' validate={required}>
-                      {({ input, meta }) => (
-                        <SmartSelector
-                          {...input}
-                          placeholder='Seleccione Municipio...'
-                          label='municipality'
-                          icon='123'
-                          options={municipalities.value}
-                          meta={meta}
-                          onChange={(e) => {
-                            if (e?.value) {
-                              setPosition(Number(e.value));
-                            }
-                            input.onChange(e);
-                          }}
-                        />
-                      )}
-                    </Field>
-
-                    <Field<number> name='zipCode' validate={required}>
-                      {({ input, meta }) => (
-                        <Input<number>
-                          id='input-code'
-                          {...input}
-                          placeholder='Ingrese un código ZIP...'
-                          label='zip'
-                          icon='123'
-                          type='number'
-                          meta={meta}
-                        />
-                      )}
-                    </Field>
-                  </div>
-                </div>
-              </div>
-
-              {/* Coordenadas y Radio */}
-              <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
-                <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                  Coordenadas y Radio
-                </h3>
-                <div className='grid grid-cols-1 gap-4'>
-                  <Slider
-                    min={0}
-                    max={2000}
-                    step={1}
-                    value={green}
-                    onChange={setGreen}
-                    label='Radio de cobertura'
-                    showValue={true}
-                    disabled={!points.value || points.value.length < 1}
-                  />
-                  <div className='grid grid-cols-1 xl:grid-cols-2 gap-3'>
-                    <Field<string> name='latitude' validate={required}>
-                      {({ input, meta }) => (
-                        <Input
-                          {...input}
-                          label='latitude'
-                          type='text'
-                          meta={meta}
-                          onChange={(e) => {
-                            input.onChange(e);
-                            const longitude =
-                              form.getFieldState('longitude')?.value;
-                            changeValue(
-                              Number(e.currentTarget.value),
-                              Number(longitude) || 0
-                            );
-                          }}
-                        />
-                      )}
-                    </Field>
-                    <Field<string> name='longitude' validate={required}>
-                      {({ input, meta }) => (
-                        <Input
-                          {...input}
-                          label='longitude'
-                          type='text'
-                          meta={meta}
-                          onChange={(e) => {
-                            input.onChange(e);
-                            const latitude =
-                              form.getFieldState('latitude')?.value;
-                            changeValue(
-                              Number(latitude) || 0,
-                              Number(e.currentTarget.value)
-                            );
-                          }}
-                        />
-                      )}
-                    </Field>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <MapLibrePointsMap
-              name='map-points'
-              pointsAmount={1}
-              sendPoints={(data) => {
-                const result = sendPointsRef(data);
-                if (result) {
-                  form.change('latitude', result.lat);
-                  form.change('longitude', result.lng);
-                }
+          <form onSubmit={handleSubmit} id='form-place-create'>
+            <StatusButton
+              onClickClean={() => {
+                form.reset();
+                setGreen(0);
+                points.value = [];
+                municipalityLocation.value = undefined;
               }}
-              pointsRef={points.value}
-              center={municipalityLocation.value}
-              condition={false}
-              errorCondition=''
-              radialPoint={null}
-              errorRadialPoint=''
-              radius={green}
-              draggable={true}
-              width='100%'
-              clickPoint={() => {}}
-              key={
-                municipalityLocation.value
-                  ? `${municipalityLocation.value.lat}-${municipalityLocation.value.lng}`
-                  : 'initial'
-              }
+              submitting={submitting}
+              pristine={pristine}
+              form='form-place-create'
+              label={id ? 'edit' : 'save'}
             />
+            <div className='space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+              <div className='grid grid-cols-1 xl:grid-cols-2 gap-2'>
+                {/* Información Básica */}
+                <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
+                  <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
+                    Información Básica
+                  </h3>
+                  <div className='grid grid-cols-1 gap-4'>
+                    <div className='grid grid-cols-2 gap-3'>
+                      <Field<string>
+                        name='code'
+                        validate={composeValidators(required, validateNumber)}
+                      >
+                        {({ input, meta }) => (
+                          <Input
+                            id='input-code'
+                            {...input}
+                            placeholder='Ingrese un codigo...'
+                            label='Codigo'
+                            type='number'
+                            icon='123'
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
 
-            {/* Botonera Convertir esto en un componente */}
-            <div className='w-full flex-row flex justify-between items-center'>
-              <StatusButton
-                onClickClean={() => {
-                  form.reset();
-                  setGreen(0);
-                  points.value = [];
-                  municipalityLocation.value = undefined;
+                      <Field<string>
+                        name='name'
+                        validate={composeValidators(
+                          required,
+                          lengthSize(3, 30)
+                        )}
+                      >
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            type='text'
+                            placeholder='Ingrese nombre...'
+                            label='name'
+                            icon='123'
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+                    </div>
+
+                    <Field<string> name='description'>
+                      {({ input, meta }) => (
+                        <TextArea
+                          {...input}
+                          min='3'
+                          max='300'
+                          placeholder='Ingrese Descripción...'
+                          label='description'
+                          type='text'
+                          icon='123'
+                          meta={meta}
+                        />
+                      )}
+                    </Field>
+                  </div>
+                </div>
+
+                {/* Información de Ubicación */}
+                <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
+                  <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
+                    Información de Ubicación
+                  </h3>
+                  <div className='grid grid-cols-1 gap-4'>
+                    <div className='grid grid-cols-2 gap-3'>
+                      <Field<string> name='type' validate={required}>
+                        {({ input, meta }) => (
+                          <Select
+                            {...input}
+                            placeholder='Selecione tipo...'
+                            label='type'
+                            name='type'
+                            icon='123'
+                            options={[
+                              { value: 'INDUSTRIAL', label: 'Industrial' },
+                              { value: 'RESIDENTIAL', label: 'Residencial' },
+                              { value: 'OTHER', label: 'Otro' },
+                            ]}
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+
+                      <Field<string> name='state' validate={required}>
+                        {({ input, meta }) => (
+                          <Select
+                            {...input}
+                            placeholder='Selecione estado...'
+                            label='status'
+                            name='state'
+                            icon='123'
+                            options={[
+                              { value: 'ACTIVE', label: 'Activo' },
+                              { value: 'INACTIVE', label: 'Inactivo' },
+                              { value: 'UNCER_REVIEW', label: 'Revisión' },
+                            ]}
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+                    </div>
+
+                    <Field<string> name='address' validate={required}>
+                      {({ input, meta }) => (
+                        <Input
+                          {...input}
+                          placeholder='Ingrese Dirección...'
+                          label='address'
+                          type='text'
+                          icon='123'
+                          meta={meta}
+                        />
+                      )}
+                    </Field>
+                  </div>
+                </div>
+
+                {/* Información de País y Departamento */}
+                <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
+                  <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
+                    Información de País y Departamento
+                  </h3>
+                  <div className='grid grid-cols-1 gap-4'>
+                    <div className='grid grid-cols-1 xl:grid-cols-2 gap-3'>
+                      <Field<IOption> name='countryId' validate={required}>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            placeholder='p_select'
+                            label='h_country'
+                            icon='123'
+                            options={countries.value}
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+
+                      <Field<string> name='departmentId' validate={required}>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            placeholder='p_select'
+                            label='h_department'
+                            icon='123'
+                            options={departments.value}
+                            onChange={(e) => {
+                              if (e && e.value) {
+                                onChangeDeparment(Number(e.value));
+                              }
+                              input.onChange(e);
+                            }}
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+                    </div>
+
+                    <div className='grid grid-cols-1 xl:grid-cols-2 gap-3'>
+                      <Field<string> name='municipalityId' validate={required}>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            placeholder='Seleccione Municipio...'
+                            label='municipality'
+                            icon='123'
+                            options={municipalities.value}
+                            meta={meta}
+                            onChange={(e) => {
+                              if (e && e.value) {
+                                setPosition(Number(e.value));
+                              }
+                              input.onChange(e);
+                            }}
+                          />
+                        )}
+                      </Field>
+
+                      <Field<number> name='zipCode' validate={required}>
+                        {({ input, meta }) => (
+                          <Input<number>
+                            id='input-code'
+                            {...input}
+                            placeholder='Ingrese un código ZIP...'
+                            label='zip'
+                            icon='123'
+                            type='number'
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Coordenadas y Radio */}
+                <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
+                  <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
+                    Coordenadas y Radio
+                  </h3>
+                  <div className='grid grid-cols-1 gap-4'>
+                    <Slider
+                      min={0}
+                      max={2000}
+                      step={1}
+                      value={green}
+                      onChange={setGreen}
+                      label='Radio de cobertura'
+                      showValue={true}
+                      disabled={!points.value || points.value.length < 1}
+                    />
+                    <div className='grid grid-cols-1 xl:grid-cols-2 gap-3'>
+                      <Field<string> name='latitude' validate={required}>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            label='latitude'
+                            type='text'
+                            meta={meta}
+                            onChange={(e) => {
+                              input.onChange(e);
+                              const longitude =
+                                form.getFieldState('longitude')?.value;
+                              changeValue(
+                                Number(e.currentTarget.value),
+                                Number(longitude) || 0
+                              );
+                            }}
+                          />
+                        )}
+                      </Field>
+                      <Field<string> name='longitude' validate={required}>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            label='longitude'
+                            type='text'
+                            meta={meta}
+                            onChange={(e) => {
+                              input.onChange(e);
+                              const latitude =
+                                form.getFieldState('latitude')?.value;
+                              changeValue(
+                                Number(latitude) || 0,
+                                Number(e.currentTarget.value)
+                              );
+                            }}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <MapLibrePointsMap
+                name='map-points'
+                pointsAmount={1}
+                sendPoints={(data) => {
+                  const result = sendPointsRef(data);
+                  if (result) {
+                    form.change('latitude', result.lat);
+                    form.change('longitude', result.lng);
+                  }
                 }}
-                submitting={submitting}
-                pristine={pristine}
-                form='form-place-create'
-                label={id ? 'edit' : 'save'}
+                pointsRef={points.value}
+                center={municipalityLocation.value}
+                condition={false}
+                errorCondition=''
+                radialPoint={null}
+                errorRadialPoint=''
+                radius={green}
+                draggable={true}
+                width='100%'
+                clickPoint={() => {}}
+                key={
+                  municipalityLocation.value
+                    ? `${municipalityLocation.value.lat}-${municipalityLocation.value.lng}`
+                    : 'initial'
+                }
               />
             </div>
+            {/* Botonera Convertir esto en un componente */}
           </form>
         )}
       />
-    </Section>
+    </>
   );
 };

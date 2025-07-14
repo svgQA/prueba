@@ -48,6 +48,7 @@ export interface IPage extends IFormBase {
 
 export interface IFormat extends IFormBase {
   pages: IPage[];
+  groups: number[];
 }
 
 export interface IElementSelected {

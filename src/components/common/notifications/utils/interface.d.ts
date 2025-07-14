@@ -6,9 +6,10 @@ export interface INotificationsProps {
 }
 
 export interface INotification extends IOption {
+  id?: string;
+  id_message?: string;
   value: number | string;
   name?: string;
-  id?: string;
   redirect?: string;
   status?: string;
 }

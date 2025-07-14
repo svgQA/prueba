@@ -3,24 +3,25 @@ import { PAGES_LIST_ROUTER } from '@/utils/routing';
 
 const base = PAGES_LIST_ROUTER.dashboard.setting.payment.base;
 export const MODAL_SETTING_PAYMENT: IModalSidebarMenu = {
-  label: 'payment',
+  label: 'g_payment',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  id: 'payment:state',
   menus: [
     {
       icon: '056',
-      label: 'payment',
-      description: 'Payment',
+      label: 'm_payment',
+      description: 'd_payment',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.payment.payment.base,
-      id: 'payment',
+      id: 'payment:payment:state',
     },
     {
       icon: '029',
-      label: 'history',
-      description: 'Payment',
+      label: 'm_history',
+      description: 'd_history',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.payment.history.base,
-      id: 'history',
+      id: 'payment:history:state',
     },
   ],
 };

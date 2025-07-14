@@ -29,6 +29,19 @@ export const shift_es = {
     },
     expandable: {
       date: {
+        pending: 'Pendiente',
+        shiftStart: 'Inicio del Turno',
+        shiftEnd: 'Finalización del Turno',
+        info: {
+          date: 'Fecha',
+          time: 'Hora',
+          source: 'Fuente',
+          distance: 'Distancia',
+        },
+        buttons: {
+          checkIn: 'Check In',
+          checkOut: 'Check Out',
+        },
         location: {
           title: 'Permiso denegado',
           message:
@@ -38,10 +51,119 @@ export const shift_es = {
           timeoutMessage:
             'Se agotó el tiempo de espera para obtener la ubicación. Por favor intente nuevamente.',
         },
-        success: 'Check realizado correctamente',
         checkSuccess: 'A tiempo',
         checkEarly: 'Temprano',
         checkError: 'Tarde',
+        success: 'Check realizado correctamente',
+      },
+      employee: {
+        operative: 'Operativo',
+        infoPerson: 'Información personal',
+        identification: 'Identificación',
+        phone: 'Teléfono',
+        email: 'Correo',
+        address: 'Dirección',
+        city: 'Ciudad',
+        infoEnterprice: 'Información de la empresa',
+        company: 'Empresa',
+        department: 'Departamento',
+        dataStart: 'Fecha de inicio',
+        statistics: 'Estadísticas Turno',
+        activities: 'Actividades',
+        shifts: 'Turnos',
+      },
+      service: {
+        title: 'Detalles del Servicio',
+        status: {
+          info: 'Información',
+        },
+        serviceName: 'Nombre del Servicio',
+        contract: 'Contrato',
+        location: {
+          title: 'Ubicación y Descripción',
+          name: 'Ubicación',
+          description: 'Descripción',
+        },
+        round: 'Ronda',
+        coverage: {
+          title: 'Área de cobertura',
+          radius: 'Radio: {{value}}m',
+        },
+      },
+      round: {
+        title: 'Rondas del Turno',
+        empty: 'No hay rondas registradas',
+        point: 'Punto',
+        frequency: 'Frec',
+        scans: 'Escaneos',
+        percentage: 'Porcentaje',
+      },
+      task: {
+        title: 'Tareas del Turno',
+        empty: 'No hay tareas asignadas',
+        completed: 'completadas',
+        overall: 'Progreso general',
+      },
+      report: {
+        title: 'Reportes del Turno',
+        count: {
+          singular: 'Reporte',
+          plural: 'Reportes',
+        },
+        status: {
+          requested: 'Solicitado',
+          notRequested: 'No solicitado',
+        },
+        dates: {
+          request: 'Solicitud',
+          received: 'Recibido',
+          report: 'Reporte',
+        },
+        form: {
+          title: 'Formulario',
+          category: 'Categoría',
+          description: 'Descripción',
+          noCategory: 'Sin categoría',
+          viewDetails: 'Ver detalles',
+          hideDetails: 'Ocultar detalles',
+          viewForm: 'Ver reporte de formulario',
+        },
+        empty: 'No hay reportes para mostrar',
+        attachments: 'Archivos adjuntos',
+      },
+      shift: {
+        title: 'Actividades del Turno',
+        empty: 'No hay actividades para mostrar',
+        progress: 'Progreso',
+      },
+      card: {
+        round: {
+          pending: 'Pendiente',
+          schedule: 'Programación',
+          solution: 'Solución',
+          form: 'Formulario',
+          noForm: 'Sin formulario',
+        },
+        task: {
+          point: 'Point',
+          frequency: 'Freq',
+        },
+      },
+      contract: {
+        client: 'Cliente',
+        status: 'Estado',
+        dates: {
+          start: 'Fecha de inicio',
+          end: 'Fecha de finalización',
+        },
+        metrics: {
+          completedShifts: 'Turnos completados',
+          totalHours: 'Horas totales',
+          totalShifts: 'Total de turnos',
+          completion: 'Cumplimiento',
+        },
+        checkPending: 'Pendiente',
+        message: '¿Está seguro de que desea realizar el',
       },
     },
     columns: {
@@ -87,22 +209,39 @@ export const shift_en = {
         message: 'Are you sure you want to delete the shift?',
         success: 'Shift deleted successfully!',
         error: 'Error deleting shift',
+        warning:
+          'The shift cannot be deleted because it is already in progress or completed',
       },
     },
     expandable: {
       date: {
+        pending: 'Pending',
+        shiftStart: 'Shift Start',
+        shiftEnd: 'Shift End',
+        info: {
+          date: 'Date',
+          time: 'Time',
+          source: 'Source',
+          distance: 'Distance',
+        },
+        buttons: {
+          checkIn: 'Check In',
+          checkOut: 'Check Out',
+        },
         location: {
           title: 'Permission denied',
           message:
             'It is necessary to approve access to the location to perform the check. Please enable location permissions in your browser.',
-          gpsMessage: 'Please enable GPS on your device.',
+          gpsMessage:
+            'Could not get location. Please verify that GPS is enabled.',
           timeoutMessage:
             'The timeout has expired to get the location. Please try again.',
         },
-        success: 'Check performed successfully',
         checkSuccess: 'On time',
         checkEarly: 'Early',
         checkError: 'Late',
+        checkPending: 'Pending',
+        message: 'Are you sure you want to perform the',
       },
     },
     columns: {

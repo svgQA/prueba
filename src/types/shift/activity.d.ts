@@ -104,6 +104,7 @@ interface IReport {
   id: number;
   shiftId: number;
   description: string;
+  responseId: string;
   requestDate: string | null;
   date: string;
   resource: Array<any>;

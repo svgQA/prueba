@@ -30,15 +30,15 @@ export const AreaCreatePage: FunctionComponent = () => {
 
     if (id) {
       request = await UserService.updateArea(id, model);
-      message = t('user.area.update');
+      message = 's_updated_success';
     } else {
       request = await UserService.createArea(model);
-      message = t('user.area.success');
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate('/users/areas/');
+    navigate('/users/areas');
   };
 
   const setInitialValues = async () => {

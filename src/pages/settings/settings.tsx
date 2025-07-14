@@ -1,26 +1,25 @@
-import {
-  CardSettingHeader,
-  CardSettingUser,
-  IModalSidebarMenu,
-} from '@/components/compose/modal';
+import { CardSettingHeader, CardSettingUser } from '@/components/compose/modal';
 import { MODAL_SIDEBAR_MENUS } from '@/utils/menus';
 
 import {
+  getMenuSelectedStorage,
+  getModalStatusStorage,
   getStatusSettingModal,
+  openSettingModal,
+  setMenuSelecteStorage,
   toggleSettingModal,
 } from '@/store/signals/modals';
 
-import { useSignal } from '@preact/signals';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { RoutingContent } from './routing';
 import { IMenu } from '@/components/common/utils/interface';
 import { Modal } from '@/components/common/modal/modal';
 import { MenuButtons } from './components/header';
-import { Search } from '@/components/common/search/search';
 import { MenuList } from './components/menu';
 import {
   appendHistory,
+  computedCreateMenu,
   currentPosition,
   historyLocation,
   menuInformationSelected,
@@ -30,7 +29,6 @@ import { useUserStore } from '@/store/slices';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 export const SettingsModal = () => {
   const { user } = useUserStore();
-  const menuSettings = useSignal<IModalSidebarMenu[]>(MODAL_SIDEBAR_MENUS);
   const [_, navigate] = useLocation();
   const [expand, setExpand] = useState<boolean>(false);
 
@@ -39,7 +37,7 @@ export const SettingsModal = () => {
     if (getStatusSettingModal.value) {
       if (!menuInformationSelected.value.to) {
         let adminMenu;
-        for (const menus of menuSettings.value) {
+        for (const menus of MODAL_SIDEBAR_MENUS) {
           adminMenu = menus.menus.find((menu) => menu.show);
           if (adminMenu) break;
         }
@@ -54,11 +52,20 @@ export const SettingsModal = () => {
       } else {
         navigate(menuInformationSelected.value.to);
       }
+    } else {
+      const stage = getModalStatusStorage();
+      if (stage) {
+        const menuSelected = getMenuSelectedStorage();
+        setMenu(menuSelected as IMenu);
+        openSettingModal();
+      }
     }
   }, [getStatusSettingModal.value]);
 
   const setMenuSelected = (menu: IMenu) => {
+    if (!menu || !menu.to) return;
     setMenu(menu);
+    setMenuSelecteStorage(menu);
     navigate(menu.to);
   };
 
@@ -80,9 +87,9 @@ export const SettingsModal = () => {
       const to = target.getAttribute('data-to');
       const label = target.getAttribute('data-label');
       const description = target.getAttribute('data-description');
-
       const id = target.getAttribute('id');
       if (!to || !label || !description || !id) return;
+      if (id === computedCreateMenu.value.id) return;
       const menuSelected = { to, description, label, id };
       appendHistory(menuSelected, setMenuSelected);
     }
@@ -98,9 +105,9 @@ export const SettingsModal = () => {
       theme
       setExpandable={setExpand}
       header={
-        <div className='flex flex-row w-full items-center justify-between'>
+        <div className='flex flex-row w-full items-center justify-between px-3'>
           <MenuButtons goBack={goBack} goForward={goForward} />
-          <LanguageSwitcher />
+          {/*
           <div className='ml-5 flex flex-row w-9/12'>
             <Search
               id='search-general'
@@ -108,12 +115,14 @@ export const SettingsModal = () => {
               placeholder='Search'
             />
           </div>
+          */}
+          <LanguageSwitcher />
         </div>
       }
     >
       <div
         onClick={selectMenu}
-        className='max-w-80 min-w-60 border-r-2 border-gray-50 dark:border-b-dark-light flex flex-col gap-1'
+        className='max-w-80 min-w-60 border-r-2 border-r-b-light-light dark:border-b-dark-light flex flex-col gap-1'
       >
         <CardSettingUser
           id='user-information'
@@ -123,21 +132,16 @@ export const SettingsModal = () => {
           image={user?.image || ''}
           rol={user?.userType || ''}
         />
-        <MenuList
-          menuSettings={menuSettings}
-          menuInformationSelected={menuInformationSelected.value}
-          expand={expand}
-        />
+        <MenuList menuSettings={MODAL_SIDEBAR_MENUS} expand={expand} />
       </div>
-      <div className='w-full'>
-        <CardSettingHeader
-          id='setting-header'
-          name='setting-header'
-          title={menuInformationSelected.value.label}
-          description={menuInformationSelected.value.description}
-        />
+      <div
+        className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'}`}
+        onClick={selectMenu}
+      >
+        <CardSettingHeader id='setting-header' name='setting-header' />
         <div
-          className={`${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} relative overflow-y-auto overflow-x-hidden vox-scroll-design w-full p-2`}
+          // className={`${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} relative overflow-y-auto overflow-x-hidden vox-scroll-design w-full p-2 bg-red-300`}
+          className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'
         >
           <RoutingContent />
         </div>

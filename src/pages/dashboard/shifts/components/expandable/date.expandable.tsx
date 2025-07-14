@@ -1,17 +1,19 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import i18n from '@/i18n';
+//import i18n from '@/i18n';
+
 import { ShiftService } from '@/services';
 import { Button } from '@/components/common/button/button';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { FormattedDate } from '@/components/compose/forms';
 import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
 import { Avatar } from '@/components/common/Avatar';
-
+import { useSignal } from '@preact/signals';
+import { useTranslation } from 'react-i18next';
 interface ICheckData {
   time: string;
   platform: string;
@@ -21,9 +23,19 @@ interface ICheckData {
   file: IPresignedRequest[];
 }
 
-const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
+const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
+  const { t } = useTranslation();
   const [checkInData, setCheckInData] = useState(checkIn);
   const [checkOutData, setCheckOutData] = useState(checkOut);
+
+  const checkInStatus = useSignal<{ message: string; color: string }>({
+    message: t('l_check_pending'),
+    color: 'bg-gray-200 text-gray-700',
+  });
+  const checkOutStatus = useSignal<{ message: string; color: string }>({
+    message: t('l_check_pending'),
+    color: 'bg-gray-200 text-gray-700',
+  });
 
   const calculateCheckStatus = (
     checkTime: string,
@@ -32,7 +44,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
   ) => {
     if (!checkTime)
       return {
-        message: 'Pendiente',
+        message: t('l_check_pending'),
         color: 'bg-gray-200 text-gray-700',
       };
 
@@ -45,12 +57,12 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
       // Para check in, es tarde si llega después de la hora programada
       if (diffMinutes > 0) {
         return {
-          message: i18n.t('shift.expandable.date.checkError'),
+          message: t('l_check_error'),
           color: 'bg-red-200 text-red-700',
         };
       } else {
         return {
-          message: i18n.t('shift.expandable.date.checkSuccess'),
+          message: t('l_check_success'),
           color: 'bg-green-200 text-green-700',
         };
       }
@@ -58,12 +70,12 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
       // Para check out, es temprano si sale antes de la hora programada
       if (diffMinutes < 0) {
         return {
-          message: i18n.t('shift.expandable.date.checkSuccess'),
+          message: t('l_check_success'),
           color: 'bg-green-200 text-green-700',
         };
       } else {
         return {
-          message: i18n.t('shift.expandable.date.checkError'),
+          message: t('l_check_error'),
           color: 'bg-red-200 text-red-700',
         };
       }
@@ -75,11 +87,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
       ? `${employee.name} ${employee.surname}`
       : '';
 
-  const checkInStatus = calculateCheckStatus(checkIn?.time, shift.start, true);
-  const checkOutStatus = calculateCheckStatus(checkOut?.time, shift.end, false);
-
   const handleCheck = (checkData: ICheckData) => {
-    const checkInData = {
+    const check = {
       time: checkData.time,
       platform: checkData.platform,
       distance: checkData.distance,
@@ -88,54 +97,67 @@ const DateInfo = ({ checkIn, checkOut, employee, shift }: any) => {
         lng: checkData.location.lng,
       },
       url: '',
+      type: checkData.type,
     };
 
     if (checkData.type === 'CHECK_IN') {
-      setCheckInData(checkInData);
+      setCheckInData(check);
     } else {
-      setCheckOutData(checkOutData);
+      setCheckOutData(check);
     }
+    onCheck(check);
   };
+
+  useEffect(() => {
+    checkInStatus.value = calculateCheckStatus(
+      checkIn?.time,
+      shift.start,
+      true
+    );
+    checkOutStatus.value = calculateCheckStatus(
+      checkOut?.time,
+      shift.end,
+      false
+    );
+  }, [checkIn, checkOut, shift]);
 
   return (
     <div class='flex gap-6 justify-center'>
       {/* Inicio del Turno */}
       <ShiftCard
-        title='Inicio del Turno'
+        title={t('shift.expandable.date.shiftStart')}
         name={employeeName}
         date={checkInData?.time || ''}
         time={checkInData?.time || ''}
         source={checkInData?.platform || ''}
-        status={checkInStatus?.message || ''}
-        statusColor={checkInStatus?.color || ''}
+        status={checkInStatus.value.message || ''}
+        statusColor={checkInStatus.value.color || ''}
         distance={checkInData?.distance || ''}
-        btnLabel='Check In'
+        btnLabel='Check In' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
         latitude={checkInData?.location.lat || 4.649251}
         longitude={checkInData?.location.lng || -74.106992}
         file={checkInData?.file || []}
-        // disabled={!!checkOutData?.distance}
-        disabled={shift?.status !== 'CREATED'} // Solo permitir check-in si está en estado CREATED
+        disabled={shift?.status !== 'CREATED'}
         onCheck={handleCheck}
       />
 
       {/* Finalización del Turno */}
       <ShiftCard
-        title='Finalización del Turno'
+        title={t('shift.expandable.date.shiftEnd')}
         name={employeeName}
         date={checkOutData?.time || ''}
         time={checkOutData?.time || ''}
         source={checkOutData?.platform || ''}
-        status={checkOutStatus?.message || ''}
-        statusColor={checkOutStatus?.color || ''}
+        status={checkOutStatus.value.message || ''}
+        statusColor={checkOutStatus.value.color || ''}
         distance={checkOutData?.distance || ''}
-        btnLabel='Check Out'
+        btnLabel='Check Out' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
         latitude={checkOutData?.location.lat || 4.649251}
         longitude={checkOutData?.location.lng || -74.106992}
         file={checkOutData?.file || []}
-        // disabled={!checkInData?.distance || !!checkOutData?.distance}
-        disabled={shift?.status !== 'OPENED'} // Solo permitir check-out si está en estado OPENED
+        disabled={shift?.status !== 'OPENED'}
         onCheck={handleCheck}
       />
     </div>
@@ -177,6 +199,7 @@ const ShiftCard = ({
   disabled,
   onCheck,
 }: IShiftCardProps) => {
+  const { t } = useTranslation();
   const getLocation = async () => {
     try {
       const position = await new Promise<GeolocationPosition>(
@@ -196,17 +219,15 @@ const ShiftCard = ({
 
     if (error.code === error.PERMISSION_DENIED) {
       showAlert({
-        title: i18n.t('shift.expandable.date.location.title'),
-        message: i18n.t('shift.expandable.date.location.message'),
+        title: t('shift.expandable.date.location.title'),
+        message: t('shift.expandable.date.location.message'),
         onConfirm: () => {},
         onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
-      ToastManager.error(i18n.t('shift.expandable.date.location.gpsMessage'));
+      ToastManager.error('s_gps_error');
     } else {
-      ToastManager.error(
-        i18n.t('shift.expandable.date.location.timeoutMessage')
-      );
+      ToastManager.error('s_gps_timeout');
     }
   };
 
@@ -225,7 +246,7 @@ const ShiftCard = ({
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
       const { distance } = response.getOne();
-      // ToastManager.success(i18n.t('shift.expandable.date.success'));
+      ToastManager.success(t('shift.expandable.date.success'));
       onCheck({
         type: checkData.type,
         time: checkData.date,
@@ -242,9 +263,7 @@ const ShiftCard = ({
 
   return (
     <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-4 p-4'>
-      {/* Título */}
       <div>
-        {/* <h2 className='font-medium mb-4'>{title}</h2> */}
         <div className='flex flex-col gap-4 justify-between h-full'>
           {/* Columna izquierda - Foto y nombre */}
           <div className='flex flex-col items-center mr-4 w-full'>
@@ -264,7 +283,7 @@ const ShiftCard = ({
                 <span className='!text-primary vox-icon size-sm vx-icon-323'></span>
               </div>
               <div>
-                <p className='font-semibold'>Fecha</p>
+                <p className='font-semibold'>{t('h_date')}</p>
                 <FormattedDate date={date} format='date' />
               </div>
             </div>
@@ -275,11 +294,11 @@ const ShiftCard = ({
               </div>
               <div className='flex flex-row justify-between w-full'>
                 <div>
-                  <p className='font-semibold'>Hora</p>
+                  <p className='font-semibold'>{t('h_time')}</p>
                   <FormattedDate date={time} format='time' />
                 </div>
                 <div>
-                  <p className='font-semibold'>Fuente</p>
+                  <p className='font-semibold'>{t('h_resource')}</p>
                   <p>{source}</p>
                 </div>
               </div>
@@ -290,7 +309,7 @@ const ShiftCard = ({
                 <span className='!text-primary vox-icon size-sm vx-icon-326'></span>
               </div>
               <div>
-                <p className='font-semibold'>Distancia</p>
+                <p className='font-semibold'>{t('h_distance')}</p>
                 <p>{(Number(distance) / 1000).toFixed(2)} Km</p>
               </div>
             </div>
@@ -303,7 +322,7 @@ const ShiftCard = ({
             onClick={() =>
               showAlert({
                 title: btnLabel,
-                message: `¿Está seguro de que desea realizar el ${btnLabel}?`,
+                message: `${t('shift.expandable.date.message')} ${btnLabel}?`,
                 onConfirm: () => handleCheck(),
                 onCancel: () => {},
               })
@@ -323,7 +342,6 @@ const ShiftCard = ({
             lng: longitude,
           }}
           pointsAmount={1}
-          // pointsRef={points.value}
           pointsRef={[
             {
               id: 1,

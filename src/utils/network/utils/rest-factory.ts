@@ -1,3 +1,4 @@
+import { ToastManager } from '@/utils/toast/toast-manager';
 import { IGenericData } from '../interface';
 
 export class GenericResponse<T> {
@@ -7,6 +8,9 @@ export class GenericResponse<T> {
 
   constructor(model: IGenericData) {
     this.status = (model.code >= 200 && model.code < 300) || false;
+    if (!this.status) {
+      ToastManager.error(model.message);
+    }
     const data = this.status ? model.data : [];
     if (Array.isArray(data)) {
       this.data = data;

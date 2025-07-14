@@ -53,7 +53,7 @@ export const UsersPage: FunctionalComponent = () => {
   const onNotificationsRef = useRef(false);
 
   useEffect(() => {
-    document.title = t('users.pageTitle');
+    document.title = t('p_user');
   }, []);
 
   useEffect(() => {
@@ -114,7 +114,7 @@ export const UsersPage: FunctionalComponent = () => {
     handleViewChange(VIEW_NAME.TABLE);
 
     if (!hasValidPlayerRef.current) {
-      ToastManager.warning(t('notification.nobody_have_player_id'));
+      ToastManager.warning('s_there_are_not_player_id');
       return;
     }
 
@@ -125,7 +125,7 @@ export const UsersPage: FunctionalComponent = () => {
     }
 
     if (selectedUsers.length === 0) {
-      ToastManager.warning(t('notification.select_at_least_one_employee'));
+      ToastManager.warning('s_must_some_selected');
       setOnNotifications(false);
       onNotificationsRef.current = false;
       return;
@@ -228,9 +228,7 @@ export const UsersPage: FunctionalComponent = () => {
   const setProfile = async (id: number, companyId: string) => {
     const response = await UserService.setProfile(id, companyId);
     if (!response.getStatus()) return;
-    ToastManager.success(
-      'Perfil asignado correctamente, te enviamos un código de verificación'
-    );
+    ToastManager.success('s_assigned_success');
     getUsers();
   };
 
@@ -248,14 +246,10 @@ export const UsersPage: FunctionalComponent = () => {
       case ROW_ACTIONS.PROFILE:
         const company = String(userFound.companies[0].company.id);
         if (userFound.cognitoId) {
-          return ToastManager.warning(
-            'Este usuario ya tiene un perfil asignado, puede iniciar en la aplicación'
-          );
+          return ToastManager.warning('s_already_profile');
         }
         if (!company) {
-          return ToastManager.warning(
-            'Este usuario no tiene una empresa asignada, por favor asigne para poder asignarle un perfil'
-          );
+          return ToastManager.warning('s_select_company');
         }
         showAlert({
           title: 'Asignar perfil',

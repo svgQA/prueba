@@ -4,6 +4,7 @@ import { createPortal } from 'preact/compat';
 import { FieldMetaState } from 'react-final-form';
 import { Chip } from '../chip/chip';
 import { useTranslation } from 'react-i18next';
+import { Button } from '../button/button';
 
 export interface IOption {
   label: string;
@@ -15,7 +16,7 @@ const ALL_OPTION: IOption = {
   value: 0,
 };
 
-interface SmartSelectorProps {
+interface Props<T = IOption> {
   name: string;
   options: IOption[];
   multiple?: boolean;
@@ -23,16 +24,21 @@ interface SmartSelectorProps {
   placeholder?: string;
   menuPortalTarget?: HTMLElement | null;
   value?: IOption[] | IOption | string;
-  onChange?: (value?: IOption) => void;
+  onChange?: (value?: T) => void;
   meta?: FieldMetaState<any>;
   label?: string;
   id?: string;
   disabled?: boolean;
   icon?: string;
   end?: boolean;
+  borderless?: boolean;
+  onClick?: (event: MouseEvent) => void;
+  buttonIcon?: string;
+  buttonType?: 'button' | 'submit';
+  button?: boolean;
 }
 
-export function SmartSelector({
+export function SmartSelector<T = IOption>({
   name,
   options,
   multiple = false,
@@ -46,7 +52,12 @@ export function SmartSelector({
   meta,
   icon,
   end = false,
-}: SmartSelectorProps) {
+  borderless = false,
+  onClick,
+  buttonIcon = '123',
+  buttonType = 'button',
+  button = false,
+}: Props<T>) {
   const { t } = useTranslation();
   const { input } = useField<IOption[] | IOption | string>(name);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -56,11 +67,13 @@ export function SmartSelector({
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
 
   const selected: IOption[] = useMemo(() => {
-    if (input.value === ALL_OPTION.value) return [ALL_OPTION];
     if (Array.isArray(input.value)) return input.value;
-    return input.value ? [input.value as IOption] : [];
+    if (input.value && typeof input.value === 'object')
+      return [input.value as IOption];
+    return [];
   }, [input.value]);
 
+  /*
   const filtered = useMemo(() => {
     if (search.length < 1) return [];
     return options.filter(
@@ -69,23 +82,46 @@ export function SmartSelector({
         !selected.some((sel) => sel.value === opt.value)
     );
   }, [search, options, selected]);
+  */
+
+  const filtered = useMemo(() => {
+    if (!focused) return [];
+    if (search.length < 1)
+      return options.filter(
+        (opt) => !selected.some((sel) => sel.value === opt.value)
+      );
+    return options.filter(
+      (opt) =>
+        opt.label.toLowerCase().includes(search.toLowerCase()) &&
+        !selected.some((sel) => sel.value === opt.value)
+    );
+  }, [search, options, selected, focused]);
 
   const handleSelect = (option: IOption) => {
     if (option.value === ALL_OPTION.value) {
-      input.onChange(ALL_OPTION.value);
+      input.onChange([ALL_OPTION]);
+      onChange?.(option as T);
     } else if (multiple) {
-      const isAll =
+      const isAllSelected =
         selected.length === 1 && selected[0].value === ALL_OPTION.value;
-      const newSelection = isAll ? [option] : [...selected, option];
+      const alreadySelected = selected.some(
+        (sel) => sel.value === option.value
+      );
+      const newSelection = isAllSelected
+        ? [option]
+        : alreadySelected
+          ? selected
+          : [...selected, option];
       input.onChange(newSelection);
+      onChange?.(newSelection as T);
     } else {
       input.onChange(option);
+      onChange?.(option as T);
     }
 
-    setSearch(''); // Limpiar búsqueda
-    setSelectedIndex(0); // Reiniciar índice
-    setFocused(false); // Cerrar el dropdown después de seleccionar
-    onChange?.(option);
+    setSearch('');
+    setSelectedIndex(0);
+    setFocused(false);
   };
 
   const handleRemove = (option: IOption) => {
@@ -218,16 +254,24 @@ export function SmartSelector({
     </div>
   );
 
+  const handleButtonClick = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setFocused(false);
+    onClick?.(e);
+  };
+
   return (
     <div ref={wrapperRef} class='relative w-full'>
       {label && (
         <label
-          for={`${id}-input`}
-          class={`block text-sm font-medium ${multiple ? 'mb-2' : 'mb-1'}`}
+          htmlFor={`${id}-input`}
+          className='capitalize block text-sm font-medium'
         >
           {t(label)}
         </label>
       )}
+
       {multiple && (
         <div class='flex flex-wrap gap-2 mb-2'>
           {selected.map((opt) => (
@@ -243,15 +287,15 @@ export function SmartSelector({
 
       <div
         className={`
-        border border-gray-200 dark:border-gray-700
-        rounded flex flex-row items-center w-full
+        ${borderless ? '' : 'border border-gray-200 dark:border-gray-700'}
+        rounded-lg flex flex-row items-center w-full
         bg-white dark:bg-b-dark-dark
       `}
       >
         {!end && icon && (
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
-        <div className='relative flex-1'>
+        <div className='relative flex-1 py-0.5'>
           <input
             ref={inputRef}
             type='text'
@@ -263,14 +307,14 @@ export function SmartSelector({
             onInput={(e) => {
               const value = (e.currentTarget as HTMLInputElement).value;
               setSearch(value);
-              if (value.length > 0) {
-                setFocused(true);
-              }
+              // if (value.length > 0) {
+              //   setFocused(true);
+              // }
             }}
             autoComplete='off'
             onFocus={() => !disabled && setFocused(true)}
             // focus:ring-blue-500 dark:focus:ring-blue-400
-            className={`w-full px-3 py-2 rounded
+            className={`w-full px-3 py-2
             !bg-white dark:!bg-b-dark-dark
             text-gray-700 dark:text-gray-200
             border-gray-300 dark:border-gray-700
@@ -282,7 +326,7 @@ export function SmartSelector({
           />
           {!multiple && selected.length > 0 && (
             <div className='absolute top-1/2 -translate-y-1/2 w-full'>
-              <div className='relative flex items-center rounded-full dark:border-slate-600 py-0 px-2 text-center text-sm transition-all text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 max-w-full h-6 justify-between'>
+              <div className='relative  !bg-white dark:!bg-b-dark-dark flex items-center rounded-full py-0 px-2 text-center text-sm transition-all max-w-full h-6 justify-between'>
                 <span className='truncate'>{selected[0].label}</span>
                 <span
                   className='right-3 vox-icon vx-icon-192 cursor-pointer size-sm pl-3 flex-shrink-0'
@@ -292,14 +336,34 @@ export function SmartSelector({
             </div>
           )}
         </div>
-        {end && icon && <span className={`vox-icon vx-icon-${icon} px-2`} />}
+        {button && (
+          <div className='border-l dark:border-gray-600 border-b-light-dark'>
+            <Button
+              onClick={handleButtonClick}
+              name='btn-input-action'
+              icon={buttonIcon}
+              type={buttonType}
+              rounded
+              borderless
+              transparent
+            />
+          </div>
+        )}
+        {!button && end && icon && (
+          <span className={`vox-icon vx-icon-${icon} px-2`} />
+        )}
       </div>
 
       {meta && meta.touched && meta.error && (
-        <div class='text-sm text-red-600 mt-1'>{meta.error}</div>
+        <div class='text-sm text-red-600 mt-1'>{t(meta.error)}</div>
       )}
+      {/*
       {focused &&
         search.length >= 1 &&
+        filtered.length > 0 &&
+        createPortal(dropdown, menuPortalTarget ?? document.body)}
+      */}
+      {focused &&
         filtered.length > 0 &&
         createPortal(dropdown, menuPortalTarget ?? document.body)}
     </div>

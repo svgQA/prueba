@@ -53,6 +53,7 @@ import { useSignal } from '@preact/signals';
 import { Button } from '../button/button';
 import { DraggableTableHeader } from './components/draggable.header';
 import { ROW_ACTIONS } from './enum';
+import { useTranslation } from 'react-i18next';
 
 const SkeletonRow = ({ columns }: { columns: number }) => {
   return (
@@ -88,7 +89,9 @@ export const Table = <T,>({
   rowClassName,
   loading = false,
   searchable,
+  absolute = false,
 }: ITableProps<T>) => {
+  const { t } = useTranslation();
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
     {}
   );
@@ -541,7 +544,7 @@ export const Table = <T,>({
                       <tr>
                         <td
                           colSpan={row.getVisibleCells().length + 1}
-                          className='p-2'
+                          className='p-2 border-b-2 dark:border-b-dark-light dark:bg-b-dark-light bg-b-light-light'
                         >
                           {expandable &&
                             expandable(row.original, selectedCells[row.id])}
@@ -627,7 +630,7 @@ export const Table = <T,>({
     return (
       <div className='flex items-center justify-between py-2 px-4 rounded-lg'>
         <div className='flex items-center gap-2'>
-          <span>Filas por página:</span>
+          <span>{t('filter_by')}:</span>
           <div className='relative'>
             <select
               value={currentPageSize}
@@ -661,8 +664,8 @@ export const Table = <T,>({
           </div>
           <span>
             {currentPage * currentPageSize + 1}-
-            {Math.min((currentPage + 1) * currentPageSize, data.length)} de{' '}
-            {data.length} elementos
+            {Math.min((currentPage + 1) * currentPageSize, data.length)}{' '}
+            {t('from')} {data.length} {t('elements')}
           </span>
         </div>
 
@@ -756,11 +759,11 @@ export const Table = <T,>({
         </div>
 
         <div className='text-sm flex items-center gap-2 px-2'>
-          Página
+          {t('page')}:
           <div className='inline-block border rounded-md px-3 py-1 min-w-[40px] text-center border-b-light-dark dark:border-b-darkt'>
             {currentPage + 1}
           </div>
-          de {totalPages}
+          {t('of')} {totalPages}
         </div>
       </div>
     );
@@ -769,7 +772,9 @@ export const Table = <T,>({
   return (
     <>
       {/* sticky top-[3.4rem] z-[8] */}
-      <div className='w-full py-1 pb-3 flex items-center justify-end'>
+      <div
+        className={`py-1 pb-3 flex items-center justify-end ${absolute ? 'absolute top-10 right-2 w-1/2' : 'w-full'}`}
+      >
         {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (
           <Search
@@ -796,9 +801,10 @@ export const Table = <T,>({
           <div
             className={`${
               isSettingTable
-                ? 'max-h-setting-table'
-                : 'max-h-general-table h-[68vh]'
-            } ${data.length > 10 ? 'overflow-auto' : 'overflow-hidden'} relative vox-scroll-design min-h-[20vh]`}
+                ? 'max-h-setting-table min-h-setting-table h-[62vh]'
+                : 'max-h-general-table h-[65vh]'
+            } overflow-auto vox-scroll-design`}
+            // ${data.length > 10 ? 'overflow-auto' : 'overflow-hidden'} relative vox-scroll-design min-h-[20vh]`}
           >
             <table className='elements relative w-full'>
               <thead>

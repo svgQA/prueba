@@ -2,7 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { useParams, useLocation } from 'wouter';
 import { TemplateService } from '@/services';
 import { ICreateNotificationTemplateDto } from '@/types/notification/ICreateNotificationTemplateDto';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
@@ -44,18 +44,28 @@ export const TemplateNotificationEditPage = () => {
 
     if (res.getStatus()) {
       alert('Plantilla actualizada correctamente');
-      navigate('/dashboard/setting/notifications/template-notification');
+      navigate('/notification/template');
     } else {
       alert('Error al actualizar la plantilla');
     }
   };
 
   return (
-    <Section>
+    <>
+      <div className='flex justify-end gap-4 absolute top-14 right-2'>
+        <Button
+          name='save-template'
+          label='Guardar'
+          className='bg-primary text-white p-2'
+          icon='022'
+          onClick={handleSubmit}
+          disabled={loading}
+        />
+      </div>
       <h2 className='text-xl font-bold mb-4'>
         Editar Plantilla de Notificación
       </h2>
-      <div className='space-y-4'>
+      <div className='grip grid-cols-2'>
         <Input
           name='title'
           label='Título'
@@ -84,17 +94,7 @@ export const TemplateNotificationEditPage = () => {
           }}
         />
         {jsonError && <p className='text-red-600 text-sm'>{jsonError}</p>}
-
-        <div className='flex justify-end'>
-          <Button
-            name='save-template'
-            label='Guardar'
-            className='bg-primary text-white p-2'
-            onClick={handleSubmit}
-            disabled={loading}
-          />
-        </div>
       </div>
-    </Section>
+    </>
   );
 };

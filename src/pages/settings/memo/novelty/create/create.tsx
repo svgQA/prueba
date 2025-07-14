@@ -5,7 +5,7 @@ import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { lengthSize } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useLocation, useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
@@ -30,10 +30,10 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
 
     if (id) {
       request = await NoveltyService.updateNovelty(model, id);
-      message = 'Novedad editado exitosamente!';
+      message = 's_updated_success';
     } else {
       request = await NoveltyService.createNovelty(model);
-      message = 'Novedad creado exitosamente!';
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;
@@ -57,7 +57,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section>
+    <>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -75,6 +75,15 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
             className='space-y-6'
             id='form-place-create'
           >
+            <StatusButton
+              onClickClean={() => {
+                () => form.reset();
+              }}
+              submitting={submitting}
+              pristine={pristine}
+              form='form-place-create'
+              label={id ? 'edit' : 'save'}
+            />
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-3'>
               <div class='col-span-3'>
@@ -130,22 +139,9 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
             </div>
-
-            {/* Botonera */}
-            <div className='w-full flex-row flex justify-end items-center'>
-              <StatusButton
-                onClickClean={() => {
-                  () => form.reset();
-                }}
-                submitting={submitting}
-                pristine={pristine}
-                form='form-place-create'
-                label={id ? 'edit' : 'save'}
-              />
-            </div>
           </form>
         )}
       />
-    </Section>
+    </>
   );
 };

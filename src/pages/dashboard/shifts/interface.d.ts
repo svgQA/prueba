@@ -22,20 +22,3 @@ export interface FormData {
 export interface IShiftRequest extends FormData {
   task?: ITask;
 }
-
-export interface ITask {
-  id?: number;
-  hourStart: string;
-  description: string;
-  name: string;
-  companyId?: number;
-  formId?: number;
-  type: string;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-  createdBy?: string;
-  editedBy?: string;
-  deletedBy?: string;
-  check?: boolean;
-}

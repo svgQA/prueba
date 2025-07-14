@@ -40,7 +40,11 @@ export const MapLibrePointsMap = ({
     lat: '',
     lng: '',
   });
-  const [editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({
+  const [_editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({
+    lat: '',
+    lng: '',
+  });
+  const editCoordsRef = useRef<{ lat: string; lng: string }>({
     lat: '',
     lng: '',
   });
@@ -51,6 +55,9 @@ export const MapLibrePointsMap = ({
   const [userLocation, setUserLocation] = useState<MapPoint | null>(null);
   const watchIdRef = useRef<number | null>(null);
   const { t } = useTranslation();
+  const lastSentPointsRef = useRef<string>(JSON.stringify([]));
+  // Agregar ref para detectar interacción del usuario
+  const userInteractedRef = useRef(false);
 
   // Map style configuration
   /*
@@ -101,6 +108,14 @@ export const MapLibrePointsMap = ({
 
     const map = mapRef.current;
 
+    // Listeners para detectar interacción del usuario
+    map.on('zoomstart', () => {
+      userInteractedRef.current = true;
+    });
+    map.on('dragstart', () => {
+      userInteractedRef.current = true;
+    });
+
     // Wait for the map to be fully loaded
     map.on('load', () => {
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
@@ -139,39 +154,56 @@ export const MapLibrePointsMap = ({
   }, [pointsRef, isMapReady]);
 
   // Update markers and send points to parent
+  // Update markers and send points to parent
   useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
 
     // Always update markers when points change
     updateMarkers();
     // Only send non-user points to parent
-    sendPoints(points.filter((p) => p.id !== -1));
+    // sendPoints(points.filter((p) => p.id !== -1));
+    // Solo enviar si los puntos realmente cambiaron
+    const filteredPoints = points.filter((p) => p.id !== -1);
+    const filteredPointsStr = JSON.stringify(filteredPoints);
+    if (lastSentPointsRef.current !== filteredPointsStr) {
+      sendPoints(filteredPoints);
+      lastSentPointsRef.current = filteredPointsStr;
+    }
 
-    // Ajustar el zoom para mostrar todos los puntos
-    if (points.length > 0) {
-      const bounds = new maplibregl.LngLatBounds();
+    // Ajustar el zoom para mostrar todos los puntos SOLO si el usuario NO ha interactuado
+    if (!userInteractedRef.current) {
+      if (points.length > 0) {
+        const bounds = new maplibregl.LngLatBounds();
 
-      // Agregar todos los puntos al bounds
-      points.forEach((point) => {
-        bounds.extend([point.position.lng, point.position.lat]);
-      });
+        // Agregar todos los puntos al bounds
+        points.forEach((point) => {
+          bounds.extend([point.position.lng, point.position.lat]);
+        });
 
-      // Si hay un punto radial, incluirlo también
-      if (radialPoint) {
-        bounds.extend([radialPoint.position.lng, radialPoint.position.lat]);
+        // Si hay un punto radial, incluirlo también
+        if (radialPoint) {
+          bounds.extend([radialPoint.position.lng, radialPoint.position.lat]);
+        }
+
+        // Si hay ubicación del usuario, incluirla también
+        if (userLocation) {
+          bounds.extend([userLocation.position.lng, userLocation.position.lat]);
+        }
+        // Ajustar el mapa para mostrar todos los puntos con un padding
+        mapRef.current.fitBounds(bounds, {
+          padding: 50,
+          maxZoom: 12, //15
+          duration: 1000,
+        });
+      } else {
+        mapRef.current.setCenter([center.lng, center.lat]);
+        mapRef.current.setZoom(12);
       }
+    }
 
-      // Si hay ubicación del usuario, incluirla también
-      if (userLocation) {
-        bounds.extend([userLocation.position.lng, userLocation.position.lat]);
-      }
-
-      // Ajustar el mapa para mostrar todos los puntos con un padding
-      mapRef.current.fitBounds(bounds, {
-        padding: 50,
-        maxZoom: 12, //15
-        duration: 1000,
-      });
+    // Si se limpian todos los puntos, reiniciar el flag para permitir autoajuste la próxima vez
+    if (points.length === 0) {
+      userInteractedRef.current = false;
     }
   }, [points, isMapReady]);
 
@@ -325,6 +357,7 @@ export const MapLibrePointsMap = ({
       activePopup.remove();
       setActivePopup(null);
     }
+    setIsMarkerClick(false);
     // setActiveMarker(null);
   }, [activePopup]);
 
@@ -510,6 +543,10 @@ export const MapLibrePointsMap = ({
       lat: point.position.lat.toString(),
       lng: point.position.lng.toString(),
     });
+    editCoordsRef.current = {
+      lat: point.position.lat.toString(),
+      lng: point.position.lng.toString(),
+    };
     clickPoint?.(point);
 
     const popupNode = document.createElement('div');
@@ -573,17 +610,21 @@ export const MapLibrePointsMap = ({
     const restoreButton = popupNode.querySelector('#btn-restore');
 
     editLatInput.addEventListener('input', (e) => {
+      const value = (e.target as HTMLInputElement).value;
       setEditCoords((prev) => ({
         ...prev,
-        lat: (e.target as HTMLInputElement).value,
+        lat: value,
       }));
+      editCoordsRef.current.lat = value;
     });
 
     editLngInput.addEventListener('input', (e) => {
+      const value = (e.target as HTMLInputElement).value;
       setEditCoords((prev) => ({
         ...prev,
-        lng: (e.target as HTMLInputElement).value,
+        lng: value,
       }));
+      editCoordsRef.current.lng = value;
     });
 
     if (deleteButton) {
@@ -660,27 +701,58 @@ export const MapLibrePointsMap = ({
     });
 
     closeActivePopup();
+    setIsMarkerClick(false);
   };
 
   // Edit marker coordinates by ID
   const editMarkerById = (id: number): void => {
-    const newLat = Number.parseFloat(editCoords.lat);
-    const newLng = Number.parseFloat(editCoords.lng);
+    // Permitir tanto punto como coma como separador decimal
+    const latStr = editCoordsRef.current.lat.replace(',', '.');
+    const lngStr = editCoordsRef.current.lng.replace(',', '.');
+    const newLat = Number.parseFloat(latStr);
+    const newLng = Number.parseFloat(lngStr);
 
+    // Validar que sean números
     if (isNaN(newLat) || isNaN(newLng)) {
       ToastManager.error(t('maps.connect.error_point'));
       return;
     }
 
-    setPoints((prevPoints) =>
+    // Validar rango de latitud y longitud
+    if (newLat < -90 || newLat > 90 || newLng < -180 || newLng > 180) {
+      ToastManager.error(t('maps.connect.error_point'));
+      return;
+    }
+
+    // Si es el punto del usuario (admin), actualizar userLocation
+    if (id === -1) {
+      setUserLocation((prev) => ({
+        ...prev!,
+        position: { lat: newLat, lng: newLng },
+      }));
+    } else {
+      // Para puntos normales
+      setPoints((prevPoints) =>
+        prevPoints.map((point) =>
+          point.id === id
+            ? { ...point, position: { lat: newLat, lng: newLng } }
+            : point
+        )
+      );
+    }
+
+    /**
+     setPoints((prevPoints) =>
       prevPoints.map((point) =>
         point.id === id
           ? { ...point, position: { lat: newLat, lng: newLng } }
           : point
       )
     );
+     */
 
     closeActivePopup();
+    setIsMarkerClick(false);
     ToastManager.success(t('maps.connect.success_point'));
   };
 
@@ -814,33 +886,36 @@ export const MapLibrePointsMap = ({
   return (
     <>
       {allowManualPoint && (
-        <div className='flex flex-row items-end justify-between gap-x-2 py-1'>
-          <Input
-            name='latitude'
-            placeholder='6.246631'
-            label='Latitud'
-            type='number'
-            value={coords.lat}
-            onChange={(e) => handleInputChange(e, 'lat')}
-          />
+        <div className='flex flex-row gap-2 items-center justify-center w-full pb-1'>
+          <div className='flex flex-row items-end justify-between gap-x-2 py-1 w-full'>
+            <Input
+              name='latitude'
+              placeholder='6.246631'
+              label='Latitud'
+              type='number'
+              value={coords.lat}
+              onChange={(e) => handleInputChange(e, 'lat')}
+            />
 
-          <Input
-            name='longitude'
-            placeholder='-75.581775'
-            label='Longitud'
-            type='number'
-            value={coords.lng}
-            onChange={(e) => handleInputChange(e, 'lng')}
-          />
-
-          <Button
-            id='btn-add'
-            name='btn-add'
-            type='button'
-            onClick={addManualPoint}
-            label='Añadir'
-            icon='123'
-          />
+            <Input
+              name='longitude'
+              placeholder='-75.581775'
+              label='Longitud'
+              type='number'
+              value={coords.lng}
+              onChange={(e) => handleInputChange(e, 'lng')}
+            />
+          </div>
+          <div className='pt-5'>
+            <Button
+              id='btn-add'
+              name='btn-add'
+              type='button'
+              onClick={addManualPoint}
+              label='Añadir'
+              icon='039'
+            />
+          </div>
         </div>
       )}
       {/*

@@ -9,6 +9,7 @@ export const notification_es = {
     memo_state: 'Estado de Memo',
     shift: 'Turno',
     shift_state: 'Estado de Turno',
+    error_redirect: 'Error al redireccionar',
   },
 };
 
@@ -21,5 +22,6 @@ export const notification_en = {
     memo_state: 'Memo State',
     shift: 'Shift',
     shift_state: 'Shift State',
+    error_redirect: 'Error redirecting',
   },
 };

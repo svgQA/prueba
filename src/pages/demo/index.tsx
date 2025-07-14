@@ -6,7 +6,7 @@ const DemoPage: React.FC = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = `TR - ${t('demo.pageTitle')}`;
+    document.title = t('p_demo');
   }, [t]);
 
   return (

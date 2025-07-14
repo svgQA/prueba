@@ -1,11 +1,13 @@
 import { Button } from '@/components/common/button/button';
 
-interface StatusButtonProps {
+interface Props {
   onClickClean: () => void;
   submitting: boolean;
   pristine: boolean;
   form: string;
   label?: string;
+  clear?: boolean;
+  lock?: boolean;
 }
 
 export const StatusButton = ({
@@ -13,30 +15,33 @@ export const StatusButton = ({
   submitting,
   pristine,
   form,
-  label = 'Guardar',
-}: StatusButtonProps) => {
+  label = 'save',
+  clear = false,
+  lock = false,
+}: Props) => {
   return (
-    <div className='w-full flex-row flex justify-end items-center gap-4'>
-      <Button
-        id='btn-clean'
-        name='btn-clean'
-        type='button'
-        label='clean'
-        icon='023'
-        onClick={onClickClean}
-        disabled={submitting || pristine}
-      />
+    <div className='flex justify-end space-x-4 absolute top-14 right-2'>
+      <div className='w-full flex-row flex justify-end items-center gap-4'>
+        <Button
+          id='btn-clean'
+          name='btn-clean'
+          type='button'
+          label='clean'
+          icon='023'
+          onClick={onClickClean}
+          disabled={clear ? lock && pristine : submitting || pristine}
+        />
 
-      <Button
-        id='btn-save'
-        name='btn-save'
-        type='submit'
-        label={label}
-        form={form}
-        icon='022'
-        className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
-        disabled={submitting}
-      />
+        <Button
+          id='btn-save'
+          name='btn-save'
+          type='submit'
+          label={label}
+          form={form}
+          icon='022'
+          disabled={submitting}
+        />
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { useLocation } from 'wouter';
 import { columns } from './components/predefined';
@@ -14,15 +14,25 @@ import {
 } from '../../store/settings';
 import { IPredefined, IRowActionPlace } from './utils/predefined.d';
 import { PredefinedService } from '@/services/shift/predefined';
+import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
 
 export const PredefinedSettingPage: FunctionComponent = () => {
   const [_, navigate] = useLocation();
   const predefined: Signal<IPredefined[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'TR - Predefined Service';
-    getPredefined();
+    document.title = t('p_predefined');
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getPredefined();
+    }
+  }, [selectedCompany, location]);
 
   const getPredefined = async () => {
     loading.value = true;
@@ -33,20 +43,16 @@ export const PredefinedSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const redirect = () => {
-    setMenu({ ...infoMenu.value, label: 'Creacion de predefinido' });
-    navigate('/memo/predefined/create');
-  };
-
   const update = (id: string) => {
-    setMenu({ ...infoMenu.value, label: 'Editar predefinido' });
+    // OJO: No traducir, dejar asi los setMenu
+    setMenu({ ...infoMenu.value, label: 'edit' });
     navigate(`/memo/predefined/update/${id}`);
   };
 
   const deletePredefined = async (id: string) => {
     const request = await PredefinedService.deletePredefined(id);
     if (!request.getStatus()) return;
-    ToastManager.success('Predefinido eliminado');
+    ToastManager.success('s_deleted_success');
     getPredefined();
   };
 
@@ -62,31 +68,16 @@ export const PredefinedSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={redirect}
-          />
-        </div>
-      </div>
+    <>
       <Table<IPredefined>
         data={predefined.value}
         columns={columns}
         pageSize={20}
-        visibility={{
-          name: true,
-          description: true,
-          priority: true,
-          action: true,
-        }}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}
+        absolute
       />
-    </Section>
+    </>
   );
 };

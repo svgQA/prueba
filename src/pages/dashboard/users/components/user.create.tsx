@@ -49,7 +49,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
 
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
   const image = useSignal<IPresignedRequest[]>([]);
-
+  const requiredRole = useSignal<boolean>(true);
   useEffect(() => {
     // applyAllData();
     Promise.all([
@@ -82,7 +82,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         label: role.role.name,
         value: role.role.id,
       }));
-      console.log('roles =>', roles);
+      // console.log('roles =>', roles);
 
       const userCompanies =
         user.companies?.map((comp) => ({
@@ -231,16 +231,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
 
   const onSubmit = async (user: IUserRequest) => {
     let request;
-    let message =
-      getUserMode.value.mode === USER_MODE_SERVICE.UPDATE
-        ? t('user.create.update')
-        : t('user.create.success');
+    let message = '';
 
-    if (getUserMode.value.mode === USER_MODE_SERVICE.UPDATE && user.id) {
+    if (user.id) {
       request = await UserService.update(user, user.id);
-    } else if (getUserMode.value.mode === USER_MODE_SERVICE.CREATE) {
+      message = 's_updated_success';
+    } else {
       request = await UserService.create(user);
-    } else return;
+      message = 's_created_success';
+    }
 
     if (!request.getStatus()) return;
     props.onUserCreated?.(request.getOne());
@@ -355,8 +354,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder={t('user.create.placeholder.phone')}
-                        label={t('user.create.form.phone')}
+                        placeholder={'h_phone'}
+                        label={'h_phone'}
                         type='tel'
                         meta={meta}
                         icon='231'
@@ -432,8 +431,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         {...input}
                         meta={meta}
                         id='country'
-                        label={t('user.create.form.country')}
-                        placeholder={t('user.create.placeholder.country')}
+                        label='h_country'
+                        placeholder='p_select'
                         icon='321'
                         options={countries.value}
                       />
@@ -449,8 +448,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         {...input}
                         meta={meta}
                         id='departmentId'
-                        label={t('user.create.form.department')}
-                        placeholder={t('user.create.placeholder.department')}
+                        label='h_department'
+                        placeholder='p_select'
                         icon='321'
                         options={departments.value}
                         onChange={(e) => {
@@ -510,6 +509,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         label={t('user.create.form.userType.label')}
                         name='userType'
                         icon='231'
+                        onChange={(e) => {
+                          requiredRole.value =
+                            e.currentTarget.value !== 'CLIENT';
+                          input.onChange(e);
+                        }}
                         optionValue='id'
                         optionLabel='name'
                         options={[
@@ -530,7 +534,10 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                       />
                     )}
                   </Field>
-                  <Field<IOption[]> name='roles' validate={required}>
+                  <Field<IOption[]>
+                    name='roles'
+                    validate={requiredRole.value ? required : undefined}
+                  >
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}

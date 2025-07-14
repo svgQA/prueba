@@ -1,7 +1,6 @@
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
-import { useLocation } from 'wouter';
 import { columns } from './components/schedule.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -9,37 +8,30 @@ import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
-import { appendHistory } from '../../store/settings';
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../store/settings';
-import { DataSchedule, DaySelection } from './components/data.schedule';
+import { DataSchedule } from './components/data.schedule';
 import { ScheduleService } from '@/services';
 import { useTranslation } from 'react-i18next';
-
-export interface ISchedule {
-  id: number;
-  name: string;
-  daysAllowed: string[];
-  days: any;
-}
-
-export interface IRowActionPlace {
-  id: string;
-  type: string;
-  action: ROW_ACTIONS;
-}
+import { IDay, IRowActionPlace, ISchedule } from '@/types/shift/shift.request';
+import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
 
 export const ScheduleSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  const { redirectSettings } = useNavigation();
   const schedules: Signal<ISchedule[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
+
   const { t } = useTranslation();
   useEffect(() => {
-    document.title = t('schedule.title');
-    getSchedules();
+    document.title = t('p_schedule');
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      getSchedules();
+    }
+  }, [selectedCompany, location]);
 
   const getSchedules = async () => {
     loading.value = true;
@@ -50,32 +42,28 @@ export const ScheduleSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const redirect = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.create.to,
-      label: 'create',
-      id: 'schedule-create',
-    };
-    appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: t('schedule.createSchedule') });
-    navigate('/rounds/schedule/create');
-  };
+  // const redirect = () => {
+  //   redirectSettings(
+  //     PAGES_LIST_ROUTER.dashboard.setting.base,
+  //     '/rounds/schedule/create',
+  //     'create',
+  //     'schedule-create'
+  //   );
+  // };
 
   const update = (id: string) => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.schedule.update.to,
-      label: 'update',
-      id: 'schedule-update',
-    };
-    appendHistory(menu);
-    setMenu({ ...infoMenu.value, label: t('schedule.editSchedule') });
-    navigate(`/rounds/schedule/update/${id}`);
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      `/shifts/schedule/update/${id}`,
+      'update',
+      'schedule-update'
+    );
   };
 
   const deleteSchedule = async (id: string) => {
     const request = await ScheduleService.deleteSchedule(id);
     if (!request.getStatus()) return;
-    ToastManager.success(t('schedule.deleteSchedule'));
+    ToastManager.success('s_deleted_success');
     getSchedules();
   };
 
@@ -91,25 +79,14 @@ export const ScheduleSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={redirect}
-            className='px-6 py-2 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
-        </div>
-      </div>
+    <>
       <Table<ISchedule>
         data={schedules.value}
         columns={columns}
-        expandable={(row: any) => {
+        expandable={(row: ISchedule) => {
           return (
             <ul className='flex flex-wrap justify-center gap-x-2'>
-              {row.days.map((dayInfo: DaySelection) => (
+              {row.days.map((dayInfo: IDay) => (
                 <DataSchedule daySelection={dayInfo} />
               ))}
             </ul>
@@ -117,13 +94,12 @@ export const ScheduleSettingPage: FunctionComponent = () => {
         }}
         visibility={{
           id: false,
-          name: true,
-          daysAllowed: true,
         }}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}
+        absolute
       />
-    </Section>
+    </>
   );
 };

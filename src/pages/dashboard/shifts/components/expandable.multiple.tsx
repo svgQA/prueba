@@ -12,13 +12,18 @@ import TaskInfo from './expandable/task.expandable';
 type Props = {
   type?: string;
   data: IShiftResponse;
+  onCheck?: (parametro: any) => void;
 };
 
-const getInfoContent = (type: string, shift: IShiftResponse) => {
+const getInfoContent = (
+  type: string,
+  shift: IShiftResponse,
+  onCheck?: (parametro: any) => void
+) => {
   const { service, employee, activityPct, roundPct, tasks, report, task } =
     shift;
 
-  console.log('tasks', task);
+  // console.log('tasks', task);
 
   switch (type) {
     case 'service':
@@ -65,6 +70,7 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
           checkOut={shift.checkOut}
           employee={employee}
           shift={shift}
+          onCheck={onCheck}
         />
       );
     case 'time-end':
@@ -74,6 +80,7 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
           checkOut={shift.checkOut}
           employee={employee}
           shift={shift}
+          onCheck={onCheck}
         />
       );
     default:
@@ -81,10 +88,6 @@ const getInfoContent = (type: string, shift: IShiftResponse) => {
   }
 };
 
-export const ExpandableMultiple = ({ type, data }: Props) => {
-  return (
-    <div className='info-container'>
-      {type && data && getInfoContent(type, data)}
-    </div>
-  );
+export const ExpandableMultiple = ({ type, data, onCheck }: Props) => {
+  return <div>{type && data && getInfoContent(type, data, onCheck)}</div>;
 };

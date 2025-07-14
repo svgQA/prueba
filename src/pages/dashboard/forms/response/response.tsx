@@ -31,11 +31,12 @@ import { QrCode } from '@/components/common/qr/qrCode';
 
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
+  type?: string;
 }
 
 export const FormResponseSettingPage: FunctionComponent<
   IFormResponseSettingPageProps
-> = ({ posFinishAction }: IFormResponseSettingPageProps) => {
+> = ({ posFinishAction, type }: IFormResponseSettingPageProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
 
@@ -50,7 +51,7 @@ export const FormResponseSettingPage: FunctionComponent<
   const handleInputChange = (
     e: TargetedEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    console.log('handleInputChange', e);
+    // console.log('handleInputChange', e);
     const model = handleChange(e);
     if (!model.page) return;
     updateResponse(
@@ -427,7 +428,7 @@ export const FormResponseSettingPage: FunctionComponent<
 
   const saveResponse = async () => {
     if (!getResponse.value) return;
-    console.log('saveResponse', getResponse.value);
+    // console.log('saveResponse', getResponse.value);
 
     // TODO: No borrar esta parte que es para guardar donde se puede dejar como se quiera
     // el formulario
@@ -472,22 +473,24 @@ export const FormResponseSettingPage: FunctionComponent<
               <h1 className='text-2xl font-bold mb-6'>
                 {getResponse.value.label}
               </h1>
-              <div className='flex flex-row gap-2'>
-                <Button
-                  type='button'
-                  onClick={finishResponse}
-                  name='btn-finish-response'
-                  icon='137'
-                  label='finish'
-                />
-                <Button
-                  type='button'
-                  onClick={saveResponse}
-                  name='btn-save-response'
-                  icon='134'
-                  label='save'
-                />
-              </div>
+              {type !== 'VIEW' && (
+                <div className='flex flex-row gap-2'>
+                  <Button
+                    type='button'
+                    onClick={finishResponse}
+                    name='btn-finish-response'
+                    icon='137'
+                    label='finish'
+                  />
+                  <Button
+                    type='button'
+                    onClick={saveResponse}
+                    name='btn-save-response'
+                    icon='134'
+                    label='save'
+                  />
+                </div>
+              )}
             </div>
 
             {getResponse.value.description && (

@@ -3,7 +3,6 @@ import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { ICompanyResponse } from '@/utils/types/company.interface';
 import { useSignal } from '@preact/signals';
-import { Button } from '@/components/common/button/button';
 import { CompanyService } from '@/services';
 import { CardCompany } from './component/card.company';
 import { Form, Field } from 'react-final-form';
@@ -15,6 +14,8 @@ import {
   IUCompanyRequest,
 } from '@/utils/types/company.interface';
 import { useUserStore } from '@/store/slices/access/user.slice';
+// import { Section } from '@/components/common/section/section';
+import { useTranslation } from 'react-i18next';
 
 export const CompanySettingPage: FunctionComponent = () => {
   const { setCompanies } = useUserStore();
@@ -22,7 +23,7 @@ export const CompanySettingPage: FunctionComponent = () => {
   const companies = useSignal<ICompanyResponse[]>([]);
   const showForm = useSignal(false);
   const isEditing = useSignal(false);
-  const selectedCompany = useSignal<ICompanyResponse | null>(null);
+  const _selectedCompany = useSignal<ICompanyResponse | null>(null);
 
   const initialFormValues: ICCompanyRequest = {
     name: '',
@@ -30,11 +31,19 @@ export const CompanySettingPage: FunctionComponent = () => {
     address: '',
     identification: '',
   };
+  const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = 'Company Settings';
-    loadCompanies();
+    document.title = t('p_setting');
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      loadCompanies();
+    }
+  }, [selectedCompany, location]);
 
   const loadCompanies = async () => {
     const [responseGeneral, responseList] = await Promise.all([
@@ -53,11 +62,9 @@ export const CompanySettingPage: FunctionComponent = () => {
   };
 
   const handleEdit = (company: ICompanyResponse) => {
-    resetForm(true, true, company);
-  };
-
-  const handleAdd = () => {
-    resetForm(!showForm.value);
+    company.id === _selectedCompany.value?.id
+      ? resetForm(true, false, null)
+      : resetForm(true, true, company);
   };
 
   const resetForm = (
@@ -65,59 +72,57 @@ export const CompanySettingPage: FunctionComponent = () => {
     isEdit: boolean = false,
     company: ICompanyResponse | null = null
   ) => {
-    selectedCompany.value = company;
+    _selectedCompany.value = company;
     isEditing.value = isEdit;
     showForm.value = show;
   };
 
   const onSubmit = async (values: ICCompanyRequest | IUCompanyRequest) => {
     let response;
-    if (isEditing && selectedCompany.value) {
+    if (isEditing && _selectedCompany.value) {
       response = await CompanyService.updateCompany(
-        selectedCompany.value.id,
+        _selectedCompany.value.id,
         values as IUCompanyRequest
       );
     } else {
       response = await CompanyService.createCompany(values as ICCompanyRequest);
     }
     if (!response.getStatus()) return;
-    ToastManager.success(
-      isEditing
-        ? 'Empresa actualizada correctamente'
-        : 'Empresa creada correctamente'
-    );
+    ToastManager.success(isEditing ? 's_updated_success' : 's_created_success');
     resetForm(false);
     loadCompanies();
   };
 
   return (
-    <div className='h-full overflow-y-auto vox-scroll-design p-5 w-full relative'>
-      <div className='flex flex-row justify-between'>
-        <div className='flex flex-row gap-2 justify-center flex-wrap'>
-          {companies.value.map((company) => (
-            <CardCompany
-              key={company.id}
-              company={company}
-              onEdit={() => handleEdit(company)}
-            />
-          ))}
-        </div>
-        {showForm.value && (
-          <div className='min-w-[500px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
+    <>
+      <div className='p-5 w-full'>
+        <div className='flex flex-row justify-between gap-2 items-start'>
+          <div className='flex flex-row gap-2 justify-center flex-wrap overflow-y-auto vox-scroll-design h-[60vh]'>
+            {companies.value.map((company) => (
+              <CardCompany
+                key={company.id}
+                company={company}
+                selected={company.id === _selectedCompany.value?.id}
+                onEdit={() => handleEdit(company)}
+              />
+            ))}
+          </div>
+          <div className='min-w-[500px] h-[250px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
             <Form<ICCompanyRequest | IUCompanyRequest>
               onSubmit={onSubmit}
               initialValues={
-                selectedCompany.value
+                _selectedCompany.value
                   ? {
-                      name: selectedCompany.value?.name,
-                      description: selectedCompany.value?.description,
-                      address: selectedCompany.value?.address || '',
+                      name: _selectedCompany.value?.name,
+                      description: _selectedCompany.value?.description,
+                      address: _selectedCompany.value?.address || '',
                       identification:
-                        selectedCompany.value?.identification || '',
+                        _selectedCompany.value?.identification || '',
                     }
                   : initialFormValues
               }
               validate={(values) => {
+                // TODO: Traducir errores en i18n validations using underscore
                 const errors: Partial<ICCompanyRequest> = {};
                 if (!values.name || values.name.length < 4)
                   errors.name = 'Nombre requerido (mínimo 4 caracteres)';
@@ -135,9 +140,22 @@ export const CompanySettingPage: FunctionComponent = () => {
                   className='h-full flex flex-col justify-between'
                   id='form-company'
                 >
+                  <StatusButton
+                    onClickClean={() => {
+                      form.reset();
+                      if (isEditing) {
+                        resetForm(false);
+                      }
+                    }}
+                    clear
+                    lock={!isEditing.value}
+                    submitting={submitting}
+                    pristine={pristine}
+                    form='form-company'
+                  />
                   <div className='flex flex-col justify-between gap-4'>
                     <h2 className='text-2xl font-bold'>
-                      {isEditing ? 'Editar Empresa' : 'Nueva Empresa'}
+                      {isEditing.value ? 'Editar Empresa' : 'Nueva Empresa'}
                     </h2>
                     <div className='grid grid-cols-2 gap-4'>
                       <Field<string> name='name'>
@@ -189,26 +207,12 @@ export const CompanySettingPage: FunctionComponent = () => {
                       </Field>
                     </div>
                   </div>
-                  <StatusButton
-                    onClickClean={() => {
-                      form.reset();
-                      if (isEditing) {
-                        resetForm(false);
-                      }
-                    }}
-                    submitting={submitting}
-                    pristine={pristine}
-                    form='form-company'
-                  />
                 </form>
               )}
             />
           </div>
-        )}
-        <div className='absolute top-0 right-0'>
-          <Button name='company-setting-add' icon='039' onClick={handleAdd} />
         </div>
       </div>
-    </div>
+    </>
   );
 };

@@ -1,11 +1,13 @@
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { FormattedDate } from '@/components/compose/forms';
+import { useTranslation } from 'react-i18next';
 
 interface CardRoundProps {
   activity: any;
 }
 
 export const CardRound = ({ activity }: CardRoundProps) => {
+  const { t } = useTranslation();
   // const openForm = (formId: number | null) => {
   //   if (formId) {
   //     // TODO: Open form
@@ -44,7 +46,7 @@ export const CardRound = ({ activity }: CardRoundProps) => {
             <div className='flex items-center gap-1'>
               <span className='vox-icon vx-icon-325'></span>
               <span>
-                Programación:{' '}
+                {t('h_schedule')}:{' '}
                 <FormattedDate
                   date={activity.serviceTask.hourStart}
                   format='datetime'
@@ -56,7 +58,7 @@ export const CardRound = ({ activity }: CardRoundProps) => {
               <div className='flex items-center gap-1'>
                 <span className='vox-icon vx-icon-325'></span>
                 <span>
-                  Solución:{' '}
+                  {t('h_solves')}:{' '}
                   <FormattedDate date={activity.date} format='datetime' />
                 </span>
               </div>

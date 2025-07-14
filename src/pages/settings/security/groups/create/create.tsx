@@ -1,6 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Section } from '@/components/common/section/section';
+// import { Section } from '@/components/common/section/section';
 import { GroupBuilder } from './GroupBuilder';
 import { Group } from './utils/types';
 import { createEmptyGroup } from './utils/utils';
@@ -11,15 +11,22 @@ import { Button } from '@/components/common/button/button';
 import { useSignal } from '@preact/signals';
 import { GeneralService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { navigate } from 'wouter/use-browser-location';
+// TODO: Ver esto, porque este lo hace de forma absoluta
+// import { navigate } from 'wouter/use-browser-location';
+import { useTranslation } from 'react-i18next';
+import { useLocation } from 'wouter';
 
 export const GroupCreateSettingPage: FunctionComponent = () => {
+  // Este lo hace de forma relativa
+  const [_, navigate] = useLocation();
   const name = useSignal<string>('');
   const description = useSignal<string>('');
 
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = 'Security Group Settings';
+    document.title = t('p_group');
   }, []);
+
   const [rootGroup, setRootGroup] = useState<Group>(createEmptyGroup());
 
   const saveGroup = async () => {
@@ -42,13 +49,21 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
     name.value = '';
     description.value = '';
     setRootGroup(createEmptyGroup());
-    ToastManager.success('Grupo creado exitosamente');
+    ToastManager.success('s_created_success');
     navigate('/security/groups');
   };
 
   return (
-    <Section>
-      <div className='p-4'>
+    <>
+      <div className='flex justify-end gap-4 absolute top-14 right-2'>
+        <Button
+          name='id-save-group'
+          label='save'
+          icon='312'
+          onClick={saveGroup}
+        />
+      </div>
+      <div className='px-4'>
         <div className='pb-4'>
           <div className='flex flex-row justify-between items-end gap-3'>
             <Input
@@ -56,12 +71,6 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
               label='name'
               value={name.value}
               onChange={(e) => (name.value = e.currentTarget.value)}
-            />
-            <Button
-              name='id-save-group'
-              label='save'
-              icon='312'
-              onClick={saveGroup}
             />
           </div>
           <TextArea
@@ -72,7 +81,7 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
           />
         </div>
         <EquationPreview filter={rootGroup} />
-        <div class='space-y-4 rounded shadow-md'>
+        <div class='space-y-4 rounded'>
           <GroupBuilder
             group={rootGroup}
             onChange={setRootGroup}
@@ -85,6 +94,6 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
           */}
         </div>
       </div>
-    </Section>
+    </>
   );
 };

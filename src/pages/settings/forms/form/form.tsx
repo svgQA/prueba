@@ -12,8 +12,8 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { FORMAT_MODE_SERVICE, setFormat } from '../create/store/question';
 import { Table } from '@/components/common/table/table';
 import { appendHistory } from '../../store/settings';
-import { Section } from '@/components/common/section/section';
-import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/common/badge/badge';
 import { localStorage } from '@/utils/storage';
@@ -22,6 +22,7 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { validateResponse } from '@/pages/dashboard/forms/response/store/response';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { closeSettingModal } from '@/store/signals/modals/settings/settings.signal';
+import { useUserStore } from '@/store/slices';
 
 export const FormSettingPage = () => {
   const { t } = useTranslation();
@@ -29,10 +30,18 @@ export const FormSettingPage = () => {
   const [_, navigate] = useLocation();
   const [hasUnfinishedForm, setHasUnfinishedForm] = useState(false);
   const loading = useSignal<boolean>(false);
+
   useEffect(() => {
-    getFormsHandler();
-    checkUnfinishedForm();
+    document.title = t('p_form');
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      Promise.all([getFormsHandler(), checkUnfinishedForm()]);
+    }
+  }, [selectedCompany, location]);
 
   const checkUnfinishedForm = () => {
     const savedData = localStorage.get<IFormat>(FORM_AUTO_SAVE_KEY);
@@ -82,7 +91,7 @@ export const FormSettingPage = () => {
   const redirect = (model?: IFormat) => {
     setFormat({ mode: FORMAT_MODE_SERVICE.CREATE }, model);
     const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.forms.create.to,
+      to: PAGES_LIST_ROUTER.dashboard.setting.forms.form.create.to,
       label: 'create',
       id: 'form-create',
     };
@@ -93,17 +102,18 @@ export const FormSettingPage = () => {
   const handleOnClick = async (action: IRowAction) => {
     const format = forms.value.find((format) => format.id == action.id);
     if (!format?.structure) throw Error(t('form.error.general'));
+    const groups = format.groups?.map((group) => group.group.id) || [];
     switch (action.action) {
       case ROW_ACTIONS.UPDATE: {
         const menu = {
-          to: PAGES_LIST_ROUTER.dashboard.setting.forms.create.to,
+          to: PAGES_LIST_ROUTER.dashboard.setting.forms.form.create.to,
           label: 'create',
           id: 'form-create',
         };
         appendHistory(menu);
         setFormat(
           { mode: FORMAT_MODE_SERVICE.UPDATE, id: format.id },
-          format.structure
+          { ...format.structure, groups: groups }
         );
         navigate(menu.to);
         break;
@@ -116,7 +126,7 @@ export const FormSettingPage = () => {
       }
       case ROW_ACTIONS.RESPONSE: {
         if (!validateResponse(format.structure)) {
-          ToastManager.error(t('form.error.invalidResponse'));
+          ToastManager.error('s_structure_error');
           return;
         }
         const response = await FormService.create_response({
@@ -163,6 +173,7 @@ export const FormSettingPage = () => {
     });
   };
 
+  /*
   const handleContinueCreatingForm = () => {
     if (!hasUnfinishedForm) return redirect();
     showAlert({
@@ -173,35 +184,27 @@ export const FormSettingPage = () => {
       onCancel: () => {},
     });
   };
+  */
 
   return (
-    <Section>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-50'>
-        <div className='flex flex-row items-center justify-between gap-2'>
-          <Button
-            name='button-create-shift'
-            label='new'
-            icon='039'
-            onClick={handleContinueCreatingForm}
-            className='px-6 py-1 text-sm font-medium rounded md:text-base h-fit items-center justify-center inline-flex bg-primary text-white border-none'
-          />
-          {hasUnfinishedForm && (
-            <div
-              onClick={continueUnfinishedForm}
-              className='cursor-pointer hover:opacity-80'
-            >
-              <Badge
-                status='warning'
-                label='Continuar Formulario'
-                full
-                outline
-                icon='039'
-                size='sm'
-                onRemove={handleRemoveUnfinishedForm}
-              />
-            </div>
-          )}
-        </div>
+    <>
+      <div className='flex flex-row items-center justify-between absolute top-16 left-28'>
+        {hasUnfinishedForm && (
+          <div
+            onClick={continueUnfinishedForm}
+            className='cursor-pointer hover:opacity-80'
+          >
+            <Badge
+              status='warning'
+              label='l_form_continue'
+              full
+              outline
+              icon='039'
+              size='sm'
+              onRemove={handleRemoveUnfinishedForm}
+            />
+          </div>
+        )}
       </div>
       <Table<IFormResponse>
         data={forms.value}
@@ -210,7 +213,11 @@ export const FormSettingPage = () => {
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}
+        absolute
+        visibility={{
+          category: false,
+        }}
       />
-    </Section>
+    </>
   );
 };

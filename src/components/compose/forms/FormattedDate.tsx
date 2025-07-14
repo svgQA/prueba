@@ -1,11 +1,11 @@
 import { ComponentChildren } from 'preact';
-import { DateUtils } from '@/utils/utilities/dates';
+import { DateUtils, ValidDate } from '@/utils/utilities/dates';
 
 type DateFormat = 'human' | 'date' | 'datetime' | 'time' | 'relative';
 type TimeZone = 'local' | 'utc';
 
-interface FormattedDateProps {
-  date: string | Date | null | undefined;
+interface Props {
+  date?: ValidDate | null;
   format?: DateFormat;
   timeZone?: TimeZone;
   className?: string;
@@ -19,9 +19,9 @@ export const FormattedDate = ({
   timeZone = 'local',
   className,
   children,
-  emptyValue = '-',
-}: FormattedDateProps) => {
-  if (!date) return <span className={className}>{emptyValue}</span>;
+  emptyValue = '--:--',
+}: Props) => {
+  if (!date || date === null || date === 'null') return emptyValue;
 
   const formatDate = (): string => {
     switch (format) {
@@ -37,7 +37,7 @@ export const FormattedDate = ({
         return DateUtils.dateToFrontend(date, { format: 'DD/MM/YYYY HH:mm' });
 
       case 'time':
-        return DateUtils.dateToFrontend(date, { format: 'HH:mm' });
+        return DateUtils.hourToFrontend(date);
 
       case 'relative':
         return DateUtils.getRelativeTime(date);

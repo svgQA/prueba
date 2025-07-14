@@ -3,28 +3,34 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-import { Button } from '@/components/common/button/button';
-import { Section } from '@/components/common/section/section';
+// import { Button } from '@/components/common/button/button';
+// import { Section } from '@/components/common/section/section';
 import { useEffect } from 'preact/hooks';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { omitBy, isNull, pick } from 'lodash';
 import arrayMutators from 'final-form-arrays';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 import { IPointMap } from '../interface';
-import { TextArea } from '@/components/common/text.area/text.area';
-import { Select } from '@/components/common/select/select';
-import dayjs from 'dayjs';
-import { Tooltip } from '@/components/common/tooltip/tooltip';
-import { ITask } from '@/types/shift/activity';
+// import { TextArea } from '@/components/common/text.area/text.area';
+// import { Select } from '@/components/common/select/select';
+// import dayjs from 'dayjs';
+// import { Tooltip } from '@/components/common/tooltip/tooltip';
+// import { ITask } from '@/types/shift/activity';
 import {
-  FormService,
+  // FormService,
+  // TaskService,
   PlaceService,
   RoundService,
-  TaskService,
 } from '@/services';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { StatusButton } from '@/pages/settings/components/custom.button';
+import { useNavigation } from '@/utils/utilities/navigation';
+import { HelpTooltip } from '@/components/common/help-tooltip';
+import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
+// import { TaskFormCreate } from '../../task/create/task.form';
+// import { IOption } from '@/components/common/multi/interface';
 
 interface IPoint {
   latitude: number;
@@ -56,26 +62,33 @@ interface ILocation {
 }
 
 export const RoundCreateSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
+  const { id } = useParams(); // Obtiene el id de la URL
   const currentLocation = useSignal<ILocation>();
   const points = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const places = useSignal<any>([]);
-  const showHelp = useSignal<boolean>(false);
-  const tasks = useSignal<ITask[]>([]);
-  const { id } = useParams(); // Obtiene el id de la URL
-  const [_, navigate] = useLocation();
-  const forms = useSignal<any[]>([]);
+  const { navigateUpsert } = useNavigation();
+  // const tasksResponse = useSignal<any[]>([]);
+  // const _forms = useSignal<IOption[]>([]);
 
-  const getFormsHandler = async () => {
-    const response = await FormService.get_all();
-    if (!response.getStatus()) return;
-    forms.value = response.getMany();
-  };
+  // const getFormsHandler = async () => {
+  //   const response = await FormService.getSimpleList();
+  //   if (!response.getStatus()) return;
+  //   _forms.value = response.getMany();
+  // };
+
+  let lastPointsSerialized = JSON.stringify([]);
 
   const sendPointsRef = (data: any) => {
+    const serialized = JSON.stringify(data);
+    if (serialized === lastPointsSerialized) return; // Solo actualiza si realmente cambió
+
+    points.value = data;
+    lastPointsSerialized = serialized;
+
     if (!data.length) return;
     const { lat, lng } = data[0].position;
-    points.value = data;
     currentLocation.value = { lat, lng };
     return { lat, lng };
   };
@@ -84,7 +97,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     let request;
     let message: string;
     if (!points.value.length) {
-      return ToastManager.warning('Ingrese puntos en el mapa');
+      return ToastManager.warning('s_insert_points');
     } else {
       model.points = points.value.map(
         (point: {
@@ -109,22 +122,25 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
     if (id) {
       request = await RoundService.updateRound(model, id);
-      message = 'Ronda editada exitosamente!';
+      message = 's_updated_success';
     } else {
       request = await RoundService.createRound(model);
-      message = 'Ronda creada exitosamente!';
+      message = 's_created_success';
     }
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
 
-    navigate('/rounds');
+    navigateUpsert('/shifts/rounds');
   };
+
+  /*
   const getTasks = async () => {
     const response = await TaskService.getTasks();
     if (!response.getStatus()) return;
     tasks.value = response.getMany();
   };
+  */
 
   const setInitialValues = async () => {
     if (!id) return;
@@ -164,11 +180,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
 
   const created = async () => {
-    await getPlaces();
-    await setInitialValues();
-    await getFormsHandler();
+    await Promise.all([
+      getPlaces(),
+      setInitialValues() /*, getFormsHandler() */,
+    ]);
   };
 
+  /*
   const selectTask = async (taskId: number, pointId: number) => {
     const task = tasks.value.find((task: any) => task.id === taskId);
 
@@ -183,14 +201,25 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       formId: task.formId,
     });
   };
+  */
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    created();
-    getTasks();
-  }, []);
+    if (selectedCompany) {
+      created();
+      // Promise.all([created(), getTasks()]);
+    }
+  }, [selectedCompany, location]);
+
+  /*
+  const onTaskAdd = (task: any, index: number) => {
+    tasksResponse.value[index] = [task, ...tasksResponse.value[index]];
+    // tasksResponse.value = [task, ...tasksResponse.value];
+  };
+  */
 
   return (
-    <Section>
+    <>
       <Form
         onSubmit={onSubmit}
         mutators={{
@@ -198,11 +227,17 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         }}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting }) => (
-          <form
-            onSubmit={handleSubmit}
-            className='space-y-6'
-            id='form-round-create'
-          >
+          <form onSubmit={handleSubmit} id='form-round-create'>
+            <StatusButton
+              onClickClean={() => {
+                form.reset();
+                resetMarket();
+              }}
+              submitting={submitting}
+              pristine={true}
+              form='form-round-create'
+              label={id ? 'edit' : 'save'}
+            />
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid md:grid-cols-2 gap-6'>
               <div className='space-y-4'>
@@ -212,8 +247,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         type='text'
-                        placeholder='Ingrese nombre...'
-                        label='name'
+                        placeholder='p_write'
+                        label='h_name'
                         meta={meta}
                       />
                     )}
@@ -227,7 +262,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         type='text'
-                        placeholder='Ingrese descripción...'
+                        placeholder='p_write'
                         label='description'
                         meta={meta}
                       />
@@ -237,32 +272,42 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
                 <div className='grid grid-cols-2 gap-4'>
                   <div>
+                    <div className='flex items-center gap-2 mb-2'>
+                      <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                        {t('h_frequency')}
+                      </label>
+                      <HelpTooltip title='h_frequency' content='i_frequency' />
+                    </div>
                     <Field
                       name='frequency'
                       parse={(value) => (value ? Number(value) : undefined)}
                     >
                       {({ input }) => (
                         <Input
-                          id='input-code'
                           {...input}
-                          placeholder='Ingrese frecuencia...'
-                          label='frequency'
+                          id='input-code'
+                          placeholder='p_write'
                           type='number'
                         />
                       )}
                     </Field>
                   </div>
                   <div>
+                    <div className='flex items-center gap-2 mb-2'>
+                      <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                        {t('h_radius')}
+                      </label>
+                      <HelpTooltip title='h_radius' content='i_radius' />
+                    </div>
                     <Field
                       name='radius'
                       parse={(value) => (value ? Number(value) : undefined)}
                     >
                       {({ input }) => (
                         <Input
-                          id='input-radius'
                           {...input}
-                          placeholder='Ingrese radio...'
-                          label='radius'
+                          id='input-radius'
+                          placeholder='p_write'
                           type='number'
                         />
                       )}
@@ -270,21 +315,33 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   </div>
                 </div>
 
-                <ExpansionPanel title='Tareas por punto' className='mb-2'>
+                <div className='max-h-[450px] overflow-auto vox-scroll-design'>
                   {points.value.map((point: IPointMap, index: number) => (
                     <ExpansionPanel
                       subtitle={`lat: ${point.position.lat}, lng: ${point.position.lng}`}
                       className='my-1'
                       key={point.id}
-                      title={`📍 Punto ${index + 1} `}
+                      title={`📍 Point ${index + 1} `}
                     >
+                      <div></div>
+                      {/*
+                      <TaskFormCreate
+                        onSubmit={(e: any) => onTaskAdd(e, index)}
+                        taskList={tasksResponse.value[index]}
+                        forms={_forms.value}
+                        add
+                        selector
+                        divisor={false}
+                        className='rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light w-full'
+                      />
+                    */}
+                      {/*
                       <Field name={`tasks.${point.id}.create`}>
                         {({ input: createInput }) => {
                           const isCreateChecked = createInput.value;
 
                           return (
                             <div className='grid grid-cols-12 gap-4 items-start bg-b-light-light dark:bg-b-dark-light p-3 border-t border-b-light dark:border-b-dark'>
-                              {/* Checkbox */}
                               <div className='col-span-1'>
                                 <Tooltip text='Crear tarea'>
                                   <input
@@ -491,58 +548,23 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                           </table>
                         </div>
                       )}
+                      */}
                     </ExpansionPanel>
                   ))}
-                </ExpansionPanel>
-
-                {/* Instrucciones */}
-                <div>
-                  <Button
-                    id='btn-help'
-                    name='btn-help'
-                    type='button'
-                    label='💡 Instrucciones'
-                    onClick={() => (showHelp.value = !showHelp.value)}
-                  />
-
-                  {showHelp.value && (
-                    <div className='mt-2 rounded-md p-4 bg-b-light-light dark:bg-b-dark-light'>
-                      <h3 className='font-medium mb-2'>Instrucciones</h3>
-                      <ul className='list-disc pl-5 space-y-2'>
-                        <li>
-                          Haga clic en el mapa para comenzar a dibujar la ronda
-                        </li>
-                        <li>Continúe haciendo clic para agregar más puntos.</li>
-                        <li>
-                          Haga clic en el botón de guardar para crear la ronda.
-                        </li>
-                      </ul>
-                    </div>
-                  )}
                 </div>
               </div>
               <div>
-                {/* <Map
-                  name='Map'
-                  pointsAmount={100}
-                  allowManualPoint={true}
-                  sendPoints={(data) => {
-                    const result = sendPointsRef(data);
-                    form.change('latitude', result?.lat);
-                    form.change('longitude', result?.lng);
-                  }}
-                  pointsRef={points.value}
-                  center={currentLocation.value}
-                  condition={false}
-                  errorCondition=''
-                  radialPoint={null}
-                  errorRadialPoint=''
-                  draggable={true}
-                  width='100%'
-                  height='500px'
-                  clickPoint={() => {}}
-                /> */}
-
+                <div className='mt-2 rounded-md p-4 bg-b-light-light dark:bg-b-dark-light'>
+                  <h3 className='font-medium mb-2 flex flex-row gap-3'>
+                    <span className='vox-icon vx-icon-406 size-sm' />
+                    {t('instructions')}
+                  </h3>
+                  <ul className='list-disc pl-5 space-y-2'>
+                    <li>{t('inst_1')}</li>
+                    <li>{t('inst_2')}</li>
+                    <li>{t('inst_3')}</li>
+                  </ul>
+                </div>
                 <MapLibrePointsMap
                   name='map-points'
                   pointsAmount={100}
@@ -563,25 +585,11 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   height='500px'
                   clickPoint={() => {}}
                 />
-
-                {/* Botonera */}
-                <div className='w-full flex-row flex justify-end items-center mt-2'>
-                  <StatusButton
-                    onClickClean={() => {
-                      form.reset();
-                      resetMarket();
-                    }}
-                    submitting={submitting}
-                    pristine={true}
-                    form='form-round-create'
-                    label={id ? 'edit' : 'save'}
-                  />
-                </div>
               </div>
             </div>
           </form>
         )}
       />
-    </Section>
+    </>
   );
 };

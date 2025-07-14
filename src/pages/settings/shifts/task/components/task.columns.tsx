@@ -29,12 +29,22 @@ export const columns: ColumnDef<ITask>[] = [
     },
   },
   {
+    id: 'type',
+    accessorKey: 'type',
+    header: 'h_type',
+  },
+  {
     id: 'hourStart',
     accessorKey: 'hourStart',
     size: 60,
     header: 'h_hour_start',
     cell: (info) => {
-      return <FormattedDate date={String(info.getValue())} format='time' />;
+      const date = info.getValue();
+      return date ? (
+        <FormattedDate date={String(date)} format='time' />
+      ) : (
+        '--:--'
+      );
     },
   },
 

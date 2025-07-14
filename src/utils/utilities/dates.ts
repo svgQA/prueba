@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import duration from 'dayjs/plugin/duration';
@@ -8,6 +8,7 @@ dayjs.extend(timezone);
 dayjs.extend(duration);
 
 export type TimeStatus = 'success' | 'warning' | 'error' | 'info' | 'default';
+export type ValidDate = string | Date;
 
 export class DateUtils {
   private static timeZone: string =
@@ -29,10 +30,39 @@ export class DateUtils {
   }
 
   /**
+   * Crea una fecha UTC ISO combinando la hora dada ('HH:mm') con la fecha actual en la zona horaria configurada.
+   * @param hourString Hora en formato 'HH:mm' (o 'HH:mm:ss')
+   * @returns ISO string en UTC: 'YYYY-MM-DDTHH:mm:00.000Z'
+   */
+  static createDateFromHour(
+    hourString: string = '1970-01-01T24:00:00.000Z',
+    back = false
+  ): string {
+    if (!hourString) return '23:59';
+    const timeOnlyMatch = hourString.match(/T(\d{2}:\d{2}(?::\d{2})?)/);
+    const timeOnly = timeOnlyMatch ? timeOnlyMatch[1] : hourString;
+    const [hour, minute, second = '0'] = timeOnly.split(':').map(Number);
+
+    const localToday = dayjs
+      .utc()
+      // .tz(DateUtils.timeZone)
+      .set('hour', hour)
+      .set('minute', minute)
+      .set('second', +second)
+      .set('millisecond', 0);
+
+    if (back) {
+      return localToday.utc().toISOString();
+    }
+
+    return localToday.format();
+  }
+
+  /**
    * Convierte una fecha local a string ISO UTC para backend.
    */
   static toUTCISOStringFromLocal(
-    dateInput: string | Date,
+    dateInput: ValidDate,
     format: 'time' | 'date' = 'date'
   ): string {
     if (format === 'time') {
@@ -42,14 +72,38 @@ export class DateUtils {
   }
 
   static dateToBackend(
-    dateInput: string | Date,
+    dateInput: ValidDate,
     format: 'time' | 'date' = 'date'
   ): string {
     return this.toUTCISOStringFromLocal(dateInput, format);
   }
 
+  /**
+   * Toma una hora en formato UTC (como '1970-01-01T18:23:00.000Z'),
+   * extrae la hora y la aplica sobre la fecha actual en la zona horaria configurada,
+   * devolviendo la hora local correcta en formato "HH:mm".
+   */
+  static hourToFrontend(dateUTC: ValidDate = '00:00'): string {
+    const date = this.createDateFromHour(dateUTC as string, true);
+    return this.fromUTCToLocal(date, 'HH:mm');
+  }
+
+  /**
+   * Convierte fecha UTC a formato local con zona configurada.
+   */
+  static fromUTCToLocal(
+    dateUTC: ValidDate,
+    format = 'YYYY-MM-DD HH:mm'
+  ): string {
+    return dayjs.utc(dateUTC).tz(DateUtils.timeZone).format(format);
+  }
+
+  static _dateToFrontend(dateInput?: ValidDate): Dayjs {
+    return dayjs.utc(dateInput).tz(DateUtils.timeZone);
+  }
+
   static dateToFrontend(
-    dateInput?: string | Date,
+    dateInput?: ValidDate,
     options?: {
       time?: boolean;
       mode?: '12' | '24';
@@ -57,9 +111,7 @@ export class DateUtils {
     }
   ): string {
     if (!dateInput) return '';
-
     if (options?.format) {
-      // console.log(options);
       return this.fromUTCToLocal(dateInput, options.format);
     }
 
@@ -69,32 +121,24 @@ export class DateUtils {
         options?.mode === '12' ? 'DD/MM/YYYY hh:mm A' : 'DD/MM/YYYY HH:mm'
       );
     }
-    return this.fromUTCToLocal(
+
+    const output = this.fromUTCToLocal(
       dateInput,
       options?.mode === '12' ? 'DD/MM/YYYY' : 'DD/MM/YYYY'
     );
+    return output;
   }
 
-  static dateToInput(dateInput?: string | Date): string {
+  static dateToInput(dateInput?: ValidDate): string {
     if (!dateInput) return '';
     return this.dateFormat(dateInput);
-  }
-
-  /**
-   * Convierte fecha UTC a formato local con zona configurada.
-   */
-  static fromUTCToLocal(
-    dateUTC: string | Date,
-    format = 'YYYY-MM-DD HH:mm'
-  ): string {
-    return dayjs.utc(dateUTC).tz(DateUtils.timeZone).format(format);
   }
 
   /**
    * Convierte entre zonas arbitrarias.
    */
   static convertBetweenTimeZones(
-    dateInput: string | Date,
+    dateInput: ValidDate,
     fromTZ: string,
     toTZ: string,
     format = 'YYYY-MM-DD HH:mm'
@@ -130,10 +174,7 @@ export class DateUtils {
     return dayjs().utc().toISOString();
   }
 
-  static dateFormat(
-    date: string | Date,
-    format = 'YYYY-MM-DD HH:mm:ss'
-  ): string {
+  static dateFormat(date: ValidDate, format = 'YYYY-MM-DD HH:mm:ss'): string {
     return dayjs(date).format(format);
   }
 
@@ -145,8 +186,8 @@ export class DateUtils {
    * @param toleranceMinutes Tolerancia en minutos (por defecto 10)
    */
   static getTimeStatus(
-    actualDate: string | Date | null | undefined,
-    scheduledDate: string | Date,
+    actualDate: ValidDate,
+    scheduledDate: ValidDate,
     type: 'start' | 'end' = 'start',
     toleranceMinutes: number = 10
   ): TimeStatus {
@@ -172,8 +213,8 @@ export class DateUtils {
    * Compara dos fechas y retorna la diferencia en horas y minutos
    */
   static getTimeDifference(
-    start: string | Date,
-    end: string | Date
+    start: ValidDate,
+    end: ValidDate
   ): { hours: number; minutes: number; miliseconds: number } {
     const startTime = dayjs(start);
     const endTime = dayjs(end);
@@ -187,7 +228,7 @@ export class DateUtils {
     };
   }
 
-  static getRelativeTime(date: string | Date): string {
+  static getRelativeTime(date: ValidDate): string {
     return dayjs(date).fromNow();
   }
 
