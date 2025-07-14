@@ -1,4 +1,3 @@
-import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { tracking_service_url } from '@/env.config';
 import { useUserStore } from '@/store/slices';
 import io from 'socket.io-client';
