@@ -198,7 +198,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='p-4'>
+    <Section className=' p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
       <Form
         mutators={{
           ...arrayMutators,

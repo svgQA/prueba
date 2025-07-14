@@ -168,6 +168,12 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: GroupCreateSettingPage })
           )}
         />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.security.groups.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: GroupCreateSettingPage })
+          )}
+        />
         {/* PAYMENT MENU */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.payment.history.to}
