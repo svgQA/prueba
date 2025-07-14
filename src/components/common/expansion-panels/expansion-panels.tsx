@@ -11,10 +11,12 @@ export const ExpansionPanel: FunctionComponent<IExpansionPanelProps> = ({
   className = '',
   children,
   onAdd,
+  onCheck,
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const handleToggle = (): void => {
+    console.log('toggle');
     if (!disabled) {
       setIsExpanded(!isExpanded);
     }
@@ -42,7 +44,21 @@ export const ExpansionPanel: FunctionComponent<IExpansionPanelProps> = ({
         onClick={handleToggle}
       >
         <div className='flex flex-col'>
-          <span className='font-medium'>{title}</span>
+          <div className='flex items-center gap-2'>
+            {onCheck && (
+              <input
+                type='checkbox'
+                className='h-4 w-4 rounded border-gray-300'
+                disabled={disabled}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  onCheck?.(e.currentTarget.checked);
+                }}
+              />
+            )}
+            <span className='font-medium'>{title}</span>
+          </div>
           {subtitle && <span className='text-sm'>{subtitle}</span>}
         </div>
         <div className='flex items-center gap-2'>

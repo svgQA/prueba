@@ -228,6 +228,50 @@ export const RolesUpsertPage = () => {
                     title={module.name}
                     key={module.id}
                     subtitle={module.description}
+                    onCheck={(checked) => {
+                      const flatPermissionIds =
+                        module.permissionsGrouped?.flat.map((p) => p.id) || [];
+
+                      const getAllTreePermissionIds = (
+                        tree: PermissionTree[]
+                      ): number[] => {
+                        return tree.reduce((ids: number[], group) => {
+                          if (group.permission?.id) {
+                            ids.push(group.permission.id);
+                          }
+                          if (group.children?.length) {
+                            ids.push(
+                              ...getAllTreePermissionIds(group.children)
+                            );
+                          }
+                          return ids;
+                        }, []);
+                      };
+
+                      const treePermissionIds = getAllTreePermissionIds(
+                        module.permissionsGrouped?.tree || []
+                      );
+
+                      const allPermissionIds = [
+                        ...flatPermissionIds,
+                        ...treePermissionIds,
+                      ];
+
+                      if (checked) {
+                        // Add all permissions that aren't already selected
+                        setSelectedPermissions((prev) => [
+                          ...prev,
+                          ...allPermissionIds.filter(
+                            (id) => !prev.includes(id)
+                          ),
+                        ]);
+                      } else {
+                        // Remove all permissions belonging to this module
+                        setSelectedPermissions((prev) =>
+                          prev.filter((id) => !allPermissionIds.includes(id))
+                        );
+                      }
+                    }}
                   >
                     <div className='border rounded-lg p-4 border-b-light-dark dark:border-b-dark-light'>
                       <div className='ml-6 space-y-2'>
