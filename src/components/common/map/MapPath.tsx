@@ -5,9 +5,9 @@ import maplibregl, {
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { themeSignal } from '@/components/compose/button/signal.theme';
-import './style.css';
 import { useSignal } from '@preact/signals';
 import { RoutePoint } from '@/services/general/tracking';
+import './utils/style.css';
 
 interface Props {
   width?: string;

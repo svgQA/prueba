@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { IMapProps } from './interface';
+import { IMapProps } from './utils/interface';
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
 import {

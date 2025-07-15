@@ -57,11 +57,42 @@ export class GeneralService extends BaseService {
     };
     return await super.make_request<IResource>(this.sname, model);
   }
+  static async updateGroup(
+    id: string,
+    data: {
+      name: string;
+      description: string;
+      model: Group;
+    }
+  ) {
+    const model: IMakeRequest = {
+      url: ['group', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<IResource>(this.sname, model);
+  }
+  static async deleteGroup(id: string) {
+    const model: IMakeRequest = {
+      url: ['group', id],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<IResource>(this.sname, model);
+  }
 
-  static async getGroup(params: IPaginationUser = { page: 1, items: 500 }) {
+  static async getSmartGroups(
+    params: IPaginationUser = { page: 1, items: 500 }
+  ) {
     const model: IMakeRequest = {
       url: ['group'],
       params: params as any,
+    };
+    return await super.make_request<any>(this.sname, model);
+  }
+
+  static async getSmartGroupById(id: string) {
+    const model: IMakeRequest = {
+      url: ['group', id],
     };
     return await super.make_request<any>(this.sname, model);
   }

@@ -32,7 +32,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     if (id) {
       const request = await TaskService.updateTask(model, id);
       if (!request.getStatus()) return;
-      ToastManager.success('s_update_success');
+      ToastManager.success('s_updated_success');
     } else {
       const request = await TaskService.createTask(model);
       if (!request.getStatus()) return;
@@ -69,8 +69,14 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     forms.value = response.getMany();
   };
 
+  const fetchData = async () => {
+    await getFormsHandler();
+    await setInitialValues();
+  };
+
   useEffect(() => {
-    Promise.all([getFormsHandler(), setInitialValues()]);
+    // Promise.all([getFormsHandler(), setInitialValues()]);
+    fetchData();
   }, []);
 
   return (

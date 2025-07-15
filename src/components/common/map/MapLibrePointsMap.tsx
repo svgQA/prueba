@@ -1,14 +1,15 @@
 import type React from 'react';
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import maplibregl, { type Map as MaplibreMap } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
-import { ToastManager } from '@/utils/toast/toast-manager';
-import { IMapProps, MapPoint } from './interface';
 import { themeSignal } from '@/components/compose/button/signal.theme';
-import { useTranslation } from 'react-i18next';
-import './style.css';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { IMapProps, MapPoint } from './utils/interface';
+import './utils/style.css';
 
 export const MapLibrePointsMap = ({
   pointsAmount = 100,
