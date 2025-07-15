@@ -71,6 +71,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
       to: `/shifts/rounds/update/${id}`,
       label: 'edit',
       id: 'shifts:rounds:state:update',
+      base: 'setting',
     });
   };
 

@@ -84,14 +84,14 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         }) => {
           const model = point.tasks
             ? {
-              latitude: point.position.lat,
-              longitude: point.position.lng,
-              task: point.tasks,
-            }
+                latitude: point.position.lat,
+                longitude: point.position.lng,
+                task: point.tasks,
+              }
             : {
-              latitude: point.position.lat,
-              longitude: point.position.lng,
-            };
+                latitude: point.position.lat,
+                longitude: point.position.lng,
+              };
           return model;
         }
       );
@@ -108,7 +108,12 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     if (!request.getStatus()) return;
     ToastManager.success(message);
 
-    go({ to: '/shifts/rounds', label: 'shifts', id: 'shifts:rounds:state' });
+    go({
+      to: '/shifts/rounds',
+      label: 'shifts',
+      id: 'shifts:rounds:state',
+      base: 'setting',
+    });
   };
 
   const setInitialValues = async () => {
@@ -282,7 +287,9 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       id={String(index)}
                       className={`border-b-light-dark dark:border-b-dark-dark rounded-md overflow-hidden my-1`}
                     >
-                      <div className={`flex items-center justify-between p-4 bg-b-light-light dark:bg-b-dark-light`}>
+                      <div
+                        className={`flex items-center justify-between p-4 bg-b-light-light dark:bg-b-dark-light`}
+                      >
                         <div className='flex flex-col'>
                           <span className='font-medium'>{`📍 Point ${index + 1} `}</span>
                           <span className='text-sm'>{`lat: ${point.position.lat}, lng: ${point.position.lng}`}</span>
@@ -551,7 +558,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   draggable={true}
                   width='100%'
                   height='500px'
-                  clickPoint={() => { }}
+                  clickPoint={() => {}}
                 />
               </div>
             </div>

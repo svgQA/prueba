@@ -50,6 +50,7 @@ export const UserRolesPage: FunctionComponent = () => {
       to: `/users/roles/update/${id}`,
       label: 'edit',
       id: 'roles:update:state',
+      base: 'setting',
     });
   };
 
