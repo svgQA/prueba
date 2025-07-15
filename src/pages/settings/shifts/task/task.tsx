@@ -1,24 +1,14 @@
-// import { Button } from '@/components/common/button/button';
-// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
-import { useLocation } from 'wouter';
 import { columns } from './components/task.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
-import { appendHistory } from '../../../../utils/hooks/store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
-
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../../../utils/hooks/store/settings';
 import { TaskService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
-
+import { useNavigation } from '@/utils/hooks/navigation';
 export interface ITask {
   id: number;
   status: string;
@@ -34,10 +24,9 @@ export interface IRowActionPlace {
 }
 
 export const TaskSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
   const tasks: Signal<ITask[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
-
+  const { go } = useNavigation();
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_task');
@@ -60,28 +49,13 @@ export const TaskSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  // const redirect = () => {
-  //   const menu = {
-  //     to: PAGES_LIST_ROUTER.dashboard.setting.shifts.task.create.to,
-  //     label: 'create',
-  //     id: 'tasks-create',
-  //   };
-  //   appendHistory(menu);
-  //   // OJO: No traducir, dejar asi los setMenu
-  //   setMenu({ ...infoMenu.value, label: 'create' });
-  //   navigate('/rounds/task/create');
-  // };
-
   const update = (id: string) => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.shifts.task.update.to,
+    go({
+      to: `/shifts/task/update/${id}`,
       label: 'update',
-      id: 'tasks-update',
-    };
-    appendHistory(menu);
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/shifts/task/update/${id}`);
+      id: 'shift:tasks:state:create',
+      base: 'setting',
+    });
   };
 
   const deleteTask = async (id: string) => {

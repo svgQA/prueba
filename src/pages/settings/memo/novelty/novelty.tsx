@@ -1,7 +1,6 @@
 // import { Button } from '@/components/common/button/button';
 // import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
-import { useLocation } from 'wouter';
 import { columns } from './components/novelty.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -9,14 +8,10 @@ import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
 
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../../../utils/hooks/store/settings';
 import { NoveltyService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
-
+import { useNavigation } from '@/utils/hooks/navigation';
 export interface INovelty {
   id: number;
   name: string;
@@ -31,7 +26,7 @@ export interface IRowActionPlace {
 }
 
 export const NoveltySettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  const { go } = useNavigation();
   const novelties: Signal<INovelty[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
   const { t } = useTranslation();
@@ -57,9 +52,12 @@ export const NoveltySettingPage: FunctionComponent = () => {
   };
 
   const update = (id: string) => {
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/memo/novelty/update/${id}`);
+    go({
+      to: `/memo/novelty/update/${id}`,
+      label: 'edit',
+      id: 'memo:novelty:state:update',
+      base: 'setting',
+    });
   };
 
   const deleteNovelty = async (id: string) => {

@@ -16,7 +16,7 @@ import { composeValidators, validateNumber } from '@/utils/validators';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useNavigation } from '@/utils/utilities/navigation';
+import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
 interface SelectOption extends IOption {
   latitude: string;
@@ -48,8 +48,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const departments = useSignal<IOption[]>([]);
   const municipalities = useSignal<SelectOption[]>([]);
   const countries = useSignal<IOption[]>([]);
-  const { navigateUpsert } = useNavigation();
-
+  const { go } = useNavigation();
   const municipalityLocation = useSignal<ILocation>();
   const points = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
@@ -113,7 +112,12 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     if (!request.getStatus()) return;
 
     ToastManager.success(message);
-    navigateUpsert('/shifts/places');
+    go({
+      to: '/shifts/places',
+      label: 'm_place',
+      id: 'shifts:places:state',
+      base: 'setting',
+    });
   };
 
   const onChangeDeparment = async (departmentId: number) => {

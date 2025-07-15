@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { Form } from 'react-final-form';
-// import { Section } from '@/components/common/section/section';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
-// import { TextArea } from '@/components/common/text.area/text.area';
-import { useLocation } from 'wouter';
-import { appendHistory } from '@/utils/hooks/store/settings';
 import { SchedulerService, TemplateService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
@@ -13,13 +9,13 @@ import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { IOption } from '@/components/common/smart-selector/smart-select';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
-
+import { useNavigation } from '@/utils/hooks/navigation';
 export const ScheduledNotificationForm = () => {
   const [templates, setTemplates] = useState<IOption[]>([]);
-  const [_, navigate] = useLocation();
   const [pendingSubmission, setPendingSubmission] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formValues, setFormValues] = useState<any>(null);
+  const { go } = useNavigation();
 
   const { t } = useTranslation();
   useEffect(() => {
@@ -45,13 +41,12 @@ export const ScheduledNotificationForm = () => {
   }, [selectedCompany, location]);
 
   const redirectToList = () => {
-    const menu = {
+    go({
       to: PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.to,
       label: 'notificaciones',
-      id: 'template-notifications',
-    };
-    navigate(menu.to);
-    appendHistory(menu);
+      base: 'setting',
+      id: 'notification:scheduled:state',
+    });
   };
 
   const handleSubmit = async (values: any) => {

@@ -8,9 +8,8 @@ import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { ContractService } from '@/services';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@/utils/utilities/navigation';
+import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
 
 export interface IProject {
@@ -30,7 +29,7 @@ export interface IRowActionPlace {
 }
 
 export const ProjectsSettingPage: FunctionComponent = () => {
-  const { redirectSettings } = useNavigation();
+  const { go } = useNavigation();
   const projects: Signal<IProject[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
   const { t } = useTranslation();
@@ -55,22 +54,13 @@ export const ProjectsSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  // const redirect = () => {
-  //   redirectSettings(
-  //     PAGES_LIST_ROUTER.dashboard.setting.base,
-  //     '/rounds/project/create',
-  //     'create',
-  //     'project-create'
-  //   );
-  // };
-
   const editProject = (id: string) => {
-    redirectSettings(
-      PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/shifts/project/edit/${id}`,
-      'edit',
-      'project-update'
-    );
+    go({
+      to: `/shifts/project/edit/${id}`,
+      label: 'edit',
+      id: 'shifts:project:state:update',
+      base: 'setting',
+    });
   };
 
   const deleteProject = async (id: string) => {

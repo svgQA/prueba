@@ -16,7 +16,7 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { DateField } from '@/components/compose/forms/DateField';
-import { useNavigation } from '@/utils/utilities/navigation';
+import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
 
 interface FormData {
@@ -33,7 +33,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
   const users = useSignal<IOption[]>([]);
-  const { navigateUpsert } = useNavigation();
+  const { go } = useNavigation();
 
   const onSubmit = async (model: FormData) => {
     let request;
@@ -54,7 +54,12 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigateUpsert('/shifts/projects');
+    go({
+      to: '/shifts/projects',
+      label: 'm_contract',
+      id: 'shift:contracts:state',
+      base: 'setting',
+    });
   };
 
   const getUsers = async () => {
