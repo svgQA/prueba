@@ -3,9 +3,8 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { lengthSize } from '@/utils/utilities';
-// import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import { PredefinedService } from '@/services/shift/predefined';
@@ -19,7 +18,6 @@ interface FormData {
 }
 
 export const PredefinedCreateSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
   const { go } = useNavigation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
