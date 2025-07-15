@@ -53,6 +53,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const municipalityLocation = useSignal<ILocation>();
   const points = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
+  const [mapZoom, setMapZoom] = useState(12);
 
   const { id } = useParams(); // Obtiene el id de la URL
 
@@ -518,6 +519,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                     ? `${municipalityLocation.value.lat}-${municipalityLocation.value.lng}`
                     : 'initial'
                 }
+                zoom={mapZoom}
+                onZoomChange={(zoom: number) => setMapZoom(zoom)}
               />
             </div>
             {/* Botonera Convertir esto en un componente */}
