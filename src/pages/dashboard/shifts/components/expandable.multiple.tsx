@@ -61,6 +61,7 @@ const getInfoContent = (
           shift={shift.id}
           round={service?.round?.id}
           frequency={service?.round?.frequency}
+          roundName={service?.round?.name}
         />
       );
     case 'time-start':

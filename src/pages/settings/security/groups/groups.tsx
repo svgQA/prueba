@@ -8,15 +8,24 @@ import { useSignal } from '@preact/signals';
 import { GeneralService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
+<<<<<<< HEAD
 import { useNavigation } from '@/utils/hooks/navigation';
 
 export const GroupSettingPage: FunctionComponent = () => {
   const { go } = useNavigation();
+=======
+import { showAlert } from '@/components/common/show-alert/show-alert';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
+import { useNavigation } from '@/utils/utilities/navigation';
+export const GroupSettingPage: FunctionComponent = () => {
+>>>>>>> qa
   const groups = useSignal<any[]>([]);
+  const { redirectSettings } = useNavigation();
 
   const { t } = useTranslation();
   useEffect(() => {
-    document.title = t('p_activity');
+    document.title = t('p_smart_group');
   }, []);
 
   const { selectedCompany } = useUserStore();
@@ -28,11 +37,12 @@ export const GroupSettingPage: FunctionComponent = () => {
   }, [selectedCompany]);
 
   const getGroups = async () => {
-    const response = await GeneralService.getGroup();
+    const response = await GeneralService.getSmartGroups();
     if (!response.getStatus()) return;
     groups.value = response.getMany();
   };
 
+<<<<<<< HEAD
   const updateActivity = (id: string) => {
     go({
       to: `/security/groups/update/${id}`,
@@ -41,15 +51,40 @@ export const GroupSettingPage: FunctionComponent = () => {
     });
   };
 
+=======
+>>>>>>> qa
   const handleOnClick = async (action: any) => {
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
-        updateActivity(action.id);
+        update(action.id);
         break;
       case ROW_ACTIONS.DELETE:
-        // await deleteActivity(action.id);
+        showAlert({
+          title: t('smartGroup.alert.title'),
+          message: t('smartGroup.alert.message', {
+            name: action.name,
+          }),
+          onConfirm: () => deleteGroup(action.id),
+          onCancel: () => {},
+        });
         break;
     }
+  };
+
+  const deleteGroup = async (id: string) => {
+    const response = await GeneralService.deleteGroup(id);
+    if (!response.getStatus()) return;
+    ToastManager.success(t('smartGroup.deleted'));
+    getGroups();
+  };
+
+  const update = (id: string) => {
+    redirectSettings(
+      PAGES_LIST_ROUTER.dashboard.setting.base,
+      `/security/groups/update/${id}`,
+      'edit',
+      'groups-update'
+    );
   };
 
   return (

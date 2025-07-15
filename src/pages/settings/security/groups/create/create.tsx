@@ -10,19 +10,20 @@ import { Button } from '@/components/common/button/button';
 import { useSignal } from '@preact/signals';
 import { GeneralService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
-// TODO: Ver esto, porque este lo hace de forma absoluta
-// import { navigate } from 'wouter/use-browser-location';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { useParams } from 'wouter';
 
 export const GroupCreateSettingPage: FunctionComponent = () => {
   const name = useSignal<string>('');
   const description = useSignal<string>('');
   const { go } = useNavigation();
+  const { id } = useParams();
   const { t } = useTranslation();
 
   useEffect(() => {
     document.title = t('p_group');
+    getSmartGroupById();
   }, []);
 
   const [rootGroup, setRootGroup] = useState<Group>(createEmptyGroup());
@@ -34,15 +35,20 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
       !description.value ||
       name.value.length < 5
     ) {
-      ToastManager.error('Nombre o descripciòn no cumplen reglas: largo >= 5');
+      ToastManager.error(t('smartGroup.form.rule'));
       return;
     }
 
-    const response = await GeneralService.createGroup({
+    const data = {
       name: name.value,
       description: description.value,
       model: rootGroup,
-    });
+    };
+
+    const response = id
+      ? await GeneralService.updateGroup(id, data)
+      : await GeneralService.createGroup(data);
+
     if (!response.getStatus()) return;
     name.value = '';
     description.value = '';
@@ -55,12 +61,23 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
     });
   };
 
+  const getSmartGroupById = async () => {
+    if (!id) return;
+    const response = await GeneralService.getSmartGroupById(id);
+    if (!response.getStatus()) return;
+
+    const smartGroup = response.getOne();
+    name.value = smartGroup.name;
+    description.value = smartGroup.description;
+    setRootGroup(smartGroup.model);
+  };
+
   return (
-    <>
+    <div className='space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
       <div className='flex justify-end gap-4 absolute top-14 right-2'>
         <Button
           name='id-save-group'
-          label='save'
+          label={id ? 'update' : 'create'}
           icon='312'
           onClick={saveGroup}
         />
@@ -91,6 +108,6 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };

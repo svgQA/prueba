@@ -298,7 +298,7 @@ const ShiftCard = ({
                   <FormattedDate date={time} format='time' />
                 </div>
                 <div>
-                  <p className='font-semibold'>{t('h_resource')}</p>
+                  <p className='font-semibold'>{t('h_device')}</p>
                   <p>{source}</p>
                 </div>
               </div>
