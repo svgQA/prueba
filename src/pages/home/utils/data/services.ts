@@ -8,26 +8,26 @@ import HomeService4 from '@/assets/image/home-service-4.svg';
 export const tryvoo_services: ISectionProps[] = [
   {
     id: 1,
-    titleKey: 'services.items.monitoring.title',
-    subtitleKey: 'services.items.monitoring.subtitle',
+    titleKey: 'i_services_monitoring_title',
+    subtitleKey: 'i_services_monitoring_subtitle',
     image: HomeService1,
   },
   {
     id: 2,
-    titleKey: 'services.items.offline.title',
-    subtitleKey: 'services.items.offline.subtitle',
+    titleKey: 'i_services_offline_title',
+    subtitleKey: 'i_services_offline_subtitle',
     image: HomeService2,
   },
   {
     id: 3,
-    titleKey: 'services.items.ai.title',
-    subtitleKey: 'services.items.ai.subtitle',
+    titleKey: 'i_services_ai_title',
+    subtitleKey: 'i_services_ai_subtitle',
     image: HomeService3,
   },
   {
     id: 4,
-    titleKey: 'services.items.integration.title',
-    subtitleKey: 'services.items.integration.subtitle',
+    titleKey: 'i_services_integration_title',
+    subtitleKey: 'i_services_integration_subtitle',
     image: HomeService4,
   },
 ];

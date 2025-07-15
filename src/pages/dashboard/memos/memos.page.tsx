@@ -291,21 +291,21 @@ export const MemosPage: FunctionComponent = () => {
   const renderCardsInfo = (summary: MemosSummary, type: string = 'memos') => (
     <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
       <CardData
-        title={t(type + '.cards.totalToday')}
+        title={t(type + 'm_total_memos')}
         count={summary.total}
         subtitle=''
         color='t-dark'
         icon='328' // 328
       />
       <CardData
-        title={t(type + '.cards.unresolved')}
+        title={t(type + 'm_unresolved')}
         count={calculatePercentage(summary)}
         subtitle=''
         color='t-dark'
         icon='311' // 311
       />
       <CardData
-        title={t(type + '.cards.resolved')}
+        title={t(type + 'm_resolved')}
         count={calculatePercentage(summary, true)}
         subtitle=''
         color='t-dark'
