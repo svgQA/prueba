@@ -193,6 +193,10 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
     tasksResponse.value = [...task, ...tasksResponse.value];
   };
 
+  const onTaskDelete = (id: string) => {
+    tasksResponse.value = tasksResponse.value.filter((task) => task.id !== id);
+  };
+
   return (
     <Section className=' p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
       <Form
@@ -309,6 +313,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                 <TaskFormCreate
                   onSubmit={onTaskAdd}
                   taskList={tasksResponse.value}
+                  onDelete={onTaskDelete}
                   add
                   selector
                   divisor={false}
