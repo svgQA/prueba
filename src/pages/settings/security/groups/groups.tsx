@@ -10,11 +10,11 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
-import { useNavigation } from '@/utils/utilities/navigation';
+import { useNavigation } from '@/utils/hooks/navigation';
+
 export const GroupSettingPage: FunctionComponent = () => {
   const groups = useSignal<any[]>([]);
-  const { redirectSettings } = useNavigation();
+  const { go } = useNavigation();
 
   const { t } = useTranslation();
   useEffect(() => {
@@ -61,12 +61,12 @@ export const GroupSettingPage: FunctionComponent = () => {
   };
 
   const update = (id: string) => {
-    redirectSettings(
-      PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/security/groups/update/${id}`,
-      'edit',
-      'groups-update'
-    );
+    go({
+      to: `/security/groups/update/${id}`,
+      label: 'edit',
+      id: 'security:groups:state:update',
+      base: 'setting',
+    });
   };
 
   return (

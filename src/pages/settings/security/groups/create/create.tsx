@@ -58,6 +58,7 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
       to: '/security/groups',
       label: 'groups',
       id: 'security:groups:state',
+      base: 'setting',
     });
   };
 
