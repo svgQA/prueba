@@ -8,18 +8,11 @@ import { useSignal } from '@preact/signals';
 import { GeneralService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
-<<<<<<< HEAD
-import { useNavigation } from '@/utils/hooks/navigation';
-
-export const GroupSettingPage: FunctionComponent = () => {
-  const { go } = useNavigation();
-=======
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { useNavigation } from '@/utils/utilities/navigation';
 export const GroupSettingPage: FunctionComponent = () => {
->>>>>>> qa
   const groups = useSignal<any[]>([]);
   const { redirectSettings } = useNavigation();
 
@@ -42,17 +35,6 @@ export const GroupSettingPage: FunctionComponent = () => {
     groups.value = response.getMany();
   };
 
-<<<<<<< HEAD
-  const updateActivity = (id: string) => {
-    go({
-      to: `/security/groups/update/${id}`,
-      label: 'edit',
-      id: 'security:groups:state:update',
-    });
-  };
-
-=======
->>>>>>> qa
   const handleOnClick = async (action: any) => {
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
