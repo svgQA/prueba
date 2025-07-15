@@ -1,4 +1,3 @@
-import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { tracking_service_url } from '@/env.config';
 import { useUserStore } from '@/store/slices';
 import io from 'socket.io-client';
@@ -6,6 +5,7 @@ import { Search } from '@/components/common/search/search';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { Shift, User } from './types';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import MapLibreShowPoints from '@/components/common/map/MapLibreShowPoints';
 
 const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   const [users, setUsers] = useState<User[]>([]);
@@ -197,7 +197,15 @@ const handle_user_disconnected = (user: { id: string }) => {
         )}
       </div>
 
-      <MapLibrePointsMap
+      {/* <MapLibrePointsMap
+        name='map-points'
+        pointsRef={mapPoints}
+        sendPoints={() => {}}
+        height='78vh'
+        disablePointSelection={true}
+        adminUser={true}
+      /> */}
+      <MapLibreShowPoints
         name='map-points'
         pointsRef={mapPoints}
         sendPoints={() => {}}

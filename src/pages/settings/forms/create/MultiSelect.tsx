@@ -65,9 +65,10 @@ export function MultiSelect<T>({
   );
 
   return (
-    <div ref={containerRef} className='relative w-full max-w-md'>
+    <div ref={containerRef} className='relative w-full'>
       <div
-        className='min-h-[40px] px-3 py-2 bg-white border border-gray-300 rounded-md flex flex-wrap gap-1 items-center'
+        className='min-h-[40px] px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg flex flex-row items-center w-full
+        bg-white dark:bg-b-dark-dark flex-wrap gap-1'
         onClick={() => {
           setIsOpen(true);
           inputRef.current?.focus();
@@ -85,7 +86,7 @@ export function MultiSelect<T>({
                 e.stopPropagation();
                 removeOption(getId(item));
               }}
-              className='ml-1 text-blue-500 hover:text-blue-700'
+              className='ml-1 text-blue-500 hover:text-blue-700 border-none text-sm'
             >
               ✕
             </button>
@@ -98,26 +99,24 @@ export function MultiSelect<T>({
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
           placeholder={selectedItems.length === 0 ? placeholder : ''}
-          className='flex-grow border-none focus:ring-0 outline-none text-sm text-gray-700 min-w-[100px]'
+          className='w-full px-3 bg-white dark:bg-b-dark-dark text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-700 appearance-none'
         />
       </div>
 
       {isOpen && (
-        <ul className='absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-md max-h-60 overflow-y-auto'>
+        <ul className='absolute z-10 mt-1 w-full border bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700 rounded-md shadow-md max-h-60 overflow-y-auto'>
           {filteredOptions.length > 0 ? (
             filteredOptions.map((item) => (
               <li
                 key={getId(item)}
                 onClick={() => toggleOption(item)}
-                className='px-4 py-2 text-sm text-gray-800 hover:bg-blue-100 cursor-pointer'
+                className='px-4 py-2 text-sm cursor-pointer'
               >
                 {getLabel(item)}
               </li>
             ))
           ) : (
-            <li className='px-4 py-2 text-sm text-gray-500 italic'>
-              No hay resultados
-            </li>
+            <li className='px-4 py-2 text-sm italic'>No hay resultados</li>
           )}
         </ul>
       )}

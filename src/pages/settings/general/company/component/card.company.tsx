@@ -3,15 +3,18 @@ import { Card } from '@/components/common/card/card';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { ICompanyResponse } from '@/utils/types/company.interface';
 
-export interface ICardCompanyProps {
+export interface Props {
   company: ICompanyResponse;
   onEdit?: () => void;
+  selected?: boolean;
 }
 
-export const CardCompany = ({ company, onEdit }: ICardCompanyProps) => {
+export const CardCompany = ({ company, onEdit, selected }: Props) => {
   return (
     <Card key={company.id} name={`company-setting-${company.id}`}>
-      <div className='p-6 min-w-[420px]'>
+      <div
+        className={`p-6 min-w-[420px] ${selected ? 'border-2 border-ternary' : ''}`}
+      >
         {/* Header */}
         <div className='flex items-start justify-between mb-4'>
           <div className='flex-1'>
@@ -24,7 +27,7 @@ export const CardCompany = ({ company, onEdit }: ICardCompanyProps) => {
           </div>
           {/* Actions */}
           <div className='flex space-x-2 ml-4'>
-            <Button name='company-setting-update' icon='010' onClick={onEdit} />
+            <Button name='company-setting-update' icon='123' onClick={onEdit} />
             {/*
             <Button name='company-setting-delete' icon='099' />
             */}

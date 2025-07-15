@@ -5,6 +5,7 @@ import { Gauge } from '@/components/common/gauge/gauge';
 import { useTranslation } from 'react-i18next';
 import MapViewer from '@/components/common/file/components/mapViewer';
 import { Button } from '@/components/common/button/button';
+import { MapPoint } from '@/components/common/map/utils/interface';
 
 interface PointStatus {
   point: string | number;
@@ -13,6 +14,12 @@ interface PointStatus {
     valid: number;
     invalid: number;
   };
+}
+
+interface PointsHistory {
+  id: number;
+  latitude: number;
+  longitude: number;
 }
 
 const RoundInfo = ({
@@ -26,15 +33,31 @@ const RoundInfo = ({
 }) => {
   const { t } = useTranslation();
   const [points, setPoints] = useState<PointStatus[]>([]);
+  const [pointsHistory, setPointsHistory] = useState<MapPoint[]>([]);
 
   useEffect(() => {
     getData();
+    if (points) getPointsHistory();
   }, [shift]);
 
   const getData = async () => {
     const data = await ShiftService.getRoundHistory<PointStatus>(shift, round);
     if (!data.getStatus()) return;
     setPoints(data.getMany());
+  };
+
+  const getPointsHistory = async () => {
+    const data = await ShiftService.getPointsHistory<PointsHistory>(
+      shift,
+      round
+    );
+    if (!data.getStatus()) return;
+    setPointsHistory(
+      data.getMany().map((point) => ({
+        id: point.id,
+        position: { lat: point.latitude, lng: point.longitude },
+      }))
+    );
   };
 
   return (
@@ -44,7 +67,7 @@ const RoundInfo = ({
           {t('h_round')}
         </h2>
         <MapViewer
-          mapPoint={{ id: 1, position: { lat: 1, lng: 2 } }}
+          mapPoint={pointsHistory}
           clickable={<Button name='btn-map-viewer' icon='289'></Button>}
         />
       </div>

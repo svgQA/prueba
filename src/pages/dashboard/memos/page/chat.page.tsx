@@ -26,7 +26,7 @@ import { File } from '@/components/common/file/file';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import ShowFiles from '@/components/common/file/show.file';
 import './chat.css';
-import { MapPoint } from '@/components/common/map/interface';
+import { MapPoint } from '@/components/common/map/utils/interface';
 
 interface IOption {
   label: string;

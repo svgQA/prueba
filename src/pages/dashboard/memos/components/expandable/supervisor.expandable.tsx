@@ -10,6 +10,7 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { DateUtils } from '@/utils/utilities/dates';
 import ShowFiles from '@/components/common/file/show.file';
 import { useTranslation } from 'react-i18next';
+import { useSignal } from '@preact/signals';
 
 const InfoContainer = ({
   label,
@@ -32,15 +33,10 @@ const InfoContainer = ({
   );
 };
 
-const SupervisorInfo = ({
-  memo,
-  resolved = false,
-}: {
-  memo: Memo;
-  resolved?: boolean;
-}) => {
+const SupervisorInfo = ({ memo }: { memo: Memo }) => {
   const { t } = useTranslation();
   const [btnLabel, setBtnLabel] = useState('Check In');
+  const status = useSignal<string | undefined>(memo.state);
 
   const getStatus = (state: string) => {
     const statesToSolve = new Set(['IN_REVISION', 'CREATED']);
@@ -104,37 +100,31 @@ const SupervisorInfo = ({
   };
 
   return (
-    <div className='w-full bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm p-3 text-b-dark-light dark:text-b-light-dark'>
+    <div className='w-full rounded-lg shadow-sm'>
       <div className='flex flex-row gap-4 w-full'>
         <div className='w-8/12 flex flex-col'>
-          <div className='w-full h-3/12 flex flex-row justify-between'>
+          <div className='flex items-center justify-between gap-1 border-b border-b-light-dark dark:border-b-dark max-h-20 w-full dark:bg-b-dark-dark bg-b-light-dark rounded-lg px-5'>
             <div className='flex-1'>
               {memo?.resource && (
                 <ShowFiles resources={memo.resource} alertEmpty={true} />
               )}
             </div>
-            {resolved &&
-              memo.state !== 'RESOLVED' &&
-              memo.state !== 'CLOSED' && (
-                <Button
-                  label={btnLabel}
-                  icon={
-                    btnLabel === 'OPENED' || btnLabel === 'SOLVE'
-                      ? '023'
-                      : '024'
-                  }
-                  disabled={btnLabel === 'SOLVE'}
-                  onClick={() =>
-                    showAlert({
-                      title: btnLabel,
-                      message: `${t('message.confirm')} ${btnLabel}`,
-                      onConfirm: () => handleCheck(),
-                      onCancel: () => {},
-                    })
-                  }
-                  name={btnLabel}
-                />
-              )}
+            {status.value != 'IN_REVISION' && status.value != 'CREATED' && (
+              <Button
+                name='btn-check-memo'
+                label={status.value === 'OPENED' ? 'SOLVE' : 'RESOLVED'}
+                icon='030'
+                disabled={status.value === 'RESOLVED'}
+                onClick={() =>
+                  showAlert({
+                    title: status.value || 'CREATED',
+                    message: `${t('message.confirm')} ${status.value}`,
+                    onConfirm: () => handleCheck(),
+                    onCancel: () => {},
+                  })
+                }
+              />
+            )}
           </div>
           <div className='w-full h-9/12 flex'>
             <div className='w-1/2 grid grid-cols-2 gap-1 p-2'>

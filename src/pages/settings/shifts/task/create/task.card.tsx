@@ -7,9 +7,15 @@ interface Props {
   task: ITask;
   remove?: boolean;
   state?: boolean;
+  onDelete?: (id: any) => void;
 }
 
-export const TaskCard = ({ task, remove = true, state = false }: Props) => {
+export const TaskCard = ({
+  task,
+  remove = true,
+  state = false,
+  onDelete,
+}: Props) => {
   const { t } = useTranslation();
   return (
     <li className='w-52 text-xs p-2 rounded-bl-2xl bg-b-light-dark dark:bg-b-dark-dark min-w-[150px] relative max-h-[80px]'>
@@ -17,6 +23,7 @@ export const TaskCard = ({ task, remove = true, state = false }: Props) => {
         <span
           data-id={task.id}
           className='vx-icon vx-icon-335 cursor-pointer absolute top-0 right-1 size-sm'
+          onClick={() => onDelete && onDelete(task.id)}
         ></span>
       )}
       <span className='absolute top-0 left-0 px-2 py-0.5 bg-ternary rounded-br-md'>

@@ -40,11 +40,12 @@ import { useLocation } from 'wouter';
 import { FormService, GeneralService } from '@/services';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
-import { TextArea } from '@/components/common/text.area/text.area';
+// import { TextArea } from '@/components/common/text.area/text.area';
 import { Badge } from '@/components/common/badge/badge';
 import { localStorage } from '@/utils/storage';
 import { MultiSelect } from './MultiSelect';
 import { useSignal } from '@preact/signals';
+import { useUserStore } from '@/store/slices';
 const AUTO_SAVE_INTERVAL = 4000; // 4 seconds
 interface IMultiSelect {
   id: number;
@@ -59,8 +60,14 @@ export const FormCreateSettingPage: FunctionComponent = () => {
 
   useEffect(() => {
     document.title = t('p_setting');
-    getGroups();
   }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    if (selectedCompany) {
+      getGroups();
+    }
+  }, [selectedCompany, location]);
 
   useEffect(() => {
     let timeoutId: number;
@@ -114,7 +121,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   };
 
   const getGroups = async () => {
-    const response = await GeneralService.getGroup();
+    const response = await GeneralService.getSmartGroups();
     if (!response.getStatus()) return;
     smartGroups.value = response.getMany();
   };
@@ -194,7 +201,6 @@ export const FormCreateSettingPage: FunctionComponent = () => {
           onClick={saveFormat}
         />
       </div>
-
       <section className='flex flex-row relative'>
         <div class='sticky top-1/2 -translate-y-1/2 h-10 flex flex-col gap-2'>
           <FormButton
@@ -216,8 +222,8 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             icon='064'
           />
         </div>
-        <div class='flex-grow p-3 min-h-[65vh] max-h-[68vh] overflow-y-auto vox-scroll-design'>
-          <div className='flex flex-row w-[96%] items-center mb-4 gap-5 justify-between'>
+        <div class='flex-grow px-3 pb-3 min-h-[65vh] max-h-[68vh] overflow-y-auto vox-scroll-design'>
+          <div className='flex flex-row w-[96%] items-center border-b-2 border-b-light-light dark:border-b-dark-light py-2 gap-5 justify-between'>
             <div className='w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer'>
               <span className='vx-icon vx-upload text-gray-400 text-2xl' />
             </div>
@@ -233,7 +239,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                   onChange={handleFormatInputChange}
                   error={(getForm.value as IFormError).label_error}
                 />
-                <TextArea
+                <Input
                   type='text'
                   placeholder={t('form.placeholder.description')}
                   name='description'
@@ -243,25 +249,20 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                   onChange={handleFormatInputChange}
                   error={(getForm.value as IFormError).description_error}
                 />
+                <MultiSelect<IMultiSelect>
+                  options={smartGroups.value}
+                  selectedIds={group.value}
+                  onChange={(selectedIds) =>
+                    (group.value = selectedIds as number[])
+                  }
+                  getLabel={(item) => item.name}
+                  getId={(item) => item.id}
+                  placeholder='Seleccione uno o más grupos inteligentes'
+                />
               </div>
             </div>
           </div>
-          <div className='w-full'>
-            <label className='block mb-2 text-sm font-medium text-gray-700'>
-              Grupos inteligentes
-            </label>
-            <MultiSelect<IMultiSelect>
-              options={smartGroups.value}
-              selectedIds={group.value}
-              onChange={(selectedIds) =>
-                (group.value = selectedIds as number[])
-              }
-              getLabel={(item) => item.name}
-              getId={(item) => item.id}
-              placeholder='Seleccione uno o más grupos inteligentes'
-            />
-          </div>
-          <div className='flex flex-row w-[96%] items-center mb-4 gap-5 justify-end'>
+          <div className='flex flex-row w-[96%] items-center my-3 gap-5 justify-end'>
             <div className='max-w-64 h-5'>
               {getHasUnsavedChanges.value && (
                 <Badge
@@ -320,7 +321,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
             ))}
           </div>
         </div>
-        <div class='sticky top-1/2 -translate-y-1/2 w-[400px] justify-center hidden 2xl:flex bg-blue-400 h-fit'>
+        <div class='sticky top-1/2 w-[400px] justify-center hidden 2xl:flex bg-blue-400 h-fit'>
           <FormPhoneViewer />
         </div>
         <ListFormModal onSelected={onSelectedList} />

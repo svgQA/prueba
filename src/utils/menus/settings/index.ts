@@ -32,4 +32,8 @@ export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
   MODAL_SETTING_NOTIFICATIONS,
 ];
 
-export const NEW_BLACK_LIST = ['user:password:state', 'memo:resources:state'];
+export const NEW_BLACK_LIST = [
+  'user:password:state',
+  'memo:resources:state',
+  'general:company:state',
+];

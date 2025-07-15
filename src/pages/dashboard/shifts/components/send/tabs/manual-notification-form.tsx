@@ -287,6 +287,7 @@ export const ManualNotificationForm = ({
             selector
             taskList={tasksResponse.value}
             disabled={templateSelected ? true : false}
+            type={sendToGeneral ? 'REPORT' : 'GENERAL'}
           />
 
           <div className='flex flex-col gap-2'>
