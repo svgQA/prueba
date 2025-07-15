@@ -6,7 +6,7 @@ import {
   computedValidateBlackList,
   computedValidateNewMenu,
   menuInformationSelected,
-} from '@/pages/settings/store/settings';
+} from '@/utils/hooks/store/settings';
 import { Link } from 'wouter';
 
 export const CardSettingHeader: FunctionComponent<
@@ -22,6 +22,7 @@ export const CardSettingHeader: FunctionComponent<
         <p className='font-thin text-xs h-4'>
           {t(menuInformationSelected.value.description || '')}
         </p>
+        {menuInformationSelected.value.id}
       </div>
       <div className='w-fit rounded-md flex items-center mt-2 h-8'>
         {computedValidateBlackList.value && computedValidateNewMenu.value && (

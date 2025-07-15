@@ -3,8 +3,8 @@ import {
   appendHistory,
   currentPosition,
   setMenu,
-} from '@/pages/settings/store/settings';
-import { menuInformationSelected as infoMenu } from '@/pages/settings/store/settings';
+} from '@/utils/hooks/store/settings';
+import { menuInformationSelected as infoMenu } from '@/utils/hooks/store/settings';
 
 export const useNavigation = () => {
   const [_, navigate] = useLocation();

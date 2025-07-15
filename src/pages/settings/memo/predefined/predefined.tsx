@@ -1,25 +1,19 @@
-// import { Button } from '@/components/common/button/button';
-// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
-import { useLocation } from 'wouter';
 import { columns } from './components/predefined';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '../../store/settings';
 import { IPredefined, IRowActionPlace } from './utils/predefined.d';
 import { PredefinedService } from '@/services/shift/predefined';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
+import { useNavigation } from '@/utils/hooks/navigation';
 
 export const PredefinedSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
   const predefined: Signal<IPredefined[]> = useSignal([]);
+  const { go } = useNavigation();
   const loading = useSignal<boolean>(false);
   const { t } = useTranslation();
   useEffect(() => {
@@ -44,9 +38,12 @@ export const PredefinedSettingPage: FunctionComponent = () => {
   };
 
   const update = (id: string) => {
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/memo/predefined/update/${id}`);
+    go({
+      to: `/memo/predefined/update/${id}`,
+      label: 'edit',
+      id: 'memo:predefined:state:update',
+      base: 'setting',
+    });
   };
 
   const deletePredefined = async (id: string) => {

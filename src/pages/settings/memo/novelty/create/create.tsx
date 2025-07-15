@@ -7,11 +7,12 @@ import { lengthSize } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 // import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
 import { omitBy, isNull, pick } from 'lodash';
 import { NoveltyService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
+import { useNavigation } from '@/utils/hooks/navigation';
 
 interface FormData {
   name: string;
@@ -20,7 +21,7 @@ interface FormData {
 }
 
 export const NoveltyCreateSettingPage: FunctionComponent = () => {
-  const [_, navigate] = useLocation();
+  const { go } = useNavigation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
 
@@ -38,7 +39,12 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate('/memo/novelty');
+    go({
+      to: '/memo/novelty',
+      label: 'm_novelty',
+      id: 'memo:novelty:state',
+      base: 'setting',
+    });
   };
 
   const setInitialValues = async () => {
