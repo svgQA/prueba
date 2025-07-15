@@ -5,19 +5,7 @@ export const general_en = {
     demo: 'Request a Demo',
     signin: 'Sign In',
   },
-  home: {
-    title: 'Transform Operations Management With Tryvoo',
-    subtitle:
-      'Optimize the management of activities, resources and assets, even without connectivity for your business',
-    demoButton: 'Schedule a Free Demo',
-  },
   pros: {
-    title: 'Why Tryvoo?',
-    subtitle: 'Simplify. Optimize. Grow.',
-    stats:
-      '60% of companies in LATAM are looking for tools that improve traceability and reduce operational costs',
-    description:
-      'Tryvoo is leading this transformation, thanks to the complete digitization and automation of field activities, delivering intuitive solutions, accessible even without connection.',
     items: {
       management: {
         title: 'Easy Management and Traceability:',
@@ -375,11 +363,6 @@ export const general_en = {
     },
     success: {
       cronExecuted: 'Cron executed manually 🚀',
-    },
-    cards: {
-      notificationShifts: 'Notification shifts',
-      openRate: 'Open rate',
-      monthlyNotifications: 'Monthly notifications',
     },
     columns: {
       title: 'Title',

@@ -6,10 +6,8 @@ import { Search } from '@/components/common/search/search';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { Shift, User } from './types';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { useTranslation } from 'react-i18next';
 
 const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
-  const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
   const [_, setConnectionStatus] = useState<string>('Connecting...');
   const socketRef = useRef<any>(null);
@@ -195,7 +193,6 @@ const handle_user_disconnected = (user: { id: string }) => {
             onChange={setSearchFilters}
             keys={searchKeys}
             value={searchFilters}
-            placeholder={t('common.search.placeholder')}
           />
         )}
       </div>

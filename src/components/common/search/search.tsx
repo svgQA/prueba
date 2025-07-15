@@ -297,7 +297,7 @@ export const Search = ({
         <input
           ref={inputRef}
           className='w-full px-2 py-1 bg-transparent outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 text-base'
-          placeholder={placeholder || t('p_general_search')}
+          placeholder={t(placeholder || 'p_general_search')}
           onChange={handleChangeInput}
           onKeyDown={handleKeyPress}
           onFocus={() => {

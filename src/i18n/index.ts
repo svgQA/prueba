@@ -20,8 +20,6 @@ import { hero_en, hero_es } from './hero';
 
 // Revisar
 import { schedule_en, schedule_es } from './schedule';
-import { table_en, table_es } from './table';
-
 // Validos
 import { common_en, common_es } from './common';
 import { buttons_en, buttons_es } from './button';
@@ -66,7 +64,6 @@ const resources = {
       ...role_en,
       ...demo_en,
       ...hero_en,
-      ...table_en,
       ...schedule_en,
     },
   },
@@ -99,7 +96,6 @@ const resources = {
       ...role_es,
       ...demo_es,
       ...hero_es,
-      ...table_es,
       ...schedule_es,
     },
   },

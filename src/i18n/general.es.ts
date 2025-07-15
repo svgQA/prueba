@@ -5,12 +5,6 @@ export const general_es = {
     demo: 'Solicita una demo',
     signin: 'Iniciar sesión',
   },
-  home: {
-    title: 'Transforma la Gestión de Operaciones Con Tryvoo',
-    subtitle:
-      'Optimiza la gestión de actividades, recursos y activos, incluso sin conectividad para tus negocios',
-    demoButton: 'Agenda Una Demo Gratis',
-  },
   pros: {
     title: '¿Por qué Tryvoo?',
     subtitle: 'Simplifica. Optimiza. Crece.',
@@ -208,11 +202,6 @@ export const general_es = {
     pageTitle: 'TR - Servicio de Turnos',
     confirmDelete: '¿Está seguro de eliminar {{name}}?',
     remoteSupervision: 'Notificationes /  Supervision',
-    cards: {
-      totalToday: 'Turnos Totales Hoy',
-      inProgress: 'Turnos En Curso',
-      completed: 'Turnos Finalizados',
-    },
     buttons: {
       create: 'Crear',
     },

@@ -56,9 +56,9 @@ export enum TypeChatView {
 const FrequentQuestions = () => {
   const { t } = useTranslation();
   const questions: FrequentQuestion[] = [
-    { id: 1, question: t('memos.frequentQuestions.question1') },
-    { id: 2, question: t('memos.frequentQuestions.question2') },
-    { id: 3, question: t('memos.frequentQuestions.question3') },
+    { id: 1, question: t('m_question1') },
+    { id: 2, question: t('m_question2') },
+    { id: 3, question: t('m_question3') },
   ];
 
   return (
@@ -310,9 +310,9 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
       {/*
       <ChatCard
         id={'0'}
-        name={t('memos.chat.aiAssistant')}
-        lastMessage={t('memos.chat.aiDefaultMessage')}
-        time={t('memos.chat.time')}
+        name={t('m_aiAssistant')}
+        lastMessage={t('m_aiDefaultMessage')}
+        time={t('m_time')}
         isAI
         onClick={handleChatSelect}
         isSelected={selectedChat.value === '0'}
@@ -574,7 +574,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   icon='321'
                   borderless
                   onClick={() => (viewMode.value = TypeChatView.USERS)}
-                  label={t('memos.view.users')}
+                  label={t('m_view_user')}
                 />
                 */}
               <Dropdown
