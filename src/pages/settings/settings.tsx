@@ -1,86 +1,54 @@
+import { useCallback, useEffect, useState } from 'preact/hooks';
+import { Modal } from '@/components/common/modal/modal';
 import { CardSettingHeader, CardSettingUser } from '@/components/compose/modal';
 import { MODAL_SIDEBAR_MENUS } from '@/utils/menus';
-
+import { MenuButtons } from './components/header';
+import { MenuList } from './components/menu';
+import { RoutingContent } from './routing';
+import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
+import { useUserStore } from '@/store/slices';
+import { useNavigation } from '@/utils/hooks/navigation';
 import {
   getMenuSelectedStorage,
   getModalStatusStorage,
   getStatusSettingModal,
-  openSettingModal,
-  setMenuSelecteStorage,
   toggleSettingModal,
 } from '@/store/signals/modals';
-
-import { useCallback, useEffect, useState } from 'preact/hooks';
-import { useLocation } from 'wouter';
-import { RoutingContent } from './routing';
 import { IMenu } from '@/components/common/utils/interface';
-import { Modal } from '@/components/common/modal/modal';
-import { MenuButtons } from './components/header';
-import { MenuList } from './components/menu';
-import {
-  appendHistory,
-  computedCreateMenu,
-  currentPosition,
-  historyLocation,
-  menuInformationSelected,
-  setMenu,
-} from './store/settings';
-import { useUserStore } from '@/store/slices';
-import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
+
 export const SettingsModal = () => {
   const { user } = useUserStore();
-  const [_, navigate] = useLocation();
   const [expand, setExpand] = useState<boolean>(false);
 
-  // TODO: Revisar esta parte para cuando se abre y ya existia un menu seleccionado.
+  const { go, goBack, goForward, current, created, settings } = useNavigation();
+
   useEffect(() => {
-    if (getStatusSettingModal.value) {
-      if (!menuInformationSelected.value.to) {
+    if (settings) {
+      if (!current.to) {
         let adminMenu;
         for (const menus of MODAL_SIDEBAR_MENUS) {
           adminMenu = menus.menus.find((menu) => menu.show);
           if (adminMenu) break;
         }
         if (adminMenu) {
-          const menuSelected = {
+          go({
             ...adminMenu,
             to: `/setting${adminMenu.base}${adminMenu.to || '/'}`,
-          };
-          appendHistory(menuSelected, setMenuSelected);
-          navigate(menuSelected.to);
+          });
         }
       } else {
-        navigate(menuInformationSelected.value.to);
+        go(current);
       }
     } else {
       const stage = getModalStatusStorage();
       if (stage) {
         const menuSelected = getMenuSelectedStorage();
-        setMenu(menuSelected as IMenu);
-        openSettingModal();
+        go(menuSelected as IMenu, true);
       }
     }
-  }, [getStatusSettingModal.value]);
+  }, [settings]);
 
-  const setMenuSelected = (menu: IMenu) => {
-    if (!menu || !menu.to) return;
-    setMenu(menu);
-    setMenuSelecteStorage(menu);
-    navigate(menu.to);
-  };
-
-  const goBack = useCallback(() => {
-    if (currentPosition.value === 0) return;
-    --currentPosition.value;
-    setMenuSelected(historyLocation.value[currentPosition.value]);
-  }, []);
-
-  const goForward = useCallback(() => {
-    if (currentPosition.value === historyLocation.value.length - 1) return;
-    ++currentPosition.value;
-    setMenuSelected(historyLocation.value[currentPosition.value]);
-  }, []);
-
+  // Al seleccionar un item del menú lateral
   const selectMenu = useCallback((event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (target.nodeName === 'A' || target.nodeName === 'SPAN') {
@@ -89,9 +57,9 @@ export const SettingsModal = () => {
       const description = target.getAttribute('data-description');
       const id = target.getAttribute('id');
       if (!to || !label || !description || !id) return;
-      if (id === computedCreateMenu.value.id) return;
-      const menuSelected = { to, description, label, id };
-      appendHistory(menuSelected, setMenuSelected);
+      if (id === created.id) return;
+
+      go({ to, label, description, id });
     }
   }, []);
 
@@ -107,15 +75,6 @@ export const SettingsModal = () => {
       header={
         <div className='flex flex-row w-full items-center justify-between px-3'>
           <MenuButtons goBack={goBack} goForward={goForward} />
-          {/*
-          <div className='ml-5 flex flex-row w-9/12'>
-            <Search
-              id='search-general'
-              name='search-general'
-              placeholder='Search'
-            />
-          </div>
-          */}
           <LanguageSwitcher />
         </div>
       }
@@ -127,8 +86,8 @@ export const SettingsModal = () => {
         <CardSettingUser
           id='user-information'
           name='user-information'
-          company={'Inndico'}
-          username={user?.name + ' ' + user?.surname}
+          company='Inndico'
+          username={`${user?.name} ${user?.surname}`}
           image={user?.image || ''}
           rol={user?.userType || ''}
         />
@@ -139,10 +98,7 @@ export const SettingsModal = () => {
         onClick={selectMenu}
       >
         <CardSettingHeader id='setting-header' name='setting-header' />
-        <div
-          // className={`${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} relative overflow-y-auto overflow-x-hidden vox-scroll-design w-full p-2 bg-red-300`}
-          className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'
-        >
+        <div className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'>
           <RoutingContent />
         </div>
       </div>

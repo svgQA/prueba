@@ -7,22 +7,18 @@ import { UserService } from '@/services/general/user';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { IUserAreaResponse } from '@/types/user/user.response';
-import { useLocation } from 'wouter';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useTranslation } from 'react-i18next';
-import {
-  menuInformationSelected as infoMenu,
-  setMenu,
-} from '@/pages/settings/store/settings';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { useUserStore } from '@/store/slices';
+import { useNavigation } from '@/utils/hooks/navigation';
 export const UserAreasPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const areas = useSignal<IUserAreaResponse[]>([]);
-  const [_, navigate] = useLocation();
   const loading = useSignal<boolean>(false);
+  const { go } = useNavigation();
 
   useEffect(() => {
     document.title = t('p_area');
@@ -45,12 +41,6 @@ export const UserAreasPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  // const redirect = () => {
-  //   // OJO: No traducir, dejar asi los setMenu
-  //   setMenu({ ...infoMenu.value, label: 'create' });
-  //   navigate('/users/areas/create');
-  // };
-
   const deleteArea = async (id: number) => {
     const request = await UserService.deleteArea(id);
     if (!request.getStatus()) return;
@@ -59,9 +49,12 @@ export const UserAreasPage: FunctionComponent = () => {
   };
 
   const editArea = (id: string) => {
-    // OJO: No traducir, dejar asi los setMenu
-    setMenu({ ...infoMenu.value, label: 'edit' });
-    navigate(`/users/areas/update/${id}`);
+    go({
+      to: `/users/areas/update/${id}`,
+      label: 'edit',
+      id: 'users:areas:state:update',
+      base: 'setting',
+    });
   };
 
   const handleOnClick = async (action: IRowAction | any) => {

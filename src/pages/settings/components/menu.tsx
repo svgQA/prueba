@@ -2,7 +2,7 @@
 import { CardSettingMenu, IModalSidebarMenu } from '@/components/compose/modal';
 import { validateSettingModuleState } from '@/store/signals/access/permission';
 import { memo } from 'preact/compat';
-import { menuInformationSelected } from '../store/settings';
+import { useNavigation } from '@/utils/hooks/navigation';
 
 interface Props {
   menuSettings: IModalSidebarMenu[];
@@ -10,6 +10,7 @@ interface Props {
 }
 
 export const MenuList = memo(({ menuSettings, expand }: Props) => {
+  const { current } = useNavigation();
   return (
     <div
       className={`vox-scroll-design ${expand ? 'max-h-[98vh]' : 'max-h-[69vh]'} overflow-y-scroll px-4 flex flex-col gap-2 py-4`}
@@ -23,7 +24,7 @@ export const MenuList = memo(({ menuSettings, expand }: Props) => {
             label={menu.label}
             menus={menu.menus}
             setting={menu.setting}
-            selected={menuInformationSelected.value}
+            selected={current}
           />
         ) : null;
       })}

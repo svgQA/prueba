@@ -8,21 +8,26 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { useParams } from 'wouter';
 import { Signal } from '@preact/signals';
 import { IUserAreaRequest } from '@/types/user/user.request';
-import { useLocation } from 'wouter';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { required } from '@/utils/utilities/validate';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@/utils/hooks/navigation';
+import { useUserStore } from '@/store/slices';
 
 export const AreaCreatePage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const initialValues: Signal<Partial<IUserAreaRequest>> = useSignal({});
-  const [_, navigate] = useLocation();
+  const { go } = useNavigation();
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    setInitialValues();
-  }, []);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      setInitialValues();
+    }
+  }, [selectedCompany, location]);
 
   const onSubmit = async (model: IUserAreaRequest) => {
     let request;
@@ -38,7 +43,12 @@ export const AreaCreatePage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigate('/users/areas');
+    go({
+      to: '/users/areas',
+      label: 'areas',
+      id: 'user:areas:state',
+      base: 'setting',
+    });
   };
 
   const setInitialValues = async () => {
