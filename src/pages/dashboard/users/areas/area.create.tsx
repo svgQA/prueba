@@ -43,7 +43,12 @@ export const AreaCreatePage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    go({ to: '/users/areas', label: 'areas', id: 'user:areas:state' });
+    go({
+      to: '/users/areas',
+      label: 'areas',
+      id: 'user:areas:state',
+      base: 'setting',
+    });
   };
 
   const setInitialValues = async () => {

@@ -53,6 +53,7 @@ export const UserAreasPage: FunctionComponent = () => {
       to: `/users/areas/update/${id}`,
       label: 'edit',
       id: 'users:areas:state:update',
+      base: 'setting',
     });
   };
 

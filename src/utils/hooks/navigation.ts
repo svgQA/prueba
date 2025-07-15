@@ -26,7 +26,10 @@ export function useNavigation() {
 
     setMenu(menu);
     setMenuSelecteStorage(menu);
-    appendHistory(menu, setMenu);
+    appendHistory(
+      { ...menu, to: menu.base ? `/${menu.base}${menu.to}` : menu.to },
+      setMenu
+    );
     navigate(menu.to);
   };
 
