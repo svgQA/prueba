@@ -27,11 +27,13 @@ export const MapLibrePointsMap = ({
   draggable = true,
   width = '100%',
   height = '500px',
-  clickPoint = () => {},
+  clickPoint = () => { },
   radius,
   disablePointSelection = false,
   adminUser = false,
-}: IMapProps) => {
+  zoom = 12,
+  onZoomChange,
+}: IMapProps & { zoom?: number; onZoomChange?: (z: number) => void }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MaplibreMap | null>(null);
   const markersRef = useRef<maplibregl.Marker[]>([]);
@@ -91,39 +93,39 @@ export const MapLibrePointsMap = ({
       ? 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
       : 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
   };
+
   // Initialize map
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     // Clean up any existing map instance
     if (mapRef.current) {
+      // Guardar el zoom actual antes de limpiar
+      if (onZoomChange) onZoomChange(mapRef.current.getZoom());
       cleanupMap();
     }
 
     mapRef.current = new maplibregl.Map({
-      container: mapContainerRef.current,
+      container: mapContainerRef.current, 
       style: getMapStyle(),
       center: [center.lng, center.lat],
-      zoom: 12,
+      zoom: zoom, // Usar el valor guardado o el de la prop
     });
 
     const map = mapRef.current;
 
-    // Listeners para detectar interacción del usuario
-    map.on('zoomstart', () => {
-      userInteractedRef.current = true;
-    });
-    map.on('dragstart', () => {
-      userInteractedRef.current = true;
+    map.on('zoomstart', () => userInteractedRef.current = true);
+
+    map.on('dragstart', () => userInteractedRef.current = true);
+
+    map.on('zoomend', () => {
+      if (onZoomChange) onZoomChange(map.getZoom());
     });
 
-    // Wait for the map to be fully loaded
     map.on('load', () => {
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
       map.on('click', handleMapClick);
       setIsMapReady(true);
-
-      // Get user location when map loads
       getUserLocation();
     });
 
@@ -132,6 +134,14 @@ export const MapLibrePointsMap = ({
       setIsMapReady(false);
     };
   }, [center.lat, center.lng]);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const currentZoom = mapRef.current.getZoom();
+    if (typeof zoom === 'number' && Math.abs(currentZoom - zoom) > 0.01) {
+      mapRef.current.setZoom(zoom);
+    }
+  }, [zoom]);
 
   // Handle points updates
   useEffect(() => {
@@ -158,12 +168,7 @@ export const MapLibrePointsMap = ({
   // Update markers and send points to parent
   useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
-
-    // Always update markers when points change
     updateMarkers();
-    // Only send non-user points to parent
-    // sendPoints(points.filter((p) => p.id !== -1));
-    // Solo enviar si los puntos realmente cambiaron
     const filteredPoints = points.filter((p) => p.id !== -1);
     const filteredPointsStr = JSON.stringify(filteredPoints);
     if (lastSentPointsRef.current !== filteredPointsStr) {
@@ -190,15 +195,16 @@ export const MapLibrePointsMap = ({
         if (userLocation) {
           bounds.extend([userLocation.position.lng, userLocation.position.lat]);
         }
+
         // Ajustar el mapa para mostrar todos los puntos con un padding
         mapRef.current.fitBounds(bounds, {
           padding: 50,
-          maxZoom: 12, //15
+          maxZoom: zoom, //15
           duration: 1000,
         });
       } else {
         mapRef.current.setCenter([center.lng, center.lat]);
-        mapRef.current.setZoom(12);
+        mapRef.current.setZoom(zoom);
       }
     }
 
@@ -246,6 +252,8 @@ export const MapLibrePointsMap = ({
       mapRef.current.remove();
       mapRef.current = null;
     }
+
+    console.log('zoomRef end: ', zoom);
   }, [activePopup]);
 
   // Calculate distance between two points (Haversine formula)
@@ -263,9 +271,9 @@ export const MapLibrePointsMap = ({
     const a =
       Math.sin(latDiffRad / 2) * Math.sin(latDiffRad / 2) +
       Math.cos(lat1Rad) *
-        Math.cos(lat2Rad) *
-        Math.sin(lngDiffRad / 2) *
-        Math.sin(lngDiffRad / 2);
+      Math.cos(lat2Rad) *
+      Math.sin(lngDiffRad / 2) *
+      Math.sin(lngDiffRad / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = earthRadius * c;
     return distance > 1000;
@@ -284,6 +292,9 @@ export const MapLibrePointsMap = ({
 
     const { lng, lat } = e.lngLat;
     setMarkerOnMap(lat, lng);
+    if (!mapRef.current) return;
+    if (onZoomChange) onZoomChange(mapRef.current.getZoom());
+    console.log('zoomRef click: ', zoom);
   };
 
   // Add a marker to the map
@@ -562,10 +573,9 @@ export const MapLibrePointsMap = ({
           <label class="text-sm mb-1 mt-2">Longitude</label>
           <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>
-        ${
-          disablePointSelection
-            ? ''
-            : `
+        ${disablePointSelection
+        ? ''
+        : `
           <div class="flex justify-between mt-2">
             <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
               Delete
@@ -573,18 +583,17 @@ export const MapLibrePointsMap = ({
             <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
               Update
             </button>
-            ${
-              id === -1
-                ? `
+            ${id === -1
+          ? `
             <button id="btn-restore" class="bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-2 rounded">
               Restore Location
             </button>
             `
-                : ''
-            }
+          : ''
+        }
           </div>
           `
-        }
+      }
       </div>
     `;
 
