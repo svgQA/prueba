@@ -8,26 +8,26 @@ import HomeSolution4 from '@/assets/image/home-solution-4.svg';
 export const tryvoo_solutions: ISectionProps[] = [
   {
     id: 1,
-    titleKey: 'solutions.items.security.title',
-    subtitleKey: 'solutions.items.security.subtitle',
+    titleKey: 'i_solutions_security_title',
+    subtitleKey: 'i_solutions_security_subtitle',
     image: HomeSolution1,
   },
   {
     id: 2,
-    titleKey: 'solutions.items.logistics.title',
-    subtitleKey: 'solutions.items.logistics.subtitle',
+    titleKey: 'i_solutions_logistics_title',
+    subtitleKey: 'i_solutions_logistics_subtitle',
     image: HomeSolution2,
   },
   {
     id: 3,
-    titleKey: 'solutions.items.construction.title',
-    subtitleKey: 'solutions.items.construction.subtitle',
+    titleKey: 'i_solutions_construction_title',
+    subtitleKey: 'i_solutions_construction_subtitle',
     image: HomeSolution3,
   },
   {
     id: 4,
-    titleKey: 'solutions.items.health.title',
-    subtitleKey: 'solutions.items.health.subtitle',
+    titleKey: 'i_solutions_health_title',
+    subtitleKey: 'i_solutions_health_subtitle',
     image: HomeSolution4,
   },
 ];
