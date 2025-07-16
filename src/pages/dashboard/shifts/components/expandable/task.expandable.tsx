@@ -2,7 +2,6 @@ import { useEffect, useState } from 'preact/hooks';
 import { Badge } from '@/components/common/badge/badge';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { formatDate } from './contract.expandable';
-import { TaskItemShift } from '@/types/shift/activity';
 import { useTranslation } from 'react-i18next';
 import { TaskCard } from '@/pages/settings/shifts/task/create/task.card';
 import { FormService } from '@/services';
