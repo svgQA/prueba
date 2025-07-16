@@ -44,7 +44,6 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
   }, [tasks]);
 
   const toggleDetailsForm = async (task: ITask) => {
-
     if (!task.formId || !task.responseId) return;
 
     // Si ya estaba abierto, lo cerramos
