@@ -11,12 +11,12 @@ export const HomeHero = () => {
         <div className='w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left mb-8 md:mb-0 text-white'>
           <div className='max-w-xl'>
             <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight'>
-              {t('home.title')}
+              {t('i_title')}
             </h1>
             <div className='text-xl sm:text-2xl md:text-3xl opacity-90 mb-8 md:mb-10'>
-              {t('home.subtitle').split('conectividad para tus negocios')[0]}{' '}
+              {t('i_subtitle').split('conectividad para tus negocios')[0]}{' '}
               <span className='font-bold'>
-                {t('home.subtitle').includes('conectividad para tus negocios')
+                {t('i_subtitle').includes('conectividad para tus negocios')
                   ? 'conectividad para tus negocios'
                   : 'connectivity for your business'}
               </span>
@@ -24,12 +24,12 @@ export const HomeHero = () => {
             <div className='flex justify-center md:justify-start gap-4'>
               <button
                 type='button'
-                className='bg-secondary rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl border-none font-bold py-3 px-5'
+                className='bg-secondary rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl border-none font-bold py-3 px-5 mb-12 z-10'
                 onClick={() => {
                   window.location.href = '/dashboard';
                 }}
               >
-                {t('home.demoButton')}
+                {t('i_demoButton')}
               </button>
             </div>
           </div>
@@ -46,7 +46,7 @@ export const HomeHero = () => {
         </div>
       </div>
 
-      <div className='absolute bottom-0 left-0 w-full'>
+      <div className='absolute bottom-0 left-0 w-full z-0'>
         <BrandCarousel />
       </div>
     </div>

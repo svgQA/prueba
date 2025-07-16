@@ -12,26 +12,26 @@ export const HomeFooter = () => {
       <div className='bg-[#20314F] flex justify-center gap-4 pt-10 pb-10 flex-col sm:flex-row'>
         <div className='w-[90%] sm:w-[30%] mx-4 sm:mx-0'>
           <h2 className='text-[18px] sm:text-[20px] font-bold'>
-            {t('footer.popularSections')}
+            {t('i_footer_popularSections')}
           </h2>
           <p className='text-[16px] sm:text-[18px] pt-2'>
-            {t('footer.learnMore')}
+            {t('i_footer_learnMore')}
           </p>
         </div>
 
         <div className='w-[90%] sm:w-[30%] mx-4 sm:mx-0'>
           <h3 className='text-[18px] sm:text-[20px] font-bold'>
-            {t('footer.contactUs')}
+            {t('i_footer_contactUs')}
           </h3>
           <p className='text-[16px] sm:text-[18px] pt-2'>
-            {t('footer.contactInfo')}
+            {t('i_footer_contactInfo')}
           </p>
         </div>
 
         <div className='w-[90%] sm:w-[30%] mx-4 sm:mx-0'>
           <div className='w-full'>
             <h3 className='text-[18px] sm:text-[20px] font-bold'>
-              {t('footer.ourNetworks')}
+              {t('i_footer_ourNetworks')}
             </h3>
           </div>
           <div className='w-full flex pt-2'>
@@ -43,14 +43,14 @@ export const HomeFooter = () => {
       </div>
       <div className='flex flex-col sm:flex-row gap-4 w-full mt-7 mb-10 items-center px-4 sm:px-8'>
         <div className='w-full sm:w-[25%] text-[20px] sm:text-[26px] font-bold text-center sm:text-left'>
-          <span className='sm:mr-12'>{t('footer.freeAdvice')}</span>
+          <span className='sm:mr-12'>{t('i_footer_freeAdvice')}</span>
         </div>
         <div className='w-full sm:w-[40%] text-lg sm:text-xl text-center sm:text-left my-4 sm:my-0'>
-          <span>{t('footer.optimizeMessage')}</span>
+          <span>{t('i_footer_optimizeMessage')}</span>
         </div>
         <div className='w-full sm:w-[25%] text-center'>
           <Button
-            label={t('footer.startButton')}
+            label={t('i_footer_startButton')}
             type='button'
             id='schedule'
             name='schedule'

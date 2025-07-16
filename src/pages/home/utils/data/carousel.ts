@@ -7,26 +7,26 @@ import HomeService4 from '@/assets/image/home-service-4.svg';
 export const tryvoo_carousel: ISectionProps[] = [
   {
     id: 1,
-    titleKey: 'carousel.items.monitoring.title',
-    subtitleKey: 'carousel.items.monitoring.subtitle',
+    titleKey: 'i_carousel_monitoring_title',
+    subtitleKey: 'i_carousel_monitoring_subtitle',
     image: HomeService1,
   },
   {
     id: 2,
-    titleKey: 'carousel.items.offline.title',
-    subtitleKey: 'carousel.items.offline.subtitle',
+    titleKey: 'i_carousel_offline_title',
+    subtitleKey: 'i_carousel_offline_subtitle',
     image: HomeService2,
   },
   {
     id: 3,
-    titleKey: 'carousel.items.ai.title',
-    subtitleKey: 'carousel.items.ai.subtitle',
+    titleKey: 'i_carousel_ai_title',
+    subtitleKey: 'i_carousel_ai_subtitle',
     image: HomeService3,
   },
   {
     id: 4,
-    titleKey: 'carousel.items.integration.title',
-    subtitleKey: 'carousel.items.integration.subtitle',
+    titleKey: 'i_carousel_integration_title',
+    subtitleKey: 'i_carousel_integration_subtitle',
     image: HomeService4,
   },
 ];

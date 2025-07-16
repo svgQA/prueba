@@ -8,9 +8,9 @@ export const HomeSolutions = () => {
   return (
     <div className='flex flex-col items-center text-center bg-white text-ternary py-12'>
       <span className='text-3xl font-bold mb-5 text-ternary'>
-        {t('solutions.title')}
+        {t('i_solutions_title')}
       </span>
-      <span className='text-xl text-gray-700'>{t('solutions.subtitle')}</span>
+      <span className='text-xl text-gray-700'>{t('i_solutions_subtitle')}</span>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10 mb-10 px-4 w-full max-w-7xl'>
         {tryvoo_solutions.map((item) => (
@@ -38,7 +38,7 @@ export const HomeSolutions = () => {
       </div>
 
       <Button
-        label={t('solutions.button')}
+        label={t('i_solutions_button')}
         type='button'
         id='schedule'
         name='schedule'

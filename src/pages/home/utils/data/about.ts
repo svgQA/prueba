@@ -1,9 +1,9 @@
 export const about_content = {
-  titleKey: 'about.title',
-  subtitleKey: 'about.subtitle',
-  mainTextKey: 'about.mainText',
-  missionTitleKey: 'about.missionTitle',
-  missionTextKey: 'about.missionText',
-  valuesTitleKey: 'about.valuesTitle',
-  valuesTextKey: 'about.valuesText',
+  titleKey: 'i_about_title',
+  subtitleKey: 'i_about_subtitle',
+  mainTextKey: 'i_about_mainText',
+  missionTitleKey: 'i_about_missionTitle',
+  missionTextKey: 'i_about_missionText',
+  valuesTitleKey: 'i_about_valuesTitle',
+  valuesTextKey: 'i_about_valuesText',
 };

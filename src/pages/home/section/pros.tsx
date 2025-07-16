@@ -10,10 +10,10 @@ export const HomePros = () => {
     <div className='bg-white text-center text-gray-500 py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-8'>
       <div className='max-w-7xl mx-auto'>
         <h2 className='text-ternary text-3xl sm:text-4xl md:text-5xl font-bold mb-4 tracking-tight'>
-          {t('pros.title')}
+          {t('i_pros_title')}
         </h2>
         <span className='text-xl sm:text-2xl md:text-3xl block mb-12 text-gray-600 font-light'>
-          {t('pros.subtitle')}
+          {t('i_pros_subtitle')}
         </span>
 
         <div className='flex flex-col md:flex-row'>
@@ -27,10 +27,10 @@ export const HomePros = () => {
             </div>
             <div className='mt-8 md:mt-12 text-left w-full max-w-md'>
               <span className='font-bold text-2xl sm:text-3xl md:text-4xl block mb-6 text-gray-800'>
-                {t('pros.stats')}
+                {t('i_pros_stats')}
               </span>
               <p className='text-lg sm:text-xl md:text-2xl text-gray-600 leading-relaxed'>
-                {t('pros.description')}
+                {t('i_pros_description')}
               </p>
             </div>
           </div>
@@ -72,7 +72,7 @@ export const HomePros = () => {
 
         <div className='mt-16 sm:mt-20 md:mt-24 flex justify-center'>
           <Button
-            label={t('pros.button')}
+            label={t('i_button')}
             type='button'
             id='schedule'
             name='schedule'

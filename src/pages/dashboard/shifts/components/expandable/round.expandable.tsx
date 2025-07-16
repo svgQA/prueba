@@ -17,9 +17,9 @@ interface PointStatus {
 }
 
 interface PointsHistory {
-  id: number,
-  latitude: number,
-  longitude: number,
+  id: number;
+  latitude: number;
+  longitude: number;
 }
 
 const RoundInfo = ({
@@ -49,12 +49,17 @@ const RoundInfo = ({
   };
 
   const getPointsHistory = async () => {
-    const data = await ShiftService.getPointsHistory<PointsHistory>(shift, round);
+    const data = await ShiftService.getPointsHistory<PointsHistory>(
+      shift,
+      round
+    );
     if (!data.getStatus()) return;
-    setPointsHistory(data.getMany().map((point) => ({
-      id: point.id,
-      position: { lat: point.latitude, lng: point.longitude },
-    })));
+    setPointsHistory(
+      data.getMany().map((point) => ({
+        id: point.id,
+        position: { lat: point.latitude, lng: point.longitude },
+      }))
+    );
   };
 
   return (
