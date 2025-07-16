@@ -24,6 +24,7 @@ export interface IInputProps<T> extends IComponentProps {
   float?: boolean;
   unicon?: boolean;
   buttonForm?: string;
+  buttonLabel?: string;
   type?:
     | 'text'
     | 'password'

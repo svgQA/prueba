@@ -40,6 +40,7 @@ export const Input = <T = string,>({
   rounded,
   float,
   unicon,
+  buttonLabel,
   ...props
 }: IInputProps<T>) => {
   const { t } = useTranslation();
@@ -91,9 +92,8 @@ export const Input = <T = string,>({
               border-gray-300 dark:border-gray-700
               appearance-none
               ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
-              ${
-                type === 'number'
-                  ? `
+              ${type === 'number'
+                ? `
                 [&::-webkit-inner-spin-button]:appearance-none
                 [&::-webkit-outer-spin-button]:appearance-none
                 [&::-webkit-inner-spin-button]:bg-gray-100
@@ -107,7 +107,7 @@ export const Input = <T = string,>({
                 [&::-webkit-inner-spin-button]:text-gray-900
                 [&::-webkit-inner-spin-button]:dark:text-gray-200
               `
-                  : ''
+                : ''
               }
             `}
             onChange={onChange}
@@ -148,16 +148,18 @@ export const Input = <T = string,>({
           )}
         </div>
         {button && (
-          <div className='border-l dark:border-gray-600 border-b-light-dark'>
+          <div className='border-l dark:border-gray-600 border-b-light-dark mr-10'>
             <Button
               onClick={() => onClick?.(value)}
               name='btn-input-action'
               icon={buttonIcon}
               type={buttonType}
-              rounded
+              rounded={!buttonLabel} // 👈 solo usa rounded si NO hay label
               borderless
               transparent
+              label={buttonLabel}
             />
+
           </div>
         )}
         {!button && end && icon && (

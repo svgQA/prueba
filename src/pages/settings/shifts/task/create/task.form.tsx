@@ -344,6 +344,7 @@ export const TaskFormCreate = ({
                                 button
                                 buttonIcon='044'
                                 buttonType='submit'
+                                buttonLabel="Agregar tarea"
                                 buttonForm='form-settings-task-create'
                               />
                             )}

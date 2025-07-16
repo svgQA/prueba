@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'preact/hooks';
-import { Form } from 'react-final-form';
+import { Field, Form } from 'react-final-form';
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
@@ -14,6 +14,7 @@ import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
 import { useSignal } from '@preact/signals';
 import { useUserStore } from '@/store/slices';
+import { required } from '@/utils/utilities/validate';
 
 export const TemplateCreateForm = () => {
   const [useForm, _setUseForm] = useState(false);
@@ -92,25 +93,36 @@ export const TemplateCreateForm = () => {
                 disabled={loading}
               />
             </div>
-            <Input
-              name='title'
-              id='template-title'
-              label='Título *'
-              placeholder='Ingrese el título de la plantilla...'
-              value={values.title || ''}
-              onChange={(e) => (values.title = e.currentTarget.value)}
-              required
-            />
 
-            <TextArea
-              name='description'
-              id='template-description'
-              label='Descripción *'
-              placeholder='Ingrese una descripción...'
-              value={values.description || ''}
-              onChange={(e) => (values.description = e.currentTarget.value)}
-              required
-            />
+            <Field<string> name='title' validate={required}>
+              {({ input, meta }) => (
+                <Input
+                  name='title'
+                  id='template-title'
+                  label='Título *'
+                  meta={meta}
+                  placeholder='Ingrese el título de la plantilla...'
+                  value={input.value || ''}
+                  onChange={input.onChange}
+                  required
+                />
+              )}
+            </Field>
+
+            <Field<string> name='description' validate={required}>
+              {({ input, meta }) => (
+                <TextArea
+                  name='description'
+                  id='template-description'
+                  label='Descripción *'
+                  meta={meta}
+                  placeholder='Ingrese una descripción...'
+                  value={input.value || ''}
+                  onChange={input.onChange}
+                  required
+                />
+              )}
+            </Field>
 
             <div>
               <h3 className='text-md font-semibold mb-2'>Contenido</h3>
