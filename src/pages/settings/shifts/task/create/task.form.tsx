@@ -77,7 +77,8 @@ export const TaskFormCreate = ({
     }
   }, [selectedCompany]);
 
-  const onChange = (value: any, form?: any) => {
+  /**
+   const onChange = (value: any, form?: any) => {
     if (!value) return;
     let _task: ITask | undefined = undefined;
     if (form) {
@@ -107,6 +108,35 @@ export const TaskFormCreate = ({
     onSubmit(_task);
     form?.reset();
 
+    if (!selector || !add) return;
+    onAppend.value = false;
+  };
+   */
+
+  const onChange = (value: any, form?: any) => {
+    if (!value) return;
+    let _task: ITask | undefined = undefined;
+
+    if (value.value === 'general') {
+      _task = {
+        id: 'general',
+        name: 'General',
+        description: 'Tarea general',
+        hourStart: DateUtils.createDateFromHour(value.hourStart, true),
+        type: 'GENERAL',
+        attachmentType: '',
+      };
+    } else if (value.id || value.name) {
+      _task = { ...value, hourStart: DateUtils.createDateFromHour(value.hourStart, true) };
+    } else {
+      const find = tasks.value.find((task) => task.id == value.value);
+      if (!find) return;
+      _task = { ...find, hourStart: DateUtils.createDateFromHour(find.hourStart, true) };
+    }
+
+    if (!_task) return;
+    onSubmit(_task);
+    if (form) form.change('select-task', undefined);
     if (!selector || !add) return;
     onAppend.value = false;
   };
@@ -147,23 +177,51 @@ export const TaskFormCreate = ({
                 id='form-settings-task-create'
               >
                 {selector && (
-                  <SmartSelector
-                    name='select-task'
-                    placeholder='p_select'
-                    label='h_task'
-                    button
-                    buttonIcon='219'
-                    icon='086'
-                    options={filteredTasks.map((e) => ({
-                      value: e.id ?? '',
-                      // label: e.description ?? 'Sin descripción',
-                      label: e.name ?? 'Sin descripción',
-                    }))}
-                    menuPortalTarget={document.body}
-                    onClick={onToggleTask}
-                    onChange={onChange}
-                    disabled={disabled}
-                  />
+                //   <SmartSelector
+                //   name='select-task'
+                //   placeholder='p_select'
+                //   label='h_task'
+                //   button
+                //   buttonIcon='219'
+                //   icon='086'
+                //   options={filteredTasks.map((e) => ({
+                //     value: e.id ?? '',
+                //     // label: e.description ?? 'Sin descripción',
+                //     label: e.name ?? 'Sin descripción',
+                //   }))}
+                //   menuPortalTarget={document.body}
+                //   onClick={onToggleTask}
+                //   onChange={onChange}
+                //   disabled={disabled}
+                // />
+                  <Field name='select-task'>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        placeholder='p_select'
+                        label='h_task'
+                        button
+                        buttonIcon='219'
+                        icon='086'
+                        options={[
+                          {
+                            value: 'general',
+                            label: 'General',
+                          },
+                          ...filteredTasks.map((e) => ({
+                            ...e,
+                            value: e.id ?? '',
+                            label: e.name ?? 'Sin descripción',
+                          })),
+                        ]}
+                        menuPortalTarget={document.body}
+                        onClick={onToggleTask}
+                        onChange={(value) => onChange(value, form)}
+                        disabled={disabled}
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
                 )}
 
                 {onAppend.value && (
