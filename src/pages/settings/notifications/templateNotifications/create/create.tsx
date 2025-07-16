@@ -76,7 +76,7 @@ export const TemplateCreateForm = () => {
     <>
       <Form
         onSubmit={handleSubmit}
-        render={({ handleSubmit, values }) => (
+        render={({ handleSubmit }) => (
           <form className='space-y-6 w-full' onSubmit={handleSubmit}>
             <div className='flex justify-end gap-4 absolute top-14 right-2'>
               <Button

@@ -54,7 +54,7 @@ const getInfoContent = (
         <ReportInfo reports={report} onViewDetails={(r) => console.log(r)} />
       );
     case 'task':
-      return <TaskInfo shiftId={Number(shift.id)} tasks={task} />;
+      return <TaskInfo shiftId={Number(shift.id)} tasks={task as any} />;
     case 'round':
       return (
         <RoundInfo
