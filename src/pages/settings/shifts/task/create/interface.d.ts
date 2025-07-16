@@ -5,6 +5,7 @@ export interface ITask {
   name: string;
   companyId?: number;
   formId?: number;
+  responseId?: string;
   type: string | IOption;
   createdAt?: string;
   updatedAt?: string;

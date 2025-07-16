@@ -42,7 +42,7 @@ const Viewer = ({ posterSpan, infoExpanded, close, click }: IViewerProps) => {
           onClick={closeViewer}
         >
           <div
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             style={{
               display: 'flex',
               alignItems: 'center',
