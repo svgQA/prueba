@@ -17,19 +17,21 @@ interface PointStatus {
 }
 
 interface PointsHistory {
-  id: number,
-  latitude: number,
-  longitude: number,
+  id: number;
+  latitude: number;
+  longitude: number;
 }
 
 const RoundInfo = ({
   shift,
   round,
   frequency,
+  roundName,
 }: {
   shift: number;
   round: number;
   frequency: number;
+  roundName: string;
 }) => {
   const { t } = useTranslation();
   const [points, setPoints] = useState<PointStatus[]>([]);
@@ -47,21 +49,27 @@ const RoundInfo = ({
   };
 
   const getPointsHistory = async () => {
-    const data = await ShiftService.getPointsHistory<PointsHistory>(shift, round);
+    const data = await ShiftService.getPointsHistory<PointsHistory>(
+      shift,
+      round
+    );
     if (!data.getStatus()) return;
-    setPointsHistory(data.getMany().map((point) => ({
-      id: point.id,
-      position: { lat: point.latitude, lng: point.longitude },
-    })));
+    setPointsHistory(
+      data.getMany().map((point) => ({
+        id: point.id,
+        position: { lat: point.latitude, lng: point.longitude },
+      }))
+    );
   };
 
   return (
     <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm text-t-light dark:text-t-dark py-2 relative'>
       <div className='flex items-center justify-between absolute top-0 right-0 w-full'>
         <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
-          {t('h_round')}
+          {t('h_round') + ': ' + roundName}
         </h2>
         <MapViewer
+          title={t('h_round') + ': ' + roundName}
           mapPoint={pointsHistory}
           clickable={<Button name='btn-map-viewer' icon='289'></Button>}
         />

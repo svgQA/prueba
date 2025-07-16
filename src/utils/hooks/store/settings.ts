@@ -17,7 +17,9 @@ export const computedCreateMenu = computed(() => ({
 }));
 
 export const computedValidateBlackList = computed(
-  () => !NEW_BLACK_LIST.includes(menuInformationSelected.value.id)
+  () =>
+    !menuInformationSelected.value.id.includes('update') &&
+    !NEW_BLACK_LIST.includes(menuInformationSelected.value.id)
 );
 
 export const computedValidateNewMenu = computed(

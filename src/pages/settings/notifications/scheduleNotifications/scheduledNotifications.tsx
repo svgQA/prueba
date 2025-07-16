@@ -1,22 +1,17 @@
 import { FunctionComponent, useEffect } from 'react';
-// import { Section } from '@/components/common/section/section';
-// import { Button } from '@/components/common/button/button';
-import { useLocation } from 'wouter';
 import { useSignal } from '@preact/signals';
 import { Table } from '@/components/common/table/table';
 import { INotificationScheduledItem } from '@/types/notification/INotificationScheduledItem';
 import { getColumns } from './components/scheduled.columns';
-// import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
-import { appendHistory } from '../../store/settings';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { SchedulerService } from '@/services/notification/schedule';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
-
+import { useNavigation } from '@/utils/hooks/navigation';
 export const ScheduledNotificationsPage: FunctionComponent = () => {
   const notifications = useSignal<INotificationScheduledItem[]>([]);
-  const [_, navigate] = useLocation();
+  const { go } = useNavigation();
   const loading = useSignal<boolean>(false);
   const { t } = useTranslation();
 
@@ -30,7 +25,7 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
     if (selectedCompany) {
       fetchNotifications();
     }
-  }, [selectedCompany, location]);
+  }, [selectedCompany]);
 
   const fetchNotifications = async () => {
     loading.value = true;
@@ -41,25 +36,13 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  // const redirect = () => {
-  //   const menu = {
-  //     to: PAGES_LIST_ROUTER.dashboard.setting.notifications
-  //       .scheduledNotification.create.to,
-  //     label: 'create',
-  //     id: 'scheduled-create',
-  //   };
-  //   navigate(menu.to);
-  //   appendHistory(menu);
-  // };
-
   const editScheduled = (id: string) => {
-    const menu = {
+    go({
       to: `/notification/scheduled/update/${id}`,
       label: 'update',
-      id: 'scheduled-update',
-    };
-    navigate(menu.to);
-    appendHistory(menu);
+      id: 'notification:scheduled:state:update',
+      base: 'setting',
+    });
   };
 
   const deleteScheduled = async (id: string) => {

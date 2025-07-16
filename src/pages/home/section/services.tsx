@@ -8,10 +8,10 @@ export const HomeService = () => {
   return (
     <div className='flex flex-col items-center text-center bg-primary-opacity bg-opacity-100 py-5 px-4 sm:px-6 md:px-8'>
       <span className='text-2xl sm:text-3xl md:text-4xl font-bold text-[#349396] mb-2'>
-        {t('services.title')}
+        {t('i_services_title')}
       </span>
       <span className='text-lg sm:text-xl md:text-2xl text-[#349396] max-w-3xl mx-auto'>
-        {t('services.subtitle')}
+        {t('i_services_subtitle')}
       </span>
 
       <div className='w-full max-w-7xl mx-auto'>
@@ -44,7 +44,7 @@ export const HomeService = () => {
       </div>
 
       <Button
-        label={t('services.button')}
+        label={t('i_services_button')}
         type='button'
         id='schedule'
         name='schedule'

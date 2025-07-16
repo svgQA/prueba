@@ -1,19 +1,15 @@
-// import { Button } from '@/components/common/button/button';
-// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { Place } from './utils/places';
 import { columns } from './components/places.columns';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect, useState } from 'preact/hooks';
-// import { ToastManager } from '@/utils/toast/toast-manager';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { PlaceService } from '@/services';
 import { useSignal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@/utils/utilities/navigation';
 import { useUserStore } from '@/store/slices';
+import { useNavigation } from '@/utils/hooks/navigation';
 
 export interface IRowActionPlace {
   id: string;
@@ -24,7 +20,7 @@ export interface IRowActionPlace {
 export const PlacesSettingPage: FunctionComponent = () => {
   const [places, setPlaces] = useState([]);
   const loading = useSignal<boolean>(false);
-  const { redirectSettings } = useNavigation();
+  const { go } = useNavigation();
 
   const { t } = useTranslation();
   useEffect(() => {
@@ -48,15 +44,6 @@ export const PlacesSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  // const redirect = () => {
-  //   redirectSettings(
-  //     PAGES_LIST_ROUTER.dashboard.setting.base,
-  //     '/rounds/places/create',
-  //     'create',
-  //     'places-create'
-  //   );
-  // };
-
   const deletePlace = async (id: string) => {
     const request = await PlaceService.deletePlace(id);
     if (!request.getStatus()) return;
@@ -65,12 +52,12 @@ export const PlacesSettingPage: FunctionComponent = () => {
   };
 
   const update = (id: string) => {
-    redirectSettings(
-      PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/shifts/places/update/${id}`,
-      'edit',
-      'places-update'
-    );
+    go({
+      to: `/shifts/places/update/${id}`,
+      label: 'edit',
+      id: 'shift:places:state:update',
+      base: 'setting',
+    });
   };
   const handleOnClick = async (action: IRowActionPlace | any) => {
     switch (action.action) {

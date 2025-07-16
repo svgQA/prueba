@@ -12,7 +12,7 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IRowAction } from '@/components/common/table/interface';
 import { Button } from '@/components/common/button/button';
 import { useLocation } from 'wouter';
-import { appendHistory } from '../../store/settings';
+import { appendHistory } from '../../../../utils/hooks/store/settings';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
 

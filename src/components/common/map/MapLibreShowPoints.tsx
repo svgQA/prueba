@@ -83,7 +83,9 @@ export const MapLibreShowPoints = ({
     }
     if (allPoints.length > 0) {
       const bounds = new maplibregl.LngLatBounds();
-      allPoints.forEach((point) => bounds.extend([point.position.lng, point.position.lat]));
+      allPoints.forEach((point) =>
+        bounds.extend([point.position.lng, point.position.lat])
+      );
       if (radialPoint) {
         bounds.extend([radialPoint.position.lng, radialPoint.position.lat]);
       }
@@ -146,10 +148,18 @@ export const MapLibreShowPoints = ({
       allPoints.push(userLocation);
     }
     allPoints.forEach((point, index) => {
-      if (!point || !point.position || typeof point.position.lat !== 'number' || typeof point.position.lng !== 'number') return;
+      if (
+        !point ||
+        !point.position ||
+        typeof point.position.lat !== 'number' ||
+        typeof point.position.lng !== 'number'
+      )
+        return;
       const markerEl = createMarkerElement(point, index);
-      const marker = new maplibregl.Marker({ element: markerEl, draggable: false })
-        .setLngLat([point.position.lng, point.position.lat]);
+      const marker = new maplibregl.Marker({
+        element: markerEl,
+        draggable: false,
+      }).setLngLat([point.position.lng, point.position.lat]);
       if (mapRef.current) {
         marker.addTo(mapRef.current);
       }
@@ -158,7 +168,10 @@ export const MapLibreShowPoints = ({
     updateRadiusCircle();
   };
 
-  const createCircleGeoJSON = (center: { lat: number; lng: number }, radiusInMeters: number) => {
+  const createCircleGeoJSON = (
+    center: { lat: number; lng: number },
+    radiusInMeters: number
+  ) => {
     const points = 64;
     const coords: number[][] = [];
     const lat = center.lat;
@@ -167,7 +180,9 @@ export const MapLibreShowPoints = ({
       const angle = (i * 360) / points;
       const radians = (angle * Math.PI) / 180;
       const latOffset = (radiusInMeters / 111320) * Math.cos(radians);
-      const lngOffset = (radiusInMeters / (111320 * Math.cos((lat * Math.PI) / 180))) * Math.sin(radians);
+      const lngOffset =
+        (radiusInMeters / (111320 * Math.cos((lat * Math.PI) / 180))) *
+        Math.sin(radians);
       coords.push([lng + lngOffset, lat + latOffset]);
     }
     return {
@@ -182,9 +197,14 @@ export const MapLibreShowPoints = ({
     if (radius && radius > 0 && center) {
       const circleData = createCircleGeoJSON(center, radius);
       if (mapRef.current.getSource('radius-circle')) {
-        (mapRef.current.getSource('radius-circle') as maplibregl.GeoJSONSource).setData(circleData);
+        (
+          mapRef.current.getSource('radius-circle') as maplibregl.GeoJSONSource
+        ).setData(circleData);
       } else {
-        mapRef.current.addSource('radius-circle', { type: 'geojson', data: circleData });
+        mapRef.current.addSource('radius-circle', {
+          type: 'geojson',
+          data: circleData,
+        });
         mapRef.current.addLayer({
           id: 'radius-circle-fill',
           type: 'fill',
@@ -195,7 +215,11 @@ export const MapLibreShowPoints = ({
           id: 'radius-circle-line',
           type: 'line',
           source: 'radius-circle',
-          paint: { 'line-color': '#FF0000', 'line-opacity': 0.8, 'line-width': 2 },
+          paint: {
+            'line-color': '#FF0000',
+            'line-opacity': 0.8,
+            'line-width': 2,
+          },
         });
       }
     } else {

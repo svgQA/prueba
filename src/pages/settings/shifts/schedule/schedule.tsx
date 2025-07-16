@@ -1,5 +1,3 @@
-// import { Button } from '@/components/common/button/button';
-// import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
 import { columns } from './components/schedule.columns';
 import { Table } from '@/components/common/table/table';
@@ -7,16 +5,15 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useEffect } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { DataSchedule } from './components/data.schedule';
 import { ScheduleService } from '@/services';
 import { useTranslation } from 'react-i18next';
 import { IDay, IRowActionPlace, ISchedule } from '@/types/shift/shift.request';
-import { useNavigation } from '@/utils/utilities/navigation';
+import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
 
 export const ScheduleSettingPage: FunctionComponent = () => {
-  const { redirectSettings } = useNavigation();
+  const { go } = useNavigation();
   const schedules: Signal<ISchedule[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
 
@@ -42,22 +39,13 @@ export const ScheduleSettingPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  // const redirect = () => {
-  //   redirectSettings(
-  //     PAGES_LIST_ROUTER.dashboard.setting.base,
-  //     '/rounds/schedule/create',
-  //     'create',
-  //     'schedule-create'
-  //   );
-  // };
-
   const update = (id: string) => {
-    redirectSettings(
-      PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/shifts/schedule/update/${id}`,
-      'update',
-      'schedule-update'
-    );
+    go({
+      to: `/shifts/schedule/update/${id}`,
+      label: 'update',
+      id: 'shift:schedules:state:update',
+      base: 'setting',
+    });
   };
 
   const deleteSchedule = async (id: string) => {

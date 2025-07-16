@@ -1,6 +1,5 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-// import { Section } from '@/components/common/section/section';
 import { GroupBuilder } from './GroupBuilder';
 import { Group } from './utils/types';
 import { createEmptyGroup } from './utils/utils';
@@ -12,15 +11,16 @@ import { useSignal } from '@preact/signals';
 import { GeneralService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@/utils/utilities/navigation';
+import { useNavigation } from '@/utils/hooks/navigation';
 import { useParams } from 'wouter';
 
 export const GroupCreateSettingPage: FunctionComponent = () => {
-  const { navigateUpsert } = useNavigation();
   const name = useSignal<string>('');
   const description = useSignal<string>('');
+  const { go } = useNavigation();
   const { id } = useParams();
   const { t } = useTranslation();
+
   useEffect(() => {
     document.title = t('p_group');
     getSmartGroupById();
@@ -53,10 +53,13 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
     name.value = '';
     description.value = '';
     setRootGroup(createEmptyGroup());
-    ToastManager.success(
-      id ? t('smartGroup.updated') : t('smartGroup.created')
-    );
-    navigateUpsert('/security/groups');
+    ToastManager.success('s_created_success');
+    go({
+      to: '/security/groups',
+      label: 'groups',
+      id: 'security:groups:state',
+      base: 'setting',
+    });
   };
 
   const getSmartGroupById = async () => {
@@ -104,11 +107,6 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
             onChange={setRootGroup}
             onRemove={() => {}}
           />
-          {/*
-          <pre class='bg-gray-100 dark:bg-b-dark-light text-sm rounded overflow-auto max-h-64 text-gray-800 dark:text-white p-2'>
-            {JSON.stringify(rootGroup, null, 2)}
-          </pre>
-          */}
         </div>
       </div>
     </div>

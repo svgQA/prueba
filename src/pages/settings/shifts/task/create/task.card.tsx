@@ -10,7 +10,12 @@ interface Props {
   onDelete?: (id: any) => void;
 }
 
-export const TaskCard = ({ task, remove = true, state = false, onDelete }: Props) => {
+export const TaskCard = ({
+  task,
+  remove = true,
+  state = false,
+  onDelete,
+}: Props) => {
   const { t } = useTranslation();
   return (
     <li className='w-52 text-xs p-2 rounded-bl-2xl bg-b-light-dark dark:bg-b-dark-dark min-w-[150px] relative max-h-[80px]'>

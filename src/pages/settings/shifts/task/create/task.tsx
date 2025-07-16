@@ -3,13 +3,13 @@ import { FunctionComponent } from 'preact';
 import { useCallback, useEffect } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { FormService, TaskService } from '@/services';
 import { IOption } from '@/components/common/multi/interface';
 import { DateUtils } from '@/utils/utilities/dates';
 import { useTranslation } from 'react-i18next';
 import { TaskFormCreate } from './task.form';
-
+import { useNavigation } from '@/utils/hooks/navigation';
 interface FormData {
   name: string;
   description: string;
@@ -21,14 +21,13 @@ interface FormData {
 
 export const TaskCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
-  const [_, navigate] = useLocation();
+  const { go } = useNavigation();
   const forms = useSignal<IOption[]>([]);
 
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams<{ id: string }>();
 
   const onSubmit = async (model: Record<string, any>) => {
-    // console.log(model);
     if (id) {
       const request = await TaskService.updateTask(model, id);
       if (!request.getStatus()) return;
@@ -38,8 +37,12 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
       if (!request.getStatus()) return;
       ToastManager.success('s_created_success');
     }
-
-    navigate('/shifts/task');
+    go({
+      to: '/shifts/task',
+      label: 'm_task',
+      id: 'shift:tasks:state',
+      base: 'setting',
+    });
   };
 
   const setInitialValues = useCallback(async () => {

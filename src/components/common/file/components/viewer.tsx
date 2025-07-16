@@ -41,7 +41,18 @@ const Viewer = ({ posterSpan, infoExpanded, close, click }: IViewerProps) => {
           }}
           onClick={closeViewer}
         >
-          {infoExpanded}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            {infoExpanded}
+          </div>
           <button
             onClick={closeViewer}
             style={{

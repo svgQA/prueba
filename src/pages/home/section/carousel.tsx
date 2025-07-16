@@ -35,7 +35,7 @@ export const HomeCarousel = () => {
       </div>
 
       <Button
-        label={t('carousel.viewDetails')}
+        label={t('i_carousel_viewDetails')}
         type='button'
         id='schedule'
         name='schedule'

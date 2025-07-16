@@ -15,11 +15,12 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 // import { useTranslation } from 'react-i18next';
 import { DAYS_OF_WEEK, HOURS } from '../constant';
 import { DaySelectedModel } from '../type';
-import { useNavigation } from '@/utils/utilities/navigation';
+import { useNavigation } from '@/utils/hooks/navigation';
 
 export const ScheduleCreateSettingPage: FunctionComponent = () => {
   // const { t } = useTranslation();
-  const { navigateUpsert } = useNavigation();
+  const { go } = useNavigation();
+
   const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
   const { id } = useParams();
 
@@ -58,7 +59,12 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    navigateUpsert('/shifts/schedule');
+    go({
+      to: '/shifts/schedule',
+      label: 'm_schedule',
+      id: 'shift:schedules:state',
+      base: 'setting',
+    });
   };
 
   const setInitialValues = async () => {

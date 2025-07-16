@@ -11,7 +11,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { FORMAT_MODE_SERVICE, setFormat } from '../create/store/question';
 import { Table } from '@/components/common/table/table';
-import { appendHistory } from '../../store/settings';
+import { appendHistory } from '../../../../utils/hooks/store/settings';
 // import { Section } from '@/components/common/section/section';
 // import { Button } from '@/components/common/button/button';
 import { useTranslation } from 'react-i18next';
@@ -23,9 +23,10 @@ import { validateResponse } from '@/pages/dashboard/forms/response/store/respons
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { closeSettingModal } from '@/store/signals/modals/settings/settings.signal';
 import { useUserStore } from '@/store/slices';
-
+import { useNavigation } from '@/utils/hooks/navigation';
 export const FormSettingPage = () => {
   const { t } = useTranslation();
+  const { go } = useNavigation();
   const forms = useSignal<IFormResponse[]>([]);
   const [_, navigate] = useLocation();
   const [hasUnfinishedForm, setHasUnfinishedForm] = useState(false);
@@ -66,13 +67,12 @@ export const FormSettingPage = () => {
   };
 
   const navigateReport = () => {
-    const menu = {
-      to: PAGES_LIST_ROUTER.dashboard.setting.forms.report.to,
+    go({
+      to: '/forms/report',
       label: 'report',
-      id: 'form-report',
-    };
-    appendHistory(menu);
-    navigate(menu.to);
+      id: 'forms:form:state:update',
+      base: 'setting',
+    });
   };
 
   const navigateResponse = () => {
@@ -105,17 +105,17 @@ export const FormSettingPage = () => {
     const groups = format.groups?.map((group) => group.group.id) || [];
     switch (action.action) {
       case ROW_ACTIONS.UPDATE: {
-        const menu = {
-          to: PAGES_LIST_ROUTER.dashboard.setting.forms.form.create.to,
-          label: 'create',
-          id: 'form-create',
-        };
-        appendHistory(menu);
         setFormat(
           { mode: FORMAT_MODE_SERVICE.UPDATE, id: format.id },
           { ...format.structure, groups: groups }
         );
-        navigate(menu.to);
+
+        go({
+          to: '/forms/create',
+          label: 'update',
+          id: 'forms:form:state:update',
+          base: 'setting',
+        });
         break;
       }
       case ROW_ACTIONS.DELETE: {

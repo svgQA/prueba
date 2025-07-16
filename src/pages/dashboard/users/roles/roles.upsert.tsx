@@ -1,13 +1,10 @@
 import { Input } from '@/components/common/input/input';
-// import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { StatusButton } from '@/pages/settings/components/custom.button';
-import { useLocation, useParams } from 'wouter';
+import { useParams } from 'wouter';
 import { Form } from 'react-final-form';
 import { Field } from 'react-final-form';
-// import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
-// import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
 import { RoleService } from '@/services/general/role';
 import { Signal, useSignal } from '@preact/signals';
@@ -20,8 +17,8 @@ import {
 import { IRoleRequest } from '@/types/role/role.request';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 import { useUserStore } from '@/store/slices';
-import { setMenu } from '@/pages/settings/store/settings';
 import { MODAL_SETTING_USER } from '@/utils/menus/settings/user';
+import { useNavigation } from '@/utils/hooks/navigation';
 
 interface RawPermission extends Omit<IPermission, 'moduleId'> {}
 
@@ -37,11 +34,11 @@ type GroupedPermissions = {
 };
 
 export const RolesUpsertPage = () => {
-  const [_, navigate] = useLocation();
   const { t } = useTranslation();
+  const { id } = useParams();
+  const { go } = useNavigation();
   const modules: Signal<IListModuleResponse[]> = useSignal([]);
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
-  const { id } = useParams(); // Obtiene el id de la URL
   const initialValues: Signal<Partial<IRoleRequest>> = useSignal({});
 
   const { selectedCompany } = useUserStore();
@@ -104,8 +101,7 @@ export const RolesUpsertPage = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    setMenu(MODAL_SETTING_USER.menus[1]);
-    navigate('/users/roles');
+    go(MODAL_SETTING_USER.menus[1]);
   };
 
   const getModules = async () => {

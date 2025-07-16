@@ -29,7 +29,7 @@ export const menus_es = {
   m_round: 'Rondas',
   m_place: 'Lugares',
   m_contract: 'Contratos',
-  m_tasks: 'Tareas',
+  m_task: 'Tareas',
   m_schedule: 'Horarios',
   m_service: 'Servicios',
   g_form: 'Formularios',

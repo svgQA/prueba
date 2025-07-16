@@ -7,6 +7,7 @@ import ServiceInfo from './expandable/service.expandable ';
 import ShiftInfo from './expandable/shift.expandable';
 import ReportInfo from './expandable/report.expandable';
 import TaskInfo from './expandable/task.expandable';
+import { ITask } from '@/pages/settings/shifts/task/create/interface';
 // import ReportInfo from './expandable/report.expandable';
 
 type Props = {
@@ -54,13 +55,14 @@ const getInfoContent = (
         <ReportInfo reports={report} onViewDetails={(r) => console.log(r)} />
       );
     case 'task':
-      return <TaskInfo shiftId={Number(shift.id)} tasks={task} />;
+      return <TaskInfo shiftId={Number(shift.id)} tasks={task as ITask[]} />;
     case 'round':
       return (
         <RoundInfo
           shift={shift.id}
           round={service?.round?.id}
           frequency={service?.round?.frequency}
+          roundName={service?.round?.name}
         />
       );
     case 'time-start':

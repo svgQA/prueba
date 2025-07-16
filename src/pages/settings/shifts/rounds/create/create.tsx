@@ -3,8 +3,6 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { required } from '@/utils/utilities';
-// import { Button } from '@/components/common/button/button';
-// import { Section } from '@/components/common/section/section';
 import { useEffect } from 'preact/hooks';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useParams } from 'wouter';
@@ -12,25 +10,13 @@ import { omitBy, isNull, pick } from 'lodash';
 import arrayMutators from 'final-form-arrays';
 // import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 import { IPointMap } from '../interface';
-// import { TextArea } from '@/components/common/text.area/text.area';
-// import { Select } from '@/components/common/select/select';
-// import dayjs from 'dayjs';
-// import { Tooltip } from '@/components/common/tooltip/tooltip';
-// import { ITask } from '@/types/shift/activity';
-import {
-  // FormService,
-  // TaskService,
-  PlaceService,
-  RoundService,
-} from '@/services';
+import { PlaceService, RoundService } from '@/services';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { StatusButton } from '@/pages/settings/components/custom.button';
-import { useNavigation } from '@/utils/utilities/navigation';
 import { HelpTooltip } from '@/components/common/help-tooltip';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
-// import { TaskFormCreate } from '../../task/create/task.form';
-// import { IOption } from '@/components/common/multi/interface';
+import { useNavigation } from '@/utils/hooks/navigation';
 
 interface IPoint {
   latitude: number;
@@ -68,16 +54,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const points = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const places = useSignal<any>([]);
-  const { navigateUpsert } = useNavigation();
-  // const tasksResponse = useSignal<any[]>([]);
-  // const _forms = useSignal<IOption[]>([]);
-
-  // const getFormsHandler = async () => {
-  //   const response = await FormService.getSimpleList();
-  //   if (!response.getStatus()) return;
-  //   _forms.value = response.getMany();
-  // };
-
+  const { go } = useNavigation();
   let lastPointsSerialized = JSON.stringify([]);
 
   const sendPointsRef = (data: any) => {
@@ -107,14 +84,14 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         }) => {
           const model = point.tasks
             ? {
-              latitude: point.position.lat,
-              longitude: point.position.lng,
-              task: point.tasks,
-            }
+                latitude: point.position.lat,
+                longitude: point.position.lng,
+                task: point.tasks,
+              }
             : {
-              latitude: point.position.lat,
-              longitude: point.position.lng,
-            };
+                latitude: point.position.lat,
+                longitude: point.position.lng,
+              };
           return model;
         }
       );
@@ -131,16 +108,13 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     if (!request.getStatus()) return;
     ToastManager.success(message);
 
-    navigateUpsert('/shifts/rounds');
+    go({
+      to: '/shifts/rounds',
+      label: 'shifts',
+      id: 'shifts:rounds:state',
+      base: 'setting',
+    });
   };
-
-  /*
-  const getTasks = async () => {
-    const response = await TaskService.getTasks();
-    if (!response.getStatus()) return;
-    tasks.value = response.getMany();
-  };
-  */
 
   const setInitialValues = async () => {
     if (!id) return;
@@ -207,16 +181,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   useEffect(() => {
     if (selectedCompany) {
       created();
-      // Promise.all([created(), getTasks()]);
     }
   }, [selectedCompany, location]);
-
-  /*
-  const onTaskAdd = (task: any, index: number) => {
-    tasksResponse.value[index] = [task, ...tasksResponse.value[index]];
-    // tasksResponse.value = [task, ...tasksResponse.value];
-  };
-  */
 
   return (
     <>
@@ -321,7 +287,9 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       id={String(index)}
                       className={`border-b-light-dark dark:border-b-dark-dark rounded-md overflow-hidden my-1`}
                     >
-                      <div className={`flex items-center justify-between p-4 bg-b-light-light dark:bg-b-dark-light`}>
+                      <div
+                        className={`flex items-center justify-between p-4 bg-b-light-light dark:bg-b-dark-light`}
+                      >
                         <div className='flex flex-col'>
                           <span className='font-medium'>{`📍 Point ${index + 1} `}</span>
                           <span className='text-sm'>{`lat: ${point.position.lat}, lng: ${point.position.lng}`}</span>
@@ -590,7 +558,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   draggable={true}
                   width='100%'
                   height='500px'
-                  clickPoint={() => { }}
+                  clickPoint={() => {}}
                 />
               </div>
             </div>

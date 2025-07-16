@@ -1,5 +1,3 @@
-// import { Button } from '@/components/common/button/button';
-// import { Section } from '@/components/common/section/section';
 import { IRowAction } from '@/components/common/table/interface.d';
 import { Table } from '@/components/common/table/table';
 import { type FunctionComponent } from 'preact';
@@ -8,26 +6,17 @@ import { Round } from './utils/rounds';
 import { columns } from './components/rounds.columns';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ExpandableRounds } from '@/components/compose/table/expandable/rounds';
-import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { RoundService } from '@/services';
 import { useSignal } from '@preact/signals';
 import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@/utils/utilities/navigation';
 import { useUserStore } from '@/store/slices';
+import { useNavigation } from '@/utils/hooks/navigation';
+
 export const RoundsSettingPage: FunctionComponent = () => {
   const [rounds, setRounds] = useState([]);
   const loading = useSignal<boolean>(false);
-  const { redirectSettings } = useNavigation();
-  // const redirect = () => {
-  //   redirectSettings(
-  //     PAGES_LIST_ROUTER.dashboard.setting.base,
-  //     '/round/create',
-  //     'create',
-  //     'rounds-create'
-  //   );
-  // };
-
+  const { go } = useNavigation();
   const { t } = useTranslation();
   useEffect(() => {
     document.title = t('p_round');
@@ -78,12 +67,12 @@ export const RoundsSettingPage: FunctionComponent = () => {
   };
 
   const editProject = (id: string) => {
-    redirectSettings(
-      PAGES_LIST_ROUTER.dashboard.setting.base,
-      `/shifts/rounds/update/${id}`,
-      'edit',
-      'rounds-update'
-    );
+    go({
+      to: `/shifts/rounds/update/${id}`,
+      label: 'edit',
+      id: 'shifts:rounds:state:update',
+      base: 'setting',
+    });
   };
 
   const handleOnClick = async (action: IRowAction | any) => {
