@@ -127,11 +127,17 @@ export const TaskFormCreate = ({
         attachmentType: '',
       };
     } else if (value.id || value.name) {
-      _task = { ...value, hourStart: DateUtils.createDateFromHour(value.hourStart, true) };
+      _task = {
+        ...value,
+        hourStart: DateUtils.createDateFromHour(value.hourStart, true),
+      };
     } else {
       const find = tasks.value.find((task) => task.id == value.value);
       if (!find) return;
-      _task = { ...find, hourStart: DateUtils.createDateFromHour(find.hourStart, true) };
+      _task = {
+        ...find,
+        hourStart: DateUtils.createDateFromHour(find.hourStart, true),
+      };
     }
 
     if (!_task) return;
@@ -177,23 +183,23 @@ export const TaskFormCreate = ({
                 id='form-settings-task-create'
               >
                 {selector && (
-                //   <SmartSelector
-                //   name='select-task'
-                //   placeholder='p_select'
-                //   label='h_task'
-                //   button
-                //   buttonIcon='219'
-                //   icon='086'
-                //   options={filteredTasks.map((e) => ({
-                //     value: e.id ?? '',
-                //     // label: e.description ?? 'Sin descripción',
-                //     label: e.name ?? 'Sin descripción',
-                //   }))}
-                //   menuPortalTarget={document.body}
-                //   onClick={onToggleTask}
-                //   onChange={onChange}
-                //   disabled={disabled}
-                // />
+                  //   <SmartSelector
+                  //   name='select-task'
+                  //   placeholder='p_select'
+                  //   label='h_task'
+                  //   button
+                  //   buttonIcon='219'
+                  //   icon='086'
+                  //   options={filteredTasks.map((e) => ({
+                  //     value: e.id ?? '',
+                  //     // label: e.description ?? 'Sin descripción',
+                  //     label: e.name ?? 'Sin descripción',
+                  //   }))}
+                  //   menuPortalTarget={document.body}
+                  //   onClick={onToggleTask}
+                  //   onChange={onChange}
+                  //   disabled={disabled}
+                  // />
                   <Field name='select-task'>
                     {({ input, meta }) => (
                       <SmartSelector
@@ -344,7 +350,7 @@ export const TaskFormCreate = ({
                                 button
                                 buttonIcon='044'
                                 buttonType='submit'
-                                buttonLabel="Agregar tarea"
+                                buttonLabel='Agregar tarea'
                                 buttonForm='form-settings-task-create'
                               />
                             )}

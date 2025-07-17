@@ -92,8 +92,9 @@ export const Input = <T = string,>({
               border-gray-300 dark:border-gray-700
               appearance-none
               ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
-              ${type === 'number'
-                ? `
+              ${
+                type === 'number'
+                  ? `
                 [&::-webkit-inner-spin-button]:appearance-none
                 [&::-webkit-outer-spin-button]:appearance-none
                 [&::-webkit-inner-spin-button]:bg-gray-100
@@ -107,7 +108,7 @@ export const Input = <T = string,>({
                 [&::-webkit-inner-spin-button]:text-gray-900
                 [&::-webkit-inner-spin-button]:dark:text-gray-200
               `
-                : ''
+                  : ''
               }
             `}
             onChange={onChange}
@@ -159,7 +160,6 @@ export const Input = <T = string,>({
               transparent
               label={buttonLabel}
             />
-
           </div>
         )}
         {!button && end && icon && (
