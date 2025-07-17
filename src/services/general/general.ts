@@ -17,6 +17,13 @@ export interface IGeneralRequest {
   description: string;
   settings: any;
 }
+
+export type IResponseSummary = {
+  total: number;
+  in_progress: number;
+  completed: number;
+};
+
 export class GeneralService extends BaseService {
   static sname: VoxServices = 'file';
   static async presigned(data: IPresignedRequest) {
