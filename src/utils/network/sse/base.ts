@@ -4,16 +4,18 @@ import { EventBus } from '../event.bus';
 export enum SSE_EVENTS {
   CREATE = 'create',
   UPDATE = 'update',
-  CREATE_PARENT = 'create-parent',
   UPDATE_CHECK = 'update-check',
+  CREATE_PARENT = 'create-parent',
+  DELETE = 'delete',
   PANIC = 'panic',
 }
 
 export enum SSE_TYPE {
-  MEMO = 'memo',
-  SHIFT = 'shift',
-  ALL = 'all',
-  PANIC = 'panic',
+    MEMO = 'memo',
+    SHIFT = 'shift',
+    RESPONSE = 'form',
+    PANIC = 'panic',
+    ALL = 'all',
 }
 
 export interface IBaseSSE {

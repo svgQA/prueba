@@ -18,6 +18,7 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
+import { IResponseSummary } from '../general/general';
 
 export class FormService extends BaseService {
   static sname: VoxServices = 'form';
@@ -131,6 +132,14 @@ export class FormService extends BaseService {
       params: params as any,
     };
     return await super.make_request<IResponseResponse>(this.sname, model);
+  }
+
+  static async get_response_summary() {
+    const model: IMakeRequest = {
+      url: ['response', 'summary', 'stats'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<IResponseSummary>(this.sname, model);
   }
 
   static async create_list(data: IListRequest) {

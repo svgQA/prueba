@@ -47,7 +47,7 @@ enum VIEW_NAME {
   PANIC,
 }
 
-const defaultSummary = {
+export const defaultSummary = {
   total: 0,
   in_progress: 0,
   completed: 0,
