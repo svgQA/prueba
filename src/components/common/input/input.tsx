@@ -40,6 +40,7 @@ export const Input = <T = string,>({
   rounded,
   float,
   unicon,
+  buttonLabel,
   ...props
 }: IInputProps<T>) => {
   const { t } = useTranslation();
@@ -148,15 +149,16 @@ export const Input = <T = string,>({
           )}
         </div>
         {button && (
-          <div className='border-l dark:border-gray-600 border-b-light-dark'>
+          <div className='border-l dark:border-gray-600 border-b-light-dark mr-10'>
             <Button
               onClick={() => onClick?.(value)}
               name='btn-input-action'
               icon={buttonIcon}
               type={buttonType}
-              rounded
+              rounded={!buttonLabel} // 👈 solo usa rounded si NO hay label
               borderless
               transparent
+              label={buttonLabel}
             />
           </div>
         )}
