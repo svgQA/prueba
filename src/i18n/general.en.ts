@@ -1,10 +1,4 @@
 export const general_en = {
-  navbar: {
-    products: 'Our Products',
-    about: 'About Us',
-    demo: 'Request a Demo',
-    signin: 'Sign In',
-  },
   login: {
     welcome: 'Welcome to Tryvoo',
     slogan: 'Simplify. Optimize. Grow.',

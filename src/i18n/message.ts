@@ -92,8 +92,6 @@ export const message_es = {
   i_solutions_health_title: 'Salud',
   i_solutions_health_subtitle:
     'Administra técnicos de salud, trackea visitas a domicilio y maneja solicitudes en tiempo real.',
-
-  // Nuevas traducciones para planes
   i_plans_title: 'Nuestros Planes',
   i_plans_subtitle:
     'Elige el plan perfecto para tu negocio y transforma tus operaciones en campo. ¡Comienza con Tryvoo hoy!',
@@ -137,6 +135,10 @@ export const message_es = {
   i_plans_premium_option6:
     'Panel de informes avanzado con personalización completa.',
   i_plans_premium_option7: 'Soporte prioritario 24/7 con consultor dedicado.',
+  i_navbar_products: 'Nuestros productos',
+  i_navbar_about: 'Conócenos',
+  i_navbar_demo: 'Solicita una demo',
+  i_navbar_signin: 'Iniciar sesión',
 };
 
 export const message_en = {
@@ -233,8 +235,6 @@ export const message_en = {
   i_solutions_health_title: 'Healthcare',
   i_solutions_health_subtitle:
     'Manage health technicians, track home visits, and handle requests in real-time.',
-
-  // New plans translations
   i_plans_title: 'Our Plans',
   i_plans_subtitle:
     'Choose the perfect plan for your business and transform your field operations. Start with Tryvoo today!',
@@ -257,16 +257,16 @@ export const message_en = {
   i_plans_enterprise_option2: 'Real-time monitoring with unlimited assets.',
   i_plans_enterprise_option3:
     'Complete offline functionality (automatic data synchronization).',
-  i_plans_enterprise_option4: 'AI-powered assistance (24/7 support).',
+  i_plans_enterprise_option4: 'AI assistance (24/7 support).',
   i_plans_enterprise_option5: 'Integration with up to 3 external tools.',
   i_plans_enterprise_option6: 'Basic reporting dashboard for data analysis.',
   i_plans_premium_pricing: '$49 USD/month',
   i_plans_premium_name: 'Premium Plan',
   i_plans_premium_action: 'Start Plan',
-  i_plans_premium_subtitle: 'Advanced companies',
+  i_plans_premium_subtitle: 'Advanced businesses',
   i_plans_premium_option1: 'Unlimited users and scalable operations.',
   i_plans_premium_option2:
-    'Advanced monitoring with real-time reporting and predictive analytics.',
+    'Advanced monitoring with real-time reporting and predictive analysis.',
   i_plans_premium_option3:
     'Advanced offline capabilities (support for multiple devices).',
   i_plans_premium_option4:
@@ -275,4 +275,8 @@ export const message_en = {
   i_plans_premium_option6:
     'Advanced reporting dashboard with full customization.',
   i_plans_premium_option7: 'Priority 24/7 support with dedicated consultant.',
+  i_navbar_products: 'Our Products',
+  i_navbar_about: 'About Us',
+  i_navbar_demo: 'Request a Demo',
+  i_navbar_signin: 'Sign In',
 };
