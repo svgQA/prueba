@@ -43,10 +43,10 @@ const CustomDemoContainer = ({
             </div>
           )}
           <h1 className='text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 w-full leading-tight'>
-            {title || t('demo.title')}
+            {title || t('i_demo_title')}
           </h1>
           <h4 className='text-white sm:text-xl md:text-xl lg:text-2xl leading-relaxed opacity-90 font-semibold max-w-2xl mx-auto md:mx-0'>
-            {subtitle || t('demo.subtitle')}
+            {subtitle || t('i_demo_subtitle')}
           </h4>
         </div>
       </div>
@@ -84,8 +84,6 @@ export const DemoForm = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     // Aquí iría la lógica para enviar la solicitud de demo
-    // console.log('Formulario enviado:', formData);
-    // Limpiamos el formulario después de enviar
     setFormData({
       fullName: '',
       company: '',
@@ -94,14 +92,18 @@ export const DemoForm = () => {
       date: '',
       time: '',
     });
-    // Aquí se podría mostrar un mensaje de éxito o redirigir a otra página
   };
 
   return (
-    <CustomDemoContainer title={t('demo.title')} subtitle={t('demo.subtitle')}>
+    <CustomDemoContainer
+      title={t('i_demo_title')}
+      subtitle={t('i_demo_subtitle')}
+    >
       <div className='w-full px-2 sm:px-4'>
         <div className='text-center mb-4'>
-          <h3 className='text-cyan-500 text-xl font-bold'>{t('demo.title')}</h3>
+          <h3 className='text-cyan-500 text-xl font-bold'>
+            {t('i_demo_title')}
+          </h3>
         </div>
 
         <form onSubmit={handleSubmit} className='space-y-4'>
@@ -110,7 +112,7 @@ export const DemoForm = () => {
               htmlFor='fullName'
               className='block text-sm font-medium text-gray-700'
             >
-              {t('demo.form.fullNameLabel')}
+              {t('l_name')}
             </label>
             <input
               type='text'
@@ -118,7 +120,7 @@ export const DemoForm = () => {
               name='fullName'
               value={formData.fullName}
               onChange={handleInputChange}
-              placeholder={t('demo.form.fullNamePlaceholder')}
+              placeholder={t('p_name')}
               className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
               required
             />
@@ -129,7 +131,7 @@ export const DemoForm = () => {
               htmlFor='company'
               className='block text-sm font-medium text-gray-700'
             >
-              {t('demo.form.companyLabel')}
+              {t('l_company')}
             </label>
             <input
               type='text'
@@ -137,7 +139,7 @@ export const DemoForm = () => {
               name='company'
               value={formData.company}
               onChange={handleInputChange}
-              placeholder={t('demo.form.companyPlaceholder')}
+              placeholder={t('p_company')}
               className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
               required
             />
@@ -148,7 +150,7 @@ export const DemoForm = () => {
               htmlFor='email'
               className='block text-sm font-medium text-gray-700'
             >
-              {t('demo.form.emailLabel')}
+              {t('l_email')}
             </label>
             <input
               type='email'
@@ -156,7 +158,7 @@ export const DemoForm = () => {
               name='email'
               value={formData.email}
               onChange={handleInputChange}
-              placeholder={t('demo.form.emailPlaceholder')}
+              placeholder={t('p_email')}
               className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
               required
             />
@@ -167,7 +169,7 @@ export const DemoForm = () => {
               htmlFor='phone'
               className='block text-sm font-medium text-gray-700'
             >
-              {t('h_phone')}
+              {t('l_phone')}
             </label>
             <input
               type='tel'
@@ -175,38 +177,46 @@ export const DemoForm = () => {
               name='phone'
               value={formData.phone}
               onChange={handleInputChange}
-              placeholder={t('demo.form.phonePlaceholder')}
+              placeholder={t('p_phone')}
               className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
               required
             />
           </div>
 
-          <div className='space-y-2'>
-            <label
-              htmlFor='date'
-              className='block text-sm font-medium text-gray-700'
-            >
-              {t('demo.form.preferredDateLabel')}
-            </label>
-            <div className='flex space-x-2'>
+          <div className='flex space-x-4'>
+            <div className='w-1/2 space-y-2'>
+              <label
+                htmlFor='date'
+                className='block text-sm font-medium text-gray-700'
+              >
+                {t('l_date')}
+              </label>
               <input
                 type='date'
                 id='date'
                 name='date'
                 value={formData.date}
                 onChange={handleInputChange}
-                placeholder={t('demo.form.preferredDatePlaceholder')}
-                className='w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
+                placeholder={t('p_date')}
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
                 required
               />
+            </div>
+            <div className='w-1/2 space-y-2'>
+              <label
+                htmlFor='time'
+                className='block text-sm font-medium text-gray-700'
+              >
+                {t('l_time')}
+              </label>
               <input
                 type='time'
                 id='time'
                 name='time'
                 value={formData.time}
                 onChange={handleInputChange}
-                placeholder={t('demo.form.preferredTimePlaceholder')}
-                className='w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
+                placeholder={t('p_time')}
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
                 required
               />
             </div>
@@ -216,7 +226,7 @@ export const DemoForm = () => {
             type='submit'
             className='w-full mt-4 px-4 py-3 bg-cyan-500 text-white font-medium rounded-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500'
           >
-            {t('demo.form.submitButton')}
+            {t('i_demo_title')}
           </button>
         </form>
 

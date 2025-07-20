@@ -15,7 +15,6 @@ import { history_en, history_es } from './history';
 import { memos_en, memos_es } from './memos';
 import { panic_en, panic_es } from './panic';
 import { role_en, role_es } from './role';
-import { demo_en, demo_es } from './demo';
 import { hero_en, hero_es } from './hero';
 
 // Revisar
@@ -63,7 +62,6 @@ const resources = {
       ...memos_en,
       ...panic_en,
       ...role_en,
-      ...demo_en,
       ...hero_en,
       ...schedule_en,
       ...smartGroup_en,
@@ -96,7 +94,6 @@ const resources = {
       ...memos_es,
       ...panic_es,
       ...role_es,
-      ...demo_es,
       ...hero_es,
       ...schedule_es,
       ...smartGroup_es,

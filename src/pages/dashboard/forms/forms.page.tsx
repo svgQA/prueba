@@ -23,7 +23,12 @@ import { validateResponse } from '@/pages/settings/forms/response/store/response
 import { useUserStore } from '@/store/slices';
 import { defaultSummary } from '../memos/memos.page';
 import { EventBus } from '@/utils/network/event.bus';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE, SseManager } from '@/utils/network/sse/base';
+import {
+  IBaseSSE,
+  SSE_EVENTS,
+  SSE_TYPE,
+  SseManager,
+} from '@/utils/network/sse/base';
 import { handleNotificationEvent } from '@/components/common/notifications/components/notification.event';
 
 export const FormsPage: FunctionComponent = () => {
@@ -56,7 +61,9 @@ export const FormsPage: FunctionComponent = () => {
     const { name, message } = event;
 
     if (name === SSE_EVENTS.UPDATE_CHECK) {
-      const memoIndex = responses.value.findIndex((data) => data.id === message.id);
+      const memoIndex = responses.value.findIndex(
+        (data) => data.id === message.id
+      );
       if (memoIndex < 0) return;
       const copyResponses: IResponseResponse[] = responses.value;
       copyResponses[memoIndex].status = message.status;
@@ -70,7 +77,9 @@ export const FormsPage: FunctionComponent = () => {
   };
 
   const selectedNotifier = () => {
-    handleNotificationEvent('go-to-panic-table', (id: any) => setHighlightedId(String(id)));
+    handleNotificationEvent('go-to-panic-table', (id: any) =>
+      setHighlightedId(String(id))
+    );
   };
 
   const getResponseHandler = async () => {
@@ -82,7 +91,7 @@ export const FormsPage: FunctionComponent = () => {
 
     if (responseForm.getStatus()) {
       responses.value = responseForm.getMany();
-    };
+    }
 
     if (responseSummary.getStatus()) {
       summary.value = responseSummary.getOne();
@@ -237,22 +246,24 @@ export const FormsPage: FunctionComponent = () => {
             pageSize={20}
             onClickAction={handleOnClick}
             loading={loading.value}
-            rowClassName={(row: IResponseResponse) => highlightedId === String(row.id) ? 'animate-highlight' : ''}
+            rowClassName={(row: IResponseResponse) =>
+              highlightedId === String(row.id) ? 'animate-highlight' : ''
+            }
           />
         )}
         {(currentView.value === VIEW_NAME.INSPECT ||
           currentView.value === VIEW_NAME.REPORT) && (
-            <div className='max-h-screen'>
-              <div className='w-full py-1 pb-3 flex items-center justify-end'>
-                <h2 className='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
-                  {currentView.value === VIEW_NAME.INSPECT
-                    ? t('form.inspect.title')
-                    : t('form.report.title')}
-                </h2>
-              </div>
-              <FormResponseSettingPage posFinishAction={handlePosFinishAction} />
+          <div className='max-h-screen'>
+            <div className='w-full py-1 pb-3 flex items-center justify-end'>
+              <h2 className='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
+                {currentView.value === VIEW_NAME.INSPECT
+                  ? t('form.inspect.title')
+                  : t('form.report.title')}
+              </h2>
             </div>
-          )}
+            <FormResponseSettingPage posFinishAction={handlePosFinishAction} />
+          </div>
+        )}
       </div>
     </Section>
   );

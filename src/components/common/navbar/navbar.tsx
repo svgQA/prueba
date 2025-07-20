@@ -93,7 +93,7 @@ export const Navbar: FunctionComponent<INavbarProps> = ({
             className='px-2 sm:px-3 md:px-4 lg:px-6 py-[3px] rounded-lg bg-white text-ternary hover:bg-opacity-90 transition-colors duration-200 whitespace-nowrap text-xs sm:text-sm md:text-base flex items-center justify-center min-w-[60px] sm:min-w-[70px] md:min-w-[80px]'
           >
             <span className='vox-icon vx-icon-007 size-sm md:size-md !text-ternary flex items-center justify-center px-3' />
-            {t('navbar.signin')}
+            {t('i_navbar_signin')}
           </Link>
         </div>
       </div>
