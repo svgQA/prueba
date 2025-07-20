@@ -139,6 +139,17 @@ export const message_es = {
   i_navbar_about: 'Conócenos',
   i_navbar_demo: 'Solicita una demo',
   i_navbar_signin: 'Iniciar sesión',
+  i_welcome: 'Bienvenido a Tryvoo',
+  i_slogan: 'Simplifica. Optimiza. Crece.',
+  i_signIn: 'Iniciar sesión',
+  i_forgotPassword: '¿Olvidó su contraseña?',
+  i_demo_title: 'Solicita una demo',
+  i_demo_subtitle:
+    'Completa el formulario para solicitar una demostración personalizada',
+  i_demo_successMessage:
+    'Tu solicitud ha sido enviada correctamente. Pronto nos pondremos en contacto contigo.',
+  i_demo_errorMessage:
+    'Ocurrió un error al enviar tu solicitud. Por favor, intenta nuevamente.',
 };
 
 export const message_en = {
@@ -279,4 +290,14 @@ export const message_en = {
   i_navbar_about: 'About Us',
   i_navbar_demo: 'Request a Demo',
   i_navbar_signin: 'Sign In',
+  i_welcome: 'Welcome to Tryvoo',
+  i_slogan: 'Simplify. Optimize. Grow.',
+  i_signIn: 'Sign In',
+  i_forgotPassword: 'Forgot your password?',
+  i_demo_title: 'Request a demo',
+  i_demo_subtitle: 'Fill out the form to request a personalized demo',
+  i_demo_successMessage:
+    'Your request has been successfully sent. We will contact you soon.',
+  i_demo_errorMessage:
+    'An error occurred while submitting your request. Please try again.',
 };

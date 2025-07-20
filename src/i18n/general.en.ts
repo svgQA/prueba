@@ -1,10 +1,4 @@
 export const general_en = {
-  login: {
-    welcome: 'Welcome to Tryvoo',
-    slogan: 'Simplify. Optimize. Grow.',
-    signIn: 'Sign In',
-    forgotPassword: 'Forgot your password?',
-  },
   shifts: {
     pageTitle: 'TR - Shift Service',
     confirmDelete: 'Are you sure you want to delete {{name}}?',

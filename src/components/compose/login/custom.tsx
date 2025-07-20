@@ -41,11 +41,11 @@ const CustomLoginContainer = ({
             </div>
           )}
           <h1 className='text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 w-full leading-tight'>
-            {title || t('login.signIn')}
+            {title || t('i_welcome')}
           </h1>
           {showSlogan && (
             <h4 className='text-base sm:text-lg md:text-2xl lg:text-3xl leading-relaxed opacity-90 font-semibold max-w-2xl mx-auto md:mx-0'>
-              {subtitle || t('login.slogan')}
+              {subtitle || t('i_slogan')}
             </h4>
           )}
         </div>
@@ -81,7 +81,7 @@ const components = {
       <div className='text-center flex flex-col items-center'>
         <Logo title='Tryvoo' slogan='' color='text-primary' />
         <h3 className='mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl my-2 sm:my-3 text-ternary'>
-          {t('login.signIn')}
+          {t('i_signIn')}
         </h3>
       </div>
     );
@@ -109,7 +109,7 @@ const components = {
             }}
             className='text-xs sm:text-sm font-normal border-0 outline-none focus:outline-none hover:border-0 active:border-0 text-ternary'
           >
-            {t('login.forgotPassword')}
+            {t('i_forgotPassword')}
           </button>
         </div>
       );
