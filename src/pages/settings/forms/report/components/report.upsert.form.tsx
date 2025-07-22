@@ -1,58 +1,27 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import { Form, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { ReportService } from '@/services/form/reports';
 import { IReportRequest } from '@/types/form/service';
-import { GeneralService } from '@/services/general/general';
-import { ModuleService } from '@/services/general/module';
-import { ContractService } from '@/services/shift/contract';
 import { MultiSelect } from '../../create/MultiSelect';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { Button } from '@/components/common/button/button';
 import { ReportUpsertFormProps } from '../utils/interface';
-
-export const periodOptions = [
-    { label: 'Diario', value: 'DAILY' },
-    { label: 'Semanal', value: 'WEEKLY' },
-    { label: 'Mensual', value: 'MONTHLY' },
-    { label: 'Trimestral', value: 'QUARTERLY' },
-    { label: 'Anual', value: 'YEARLY' },
-];
+import { useNavigation } from '@/utils/utilities/navigation';
+import { IModuleReport, IProjectsReport } from '@/types/form';
+import { useSignal } from '@preact/signals';
+import { periodOptions, reportModuleOptions, reportProjectOptions } from '../utils/report.data';
+import { IOption } from '@/components/common/multi/interface';
 
 const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) => {
     const [loading, setLoading] = useState(false);
-    const [smartGroups, setSmartGroups] = useState<{ id: number; name: string }[]>([]);
-    const [modules, setModules] = useState<{ id: number; name: string }[]>([]);
-    const [projects, setProjects] = useState<{ id: number; name: string }[]>([]);
-
-    useEffect(() => {
-        fetchSmartGroups();
-        fetchModules();
-        fetchProjects();
-    }, []);
-
-    const fetchSmartGroups = async () => {
-        const res = await GeneralService.getSmartGroups();
-        if (res.getStatus()) setSmartGroups(res.getMany());
-    };
-    const fetchModules = async () => {
-        const res = await ModuleService.getModules('REPORT');
-        if (res.getStatus()) {
-            const mapped = res.getMany().map((m: any) => ({ id: m.id, name: m.title || m.name }));
-            setModules(mapped);
-        }
-    };
-    const fetchProjects = async () => {
-        const res = await ContractService.getSimpleList();
-        if (res.getStatus()) {
-            const mapped = res.getMany().map((p: any) => ({ id: p.value, name: p.label }));
-            setProjects(mapped);
-        }
-    };
-
+    const modules = useSignal<IModuleReport[]>(reportModuleOptions);
+    const projects = useSignal<IProjectsReport[]>(reportProjectOptions);
+    const periods = useSignal<IOption[]>(periodOptions);
+    const { navigateUpsert } = useNavigation();
     const isEdit = Boolean(initialData && initialData.id);
 
     const initialValues = useMemo(() => ({
@@ -81,24 +50,15 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                 emails: values.extraData.emails,
             },
         };
-        try {
-            let response;
-            if (isEdit && initialData.id) {
-                response = await ReportService.update_report(payload, initialData.id);
-            } else {
-                response = await ReportService.create_report(payload);
-            }
-            if (response.getStatus()) {
-                ToastManager.success(isEdit ? 'Reporte actualizado' : 'Reporte creado');
-                onSaved && onSaved();
-            } else {
-                ToastManager.error('Error al guardar el reporte');
-            }
-        } catch (e) {
-            ToastManager.error('Error inesperado');
-        } finally {
-            setLoading(false);
-        }
+
+        let response = (isEdit && initialData.id) ?
+            await ReportService.update_report(payload, initialData.id) :
+            await ReportService.create_report(payload);
+        if (!response.getStatus()) return;
+        ToastManager.success((isEdit && initialData.id) ? 's_updated_success' : 's_created_success');
+        navigateUpsert('/forms/report');
+        onSaved && onSaved();
+        setLoading(false);
     };
 
     return (
@@ -126,8 +86,8 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                                 {({ input, meta }) => (
                                     <SmartSelector
                                         {...input}
-                                        options={periodOptions}
-                                        value={periodOptions.find((opt) => opt.value === input.value) || undefined}
+                                        options={periods.value}
+                                        value={periods.value.find((opt) => opt.value === input.value)}
                                         onChange={(opt) => input.onChange(opt?.value)}
                                         placeholder="Selecciona un periodo"
                                         label="Periodo"
@@ -136,29 +96,17 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                                     />
                                 )}
                             </Field>
-                            <Field name="smart_groups">
-                                {({ input, meta }) => (
-                                    <MultiSelect
-                                        options={smartGroups}
-                                        selectedIds={input.value || []}
-                                        onChange={input.onChange}
-                                        getLabel={(item) => item.name}
-                                        getId={(item) => item.id}
-                                        placeholder="Selecciona uno o más grupos inteligentes"
-                                    />
-                                )}
-                            </Field>
                             <Field name="extraData.modules">
                                 {({ input, meta }) => (
                                     <MultiSelect
-                                        options={modules}
+                                        options={modules.value.map((m: any) => ({ value: m.id, label: m.name }))}
                                         selectedIds={input.value?.map((m: any) => m.id) || []}
                                         onChange={(selectedIds) => {
-                                            const selected = modules.filter((m) => selectedIds.includes(m.id));
+                                            const selected = modules.value.filter((m: any) => selectedIds.includes(m.id));
                                             input.onChange(selected);
                                         }}
-                                        getLabel={(item) => item.name}
-                                        getId={(item) => item.id}
+                                        getLabel={(item) => item.label}
+                                        getId={(item) => item.value}
                                         placeholder="Selecciona uno o más módulos"
                                     />
                                 )}
@@ -166,14 +114,14 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                             <Field name="extraData.projects">
                                 {({ input, meta }) => (
                                     <MultiSelect
-                                        options={projects}
+                                        options={projects.value.map((p: any) => ({ value: p.id, label: p.name }))}
                                         selectedIds={input.value?.map((p: any) => p.id) || []}
                                         onChange={(selectedIds) => {
-                                            const selected = projects.filter((p) => selectedIds.includes(p.id));
+                                            const selected = projects.value.filter((p) => selectedIds.includes(p.id));
                                             input.onChange(selected);
                                         }}
-                                        getLabel={(item) => item.name}
-                                        getId={(item) => item.id}
+                                        getLabel={(item) => item.label}
+                                        getId={(item) => item.value}
                                         placeholder="Selecciona uno o más proyectos"
                                     />
                                 )}
