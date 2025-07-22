@@ -75,6 +75,7 @@ import { GroupCreateSettingPage } from './security/groups/create/create';
 // import { ResourceCreateSettingPage } from './memo/resource/create/create';
 import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
 import { ResourceMemoSettingPage } from './memo/resource/resource';
+import ReportUpsertPage from './forms/report/components/report.upsert';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -232,6 +233,12 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.to}
           component={lazy(() =>
             Promise.resolve({ default: FormReportSettingPage })
+          )}
+        />
+         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ReportUpsertPage })
           )}
         />
         {/* IOT MENU */}

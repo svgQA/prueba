@@ -16,24 +16,10 @@ export const getColumns = (
   }) => void
 ): ColumnDef<IReportResponse>[] => [
   {
-    accessorKey: 'description',
-    id: 'description',
-    header: 'Descripción',
-    size: 200,
-    cell: (info) => <TextEllipsis text={info.getValue() as string} maxWidth='250px' />,
-  },
-  {
-    accessorKey: 'period',
-    id: 'period',
-    header: 'Periodo',
-    size: 100,
-    cell: (info) => info.getValue(),
-  },
-  {
     accessorKey: 'title',
     id: 'title',
     header: 'h_title',
-    size: 300,
+    size: 200,
     cell: (info) => {
       const { title, description } = info.row.original;
       return (
@@ -46,6 +32,27 @@ export const getColumns = (
         </div>
       );
     },
+  },
+  {
+    accessorKey: 'subtitle',
+    id: 'subtitle',
+    header: 'subtitle',
+    size: 200,
+    cell: (info) => <TextEllipsis text={info.getValue() as string} maxWidth='250px' />,
+  },
+  {
+    accessorKey: 'description',
+    id: 'description',
+    header: 'Descripción',
+    size: 200,
+    cell: (info) => <TextEllipsis text={info.getValue() as string} maxWidth='250px' />,
+  },
+  {
+    accessorKey: 'period',
+    id: 'period',
+    header: 'Periodo',
+    size: 100,
+    cell: (info) => info.getValue(),
   },
   {
     id: 'modules',
@@ -82,13 +89,6 @@ export const getColumns = (
       }
       return '-';
     },
-  },
-  {
-    accessorKey: 'createdAt',
-    id: 'createdAt',
-    size: 50,
-    header: 'h_created',
-    cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',

@@ -7,12 +7,17 @@ import { useTranslation } from 'react-i18next';
 import { getColumns } from './components/report.columns';
 import { IRowAction } from '@/components/common/table/interface';
 import { ReportService } from '@/services/form/reports';
-// import { useLocation } from 'wouter';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { useNavigation } from '@/utils/hooks/navigation';
+
 // import { PdfmeEditor } from './components/PdfmeEditor';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing';
+// import { useLocation } from 'wouter';
 
 export const FormReportSettingPage = () => {
   const { t } = useTranslation();
   const report = useSignal<IReportResponse[]>([]);
+  const { go } = useNavigation();
   // const [_, navigate] = useLocation();
   const loading = useSignal<boolean>(false);
 
@@ -40,10 +45,25 @@ export const FormReportSettingPage = () => {
     loading.value = false;
   }
 
-  const handleOnClick = async (_action: IRowAction) => { }
+  const handleOnClick = async (action: IRowAction) => {
+    switch (action.action) {
+      case ROW_ACTIONS.UPDATE:{
+        go({
+          to: `/forms/report/update/${action.id}`,
+          label: 'update',
+          id: 'forms:form:state:update',
+          base: 'setting',
+        });
+        break;
+      }
+      default:
+        break;
+    }
+  }
 
   return (
     <>
+      {/* <ReportUpsertPage onSaved={fetchInitialData} /> */}
       {/*<Section>
        <PdfmeEditor /> 
     </Section>*/}

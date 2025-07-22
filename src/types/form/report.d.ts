@@ -23,6 +23,7 @@ import { IPresignedRequest } from '../file';
 export interface IReport {
   id?: number;
   title: string;
+  subtitle?: string;
   description?: string;
   period: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
   extraData?: any;
