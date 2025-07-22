@@ -241,6 +241,12 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: ReportUpsertPage })
           )}
         />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ReportUpsertPage })
+          )}
+        />
         {/* IOT MENU */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.iot.devices.to}

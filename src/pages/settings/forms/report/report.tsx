@@ -11,21 +11,17 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { useNavigation } from '@/utils/hooks/navigation';
 
 // import { PdfmeEditor } from './components/PdfmeEditor';
-// import { PAGES_LIST_ROUTER } from '@/utils/routing';
-// import { useLocation } from 'wouter';
 
 export const FormReportSettingPage = () => {
   const { t } = useTranslation();
   const report = useSignal<IReportResponse[]>([]);
   const { go } = useNavigation();
-  // const [_, navigate] = useLocation();
   const loading = useSignal<boolean>(false);
+  const { selectedCompany } = useUserStore();
 
   useEffect(() => {
     document.title = t('p_form');
   }, []);
-
-  const { selectedCompany } = useUserStore();
 
   useEffect(() => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
@@ -47,13 +43,19 @@ export const FormReportSettingPage = () => {
 
   const handleOnClick = async (action: IRowAction) => {
     switch (action.action) {
-      case ROW_ACTIONS.UPDATE:{
+      case ROW_ACTIONS.UPDATE: {
         go({
-          to: `/forms/report/update/${action.id}`,
+          to: '/forms/report/create',
           label: 'update',
           id: 'forms:form:state:update',
           base: 'setting',
         });
+        break;
+      }
+      case ROW_ACTIONS.DELETE: {
+        const response = await ReportService.delete_report(Number(action.id));
+        if (!response.getStatus()) return;
+        fetchInitialData();
         break;
       }
       default:
@@ -63,10 +65,7 @@ export const FormReportSettingPage = () => {
 
   return (
     <>
-      {/* <ReportUpsertPage onSaved={fetchInitialData} /> */}
-      {/*<Section>
-       <PdfmeEditor /> 
-    </Section>*/}
+      {/*<Section> <PdfmeEditor /> </Section>*/}
       <Table<IReportResponse>
         data={report.value}
         columns={getColumns(handleOnClick)}

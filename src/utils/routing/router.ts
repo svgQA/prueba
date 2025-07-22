@@ -1,3 +1,5 @@
+import { create } from "lodash";
+
 export const PAGES_LIST_ROUTER = {
   home: '/',
   signin: '/signin',
@@ -327,6 +329,10 @@ export const PAGES_LIST_ROUTER = {
           update: {
             base: '/update',
             to: '/forms/report/update/:id',
+          },
+          create: {
+            base: '/create',
+            to: '/forms/report/create',
           },
         },
       },

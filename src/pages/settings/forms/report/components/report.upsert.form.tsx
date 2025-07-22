@@ -4,15 +4,15 @@ import arrayMutators from 'final-form-arrays';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { ReportService } from '@/services/form/reports';
-import { IReportRequest, IReportResponse } from '@/types/form/service';
+import { IReportRequest } from '@/types/form/service';
 import { GeneralService } from '@/services/general/general';
 import { ModuleService } from '@/services/general/module';
 import { ContractService } from '@/services/shift/contract';
-import { CompanyService } from '@/services/general/company';
 import { MultiSelect } from '../../create/MultiSelect';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { Button } from '@/components/common/button/button';
+import { ReportUpsertFormProps } from '../utils/interface';
 
 export const periodOptions = [
     { label: 'Diario', value: 'DAILY' },
@@ -22,23 +22,16 @@ export const periodOptions = [
     { label: 'Anual', value: 'YEARLY' },
 ];
 
-interface ReportUpsertFormProps {
-    initialData?: Partial<IReportResponse>;
-    onSaved?: () => void;
-}
-
 const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) => {
     const [loading, setLoading] = useState(false);
     const [smartGroups, setSmartGroups] = useState<{ id: number; name: string }[]>([]);
     const [modules, setModules] = useState<{ id: number; name: string }[]>([]);
     const [projects, setProjects] = useState<{ id: number; name: string }[]>([]);
-    const [companies, setCompanies] = useState<{ label: string; value: string | number }[]>([]);
 
     useEffect(() => {
         fetchSmartGroups();
         fetchModules();
         fetchProjects();
-        fetchCompanies();
     }, []);
 
     const fetchSmartGroups = async () => {
@@ -57,13 +50,6 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
         if (res.getStatus()) {
             const mapped = res.getMany().map((p: any) => ({ id: p.value, name: p.label }));
             setProjects(mapped);
-        }
-    };
-    const fetchCompanies = async () => {
-        const res = await CompanyService.getCompanyList();
-        if (res.getStatus()) {
-            const mapped = res.getMany().map((c: any) => ({ label: c.label, value: c.value }));
-            setCompanies(mapped);
         }
     };
 

@@ -48,4 +48,12 @@ export class ReportService extends BaseService {
         };
         return await super.make_request<IReportResponse>(this.sname, model);
     }
+
+    static async delete_report(id: number) {
+        const model: IMakeRequest = {
+            url: ['report', `${id}`],
+            method: REQUEST_METHODS.DELETE,
+        };
+        return await super.make_request<IReportResponse>(this.sname, model);
+    }
 }
