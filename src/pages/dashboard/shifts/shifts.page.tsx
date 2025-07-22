@@ -338,10 +338,10 @@ export const ShiftsPage: FunctionalComponent = () => {
   const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
-    (id: string | number) => {
-      const selectedUser = ganttShifts.users.find((user) => user.id === id);
-      setUserSelected(selectedUser);
-      toggleUpsertModal();
+    (_id: string | number) => {
+      // const selectedUser = ganttShifts.users.find((user) => user.id === id);
+      // setUserSelected(selectedUser);
+      // toggleUpsertModal();
     },
     [ganttShifts.users]
   );

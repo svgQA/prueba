@@ -22,7 +22,7 @@ export const CardSettingHeader: FunctionComponent<
         <p className='font-thin text-xs h-4'>
           {t(menuInformationSelected.value.description || '')}
         </p>
-        {menuInformationSelected.value.id}
+        {/* {menuInformationSelected.value.id} */}
       </div>
       <div className='w-fit rounded-md flex items-center mt-2 h-8'>
         {computedValidateBlackList.value && computedValidateNewMenu.value && (
