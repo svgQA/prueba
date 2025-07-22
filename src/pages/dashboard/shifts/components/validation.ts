@@ -15,10 +15,16 @@ const checkTime = (date: Dayjs, schedule: Schedule) => {
     (d: DaySchedule) => DAYS_OF_WEEK[d.dayIndex]?.position === day_name.position
   )?.blocks;
   if (!_schedule_hours) return false;
+
   const _hour = date.hour();
+  const _minute = date.minute();
+
+  const currentMinutes = _hour * 60 + _minute;
 
   const validation = _schedule_hours.some((block: TimeBlock) => {
-    return _hour >= block.start && _hour < block.end;
+    const startMinutes = block.start * 60;
+    const endMinutes = block.end * 60;
+    return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
   });
 
   return validation;

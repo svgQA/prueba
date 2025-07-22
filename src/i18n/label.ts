@@ -16,6 +16,12 @@ export const label_es = {
   l_filter_by: 'Filtrar por',
   l_form_continue: 'Continuar con el formulario',
   filter_by: 'Filas',
+  l_name: 'Nombre',
+  l_company: 'Empresa',
+  l_email: 'Correo electrónico',
+  l_phone: 'Teléfono',
+  l_date: 'Fecha',
+  l_time: 'Hora',
 };
 
 export const label_en = {
@@ -36,4 +42,10 @@ export const label_en = {
   l_filter_by: 'Filter by',
   l_form_continue: 'Continue with form',
   filter_by: 'Rows',
+  l_name: 'Name',
+  l_company: 'Company',
+  l_email: 'Email',
+  l_phone: 'Phone',
+  l_date: 'Date',
+  l_time: 'Time',
 };

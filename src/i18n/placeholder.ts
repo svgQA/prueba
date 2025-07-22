@@ -12,6 +12,11 @@ export const placeholder_es = {
   p_general_search: 'Buscar por columnas',
   p_search: 'Buscar',
   p_search_scheduler: 'Buscar por horario',
+  p_name: 'Ingresa nombre completo',
+  p_company: 'Ingresa nombre de la empresa',
+  p_email: 'Ingresa correo electrónico',
+  p_phone: 'Ingresa número telefónico',
+  p_date: 'Ingresa una fecha',
 };
 
 export const placeholder_en = {
@@ -28,4 +33,9 @@ export const placeholder_en = {
   p_general_search: 'Search by columns',
   p_search: 'Search',
   p_search_scheduler: 'Search by schedule',
+  p_name: 'Enter full name',
+  p_company: 'Enter company name',
+  p_email: 'Enter email',
+  p_phone: 'Enter phone number',
+  p_date: 'Enter date',
 };

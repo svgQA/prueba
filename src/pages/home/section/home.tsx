@@ -26,7 +26,7 @@ export const HomeHero = () => {
                 type='button'
                 className='bg-secondary rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl border-none font-bold py-3 px-5 mb-12 z-10'
                 onClick={() => {
-                  window.location.href = '/dashboard';
+                  window.location.href = '/demo';
                 }}
               >
                 {t('i_demoButton')}

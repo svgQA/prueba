@@ -11,11 +11,11 @@ export enum SSE_EVENTS {
 }
 
 export enum SSE_TYPE {
-    MEMO = 'memo',
-    SHIFT = 'shift',
-    RESPONSE = 'form',
-    PANIC = 'panic',
-    ALL = 'all',
+  MEMO = 'memo',
+  SHIFT = 'shift',
+  RESPONSE = 'form',
+  PANIC = 'panic',
+  ALL = 'all',
 }
 
 export interface IBaseSSE {
