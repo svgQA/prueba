@@ -655,7 +655,7 @@ export const MapLibrePointsMap = ({
     });
 
     if (editNameInput) {
-      editNameInput.addEventListener('input', (e) => {
+      editNameInput.addEventListener('input', (_e) => {
         // No es necesario actualizar el estado aquí, solo se toma el valor al guardar
       });
     }
