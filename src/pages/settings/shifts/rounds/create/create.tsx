@@ -17,8 +17,10 @@ import { HelpTooltip } from '@/components/common/help-tooltip';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { MapPoint } from '@/components/common/map/utils/interface';
 
 interface IPoint {
+  name: string;
   latitude: number;
   longitude: number;
 }
@@ -57,7 +59,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const { go } = useNavigation();
   let lastPointsSerialized = JSON.stringify([]);
 
-  const sendPointsRef = (data: any) => {
+  const sendPointsRef = (data: MapPoint[]) => {
     const serialized = JSON.stringify(data);
     if (serialized === lastPointsSerialized) return; // Solo actualiza si realmente cambió
 
@@ -80,6 +82,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         (point: {
           id: number;
           position: { lat: number; lng: number };
+          name?: string;
           tasks: any[];
         }) => {
           const model = point.tasks
@@ -87,10 +90,12 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                 latitude: point.position.lat,
                 longitude: point.position.lng,
                 task: point.tasks,
+                name: point.name || `Point ${point.id}`,
               }
             : {
                 latitude: point.position.lat,
                 longitude: point.position.lng,
+                name: point.name || `Point ${point.id}`,
               };
           return model;
         }
@@ -132,6 +137,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
         count++;
         return {
           id: count,
+          name: point.name || `Point ${count}`,
           position: {
             lat: point.latitude,
             lng: point.longitude,
@@ -291,7 +297,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                         className={`flex items-center justify-between p-4 bg-b-light-light dark:bg-b-dark-light`}
                       >
                         <div className='flex flex-col'>
-                          <span className='font-medium'>{`📍 Point ${index + 1} `}</span>
+                           <span className='font-medium'>{`📍 ${point?.name} `}</span>
                           <span className='text-sm'>{`lat: ${point.position.lat}, lng: ${point.position.lng}`}</span>
                         </div>
                       </div>
@@ -544,10 +550,10 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   name='map-points'
                   pointsAmount={100}
                   allowManualPoint={true}
-                  sendPoints={(data) => {
+                  sendPoints={(data: MapPoint[]) => {
                     const result = sendPointsRef(data);
-                    form.change('latitude', result?.lat);
-                    form.change('longitude', result?.lng);
+                    form.change('latitude', result?.lat.toString());
+                    form.change('longitude', result?.lng.toString());
                   }}
                   pointsRef={points.value}
                   center={currentLocation.value}

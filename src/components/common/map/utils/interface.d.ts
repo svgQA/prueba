@@ -24,6 +24,7 @@ export interface IMapProps extends IComponentProps {
 
 export interface MapPoint {
   id: number;
+  name: string;
   position: { lat: number; lng: number };
 }
 
