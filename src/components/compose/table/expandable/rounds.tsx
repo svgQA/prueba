@@ -113,12 +113,15 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
         pdf.text(`ID: ${qrData.point.id}`, x + qrSize / 2, textY, {
           align: 'center',
         });
-        pdf.text(`Lat: ${qrData.point.latitude}`, x + qrSize / 2, textY + 4, {
+        pdf.text(`NAME: ${qrData.point.name}`, x + qrSize / 2, textY + 4, {
           align: 'center',
         });
-        pdf.text(`Lng: ${qrData.point.longitude}`, x + qrSize / 2, textY + 8, {
-          align: 'center',
-        });
+        // pdf.text(`Lat: ${qrData.point.latitude}`, x + qrSize / 2, textY + 4, {
+        //   align: 'center',
+        // });
+        // pdf.text(`Lng: ${qrData.point.longitude}`, x + qrSize / 2, textY + 8, {
+        //   align: 'center',
+        // });
 
         currentCol++;
       };
