@@ -72,8 +72,8 @@ export const ChatMessage = ({
 
     if (error.code === error.PERMISSION_DENIED) {
       showAlert({
-        title: t('shift.expandable.date.location.title'),
-        message: t('shift.expandable.date.location.message'),
+        title: t('i_location_title'),
+        message: t('i_location_message'),
         onConfirm: () => {},
         onCancel: () => {},
       });

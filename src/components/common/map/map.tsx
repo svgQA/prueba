@@ -34,7 +34,7 @@ export const Map: FunctionComponent<IMapProps> = ({
 }) => {
   const [_map, setMap] = useState<google.maps.Map | null>(null);
   const [points, setPoint] = useState<
-    { id: number; position: google.maps.LatLngLiteral; tasks: ITask[]; }[]
+    { id: number; position: google.maps.LatLngLiteral; tasks: ITask[] }[]
   >([]);
   const [editCoords, setEditCoords] = useState<{ lat: string; lng: string }>({
     lat: '',
