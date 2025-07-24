@@ -67,8 +67,8 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
 
     if (error.code === error.PERMISSION_DENIED) {
       showAlert({
-        title: i18n.t('shift.expandable.date.location.title'),
-        message: i18n.t('shift.expandable.date.location.message'),
+        title: i18n.t('i_location_title'),
+        message: i18n.t('i_location_message'),
         onConfirm: () => {},
         onCancel: () => {},
       });
@@ -161,7 +161,7 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
                 icon='320'
               />
               <InfoContainer
-                header={t('memos.supervisor.company')}
+                header={t('d_company')}
                 label={memo?.extraData?.company?.name}
                 icon='023'
               />

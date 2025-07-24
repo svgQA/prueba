@@ -291,21 +291,21 @@ export const MemosPage: FunctionComponent = () => {
   const renderCardsInfo = (summary: MemosSummary, _type: string = 'memos') => (
     <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
       <CardData
-        title='m_total_memos'
+        title='h_memos_total'
         count={summary.total}
         subtitle=''
         color='t-dark'
         icon='328' // 328
       />
       <CardData
-        title='m_unresolved'
+        title='h_memos_unresolved'
         count={calculatePercentage(summary)}
         subtitle=''
         color='t-dark'
         icon='311' // 311
       />
       <CardData
-        title='m_resolved'
+        title='h_memos_resolved'
         count={calculatePercentage(summary, true)}
         subtitle=''
         color='t-dark'

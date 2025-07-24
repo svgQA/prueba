@@ -120,8 +120,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
     if (error.code === error.PERMISSION_DENIED) {
       showAlert({
-        title: i18n.t('shift.expandable.date.location.title'),
-        message: i18n.t('shift.expandable.date.location.message'),
+        title: i18n.t('i_location_title'),
+        message: i18n.t('i_location_message'),
         onConfirm: () => {},
         onCancel: () => {},
       });
@@ -301,7 +301,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           {memos.value.length === 0 && (
             <div className='flex justify-center items-center h-20'>
               <p className='text-gray-text-light dark:text-t-dark-light text-sm'>
-                {t('memos.history.comment')}
+                {t('i_comment')}
               </p>
             </div>
           )}
@@ -499,12 +499,11 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
             />
           )}
 
-          {memo.createdAt &&
-            showDate('memos.history.created', memo.createdAt, 'datetime')}
+          {memo.createdAt && showDate('h_created', memo.createdAt, 'datetime')}
           {memo.updatedAt &&
             memo.createdAt &&
             showDate(
-              'memos.history.updated',
+              'h_updated',
               memo.updatedAt != null ? memo.updatedAt : memo.createdAt,
               'datetime'
             )}

@@ -150,6 +150,21 @@ export const message_es = {
     'Tu solicitud ha sido enviada correctamente. Pronto nos pondremos en contacto contigo.',
   i_demo_errorMessage:
     'Ocurrió un error al enviar tu solicitud. Por favor, intenta nuevamente.',
+  i_location_title: 'Permiso denegado',
+  i_location_message:
+    'Es necesario aprobar el acceso a la ubicación para realizar el check. Por favor habilite los permisos de ubicación en su navegador.',
+  i_location_gpsMessage:
+    'No se pudo obtener la ubicación. Por favor verifique que el GPS esté activado.',
+  i_location_timeoutMessage:
+    'Se agotó el tiempo de espera para obtener la ubicación. Por favor intente nuevamente.',
+  i_question1: '',
+  i_question2: '',
+  i_question3: '',
+  i_view_user: 'Chats',
+  i_view_users: 'Usuarios',
+  i_view_select: 'Minutas',
+  i_view_services: 'Servicios',
+  i_comment: 'Sin comentario',
 };
 
 export const message_en = {
@@ -300,4 +315,19 @@ export const message_en = {
     'Your request has been successfully sent. We will contact you soon.',
   i_demo_errorMessage:
     'An error occurred while submitting your request. Please try again.',
+  i_location_title: 'Permission denied',
+  i_location_message:
+    'It is necessary to approve access to the location to perform the check. Please enable location permissions in your browser.',
+  i_location_gpsMessage:
+    'Could not get location. Please verify that GPS is enabled.',
+  i_location_timeoutMessage:
+    'The timeout has expired to get the location. Please try again.',
+  i_question1: '',
+  i_question2: '',
+  i_question3: '',
+  i_view_user: 'Chats',
+  i_view_users: 'Users',
+  i_view_select: 'Memorandums',
+  i_view_services: 'Services',
+  i_comment: 'No comment',
 };

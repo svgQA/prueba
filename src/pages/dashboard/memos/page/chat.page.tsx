@@ -56,9 +56,9 @@ export enum TypeChatView {
 const FrequentQuestions = () => {
   const { t } = useTranslation();
   const questions: FrequentQuestion[] = [
-    { id: 1, question: t('m_question1') },
-    { id: 2, question: t('m_question2') },
-    { id: 3, question: t('m_question3') },
+    { id: 1, question: t('i_question1') },
+    { id: 2, question: t('i_question2') },
+    { id: 3, question: t('i_question3') },
   ];
 
   return (
@@ -574,7 +574,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   icon='321'
                   borderless
                   onClick={() => (viewMode.value = TypeChatView.USERS)}
-                  label={t('m_view_user')}
+                  label={t('i_view_user')}
                 />
                 */}
               <Dropdown

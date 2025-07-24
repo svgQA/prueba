@@ -297,7 +297,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                         className={`flex items-center justify-between p-4 bg-b-light-light dark:bg-b-dark-light`}
                       >
                         <div className='flex flex-col'>
-                           <span className='font-medium'>{`📍 ${point?.name} `}</span>
+                          <span className='font-medium'>{`📍 ${point?.name} `}</span>
                           <span className='text-sm'>{`lat: ${point.position.lat}, lng: ${point.position.lng}`}</span>
                         </div>
                       </div>

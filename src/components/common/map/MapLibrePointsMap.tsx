@@ -774,7 +774,11 @@ export const MapLibrePointsMap = ({
       setPoints((prevPoints) =>
         prevPoints.map((point) =>
           point.id === id
-            ? { ...point, position: { lat: newLat, lng: newLng }, name: name ?? point.name }
+            ? {
+                ...point,
+                position: { lat: newLat, lng: newLng },
+                name: name ?? point.name,
+              }
             : point
         )
       );

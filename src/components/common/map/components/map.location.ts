@@ -21,8 +21,8 @@ export const getErrorGeolocation = (error: GeolocationPositionError) => {
 
   if (error.code === error.PERMISSION_DENIED) {
     showAlert({
-      title: i18n.t('shift.expandable.date.location.title'),
-      message: i18n.t('shift.expandable.date.location.message'),
+      title: i18n.t('i_location_title'),
+      message: i18n.t('i_location_message'),
       onConfirm: () => {},
       onCancel: () => {},
     });
