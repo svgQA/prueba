@@ -5,7 +5,6 @@ import { Button } from '@/components/common/button/button';
 import { useEffect, useState } from 'preact/hooks';
 import { MemoService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import i18n from '@/i18n';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { DateUtils } from '@/utils/utilities/dates';
 import ShowFiles from '@/components/common/file/show.file';
@@ -67,8 +66,8 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
 
     if (error.code === error.PERMISSION_DENIED) {
       showAlert({
-        title: i18n.t('i_location_title'),
-        message: i18n.t('i_location_message'),
+        title: t('i_location_title'),
+        message: t('i_location_message'),
         onConfirm: () => {},
         onCancel: () => {},
       });

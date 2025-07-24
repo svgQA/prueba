@@ -7,7 +7,6 @@ import { TextArea } from '@/components/common/text.area/text.area';
 import { Signal, useSignal } from '@preact/signals';
 import { Button } from '@/components/common/button/button';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import i18n from '@/i18n';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { FormattedDate } from '@/components/compose/forms';
 import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
@@ -120,8 +119,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
     if (error.code === error.PERMISSION_DENIED) {
       showAlert({
-        title: i18n.t('i_location_title'),
-        message: i18n.t('i_location_message'),
+        title: t('i_location_title'),
+        message: t('i_location_message'),
         onConfirm: () => {},
         onCancel: () => {},
       });
