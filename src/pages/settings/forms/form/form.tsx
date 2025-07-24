@@ -24,6 +24,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { closeSettingModal } from '@/store/signals/modals/settings/settings.signal';
 import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
+
 export const FormSettingPage = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();

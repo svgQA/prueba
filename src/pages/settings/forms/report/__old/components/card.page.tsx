@@ -1,5 +1,5 @@
 import { useRef } from 'preact/hooks';
-import { getReport } from '../store/report';
+// import { getReport } from '../store/report';
 import { Button } from '@/components/common/button/button';
 import { VNode } from 'preact';
 import { useReactToPrint } from 'react-to-print';
@@ -88,7 +88,7 @@ export const CardReport = ({ menu }: ICardReportProps) => {
           <section className='flex flex-row border-b'>
             <div className=' pb-4 w-1/2'>
               <h2 className='text-xl font-bold mb-2 capitalize'>
-                {getReport.value.title}
+                {/* {getReport.value.title} */}
               </h2>
               <p>123 Business Street</p>
               <p>City, State 12345</p>
@@ -96,8 +96,8 @@ export const CardReport = ({ menu }: ICardReportProps) => {
             <div className='p-8 text-center flex flex-row justify-between items-center'>
               <span className='vox-icon vx-icon-023' />
               <p className='text-t-light dark:text-t-dark mx-3'>
-                {getReport.value.coverPage?.name ||
-                  'Drop your cover page file here or click to browse'}
+                {/* {getReport.value.coverPage?.name || */}
+                  {/* 'Drop your cover page file here or click to browse'} */}
               </p>
             </div>
           </section>
