@@ -38,7 +38,7 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
         },
     }), [initialData]);
 
-    const handleSubmit = async (values: any, form: any) => {
+    const handleSubmit = async (values: any, _form?: any) => {
         setLoading(true);
         const payload: IReportRequest = {
             ...values,
@@ -69,7 +69,7 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                 mutators={{
                     ...arrayMutators,
                 }}
-                render={({ handleSubmit, values, form, submitting }) => (
+                render={({ handleSubmit }) => (
                     <form id="form-report-create-update" onSubmit={handleSubmit} className="space-y-6 max-w-5xl mx-auto w-full">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <Field name="title">
@@ -97,7 +97,7 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                                 )}
                             </Field>
                             <Field name="extraData.modules">
-                                {({ input, meta }) => (
+                                {({ input }) => (
                                     <MultiSelect
                                         options={modules.value.map((m: any) => ({ value: m.id, label: m.name }))}
                                         selectedIds={input.value?.map((m: any) => m.id) || []}
@@ -112,7 +112,7 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                                 )}
                             </Field>
                             <Field name="extraData.projects">
-                                {({ input, meta }) => (
+                                {({ input }) => (
                                     <MultiSelect
                                         options={projects.value.map((p: any) => ({ value: p.id, label: p.name }))}
                                         selectedIds={input.value?.map((p: any) => p.id) || []}
@@ -128,7 +128,7 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                             </Field>
                             <div className="md:col-span-3">
                                 <Field name="extraData.emails">
-                                    {({ input, meta }) => (
+                                    {({ input }) => (
                                         <MultiSelect
                                             options={(input.value || []).map((e: string) => ({ id: e, name: e }))}
                                             selectedIds={input.value || []}

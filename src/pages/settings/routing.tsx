@@ -24,7 +24,7 @@ import { PaymentSettingPage } from './payment/payment/payment';
 import { FormSettingPage } from './forms/form/form';
 // import { FormAnalyticSettingPage } from './forms/analytic/analytic';
 import { FormCreateSettingPage } from './forms/create/create';
-import { FormReportSettingPage } from './forms/report/report';
+// import { FormReportSettingPage } from './forms/report/report';
 import { DevicesSettingPage } from './iot/devices/devices';
 import { IotSettingPage } from './iot/iot/iot';
 import { ChannelsSettingPage } from './iot/channels/channels';
@@ -75,7 +75,7 @@ import { GroupCreateSettingPage } from './security/groups/create/create';
 // import { ResourceCreateSettingPage } from './memo/resource/create/create';
 import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
 import { ResourceMemoSettingPage } from './memo/resource/resource';
-import ReportUpsertPage from './forms/report/components/report.upsert';
+// import ReportUpsertPage from './forms/report/components/report.upsert';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -229,6 +229,12 @@ export const RoutingContent = memo(() => {
           )}
         />
         */}
+        {/**
+         * 
+         * this is the reports MCP
+         * 
+         * */}
+        {/*
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.to}
           component={lazy(() =>
@@ -247,6 +253,7 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: ReportUpsertPage })
           )}
         />
+        */}
         {/* IOT MENU */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.iot.devices.to}
