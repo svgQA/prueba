@@ -39,6 +39,7 @@ import NotificationBanner from '@/components/common/notifications/components/not
 import { PanicService } from '@/services/memo/panic';
 import { getColumnsPanic } from './components/panic.columns';
 import { handleNotificationEvent } from '@/components/common/notifications/components/notification.event';
+import { modulesReport } from '@/types/form';
 
 enum VIEW_NAME {
   TABLE,
@@ -395,6 +396,7 @@ export const MemosPage: FunctionComponent = () => {
             rowClassName={(row: Memo) =>
               row.id === highlightedMemoId ? 'animate-highlight' : ''
             }
+            modules={modulesReport.Memo}
           />
         )}
 

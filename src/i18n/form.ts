@@ -67,6 +67,11 @@ export const form_es = {
     },
     report: {
       title: 'Reporte',
+      title_automatic: 'Reporte Automatico',
+      download_file_success: 'descargado exitosamente',
+      download_file_error: 'No se puede descargar el archivo',
+      download_file: 'Descargar archivo',
+      errorUrl: 'La URL de la lista no es válida',
     },
     create: {
       error: {
@@ -148,6 +153,11 @@ export const form_en = {
     },
     report: {
       title: 'Report',
+      title_automatic: 'Automatic Report',
+      download_file_success: 'downloaded successfully',
+      download_file_error: 'Cannot download file',
+      download_file: 'Download file',
+      errorUrl: 'The list URL is not valid',
     },
     create: {
       error: {
