@@ -90,6 +90,7 @@ export const Table = <T,>({
   loading = false,
   searchable,
   absolute = false,
+  modules,
 }: ITableProps<T>) => {
   const { t } = useTranslation();
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
@@ -785,6 +786,7 @@ export const Table = <T,>({
             table={table}
             group={<Group<T> table={table} />}
             disabled={loading}
+            modules={modules}
           />
         )}
       </div>

@@ -1,3 +1,4 @@
+import { IOption } from '@/components/common/smart-selector/smart-select';
 import { IPresignedRequest } from '../file';
 
 // export interface IReport {
@@ -26,26 +27,32 @@ export interface IReport {
   subtitle?: string;
   description?: string;
   period: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
-  extraData?: any;
-  companyId: number;
+  date?: Date | string;
+  startDate?: Date | string;
+  endDate?: Date | string;
+  extraData?: extraDataReport;
+  companyId?: number;
   createdBy?: any;
   editedBy?: any;
   deletedBy?: any;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string;
 }
 
 export interface extraDataReport {
   modules: IModuleReport[];
-  emails: string[];
-  projects: IProjectsReport[];
+  emails?: string[];
+  projects: IOption[];
 }
 
 export interface IModuleReport {
   id?: number;
-  name: string;
+  name: modulesReport;
 }
 
-export interface IProjectsReport {
-  id: number;
-  name: string;
-  description: string;
+export enum modulesReport {
+  Shift = 'Shift',
+  Memo = 'Memo',
+  Form = 'Form',
 }

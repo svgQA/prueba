@@ -1,4 +1,5 @@
 import { type IComponentProps } from '@/components/utils/interface';
+import { modulesReport } from '@/types/form';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { VNode } from 'preact';
 
@@ -17,4 +18,5 @@ export interface ISearchProps extends IComponentProps {
   group?: VNode;
   grouping?: boolean;
   disabled?: boolean;
+  modules?: modulesReport;
 }

@@ -4,6 +4,7 @@ import { IKey, ISearchProps } from './interface';
 import { TargetedEvent } from 'preact/compat';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
+import { ReportAutomatic } from '../report-automatic/report-automatic';
 
 export const Search = ({
   id,
@@ -16,6 +17,7 @@ export const Search = ({
   group,
   grouping,
   disabled = false,
+  modules,
 }: ISearchProps) => {
   const { t } = useTranslation();
   const inputState = useSignal<string>('');
@@ -199,11 +201,10 @@ export const Search = ({
           const keyName = `filter-key-${key.id}-${index}`;
           return (
             <div
-              className={`px-3 py-2 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${
-                index === selectedKeyIndex.value
+              className={`px-3 py-2 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${index === selectedKeyIndex.value
                   ? 'bg-primary-opacity text-primary'
                   : 'hover:bg-b-light hover:text-primary'
-              }`}
+                }`}
               key={keyName}
               data-name={keyName}
               data-id={key.id}
@@ -284,7 +285,7 @@ export const Search = ({
     <div
       id={id}
       className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700 shadow-sm'
-      // focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200
+    // focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200
     >
       <span className='vox-icon vx-icon-153 text-gray-500 dark:text-gray-400' />
       <div
@@ -311,6 +312,7 @@ export const Search = ({
       </div>
 
       {(table || grouping) && group && <>{group}</>}
+      {(table && modules) && <ReportAutomatic modules={modules} />}
 
       {keys.length > 0 && isDropdownOpen.value && (
         <div

@@ -5,6 +5,7 @@ import {
   PrioritySection,
 } from '../expansible/expansible';
 import { ROW_ACTIONS } from './enum';
+import { modulesReport } from '@/types/form';
 
 export interface IRowAction {
   id: number | string;
@@ -33,4 +34,5 @@ export interface ITableProps<T> {
   rowClassName?: (row: T) => string;
   loading?: boolean;
   searchable?: { [key: string]: boolean };
+  modules?: modulesReport;
 }
