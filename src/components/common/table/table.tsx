@@ -54,7 +54,6 @@ import { Button } from '../button/button';
 import { DraggableTableHeader } from './components/draggable.header';
 import { ROW_ACTIONS } from './enum';
 import { useTranslation } from 'react-i18next';
-import { ReportAutomatic } from '../report-automatic/report-automatic';
 
 const SkeletonRow = ({ columns }: { columns: number }) => {
   return (

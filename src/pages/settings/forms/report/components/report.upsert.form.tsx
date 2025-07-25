@@ -11,15 +11,15 @@ import { TextArea } from '@/components/common/text.area/text.area';
 import { Button } from '@/components/common/button/button';
 import { ReportUpsertFormProps } from '../utils/interface';
 import { useNavigation } from '@/utils/utilities/navigation';
-import { IModuleReport, IProjectsReport } from '@/types/form';
 import { useSignal } from '@preact/signals';
-import { periodOptions, reportModuleOptions, reportProjectOptions } from '../utils/report.data';
+import { periodOptions} from '../utils/report.data';
 import { IOption } from '@/components/common/multi/interface';
+import { IModuleReport } from '@/types/form';
 
 const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) => {
     const [loading, setLoading] = useState(false);
-    const modules = useSignal<IModuleReport[]>(reportModuleOptions);
-    const projects = useSignal<IProjectsReport[]>(reportProjectOptions);
+    const modules = useSignal<IModuleReport[]>([]);
+    const projects = useSignal<IOption[]>([]);
     const periods = useSignal<IOption[]>(periodOptions);
     const { navigateUpsert } = useNavigation();
     const isEdit = Boolean(initialData && initialData.id);
@@ -117,7 +117,7 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                                         options={projects.value.map((p: any) => ({ value: p.id, label: p.name }))}
                                         selectedIds={input.value?.map((p: any) => p.id) || []}
                                         onChange={(selectedIds) => {
-                                            const selected = projects.value.filter((p) => selectedIds.includes(p.id));
+                                            const selected = projects.value.filter((p) => selectedIds.includes(p.value));
                                             input.onChange(selected);
                                         }}
                                         getLabel={(item) => item.label}
