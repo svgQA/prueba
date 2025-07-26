@@ -1,28 +1,31 @@
-import { useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo } from 'preact/hooks';
 import { Form, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { ReportService } from '@/services/form/reports';
-import { IReportRequest } from '@/types/form/service';
-import { MultiSelect } from '../../create/MultiSelect';
 import { Input } from '@/components/common/input/input';
-import { TextArea } from '@/components/common/text.area/text.area';
-import { Button } from '@/components/common/button/button';
 import { ReportUpsertFormProps } from '../utils/interface';
 import { useNavigation } from '@/utils/utilities/navigation';
 import { useSignal } from '@preact/signals';
-import { periodOptions} from '../utils/report.data';
+import { periodOptions } from '../utils/report.data';
 import { IOption } from '@/components/common/multi/interface';
-import { IModuleReport } from '@/types/form';
+import { IModuleReport, IReport, modulesReport } from '@/types/form';
+import { DateField } from '@/components/compose/forms';
+import { DateUtils } from '@/utils/utilities/dates';
+import { useUserStore } from '@/store/slices';
+import { ServiceService } from '@/services';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 
 const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) => {
-    const [loading, setLoading] = useState(false);
-    const modules = useSignal<IModuleReport[]>([]);
+    const { selectedCompany } = useUserStore();
+
+    const modules = useSignal<IOption[]>([]);
     const projects = useSignal<IOption[]>([]);
     const periods = useSignal<IOption[]>(periodOptions);
     const { navigateUpsert } = useNavigation();
     const isEdit = Boolean(initialData && initialData.id);
+    const loading = useSignal<boolean>(false);
 
     const initialValues = useMemo(() => ({
         title: initialData.title || '',
@@ -38,28 +41,50 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
         },
     }), [initialData]);
 
-    const handleSubmit = async (values: any, _form?: any) => {
-        setLoading(true);
-        const payload: IReportRequest = {
-            ...values,
-            companyId: values.companyId,
-            smart_groups: values.smart_groups,
+    useEffect(() => {
+        if (selectedCompany) {
+            Promise.all([getServices()]);
+            modules.value = Object.values(modulesReport).map((mod, index) => ({ label: mod, value: index }));
+        }
+    }, [selectedCompany]);
+
+    const getServices = useCallback(async () => {
+        const request = await ServiceService.getServicesSimpleList();
+        if (!request.getStatus()) return;
+        projects.value = request.getMany();
+    }, []);
+
+    const handleSubmit = async (model: any, _form?: any) => {
+        loading.value = true;
+        const selectedModules: IModuleReport[] = model.modules?.map((mod: IOption) => ({ name: mod.label, id: mod.value }));
+
+        let report: IReport = {
+            title: model.title,
+            subtitle: model.subtitle,
+            description: model.description,
+            period: model.period.label,
             extraData: {
-                modules: values.extraData.modules,
-                projects: values.extraData.projects,
-                emails: values.extraData.emails,
+                modules: selectedModules,
+                projects: Array.isArray(model.projects) ? model.projects : [model.projects],
             },
-        };
+            date: DateUtils.dateToBackend(model.date),
+        }
 
         let response = (isEdit && initialData.id) ?
-            await ReportService.update_report(payload, initialData.id) :
-            await ReportService.create_report(payload);
+            await ReportService.update_report(report, initialData.id) :
+            await ReportService.create_report(report);
         if (!response.getStatus()) return;
         ToastManager.success((isEdit && initialData.id) ? 's_updated_success' : 's_created_success');
         navigateUpsert('/forms/report');
         onSaved && onSaved();
-        setLoading(false);
+        loading.value = false;
     };
+
+    const preventKeyDown = useCallback((e: KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+        }
+    }, []);
 
     return (
         <div className="px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design">
@@ -69,100 +94,119 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                 mutators={{
                     ...arrayMutators,
                 }}
-                render={({ handleSubmit }) => (
-                    <form id="form-report-create-update" onSubmit={handleSubmit} className="space-y-6 max-w-5xl mx-auto w-full">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <Field name="title">
-                                {({ input, meta }) => (
-                                    <Input {...input} type="text" label="Título *" required disabled={loading} error={meta.touched && meta.error} />
-                                )}
-                            </Field>
-                            <Field name="subtitle">
-                                {({ input, meta }) => (
-                                    <Input {...input} type="text" label="Subtítulo" disabled={loading} error={meta.touched && meta.error} />
-                                )}
-                            </Field>
-                            <Field name="period">
-                                {({ input, meta }) => (
-                                    <SmartSelector
-                                        {...input}
-                                        options={periods.value}
-                                        value={periods.value.find((opt) => opt.value === input.value)}
-                                        onChange={(opt) => input.onChange(opt?.value)}
-                                        placeholder="Selecciona un periodo"
-                                        label="Periodo"
-                                        disabled={loading}
-                                        meta={meta}
-                                    />
-                                )}
-                            </Field>
-                            <Field name="extraData.modules">
-                                {({ input }) => (
-                                    <MultiSelect
-                                        options={modules.value.map((m: any) => ({ value: m.id, label: m.name }))}
-                                        selectedIds={input.value?.map((m: any) => m.id) || []}
-                                        onChange={(selectedIds) => {
-                                            const selected = modules.value.filter((m: any) => selectedIds.includes(m.id));
-                                            input.onChange(selected);
-                                        }}
-                                        getLabel={(item) => item.label}
-                                        getId={(item) => item.value}
-                                        placeholder="Selecciona uno o más módulos"
-                                    />
-                                )}
-                            </Field>
-                            <Field name="extraData.projects">
-                                {({ input }) => (
-                                    <MultiSelect
-                                        options={projects.value.map((p: any) => ({ value: p.id, label: p.name }))}
-                                        selectedIds={input.value?.map((p: any) => p.id) || []}
-                                        onChange={(selectedIds) => {
-                                            const selected = projects.value.filter((p) => selectedIds.includes(p.value));
-                                            input.onChange(selected);
-                                        }}
-                                        getLabel={(item) => item.label}
-                                        getId={(item) => item.value}
-                                        placeholder="Selecciona uno o más proyectos"
-                                    />
-                                )}
-                            </Field>
-                            <div className="md:col-span-3">
-                                <Field name="extraData.emails">
-                                    {({ input }) => (
-                                        <MultiSelect
-                                            options={(input.value || []).map((e: string) => ({ id: e, name: e }))}
-                                            selectedIds={input.value || []}
-                                            onChange={input.onChange}
-                                            getLabel={(item: { id: string; name: string }) => item.name}
-                                            getId={(item: { id: string; name: string }) => item.id}
-                                            placeholder="Agrega uno o más correos (escribe y presiona enter)"
-                                        />
-                                    )}
-                                </Field>
+                render={({ handleSubmit, form, submitting }) => (
+                    <form
+                        onSubmit={handleSubmit}
+                        className='space-y-6'
+                        id='form-report-automatic-create-update'
+                        onKeyDown={preventKeyDown}
+                    >
+                        <StatusButton
+                            onClickClean={() => form.reset()}
+                            submitting={submitting}
+                            pristine={true}
+                            form='form-report-automatic-create-update'
+                            label={initialData.id ? 'edit' : 'save'}
+                        />
+                        <Field<IOption> name='projects'>
+                            {({ input, meta }) => (
+                                <SmartSelector
+                                    {...input}
+                                    meta={meta}
+                                    id='select-projects'
+                                    icon='191'
+                                    label='h_projects'
+                                    options={projects.value}
+                                    menuPortalTarget={document.body}
+                                    placeholder='p_select'
+                                    disabled={loading.value}
+                                />
+                            )}
+                        </Field>
+                        <Field<IOption> name='modules'>
+                            {({ input, meta }) => (
+                                <SmartSelector
+                                    {...input}
+                                    meta={meta}
+                                    id='select-projects'
+                                    icon='191'
+                                    label='h_modulos'
+                                    options={modules.value}
+                                    menuPortalTarget={document.body}
+                                    placeholder='p_select'
+                                    disabled={loading.value}
+                                    multiple={true}
+                                />
+                            )}
+                        </Field>
+                        <div className='flex flex-col justify-center border-t dark:border-t-light-dark py-2'>
+                            <div className='grid grid-cols-2 gap-3'>
+                                <div className='col-span-1'>
+                                    <Field<string> name='title'>
+                                        {({ input, meta }) => (
+                                            <Input
+                                                {...input}
+                                                placeholder='h_title'
+                                                label='h_title'
+                                                meta={meta}
+                                                icon='120'
+                                                type='text'
+                                                disabled={loading.value}
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+                                <div className='col-span-1'>
+                                    <Field<string> name='subtitle'>
+                                        {({ input, meta }) => (
+                                            <Input
+                                                {...input}
+                                                placeholder='h_subtitle'
+                                                label='h_subtitle'
+                                                meta={meta}
+                                                icon='120'
+                                                type='text'
+                                                disabled={loading.value}
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+                                <div className='col-span-1'>
+                                    <Field<string> name='description'>
+                                        {({ input, meta }) => (
+                                            <Input
+                                                {...input}
+                                                placeholder='h_description'
+                                                label='h_description'
+                                                meta={meta}
+                                                icon='120'
+                                                type='text'
+                                                disabled={loading.value}
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+                                <div className='col-span-1'>
+                                    <Field<IOption> name='period'>
+                                        {({ input, meta }) => (
+                                            <SmartSelector
+                                                {...input}
+                                                meta={meta}
+                                                id='select-period'
+                                                icon='191'
+                                                label='h_period'
+                                                options={periods.value}
+                                                menuPortalTarget={document.body}
+                                                placeholder='p_select'
+                                                disabled={loading.value}
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+                                <div class='col-span-1'>
+                                    <DateField name='date' label='h_date' />
+                                </div>
                             </div>
-                            <div className="md:col-span-3">
-                                <Field name="description">
-                                    {({ input, meta }) => (
-                                        <TextArea
-                                            {...input}
-                                            type="text"
-                                            label="Descripción"
-                                            rows={3}
-                                            disabled={loading}
-                                            error={meta.touched && meta.error}
-                                        />
-                                    )}
-                                </Field>
-                            </div>
-                        </div>
-                        <div className="pt-4">
-                            <Button
-                                name='btn-submit'
-                                type="submit"
-                                className="btn btn-primary w-full"
-                                label={isEdit ? 'Editar' : 'Guardar'}
-                                disabled={loading}
-                            />
                         </div>
                     </form>
                 )}

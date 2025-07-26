@@ -43,6 +43,7 @@ export const menus_es = {
   m_programmed: 'Programadas',
   m_template: 'Plantillas',
   m_module: 'Módulos',
+  m_scheduled_reports: 'Reportes Programados',
 };
 
 export const menus_en = {
@@ -90,4 +91,5 @@ export const menus_en = {
   g_notification: 'Notifications',
   m_programmed: 'Programmed',
   m_template: 'Templates',
+  m_scheduled_reports: 'Scheduled Reports',
 };

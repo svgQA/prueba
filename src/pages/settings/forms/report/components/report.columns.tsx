@@ -104,17 +104,17 @@ export const getColumns = (
     cell: (info) => {
       const { id } = info.row.original;
       const actions: IDropdownAction[] = [
-        {
-          label: 'update',
-          icon: 'vox-icon vx-icon-123 text-primary',
-          onClick: () => {
-            onClickAction({
-              id: String(id),
-              type: 'form',
-              action: ROW_ACTIONS.UPDATE,
-            });
-          },
-        },
+        // {
+        //   label: 'update',
+        //   icon: 'vox-icon vx-icon-123 text-primary',
+        //   onClick: () => {
+        //     onClickAction({
+        //       id: String(id),
+        //       type: 'form',
+        //       action: ROW_ACTIONS.UPDATE,
+        //     });
+        //   },
+        // },
         {
           label: 'delete',
           icon: 'vox-icon vx-icon-053 text-red-500',

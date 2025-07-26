@@ -43,15 +43,15 @@ export const FormReportSettingPage = () => {
 
   const handleOnClick = async (action: IRowAction) => {
     switch (action.action) {
-      case ROW_ACTIONS.UPDATE: {
-        go({
-          to: '/forms/report/create',
-          label: 'update',
-          id: 'forms:form:state:update',
-          base: 'setting',
-        });
-        break;
-      }
+      // case ROW_ACTIONS.UPDATE: {
+      //   go({
+      //     to: '/forms/report/create',
+      //     label: 'update',
+      //     id: 'forms:form:state:update',
+      //     base: 'setting',
+      //   });
+      //   break;
+      // }
       case ROW_ACTIONS.DELETE: {
         const response = await ReportService.delete_report(Number(action.id));
         if (!response.getStatus()) return;

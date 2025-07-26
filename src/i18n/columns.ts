@@ -71,6 +71,7 @@ export const columns_es = {
   h_projects: 'Projects',
   h_period: 'Period',
   h_subtitle: 'Subtitle',
+  h_modulos: 'Módulos',
 };
 
 export const columns_en = {
@@ -146,4 +147,5 @@ export const columns_en = {
   h_projects: 'Proyectos',
   h_period: 'Período',
   h_subtitle: 'subtitulo',
+  h_modulos: 'Modules',
 };
