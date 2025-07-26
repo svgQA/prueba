@@ -16,8 +16,11 @@ import { DateUtils } from '@/utils/utilities/dates';
 import { useUserStore } from '@/store/slices';
 import { ServiceService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
+import { MultiSelect } from '../../create/MultiSelect';
+import { useTranslation } from 'react-i18next';
 
 const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) => {
+    const { t } = useTranslation();
     const { selectedCompany } = useUserStore();
 
     const modules = useSignal<IOption[]>([]);
@@ -56,7 +59,11 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
 
     const handleSubmit = async (model: any, _form?: any) => {
         loading.value = true;
-        const selectedModules: IModuleReport[] = model.modules?.map((mod: IOption) => ({ name: mod.label, id: mod.value }));
+        const selectedModules: IModuleReport[] = Array.isArray(model.modules)
+            ? model.modules.map((mod: IOption) => ({ name: mod.label, id: mod.value }))
+            : model.modules
+                ? [{ name: model.modules.label, id: model.modules.value }]
+                : [];
 
         let report: IReport = {
             title: model.title,
@@ -123,20 +130,32 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                                 />
                             )}
                         </Field>
-                        <Field<IOption> name='modules'>
+                        <Field<IOption[]> name='modules'>
                             {({ input, meta }) => (
-                                <SmartSelector
-                                    {...input}
-                                    meta={meta}
-                                    id='select-projects'
-                                    icon='191'
-                                    label='h_modulos'
+                                <MultiSelect
                                     options={modules.value}
-                                    menuPortalTarget={document.body}
-                                    placeholder='p_select'
-                                    disabled={loading.value}
-                                    multiple={true}
+                                    placeholder={t('p_select')}
+                                    selectedIds={Array.isArray(input.value) ? input.value.map((opt: IOption) => opt.value) : []}
+                                    getLabel={(option: IOption) => option.label}
+                                    getId={(option: IOption) => option.value}
+                                    onChange={(selectedIds: (string | number)[]) => {
+                                        const selectedOptions = modules.value.filter(opt => selectedIds.includes(opt.value));
+                                        input.onChange(selectedOptions);
+                                    }}
                                 />
+
+                                // <SmartSelector
+                                //     {...input}
+                                //     meta={meta}
+                                //     id='select-projects'
+                                //     icon='191'
+                                //     label='h_modulos'
+                                //     options={modules.value}
+                                //     menuPortalTarget={document.body}
+                                //     placeholder='p_select'
+                                //     disabled={loading.value}
+                                //     multiple={true}
+                                // />
                             )}
                         </Field>
                         <div className='flex flex-col justify-center border-t dark:border-t-light-dark py-2'>
@@ -215,4 +234,4 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
     );
 };
 
-export default ReportUpsertForm; 
+export default ReportUpsertForm;

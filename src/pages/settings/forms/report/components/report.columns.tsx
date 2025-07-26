@@ -73,7 +73,7 @@ export const getColumns = (
     cell: (info) => {
       const extraData = info.row.original.extraData as any;
       if (extraData && Array.isArray(extraData.projects)) {
-        return extraData.projects.map((p: any) => p.name).join(', ');
+        return extraData.projects.map((p: any) => p.label).join(', ');
       }
       return '-';
     },
