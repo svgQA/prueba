@@ -36,7 +36,6 @@ export class ReportService extends BaseService {
         const model: IMakeRequest = {
             url: ['report', `${id}`],
             method: REQUEST_METHODS.GET,
-            params: { id },
         };
         return await super.make_request<IReportResponse>(this.sname, model);
     }

@@ -326,13 +326,13 @@ export const PAGES_LIST_ROUTER = {
         report: {
           base: '/report',
           to: '/forms/report',
-          update: {
-            base: '/update',
-            to: '/forms/report/update/:id',
-          },
           create: {
             base: '/create',
             to: '/forms/report/create',
+          },
+          update: {
+            base: '/update',
+            to: '/forms/report/update/:id',
           },
         },
       },

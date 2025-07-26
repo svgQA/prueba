@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo } from 'preact/hooks';
+import { useState, useEffect, useCallback } from 'preact/hooks';
 import { Form, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { ReportService } from '@/services/form/reports';
 import { Input } from '@/components/common/input/input';
-import { ReportUpsertFormProps } from '../utils/interface';
 import { useNavigation } from '@/utils/utilities/navigation';
 import { useSignal } from '@preact/signals';
 import { periodOptions } from '../utils/report.data';
@@ -18,31 +17,23 @@ import { ServiceService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { MultiSelect } from '../../create/MultiSelect';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'wouter';
 
-const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) => {
+const ReportUpsertForm = () => {
     const { t } = useTranslation();
+    const { id } = useParams();
     const { selectedCompany } = useUserStore();
 
     const modules = useSignal<IOption[]>([]);
     const projects = useSignal<IOption[]>([]);
     const periods = useSignal<IOption[]>(periodOptions);
     const { navigateUpsert } = useNavigation();
-    const isEdit = Boolean(initialData && initialData.id);
     const loading = useSignal<boolean>(false);
+    const [initialValues, setInitialValues] = useState<any>({});
 
-    const initialValues = useMemo(() => ({
-        title: initialData.title || '',
-        subtitle: initialData.subtitle || '',
-        description: initialData.description || '',
-        period: initialData.period || '',
-        companyId: initialData.companyId || '',
-        smart_groups: initialData.extraData?.smart_groups || [],
-        extraData: {
-            modules: initialData.extraData?.modules || [],
-            projects: initialData.extraData?.projects || [],
-            emails: initialData.extraData?.emails || [],
-        },
-    }), [initialData]);
+    useEffect(() => {
+        fetchInitialValues();
+    }, [id, modules.value, projects.value, periods.value]);
 
     useEffect(() => {
         if (selectedCompany) {
@@ -50,6 +41,30 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
             modules.value = Object.values(modulesReport).map((mod, index) => ({ label: mod, value: index }));
         }
     }, [selectedCompany]);
+
+    const fetchInitialValues = async () => {
+        if (!id) return;
+        const response = await ReportService.get_report_by_id(Number(id));
+        if (!response.getStatus()) return;
+        const initialData = response.getOne();
+
+        setInitialValues({
+            title: initialData.title,
+            subtitle: initialData.subtitle,
+            description: initialData.description,
+            period: periods.value.find(opt => opt.label === initialData.period), // <-- esto está correcto
+            modules: initialData.extraData?.modules
+                ? initialData.extraData.modules.map((mod: any) =>
+                    modules.value.find(opt => opt.value === mod.id)
+                )
+                : [],
+            projects: initialData.extraData?.projects && initialData.extraData?.projects.length > 0
+                ? projects.value.find(opt => opt.value === initialData.extraData?.projects[0].value)
+                : null,
+            emails: initialData.extraData?.emails,
+            date: initialData.date,
+        });
+    };
 
     const getServices = useCallback(async () => {
         const request = await ServiceService.getServicesSimpleList();
@@ -77,13 +92,12 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
             date: DateUtils.dateToBackend(model.date),
         }
 
-        let response = (isEdit && initialData.id) ?
-            await ReportService.update_report(report, initialData.id) :
+        let response = (id) ?
+            await ReportService.update_report(report, Number(id)) :
             await ReportService.create_report(report);
         if (!response.getStatus()) return;
-        ToastManager.success((isEdit && initialData.id) ? 's_updated_success' : 's_created_success');
+        ToastManager.success(id ? 's_updated_success' : 's_created_success');
         navigateUpsert('/forms/report');
-        onSaved && onSaved();
         loading.value = false;
     };
 
@@ -113,7 +127,7 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                             submitting={submitting}
                             pristine={true}
                             form='form-report-automatic-create-update'
-                            label={initialData.id ? 'edit' : 'save'}
+                            label={id ? 'edit' : 'save'}
                         />
                         <Field<IOption> name='projects'>
                             {({ input, meta }) => (
@@ -131,7 +145,7 @@ const ReportUpsertForm = ({ initialData = {}, onSaved }: ReportUpsertFormProps) 
                             )}
                         </Field>
                         <Field<IOption[]> name='modules'>
-                            {({ input, meta }) => (
+                            {({ input }) => (
                                 <MultiSelect
                                     options={modules.value}
                                     placeholder={t('p_select')}
