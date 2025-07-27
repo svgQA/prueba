@@ -38,14 +38,18 @@ export const getColumns = (
     id: 'subtitle',
     header: 'subtitle',
     size: 200,
-    cell: (info) => <TextEllipsis text={info.getValue() as string} maxWidth='250px' />,
+    cell: (info) => (
+      <TextEllipsis text={info.getValue() as string} maxWidth='250px' />
+    ),
   },
   {
     accessorKey: 'description',
     id: 'description',
     header: 'Descripción',
     size: 200,
-    cell: (info) => <TextEllipsis text={info.getValue() as string} maxWidth='250px' />,
+    cell: (info) => (
+      <TextEllipsis text={info.getValue() as string} maxWidth='250px' />
+    ),
   },
   {
     accessorKey: 'period',

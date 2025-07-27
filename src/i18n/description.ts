@@ -17,7 +17,7 @@ export const description_es = {
   d_template: '',
   d_novelty: '',
   d_create: '',
-  d_scheduled_reports: ''
+  d_scheduled_reports: '',
 };
 
 export const description_en = {
@@ -39,5 +39,5 @@ export const description_en = {
   d_template: '',
   d_novelty: '',
   d_create: '',
-  d_scheduled_reports: ''
+  d_scheduled_reports: '',
 };

@@ -149,18 +149,16 @@ export const Input = <T = string,>({
           )}
         </div>
         {button && (
-          <div className='border-l dark:border-gray-600 border-b-light-dark mr-10'>
-            <Button
-              onClick={() => onClick?.(value)}
-              name='btn-input-action'
-              icon={buttonIcon}
-              type={buttonType}
-              rounded={!buttonLabel} // 👈 solo usa rounded si NO hay label
-              borderless
-              transparent
-              label={buttonLabel}
-            />
-          </div>
+          <Button
+            onClick={() => onClick?.(value)}
+            name='btn-input-action'
+            icon={buttonIcon}
+            type={buttonType}
+            rounded={!buttonLabel} // 👈 solo usa rounded si NO hay label
+            borderless
+            transparent
+            label={buttonLabel}
+          />
         )}
         {!button && end && icon && (
           <span className={`vox-icon vx-icon-${icon}`} />

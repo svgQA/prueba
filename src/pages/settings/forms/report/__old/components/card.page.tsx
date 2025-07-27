@@ -97,7 +97,7 @@ export const CardReport = ({ menu }: ICardReportProps) => {
               <span className='vox-icon vx-icon-023' />
               <p className='text-t-light dark:text-t-dark mx-3'>
                 {/* {getReport.value.coverPage?.name || */}
-                  {/* 'Drop your cover page file here or click to browse'} */}
+                {/* 'Drop your cover page file here or click to browse'} */}
               </p>
             </div>
           </section>

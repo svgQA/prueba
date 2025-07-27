@@ -40,7 +40,7 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
       description: 'd_scheduled_reports',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.report.base,
-      id: 'forms:form:state',
+      id: 'forms:scheduled:state',
       show: true,
     },
   ],

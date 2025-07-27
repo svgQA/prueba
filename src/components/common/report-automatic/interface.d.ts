@@ -1,5 +1,5 @@
-import { modulesReport } from "@/types/form";
+import { modulesReport } from '@/types/form';
 
 export interface ReportAutomaticProps {
-    modules: modulesReport;
+  modules: modulesReport;
 }

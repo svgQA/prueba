@@ -229,9 +229,9 @@ export const RoutingContent = memo(() => {
         />
         */}
         {/**
-         * 
+         *
          * this is the reports MCP
-         * 
+         *
          * */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.to}
@@ -239,17 +239,13 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: FormReportSettingPage })
           )}
         />
-         <Route
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.update.to}
-          component={lazy(() =>
-            Promise.resolve({ default: ReportUpsertForm })
-          )}
+          component={lazy(() => Promise.resolve({ default: ReportUpsertForm }))}
         />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.create.to}
-          component={lazy(() =>
-            Promise.resolve({ default: ReportUpsertForm })
-          )}
+          component={lazy(() => Promise.resolve({ default: ReportUpsertForm }))}
         />
         {/* IOT MENU */}
         <Route

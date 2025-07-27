@@ -32,14 +32,16 @@ export const FormReportSettingPage = () => {
 
   const fetchInitialData = async () => {
     loading.value = true;
-    const [responseReport] = await Promise.all([ReportService.get_report_all()]);
+    const [responseReport] = await Promise.all([
+      ReportService.get_report_all(),
+    ]);
 
     if (responseReport.getStatus()) {
       report.value = responseReport.getMany();
     }
 
     loading.value = false;
-  }
+  };
 
   const editReport = (id: number) => {
     go({
@@ -48,13 +50,13 @@ export const FormReportSettingPage = () => {
       id: 'forms:form:state:update',
       base: 'setting',
     });
-  }
+  };
 
   const deleteReport = async (id: number) => {
     const response = await ReportService.delete_report(id);
     if (!response.getStatus()) return;
     fetchInitialData();
-  }
+  };
 
   const handleOnClick = async (action: IRowAction) => {
     switch (action.action) {
@@ -65,7 +67,7 @@ export const FormReportSettingPage = () => {
         deleteReport(Number(action.id));
         break;
     }
-  }
+  };
 
   return (
     <>
