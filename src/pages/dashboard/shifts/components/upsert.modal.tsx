@@ -85,13 +85,13 @@ export const TaskForm = ({
       ToastManager.warning('s_updated_error_schedule');
       return;
     }
-    delete model.scheduleId;
 
-    const { employeeId, serviceId } = model;
+    const { employeeId, serviceId, scheduleId } = model;
     const request_model: IShiftRequest = {
       ...model,
       employeeId: employeeId?.value,
       serviceId: serviceId?.value,
+      scheduleId: scheduleId?.value,
       task: tasksResponse,
     };
 
@@ -153,6 +153,10 @@ export const TaskForm = ({
     const response = await ShiftService.get_shift(shiftId);
     if (!response.getStatus()) return;
     const model = response.getOne();
+
+    await onChangeService(model.service.id);
+    if (model.schedule.id) await onChangeSchedule(model.schedule.id);
+
     setInitialValues({
       employeeId: {
         value: model.employee.id,
@@ -161,6 +165,10 @@ export const TaskForm = ({
       serviceId: {
         value: model.service.id,
         label: model.service.name,
+      },
+      scheduleId: {
+        value: model.schedule?.id,
+        label: model.schedule?.name,
       },
       type: model.type,
       start: model.start,

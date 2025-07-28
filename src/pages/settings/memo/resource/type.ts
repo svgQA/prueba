@@ -6,4 +6,5 @@ export interface IResource {
   image: string;
   icon: string;
   link: string;
+  groups: number[];
 }

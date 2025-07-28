@@ -24,7 +24,6 @@ import { PaymentSettingPage } from './payment/payment/payment';
 import { FormSettingPage } from './forms/form/form';
 // import { FormAnalyticSettingPage } from './forms/analytic/analytic';
 import { FormCreateSettingPage } from './forms/create/create';
-import { FormReportSettingPage } from './forms/report/report';
 import { DevicesSettingPage } from './iot/devices/devices';
 import { IotSettingPage } from './iot/iot/iot';
 import { ChannelsSettingPage } from './iot/channels/channels';
@@ -72,9 +71,10 @@ import { ScheduledNotificationEditPage } from './notifications/scheduleNotificat
 import { PredefinedSettingPage } from './memo/predefined/predefined';
 import { PredefinedCreateSettingPage } from './memo/predefined/create/create';
 import { GroupCreateSettingPage } from './security/groups/create/create';
-// import { ResourceCreateSettingPage } from './memo/resource/create/create';
 import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
 import { ResourceMemoSettingPage } from './memo/resource/resource';
+import { FormReportSettingPage } from './forms/report/report';
+import ReportUpsertForm from './forms/report/components/report.upsert.form';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -228,11 +228,24 @@ export const RoutingContent = memo(() => {
           )}
         />
         */}
+        {/**
+         *
+         * this is the reports MCP
+         *
+         * */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.to}
           component={lazy(() =>
             Promise.resolve({ default: FormReportSettingPage })
           )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.update.to}
+          component={lazy(() => Promise.resolve({ default: ReportUpsertForm }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.report.create.to}
+          component={lazy(() => Promise.resolve({ default: ReportUpsertForm }))}
         />
         {/* IOT MENU */}
         <Route

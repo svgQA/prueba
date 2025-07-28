@@ -34,5 +34,14 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.forms.analytic.base,
       id: 'forms:analytic:state',
     },
+    {
+      icon: '094',
+      label: 'm_scheduled_reports',
+      description: 'd_scheduled_reports',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.forms.report.base,
+      id: 'forms:scheduled:state',
+      show: true,
+    },
   ],
 };

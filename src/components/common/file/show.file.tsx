@@ -28,6 +28,7 @@ const showFiles = ({
 
   const getUrl = (file: IPresignedRequest) => {
     const validation = `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
+    console.log('validation', validation);
     return validation;
   };
 

@@ -305,9 +305,11 @@ export const MapLibrePointsMap = ({
     }
 
     if (pointsAmount === 1) setPoints([]);
+    const nextId = nextIdRef.current++;
     const newPoint: MapPoint = {
-      id: nextIdRef.current++,
+      id: nextId,
       position: { lat, lng },
+      name: `Point ${nextId}`,
     };
 
     if (radialPoint) {
@@ -318,7 +320,14 @@ export const MapLibrePointsMap = ({
       }
     }
 
-    setPoints((prevPoints) => [...prevPoints, newPoint]); // Use functional update
+    setPoints((prevPoints) => {
+      const updated = [...prevPoints, newPoint];
+      // Abrir el popup automáticamente para el nuevo punto
+      setTimeout(() => {
+        handleMarkerClick(newPoint.id);
+      }, 100);
+      return updated;
+    });
   };
 
   // Create marker element with number
@@ -567,7 +576,10 @@ export const MapLibrePointsMap = ({
     popupNode.innerHTML = `
       <div>
         <div class="flex flex-col mb-2">
-          <label class="text-sm mb-1">Latitude</label>
+          <label class="text-sm mb-1">Name</label>
+          <input id="edit-name" type="text" value="${point.name}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''}/>
+
+          <label class="text-sm mb-1 mt-2">Latitude</label>
           <input id="edit-lat" type="text" value="${point.position.lat}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''}/>
 
           <label class="text-sm mb-1 mt-2">Longitude</label>
@@ -617,6 +629,9 @@ export const MapLibrePointsMap = ({
     const editLngInput = popupNode.querySelector(
       '#edit-lng'
     ) as HTMLInputElement;
+    const editNameInput = popupNode.querySelector(
+      '#edit-name'
+    ) as HTMLInputElement;
     const deleteButton = popupNode.querySelector('#btn-delete');
     const editButton = popupNode.querySelector('#btn-edit');
     const restoreButton = popupNode.querySelector('#btn-restore');
@@ -639,6 +654,12 @@ export const MapLibrePointsMap = ({
       editCoordsRef.current.lng = value;
     });
 
+    if (editNameInput) {
+      editNameInput.addEventListener('input', (_e) => {
+        // No es necesario actualizar el estado aquí, solo se toma el valor al guardar
+      });
+    }
+
     if (deleteButton) {
       deleteButton.addEventListener('click', () => {
         removeMarkerById(id);
@@ -648,7 +669,12 @@ export const MapLibrePointsMap = ({
 
     if (editButton) {
       editButton.addEventListener('click', () => {
-        editMarkerById(id);
+        const nameValue = editNameInput ? editNameInput.value.trim() : '';
+        if (!nameValue) {
+          ToastManager.error('El nombre es requerido');
+          return;
+        }
+        editMarkerById(id, nameValue);
         popup.remove();
       });
     }
@@ -659,6 +685,7 @@ export const MapLibrePointsMap = ({
         setUserLocation({
           id: -1,
           position: location,
+          name: '',
         });
         popup.remove();
         // ToastManager.success(t('maps.connect.success_location_restored'));
@@ -717,7 +744,7 @@ export const MapLibrePointsMap = ({
   };
 
   // Edit marker coordinates by ID
-  const editMarkerById = (id: number): void => {
+  const editMarkerById = (id: number, name?: string): void => {
     // Permitir tanto punto como coma como separador decimal
     const latStr = editCoordsRef.current.lat.replace(',', '.');
     const lngStr = editCoordsRef.current.lng.replace(',', '.');
@@ -747,7 +774,11 @@ export const MapLibrePointsMap = ({
       setPoints((prevPoints) =>
         prevPoints.map((point) =>
           point.id === id
-            ? { ...point, position: { lat: newLat, lng: newLng } }
+            ? {
+                ...point,
+                position: { lat: newLat, lng: newLng },
+                name: name ?? point.name,
+              }
             : point
         )
       );
@@ -820,6 +851,7 @@ export const MapLibrePointsMap = ({
     const newUserPoint: MapPoint = {
       id: -1,
       position: exactCoordinates,
+      name: 'User Admin Location',
     };
     setUserLocation(newUserPoint);
 

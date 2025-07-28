@@ -65,6 +65,13 @@ export const columns_es = {
   h_supervisor: 'Supervisor',
   h_scans: 'Escaneos',
   h_device: 'Dispositivo',
+  h_memos_total: 'Memorandos Totales Hoy',
+  h_memos_unresolved: 'Memorandos sin resolver',
+  h_memos_resolved: 'Memorandos Resueltos',
+  h_projects: 'Projects',
+  h_period: 'Period',
+  h_subtitle: 'Subtitle',
+  h_modulos: 'Módulos',
 };
 
 export const columns_en = {
@@ -134,4 +141,11 @@ export const columns_en = {
   h_employee: 'Employee',
   h_scans: 'Scans',
   h_device: 'Device',
+  h_memos_total: 'Total Memos Today',
+  h_memos_unresolved: 'Unresolved Memos',
+  h_memos_resolved: 'Resolved Memos',
+  h_projects: 'Proyectos',
+  h_period: 'Período',
+  h_subtitle: 'subtitulo',
+  h_modulos: 'Modules',
 };

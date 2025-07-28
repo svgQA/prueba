@@ -1,5 +1,5 @@
 export const description_es = {
-  d_company: 'Esta es una compañia',
+  d_company: 'Empresa',
   d_group: '',
   d_area: '',
   d_role: '',
@@ -17,10 +17,11 @@ export const description_es = {
   d_template: '',
   d_novelty: '',
   d_create: '',
+  d_scheduled_reports: '',
 };
 
 export const description_en = {
-  d_company: 'This is a company',
+  d_company: 'Company',
   d_group: '',
   d_area: '',
   d_role: '',
@@ -38,4 +39,5 @@ export const description_en = {
   d_template: '',
   d_novelty: '',
   d_create: '',
+  d_scheduled_reports: '',
 };
