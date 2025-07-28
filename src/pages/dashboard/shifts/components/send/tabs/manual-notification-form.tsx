@@ -7,10 +7,10 @@ import { TextArea } from '@/components/common/text.area/text.area';
 import { Switch } from '@/components/common/switch/switch';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { Form, Field } from 'react-final-form';
-import { useSignal } from '@preact/signals';
+import { Signal, useSignal } from '@preact/signals';
 import { lengthSize } from '@/utils/utilities';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { NotificationService, TaskService, TemplateService } from '@/services';
+import { NotificationService, PlaceService, TaskService, TemplateService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
@@ -42,6 +42,7 @@ export const ManualNotificationForm = ({
   const templates = useSignal<IOption[]>([]);
   const tasks = useSignal<IOption[]>([]);
   const tasksResponse = useSignal<ITask[]>([]);
+  const places: Signal<IOption[]> = useSignal([]);
 
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
   const [sendToGeneral, setSendToGeneral] = useState<boolean>(false);
@@ -79,10 +80,18 @@ export const ManualNotificationForm = ({
     setSelectedUsersFull(finalUsers);
   }, [selectedUserIds, usersWithPlayerId]);
 
+
+  const getPlaces = async () => {
+    const request = await PlaceService.getSimpleList();
+    if (!request.getStatus()) return;
+    places.value = request.getMany();
+  };
+
   const getInitData = useCallback(async () => {
-    const [request_task, request_template] = await Promise.all([
+    const [request_task, request_template, request_places] = await Promise.all([
       TaskService.getSimplesList(),
       TemplateService.getBasicTemplates(),
+      PlaceService.getSimpleList()
     ]);
 
     if (request_task.getStatus()) {
@@ -91,6 +100,10 @@ export const ManualNotificationForm = ({
 
     if (request_template.getStatus()) {
       templates.value = request_template.getMany();
+    }
+
+    if (request_places.getStatus()) {
+      places.value = request_places.getMany();
     }
   }, []);
 
@@ -112,6 +125,7 @@ export const ManualNotificationForm = ({
       overrideTitle: values.title,
       overrideDescription: values.description,
       tasks: tasksResponse.value,
+      placeId: values.placeId.value,
       filters: {
         userIds: selectedUsersFull.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
@@ -289,6 +303,23 @@ export const ManualNotificationForm = ({
             disabled={templateSelected ? true : false}
             type={sendToGeneral ? 'REPORT' : 'GENERAL'}
           />
+
+          <div class='col-span-2'>
+            <Field<IOption> name='placeId'>
+              {({ input, meta }) => (
+                <SmartSelector
+                  {...input}
+                  meta={meta}
+                  placeholder='Seleccione lugar...'
+                  label='place'
+                  id='placeId'
+                  icon='252'
+                  options={places.value}
+                />
+              )}
+            </Field>
+          </div>
+
 
           <div className='flex flex-col gap-2'>
             <Field<string>
