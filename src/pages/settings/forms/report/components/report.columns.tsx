@@ -38,14 +38,18 @@ export const getColumns = (
     id: 'subtitle',
     header: 'subtitle',
     size: 200,
-    cell: (info) => <TextEllipsis text={info.getValue() as string} maxWidth='250px' />,
+    cell: (info) => (
+      <TextEllipsis text={info.getValue() as string} maxWidth='250px' />
+    ),
   },
   {
     accessorKey: 'description',
     id: 'description',
     header: 'Descripción',
     size: 200,
-    cell: (info) => <TextEllipsis text={info.getValue() as string} maxWidth='250px' />,
+    cell: (info) => (
+      <TextEllipsis text={info.getValue() as string} maxWidth='250px' />
+    ),
   },
   {
     accessorKey: 'period',
@@ -73,7 +77,7 @@ export const getColumns = (
     cell: (info) => {
       const extraData = info.row.original.extraData as any;
       if (extraData && Array.isArray(extraData.projects)) {
-        return extraData.projects.map((p: any) => p.name).join(', ');
+        return extraData.projects.map((p: any) => p.label).join(', ');
       }
       return '-';
     },

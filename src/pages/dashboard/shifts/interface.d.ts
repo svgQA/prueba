@@ -12,6 +12,7 @@ export interface FormData {
   workstationId: number;
   serviceId: any;
   employeeId: any;
+  scheduleId: any;
   roundId: number;
   externalId: string;
   keywords: string[];

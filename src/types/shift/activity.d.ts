@@ -162,6 +162,7 @@ export interface IShiftResponse {
   start: string;
   end: string;
   employeeId: number;
+  schedule: any;
   employee: IUser;
   serviceId: number;
   status: string;

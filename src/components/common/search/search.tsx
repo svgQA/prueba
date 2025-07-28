@@ -4,6 +4,7 @@ import { IKey, ISearchProps } from './interface';
 import { TargetedEvent } from 'preact/compat';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
+import { ReportAutomatic } from '../report-automatic/report-automatic';
 
 export const Search = ({
   id,
@@ -16,6 +17,7 @@ export const Search = ({
   group,
   grouping,
   disabled = false,
+  modules,
 }: ISearchProps) => {
   const { t } = useTranslation();
   const inputState = useSignal<string>('');
@@ -311,6 +313,7 @@ export const Search = ({
       </div>
 
       {(table || grouping) && group && <>{group}</>}
+      {table && modules && <ReportAutomatic modules={modules} />}
 
       {keys.length > 0 && isDropdownOpen.value && (
         <div
