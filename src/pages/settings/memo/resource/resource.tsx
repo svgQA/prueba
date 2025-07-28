@@ -15,10 +15,15 @@ import { Input } from '@/components/common/input/input';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { required } from '@/utils/utilities';
 import { useResourceStore } from '@/store/slices/optimusAccess/access.slice';
-
+import { MultiSelect } from '../../forms/create/MultiSelect';
+interface IMultiSelect {
+  id: number;
+  name: string;
+}
 export const ResourceMemoSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const resources = useSignal<IResource[]>([]);
+  const smartGroups = useSignal<{ name: string; id: number }[]>([]);
 
   useEffect(() => {
     document.title = t('p_resource');
@@ -28,8 +33,15 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
   useEffect(() => {
     if (selectedCompany) {
       getResources();
+      getGroups();
     }
   }, [selectedCompany, location]);
+
+  const getGroups = async () => {
+    const response = await GeneralService.getSmartGroups();
+    if (!response.getStatus()) return;
+    smartGroups.value = response.getMany();
+  };
 
   const getResources = async () => {
     const response = await GeneralService.resource();
@@ -46,10 +58,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
       icon: values.icon || '',
     };
     const response = await GeneralService.createResource(output);
-    if (!response.getStatus()) {
-      ToastManager.error('s_created_error');
-      return;
-    }
+    if (!response.getStatus()) return;
     ToastManager.success('s_created_success');
     getResources();
     form?.reset();
@@ -177,6 +186,24 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                             placeholder='URL del icono'
                             label='URL del icono'
                             meta={meta}
+                          />
+                        )}
+                      </Field>
+                    </div>
+
+                    <div className='space-y-4'>
+                      <Field<number[]> name='groups'>
+                        {({ input }) => (
+                          <MultiSelect<IMultiSelect>
+                            {...input}
+                            options={smartGroups.value}
+                            selectedIds={input.value || []}
+                            onChange={(selectedIds) => {
+                              form.change('groups', selectedIds as number[]);
+                            }}
+                            getLabel={(item) => item.name}
+                            getId={(item) => item.id}
+                            placeholder='Seleccione uno o más grupos inteligentes'
                           />
                         )}
                       </Field>
