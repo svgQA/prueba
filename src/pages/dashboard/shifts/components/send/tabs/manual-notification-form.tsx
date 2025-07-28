@@ -80,13 +80,6 @@ export const ManualNotificationForm = ({
     setSelectedUsersFull(finalUsers);
   }, [selectedUserIds, usersWithPlayerId]);
 
-
-  const getPlaces = async () => {
-    const request = await PlaceService.getSimpleList();
-    if (!request.getStatus()) return;
-    places.value = request.getMany();
-  };
-
   const getInitData = useCallback(async () => {
     const [request_task, request_template, request_places] = await Promise.all([
       TaskService.getSimplesList(),
