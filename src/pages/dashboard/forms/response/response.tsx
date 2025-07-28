@@ -28,7 +28,7 @@ import { responseValidation } from '@/pages/settings/forms/create/utils/validati
 import { AudioRecorder } from '@/components/common/audio/Audio.Recorder';
 import { Signature } from '@/components/common/signature/signature';
 import { QrCode } from '@/components/common/qr/qrCode';
-
+import { Barcode } from '@/components/common/barcode/barcode';
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
   type?: string;
@@ -365,6 +365,22 @@ export const FormResponseSettingPage: FunctionComponent<
         return (
           <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
             <QrCode
+              name={element.id}
+              onChange={handleInputChange}
+              page={page}
+              value={element.value}
+              label={element.label}
+              data-section={section}
+              disabled={disabled}
+              // required={required}
+            />
+          </div>
+        );
+
+      case ELEMENT_TYPE.BARCODE:
+        return (
+          <div class='mb-4 p-4 rounded-lg bg-b-light dark:bg-b-dark'>
+            <Barcode
               name={element.id}
               onChange={handleInputChange}
               page={page}
