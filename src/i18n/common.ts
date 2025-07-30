@@ -42,6 +42,7 @@ export const common_es = {
   area: 'Área',
   profile: 'Perfil',
   instructions: 'Instrucciones',
+  no_results: 'No hay resultados',
 };
 
 export const common_en = {
@@ -92,4 +93,5 @@ export const common_en = {
   area: 'Area',
   profile: 'Profile',
   instructions: 'Instructions',
+  no_results: 'No results',
 };

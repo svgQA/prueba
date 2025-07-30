@@ -132,14 +132,7 @@ export const general_es = {
   },
   forms: {
     pageTitle: 'TR - Servicio de Formularios',
-    cards: {
-      total: 'Total Formularios',
-      subtitle: 'Formularios creados',
-      active: 'Formularios Activos',
-      activeSubtitle: 'En uso',
-      archived: 'Formularios Archivados',
-      archivedSubtitle: 'No disponibles',
-    },
+    cards: {},
     columns: {
       user: 'Usuario',
       title: 'Título',

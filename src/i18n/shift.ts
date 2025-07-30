@@ -1,7 +1,4 @@
 export const shift_es = {
-  s_total: 'Turnos Totales Hoy',
-  s_inProgress: 'Turnos En Curso',
-  s_completed: 'Turnos Finalizados',
   shift: {
     upsert: {
       success: 'Turno creado exitosamente!',
@@ -179,9 +176,6 @@ export const shift_es = {
 };
 
 export const shift_en = {
-  s_total: 'Total Shifts Today',
-  s_inProgress: 'Shifts In Progress',
-  s_completed: 'Completed Shifts',
   shift: {
     upsert: {
       success: 'Shift created successfully!',

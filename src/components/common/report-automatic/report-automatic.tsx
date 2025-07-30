@@ -66,7 +66,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
 
   const downloadReport = async (urlObj: { url: string }) => {
     if (!urlObj?.url) {
-      ToastManager.error(t('form.report.errorUrl'));
+      ToastManager.error('s_errorUrl');
       return;
     }
 
@@ -100,11 +100,9 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(downloadUrl);
-      ToastManager.success(
-        `${t('form.report.title')} ${filename} ${t('form.report.download_file_success')}`
-      );
+      ToastManager.success(`'s_title' ${filename} 's_download_file_success'`);
     } catch (error) {
-      ToastManager.error(t('form.report.download_file_error'));
+      ToastManager.error('s_download_file_error');
     }
   };
 
@@ -156,9 +154,9 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
           name='report-automatic-modal'
           open={isOpen}
           onClose={() => setIsOpen(false)}
-          title={t('form.report.title_automatic')}
+          title={t('s_title_automatic')}
           width='min-w-[800px]'
-          header={<h3>{t('form.report.title_automatic')}</h3>}
+          header={<h3>{t('s_title_automatic')}</h3>}
           footer={footerContent}
         >
           <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>

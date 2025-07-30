@@ -597,7 +597,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='s_total'
+          title='h_shifts_total'
           count={shiftSummary.value.total}
           subtitle=''
           color='t-dark'
@@ -605,7 +605,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <CardData
-          title='s_inProgress'
+          title='h_shifts_in_progress'
           count={calculatePercentage(shiftSummary.value.in_progress)}
           subtitle=''
           color='t-dark'
@@ -613,7 +613,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <CardData
-          title='s_completed'
+          title='h_shifts_completed'
           count={calculatePercentage(shiftSummary.value.completed)}
           subtitle=''
           color='t-dark'

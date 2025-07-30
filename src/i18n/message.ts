@@ -165,6 +165,10 @@ export const message_es = {
   i_view_select: 'Minutas',
   i_view_services: 'Servicios',
   i_comment: 'Sin comentario',
+  i_error_title: 'El título debe tener al menos 5 caracteres',
+  i_description: 'La descripción debe tener al menos 5 caracteres',
+  i_structure: 'Debe tener al menos una sección',
+  i_required: 'El campo es requerido',
 };
 
 export const message_en = {
@@ -330,4 +334,8 @@ export const message_en = {
   i_view_select: 'Memorandums',
   i_view_services: 'Services',
   i_comment: 'No comment',
+  i_error_title: 'The title must have at least 5 characters',
+  i_description: 'The description must have at least 5 characters',
+  i_structure: 'Must have at least one section',
+  i_required: 'The field is required',
 };
