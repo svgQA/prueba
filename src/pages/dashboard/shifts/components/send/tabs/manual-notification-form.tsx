@@ -10,7 +10,12 @@ import { Form, Field } from 'react-final-form';
 import { Signal, useSignal } from '@preact/signals';
 import { lengthSize } from '@/utils/utilities';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { NotificationService, PlaceService, TaskService, TemplateService } from '@/services';
+import {
+  NotificationService,
+  PlaceService,
+  TaskService,
+  TemplateService,
+} from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
@@ -84,7 +89,7 @@ export const ManualNotificationForm = ({
     const [request_task, request_template, request_places] = await Promise.all([
       TaskService.getSimplesList(),
       TemplateService.getBasicTemplates(),
-      PlaceService.getSimpleList()
+      PlaceService.getSimpleList(),
     ]);
 
     if (request_task.getStatus()) {
@@ -312,7 +317,6 @@ export const ManualNotificationForm = ({
               )}
             </Field>
           </div>
-
 
           <div className='flex flex-col gap-2'>
             <Field<string>
