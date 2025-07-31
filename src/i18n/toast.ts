@@ -48,6 +48,9 @@ export const toast_es = {
   s_download_file: 'Descargar archivo',
   s_errorUrl: 'La URL de la lista no es válida',
   s_inspect_title: 'Inspección',
+  s_general: 'Hay un error en el formulario',
+  s_invalid_response: 'La estructura del formulario no es válida',
+  s_not_exist_response: 'La estructura del formulario no existe',
 };
 
 export const toast_en = {
@@ -100,4 +103,7 @@ export const toast_en = {
   s_download_file: 'Download file',
   s_errorUrl: 'The list URL is not valid',
   s_inspect_title: 'Inspection',
+  s_general: 'There is an error in the form',
+  s_invalid_response: 'The form structure is invalid',
+  s_not_exist_response: 'The form structure does not exist',
 };

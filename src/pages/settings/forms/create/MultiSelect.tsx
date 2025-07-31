@@ -118,9 +118,7 @@ export function MultiSelect<T>({
               </li>
             ))
           ) : (
-            <li className='px-4 py-2 text-sm italic'>
-              {t('common.no_results')}
-            </li>
+            <li className='px-4 py-2 text-sm italic'>{t('no_results')}</li>
           )}
         </ul>
       )}
