@@ -72,6 +72,15 @@ export const columns_es = {
   h_period: 'Period',
   h_subtitle: 'Subtitle',
   h_modulos: 'Módulos',
+  h_shifts_total: 'Turnos Totales Hoy',
+  h_shifts_in_progress: 'Turnos En Progreso',
+  h_shifts_completed: 'Turnos Completados',
+  h_forms_total: 'Total Formularios',
+  h_forms_subtitle: 'Formularios creados',
+  h_forms_active: 'Formularios Activos',
+  h_forms_active_subtitle: 'En uso',
+  h_forms_archived: 'Formularios Archivados',
+  h_forms_archived_subtitle: 'No disponibles',
 };
 
 export const columns_en = {
@@ -148,4 +157,13 @@ export const columns_en = {
   h_period: 'Período',
   h_subtitle: 'subtitulo',
   h_modulos: 'Modules',
+  h_shifts_total: 'Total Shifts Today',
+  h_shifts_in_progress: 'Shifts In Progress',
+  h_shifts_completed: 'Completed Shifts',
+  h_forms_total: 'Total Forms',
+  h_forms_subtitle: 'Created forms',
+  h_forms_active: 'Active Forms',
+  h_forms_active_subtitle: 'In use',
+  h_forms_archived: 'Archived Forms',
+  h_forms_archived_subtitle: 'Not available',
 };

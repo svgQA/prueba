@@ -209,25 +209,25 @@ export const FormsPage: FunctionComponent = () => {
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title={t('forms.cards.total')}
+          title='h_forms_total'
           count={summary.value.total}
-          subtitle={t('forms.cards.subtitle')}
+          subtitle='h_forms_subtitle'
           color='t-dark'
           icon='328'
         />
 
         <CardData
-          title={t('forms.cards.active')}
+          title='h_forms_active'
           count={calculatePercentage(summary.value)}
-          subtitle={t('forms.cards.activeSubtitle')}
+          subtitle='h_forms_active_subtitle'
           color='t-dark'
           icon='311'
         />
 
         <CardData
-          title={t('forms.cards.archived')}
+          title='h_forms_archived'
           count={calculatePercentage(summary.value, true)}
-          subtitle={t('forms.cards.archivedSubtitle')}
+          subtitle='h_forms_archived_subtitle'
           color='t-dark'
           icon='312'
         />
@@ -257,8 +257,8 @@ export const FormsPage: FunctionComponent = () => {
             <div className='w-full py-1 pb-3 flex items-center justify-end'>
               <h2 className='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
                 {currentView.value === VIEW_NAME.INSPECT
-                  ? t('form.inspect.title')
-                  : t('form.report.title')}
+                  ? t('s_inspect_title')
+                  : t('s_title')}
               </h2>
             </div>
             <FormResponseSettingPage posFinishAction={handlePosFinishAction} />

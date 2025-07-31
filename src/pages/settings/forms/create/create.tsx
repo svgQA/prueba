@@ -231,7 +231,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               <div className='flex flex-col gap-1 w-full'>
                 <Input
                   type='text'
-                  placeholder={t('form.placeholder.title')}
+                  placeholder='p_title'
                   name='label'
                   icon='245'
                   id={`in-form-${getForm.value.id}-format-title`}
@@ -241,7 +241,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                 />
                 <Input
                   type='text'
-                  placeholder={t('form.placeholder.description')}
+                  placeholder='p_description'
                   name='description'
                   icon='123'
                   id={`in-form-${getForm.value.id}-format-description`}
@@ -257,7 +257,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                   }
                   getLabel={(item) => item.name}
                   getId={(item) => item.id}
-                  placeholder='Seleccione uno o más grupos inteligentes'
+                  placeholder='p_iteam'
                 />
               </div>
             </div>
@@ -279,7 +279,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               <div key={page.id} className='w-full mb-5 rounded-2xl'>
                 <Input
                   type='text'
-                  placeholder={t('form.placeholder.title_page')}
+                  placeholder='p_title_page'
                   name='label'
                   id={`in-form-${page.id}-page-title`}
                   data-pageid={page.id}
@@ -293,11 +293,9 @@ export const FormCreateSettingPage: FunctionComponent = () => {
                     <thead className='border-b-2 border-b-light-light dark:border-b-dark-light'>
                       <tr>
                         <th className='py-1 px-2 rounded-tl-md'>
-                          {t('form.field.question')}
+                          {t('l_question')}
                         </th>
-                        <th className='py-1 rounded-tr-md'>
-                          {t('form.field.type')}
-                        </th>
+                        <th className='py-1 rounded-tr-md'>{t('l_type')}</th>
                       </tr>
                     </thead>
                     <DndProvider backend={HTML5Backend}>

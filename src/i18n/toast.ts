@@ -41,6 +41,13 @@ export const toast_es = {
   s_title_and_sub_required: 'Titulo y Subtitulo son requeridos',
   s_already_profile: 'Perfil ya existe',
   s_select_company: 'Selecciona una empresa',
+  s_title: 'Reporte',
+  s_title_automatic: 'Reporte Automatico',
+  s_download_file_success: 'descargado exitosamente',
+  s_download_file_error: 'No se puede descargar el archivo',
+  s_download_file: 'Descargar archivo',
+  s_errorUrl: 'La URL de la lista no es válida',
+  s_inspect_title: 'Inspección',
 };
 
 export const toast_en = {
@@ -86,4 +93,11 @@ export const toast_en = {
   s_title_and_sub_required: 'Title and Subtitle are required',
   s_already_profile: 'Profile already exists',
   s_select_company: 'Select a company',
+  title: 'Report',
+  s_title_automatic: 'Automatic Report',
+  s_download_file_success: 'downloaded successfully',
+  s_download_file_error: 'Cannot download file',
+  s_download_file: 'Download file',
+  s_errorUrl: 'The list URL is not valid',
+  s_inspect_title: 'Inspection',
 };

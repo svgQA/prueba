@@ -136,14 +136,7 @@ export const general_en = {
   },
   forms: {
     pageTitle: 'TR - Forms Service',
-    cards: {
-      total: 'Total Forms',
-      subtitle: 'Created forms',
-      active: 'Active Forms',
-      activeSubtitle: 'In use',
-      archived: 'Archived Forms',
-      archivedSubtitle: 'Not available',
-    },
+    cards: {},
     columns: {
       id: 'ID',
       createdAt: 'Creation date',
