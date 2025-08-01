@@ -51,6 +51,11 @@ export const toast_es = {
   s_general: 'Hay un error en el formulario',
   s_invalid_response: 'La estructura del formulario no es válida',
   s_not_exist_response: 'La estructura del formulario no existe',
+  s_warning:
+    'El turno no se puede eliminar porque ya esta en curso o finalizado',
+  s_title_delete: 'Eliminar Turno',
+  s_message: '¿Está seguro que desea eliminar el turno?',
+  s_success: 'Turno creado exitosamente!',
 };
 
 export const toast_en = {
@@ -106,4 +111,9 @@ export const toast_en = {
   s_general: 'There is an error in the form',
   s_invalid_response: 'The form structure is invalid',
   s_not_exist_response: 'The form structure does not exist',
+  s_warning:
+    'The shift cannot be deleted because it is already in progress or completed',
+  s_title_delete: 'Delete Shift',
+  s_message: 'Are you sure you want to delete the shift?',
+  s_success: 'Shift created successfully!',
 };

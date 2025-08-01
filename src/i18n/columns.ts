@@ -81,6 +81,7 @@ export const columns_es = {
   h_forms_active_subtitle: 'En uso',
   h_forms_archived: 'Formularios Archivados',
   h_forms_archived_subtitle: 'No disponibles',
+  h_title_shift: 'Actividades del Turno',
 };
 
 export const columns_en = {
@@ -166,4 +167,5 @@ export const columns_en = {
   h_forms_active_subtitle: 'In use',
   h_forms_archived: 'Archived Forms',
   h_forms_archived_subtitle: 'Not available',
+  h_title_shift: 'Shift Activities',
 };

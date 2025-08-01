@@ -185,7 +185,7 @@ export const ManualNotificationForm = ({
                 setSendToShiftToday(checked);
                 setNotificationType(checked ? 'REPORT' : 'GENERAL');
               }}
-              label='¿Esta es una solicitud de reporte a la central?'
+              label={t('l_request_report')}
             />
           </div>
 
@@ -193,7 +193,7 @@ export const ManualNotificationForm = ({
             <input
               type='text'
               className='w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200'
-              placeholder={t('shifts.notifications.searchPlaceholder')}
+              placeholder={t('p_searchPlaceholder')}
               value={search}
               onInput={(e) => setSearch(e.currentTarget.value)}
             />

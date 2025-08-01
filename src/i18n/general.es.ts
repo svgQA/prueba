@@ -52,7 +52,6 @@ export const general_es = {
       center: 'Centro de notificaciones',
       sendManual: 'Enviar notificación manual',
       users: 'Usuarios',
-      searchPlaceholder: 'Buscar por nombre o email...',
       onlyWithActiveShift: 'Solo con turno activo',
       clearUserSelection: 'Limpiar selección de usuarios',
       noSelectionWarning:

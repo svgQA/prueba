@@ -14,6 +14,8 @@ export const validation_es = {
   audio: 'Graba un Audio',
   location: 'La Ubicación',
   get_files: 'Agregar Archivos',
+  shiftStart: 'Inicio del Turno',
+  shiftEnd: 'Finalización del Turno',
 };
 
 export const validation_en = {
@@ -32,4 +34,6 @@ export const validation_en = {
   audio: 'Record an Audio',
   location: 'The Location',
   get_files: 'Add Files',
+  shiftStart: 'Shift Start',
+  shiftEnd: 'Shift End',
 };
