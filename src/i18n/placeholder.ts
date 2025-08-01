@@ -32,6 +32,7 @@ export const placeholder_es = {
   p_number_files: 'Ingrese el número de archivos',
   p_element_description: 'Ingrese la descripción',
   p_form_company: 'Selecciona la empresa',
+  p_searchPlaceholder: 'Buscar por nombre o email...',
 };
 
 export const placeholder_en = {
@@ -68,4 +69,5 @@ export const placeholder_en = {
   p_number_files: 'Enter number files',
   p_element_description: 'Enter description',
   p_form_company: 'Select company',
+  p_searchPlaceholder: 'Search by name or email...',
 };

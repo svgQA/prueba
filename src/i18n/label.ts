@@ -34,6 +34,7 @@ export const label_es = {
   l_new: 'Crear formulario',
   l_question: 'Pregunta',
   l_type: 'Tipo de respuesta',
+  l_request_report: '¿Esta es una solicitud de reporte a la central?',
 };
 
 export const label_en = {
@@ -72,4 +73,5 @@ export const label_en = {
   l_new: 'Create form',
   l_question: 'Question',
   l_type: 'Answer type',
+  l_request_report: 'Is this a request for a report to the central?',
 };

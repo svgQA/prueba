@@ -125,7 +125,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
     <div class='flex gap-6 justify-center'>
       {/* Inicio del Turno */}
       <ShiftCard
-        title={t('shift.expandable.date.shiftStart')}
+        title={t('shiftStart')}
         name={employeeName}
         date={checkInData?.time || ''}
         time={checkInData?.time || ''}
@@ -144,7 +144,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
 
       {/* Finalización del Turno */}
       <ShiftCard
-        title={t('shift.expandable.date.shiftEnd')}
+        title={t('shiftEnd')}
         name={employeeName}
         date={checkOutData?.time || ''}
         time={checkOutData?.time || ''}
@@ -246,7 +246,7 @@ const ShiftCard = ({
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
       const { distance } = response.getOne();
-      ToastManager.success(t('shift.expandable.date.success'));
+      ToastManager.success(t('s_success'));
       onCheck({
         type: checkData.type,
         time: checkData.date,
@@ -322,7 +322,7 @@ const ShiftCard = ({
             onClick={() =>
               showAlert({
                 title: btnLabel,
-                message: `${t('shift.expandable.date.message')} ${btnLabel}?`,
+                message: `${t('s_message')} ${btnLabel}?`,
                 onConfirm: () => handleCheck(),
                 onCancel: () => {},
               })

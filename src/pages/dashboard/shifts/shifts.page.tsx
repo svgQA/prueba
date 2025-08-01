@@ -532,13 +532,13 @@ export const ShiftsPage: FunctionalComponent = () => {
 
         const status = shift.status as unknown as SHIFT_STATUS;
         if (status !== SHIFT_STATUS.CREATED) {
-          ToastManager.warning('shift.table.delete.warning');
+          ToastManager.warning('s_warning');
           return;
         }
 
         showAlert({
-          title: t('shift.table.delete.title'),
-          message: t('shift.table.delete.message'),
+          title: t('s_title_delete'),
+          message: t('s_message'),
           onConfirm: () => deleteShift(params.id),
           onCancel: () => {},
         });
