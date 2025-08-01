@@ -7,6 +7,11 @@ export interface IAccess {
   checkIn?: string;
   checkOut?: string;
   user?: IUserAccess;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: any | null;
+  editedBy: any | null;
+  deletedBy: any | null;
 
   // Campos mostrados en el expansible
   // vehicleType: 'Carro' | 'Moto' | 'Bicicleta' | 'Patineta';
