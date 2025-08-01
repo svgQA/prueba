@@ -1,57 +1,165 @@
 import { FunctionalComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 
 import { Section } from '@/components/common/section/section';
 // Ajusta si tu Section está en otro lado
 import { Table } from '@/components/common/table/table';
-import { IAccess, accesData } from './utils';
-import { accessColumns } from './components/access.columns';
+import { IAccess } from './utils';
+import { getColumns } from './components/access.columns';
 import { ExpandableAccess } from '@/components/compose/table/expandable/access';
 import { CardData } from '@/components/compose/cards';
 import { useTranslation } from 'react-i18next';
+import { AccessesService } from '@/services/access/accesses';
+import { useSignal } from '@preact/signals';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { defaultSummary, IResponseSummary } from '@/services';
+import { Button } from '@/components/common/button/button';
+import { AccessForm } from './components/access.upsert.form';
+import { useNavigation } from '@/utils/hooks/navigation';
+import { IRowAction } from '@/components/common/table/interface';
 
 export const AccessPage: FunctionalComponent = () => {
   const { t } = useTranslation();
-  const [data, setData] = useState<IAccess[]>([]);
+  const { go } = useNavigation();
+
+  const accesses = useSignal<IAccess[]>([]);
+  const summary = useSignal<IResponseSummary>(defaultSummary);
+  const showUpsertModal = useSignal<boolean>(false);
+  const idAccess = useSignal<string>();
 
   useEffect(() => {
     document.title = t('p_access');
-    setData(accesData);
+    fetchInitialData();
   }, []);
+
+  const fetchInitialData = async () => {
+    const [
+      accessesresponse,
+      summaryresponse
+    ] = await Promise.all([
+      AccessesService.get_all(),
+      AccessesService.getAccessesSummary()
+    ]);
+
+    if (accessesresponse.getStatus()) {
+      accesses.value = accessesresponse.getMany();
+    }
+
+    if (summaryresponse.getStatus()) {
+      summary.value = summaryresponse.getOne();
+    }
+  }
+
+  const toggleUpsertModal = () => {
+    showUpsertModal.value = !showUpsertModal.value;
+  };
+
+  const clearUpsertModal = () => {
+    idAccess.value = undefined;
+    showUpsertModal.value = false;
+  };
+
+  const handleUpsert = (id?: string) => {
+    clearUpsertModal();
+    if (id) idAccess.value = id;
+    toggleUpsertModal();
+  };
+
+  const deleteUpsert = async (id: string) => {
+    const response = await AccessesService.deleteAccesses(id);
+    if (!response.getStatus()) return;
+    fetchInitialData();
+  };
+
+  const onClickAction = async (action: IRowAction) => {
+    switch (action.action) {
+      case ROW_ACTIONS.UPDATE:
+        handleUpsert(String(action.id));
+        break;
+      case ROW_ACTIONS.DELETE:
+        deleteUpsert(String(action.id));
+        break;
+    }
+  };
+
+  /**
+   *
+   * @param summary
+   * @param isResolve
+   * @returns
+   */
+  const calculatePercentage = (
+    summary: IResponseSummary,
+    isResolve: boolean = false
+  ): string => {
+    const inProgress = summary.in_progress || 0;
+    const completed = summary.completed || 0;
+    const total = inProgress + completed;
+    if (total === 0) return '0%';
+    const value = isResolve ? completed : inProgress;
+    return `${Math.round((value / total) * 100)}%`;
+  };
 
   return (
     <Section>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
           title='Visitas Mensuales'
-          count={1200}
+          count={summary.value?.total}
           subtitle='Registros de este mes'
           color='text-secondary'
           icon='189'
         />
         <CardData
           title='Vehículos que ingresaron'
-          count={42}
+          count={calculatePercentage(summary.value)}
           subtitle='Por día'
           color='text-primary'
           icon='183'
         />
         <CardData
           title='Vehículos que ingresaron y salieron'
-          count={38}
+          count={calculatePercentage(summary.value, true)}
           subtitle='Por día'
           color='text-error'
           icon='221'
         />
       </div>
 
-      <Table<IAccess>
-        data={data}
-        columns={accessColumns}
-        pageSize={10}
-        // Reutilizando la propiedad "expandable" (igual que en shifts)
-        expandable={(row: IAccess) => <ExpandableAccess row={row} />}
-      />
+      <div className='max-h-screen'>
+        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
+          <div className='flex flex-row items-center justify-between'>
+            <Button
+              name='button-create-shift'
+              label='create'
+              onClick={() => handleUpsert()}
+              icon='044'
+              iconSize='sm'
+            />
+            {/* <AudioButton /> */}
+          </div>
+        </div>
+
+        <Table<IAccess>
+          data={accesses.value}
+          columns={getColumns(onClickAction)}
+          pageSize={10}
+          // Reutilizando la propiedad "expandable" (igual que en shifts)
+          expandable={(row: IAccess) => <ExpandableAccess row={row} />}
+          visibility={{
+            id: false,
+            updatedAt: false,
+          }}
+        />
+      </div>
+
+      {showUpsertModal.value && (
+        <AccessForm
+          closed={showUpsertModal.value}
+          onClose={toggleUpsertModal}
+          id={idAccess.value}
+        />
+      )}
     </Section>
   );
 };

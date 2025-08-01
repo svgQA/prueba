@@ -1,13 +1,21 @@
+import { IUserRequest } from "@/types/auth";
+
 export interface IAccess {
-  id: number;
+  id?: number;
   name: string;
-  phone: string;
-  checkIn: string;
-  checkOut: string;
-  houseNumber: string;
+  description: string;
+  checkIn?: string;
+  checkOut?: string;
+  user?: IUserAccess;
 
   // Campos mostrados en el expansible
-  vehicleType: 'Carro' | 'Moto' | 'Bicicleta' | 'Patineta';
-  vehiclePlate: string;
-  observation: string;
+  // vehicleType: 'Carro' | 'Moto' | 'Bicicleta' | 'Patineta';
+  // vehiclePlate: string;
+  // observation: string;
+}
+
+export interface IUserAccess extends IUserRequest {
+  phone: string;
+  houseNumber: string;
+  address: string;
 }
