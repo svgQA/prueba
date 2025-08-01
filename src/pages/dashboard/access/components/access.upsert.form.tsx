@@ -7,7 +7,6 @@ import { useSignal } from "@preact/signals";
 import { useNavigation } from "@/utils/utilities/navigation";
 import { Form, Field } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
-import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/common/button/button";
 
@@ -119,7 +118,7 @@ export const AccessForm = ({ closed, onClose, id }: IAccessFormProps) => {
                     onSubmit={handleSubmit}
                     initialValues={initialValues}
                     enableReinitialize={true}
-                    render={({ handleSubmit, form, submitting }) => (
+                    render={({ handleSubmit}) => (
                         <form
                             onSubmit={handleSubmit}
                             className='space-y-6'

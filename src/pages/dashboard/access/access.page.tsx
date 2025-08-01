@@ -15,12 +15,10 @@ import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { defaultSummary, IResponseSummary } from '@/services';
 import { Button } from '@/components/common/button/button';
 import { AccessForm } from './components/access.upsert.form';
-import { useNavigation } from '@/utils/hooks/navigation';
 import { IRowAction } from '@/components/common/table/interface';
 
 export const AccessPage: FunctionalComponent = () => {
   const { t } = useTranslation();
-  const { go } = useNavigation();
 
   const accesses = useSignal<IAccess[]>([]);
   const summary = useSignal<IResponseSummary>(defaultSummary);
