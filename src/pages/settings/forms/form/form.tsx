@@ -102,7 +102,7 @@ export const FormSettingPage = () => {
 
   const handleOnClick = async (action: IRowAction) => {
     const format = forms.value.find((format) => format.id == action.id);
-    if (!format?.structure) throw Error(t('form.error.general'));
+    if (!format?.structure) throw Error('s_general');
     const groups = format.groups?.map((group) => group.group.id) || [];
     switch (action.action) {
       case ROW_ACTIONS.UPDATE: {
@@ -168,7 +168,7 @@ export const FormSettingPage = () => {
   const handleRemoveUnfinishedForm = () => {
     showAlert({
       title: 'Eliminar Formulario',
-      message: '¿Estás seguro que quieres eliminar el formulario guardado?',
+      message: t('i_delete_form'),
       onConfirm: handleContinueUnfinishedForm,
       onCancel: () => {},
     });

@@ -130,7 +130,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
     const [message, error] = formValidation(getForm.value);
     if (error) {
       setSingleFormat(message);
-      return ToastManager.error(t('form.error.general'));
+      return ToastManager.error('s_general');
     }
     const format: IFormRequest = {
       title: getForm.value.label,

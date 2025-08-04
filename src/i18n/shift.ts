@@ -19,19 +19,13 @@ export const shift_es = {
     },
     table: {
       delete: {
-        title: 'Eliminar Turno',
-        message: '¿Está seguro que desea eliminar el turno?',
         success: 'Turno eliminado exitosamente!',
         error: 'Error al eliminar el turno',
-        warning:
-          'El turno no se puede eliminar porque ya esta en curso o finalizado',
       },
     },
     expandable: {
       date: {
         pending: 'Pendiente',
-        shiftStart: 'Inicio del Turno',
-        shiftEnd: 'Finalización del Turno',
         info: {
           date: 'Fecha',
           time: 'Hora',
@@ -123,7 +117,6 @@ export const shift_es = {
         attachments: 'Archivos adjuntos',
       },
       shift: {
-        title: 'Actividades del Turno',
         empty: 'No hay actividades para mostrar',
         progress: 'Progreso',
       },
@@ -196,19 +189,13 @@ export const shift_en = {
     },
     table: {
       delete: {
-        title: 'Delete Shift',
-        message: 'Are you sure you want to delete the shift?',
         success: 'Shift deleted successfully!',
         error: 'Error deleting shift',
-        warning:
-          'The shift cannot be deleted because it is already in progress or completed',
       },
     },
     expandable: {
       date: {
         pending: 'Pending',
-        shiftStart: 'Shift Start',
-        shiftEnd: 'Shift End',
         info: {
           date: 'Date',
           time: 'Time',

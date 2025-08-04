@@ -169,6 +169,7 @@ export const message_es = {
   i_description: 'La descripción debe tener al menos 5 caracteres',
   i_structure: 'Debe tener al menos una sección',
   i_required: 'El campo es requerido',
+  i_delete_form: '¿Estás seguro que quieres eliminar el formulario guardado?',
 };
 
 export const message_en = {
@@ -338,4 +339,5 @@ export const message_en = {
   i_description: 'The description must have at least 5 characters',
   i_structure: 'Must have at least one section',
   i_required: 'The field is required',
+  i_delete_form: 'Are you sure you want to delete the saved form?',
 };

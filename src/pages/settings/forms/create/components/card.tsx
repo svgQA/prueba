@@ -1,5 +1,6 @@
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ELEMENT_TYPE, IElement } from '@/types/form';
+import { useTranslation } from 'react-i18next';
 
 export interface CardElementProps {
   id: string;
@@ -14,6 +15,8 @@ export const CardElement = ({
   element,
   selected,
 }: CardElementProps) => {
+  const { t } = useTranslation();
+
   const renderPreviewElement = () => {
     switch (element.type) {
       case ELEMENT_TYPE.INPUT:
@@ -144,11 +147,11 @@ export const CardElement = ({
           <div className='text-sm flex gap-6 p-2 flex-row justify-center'>
             <div className='w-28 h-16 bg-primary rounded-md flex flex-col items-center justify-center'>
               <span className='vx-icon vx-icon-264 size-xl mb-1' />
-              Tomar Foto
+              {t('photo')}
             </div>
             <div className='w-28 h-16 bg-primary rounded-md flex flex-col items-center justify-center'>
               <span className='vx-icon vx-icon-199 size-xl mb-1' />
-              Seleccionar
+              {t('select')}
             </div>
           </div>
         );
@@ -158,7 +161,7 @@ export const CardElement = ({
             <div className='h-24 bg-gray-50 rounded flex items-center justify-center border-2 border-dashed'>
               <div className='text-center text-gray-500'>
                 <span className='vx-icon vx-icon-171 text-2xl block mb-1' />
-                <span>Firma aquí</span>
+                <span>{t('sign')}</span>
               </div>
             </div>
           </div>
@@ -169,7 +172,7 @@ export const CardElement = ({
             <div className='h-24 bg-gray-50 rounded flex items-center justify-center border-2 border-dashed'>
               <div className='text-center text-gray-500'>
                 <span className='vx-icon vx-icon-132 text-2xl block mb-1' />
-                <span>Escanear código QR</span>
+                <span>{t('scan_qr')}</span>
               </div>
             </div>
           </div>
@@ -180,7 +183,7 @@ export const CardElement = ({
             <div className='h-24 bg-gray-50 rounded flex items-center justify-center border-2 border-dashed'>
               <div className='text-center text-gray-500'>
                 <span className='vx-icon vx-icon-132 text-2xl block mb-1' />
-                <span>Escanear código Barcode</span>
+                <span>{t('scan_barcode')}</span>
               </div>
             </div>
           </div>
@@ -191,7 +194,7 @@ export const CardElement = ({
             <div className='h-24 bg-gray-50 rounded flex items-center justify-center border-2 border-dashed'>
               <div className='text-center text-gray-500'>
                 <span className='vx-icon vx-icon-082 text-2xl block mb-1' />
-                <span>Graba un Audio</span>
+                <span>{t('audio')}</span>
               </div>
             </div>
           </div>
@@ -213,7 +216,7 @@ export const CardElement = ({
             <div className='h-24 bg-gray-50 rounded flex items-center justify-center border-2 border-dashed'>
               <div className='text-center text-gray-500'>
                 <span className='vx-icon vx-icon-289 text-2xl block mb-1' />
-                <span>La Ubicación</span>
+                <span>{t('location')}</span>
               </div>
             </div>
           </div>
@@ -224,7 +227,7 @@ export const CardElement = ({
             <div className='h-24 bg-gray-50 rounded flex items-center justify-center border-2 border-dashed'>
               <div className='text-center text-gray-500'>
                 <span className='vx-icon vx-icon-065 text-2xl block mb-1' />
-                <span>Agregar Archivos</span>
+                <span>{t('get_files')}</span>
               </div>
             </div>
           </div>
