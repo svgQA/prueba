@@ -27,22 +27,22 @@ export const SIDEBAR_MENUS: IMenu[] = [
     id: 'form',
     key: 'form',
   },
-  /*
   {
     label: 't_access',
     to: PAGES_LIST_ROUTER.dashboard.access,
     description: 'd_access',
     icon: '099',
-    id: 'access',
+    id: 'memo',
+    key: 'memo',
   },
   {
     label: 't_inbox',
     to: PAGES_LIST_ROUTER.dashboard.correspondence,
     description: 'd_inbox',
     icon: '102',
-    id: 'inbox',
+    id: 'memo',
+    key: 'memo',
   },
-  */
   {
     label: 't_user',
     to: PAGES_LIST_ROUTER.dashboard.users,

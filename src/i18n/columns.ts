@@ -91,6 +91,8 @@ export const columns_es = {
   h_end_date: 'Fecha y Hora de Fin',
   h_check_in: 'Registro de entrada',
   h_check_out: 'Registro de salida',
+  h_modules: 'Módulos',
+  h_emails: 'Correos electrónicos',
 };
 
 export const columns_en = {
@@ -186,4 +188,6 @@ export const columns_en = {
   h_end_date: 'End Date and Time',
   h_check_in: 'Check-in',
   h_check_out: 'Check-out',
+  h_modules: 'Modules',
+  h_emails: 'Emails',
 };

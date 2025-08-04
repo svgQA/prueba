@@ -26,11 +26,10 @@ export interface IReport {
   title: string;
   subtitle?: string;
   description?: string;
-  period: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
-  date?: Date | string;
+  period?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+  extraData?: extraDataReport;
   startDate?: Date | string;
   endDate?: Date | string;
-  extraData?: extraDataReport;
   companyId?: number;
   createdBy?: any;
   editedBy?: any;

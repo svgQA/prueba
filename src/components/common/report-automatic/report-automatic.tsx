@@ -9,12 +9,12 @@ import { Input } from '../input/input';
 import { IReport } from '@/types/form';
 import { ReportService } from '@/services/form/reports';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { periodOptions } from '@/pages/settings/forms/report/utils/report.data';
 import { ServiceService } from '@/services';
 import { useUserStore } from '@/store/slices';
 import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
 import { DateField } from '@/components/compose/forms';
+import { modulesReport } from '@/types/form';
 
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const { t } = useTranslation();
@@ -23,7 +23,6 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const loading = useSignal(false);
   const projects = useSignal<IOption[]>([]);
-  const periods = useSignal<IOption[]>(periodOptions);
 
   useEffect(() => {
     if (selectedCompany) {
@@ -45,7 +44,6 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       title: model.title,
       subtitle: model.subtitle,
       description: model.description,
-      period: model.period.label,
       extraData: {
         modules: [{ id: 1, name: modules }],
         projects: Array.isArray(model.projects)
@@ -156,7 +154,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
           onClose={() => setIsOpen(false)}
           title={t('s_title_automatic')}
           width='min-w-[800px]'
-          header={<h3>{t('s_title_automatic')}</h3>}
+          header={<h3>{modules === modulesReport.Memo ? t('s_title_history') : t('s_title')}</h3>}
           footer={footerContent}
         >
           <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
@@ -178,7 +176,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                           meta={meta}
                           id='select-projects'
                           icon='191'
-                          label='h_projects'
+                          label='h_service'
                           options={projects.value}
                           menuPortalTarget={document.body}
                           placeholder='p_select'
@@ -218,7 +216,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                             )}
                           </Field>
                         </div>
-                        <div className='col-span-1'>
+                        <div className='col-span-2'>
                           <Field<string> name='description'>
                             {({ input, meta }) => (
                               <Input
@@ -228,23 +226,6 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                                 meta={meta}
                                 icon='120'
                                 type='text'
-                                disabled={loading.value}
-                              />
-                            )}
-                          </Field>
-                        </div>
-                        <div className='col-span-1'>
-                          <Field<IOption> name='period'>
-                            {({ input, meta }) => (
-                              <SmartSelector
-                                {...input}
-                                meta={meta}
-                                id='select-period'
-                                icon='191'
-                                label='h_period'
-                                options={periods.value}
-                                menuPortalTarget={document.body}
-                                placeholder='p_select'
                                 disabled={loading.value}
                               />
                             )}
