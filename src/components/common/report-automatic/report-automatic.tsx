@@ -55,11 +55,13 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     };
 
     const reportResponse = await ReportService.create_report_automatic(report);
-    if (!reportResponse.getStatus()) return;
-    downloadReport(reportResponse.getOne());
-    setIsOpen(false);
+    if (reportResponse.getStatus()) {
+      downloadReport(reportResponse.getOne());
+      setIsOpen(false);
+      form.reset();
+    }
+
     loading.value = false;
-    form.reset();
   };
 
   const downloadReport = async (urlObj: { url: string }) => {
@@ -160,7 +162,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
           <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
             <Form
               onSubmit={onSubmit}
-              initialValues={() => {}}
+              initialValues={() => { }}
               render={({ handleSubmit }) => {
                 return (
                   <form
