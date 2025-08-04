@@ -236,7 +236,7 @@ export const ManualNotificationForm = ({
                     onChange={(e) =>
                       setSendToShiftToday(e.currentTarget.checked)
                     }
-                    label='Solo con turno activo'
+                    label='l_active_shift'
                   />
                 )}
               </div>
@@ -244,7 +244,7 @@ export const ManualNotificationForm = ({
               {selectedUserIds.length > 0 && (
                 <Button
                   name='button-clear-user-selection'
-                  label='Limpiar selección de usuarios'
+                  label='l_clear_user'
                   mode='primary'
                   onClick={clearUserSelection}
                   borderless
@@ -256,9 +256,7 @@ export const ManualNotificationForm = ({
 
             {selectedUsersFull.length > 0 && (
               <div className='mt-2 border-y-b-light-dark dark:border-y-b-dark-light border-y py-3'>
-                <h5 className='font-medium mb-1'>
-                  Usuarios seleccionados con registro de notificaciones:
-                </h5>
+                <h5 className='font-medium mb-1'>{t('h_users_selected')}</h5>
                 <ul className='list-disc list-inside space-y-1'>
                   {[
                     ...new Map(
@@ -283,8 +281,8 @@ export const ManualNotificationForm = ({
                   meta={meta}
                   options={templates.value}
                   menuPortalTarget={document.body}
-                  placeholder='Selecciona una plantilla'
-                  label='Plantilla'
+                  placeholder={t('p_select_template')}
+                  label={t('l_template')}
                   onChange={(value?: IOption) => {
                     if (value) infoTemplate(value);
                   }}
@@ -308,8 +306,8 @@ export const ManualNotificationForm = ({
                 <SmartSelector
                   {...input}
                   meta={meta}
-                  placeholder='Seleccione lugar...'
-                  label='place'
+                  placeholder={t('p_select_place')}
+                  label={t('l_place')}
                   id='placeId'
                   icon='252'
                   options={places.value}
@@ -325,7 +323,7 @@ export const ManualNotificationForm = ({
               render={({ input, meta }) => (
                 <Input
                   {...input}
-                  label={t('shifts.notifications.customTitle')}
+                  label='l_custom_title'
                   meta={meta}
                   type='text'
                 />
@@ -338,7 +336,7 @@ export const ManualNotificationForm = ({
                 <TextArea
                   {...input}
                   name='input-custom-description'
-                  label={t('shifts.notifications.customDescription')}
+                  label='l_custom_description'
                   meta={meta}
                   type='text'
                 />
@@ -348,7 +346,7 @@ export const ManualNotificationForm = ({
 
           <div className='flex justify-end'>
             <Button
-              label='Enviar notificacion'
+              label='l_send_notification'
               mode='ternary'
               type='submit'
               name='button-notification'

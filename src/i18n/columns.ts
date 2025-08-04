@@ -82,6 +82,15 @@ export const columns_es = {
   h_forms_archived: 'Formularios Archivados',
   h_forms_archived_subtitle: 'No disponibles',
   h_title_shift: 'Actividades del Turno',
+  h_users_selected: 'Usuarios seleccionados con registro de notificaciones',
+  h_management: 'Gestión de plantillas',
+  h_notification_center: 'Centro de notificaciones',
+  h_shift_details: 'Detalles del Turno',
+  h_service_type: 'Tipo de Servicio',
+  h_start_date: 'Fecha y Hora de Inicio',
+  h_end_date: 'Fecha y Hora de Fin',
+  h_check_in: 'Registro de entrada',
+  h_check_out: 'Registro de salida',
 };
 
 export const columns_en = {
@@ -168,4 +177,13 @@ export const columns_en = {
   h_forms_archived: 'Archived Forms',
   h_forms_archived_subtitle: 'Not available',
   h_title_shift: 'Shift Activities',
+  h_users_selected: 'Users with notification registration',
+  h_management: 'Template management',
+  h_notification_center: 'Notification center',
+  h_shift_details: 'Shift details',
+  h_service_type: 'Service type',
+  h_start_date: 'Start Date and Time',
+  h_end_date: 'End Date and Time',
+  h_check_in: 'Check-in',
+  h_check_out: 'Check-out',
 };

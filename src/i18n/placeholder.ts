@@ -33,6 +33,12 @@ export const placeholder_es = {
   p_element_description: 'Ingrese la descripción',
   p_form_company: 'Selecciona la empresa',
   p_searchPlaceholder: 'Buscar por nombre o email...',
+  p_select_template: 'Selecciona una plantilla',
+  p_select_place: 'Seleccione lugar...',
+  p_titlePlaceholder: 'Título',
+  p_descriptionPlaceholder: 'Descripción',
+  p_dataJsonPlaceholder: 'Data JSON',
+  p_saveButton: 'Guardar plantilla',
 };
 
 export const placeholder_en = {
@@ -70,4 +76,10 @@ export const placeholder_en = {
   p_element_description: 'Enter description',
   p_form_company: 'Select company',
   p_searchPlaceholder: 'Search by name or email...',
+  p_select_template: 'Select a template',
+  p_select_place: 'Select place...',
+  p_titlePlaceholder: 'Title',
+  p_descriptionPlaceholder: 'Description',
+  p_dataJsonPlaceholder: 'Data JSON',
+  p_saveButton: 'Save template',
 };
