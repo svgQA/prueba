@@ -15,6 +15,8 @@ import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
 import { DateField } from '@/components/compose/forms';
 import { modulesReport } from '@/types/form';
+import { IOptionCheck } from '../select-check/interface';
+import { SelectCheck } from '../select-check';
 
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const { t } = useTranslation();
@@ -23,10 +25,12 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const loading = useSignal(false);
   const projects = useSignal<IOption[]>([]);
+  const format = useSignal<IOptionCheck[]>([]);
 
   useEffect(() => {
     if (selectedCompany) {
       Promise.all([getServices()]);
+      getFormatOptions();
     }
   }, [selectedCompany]);
 
@@ -36,6 +40,13 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       projects.value = request.getMany();
     }
   }, []);
+
+  const getFormatOptions = () => {
+    format.value = [
+      { value: 'pdf', label: 'PDF', icon: '306', color: 'primary' },
+      { value: 'excel', label: 'Excel', icon: '307', color: 'secondary' },
+    ];
+  }
 
   const onSubmit = async (model: any, form: any) => {
     loading.value = true;
@@ -54,11 +65,21 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       endDate: DateUtils.dateToBackend(model.end),
     };
 
-    const reportResponse = await ReportService.create_report_automatic(report);
-    if (reportResponse.getStatus()) {
-      downloadReport(reportResponse.getOne());
-      setIsOpen(false);
-      form.reset();
+    if (model.format === 'pdf') {
+      const reportResponse = await ReportService.create_report_automatic(report);
+      if (reportResponse.getStatus()) {
+        downloadReport(reportResponse.getOne());
+        setIsOpen(false);
+        form.reset();
+      }
+    } else if (model.format === 'excel') {
+      const reportResponse = await ReportService.create_report_automatic_excel(report);
+      if (reportResponse.getStatus()) {
+        const info = reportResponse.getMany();
+        console.log('info: ', info);
+        setIsOpen(false);
+        form.reset();
+      }
     }
 
     loading.value = false;
@@ -238,6 +259,21 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                         </div>
                         <div class='col-span-1'>
                           <DateField name='end' label='h_date_end' />
+                        </div>
+                        <div class='col-span-2'>
+                          <Field<string>
+                            name='format'
+                            initialValue='pdf'
+                          >
+                            {({ input }) => (
+                              <SelectCheck
+                                input={input}
+                                options={format.value}
+                                label='h_format'
+                                loading={loading.value}
+                              />
+                            )}
+                          </Field>
                         </div>
                       </div>
                     </div>
