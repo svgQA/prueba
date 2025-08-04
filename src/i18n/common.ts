@@ -43,6 +43,8 @@ export const common_es = {
   profile: 'Perfil',
   instructions: 'Instrucciones',
   no_results: 'No hay resultados',
+  send: 'Enviar',
+  answer: 'Respuesta',
 };
 
 export const common_en = {
@@ -94,4 +96,6 @@ export const common_en = {
   profile: 'Profile',
   instructions: 'Instructions',
   no_results: 'No results',
+  send: 'Send',
+  answer: 'Answer',
 };

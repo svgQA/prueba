@@ -3,6 +3,7 @@ import { useCallback, useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import { IaService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { useTranslation } from 'react-i18next';
 import {
   MentionEditor,
   MentionOption,
@@ -22,7 +23,7 @@ export const PlannerView: FunctionalComponent<{
   const [streamingResponse, setStreamingResponse] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [shifts, setShifts] = useState<Shift[]>([]);
-
+  const { t } = useTranslation();
   const handleShiftUpdate = useCallback((_: Shift) => {
     // console.log('Turno actualizado:', turnoActualizado);
   }, []);
@@ -56,7 +57,7 @@ export const PlannerView: FunctionalComponent<{
     } catch (error) {
       setIsStreaming(false);
       ToastManager.error(
-        `Error al enviar el prompt: ${error instanceof Error ? error.message : 'Error desconocido'}`
+        `${t('s_error_send_prompt')} ${error instanceof Error ? error.message : t('s_error_unknown')}`
       );
     }
   }, [currentPrompt.value]);
@@ -70,7 +71,7 @@ export const PlannerView: FunctionalComponent<{
             disabled={!currentPrompt.value.trim() || isStreaming}
             className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed'
           >
-            Enviar
+            {t('send')}
           </button>
         </div>
         <MentionEditor
@@ -88,7 +89,7 @@ export const PlannerView: FunctionalComponent<{
         {streamingResponse && (
           <div className='mt-4 p-4 bg-gray-50 rounded-md'>
             <div className='text-sm font-medium text-gray-700 mb-2'>
-              Respuesta:
+              {t('answer')}:
             </div>
             <div className='text-sm whitespace-pre-wrap'>
               {streamingResponse}

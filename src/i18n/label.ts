@@ -35,6 +35,17 @@ export const label_es = {
   l_question: 'Pregunta',
   l_type: 'Tipo de respuesta',
   l_request_report: '¿Esta es una solicitud de reporte a la central?',
+  l_active_shift: 'Solo con turno activo',
+  l_clear_user: 'Limpiar selección de usuarios',
+  l_template: 'Plantilla',
+  l_place: 'Lugar',
+  l_custom_title: 'Título personalizado',
+  l_custom_description: 'Descripción personalizada',
+  l_send_notification: 'Enviar notificación',
+  l_replicate_until: 'Replicar Hasta',
+  l_delete: 'Eliminar',
+  l_replicate: 'Replicar',
+  l_remote_supervision: 'Supervisión Remota',
 };
 
 export const label_en = {
@@ -74,4 +85,15 @@ export const label_en = {
   l_question: 'Question',
   l_type: 'Answer type',
   l_request_report: 'Is this a request for a report to the central?',
+  l_active_shift: 'Only with active shift',
+  l_clear_user: 'Clear user selection',
+  l_template: 'Template',
+  l_place: 'Place',
+  l_custom_title: 'Custom title',
+  l_custom_description: 'Custom description',
+  l_send_notification: 'Send notification',
+  l_replicate_until: 'Replicate until',
+  l_delete: 'Delete',
+  l_replicate: 'Replicate',
+  l_remote_supervision: 'Remote supervision',
 };

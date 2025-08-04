@@ -41,16 +41,14 @@ export const TemplateManager = () => {
       setError('');
       fetchTemplates();
     } catch (err: any) {
-      console.error('Error creando plantilla:', err);
-      setError(t('shifts.notifications.templates.errorInvalid'));
+      console.error(t('s_error_template'), err);
+      setError(t('s_error_template_invalid'));
     }
   };
 
   return (
     <div className='space-y-4'>
-      <h4 className='text-md font-medium'>
-        {t('shifts.notifications.templates.management')}
-      </h4>
+      <h4 className='text-md font-medium'>{t('h_management')}</h4>
 
       <div className='border rounded border-gray-200 bg-white shadow-sm divide-y'>
         {templates.map((tpl) => (
@@ -69,24 +67,20 @@ export const TemplateManager = () => {
         <div className='space-y-2'>
           <input
             type='text'
-            placeholder={t('shifts.notifications.templates.titlePlaceholder')}
+            placeholder={t('p_titlePlaceholder')}
             value={title}
             onInput={(e) => setTitle(e.currentTarget.value)}
             className='w-full border px-3 py-2 rounded text-sm'
           />
           <textarea
-            placeholder={t(
-              'shifts.notifications.templates.descriptionPlaceholder'
-            )}
+            placeholder={t('p_descriptionPlaceholder')}
             rows={2}
             value={description}
             onInput={(e) => setDescription(e.currentTarget.value)}
             className='w-full border px-3 py-2 rounded text-sm'
           ></textarea>
           <textarea
-            placeholder={t(
-              'shifts.notifications.templates.dataJsonPlaceholder'
-            )}
+            placeholder={t('p_dataJsonPlaceholder')}
             rows={3}
             value={dataJson}
             onInput={(e) => setDataJson(e.currentTarget.value)}
@@ -99,7 +93,7 @@ export const TemplateManager = () => {
             onClick={handleCreate}
             className='px-4 py-2 bg-cyan-600 text-white text-sm rounded hover:bg-cyan-700'
           >
-            {t('shifts.notifications.templates.saveButton')}
+            {t('p_saveButton')}
           </button>
         </div>
       </div>

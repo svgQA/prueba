@@ -56,6 +56,11 @@ export const toast_es = {
   s_title_delete: 'Eliminar Turno',
   s_message: '¿Está seguro que desea eliminar el turno?',
   s_success: 'Turno creado exitosamente!',
+  s_error_template: 'Error al crear la plantilla',
+  s_error_template_invalid:
+    'Error al crear plantilla. Asegúrate de que el JSON es válido.',
+  s_error_send_prompt: 'Error al enviar el prompt',
+  s_error_unknown: 'Error desconocido',
 };
 
 export const toast_en = {
@@ -116,4 +121,9 @@ export const toast_en = {
   s_title_delete: 'Delete Shift',
   s_message: 'Are you sure you want to delete the shift?',
   s_success: 'Shift created successfully!',
+  s_error_template: 'Error creating template',
+  s_error_template_invalid:
+    'Error creating template. Ensure the JSON is valid.',
+  s_error_send_prompt: 'Error sending prompt',
+  s_error_unknown: 'Unknown error',
 };

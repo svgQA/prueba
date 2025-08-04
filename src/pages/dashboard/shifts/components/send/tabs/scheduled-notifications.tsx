@@ -6,15 +6,15 @@ export const ScheduledNotifications = () => {
   const [scheduled] = useState([
     {
       id: '1',
-      title: t('shifts.notifications.scheduled.reminderTitle'),
-      description: t('shifts.notifications.scheduled.reminderDescription'),
+      title: t('reminder_title'),
+      description: t('reminderDescription'),
       sendAt: '2025-04-03T08:00:00Z',
       status: 'pending',
     },
     {
       id: '2',
-      title: t('shifts.notifications.scheduled.formTitle'),
-      description: t('shifts.notifications.scheduled.formDescription'),
+      title: t('form_title'),
+      description: t('formDescription'),
       sendAt: '2025-04-01T14:00:00Z',
       status: 'sent',
     },
@@ -22,9 +22,7 @@ export const ScheduledNotifications = () => {
 
   return (
     <div className='space-y-4'>
-      <h4 className='text-md font-medium'>
-        {t('shifts.notifications.scheduled.title')}
-      </h4>
+      <h4 className='text-md font-medium'>{t('title_scheduled')}</h4>
 
       <div className='border rounded border-gray-200 bg-white shadow-sm divide-y'>
         {scheduled.map((item) => (
@@ -32,29 +30,22 @@ export const ScheduledNotifications = () => {
             <div className='font-semibold'>{item.title}</div>
             <div className='text-sm text-gray-600'>{item.description}</div>
             <div className='text-xs text-gray-400'>
-              {t('shifts.notifications.scheduled.send')}:{' '}
-              {new Date(item.sendAt).toLocaleString()}
+              {t('send')}: {new Date(item.sendAt).toLocaleString()}
             </div>
             <div className='text-xs'>
-              {t('shifts.notifications.scheduled.status')}:{' '}
-              <span className='font-medium'>
-                {t(`shifts.notifications.scheduled.${item.status}`)}
-              </span>
+              {t('status')}:{' '}
+              <span className='font-medium'>{t(`${item.status}`)}</span>
             </div>
           </div>
         ))}
       </div>
 
       <div className='border-t pt-4'>
-        <h5 className='text-sm font-semibold mb-2'>
-          {t('shifts.notifications.scheduled.scheduleNew')}
-        </h5>
+        <h5 className='text-sm font-semibold mb-2'>{t('scheduleNew')}</h5>
         <div className='space-y-2'>
           <input
             type='text'
-            placeholder={t(
-              'shifts.notifications.scheduled.titleOverridePlaceholder'
-            )}
+            placeholder={t('titleOverridePlaceholder')}
             className='w-full border px-3 py-2 rounded text-sm'
           />
           <input
@@ -62,7 +53,7 @@ export const ScheduledNotifications = () => {
             className='w-full border px-3 py-2 rounded text-sm'
           />
           <button className='px-4 py-2 bg-cyan-600 text-white text-sm rounded hover:bg-cyan-700'>
-            {t('shifts.notifications.scheduled.scheduleButton')}
+            {t('scheduleButton')}
           </button>
         </div>
       </div>
