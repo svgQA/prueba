@@ -8,7 +8,6 @@ import { useSignal } from '@preact/signals';
 import { Input } from '../input/input';
 import { IReport } from '@/types/form';
 import { ReportService } from '@/services/form/reports';
-import { ToastManager } from '@/utils/toast/toast-manager';
 import { ServiceService } from '@/services';
 import { useUserStore } from '@/store/slices';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +16,7 @@ import { DateField } from '@/components/compose/forms';
 import { modulesReport } from '@/types/form';
 import { IOptionCheck } from '../select-check/interface';
 import { SelectCheck } from '../select-check';
+import { fileManager } from '@/utils/network/file/file';
 
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const { t } = useTranslation();
@@ -65,67 +65,22 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       endDate: DateUtils.dateToBackend(model.end),
     };
 
-    if (model.format === 'pdf') {
-      const reportResponse = await ReportService.create_report_automatic(report);
-      if (reportResponse.getStatus()) {
-        downloadReport(reportResponse.getOne());
-        setIsOpen(false);
-        form.reset();
-      }
-    } else if (model.format === 'excel') {
-      const reportResponse = await ReportService.create_report_automatic_excel(report);
-      if (reportResponse.getStatus()) {
-        const info = reportResponse.getMany();
-        console.log('info: ', info);
-        setIsOpen(false);
-        form.reset();
-      }
+    let reportResponse = await (model.format === 'pdf'
+      ? ReportService.create_report_automatic(report)
+      : ReportService.create_report_automatic_excel(report));
+
+    if (reportResponse.getStatus()) {
+      const info: any = (model.format === 'pdf') ? reportResponse.getOne() : reportResponse.getMany();
+      model.format === 'pdf'
+        ? await fileManager.downloadFile(info)
+        : await fileManager.generateExcel(info.map((item: any) => ({ header: item.name, data: item.table })), 'report.xlsx');
+      setIsOpen(false);
+      form.reset();
     }
 
     loading.value = false;
   };
 
-  const downloadReport = async (urlObj: { url: string }) => {
-    if (!urlObj?.url) {
-      ToastManager.error('s_errorUrl');
-      return;
-    }
-
-    const url = urlObj.url;
-
-    try {
-      const response = await fetch(url, { method: 'GET' });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      const disposition = response.headers.get('Content-Disposition'); // Extraer nombre desde Content-Disposition si existe
-      let filename = 'Report.pdf';
-
-      if (disposition && disposition.includes('filename=')) {
-        const match = disposition.match(
-          /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
-        );
-        if (match?.[1]) {
-          filename = match[1].replace(/['"]/g, ''); // limpia comillas si vienen
-        }
-      }
-
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(downloadUrl);
-      ToastManager.success(`'s_title' ${filename} 's_download_file_success'`);
-    } catch (error) {
-      ToastManager.error('s_download_file_error');
-    }
-  };
 
   const footerContent = useMemo(
     () => (
