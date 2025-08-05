@@ -1,22 +1,22 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { ReportAutomaticProps } from './interface';
 import { Button } from '../button/button';
-import { Modal } from '../modal/modal';
 import { IOption, SmartSelector } from '../smart-selector/smart-select';
 import { Field, Form } from 'react-final-form';
 import { useSignal } from '@preact/signals';
 import { Input } from '../input/input';
-import { IReport } from '@/types/form';
+import { IReport, modulesReport } from '@/types/form';
 import { ReportService } from '@/services/form/reports';
 import { ServiceService } from '@/services';
 import { useUserStore } from '@/store/slices';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
 import { DateField } from '@/components/compose/forms';
-import { modulesReport } from '@/types/form';
 import { IOptionCheck, SelectCheck } from '../select-check';
 import { fileManager } from '@/utils/network/file/file';
 import { IExcelGenerate } from '@/utils/network/file/interface';
+import { ExpandeableContent } from './expandeable-content';
+import { useTranslation } from 'react-i18next';
 
 interface ReportFinishedSubmit {
   model: any;
@@ -140,11 +140,9 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         />
       </div>
       {isOpen && (
-        <Modal
-          name='report-automatic-modal'
-          open={isOpen}
+        <ExpandeableContent
+          isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          title={t('s_title_automatic')}
           width='min-w-[800px]'
           header={<h3>{modules === modulesReport.Memo ? t('s_title_history') : t('s_title')}</h3>}
           footer={footerContent}
@@ -254,7 +252,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
               }}
             />
           </div>
-        </Modal>
+        </ExpandeableContent>
       )}
     </div>
   );
