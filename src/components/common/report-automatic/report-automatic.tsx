@@ -16,6 +16,15 @@ import { DateField } from '@/components/compose/forms';
 import { modulesReport } from '@/types/form';
 import { IOptionCheck, SelectCheck } from '../select-check';
 import { fileManager } from '@/utils/network/file/file';
+import { IExcelGenerate } from '@/utils/network/file/interface';
+
+interface ReportFinishedSubmit {
+  model: any;
+  form: any;
+  report?: IReport;
+  startDate?: Date | string;
+  endDate?: Date | string;
+}
 
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const { t } = useTranslation();
@@ -50,6 +59,10 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const onSubmit = async (model: any, form: any) => {
     loading.value = true;
 
+    if (model.format === 'excel') {
+      return await handleFinishedSubmit({ model, form, startDate: model.start, endDate: model.end } as ReportFinishedSubmit);
+    }
+
     let report: IReport = {
       title: model.title,
       subtitle: model.subtitle,
@@ -64,22 +77,24 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       endDate: DateUtils.dateToBackend(model.end),
     };
 
-    let reportResponse = await (model.format === 'pdf'
+    await handleFinishedSubmit({ model, form, report } as ReportFinishedSubmit);
+    loading.value = false;
+  };
+
+  const handleFinishedSubmit = async ({ model, form, report, startDate = new Date(), endDate = new Date() }: ReportFinishedSubmit) => {
+    let reportResponse = await ((model.format === 'pdf' && report)
       ? ReportService.create_report_automatic(report)
-      : ReportService.create_report_automatic_excel(report));
+      : ReportService.create_report_automatic_excel({ startDate, endDate }));
 
     if (reportResponse.getStatus()) {
       const info: any = (model.format === 'pdf') ? reportResponse.getOne() : reportResponse.getMany();
       model.format === 'pdf'
         ? await fileManager.downloadFile(info)
-        : await fileManager.generateExcel(info.map((item: any) => ({ header: item.name, data: item.table })), 'report');
+        : await fileManager.generateExcel([{ header: 't_memo', data: info } as IExcelGenerate], 'report');
       setIsOpen(false);
       form.reset();
     }
-
-    loading.value = false;
-  };
-
+  }
 
   const footerContent = useMemo(
     () => (
@@ -146,6 +161,24 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                     id='form-report-automatic-create'
                     onKeyDown={preventKeyDown}
                   >
+                    <div class='col-span-2'>
+                      <Field<string>
+                        name='format'
+                        initialValue='pdf'
+                      >
+                        {({ input }) => (
+                          <SelectCheck
+                            {...input}
+                            options={format.value}
+                            label='h_format'
+                            loading={loading.value}
+                            onChange={(option: any) => {
+                              input.onChange(option.value);
+                            }}
+                          />
+                        )}
+                      </Field>
+                    </div>
                     <Field<IOption> name='projects'>
                       {({ input, meta }) => (
                         <SmartSelector
@@ -213,24 +246,6 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                         </div>
                         <div class='col-span-1'>
                           <DateField name='end' label='h_date_end' />
-                        </div>
-                        <div class='col-span-2'>
-                          <Field<string>
-                            name='format'
-                            initialValue='pdf'
-                          >
-                            {({ input }) => (
-                              <SelectCheck
-                                {...input}
-                                options={format.value}
-                                label='h_format'
-                                loading={loading.value}
-                                onChange={(option: any) => {
-                                  input.onChange(option.value);
-                                }}
-                              />
-                            )}
-                          </Field>
                         </div>
                       </div>
                     </div>

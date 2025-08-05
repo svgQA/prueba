@@ -1,5 +1,6 @@
 import { IPagination } from '@/types';
 import {
+  IExcelGenerateRequest,
   IReportRequest,
   IReportResponse,
   IResponseResponse,
@@ -65,9 +66,9 @@ export class ReportService extends BaseService {
     return await super.make_request<{ url: string }>(this.sname, model);
   }
 
-  static async create_report_automatic_excel(data: IReportRequest) {
+  static async create_report_automatic_excel(data: IExcelGenerateRequest) {
     const model: IMakeRequest = {
-      url: ['reportIa', 'generate-excel'],
+      url: ['reportIa', 'generate-excel-memo'],
       method: REQUEST_METHODS.POST,
       data,
     };

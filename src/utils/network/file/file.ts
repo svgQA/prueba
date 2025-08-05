@@ -1,6 +1,7 @@
 import { ToastManager } from "@/utils/toast/toast-manager";
 import { IExcelGenerate } from "./interface";
 import ExcelJS from 'exceljs';
+import i18n from "@/i18n";
 
 export class fileManager {
     static async downloadFile(urlObj: { url: string }) {
@@ -50,7 +51,7 @@ export class fileManager {
         fileName: string
     ) {
         const processedInformation: IExcelGenerate[] = info.map(item => ({
-            ...item,
+            header: i18n.t(item.header),
             data: item.data?.map(obj => {
                 const { resource, ...rest } = obj;
                 return rest;

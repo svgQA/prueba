@@ -28,7 +28,7 @@ interface IGroups {
   };
 }
 
-export interface UResponseRequest extends Omit<IResponseRequest, 'formId'> {}
+export interface UResponseRequest extends Omit<IResponseRequest, 'formId'> { }
 
 export interface IListRequest {
   name: string;
@@ -42,7 +42,7 @@ export interface IListResponse extends IListRequest {
   deletedAt?: Date;
 }
 
-export interface IReportRequest extends IReport {}
+export interface IReportRequest extends IReport { }
 
 export interface IReportResponse extends IReportRequest {
   id: number;
@@ -66,3 +66,10 @@ export interface IResponseResponse extends IResponseRequest {
   updatedAt?: Date;
   deletedAt?: Date;
 }
+
+export interface IExcelGenerateRequest {
+  startDate: Date | string;
+  endDate: Date | string;
+}
+
+
