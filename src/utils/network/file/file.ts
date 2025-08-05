@@ -57,7 +57,7 @@ export class fileManager {
             }) ?? []
         })).filter(item => item.data && item.data.length > 0);
         const information: IExcelGenerate[] = processedInformation;
-        
+
         try {
             const workbook = new ExcelJS.Workbook();
             const worksheet = workbook.addWorksheet('Report');
@@ -69,56 +69,78 @@ export class fileManager {
                     currentRow++;
                 }
 
+                // Header principal (título)
+                let allKeys: string[] = [];
+                if (dataSet.data && dataSet.data.length > 0) {
+                    allKeys = Array.from(new Set(dataSet.data.flatMap(item => Object.keys(item))));
+                }
                 if (dataSet.header) {
-                    const titleRow = worksheet.addRow([dataSet.header]);
-                    titleRow.font = { bold: true, size: 14 };
-                    titleRow.alignment = { horizontal: 'center' };
+                    // Crear una fila vacía con el mismo número de columnas que allKeys para el título
+                    const titleRow = worksheet.addRow(Array(allKeys.length).fill(''));
+                    // Colocar el texto del header en la primera celda
+                    titleRow.getCell(1).value = dataSet.header;
+                    // Combinar el rango de columnas con datos (horizontalmente)
+                    if (allKeys.length > 1) {
+                        worksheet.mergeCells(`A${titleRow.number}:${String.fromCharCode(65 + allKeys.length - 1)}${titleRow.number}`);
+                    }
+                    // Formato centrado y color
+                    titleRow.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+                    titleRow.getCell(1).font = { bold: true, size: 16, color: { argb: 'FF4472C4' } };
                     currentRow++;
-                    worksheet.addRow([]);
-                    currentRow++;
+                    // No agregamos fila vacía aquí
                 }
 
-                if (dataSet.data && dataSet.data.length > 0) {
-                    const allKeys = Array.from(new Set(dataSet.data.flatMap(item => Object.keys(item))));
+                if (allKeys.length > 0) {
+                    // Encabezado de columnas
                     const headerRow = worksheet.addRow(allKeys);
-                    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
-                    headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4472C4' } };
+                    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
                     headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
-                    headerRow.border = {
-                        top: { style: 'thin', color: { argb: 'FF000000' } },
-                        bottom: { style: 'thin', color: { argb: 'FF000000' } },
-                        left: { style: 'thin', color: { argb: 'FF000000' } },
-                        right: { style: 'thin', color: { argb: 'FF000000' } }
-                    };
+                    // Solo aplicar el fondo azul a las celdas con datos
+                    allKeys.forEach((_, idx) => {
+                        const cell = headerRow.getCell(idx + 1);
+                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4472C4' } };
+                        cell.border = {
+                            top: { style: 'medium', color: { argb: 'FF4472C4' } },
+                            bottom: { style: 'medium', color: { argb: 'FF4472C4' } },
+                            left: { style: 'medium', color: { argb: 'FF4472C4' } },
+                            right: { style: 'medium', color: { argb: 'FF4472C4' } }
+                        };
+                    });
                     currentRow++;
 
                     dataSet.data.forEach((item, idx) => {
                         const row = worksheet.addRow(allKeys.map(key => item[key] ?? ''));
+                        row.alignment = { horizontal: 'center', vertical: 'middle' };
                         row.border = {
-                            top: { style: 'thin', color: { argb: 'FF000000' } },
-                            bottom: { style: 'thin', color: { argb: 'FF000000' } },
-                            left: { style: 'thin', color: { argb: 'FF000000' } },
-                            right: { style: 'thin', color: { argb: 'FF000000' } }
+                            top: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+                            bottom: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+                            left: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+                            right: { style: 'thin', color: { argb: 'FFCCCCCC' } }
                         };
                         // Alternar color de fondo en filas
-                        if (idx % 2 === 1) {
-                            row.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F2F2' } };
-                        }
+                        row.fill = idx % 2 === 0
+                            ? { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } }
+                            : { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F2F2' } };
                         currentRow++;
                     });
                 }
             });
 
-            // Auto-ajustar ancho de columnas
-            worksheet.columns.forEach(column => {
+            // Ajustar ancho de columnas según el contenido máximo de cada columna
+            worksheet.columns.forEach((column, _i) => {
                 let maxLength = 10;
-                if (typeof column.eachCell === 'function') {
-                    column.eachCell({ includeEmpty: true }, cell => {
-                        const cellValue = cell.value ? String(cell.value) : '';
-                        maxLength = Math.max(maxLength, cellValue.length);
-                    });
-                }
-                column.width = Math.min(maxLength + 2, 50);
+                column.eachCell?.({ includeEmpty: true }, cell => {
+                    const cellValue = cell.value ? String(cell.value) : '';
+                    maxLength = Math.max(maxLength, cellValue.length);
+                });
+                column.width = Math.min(maxLength + 2, 30); // Limita a 30 para evitar columnas muy largas
+            });
+
+            // Ajustar la selección visual de celdas (centrado y bordes)
+            worksheet.eachRow({ includeEmpty: false }, row => {
+                row.eachCell(cell => {
+                    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+                });
             });
 
             const buffer = await workbook.xlsx.writeBuffer();

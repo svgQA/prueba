@@ -14,8 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
 import { DateField } from '@/components/compose/forms';
 import { modulesReport } from '@/types/form';
-import { IOptionCheck } from '../select-check/interface';
-import { SelectCheck } from '../select-check';
+import { IOptionCheck, SelectCheck } from '../select-check';
 import { fileManager } from '@/utils/network/file/file';
 
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
@@ -73,7 +72,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       const info: any = (model.format === 'pdf') ? reportResponse.getOne() : reportResponse.getMany();
       model.format === 'pdf'
         ? await fileManager.downloadFile(info)
-        : await fileManager.generateExcel(info.map((item: any) => ({ header: item.name, data: item.table })), 'report.xlsx');
+        : await fileManager.generateExcel(info.map((item: any) => ({ header: item.name, data: item.table })), 'report');
       setIsOpen(false);
       form.reset();
     }
@@ -222,10 +221,13 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                           >
                             {({ input }) => (
                               <SelectCheck
-                                input={input}
+                                {...input}
                                 options={format.value}
                                 label='h_format'
                                 loading={loading.value}
+                                onChange={(option: any) => {
+                                  input.onChange(option.value);
+                                }}
                               />
                             )}
                           </Field>

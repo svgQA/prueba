@@ -1,14 +1,31 @@
 import { useTranslation } from "react-i18next";
-import { IOptionCheck, SelectCheckProps } from "./interface";
+import { useField } from "react-final-form";
+import { IOption } from "../smart-selector/smart-select";
 
-export const SelectCheck = ({
-    input,
+export interface IOptionCheck extends IOption {
+    icon: string;
+    color?: string;
+}
+
+interface Props<T = IOptionCheck> {
+    name: string;
+    // input: SelectCheckInputProps;
+    options: T[];
+    label?: string;
+    onChange?: (value: any) => void;
+    loading?: boolean;
+}
+
+export function SelectCheck<T = IOption>({
+    name,
     options,
     label,
+    onChange,
     loading = false
-}: SelectCheckProps) => {
+}: Props<T>) {
     const { t } = useTranslation();
-
+    const { input } = useField<IOptionCheck[] | IOptionCheck | string>(name);
+    
     return (
         <>
             {label && (
@@ -17,15 +34,18 @@ export const SelectCheck = ({
                 </label>
             )}
             <div className='flex gap-2'>
-                {options.map((option: IOptionCheck) => (
+                {options.map((option: any) => (
                     <label key={option.value} className='relative flex-1 cursor-pointer'>
                         <input
-                            {...input}
                             type='radio'
                             value={option.value}
                             checked={input.value === option.value}
                             className='sr-only'
                             disabled={loading}
+                            onChange={(_e) => {
+                                input.onChange(option.value);
+                                onChange?.(option);
+                            }}
                         />
                         <div className={`
                         flex items-center justify-center p-1.5 rounded-md border transition-all duration-200 min-h-[35px]
