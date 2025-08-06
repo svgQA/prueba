@@ -14,6 +14,7 @@ interface Props<T = IOptionCheck> {
     label?: string;
     onChange?: (value: any) => void;
     loading?: boolean;
+    size?: 'sm' | 'md' | 'lg';
 }
 
 export function SelectCheck<T = IOption>({
@@ -21,7 +22,8 @@ export function SelectCheck<T = IOption>({
     options,
     label,
     onChange,
-    loading = false
+    loading = false,
+    size = 'sm'
 }: Props<T>) {
     const { t } = useTranslation();
     const { input } = useField<IOptionCheck[] | IOptionCheck | string>(name);
@@ -33,7 +35,13 @@ export function SelectCheck<T = IOption>({
                     {t(label)}
                 </label>
             )}
-            <div className='flex gap-2'>
+            <div
+                className={`flex gap-2 ${
+                  size === 'sm' ? 'min-h-[35px] text-xs' :
+                  size === 'md' ? 'min-h-[55px] text-base' :
+                  size === 'lg' ? 'min-h-[70px] text-xl' : ''
+                }`}
+            >
                 {options.map((option: any) => (
                     <label key={option.value} className='relative flex-1 cursor-pointer'>
                         <input
@@ -48,7 +56,8 @@ export function SelectCheck<T = IOption>({
                             }}
                         />
                         <div className={`
-                        flex items-center justify-center p-1.5 rounded-md border transition-all duration-200 min-h-[35px]
+                        flex items-center justify-center p-1.5 rounded-md border transition-all duration-200
+                        ${size === 'sm' ? 'min-h-[35px]' : size === 'md' ? 'min-h-[55px]' : size === 'lg' ? 'min-h-[70px]' : ''}
                         ${input.value === option.value
                                 ? `border-${option.color || 'primary'} bg-${option.color || 'primary'}/10 shadow-sm scale-[1.02]`
                                 : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
@@ -56,11 +65,19 @@ export function SelectCheck<T = IOption>({
                         ${loading ? 'opacity-50 cursor-not-allowed' : ''}
                     `}>
                             <div className='flex flex-col items-center gap-0.5'>
-                                <span className={`vox-icon vx-icon-${option.icon} text-sm ${input.value === option.value
+                                <span className={`vox-icon vx-icon-${option.icon} ${
+                                  size === 'sm' ? 'text-sm' :
+                                  size === 'md' ? 'text-lg' :
+                                  size === 'lg' ? 'text-2xl' : ''
+                                } ${input.value === option.value
                                     ? `text-${option.color || 'primary'}`
                                     : 'text-gray-500 dark:text-gray-400'
                                     }`} />
-                                <span className={`text-xs font-medium leading-tight ${input.value === option.value
+                                <span className={`${
+                                  size === 'sm' ? 'text-xs' :
+                                  size === 'md' ? 'text-base' :
+                                  size === 'lg' ? 'text-xl' : ''
+                                } font-medium leading-tight ${input.value === option.value
                                     ? `text-${option.color || 'primary'}`
                                     : 'text-gray-700 dark:text-gray-300'
                                     }`}>

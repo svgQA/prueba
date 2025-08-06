@@ -42,7 +42,7 @@ export interface IReport {
 export interface extraDataReport {
   modules: IModuleReport[];
   emails?: string[];
-  projects: IOption[];
+  projects?: IOption[];
 }
 
 export interface IModuleReport {

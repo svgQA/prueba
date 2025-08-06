@@ -19,11 +19,15 @@ import { ExpandeableContent } from './expandeable-content';
 import { useTranslation } from 'react-i18next';
 
 interface ReportFinishedSubmit {
-  model: any;
   form: any;
   report?: IReport;
   startDate?: Date | string;
   endDate?: Date | string;
+}
+
+export enum SelectCheckType {
+  INTERNO = 'interno',
+  CLIENTE = 'cliente',
 }
 
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
@@ -33,7 +37,8 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const loading = useSignal(false);
   const projects = useSignal<IOption[]>([]);
-  const format = useSignal<IOptionCheck[]>([]);
+  const checkList = useSignal<IOptionCheck[]>([]);
+  const checkListSelected = useSignal<SelectCheckType | null>(null);
 
   useEffect(() => {
     if (selectedCompany) {
@@ -50,17 +55,17 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   }, []);
 
   const getFormatOptions = () => {
-    format.value = [
-      { value: 'pdf', label: 'PDF', icon: '306', color: 'primary' },
-      { value: 'excel', label: 'Excel', icon: '307', color: 'secondary' },
+    checkList.value = [
+      { value: SelectCheckType.INTERNO, label: 'Interno', icon: '306', color: 'primary' },
+      { value: SelectCheckType.CLIENTE, label: 'Cliente', icon: '307', color: 'secondary' },
     ];
   }
 
   const onSubmit = async (model: any, form: any) => {
     loading.value = true;
 
-    if (model.format === 'excel') {
-      return await handleFinishedSubmit({ model, form, startDate: model.start, endDate: model.end } as ReportFinishedSubmit);
+    if (checkListSelected.value === SelectCheckType.INTERNO) {
+      return await handleFinishedSubmit({ form, startDate: model.start, endDate: model.end } as ReportFinishedSubmit);
     }
 
     let report: IReport = {
@@ -69,26 +74,26 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       description: model.description,
       extraData: {
         modules: [{ id: 1, name: modules }],
-        projects: Array.isArray(model.projects)
-          ? model.projects
-          : [model.projects],
+        // projects: Array.isArray(model.projects)
+        //   ? model.projects
+        //   : [model.projects],
       },
       startDate: DateUtils.dateToBackend(model.start),
       endDate: DateUtils.dateToBackend(model.end),
     };
 
-    await handleFinishedSubmit({ model, form, report } as ReportFinishedSubmit);
+    await handleFinishedSubmit({ form, report } as ReportFinishedSubmit);
     loading.value = false;
   };
 
-  const handleFinishedSubmit = async ({ model, form, report, startDate = new Date(), endDate = new Date() }: ReportFinishedSubmit) => {
-    let reportResponse = await ((model.format === 'pdf' && report)
+  const handleFinishedSubmit = async ({ form, report, startDate = new Date(), endDate = new Date() }: ReportFinishedSubmit) => {
+    let reportResponse = await ((checkListSelected.value === SelectCheckType.CLIENTE && report)
       ? ReportService.create_report_automatic(report)
       : ReportService.create_report_automatic_excel({ startDate, endDate }));
 
     if (reportResponse.getStatus()) {
-      const info: any = (model.format === 'pdf') ? reportResponse.getOne() : reportResponse.getMany();
-      model.format === 'pdf'
+      const info: any = (checkListSelected.value === SelectCheckType.CLIENTE) ? reportResponse.getOne() : reportResponse.getMany();
+      checkListSelected.value === SelectCheckType.CLIENTE
         ? await fileManager.downloadFile(info)
         : await fileManager.generateExcel([{ header: 't_memo', data: info } as IExcelGenerate], 'report');
       setIsOpen(false);
@@ -120,6 +125,12 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     []
   );
 
+  const onClose = () => {
+    setIsOpen(false);
+    loading.value = false;
+    checkListSelected.value = null;
+  };
+
   const preventKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -142,15 +153,15 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       {isOpen && (
         <ExpandeableContent
           isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
+          onClose={onClose}
           width='min-w-[800px]'
           header={<h3>{modules === modulesReport.Memo ? t('s_title_history') : t('s_title')}</h3>}
-          footer={footerContent}
+          footer={checkListSelected.value !== null ? footerContent : null}
         >
           <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
             <Form
               onSubmit={onSubmit}
-              initialValues={() => { }}
+              initialValues={{}}
               render={({ handleSubmit }) => {
                 return (
                   <form
@@ -159,25 +170,25 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                     id='form-report-automatic-create'
                     onKeyDown={preventKeyDown}
                   >
-                    <div class='col-span-2'>
+                    {checkListSelected.value === null && (
                       <Field<string>
-                        name='format'
-                        initialValue='pdf'
+                        name='typeCheck'
                       >
                         {({ input }) => (
                           <SelectCheck
                             {...input}
-                            options={format.value}
-                            label='h_format'
+                            options={checkList.value}
                             loading={loading.value}
                             onChange={(option: any) => {
                               input.onChange(option.value);
+                              checkListSelected.value = option.value as SelectCheckType;
                             }}
+                            size='md'
                           />
                         )}
                       </Field>
-                    </div>
-                    <Field<IOption> name='projects'>
+                    )}
+                    {/* <Field<IOption> name='projects'>
                       {({ input, meta }) => (
                         <SmartSelector
                           {...input}
@@ -191,54 +202,59 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                           disabled={loading.value}
                         />
                       )}
-                    </Field>
-                    <div className='flex flex-col justify-center border-t dark:border-t-light-dark py-2'>
-                      <div className='grid grid-cols-2 gap-3'>
-                        <div className='col-span-1'>
-                          <Field<string> name='title'>
-                            {({ input, meta }) => (
-                              <Input
-                                {...input}
-                                placeholder='h_title'
-                                label='h_title'
-                                meta={meta}
-                                icon='120'
-                                type='text'
-                                disabled={loading.value}
-                              />
-                            )}
-                          </Field>
-                        </div>
-                        <div className='col-span-1'>
-                          <Field<string> name='subtitle'>
-                            {({ input, meta }) => (
-                              <Input
-                                {...input}
-                                placeholder='h_subtitle'
-                                label='h_subtitle'
-                                meta={meta}
-                                icon='120'
-                                type='text'
-                                disabled={loading.value}
-                              />
-                            )}
-                          </Field>
-                        </div>
-                        <div className='col-span-2'>
-                          <Field<string> name='description'>
-                            {({ input, meta }) => (
-                              <Input
-                                {...input}
-                                placeholder='h_description'
-                                label='h_description'
-                                meta={meta}
-                                icon='120'
-                                type='text'
-                                disabled={loading.value}
-                              />
-                            )}
-                          </Field>
-                        </div>
+                    </Field> */}
+                    {checkListSelected.value !== null && (
+                      <div className='py-2 grid grid-cols-2 gap-3'>
+                        {checkListSelected.value === SelectCheckType.CLIENTE && (
+                          <>
+                            <div className='col-span-1'>
+                              <Field<string> name='title'>
+                                {({ input, meta }) => (
+                                  <Input
+                                    {...input}
+                                    placeholder='h_title'
+                                    label='h_title'
+                                    meta={meta}
+                                    icon='120'
+                                    type='text'
+                                    disabled={loading.value}
+                                  />
+                                )}
+                              </Field>
+                            </div>
+                            <div className='col-span-1'>
+                              <Field<string> name='subtitle'>
+                                {({ input, meta }) => (
+                                  <Input
+                                    {...input}
+                                    placeholder='h_subtitle'
+                                    label='h_subtitle'
+                                    meta={meta}
+                                    icon='120'
+                                    type='text'
+                                    disabled={loading.value}
+                                  />
+                                )}
+                              </Field>
+                            </div>
+                            <div className='col-span-2'>
+                              <Field<string> name='description'>
+                                {({ input, meta }) => (
+                                  <Input
+                                    {...input}
+                                    placeholder='h_description'
+                                    label='h_description'
+                                    meta={meta}
+                                    icon='120'
+                                    type='text'
+                                    disabled={loading.value}
+                                  />
+                                )}
+                              </Field>
+                            </div>
+                          </>
+                        )}
+
                         <div class='col-span-1'>
                           <DateField name='start' label='h_date_start' />
                         </div>
@@ -246,7 +262,8 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                           <DateField name='end' label='h_date_end' />
                         </div>
                       </div>
-                    </div>
+                    )}
+
                   </form>
                 );
               }}
