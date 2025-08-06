@@ -5,9 +5,9 @@ import { IOption, SmartSelector } from '../smart-selector/smart-select';
 import { Field, Form } from 'react-final-form';
 import { useSignal } from '@preact/signals';
 import { Input } from '../input/input';
-import { IReport, modulesReport } from '@/types/form';
+import { ICReportAiRequest, modulesReport } from '@/types/form';
 import { ReportService } from '@/services/form/reports';
-import { ServiceService } from '@/services';
+import { ServiceService, UserService } from '@/services';
 import { useUserStore } from '@/store/slices';
 // import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
@@ -17,10 +17,11 @@ import { fileManager } from '@/utils/network/file/file';
 import { IExcelGenerate } from '@/utils/network/file/interface';
 import { ExpandeableContent } from './expandeable-content';
 import { useTranslation } from 'react-i18next';
+import { MentionOption } from '../mention-editor';
 
 interface ReportFinishedSubmit {
   form: any;
-  report?: IReport;
+  report?: ICReportAiRequest;
   startDate?: Date | string;
   endDate?: Date | string;
 }
@@ -38,11 +39,12 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const loading = useSignal(false);
   const projects = useSignal<IOption[]>([]);
   const checkList = useSignal<IOptionCheck[]>([]);
+  const users = useSignal<MentionOption[]>([]);
   const checkListSelected = useSignal<SelectCheckType | null>(null);
 
   useEffect(() => {
     if (selectedCompany) {
-      Promise.all([getServices()]);
+      Promise.all([getServices(), getUsers()]);
       getFormatOptions();
     }
   }, [selectedCompany]);
@@ -51,6 +53,13 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     const request = await ServiceService.getServicesSimpleList();
     if (request.getStatus()) {
       projects.value = request.getMany();
+    }
+  }, []);
+
+  const getUsers = useCallback(async () => {
+    const usersResponse = await UserService.getListUsers();
+    if (usersResponse.getStatus()) {
+      users.value = usersResponse.getMany();
     }
   }, []);
 
@@ -68,7 +77,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       return await handleFinishedSubmit({ form, startDate: model.start, endDate: model.end } as ReportFinishedSubmit);
     }
 
-    let report: IReport = {
+    let report: ICReportAiRequest = {
       title: model.title,
       subtitle: model.subtitle,
       description: model.description,
@@ -80,6 +89,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       },
       startDate: DateUtils.dateToBackend(model.start),
       endDate: DateUtils.dateToBackend(model.end),
+      user: model.userId,
     };
 
     await handleFinishedSubmit({ form, report } as ReportFinishedSubmit);
@@ -207,6 +217,22 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                       <div className='py-2 grid grid-cols-2 gap-3'>
                         {checkListSelected.value === SelectCheckType.CLIENTE && (
                           <>
+                            <div class='col-span-2'>
+                              <Field<IOption> name='userId'>
+                                {({ input, meta }) => (
+                                  <SmartSelector
+                                    {...input}
+                                    meta={meta}
+                                    id='select-user'
+                                    icon='191'
+                                    label='h_user'
+                                    options={users.value}
+                                    menuPortalTarget={document.body}
+                                    placeholder='p_select'
+                                  />
+                                )}
+                              </Field>
+                            </div>
                             <div className='col-span-1'>
                               <Field<string> name='title'>
                                 {({ input, meta }) => (
