@@ -56,8 +56,7 @@ export const getColumns = (
 
         return (
           <ul
-            className="flex flex-row gap-3 overflow-x-auto vx-scroll-desing pr-2"
-            style={{ maxWidth: '500px' }} // 2 cards (2x208) + margen entre ellas
+            className="flex flex-row gap-3 overflow-x-auto vox-scroll-design pr-2 max-w-[500px]"
           >
             {tasks.map((item, index) => (
               <TaskCard key={index} task={item.task} remove={false} />
