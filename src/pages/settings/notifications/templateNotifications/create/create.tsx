@@ -53,8 +53,6 @@ export const TemplateCreateForm = () => {
       tasks: mappedTasks,
     };
 
-    console.log('🔧 Mapped tasks:', mappedTasks);
-
     const result = await TemplateService.createTemplate(output);
 
     if (!result.getStatus()) {
