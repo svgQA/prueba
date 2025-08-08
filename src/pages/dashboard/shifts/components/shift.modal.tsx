@@ -203,7 +203,7 @@ export const ShiftForm = ({
                 />
                 <Button
                   name='button-accept-replicate'
-                  label={t('l_replicate_until')}
+                  label='l_replicate_until'
                   icon='293'
                   onClick={handleAcceptReplicate}
                 />
@@ -214,7 +214,7 @@ export const ShiftForm = ({
                   (taskData.status === 'CLOSED' && (
                     <Button
                       name='button-delete-shift'
-                      label={t('l_delete')}
+                      label='l_delete'
                       icon='192'
                       onClick={onDeleteShift}
                       className='mx-3 px-4 py-1 text-sm font-medium text-red-700 dark:text-red-400 bg-white dark:bg-b-dark-dark border border-red-300 dark:border-red-700 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
@@ -222,14 +222,14 @@ export const ShiftForm = ({
                   ))}
                 <Button
                   name='button-create-shift'
-                  label={t('l_replicate')}
+                  label='l_replicate'
                   icon='292'
                   onClick={toggleReplicateClick}
                   className='mx-3 px-4 py-1 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-b-dark-dark border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                 />
                 <Button
                   name='button-supervision'
-                  label={t('l_remote_supervision')}
+                  label='l_remote_supervision'
                   icon='092'
                   className='bg-primary text-white py-1 rounded px-4'
                   onClick={onSupervision}

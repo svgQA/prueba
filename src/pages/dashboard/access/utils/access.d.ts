@@ -1,4 +1,4 @@
-import { IUserRequest } from "@/types/auth";
+import { IUserRequest } from '@/types/auth';
 
 export interface IAccess {
   id?: number;

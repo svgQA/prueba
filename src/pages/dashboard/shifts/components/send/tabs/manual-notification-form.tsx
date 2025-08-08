@@ -306,8 +306,8 @@ export const ManualNotificationForm = ({
                 <SmartSelector
                   {...input}
                   meta={meta}
-                  placeholder={t('p_select_place')}
-                  label={t('l_place')}
+                  placeholder='p_select_place'
+                  label='l_place'
                   id='placeId'
                   icon='252'
                   options={places.value}

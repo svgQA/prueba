@@ -16,7 +16,12 @@ import { defaultSummary, IResponseSummary } from '@/services';
 import { Button } from '@/components/common/button/button';
 import { AccessForm } from './components/access.upsert.form';
 import { IRowAction } from '@/components/common/table/interface';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE, SseManager } from '@/utils/network/sse/base';
+import {
+  IBaseSSE,
+  SSE_EVENTS,
+  SSE_TYPE,
+  SseManager,
+} from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 
 export const AccessPage: FunctionalComponent = () => {
@@ -35,12 +40,9 @@ export const AccessPage: FunctionalComponent = () => {
   }, []);
 
   const fetchInitialData = async () => {
-    const [
-      accessesresponse,
-      summaryresponse
-    ] = await Promise.all([
+    const [accessesresponse, summaryresponse] = await Promise.all([
       AccessesService.get_all(),
-      AccessesService.getAccessesSummary()
+      AccessesService.getAccessesSummary(),
     ]);
 
     if (accessesresponse.getStatus()) {
@@ -50,7 +52,7 @@ export const AccessPage: FunctionalComponent = () => {
     if (summaryresponse.getStatus()) {
       summary.value = summaryresponse.getOne();
     }
-  }
+  };
 
   const fetchSSE = useCallback(async () => {
     await SseManager.getQuery(['accesses', 'stream']);
@@ -60,7 +62,9 @@ export const AccessPage: FunctionalComponent = () => {
     const { name, message } = event;
 
     if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
-      const index = accesses.value.findIndex((value: any) => value.id === message.id);
+      const index = accesses.value.findIndex(
+        (value: any) => value.id === message.id
+      );
       if (index < 0) return;
       const copy: IAccess[] = accesses.value;
       copy[index].name = message.name;
