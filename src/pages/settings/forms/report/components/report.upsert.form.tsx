@@ -31,7 +31,6 @@ const ReportUpsertForm = () => {
   const emails = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<any>({});
 
-
   useEffect(() => {
     fetchInitialValues();
   }, [id, modules.value, projects.value, periods.value]);
@@ -59,12 +58,12 @@ const ReportUpsertForm = () => {
       period: periods.value.find((opt) => opt.label === initialData.period), // <-- esto está correcto
       modules: initialData.extraData?.modules
         ? initialData.extraData.modules.map((mod: any) =>
-          modules.value.find((opt) => opt.value === mod.id)
-        )
+            modules.value.find((opt) => opt.value === mod.id)
+          )
         : [],
       projects:
         initialData.extraData?.projects &&
-          initialData.extraData?.projects.length > 0
+        initialData.extraData?.projects.length > 0
           ? projects.value.find(
             (opt) => opt.value === initialData.extraData?.projects?.[0]?.value
           )
@@ -83,9 +82,9 @@ const ReportUpsertForm = () => {
     loading.value = true;
     const selectedModules: IModuleReport[] = Array.isArray(model.modules)
       ? model.modules.map((mod: IOption) => ({
-        name: mod.label,
-        id: mod.value,
-      }))
+          name: mod.label,
+          id: mod.value,
+        }))
       : model.modules
         ? [{ name: model.modules.label, id: model.modules.value }]
         : [];
@@ -100,7 +99,7 @@ const ReportUpsertForm = () => {
         projects: Array.isArray(model.projects)
           ? model.projects
           : [model.projects],
-        emails: model.emails.map((email: IOption) => email.label)
+        emails: model.emails.map((email: IOption) => email.label),
       },
     };
 
@@ -125,7 +124,7 @@ const ReportUpsertForm = () => {
       },
     ];
     setInitialValues({ emails: emails.value, ...initialValues });
-  }
+  };
 
   const preventKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Enter') {

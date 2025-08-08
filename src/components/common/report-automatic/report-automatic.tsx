@@ -167,8 +167,14 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
           isOpen={isOpen}
           onClose={onClose}
           width='min-w-[800px]'
-          header={<h3>{modules === modulesReport.Memo ? t('s_title_history') : t('s_title')}</h3>}
-          footer={checkListSelected.value !== null ? footerContent : null}
+          header={
+            <h3>
+              {modules === modulesReport.Memo
+                ? t('s_title_history')
+                : t('s_title')}
+            </h3>
+          }
+          footer={footerContent}
         >
           <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
             <Form

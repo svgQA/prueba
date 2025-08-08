@@ -93,6 +93,9 @@ export const columns_es = {
   h_check_out: 'Registro de salida',
   h_modules: 'Módulos',
   h_emails: 'Correos electrónicos',
+  h_basic_info: 'Información Básica',
+  h_location_info: 'Información de Ubicación',
+  h_coordinates_and_radius: 'Coordenadas y Radio',
 };
 
 export const columns_en = {
@@ -190,4 +193,7 @@ export const columns_en = {
   h_check_out: 'Check-out',
   h_modules: 'Modules',
   h_emails: 'Emails',
+  h_basic_info: 'Basic information',
+  h_location_info: 'Location information',
+  h_coordinates_and_radius: 'Coordinates and radius',
 };

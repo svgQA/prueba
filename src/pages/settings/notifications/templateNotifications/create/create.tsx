@@ -35,7 +35,9 @@ export const TemplateCreateForm = () => {
   };
 
   const handleSubmit = async (values: any) => {
-    const rawTasks = Array.isArray(tasksResponse.value) ? tasksResponse.value : [];
+    const rawTasks = Array.isArray(tasksResponse.value)
+      ? tasksResponse.value
+      : [];
 
     const mappedTasks = rawTasks.map((t: any) => {
       if (typeof t !== 'object' || !t.name) return t; // puede ser un ID o algo ya válido
@@ -44,7 +46,8 @@ export const TemplateCreateForm = () => {
         ...t,
         formId: t.formId?.value ?? t.formId ?? undefined,
         type: t.type?.value ?? t.type ?? undefined,
-        attachmentType: t.attachmentType?.value ?? t.attachmentType ?? undefined,
+        attachmentType:
+          t.attachmentType?.value ?? t.attachmentType ?? undefined,
       };
     });
 
@@ -63,7 +66,6 @@ export const TemplateCreateForm = () => {
     ToastManager.success('s_send_success');
     redirectToList();
   };
-
 
   const { selectedCompany } = useUserStore();
   useEffect(() => {
