@@ -81,4 +81,5 @@ export interface ICReportAiRequest {
     startDate?: Date | string;
     endDate?: Date | string;
     user?: IOption;
+    sendEmail?: boolean;
 }

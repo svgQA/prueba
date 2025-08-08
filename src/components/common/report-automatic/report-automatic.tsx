@@ -72,6 +72,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
 
   const onSubmit = async (model: any, form: any) => {
     loading.value = true;
+    const sendEmail = !!model.sendEmail;
 
     if (checkListSelected.value === SelectCheckType.INTERNO) {
       return await handleFinishedSubmit({ form, startDate: model.start, endDate: model.end } as ReportFinishedSubmit);
@@ -90,6 +91,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       startDate: DateUtils.dateToBackend(model.start),
       endDate: DateUtils.dateToBackend(model.end),
       user: model.userId,
+      sendEmail,
     };
 
     await handleFinishedSubmit({ form, report } as ReportFinishedSubmit);
@@ -287,6 +289,29 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                         <div class='col-span-1'>
                           <DateField name='end' label='h_date_end' />
                         </div>
+
+                        {checkListSelected.value === SelectCheckType.CLIENTE && (
+                          <div class='col-span-1'>
+                            {/* Nuevo checkbox para enviar email */}
+                            <div className='col-span-2 flex items-center'>
+                              <Field<boolean> name='sendEmail' type='checkbox'>
+                                {({ input }) => (
+                                  <label className='flex items-center gap-2'>
+                                    <input
+                                      type='checkbox'
+                                      name={input.name}
+                                      checked={input.checked}
+                                      onChange={input.onChange}
+                                      onBlur={input.onBlur}
+                                      onFocus={input.onFocus}
+                                    />
+                                    {t('¿Enviar email?')}
+                                  </label>
+                                )}
+                              </Field>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 
