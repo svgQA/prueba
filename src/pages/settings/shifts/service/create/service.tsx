@@ -230,8 +230,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='Ingrese nombre...'
-                      label='name'
+                      placeholder='p_name'
+                      label='l_name'
                       type='text'
                       meta={meta}
                     />
@@ -245,8 +245,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='Seleccione Contrato...'
-                      label='contract'
+                      placeholder='p_contract'
+                      label='l_contract'
                       id='contractId'
                       icon='241'
                       options={projects.value}
@@ -261,8 +261,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='Seleccione lugar...'
-                      label='place'
+                      placeholder='p_select_place'
+                      label='l_place'
                       id='placeId'
                       icon='252'
                       options={places.value}
@@ -276,8 +276,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   {({ input }) => (
                     <SmartSelector
                       {...input}
-                      placeholder='Seleccione ronda...'
-                      label='round'
+                      placeholder='p_select_round'
+                      label='l_round'
                       id='roundId'
                       icon='252'
                       options={rounds.value}
@@ -293,7 +293,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       {...input}
                       min='3'
                       max='300'
-                      placeholder='Ingrese Descripción...'
+                      placeholder='p_element_description'
                       label='description'
                       type='text'
                       meta={meta}

@@ -1,4 +1,5 @@
 import { type FunctionComponent } from 'preact';
+import { useTranslation } from 'react-i18next';
 
 interface SliderProps {
   min?: number;
@@ -23,13 +24,14 @@ export const Slider: FunctionComponent<SliderProps> = ({
   className = '',
   disabled = false,
 }) => {
+  const { t } = useTranslation();
   const percentage = ((value - min) / (max - min)) * 100;
 
   return (
     <div className={`mt-4 ${className}`}>
       {label && (
         <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
-          {label}: {showValue ? value : ''}
+          {t(label)}: {showValue ? value : ''}
         </label>
       )}
       <div

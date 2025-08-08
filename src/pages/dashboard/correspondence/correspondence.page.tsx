@@ -13,7 +13,12 @@ import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 import { EventBus } from '@/utils/network/event.bus';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE, SseManager } from '@/utils/network/sse/base';
+import {
+  IBaseSSE,
+  SSE_EVENTS,
+  SSE_TYPE,
+  SseManager,
+} from '@/utils/network/sse/base';
 
 import { defaultSummary, IResponseSummary } from '@/services';
 import { CorrespondenceService } from '@/services/access/correspondence';
@@ -22,7 +27,6 @@ import { useTranslation } from 'react-i18next';
 
 import { ICorrespondence } from './utils';
 import { getColumns } from './components/correspondence.columns';
-
 
 export const CorrespondencePage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -40,12 +44,9 @@ export const CorrespondencePage: FunctionalComponent = () => {
   }, []);
 
   const fetchInitialData = async () => {
-    const [
-      correspondenceResponse,
-      summaryResponse
-    ] = await Promise.all([
+    const [correspondenceResponse, summaryResponse] = await Promise.all([
       CorrespondenceService.get_all(),
-      CorrespondenceService.getCorrespondenceSummary()
+      CorrespondenceService.getCorrespondenceSummary(),
     ]);
 
     if (correspondenceResponse.getStatus()) {
@@ -55,7 +56,7 @@ export const CorrespondencePage: FunctionalComponent = () => {
     if (summaryResponse.getStatus()) {
       summary.value = summaryResponse.getOne();
     }
-  }
+  };
 
   const fetchSSE = useCallback(async () => {
     await SseManager.getQuery(['correspondences', 'stream']);
@@ -65,7 +66,9 @@ export const CorrespondencePage: FunctionalComponent = () => {
     const { name, message } = event;
 
     if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
-      const index = correspondence.value.findIndex((value: any) => value.id === message.id);
+      const index = correspondence.value.findIndex(
+        (value: any) => value.id === message.id
+      );
       if (index < 0) return;
       const copy: ICorrespondence[] = correspondence.value;
       copy[index].observation = message.observation;
@@ -174,11 +177,10 @@ export const CorrespondencePage: FunctionalComponent = () => {
           expandable={(row: ICorrespondence) => (
             <ExpandableCorrespondence row={row} />
           )}
-        // Si deseas ocultar columnas, p. ej. con visibility
-        // visibility={{ whoPickedUp: true, ... etc}}
+          // Si deseas ocultar columnas, p. ej. con visibility
+          // visibility={{ whoPickedUp: true, ... etc}}
         />
       </div>
-
     </Section>
   );
 };
