@@ -18,12 +18,12 @@ export interface IAccess {
 }
 
 export interface ICheckInAccesses {
-  resource: [],
+  resource: [];
   startDate: string;
 }
 
 export interface ICheckOutAccesses {
-  resource: [],
+  resource: [];
   endDate: string;
 }
 

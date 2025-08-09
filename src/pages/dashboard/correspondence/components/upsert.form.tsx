@@ -7,7 +7,10 @@ import { Form, Field } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/common/button/button';
-import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
+import {
+  IOption,
+  SmartSelector,
+} from '@/components/common/smart-selector/smart-select';
 import { UserService } from '@/services';
 import { ICCorrespondence, ICorrespondence } from '@/types/access';
 import { Correspondence_STATUS } from '@/types/access/service';
@@ -25,7 +28,12 @@ export const CorrespondenceForm = ({ closed, onClose, id }: Props) => {
   const { navigateUpsert } = useNavigation();
 
   const users = useSignal<IOption[]>([]);
-  const status = useSignal<IOption[]>(Object.values(Correspondence_STATUS).map((value, index) => ({ label: value, value: index })));
+  const status = useSignal<IOption[]>(
+    Object.values(Correspondence_STATUS).map((value, index) => ({
+      label: value,
+      value: index,
+    }))
+  );
   const loading = useSignal<boolean>(false);
   const [initialValues, setInitialValues] = useState<any>();
 
@@ -37,9 +45,7 @@ export const CorrespondenceForm = ({ closed, onClose, id }: Props) => {
 
   const fetchInitialValues = async () => {
     // Si necesitas usuarios, mantenlo
-    const [usersResponse] = await Promise.all([
-      UserService.getListUsers(),
-    ]);
+    const [usersResponse] = await Promise.all([UserService.getListUsers()]);
 
     if (usersResponse.getStatus()) {
       users.value = usersResponse.getMany();
@@ -63,7 +69,7 @@ export const CorrespondenceForm = ({ closed, onClose, id }: Props) => {
     const response = await CorrespondenceService.get_by_id(id);
     if (!response.getStatus()) return;
     const initialData = response.getOne();
-    const statusFind = status.value.find(s => s.label === initialData.status);
+    const statusFind = status.value.find((s) => s.label === initialData.status);
 
     setInitialValues({
       sender: initialData.sender || '',

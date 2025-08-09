@@ -8,7 +8,10 @@ import { Form, Field } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/common/button/button';
-import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
+import {
+  IOption,
+  SmartSelector,
+} from '@/components/common/smart-selector/smart-select';
 import { UserService } from '@/services';
 import { DateField } from '@/components/compose/forms';
 import { Signature } from '@/components/common/signature/signature';
@@ -36,9 +39,7 @@ export const AccessForm = ({ closed, onClose, id }: IAccessFormProps) => {
   }, [id, closed]);
 
   const fetchInitialValues = async () => {
-    const [usersResponse] = await Promise.all([
-      UserService.getListUsers(),
-    ]);
+    const [usersResponse] = await Promise.all([UserService.getListUsers()]);
 
     if (usersResponse.getStatus()) {
       users.value = usersResponse.getMany();
@@ -65,7 +66,7 @@ export const AccessForm = ({ closed, onClose, id }: IAccessFormProps) => {
       name: initialData.name || '',
       description: initialData.description || '',
       user: userOption,
-      startDate: initialData.checkIn?.startDate || '',  
+      startDate: initialData.checkIn?.startDate || '',
       signature: initialData.checkIn?.resource || [],
     });
   };
@@ -80,7 +81,7 @@ export const AccessForm = ({ closed, onClose, id }: IAccessFormProps) => {
       checkIn: {
         resource: model.signature,
         startDate: DateUtils.dateToBackend(model.startDate),
-      }
+      },
     };
 
     let response = id
