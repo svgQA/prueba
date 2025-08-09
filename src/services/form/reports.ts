@@ -1,5 +1,7 @@
 import { IPagination } from '@/types';
 import {
+  ICReportAiRequest,
+  IExcelGenerateRequest,
   IReportRequest,
   IReportResponse,
   IResponseResponse,
@@ -56,12 +58,21 @@ export class ReportService extends BaseService {
     return await super.make_request<IReportResponse>(this.sname, model);
   }
 
-  static async create_report_automatic(data: IReportRequest) {
+  static async create_report_automatic(data: ICReportAiRequest) {
     const model: IMakeRequest = {
       url: ['reportIa', 'generate'],
       method: REQUEST_METHODS.POST,
       data,
     };
     return await super.make_request<{ url: string }>(this.sname, model);
+  }
+
+  static async create_report_automatic_excel(data: IExcelGenerateRequest) {
+    const model: IMakeRequest = {
+      url: ['reportIa', 'generate-excel-memo'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any[]>(this.sname, model);
   }
 }

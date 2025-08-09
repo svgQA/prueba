@@ -16,6 +16,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { IElementError } from '@/types/form/error.type';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { useUserStore } from '@/store/slices';
+import type { RefCallback } from 'preact';
 
 const ItemType = {
   QUESTION: 'question',
@@ -35,7 +36,7 @@ export const FormElement = ({
     toggleListModal({ question: question.id, page, section, field: 'options' });
   };
 
-  const [{ isDragging }, ref] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     type: ItemType.QUESTION,
     item: { index },
     collect: (monitor) => ({
@@ -55,6 +56,14 @@ export const FormElement = ({
       isOver: monitor.isOver(),
     }),
   });
+
+  const rowRef: RefCallback<HTMLTableRowElement> = (node) => {
+    if (node) drop(node);
+  };
+
+  const handleRef: RefCallback<HTMLSpanElement> = (node) => {
+    if (node) drag(node);
+  };
 
   const onChangeMulty = (value: IOption[], name?: string) => {
     if (!name) return;
@@ -144,7 +153,7 @@ export const FormElement = ({
   return (
     <>
       <tr
-        ref={drop}
+        ref={rowRef}
         className='vx-form-question relative rounded-2xl bg-white dark:bg-b-dark-dark border-b-2 border-b-light-light dark:border-b-dark-light'
       >
         {question.type === ELEMENT_TYPE.SECTION ? (
@@ -156,7 +165,7 @@ export const FormElement = ({
             {/* className={`${selected ? 'border-2 border-red-300' : ''}`} */}
             <div className='flex flex-row items-center'>
               <span
-                ref={(node) => ref(drop(node))}
+                ref={handleRef}
                 className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
               ></span>
               <Input
@@ -188,7 +197,7 @@ export const FormElement = ({
               )}
               <div className='flex flex-row w-full items-center'>
                 <span
-                  ref={(node) => ref(drop(node))}
+                  ref={handleRef}
                   className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
                 ></span>
                 <Input

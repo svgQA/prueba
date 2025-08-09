@@ -65,7 +65,7 @@ const ReportUpsertForm = () => {
         initialData.extraData?.projects &&
         initialData.extraData?.projects.length > 0
           ? projects.value.find(
-              (opt) => opt.value === initialData.extraData?.projects[0].value
+              (opt) => opt.value === initialData.extraData?.projects?.[0]?.value
             )
           : null,
       emails: initialData.extraData?.emails,

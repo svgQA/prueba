@@ -26,7 +26,7 @@ export interface IReport {
   title: string;
   subtitle?: string;
   description?: string;
-  period?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+  period?: ReportPeriod;
   extraData?: extraDataReport;
   startDate?: Date | string;
   endDate?: Date | string;
@@ -42,7 +42,7 @@ export interface IReport {
 export interface extraDataReport {
   modules: IModuleReport[];
   emails?: string[];
-  projects: IOption[];
+  projects?: IOption[];
 }
 
 export interface IModuleReport {
@@ -54,4 +54,12 @@ export enum modulesReport {
   Shift = 'Shift',
   Memo = 'Memo',
   Form = 'Form',
+}
+
+export enum ReportPeriod {
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+  QUARTERLY = 'QUARTERLY',
+  YEARLY = 'YEARLY',
 }
