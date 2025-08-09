@@ -1,7 +1,7 @@
 // src/pages/dashboard/correspondence/correspondence.page.tsx
 
 import { FunctionalComponent } from 'preact';
-import { useCallback, useEffect } from 'preact/hooks';
+import { /*useCallback,*/ useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 
 import { Section } from '@/components/common/section/section';
@@ -12,21 +12,22 @@ import { Button } from '@/components/common/button/button';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 
-import { EventBus } from '@/utils/network/event.bus';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-  SseManager,
-} from '@/utils/network/sse/base';
+// import { EventBus } from '@/utils/network/event.bus';
+// import {
+//   IBaseSSE,
+//   SSE_EVENTS,
+//   SSE_TYPE,
+//   SseManager,
+// } from '@/utils/network/sse/base';
 
 import { defaultSummary, IResponseSummary } from '@/services';
 import { CorrespondenceService } from '@/services/access/correspondence';
 
 import { useTranslation } from 'react-i18next';
 
-import { ICorrespondence } from './utils';
 import { getColumns } from './components/correspondence.columns';
+import { ICorrespondence } from '@/types/access';
+import { CorrespondenceForm } from './components/upsert.form';
 
 export const CorrespondencePage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -39,8 +40,8 @@ export const CorrespondencePage: FunctionalComponent = () => {
   useEffect(() => {
     document.title = t('p_correspondence');
     fetchInitialData();
-    fetchSSE();
-    EventBus.on(SSE_TYPE.CORRESPONDENCE, handleSSE);
+    // fetchSSE();
+    // EventBus.on(SSE_TYPE.CORRESPONDENCE, handleSSE);
   }, []);
 
   const fetchInitialData = async () => {
@@ -58,25 +59,25 @@ export const CorrespondencePage: FunctionalComponent = () => {
     }
   };
 
-  const fetchSSE = useCallback(async () => {
-    await SseManager.getQuery(['correspondences', 'stream']);
-  }, []);
+  // const fetchSSE = useCallback(async () => {
+  //   await SseManager.getQuery(['correspondences', 'stream']);
+  // }, []);
 
-  const handleSSE = async (event: IBaseSSE) => {
-    const { name, message } = event;
+  // const handleSSE = async (event: IBaseSSE) => {
+  //   const { name, message } = event;
 
-    if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
-      const index = correspondence.value.findIndex(
-        (value: any) => value.id === message.id
-      );
-      if (index < 0) return;
-      const copy: ICorrespondence[] = correspondence.value;
-      copy[index].observation = message.observation;
-      correspondence.value = [...copy];
-    }
+  //   if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
+  //     const index = correspondence.value.findIndex(
+  //       (value: any) => value.id === message.id
+  //     );
+  //     if (index < 0) return;
+  //     const copy: ICorrespondence[] = correspondence.value;
+  //     copy[index].observation = message.observation;
+  //     correspondence.value = [...copy];
+  //   }
 
-    if (name === SSE_EVENTS.CREATE) fetchInitialData();
-  };
+  //   if (name === SSE_EVENTS.CREATE) fetchInitialData();
+  // };
 
   const toggleUpsertModal = () => {
     showUpsertModal.value = !showUpsertModal.value;
@@ -177,10 +178,19 @@ export const CorrespondencePage: FunctionalComponent = () => {
           expandable={(row: ICorrespondence) => (
             <ExpandableCorrespondence row={row} />
           )}
-          // Si deseas ocultar columnas, p. ej. con visibility
-          // visibility={{ whoPickedUp: true, ... etc}}
         />
       </div>
+
+      {showUpsertModal.value && (
+        <CorrespondenceForm
+          closed={showUpsertModal.value}
+          onClose={() => {
+            toggleUpsertModal();
+            fetchInitialData();
+          }}
+          id={idCorrespondence.value}
+        />
+      )}
     </Section>
   );
 };

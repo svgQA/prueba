@@ -1,5 +1,3 @@
-// src/pages/dashboard/correspondence/utils/correspondence.d.ts
-
 /**
  * Estructura de los datos de Correspondencia:
  * - id: identificador único
@@ -21,11 +19,16 @@ export interface ICorrespondence {
   owner: string; // Propietario
   receivedAt: string; // "YYYY-MM-DDTHH:mm:ss" o similar
   houseNumber: string; // "Casa 101", "Apto 302", ...
-  status: 'Entregado' | 'En Portería';
+  status: CorrespondenceStatus;
   whoPickedUp: string;
 
   // Para el expansible
   packageType: string; // "Documentos", "Revista", etc.
   observation: string; // Observaciones libres
   messageToOwner: string; // Mensaje que queremos enviar al propietario
+}
+
+export enum Correspondence_status {
+  Delivered = 'Entregado',
+  InReception = 'En Portería',
 }

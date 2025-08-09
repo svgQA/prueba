@@ -4,7 +4,6 @@ import { useCallback, useEffect } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 // Ajusta si tu Section está en otro lado
 import { Table } from '@/components/common/table/table';
-import { IAccess } from './utils';
 import { getColumns } from './components/access.columns';
 import { ExpandableAccess } from '@/components/compose/table/expandable/access';
 import { CardData } from '@/components/compose/cards';
@@ -23,6 +22,7 @@ import {
   SseManager,
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
+import { IAccess } from '@/types/access/accesses';
 
 export const AccessPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -184,7 +184,10 @@ export const AccessPage: FunctionalComponent = () => {
       {showUpsertModal.value && (
         <AccessForm
           closed={showUpsertModal.value}
-          onClose={toggleUpsertModal}
+          onClose={() => {
+            toggleUpsertModal();
+            fetchInitialData();
+          }}
           id={idAccess.value}
         />
       )}

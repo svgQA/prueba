@@ -4,19 +4,27 @@ export interface IAccess {
   id?: number;
   name: string;
   description: string;
-  checkIn?: string;
-  checkOut?: string;
+  checkIn?: ICheckInAccesses;
+  checkOut?: ICheckOutAccesses;
+  userId?: number;
   user?: IUserAccess;
   createdAt?: string;
   updatedAt?: string;
-  createdBy?: any | null;
-  editedBy?: any | null;
-  deletedBy?: any | null;
 
   // Campos mostrados en el expansible
   // vehicleType: 'Carro' | 'Moto' | 'Bicicleta' | 'Patineta';
   // vehiclePlate: string;
   // observation: string;
+}
+
+export interface ICheckInAccesses {
+  resource: [],
+  startDate: string;
+}
+
+export interface ICheckOutAccesses {
+  resource: [],
+  endDate: string;
 }
 
 export interface IUserAccess extends IUserRequest {

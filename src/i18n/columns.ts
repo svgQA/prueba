@@ -96,6 +96,16 @@ export const columns_es = {
   h_basic_info: 'Información Básica',
   h_location_info: 'Información de Ubicación',
   h_coordinates_and_radius: 'Coordenadas y Radio',
+  h_signature: 'Firma',
+  h_house_number: 'Número de casa',
+  h_received: 'Hora recibido',
+  h_who_picked_up: 'Quién recogió',
+  h_package_type: 'Tipo de paquete',
+  h_observation: 'Observación',
+  h_message_to_owner: 'Mensaje al propietario',
+  h_sender: 'Remitente',
+  h_owner: 'Propietario',
+  h_notification: 'Notificación',
 };
 
 export const columns_en = {
@@ -196,4 +206,14 @@ export const columns_en = {
   h_basic_info: 'Basic information',
   h_location_info: 'Location information',
   h_coordinates_and_radius: 'Coordinates and radius',
+  h_signature: 'Signature',
+  h_house_number: 'House number',
+  h_received: 'Received time',
+  h_who_picked_up: 'Who picked up',
+  h_package_type: 'Package type',
+  h_observation: 'Observation',
+  h_message_to_owner: 'Message to owner',
+  h_sender: 'Sender',
+  h_owner: 'Owner',
+  h_notification: 'Notification',
 };

@@ -1,13 +1,13 @@
 // src/pages/dashboard/correspondence/components/correspondence.columns.tsx
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ICorrespondence } from '../utils';
 import { FormattedDate } from '@/components/compose/forms';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import {
   DropdownActionsMenu,
   IDropdownAction,
 } from '@/components/common/table/components/dropdown.actions.menu';
+import { ICorrespondence } from '@/types/access';
 
 /**
  * Columnas para la tabla de Correspondencia.
