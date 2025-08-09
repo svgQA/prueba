@@ -1,5 +1,5 @@
 // src/pages/dashboard/correspondence/utils/correspondence.data.ts
-import { ICorrespondence } from './correspondence.d';
+import { ICorrespondence } from "@/types/access";
 
 export const correspondenceData: ICorrespondence[] = [
   {
