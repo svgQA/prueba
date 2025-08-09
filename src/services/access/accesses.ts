@@ -1,4 +1,5 @@
 import { IPagination } from '@/types';
+import { ICAccesses } from '@/types/access';
 import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
@@ -25,7 +26,7 @@ export class AccessesService extends BaseService {
     return await super.make_request<any>(this.name, model);
   }
 
-  static async createAccesses(data: any) {
+  static async createAccesses(data: ICAccesses) {
     const model: IMakeRequest = {
       url: ['Accesses'],
       method: REQUEST_METHODS.POST,

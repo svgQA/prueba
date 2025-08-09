@@ -65,17 +65,31 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
 
   const getFormatOptions = () => {
     checkList.value = [
-      { value: SelectCheckType.INTERNO, label: 'Interno', icon: '306', color: 'primary' },
-      { value: SelectCheckType.CLIENTE, label: 'Cliente', icon: '307', color: 'secondary' },
+      {
+        value: SelectCheckType.INTERNO,
+        label: 'Interno',
+        icon: '306',
+        color: 'primary',
+      },
+      {
+        value: SelectCheckType.CLIENTE,
+        label: 'Cliente',
+        icon: '307',
+        color: 'secondary',
+      },
     ];
-  }
+  };
 
   const onSubmit = async (model: any, form: any) => {
     loading.value = true;
     const sendEmail = !!model.sendEmail;
 
     if (checkListSelected.value === SelectCheckType.INTERNO) {
-      return await handleFinishedSubmit({ form, startDate: model.start, endDate: model.end } as ReportFinishedSubmit);
+      return await handleFinishedSubmit({
+        form,
+        startDate: model.start,
+        endDate: model.end,
+      } as ReportFinishedSubmit);
     }
 
     let report: ICReportAiRequest = {
@@ -98,20 +112,32 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     loading.value = false;
   };
 
-  const handleFinishedSubmit = async ({ form, report, startDate = new Date(), endDate = new Date() }: ReportFinishedSubmit) => {
-    let reportResponse = await ((checkListSelected.value === SelectCheckType.CLIENTE && report)
+  const handleFinishedSubmit = async ({
+    form,
+    report,
+    startDate = new Date(),
+    endDate = new Date(),
+  }: ReportFinishedSubmit) => {
+    let reportResponse = await (checkListSelected.value ===
+      SelectCheckType.CLIENTE && report
       ? ReportService.create_report_automatic(report)
       : ReportService.create_report_automatic_excel({ startDate, endDate }));
 
     if (reportResponse.getStatus()) {
-      const info: any = (checkListSelected.value === SelectCheckType.CLIENTE) ? reportResponse.getOne() : reportResponse.getMany();
+      const info: any =
+        checkListSelected.value === SelectCheckType.CLIENTE
+          ? reportResponse.getOne()
+          : reportResponse.getMany();
       checkListSelected.value === SelectCheckType.CLIENTE
         ? await fileManager.downloadFile(info)
-        : await fileManager.generateExcel([{ header: 't_memo', data: info } as IExcelGenerate], 'report');
+        : await fileManager.generateExcel(
+            [{ header: 't_memo', data: info } as IExcelGenerate],
+            'report'
+          );
       setIsOpen(false);
       form.reset();
     }
-  }
+  };
 
   const footerContent = useMemo(
     () => (
@@ -189,9 +215,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                     onKeyDown={preventKeyDown}
                   >
                     {checkListSelected.value === null && (
-                      <Field<string>
-                        name='typeCheck'
-                      >
+                      <Field<string> name='typeCheck'>
                         {({ input }) => (
                           <SelectCheck
                             {...input}
@@ -199,7 +223,8 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                             loading={loading.value}
                             onChange={(option: any) => {
                               input.onChange(option.value);
-                              checkListSelected.value = option.value as SelectCheckType;
+                              checkListSelected.value =
+                                option.value as SelectCheckType;
                             }}
                             size='md'
                           />
@@ -223,7 +248,8 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                     </Field> */}
                     {checkListSelected.value !== null && (
                       <div className='py-2 grid grid-cols-2 gap-3'>
-                        {checkListSelected.value === SelectCheckType.CLIENTE && (
+                        {checkListSelected.value ===
+                          SelectCheckType.CLIENTE && (
                           <>
                             <div class='col-span-2'>
                               <Field<IOption> name='userId'>
@@ -296,7 +322,8 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                           <DateField name='end' label='h_date_end' />
                         </div>
 
-                        {checkListSelected.value === SelectCheckType.CLIENTE && (
+                        {checkListSelected.value ===
+                          SelectCheckType.CLIENTE && (
                           <div class='col-span-1'>
                             {/* Nuevo checkbox para enviar email */}
                             <div className='col-span-2 flex items-center'>
@@ -320,7 +347,6 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                         )}
                       </div>
                     )}
-
                   </form>
                 );
               }}

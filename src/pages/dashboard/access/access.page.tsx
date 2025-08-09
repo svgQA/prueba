@@ -4,7 +4,6 @@ import { useCallback, useEffect } from 'preact/hooks';
 import { Section } from '@/components/common/section/section';
 // Ajusta si tu Section está en otro lado
 import { Table } from '@/components/common/table/table';
-import { IAccess } from './utils';
 import { getColumns } from './components/access.columns';
 import { ExpandableAccess } from '@/components/compose/table/expandable/access';
 import { CardData } from '@/components/compose/cards';
@@ -13,7 +12,7 @@ import { AccessesService } from '@/services/access/accesses';
 import { useSignal } from '@preact/signals';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { defaultSummary, IResponseSummary } from '@/services';
-import { Button } from '@/components/common/button/button';
+// import { Button } from '@/components/common/button/button';
 import { AccessForm } from './components/access.upsert.form';
 import { IRowAction } from '@/components/common/table/interface';
 import {
@@ -23,6 +22,7 @@ import {
   SseManager,
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
+import { IAccess } from '@/types/access/accesses';
 
 export const AccessPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -157,14 +157,14 @@ export const AccessPage: FunctionalComponent = () => {
       <div className='max-h-screen'>
         <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
           <div className='flex flex-row items-center justify-between'>
-            <Button
+            {/* <Button
               name='button-create-shift'
               label='create'
               onClick={() => handleUpsert()}
               icon='044'
               iconSize='sm'
             />
-            {/* <AudioButton /> */}
+            <AudioButton /> */}
           </div>
         </div>
 
@@ -184,7 +184,10 @@ export const AccessPage: FunctionalComponent = () => {
       {showUpsertModal.value && (
         <AccessForm
           closed={showUpsertModal.value}
-          onClose={toggleUpsertModal}
+          onClose={() => {
+            toggleUpsertModal();
+            fetchInitialData();
+          }}
           id={idAccess.value}
         />
       )}

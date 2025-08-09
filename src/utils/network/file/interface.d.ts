@@ -1,4 +1,4 @@
 export interface IExcelGenerate {
-    header: string;
-    data: any[];
+  header: string;
+  data: any[];
 }

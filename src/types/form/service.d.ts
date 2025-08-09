@@ -28,7 +28,7 @@ interface IGroups {
   };
 }
 
-export interface UResponseRequest extends Omit<IResponseRequest, 'formId'> { }
+export interface UResponseRequest extends Omit<IResponseRequest, 'formId'> {}
 
 export interface IListRequest {
   name: string;
@@ -42,7 +42,7 @@ export interface IListResponse extends IListRequest {
   deletedAt?: Date;
 }
 
-export interface IReportRequest extends IReport { }
+export interface IReportRequest extends IReport {}
 
 export interface IReportResponse extends IReportRequest {
   id: number;
@@ -73,13 +73,13 @@ export interface IExcelGenerateRequest {
 }
 
 export interface ICReportAiRequest {
-    title: string;
-    subtitle?: string;
-    description?: string;
-    period?: ReportPeriod;
-    extraData?: extraDataReport;
-    startDate?: Date | string;
-    endDate?: Date | string;
-    user?: IOption;
-    sendEmail?: boolean;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  period?: ReportPeriod;
+  extraData?: extraDataReport;
+  startDate?: Date | string;
+  endDate?: Date | string;
+  user?: IOption;
+  sendEmail?: boolean;
 }

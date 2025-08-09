@@ -183,12 +183,14 @@ export class UserService extends BaseService {
 ## 📝 Mejores Prácticas
 
 1. **EventBus**
+
    - Usar IDs de eventos descriptivos y consistentes
    - Limpiar suscripciones en useEffect
    - Mantener los eventos tipados cuando sea posible
    - Evitar emitir eventos en bucles o eventos frecuentes
 
 2. **SSE**
+
    - Manejar siempre los casos de error
    - Limpiar streams cuando el componente se desmonte
    - Usar para datos que requieren actualizaciones en tiempo real
@@ -247,11 +249,13 @@ streamIAResponse(
 ## ⚠️ Consideraciones
 
 1. **EventBus**
+
    - No usar para estado global (preferir Redux/Context)
    - Evitar dependencias circulares
    - Mantener eventos simples y enfocados
 
 2. **SSE**
+
    - Considerar límites de conexiones concurrentes
    - Implementar timeout y reconexión
    - Manejar memoria en streams largos

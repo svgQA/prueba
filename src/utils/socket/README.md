@@ -197,16 +197,19 @@ function NotificationCenter() {
 ## 📝 Mejores Prácticas
 
 1. **Conexión**
+
    - Conectar solo cuando sea necesario
    - Cerrar conexiones al desmontar componentes
    - Manejar reconexiones apropiadamente
 
 2. **Eventos**
+
    - Usar nombres de eventos descriptivos
    - Limpiar listeners al desmontar
    - Evitar duplicación de listeners
 
 3. **Mensajes**
+
    - Mantener mensajes pequeños y enfocados
    - Usar tipos consistentes
    - Incluir timestamps cuando sea relevante
@@ -219,16 +222,19 @@ function NotificationCenter() {
 ## ⚠️ Consideraciones
 
 1. **Rendimiento**
+
    - Limitar número de conexiones simultáneas
    - Limpiar listeners no utilizados
    - Manejar reconexiones eficientemente
 
 2. **Seguridad**
+
    - Usar WSS (WebSocket Secure)
    - Validar mensajes entrantes
    - Implementar autenticación cuando sea necesario
 
 3. **Estado de la Conexión**
+
    - Mostrar indicador de conexión
    - Manejar desconexiones graciosamente
    - Proporcionar feedback al usuario

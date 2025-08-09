@@ -1,12 +1,12 @@
 // src/pages/dashboard/access/components/access.columns.tsx
 import { ColumnDef } from '@tanstack/react-table';
-import { IAccess } from '../utils';
 import { FormattedDate } from '@/components/compose/forms';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import {
   DropdownActionsMenu,
   IDropdownAction,
 } from '@/components/common/table/components/dropdown.actions.menu';
+import { IAccess } from '@/types/access/accesses';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -43,7 +43,7 @@ export const getColumns = (
   },
   {
     id: 'checkIn',
-    accessorKey: 'checkIn',
+    accessorKey: 'checkIn.startDate',
     size: 140,
     header: 'h_check_in',
     cell: (info) => {
@@ -52,7 +52,7 @@ export const getColumns = (
   },
   {
     id: 'checkOut',
-    accessorKey: 'checkOut',
+    accessorKey: 'checkOut.endDate',
     size: 140,
     header: 'h_check_out',
     cell: (info) => {
@@ -61,7 +61,7 @@ export const getColumns = (
   },
   {
     id: 'houseNumber',
-    accessorKey: 'user.houseNumber',
+    accessorKey: 'user.address',
     size: 140,
     header: 'h_house_number',
     enableGrouping: true,
