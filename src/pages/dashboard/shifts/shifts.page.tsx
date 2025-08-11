@@ -54,6 +54,7 @@ import {
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 import { useUserStore } from '@/store/slices';
+import { modulesReport } from '@/types/form';
 
 enum VIEW_NAME {
   TABLE,
@@ -532,13 +533,13 @@ export const ShiftsPage: FunctionalComponent = () => {
 
         const status = shift.status as unknown as SHIFT_STATUS;
         if (status !== SHIFT_STATUS.CREATED) {
-          ToastManager.warning('shift.table.delete.warning');
+          ToastManager.warning('s_warning');
           return;
         }
 
         showAlert({
-          title: t('shift.table.delete.title'),
-          message: t('shift.table.delete.message'),
+          title: t('s_title_delete'),
+          message: t('s_message'),
           onConfirm: () => deleteShift(params.id),
           onCancel: () => {},
         });
@@ -597,7 +598,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='s_total'
+          title='h_shifts_total'
           count={shiftSummary.value.total}
           subtitle=''
           color='t-dark'
@@ -605,7 +606,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <CardData
-          title='s_inProgress'
+          title='h_shifts_in_progress'
           count={calculatePercentage(shiftSummary.value.in_progress)}
           subtitle=''
           color='t-dark'
@@ -613,7 +614,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <CardData
-          title='s_completed'
+          title='h_shifts_completed'
           count={calculatePercentage(shiftSummary.value.completed)}
           subtitle=''
           color='t-dark'
@@ -683,6 +684,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               client: false,
               duration: false,
             }}
+            modules={modulesReport.Shift}
           />
         )}
 

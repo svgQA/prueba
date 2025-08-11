@@ -468,7 +468,7 @@ export const FormResponseSettingPage: FunctionComponent<
     const [structure, error] = responseValidation(getResponse.value);
     if (error) {
       setSingleResponse(structure as IResponse);
-      return ToastManager.error('form.error.general');
+      return ToastManager.error('s_general');
     }
 
     if (!getResponse?.value || !getResponseMode?.value?.id) return;

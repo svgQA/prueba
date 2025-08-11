@@ -1,15 +1,26 @@
 // src/pages/dashboard/correspondence/components/correspondence.columns.tsx
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ICorrespondence } from '../utils';
 import { FormattedDate } from '@/components/compose/forms';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import {
+  DropdownActionsMenu,
+  IDropdownAction,
+} from '@/components/common/table/components/dropdown.actions.menu';
+import { ICorrespondence } from '@/types/access';
 
 /**
  * Columnas para la tabla de Correspondencia.
  * Son similares a las de Access, con la posibilidad de grouping
  * y la funcionalidad de filtrado/paginación que provee la tabla principal.
  */
-export const correspondenceColumns: ColumnDef<ICorrespondence>[] = [
+export const getColumns = (
+  onClickAction: (params: {
+    id: string;
+    type: string;
+    action: ROW_ACTIONS;
+  }) => void
+): ColumnDef<ICorrespondence>[] => [
   {
     id: 'sender',
     accessorKey: 'sender',
@@ -81,5 +92,44 @@ export const correspondenceColumns: ColumnDef<ICorrespondence>[] = [
     accessorKey: 'whoPickedUp',
     size: 180,
     header: 'h_who_picked_up',
+  },
+  {
+    id: 'action',
+    size: 20,
+    header: 'h_action',
+    cell: (info) => {
+      const { id } = info.row.original;
+      const actions: IDropdownAction[] = [
+        {
+          label: 'update',
+          icon: 'vox-icon vx-icon-123 text-primary',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'form',
+              action: ROW_ACTIONS.UPDATE,
+            });
+          },
+        },
+        {
+          label: 'delete',
+          icon: 'vox-icon vx-icon-053 text-red-500',
+          color: 'text-red-600',
+          onClick: () => {
+            onClickAction({
+              id: String(id),
+              type: 'form',
+              action: ROW_ACTIONS.DELETE,
+            });
+          },
+        },
+      ];
+
+      return (
+        <div className='w-full flex justify-center items-center'>
+          <DropdownActionsMenu actions={actions} />
+        </div>
+      );
+    },
   },
 ];

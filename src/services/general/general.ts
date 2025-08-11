@@ -24,6 +24,12 @@ export type IResponseSummary = {
   completed: number;
 };
 
+export const defaultSummary = {
+  total: 0,
+  in_progress: 0,
+  completed: 0,
+};
+
 export class GeneralService extends BaseService {
   static sname: VoxServices = 'file';
   static async presigned(data: IPresignedRequest) {

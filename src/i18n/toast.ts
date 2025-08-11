@@ -41,6 +41,27 @@ export const toast_es = {
   s_title_and_sub_required: 'Titulo y Subtitulo son requeridos',
   s_already_profile: 'Perfil ya existe',
   s_select_company: 'Selecciona una empresa',
+  s_title: 'Reporte',
+  s_title_automatic: 'Reporte Automatico',
+  s_title_history: 'Reporte historico',
+  s_download_file_success: 'descargado exitosamente',
+  s_download_file_error: 'No se puede descargar el archivo',
+  s_download_file: 'Descargar archivo',
+  s_errorUrl: 'La URL de la lista no es válida',
+  s_inspect_title: 'Inspección',
+  s_general: 'Hay un error en el formulario',
+  s_invalid_response: 'La estructura del formulario no es válida',
+  s_not_exist_response: 'La estructura del formulario no existe',
+  s_warning:
+    'El turno no se puede eliminar porque ya esta en curso o finalizado',
+  s_title_delete: 'Eliminar Turno',
+  s_message: '¿Está seguro que desea eliminar el turno?',
+  s_success: 'Turno creado exitosamente!',
+  s_error_template: 'Error al crear la plantilla',
+  s_error_template_invalid:
+    'Error al crear plantilla. Asegúrate de que el JSON es válido.',
+  s_error_send_prompt: 'Error al enviar el prompt',
+  s_error_unknown: 'Error desconocido',
 };
 
 export const toast_en = {
@@ -86,4 +107,25 @@ export const toast_en = {
   s_title_and_sub_required: 'Title and Subtitle are required',
   s_already_profile: 'Profile already exists',
   s_select_company: 'Select a company',
+  title: 'Report',
+  s_title_automatic: 'Automatic Report',
+  s_title_history: 'Historical Report',
+  s_download_file_success: 'downloaded successfully',
+  s_download_file_error: 'Cannot download file',
+  s_download_file: 'Download file',
+  s_errorUrl: 'The list URL is not valid',
+  s_inspect_title: 'Inspection',
+  s_general: 'There is an error in the form',
+  s_invalid_response: 'The form structure is invalid',
+  s_not_exist_response: 'The form structure does not exist',
+  s_warning:
+    'The shift cannot be deleted because it is already in progress or completed',
+  s_title_delete: 'Delete Shift',
+  s_message: 'Are you sure you want to delete the shift?',
+  s_success: 'Shift created successfully!',
+  s_error_template: 'Error creating template',
+  s_error_template_invalid:
+    'Error creating template. Ensure the JSON is valid.',
+  s_error_send_prompt: 'Error sending prompt',
+  s_error_unknown: 'Unknown error',
 };

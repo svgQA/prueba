@@ -6,7 +6,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { general_en } from './general.en';
 import { general_es } from './general.es';
 import { error_en, error_es } from './error';
-import { form_en, form_es } from './form';
 import { shift_en, shift_es } from './shift';
 import { user_en, user_es } from './user';
 import { notification_en, notification_es } from './notification';
@@ -51,7 +50,6 @@ const resources = {
       // Posible Delete
       ...general_en,
       ...error_en,
-      ...form_en,
       ...shift_en,
       ...user_en,
       ...notification_en,
@@ -82,7 +80,6 @@ const resources = {
       // Posible Delete
       ...general_es,
       ...error_es,
-      ...form_es,
       ...shift_es,
       ...user_es,
       ...notification_es,

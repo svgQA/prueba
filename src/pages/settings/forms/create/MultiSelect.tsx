@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface MultiSelectProps<T> {
   options: T[];
@@ -15,8 +16,9 @@ export function MultiSelect<T>({
   onChange,
   getLabel,
   getId,
-  placeholder = 'Seleccione...',
+  placeholder = 'p_select',
 }: MultiSelectProps<T>) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -98,7 +100,7 @@ export function MultiSelect<T>({
           type='text'
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
-          placeholder={selectedItems.length === 0 ? placeholder : ''}
+          placeholder={selectedItems.length === 0 ? t(placeholder) : ''}
           className='w-full px-3 bg-white dark:bg-b-dark-dark text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-700 appearance-none'
         />
       </div>
@@ -116,7 +118,7 @@ export function MultiSelect<T>({
               </li>
             ))
           ) : (
-            <li className='px-4 py-2 text-sm italic'>No hay resultados</li>
+            <li className='px-4 py-2 text-sm italic'>{t('no_results')}</li>
           )}
         </ul>
       )}

@@ -125,7 +125,7 @@ export const TaskForm = ({
       <div className='flex justify-end items-center gap-2 p-4'>
         <Button
           name='btn-form-shift-close'
-          label='cancel'
+          label='CANCELED'
           type='button'
           onClick={handleOnClose}
           icon='041'

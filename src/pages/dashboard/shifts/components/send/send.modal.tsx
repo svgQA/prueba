@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'preact/hooks';
 import { ManualNotificationForm } from './tabs/manual-notification-form';
 import { Button } from '@/components/common/button/button';
+import { useTranslation } from 'react-i18next';
 interface Props {
   hasplayers?: boolean;
   onClose?: () => void;
@@ -9,7 +10,7 @@ interface Props {
 
 export const SendForm = ({ onClose, users, hasplayers }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
-
+  const { t } = useTranslation();
   // Cerrar si se hace click por fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -30,7 +31,7 @@ export const SendForm = ({ onClose, users, hasplayers }: Props) => {
     >
       <div className='px-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center pb-2 bg-white dark:bg-b-dark-dark'>
         <h3 className='text-base font-semibold text-gray-900 dark:text-gray-200'>
-          Centro de notificaciones
+          {t('h_notification_center')}
         </h3>
         <Button
           name='btn-close'

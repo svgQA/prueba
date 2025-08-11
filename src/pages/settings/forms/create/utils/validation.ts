@@ -11,7 +11,7 @@ export const responseValidation = (
       if (element.elements && element.elements.length > 0) {
         for (const subElement of element.elements) {
           if (subElement.required && subElement.assigned && !subElement.value) {
-            subElement.value_error = i18n.t('form.create.error.required');
+            subElement.value_error = i18n.t('i_required');
             error = true;
           } else {
             subElement.value_error = undefined;
@@ -19,7 +19,7 @@ export const responseValidation = (
         }
       } else {
         if (element.required && element.assigned && !element.value) {
-          element.value_error = i18n.t('form.create.error.required');
+          element.value_error = i18n.t('i_required');
           error = true;
         } else {
           element.value_error = undefined;
@@ -32,7 +32,7 @@ export const responseValidation = (
 };
 
 export const formValidation = (format: IFormError): [IFormError, boolean] => {
-  const message = i18n.t('form.create.error.title');
+  const message = i18n.t('i_error_title');
   let error = false;
   if (!format.label || format.label.length < 5) {
     format.label_error = message;
@@ -41,14 +41,14 @@ export const formValidation = (format: IFormError): [IFormError, boolean] => {
     format.label_error = undefined;
   }
   if (!format.description || format.description.length < 5) {
-    format.description_error = i18n.t('form.create.error.description');
+    format.description_error = i18n.t('i_description');
     error = true;
   } else {
     format.description_error = undefined;
   }
 
   if (!format.pages || format.pages.length === 0) {
-    format.pages_error = i18n.t('form.create.error.structure');
+    format.pages_error = i18n.t('i_structure');
     error = true;
   } else {
     format.pages_error = undefined;

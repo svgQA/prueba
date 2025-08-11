@@ -11,6 +11,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { Avatar } from '@/components/common/Avatar';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { DateUtils } from '@/utils/utilities/dates';
+import { useTranslation } from 'react-i18next';
 
 interface IShiftFormProps {
   closed?: boolean;
@@ -30,7 +31,7 @@ export const ShiftForm = ({
   const shift = useSignal<IShiftResponse>();
   const showReplicateForm = useSignal<boolean>(false);
   const replicateDate = useSignal<string>('');
-
+  const { t } = useTranslation();
   /*
   const checkInPoints = useSignal([
     {
@@ -145,12 +146,12 @@ export const ShiftForm = ({
       name='modal-shift-updsert'
       width='w-2/3'
       position='fixed'
-      header={<h3 className='text-xl font-medium'>Detalles del Turno</h3>}
+      header={<h3 className='text-xl font-medium'>{t('h_shift_details')}</h3>}
     >
       <div className='w-full py-3'>
         <div className='flex w-full p-3 justify-center'>
           <h2 className='text-gray-700 dark:text-gray-200'>
-            Service: {taskData.serviveName}
+            {t('h_service')}: {taskData.serviveName}
           </h2>
         </div>
 
@@ -202,7 +203,7 @@ export const ShiftForm = ({
                 />
                 <Button
                   name='button-accept-replicate'
-                  label='Replicar Hasta'
+                  label='l_replicate_until'
                   icon='293'
                   onClick={handleAcceptReplicate}
                 />
@@ -213,7 +214,7 @@ export const ShiftForm = ({
                   (taskData.status === 'CLOSED' && (
                     <Button
                       name='button-delete-shift'
-                      label='Eliminar'
+                      label='l_delete'
                       icon='192'
                       onClick={onDeleteShift}
                       className='mx-3 px-4 py-1 text-sm font-medium text-red-700 dark:text-red-400 bg-white dark:bg-b-dark-dark border border-red-300 dark:border-red-700 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
@@ -221,14 +222,14 @@ export const ShiftForm = ({
                   ))}
                 <Button
                   name='button-create-shift'
-                  label='Replicar'
+                  label='l_replicate'
                   icon='292'
                   onClick={toggleReplicateClick}
                   className='mx-3 px-4 py-1 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-b-dark-dark border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                 />
                 <Button
                   name='button-supervision'
-                  label='Supervisión Remota'
+                  label='l_remote_supervision'
                   icon='092'
                   className='bg-primary text-white py-1 rounded px-4'
                   onClick={onSupervision}
@@ -243,7 +244,7 @@ export const ShiftForm = ({
             <div className='space-y-4'>
               <div>
                 <p className='text-sm text-t-light-dark dark:text-t-dark mb-1'>
-                  Estado
+                  {t('h_status')}
                 </p>
                 <span className='bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-4 py-1 rounded-full text-sm font-medium'>
                   {taskData.status}
@@ -252,7 +253,7 @@ export const ShiftForm = ({
 
               <div>
                 <p className='text-sm text-t-light-dark dark:text-t-dark mb-1'>
-                  Tipo de Servicio
+                  {t('h_service_type')}
                 </p>
                 <p className='font-medium text-gray-700 dark:text-gray-200'>
                   {taskData.type}
@@ -261,7 +262,7 @@ export const ShiftForm = ({
 
               <div>
                 <p className='text-sm text-t-light-dark dark:text-t-dark mb-1'>
-                  Contrato
+                  {t('h_contract')}
                 </p>
                 <p className='font-medium text-gray-700 dark:text-gray-200'>
                   {taskData.contractName}
@@ -270,7 +271,7 @@ export const ShiftForm = ({
 
               <div>
                 <p className='text-sm text-t-light-dark dark:text-t-dark mb-1'>
-                  Ubicación
+                  {t('h_location')}
                 </p>
                 <div className='flex items-start gap-2'>
                   <span className='vox-icon vx-icon-072 text-primary'></span>
@@ -289,7 +290,7 @@ export const ShiftForm = ({
             <div className='space-y-4'>
               <div>
                 <p className='text-sm text-t-light-dark dark:text-t-dark mb-1'>
-                  Fecha y Hora de Inicio
+                  {t('h_start_date')}
                 </p>
                 <div className='flex items-center gap-2'>
                   <span className='vox-icon vx-icon-323 text-primary'></span>
@@ -301,7 +302,7 @@ export const ShiftForm = ({
 
               <div>
                 <p className='text-sm text-t-light-dark dark:text-t-dark mb-1'>
-                  Fecha y Hora de Fin
+                  {t('h_end_date')}
                 </p>
                 <div className='flex items-center gap-2'>
                   <span className='vox-icon vx-icon-323 text-primary'></span>
@@ -313,7 +314,7 @@ export const ShiftForm = ({
 
               <div>
                 <p className='text-sm text-t-light-dark dark:text-t-dark mb-1'>
-                  Prioridad
+                  {t('h_priority')}
                 </p>
                 <span
                   className={`px-4 py-1 rounded-full text-sm font-medium ${
@@ -336,7 +337,7 @@ export const ShiftForm = ({
             <div className='bg-white dark:bg-b-dark-dark rounded-lg'>
               <div className='flex items-center justify-between mb-4 p-4'>
                 <h4 className='text-lg font-medium text-gray-700 dark:text-gray-200'>
-                  Check-in
+                  {t('h_check_in')}
                 </h4>
                 <span className='text-xl font-medium text-gray-700 dark:text-gray-200'>
                   {taskData.checkInTime}
@@ -393,7 +394,7 @@ export const ShiftForm = ({
             <div className='bg-white dark:bg-b-dark-dark rounded-lg'>
               <div className='flex items-center justify-between mb-4 p-4'>
                 <h4 className='text-lg font-medium text-gray-700 dark:text-gray-200'>
-                  Check-out
+                  {t('h_check_out')}
                 </h4>
                 <span className='text-xl font-medium text-gray-700 dark:text-gray-200'>
                   {taskData.checkOutTime}

@@ -4,6 +4,7 @@ import {
   IDropdownAction,
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
+import { TaskCard } from '@/pages/settings/shifts/task/create/task.card';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -41,17 +42,24 @@ export const getColumns = (
     ),
   },
   {
-    id: 'data',
-    accessorKey: 'data',
+    id: 'tasks',
+    accessorKey: 'tasks',
     header: 'h_data',
-    size: 220,
+    size: 300, // puedes ajustar este ancho
     cell: (info) => {
-      const value = info.getValue() as Record<string, any>;
-      const parsed = `{formId: ${value?.formId ?? 'Ninguna'}, taskId: ${value?.taskId ?? 'Ninguna'}}`;
+      const row = info.row.original as Record<string, any>;
+      const tasks = row.tasks as any[];
+
+      if (!Array.isArray(tasks) || tasks.length === 0) {
+        return <span className='text-gray-400'>Sin tareas</span>;
+      }
+
       return (
-        <span className='whitespace-nowrap overflow-hidden text-ellipsis block'>
-          {parsed}
-        </span>
+        <ul className='flex flex-row gap-3 overflow-x-auto vox-scroll-design pr-2 max-w-[500px]'>
+          {tasks.map((item, index) => (
+            <TaskCard key={index} task={item.task} remove={false} />
+          ))}
+        </ul>
       );
     },
   },

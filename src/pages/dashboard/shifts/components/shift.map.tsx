@@ -6,6 +6,7 @@ import { ColumnFiltersState } from '@tanstack/react-table';
 import { Shift, User } from './types';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import MapLibreShowPoints from '@/components/common/map/MapLibreShowPoints';
+import { useTranslation } from 'react-i18next';
 
 const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   const [users, setUsers] = useState<User[]>([]);
@@ -13,13 +14,13 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   const socketRef = useRef<any>(null);
   const { getToken, tenant } = useUserStore();
   const [searchFilters, setSearchFilters] = useState<ColumnFiltersState>([]);
-
+  const { t } = useTranslation();
   const searchKeys = useMemo(
     () => [
-      { id: 'name', label: 'Nombre' },
-      { id: 'service', label: 'Servicio' },
-      { id: 'contract', label: 'Contrato' },
-      { id: 'client', label: 'Cliente' },
+      { id: 'name', label: t('h_name') },
+      { id: 'service', label: t('h_service') },
+      { id: 'contract', label: t('h_contract') },
+      { id: 'client', label: t('h_client') },
     ],
     []
   );
