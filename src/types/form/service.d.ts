@@ -1,6 +1,6 @@
 import { IOption } from '@/components/common/interface';
 import { IFormat } from './form';
-import { extraDataReport, IReport, ReportPeriod } from './report';
+import { extraDataReport, IModuleReport, IReport, modulesReport, ReportPeriod } from './report';
 import { RESPONSE_STATUS } from './form.enum';
 
 export interface IFormRequest {
@@ -68,6 +68,7 @@ export interface IResponseResponse extends IResponseRequest {
 }
 
 export interface IExcelGenerateRequest {
+  mod: modulesReport;
   startDate: Date | string;
   endDate: Date | string;
 }

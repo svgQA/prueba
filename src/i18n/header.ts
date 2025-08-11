@@ -1,5 +1,6 @@
 export const header_es = {
   t_memo: 'Memos',
+  t_memorandum: 'Memorándos',
   t_shift: 'Turnos',
   t_inspect: 'Formulario',
   t_user: 'Usuarios',
@@ -11,6 +12,7 @@ export const header_es = {
 
 export const header_en = {
   t_memo: 'Memos',
+  t_memorandum: 'Memorandums',
   t_shift: 'Shift',
   t_inspect: 'Form',
   t_user: 'User',

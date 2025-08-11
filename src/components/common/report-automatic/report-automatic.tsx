@@ -64,6 +64,11 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   }, []);
 
   const getFormatOptions = () => {
+    if (modules !== modulesReport.Memo) {
+      checkListSelected.value = SelectCheckType.INTERNO;
+      return;
+    };
+
     checkList.value = [
       {
         value: SelectCheckType.INTERNO,
@@ -76,8 +81,8 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         label: 'Cliente',
         icon: '307',
         color: 'secondary',
-        disabled: true,
-      },
+        // disabled: true,
+      }
     ];
   };
 
@@ -119,10 +124,11 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     startDate = new Date(),
     endDate = new Date(),
   }: ReportFinishedSubmit) => {
-    let reportResponse = await (checkListSelected.value ===
-      SelectCheckType.CLIENTE && report
-      ? ReportService.create_report_automatic(report)
-      : ReportService.create_report_automatic_excel({ startDate, endDate }));
+    let reportResponse = await (
+      checkListSelected.value === SelectCheckType.CLIENTE && report
+        ? ReportService.create_report_automatic(report)
+        : ReportService.create_report_automatic_excel({ mod: modules, startDate, endDate })
+    );
 
     if (reportResponse.getStatus()) {
       const info: any =
@@ -132,13 +138,27 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       checkListSelected.value === SelectCheckType.CLIENTE
         ? await fileManager.downloadFile(info)
         : await fileManager.generateExcel(
-          [{ header: 't_memo', data: info } as IExcelGenerate],
+          [{ header: getHeaderExcel(startDate, endDate), data: info } as IExcelGenerate],
           'report'
         );
       setIsOpen(false);
       form.reset();
     }
   };
+
+  const getHeaderExcel = (
+    startDate?: Date | string, 
+    endDate?: Date | string
+  ) => {
+    const headers: Record<modulesReport, string> = {
+      [modulesReport.Memo]: t('t_memorandum'),
+      [modulesReport.Shift]: t('t_shift'),
+      [modulesReport.Form]: t('t_form'),
+    };
+    const header = headers[modules];
+    if(startDate && endDate) return `${header} - ${DateUtils.dateToFrontend(startDate)} a ${DateUtils.dateToFrontend(endDate)}`;
+    return header;
+  }
 
   const footerContent = useMemo(
     () => (
