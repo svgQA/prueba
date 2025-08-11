@@ -81,7 +81,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         label: 'Cliente',
         icon: '307',
         color: 'secondary',
-        // disabled: true,
+        disabled: true,
       }
     ];
   };
