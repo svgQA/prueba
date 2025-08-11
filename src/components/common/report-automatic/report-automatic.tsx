@@ -64,6 +64,11 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   }, []);
 
   const getFormatOptions = () => {
+    if (modules !== modulesReport.Memo) {
+      checkListSelected.value = SelectCheckType.INTERNO;
+      return;
+    };
+
     checkList.value = [
       {
         value: SelectCheckType.INTERNO,
@@ -76,7 +81,8 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         label: 'Cliente',
         icon: '307',
         color: 'secondary',
-      },
+        disabled: true,
+      }
     ];
   };
 
@@ -118,10 +124,11 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     startDate = new Date(),
     endDate = new Date(),
   }: ReportFinishedSubmit) => {
-    let reportResponse = await (checkListSelected.value ===
-      SelectCheckType.CLIENTE && report
-      ? ReportService.create_report_automatic(report)
-      : ReportService.create_report_automatic_excel({ startDate, endDate }));
+    let reportResponse = await (
+      checkListSelected.value === SelectCheckType.CLIENTE && report
+        ? ReportService.create_report_automatic(report)
+        : ReportService.create_report_automatic_excel({ mod: modules, startDate, endDate })
+    );
 
     if (reportResponse.getStatus()) {
       const info: any =
@@ -131,13 +138,27 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       checkListSelected.value === SelectCheckType.CLIENTE
         ? await fileManager.downloadFile(info)
         : await fileManager.generateExcel(
-            [{ header: 't_memo', data: info } as IExcelGenerate],
-            'report'
-          );
+          [{ header: getHeaderExcel(startDate, endDate), data: info } as IExcelGenerate],
+          'report'
+        );
       setIsOpen(false);
       form.reset();
     }
   };
+
+  const getHeaderExcel = (
+    startDate?: Date | string, 
+    endDate?: Date | string
+  ) => {
+    const headers: Record<modulesReport, string> = {
+      [modulesReport.Memo]: t('t_memorandum'),
+      [modulesReport.Shift]: t('t_shift'),
+      [modulesReport.Form]: t('t_form'),
+    };
+    const header = headers[modules];
+    if(startDate && endDate) return `${header} - ${DateUtils.dateToFrontend(startDate)} a ${DateUtils.dateToFrontend(endDate)}`;
+    return header;
+  }
 
   const footerContent = useMemo(
     () => (
@@ -160,7 +181,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         />
       </div>
     ),
-    []
+    [loading.value]
   );
 
   const onClose = () => {
@@ -250,70 +271,70 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                       <div className='py-2 grid grid-cols-2 gap-3'>
                         {checkListSelected.value ===
                           SelectCheckType.CLIENTE && (
-                          <>
-                            <div class='col-span-2'>
-                              <Field<IOption> name='userId'>
-                                {({ input, meta }) => (
-                                  <SmartSelector
-                                    {...input}
-                                    meta={meta}
-                                    id='select-user'
-                                    icon='191'
-                                    label='h_user'
-                                    options={users.value}
-                                    menuPortalTarget={document.body}
-                                    placeholder='p_select'
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                            <div className='col-span-1'>
-                              <Field<string> name='title'>
-                                {({ input, meta }) => (
-                                  <Input
-                                    {...input}
-                                    placeholder='h_title'
-                                    label='h_title'
-                                    meta={meta}
-                                    icon='120'
-                                    type='text'
-                                    disabled={loading.value}
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                            <div className='col-span-1'>
-                              <Field<string> name='subtitle'>
-                                {({ input, meta }) => (
-                                  <Input
-                                    {...input}
-                                    placeholder='h_subtitle'
-                                    label='h_subtitle'
-                                    meta={meta}
-                                    icon='120'
-                                    type='text'
-                                    disabled={loading.value}
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                            <div className='col-span-2'>
-                              <Field<string> name='description'>
-                                {({ input, meta }) => (
-                                  <Input
-                                    {...input}
-                                    placeholder='h_description'
-                                    label='h_description'
-                                    meta={meta}
-                                    icon='120'
-                                    type='text'
-                                    disabled={loading.value}
-                                  />
-                                )}
-                              </Field>
-                            </div>
-                          </>
-                        )}
+                            <>
+                              <div class='col-span-2'>
+                                <Field<IOption> name='userId'>
+                                  {({ input, meta }) => (
+                                    <SmartSelector
+                                      {...input}
+                                      meta={meta}
+                                      id='select-user'
+                                      icon='191'
+                                      label='h_user'
+                                      options={users.value}
+                                      menuPortalTarget={document.body}
+                                      placeholder='p_select'
+                                    />
+                                  )}
+                                </Field>
+                              </div>
+                              <div className='col-span-1'>
+                                <Field<string> name='title'>
+                                  {({ input, meta }) => (
+                                    <Input
+                                      {...input}
+                                      placeholder='h_title'
+                                      label='h_title'
+                                      meta={meta}
+                                      icon='120'
+                                      type='text'
+                                      disabled={loading.value}
+                                    />
+                                  )}
+                                </Field>
+                              </div>
+                              <div className='col-span-1'>
+                                <Field<string> name='subtitle'>
+                                  {({ input, meta }) => (
+                                    <Input
+                                      {...input}
+                                      placeholder='h_subtitle'
+                                      label='h_subtitle'
+                                      meta={meta}
+                                      icon='120'
+                                      type='text'
+                                      disabled={loading.value}
+                                    />
+                                  )}
+                                </Field>
+                              </div>
+                              <div className='col-span-2'>
+                                <Field<string> name='description'>
+                                  {({ input, meta }) => (
+                                    <Input
+                                      {...input}
+                                      placeholder='h_description'
+                                      label='h_description'
+                                      meta={meta}
+                                      icon='120'
+                                      type='text'
+                                      disabled={loading.value}
+                                    />
+                                  )}
+                                </Field>
+                              </div>
+                            </>
+                          )}
 
                         <div class='col-span-1'>
                           <DateField name='start' label='h_date_start' />
@@ -324,27 +345,27 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
 
                         {checkListSelected.value ===
                           SelectCheckType.CLIENTE && (
-                          <div class='col-span-1'>
-                            {/* Nuevo checkbox para enviar email */}
-                            <div className='col-span-2 flex items-center'>
-                              <Field<boolean> name='sendEmail' type='checkbox'>
-                                {({ input }) => (
-                                  <label className='flex items-center gap-2'>
-                                    <input
-                                      type='checkbox'
-                                      name={input.name}
-                                      checked={input.checked}
-                                      onChange={input.onChange}
-                                      onBlur={input.onBlur}
-                                      onFocus={input.onFocus}
-                                    />
-                                    {t('¿Enviar email?')}
-                                  </label>
-                                )}
-                              </Field>
+                            <div class='col-span-1'>
+                              {/* Nuevo checkbox para enviar email */}
+                              <div className='col-span-2 flex items-center'>
+                                <Field<boolean> name='sendEmail' type='checkbox'>
+                                  {({ input }) => (
+                                    <label className='flex items-center gap-2'>
+                                      <input
+                                        type='checkbox'
+                                        name={input.name}
+                                        checked={input.checked}
+                                        onChange={input.onChange}
+                                        onBlur={input.onBlur}
+                                        onFocus={input.onFocus}
+                                      />
+                                      {t('¿Enviar email?')}
+                                    </label>
+                                  )}
+                                </Field>
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
                       </div>
                     )}
                   </form>

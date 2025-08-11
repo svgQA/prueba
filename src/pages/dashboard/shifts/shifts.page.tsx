@@ -54,6 +54,7 @@ import {
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 import { useUserStore } from '@/store/slices';
+import { modulesReport } from '@/types/form';
 
 enum VIEW_NAME {
   TABLE,
@@ -683,6 +684,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               client: false,
               duration: false,
             }}
+            modules={modulesReport.Shift}
           />
         )}
 
