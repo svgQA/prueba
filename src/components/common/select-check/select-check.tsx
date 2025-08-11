@@ -5,6 +5,7 @@ import { IOption } from '../smart-selector/smart-select';
 export interface IOptionCheck extends IOption {
   icon: string;
   color?: string;
+  disabled?: boolean; 
 }
 
 interface Props<T = IOptionCheck> {
@@ -53,7 +54,7 @@ export function SelectCheck<T = IOption>({
               value={option.value}
               checked={input.value === option.value}
               className='sr-only'
-              disabled={loading}
+              disabled={loading || option.disabled}
               onChange={(_e) => {
                 input.onChange(option.value);
                 onChange?.(option);
@@ -61,15 +62,17 @@ export function SelectCheck<T = IOption>({
             />
             <div
               className={`
-                        flex items-center justify-center p-1.5 rounded-md border transition-all duration-200
-                        ${size === 'sm' ? 'min-h-[35px]' : size === 'md' ? 'min-h-[55px]' : size === 'lg' ? 'min-h-[70px]' : ''}
-                        ${
-                          input.value === option.value
-                            ? `border-${option.color || 'primary'} bg-${option.color || 'primary'}/10 shadow-sm scale-[1.02]`
-                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                        }
-                        ${loading ? 'opacity-50 cursor-not-allowed' : ''}
-                    `}
+                flex items-center justify-center p-1.5 rounded-md border transition-all duration-200
+                ${size === 'sm' ? 'min-h-[35px]' : size === 'md' ? 'min-h-[55px]' : size === 'lg' ? 'min-h-[70px]' : ''}
+                ${
+                  option.disabled
+                    ? 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-60'
+                    : input.value === option.value
+                      ? `border-${option.color || 'primary'} bg-${option.color || 'primary'}/10 shadow-sm scale-[1.02]`
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                }
+                ${loading ? 'opacity-50 cursor-not-allowed' : ''}
+              `}
             >
               <div className='flex flex-col items-center gap-0.5'>
                 <span
@@ -82,9 +85,11 @@ export function SelectCheck<T = IOption>({
                           ? 'text-2xl'
                           : ''
                   } ${
-                    input.value === option.value
-                      ? `text-${option.color || 'primary'}`
-                      : 'text-gray-500 dark:text-gray-400'
+                    option.disabled
+                      ? 'text-gray-400'
+                      : input.value === option.value
+                        ? `text-${option.color || 'primary'}`
+                        : 'text-gray-500 dark:text-gray-400'
                   }`}
                 />
                 <span
@@ -97,9 +102,11 @@ export function SelectCheck<T = IOption>({
                           ? 'text-xl'
                           : ''
                   } font-medium leading-tight ${
-                    input.value === option.value
-                      ? `text-${option.color || 'primary'}`
-                      : 'text-gray-700 dark:text-gray-300'
+                    option.disabled
+                      ? 'text-gray-400'
+                      : input.value === option.value
+                        ? `text-${option.color || 'primary'}`
+                        : 'text-gray-700 dark:text-gray-300'
                   }`}
                 >
                   {option.label}
