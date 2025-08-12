@@ -31,6 +31,12 @@ export enum SelectCheckType {
   CLIENTE = 'cliente',
 }
 
+export const selectPriority: IOption[] = [
+  { value: 5, label: 'Alta' },
+  { value: 4, label: 'Media' },
+  { value: 3, label: 'Baja' },
+]
+
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
@@ -40,6 +46,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const projects = useSignal<IOption[]>([]);
   const checkList = useSignal<IOptionCheck[]>([]);
   const users = useSignal<MentionOption[]>([]);
+  const priorities = useSignal<IOption[]>(selectPriority);
   const checkListSelected = useSignal<SelectCheckType | null>(null);
 
   useEffect(() => {
@@ -101,7 +108,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     let report: ICReportAiRequest = {
       title: model.title,
       subtitle: model.subtitle,
-      description: model.description,
+      description: model.description || '',
       extraData: {
         modules: [{ id: 1, name: modules }],
         // projects: Array.isArray(model.projects)
@@ -112,6 +119,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       endDate: DateUtils.dateToBackend(model.end),
       user: model.userId,
       sendEmail,
+      priority: model.priority || null,
     };
 
     await handleFinishedSubmit({ form, report } as ReportFinishedSubmit);
@@ -147,7 +155,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   };
 
   const getHeaderExcel = (
-    startDate?: Date | string, 
+    startDate?: Date | string,
     endDate?: Date | string
   ) => {
     const headers: Record<modulesReport, string> = {
@@ -156,7 +164,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       [modulesReport.Form]: t('t_form'),
     };
     const header = headers[modules];
-    if(startDate && endDate) return `${header} - ${DateUtils.dateToFrontend(startDate)} a ${DateUtils.dateToFrontend(endDate)}`;
+    if (startDate && endDate) return `${header} - ${DateUtils.dateToFrontend(startDate)} a ${DateUtils.dateToFrontend(endDate)}`;
     return header;
   }
 
@@ -202,7 +210,11 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         <div className='h-6 w-px bg-b-light-dark dark:bg-gray-700 mx-2' />
         <Button
           name='group-none-filter'
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            setIsOpen(true);
+            checkListSelected.value = null; // Reinicia la selección
+            getFormatOptions(); // Vuelve a preguntar cada vez que abres
+          }}
           icon='306'
           square
           transparent
@@ -272,7 +284,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                         {checkListSelected.value ===
                           SelectCheckType.CLIENTE && (
                             <>
-                              <div class='col-span-2'>
+                              <div class='col-span-1'>
                                 <Field<IOption> name='userId'>
                                   {({ input, meta }) => (
                                     <SmartSelector
@@ -284,6 +296,23 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                                       options={users.value}
                                       menuPortalTarget={document.body}
                                       placeholder='p_select'
+                                    />
+                                  )}
+                                </Field>
+                              </div>
+                              <div class='col-span-1'>
+                                <Field<IOption> name='priority'>
+                                  {({ input, meta }) => (
+                                    <SmartSelector
+                                      {...input}
+                                      meta={meta}
+                                      id='select-priority'
+                                      icon='191'
+                                      label='h_priority'
+                                      options={priorities.value}
+                                      menuPortalTarget={document.body}
+                                      placeholder='p_select'
+                                      disabled={loading.value}
                                     />
                                   )}
                                 </Field>
@@ -318,6 +347,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                                   )}
                                 </Field>
                               </div>
+                              {/*
                               <div className='col-span-2'>
                                 <Field<string> name='description'>
                                   {({ input, meta }) => (
@@ -333,6 +363,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                                   )}
                                 </Field>
                               </div>
+                              */}
                             </>
                           )}
 
