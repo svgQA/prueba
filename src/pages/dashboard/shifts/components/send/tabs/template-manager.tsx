@@ -51,7 +51,7 @@ export const TemplateManager = () => {
       <h4 className='text-md font-medium'>{t('h_management')}</h4>
 
       <div className='border rounded border-gray-200 bg-white shadow-sm divide-y'>
-        {templates.map((tpl) => (
+        {templates?.map((tpl) => (
           <div key={tpl.id} className='p-4'>
             <h5 className='font-semibold'>{tpl.title}</h5>
             <p className='text-sm text-gray-600'>{tpl.description}</p>

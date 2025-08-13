@@ -69,12 +69,12 @@ export const ManualNotificationForm = ({
   });
 
   useEffect(() => {
-    setSelectedUserIds(usersWithPlayerId.map((u) => u.id));
+    setSelectedUserIds(usersWithPlayerId?.map((u) => u.id));
   }, [externalUsers]);
 
   useEffect(() => {
     const finalUsers = usersWithPlayerId
-      .filter((u) => selectedUserIds.includes(u.id))
+      ?.filter((u) => selectedUserIds.includes(u.id))
       .map((u) => ({
         id: u.id,
         name: u.name,
@@ -125,7 +125,7 @@ export const ManualNotificationForm = ({
       tasks: tasksResponse.value,
       placeId: values.placeId.value,
       filters: {
-        userIds: selectedUsersFull.map((u) => String(u.id)),
+        userIds: selectedUsersFull?.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
@@ -260,7 +260,7 @@ export const ManualNotificationForm = ({
                 <ul className='list-disc list-inside space-y-1'>
                   {[
                     ...new Map(
-                      selectedUsersFull.map((u) => [u.id, u])
+                      selectedUsersFull?.map((u) => [u.id, u])
                     ).values(),
                   ].map((u) => (
                     <li key={u.id}>

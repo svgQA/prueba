@@ -130,7 +130,7 @@ const handle_user_disconnected = (user: { id: string }) => {
     );
 
     if (!searchFilters.length) {
-      return usersWithShifts.map((user, index) => ({
+      return usersWithShifts?.map((user, index) => ({
         id: index + 1,
         position: { lat: user.lat!, lng: user.lng! },
       }));
@@ -178,7 +178,7 @@ const handle_user_disconnected = (user: { id: string }) => {
       });
     });
 
-    return points.map((user, index) => ({
+    return points?.map((user, index) => ({
       id: index + 1,
       position: { lat: user.lat!, lng: user.lng! },
     }));

@@ -35,7 +35,7 @@ const ShiftInfo = ({
             </div>
           </div>
           <div className='flex flex-row gap-2 flex-wrap justify-center'>
-            {tasks.map((task: any, index: number) => (
+            {tasks?.map((task: any, index: number) => (
               <CardRound
                 key={index}
                 activity={{

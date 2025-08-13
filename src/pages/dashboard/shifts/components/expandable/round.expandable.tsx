@@ -55,7 +55,7 @@ const RoundInfo = ({
     );
     if (!data.getStatus()) return;
     setPointsHistory(
-      data.getMany().map((point) => ({
+      data.getMany()?.map((point) => ({
         id: point.id,
         position: { lat: point.latitude, lng: point.longitude },
       }))
@@ -80,7 +80,7 @@ const RoundInfo = ({
         </div>
       ) : (
         <div className='flex flex-row gap-2 flex-wrap justify-center'>
-          {points.map((point: PointStatus, index: number) => {
+          {points?.map((point: PointStatus, index: number) => {
             const percent =
               ((point?.status?.valid || 0) / (frequency || 1)) * 100;
             return (
