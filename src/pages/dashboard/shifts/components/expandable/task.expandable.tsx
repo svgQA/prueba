@@ -26,7 +26,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
   const [selectedFormId, setSelectedFormId] = useState<number | null>(null);
 
   useEffect(() => {
-    const groupByDate = tasks.reduce(
+    const groupByDate = tasks?.reduce(
       (acc, task) => {
         const date = task.hourStart?.split('T')[0] ?? 'Sin fecha';
         if (!acc[date]) acc[date] = [];
@@ -38,8 +38,8 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
 
     setGrouped(groupByDate);
 
-    const total = tasks.length;
-    const completed = tasks.filter((t) => t.check).length;
+    const total = tasks?.length ?? 0;
+    const completed = tasks?.filter((t) => t.check).length ?? 0;
     setOverallProgress(total > 0 ? (completed / total) * 100 : 0);
   }, [tasks]);
 
@@ -85,7 +85,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
         </div>
       ) : (
         <div className='flex flex-row gap-6 justify-start overflow-x-auto px-2 pb-4 w-full'>
-          {Object.entries(grouped).map(([date, list], idx) => {
+          {Object.entries(grouped)?.map(([date, list], idx) => {
             const completed = list.filter((t) => t.check).length;
             const total = list.length;
 
@@ -103,7 +103,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
 
                 <div className='flex flex-row gap-2 w-full'>
                   <div className='flex flex-row gap-1 flex-wrap w-10/12 justify-center items-center'>
-                    {list.map((task: ITask, i) => (
+                    {list?.map((task: ITask, i) => (
                       <div key={`task-selected-${i}`} className='relative'>
                         <TaskCard task={task} remove={false} state />
 

@@ -25,7 +25,7 @@ export const ScheduledNotifications = () => {
       <h4 className='text-md font-medium'>{t('title_scheduled')}</h4>
 
       <div className='border rounded border-gray-200 bg-white shadow-sm divide-y'>
-        {scheduled.map((item) => (
+        {scheduled?.map((item) => (
           <div key={item.id} className='p-4 flex flex-col gap-1'>
             <div className='font-semibold'>{item.title}</div>
             <div className='text-sm text-gray-600'>{item.description}</div>

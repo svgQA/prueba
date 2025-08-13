@@ -33,7 +33,7 @@ export const MapLibrePointsMap = ({
   adminUser = false,
   zoom = 12,
   onZoomChange,
-  setName
+  setName,
 }: IMapProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MaplibreMap | null>(null);
@@ -62,7 +62,6 @@ export const MapLibrePointsMap = ({
   const lastAddedPointIdRef = useRef<number | null>(null);
   const userInteractedRef = useRef(false);
 
-
   const getMapStyle = () => {
     return themeSignal.value
       ? 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
@@ -71,7 +70,7 @@ export const MapLibrePointsMap = ({
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
-    
+
     if (mapRef.current) {
       if (onZoomChange) onZoomChange(mapRef.current.getZoom());
       cleanupMap();
@@ -81,7 +80,7 @@ export const MapLibrePointsMap = ({
       container: mapContainerRef.current,
       style: getMapStyle(),
       center: [center.lng, center.lat],
-      zoom: zoom, 
+      zoom: zoom,
     });
 
     const map = mapRef.current;
@@ -159,7 +158,7 @@ export const MapLibrePointsMap = ({
         }
         mapRef.current.fitBounds(bounds, {
           padding: 50,
-          maxZoom: zoom, 
+          maxZoom: zoom,
           duration: 1000,
         });
       } else {
@@ -255,7 +254,9 @@ export const MapLibrePointsMap = ({
     }
 
     if (setName && activePopup) {
-      ToastManager.error('Debes terminar de crear el punto actual antes de agregar otro.');
+      ToastManager.error(
+        'Debes terminar de crear el punto actual antes de agregar otro.'
+      );
       return;
     }
 
@@ -678,7 +679,11 @@ export const MapLibrePointsMap = ({
     setIsMarkerClick(false);
   };
 
-  const editMarkerById = (id: number, name?: string, isCreate?: boolean): void => {
+  const editMarkerById = (
+    id: number,
+    name?: string,
+    isCreate?: boolean
+  ): void => {
     const latStr = editCoordsRef.current.lat.replace(',', '.');
     const lngStr = editCoordsRef.current.lng.replace(',', '.');
     const newLat = Number.parseFloat(latStr);
@@ -715,7 +720,11 @@ export const MapLibrePointsMap = ({
 
     closeActivePopup();
     setIsMarkerClick(false);
-    ToastManager.success(isCreate ? t('maps.connect.success_create_point') : t('maps.connect.success_point'));
+    ToastManager.success(
+      isCreate
+        ? t('maps.connect.success_create_point')
+        : t('maps.connect.success_point')
+    );
   };
 
   const getLocation = (): Promise<{ lat: number; lng: number }> => {

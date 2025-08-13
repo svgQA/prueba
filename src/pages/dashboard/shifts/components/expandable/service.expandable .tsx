@@ -18,8 +18,8 @@ const ServiceInfo = ({
     {
       id: 1,
       position: {
-        lat: service.place.latitude,
-        lng: service.place.longitude,
+        lat: service?.place?.latitude,
+        lng: service?.place?.longitude,
       },
     },
   ]);
@@ -33,14 +33,14 @@ const ServiceInfo = ({
             <span className='!text-primary mr-2 vox-icon size-sm vx-icon-341'></span>
             {t('h_service')}
           </h4>
-          <Badge label={service.state} status='info' outline />
+          <Badge label={service?.state} status='info' outline />
         </div>
 
         <div className='space-y-4'>
           <div>
             <p className='mb-1 font-semibold'>{t('h_name')}</p>
             <TextEllipsis
-              text={service.description}
+              text={service?.description}
               maxWidth='500px'
             ></TextEllipsis>
           </div>
@@ -52,7 +52,7 @@ const ServiceInfo = ({
           )}
           <div>
             <p className='mb-1 font-semibold'>{t('h_contract')}</p>
-            <p className='text-primary capitalize'>{service.contract.name}</p>
+            <p className='text-primary capitalize'>{service?.contract?.name}</p>
           </div>
           {/* <div className='flex flex-row items-center justify-between mb-3'>
             <h4 className='font-semibold'>Contrato</h4>
@@ -72,16 +72,16 @@ const ServiceInfo = ({
             <p className='mb-1 font-semibold'>{t('h_location')}</p>
             <div className='flex items-center'>
               <span className='!text-primary mr-2 vox-icon size-sm vx-icon-351'></span>
-              <p>{service.place.name}</p>
+              <p>{service?.place?.name}</p>
             </div>
           </div>
           <div>
             <p className='mb-1 font-semibold'>{t('h_description')}</p>
-            <p>{service.place.description}</p>
+            <p>{service?.place?.description}</p>
           </div>
           <div>
             <p className='mb-1 font-semibold'>{t('h_round')}</p>
-            <p className='text-primary capitalize'>{service.round.name}</p>
+            <p className='text-primary capitalize'>{service?.round?.name}</p>
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@ const ServiceInfo = ({
           <h4 className='font-semibold'>{t('h_coverage')}</h4>
           <Badge
             label={t('h_radius', {
-              value: service.place.radius || 50,
+              value: service?.place?.radius || 50,
             })}
             color='primary'
             status='info'
@@ -104,8 +104,8 @@ const ServiceInfo = ({
             sendPoints={() => {}}
             name='Map'
             center={{
-              lat: service.place.latitude,
-              lng: service.place.longitude,
+              lat: service?.place?.latitude,
+              lng: service?.place?.longitude,
             }}
             pointsAmount={1}
             pointsRef={points.value}
@@ -113,7 +113,7 @@ const ServiceInfo = ({
             errorCondition=''
             radialPoint={null}
             errorRadialPoint=''
-            radius={service.place.radius || 50}
+            radius={service?.place?.radius || 50}
             draggable={true}
             height='100%'
             clickPoint={() => {}}
