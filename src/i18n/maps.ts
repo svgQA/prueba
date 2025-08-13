@@ -15,7 +15,7 @@ export const maps_es = {
       error_delete_point: 'No se pudo encontrar el punto para eliminar',
       success_point_remove: 'Punto eliminado correctamente',
       success_create_point: 'Punto creado correctamente',
-      error_name: 'Nombre es requerido'
+      error_name: 'Nombre es requerido',
     },
   },
 };

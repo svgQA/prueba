@@ -26,7 +26,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
   const [selectedFormId, setSelectedFormId] = useState<number | null>(null);
 
   useEffect(() => {
-    const groupByDate = tasks.reduce(
+    const groupByDate = tasks?.reduce(
       (acc, task) => {
         const date = task.hourStart?.split('T')[0] ?? 'Sin fecha';
         if (!acc[date]) acc[date] = [];

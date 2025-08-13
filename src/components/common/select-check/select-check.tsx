@@ -5,7 +5,7 @@ import { IOption } from '../smart-selector/smart-select';
 export interface IOptionCheck extends IOption {
   icon: string;
   color?: string;
-  disabled?: boolean; 
+  disabled?: boolean;
 }
 
 interface Props<T = IOptionCheck> {
