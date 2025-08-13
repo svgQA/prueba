@@ -213,7 +213,7 @@ export const TaskForm = ({
     currentSchedule.value = schedule;
     const days = schedule.days.reduce(
       (acc: any, day: any) => {
-        acc[day.day] = day.blocks.map((block: any) => {
+        acc[day.day] = day.blocks?.map((block: any) => {
           return { start: block.start, end: block.end };
         });
         return acc;
@@ -241,7 +241,7 @@ export const TaskForm = ({
 
   const schedulesOptions = useMemo(
     () =>
-      schedules.value.map((value: any) => ({
+      schedules.value?.map((value: any) => ({
         value: value.schedule.id,
         label: value.schedule.name,
       })),
@@ -274,7 +274,7 @@ export const TaskForm = ({
         {relatedShifts.value.length > 0 && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-1 justify-center'>
-              {relatedShifts.value.map((shift) => (
+              {relatedShifts.value?.map((shift) => (
                 <li
                   key={shift.id}
                   className='w-52 text-xs p-2 rounded-md border bg-b-light-dark dark:bg-b-dark-dark  border-red-500 min-w-[150px]'

@@ -20,6 +20,9 @@ export interface IMapProps extends IComponentProps {
   radius?: number;
   disablePointSelection?: boolean;
   adminUser?: boolean;
+  zoom?: number;
+  onZoomChange?: (z: number) => void;
+  setName?: boolean;
 }
 
 export interface MapPoint {

@@ -1,5 +1,6 @@
 export const maps_es = {
   maps: {
+    pointName: 'Punto',
     connect: {
       success: 'Ubicación establecida correctamente',
       error: 'Error al obtener la ubicación',
@@ -13,12 +14,15 @@ export const maps_es = {
       error_radial_point: 'Punto del lugar no se debe mover',
       error_delete_point: 'No se pudo encontrar el punto para eliminar',
       success_point_remove: 'Punto eliminado correctamente',
+      success_create_point: 'Punto creado correctamente',
+      error_name: 'Nombre es requerido',
     },
   },
 };
 
 export const maps_en = {
   maps: {
+    pointName: 'Point',
     connect: {
       success: 'Location set correctly',
       error: 'Error while getting location',
@@ -31,6 +35,7 @@ export const maps_en = {
       error_radial_point: 'Point of place should not be moved',
       error_delete_point: 'Point not found to delete',
       success_point_remove: 'Point removed correctly',
+      success_create_point: 'Point created correctly',
     },
   },
 };

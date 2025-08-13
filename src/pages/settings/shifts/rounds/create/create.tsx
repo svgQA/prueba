@@ -115,7 +115,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
     go({
       to: '/shifts/rounds',
-      label: 'shifts',
+      label: 'm_round',
       id: 'shifts:rounds:state',
       base: 'setting',
     });
@@ -565,6 +565,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   width='100%'
                   height='500px'
                   clickPoint={() => {}}
+                  setName={true}
                 />
               </div>
             </div>

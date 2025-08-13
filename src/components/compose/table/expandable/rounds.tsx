@@ -110,9 +110,9 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
         // Agregar información del punto
         pdf.setFontSize(8);
         const textY = y + qrSize + 5;
-        pdf.text(`ID: ${qrData.point.id}`, x + qrSize / 2, textY, {
-          align: 'center',
-        });
+        // pdf.text(`ID: ${qrData.point.id}`, x + qrSize / 2, textY, {
+        //   align: 'center',
+        // });
         pdf.text(`NAME: ${qrData.point.name}`, x + qrSize / 2, textY + 4, {
           align: 'center',
         });
