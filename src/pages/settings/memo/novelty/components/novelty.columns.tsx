@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { INovelty } from '../novelty';
+import { Badge } from '@/components/common/badge/badge';
 
 export const columns: ColumnDef<INovelty>[] = [
   {
@@ -36,14 +37,23 @@ export const columns: ColumnDef<INovelty>[] = [
     accessorKey: 'priority',
     size: 180,
     header: 'h_priority',
-    cell: (info) => {
-      const value = info.getValue() as string;
+    cell: (info: any) => {
+      const priority = info.getValue() as string;
+      let status = 'info';
+      
+      if (priority === 'Alta') {
+        status = 'error';
+      } else if (priority === 'Media') {
+        status = 'warning';
+      }
+
       return (
-        <span
-          className={`px-2 py-1 rounded bg-secondary dark:bg-ternary text-white`}
-        >
-          {value}
-        </span>
+        <Badge
+          label={priority}
+          status={status as 'info' | 'error' | 'warning' | 'success'}
+          full
+          outline
+        />
       );
     },
   },
