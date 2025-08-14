@@ -52,7 +52,7 @@ const ServiceInfo = ({
           )}
           <div>
             <p className='mb-1 font-semibold'>{t('h_contract')}</p>
-            <p className='text-primary capitalize'>{service?.contract?.name}</p>
+            <p className='capitalize'>{service?.contract?.name}</p>
           </div>
           {/* <div className='flex flex-row items-center justify-between mb-3'>
             <h4 className='font-semibold'>Contrato</h4>
@@ -81,7 +81,7 @@ const ServiceInfo = ({
           </div>
           <div>
             <p className='mb-1 font-semibold'>{t('h_round')}</p>
-            <p className='text-primary capitalize'>{service?.round?.name}</p>
+            <p className='capitalize'>{service?.round?.name}</p>
           </div>
         </div>
       </div>
