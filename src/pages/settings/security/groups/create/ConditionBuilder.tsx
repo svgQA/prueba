@@ -53,7 +53,7 @@ const predefinedOptions: Record<string, { label: string; value: string }[]> = {
 
 export const ConditionBuilder = ({ condition, onRemove, onChange }: Props) => {
   return (
-    <div className='flex flex-wrap md:flex-nowrap gap-2 items-center bg-white dark:bg-b-dark-dark p-2 justify-center'>
+    <div className='flex gap-3 flex-row bg-gray-50 dark:bg-gray-700 px-3 items-center justify-between rounded-md'>
       <div className='w-44'>
         <Dropdown
           id={`field-${condition.id}`}
@@ -76,9 +76,9 @@ export const ConditionBuilder = ({ condition, onRemove, onChange }: Props) => {
           }
         />
       </div>
-      {operatorsWithValue.includes(condition.operator) &&
-        (predefinedOptions[condition.field] ? (
-          <div className='w-40'>
+      <div className='w-full'>
+        {operatorsWithValue.includes(condition.operator) &&
+          (predefinedOptions[condition.field] ? (
             <Dropdown
               id={`value-${condition.id}`}
               name='value'
@@ -86,12 +86,9 @@ export const ConditionBuilder = ({ condition, onRemove, onChange }: Props) => {
               options={predefinedOptions[condition.field]}
               onChange={(val) => onChange({ ...condition, value: String(val) })}
             />
-          </div>
-        ) : (
-          <div className='w-1/2'>
+          ) : (
             <Input
               name='int-selection'
-              paddingVertical='py-1'
               value={condition.value ?? ''}
               onChange={(e) =>
                 onChange({
@@ -100,12 +97,14 @@ export const ConditionBuilder = ({ condition, onRemove, onChange }: Props) => {
                 })
               }
             />
-          </div>
-        ))}
+          ))}
+      </div>
       <Button
         name='btn-remove-action'
         onClick={onRemove}
-        icon='014'
+        icon='041'
+        transparent
+        borderless
         rounded={false}
       />
     </div>

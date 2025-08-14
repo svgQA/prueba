@@ -18,6 +18,7 @@ import { IExcelGenerate } from '@/utils/network/file/interface';
 import { ExpandeableContent } from './expandeable-content';
 import { useTranslation } from 'react-i18next';
 import { MentionOption } from '../mention-editor';
+import { selectPriority } from '@/pages/settings/memo/novelty/create/create';
 
 interface ReportFinishedSubmit {
   form: any;
@@ -30,12 +31,6 @@ export enum SelectCheckType {
   INTERNO = 'interno',
   CLIENTE = 'cliente',
 }
-
-export const selectPriority: IOption[] = [
-  { value: 5, label: 'Alta' },
-  { value: 4, label: 'Media' },
-  { value: 3, label: 'Baja' },
-];
 
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const { t } = useTranslation();

@@ -515,13 +515,13 @@ export const MapLibrePointsMap = ({
     popupNode.innerHTML = `
       <div>
         <div class="flex flex-col mb-2">
-          <label class="text-sm mb-1">Name</label>
+          <label class="text-sm mb-1">${t('h_name')}</label>
           <input id="edit-name" type="text" value="${point.name}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''}/>
 
-          <label class="text-sm mb-1 mt-2">Latitude</label>
+          <label class="text-sm mb-1 mt-2">${t('h_latitude')}</label>
           <input id="edit-lat" type="text" value="${point.position.lat}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''}/>
 
-          <label class="text-sm mb-1 mt-2">Longitude</label>
+          <label class="text-sm mb-1 mt-2">${t('h_longitude')}</label>
           <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>
         ${
@@ -530,16 +530,16 @@ export const MapLibrePointsMap = ({
             : `
           <div class="flex justify-between mt-2">
             <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
-              Delete
+              ${t('delete')}
             </button>
             <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
-              ${isCreate ? 'Create' : 'Update'}
+              ${isCreate ? t('save') : t('edit')}
             </button>
             ${
               id === -1
                 ? `
             <button id="btn-restore" class="bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-2 rounded">
-              Restore Location
+              ${t('restore')}
             </button>
             `
                 : ''
@@ -875,7 +875,7 @@ export const MapLibrePointsMap = ({
             <Input
               name='latitude'
               placeholder='6.246631'
-              label='Latitud'
+              label='h_latitude'
               type='number'
               value={coords.lat}
               onChange={(e) => handleInputChange(e, 'lat')}
@@ -884,7 +884,7 @@ export const MapLibrePointsMap = ({
             <Input
               name='longitude'
               placeholder='-75.581775'
-              label='Longitud'
+              label='h_longitude'
               type='number'
               value={coords.lng}
               onChange={(e) => handleInputChange(e, 'lng')}

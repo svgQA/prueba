@@ -63,7 +63,8 @@ export const GroupBuilder = ({ group, onChange, onRemove }: Props) => {
         <Button
           name='btn-delete-group'
           rounded={false}
-          icon='014'
+          icon='041'
+          borderless
           onClick={onRemove}
         />
       </div>
@@ -84,7 +85,7 @@ export const GroupBuilder = ({ group, onChange, onRemove }: Props) => {
           />
         )
       )}
-      <div class='flex gap-2'>
+      <div class='flex gap-2 justify-end'>
         <Button
           name='btn-add-condition'
           rounded={false}
