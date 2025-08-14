@@ -23,29 +23,40 @@ interface ICheckData {
   file: IPresignedRequest[];
 }
 
+interface ICheckStatus {
+  message: string;
+  color: StatusColor;
+  label: string;
+}
+
+type StatusColor = 'error' | 'success' | 'warning' | 'info' | 'ternary';
+
 const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
   const { t } = useTranslation();
   const [checkInData, setCheckInData] = useState(checkIn);
   const [checkOutData, setCheckOutData] = useState(checkOut);
 
-  const checkInStatus = useSignal<{ message: string; color: string }>({
+  const checkInStatus = useSignal<ICheckStatus>({
     message: t('l_check_pending'),
-    color: 'bg-gray-200 text-gray-700',
+    color: 'info',
+    label: '',
   });
-  const checkOutStatus = useSignal<{ message: string; color: string }>({
+  const checkOutStatus = useSignal<ICheckStatus>({
     message: t('l_check_pending'),
-    color: 'bg-gray-200 text-gray-700',
+    color: 'info',
+    label: '',
   });
 
-  const calculateCheckStatus = (
+  const calculateCheckStatus: (
     checkTime: string,
     scheduleTime: string,
     isCheckIn: boolean
-  ) => {
+  ) => ICheckStatus = (checkTime, scheduleTime, isCheckIn) => {
     if (!checkTime)
       return {
         message: t('l_check_pending'),
-        color: 'bg-gray-200 text-gray-700',
+        color: 'info',
+        label: '',
       };
 
     const check = new Date(checkTime);
@@ -58,12 +69,14 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       if (diffMinutes > 0) {
         return {
           message: t('l_check_error'),
-          color: 'bg-red-200 text-red-700',
+          color: 'error',
+          label: t('l_check_late'),
         };
       } else {
         return {
           message: t('l_check_success'),
-          color: 'bg-green-200 text-green-700',
+          color: 'success',
+          label: t('l_check_on_time'),
         };
       }
     } else {
@@ -71,12 +84,14 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       if (diffMinutes < 0) {
         return {
           message: t('l_check_success'),
-          color: 'bg-green-200 text-green-700',
+          color: 'success',
+          label: t('l_check_early'),
         };
       } else {
         return {
           message: t('l_check_error'),
-          color: 'bg-red-200 text-red-700',
+          color: 'error',
+          label: t('l_check_late'),
         };
       }
     }
@@ -107,7 +122,6 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
     }
     onCheck(check);
   };
-
   useEffect(() => {
     checkInStatus.value = calculateCheckStatus(
       checkIn?.time,
@@ -132,6 +146,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         source={checkInData?.platform || ''}
         status={checkInStatus.value.message || ''}
         statusColor={checkInStatus.value.color || ''}
+        label={checkInStatus.value.label}
         distance={checkInData?.distance || ''}
         btnLabel='Check In' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
@@ -151,6 +166,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         source={checkOutData?.platform || ''}
         status={checkOutStatus.value.message || ''}
         statusColor={checkOutStatus.value.color || ''}
+        label={checkOutStatus.value.label}
         distance={checkOutData?.distance || ''}
         btnLabel='Check Out' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
@@ -171,7 +187,8 @@ interface IShiftCardProps {
   time: string;
   source: string;
   status: string;
-  statusColor: string;
+  statusColor: StatusColor;
+  label: string;
   btnLabel: string;
   shiftId: number;
   distance?: string;
@@ -189,7 +206,8 @@ const ShiftCard = ({
   time,
   source,
   status,
-  // statusColor,
+  statusColor,
+  label,
   distance,
   btnLabel,
   shiftId,
@@ -273,7 +291,8 @@ const ShiftCard = ({
               <Avatar icon='023' size='md' />
             )}
             <TextEllipsis text={name} maxWidth='200px'></TextEllipsis>
-            <Badge label={status} status='success' outline />
+            <Badge label={status} status={statusColor} outline />
+            <p>{label}</p>
           </div>
 
           {/* Columna central - Información */}
