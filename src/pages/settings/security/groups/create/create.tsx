@@ -74,7 +74,7 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <div className='space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <div className='space-y-2 h-[65vh] overflow-y-auto vox-scroll-design'>
       <div className='flex justify-end gap-4 absolute top-14 right-2'>
         <Button
           name='id-save-group'

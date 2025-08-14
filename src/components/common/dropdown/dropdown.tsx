@@ -146,12 +146,12 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
           name={name}
           disabled={disabled}
           // focus:ring-4 focus:outline-none
-          className={`font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center transition-colors duration-150
+          className={`font-medium rounded-lg text-sm px-2 text-center inline-flex items-center transition-colors duration-150
             bg-white dark:bg-b-dark-dark
             text-gray-700 dark:text-gray-200
             ${borderless ? 'border-none' : 'border border-gray-200 dark:border-gray-700'}
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-            ${isIconOnly ? 'border-none justify-center hover:bg-gray-100 dark:hover:bg-gray-700' : 'w-full focus:ring-blue-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+            ${isIconOnly ? 'border-none justify-center hover:bg-gray-100 dark:hover:bg-gray-800' : 'w-full focus:ring-blue-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
           type='button'
           onClick={toggleDropdown}
         >
@@ -165,8 +165,10 @@ export const Dropdown: FunctionComponent<IDropdownProps> = memo(
               className={`vox-icon vx-icon-${selected?.icon as string} size-sm mr-2`}
             />
           )}
-          {!isIconOnly &&
-            t((selected?.[labelTag] || t(placeholder || '')) as string)}
+          <span className='h-10 flex items-center'>
+            {!isIconOnly &&
+              t((selected?.[labelTag] || t(placeholder || '...')) as string)}
+          </span>
         </button>
         {meta && meta.touched && meta.error && (
           <span className='text-red-500 text-sm'>{t(meta.error)}</span>
