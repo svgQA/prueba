@@ -95,7 +95,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
       </div>
 
       <div className='divide-y dark:divide-b-dark-light divide-b-light-dark'>
-        {reports.map((report) => {
+        {reports?.map((report) => {
           const isRequested = report.request;
 
           const hasAttachments = report.resource?.length > 0;

@@ -14,9 +14,9 @@ import { validateSelectedElement } from '../store/control';
 import { toggleListModal } from '../../lists/store/list';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { IElementError } from '@/types/form/error.type';
-import { useTranslation } from 'react-i18next';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { useUserStore } from '@/store/slices';
+import type { RefCallback } from 'preact';
 
 const ItemType = {
   QUESTION: 'question',
@@ -31,14 +31,12 @@ export const FormElement = ({
   onSelect,
   onDelete,
 }: IElementProps) => {
-  const { t } = useTranslation();
-
   const { getToken, getTenant, getCompanyId } = useUserStore();
   const openModalList = () => {
     toggleListModal({ question: question.id, page, section, field: 'options' });
   };
 
-  const [{ isDragging }, ref] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     type: ItemType.QUESTION,
     item: { index },
     collect: (monitor) => ({
@@ -58,6 +56,14 @@ export const FormElement = ({
       isOver: monitor.isOver(),
     }),
   });
+
+  const rowRef: RefCallback<HTMLTableRowElement> = (node) => {
+    if (node) drop(node);
+  };
+
+  const handleRef: RefCallback<HTMLSpanElement> = (node) => {
+    if (node) drag(node);
+  };
 
   const onChangeMulty = (value: IOption[], name?: string) => {
     if (!name) return;
@@ -147,7 +153,7 @@ export const FormElement = ({
   return (
     <>
       <tr
-        ref={drop}
+        ref={rowRef}
         className='vx-form-question relative rounded-2xl bg-white dark:bg-b-dark-dark border-b-2 border-b-light-light dark:border-b-dark-light'
       >
         {question.type === ELEMENT_TYPE.SECTION ? (
@@ -159,12 +165,12 @@ export const FormElement = ({
             {/* className={`${selected ? 'border-2 border-red-300' : ''}`} */}
             <div className='flex flex-row items-center'>
               <span
-                ref={(node) => ref(drop(node))}
+                ref={handleRef}
                 className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
               ></span>
               <Input
                 type='text'
-                placeholder={t('form.placeholder.section_title')}
+                placeholder='p_section_title'
                 name='label'
                 id={`in-form-${question.id}-section-title`}
                 data-sectionid={question.id}
@@ -191,13 +197,13 @@ export const FormElement = ({
               )}
               <div className='flex flex-row w-full items-center'>
                 <span
-                  ref={(node) => ref(drop(node))}
+                  ref={handleRef}
                   className='vox-icon vx-icon-119 size-sm mx-2 cursor-move'
                 ></span>
                 <Input
                   type='text'
                   name='label'
-                  placeholder={t('form.placeholder.element_title')}
+                  placeholder='p_element_title'
                   id={`in-form-${question.id}-element-title`}
                   value={question.label}
                   onChange={handleInputChange}
@@ -213,7 +219,7 @@ export const FormElement = ({
               className='w-3/12 dark:bg-b-dark-dark bg-white rounded-br-xl'
             >
               <Select
-                placeholder={t('form.placeholder.type_element')}
+                placeholder='p_type_element'
                 id={`se-form-${question.id}-element-type`}
                 icon='106'
                 value={question.type}
@@ -239,7 +245,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-required`}
                 name='required'
-                label={t('form.label.required')}
+                label='l_required'
                 onChange={handleInputChange}
                 value={question.required}
               />
@@ -247,7 +253,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-visible`}
                 name='invisible'
-                label={t('form.label.invisible')}
+                label='l_invisible'
                 onChange={handleInputChange}
                 value={question.invisible}
               />
@@ -257,7 +263,7 @@ export const FormElement = ({
                   <Switch
                     id={`cb-form-${question.id}-element-disable`}
                     name='disable'
-                    label={t('form.label.disable')}
+                    label='l_disable'
                     onChange={handleInputChange}
                     value={question.disable}
                   />
@@ -265,7 +271,7 @@ export const FormElement = ({
               <Switch
                 id={`cb-form-${question.id}-element-assigned`}
                 name='assigned'
-                label={t('form.label.administrator')}
+                label='l_administrator'
                 onChange={handleInputChange}
                 value={question.assigned}
               />
@@ -280,7 +286,7 @@ export const FormElement = ({
                 id={`ta-form-${question.id}-element-description`}
                 value={question.description}
                 onChange={handleInputChange}
-                placeholder={t('form.placeholder.element_description')}
+                placeholder='p_element_description'
               />
             </div>
 
@@ -288,12 +294,12 @@ export const FormElement = ({
               {question.type === ELEMENT_TYPE.NUMBER_INPUT && (
                 <Input
                   name='default'
-                  label={t('form.label.default')}
+                  label='l_default'
                   type='number'
                   id={`in-number-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
-                  placeholder={t('form.placeholder.default_value')}
+                  placeholder='p_default_value'
                   borderless
                   thin
                   icon='123'
@@ -303,12 +309,12 @@ export const FormElement = ({
                 question.type === ELEMENT_TYPE.TEXT_AREA) && (
                 <Input
                   name='default'
-                  label={t('form.label.default')}
+                  label='l_default'
                   type='text'
                   id={`in-text-form-${question.id}-element-default`}
                   value={question.default}
                   onChange={handleInputChange}
-                  placeholder={t('form.placeholder.default_value')}
+                  placeholder='p_default_value'
                   borderless
                   thin
                   icon='123'
@@ -319,9 +325,9 @@ export const FormElement = ({
                   <div class='w-full mr-4'>
                     {question.isUrl ? (
                       <Input
-                        label={t('form.label.list_url')}
+                        label='l_list_url'
                         name='url'
-                        placeholder={t('form.placeholder.list_url')}
+                        placeholder='p_list_url'
                         onChange={handleInputChange}
                         id={`se-form-${question.id}-element-options-url`}
                         icon='104'
@@ -404,9 +410,9 @@ export const FormElement = ({
 
             {question.type === ELEMENT_TYPE.INPUT && (
               <Select
-                label={t('form.label.regex')}
+                label='l_regex'
                 name='regex'
-                placeholder={t('form.placeholder.regex_patters')}
+                placeholder='p_regex_patters'
                 id={`se-form-${question.id}-element-regex`}
                 value={question.regex}
                 onChange={handleInputChange}
@@ -434,7 +440,7 @@ export const FormElement = ({
                 />
                 <Input
                   name='max'
-                  label={t('form.label.maximum')}
+                  label='l_maximum'
                   id={`in-time-form-${question.id}-element-max`}
                   type={question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'}
                   value={question.max}
@@ -455,7 +461,7 @@ export const FormElement = ({
                 type='number'
                 id={`in-number-form-${question.id}-element-min`}
                 value={question.min}
-                placeholder={t('form.placeholder.min_length')}
+                placeholder='p_min_length'
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -473,7 +479,7 @@ export const FormElement = ({
                 type='number'
                 id={`in-number-form-${question.id}-element-max`}
                 value={question.max}
-                placeholder={t('form.placeholder.max_length')}
+                placeholder='p_max_length'
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -490,7 +496,7 @@ export const FormElement = ({
                 label='size'
                 id={`in-number-form-${question.id}-element-size`}
                 value={question.size}
-                placeholder={t('form.placeholder.size')}
+                placeholder='p_size'
                 onChange={handleInputChange}
                 borderless
                 thin
@@ -506,7 +512,7 @@ export const FormElement = ({
                 label='Number Files'
                 id={`in-number-form-${question.id}-element-files`}
                 value={question.maxNumberFiles}
-                placeholder={t('form.placeholder.number_files')}
+                placeholder='p_number_files'
                 onChange={handleInputChange}
                 borderless
                 thin

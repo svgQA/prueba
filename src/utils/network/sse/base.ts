@@ -15,6 +15,8 @@ export enum SSE_TYPE {
   SHIFT = 'shift',
   RESPONSE = 'form',
   PANIC = 'panic',
+  ACCESSES = 'accesses',
+  CORRESPONDENCE = 'correspondence',
   ALL = 'all',
 }
 

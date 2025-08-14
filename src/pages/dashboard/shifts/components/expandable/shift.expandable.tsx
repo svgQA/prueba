@@ -25,7 +25,7 @@ const ShiftInfo = ({
         <div>
           <div className='flex items-center justify-between absolute top-0 right-0 w-full'>
             <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
-              {t('shift.expandable.shift.title')}
+              {t('h_title_shift')}
             </h2>
             <div className='flex flex-row gap-2 flex-wrap justify-end'>
               <Chip
@@ -35,7 +35,7 @@ const ShiftInfo = ({
             </div>
           </div>
           <div className='flex flex-row gap-2 flex-wrap justify-center'>
-            {tasks.map((task: any, index: number) => (
+            {tasks?.map((task: any, index: number) => (
               <CardRound
                 key={index}
                 activity={{

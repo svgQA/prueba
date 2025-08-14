@@ -6,6 +6,16 @@ export const validation_es = {
   eql_len: 'Longitud exacta: ',
   ran_len_5_50: 'Longitud entre 5 y 50 caracteres',
   ran_len_5_200: 'Longitud entre 5 y 200 caracteres',
+  photo: 'Tomar foto',
+  select: 'Seleccionar',
+  sign: 'Firma aquí',
+  scan_qr: 'Escanear código QR',
+  scan_barcode: 'Escanear código Barcode',
+  audio: 'Graba un Audio',
+  location: 'La Ubicación',
+  get_files: 'Agregar Archivos',
+  shiftStart: 'Inicio del Turno',
+  shiftEnd: 'Finalización del Turno',
 };
 
 export const validation_en = {
@@ -16,4 +26,14 @@ export const validation_en = {
   eql_len: 'Exact length: ',
   ran_len_5_50: 'Length between 5 and 50 characters',
   ran_len_5_200: 'Length between 5 and 200 characters',
+  photo: 'Take a photo',
+  select: 'Select',
+  sign: 'Sign here',
+  scan_qr: 'Scan QR code',
+  scan_barcode: 'Scan barcode',
+  audio: 'Record an Audio',
+  location: 'The Location',
+  get_files: 'Add Files',
+  shiftStart: 'Shift Start',
+  shiftEnd: 'Shift End',
 };

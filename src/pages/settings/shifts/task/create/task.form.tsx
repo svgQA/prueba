@@ -116,15 +116,13 @@ export const TaskFormCreate = ({
   const onChange = (value: any, form?: any) => {
     if (!value) return;
     let _task: ITask | undefined = undefined;
-
     if (value.value === 'general') {
       _task = {
-        id: 'general',
         name: 'General',
         description: 'Tarea general',
         hourStart: DateUtils.createDateFromHour(value.hourStart, true),
         type: 'GENERAL',
-        attachmentType: '',
+        attachmentType: undefined,
       };
     } else if (value.id || value.name) {
       _task = {

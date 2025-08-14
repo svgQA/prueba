@@ -27,13 +27,13 @@ export const SIDEBAR_MENUS: IMenu[] = [
     id: 'form',
     key: 'form',
   },
-  /*
   {
     label: 't_access',
     to: PAGES_LIST_ROUTER.dashboard.access,
     description: 'd_access',
     icon: '099',
     id: 'access',
+    key: 'access',
   },
   {
     label: 't_inbox',
@@ -41,8 +41,8 @@ export const SIDEBAR_MENUS: IMenu[] = [
     description: 'd_inbox',
     icon: '102',
     id: 'inbox',
+    key: 'inbox',
   },
-  */
   {
     label: 't_user',
     to: PAGES_LIST_ROUTER.dashboard.users,

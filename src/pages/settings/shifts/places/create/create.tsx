@@ -18,6 +18,8 @@ import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
+import { useTranslation } from 'react-i18next';
+
 interface SelectOption extends IOption {
   latitude: string;
   longitude: string;
@@ -53,7 +55,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const points = useSignal<any>([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const [mapZoom, setMapZoom] = useState(12);
-
+  const { t } = useTranslation();
   const { id } = useParams(); // Obtiene el id de la URL
 
   const sendPointsRef = (data: any) => {
@@ -151,19 +153,19 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
     const request = await PlaceService.getPlaceById(id);
     let municipalityId = {
       value: 0,
-      label: 'Seleccione un municipio',
+      label: 'p_select_municipality',
       latitude: 0,
       longitude: 0,
     };
 
     let departmentId = {
       value: 0,
-      label: 'Seleccione un departamento',
+      label: 'p_select_department',
     };
 
     let countryId = {
       value: 0,
-      label: 'Seleccione un país',
+      label: 'p_select_country',
     };
 
     if (request.getStatus()) {
@@ -244,7 +246,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 {/* Información Básica */}
                 <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
                   <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                    Información Básica
+                    {t('h_basic_info')}
                   </h3>
                   <div className='grid grid-cols-1 gap-4'>
                     <div className='grid grid-cols-2 gap-3'>
@@ -256,8 +258,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           <Input
                             id='input-code'
                             {...input}
-                            placeholder='Ingrese un codigo...'
-                            label='Codigo'
+                            placeholder='p_code'
+                            label='l_code'
                             type='number'
                             icon='123'
                             meta={meta}
@@ -276,8 +278,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           <Input
                             {...input}
                             type='text'
-                            placeholder='Ingrese nombre...'
-                            label='name'
+                            placeholder='p_name'
+                            label='l_name'
                             icon='123'
                             meta={meta}
                           />
@@ -291,7 +293,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           {...input}
                           min='3'
                           max='300'
-                          placeholder='Ingrese Descripción...'
+                          placeholder='p_element_description'
                           label='description'
                           type='text'
                           icon='123'
@@ -305,7 +307,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 {/* Información de Ubicación */}
                 <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
                   <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                    Información de Ubicación
+                    {t('h_location_info')}
                   </h3>
                   <div className='grid grid-cols-1 gap-4'>
                     <div className='grid grid-cols-2 gap-3'>
@@ -313,8 +315,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         {({ input, meta }) => (
                           <Select
                             {...input}
-                            placeholder='Selecione tipo...'
-                            label='type'
+                            placeholder='p_select_type'
+                            label='l_type_ubication'
                             name='type'
                             icon='123'
                             options={[
@@ -331,8 +333,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         {({ input, meta }) => (
                           <Select
                             {...input}
-                            placeholder='Selecione estado...'
-                            label='status'
+                            placeholder='p_select_state'
+                            label='l_status'
                             name='state'
                             icon='123'
                             options={[
@@ -350,8 +352,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       {({ input, meta }) => (
                         <Input
                           {...input}
-                          placeholder='Ingrese Dirección...'
-                          label='address'
+                          placeholder='p_address'
+                          label='l_address'
                           type='text'
                           icon='123'
                           meta={meta}
@@ -364,7 +366,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 {/* Información de País y Departamento */}
                 <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
                   <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                    Información de País y Departamento
+                    {t('h_location_info')}
                   </h3>
                   <div className='grid grid-cols-1 gap-4'>
                     <div className='grid grid-cols-1 xl:grid-cols-2 gap-3'>
@@ -406,8 +408,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         {({ input, meta }) => (
                           <SmartSelector
                             {...input}
-                            placeholder='Seleccione Municipio...'
-                            label='municipality'
+                            placeholder='p_select_municipality'
+                            label='l_municipality'
                             icon='123'
                             options={municipalities.value}
                             meta={meta}
@@ -426,7 +428,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           <Input<number>
                             id='input-code'
                             {...input}
-                            placeholder='Ingrese un código ZIP...'
+                            placeholder='p_zip_code'
                             label='zip'
                             icon='123'
                             type='number'
@@ -441,7 +443,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                 {/* Coordenadas y Radio */}
                 <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
                   <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                    Coordenadas y Radio
+                    {t('h_coordinates_and_radius')}
                   </h3>
                   <div className='grid grid-cols-1 gap-4'>
                     <Slider
@@ -450,7 +452,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                       step={1}
                       value={green}
                       onChange={setGreen}
-                      label='Radio de cobertura'
+                      label='l_radius'
                       showValue={true}
                       disabled={!points.value || points.value.length < 1}
                     />
@@ -459,7 +461,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         {({ input, meta }) => (
                           <Input
                             {...input}
-                            label='latitude'
+                            label='l_latitude'
                             type='text'
                             meta={meta}
                             onChange={(e) => {
@@ -478,7 +480,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                         {({ input, meta }) => (
                           <Input
                             {...input}
-                            label='longitude'
+                            label='l_longitude'
                             type='text'
                             meta={meta}
                             onChange={(e) => {

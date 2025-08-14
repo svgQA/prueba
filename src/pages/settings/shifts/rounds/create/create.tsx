@@ -115,7 +115,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
     go({
       to: '/shifts/rounds',
-      label: 'shifts',
+      label: 'm_round',
       id: 'shifts:rounds:state',
       base: 'setting',
     });
@@ -219,8 +219,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         type='text'
-                        placeholder='p_write'
-                        label='h_name'
+                        placeholder='p_name'
+                        label='l_name'
                         meta={meta}
                       />
                     )}
@@ -234,8 +234,8 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         type='text'
-                        placeholder='p_write'
-                        label='description'
+                        placeholder='p_element_description'
+                        label='h_description'
                         meta={meta}
                       />
                     )}
@@ -258,7 +258,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                         <Input
                           {...input}
                           id='input-code'
-                          placeholder='p_write'
+                          placeholder='p_frequency'
                           type='number'
                         />
                       )}
@@ -279,7 +279,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                         <Input
                           {...input}
                           id='input-radius'
-                          placeholder='p_write'
+                          placeholder='p_radius'
                           type='number'
                         />
                       )}
@@ -565,6 +565,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   width='100%'
                   height='500px'
                   clickPoint={() => {}}
+                  setName={true}
                 />
               </div>
             </div>

@@ -58,6 +58,29 @@ export class DateUtils {
     return localToday.format();
   }
 
+  static createDateFromHourBackend(
+    hourString: string = '1970-01-01T24:00:00.000Z',
+    tz: string = dayjs.tz.guess() // si tu backend siempre manda TZ fija puedes ponerla aquí
+  ): string {
+    if (!hourString) return dayjs.utc().toISOString();
+
+    // Extraer hora de hourString
+    const timeOnlyMatch = hourString.match(/T(\d{2}:\d{2}(?::\d{2})?)/);
+    const timeOnly = timeOnlyMatch ? timeOnlyMatch[1] : hourString;
+    const [hour, minute, second = '0'] = timeOnly.split(':').map(Number);
+
+    // Crear fecha en la TZ indicada
+    const localToday = dayjs()
+      .tz(tz)
+      .set('hour', hour)
+      .set('minute', minute)
+      .set('second', +second)
+      .set('millisecond', 0);
+
+    // Convertir a UTC y devolver ISO string
+    return localToday.utc().toISOString();
+  }
+
   /**
    * Convierte una fecha local a string ISO UTC para backend.
    */

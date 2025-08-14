@@ -7,10 +7,15 @@ import { TextArea } from '@/components/common/text.area/text.area';
 import { Switch } from '@/components/common/switch/switch';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { Form, Field } from 'react-final-form';
-import { useSignal } from '@preact/signals';
+import { Signal, useSignal } from '@preact/signals';
 import { lengthSize } from '@/utils/utilities';
 import { ISendManualNotificationDto } from '@/types/notification/ISendManualNotificationDto';
-import { NotificationService, TaskService, TemplateService } from '@/services';
+import {
+  NotificationService,
+  PlaceService,
+  TaskService,
+  TemplateService,
+} from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
@@ -42,6 +47,7 @@ export const ManualNotificationForm = ({
   const templates = useSignal<IOption[]>([]);
   const tasks = useSignal<IOption[]>([]);
   const tasksResponse = useSignal<ITask[]>([]);
+  const places: Signal<IOption[]> = useSignal([]);
 
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
   const [sendToGeneral, setSendToGeneral] = useState<boolean>(false);
@@ -63,12 +69,12 @@ export const ManualNotificationForm = ({
   });
 
   useEffect(() => {
-    setSelectedUserIds(usersWithPlayerId.map((u) => u.id));
+    setSelectedUserIds(usersWithPlayerId?.map((u) => u.id));
   }, [externalUsers]);
 
   useEffect(() => {
     const finalUsers = usersWithPlayerId
-      .filter((u) => selectedUserIds.includes(u.id))
+      ?.filter((u) => selectedUserIds.includes(u.id))
       .map((u) => ({
         id: u.id,
         name: u.name,
@@ -80,9 +86,10 @@ export const ManualNotificationForm = ({
   }, [selectedUserIds, usersWithPlayerId]);
 
   const getInitData = useCallback(async () => {
-    const [request_task, request_template] = await Promise.all([
+    const [request_task, request_template, request_places] = await Promise.all([
       TaskService.getSimplesList(),
       TemplateService.getBasicTemplates(),
+      PlaceService.getSimpleList(),
     ]);
 
     if (request_task.getStatus()) {
@@ -91,6 +98,10 @@ export const ManualNotificationForm = ({
 
     if (request_template.getStatus()) {
       templates.value = request_template.getMany();
+    }
+
+    if (request_places.getStatus()) {
+      places.value = request_places.getMany();
     }
   }, []);
 
@@ -112,8 +123,9 @@ export const ManualNotificationForm = ({
       overrideTitle: values.title,
       overrideDescription: values.description,
       tasks: tasksResponse.value,
+      placeId: values.placeId.value,
       filters: {
-        userIds: selectedUsersFull.map((u) => String(u.id)),
+        userIds: selectedUsersFull?.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
@@ -173,7 +185,7 @@ export const ManualNotificationForm = ({
                 setSendToShiftToday(checked);
                 setNotificationType(checked ? 'REPORT' : 'GENERAL');
               }}
-              label='¿Esta es una solicitud de reporte a la central?'
+              label={t('l_request_report')}
             />
           </div>
 
@@ -181,7 +193,7 @@ export const ManualNotificationForm = ({
             <input
               type='text'
               className='w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200'
-              placeholder={t('shifts.notifications.searchPlaceholder')}
+              placeholder={t('p_searchPlaceholder')}
               value={search}
               onInput={(e) => setSearch(e.currentTarget.value)}
             />
@@ -224,7 +236,7 @@ export const ManualNotificationForm = ({
                     onChange={(e) =>
                       setSendToShiftToday(e.currentTarget.checked)
                     }
-                    label='Solo con turno activo'
+                    label='l_active_shift'
                   />
                 )}
               </div>
@@ -232,7 +244,7 @@ export const ManualNotificationForm = ({
               {selectedUserIds.length > 0 && (
                 <Button
                   name='button-clear-user-selection'
-                  label='Limpiar selección de usuarios'
+                  label='l_clear_user'
                   mode='primary'
                   onClick={clearUserSelection}
                   borderless
@@ -244,13 +256,11 @@ export const ManualNotificationForm = ({
 
             {selectedUsersFull.length > 0 && (
               <div className='mt-2 border-y-b-light-dark dark:border-y-b-dark-light border-y py-3'>
-                <h5 className='font-medium mb-1'>
-                  Usuarios seleccionados con registro de notificaciones:
-                </h5>
+                <h5 className='font-medium mb-1'>{t('h_users_selected')}</h5>
                 <ul className='list-disc list-inside space-y-1'>
                   {[
                     ...new Map(
-                      selectedUsersFull.map((u) => [u.id, u])
+                      selectedUsersFull?.map((u) => [u.id, u])
                     ).values(),
                   ].map((u) => (
                     <li key={u.id}>
@@ -271,8 +281,8 @@ export const ManualNotificationForm = ({
                   meta={meta}
                   options={templates.value}
                   menuPortalTarget={document.body}
-                  placeholder='Selecciona una plantilla'
-                  label='Plantilla'
+                  placeholder={t('p_select_template')}
+                  label={t('l_template')}
                   onChange={(value?: IOption) => {
                     if (value) infoTemplate(value);
                   }}
@@ -290,6 +300,22 @@ export const ManualNotificationForm = ({
             type={sendToGeneral ? 'REPORT' : 'GENERAL'}
           />
 
+          <div class='col-span-2'>
+            <Field<IOption> name='placeId'>
+              {({ input, meta }) => (
+                <SmartSelector
+                  {...input}
+                  meta={meta}
+                  placeholder='p_select_place'
+                  label='l_place'
+                  id='placeId'
+                  icon='252'
+                  options={places.value}
+                />
+              )}
+            </Field>
+          </div>
+
           <div className='flex flex-col gap-2'>
             <Field<string>
               name='title'
@@ -297,7 +323,7 @@ export const ManualNotificationForm = ({
               render={({ input, meta }) => (
                 <Input
                   {...input}
-                  label={t('shifts.notifications.customTitle')}
+                  label='l_custom_title'
                   meta={meta}
                   type='text'
                 />
@@ -310,7 +336,7 @@ export const ManualNotificationForm = ({
                 <TextArea
                   {...input}
                   name='input-custom-description'
-                  label={t('shifts.notifications.customDescription')}
+                  label='l_custom_description'
                   meta={meta}
                   type='text'
                 />
@@ -320,7 +346,7 @@ export const ManualNotificationForm = ({
 
           <div className='flex justify-end'>
             <Button
-              label='Enviar notificacion'
+              label='l_send_notification'
               mode='ternary'
               type='submit'
               name='button-notification'

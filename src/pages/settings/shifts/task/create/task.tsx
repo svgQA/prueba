@@ -28,12 +28,20 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
 
   const onSubmit = async (model: Record<string, any>) => {
+    const output = {
+      name: model.name,
+      description: model.description,
+      formId: model.formId?.value || undefined,
+      hourStart: DateUtils.createDateFromHourBackend(model.hourStart),
+      type: model.type?.value || undefined,
+    };
+
     if (id) {
-      const request = await TaskService.updateTask(model, id);
+      const request = await TaskService.updateTask(output, id);
       if (!request.getStatus()) return;
       ToastManager.success('s_updated_success');
     } else {
-      const request = await TaskService.createTask(model);
+      const request = await TaskService.createTask(output);
       if (!request.getStatus()) return;
       ToastManager.success('s_created_success');
     }

@@ -117,8 +117,8 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
           initialValues={initialValues.value}
           validate={(values) => {
             const errors: Partial<FormData> = {};
-            if (!values.name) errors.name = 'Campo obligatorio';
-            if (!values.description) errors.description = 'Campo obligatorio';
+            if (!values.name) errors.name = 'field_required';
+            if (!values.description) errors.description = 'field_required';
             return errors;
           }}
           render={({ handleSubmit, form, submitting, pristine }) => (
@@ -135,8 +135,8 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         type='text'
-                        placeholder='Ingrese nombre...'
-                        label='name'
+                        placeholder='p_name'
+                        label='l_name'
                         meta={meta}
                       />
                     )}
@@ -148,8 +148,8 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        placeholder='Selecione cliente...'
-                        label='client'
+                        placeholder='p_select_client'
+                        label='l_client'
                         icon='252'
                         options={users.value}
                       />
@@ -180,7 +180,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         {...input}
                         min='3'
                         max='300'
-                        placeholder='Ingrese Descripción...'
+                        placeholder='p_element_description'
                         label='description'
                         type='text'
                         meta={meta}
@@ -194,8 +194,8 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                     {({ input }) => (
                       <Select
                         {...input}
-                        placeholder='Selecione prioridad...'
-                        label='priority'
+                        placeholder='p_select_priority'
+                        label='l_priority'
                         icon='252'
                         options={[
                           { value: 'HIGH', label: 'Alta' },
@@ -211,8 +211,8 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                     {({ input }) => (
                       <Select
                         {...input}
-                        placeholder='Selecione estado...'
-                        label='status'
+                        placeholder='p_select_state'
+                        label='l_status'
                         icon='252'
                         options={[
                           { value: 'IN_PROGRESS', label: 'En progreso' },
@@ -227,14 +227,14 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                 <div class='col-span-1'>
                   <DateField
                     name='startDate'
-                    label='Fecha inicio'
+                    label='l_date_start'
                     validate={required}
                   />
                 </div>
                 <div class='col-span-1'>
                   <DateField
                     name='endDate'
-                    label='Fecha fin'
+                    label='l_date_end'
                     validate={required}
                   />
                 </div>
