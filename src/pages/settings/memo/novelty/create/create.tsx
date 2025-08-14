@@ -4,7 +4,7 @@ import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { lengthSize } from '@/utils/utilities';
-import { Select } from '@/components/common/select/select';
+// import { Select } from '@/components/common/select/select';
 // import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useParams } from 'wouter';
@@ -13,21 +13,31 @@ import { omitBy, isNull, pick } from 'lodash';
 import { NoveltyService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
 
 interface FormData {
   name: string;
   description: string;
-  priority: number;
+  priority: any;
 }
+
+export const selectPriority: IOption[] = [
+  { value: 5, label: 'Alta' },
+  { value: 4, label: 'Media' },
+  { value: 3, label: 'Baja' },
+]
 
 export const NoveltyCreateSettingPage: FunctionComponent = () => {
   const { go } = useNavigation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
+  const priorities = useSignal<IOption[]>(selectPriority);
 
   const onSubmit = async (model: FormData) => {
     let request;
     let message: string;
+
+    model = { ...model, priority: model.priority.value, };
 
     if (id) {
       request = await NoveltyService.updateNovelty(model, id);
@@ -106,7 +116,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
               <div class='col-span-1'>
-                <Field
+                {/* <Field
                   name='priority'
                   parse={(value) => (value ? Number(value) : undefined)}
                 >
@@ -127,6 +137,20 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                       </div>
                     );
                   }}
+                </Field> */}
+                <Field<IOption> name='priority'>
+                  {({ input, meta }) => (
+                    <SmartSelector
+                      {...input}
+                      meta={meta}
+                      id='select-priority'
+                      icon='191'
+                      label='h_priority'
+                      options={priorities.value}
+                      menuPortalTarget={document.body}
+                      placeholder='p_select'
+                    />
+                  )}
                 </Field>
               </div>
               <div class='col-span-4'>

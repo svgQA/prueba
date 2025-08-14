@@ -165,11 +165,7 @@ export const MemosPage: FunctionComponent = () => {
     if (responseMemos.getStatus()) {
       memos.value = responseMemos.getMany().map((memo: Memo) => ({
         ...memo,
-        priority:
-          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
-          format: 'DD/MM/YYYY HH:mm',
-        }),
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm' }),
       }));
       loading.value = false;
     }
@@ -193,11 +189,7 @@ export const MemosPage: FunctionComponent = () => {
     if (responseMemoPanic.getStatus()) {
       panic.value = responseMemoPanic.getMany().map((memo: Memo) => ({
         ...memo,
-        priority:
-          memo.priority === 5 ? 'Alta' : memo.priority === 4 ? 'Media' : 'Baja',
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
-          format: 'DD/MM/YYYY HH:mm',
-        }),
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm' }),
       }));
       loading.value = false;
     }

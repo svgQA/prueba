@@ -121,6 +121,7 @@ export const getColumnsPanic = (
       cell: (info: any) => {
         const priority = info.getValue() as string;
         let status = 'info';
+
         if (priority === 'Alta') {
           status = 'error';
         } else if (priority === 'Media') {
