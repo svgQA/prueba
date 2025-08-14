@@ -90,8 +90,8 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
       ) : (
         <div className='flex flex-row gap-6 justify-start overflow-x-auto px-2 pb-4 w-full'>
           {Object.entries(grouped)?.map(([_, list], idx) => {
-            const completed = list.filter((t) => t.check).length;
-            const total = list.length;
+            const completed = list?.filter((t) => t.check).length ?? 0;
+            const total = list?.length ?? 0;
 
             return (
               <div
