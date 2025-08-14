@@ -3,79 +3,79 @@ import { ELEMENT_TYPE } from '@/types/form';
 export const ELEMENT_TYPE_VALUES = [
   {
     value: ELEMENT_TYPE.TITLE,
-    label: 'Title',
+    label: 'Título',
   },
   {
     value: ELEMENT_TYPE.INPUT,
-    label: 'Input',
+    label: 'Campo de texto',
   },
   {
     value: ELEMENT_TYPE.TEXT_AREA,
-    label: 'Text Area',
+    label: 'Campo de texto multilínea',
   },
   {
     value: ELEMENT_TYPE.NUMBER_INPUT,
-    label: 'Number Input',
+    label: 'Campo numérico',
   },
   {
     value: ELEMENT_TYPE.DROPDOWN,
-    label: 'Dropdown',
+    label: 'Lista desplegable',
   },
   {
     value: ELEMENT_TYPE.RADIO_BUTTON,
-    label: 'Radio Button',
+    label: 'Opción única',
   },
   {
     value: ELEMENT_TYPE.CHECK_BOX,
-    label: 'Checkbox',
+    label: 'Selección múltiple',
   },
   {
     value: ELEMENT_TYPE.SWITCH,
-    label: 'Switch',
+    label: 'Selector simple',
   },
   {
     value: ELEMENT_TYPE.DATE,
-    label: 'Date',
+    label: 'Fecha',
   },
   {
     value: ELEMENT_TYPE.TIME,
-    label: 'Time',
+    label: 'Hora',
   },
   {
     value: ELEMENT_TYPE.RATING,
-    label: 'Rating',
+    label: 'Calificación',
   },
   {
     value: ELEMENT_TYPE.IMAGE,
-    label: 'Image',
+    label: 'Imagen',
   },
   {
     value: ELEMENT_TYPE.SIGNATURE,
-    label: 'Signature',
+    label: 'Firma',
   },
   {
     value: ELEMENT_TYPE.QR,
-    label: 'QR',
+    label: 'Código QR',
   },
   {
     value: ELEMENT_TYPE.BARCODE,
-    label: 'Barcode',
+    label: 'Código de barras',
   },
   {
     value: ELEMENT_TYPE.AUDIO,
     label: 'Audio',
   },
-  {
+  /*{
     value: ELEMENT_TYPE.CALCULATE,
     label: 'Calculate',
-  },
+  },*/
   {
     value: ELEMENT_TYPE.LOCATION,
-    label: 'Location',
+    label: 'Ubicación',
   },
   {
     value: ELEMENT_TYPE.FILES,
-    label: 'Files',
+    label: 'Archivos',
   },
 ];
 

@@ -123,6 +123,8 @@ export const general_en = {
     buttons: {
       continue: 'Continue',
     },
+    title: 'Title',
+    Input: 'Input',
   },
   history: {
     pageTitle: 'TR - Notification History',
