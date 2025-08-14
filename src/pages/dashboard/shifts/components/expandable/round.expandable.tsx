@@ -43,12 +43,14 @@ const RoundInfo = ({
   }, [shift]);
 
   const getData = async () => {
+    if (!round) return;
     const data = await ShiftService.getRoundHistory<PointStatus>(shift, round);
     if (!data.getStatus()) return;
     setPoints(data.getMany());
   };
 
   const getPointsHistory = async () => {
+    if (!round) return;
     const data = await ShiftService.getPointsHistory<PointsHistory>(
       shift,
       round

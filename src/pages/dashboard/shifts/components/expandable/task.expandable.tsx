@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
-import { Badge } from '@/components/common/badge/badge';
+//import { Badge } from '@/components/common/badge/badge';
 import { Gauge } from '@/components/common/gauge/gauge';
-import { formatDate } from './contract.expandable';
+//import { formatDate } from './contract.expandable';
 import { useTranslation } from 'react-i18next';
 import { TaskCard } from '@/pages/settings/shifts/task/create/task.card';
 import { FormService } from '@/services';
@@ -26,7 +26,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
   const [selectedFormId, setSelectedFormId] = useState<number | null>(null);
 
   useEffect(() => {
-    const groupByDate = tasks?.reduce(
+    /* const groupByDate = tasks.reduce(
       (acc, task) => {
         const date = task.hourStart?.split('T')[0] ?? 'Sin fecha';
         if (!acc[date]) acc[date] = [];
@@ -34,9 +34,8 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
         return acc;
       },
       {} as Record<string, ITask[]>
-    );
-
-    setGrouped(groupByDate);
+    ); */
+    setGrouped({ '': tasks });
 
     const total = tasks?.length ?? 0;
     const completed = tasks?.filter((t) => t.check).length ?? 0;
@@ -85,7 +84,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
         </div>
       ) : (
         <div className='flex flex-row gap-6 justify-start overflow-x-auto px-2 pb-4 w-full'>
-          {Object.entries(grouped)?.map(([date, list], idx) => {
+          {Object.entries(grouped)?.map(([_, list], idx) => {
             const completed = list.filter((t) => t.check).length;
             const total = list.length;
 
@@ -98,7 +97,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
                   <div className='text-xs text-gray-600 dark:text-gray-400'>
                     {completed} / {total} {t('l_completed')}
                   </div>
-                  <Badge label={formatDate(date)} status='info' />
+                  {/* <Badge label={date} status='info' /> */}
                 </div>
 
                 <div className='flex flex-row gap-2 w-full'>

@@ -61,8 +61,8 @@ const getInfoContent = (
         <RoundInfo
           shift={shift.id}
           round={service?.round?.id}
-          frequency={service?.round?.frequency}
-          roundName={service?.round?.name}
+          frequency={service?.round?.frequency || 0}
+          roundName={service?.round?.name || 'No tiene ronda'}
         />
       );
     case 'time-start':
