@@ -7,7 +7,7 @@ import { useSignal } from '@preact/signals';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { CardData } from '@/components/compose/cards';
-import { ExpandableCorrespondence } from '@/components/compose/table/expandable/correspondence';
+// import { ExpandableCorrespondence } from '@/components/compose/table/expandable/correspondence';
 // import { Button } from '@/components/common/button/button';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -175,9 +175,9 @@ export const CorrespondencePage: FunctionalComponent = () => {
           columns={getColumns(onClickAction)}
           pageSize={10}
           // Expansible (similar a Access)
-          expandable={(row: ICorrespondence) => (
-            <ExpandableCorrespondence row={row} />
-          )}
+          // expandable={(row: ICorrespondence) => (
+          //   <ExpandableCorrespondence row={row} />
+          // )}
         />
       </div>
 

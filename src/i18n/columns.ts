@@ -106,6 +106,8 @@ export const columns_es = {
   h_sender: 'Remitente',
   h_owner: 'Propietario',
   h_notification: 'Notificación',
+  h_entry_type: 'Ingreso',
+  h_person_entry: 'Persona que ingresó'
 };
 
 export const columns_en = {
@@ -216,4 +218,6 @@ export const columns_en = {
   h_sender: 'Sender',
   h_owner: 'Owner',
   h_notification: 'Notification',
+  h_entry_type: 'Entry Type',
+  h_person_entry: 'Person who entered',
 };

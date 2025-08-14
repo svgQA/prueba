@@ -16,7 +16,7 @@ import { UserService } from '@/services';
 import { DateField } from '@/components/compose/forms';
 import { Signature } from '@/components/common/signature/signature';
 import { IAccess } from '@/types/access/accesses';
-import { DateUtils } from '@/utils/utilities/dates';
+// import { DateUtils } from '@/utils/utilities/dates';
 
 export interface IAccessFormProps {
   closed: boolean;
@@ -71,24 +71,24 @@ export const AccessForm = ({ closed, onClose, id }: IAccessFormProps) => {
     });
   };
 
-  const handleSubmit = async (model: any, _form?: any) => {
+  const handleSubmit = async (_model: any, _form?: any) => {
     loading.value = true;
 
-    let access: IAccess = {
-      name: model.name,
-      description: model.description,
-      userId: model.user.value,
-      checkIn: {
-        resource: model.signature,
-        startDate: DateUtils.dateToBackend(model.startDate),
-      },
-    };
+    // let access: IAccess = {
+    //   name: model.name,
+    //   description: model.description,
+    //   userId: model.user.value,
+    //   checkIn: {
+    //     resource: model.signature,
+    //     startDate: DateUtils.dateToBackend(model.startDate),
+    //   },
+    // };
 
-    let response = id
-      ? await AccessesService.updateAccesses(id, access)
-      : await AccessesService.createAccesses(access);
+    // let response = id
+    //   ? await AccessesService.updateAccesses(id, access)
+    //   : await AccessesService.createAccesses(access);
 
-    if (!response.getStatus()) return;
+    // if (!response.getStatus()) return;
     ToastManager.success(id ? 's_updated_success' : 's_created_success');
     handleClose();
     navigateUpsert('/access');
