@@ -21,7 +21,9 @@ interface Props {
 const TaskInfo = ({ shiftId, tasks }: Props) => {
   const { t } = useTranslation();
   const [_, navigate] = useLocation();
-  const [grouped, setGrouped] = useState<Record<string, ITask[]>>({});
+  const [grouped, setGrouped] = useState<Record<string, ITask[] | undefined>>(
+    {}
+  );
   const [overallProgress, setOverallProgress] = useState<number>(0);
   const [selectedFormId, setSelectedFormId] = useState<number | null>(null);
 
@@ -35,7 +37,10 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
       },
       {} as Record<string, ITask[]>
     ); */
-    setGrouped({ '': tasks });
+
+    //Todo: Cambiar esto, no es necesario agrupar por fecha
+    const groupedTasks = tasks?.length ? { '': tasks } : {};
+    setGrouped(groupedTasks);
 
     const total = tasks?.length ?? 0;
     const completed = tasks?.filter((t) => t.check).length ?? 0;
