@@ -24,6 +24,7 @@ import {
   updatePageForm,
   getHasUnsavedChanges,
   setHasUnsavedChanges,
+  setFormat,
 } from './store/question';
 import { setPhonePage } from './store/phone';
 import { TargetedEvent } from 'preact/compat';
@@ -40,29 +41,33 @@ import { useLocation } from 'wouter';
 import { FormService, GeneralService } from '@/services';
 import { PAGES_LIST_ROUTER } from '@/utils/routing';
 import { useTranslation } from 'react-i18next';
-// import { TextArea } from '@/components/common/text.area/text.area';
 import { Badge } from '@/components/common/badge/badge';
 import { localStorage } from '@/utils/storage';
 import { MultiSelect } from './MultiSelect';
 import { useSignal } from '@preact/signals';
 import { useUserStore } from '@/store/slices';
 const AUTO_SAVE_INTERVAL = 4000; // 4 seconds
+
 interface IMultiSelect {
   id: number;
   name: string;
 }
+
 export const FormCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const [_, navigate] = useLocation();
   const [isAutoSaving, setIsAutoSaving] = useState(false);
   const group = useSignal<number[]>(getForm.value.groups);
   const smartGroups = useSignal<{ name: string; id: number }[]>([]);
+  const { selectedCompany } = useUserStore();
 
   useEffect(() => {
     document.title = t('p_setting');
+    return () => {
+      setFormat();
+    };
   }, []);
 
-  const { selectedCompany } = useUserStore();
   useEffect(() => {
     if (selectedCompany) {
       getGroups();
@@ -132,12 +137,14 @@ export const FormCreateSettingPage: FunctionComponent = () => {
       setSingleFormat(message);
       return ToastManager.error('s_general');
     }
+
     const format: IFormRequest = {
       title: getForm.value.label,
       description: getForm.value.description || '',
       structure: getForm.value,
       smart_groups: group.value,
     };
+
     if (getFormMode.value.mode === FORMAT_MODE_SERVICE.UPDATE) {
       if (!getFormMode.value.id) return;
       const response = await FormService.update(format, getFormMode.value.id);
