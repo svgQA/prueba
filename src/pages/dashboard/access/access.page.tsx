@@ -128,23 +128,23 @@ export const AccessPage: FunctionalComponent = () => {
     <Section>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='Visitas Mensuales'
+          title='h_accessess_total'
           count={summary.value?.total}
-          subtitle='Registros de este mes'
+          subtitle='h_accessess_subtitle'
           color='text-secondary'
           icon='189'
         />
         <CardData
-          title='Vehículos que ingresaron'
+          title='h_accessess_in_progress'
           count={calculatePercentage(summary.value)}
-          subtitle='Por día'
+          subtitle='h_accessess_entered_subtitle'
           color='text-primary'
           icon='183'
         />
         <CardData
-          title='Vehículos que ingresaron y salieron'
+          title='h_accessess_completed'
           count={calculatePercentage(summary.value, true)}
-          subtitle='Por día'
+          subtitle='h_accessess_entered_subtitle'
           color='text-error'
           icon='221'
         />
