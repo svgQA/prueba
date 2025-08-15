@@ -54,6 +54,7 @@ import { Button } from '../button/button';
 import { DraggableTableHeader } from './components/draggable.header';
 import { ROW_ACTIONS } from './enum';
 import { useTranslation } from 'react-i18next';
+import { DateUtils } from '@/utils/utilities/dates';
 
 const SkeletonRow = ({ columns }: { columns: number }) => {
   return (
@@ -96,17 +97,74 @@ export const Table = <T,>({
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
     {}
   );
+
+  // const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
+  //   const rowValue = row.getValue(columnId);
+
+  //   if (Array.isArray(filterValue)) {
+  //     return filterValue.some((val) =>
+  //       String(rowValue).toLowerCase().includes(String(val).toLowerCase())
+  //     );
+  //   }
+  //   return String(rowValue)
+  //     .toLowerCase()
+  //     .includes(String(filterValue).toLowerCase());
+  // };
+
   const defaultOrFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId);
 
-    if (Array.isArray(filterValue)) {
-      return filterValue.some((val) =>
-        String(rowValue).toLowerCase().includes(String(val).toLowerCase())
-      );
+    // Detectar si es una columna de fecha
+    if (columnId.includes('At') || columnId.includes('Date') || columnId === 'createdAt' || columnId === 'updatedAt') {
+      const originalString = String(rowValue);
+
+      // Formatear la fecha igual que FormattedDate
+      // const formattedValue = new Date(rowValue as string | number | Date).toLocaleDateString('es-ES', {
+      //   day: '2-digit',
+      //   month: '2-digit',
+      //   year: 'numeric'
+      // });
+      
+      // Usar DateUtils para mantener consistencia con el resto de la app
+      const formattedValue = DateUtils.dateToFrontend(rowValue as string | Date, { format: 'DD/MM/YYYY' });
+
+      if (Array.isArray(filterValue)) {
+        return filterValue.some((val) => {
+          const searchValue = String(val).toLowerCase();
+          return originalString.toLowerCase().includes(searchValue) ||
+            formattedValue.toLowerCase().includes(searchValue);
+        });
+      }
+
+      const searchValue = String(filterValue).toLowerCase();
+      return originalString.toLowerCase().includes(searchValue) ||
+        formattedValue.toLowerCase().includes(searchValue);
     }
-    return String(rowValue)
-      .toLowerCase()
-      .includes(String(filterValue).toLowerCase());
+
+    // Filtro normal para otros campos con soporte para traducciones
+    const originalValue = String(rowValue).toLowerCase();
+    const translatedValue = t(String(rowValue)).toLowerCase();
+
+    if (Array.isArray(filterValue)) {
+      return filterValue.some((val) => {
+        const searchValue = String(val).toLowerCase();
+        const translatedSearchValue = t(String(val)).toLowerCase();
+
+        return originalValue.includes(searchValue) ||
+          originalValue.includes(translatedSearchValue) ||
+          translatedValue.includes(searchValue) ||
+          translatedValue.includes(translatedSearchValue);
+      });
+    }
+
+    const searchValue = String(filterValue).toLowerCase();
+    const translatedSearchValue = t(String(filterValue)).toLowerCase();
+
+    return originalValue.includes(searchValue) ||
+      originalValue.includes(translatedSearchValue) ||
+      translatedValue.includes(searchValue) ||
+      translatedValue.includes(translatedSearchValue);
+
   };
 
   const columnsData = useMemo<ColumnDef<T>[]>(() => {

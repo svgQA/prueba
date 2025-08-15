@@ -1,5 +1,5 @@
 import { FunctionalComponent } from 'preact';
-import { useCallback, useEffect } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 
 import { Section } from '@/components/common/section/section';
 // Ajusta si tu Section está en otro lado
@@ -15,13 +15,13 @@ import { defaultSummary, IResponseSummary } from '@/services';
 // import { Button } from '@/components/common/button/button';
 import { AccessForm } from './components/access.upsert.form';
 import { IRowAction } from '@/components/common/table/interface';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-  SseManager,
-} from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/event.bus';
+// import {
+//   IBaseSSE,
+//   SSE_EVENTS,
+//   SSE_TYPE,
+//   SseManager,
+// } from '@/utils/network/sse/base';
+// import { EventBus } from '@/utils/network/event.bus';
 import { IAccess } from '@/types/access/accesses';
 
 export const AccessPage: FunctionalComponent = () => {
@@ -35,8 +35,8 @@ export const AccessPage: FunctionalComponent = () => {
   useEffect(() => {
     document.title = t('p_access');
     fetchInitialData();
-    fetchSSE();
-    EventBus.on(SSE_TYPE.ACCESSES, handleAccessSSE);
+    // fetchSSE();
+    // EventBus.on(SSE_TYPE.ACCESSES, handleAccessSSE);
   }, []);
 
   const fetchInitialData = async () => {
@@ -54,29 +54,25 @@ export const AccessPage: FunctionalComponent = () => {
     }
   };
 
-  const fetchSSE = useCallback(async () => {
-    await SseManager.getQuery(['accesses', 'stream']);
-  }, []);
+  // const fetchSSE = useCallback(async () => {
+  //   await SseManager.getQuery(['accesses', 'stream']);
+  // }, []);
 
-  const handleAccessSSE = async (event: IBaseSSE) => {
-    const { name, message } = event;
+  // const handleAccessSSE = async (event: IBaseSSE) => {
+  //   const { name, message } = event;
 
-    if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
-      const index = accesses.value.findIndex(
-        (value: any) => value.id === message.id
-      );
-      if (index < 0) return;
-      const copy: IAccess[] = accesses.value;
-      copy[index].name = message.name;
-      copy[index].description = message.description;
-      copy[index].checkIn = message.checkIn;
-      copy[index].checkOut = message.checkOut;
-      copy[index].updatedAt = message.updatedAt;
-      accesses.value = [...copy];
-    }
+  //   if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
+  //     const index = accesses.value.findIndex(
+  //       (value: any) => value.id === message.id
+  //     );
+  //     if (index < 0) return;
+  //     const copy: IAccess[] = accesses.value;
+  //     copy[index] = message;
+  //     accesses.value = [...copy];
+  //   }
 
-    if (name === SSE_EVENTS.CREATE) fetchInitialData();
-  };
+  //   if (name === SSE_EVENTS.CREATE) fetchInitialData();
+  // };
 
   const toggleUpsertModal = () => {
     showUpsertModal.value = !showUpsertModal.value;
@@ -132,23 +128,23 @@ export const AccessPage: FunctionalComponent = () => {
     <Section>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='Visitas Mensuales'
+          title='h_accessess_total'
           count={summary.value?.total}
-          subtitle='Registros de este mes'
+          subtitle='h_accessess_subtitle'
           color='text-secondary'
           icon='189'
         />
         <CardData
-          title='Vehículos que ingresaron'
+          title='h_accessess_in_progress'
           count={calculatePercentage(summary.value)}
-          subtitle='Por día'
+          subtitle='h_accessess_entered_subtitle'
           color='text-primary'
           icon='183'
         />
         <CardData
-          title='Vehículos que ingresaron y salieron'
+          title='h_accessess_completed'
           count={calculatePercentage(summary.value, true)}
-          subtitle='Por día'
+          subtitle='h_accessess_entered_subtitle'
           color='text-error'
           icon='221'
         />
