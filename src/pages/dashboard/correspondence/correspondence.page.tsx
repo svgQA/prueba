@@ -7,7 +7,7 @@ import { useSignal } from '@preact/signals';
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { CardData } from '@/components/compose/cards';
-import { ExpandableCorrespondence } from '@/components/compose/table/expandable/correspondence';
+// import { ExpandableCorrespondence } from '@/components/compose/table/expandable/correspondence';
 // import { Button } from '@/components/common/button/button';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
@@ -134,23 +134,23 @@ export const CorrespondencePage: FunctionalComponent = () => {
       {/* Tarjetas superiores, como en Access o Shifts */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title='Visitas Mensuales'
+          title='h_correspondence_total'
           count={summary.value?.total}
-          subtitle='Registros de este mes'
+          subtitle='h_correspondence_subtitle'
           color='text-secondary'
           icon='189'
         />
         <CardData
-          title='Vehículos que ingresaron'
+          title='h_correspondence_in_progress'
           count={calculatePercentage(summary.value)}
-          subtitle='Por día'
+          subtitle='h_correspondence_delivered_subtitle'
           color='text-primary'
           icon='183'
         />
         <CardData
-          title='Vehículos que ingresaron y salieron'
+          title='h_correspondence_completed'
           count={calculatePercentage(summary.value, true)}
-          subtitle='Por día'
+          subtitle='h_correspondence_delivered_subtitle'
           color='text-error'
           icon='221'
         />
@@ -175,9 +175,9 @@ export const CorrespondencePage: FunctionalComponent = () => {
           columns={getColumns(onClickAction)}
           pageSize={10}
           // Expansible (similar a Access)
-          expandable={(row: ICorrespondence) => (
-            <ExpandableCorrespondence row={row} />
-          )}
+          // expandable={(row: ICorrespondence) => (
+          //   <ExpandableCorrespondence row={row} />
+          // )}
         />
       </div>
 

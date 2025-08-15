@@ -97,7 +97,7 @@ export const columns: ColumnDef<IProject>[] = [
       };
       return (
         <Badge
-          label={state?.label}
+          label={value}
           status={state?.color as 'info' | 'error' | 'warning' | 'success'}
           outline
           full
@@ -119,7 +119,7 @@ export const columns: ColumnDef<IProject>[] = [
       };
       return (
         <Badge
-          label={priority?.label}
+          label={value}
           status={priority?.color as 'info' | 'error' | 'warning' | 'success'}
           outline
           full

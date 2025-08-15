@@ -45,6 +45,18 @@ export const common_es = {
   no_results: 'No hay resultados',
   send: 'Enviar',
   answer: 'Respuesta',
+  vehicule: 'Vehículo',
+  peatonal: 'Peatonal',
+  yes: 'si',
+  RECEIVED: 'Recibido',
+  DELIVERED: 'Entregado',
+  IN_RECEPTION: 'En Portería',
+  IN_PROGRESS: 'En Progreso',
+  PENDING: 'Pendiente',
+  COMPLETED: 'Completado',
+  HIGH: 'Alta',
+  MEDIUM: 'Media',
+  LOW: 'Baja'
 };
 
 export const common_en = {
@@ -98,4 +110,16 @@ export const common_en = {
   no_results: 'No results',
   send: 'Send',
   answer: 'Answer',
+  vehicule: 'Vehículo',
+  peatonal: 'Peatonal',
+  yes: 'yes',
+  RECEIVED: 'Received',
+  DELIVERED: 'Delivered',
+  IN_RECEPTION: 'In Reception',
+  IN_PROGRESS: 'In Progress',
+  PENDING: 'Pending',
+  COMPLETED: 'Completed',
+  HIGH: 'High',
+  MEDIUM: 'Medium',
+  LOW: 'Low'
 };
