@@ -51,6 +51,12 @@ export const common_es = {
   RECEIVED: 'Recibido',
   DELIVERED: 'Entregado',
   IN_RECEPTION: 'En Portería',
+  IN_PROGRESS: 'En Progreso',
+  PENDING: 'Pendiente',
+  COMPLETED: 'Completado',
+  HIGH: 'Alta',
+  MEDIUM: 'Media',
+  LOW: 'Baja'
 };
 
 export const common_en = {
@@ -110,4 +116,10 @@ export const common_en = {
   RECEIVED: 'Received',
   DELIVERED: 'Delivered',
   IN_RECEPTION: 'In Reception',
+  IN_PROGRESS: 'In Progress',
+  PENDING: 'Pending',
+  COMPLETED: 'Completed',
+  HIGH: 'High',
+  MEDIUM: 'Medium',
+  LOW: 'Low'
 };
