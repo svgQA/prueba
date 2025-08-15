@@ -27,7 +27,7 @@ export const MapLibrePointsMap = ({
   draggable = true,
   width = '100%',
   height = '500px',
-  clickPoint = () => {},
+  clickPoint = () => { },
   radius,
   disablePointSelection = false,
   adminUser = false,
@@ -223,9 +223,9 @@ export const MapLibrePointsMap = ({
     const a =
       Math.sin(latDiffRad / 2) * Math.sin(latDiffRad / 2) +
       Math.cos(lat1Rad) *
-        Math.cos(lat2Rad) *
-        Math.sin(lngDiffRad / 2) *
-        Math.sin(lngDiffRad / 2);
+      Math.cos(lat2Rad) *
+      Math.sin(lngDiffRad / 2) *
+      Math.sin(lngDiffRad / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = earthRadius * c;
     return distance > 1000;
@@ -515,19 +515,27 @@ export const MapLibrePointsMap = ({
     popupNode.innerHTML = `
       <div>
         <div class="flex flex-col mb-2">
-          <label class="text-sm mb-1">${t('h_name')}</label>
-          <input id="edit-name" type="text" value="${point.name}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''}/>
-
+      ${point.name 
+        ? (disablePointSelection 
+          ? `<div>
+              <label class="text-sm mb-1">${t('h_name')}</label>
+              <input id="edit-name" type="text" value="${point.name}" class="w-full text-sm p-1 border rounded" disabled/>
+            </div>`
+          : `<div>
+              <label class="text-sm mb-1">${t('h_name')}</label>
+              <input id="edit-name" type="text" value="${point.name}" class="w-full text-sm p-1 border rounded"/>
+            </div>`)
+        : ''
+      }
           <label class="text-sm mb-1 mt-2">${t('h_latitude')}</label>
           <input id="edit-lat" type="text" value="${point.position.lat}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''}/>
 
           <label class="text-sm mb-1 mt-2">${t('h_longitude')}</label>
           <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>
-        ${
-          disablePointSelection
-            ? ''
-            : `
+        ${disablePointSelection
+        ? ''
+        : `
           <div class="flex justify-between mt-2">
             <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
               ${t('delete')}
@@ -535,18 +543,17 @@ export const MapLibrePointsMap = ({
             <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
               ${isCreate ? t('save') : t('edit')}
             </button>
-            ${
-              id === -1
-                ? `
+            ${id === -1
+          ? `
             <button id="btn-restore" class="bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-2 rounded">
               ${t('restore')}
             </button>
             `
-                : ''
-            }
+          : ''
+        }
           </div>
           `
-        }
+      }
       </div>
     `;
 
@@ -709,10 +716,10 @@ export const MapLibrePointsMap = ({
         prevPoints.map((point) =>
           point.id === id
             ? {
-                ...point,
-                position: { lat: newLat, lng: newLng },
-                name: name ?? point.name,
-              }
+              ...point,
+              position: { lat: newLat, lng: newLng },
+              name: name ?? point.name,
+            }
             : point
         )
       );

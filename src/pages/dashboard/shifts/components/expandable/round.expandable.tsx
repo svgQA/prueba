@@ -20,6 +20,7 @@ interface PointsHistory {
   id: number;
   latitude: number;
   longitude: number;
+  name?: string;
 }
 
 const RoundInfo = ({
@@ -60,6 +61,7 @@ const RoundInfo = ({
       data.getMany()?.map((point) => ({
         id: point.id,
         position: { lat: point.latitude, lng: point.longitude },
+        name: point.name
       }))
     );
   };
@@ -70,11 +72,13 @@ const RoundInfo = ({
         <h2 className='font-medium p-2 bg-ternary text-white rounded-ee-lg'>
           {t('h_round') + ': ' + roundName}
         </h2>
-        <MapViewer
-          title={t('h_round') + ': ' + roundName}
-          mapPoint={pointsHistory}
-          clickable={<Button name='btn-map-viewer' icon='289'></Button>}
-        />
+        {points.length !== 0 && (
+          <MapViewer
+            title={t('h_round') + ': ' + roundName}
+            mapPoint={pointsHistory}
+            clickable={<Button name='btn-map-viewer' icon='289'></Button>}
+          />
+        )}
       </div>
       {points.length === 0 ? (
         <div className='flex items-center justify-center h-32'>
