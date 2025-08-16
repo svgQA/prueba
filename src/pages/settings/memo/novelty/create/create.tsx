@@ -14,11 +14,12 @@ import { NoveltyService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
-
+import { Checkbox } from '@/components/common/checkbox/checkbox';
 interface FormData {
   name: string;
   description: string;
   priority: any;
+  autoResolve: boolean;
 }
 
 export const selectPriority: IOption[] = [
@@ -60,7 +61,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
   const setInitialValues = async () => {
     if (!id) return;
 
-    const userKeys = ['name', 'description', 'priority'] as const;
+    const userKeys = ['name', 'description', 'priority', 'autoResolve'] as const;
 
     const request: any = await NoveltyService.getNoveltyById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
@@ -102,7 +103,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
             />
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-3'>
-              <div class='col-span-3'>
+              <div class='col-span-2'>
                 <Field<string> name='name' validate={lengthSize(5, 30)}>
                   {({ input, meta }) => (
                     <Input
@@ -149,6 +150,25 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                       options={priorities.value}
                       menuPortalTarget={document.body}
                       placeholder='p_select'
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1 mt-8'>
+                <Field<boolean> name='autoResolve'>
+                  {({ input }) => (
+                    <Checkbox
+                      {...input}
+                      name='autoResolve'
+                      label=''
+                      options={[
+                        {
+                          value: 'autoResolve',
+                          label: 'Activar resolución automática',
+                        },
+                      ]}
+                      value={input.value ? { autoResolve: true } : {}}
+                      checked={input.value }
                     />
                   )}
                 </Field>
