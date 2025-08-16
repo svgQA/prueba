@@ -123,7 +123,7 @@ export const ManualNotificationForm = ({
       overrideTitle: values.title,
       overrideDescription: values.description,
       tasks: tasksResponse.value,
-      placeId: values.placeId.value,
+      placeId: values.placeId?.value ? Number(values.placeId.value) : undefined,
       filters: {
         userIds: selectedUsersFull?.map((u) => String(u.id)),
         ...(sendToShiftToday && { shiftToday: true }),
