@@ -11,7 +11,7 @@ export interface IInputProps<T> extends IComponentProps {
   label?: string;
   min?: string | number; // ✅ actualizado
   max?: string | number; // ✅ actualizado
-  value?: string | number | Date | boolean | undefined;
+  value?: string | number | Date  | undefined;
   step?: number;
   pattern?: string;
   required?: boolean;
