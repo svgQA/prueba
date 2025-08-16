@@ -55,6 +55,7 @@ import { DraggableTableHeader } from './components/draggable.header';
 import { ROW_ACTIONS } from './enum';
 import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
+import { RangeDateFilter } from './components/range/range';
 
 const SkeletonRow = ({ columns }: { columns: number }) => {
   return (
@@ -843,6 +844,7 @@ export const Table = <T,>({
             onChange={setColumnFilters}
             table={table}
             group={<Group<T> table={table} />}
+            range={<RangeDateFilter<T> table={table} />}
             disabled={loading}
             modules={modules}
           />

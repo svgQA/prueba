@@ -18,6 +18,7 @@ export const Search = ({
   grouping,
   disabled = false,
   modules,
+  range
 }: ISearchProps) => {
   const { t } = useTranslation();
   const inputState = useSignal<string>('');
@@ -312,6 +313,7 @@ export const Search = ({
         />
       </div>
 
+      {table && range && <>{range}</>}
       {(table || grouping) && group && <>{group}</>}
       {table && modules && <ReportAutomatic modules={modules} />}
 
