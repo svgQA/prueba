@@ -32,7 +32,11 @@ export const DateField = ({
       validate={isRequired ? required : validate}
       parse={(value) => (value ? DateUtils.dateToBackend(value, format) : '')}
       format={(value) => (value ? DateUtils.dateToInput(value) : '')}
-      initialValue={defaultToNow ? DateUtils.dateFormat(new Date(), 'YYYY-MM-DDTHH:mm') : undefined}
+      initialValue={
+        defaultToNow
+          ? DateUtils.dateFormat(new Date(), 'YYYY-MM-DDTHH:mm')
+          : undefined
+      }
     >
       {({ input, meta }) => {
         return (

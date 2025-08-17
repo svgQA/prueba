@@ -318,7 +318,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       startDate as Date | string,
       DateUtils.nowUTCDate()
     );
-    const totalMinutes = (timeDifference.hours * 60) + timeDifference.minutes;
+    const totalMinutes = timeDifference.hours * 60 + timeDifference.minutes;
     return totalMinutes;
   };
 
@@ -371,8 +371,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                                 name='duration'
                                 label='h_duration'
                                 placeholder='min'
-                            />
-                          );
+                              />
+                            );
                           }}
                         </Field>
                       </div>

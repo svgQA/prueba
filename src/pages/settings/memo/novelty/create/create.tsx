@@ -13,7 +13,10 @@ import { omitBy, isNull, pick } from 'lodash';
 import { NoveltyService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useNavigation } from '@/utils/hooks/navigation';
-import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
+import {
+  IOption,
+  SmartSelector,
+} from '@/components/common/smart-selector/smart-select';
 import { Checkbox } from '@/components/common/checkbox/checkbox';
 interface FormData {
   name: string;
@@ -26,7 +29,7 @@ export const selectPriority: IOption[] = [
   { value: 5, label: 'Alta' },
   { value: 4, label: 'Media' },
   { value: 3, label: 'Baja' },
-]
+];
 
 export const NoveltyCreateSettingPage: FunctionComponent = () => {
   const { go } = useNavigation();
@@ -38,7 +41,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
     let request;
     let message: string;
 
-    model = { ...model, priority: model.priority.value, };
+    model = { ...model, priority: model.priority.value };
 
     if (id) {
       request = await NoveltyService.updateNovelty(model, id);
@@ -61,11 +64,16 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
   const setInitialValues = async () => {
     if (!id) return;
 
-    const userKeys = ['name', 'description', 'priority', 'autoResolve'] as const;
+    const userKeys = [
+      'name',
+      'description',
+      'priority',
+      'autoResolve',
+    ] as const;
 
     const request: any = await NoveltyService.getNoveltyById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
-    const priority = priorities.value.find(p => p.value === model.priority);
+    const priority = priorities.value.find((p) => p.value === model.priority);
 
     initialValues.value = {
       ...model,
@@ -150,7 +158,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                         },
                       ]}
                       value={input.value ? { autoResolve: true } : {}}
-                      checked={input.value }
+                      checked={input.value}
                     />
                   )}
                 </Field>
