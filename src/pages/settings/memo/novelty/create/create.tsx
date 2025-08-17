@@ -3,7 +3,7 @@ import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
-import { lengthSize } from '@/utils/utilities';
+import { required } from '@/utils/utilities';
 // import { Select } from '@/components/common/select/select';
 // import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
@@ -65,8 +65,12 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
 
     const request: any = await NoveltyService.getNoveltyById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
+    const priority = priorities.value.find(p => p.value === model.priority);
 
-    initialValues.value = model;
+    initialValues.value = {
+      ...model,
+      priority: priority,
+    };
   };
 
   useEffect(() => {
@@ -104,7 +108,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-3'>
               <div class='col-span-2'>
-                <Field<string> name='name' validate={lengthSize(5, 30)}>
+                <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
                       {...input}
@@ -117,29 +121,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
               <div class='col-span-1'>
-                {/* <Field
-                  name='priority'
-                  parse={(value) => (value ? Number(value) : undefined)}
-                >
-                  {({ input }) => {
-                    return (
-                      <div>
-                        <Select
-                          {...input}
-                          placeholder='Selecione prioridad...'
-                          label='Prioridad'
-                          name='priority'
-                          icon='252'
-                          options={Array.from({ length: 10 }, (_, i) => ({
-                            value: i + 1,
-                            label: i + 1,
-                          }))}
-                        />
-                      </div>
-                    );
-                  }}
-                </Field> */}
-                <Field<IOption> name='priority'>
+                <Field<IOption> name='priority' validate={required}>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
@@ -155,7 +137,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
               <div class='col-span-1 mt-8'>
-                <Field<boolean> name='autoResolve'>
+                <Field<boolean> name='autoResolve' defaultValue={false}>
                   {({ input }) => (
                     <Checkbox
                       {...input}
@@ -174,7 +156,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
               <div class='col-span-4'>
-                <Field<string> name='description' validate={lengthSize(5, 250)}>
+                <Field<string> name='description' validate={required}>
                   {({ input, meta }) => (
                     <TextArea
                       {...input}
