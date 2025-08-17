@@ -26,13 +26,13 @@ import { IPanic } from '@/components/common/panic/utils/interface';
 import { PanicService } from '@/services/memo/panic';
 import { Badge } from '@/components/common/badge/badge';
 import { useTranslation } from 'react-i18next';
+import { required } from '@/utils/utilities';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const { t } = useTranslation();
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
   const memos = useSignal<Memo[]>([]);
   const files = useSignal<IPresignedRequest[]>([]);
-  const [message, setMessage] = useState('');
   const [btnLabel, setBtnLabel] = useState('Check In');
   const predefined: Signal<IOption[]> = useSignal([]);
   const panic = useSignal<IPanic[]>([]);
@@ -155,7 +155,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     let lastMemo: Omit<Memo, 'resource'> = memo;
     let extraData: ExtraData = { ...memo.extraData } as ExtraData;
 
-    if (!message.trim() && !values.predefined) return;
+    if (!values.message.trim() && !values.predefined) return;
     if (values.predefined && values.predefined.value !== 'other')
       extraData.predefined = values.predefined;
     if (values.duration) extraData.duration = values.duration;
@@ -163,7 +163,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
     const newMemo: Memo = {
       ...lastMemo,
-      description: message.trim() ? message : '...',
+      description: values.message.trim() ? values.message : '...',
       priority:
         lastMemo.priority === 'Alta'
           ? 5
@@ -182,10 +182,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     if (response.getStatus()) {
       form.reset();
       files.value = [];
-      // Verificar si el memo ya existe antes de agregarlo
-      const newMemoData = response.getOne();
-      memos.value = [...memos.value, newMemoData];
-      setMessage('');
+      fetchInitialData();
+      ToastManager.success('Se a envió la respuesta correctamente');
     }
   };
 
@@ -263,9 +261,10 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                           {memo.extraData.time && (
                             <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
                               <span className='vox-icon size-sm vx-icon-237 text-primary' />
-                              {DateUtils.dateToFrontend(memo.extraData.time, {
-                                format: 'DD/MM/YYYY HH:mm',
-                              })}
+                              <FormattedDate
+                                date={memo.createdAt as string}
+                                format='datetime'
+                              />
                             </span>
                           )}
                         </div>
@@ -313,12 +312,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     files.value = files.value.filter((file) => file.uuid !== uuid);
   };
 
-  const getDurationInMinutes = (start: string | Date, end: string | Date) => {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    const diffMs = endDate.getTime() - startDate.getTime();
-    const diffMinutes = Math.floor(diffMs / 60000); // 1 minuto = 60,000 ms
-    return diffMinutes;
+  const calculateInitialDuration = () => {
+    const startDate = memo.updatedAt ?? memo.createdAt;
+    const timeDifference = DateUtils.getTimeDifference(
+      startDate as Date | string,
+      DateUtils.nowUTCDate()
+    );
+    const totalMinutes = (timeDifference.hours * 60) + timeDifference.minutes;
+    return totalMinutes;
   };
 
   const messageInput = () => {
@@ -329,22 +330,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         <Form
           onSubmit={handleSubmitMessage}
           initialValues={{
-            date: DateUtils.dateToFrontend(new Date(), {
-              format: 'DD/MM/YYYY HH:mm',
-            }),
-            duration:
-              memos.value.length > 0 &&
-              memos.value[memos.value.length - 1]?.createdAt &&
-              memo.updatedAt
-                ? getDurationInMinutes(
-                    memos.value[memos.value.length - 1].createdAt as
-                      | Date
-                      | string,
-                    memo.updatedAt
-                  )
-                : memo.createdAt && memo.updatedAt
-                  ? getDurationInMinutes(memo.createdAt, memo.updatedAt)
-                  : null,
+            duration: calculateInitialDuration(),
           }}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit} id='form-message-memo'>
@@ -376,22 +362,33 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                         </Field>
 
                         <Field<string> name='duration'>
-                          {({ input }) => (
-                            <Input
-                              {...input}
-                              type='number'
-                              name='duration'
-                              label='h_duration'
-                              placeholder='min'
+                          {({ input }) => {
+                            return (
+                              <Input
+                                disabled={true}
+                                {...input}
+                                type='number'
+                                name='duration'
+                                label='h_duration'
+                                placeholder='min'
                             />
-                          )}
+                          );
+                          }}
                         </Field>
                       </div>
                       <div className='grid grid-cols-2 gap-2'>
                         <Field<string> name='date'>
-                          {({ input }) => (
-                            <DateField {...input} name='date' label='h_date' />
-                          )}
+                          {({ input }) => {
+                            return (
+                              <DateField
+                                {...input}
+                                name='date'
+                                label='h_date'
+                                defaultToNow={true}
+                                disabled={true}
+                              />
+                            );
+                          }}
                         </Field>
 
                         <Field name='attachments'>
@@ -411,19 +408,15 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                       <div
                         className={`grid ${files.value.length > 0 ? 'grid-cols-2' : 'grid-cols-1'}`}
                       >
-                        <Field<string> name='message'>
-                          {({}) => (
+                        <Field<string> name='message' validate={required}>
+                          {({ input }) => (
                             <TextArea
-                              name='message'
+                              name={input.name}
+                              value={input.value}
+                              onChange={input.onChange}
+                              onBlur={input.onBlur}
+                              onFocus={input.onFocus}
                               placeholder='p_comment'
-                              value={message}
-                              onChange={(
-                                e: React.ChangeEvent<HTMLTextAreaElement>
-                              ) =>
-                                setMessage(
-                                  (e.target as HTMLTextAreaElement).value
-                                )
-                              }
                             />
                           )}
                         </Field>
@@ -511,7 +504,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
             name='memo-send-response'
             form='form-message-memo'
             type='submit'
-            disabled={disable || !message.trim() /* && !selectedPredefined */}
+            disabled={disable}
             label='send'
             icon='311'
           />

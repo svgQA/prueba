@@ -165,7 +165,8 @@ export const MemosPage: FunctionComponent = () => {
     if (responseMemos.getStatus()) {
       memos.value = responseMemos.getMany().map((memo: Memo) => ({
         ...memo,
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm' }),
+        // Es importante que se mantenga el updatedAt para que el history funcione correctamente
+        //updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm' }),
       }));
       loading.value = false;
     }
