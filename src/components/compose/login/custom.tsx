@@ -100,19 +100,18 @@ const components = {
       return null;
     },
     Footer() {
-      const { t } = useTranslation();
+      /*  const { t } = useTranslation();
       return (
         <div className='text-center'>
           <button
-            onClick={() => {
-              /*console.log(t('login.forgotPassword'))*/
-            }}
+            onClick={() => {}}
             className='text-xs sm:text-sm font-normal border-0 outline-none focus:outline-none hover:border-0 active:border-0 text-ternary'
           >
             {t('i_forgotPassword')}
           </button>
         </div>
-      );
+      );*/
+      return null;
     },
   },
 };
