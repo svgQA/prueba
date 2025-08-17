@@ -13,6 +13,7 @@ interface DateContrastProps {
   scheduledDate: string | Date;
   actualDate?: {
     time?: string;
+    date?: string;
     location?: Location | string;
   } | null;
   className?: string;
@@ -48,6 +49,7 @@ export const DateContrast = ({
 }: DateContrastProps) => {
   if (!scheduledDate) return <span className={className}>{emptyValue}</span>;
 
+  const real_date = actualDate?.time || actualDate?.date;
   // Formatear para visualización en hora local
   const formatTime = (date: string | Date | null | undefined): string => {
     if (!date) return emptyValue;
@@ -55,16 +57,16 @@ export const DateContrast = ({
   };
 
   const scheduledTime = formatTime(scheduledDate);
-  const actualTime = formatTime(actualDate?.time);
+  const actualTime = formatTime(real_date);
 
   const getStatus = (): TimeStatus => {
     if (customStatus) {
       return customStatus(scheduledTime, actualTime);
     }
 
-    if (!actualDate?.location) return 'default';
+    if (!real_date) return 'default';
     return DateUtils.getTimeStatus(
-      actualDate.time as string,
+      real_date,
       scheduledDate,
       type,
       toleranceMinutes

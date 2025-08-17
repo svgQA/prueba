@@ -56,7 +56,7 @@ export const common_es = {
   COMPLETED: 'Completado',
   HIGH: 'Alta',
   MEDIUM: 'Media',
-  LOW: 'Baja'
+  LOW: 'Baja',
 };
 
 export const common_en = {
@@ -121,5 +121,5 @@ export const common_en = {
   COMPLETED: 'Completed',
   HIGH: 'High',
   MEDIUM: 'Medium',
-  LOW: 'Low'
+  LOW: 'Low',
 };
