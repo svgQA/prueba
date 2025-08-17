@@ -37,6 +37,7 @@ const SupervisorInfo = ({
   onStatusChange,
 }: {
   memo: Memo;
+  //evento para actualizar el estado de la memo
   onStatusChange?: (newStatus: string, memoId: number) => void;
 }) => {
   const { t } = useTranslation();
