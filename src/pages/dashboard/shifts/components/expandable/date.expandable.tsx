@@ -150,8 +150,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         distance={checkInData?.distance || ''}
         btnLabel='Check In' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
-        latitude={checkInData?.location.lat || 4.649251}
-        longitude={checkInData?.location.lng || -74.106992}
+        latitude={checkInData?.location?.lat || checkInData?.lat}
+        longitude={checkInData?.location?.lng || checkInData?.lng}
         file={checkInData?.file || []}
         disabled={shift?.status !== 'CREATED'}
         onCheck={handleCheck}
@@ -170,8 +170,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         distance={checkOutData?.distance || ''}
         btnLabel='Check Out' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
-        latitude={checkOutData?.location.lat || 4.649251}
-        longitude={checkOutData?.location.lng || -74.106992}
+        latitude={checkOutData?.location?.lat || checkOutData?.lat}
+        longitude={checkOutData?.location?.lng || checkOutData?.lng}
         file={checkOutData?.file || []}
         disabled={shift?.status !== 'OPENED'}
         onCheck={handleCheck}
