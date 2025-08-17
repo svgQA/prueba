@@ -32,7 +32,13 @@ const InfoContainer = ({
   );
 };
 
-const SupervisorInfo = ({ memo }: { memo: Memo }) => {
+const SupervisorInfo = ({
+  memo,
+  onStatusChange,
+}: {
+  memo: Memo;
+  onStatusChange?: (newStatus: string, memoId: number) => void;
+}) => {
   const { t } = useTranslation();
   const [btnLabel, setBtnLabel] = useState('Check In');
   const status = useSignal<string | undefined>(memo.state);
@@ -90,12 +96,13 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
       type: btnLabel === 'OPENED' ? 'OPENED' : 'SOLVE',
     };
 
-    // const response = await MemoService.createCheck(checkData, memo.id);
-    await MemoService.createCheck(checkData, memo.id);
-
-    // if (response.getStatus()) {
-    //   ToastManager.success(i18n.t('shift.expandable.date.success'));
-    // }
+    const response = await MemoService.createCheck(checkData, memo.id);
+    if (response.getStatus()) {
+      ToastManager.success(t('panic.success'));
+      const newStatus = 'RESOLVED';
+      status.value = newStatus;
+      onStatusChange?.(newStatus, memo.id);
+    }
   };
 
   return (
@@ -116,8 +123,8 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
                 disabled={status.value === 'RESOLVED'}
                 onClick={() =>
                   showAlert({
-                    title: status.value || 'CREATED',
-                    message: `${t('message.confirm')} ${status.value}`,
+                    title: t('panic.title'),
+                    message: t('panic.body'),
                     onConfirm: () => handleCheck(),
                     onCancel: () => {},
                   })
@@ -134,7 +141,7 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
               />
               <InfoContainer
                 header='h_service'
-                label={memo?.novelty?.name}
+                label={t('panic_button')}
                 icon='432'
               />
               <InfoContainer
@@ -173,7 +180,7 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
             <div className='w-1/2 p-2 flex flex-col justify-between'>
               <div className='w-full'>
                 <p className='mb-2 leading-tight text-lg'>
-                  {memo?.description}
+                  {t('panic_description')}
                 </p>
               </div>
               {/*
@@ -195,14 +202,14 @@ const SupervisorInfo = ({ memo }: { memo: Memo }) => {
               {
                 id: memo?.id,
                 position: {
-                  lat: memo?.extraData?.place?.latitude,
-                  lng: memo?.extraData?.place?.longitude,
+                  lat: memo?.latitude,
+                  lng: memo?.longitude,
                 },
               },
             ]}
             center={{
-              lat: memo?.extraData?.place?.latitude || 0,
-              lng: memo?.extraData?.place?.longitude || 0,
+              lat: memo?.latitude || 0,
+              lng: memo?.longitude || 0,
             }}
             sendPoints={() => {}}
             height='100%'
