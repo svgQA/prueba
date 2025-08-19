@@ -3,6 +3,10 @@ export interface IPagination {
   items: number;
 }
 
+export interface ICustomQuery extends IPagination {
+  [key: string]: string | number | boolean | [string, string];
+}
+
 export const allowedAreaTypesConst = [
   'form',
   'memo',

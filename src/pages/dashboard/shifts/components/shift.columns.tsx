@@ -79,7 +79,7 @@ export const getColumns = (
       size: 120,
       header: 'h_date',
       enableGrouping: false,
-      meta: { headerAlign: 'center' },
+      meta: { headerAlign: 'center', type: 'date' },
       cell: (info) => (
         <FormattedDate date={info.getValue() as string} format='date' />
       ),

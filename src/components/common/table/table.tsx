@@ -255,7 +255,8 @@ export const Table = <T,>({
           typeof column.columnDef.header !== 'string'
             ? column.id
             : (column.columnDef.header as string);
-        return { label: columnHeader, id: column.id };
+            // @ts-ignore
+        return { label: columnHeader, id: column.id, type: column.columnDef?.meta?.type || 'text' };
       });
   }, [searchable]);
 
@@ -844,7 +845,7 @@ export const Table = <T,>({
             onChange={setColumnFilters}
             table={table}
             group={<Group<T> table={table} />}
-            range={<RangeDateFilter<T> table={table} />}
+            // range={<RangeDateFilter<T> table={table} />}
             disabled={loading}
             modules={modules}
           />
