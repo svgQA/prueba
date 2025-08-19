@@ -197,7 +197,11 @@ export const ShiftsPage: FunctionalComponent = () => {
     loading.value = true;
     const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
       await Promise.all([
-        ShiftService.get_all({ page: 1, items: 1000 }),
+        ShiftService.get_all({
+          page: 1,
+          items: 1000,
+          start: ['123123', '12312312'],
+        }),
         ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),
         NotificationService.hasUsersWithPlayerId(),

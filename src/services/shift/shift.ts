@@ -1,5 +1,5 @@
 import { FormValues } from '@/components/compose/gantt/components/gantt/replicate.modal';
-import { type IPagination } from '@/types';
+import { IGeneralQuery, type IPagination } from '@/types';
 import { type IShiftResponse } from '@/types/shift/activity';
 import { ICheckRequest } from '@/types/shift/shift.request';
 import { BaseService, IRequestModelOutput } from '@/utils/network';
@@ -25,7 +25,7 @@ export type RelatedShifts = {
 
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';
-  static async get_all(params: IPagination = { page: 1, items: 400 }) {
+  static async get_all(params: IGeneralQuery = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
       url: ['activity'],
       params: params as any,

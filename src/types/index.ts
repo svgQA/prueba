@@ -3,6 +3,11 @@ export interface IPagination {
   items: number;
 }
 
+export interface IGeneralQuery extends IPagination {
+  start?: [string, string];
+  end?: [string, string];
+}
+
 export const allowedAreaTypesConst = [
   'form',
   'memo',
