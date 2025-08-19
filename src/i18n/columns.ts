@@ -118,7 +118,7 @@ export const columns_es = {
   h_accessess_completed: 'Vehículos que ingresaron y salieron',
   h_accessess_subtitle: 'Registros de este mes',
   h_accessess_entered_subtitle: 'Por día',
-  h_filter_date: 'Filtrar por fecha'
+  h_filter_date: 'Filtrar por fecha',
 };
 
 export const columns_en = {
@@ -241,5 +241,5 @@ export const columns_en = {
   h_accessess_completed: 'Vehicles Exited',
   h_accessess_subtitle: 'Records Created',
   h_accessess_entered_subtitle: 'Per Day',
-  h_filter_date: 'Filter Date'
+  h_filter_date: 'Filter Date',
 };

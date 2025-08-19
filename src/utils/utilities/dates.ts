@@ -223,7 +223,7 @@ export class DateUtils {
 
     if (type === 'start') {
       if (actual.isBefore(before)) return 'success';
-      if (actual.isAfter(after)) return 'info';
+      if (actual.isAfter(after)) return 'error';
       return 'warning';
     } else {
       if (actual.isBefore(before)) return 'warning';

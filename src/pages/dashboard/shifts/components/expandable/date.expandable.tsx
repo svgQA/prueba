@@ -141,8 +141,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       <ShiftCard
         title={t('shiftStart')}
         name={employeeName}
-        date={checkInData?.time || ''}
-        time={checkInData?.time || ''}
+        date={checkInData?.time || checkInData?.date || ''}
+        time={checkInData?.time || checkInData?.date || ''}
         source={checkInData?.platform || ''}
         status={checkInStatus.value.message || ''}
         statusColor={checkInStatus.value.color || ''}
@@ -150,8 +150,18 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         distance={checkInData?.distance || ''}
         btnLabel='Check In' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
-        latitude={checkInData?.location.lat || 4.649251}
-        longitude={checkInData?.location.lng || -74.106992}
+        latitude={
+          checkInData?.location?.lat ||
+          checkInData?.lat ||
+          checkInData?.latitude ||
+          0.0
+        }
+        longitude={
+          checkInData?.location?.lng ||
+          checkInData?.lng ||
+          checkInData?.longitude ||
+          0.0
+        }
         file={checkInData?.file || []}
         disabled={shift?.status !== 'CREATED'}
         onCheck={handleCheck}
@@ -161,8 +171,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       <ShiftCard
         title={t('shiftEnd')}
         name={employeeName}
-        date={checkOutData?.time || ''}
-        time={checkOutData?.time || ''}
+        date={checkOutData?.time || checkOutData?.date || ''}
+        time={checkOutData?.time || checkOutData?.date || ''}
         source={checkOutData?.platform || ''}
         status={checkOutStatus.value.message || ''}
         statusColor={checkOutStatus.value.color || ''}
@@ -170,8 +180,18 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         distance={checkOutData?.distance || ''}
         btnLabel='Check Out' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
-        latitude={checkOutData?.location.lat || 4.649251}
-        longitude={checkOutData?.location.lng || -74.106992}
+        latitude={
+          checkOutData?.location?.lat ||
+          checkOutData?.lat ||
+          checkInData?.latitude ||
+          0.0
+        }
+        longitude={
+          checkOutData?.location?.lng ||
+          checkOutData?.lng ||
+          checkInData?.longitude ||
+          0.0
+        }
         file={checkOutData?.file || []}
         disabled={shift?.status !== 'OPENED'}
         onCheck={handleCheck}

@@ -165,7 +165,8 @@ export const MemosPage: FunctionComponent = () => {
     if (responseMemos.getStatus()) {
       memos.value = responseMemos.getMany().map((memo: Memo) => ({
         ...memo,
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm' }),
+        // Es importante que se mantenga el updatedAt para que el history funcione correctamente
+        //updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm' }),
       }));
       loading.value = false;
     }
@@ -189,7 +190,9 @@ export const MemosPage: FunctionComponent = () => {
     if (responseMemoPanic.getStatus()) {
       panic.value = responseMemoPanic.getMany().map((memo: Memo) => ({
         ...memo,
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm' }),
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
+          format: 'DD/MM/YYYY HH:mm',
+        }),
       }));
       loading.value = false;
     }
@@ -334,6 +337,18 @@ export const MemosPage: FunctionComponent = () => {
     // Aquí abres modales, haces navigations, etc.
   };
 
+  const handleStatusChange = (newStatus: string, memoId: number) => {
+    console.log('newStatus', newStatus, 'memoId', memoId);
+
+    // Actualizar el estado del memo en el array de panic
+    const panicIndex = panic.value.findIndex((memo) => memo.id === memoId);
+    if (panicIndex !== -1) {
+      const panicCopy: Memo[] = [...panic.value];
+      panicCopy[panicIndex] = { ...panicCopy[panicIndex], state: newStatus };
+      panic.value = panicCopy;
+    }
+  };
+
   return (
     <Section
       className={
@@ -401,7 +416,11 @@ export const MemosPage: FunctionComponent = () => {
             selectable
             loading={loading.value}
             expandable={(row: Memo, column?: string) => (
-              <ExpandableMultiple type={column} data={row} />
+              <ExpandableMultiple
+                type={column}
+                data={row}
+                onStatusChange={handleStatusChange}
+              />
             )}
             visibility={{
               id: false,

@@ -11,6 +11,8 @@ interface DateFieldProps {
   validate?: (value: any) => any;
   format?: 'time' | 'date';
   placeholder?: string;
+  disabled?: boolean;
+  defaultToNow?: boolean;
 }
 
 export const DateField = ({
@@ -20,7 +22,9 @@ export const DateField = ({
   id,
   validate,
   format = 'date',
+  disabled = false,
   placeholder,
+  defaultToNow = false,
 }: DateFieldProps) => {
   return (
     <Field<string>
@@ -28,6 +32,11 @@ export const DateField = ({
       validate={isRequired ? required : validate}
       parse={(value) => (value ? DateUtils.dateToBackend(value, format) : '')}
       format={(value) => (value ? DateUtils.dateToInput(value) : '')}
+      initialValue={
+        defaultToNow
+          ? DateUtils.dateFormat(new Date(), 'YYYY-MM-DDTHH:mm')
+          : undefined
+      }
     >
       {({ input, meta }) => {
         return (
@@ -41,6 +50,7 @@ export const DateField = ({
             unicon
             icon='325'
             placeholder={placeholder}
+            disabled={disabled}
           />
         );
       }}

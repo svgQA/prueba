@@ -55,7 +55,7 @@ import { DraggableTableHeader } from './components/draggable.header';
 import { ROW_ACTIONS } from './enum';
 import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
-import { RangeDateFilter } from './components/range/range';
+// import { RangeDateFilter } from './components/range/range';
 
 const SkeletonRow = ({ columns }: { columns: number }) => {
   return (
@@ -116,7 +116,12 @@ export const Table = <T,>({
     const rowValue = row.getValue(columnId);
 
     // Detectar si es una columna de fecha
-    if (columnId.includes('At') || columnId.includes('Date') || columnId === 'createdAt' || columnId === 'updatedAt') {
+    if (
+      columnId.includes('At') ||
+      columnId.includes('Date') ||
+      columnId === 'createdAt' ||
+      columnId === 'updatedAt'
+    ) {
       const originalString = String(rowValue);
 
       // Formatear la fecha igual que FormattedDate
@@ -125,21 +130,28 @@ export const Table = <T,>({
       //   month: '2-digit',
       //   year: 'numeric'
       // });
-      
+
       // Usar DateUtils para mantener consistencia con el resto de la app
-      const formattedValue = DateUtils.dateToFrontend(rowValue as string | Date, { format: 'DD/MM/YYYY' });
+      const formattedValue = DateUtils.dateToFrontend(
+        rowValue as string | Date,
+        { format: 'DD/MM/YYYY' }
+      );
 
       if (Array.isArray(filterValue)) {
         return filterValue.some((val) => {
           const searchValue = String(val).toLowerCase();
-          return originalString.toLowerCase().includes(searchValue) ||
-            formattedValue.toLowerCase().includes(searchValue);
+          return (
+            originalString.toLowerCase().includes(searchValue) ||
+            formattedValue.toLowerCase().includes(searchValue)
+          );
         });
       }
 
       const searchValue = String(filterValue).toLowerCase();
-      return originalString.toLowerCase().includes(searchValue) ||
-        formattedValue.toLowerCase().includes(searchValue);
+      return (
+        originalString.toLowerCase().includes(searchValue) ||
+        formattedValue.toLowerCase().includes(searchValue)
+      );
     }
 
     // Filtro normal para otros campos con soporte para traducciones
@@ -151,21 +163,24 @@ export const Table = <T,>({
         const searchValue = String(val).toLowerCase();
         const translatedSearchValue = t(String(val)).toLowerCase();
 
-        return originalValue.includes(searchValue) ||
+        return (
+          originalValue.includes(searchValue) ||
           originalValue.includes(translatedSearchValue) ||
           translatedValue.includes(searchValue) ||
-          translatedValue.includes(translatedSearchValue);
+          translatedValue.includes(translatedSearchValue)
+        );
       });
     }
 
     const searchValue = String(filterValue).toLowerCase();
     const translatedSearchValue = t(String(filterValue)).toLowerCase();
 
-    return originalValue.includes(searchValue) ||
+    return (
+      originalValue.includes(searchValue) ||
       originalValue.includes(translatedSearchValue) ||
       translatedValue.includes(searchValue) ||
-      translatedValue.includes(translatedSearchValue);
-
+      translatedValue.includes(translatedSearchValue)
+    );
   };
 
   const columnsData = useMemo<ColumnDef<T>[]>(() => {
@@ -255,8 +270,12 @@ export const Table = <T,>({
           typeof column.columnDef.header !== 'string'
             ? column.id
             : (column.columnDef.header as string);
-            // @ts-ignore
-        return { label: columnHeader, id: column.id, type: column.columnDef?.meta?.type || 'text' };
+        return {
+          label: columnHeader,
+          id: column.id,
+          // @ts-ignore
+          type: column.columnDef?.meta?.type || 'text',
+        };
       });
   }, [searchable]);
 
