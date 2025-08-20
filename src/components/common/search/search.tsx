@@ -238,7 +238,7 @@ export const Search = ({
                 data-type={key.type}
               />
               <span className='px-2 mr-1 font-medium text-sm capitalize'>
-                [{key.type}]{t(key.label)}:
+                {/* [{key.type}] */} {t(key.label)}: 
               </span>
               <span className='text-sm font-normal'>{inputState.value}</span>
             </div>
@@ -349,7 +349,7 @@ export const Search = ({
         </div>
       )}
 
-      <RangeDateFilter isOpen={isOpenRange} />
+      <RangeDateFilter isOpen={isOpenRange} table={table}/>
     </div>
   );
 };

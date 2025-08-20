@@ -2,72 +2,72 @@ import { Button } from '@/components/common/button/button';
 import { ExpandeableContent } from '@/components/common/report-automatic/expandeable-content';
 import { DateField } from '@/components/compose/forms';
 import { Signal, useSignal } from '@preact/signals';
-import { useCallback, useMemo } from 'preact/hooks';
-import { Form } from 'react-final-form';
+import { useCallback, useMemo, useEffect } from 'preact/hooks';
+import { Field, Form } from 'react-final-form';
 import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
+import { Table } from '@tanstack/react-table';
+import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
 
-interface Props {
-  // table: Table<T>;
+interface Props<T> {
+  table: Table<T>;
   className?: string;
   isOpen: Signal<boolean>;
 }
 
-interface DateRangeValues {
+interface IModelsValues {
   start: string;
   end: string;
+  columns: IOption[];
 }
 
-export const RangeDateFilter = ({ isOpen }: Props) => {
+export interface IRangeValues {
+  [key: string]: [string, string];
+}
+
+export const RangeDateFilter = <T,>({ isOpen, table }: Props<T>) => {
   const { t } = useTranslation();
   const loading = useSignal(false);
+  const columns = useSignal<IOption[]>([]);
 
-  // Función para obtener todas las columnas de fecha
-  // const getDateColumns = useCallback(() => {
-  //     return table.getAllLeafColumns().filter(column => {
-  //         const dateEnable = (column.columnDef as any)?.enableDateFilter;
-  //         return dateEnable ? dateEnable : false;
-  //     });
-  // }, [table]);
+  // Ejecutar directamente cuando el componente se monte
+  useEffect(() => {
+    dateColumns();
+  }, [table]);
 
-  const onSubmit = async (_values: DateRangeValues) => {
-    loading.value = true;
+  const dateColumns = () => {
+    return table.getAllLeafColumns().filter(column => {
+      const dateEnable = (column.columnDef as any)?.meta.type;
 
-    try {
-      // const startDate = DateUtils.dateToFrontend(start);
-      // const endDate = DateUtils.dateToFrontend(end);
-      // const dateColumns = getDateColumns();
-
-      // const filters = dateColumns.map(column => ({
-      //     id: column.id,
-      //     value: {
-      //         start: startDate,
-      //         end: endDate
-      //     }
-      // }));
-
-      // // Aplicar todos los filtros de una vez
-      // table.setColumnFilters(prev => [
-      //     ...prev.filter(filter => !dateColumns.some(col => col.id === filter.id)),
-      //     ...filters
-      // ]);
-
-      // Usar filtro global con rango de fechas
-      // table.setGlobalFilter({
-      //     type: 'dateRange',
-      //     start,
-      //     end
-      // });
-
-      isOpen.value = false;
-    } catch (error) {
-      console.error('Error applying date range filter:', error);
-    } finally {
-      loading.value = false;
-    }
+      if (dateEnable === 'date') {
+        columns.value.push({
+          // @ts-ignore
+          value: String(column.columnDef?.accessorKey),
+          label: t(String(column.columnDef.header))
+        });
+        return true;
+      }
+      return false;
+    });
   };
 
-  const handleClearFilters = () => {};
+  const onSubmit = async (model: IModelsValues) => {
+    loading.value = true;
+
+    const range: IRangeValues = model.columns.reduce((acc, column) => {
+      return {
+        ...acc,
+        [String(column?.value)]: [DateUtils.dateToBackend(model.start), DateUtils.dateToBackend(model.end)] as [string, string]
+      };
+    }, {} as IRangeValues);
+
+    console.log('Form data:', range);
+
+    isOpen.value = false;
+    loading.value = false;
+  };
+
+  const handleClearFilters = () => { };
 
   const footerContent = useMemo(
     () => (
@@ -116,18 +116,6 @@ export const RangeDateFilter = ({ isOpen }: Props) => {
 
   return (
     <div>
-      {/* <div className='flex flex-row justify-between items-center'>
-                <div className='h-6 w-px bg-b-light-dark dark:bg-gray-700 mx-2' />
-                <Button
-                    name='date-range-filter'
-                    onClick={() => isOpen.value = true}
-                    icon='319'
-                    square
-                    transparent
-                    borderless
-                    selectedColor='bg-primary text-white'
-                />
-            </div> */}
       {isOpen.value && (
         <ExpandeableContent
           isOpen={isOpen.value}
@@ -165,6 +153,7 @@ export const RangeDateFilter = ({ isOpen }: Props) => {
                             }
                             return undefined;
                           }}
+                          disabled={loading.value}
                         />
                       </div>
                       <div className='col-span-1'>
@@ -183,26 +172,27 @@ export const RangeDateFilter = ({ isOpen }: Props) => {
                             }
                             return undefined;
                           }}
+                          disabled={loading.value}
                         />
                       </div>
+                      <div className='col-span-1'>
+                        <Field<IOption[]> name='columns'>
+                          {({ input, meta }) => (
+                            <SmartSelector
+                              {...input}
+                              meta={meta}
+                              id='select-columns'
+                              icon='120'
+                              label='h_columns'
+                              options={columns.value}
+                              menuPortalTarget={document.body}
+                              placeholder='p_select'
+                              multiple={true}
+                            />
+                          )}
+                        </Field>
+                      </div>
                     </div>
-
-                    {/* Información sobre las columnas que se filtrarán */}
-                    {/* <div className='text-sm text-gray-600 dark:text-gray-400 p-3 bg-gray-50 dark:bg-gray-800 rounded-md'>
-                                            <p className='font-medium mb-2'>{t('columns_to_filter')}:</p>
-                                            <ul className='list-disc list-inside space-y-1'>
-                                                {getDateColumns().map(column => {
-                                                    const header = typeof column.columnDef.header === 'string'
-                                                        ? column.columnDef.header
-                                                        : column.id;
-                                                    return (
-                                                        <li key={column.id} className='text-xs'>
-                                                            {t(header)}
-                                                        </li>
-                                                    );
-                                                })}
-                                            </ul>
-                                        </div> */}
                   </form>
                 );
               }}

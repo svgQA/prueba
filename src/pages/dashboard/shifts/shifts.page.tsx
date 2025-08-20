@@ -200,8 +200,8 @@ export const ShiftsPage: FunctionalComponent = () => {
         ShiftService.get_all({
           page: 1,
           items: 1000,
-          // start: ['18/08/2025', '20/08/2025'],
-          // end: ['18/08/2025', '20/08/2025'],
+          start: ['18/08/2025', '20/08/2025'],
+          end: ['18/08/2025', '20/08/2025'],
         }),
         ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),

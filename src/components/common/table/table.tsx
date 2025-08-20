@@ -116,43 +116,43 @@ export const Table = <T,>({
     const rowValue = row.getValue(columnId);
 
     // Detectar si es una columna de fecha
-    if (
-      columnId.includes('At') ||
-      columnId.includes('Date') ||
-      columnId === 'createdAt' ||
-      columnId === 'updatedAt'
-    ) {
-      const originalString = String(rowValue);
+    // if (
+    //   columnId.includes('At') ||
+    //   columnId.includes('Date') ||
+    //   columnId === 'createdAt' ||
+    //   columnId === 'updatedAt'
+    // ) {
+    //   const originalString = String(rowValue);
 
-      // Formatear la fecha igual que FormattedDate
-      // const formattedValue = new Date(rowValue as string | number | Date).toLocaleDateString('es-ES', {
-      //   day: '2-digit',
-      //   month: '2-digit',
-      //   year: 'numeric'
-      // });
+    //   // Formatear la fecha igual que FormattedDate
+    //   // const formattedValue = new Date(rowValue as string | number | Date).toLocaleDateString('es-ES', {
+    //   //   day: '2-digit',
+    //   //   month: '2-digit',
+    //   //   year: 'numeric'
+    //   // });
 
-      // Usar DateUtils para mantener consistencia con el resto de la app
-      const formattedValue = DateUtils.dateToFrontend(
-        rowValue as string | Date,
-        { format: 'DD/MM/YYYY' }
-      );
+    //   // Usar DateUtils para mantener consistencia con el resto de la app
+    //   const formattedValue = DateUtils.dateToFrontend(
+    //     rowValue as string | Date,
+    //     { format: 'DD/MM/YYYY' }
+    //   );
 
-      if (Array.isArray(filterValue)) {
-        return filterValue.some((val) => {
-          const searchValue = String(val).toLowerCase();
-          return (
-            originalString.toLowerCase().includes(searchValue) ||
-            formattedValue.toLowerCase().includes(searchValue)
-          );
-        });
-      }
+    //   if (Array.isArray(filterValue)) {
+    //     return filterValue.some((val) => {
+    //       const searchValue = String(val).toLowerCase();
+    //       return (
+    //         originalString.toLowerCase().includes(searchValue) ||
+    //         formattedValue.toLowerCase().includes(searchValue)
+    //       );
+    //     });
+    //   }
 
-      const searchValue = String(filterValue).toLowerCase();
-      return (
-        originalString.toLowerCase().includes(searchValue) ||
-        formattedValue.toLowerCase().includes(searchValue)
-      );
-    }
+    //   const searchValue = String(filterValue).toLowerCase();
+    //   return (
+    //     originalString.toLowerCase().includes(searchValue) ||
+    //     formattedValue.toLowerCase().includes(searchValue)
+    //   );
+    // }
 
     // Filtro normal para otros campos con soporte para traducciones
     const originalValue = String(rowValue).toLowerCase();
