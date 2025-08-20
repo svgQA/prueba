@@ -44,25 +44,9 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
     loading.value = false;
   };
 
-  const handleClearFilters = () => {
-    // Limpiar los filtros llamando al callback con null
-    if (onRangeChange) {
-      onRangeChange(null);
-    }
-    isOpen.value = false;
-  };
-
   const footerContent = useMemo(
     () => (
       <div className='flex justify-between items-center gap-2 p-4'>
-        <Button
-          name='btn-date-filter-clear'
-          label='clear_filters'
-          type='button'
-          onClick={handleClearFilters}
-          icon='319'
-          disabled={loading.value}
-        />
         <div className='flex gap-2'>
           <Button
             name='btn-date-filter-close'
@@ -75,7 +59,7 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
           <Button
             name='btn-date-filter-save'
             type='submit'
-            label='apply_filter'
+            label='apply'
             form='form-date-range-filter'
             icon='041'
             disabled={loading.value}
@@ -83,7 +67,7 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
         </div>
       </div>
     ),
-    [loading.value, handleClearFilters]
+    [loading.value]
   );
 
   const onClose = () => {

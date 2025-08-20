@@ -59,11 +59,13 @@ export const Search = ({
       return (prev: ColumnFiltersState) => {
         const id = selected.id;
         const value = inputState.value.trim();
+        const type = selected.type;
         const existingIndex = prev.findIndex((item) => item.id === id);
         if (existingIndex !== -1) {
           const updatedItem = {
             ...prev[existingIndex],
             value: [...(prev[existingIndex].value as string[]), value],
+            type,
           };
           return [
             ...prev.slice(0, existingIndex),
@@ -71,7 +73,7 @@ export const Search = ({
             ...prev.slice(existingIndex + 1),
           ];
         } else {
-          return [...prev, { id, value: [value] }];
+          return [...prev, { id, value: [value], type }];
         }
       };
     },
@@ -215,8 +217,8 @@ export const Search = ({
           return (
             <div
               className={`relative px-3 py-1 my-1 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${index === selectedKeyIndex.value
-                  ? 'bg-primary-opacity text-primary'
-                  : 'hover:bg-b-light hover:text-primary'
+                ? 'bg-primary-opacity text-primary'
+                : 'hover:bg-b-light hover:text-primary'
                 }`}
               // className={'bg-red-100 relative my-1'}
               key={keyName}
@@ -260,6 +262,7 @@ export const Search = ({
         const keyName = `filter-search-${item.id}-${index}`;
         const key = keys.find((k) => k.id === item.id);
         const keyLabel = key?.label || item.id;
+        const keyType = key?.type || 'text';
 
         return (
           <div key={keyName} className='relative'>
@@ -268,13 +271,14 @@ export const Search = ({
               className='flex items-center h-7 px-2 py-1 bg-primary-opacity dark:bg-ternary dark:text-white text-primary rounded-xl cursor-pointer gap-1 transition-all hover:bg-primary-opacity-2 text-sm'
             >
               <span className='font-medium'>
-                <strong>{t(keyLabel)}</strong>: {String(item.value)}
+                <strong>{t(keyLabel)}</strong> {keyType === 'date'? '': `: ${String(item.value)}`}
               </span>
               <span
                 className='ml-1 hover:text-ternary cursor-pointer flex items-center justify-center w-4 h-4 rounded-full hover:bg-primary-opacity-2'
                 onClick={(e) => {
                   e.stopPropagation();
                   setFilter(searchArray.value.filter((f) => f.id !== item.id));
+                  if (keyType === 'date' && onRangeChange) onRangeChange(null);
                 }}
               >
                 ×
@@ -350,7 +354,7 @@ export const Search = ({
         </div>
       )}
 
-      <RangeDateFilter isOpen={isOpenRange} onRangeChange={onRangeChange} column={columnSelected.value}/>
+      <RangeDateFilter isOpen={isOpenRange} onRangeChange={onRangeChange} column={columnSelected.value} />
     </div>
   );
 };
