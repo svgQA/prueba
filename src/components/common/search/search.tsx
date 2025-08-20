@@ -200,9 +200,10 @@ export const Search = ({
         if (type === 'date') {
           isOpenRange.value = true;
           columnSelected.value = id;
+          setFilterSelected({ id, label, type }, true);
         }
 
-        setFilterSelected({ id, label, type }, (type === 'date') ? true : false);
+        setFilterSelected({ id, label, type });
       }
     },
     [setFilterSelected]
