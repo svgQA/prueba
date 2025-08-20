@@ -28,6 +28,7 @@ export interface IRangeValues {
 export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
   const { t } = useTranslation();
   const loading = useSignal(false);
+  const canApply = useSignal(false);
 
   const onSubmit = async (model: IModelsValues) => {
     loading.value = true;
@@ -62,12 +63,12 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
             label='apply'
             form='form-date-range-filter'
             icon='041'
-            disabled={loading.value}
+            disabled={loading.value || !canApply.value}
           />
         </div>
       </div>
     ),
-    [loading.value]
+    [loading.value, canApply.value]
   );
 
   const onClose = () => {
@@ -96,6 +97,9 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
               onSubmit={onSubmit}
               initialValues={{}}
               render={({ handleSubmit, values }) => {
+                // Actualizar el signal automáticamente cuando cambien los valores
+                canApply.value = !!(values.start && values.end);
+                
                 return (
                   <form
                     onSubmit={handleSubmit}
@@ -109,7 +113,7 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
                           name='start'
                           label='h_date_start'
                           format='date'
-                          type='date'
+                          // type='date'
                           validate={(value) => {
                             if (value && values.end) {
                               const startDate = DateUtils.dateToFrontend(value);
@@ -130,7 +134,7 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
                           name='end'
                           label='h_date_end'
                           format='date'
-                          type='date'
+                          // type='date'
                           validate={(value) => {
                             if (value && values.start) {
                               const startDate = DateUtils.dateToFrontend(
