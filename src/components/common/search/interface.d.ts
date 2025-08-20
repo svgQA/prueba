@@ -6,6 +6,7 @@ import { VNode } from 'preact';
 export type IKey = {
   label: string;
   id: string;
+  type: string;
 };
 
 export interface ISearchProps extends IComponentProps {
@@ -16,7 +17,9 @@ export interface ISearchProps extends IComponentProps {
   placeholder?: string;
   table?: any;
   group?: VNode;
+  // range?: VNode;
   grouping?: boolean;
   disabled?: boolean;
   modules?: modulesReport;
+  onRangeChange?: (range: {[key: string]: [string, string]} | null) => void;
 }

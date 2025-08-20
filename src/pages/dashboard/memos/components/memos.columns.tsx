@@ -190,7 +190,7 @@ export const getColumns = (
       id: 'createdAt',
       accessorKey: 'createdAt',
       header: 'h_created',
-      meta: { headerAlign: 'center' },
+      meta: { headerAlign: 'center', type: 'date' },
       cell: (info) => {
         return <FormattedDate date={String(info.getValue())} format='date' />;
       },
@@ -200,7 +200,7 @@ export const getColumns = (
       accessorKey: 'updatedAt',
       header: 'h_updated',
       enableGrouping: true,
-      meta: { headerAlign: 'center' },
+      meta: { headerAlign: 'center', type: 'date' },
       cell: (info) => {
         return <FormattedDate date={String(info.getValue())} format='date' />;
       },

@@ -54,7 +54,8 @@ import { Button } from '../button/button';
 import { DraggableTableHeader } from './components/draggable.header';
 import { ROW_ACTIONS } from './enum';
 import { useTranslation } from 'react-i18next';
-import { DateUtils } from '@/utils/utilities/dates';
+// import { DateUtils } from '@/utils/utilities/dates';
+// import { RangeDateFilter } from './components/range/range';
 
 const SkeletonRow = ({ columns }: { columns: number }) => {
   return (
@@ -92,6 +93,7 @@ export const Table = <T,>({
   searchable,
   absolute = false,
   modules,
+  onRangeChange,
 }: ITableProps<T>) => {
   const { t } = useTranslation();
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
@@ -115,43 +117,43 @@ export const Table = <T,>({
     const rowValue = row.getValue(columnId);
 
     // Detectar si es una columna de fecha
-    if (
-      columnId.includes('At') ||
-      columnId.includes('Date') ||
-      columnId === 'createdAt' ||
-      columnId === 'updatedAt'
-    ) {
-      const originalString = String(rowValue);
+    // if (
+    //   columnId.includes('At') ||
+    //   columnId.includes('Date') ||
+    //   columnId === 'createdAt' ||
+    //   columnId === 'updatedAt'
+    // ) {
+    //   const originalString = String(rowValue);
 
-      // Formatear la fecha igual que FormattedDate
-      // const formattedValue = new Date(rowValue as string | number | Date).toLocaleDateString('es-ES', {
-      //   day: '2-digit',
-      //   month: '2-digit',
-      //   year: 'numeric'
-      // });
+    //   // Formatear la fecha igual que FormattedDate
+    //   // const formattedValue = new Date(rowValue as string | number | Date).toLocaleDateString('es-ES', {
+    //   //   day: '2-digit',
+    //   //   month: '2-digit',
+    //   //   year: 'numeric'
+    //   // });
 
-      // Usar DateUtils para mantener consistencia con el resto de la app
-      const formattedValue = DateUtils.dateToFrontend(
-        rowValue as string | Date,
-        { format: 'DD/MM/YYYY' }
-      );
+    //   // Usar DateUtils para mantener consistencia con el resto de la app
+    //   const formattedValue = DateUtils.dateToFrontend(
+    //     rowValue as string | Date,
+    //     { format: 'DD/MM/YYYY' }
+    //   );
 
-      if (Array.isArray(filterValue)) {
-        return filterValue.some((val) => {
-          const searchValue = String(val).toLowerCase();
-          return (
-            originalString.toLowerCase().includes(searchValue) ||
-            formattedValue.toLowerCase().includes(searchValue)
-          );
-        });
-      }
+    //   if (Array.isArray(filterValue)) {
+    //     return filterValue.some((val) => {
+    //       const searchValue = String(val).toLowerCase();
+    //       return (
+    //         originalString.toLowerCase().includes(searchValue) ||
+    //         formattedValue.toLowerCase().includes(searchValue)
+    //       );
+    //     });
+    //   }
 
-      const searchValue = String(filterValue).toLowerCase();
-      return (
-        originalString.toLowerCase().includes(searchValue) ||
-        formattedValue.toLowerCase().includes(searchValue)
-      );
-    }
+    //   const searchValue = String(filterValue).toLowerCase();
+    //   return (
+    //     originalString.toLowerCase().includes(searchValue) ||
+    //     formattedValue.toLowerCase().includes(searchValue)
+    //   );
+    // }
 
     // Filtro normal para otros campos con soporte para traducciones
     const originalValue = String(rowValue).toLowerCase();
@@ -269,7 +271,12 @@ export const Table = <T,>({
           typeof column.columnDef.header !== 'string'
             ? column.id
             : (column.columnDef.header as string);
-        return { label: columnHeader, id: column.id };
+        return {
+          label: columnHeader,
+          id: column.id,
+          // @ts-ignore
+          type: column.columnDef?.meta?.type || 'text',
+        };
       });
   }, [searchable]);
 
@@ -858,8 +865,10 @@ export const Table = <T,>({
             onChange={setColumnFilters}
             table={table}
             group={<Group<T> table={table} />}
+            // range={<RangeDateFilter<T> table={table} />}
             disabled={loading}
             modules={modules}
+            onRangeChange={onRangeChange}
           />
         )}
       </div>

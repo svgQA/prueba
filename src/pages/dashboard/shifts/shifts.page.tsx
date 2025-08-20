@@ -8,6 +8,7 @@ import {
 } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import {
+  baseParams,
   GanttService,
   NotificationService,
   ServiceService,
@@ -98,6 +99,9 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const loading = useSignal<boolean>(false);
 
+  // Estado para almacenar los filtros de rango de fechas
+  const [dateRangeFilters, setDateRangeFilters] = useState<{ [key: string]: [string, string] } | null>(null);
+
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
   const memoizedServices = useMemo(() => services, [services]);
   const memoizedUsers = useMemo(() => users, [users]);
@@ -122,11 +126,11 @@ export const ShiftsPage: FunctionalComponent = () => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
       handleGetShiftSummary();
-      fetchInitialData();
+      fetchInitialData(dateRangeFilters);
       fetchSSE();
       EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
     }
-  }, [selectedCompany, location]);
+  }, [selectedCompany, location, dateRangeFilters]);
 
   const handleViewMode = async (viewMode: ViewMode = ViewMode.QuarterDay) => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -189,15 +193,15 @@ export const ShiftsPage: FunctionalComponent = () => {
     }
 
     if (name === SSE_EVENTS.CREATE) {
-      fetchInitialData();
+      fetchInitialData(dateRangeFilters);
     }
   };
 
-  const fetchInitialData = async () => {
+  const fetchInitialData = async (rangeFilters?: { [key: string]: [string, string] } | null) => {
     loading.value = true;
     const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
       await Promise.all([
-        ShiftService.get_all({ page: 1, items: 1000 }),
+        ShiftService.get_all(rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams),
         ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),
         NotificationService.hasUsersWithPlayerId(),
@@ -336,7 +340,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => {}, []);
+  const handleClick = useCallback((/* task: Task */) => { }, []);
 
   const handleUserDoubleClick = useCallback(
     (_id: string | number) => {
@@ -541,7 +545,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           title: t('s_title_delete'),
           message: t('s_message'),
           onConfirm: () => deleteShift(params.id),
-          onCancel: () => {},
+          onCancel: () => { },
         });
         break;
       case ROW_ACTIONS.CHECK_IN:
@@ -646,6 +650,9 @@ export const ShiftsPage: FunctionalComponent = () => {
             onNotifications={onNotifications}
             hasNotifications={notificationValidate.value}
             loading={loading.value}
+            onRangeChange={(range) => {
+              setDateRangeFilters(range);
+            }}
             onSelectionChange={(rows) => {
               const validUsers = rows.map((row: any) => ({
                 id: row.employee.id,

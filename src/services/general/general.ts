@@ -30,6 +30,11 @@ export const defaultSummary = {
   completed: 0,
 };
 
+export const baseParams = { 
+  page: 1, 
+  items: 1000, 
+};
+
 export class GeneralService extends BaseService {
   static sname: VoxServices = 'file';
   static async presigned(data: IPresignedRequest) {
