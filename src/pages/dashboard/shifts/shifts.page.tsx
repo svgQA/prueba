@@ -51,7 +51,6 @@ import {
   IBaseSSE,
   SSE_EVENTS,
   SSE_TYPE,
-  SseManager,
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 import { useUserStore } from '@/store/slices';
@@ -127,8 +126,11 @@ export const ShiftsPage: FunctionalComponent = () => {
     if (selectedCompany) {
       handleGetShiftSummary();
       fetchInitialData(dateRangeFilters);
-      fetchSSE();
+      // fetchSSE();
       EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
+      return () => {
+        EventBus.off(SSE_TYPE.SHIFT, handleMemoSSE);
+      };
     }
   }, [selectedCompany, location, dateRangeFilters]);
 
@@ -168,9 +170,9 @@ export const ShiftsPage: FunctionalComponent = () => {
     setHasValidPlayer(result);
   }, [shifts.value]);
 
-  const fetchSSE = useCallback(async () => {
-    await SseManager.getQuery(['activity', 'stream', 'check']);
-  }, []);
+  // const fetchSSE = useCallback(async () => {
+  //   await SseManager.getQuery(['activity', 'stream', 'check']);
+  // }, []);
 
   const handleMemoSSE = (event: IBaseSSE) => {
     const { name, message } = event;
