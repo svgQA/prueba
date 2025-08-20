@@ -99,7 +99,8 @@ const SupervisorInfo = ({
 
     const response = await MemoService.createCheck(checkData, memo.id);
     if (response.getStatus()) {
-      ToastManager.success(t('panic.success'));
+      const label = memo.panicUuid ? 'panic.success' : 'panic.success_novelty';
+      ToastManager.success(t(label));
       const newStatus = 'RESOLVED';
       status.value = newStatus;
       onStatusChange?.(newStatus, memo.id);
@@ -124,8 +125,12 @@ const SupervisorInfo = ({
                 disabled={status.value === 'RESOLVED'}
                 onClick={() =>
                   showAlert({
-                    title: t('panic.title'),
-                    message: t('panic.body'),
+                    title: memo?.panicUuid
+                      ? t('panic.title')
+                      : t('panic.title_novelty'),
+                    message: memo?.panicUuid
+                      ? t('panic.body')
+                      : t('panic.body_novelty'),
                     onConfirm: () => handleCheck(),
                     onCancel: () => {},
                   })
@@ -142,7 +147,11 @@ const SupervisorInfo = ({
               />
               <InfoContainer
                 header='h_service'
-                label={t('panic_button')}
+                label={
+                  memo.panicUuid
+                    ? t('panic_description')
+                    : memo?.extraData?.service?.name
+                }
                 icon='432'
               />
               <InfoContainer
@@ -181,7 +190,7 @@ const SupervisorInfo = ({
             <div className='w-1/2 p-2 flex flex-col justify-between'>
               <div className='w-full'>
                 <p className='mb-2 leading-tight text-lg'>
-                  {t('panic_description')}
+                  {memo.panicUuid ? t('panic_description') : ''}
                 </p>
               </div>
               {/*
