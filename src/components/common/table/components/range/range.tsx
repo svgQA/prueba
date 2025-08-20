@@ -13,6 +13,7 @@ interface Props<T> {
   table: Table<T>;
   className?: string;
   isOpen: Signal<boolean>;
+  onRangeChange?: (range: IRangeValues | null) => void;
 }
 
 interface IModelsValues {
@@ -25,7 +26,7 @@ export interface IRangeValues {
   [key: string]: [string, string];
 }
 
-export const RangeDateFilter = <T,>({ isOpen, table }: Props<T>) => {
+export const RangeDateFilter = <T,>({ isOpen, table, onRangeChange }: Props<T>) => {
   const { t } = useTranslation();
   const loading = useSignal(false);
   const columns = useSignal<IOption[]>([]);
@@ -63,11 +64,22 @@ export const RangeDateFilter = <T,>({ isOpen, table }: Props<T>) => {
 
     console.log('Form data:', range);
 
+    // Llamar al callback para pasar los filtros al componente padre
+    if (onRangeChange) {
+      onRangeChange(range);
+    }
+
     isOpen.value = false;
     loading.value = false;
   };
 
-  const handleClearFilters = () => { };
+  const handleClearFilters = () => {
+    // Limpiar los filtros llamando al callback con null
+    if (onRangeChange) {
+      onRangeChange(null);
+    }
+    isOpen.value = false;
+  };
 
   const footerContent = useMemo(
     () => (

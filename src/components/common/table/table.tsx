@@ -54,7 +54,7 @@ import { Button } from '../button/button';
 import { DraggableTableHeader } from './components/draggable.header';
 import { ROW_ACTIONS } from './enum';
 import { useTranslation } from 'react-i18next';
-import { DateUtils } from '@/utils/utilities/dates';
+// import { DateUtils } from '@/utils/utilities/dates';
 // import { RangeDateFilter } from './components/range/range';
 
 const SkeletonRow = ({ columns }: { columns: number }) => {
@@ -93,6 +93,7 @@ export const Table = <T,>({
   searchable,
   absolute = false,
   modules,
+  onRangeChange,
 }: ITableProps<T>) => {
   const { t } = useTranslation();
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
@@ -867,6 +868,7 @@ export const Table = <T,>({
             // range={<RangeDateFilter<T> table={table} />}
             disabled={loading}
             modules={modules}
+            onRangeChange={onRangeChange}
           />
         )}
       </div>

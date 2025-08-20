@@ -19,6 +19,7 @@ export const Search = ({
   grouping,
   disabled = false,
   modules,
+  onRangeChange,
   // range
 }: ISearchProps) => {
   const { t } = useTranslation();
@@ -349,7 +350,7 @@ export const Search = ({
         </div>
       )}
 
-      <RangeDateFilter isOpen={isOpenRange} table={table}/>
+      <RangeDateFilter isOpen={isOpenRange} table={table} onRangeChange={onRangeChange}/>
     </div>
   );
 };
