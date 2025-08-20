@@ -528,7 +528,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
             <Field<string> name='date'>
               {({ input }) => (
-                <DateField {...input} name='date' label='Fecha' />
+                <DateField {...input} name='date' label='Fecha' type='datetime-local' />
               )}
             </Field>
 

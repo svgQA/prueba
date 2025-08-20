@@ -30,6 +30,7 @@ export const Search = ({
   const keysContainerRef = useRef<HTMLDivElement>(null);
   const isDropdownOpen = useSignal<boolean>(false);
   const isOpenRange = useSignal<boolean>(false);
+  const columnSelected = useSignal<string>('createdAt');
 
   const handleChangeInput = useCallback(
     (event: TargetedEvent<HTMLInputElement, Event>) => {
@@ -47,9 +48,9 @@ export const Search = ({
     [lenThreshold]
   );
 
-  const setFilter = (filter: ColumnFiltersState) => {
+  const setFilter = (filter: ColumnFiltersState, update = true) => {
     searchArray.value = filter;
-    if (!onChange) return;
+    if (!onChange || !update) return;
     onChange(searchArray.value);
   };
 
@@ -78,9 +79,9 @@ export const Search = ({
   );
 
   const setFilterSelected = useCallback(
-    (key: IKey) => {
+    (key: IKey, update = true) => {
       const setSearch = selectKey(key);
-      setFilter(setSearch(searchArray.value));
+      setFilter(setSearch(searchArray.value), update);
       inputState.value = '';
       selectedKeyIndex.value = -1;
       isDropdownOpen.value = false;
@@ -196,10 +197,10 @@ export const Search = ({
 
         if (type === 'date') {
           isOpenRange.value = true;
-          return;
+          columnSelected.value = id;
         }
 
-        setFilterSelected({ id, label, type });
+        setFilterSelected({ id, label, type }, (type === 'date') ? true : false);
       }
     },
     [setFilterSelected]
@@ -213,11 +214,10 @@ export const Search = ({
           const keyName = `filter-key-${key.id}-${index}`;
           return (
             <div
-              className={`relative px-3 py-1 my-1 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${
-                index === selectedKeyIndex.value
+              className={`relative px-3 py-1 my-1 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${index === selectedKeyIndex.value
                   ? 'bg-primary-opacity text-primary'
                   : 'hover:bg-b-light hover:text-primary'
-              }`}
+                }`}
               // className={'bg-red-100 relative my-1'}
               key={keyName}
               // data-name={keyName}
@@ -226,10 +226,10 @@ export const Search = ({
               // data-type={key.type}
               tabIndex={0}
               onKeyDown={handleKeyPress}
-              // onClick={(e) => {
-              //   e.stopPropagation();
-              //   setFilterSelected(key);
-              // }}
+            // onClick={(e) => {
+            //   e.stopPropagation();
+            //   setFilterSelected(key);
+            // }}
             >
               <span
                 className='absolute top-0 left-0 w-full h-full'
@@ -239,7 +239,7 @@ export const Search = ({
                 data-type={key.type}
               />
               <span className='px-2 mr-1 font-medium text-sm capitalize'>
-                {/* [{key.type}] */} {t(key.label)}: 
+                {/* [{key.type}] */} {t(key.label)}:
               </span>
               <span className='text-sm font-normal'>{inputState.value}</span>
             </div>
@@ -307,7 +307,7 @@ export const Search = ({
     <div
       id={id}
       className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700 shadow-sm'
-      // focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200
+    // focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200
     >
       <span className='vox-icon vx-icon-153 text-gray-500 dark:text-gray-400' />
       <div
@@ -350,7 +350,7 @@ export const Search = ({
         </div>
       )}
 
-      <RangeDateFilter isOpen={isOpenRange} table={table} onRangeChange={onRangeChange}/>
+      <RangeDateFilter isOpen={isOpenRange} onRangeChange={onRangeChange} column={columnSelected.value}/>
     </div>
   );
 };

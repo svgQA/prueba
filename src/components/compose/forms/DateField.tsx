@@ -9,10 +9,13 @@ interface DateFieldProps {
   id?: string;
   meta?: any;
   validate?: (value: any) => any;
-  format?: 'time' | 'date';
+  format?: 'time' | 'date' | 'full';
   placeholder?: string;
   disabled?: boolean;
   defaultToNow?: boolean;
+  type?: 'time'
+  | 'date'
+  | 'datetime-local';
 }
 
 export const DateField = ({
@@ -21,10 +24,11 @@ export const DateField = ({
   required: isRequired = false,
   id,
   validate,
-  format = 'date',
+  format = 'full',
   disabled = false,
   placeholder,
   defaultToNow = false,
+  type = 'datetime-local'
 }: DateFieldProps) => {
   return (
     <Field<string>
@@ -44,7 +48,7 @@ export const DateField = ({
             {...input}
             id={id || `input-${name}`}
             name={`input-${name}`}
-            type='datetime-local'
+            type={type}
             label={label}
             meta={meta}
             unicon

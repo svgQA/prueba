@@ -2,18 +2,17 @@ import { Button } from '@/components/common/button/button';
 import { ExpandeableContent } from '@/components/common/report-automatic/expandeable-content';
 import { DateField } from '@/components/compose/forms';
 import { Signal, useSignal } from '@preact/signals';
-import { useCallback, useMemo, useEffect } from 'preact/hooks';
-import { Field, Form } from 'react-final-form';
+import { useCallback, useMemo } from 'preact/hooks';
+import { Form } from 'react-final-form';
 import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
-import { Table } from '@tanstack/react-table';
-import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { IOption } from '@/components/common/smart-selector/smart-select';
 
-interface Props<T> {
-  table: Table<T>;
+interface Props {
   className?: string;
   isOpen: Signal<boolean>;
   onRangeChange?: (range: IRangeValues | null) => void;
+  column: string;
 }
 
 interface IModelsValues {
@@ -26,45 +25,17 @@ export interface IRangeValues {
   [key: string]: [string, string];
 }
 
-export const RangeDateFilter = <T,>({ isOpen, table, onRangeChange }: Props<T>) => {
+export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
   const { t } = useTranslation();
   const loading = useSignal(false);
-  const columns = useSignal<IOption[]>([]);
-
-  // Ejecutar directamente cuando el componente se monte
-  useEffect(() => {
-    dateColumns();
-  }, [table]);
-
-  const dateColumns = () => {
-    return table.getAllLeafColumns().filter(column => {
-      const dateEnable = (column.columnDef as any)?.meta.type;
-
-      if (dateEnable === 'date') {
-        columns.value.push({
-          // @ts-ignore
-          value: String(column.columnDef?.accessorKey),
-          label: t(String(column.columnDef.header))
-        });
-        return true;
-      }
-      return false;
-    });
-  };
 
   const onSubmit = async (model: IModelsValues) => {
     loading.value = true;
 
-    const range: IRangeValues = model.columns.reduce((acc, column) => {
-      return {
-        ...acc,
-        [String(column?.value)]: [DateUtils.dateToBackend(model.start), DateUtils.dateToBackend(model.end)] as [string, string]
-      };
-    }, {} as IRangeValues);
+    const range: IRangeValues = {
+      [column]: [DateUtils.dateToBackend(model.start, 'date'), DateUtils.dateToBackend(model.end, 'date')] as [string, string]
+    };
 
-    console.log('Form data:', range);
-
-    // Llamar al callback para pasar los filtros al componente padre
     if (onRangeChange) {
       onRangeChange(range);
     }
@@ -153,6 +124,8 @@ export const RangeDateFilter = <T,>({ isOpen, table, onRangeChange }: Props<T>) 
                         <DateField
                           name='start'
                           label='h_date_start'
+                          format='date'
+                          type='date'
                           validate={(value) => {
                             if (value && values.end) {
                               const startDate = DateUtils.dateToFrontend(value);
@@ -172,6 +145,8 @@ export const RangeDateFilter = <T,>({ isOpen, table, onRangeChange }: Props<T>) 
                         <DateField
                           name='end'
                           label='h_date_end'
+                          format='date'
+                          type='date'
                           validate={(value) => {
                             if (value && values.start) {
                               const startDate = DateUtils.dateToFrontend(
@@ -186,23 +161,6 @@ export const RangeDateFilter = <T,>({ isOpen, table, onRangeChange }: Props<T>) 
                           }}
                           disabled={loading.value}
                         />
-                      </div>
-                      <div className='col-span-1'>
-                        <Field<IOption[]> name='columns'>
-                          {({ input, meta }) => (
-                            <SmartSelector
-                              {...input}
-                              meta={meta}
-                              id='select-columns'
-                              icon='120'
-                              label='h_columns'
-                              options={columns.value}
-                              menuPortalTarget={document.body}
-                              placeholder='p_select'
-                              multiple={true}
-                            />
-                          )}
-                        </Field>
                       </div>
                     </div>
                   </form>

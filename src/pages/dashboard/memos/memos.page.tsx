@@ -20,7 +20,7 @@ import { getColumns } from './components/memos.columns';
 import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
-import { MemoService, MemosSummary } from '@/services';
+import { baseParams, MemoService, MemosSummary } from '@/services';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
@@ -84,6 +84,7 @@ export const MemosPage: FunctionComponent = () => {
   );
   const panic = useSignal<Memo[]>([]);
   const summaryPanic = useSignal<MemosSummary>(defaultSummary);
+  const [dateRangeFilters, setDateRangeFilters] = useState<{ [key: string]: [string, string] } | null>(null);
 
   useEffect(() => {
     document.title = t('p_chat');
@@ -95,12 +96,12 @@ export const MemosPage: FunctionComponent = () => {
   useEffect(() => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
-      fetchInitialData();
+      fetchInitialData(dateRangeFilters);
       fetchSSE();
       selectedNotifier();
       EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
     }
-  }, [selectedCompany, location]);
+  }, [selectedCompany, location, dateRangeFilters]);
 
   const selectedNotifier = () => {
     handleNotificationEvent('notification-click', (id: any) => {
@@ -142,7 +143,7 @@ export const MemosPage: FunctionComponent = () => {
     }
   };
 
-  const fetchInitialData = async () => {
+  const fetchInitialData = async (rangeFilters?: { [key: string]: [string, string] } | null) => {
     loading.value = true;
     const [
       responseMemos,
@@ -153,12 +154,12 @@ export const MemosPage: FunctionComponent = () => {
       responseMemoPanic,
       responseSummaryPanic,
     ] = await Promise.all([
-      MemoService.get_all({ page: 1, items: 1000 }),
-      UserService.get_all_employee({ items: 20, page: 1 }),
+      MemoService.get_all(rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams),
+      UserService.get_all_employee(baseParams),
       MemoService.getMemosSummary(),
       MemoService.get_all_by_service(),
       MemoService.get_all_by_user(),
-      PanicService.get_all_memo_panic({ page: 1, items: 1000 }),
+      PanicService.get_all_memo_panic(baseParams),
       PanicService.getPanicSummary(),
     ]);
 
@@ -386,6 +387,9 @@ export const MemosPage: FunctionComponent = () => {
             pageSize={20}
             selectable
             loading={loading.value}
+            onRangeChange={(range) => {
+              setDateRangeFilters(range);
+            }}
             expandable={(row: Memo, column?: string) => (
               <ExpandableMultiple type={column} data={row} />
             )}

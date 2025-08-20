@@ -8,6 +8,7 @@ import {
 } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import {
+  baseParams,
   GanttService,
   NotificationService,
   ServiceService,
@@ -198,8 +199,6 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const fetchInitialData = async (rangeFilters?: { [key: string]: [string, string] } | null) => {
     loading.value = true;
-    const baseParams = { page: 1, items: 1000, };
-
     const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
       await Promise.all([
         ShiftService.get_all(rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams),

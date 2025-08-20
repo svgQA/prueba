@@ -386,6 +386,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                                 label='h_date'
                                 defaultToNow={true}
                                 disabled={true}
+                                type='datetime-local'
                               />
                             );
                           }}
