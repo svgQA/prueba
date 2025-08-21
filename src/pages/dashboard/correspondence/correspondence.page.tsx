@@ -12,13 +12,12 @@ import { CardData } from '@/components/compose/cards';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 
-// import { EventBus } from '@/utils/network/event.bus';
-// import {
-//   IBaseSSE,
-//   SSE_EVENTS,
-//   SSE_TYPE,
-//   SseManager,
-// } from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/event.bus';
+import {
+  IBaseSSE,
+  SSE_EVENTS,
+  SSE_TYPE,
+} from '@/utils/network/sse/base';
 
 import { defaultSummary, IResponseSummary } from '@/services';
 import { CorrespondenceService } from '@/services/access/correspondence';
@@ -41,7 +40,10 @@ export const CorrespondencePage: FunctionalComponent = () => {
     document.title = t('p_correspondence');
     fetchInitialData();
     // fetchSSE();
-    // EventBus.on(SSE_TYPE.CORRESPONDENCE, handleSSE);
+    EventBus.on(SSE_TYPE.CORRESPONDENCE, handleSSE);
+    return () => {
+      EventBus.off(SSE_TYPE.CORRESPONDENCE, handleSSE);
+    };
   }, []);
 
   const fetchInitialData = async () => {
@@ -63,21 +65,21 @@ export const CorrespondencePage: FunctionalComponent = () => {
   //   await SseManager.getQuery(['correspondences', 'stream']);
   // }, []);
 
-  // const handleSSE = async (event: IBaseSSE) => {
-  //   const { name, message } = event;
+  const handleSSE = async (event: IBaseSSE) => {
+    const { name, message } = event;
 
-  //   if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
-  //     const index = correspondence.value.findIndex(
-  //       (value: any) => value.id === message.id
-  //     );
-  //     if (index < 0) return;
-  //     const copy: ICorrespondence[] = correspondence.value;
-  //     copy[index].observation = message.observation;
-  //     correspondence.value = [...copy];
-  //   }
+    if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
+      const index = correspondence.value.findIndex(
+        (value: any) => value.id === message.id
+      );
+      if (index < 0) return;
+      const copy: ICorrespondence[] = correspondence.value;
+      copy[index].observation = message.observation;
+      correspondence.value = [...copy];
+    }
 
-  //   if (name === SSE_EVENTS.CREATE) fetchInitialData();
-  // };
+    if (name === SSE_EVENTS.CREATE) fetchInitialData();
+  };
 
   const toggleUpsertModal = () => {
     showUpsertModal.value = !showUpsertModal.value;
