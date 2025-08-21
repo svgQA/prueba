@@ -15,7 +15,8 @@ import { Avatar } from '@/components/common/Avatar';
 import { useSignal } from '@preact/signals';
 import { useTranslation } from 'react-i18next';
 interface ICheckData {
-  time: string;
+  time?: string;
+  date?: string;
   platform: string;
   distance?: string;
   location: { lat: string; lng: string };
@@ -124,12 +125,12 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
   };
   useEffect(() => {
     checkInStatus.value = calculateCheckStatus(
-      checkIn?.time,
+      checkIn?.time ?? checkIn?.date,
       shift.start,
       true
     );
     checkOutStatus.value = calculateCheckStatus(
-      checkOut?.time,
+      checkOut?.time ?? checkOut?.date,
       shift.end,
       false
     );
@@ -212,8 +213,8 @@ interface IShiftCardProps {
   btnLabel: string;
   shiftId: number;
   distance?: string;
-  latitude: number;
-  longitude: number;
+  latitude: number | string;
+  longitude: number | string;
   file: IPresignedRequest[];
   disabled: boolean;
   onCheck: (checkData: ICheckData) => void;
@@ -238,6 +239,10 @@ const ShiftCard = ({
   onCheck,
 }: IShiftCardProps) => {
   const { t } = useTranslation();
+
+  const lat = typeof latitude === 'number' ? latitude : parseFloat(latitude);
+  const lng = typeof longitude === 'number' ? longitude : parseFloat(longitude);
+
   const getLocation = async () => {
     try {
       const position = await new Promise<GeolocationPosition>(
@@ -377,16 +382,16 @@ const ShiftCard = ({
           sendPoints={() => {}}
           name='Map'
           center={{
-            lat: latitude,
-            lng: longitude,
+            lat: lat,
+            lng: lng,
           }}
           pointsAmount={1}
           pointsRef={[
             {
               id: 1,
               position: {
-                lat: latitude,
-                lng: longitude,
+                lat: lat,
+                lng: lng,
               },
             },
           ]}
