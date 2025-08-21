@@ -167,6 +167,7 @@ export const ExpandableRounds: FunctionComponent<IExpandableProps> = ({
                         pointId: item.id,
                         latitude: item.latitude,
                         longitude: item.longitude,
+                        pointName: item.name,
                       })}
                       viewBox={`0 0 512 512`}
                       title='QR Code'
