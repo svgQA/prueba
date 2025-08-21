@@ -56,7 +56,6 @@ export const RoundsSettingPage: FunctionComponent = () => {
       };
     });
 
-    console.log(rounds);
     setRounds(rounds);
     loading.value = false;
   };
