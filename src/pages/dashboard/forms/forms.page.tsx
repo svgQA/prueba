@@ -27,7 +27,6 @@ import {
   IBaseSSE,
   SSE_EVENTS,
   SSE_TYPE,
-  SseManager,
 } from '@/utils/network/sse/base';
 import { handleNotificationEvent } from '@/components/common/notifications/components/notification.event';
 
@@ -47,15 +46,18 @@ export const FormsPage: FunctionComponent = () => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
       getResponseHandler();
-      fetchSSE();
+      // fetchSSE();
       EventBus.on(SSE_TYPE.RESPONSE, handleResponseSSE);
       selectedNotifier();
+      return () => {
+        EventBus.off(SSE_TYPE.RESPONSE, handleResponseSSE);
+      };
     }
   }, [selectedCompany, location]);
 
-  const fetchSSE = useCallback(async () => {
-    await SseManager.getQuery(['response', 'stream', 'sse']);
-  }, []);
+  // const fetchSSE = useCallback(async () => {
+  //   await SseManager.getQuery(['response', 'stream', 'sse']);
+  // }, []);
 
   const handleResponseSSE = async (event: IBaseSSE) => {
     const { name, message } = event;

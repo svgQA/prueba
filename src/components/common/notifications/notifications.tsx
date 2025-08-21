@@ -35,6 +35,9 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
     setLocalNotifications(initialNotifications);
     setNotifications(initialNotifications);
     EventBus.on(SSE_TYPE.ALL, handleNotificationSSE);
+    return () => {
+      EventBus.off(SSE_TYPE.ALL, handleNotificationSSE);
+    };
   }, []);
 
   const handleNotificationSSE = (event: IBaseSSE) => {

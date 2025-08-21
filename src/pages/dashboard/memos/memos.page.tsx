@@ -30,7 +30,6 @@ import {
   IBaseSSE,
   SSE_EVENTS,
   SSE_TYPE,
-  SseManager,
 } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 import { MapPath } from '@/components/common/map/MapPath';
@@ -97,9 +96,12 @@ export const MemosPage: FunctionComponent = () => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
       fetchInitialData(dateRangeFilters);
-      fetchSSE();
+      // fetchSSE();
       selectedNotifier();
       EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
+      return () => {
+        EventBus.off(SSE_TYPE.MEMO, handleMemoSSE);
+      };
     }
   }, [selectedCompany, location, dateRangeFilters]);
 
@@ -114,9 +116,9 @@ export const MemosPage: FunctionComponent = () => {
     });
   };
 
-  const fetchSSE = useCallback(async () => {
-    await SseManager.getQuery(['memo', 'stream', 'history']);
-  }, []);
+  // const fetchSSE = useCallback(async () => {
+  //   await SseManager.getQuery(['memo', 'stream', 'history']);
+  // }, []);
 
   const handleMemoSSE = async (event: IBaseSSE) => {
     const { name, message } = event;
