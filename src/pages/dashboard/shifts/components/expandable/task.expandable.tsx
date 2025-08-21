@@ -109,7 +109,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
                   <div className='flex flex-row gap-1 flex-wrap w-10/12 justify-center items-center'>
                     {list?.map((task: ITask, i) => (
                       <div key={`task-selected-${i}`} className='relative'>
-                        <TaskCard task={task} remove={false} state />
+                        <TaskCard task={task} remove={false} state whidt='70%'/>
 
                         {/* 👇 Ver Formulario si hay responseId */}
                         {task.responseId && task.formId && (
