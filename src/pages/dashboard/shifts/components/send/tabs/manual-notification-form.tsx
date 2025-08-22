@@ -46,7 +46,7 @@ export const ManualNotificationForm = ({
 
   const templates = useSignal<IOption[]>([]);
   const tasks = useSignal<IOption[]>([]);
-  const tasksResponse = useSignal<ITask[]>([]);
+  const [tasksResponse, setTasksResponse] = useState<ITask[]>([]);
   const places: Signal<IOption[]> = useSignal([]);
 
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
@@ -122,7 +122,7 @@ export const ManualNotificationForm = ({
         values.task?.value && { taskId: Number(values.task.value) }),
       overrideTitle: values.title,
       overrideDescription: values.description,
-      tasks: tasksResponse.value,
+      tasks: tasksResponse,
       placeId: values.placeId?.value ? Number(values.placeId.value) : undefined,
       filters: {
         userIds: selectedUsersFull?.map((u) => String(u.id)),
@@ -139,20 +139,26 @@ export const ManualNotificationForm = ({
     /* DELETE: Posibllemente eliminar esto */
   };
 
+  const onTaskDelete = (id: string) => {
+    setTasksResponse(tasksResponse.filter((task) => task.id !== id));
+  };
+
   const clearUserSelection = () => setSelectedUserIds([]);
 
   useEffect(() => {
     getInitData();
   }, []);
 
-  const onTaskAdd = (model: any) => {
-    if (Array.isArray(model)) {
-      tasksResponse.value = [...tasksResponse.value, ...model];
-    } else {
-      tasksResponse.value = [...tasksResponse.value, model];
-    }
+  const onTaskAdd = (model: any, t: number = 2) => {
+    const size = tasksResponse.length + 1;
+    const out = _onTaskAddWithId(model, size, t);
+    setTasksResponse([
+      ...tasksResponse,
+      ...(Array.isArray(out) ? out : [out])
+    ])
     showInlineCreate.value = false;
   };
+
 
   const infoTemplate = async (value: IOption) => {
     setTemplateSelected(value);
@@ -293,9 +299,10 @@ export const ManualNotificationForm = ({
 
           <TaskFormCreate
             onSubmit={onTaskAdd}
+            onDelete={onTaskDelete}
             add
             selector
-            taskList={tasksResponse.value}
+            taskList={tasksResponse}
             disabled={templateSelected ? true : false}
             type={sendToGeneral ? 'REPORT' : 'GENERAL'}
           />
