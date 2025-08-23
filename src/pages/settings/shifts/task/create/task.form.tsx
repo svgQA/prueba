@@ -14,7 +14,6 @@ import { ITask } from './interface';
 import { DateUtils } from '@/utils/utilities/dates';
 
 interface Props {
-  initialValues?: Record<string, any>;
   onSubmit: (values: Record<string, any>) => void;
   add?: boolean;
   taskList?: any[];
@@ -29,7 +28,6 @@ interface Props {
 }
 
 export const TaskFormCreate = ({
-  initialValues,
   onSubmit,
   add = false,
   taskList = [],
@@ -77,45 +75,9 @@ export const TaskFormCreate = ({
     }
   }, [selectedCompany]);
 
-  /**
-   const onChange = (value: any, form?: any) => {
-    if (!value) return;
-    let _task: ITask | undefined = undefined;
-    if (form) {
-      _task = {
-        id: value.id,
-        name: value.name,
-        description: value.description,
-        formId: value.formId?.value,
-        type: value.type?.value,
-        hourStart: DateUtils.createDateFromHour(value.hourStart, true),
-        attachmentType: value.attachmentType?.value,
-      };
-    } else {
-      // TODO: esta mierda no me gusta.
-      const find = tasks.value.find((task) => task.id === value.value);
-      if (!find) return;
-      _task = {
-        id: find.id,
-        name: find.name,
-        description: find.description,
-        formId: find.formId,
-        type: find.type,
-        hourStart: DateUtils.createDateFromHour(find.hourStart, true),
-        attachmentType: find.attachmentType,
-      };
-    }
-    onSubmit(_task);
-    form?.reset();
-
-    if (!selector || !add) return;
-    onAppend.value = false;
-  };
-   */
-
   const onChange = (value: any, form?: any) => {
     if (!value) return;
-    let _task: ITask | undefined = undefined;
+    let _task: any | undefined = undefined;
     if (value.value === 'general') {
       _task = {
         name: 'General',
@@ -139,7 +101,24 @@ export const TaskFormCreate = ({
     }
 
     if (!_task) return;
-    onSubmit(_task);
+    onSubmit({
+      id: _task?.value,
+      formId: _task.formId?.value ?? _task.formId,
+      type: _task.type?.value ?? _task.type,
+      attachmentType: _task.attachmentType?.value ?? _task.attachmentType,
+      hourStart: _task.hourStart,
+      description: _task.description,
+      name: _task.name,
+      responseId: _task.responseId,
+      check: _task.check ?? false,
+      status: _task.status,
+      progress: _task.progess,
+      start: _task.start ?? _task.hourStart,
+      end: _task.end,
+      styles: _task.styles,
+      companyId: _task.companyId,
+    });
+
     if (form) form.change('select-task', undefined);
     if (!selector || !add) return;
     onAppend.value = false;
@@ -167,13 +146,19 @@ export const TaskFormCreate = ({
       >
         <Form
           onSubmit={onChange}
-          initialValues={initialValues}
+          initialValues={{ type }}
           render={({ handleSubmit, form, submitting, pristine }) => {
             const values: any = form.getState().values;
-            const isGeneral = values.type?.value === 'GENERAL';
-            const isReport = values.type?.value === 'REPORT';
+
+            const isGeneral =
+              values.type === 'GENERAL' || values.type?.value === 'GENERAL';
+            const isReport =
+              values.type === 'REPORT' || values.type?.value === 'REPORT';
             const isFormReport =
-              isReport && values.attachmentType?.value === 'FORMS';
+              isReport &&
+              (values.attachmentType === 'FORMS' ||
+                values.attachmentType?.value === 'FORMS');
+
             return (
               <form
                 onSubmit={handleSubmit}
@@ -181,23 +166,6 @@ export const TaskFormCreate = ({
                 id='form-settings-task-create'
               >
                 {selector && (
-                  //   <SmartSelector
-                  //   name='select-task'
-                  //   placeholder='p_select'
-                  //   label='h_task'
-                  //   button
-                  //   buttonIcon='219'
-                  //   icon='086'
-                  //   options={filteredTasks.map((e) => ({
-                  //     value: e.id ?? '',
-                  //     // label: e.description ?? 'Sin descripción',
-                  //     label: e.name ?? 'Sin descripción',
-                  //   }))}
-                  //   menuPortalTarget={document.body}
-                  //   onClick={onToggleTask}
-                  //   onChange={onChange}
-                  //   disabled={disabled}
-                  // />
                   <Field name='select-task'>
                     {({ input, meta }) => (
                       <SmartSelector
@@ -249,18 +217,24 @@ export const TaskFormCreate = ({
                       </div>
 
                       <div className='col-span-1'>
-                        <Field<IOption> name='type' validate={required}>
-                          {({ input, meta }) => (
-                            <SmartSelector
-                              {...input}
-                              placeholder='p_select'
-                              label='h_type'
-                              icon='454'
-                              options={TASK_TYPE_OPTIONS}
-                              meta={meta}
-                            />
-                          )}
-                        </Field>
+                        {type ? (
+                          <div className='font-bold h-full w-full flex text-center flex-col justify-center'>
+                            <p>{type}</p>
+                          </div>
+                        ) : (
+                          <Field<IOption> name='type' validate={required}>
+                            {({ input, meta }) => (
+                              <SmartSelector
+                                {...input}
+                                placeholder='p_select'
+                                label='h_type'
+                                icon='454'
+                                options={TASK_TYPE_OPTIONS}
+                                meta={meta}
+                              />
+                            )}
+                          </Field>
+                        )}
                       </div>
 
                       {/* GENERAL: Form selector y hora inicio */}

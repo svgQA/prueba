@@ -21,7 +21,10 @@ export class EventBus {
 
   static off = (type: SSE_TYPE, listener: Listener) => {
     const result = listeners.get(type) || [];
-    listeners.set(type, result.filter((l) => l !== listener));
+    listeners.set(
+      type,
+      result.filter((l) => l !== listener)
+    );
   };
 
   // static on = (listener: Listener) => {

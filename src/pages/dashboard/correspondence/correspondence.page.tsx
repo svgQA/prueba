@@ -13,11 +13,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 
 import { EventBus } from '@/utils/network/event.bus';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-} from '@/utils/network/sse/base';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 
 import { defaultSummary, IResponseSummary } from '@/services';
 import { CorrespondenceService } from '@/services/access/correspondence';

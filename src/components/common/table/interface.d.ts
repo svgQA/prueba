@@ -35,5 +35,5 @@ export interface ITableProps<T> {
   loading?: boolean;
   searchable?: { [key: string]: boolean };
   modules?: modulesReport;
-  onRangeChange?: (range: {[key: string]: [string, string]} | null) => void;
+  onRangeChange?: (range: { [key: string]: [string, string] } | null) => void;
 }

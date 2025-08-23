@@ -47,11 +47,7 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 // import { AudioButton } from './audio/socket.button';
 import { getLocation } from '@/utils/utilities/location';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-} from '@/utils/network/sse/base';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 import { useUserStore } from '@/store/slices';
 import { modulesReport } from '@/types/form';
@@ -99,7 +95,9 @@ export const ShiftsPage: FunctionalComponent = () => {
   const loading = useSignal<boolean>(false);
 
   // Estado para almacenar los filtros de rango de fechas
-  const [dateRangeFilters, setDateRangeFilters] = useState<{ [key: string]: [string, string] } | null>(null);
+  const [dateRangeFilters, setDateRangeFilters] = useState<{
+    [key: string]: [string, string];
+  } | null>(null);
 
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
   const memoizedServices = useMemo(() => services, [services]);
@@ -199,11 +197,15 @@ export const ShiftsPage: FunctionalComponent = () => {
     }
   };
 
-  const fetchInitialData = async (rangeFilters?: { [key: string]: [string, string] } | null) => {
+  const fetchInitialData = async (
+    rangeFilters?: { [key: string]: [string, string] } | null
+  ) => {
     loading.value = true;
     const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
       await Promise.all([
-        ShiftService.get_all(rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams),
+        ShiftService.get_all(
+          rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams
+        ),
         ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),
         NotificationService.hasUsersWithPlayerId(),
@@ -342,7 +344,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
     (_id: string | number) => {
@@ -547,7 +549,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           title: t('s_title_delete'),
           message: t('s_message'),
           onConfirm: () => deleteShift(params.id),
-          onCancel: () => { },
+          onCancel: () => {},
         });
         break;
       case ROW_ACTIONS.CHECK_IN:

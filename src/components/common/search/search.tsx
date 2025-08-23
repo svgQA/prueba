@@ -217,10 +217,11 @@ export const Search = ({
           const keyName = `filter-key-${key.id}-${index}`;
           return (
             <div
-              className={`relative px-3 py-1 my-1 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${index === selectedKeyIndex.value
-                ? 'bg-primary-opacity text-primary'
-                : 'hover:bg-b-light hover:text-primary'
-                }`}
+              className={`relative px-3 py-1 my-1 cursor-pointer flex flex-row min-w-40 rounded-md transition-colors duration-150 ${
+                index === selectedKeyIndex.value
+                  ? 'bg-primary-opacity text-primary'
+                  : 'hover:bg-b-light hover:text-primary'
+              }`}
               // className={'bg-red-100 relative my-1'}
               key={keyName}
               // data-name={keyName}
@@ -229,10 +230,10 @@ export const Search = ({
               // data-type={key.type}
               tabIndex={0}
               onKeyDown={handleKeyPress}
-            // onClick={(e) => {
-            //   e.stopPropagation();
-            //   setFilterSelected(key);
-            // }}
+              // onClick={(e) => {
+              //   e.stopPropagation();
+              //   setFilterSelected(key);
+              // }}
             >
               <span
                 className='absolute top-0 left-0 w-full h-full'
@@ -272,7 +273,8 @@ export const Search = ({
               className='flex items-center h-7 px-2 py-1 bg-primary-opacity dark:bg-ternary dark:text-white text-primary rounded-xl cursor-pointer gap-1 transition-all hover:bg-primary-opacity-2 text-sm'
             >
               <span className='font-medium'>
-                <strong>{t(keyLabel)}</strong> {keyType === 'date'? '': `: ${String(item.value)}`}
+                <strong>{t(keyLabel)}</strong>{' '}
+                {keyType === 'date' ? '' : `: ${String(item.value)}`}
               </span>
               <span
                 className='ml-1 hover:text-ternary cursor-pointer flex items-center justify-center w-4 h-4 rounded-full hover:bg-primary-opacity-2'
@@ -312,7 +314,7 @@ export const Search = ({
     <div
       id={id}
       className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700 shadow-sm'
-    // focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200
+      // focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200
     >
       <span className='vox-icon vx-icon-153 text-gray-500 dark:text-gray-400' />
       <div
@@ -355,7 +357,11 @@ export const Search = ({
         </div>
       )}
 
-      <RangeDateFilter isOpen={isOpenRange} onRangeChange={onRangeChange} column={columnSelected.value} />
+      <RangeDateFilter
+        isOpen={isOpenRange}
+        onRangeChange={onRangeChange}
+        column={columnSelected.value}
+      />
     </div>
   );
 };
