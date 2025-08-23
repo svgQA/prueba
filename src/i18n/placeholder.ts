@@ -51,6 +51,7 @@ export const placeholder_es = {
   p_select_round: 'Seleccione ronda...',
   p_frequency: 'Ingrese frecuencia...',
   p_radius: 'Ingrese radio...',
+  p_mention_placeholder: 'Escribe @ para mencionar a alguien en el turno...',
 };
 
 export const placeholder_en = {
@@ -106,4 +107,5 @@ export const placeholder_en = {
   p_select_round: 'Select round...',
   p_frequency: 'Enter frequency...',
   p_radius: 'Enter radius...',
+  p_mention_placeholder: 'Write @ to mention someone in the shift...',
 };

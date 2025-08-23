@@ -185,7 +185,7 @@ export const ManualNotificationForm = ({
                 setSendToShiftToday(checked);
                 setNotificationType(checked ? 'REPORT' : 'GENERAL');
               }}
-              label={t('l_request_report')}
+              label='l_request_report'
             />
           </div>
 
