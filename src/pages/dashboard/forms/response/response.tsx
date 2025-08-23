@@ -4,6 +4,7 @@ import {
   IElement,
   IRElementError,
   IResponse,
+  RESPONSE_STATUS,
 } from '@/types/form';
 import { Checkbox } from '@/components/common/checkbox/checkbox';
 import { Radio } from '@/components/common/radio/radio';
@@ -29,6 +30,7 @@ import { AudioRecorder } from '@/components/common/audio/Audio.Recorder';
 import { Signature } from '@/components/common/signature/signature';
 import { QrCode } from '@/components/common/qr/qrCode';
 import { Barcode } from '@/components/common/barcode/barcode';
+import { jsonToGzipBase64 } from '@/utils/utilities/blob';
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
   type?: string;
@@ -443,20 +445,21 @@ export const FormResponseSettingPage: FunctionComponent<
   };
 
   const saveResponse = async () => {
-    if (!getResponse.value) return;
+    if (!getResponse.value || !getResponseMode?.value?.id) return;
     // console.log('saveResponse', getResponse.value);
 
     // TODO: No borrar esta parte que es para guardar donde se puede dejar como se quiera
     // el formulario
-    // const [structure, error] = responseValidation(getResponse.value);
-    // if (error) {
-    //   setSingleResponse(structure as IResponse);
-    //   return ToastManager.error('form.error.general');
-    // }
+    const [structure, error] = responseValidation(getResponse.value);
+    if (error) {
+      setSingleResponse(structure as IResponse);
+      return ToastManager.error('form.error.general');
+    }
 
-    if (!getResponse?.value || !getResponseMode?.value?.id) return;
+    const newStructure = jsonToGzipBase64(getResponse.value);
+
     const response = await FormService.update_response(
-      { structure: getResponse.value },
+      { structure: newStructure, status: RESPONSE_STATUS.OPENED },
       getResponseMode.value.id
     );
     if (!response.getStatus()) return;
@@ -472,8 +475,9 @@ export const FormResponseSettingPage: FunctionComponent<
     }
 
     if (!getResponse?.value || !getResponseMode?.value?.id) return;
-    const response = await FormService.finish_response(
-      { structure },
+    const newStructure = jsonToGzipBase64(getResponse.value);
+    const response = await FormService.update_response(
+      { structure: newStructure, status: RESPONSE_STATUS.CLOSED },
       getResponseMode.value.id
     );
     if (!response.getStatus()) return;

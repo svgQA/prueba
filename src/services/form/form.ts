@@ -5,8 +5,9 @@ import {
   IFormResponse,
   IListRequest,
   IListResponse,
-  IResponseRequest,
+  IResponseRequestBase64,
   IResponseResponse,
+  IResponseStructure,
   UResponseRequest,
 } from '@/types/form';
 import { IShiftResponse } from '@/types/shift/activity';
@@ -62,7 +63,7 @@ export class FormService extends BaseService {
     return await super.make_request<IListResponse>(this.sname, model);
   }
 
-  static async create_response(data: IResponseRequest) {
+  static async create_response(data: IResponseRequestBase64) {
     const model: IMakeRequest = {
       url: ['response'],
       method: REQUEST_METHODS.POST,
@@ -142,5 +143,13 @@ export class FormService extends BaseService {
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<IFormResponse>(this.sname, model);
+  }
+
+  static async get_structure(id: string) {
+    const model: IMakeRequest = {
+      url: ['response', 'structure', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<IResponseStructure>(this.sname, model);
   }
 }

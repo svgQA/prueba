@@ -99,15 +99,13 @@ export const FormsPage: FunctionComponent = () => {
   };
 
   const handleOnClick = async (action: IRowAction) => {
-    const response = responses.value.find(
-      (response) => response.id == action.id
-    );
-
-    if (!response?.structure) {
+    const data = await FormService.get_structure(String(action.id));
+    if (!data.getStatus()) {
       ToastManager.error('s_not_exist');
       return;
     }
 
+    const response = data.getOne();
     if (!validateResponse(response.structure)) {
       ToastManager.error('s_structure_error');
       return;
@@ -123,8 +121,10 @@ export const FormsPage: FunctionComponent = () => {
         break;
       }
       case ROW_ACTIONS.DELETE: {
-        const respons = await FormService.remove_response_one(response.id);
-        if (!respons.getStatus()) return;
+        const deleteResponse = await FormService.remove_response_one(
+          response.id
+        );
+        if (!deleteResponse.getStatus()) return;
         getResponseHandler();
         break;
       }
@@ -259,7 +259,12 @@ export const FormsPage: FunctionComponent = () => {
                   : t('s_title')}
               </h2>
             </div>
-            <FormResponseSettingPage posFinishAction={handlePosFinishAction} />
+            <FormResponseSettingPage
+              posFinishAction={handlePosFinishAction}
+              type={
+                currentView.value === VIEW_NAME.INSPECT ? 'INSPECT' : 'VIEW'
+              }
+            />
           </div>
         )}
       </div>
