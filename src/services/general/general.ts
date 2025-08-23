@@ -3,7 +3,6 @@ import { Group } from '@/pages/settings/security/groups/create/utils/types';
 import { IPresignedRequest, IPresignedResponse } from '@/types/file';
 import { BaseService, IRequestModelOutput } from '@/utils/network';
 import { streamGetResponse } from '@/utils/network/sse/sse.get';
-import { streamIAResponse } from '@/utils/network/sse/sse.post';
 import {
   IMakeRequest,
   REQUEST_METHODS,

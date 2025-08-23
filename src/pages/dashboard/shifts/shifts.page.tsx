@@ -176,7 +176,6 @@ export const ShiftsPage: FunctionalComponent = () => {
         (shift) => Number(shift.id) === Number(message.id)
       );
       if (shiftIndex < 0) return;
-      console.log('Updating shift:', message);
       const shiftCopy: IShiftResponse[] = shifts.value;
       shiftCopy[shiftIndex] = message;
       shifts.value = [...shiftCopy];
