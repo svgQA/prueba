@@ -7,6 +7,7 @@ interface Props {
   task: ITask;
   remove?: boolean;
   state?: boolean;
+  whidt?: string;
   onDelete?: (id: any) => void;
 }
 
@@ -15,6 +16,7 @@ export const TaskCard = ({
   remove = true,
   state = false,
   onDelete,
+  whidt,
 }: Props) => {
   const { t } = useTranslation();
   return (
@@ -34,7 +36,11 @@ export const TaskCard = ({
         )}
       </span>
       <div className='flex flex-row justify-between mt-4'>
-        <TextEllipsis text={task.name} className='text-primary' />
+        <TextEllipsis
+          text={task.name}
+          className='text-primary'
+          maxWidth={whidt}
+        />
         <p>{DateUtils.dateToFrontend(task.hourStart, { format: 'hh:mm A' })}</p>
       </div>
       <div className='flex flex-row justify-between'>

@@ -1,4 +1,4 @@
-import { IBaseSSE, SSE_TYPE } from './sse/base';
+import { IBaseSSE, SSE_TYPE } from './base';
 
 type Listener = (event: IBaseSSE) => void;
 const listeners = new Map<string, Listener[]>();
@@ -21,7 +21,10 @@ export class EventBus {
 
   static off = (type: SSE_TYPE, listener: Listener) => {
     const result = listeners.get(type) || [];
-    listeners.set(type, result.filter((l) => l !== listener));
+    listeners.set(
+      type,
+      result.filter((l) => l !== listener)
+    );
   };
 
   // static on = (listener: Listener) => {

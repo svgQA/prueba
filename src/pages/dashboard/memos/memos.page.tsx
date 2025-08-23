@@ -26,12 +26,8 @@ import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { DateUtils } from '@/utils/utilities/dates';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-} from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/event.bus';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/sse/event.bus';
 import { MapPath } from '@/components/common/map/MapPath';
 import { RoutePoint } from '@/services/general/tracking';
 import NotificationBanner from '@/components/common/notifications/components/notification.banner';
@@ -83,7 +79,9 @@ export const MemosPage: FunctionComponent = () => {
   );
   const panic = useSignal<Memo[]>([]);
   const summaryPanic = useSignal<MemosSummary>(defaultSummary);
-  const [dateRangeFilters, setDateRangeFilters] = useState<{ [key: string]: [string, string] } | null>(null);
+  const [dateRangeFilters, setDateRangeFilters] = useState<{
+    [key: string]: [string, string];
+  } | null>(null);
 
   useEffect(() => {
     document.title = t('p_chat');
@@ -145,7 +143,9 @@ export const MemosPage: FunctionComponent = () => {
     }
   };
 
-  const fetchInitialData = async (rangeFilters?: { [key: string]: [string, string] } | null) => {
+  const fetchInitialData = async (
+    rangeFilters?: { [key: string]: [string, string] } | null
+  ) => {
     loading.value = true;
     const [
       responseMemos,
@@ -156,7 +156,9 @@ export const MemosPage: FunctionComponent = () => {
       responseMemoPanic,
       responseSummaryPanic,
     ] = await Promise.all([
-      MemoService.get_all(rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams),
+      MemoService.get_all(
+        rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams
+      ),
       UserService.get_all_employee(baseParams),
       MemoService.getMemosSummary(),
       MemoService.get_all_by_service(),

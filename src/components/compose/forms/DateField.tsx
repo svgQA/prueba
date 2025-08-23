@@ -13,9 +13,7 @@ interface DateFieldProps {
   placeholder?: string;
   disabled?: boolean;
   defaultToNow?: boolean;
-  type?: 'time'
-  | 'date'
-  | 'datetime-local';
+  type?: 'time' | 'date' | 'datetime-local';
 }
 
 export const DateField = ({
@@ -28,7 +26,7 @@ export const DateField = ({
   disabled = false,
   placeholder,
   defaultToNow = false,
-  type = 'datetime-local'
+  type = 'datetime-local',
 }: DateFieldProps) => {
   return (
     <Field<string>

@@ -354,15 +354,18 @@ export const FormResponseSettingPage: FunctionComponent = () => {
   const saveResponse = async () => {
     if (!getResponse.value) return;
 
-    // const [structure, error] = responseValidation(getResponse.value);
-    // if (error) {
-    //   setSingleResponse(structure as IResponse);
-    //   return ToastManager.error('form.error.general');
-    // }
+    const [structure, error] = responseValidation(getResponse.value);
+    if (error) {
+      setSingleResponse(structure as IResponse);
+      return ToastManager.error('form.error.general');
+    }
 
     if (!getResponse?.value || !getResponseMode?.value?.id) return;
     const response = await FormService.update_response(
-      { structure: getResponse.value },
+      {
+        structure:
+          /* getResponse.value */ 'ir a /pages/dashboard/forms/response/response.tsx',
+      },
       getResponseMode.value.id
     );
     if (!response.getStatus()) return;
@@ -379,7 +382,10 @@ export const FormResponseSettingPage: FunctionComponent = () => {
 
     if (!getResponse?.value || !getResponseMode?.value?.id) return;
     const response = await FormService.finish_response(
-      { structure },
+      {
+        structure:
+          /* structure */ 'ir a /pages/dashboard/forms/response/response.tsx',
+      },
       getResponseMode.value.id
     );
     if (!response.getStatus()) return;

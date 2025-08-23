@@ -21,5 +21,5 @@ export interface ISearchProps extends IComponentProps {
   grouping?: boolean;
   disabled?: boolean;
   modules?: modulesReport;
-  onRangeChange?: (range: {[key: string]: [string, string]} | null) => void;
+  onRangeChange?: (range: { [key: string]: [string, string] } | null) => void;
 }

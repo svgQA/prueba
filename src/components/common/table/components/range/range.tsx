@@ -34,7 +34,10 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
     loading.value = true;
 
     const range: IRangeValues = {
-      [column]: [DateUtils.dateToBackend(model.start, 'date'), DateUtils.dateToBackend(model.end, 'date')] as [string, string]
+      [column]: [
+        DateUtils.dateToBackend(model.start, 'date'),
+        DateUtils.dateToBackend(model.end, 'date'),
+      ] as [string, string],
     };
 
     if (onRangeChange) {
@@ -99,7 +102,7 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
               render={({ handleSubmit, values }) => {
                 // Actualizar el signal automáticamente cuando cambien los valores
                 canApply.value = !!(values.start && values.end);
-                
+
                 return (
                   <form
                     onSubmit={handleSubmit}

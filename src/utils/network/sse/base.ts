@@ -1,5 +1,5 @@
 import { GeneralService } from '@/services';
-import { EventBus } from '../event.bus';
+import { EventBus } from './event.bus';
 
 export enum SSE_EVENTS {
   CREATE = 'create',

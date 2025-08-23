@@ -445,18 +445,17 @@ export const FormResponseSettingPage: FunctionComponent<
   };
 
   const saveResponse = async () => {
-    if (!getResponse.value) return;
+    if (!getResponse.value || !getResponseMode?.value?.id) return;
     // console.log('saveResponse', getResponse.value);
 
     // TODO: No borrar esta parte que es para guardar donde se puede dejar como se quiera
     // el formulario
-    // const [structure, error] = responseValidation(getResponse.value);
-    // if (error) {
-    //   setSingleResponse(structure as IResponse);
-    //   return ToastManager.error('form.error.general');
-    // }
+    const [structure, error] = responseValidation(getResponse.value);
+    if (error) {
+      setSingleResponse(structure as IResponse);
+      return ToastManager.error('form.error.general');
+    }
 
-    if (!getResponse?.value || !getResponseMode?.value?.id) return;
     const newStructure = jsonToGzipBase64(getResponse.value);
 
     const response = await FormService.update_response(

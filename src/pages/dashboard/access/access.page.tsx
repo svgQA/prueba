@@ -15,12 +15,8 @@ import { defaultSummary, IResponseSummary } from '@/services';
 // import { Button } from '@/components/common/button/button';
 import { AccessForm } from './components/access.upsert.form';
 import { IRowAction } from '@/components/common/table/interface';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-} from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/event.bus';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/sse/event.bus';
 import { IAccess } from '@/types/access/accesses';
 
 export const AccessPage: FunctionalComponent = () => {

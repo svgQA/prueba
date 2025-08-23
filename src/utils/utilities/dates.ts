@@ -86,12 +86,12 @@ export class DateUtils {
    */
   static toUTCISOStringFromLocal(
     dateInput: ValidDate,
-    format: 'time' |  'date' | 'full' = 'full'
+    format: 'time' | 'date' | 'full' = 'full'
   ): string {
     if (format === 'time') {
       return dayjs(dateInput).utc().format('HH:mm');
     }
-    
+
     if (format === 'full') {
       return dayjs(dateInput).utc().toISOString();
     }
@@ -101,7 +101,7 @@ export class DateUtils {
 
   static dateToBackend(
     dateInput: ValidDate,
-    format: 'time' |  'date' | 'full' = 'full'
+    format: 'time' | 'date' | 'full' = 'full'
   ): string {
     return this.toUTCISOStringFromLocal(dateInput, format);
   }
