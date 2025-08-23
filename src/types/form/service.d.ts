@@ -34,7 +34,10 @@ interface IGroups {
   };
 }
 
-export interface UResponseRequest extends Omit<IResponseRequest, 'formId'> {}
+export interface UResponseRequest
+  extends Omit<IResponseRequestBase64, 'formId'> {
+  status?: RESPONSE_STATUS;
+}
 
 export interface IListRequest {
   name: string;
@@ -60,6 +63,16 @@ export interface IReportResponse extends IReportRequest {
 export interface IResponseRequest {
   formId: number;
   structure: IFormat;
+}
+
+export interface IResponseRequestBase64 {
+  formId: number;
+  structure: string;
+}
+
+export interface IResponseStructure {
+  structure: IFormat;
+  id: string;
 }
 
 // TODO: Corregir estas interfaces en form y user

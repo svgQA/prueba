@@ -24,6 +24,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { closeSettingModal } from '@/store/signals/modals/settings/settings.signal';
 import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { jsonToGzipBase64 } from '@/utils/utilities/blob';
 
 export const FormSettingPage = () => {
   const { t } = useTranslation();
@@ -130,9 +131,10 @@ export const FormSettingPage = () => {
           ToastManager.error('s_structure_error');
           return;
         }
+        const newStructure = jsonToGzipBase64(format.structure);
         const response = await FormService.create_response({
           formId: format.id,
-          structure: format.structure,
+          structure: newStructure,
         });
         if (!response.getStatus()) return;
         const responseModel = response.getOne();
