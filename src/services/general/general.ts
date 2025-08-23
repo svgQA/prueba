@@ -2,7 +2,7 @@ import { IResource } from '@/pages/settings/access/resource/type';
 import { Group } from '@/pages/settings/security/groups/create/utils/types';
 import { IPresignedRequest, IPresignedResponse } from '@/types/file';
 import { BaseService, IRequestModelOutput } from '@/utils/network';
-import { streamIAResponse } from '@/utils/network/sse.post';
+import { streamGetResponse } from '@/utils/network/sse/sse.get';
 import {
   IMakeRequest,
   REQUEST_METHODS,
@@ -120,19 +120,30 @@ export class GeneralService extends BaseService {
     onData: (chunk: string) => void,
     onDone?: () => void,
     onError?: (err: any) => void,
-    prompt: string = ''
+    _prompt: string = ''
   ) {
     const model: IRequestModelOutput = this.make_request_model(
       'memo',
       {
         url: url,
-        method: REQUEST_METHODS.POST,
-        data: { prompt },
+        method: REQUEST_METHODS.GET,
       },
-      false
+      true
     );
 
-    await streamIAResponse(model, onData, onDone, onError);
+    await streamGetResponse(model, onData, onDone, onError);
+
+    //  const model: IRequestModelOutput = this.make_request_model(
+    //   'memo',
+    //   {
+    //     url: url,
+    //     method: REQUEST_METHODS.POST,
+    //     data: { prompt },
+    //   },
+    //   false
+    // );
+    // await streamIAResponse(model, onData, onDone, onError);
+
     // try {
     //   await streamIAResponse(model, onData, onDone, onError);
     // } catch (error) {

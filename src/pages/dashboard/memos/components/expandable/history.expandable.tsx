@@ -10,7 +10,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { FormattedDate } from '@/components/compose/forms';
 import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/event.bus';
+import { EventBus } from '@/utils/network/sse/event.bus';
 import {
   IOption,
   SmartSelector,

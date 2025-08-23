@@ -3,7 +3,7 @@ import { ICustomQuery, type IPagination } from '@/types';
 import { type IShiftResponse } from '@/types/shift/activity';
 import { ICheckRequest } from '@/types/shift/shift.request';
 import { BaseService, IRequestModelOutput } from '@/utils/network';
-import { streamIAResponse } from '@/utils/network/sse.post';
+import { streamIAResponse } from '@/utils/network/sse/sse.post';
 import {
   type IMakeRequest,
   VoxServices,

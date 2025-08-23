@@ -27,7 +27,7 @@ import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { DateUtils } from '@/utils/utilities/dates';
 import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/event.bus';
+import { EventBus } from '@/utils/network/sse/event.bus';
 import { MapPath } from '@/components/common/map/MapPath';
 import { RoutePoint } from '@/services/general/tracking';
 import NotificationBanner from '@/components/common/notifications/components/notification.banner';
