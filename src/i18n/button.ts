@@ -23,6 +23,7 @@ export const buttons_es = {
   page: 'Página',
   of: 'de',
   restore: 'Restaurar',
+  apply: 'Aplicar',
 };
 
 export const buttons_en = {
@@ -50,4 +51,5 @@ export const buttons_en = {
   page: 'Page',
   of: 'of',
   restore: 'Restore',
+  apply: 'Apply',
 };

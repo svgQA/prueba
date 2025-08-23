@@ -769,12 +769,12 @@ const GanttComponent: ComponentType<GanttProps> = ({
             id='search-general'
             name='search-general'
             keys={[
-              { label: 'Nombre', id: 'name' },
-              { label: 'Estado', id: 'task.status' },
-              { label: 'Identificador', id: 'cardId' },
-              { label: 'Servicio', id: 'task.service' },
-              { label: 'Contrato', id: 'task.contract' },
-              { label: 'Cliente', id: 'task.client' },
+              { label: 'Nombre', id: 'name', type: 'text' },
+              { label: 'Estado', id: 'task.status', type: 'text' },
+              { label: 'Identificador', id: 'cardId', type: 'text' },
+              { label: 'Servicio', id: 'task.service', type: 'text' },
+              { label: 'Contrato', id: 'task.contract', type: 'text' },
+              { label: 'Cliente', id: 'task.client', type: 'text' },
             ]}
             onChange={setColumnFilters}
             group={group}

@@ -332,6 +332,7 @@ export const TaskForm = ({
           onSubmit={onTaskAdd}
           taskList={tasksResponse}
           onDelete={onTaskDelete}
+          type='GENERAL'
           add
           selector
         />

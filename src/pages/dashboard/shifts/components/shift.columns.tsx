@@ -79,7 +79,7 @@ export const getColumns = (
       size: 120,
       header: 'h_date',
       enableGrouping: false,
-      meta: { headerAlign: 'center' },
+      meta: { headerAlign: 'center', type: 'date' },
       cell: (info) => (
         <FormattedDate date={info.getValue() as string} format='date' />
       ),
@@ -90,7 +90,7 @@ export const getColumns = (
       size: 150,
       clickable: true,
       header: 'h_start',
-      meta: { headerAlign: 'center' },
+      meta: { headerAlign: 'center', type: 'date' },
       cell: (info) => {
         const rowData = info.row.original;
         return (
@@ -109,7 +109,7 @@ export const getColumns = (
       size: 150,
       clickable: true,
       header: 'h_end',
-      meta: { headerAlign: 'center' },
+      meta: { headerAlign: 'center', type: 'date' },
       cell: (info) => {
         const rowData = info.row.original;
         return (

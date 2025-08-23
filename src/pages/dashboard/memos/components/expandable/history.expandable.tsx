@@ -43,6 +43,10 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     fetchInitialData();
     EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
     EventBus.on(SSE_TYPE.PANIC, handleMemoSSE);
+    return () => {
+      EventBus.off(SSE_TYPE.MEMO, handleMemoSSE);
+      EventBus.off(SSE_TYPE.PANIC, handleMemoSSE);
+    };
   }, []);
 
   const handleMemoSSE = (event: IBaseSSE) => {
@@ -386,6 +390,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                                 label='h_date'
                                 defaultToNow={true}
                                 disabled={true}
+                                type='datetime-local'
                               />
                             );
                           }}

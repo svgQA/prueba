@@ -17,10 +17,10 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   const { t } = useTranslation();
   const searchKeys = useMemo(
     () => [
-      { id: 'name', label: t('h_name') },
-      { id: 'service', label: t('h_service') },
-      { id: 'contract', label: t('h_contract') },
-      { id: 'client', label: t('h_client') },
+      { id: 'name', label: t('h_name'), type: 'text' },
+      { id: 'service', label: t('h_service'), type: 'text' },
+      { id: 'contract', label: t('h_contract'), type: 'text' },
+      { id: 'client', label: t('h_client'), type: 'text' },
     ],
     []
   );

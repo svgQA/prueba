@@ -56,6 +56,7 @@ import PanicModal from '@/components/common/panic/components/panic.modal';
 import { IPanic } from '@/components/common/panic/utils/interface';
 
 import { IconsModal } from '../globals/icons/icons';
+import { SseManager } from '@/utils/network/sse/base';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -87,6 +88,12 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       BaseService.setUser(getTenant, getToken, getCompanyId);
       validateUser();
     }, []);
+
+    useEffect(() => {
+      if (selectedCompany) {
+        Promise.all([SseManager.getQuery(['company', 'stream', 'sse'])]);
+      }
+    }, [selectedCompany]);
 
     const validateUser = async () => {
       const result = await hasUserTenant(

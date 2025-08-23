@@ -15,13 +15,8 @@ import { defaultSummary, IResponseSummary } from '@/services';
 // import { Button } from '@/components/common/button/button';
 import { AccessForm } from './components/access.upsert.form';
 import { IRowAction } from '@/components/common/table/interface';
-// import {
-//   IBaseSSE,
-//   SSE_EVENTS,
-//   SSE_TYPE,
-//   SseManager,
-// } from '@/utils/network/sse/base';
-// import { EventBus } from '@/utils/network/event.bus';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/event.bus';
 import { IAccess } from '@/types/access/accesses';
 
 export const AccessPage: FunctionalComponent = () => {
@@ -36,7 +31,10 @@ export const AccessPage: FunctionalComponent = () => {
     document.title = t('p_access');
     fetchInitialData();
     // fetchSSE();
-    // EventBus.on(SSE_TYPE.ACCESSES, handleAccessSSE);
+    EventBus.on(SSE_TYPE.ACCESSES, handleAccessSSE);
+    return () => {
+      EventBus.off(SSE_TYPE.ACCESSES, handleAccessSSE);
+    };
   }, []);
 
   const fetchInitialData = async () => {
@@ -58,21 +56,21 @@ export const AccessPage: FunctionalComponent = () => {
   //   await SseManager.getQuery(['accesses', 'stream']);
   // }, []);
 
-  // const handleAccessSSE = async (event: IBaseSSE) => {
-  //   const { name, message } = event;
+  const handleAccessSSE = async (event: IBaseSSE) => {
+    const { name, message } = event;
 
-  //   if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
-  //     const index = accesses.value.findIndex(
-  //       (value: any) => value.id === message.id
-  //     );
-  //     if (index < 0) return;
-  //     const copy: IAccess[] = accesses.value;
-  //     copy[index] = message;
-  //     accesses.value = [...copy];
-  //   }
+    if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
+      const index = accesses.value.findIndex(
+        (value: any) => value.id === message.id
+      );
+      if (index < 0) return;
+      const copy: IAccess[] = accesses.value;
+      copy[index] = message;
+      accesses.value = [...copy];
+    }
 
-  //   if (name === SSE_EVENTS.CREATE) fetchInitialData();
-  // };
+    if (name === SSE_EVENTS.CREATE) fetchInitialData();
+  };
 
   const toggleUpsertModal = () => {
     showUpsertModal.value = !showUpsertModal.value;

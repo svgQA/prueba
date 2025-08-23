@@ -122,6 +122,7 @@ export const columns_es = {
   h_participants: 'Participantes',
   h_feed: 'Feed',
   h_not_connected: 'No conectado',
+  h_filter_date: 'Filtrar por fecha',
 };
 
 export const columns_en = {
@@ -248,4 +249,5 @@ export const columns_en = {
   h_participants: 'Participants',
   h_feed: 'Feed',
   h_not_connected: 'Not connected',
+  h_filter_date: 'Filter Date',
 };

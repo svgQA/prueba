@@ -8,6 +8,7 @@ import {
 } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import {
+  baseParams,
   GanttService,
   NotificationService,
   ServiceService,
@@ -46,12 +47,7 @@ import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 // import { AudioButton } from './audio/socket.button';
 import { getLocation } from '@/utils/utilities/location';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-  SseManager,
-} from '@/utils/network/sse/base';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/event.bus';
 import { useUserStore } from '@/store/slices';
 import { modulesReport } from '@/types/form';
@@ -98,6 +94,11 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const loading = useSignal<boolean>(false);
 
+  // Estado para almacenar los filtros de rango de fechas
+  const [dateRangeFilters, setDateRangeFilters] = useState<{
+    [key: string]: [string, string];
+  } | null>(null);
+
   // Memoizar los servicios y usuarios para evitar re-renders innecesarios
   const memoizedServices = useMemo(() => services, [services]);
   const memoizedUsers = useMemo(() => users, [users]);
@@ -122,11 +123,14 @@ export const ShiftsPage: FunctionalComponent = () => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
       handleGetShiftSummary();
-      fetchInitialData();
-      fetchSSE();
+      fetchInitialData(dateRangeFilters);
+      // fetchSSE();
       EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
+      return () => {
+        EventBus.off(SSE_TYPE.SHIFT, handleMemoSSE);
+      };
     }
-  }, [selectedCompany, location]);
+  }, [selectedCompany, location, dateRangeFilters]);
 
   const handleViewMode = async (viewMode: ViewMode = ViewMode.QuarterDay) => {
     if (currentView.value === VIEW_NAME.SCHEDULER) {
@@ -164,9 +168,9 @@ export const ShiftsPage: FunctionalComponent = () => {
     setHasValidPlayer(result);
   }, [shifts.value]);
 
-  const fetchSSE = useCallback(async () => {
-    await SseManager.getQuery(['activity', 'stream', 'check']);
-  }, []);
+  // const fetchSSE = useCallback(async () => {
+  //   await SseManager.getQuery(['activity', 'stream', 'check']);
+  // }, []);
 
   const handleMemoSSE = (event: IBaseSSE) => {
     const { name, message } = event;
@@ -189,15 +193,19 @@ export const ShiftsPage: FunctionalComponent = () => {
     }
 
     if (name === SSE_EVENTS.CREATE) {
-      fetchInitialData();
+      fetchInitialData(dateRangeFilters);
     }
   };
 
-  const fetchInitialData = async () => {
+  const fetchInitialData = async (
+    rangeFilters?: { [key: string]: [string, string] } | null
+  ) => {
     loading.value = true;
     const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
       await Promise.all([
-        ShiftService.get_all({ page: 1, items: 1000 }),
+        ShiftService.get_all(
+          rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams
+        ),
         ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),
         NotificationService.hasUsersWithPlayerId(),
@@ -646,6 +654,9 @@ export const ShiftsPage: FunctionalComponent = () => {
             onNotifications={onNotifications}
             hasNotifications={notificationValidate.value}
             loading={loading.value}
+            onRangeChange={(range) => {
+              setDateRangeFilters(range);
+            }}
             onSelectionChange={(rows) => {
               const validUsers = rows.map((row: any) => ({
                 id: row.employee.id,

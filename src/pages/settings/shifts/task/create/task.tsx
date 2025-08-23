@@ -10,6 +10,7 @@ import { DateUtils } from '@/utils/utilities/dates';
 import { useTranslation } from 'react-i18next';
 import { TaskFormCreate } from './task.form';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { useUserStore } from '@/store/slices';
 interface FormData {
   name: string;
   description: string;
@@ -85,10 +86,13 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     await setInitialValues();
   };
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    // Promise.all([getFormsHandler(), setInitialValues()]);
-    fetchData();
-  }, []);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchData();
+    }
+  }, [selectedCompany, location]);
 
   return (
     <Section className='pt-2 px-40'>
@@ -98,12 +102,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
         </div>
       </div>
       <div className='flex flex-col justify-center mt-16'>
-        <TaskFormCreate
-          onSubmit={onSubmit}
-          forms={forms.value}
-          initialValues={initialValues.value}
-          append
-        />
+        <TaskFormCreate onSubmit={onSubmit} forms={forms.value} append />
       </div>
     </Section>
   );

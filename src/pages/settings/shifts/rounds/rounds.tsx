@@ -40,6 +40,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
       for (let point of item.points) {
         const marker = {
           id: point.id,
+          name: point.name,
           position: {
             lat: point.latitude,
             lng: point.longitude,
