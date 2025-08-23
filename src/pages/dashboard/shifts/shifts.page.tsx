@@ -48,7 +48,7 @@ import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 // import { AudioButton } from './audio/socket.button';
 import { getLocation } from '@/utils/utilities/location';
 import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/event.bus';
+import { EventBus } from '@/utils/network/sse/event.bus';
 import { useUserStore } from '@/store/slices';
 import { modulesReport } from '@/types/form';
 
@@ -168,10 +168,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     setHasValidPlayer(result);
   }, [shifts.value]);
 
-  // const fetchSSE = useCallback(async () => {
-  //   await SseManager.getQuery(['activity', 'stream', 'check']);
-  // }, []);
-
   const handleMemoSSE = (event: IBaseSSE) => {
     const { name, message } = event;
 
@@ -180,15 +176,9 @@ export const ShiftsPage: FunctionalComponent = () => {
         (shift) => Number(shift.id) === Number(message.id)
       );
       if (shiftIndex < 0) return;
+      console.log('Updating shift:', message);
       const shiftCopy: IShiftResponse[] = shifts.value;
-      shiftCopy[shiftIndex].status = message.status;
-      shiftCopy[shiftIndex].updatedAt = message.updatedAt;
-      shiftCopy[shiftIndex].activityPct = message.activityPct;
-      shiftCopy[shiftIndex].roundPct = message.roundPct;
-      shiftCopy[shiftIndex].tasks = message.tasks;
-      shiftCopy[shiftIndex].start = message.start;
-      shiftCopy[shiftIndex].end = message.end;
-      shiftCopy[shiftIndex].service = message.service;
+      shiftCopy[shiftIndex] = message;
       shifts.value = [...shiftCopy];
     }
 

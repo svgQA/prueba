@@ -91,7 +91,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     useEffect(() => {
       if (selectedCompany) {
-        Promise.all([SseManager.getQuery(['company', 'stream', 'sse'])]);
+        // Promise.all([SseManager.getQuery(['company', 'stream', 'sse'])]);
+        Promise.all([SseManager.getQuery(['events', 'stream'])]);
       }
     }, [selectedCompany]);
 
