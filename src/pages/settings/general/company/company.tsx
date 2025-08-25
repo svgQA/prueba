@@ -77,7 +77,7 @@ export const CompanySettingPage: FunctionComponent = () => {
     showForm.value = show;
   };
 
-  const onSubmit = async (values: ICCompanyRequest | IUCompanyRequest) => {
+  const onSubmit = async (values: ICCompanyRequest | IUCompanyRequest, form?: any) => {
     let response;
     if (isEditing && _selectedCompany.value) {
       response = await CompanyService.updateCompany(
@@ -90,6 +90,7 @@ export const CompanySettingPage: FunctionComponent = () => {
     if (!response.getStatus()) return;
     ToastManager.success(isEditing ? 's_updated_success' : 's_created_success');
     resetForm(false);
+    form.reset();
     loadCompanies();
   };
 
