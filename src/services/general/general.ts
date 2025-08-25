@@ -9,6 +9,8 @@ import {
   VoxServices,
 } from '@/utils/network/types';
 import { IPaginationUser } from '@/utils/types/user.interface';
+import { IResourceResponse } from '@/types/memo/memo.response';
+import { IResourceRequest } from '@/types/memo/memo.request';
 
 export interface IGeneralRequest {
   id?: number;
@@ -51,16 +53,33 @@ export class GeneralService extends BaseService {
       url: ['resource'],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<IResource>(this.sname, model);
+    return await super.make_request<IResourceResponse>(this.sname, model);
   }
 
-  static async createResource(data: IResource) {
+  static async updateResource(id: number, data: IResourceRequest) {
+    const model: IMakeRequest = {
+      url: ['resource', id.toString()],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<IResourceRequest>(this.sname, model);
+  }
+
+  static async deleteResource(id: number) {
+    const model: IMakeRequest = {
+      url: ['resource', id.toString()],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<IResourceRequest>(this.sname, model);
+  }
+
+  static async createResource(data: IResourceRequest) {
     const model: IMakeRequest = {
       url: ['resource'],
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<IResource>(this.sname, model);
+    return await super.make_request<IResourceRequest>(this.sname, model);
   }
 
   static async createGroup(data: {
