@@ -10,3 +10,14 @@ export interface ICheckRequest {
     uuid: string;
   };
 }
+
+export interface IResourceRequest {
+  id?: number;
+  name: string;
+  type: string;
+  description: string;
+  image?: string;
+  icon?: string;
+  link?: string;
+  groups?: number[];
+}
