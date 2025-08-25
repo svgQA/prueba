@@ -12,7 +12,7 @@ import { CardData } from '@/components/compose/cards';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 
-import { EventBus } from '@/utils/network/event.bus';
+import { EventBus } from '@/utils/network/sse/event.bus';
 import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 
 import { defaultSummary, IResponseSummary } from '@/services';

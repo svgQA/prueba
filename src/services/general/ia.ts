@@ -11,7 +11,7 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
-import { streamIAResponse } from '@/utils/network/sse.post';
+import { streamIAResponse } from '@/utils/network/sse/sse.post';
 
 export class IaService extends BaseService {
   static name: VoxServices = 'ia';

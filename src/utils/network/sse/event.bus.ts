@@ -1,4 +1,4 @@
-import { IBaseSSE, SSE_TYPE } from './sse/base';
+import { IBaseSSE, SSE_TYPE } from './base';
 
 type Listener = (event: IBaseSSE) => void;
 const listeners = new Map<string, Listener[]>();
