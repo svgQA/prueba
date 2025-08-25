@@ -101,7 +101,13 @@ export const RolesUpsertPage = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    go(MODAL_SETTING_USER.menus[1]);
+    // go(MODAL_SETTING_USER.menus[1]);
+    go({
+      to: '/users/roles',
+      label: 'm_role',
+      id: 'user:roles:state',
+      base: 'setting',
+    });
   };
 
   const getModules = async () => {
