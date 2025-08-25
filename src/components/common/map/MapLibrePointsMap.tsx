@@ -61,6 +61,7 @@ export const MapLibrePointsMap = ({
   const lastSentPointsRef = useRef<string>(JSON.stringify([]));
   const lastAddedPointIdRef = useRef<number | null>(null);
   const userInteractedRef = useRef(false);
+  const isFirstPointZoomingRef = useRef(false);
 
   const getMapStyle = () => {
     return themeSignal.value
@@ -278,6 +279,7 @@ export const MapLibrePointsMap = ({
 
     setPoints((prevPoints) => [...prevPoints, newPoint]);
     lastAddedPointIdRef.current = newPoint.id;
+    if (setName && points.length === 0) isFirstPointZoomingRef.current = true;
   };
 
   const createMarkerElement = (point: MapPoint, index: number) => {
@@ -862,14 +864,20 @@ export const MapLibrePointsMap = ({
       lastAddedPointIdRef.current !== null &&
       points.some((p) => p.id === lastAddedPointIdRef.current)
     ) {
-      if (points.length === 1 && mapRef.current) {
+      if (points.length === 1 && mapRef.current && isFirstPointZoomingRef.current) {
         const idToOpen = lastAddedPointIdRef.current;
         const openModal = () => {
           handleMarkerClick(idToOpen, true);
           lastAddedPointIdRef.current = null;
+          isFirstPointZoomingRef.current = false;
           mapRef.current?.off('moveend', openModal);
         };
         mapRef.current.on('moveend', openModal);
+        setTimeout(() => {
+          if (isFirstPointZoomingRef.current) {
+            openModal();
+          }
+        }, 500); 
       } else {
         handleMarkerClick(lastAddedPointIdRef.current, true);
         lastAddedPointIdRef.current = null;
