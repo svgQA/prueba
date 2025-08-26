@@ -144,15 +144,15 @@ export class fileManager {
             row.fill =
               idx % 2 === 0
                 ? {
-                  type: 'pattern',
-                  pattern: 'solid',
-                  fgColor: { argb: 'FFFFFFFF' },
-                }
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FFFFFFFF' },
+                  }
                 : {
-                  type: 'pattern',
-                  pattern: 'solid',
-                  fgColor: { argb: 'FFF2F2F2' },
-                };
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FFF2F2F2' },
+                  };
             currentRow++;
           });
         }
@@ -206,7 +206,9 @@ export class fileManager {
     const extension = mimeToExtension[file.type] || 'unknown';
 
     if (extension === 'unknown') {
-      ToastManager.error('Tipo de archivo desconocido. No se puede descargar con la extensión correcta.');
+      ToastManager.error(
+        'Tipo de archivo desconocido. No se puede descargar con la extensión correcta.'
+      );
       return;
     }
 

@@ -187,7 +187,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
                 {/* Archivos */}
                 {isExpanded && hasAttachments && (
-                  <div className='p-4 bg-gray-50'>
+                  <div className='p-4 bg-b-light-light dark:bg-b-dark-dark'>
                     <ShowFiles resources={report.resource} />
                   </div>
                 )}

@@ -72,9 +72,11 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
 
     const attachmentType = task.attachmentType
       ? {
-        value: task.attachmentType,
-        label: task.attachmentType.charAt(0).toUpperCase() + task.attachmentType.slice(1).toLowerCase()
-      }
+          value: task.attachmentType,
+          label:
+            task.attachmentType.charAt(0).toUpperCase() +
+            task.attachmentType.slice(1).toLowerCase(),
+        }
       : undefined;
 
     initialValues.value = {
