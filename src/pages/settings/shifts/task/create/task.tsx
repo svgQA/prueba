@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { TaskFormCreate } from './task.form';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
+import { IOptionCheck } from '@/components/common/select-check';
 interface FormData {
   name: string;
   description: string;
@@ -36,6 +37,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
       name: model.name,
       description: model.description,
       formId: formId,
+      attachmentType: model.attachmentType,
       hourStart: DateUtils.createDateFromHourBackend(model.hourStart),
       type: type,
     };
@@ -67,6 +69,14 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     const form = task.formId
       ? forms.value.find((_f) => _f.value === task.formId)
       : undefined;
+
+    const attachmentType = task.attachmentType
+      ? {
+        value: task.attachmentType,
+        label: task.attachmentType.charAt(0).toUpperCase() + task.attachmentType.slice(1).toLowerCase()
+      }
+      : undefined;
+
     initialValues.value = {
       ...task,
       hourStart: DateUtils.hourToFrontend(task.hourStart),
@@ -75,6 +85,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
         value: task.type,
         label: task.type,
       },
+      attachmentType: attachmentType,
     };
   }, [id]);
 
