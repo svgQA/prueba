@@ -22,13 +22,8 @@ import {
 import { validateResponse } from '@/pages/settings/forms/response/store/response';
 import { useUserStore } from '@/store/slices';
 import { defaultSummary } from '../memos/memos.page';
-import { EventBus } from '@/utils/network/event.bus';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-  SseManager,
-} from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/sse/event.bus';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 import { handleNotificationEvent } from '@/components/common/notifications/components/notification.event';
 
 export const FormsPage: FunctionComponent = () => {
@@ -47,15 +42,18 @@ export const FormsPage: FunctionComponent = () => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
       getResponseHandler();
-      fetchSSE();
+      // fetchSSE();
       EventBus.on(SSE_TYPE.RESPONSE, handleResponseSSE);
       selectedNotifier();
+      return () => {
+        EventBus.off(SSE_TYPE.RESPONSE, handleResponseSSE);
+      };
     }
   }, [selectedCompany, location]);
 
-  const fetchSSE = useCallback(async () => {
-    await SseManager.getQuery(['response', 'stream', 'sse']);
-  }, []);
+  // const fetchSSE = useCallback(async () => {
+  //   await SseManager.getQuery(['response', 'stream', 'sse']);
+  // }, []);
 
   const handleResponseSSE = async (event: IBaseSSE) => {
     const { name, message } = event;
@@ -101,15 +99,13 @@ export const FormsPage: FunctionComponent = () => {
   };
 
   const handleOnClick = async (action: IRowAction) => {
-    const response = responses.value.find(
-      (response) => response.id == action.id
-    );
-
-    if (!response?.structure) {
+    const data = await FormService.get_structure(String(action.id));
+    if (!data.getStatus()) {
       ToastManager.error('s_not_exist');
       return;
     }
 
+    const response = data.getOne();
     if (!validateResponse(response.structure)) {
       ToastManager.error('s_structure_error');
       return;
@@ -125,8 +121,10 @@ export const FormsPage: FunctionComponent = () => {
         break;
       }
       case ROW_ACTIONS.DELETE: {
-        const respons = await FormService.remove_response_one(response.id);
-        if (!respons.getStatus()) return;
+        const deleteResponse = await FormService.remove_response_one(
+          response.id
+        );
+        if (!deleteResponse.getStatus()) return;
         getResponseHandler();
         break;
       }
@@ -261,7 +259,12 @@ export const FormsPage: FunctionComponent = () => {
                   : t('s_title')}
               </h2>
             </div>
-            <FormResponseSettingPage posFinishAction={handlePosFinishAction} />
+            <FormResponseSettingPage
+              posFinishAction={handlePosFinishAction}
+              type={
+                currentView.value === VIEW_NAME.INSPECT ? 'INSPECT' : 'VIEW'
+              }
+            />
           </div>
         )}
       </div>

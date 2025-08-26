@@ -5,12 +5,17 @@ import SupervisorInfo from './expandable/supervisor.expandable';
 type Props = {
   type?: string;
   data: Memo;
+  onStatusChange?: (newStatus: string, memoId: number) => void;
 };
 
-const getInfoContent = (type: string, data: Memo) => {
+const getInfoContent = (
+  type: string,
+  data: Memo,
+  onStatusChange?: (newStatus: string, memoId: number) => void
+) => {
   switch (type) {
     case 'expandable':
-      return <SupervisorInfo memo={data} />;
+      return <SupervisorInfo memo={data} onStatusChange={onStatusChange} />;
     case 'history':
       return <HistoryInfo memo={data} />;
     default:
@@ -18,10 +23,10 @@ const getInfoContent = (type: string, data: Memo) => {
   }
 };
 
-export const ExpandableMultiple = ({ type, data }: Props) => {
+export const ExpandableMultiple = ({ type, data, onStatusChange }: Props) => {
   return (
     <div className='info-container'>
-      {type && data && getInfoContent(type, data)}
+      {type && data && getInfoContent(type, data, onStatusChange)}
     </div>
   );
 };

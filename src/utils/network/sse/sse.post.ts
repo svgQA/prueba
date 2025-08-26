@@ -1,4 +1,4 @@
-import { IRequestModelOutput } from './utils/service';
+import { IRequestModelOutput } from '../utils/service';
 
 export async function streamIAResponse(
   model: IRequestModelOutput,

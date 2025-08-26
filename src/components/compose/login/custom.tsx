@@ -5,6 +5,7 @@ import { Logo } from '@/components/common/logo/logo';
 import '@aws-amplify/ui-react/styles.css';
 import './styles.css';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 interface CustomLoginContainerProps {
   children: React.ReactNode;
@@ -100,19 +101,18 @@ const components = {
       return null;
     },
     Footer() {
-      const { t } = useTranslation();
+      /*  const { t } = useTranslation();
       return (
         <div className='text-center'>
           <button
-            onClick={() => {
-              /*console.log(t('login.forgotPassword'))*/
-            }}
+            onClick={() => {}}
             className='text-xs sm:text-sm font-normal border-0 outline-none focus:outline-none hover:border-0 active:border-0 text-ternary'
           >
             {t('i_forgotPassword')}
           </button>
         </div>
-      );
+      );*/
+      return null;
     },
   },
 };
@@ -120,6 +120,26 @@ const components = {
 export const CustomLoginPage = () => {
   const [_, navigate] = useLocation();
   const { route } = useAuthenticator((context) => [context.route]);
+
+  useEffect(() => {
+    const handleFormSubmit = (event: Event) => {
+      const target = event.target as HTMLFormElement;
+
+      if (target && target.tagName === 'FORM') {
+        const passwordInput = target.querySelector(
+          'input[name="password"]'
+        ) as HTMLInputElement;
+
+        if (passwordInput) {
+          passwordInput.value = passwordInput.value.trim();
+        }
+      }
+    };
+    document.addEventListener('submit', handleFormSubmit, true);
+    return () => {
+      document.removeEventListener('submit', handleFormSubmit, true);
+    };
+  }, []);
 
   if (route === 'authenticated') {
     navigate(PAGES_LIST.DASHBOARD);

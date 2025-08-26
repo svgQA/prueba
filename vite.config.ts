@@ -65,9 +65,12 @@ export default defineConfig({
           if (id.includes('aws-amplify')) {
             return '@aws-amplify-base'; // 413.17 kB
           }
-          // if (id.includes('chart')) {
-          //   return '@chart-base';
-          // }
+          if (id.includes('chart')) {
+            return '@chart-base';
+          }
+          if (id.includes('exceljs')) {
+            return '@excel-base';
+          }
           if (id.includes('@fullcalendar')) {
             return '@calendar-base'; // 257.94 kB
           }
@@ -82,6 +85,9 @@ export default defineConfig({
           }
           if (id.includes('pdf-lib')) {
             return '@pdf-lib'; // 148.81 kB
+          }
+          if (id.includes('pako')) {
+            return '@pako-lib'; // 148.81 kB
           }
           if (id.includes('@pdfme/common')) {
             return '@pdfme/common'; // 148.81 kB

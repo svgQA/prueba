@@ -154,7 +154,7 @@ export const TaskForm = ({
     if (!response.getStatus()) return;
     const model = response.getOne();
 
-    await onChangeService(model.service.id);
+    await onChangeService(model.service.id, true);
     if (model.schedule.id) await onChangeSchedule(model.schedule.id);
 
     setInitialValues({
@@ -192,12 +192,12 @@ export const TaskForm = ({
       : outputs;
   };
 
-  const onChangeService = async (id: number) => {
+  const onChangeService = async (id: number, initalData: boolean = false) => {
     const response = await ServiceService.getServiceById(String(id));
     if (!response.getStatus()) return;
     const model = response.getOne();
 
-    if (model.tasks && model.tasks.length > 0) {
+    if (model.tasks && model.tasks.length > 0 && !initalData) {
       onTaskAdd(model.tasks, 1);
     }
 
@@ -332,6 +332,7 @@ export const TaskForm = ({
           onSubmit={onTaskAdd}
           taskList={tasksResponse}
           onDelete={onTaskDelete}
+          type='GENERAL'
           add
           selector
         />

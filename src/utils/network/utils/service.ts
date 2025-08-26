@@ -65,10 +65,14 @@ export class BaseService {
       const queryParams = new URLSearchParams();
       Object.entries(model.params).forEach(([key, value]) => {
         if (value && key) {
-          queryParams.append(key, String(value));
+          if (Array.isArray(value)) {
+            value.forEach((val) => queryParams.append(key, String(val)));
+          } else {
+            queryParams.append(key, String(value));
+          }
         }
       });
-      url = `${url}?${queryParams.toString()}`;
+      url = `${url}?${String(queryParams)}`;
     }
     const method = model?.method || REQUEST_METHODS.GET;
 

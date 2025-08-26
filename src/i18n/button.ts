@@ -22,7 +22,8 @@ export const buttons_es = {
   send: 'Enviar',
   page: 'Página',
   of: 'de',
-  restore: 'Restaurar'
+  restore: 'Restaurar',
+  apply: 'Aplicar',
 };
 
 export const buttons_en = {
@@ -49,5 +50,6 @@ export const buttons_en = {
   send: 'Send',
   page: 'Page',
   of: 'of',
-  restore: 'Restore'
+  restore: 'Restore',
+  apply: 'Apply',
 };

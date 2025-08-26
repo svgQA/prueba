@@ -4,6 +4,7 @@ import { useUserStore } from '@/store/slices';
 import { cdn_service_url } from '@/env.config';
 import {
   allowedAudioTypesConst,
+  allowedDocumentTypesConst,
   allowedImageTypesConst,
   allowedVideoTypesConst,
 } from '@/types';
@@ -14,12 +15,14 @@ import { Button } from '../button/button';
 import { VideoPlayer } from './components/VideoPlayer';
 import MapViewer from './components/mapViewer';
 import MapPathViewer from './components/mapPathViewer';
+import { fileManager } from '@/utils/network/file/file';
 
 const showFiles = ({
   resources = [],
   isSender = false,
   removeFile,
   mapPoint,
+  disabled
 }: ShowFilesProps) => {
   const { getTenant, getCompanyId } = useUserStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -28,7 +31,6 @@ const showFiles = ({
 
   const getUrl = (file: IPresignedRequest) => {
     const validation = `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
-    console.log('validation', validation);
     return validation;
   };
 
@@ -60,6 +62,14 @@ const showFiles = ({
   const goRight = () =>
     setStartIdx((prev) => Math.min(resources.length - visibleCount, prev + 1));
   const visibleFiles = resources.slice(startIdx, startIdx + visibleCount);
+
+  const downloadFile = (file: IPresignedRequest) => {
+    const url: string = getUrl(file);
+    const extension = fileManager.getExtensionFile(file);
+    if(!extension) return;
+    let fileName: string = `tryvoo.${extension}`;
+    fileManager.downloadFile({ url }, fileName);
+  }
 
   return (
     <div
@@ -98,11 +108,16 @@ const showFiles = ({
               <VideoPlayer src={getUrl(file)} />
             ) : file.type === 'application/json' ? (
               <MapPathViewer src={getUrl(file)} />
+            ) : allowedDocumentTypesConst.includes(file.type as any) ? (
+              <span
+                className='vox-icon vx-icon-341 px-3'
+                onClick={() => downloadFile(file)}
+              />
             ) : (
-              <span className='vox-icon vx-icon-069 px-3' />
+              <span className='vox-icon vx-icon-064 px-3' />
             )}
 
-            {removeFile && (
+            {removeFile && !disabled && (
               <span
                 className='absolute vox-icon vx-icon-008 size-sm top-0 right-0 cursor-pointer'
                 onClick={() => removeFile(file.uuid)}

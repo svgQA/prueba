@@ -2,13 +2,15 @@ import { IResource } from '@/pages/settings/access/resource/type';
 import { Group } from '@/pages/settings/security/groups/create/utils/types';
 import { IPresignedRequest, IPresignedResponse } from '@/types/file';
 import { BaseService, IRequestModelOutput } from '@/utils/network';
-import { streamIAResponse } from '@/utils/network/sse.post';
+import { streamGetResponse } from '@/utils/network/sse/sse.get';
 import {
   IMakeRequest,
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
 import { IPaginationUser } from '@/utils/types/user.interface';
+import { IResourceResponse } from '@/types/memo/memo.response';
+import { IResourceRequest } from '@/types/memo/memo.request';
 
 export interface IGeneralRequest {
   id?: number;
@@ -30,6 +32,11 @@ export const defaultSummary = {
   completed: 0,
 };
 
+export const baseParams = {
+  page: 1,
+  items: 1000,
+};
+
 export class GeneralService extends BaseService {
   static sname: VoxServices = 'file';
   static async presigned(data: IPresignedRequest) {
@@ -46,16 +53,33 @@ export class GeneralService extends BaseService {
       url: ['resource'],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<IResource>(this.sname, model);
+    return await super.make_request<IResourceResponse>(this.sname, model);
   }
 
-  static async createResource(data: IResource) {
+  static async updateResource(id: number, data: IResourceRequest) {
+    const model: IMakeRequest = {
+      url: ['resource', id.toString()],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<IResourceRequest>(this.sname, model);
+  }
+
+  static async deleteResource(id: number) {
+    const model: IMakeRequest = {
+      url: ['resource', id.toString()],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<IResourceRequest>(this.sname, model);
+  }
+
+  static async createResource(data: IResourceRequest) {
     const model: IMakeRequest = {
       url: ['resource'],
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<IResource>(this.sname, model);
+    return await super.make_request<IResourceRequest>(this.sname, model);
   }
 
   static async createGroup(data: {
@@ -115,19 +139,30 @@ export class GeneralService extends BaseService {
     onData: (chunk: string) => void,
     onDone?: () => void,
     onError?: (err: any) => void,
-    prompt: string = ''
+    _prompt: string = ''
   ) {
     const model: IRequestModelOutput = this.make_request_model(
       'memo',
       {
         url: url,
-        method: REQUEST_METHODS.POST,
-        data: { prompt },
+        method: REQUEST_METHODS.GET,
       },
-      false
+      true
     );
 
-    await streamIAResponse(model, onData, onDone, onError);
+    await streamGetResponse(model, onData, onDone, onError);
+
+    //  const model: IRequestModelOutput = this.make_request_model(
+    //   'memo',
+    //   {
+    //     url: url,
+    //     method: REQUEST_METHODS.POST,
+    //     data: { prompt },
+    //   },
+    //   false
+    // );
+    // await streamIAResponse(model, onData, onDone, onError);
+
     // try {
     //   await streamIAResponse(model, onData, onDone, onError);
     // } catch (error) {

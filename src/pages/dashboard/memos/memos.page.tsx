@@ -20,19 +20,14 @@ import { getColumns } from './components/memos.columns';
 import { Memo } from './utils/memos';
 import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
-import { MemoService, MemosSummary } from '@/services';
+import { baseParams, MemoService, MemosSummary } from '@/services';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { DateUtils } from '@/utils/utilities/dates';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-  SseManager,
-} from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/event.bus';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/sse/event.bus';
 import { MapPath } from '@/components/common/map/MapPath';
 import { RoutePoint } from '@/services/general/tracking';
 import NotificationBanner from '@/components/common/notifications/components/notification.banner';
@@ -84,6 +79,9 @@ export const MemosPage: FunctionComponent = () => {
   );
   const panic = useSignal<Memo[]>([]);
   const summaryPanic = useSignal<MemosSummary>(defaultSummary);
+  const [dateRangeFilters, setDateRangeFilters] = useState<{
+    [key: string]: [string, string];
+  } | null>(null);
 
   useEffect(() => {
     document.title = t('p_chat');
@@ -95,12 +93,15 @@ export const MemosPage: FunctionComponent = () => {
   useEffect(() => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
-      fetchInitialData();
-      fetchSSE();
+      fetchInitialData(dateRangeFilters);
+      // fetchSSE();
       selectedNotifier();
       EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
+      return () => {
+        EventBus.off(SSE_TYPE.MEMO, handleMemoSSE);
+      };
     }
-  }, [selectedCompany, location]);
+  }, [selectedCompany, location, dateRangeFilters]);
 
   const selectedNotifier = () => {
     handleNotificationEvent('notification-click', (id: any) => {
@@ -113,9 +114,9 @@ export const MemosPage: FunctionComponent = () => {
     });
   };
 
-  const fetchSSE = useCallback(async () => {
-    await SseManager.getQuery(['memo', 'stream', 'history']);
-  }, []);
+  // const fetchSSE = useCallback(async () => {
+  //   await SseManager.getQuery(['memo', 'stream', 'history']);
+  // }, []);
 
   const handleMemoSSE = async (event: IBaseSSE) => {
     const { name, message } = event;
@@ -142,7 +143,9 @@ export const MemosPage: FunctionComponent = () => {
     }
   };
 
-  const fetchInitialData = async () => {
+  const fetchInitialData = async (
+    rangeFilters?: { [key: string]: [string, string] } | null
+  ) => {
     loading.value = true;
     const [
       responseMemos,
@@ -153,19 +156,22 @@ export const MemosPage: FunctionComponent = () => {
       responseMemoPanic,
       responseSummaryPanic,
     ] = await Promise.all([
-      MemoService.get_all({ page: 1, items: 1000 }),
-      UserService.get_all_employee({ items: 20, page: 1 }),
+      MemoService.get_all(
+        rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams
+      ),
+      UserService.get_all_employee(baseParams),
       MemoService.getMemosSummary(),
       MemoService.get_all_by_service(),
       MemoService.get_all_by_user(),
-      PanicService.get_all_memo_panic({ page: 1, items: 1000 }),
+      PanicService.get_all_memo_panic(baseParams),
       PanicService.getPanicSummary(),
     ]);
 
     if (responseMemos.getStatus()) {
       memos.value = responseMemos.getMany().map((memo: Memo) => ({
         ...memo,
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm' }),
+        // Es importante que se mantenga el updatedAt para que el history funcione correctamente
+        //updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm' }),
       }));
       loading.value = false;
     }
@@ -189,7 +195,9 @@ export const MemosPage: FunctionComponent = () => {
     if (responseMemoPanic.getStatus()) {
       panic.value = responseMemoPanic.getMany().map((memo: Memo) => ({
         ...memo,
-        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, { format: 'DD/MM/YYYY HH:mm' }),
+        updatedAt: DateUtils.dateToFrontend(memo.updatedAt, {
+          format: 'DD/MM/YYYY HH:mm',
+        }),
       }));
       loading.value = false;
     }
@@ -334,6 +342,18 @@ export const MemosPage: FunctionComponent = () => {
     // Aquí abres modales, haces navigations, etc.
   };
 
+  const handleStatusChange = (newStatus: string, memoId: number) => {
+    console.log('newStatus', newStatus, 'memoId', memoId);
+
+    // Actualizar el estado del memo en el array de panic
+    const panicIndex = panic.value.findIndex((memo) => memo.id === memoId);
+    if (panicIndex !== -1) {
+      const panicCopy: Memo[] = [...panic.value];
+      panicCopy[panicIndex] = { ...panicCopy[panicIndex], state: newStatus };
+      panic.value = panicCopy;
+    }
+  };
+
   return (
     <Section
       className={
@@ -371,6 +391,9 @@ export const MemosPage: FunctionComponent = () => {
             pageSize={20}
             selectable
             loading={loading.value}
+            onRangeChange={(range) => {
+              setDateRangeFilters(range);
+            }}
             expandable={(row: Memo, column?: string) => (
               <ExpandableMultiple type={column} data={row} />
             )}
@@ -401,7 +424,11 @@ export const MemosPage: FunctionComponent = () => {
             selectable
             loading={loading.value}
             expandable={(row: Memo, column?: string) => (
-              <ExpandableMultiple type={column} data={row} />
+              <ExpandableMultiple
+                type={column}
+                data={row}
+                onStatusChange={handleStatusChange}
+              />
             )}
             visibility={{
               id: false,

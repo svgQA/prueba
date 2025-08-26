@@ -4,7 +4,7 @@ import { Button } from '../button/button';
 import { INotification, INotificationsProps } from './utils/interface';
 import { useLocation } from 'wouter';
 import { localStorage } from '@/utils/storage';
-import { EventBus } from '@/utils/network/event.bus';
+import { EventBus } from '@/utils/network/sse/event.bus';
 import { IBaseSSE, SSE_TYPE } from '@/utils/network/sse/base';
 import { SIDEBAR_MENUS } from '@/utils/menus/sidebar';
 import ExpanderNotification from './components/expander.notification';
@@ -35,6 +35,9 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
     setLocalNotifications(initialNotifications);
     setNotifications(initialNotifications);
     EventBus.on(SSE_TYPE.ALL, handleNotificationSSE);
+    return () => {
+      EventBus.off(SSE_TYPE.ALL, handleNotificationSSE);
+    };
   }, []);
 
   const handleNotificationSSE = (event: IBaseSSE) => {

@@ -54,6 +54,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const onSubmit = async (model: FormData) => {
     model.tasks = tasksResponse.value;
     model.hasRound = !!model.roundId;
+
     const output = {
       ...model,
       placeId: Number(model.placeId?.value),
@@ -321,6 +322,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   onDelete={onTaskDelete}
                   add
                   selector
+                  type='GENERAL'
                   divisor={false}
                   className='rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light w-full'
                 />

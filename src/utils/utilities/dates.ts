@@ -86,17 +86,22 @@ export class DateUtils {
    */
   static toUTCISOStringFromLocal(
     dateInput: ValidDate,
-    format: 'time' | 'date' = 'date'
+    format: 'time' | 'date' | 'full' = 'full'
   ): string {
     if (format === 'time') {
       return dayjs(dateInput).utc().format('HH:mm');
     }
-    return dayjs(dateInput).utc().toISOString();
+
+    if (format === 'full') {
+      return dayjs(dateInput).utc().toISOString();
+    }
+
+    return dayjs(dateInput).utc().format('YYYY-MM-DD');
   }
 
   static dateToBackend(
     dateInput: ValidDate,
-    format: 'time' | 'date' = 'date'
+    format: 'time' | 'date' | 'full' = 'full'
   ): string {
     return this.toUTCISOStringFromLocal(dateInput, format);
   }
@@ -223,7 +228,7 @@ export class DateUtils {
 
     if (type === 'start') {
       if (actual.isBefore(before)) return 'success';
-      if (actual.isAfter(after)) return 'info';
+      if (actual.isAfter(after)) return 'error';
       return 'warning';
     } else {
       if (actual.isBefore(before)) return 'warning';

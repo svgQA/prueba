@@ -1,12 +1,7 @@
-import { useCallback, useEffect, useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { IPanic, IPanicProps } from './utils/interface';
-import { EventBus } from '@/utils/network/event.bus';
-import {
-  IBaseSSE,
-  SSE_EVENTS,
-  SSE_TYPE,
-  SseManager,
-} from '@/utils/network/sse/base';
+import { EventBus } from '@/utils/network/sse/event.bus';
+import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 import { FloatBadge } from '../badge/float';
 import { Button } from '../button/button';
 import { useSignal } from '@preact/signals';
@@ -33,14 +28,17 @@ const Panic = (_panic: IPanicProps) => {
   useEffect(() => {
     if (!selectedCompany) return;
     fetchPanic();
-    fetchSSE();
+    // fetchSSE();
     EventBus.on(SSE_TYPE.PANIC, handlePanicSSE);
+    return () => {
+      EventBus.off(SSE_TYPE.PANIC, handlePanicSSE);
+    };
   }, [selectedCompany]);
 
-  const fetchSSE = useCallback(
-    async () => await SseManager.getQuery(['panic', 'panic-button']),
-    []
-  );
+  // const fetchSSE = useCallback(
+  //   async () => await SseManager.getQuery(['panic', 'panic-button']),
+  //   []
+  // );
 
   const handlePanicSSE = async (event: IBaseSSE) => {
     if (event.name === SSE_EVENTS.PANIC) {

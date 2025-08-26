@@ -79,7 +79,7 @@ export const getColumns = (
       size: 120,
       header: 'h_date',
       enableGrouping: false,
-      meta: { headerAlign: 'center' },
+      meta: { headerAlign: 'center', type: 'date' },
       cell: (info) => (
         <FormattedDate date={info.getValue() as string} format='date' />
       ),
@@ -90,7 +90,7 @@ export const getColumns = (
       size: 150,
       clickable: true,
       header: 'h_start',
-      meta: { headerAlign: 'center' },
+      meta: { headerAlign: 'center', type: 'date' },
       cell: (info) => {
         const rowData = info.row.original;
         return (
@@ -109,7 +109,7 @@ export const getColumns = (
       size: 150,
       clickable: true,
       header: 'h_end',
-      meta: { headerAlign: 'center' },
+      meta: { headerAlign: 'center', type: 'date' },
       cell: (info) => {
         const rowData = info.row.original;
         return (
@@ -132,7 +132,7 @@ export const getColumns = (
         const rowData = info.row.original;
         return (
           <div className='w-full justify-center flex items-center'>
-            <Badge label={rowData.status} width='w-24' />
+            <Badge label={String(rowData.status)} width='w-24' />
           </div>
         );
       },
@@ -148,6 +148,7 @@ export const getColumns = (
         const rowData = info.row.original;
         const checkInData = rowData.checkIn;
         const checkOutData = rowData.checkOut;
+
         let dateDifferent = { hours: 0, minutes: 0 };
         let checkDifferent = { hours: 0, minutes: 0 };
 
@@ -186,8 +187,8 @@ export const getColumns = (
       clickable: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
-        const report = info.row.original.report.length.toString();
-        const promedio = info.row.original.promedio;
+        const report = String(info.row?.original?.report?.length || 0);
+        const promedio = Number(info.row?.original?.promedio || 0);
         // 1) Con Math.round
         const promedioUnDecimal = Math.round(promedio * 10) / 10;
         return (

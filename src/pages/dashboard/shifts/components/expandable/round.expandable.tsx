@@ -61,7 +61,7 @@ const RoundInfo = ({
       data.getMany()?.map((point) => ({
         id: point.id,
         position: { lat: point.latitude, lng: point.longitude },
-        name: point.name
+        name: point.name,
       }))
     );
   };

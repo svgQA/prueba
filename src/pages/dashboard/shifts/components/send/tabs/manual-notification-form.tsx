@@ -46,7 +46,7 @@ export const ManualNotificationForm = ({
 
   const templates = useSignal<IOption[]>([]);
   const tasks = useSignal<IOption[]>([]);
-  const tasksResponse = useSignal<ITask[]>([]);
+  const [tasksResponse, setTasksResponse] = useState<ITask[]>([]);
   const places: Signal<IOption[]> = useSignal([]);
 
   const [sendToShiftToday, setSendToShiftToday] = useState<boolean>(false);
@@ -122,7 +122,7 @@ export const ManualNotificationForm = ({
         values.task?.value && { taskId: Number(values.task.value) }),
       overrideTitle: values.title,
       overrideDescription: values.description,
-      tasks: tasksResponse.value,
+      tasks: tasksResponse,
       placeId: values.placeId?.value ? Number(values.placeId.value) : undefined,
       filters: {
         userIds: selectedUsersFull?.map((u) => String(u.id)),
@@ -139,18 +139,20 @@ export const ManualNotificationForm = ({
     /* DELETE: Posibllemente eliminar esto */
   };
 
+  const onTaskDelete = (id: string) => {
+    setTasksResponse(tasksResponse.filter((task) => task.id !== id));
+  };
+
   const clearUserSelection = () => setSelectedUserIds([]);
 
   useEffect(() => {
     getInitData();
   }, []);
 
-  const onTaskAdd = (model: any) => {
-    if (Array.isArray(model)) {
-      tasksResponse.value = [...tasksResponse.value, ...model];
-    } else {
-      tasksResponse.value = [...tasksResponse.value, model];
-    }
+  const onTaskAdd = (model: any, t: number = 2) => {
+    const size = tasksResponse.length + 1;
+    const out = _onTaskAddWithId(model, size, t);
+    setTasksResponse([...tasksResponse, ...(Array.isArray(out) ? out : [out])]);
     showInlineCreate.value = false;
   };
 
@@ -198,7 +200,7 @@ export const ManualNotificationForm = ({
               onInput={(e) => setSearch(e.currentTarget.value)}
             />
 
-            <div className='max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-2  bg-white dark:bg-b-dark-dark'>
+            <div className='max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-2'>
               {[...new Map(filteredUsers.map((u) => [u.id, u])).values()].map(
                 (user: any) => (
                   <label
@@ -255,7 +257,7 @@ export const ManualNotificationForm = ({
             </div>
 
             {selectedUsersFull.length > 0 && (
-              <div className='mt-2 border-y-b-light-dark dark:border-y-b-dark-light border-y py-3'>
+              <div className='mt-2 border-y-b-light-dark dark:border-y-b-dark-light border-y py-3 max-h-40 overflow-y-auto vox-scroll-design'>
                 <h5 className='font-medium mb-1'>{t('h_users_selected')}</h5>
                 <ul className='list-disc list-inside space-y-1'>
                   {[
@@ -270,50 +272,6 @@ export const ManualNotificationForm = ({
                 </ul>
               </div>
             )}
-          </div>
-
-          <div className='w-full'>
-            <Field<IOption[]>
-              name='template'
-              render={({ input, meta }) => (
-                <SmartSelector
-                  {...input}
-                  meta={meta}
-                  options={templates.value}
-                  menuPortalTarget={document.body}
-                  placeholder={t('p_select_template')}
-                  label={t('l_template')}
-                  onChange={(value?: IOption) => {
-                    if (value) infoTemplate(value);
-                  }}
-                />
-              )}
-            />
-          </div>
-
-          <TaskFormCreate
-            onSubmit={onTaskAdd}
-            add
-            selector
-            taskList={tasksResponse.value}
-            disabled={templateSelected ? true : false}
-            type={sendToGeneral ? 'REPORT' : 'GENERAL'}
-          />
-
-          <div class='col-span-2'>
-            <Field<IOption> name='placeId'>
-              {({ input, meta }) => (
-                <SmartSelector
-                  {...input}
-                  meta={meta}
-                  placeholder='p_select_place'
-                  label='l_place'
-                  id='placeId'
-                  icon='252'
-                  options={places.value}
-                />
-              )}
-            </Field>
           </div>
 
           <div className='flex flex-col gap-2'>
@@ -343,6 +301,54 @@ export const ManualNotificationForm = ({
               )}
             />
           </div>
+
+          <div className='w-full'>
+            <Field<IOption[]>
+              name='template'
+              render={({ input, meta }) => (
+                <SmartSelector
+                  {...input}
+                  meta={meta}
+                  options={templates.value}
+                  menuPortalTarget={document.body}
+                  placeholder={t('p_select_template')}
+                  label={t('l_template')}
+                  onChange={(value?: IOption) => {
+                    if (value) infoTemplate(value);
+                  }}
+                />
+              )}
+            />
+          </div>
+          {sendToGeneral && (
+            <>
+              <TaskFormCreate
+                onSubmit={onTaskAdd}
+                onDelete={onTaskDelete}
+                add
+                selector
+                taskList={tasksResponse}
+                disabled={templateSelected ? true : false}
+                type={sendToGeneral ? 'REPORT' : 'GENERAL'}
+              />
+
+              <div class='col-span-2'>
+                <Field<IOption> name='placeId'>
+                  {({ input, meta }) => (
+                    <SmartSelector
+                      {...input}
+                      meta={meta}
+                      placeholder='p_select_place'
+                      label='l_place'
+                      id='placeId'
+                      icon='252'
+                      options={places.value}
+                    />
+                  )}
+                </Field>
+              </div>
+            </>
+          )}
 
           <div className='flex justify-end'>
             <Button

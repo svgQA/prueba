@@ -82,7 +82,7 @@ Utilidad para manejar streams de datos del servidor, especialmente útil para re
 ### Uso Básico
 
 ```typescript
-import { streamIAResponse } from '@/utils/network/sse.post';
+import { streamIAResponse } from '@/utils/network/sse/sse.post';
 
 // En un servicio de IA
 const model = {

@@ -17,7 +17,7 @@ import {
 import { IRoleRequest } from '@/types/role/role.request';
 import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-panels';
 import { useUserStore } from '@/store/slices';
-import { MODAL_SETTING_USER } from '@/utils/menus/settings/user';
+// import { MODAL_SETTING_USER } from '@/utils/menus/settings/user';
 import { useNavigation } from '@/utils/hooks/navigation';
 
 interface RawPermission extends Omit<IPermission, 'moduleId'> {}
@@ -101,7 +101,13 @@ export const RolesUpsertPage = () => {
 
     if (!request.getStatus()) return;
     ToastManager.success(message);
-    go(MODAL_SETTING_USER.menus[1]);
+    // go(MODAL_SETTING_USER.menus[1]);
+    go({
+      to: '/users/roles',
+      label: 'm_role',
+      id: 'user:roles:state',
+      base: 'setting',
+    });
   };
 
   const getModules = async () => {

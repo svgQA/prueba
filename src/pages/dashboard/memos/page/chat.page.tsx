@@ -102,6 +102,18 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   const messages = useSignal<string>('');
   const files = useSignal<IPresignedRequest[]>([]);
 
+  const calculateInitialDuration = () => {
+    let memo: Memo = memoByService.value.find((e) => e.id == replyToId.value);
+    if (!memo) return 0;
+    const startDate = memo.updatedAt ?? memo.createdAt;
+    const timeDifference = DateUtils.getTimeDifference(
+      startDate as Date | string,
+      DateUtils.nowUTCDate()
+    );
+    const totalMinutes = timeDifference.hours * 60 + timeDifference.minutes;
+    return totalMinutes;
+  };
+
   useEffect(() => {
     fetchPredefinedOptions();
   }, []);
@@ -520,6 +532,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   {...input}
                   type='number'
                   name='duration'
+                  disabled={true}
                   label='Duración'
                   placeholder='Min'
                 />
@@ -528,7 +541,14 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 
             <Field<string> name='date'>
               {({ input }) => (
-                <DateField {...input} name='date' label='Fecha' />
+                <DateField
+                  {...input}
+                  name='date'
+                  label='Fecha'
+                  type='datetime-local'
+                  defaultToNow={true}
+                  disabled={true}
+                />
               )}
             </Field>
 
@@ -657,6 +677,9 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
           </div>
           <Form
             onSubmit={handleSubmitMessage}
+            initialValues={{
+              duration: calculateInitialDuration(),
+            }}
             render={({ handleSubmit }) => (
               <form
                 id='chat-input-form-memo'
