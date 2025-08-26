@@ -29,12 +29,15 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
 
   const onSubmit = async (model: Record<string, any>) => {
+    const formId = model.formId?.value || model.formId || undefined;
+    const type = model.type?.value || model.type || undefined;
+
     const output = {
       name: model.name,
       description: model.description,
-      formId: model.formId?.value || undefined,
+      formId: formId,
       hourStart: DateUtils.createDateFromHourBackend(model.hourStart),
-      type: model.type?.value || undefined,
+      type: type,
     };
 
     if (id) {
@@ -102,7 +105,12 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
         </div>
       </div>
       <div className='flex flex-col justify-center mt-16'>
-        <TaskFormCreate onSubmit={onSubmit} forms={forms.value} append />
+        <TaskFormCreate
+          onSubmit={onSubmit}
+          forms={forms.value}
+          append
+          initialValues={initialValues.value}
+        />
       </div>
     </Section>
   );

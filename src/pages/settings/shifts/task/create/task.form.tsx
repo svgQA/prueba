@@ -25,6 +25,7 @@ interface Props {
   onDelete?: (id: string) => void;
   type?: 'REPORT' | 'GENERAL';
   disabled?: boolean;
+  initialValues?: Record<string, any>;
 }
 
 export const TaskFormCreate = ({
@@ -32,6 +33,7 @@ export const TaskFormCreate = ({
   add = false,
   taskList = [],
   selector = false,
+  initialValues = {},
   divisor = true,
   className = '',
   forms,
@@ -146,7 +148,7 @@ export const TaskFormCreate = ({
       >
         <Form
           onSubmit={onChange}
-          initialValues={{ type }}
+          initialValues={{ type, ...initialValues }}
           render={({ handleSubmit, form, submitting, pristine }) => {
             const values: any = form.getState().values;
 
