@@ -175,13 +175,13 @@ export const TaskFormCreate = ({
                         placeholder='p_select'
                         label='h_task'
                         button
-                        buttonIcon='219'
+                        buttonIcon={!onAppend.value ? '044' : '192'}
                         icon='086'
                         options={[
-                          {
-                            value: 'general',
-                            label: 'General',
-                          },
+                          // {
+                          //   value: 'general',
+                          //   label: 'General',
+                          // },
                           ...filteredTasks.map((e) => ({
                             ...e,
                             value: e.id ?? '',
