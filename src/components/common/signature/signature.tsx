@@ -214,7 +214,7 @@ export const Signature = ({
         />
       </div>
       {resources.length > 0 && (
-        <ShowFiles resources={resources} removeFile={handleRemove} />
+        <ShowFiles resources={resources} removeFile={handleRemove} disabled={disabled} />
       )}
     </div>
   );
