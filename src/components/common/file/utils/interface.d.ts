@@ -28,6 +28,7 @@ export interface IFileProps extends IComponentProps {
   disabled?: boolean;
   value: IPresignedRequest[];
   area?: AllowedAreaTypes;
+  showFiles?: boolean;
 }
 
 export interface Attachment {
@@ -42,4 +43,5 @@ export interface ShowFilesProps {
   removeFile?: (uuid: string) => void;
   alertEmpty?: boolean;
   mapPoint?: MapPoint;
+  disabled?: boolean;
 }
