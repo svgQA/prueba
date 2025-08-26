@@ -5,6 +5,7 @@ import { Button } from '../button/button';
 import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
 import { DateUtils } from '@/utils/utilities/dates';
+import { SvgViewer } from '../file/components/svg.viewer';
 
 export const Signature = ({
   name,
@@ -213,6 +214,11 @@ export const Signature = ({
           label='clean'
         />
       </div>
+
+      {typeof value === 'string' && value.trim() !== '' && value.includes('<svg') && (
+        <SvgViewer src={value} />
+      )}
+
       {resources.length > 0 && (
         <ShowFiles resources={resources} removeFile={handleRemove} disabled={disabled} />
       )}
