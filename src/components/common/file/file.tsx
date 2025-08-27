@@ -2,9 +2,10 @@ import { type IFileProps } from './utils/interface';
 import { useSignal } from '@preact/signals';
 import { IPresignedRequest } from '@/types/file';
 import { handleFileChangeWrapper } from './utils/utils';
-import { GeneralService } from '@/services/general/general';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
+import ShowFiles from './show.file';
+
 export const File = ({
   id,
   name,
@@ -22,6 +23,7 @@ export const File = ({
   value = [],
   disabled,
   area,
+  showFiles = true,
   ...props
 }: IFileProps) => {
   const { t } = useTranslation();
@@ -65,27 +67,27 @@ export const File = ({
     });
   };
 
-  const downloadAction = async (fileUUID: string) => {
-    const fileInfo = value.find((f) => f.uuid === fileUUID);
-    if (!fileInfo) return;
-    const preResponse = await GeneralService.presigned(fileInfo);
-    if (!preResponse.getStatus()) return;
-    const urlModel = preResponse.getOne();
+  // const downloadAction = async (fileUUID: string) => {
+  //   const fileInfo = value.find((f) => f.uuid === fileUUID);
+  //   if (!fileInfo) return;
+  //   const preResponse = await GeneralService.presigned(fileInfo);
+  //   if (!preResponse.getStatus()) return;
+  //   const urlModel = preResponse.getOne();
 
-    try {
-      const filResponse = await fetch(urlModel.url);
-      if (!filResponse.ok) throw new Error('Failed to fetch image');
-      const blob = await filResponse.blob();
-      const downloadUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-      a.download = fileInfo.name;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(downloadUrl);
-    } catch {}
-  };
+  //   try {
+  //     const filResponse = await fetch(urlModel.url);
+  //     if (!filResponse.ok) throw new Error('Failed to fetch image');
+  //     const blob = await filResponse.blob();
+  //     const downloadUrl = URL.createObjectURL(blob);
+  //     const a = document.createElement('a');
+  //     a.href = downloadUrl;
+  //     a.download = fileInfo.name;
+  //     document.body.appendChild(a);
+  //     a.click();
+  //     a.remove();
+  //     URL.revokeObjectURL(downloadUrl);
+  //   } catch { }
+  // };
 
   return (
     <div id={id} className='w-full'>
@@ -143,8 +145,14 @@ export const File = ({
             {meta?.error}
           </span>
         )}
-        <div className='mt-4 grid grid-cols-4 gap-4'>
-          {Array.isArray(value) &&
+        {showFiles && value && (
+          <div className='mt-4 grid grid-cols-4 gap-4'>
+            <ShowFiles
+              resources={Array.isArray(value) ? value : []}
+              removeFile={removeAction}
+              disabled={disabled}
+            />
+            {/* {Array.isArray(value) &&
             value.map((file) => (
               <div
                 key={file.uuid}
@@ -168,8 +176,9 @@ export const File = ({
                   {file.type}
                 </p>
               </div>
-            ))}
-        </div>
+            ))} */}
+          </div>
+        )}
       </div>
     </div>
   );

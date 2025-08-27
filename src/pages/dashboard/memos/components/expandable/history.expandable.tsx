@@ -406,6 +406,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                               multiple={true}
                               label='h_attachment'
                               area='memo'
+                              showFiles={false}
                             />
                           )}
                         </Field>

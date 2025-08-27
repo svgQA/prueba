@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { TaskFormCreate } from './task.form';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
+// import { IOptionCheck } from '@/components/common/select-check';
 interface FormData {
   name: string;
   description: string;
@@ -29,12 +30,16 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
 
   const onSubmit = async (model: Record<string, any>) => {
+    const formId = model.formId?.value || model.formId || undefined;
+    const type = model.type?.value || model.type || undefined;
+
     const output = {
       name: model.name,
       description: model.description,
-      formId: model.formId?.value || undefined,
+      formId: formId,
+      attachmentType: model.attachmentType,
       hourStart: DateUtils.createDateFromHourBackend(model.hourStart),
-      type: model.type?.value || undefined,
+      type: type,
     };
 
     if (id) {
@@ -64,6 +69,16 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
     const form = task.formId
       ? forms.value.find((_f) => _f.value === task.formId)
       : undefined;
+
+    const attachmentType = task.attachmentType
+      ? {
+          value: task.attachmentType,
+          label:
+            task.attachmentType.charAt(0).toUpperCase() +
+            task.attachmentType.slice(1).toLowerCase(),
+        }
+      : undefined;
+
     initialValues.value = {
       ...task,
       hourStart: DateUtils.hourToFrontend(task.hourStart),
@@ -72,6 +87,7 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
         value: task.type,
         label: task.type,
       },
+      attachmentType: attachmentType,
     };
   }, [id]);
 
@@ -102,7 +118,12 @@ export const TaskCreateSettingPage: FunctionComponent = () => {
         </div>
       </div>
       <div className='flex flex-col justify-center mt-16'>
-        <TaskFormCreate onSubmit={onSubmit} forms={forms.value} append />
+        <TaskFormCreate
+          onSubmit={onSubmit}
+          forms={forms.value}
+          append
+          initialValues={initialValues.value}
+        />
       </div>
     </Section>
   );

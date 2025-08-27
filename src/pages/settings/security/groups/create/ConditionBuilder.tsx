@@ -2,6 +2,10 @@ import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { Condition } from './utils/types';
+import { useEffect } from 'preact/hooks';
+import { CompanyService } from '@/services/general/company';
+//import { useTranslation } from 'react-i18next';
+import { RoleService } from '@/services/general/role';
 
 interface Props {
   condition: Condition;
@@ -10,6 +14,7 @@ interface Props {
 }
 
 const operatorsWithValue = ['=', '!=', 'like', 'starts with'];
+//const { t } = useTranslation();
 
 const fieldOptions = [
   'nombre',
@@ -36,22 +41,47 @@ const operatorOptions = [
 ];
 
 const predefinedOptions: Record<string, { label: string; value: string }[]> = {
-  compañía: [
-    { label: 'Servagro', value: 'Servagro' },
-    { label: 'Inndico', value: 'Inndico' },
-    { label: 'TechCorp', value: 'TechCorp' },
-  ],
-  roles: [
-    { label: 'Admin', value: 'admin' },
-    { label: 'User', value: 'user' },
-  ],
+  compañía: [],
+  roles: [],
   perfil: [
-    { label: 'Supervisor', value: 'supervisor' },
-    { label: 'Empleado', value: 'empleado' },
+    {
+      value: 'USER',
+      label: 'user.create.form.userType.USER',
+    },
+    {
+      value: 'ADMIN',
+      label: 'user.create.form.userType.ADMIN',
+    },
+    {
+      value: 'CLIENT',
+      label: 'user.create.form.userType.CLIENT',
+    },
   ],
 };
 
 export const ConditionBuilder = ({ condition, onRemove, onChange }: Props) => {
+  useEffect(() => {
+    Promise.all([getCompanies(), getRoles()]);
+  }, []);
+
+  const getCompanies = async (): Promise<void> => {
+    const response = await CompanyService.getCompanyList();
+    if (!response.getStatus()) return;
+    predefinedOptions.compañía = response.getMany().map((company) => ({
+      label: company.label,
+      value: company.label,
+    }));
+  };
+
+  const getRoles = async (): Promise<void> => {
+    const response = await RoleService.getRoles();
+    if (!response.getStatus()) return;
+    predefinedOptions.roles = response.getMany().map((role) => ({
+      label: role.name,
+      value: role.name,
+    }));
+  };
+
   return (
     <div className='flex gap-3 flex-row bg-gray-50 dark:bg-gray-700 px-3 items-center justify-between rounded-md'>
       <div className='w-44'>

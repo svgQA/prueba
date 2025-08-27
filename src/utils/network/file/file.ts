@@ -2,9 +2,13 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { IExcelGenerate } from './interface';
 import ExcelJS from 'exceljs';
 import i18n from '@/i18n';
+import { IPresignedRequest } from '@/types/file';
 
 export class fileManager {
-  static async downloadFile(urlObj: { url: string }) {
+  static async downloadFile(
+    urlObj: { url: string },
+    filename: string = 'Report.pdf'
+  ) {
     if (!urlObj?.url) {
       ToastManager.error('s_errorUrl');
       return;
@@ -21,7 +25,6 @@ export class fileManager {
 
       const blob = await response.blob();
       const disposition = response.headers.get('Content-Disposition'); // Extraer nombre desde Content-Disposition si existe
-      let filename = 'Report.pdf';
 
       if (disposition && disposition.includes('filename=')) {
         const match = disposition.match(
@@ -188,5 +191,27 @@ export class fileManager {
     } catch (error) {
       ToastManager.error('s_download_file_error');
     }
+  }
+
+  static getExtensionFile(file: IPresignedRequest): string | undefined {
+    const mimeToExtension: { [key: string]: string } = {
+      'text/csv': 'csv',
+      'application/pdf': 'pdf',
+      'application/msword': 'doc',
+      'application/vnd.ms-excel': 'xls',
+      'text/plain': 'txt',
+      'application/json': 'json',
+    };
+
+    const extension = mimeToExtension[file.type] || 'unknown';
+
+    if (extension === 'unknown') {
+      ToastManager.error(
+        'Tipo de archivo desconocido. No se puede descargar con la extensión correcta.'
+      );
+      return;
+    }
+
+    return extension;
   }
 }
