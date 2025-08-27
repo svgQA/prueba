@@ -63,6 +63,14 @@ export const label_es = {
   l_client: 'Cliente',
   l_contract: 'Contrato',
   l_round: 'Ronda',
+  l_external: 'Externo',
+  l_internal: 'Interno',
+  l_created: 'Creado',
+  l_opened: 'Abierto',
+  l_closed: 'Cerrado',
+  l_resolved: 'Resuelto',
+  l_service: 'Servicio',
+  l_external_code: 'Código externo',
 };
 
 export const label_en = {
@@ -130,4 +138,12 @@ export const label_en = {
   l_client: 'Client',
   l_contract: 'Contract',
   l_round: 'Round',
+  l_external: 'External',
+  l_internal: 'Internal',
+  l_created: 'Created',
+  l_opened: 'Opened',
+  l_closed: 'Closed',
+  l_resolved: 'Resolved',
+  l_service: 'Service',
+  l_external_code: 'External code',
 };

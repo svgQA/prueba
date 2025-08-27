@@ -18,6 +18,7 @@ import { DateField } from '@/components/compose/forms';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useNavigation } from '@/utils/utilities/navigation';
 import { useUserStore } from '@/store/slices';
+import { useTranslation } from 'react-i18next';
 
 interface ITask {
   start: string;
@@ -46,7 +47,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
   const services = useSignal([]);
   const users = useSignal([]);
   const { navigateUpsert } = useNavigation();
-
+  const { t } = useTranslation();
   const { id } = useParams(); // Obtiene el id de la URL
 
   const onSubmit = async (model: FormData) => {
@@ -154,12 +155,16 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                 */}
                 <DateField
                   name='start'
-                  label='Fecha inicio'
+                  label={t('l_date_start')}
                   validate={required}
                 />
               </div>
               <div class='col-span-1'>
-                <DateField name='end' label='Fecha fin' validate={required} />
+                <DateField
+                  name='end'
+                  label={t('l_date_end')}
+                  validate={required}
+                />
                 {/*
                 <Field<string>
                   name='end'
@@ -186,15 +191,15 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                   {({ input }) => (
                     <Select
                       {...input}
-                      placeholder='Selecione estado...'
-                      label='Estado'
+                      placeholder='p_select_state'
+                      label='l_status'
                       name='status'
                       icon='252'
                       options={[
-                        { value: 'CREATED', label: 'Creado' },
-                        { value: 'OPENED', label: 'Abierto' },
-                        { value: 'CLOSED', label: 'Cerrado' },
-                        { value: 'RESOLVED', label: 'Resuelto' },
+                        { value: 'CREATED', label: 'l_created' },
+                        { value: 'OPENED', label: 'l_opened' },
+                        { value: 'CLOSED', label: 'l_closed' },
+                        { value: 'RESOLVED', label: 'l_resolved' },
                       ]}
                     />
                   )}
@@ -205,13 +210,13 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                   {({ input }) => (
                     <Select
                       {...input}
-                      placeholder='Selecione tipo...'
-                      label='Tipo'
+                      placeholder='p_select_type'
+                      label='l_type_ubication'
                       name='type'
                       icon='252'
                       options={[
-                        { value: 'EXTERNAL', label: 'Externo' },
-                        { value: 'INTERNAL', label: 'Interno' },
+                        { value: 'EXTERNAL', label: 'l_external' },
+                        { value: 'INTERNAL', label: 'l_internal' },
                       ]}
                     />
                   )}
@@ -222,8 +227,8 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                   {({ input }) => (
                     <Select
                       {...input}
-                      placeholder='Selecione empleado...'
-                      label='Empleado'
+                      placeholder='p_select_employee'
+                      label='USER'
                       name='employeedId'
                       icon='252'
                       options={users.value}
@@ -242,8 +247,8 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                   {({ input }) => (
                     <Select
                       {...input}
-                      placeholder='Selecione Servicio...'
-                      label='Servicio'
+                      placeholder='p_select_service'
+                      label='l_service'
                       name='serviceId'
                       icon='252'
                       optionValue='id'
@@ -261,7 +266,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
               <div class='col-span-1'>
                 <Field<string> name='externalId'>
                   {({ input }) => (
-                    <Input {...input} type='text' label='Codigo externo' />
+                    <Input {...input} type='text' label='l_external_code' />
                   )}
                 </Field>
               </div>
@@ -276,7 +281,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                           onChange={(e) =>
                             (inputKeywords.value = e.currentTarget.value)
                           }
-                          placeholder='Escribe una palabra clave'
+                          placeholder={t('p_write_keyword')}
                           className='flex-grow p-2 border rounded-md'
                         />
                         <button
