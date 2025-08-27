@@ -22,7 +22,7 @@ const showFiles = ({
   isSender = false,
   removeFile,
   mapPoint,
-  disabled
+  disabled,
 }: ShowFilesProps) => {
   const { getTenant, getCompanyId } = useUserStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -66,14 +66,14 @@ const showFiles = ({
   const downloadFile = (file: IPresignedRequest) => {
     const url: string = getUrl(file);
     const extension = fileManager.getExtensionFile(file);
-    if(!extension) return;
+    if (!extension) return;
     let fileName: string = `tryvoo.${extension}`;
     fileManager.downloadFile({ url }, fileName);
-  }
+  };
 
   return (
     <div
-      className='relative w-full flex justify-center items-center'
+      className='relative w-full flex justify-center items-center bg-b-light-light dark:bg-b-dark-dark'
       ref={containerRef}
     >
       {visibleFiles && resources.length > 0 && (

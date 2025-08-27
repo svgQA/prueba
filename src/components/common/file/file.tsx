@@ -4,7 +4,7 @@ import { IPresignedRequest } from '@/types/file';
 import { handleFileChangeWrapper } from './utils/utils';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
-import ShowFiles from "./show.file";
+import ShowFiles from './show.file';
 
 export const File = ({
   id,
@@ -106,8 +106,9 @@ export const File = ({
           </label>
         )}
         <div
-          className={`${borderless ? '' : 'border border-gray-200 dark:border-gray-700'
-            } rounded-lg flex flex-row items-center bg-white dark:bg-b-dark-dark`}
+          className={`${
+            borderless ? '' : 'border border-gray-200 dark:border-gray-700'
+          } rounded-lg flex flex-row items-center bg-white dark:bg-b-dark-dark`}
         >
           {!end && icon && (
             <span

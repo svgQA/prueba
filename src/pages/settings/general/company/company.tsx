@@ -77,7 +77,10 @@ export const CompanySettingPage: FunctionComponent = () => {
     showForm.value = show;
   };
 
-  const onSubmit = async (values: ICCompanyRequest | IUCompanyRequest, form?: any) => {
+  const onSubmit = async (
+    values: ICCompanyRequest | IUCompanyRequest,
+    form?: any
+  ) => {
     let response;
     if (isEditing && _selectedCompany.value) {
       response = await CompanyService.updateCompany(

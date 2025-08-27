@@ -215,12 +215,16 @@ export const Signature = ({
         />
       </div>
 
-      {typeof value === 'string' && value.trim() !== '' && value.includes('<svg') && (
-        <SvgViewer src={value} />
-      )}
+      {typeof value === 'string' &&
+        value.trim() !== '' &&
+        value.includes('<svg') && <SvgViewer src={value} />}
 
       {resources.length > 0 && (
-        <ShowFiles resources={resources} removeFile={handleRemove} disabled={disabled} />
+        <ShowFiles
+          resources={resources}
+          removeFile={handleRemove}
+          disabled={disabled}
+        />
       )}
     </div>
   );

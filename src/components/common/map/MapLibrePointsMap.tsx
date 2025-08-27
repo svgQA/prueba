@@ -864,7 +864,11 @@ export const MapLibrePointsMap = ({
       lastAddedPointIdRef.current !== null &&
       points.some((p) => p.id === lastAddedPointIdRef.current)
     ) {
-      if (points.length === 1 && mapRef.current && isFirstPointZoomingRef.current) {
+      if (
+        points.length === 1 &&
+        mapRef.current &&
+        isFirstPointZoomingRef.current
+      ) {
         const idToOpen = lastAddedPointIdRef.current;
         const openModal = () => {
           handleMarkerClick(idToOpen, true);
@@ -877,7 +881,7 @@ export const MapLibrePointsMap = ({
           if (isFirstPointZoomingRef.current) {
             openModal();
           }
-        }, 500); 
+        }, 500);
       } else {
         handleMarkerClick(lastAddedPointIdRef.current, true);
         lastAddedPointIdRef.current = null;
