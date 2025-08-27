@@ -176,7 +176,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                     <div className='col-span-1 text-right'>
                       <button
                         onClick={() => toggleDetails(report)}
-                        className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
+                        className='text-cyan-600 text-xs flex items-center justify-end border-none'
                       >
                         {buttonLabel}
                         <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
@@ -194,7 +194,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
 
                 {/* Formulario */}
                 {isExpanded && !hasAttachments && hasForm && (
-                  <div className='p-4 bg-gray-50'>
+                  <div className='p-4 bg-b-light-light dark:bg-b-dark-dark'>
                     <div className='grid grid-cols-4 items-center gap-x-4'>
                       <p className='text-sm'>
                         <span className='font-semibold'>{t('h_title')}:</span>{' '}
@@ -215,7 +215,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                       <div className='text-right'>
                         <button
                           onClick={() => toggleDetailsForm(report)}
-                          className='text-cyan-600 text-xs flex items-center justify-end hover:underline'
+                          className='text-cyan-600 text-xs flex items-center justify-end border-none'
                         >
                           {t('show')}
                           <span className='ml-1 vox-icon vx-icon-004 text-cyan-600'></span>
