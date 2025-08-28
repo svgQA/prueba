@@ -27,6 +27,47 @@ export const user_es = {
         description: 'Ingrese la descripción de la área...',
       },
     },
+    residence: {
+      success: 'Residencia creada exitosamente!',
+      update: 'Residencia actualizada exitosamente!',
+      title: 'Residencias',
+      create: 'Nueva residencia',
+      edit: 'Editar residencia',
+      delete: 'Residencia eliminada exitosamente!',
+      showAlert: {
+        msg: '¿Estás seguro de querer eliminar la residencia?',
+        title: 'Eliminar residencia',
+      },
+      table: {
+        residence: 'Residencia',
+        type: 'Tipo',
+        houseNumber: 'Número de casa',
+        block: 'Bloque',
+        floor: 'Piso',
+        place: 'Conjunto',
+        user: 'Usuario',
+        owner: 'Propietario',
+        action: 'Acción',
+        actions: 'Acciones',
+      },
+      form: {
+        houseNumber: 'Número de casa',
+        block: 'Bloque',
+        place: 'Conjunto',
+        user: 'Usuario',
+        btnSave: 'Guardar',
+        btnUpdate: 'Actualizar',
+        type: 'Tipo de residencia',
+        floor: 'Piso'
+      },
+      placeholder: {
+        houseNumber: 'Ingrese el número de la casa...',
+        block: 'Ingrese el bloque (opcional)...',
+        place: 'Seleccione el conjunto...',
+        user: 'Seleccione el usuario...',
+        type: 'Seleccione el tipo...'
+      },
+    },
     cards: {
       total: 'Total de Usuarios',
       totalSubtitle: 'Registrados',
@@ -135,10 +176,51 @@ export const user_en = {
         description: 'Description',
         btnSave: 'Save',
         btnUpdate: 'Update',
+        type: 'Type of residence'
       },
       placeholder: {
         name: 'Enter the area name...',
         description: 'Enter the area description...',
+      },
+    },
+    residence: {
+      success: 'Residence created successfully!',
+      update: 'Residence updated successfully!',
+      title: 'Residences',
+      create: 'New residence',
+      edit: 'Edit residence',
+      delete: 'Residence deleted successfully!',
+      showAlert: {
+        msg: 'Are you sure you want to delete the residence?',
+        title: 'Delete residence',
+      },
+      table: {
+        residence: 'Residence',
+        type: 'Type',
+        houseNumber: 'House number',
+        block: 'Block',
+        floor: 'Floor',
+        place: 'Complex',
+        user: 'User',
+        owner: 'Owner',
+        action: 'Action',
+        actions: 'Actions',
+      },
+      form: {
+        houseNumber: 'House Number',
+        block: 'Block',
+        place: 'Place',
+        user: 'User',
+        btnSave: 'Save',
+        btnUpdate: 'Update',
+        floor: 'Floor'
+      },
+      placeholder: {
+        houseNumber: 'Enter the house number...',
+        block: 'Enter the block (optional)...',
+        place: 'Select the place...',
+        user: 'Select the user...',
+        type: 'Select the type...'
       },
     },
     cards: {
