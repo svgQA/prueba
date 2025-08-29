@@ -69,7 +69,7 @@ export class ReportService extends BaseService {
 
   static async create_report_automatic_excel(data: IExcelGenerateRequest) {
     const model: IMakeRequest = {
-      url: ['reportIa', 'generate-excel-memo'],
+      url: ['reportIa', 'generate-excel'],
       method: REQUEST_METHODS.POST,
       data,
     };

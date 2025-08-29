@@ -1,5 +1,5 @@
 import { FormService, IResponseSummary } from '@/services';
-import { IResponseResponse } from '@/types/form';
+import { IResponseResponse, modulesReport } from '@/types/form';
 import { useSignal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
@@ -247,6 +247,7 @@ export const FormsPage: FunctionComponent = () => {
             rowClassName={(row: IResponseResponse) =>
               highlightedId === String(row.id) ? 'animate-highlight' : ''
             }
+            modules={modulesReport.Form}
           />
         )}
         {(currentView.value === VIEW_NAME.INSPECT ||
