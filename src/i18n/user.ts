@@ -65,7 +65,8 @@ export const user_es = {
         block: 'Ingrese el bloque (opcional)...',
         place: 'Seleccione el conjunto...',
         user: 'Seleccione el usuario...',
-        type: 'Seleccione el tipo...'
+        type: 'Seleccione el tipo...',
+        floor: 'Ingrese el Piso...'
       },
     },
     cards: {
@@ -220,7 +221,8 @@ export const user_en = {
         block: 'Enter the block (optional)...',
         place: 'Select the place...',
         user: 'Select the user...',
-        type: 'Select the type...'
+        type: 'Select the type...',
+        floor: 'Enter the floor...'
       },
     },
     cards: {

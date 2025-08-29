@@ -156,20 +156,7 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                   </Field>
                 </div>
 
-                {/* Número de casa / apartamento */}
-                <div className="col-span-2">
-                  <Field<string> name="houseNumber" validate={required}>
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        placeholder="user.residence.placeholder.houseNumber"
-                        label="user.residence.form.houseNumber"
-                        type="text"
-                        meta={meta}
-                      />
-                    )}
-                  </Field>
-                </div>
+
 
                 {/* Bloque / Torre (opcional) */}
                 <div className="col-span-2">
@@ -199,6 +186,21 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                         disabled={!isApartment}
                         onInput={(e: any) => input.onChange(Number(e.currentTarget.value))}
                         value={typeof input.value === 'number' ? input.value : (isApartment ? '' : 0)}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* Número de casa / apartamento */}
+                <div className="col-span-2">
+                  <Field<string> name="houseNumber" validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder="user.residence.placeholder.houseNumber"
+                        label="user.residence.form.houseNumber"
+                        type="text"
+                        meta={meta}
                       />
                     )}
                   </Field>
