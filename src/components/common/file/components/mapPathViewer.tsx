@@ -31,7 +31,7 @@ const MapPathViewer = ({ src }: { src: string }) => {
           action: value.e.e,
         } as RoutePoint;
       });
-      if(points.value.length === 0) {
+      if (points.value.length === 0) {
         message.value = 'No hay datos de ruta disponibles';
       }
     } catch (error) {
@@ -44,9 +44,9 @@ const MapPathViewer = ({ src }: { src: string }) => {
       posterSpan={<span className='vox-icon vx-icon-321 px-3' />}
       infoExpanded={
         points.value.length > 0 ? (
-          <MapPath route={points.value} width='80%' />
+          <MapPath route={points.value} width='100%' />
         ) : (
-          <div className="flex items-center justify-center h-64 bg-gray-100 rounded-lg">
+          <div className='flex items-center justify-center h-64 bg-gray-100 rounded-lg'>
             <span>{message.value}</span>
           </div>
         )
