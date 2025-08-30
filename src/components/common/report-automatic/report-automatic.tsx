@@ -66,7 +66,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   }, []);
 
   const getFormatOptions = () => {
-    if (modules !== modulesReport.Memo) {
+    if (modules == modulesReport.Form) {
       checkListSelected.value = SelectCheckType.INTERNO;
       return;
     }
