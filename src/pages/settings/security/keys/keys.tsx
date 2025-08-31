@@ -62,12 +62,7 @@ export const KeysSettingPage: FunctionalComponent = () => {
           onClick={createKey}
         />
       </div>
-      <Table
-        data={keys.value}
-        columns={columns}
-        loading={loading.value}
-        unsettings
-      />
+      <Table data={keys.value} columns={columns} loading={loading.value} />
     </Section>
   );
 };

@@ -9,11 +9,12 @@ export const columns: ColumnDef<IWebhookResponse>[] = [
     size: 20,
   },
   {
-    id: 'url',
-    accessorKey: 'url',
+    id: 'webhook',
+    accessorKey: 'webhook',
     header: 'h_url',
     size: 30,
   },
+  /*
   {
     id: 'events',
     accessorKey: 'events',
@@ -21,6 +22,7 @@ export const columns: ColumnDef<IWebhookResponse>[] = [
     size: 20,
     cell: ({ getValue }) => (getValue() as string[]).join(', '),
   },
+  */
   {
     id: 'platform',
     accessorKey: 'platform',

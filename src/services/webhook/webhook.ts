@@ -24,6 +24,6 @@ export class WebhookService extends BaseService {
       url: ['webhook'],
       method: REQUEST_METHODS.GET,
     };
-    return await super.make_request<IWebhookResponse[]>(this.name, model);
+    return await super.make_request<IWebhookResponse>(this.name, model);
   }
 }
