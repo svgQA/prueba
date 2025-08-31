@@ -1,10 +1,14 @@
 import { BaseService } from '@/utils/network';
-import { IMakeRequest, REQUEST_METHODS, VoxServices } from '@/utils/network/types';
+import {
+  IMakeRequest,
+  REQUEST_METHODS,
+  VoxServices,
+} from '@/utils/network/types';
 import { IKeyResponse } from '@/types/key/key.response';
 import { ICreateKeyRequest } from '@/types/key/key.request';
 
 export class KeyService extends BaseService {
-  static name: VoxServices = 'key';
+  static name: VoxServices = 'shift';
 
   static async create(data: ICreateKeyRequest) {
     const model: IMakeRequest = {
@@ -19,6 +23,6 @@ export class KeyService extends BaseService {
     const model: IMakeRequest = {
       url: ['key'],
     };
-    return await super.make_request<IKeyResponse[]>(this.name, model);
+    return await super.make_request<IKeyResponse>(this.name, model);
   }
 }
