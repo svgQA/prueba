@@ -75,6 +75,7 @@ import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
 import { ResourceMemoSettingPage } from './memo/resource/resource';
 import { FormReportSettingPage } from './forms/report/report';
 import ReportUpsertForm from './forms/report/components/report.upsert.form';
+import { WebHookSettingPage } from './general/webhook/webhook';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -109,6 +110,12 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.setting.user.to}
           component={lazy(() => Promise.resolve({ default: UserSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.webhook.to}
+          component={lazy(() =>
+            Promise.resolve({ default: WebHookSettingPage })
+          )}
         />
         <Route
           // userCreate
