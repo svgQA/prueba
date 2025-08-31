@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { getColumns } from './components/correspondence.columns';
 import { ICorrespondence } from '@/types/access';
 import { CorrespondenceForm } from './components/upsert.form';
+import { modulesReport } from '@/types/form';
 
 export const CorrespondencePage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -176,6 +177,7 @@ export const CorrespondencePage: FunctionalComponent = () => {
           // expandable={(row: ICorrespondence) => (
           //   <ExpandableCorrespondence row={row} />
           // )}
+          modules={modulesReport.Correspondence}
         />
       </div>
 

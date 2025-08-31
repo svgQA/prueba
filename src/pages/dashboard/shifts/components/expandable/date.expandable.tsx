@@ -239,7 +239,7 @@ const ShiftCard = ({
   file,
   disabled,
   onCheck,
-  resource
+  resource,
 }: IShiftCardProps) => {
   const { t } = useTranslation();
 
@@ -267,8 +267,8 @@ const ShiftCard = ({
       showAlert({
         title: t('i_location_title'),
         message: t('i_location_message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error('s_gps_error');
@@ -359,14 +359,14 @@ const ShiftCard = ({
                 <p className='font-semibold'>{t('h_distance')}</p>
                 <p>{(Number(distance) / 1000).toFixed(2)} Km</p>
               </div>
-
-              {resource && (
-                <div className='max-w-80 flex justify-center'>
-                  <ShowFiles resources={resource} />
-                </div>
-              )}
             </div>
           </div>
+
+          {resource && (
+            <div className='flex flex-col items-center mr-4 w-full'>
+              <ShowFiles resources={resource} />
+            </div>
+          )}
 
           <Button
             label={btnLabel}
@@ -377,7 +377,7 @@ const ShiftCard = ({
                 title: btnLabel,
                 message: `${t('s_message')} ${btnLabel}?`,
                 onConfirm: () => handleCheck(),
-                onCancel: () => { },
+                onCancel: () => {},
               })
             }
             name={btnLabel}
@@ -386,9 +386,9 @@ const ShiftCard = ({
       </div>
 
       {/* Columna derecha - Mapa */}
-      <div className='flex-1 w-full max-h-96 overflow-hidden'>
+      <div className='flex-1 w-full max-h-[44vh] overflow-hidden'>
         <MapLibrePointsMap
-          sendPoints={() => { }}
+          sendPoints={() => {}}
           name='Map'
           center={{
             lat: lat,
@@ -409,9 +409,9 @@ const ShiftCard = ({
           radialPoint={null}
           errorRadialPoint=''
           radius={50}
-          draggable={true}
+          draggable={false}
           width='100%'
-          clickPoint={() => { }}
+          clickPoint={() => {}}
         />
       </div>
     </div>
