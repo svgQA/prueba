@@ -16,6 +16,7 @@ import { VideoPlayer } from './components/VideoPlayer';
 import MapViewer from './components/mapViewer';
 import MapPathViewer from './components/mapPathViewer';
 import { fileManager } from '@/utils/network/file/file';
+import { SvgViewer } from './components/svg.viewer';
 
 const showFiles = ({
   resources = [],
@@ -23,6 +24,7 @@ const showFiles = ({
   removeFile,
   mapPoint,
   disabled,
+  svg,
 }: ShowFilesProps) => {
   const { getTenant, getCompanyId } = useUserStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -138,6 +140,10 @@ const showFiles = ({
           disabled={!showRight}
         ></Button>
       )}
+      {typeof svg === 'string' &&
+        svg.trim() !== '' &&
+        svg.includes('<svg') && <SvgViewer src={svg} />
+      }
     </div>
   );
 };

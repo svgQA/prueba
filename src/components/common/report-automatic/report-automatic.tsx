@@ -66,7 +66,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   }, []);
 
   const getFormatOptions = () => {
-    if (modules !== modulesReport.Memo) {
+    if (modules == modulesReport.Form) {
       checkListSelected.value = SelectCheckType.INTERNO;
       return;
     }
@@ -164,7 +164,9 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     const headers: Record<modulesReport, string> = {
       [modulesReport.Memo]: t('t_memorandum'),
       [modulesReport.Shift]: t('t_shift'),
-      [modulesReport.Form]: t('t_form'),
+      [modulesReport.Form]: t('t_inspect'),
+      [modulesReport.Access]: t('t_access'),
+      [modulesReport.Correspondence]: t('t_inbox'),
     };
     const header = headers[modules];
     if (startDate && endDate)
