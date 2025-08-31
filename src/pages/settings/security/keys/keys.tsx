@@ -10,6 +10,7 @@ import { columns } from './keys.columns';
 import { KeyService } from '@/services';
 import { IKeyResponse } from '@/types/key/key.response';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { useUserStore } from '@/store/slices';
 
 export const KeysSettingPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -17,10 +18,13 @@ export const KeysSettingPage: FunctionalComponent = () => {
   const keys = useSignal<IKeyResponse[]>([]);
   const loading = useSignal(false);
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
     document.title = t('p_key');
-    fetchKeys();
-  }, []);
+    if (selectedCompany) {
+      fetchKeys();
+    }
+  }, [selectedCompany, location]);
 
   const fetchKeys = async () => {
     loading.value = true;
