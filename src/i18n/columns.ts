@@ -123,6 +123,9 @@ export const columns_es = {
   h_feed: 'Feed',
   h_not_connected: 'No conectado',
   h_filter_date: 'Filtrar por fecha',
+  h_resident: 'Residente',
+  h_visit: 'Visitante',
+  h_plate: 'Placa',
 };
 
 export const columns_en = {
@@ -250,4 +253,7 @@ export const columns_en = {
   h_feed: 'Feed',
   h_not_connected: 'Not connected',
   h_filter_date: 'Filter Date',
+  h_resident: 'Resident',
+  h_visit: 'Visitor',
+  h_plate: 'Plate'
 };

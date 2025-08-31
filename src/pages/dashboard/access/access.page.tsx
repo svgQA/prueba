@@ -18,6 +18,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/sse/event.bus';
 import { IAccess } from '@/types/access/accesses';
+import { modulesReport } from '@/types/form';
 
 export const AccessPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -172,6 +173,7 @@ export const AccessPage: FunctionalComponent = () => {
             id: false,
             updatedAt: false,
           }}
+          modules={modulesReport.Access}
         />
       </div>
 

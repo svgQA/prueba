@@ -16,135 +16,162 @@ export const getColumns = (
     action: ROW_ACTIONS;
   }) => void
 ): ColumnDef<IAccess>[] => [
-  {
-    id: 'id',
-    accessorKey: 'id',
-    size: 60,
-    header: 'h_id',
-  },
-  {
-    id: 'name',
-    accessorKey: 'name',
-    size: 180,
-    header: 'h_name',
-    enableGrouping: true,
-  },
-  {
-    id: 'ingreso',
-    accessorKey: 'entryType',
-    size: 140,
-    header: 'h_entry_type',
-    cell: (info) => {
-      let entryType = info.getValue() as string;
-      const { plate } = info.row.original;
-      return entryType === 'VEHICLE'
-        ? i18n.t('vehicule') + ' ' + plate
-        : i18n.t('peatonal');
+    {
+      id: 'id',
+      accessorKey: 'id',
+      size: 60,
+      header: 'h_id',
     },
-  },
-  {
-    id: 'houseNumber',
-    accessorKey: 'checkIn.house',
-    size: 140,
-    header: 'h_house_number',
-    enableGrouping: true,
-  },
-  {
-    id: 'personName',
-    accessorKey: 'checkIn.personName',
-    size: 160,
-    header: 'h_person_entry',
-    enableGrouping: true,
-  },
-  {
-    id: 'observations',
-    accessorKey: 'observations',
-    size: 200,
-    header: 'h_observation',
-    cell: (info) => {
-      const observations = info.getValue() as string;
-      return observations ? (
-        <span className='truncate max-w-[180px] block' title={observations}>
-          {observations}
-        </span>
-      ) : (
-        <span className='text-gray-400'>-</span>
-      );
+    {
+      id: 'name',
+      accessorKey: 'name',
+      size: 180,
+      header: 'h_resident',
+      enableGrouping: true,
     },
-  },
-  {
-    id: 'signature',
-    accessorKey: 'checkIn.signature',
-    size: 100,
-    header: 'h_signature',
-    cell: (info) => {
-      const signature = info.getValue() as string;
-      return signature ? (
-        <span className='text-green-600'>✓ {i18n.t('yes')}</span>
-      ) : (
-        <span className='text-gray-400'>✗ {i18n.t('no')}</span>
-      );
+    {
+      id: 'personName',
+      accessorKey: 'checkIn.personName',
+      size: 160,
+      // header: 'h_person_entry',
+      header: 'h_visit',
+      enableGrouping: true,
     },
-  },
-  {
-    id: 'checkIn',
-    accessorKey: 'checkIn.time',
-    size: 140,
-    header: 'h_check_in',
-    cell: (info) => {
-      return (
-        <FormattedDate date={info.getValue() as string} format='datetime' />
-      );
+    {
+      id: 'ingreso',
+      accessorKey: 'entryType',
+      size: 140,
+      header: 'h_entry_type',
+      cell: (info) => {
+        let entryType = info.getValue() as string;
+        return entryType === 'VEHICLE'
+          ? i18n.t('vehicule')
+          : i18n.t('peatonal');
+      },
     },
-  },
-  {
-    id: 'checkOut',
-    accessorKey: 'checkOut.time',
-    size: 140,
-    header: 'h_check_out',
-    cell: (info) => {
-      return (
-        <FormattedDate date={info.getValue() as string} format='datetime' />
-      );
+    {
+      id: 'houseNumber',
+      accessorKey: 'checkIn.house',
+      size: 140,
+      header: 'h_house_number',
+      enableGrouping: true,
     },
-  },
-  {
-    id: 'action',
-    size: 20,
-    header: 'h_action',
-    cell: (info) => {
-      const { id } = info.row.original;
-      const actions: IDropdownAction[] = [
-        // {
-        //   label: 'update',
-        //   icon: 'vox-icon vx-icon-123 text-primary',
-        //   onClick: () => {
-        //     onClickAction({
-        //       id: String(id),
-        //       type: 'form',
-        //       action: ROW_ACTIONS.UPDATE,
-        //     });
-        //   },
-        // },
-        {
-          label: 'delete',
-          icon: 'vox-icon vx-icon-053 text-red-500',
-          color: 'text-red-600',
-          onClick: () => {
-            onClickAction({
-              id: String(id),
-              type: 'form',
-              action: ROW_ACTIONS.DELETE,
-            });
+    {
+      id: 'observations',
+      accessorKey: 'observations',
+      size: 200,
+      header: 'h_observation',
+      cell: (info) => {
+        const observations = info.getValue() as string;
+        return observations ? (
+          <span className='truncate max-w-[180px] block' title={observations}>
+            {observations}
+          </span>
+        ) : (
+          <span className='text-gray-400'>-</span>
+        );
+      },
+    },
+    {
+      id: 'signature',
+      accessorKey: 'checkIn.signature',
+      size: 100,
+      header: 'h_signature',
+      cell: (info) => {
+        const signature = info.getValue() as string;
+        return signature ? (
+          <div
+            className='border rounded bg-white p-2 flex items-center justify-center cursor-pointer hover:bg-gray-50'
+            style={{ width: 60, height: 60 }}
+          >
+            <div
+              style={{ width: '100%', height: '100%' }}
+              dangerouslySetInnerHTML={{ __html: signature }}
+            />
+          </div>
+        ) : (
+          <span className='text-gray-400'>✗ {i18n.t('no')}</span>
+        );
+      },
+    },
+    {
+      id: 'plate',
+      accessorKey: 'plate',
+      size: 100,
+      header: 'h_plate',
+      cell: (info) => {
+        const plate = info.getValue() as string;
+        return (
+          <span className={
+            plate ?
+              'truncate max-w-[180px] block' :
+              'text-gray-400'
+          }
+          >
+            {plate ? plate : `✗ ${i18n.t('no')}`}
+          </span>
+        );
+      },
+    },
+    {
+      id: 'checkIn',
+      accessorKey: 'checkIn.time',
+      size: 140,
+      header: 'h_check_in',
+      cell: (info) => {
+        return (
+          <FormattedDate date={info.getValue() as string} format='datetime' />
+        );
+      },
+    },
+    {
+      id: 'checkOut',
+      accessorKey: 'checkOut.time',
+      size: 140,
+      header: 'h_check_out',
+      cell: (info) => {
+        return (
+          <FormattedDate date={info.getValue() as string} format='datetime' />
+        );
+      },
+    },
+    {
+      id: 'action',
+      size: 20,
+      header: 'h_action',
+      cell: (info) => {
+        const { id } = info.row.original;
+        const actions: IDropdownAction[] = [
+          // {
+          //   label: 'update',
+          //   icon: 'vox-icon vx-icon-123 text-primary',
+          //   onClick: () => {
+          //     onClickAction({
+          //       id: String(id),
+          //       type: 'form',
+          //       action: ROW_ACTIONS.UPDATE,
+          //     });
+          //   },
+          // },
+          {
+            label: 'delete',
+            icon: 'vox-icon vx-icon-053 text-red-500',
+            color: 'text-red-600',
+            onClick: () => {
+              onClickAction({
+                id: String(id),
+                type: 'form',
+                action: ROW_ACTIONS.DELETE,
+              });
+            },
           },
-        },
-      ];
+        ];
 
-      return (
-        <div className='w-full flex justify-center items-center'>
-          <DropdownActionsMenu actions={actions} />
-        </div>
-      );
+        return (
+          <div className='w-full flex justify-center items-center'>
+            <DropdownActionsMenu actions={actions} />
+          </div>
+        );
+      },
     },
-  },
-];
+  ];
