@@ -119,6 +119,9 @@ export const columns_es = {
   h_accessess_subtitle: 'Registros de este mes',
   h_accessess_entered_subtitle: 'Por día',
   h_filter_date: 'Filtrar por fecha',
+  h_resident: 'Residente',
+  h_visit: 'Visitante',
+  h_plate: 'Placa',
 };
 
 export const columns_en = {
@@ -242,4 +245,7 @@ export const columns_en = {
   h_accessess_subtitle: 'Records Created',
   h_accessess_entered_subtitle: 'Per Day',
   h_filter_date: 'Filter Date',
+  h_resident: 'Resident',
+  h_visit: 'Visitor',
+  h_plate: 'Plate'
 };
