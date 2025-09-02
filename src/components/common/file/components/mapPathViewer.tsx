@@ -3,6 +3,7 @@ import Viewer from './viewer';
 import { useSignal } from '@preact/signals';
 import { RoutePoint } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
+import { DateUtils } from '@/utils/utilities/dates';
 
 const MapPathViewer = ({ src }: { src: string }) => {
   const points = useSignal<RoutePoint[]>([]);
@@ -26,9 +27,13 @@ const MapPathViewer = ({ src }: { src: string }) => {
       });
 
       points.value = filteredData.map((value: any) => {
+        let info: Record<string, any> = {};
+        if (value.s && value.s !== 'undefined') info.time = DateUtils.dateFormat(value.s, 'YYYY-MM-DD');
+
         return {
           coords: [value.g, value.t],
           action: value.e.e,
+          info,
         } as RoutePoint;
       });
       if (points.value.length === 0) {
