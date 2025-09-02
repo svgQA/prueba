@@ -13,6 +13,7 @@ import { omitBy, isNull, pick } from 'lodash';
 import { UserService } from '@/services/general/user';
 import { ContractService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
+import { useTranslation } from 'react-i18next';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { DateField } from '@/components/compose/forms/DateField';
@@ -34,6 +35,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
   const { id } = useParams(); // Obtiene el id de la URL
   const users = useSignal<IOption[]>([]);
   const { go } = useNavigation();
+  const { t } = useTranslation();
 
   const onSubmit = async (model: FormData) => {
     let request;
@@ -157,8 +159,8 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                       <Select
                         {...input}
                         meta={meta}
-                        placeholder='Selecione cliente...'
-                        label='Cliente'
+                        placeholder={t('p_select_client')}
+                        label={t('client')}
                         name='Cliente'
                         icon='252'
                         options={users.value}
@@ -198,9 +200,9 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         label='l_priority'
                         icon='252'
                         options={[
-                          { value: 'HIGH', label: 'Alta' },
-                          { value: 'MEDIUM', label: 'Media' },
-                          { value: 'LOW', label: 'Baja' },
+                          { value: 'HIGH', label: t('l_high') },
+                          { value: 'MEDIUM', label: t('l_medium') },
+                          { value: 'LOW', label: t('l_low') },
                         ]}
                       />
                     )}
@@ -215,9 +217,9 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         label='l_status'
                         icon='252'
                         options={[
-                          { value: 'IN_PROGRESS', label: 'En progreso' },
-                          { value: 'COMPLETED', label: 'Compleado' },
-                          { value: 'PENDING', label: 'Pendiente' },
+                          { value: 'IN_PROGRESS', label: t('l_in_progress') },
+                          { value: 'COMPLETED', label: t('COMPLETED') },
+                          { value: 'PENDING', label: t('pending') },
                         ]}
                       />
                     )}

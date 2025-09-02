@@ -55,6 +55,11 @@ export const placeholder_es = {
   p_select_employee: 'Selecione empleado...',
   p_select_service: 'Selecione servicio...',
   p_write_keyword: 'Escribe una palabra clave',
+  p_enter_name: 'Ingrese nombre...',
+  p_enter_description: 'Ingrese descripción...',
+  p_enter_range: 'Ingrese rango...',
+  p_enter_max_time: 'Ingrese tiempo máximo...',
+  p_enter_min_time: 'Ingrese tiempo mínimo...',
 };
 
 export const placeholder_en = {
@@ -114,4 +119,9 @@ export const placeholder_en = {
   p_select_employee: 'Select employee...',
   p_select_service: 'Select service...',
   p_write_keyword: 'Write a keyword',
+  p_enter_name: 'Enter name...',
+  p_enter_description: 'Enter description...',
+  p_enter_range: 'Enter range...',
+  p_enter_max_time: 'Enter maximum time...',
+  p_enter_min_time: 'Enter minimum time...',
 };

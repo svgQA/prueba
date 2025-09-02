@@ -147,7 +147,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                     <Input
                       {...input}
                       type='datetime-local'
-                      label='Fecha inicio'
+                      label={t('date_start')}
                       meta={meta}
                     />
                   )}
@@ -178,7 +178,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                     <Input
                       {...input}
                       type='datetime-local'
-                      label='Fecha fin'
+                      label={t('date_end')}
                       meta={meta}
                     />
                   )}
@@ -196,10 +196,10 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                       name='status'
                       icon='252'
                       options={[
-                        { value: 'CREATED', label: 'l_created' },
-                        { value: 'OPENED', label: 'l_opened' },
-                        { value: 'CLOSED', label: 'l_closed' },
-                        { value: 'RESOLVED', label: 'l_resolved' },
+                        { value: 'CREATED', label: t('CREATED') },
+                        { value: 'OPENED', label: t('OPENED') },
+                        { value: 'CLOSED', label: t('CLOSED') },
+                        { value: 'RESOLVED', label: t('RESOLVED') },
                       ]}
                     />
                   )}
@@ -215,8 +215,8 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                       name='type'
                       icon='252'
                       options={[
-                        { value: 'EXTERNAL', label: 'l_external' },
-                        { value: 'INTERNAL', label: 'l_internal' },
+                        { value: 'EXTERNAL', label: t('EXTERNAL') },
+                        { value: 'INTERNAL', label: t('INTERNAL') },
                       ]}
                     />
                   )}
@@ -228,7 +228,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                     <Select
                       {...input}
                       placeholder='p_select_employee'
-                      label='USER'
+                      label='user'
                       name='employeedId'
                       icon='252'
                       options={users.value}
@@ -292,7 +292,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                             inputKeywords.value = '';
                           }}
                         >
-                          Agregar
+                          {t('add')}
                         </button>
                       </div>
                       <div className='flex flex-wrap gap-2'>
@@ -365,7 +365,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                                       {...input}
                                       type='datetime-local'
                                       id='task-start'
-                                      label='Fecha inicio'
+                                      label={t('date_start')}
                                       meta={meta}
                                     />
                                   )}
@@ -377,18 +377,18 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                                   {({ input }) => (
                                     <Select
                                       {...input}
-                                      placeholder='Selecione tipo...'
-                                      label='Tipo'
+                                      placeholder={t('p_select_type')}
+                                      label={t('type')}
                                       id='task-status'
                                       name='type'
                                       icon='252'
                                       options={[
-                                        { value: 'CREATED', label: 'Creado' },
+                                        { value: 'CREATED', label: t('CREATED') },
                                         {
                                           value: 'RESOLVED',
-                                          label: 'Resuelto',
+                                          label: t('RESOLVED'),
                                         },
-                                        { value: 'CLOSED', label: 'Cerrado' },
+                                        { value: 'CLOSED', label: t('CLOSED') },
                                       ]}
                                     />
                                   )}
@@ -404,8 +404,8 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                                     <TextArea
                                       {...input}
                                       id='task-description'
-                                      placeholder='Ingrese Descripción...'
-                                      label='Descripción'
+                                      placeholder={t('p_enter_description')}
+                                      label={t('description')}
                                       type='text'
                                       meta={meta}
                                     />

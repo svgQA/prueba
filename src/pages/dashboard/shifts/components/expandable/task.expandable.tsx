@@ -30,7 +30,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
   useEffect(() => {
     /* const groupByDate = tasks.reduce(
       (acc, task) => {
-        const date = task.hourStart?.split('T')[0] ?? 'Sin fecha';
+        const date = task.hourStart?.split('T')[0] ?? t('no_date');
         if (!acc[date]) acc[date] = [];
         acc[date].push(task);
         return acc;
@@ -122,7 +122,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
                             onClick={() => toggleDetailsForm(task)}
                             className='absolute bottom-2 right-8 text-xs text-primary underline cursor-pointer'
                           >
-                            {'Formulario'}
+                            {t('form')}
                           </span>
                         )}
                       </div>

@@ -255,5 +255,5 @@ export const columns_en = {
   h_filter_date: 'Filter Date',
   h_resident: 'Resident',
   h_visit: 'Visitor',
-  h_plate: 'Plate'
+  h_plate: 'Plate',
 };

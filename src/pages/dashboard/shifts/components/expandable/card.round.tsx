@@ -35,8 +35,8 @@ export const CardRound = ({ activity }: CardRoundProps) => {
             >
               <span className='vox-icon vx-icon-306 !text-primary mr-1'></span>
               {activity.serviceTask.formId
-                ? `Formulario ${activity.serviceTask.formId}`
-                : 'Sin formulario'}
+                ? `${t('form')} ${activity.serviceTask.formId}`
+                : t('l_no_form')}
               <span className='ml-1 vox-icon vx-icon-004 !text-primary'></span>
             </a> */}
           </div>

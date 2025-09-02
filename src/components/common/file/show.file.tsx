@@ -140,10 +140,9 @@ const showFiles = ({
           disabled={!showRight}
         ></Button>
       )}
-      {typeof svg === 'string' &&
-        svg.trim() !== '' &&
-        svg.includes('<svg') && <SvgViewer src={svg} />
-      }
+      {typeof svg === 'string' && svg.trim() !== '' && svg.includes('<svg') && (
+        <SvgViewer src={svg} />
+      )}
     </div>
   );
 };

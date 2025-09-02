@@ -9,14 +9,12 @@ export const common_es = {
   EXTERNAL: 'Externo',
   CLOSED: 'Cerrado',
   SOLVE: 'Resolver',
-  Baja: 'Baja',
-  Media: 'Media',
-  Alta: 'Alta',
+
   ADMIN: 'Administrador',
   USER: 'Empleado',
   CLIENT: 'Cliente',
   operative: 'Operativo',
-  ADMIND: 'Administrador',
+
   setting: 'Configuración',
   change_password: 'Cambiar Contraseña',
   monday: 'Lunes',
@@ -37,7 +35,7 @@ export const common_es = {
   'Invalid Date': 'No aplicable',
   hide: 'Ocultar',
   show: 'Mostrar',
-  received: 'Recibido',
+
   empty: 'Vacío',
   area: 'Área',
   profile: 'Perfil',
@@ -72,9 +70,7 @@ export const common_en = {
   EXTERNAL: 'External',
   CLOSED: 'Closed',
   SOLVE: 'Solve',
-  Baja: 'Low',
-  Media: 'Medium',
-  Alta: 'High',
+
   from: 'From',
   operative: 'Operative',
   identification: 'Identification',
@@ -86,7 +82,7 @@ export const common_en = {
   ADMIN: 'Administrator',
   USER: 'Employee',
   CLIENT: 'Client',
-  ADMIND: 'Administrator',
+
   setting: 'Settings',
   country: 'Country',
   department: 'Department',
@@ -103,7 +99,7 @@ export const common_en = {
   create: 'Create',
   update: 'Update',
   'Invalid Date': 'Not applicable',
-  received: 'Received',
+
   empty: 'Empty',
   area: 'Area',
   profile: 'Profile',

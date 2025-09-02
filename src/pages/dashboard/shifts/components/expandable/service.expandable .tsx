@@ -91,7 +91,7 @@ const ServiceInfo = ({
         <div className='flex flex-row items-center justify-between mb-3'>
           <h4 className='font-semibold'>{t('h_coverage')}</h4>
           <Badge
-            label={`${'h_radius'}: ${service?.place?.radius || 50}m`}
+            label={`h_radius: ${service?.place?.radius || 50}m`}
             color='primary'
             status='info'
             outline
