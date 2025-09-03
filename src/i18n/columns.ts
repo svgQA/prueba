@@ -18,6 +18,7 @@ export const columns_es = {
   h_contract: 'Contrato',
   h_start: 'Inicio',
   h_end: 'Fin',
+  h_pat: 'Pat',
   h_report: 'Reporte',
   h_round: 'Ronda',
   h_task: 'Tareas',
@@ -125,6 +126,10 @@ export const columns_es = {
   h_filter_date: 'Filtrar por fecha',
   h_resident: 'Residente',
   h_visit: 'Visitante',
+  h_url: 'URL',
+  h_events: 'Eventos',
+  h_platform: 'Plataforma',
+  h_token: 'Token',
   h_plate: 'Placa',
 };
 
@@ -135,6 +140,7 @@ export const columns_en = {
   h_supervisor: 'Supervisor',
   h_created: 'Created',
   h_title: 'Title',
+  h_pat: 'Pat',
   h_id: 'ID',
   h_resource: 'Resources',
   h_distance: 'Distance',
@@ -255,5 +261,9 @@ export const columns_en = {
   h_filter_date: 'Filter Date',
   h_resident: 'Resident',
   h_visit: 'Visitor',
+  h_url: 'URL',
+  h_events: 'Events',
+  h_platform: 'Platform',
+  h_token: 'Token',
   h_plate: 'Plate',
 };
