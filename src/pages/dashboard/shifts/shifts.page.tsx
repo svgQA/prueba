@@ -445,7 +445,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         {/*
         <Button
           name='button-supervision'
-          label={t('shifts.remoteSupervision')}
+          label={t('l_remote_supervision')}
           className='bg-primary text-white py-1 rounded px-4'
           icon='079'
           iconSize='sm'

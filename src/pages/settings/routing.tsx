@@ -75,6 +75,9 @@ import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
 import { ResourceMemoSettingPage } from './memo/resource/resource';
 import { FormReportSettingPage } from './forms/report/report';
 import ReportUpsertForm from './forms/report/components/report.upsert.form';
+import { UserResidencesPage } from '../dashboard/users/residences/user.residences';
+import { ResidenceCreatePage } from '../dashboard/users/residences/residence.create';
+import { WebHookSettingPage } from './general/webhook/webhook';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -109,6 +112,12 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.setting.user.to}
           component={lazy(() => Promise.resolve({ default: UserSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.webhook.to}
+          component={lazy(() =>
+            Promise.resolve({ default: WebHookSettingPage })
+          )}
         />
         <Route
           // userCreate
@@ -448,6 +457,24 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.to}
           component={lazy(() => Promise.resolve({ default: UserAreasPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.residences.to}
+          component={lazy(() =>
+            Promise.resolve({ default: UserResidencesPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.residences.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ResidenceCreatePage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.residences.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ResidenceCreatePage })
+          )}
         />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.users.groups.to}

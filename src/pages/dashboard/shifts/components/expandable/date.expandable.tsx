@@ -409,7 +409,7 @@ const ShiftCard = ({
           radialPoint={null}
           errorRadialPoint=''
           radius={50}
-          draggable={true}
+          draggable={false}
           width='100%'
           clickPoint={() => {}}
         />

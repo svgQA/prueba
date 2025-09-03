@@ -54,6 +54,8 @@ export enum modulesReport {
   Shift = 'Shift',
   Memo = 'Memo',
   Form = 'Form',
+  Access = 'Access',
+  Correspondence = 'Correspondence',
 }
 
 export enum ReportPeriod {
