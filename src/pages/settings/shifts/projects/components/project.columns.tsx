@@ -9,20 +9,20 @@ import { FormattedDate } from '@/components/compose/forms';
 const status: { key: string; label: string; color: string }[] = [
   {
     key: 'IN_PROGRESS',
-    label: 'En progreso',
+    label: 'l_in_progress',
     color: 'info',
   },
-  { key: 'COMPLETED', label: 'Completado', color: 'success' },
-  { key: 'PENDING', label: 'Pendiente', color: 'error' },
+  { key: 'COMPLETED', label: 'COMPLETED', color: 'success' },
+  { key: 'PENDING', label: 'pending', color: 'error' },
 ];
 const priorities: { key: string; label: string; color: string }[] = [
   {
     key: 'LOW',
-    label: 'Baja',
+    label: 'l_low',
     color: 'info',
   },
-  { key: 'MEDIUM', label: 'Media', color: 'warning' },
-  { key: 'HIGH', label: 'Alta', color: 'error' },
+  { key: 'MEDIUM', label: 'l_medium', color: 'warning' },
+  { key: 'HIGH', label: 'l_high', color: 'error' },
 ];
 
 export const columns: ColumnDef<IProject>[] = [

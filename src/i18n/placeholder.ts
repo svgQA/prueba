@@ -51,6 +51,15 @@ export const placeholder_es = {
   p_select_round: 'Seleccione ronda...',
   p_frequency: 'Ingrese frecuencia...',
   p_radius: 'Ingrese radio...',
+  p_mention_placeholder: 'Escribe @ para mencionar a alguien en el turno...',
+  p_select_employee: 'Selecione empleado...',
+  p_select_service: 'Selecione servicio...',
+  p_write_keyword: 'Escribe una palabra clave',
+  p_enter_name: 'Ingrese nombre...',
+  p_enter_description: 'Ingrese descripción...',
+  p_enter_range: 'Ingrese rango...',
+  p_enter_max_time: 'Ingrese tiempo máximo...',
+  p_enter_min_time: 'Ingrese tiempo mínimo...',
 };
 
 export const placeholder_en = {
@@ -106,4 +115,13 @@ export const placeholder_en = {
   p_select_round: 'Select round...',
   p_frequency: 'Enter frequency...',
   p_radius: 'Enter radius...',
+  p_mention_placeholder: 'Write @ to mention someone in the shift...',
+  p_select_employee: 'Select employee...',
+  p_select_service: 'Select service...',
+  p_write_keyword: 'Write a keyword',
+  p_enter_name: 'Enter name...',
+  p_enter_description: 'Enter description...',
+  p_enter_range: 'Enter range...',
+  p_enter_max_time: 'Enter maximum time...',
+  p_enter_min_time: 'Enter minimum time...',
 };

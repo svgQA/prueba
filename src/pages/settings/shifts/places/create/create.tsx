@@ -320,9 +320,12 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             name='type'
                             icon='123'
                             options={[
-                              { value: 'INDUSTRIAL', label: 'Industrial' },
-                              { value: 'RESIDENTIAL', label: 'Residencial' },
-                              { value: 'OTHER', label: 'Otro' },
+                              { value: 'INDUSTRIAL', label: t('l_industrial') },
+                              {
+                                value: 'RESIDENTIAL',
+                                label: t('l_residential'),
+                              },
+                              { value: 'OTHER', label: t('l_other') },
                             ]}
                             meta={meta}
                           />
@@ -338,9 +341,9 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             name='state'
                             icon='123'
                             options={[
-                              { value: 'ACTIVE', label: 'Activo' },
-                              { value: 'INACTIVE', label: 'Inactivo' },
-                              { value: 'UNCER_REVIEW', label: 'Revisión' },
+                              { value: 'ACTIVE', label: t('active') },
+                              { value: 'INACTIVE', label: t('inactive') },
+                              { value: 'UNCER_REVIEW', label: t('l_review') },
                             ]}
                             meta={meta}
                           />

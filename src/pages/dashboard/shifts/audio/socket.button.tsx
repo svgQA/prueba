@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { IJanusSettings, IParticipant } from './interfaces';
 import { Button } from '@/components/common/button/button';
 import { useSignal } from '@preact/signals';
+import { useTranslation } from 'react-i18next';
 
 const myName = `User_${Math.floor(Math.random() * 1000)}`;
 let pendingOfferMap = new Map();
@@ -13,7 +14,7 @@ export interface AudioButtonProps {
 
 export const AudioButton = () => {
   const ref = useRef<HTMLDivElement>(null);
-
+  const { t } = useTranslation();
   const isOpen = useSignal<boolean>(false);
   const [connected, setConnected] = useState<boolean>(false);
   const [room, setRoom] = useState<string | null>(null);
@@ -252,8 +253,12 @@ export const AudioButton = () => {
         ref={ref}
       >
         <div className='flex flex-col justify-between'>
-          <h2>AudioBridge Room: {room || 'Not connected'}</h2>
-          <h3>Participants: {audioStream ? 'SI' : 'NO'}</h3>
+          <h2>
+            {t('h_room')}: {room || t('h_not_connected')}
+          </h2>
+          <h3>
+            {t('h_participants')}: {audioStream ? t('yes') : t('no')}
+          </h3>
         </div>
         {audioStream && (
           <audio
@@ -269,7 +274,7 @@ export const AudioButton = () => {
         <ul>
           {participants.map((participant) => (
             <li key={participant.feed}>
-              {participant.display} (Feed: {participant.feed}){' '}
+              {participant.display} ({t('h_feed')}: {participant.feed}){' '}
             </li>
           ))}
         </ul>
