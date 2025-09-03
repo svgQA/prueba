@@ -31,7 +31,7 @@ const EmployeeInfo = ({
             {employee?.name} {employee?.surname}
           </h3>
           <p>{t('operative')}</p>
-          <Badge label='Activo' status='success' outline />
+          <Badge label='active' status='success' outline />
         </div>
 
         {/* Información Personal */}

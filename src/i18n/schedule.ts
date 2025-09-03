@@ -1,16 +1,8 @@
 export const schedule_es = {
   schedule: {
-    monday: 'Lunes',
-    tuesday: 'Martes',
-    wednesday: 'Miércoles',
-    thursday: 'Jueves',
-    friday: 'Viernes',
-    saturday: 'Sábado',
-    sunday: 'Domingo',
     name: 'Nombre',
     namePlaceholder: 'Ingrese nombre...',
-    save: 'Guardar',
-    edit: 'Editar',
+
     clean: 'Limpiar',
     successEdit: 'Horario editado exitosamente!',
     successCreate: 'Horario creado exitosamente!',
@@ -24,8 +16,7 @@ export const schedule_es = {
     title_scheduled: 'Notificaciones programadas',
     send: 'Envío',
     status: 'Estado',
-    pending: 'Pendiente',
-    sent: 'Enviado',
+
     scheduleNew: 'Programar nueva notificación (visual)',
     titleOverridePlaceholder: 'Título override',
     scheduleButton: 'Programar',
@@ -36,17 +27,9 @@ export const schedule_es = {
 
 export const schedule_en = {
   schedule: {
-    monday: 'Monday',
-    tuesday: 'Tuesday',
-    wednesday: 'Wednesday',
-    thursday: 'Thursday',
-    friday: 'Friday',
-    saturday: 'Saturday',
-    sunday: 'Sunday',
     name: 'Name',
     namePlaceholder: 'Enter name...',
-    save: 'Save',
-    edit: 'Edit',
+
     clean: 'Clean',
     successEdit: 'Schedule updated successfully!',
     successCreate: 'Schedule created successfully!',
@@ -60,8 +43,7 @@ export const schedule_en = {
     title_scheduled: 'Scheduled notifications',
     send: 'Send',
     status: 'Status',
-    pending: 'Pending',
-    sent: 'Sent',
+
     scheduleNew: 'Schedule new notification (visual)',
     titleOverridePlaceholder: 'Title override',
     scheduleButton: 'Schedule',

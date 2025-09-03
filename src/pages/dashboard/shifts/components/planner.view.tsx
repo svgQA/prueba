@@ -83,7 +83,7 @@ export const PlannerView: FunctionalComponent<{
             { name: 'User', options: users },
             { name: 'Service', options: services },
           ]}
-          placeholder='Escribe @ para mencionar a alguien en el turno...'
+          placeholder={t('p_mention_placeholder')}
           className='min-h-[120px]'
         />
         {streamingResponse && (

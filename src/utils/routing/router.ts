@@ -35,6 +35,18 @@ export const PAGES_LIST_ROUTER = {
             to: '/users/areas/update/:id',
           },
         },
+        residences: {
+          base: '/residences',
+          to: '/users/residences',
+          create: {
+            base: '/create',
+            to: '/users/residences/create',
+          },
+          update: {
+            base: '/update',
+            to: '/users/residences/update/:id',
+          },
+        },
         roles: {
           base: '/roles',
           to: '/users/roles',
@@ -248,6 +260,10 @@ export const PAGES_LIST_ROUTER = {
         integration: {
           base: '/integration',
           to: '/setting/integration',
+        },
+        webhook: {
+          base: '/webhook',
+          to: '/setting/webhook',
         },
         voxline: {
           base: '/voxline',
