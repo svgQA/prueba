@@ -99,10 +99,7 @@ const RoundInfo = ({
                 '
               >
                 <div className='flex flex-row justify-between gap-1'>
-                  <Badge
-                    label={`${t('h_point')}: ${point.point}`}
-                    status='info'
-                  />
+                  <Badge label={`${'h_point'}: ${point.point}`} status='info' />
                   <span>
                     {t('h_frequency')}: {frequency}
                   </span>

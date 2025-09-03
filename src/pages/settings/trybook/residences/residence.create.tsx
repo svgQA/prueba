@@ -21,7 +21,7 @@ import { ResidencesService } from '@/services/trybook/residences';
 type ResidenceType = 'HOUSE' | 'APARTMENT';
 
 interface FormData {
-  type?: IOption;              // { value: 'HOUSE'|'APARTMENT', label: string }
+  type?: IOption; // { value: 'HOUSE'|'APARTMENT', label: string }
   houseNumber: string;
   block?: string;
   floor?: number;
@@ -62,16 +62,25 @@ export const ResidenceCreatePage: FunctionComponent = () => {
     const model = req.getOne();
     initialValues.value = {
       type: model.type
-        ? TYPE_OPTIONS.find(o => o.value === model.type) ?? { value: model.type, label: model.type }
+        ? (TYPE_OPTIONS.find((o) => o.value === model.type) ?? {
+            value: model.type,
+            label: model.type,
+          })
         : undefined,
       houseNumber: model.houseNumber,
       block: model.block ?? '',
       floor: typeof model.floor === 'number' ? model.floor : undefined,
       placeId: model.placeId
-        ? { value: model.placeId, label: model.place?.name ?? String(model.placeId) }
+        ? {
+            value: model.placeId,
+            label: model.place?.name ?? String(model.placeId),
+          }
         : undefined,
       userId: model.userId
-        ? { value: model.userId, label: model.user?.name ?? String(model.userId) }
+        ? {
+            value: model.userId,
+            label: model.user?.name ?? String(model.userId),
+          }
         : undefined,
     };
   }, [uuid]);
@@ -97,7 +106,9 @@ export const ResidenceCreatePage: FunctionComponent = () => {
       block: model.block?.trim() || undefined,
       floor:
         (model.type?.value as ResidenceType) === 'APARTMENT'
-          ? Number.isFinite(model.floor) ? Number(model.floor) : 0
+          ? Number.isFinite(model.floor)
+            ? Number(model.floor)
+            : 0
           : 0,
       placeId: Number(model.placeId?.value),
       userId: Number(model.userId?.value),
@@ -120,7 +131,7 @@ export const ResidenceCreatePage: FunctionComponent = () => {
   };
 
   return (
-    <Section className="p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design">
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -129,19 +140,23 @@ export const ResidenceCreatePage: FunctionComponent = () => {
           const isApartment = values.type?.value === 'APARTMENT';
 
           return (
-            <form onSubmit={handleSubmit} className="space-y-6" id="form-residence-create">
+            <form
+              onSubmit={handleSubmit}
+              className='space-y-6'
+              id='form-residence-create'
+            >
               <StatusButton
                 onClickClean={() => form.reset()}
                 submitting={submitting || loading.value}
                 pristine={pristine}
-                form="form-residence-create"
+                form='form-residence-create'
                 label={uuid ? 'edit' : 'save'}
               />
 
-              <div className="grid grid-cols-4 gap-2">
+              <div className='grid grid-cols-4 gap-2'>
                 {/* Tipo */}
-                <div className="col-span-2">
-                  <Field<IOption> name="type" validate={required}>
+                <div className='col-span-2'>
+                  <Field<IOption> name='type' validate={required}>
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
@@ -157,11 +172,9 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                   </Field>
                 </div>
 
-
-
                 {/* Bloque / Torre (opcional) */}
-                <div className="col-span-2">
-                  <Field<string> name="block">
+                <div className='col-span-2'>
+                  <Field<string> name='block'>
                     {({ input, meta }) => (
                       <Input
                         {...input}
@@ -175,8 +188,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                 </div>
 
                 {/* Piso (solo aplica si es APARTMENT) */}
-                <div className="col-span-2">
-                  <Field<number> name="floor">
+                <div className='col-span-2'>
+                  <Field<number> name='floor'>
                     {({ input, meta }) => (
                       <Input
                         {...input}
@@ -185,16 +198,24 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                         type="number"
                         meta={meta}
                         disabled={!isApartment}
-                        onInput={(e: any) => input.onChange(Number(e.currentTarget.value))}
-                        value={typeof input.value === 'number' ? input.value : (isApartment ? '' : 0)}
+                        onInput={(e: any) =>
+                          input.onChange(Number(e.currentTarget.value))
+                        }
+                        value={
+                          typeof input.value === 'number'
+                            ? input.value
+                            : isApartment
+                              ? ''
+                              : 0
+                        }
                       />
                     )}
                   </Field>
                 </div>
 
                 {/* Número de casa / apartamento */}
-                <div className="col-span-2">
-                  <Field<string> name="houseNumber" validate={required}>
+                <div className='col-span-2'>
+                  <Field<string> name='houseNumber' validate={required}>
                     {({ input, meta }) => (
                       <Input
                         {...input}
@@ -208,8 +229,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                 </div>
 
                 {/* Lugar */}
-                <div className="col-span-2">
-                  <Field<IOption> name="placeId" validate={required}>
+                <div className='col-span-2'>
+                  <Field<IOption> name='placeId' validate={required}>
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
@@ -226,8 +247,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                 </div>
 
                 {/* Usuario */}
-                <div className="col-span-2">
-                  <Field<IOption> name="userId" validate={required}>
+                <div className='col-span-2'>
+                  <Field<IOption> name='userId' validate={required}>
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}

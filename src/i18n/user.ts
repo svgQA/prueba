@@ -58,7 +58,7 @@ export const user_es = {
         btnSave: 'Guardar',
         btnUpdate: 'Actualizar',
         type: 'Tipo de residencia',
-        floor: 'Piso'
+        floor: 'Piso',
       },
       placeholder: {
         houseNumber: 'Ingrese el número de la casa...',
@@ -66,7 +66,7 @@ export const user_es = {
         place: 'Seleccione el conjunto...',
         user: 'Seleccione el usuario...',
         type: 'Seleccione el tipo...',
-        floor: 'Ingrese el Piso...'
+        floor: 'Ingrese el Piso...',
       },
     },
     cards: {
@@ -177,7 +177,7 @@ export const user_en = {
         description: 'Description',
         btnSave: 'Save',
         btnUpdate: 'Update',
-        type: 'Type of residence'
+        type: 'Type of residence',
       },
       placeholder: {
         name: 'Enter the area name...',
@@ -214,7 +214,7 @@ export const user_en = {
         user: 'User',
         btnSave: 'Save',
         btnUpdate: 'Update',
-        floor: 'Floor'
+        floor: 'Floor',
       },
       placeholder: {
         houseNumber: 'Enter the house number...',
@@ -222,7 +222,7 @@ export const user_en = {
         place: 'Select the place...',
         user: 'Select the user...',
         type: 'Select the type...',
-        floor: 'Enter the floor...'
+        floor: 'Enter the floor...',
       },
     },
     cards: {

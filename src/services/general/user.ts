@@ -1,7 +1,9 @@
 import { type IOption } from '@/components/common/multi/interface';
 import { type IPagination } from '@/types';
 import { type IUserRequest, type IUserResponse } from '@/types/auth';
-import { IUserResidenceRequest, type IUserAreaRequest } from '@/types/user/user.request';
+import {
+  type IUserAreaRequest,
+} from '@/types/user/user.request';
 
 import {
   type IDocumentTypeResponse,

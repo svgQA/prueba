@@ -15,7 +15,7 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.security.keys.base,
       id: 'security:keys:state',
-      show: false,
+      show: true,
     },
     {
       icon: '007',

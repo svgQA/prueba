@@ -72,7 +72,113 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
       }
     };
 
+    // Nueva función para mostrar puntos de la ruta
+    const ensureRoutePoints = () => {
+      const pointsSrc = map.getSource('route-points') as GeoJSONSource | undefined;
+      const pointsData = {
+        type: 'FeatureCollection' as const,
+        features: trail.map((coord, index) => {
+          const routePoint = route[index];
+          return {
+            type: 'Feature' as const,
+            properties: {
+              coordinates: coord,
+              // index: index,
+              action: routePoint?.action,
+              lat: coord[1],
+              lng: coord[0],
+              posicion: index,
+              ...(routePoint?.info || {})
+            },
+            geometry: { 
+              type: 'Point' as const, 
+              coordinates: coord 
+            },
+          };
+        })
+      };
+      
+      if (!pointsSrc) {
+        map.addSource('route-points', { type: 'geojson', data: pointsData });
+        map.addLayer({
+          id: 'route-points-layer',
+          type: 'circle',
+          source: 'route-points',
+          paint: {
+            'circle-radius': 6, // Aumentado de 4 a 6 para hacer más fácil el clic
+            'circle-color': '#ffffff',
+            'circle-stroke-color': '#000000',
+            'circle-stroke-width': 2,
+            'circle-opacity': 0.9,
+          },
+        });
+
+        // Agregar evento de clic en los puntos - Corregido el tipo
+        map.on('click', 'route-points-layer', (e: any) => {
+          if (e.features && e.features.length > 0) {
+            const feature = e.features[0];
+            const geometry = feature.geometry as { type: 'Point'; coordinates: number[] };
+            const coordinates = geometry.coordinates.slice();
+            const { 
+              lat, 
+              lng, 
+              action, 
+              // index, 
+              coordinates: _, 
+              ...info 
+            } = feature.properties;
+
+            // Asegurar que el popup aparezca en la coordenada correcta
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+              coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            // Generar HTML dinámico para todas las propiedades de info
+            const infoHTML = info && typeof info === 'object' && Object.keys(info).length > 0
+              ? Object.entries(info)
+                  .map(([key, value]) => `<div><strong>${key}:</strong> ${value}</div>`)
+                  .join('')
+              : '';
+
+            new maplibregl.Popup({ closeOnClick: true, closeButton: true })
+              .setLngLat(coordinates as [number, number])
+              .setHTML(`
+                <div style="padding: 8px; font-family: system-ui, sans-serif;">
+                  <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">Punto 
+                  ${
+                    //index + 1
+                    action
+                  }
+                  </h4>
+                  <div style="font-size: 12px; line-height: 1.4;">
+                    <div><strong>Latitud:</strong> ${lat.toFixed(6)}</div>
+                    <div><strong>Longitud:</strong> ${lng.toFixed(6)}</div>
+                    ${infoHTML}
+                  </div>
+                </div>
+              `)
+              .addTo(map);
+          } else {
+            console.log('No features found in click event');
+          }
+        });
+
+        // Cambiar cursor cuando se pasa por encima de los puntos - Corregido el tipo
+        map.on('mouseenter' as any, 'route-points-layer', () => {
+          map.getCanvas().style.cursor = 'pointer';
+        });
+
+        map.on('mouseleave' as any, 'route-points-layer', () => {
+          map.getCanvas().style.cursor = '';
+        });
+
+      } else {
+        pointsSrc.setData(pointsData);
+      }
+    };
+
     ensureTrail();
+    ensureRoutePoints();
 
     let stopped = false;
     const tick = () => {
@@ -83,6 +189,7 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
       const next = route[i].coords;
       trail = [...trail, next];
       ensureTrail();
+      ensureRoutePoints();
 
       // mover marcador
       currentMarker.setLngLat(next);
@@ -123,6 +230,21 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
       stop: () => {
         stopped = true;
         currentMarker.remove();
+        
+        // Limpiar eventos y capas de puntos al parar
+        if (map.getLayer('route-points-layer')) {
+          map.removeLayer('route-points-layer');
+        }
+        if (map.getSource('route-points')) {
+          map.removeSource('route-points');
+        }
+        // Limpiar capa de línea al parar
+        if (map.getLayer('route-trail-line')) {
+          map.removeLayer('route-trail-line');
+        }
+        if (map.getSource('route-trail')) {
+          map.removeSource('route-trail');
+        }
       },
     };
   };

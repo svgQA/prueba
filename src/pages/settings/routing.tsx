@@ -81,6 +81,7 @@ import { TrybookCommonZonesPage } from './trybook/commonzone/trybook.comonzone';
 import { CommonZoneCreatePage } from './trybook/commonzone/comonzone.create';
 import { CommonSlotCreatetPage } from './trybook/commonslot/commonslot.create';
 import { TrybookCommonSlotsPage } from './trybook/commonslot/trybook.commonslot';
+import { WebHookSettingPage } from './general/webhook/webhook';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -115,6 +116,12 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.setting.user.to}
           component={lazy(() => Promise.resolve({ default: UserSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.setting.webhook.to}
+          component={lazy(() =>
+            Promise.resolve({ default: WebHookSettingPage })
+          )}
         />
         <Route
           // userCreate
