@@ -83,10 +83,11 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
             type: 'Feature' as const,
             properties: {
               coordinates: coord,
-              index: index,
+              // index: index,
               action: routePoint?.action,
               lat: coord[1],
               lng: coord[0],
+              posicion: index,
               ...(routePoint?.info || {})
             },
             geometry: { 

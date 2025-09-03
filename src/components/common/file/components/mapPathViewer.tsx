@@ -28,7 +28,7 @@ const MapPathViewer = ({ src }: { src: string }) => {
 
       points.value = filteredData.map((value: any) => {
         let info: Record<string, any> = {};
-        if (value.s && value.s !== 'undefined') info.time = DateUtils.dateFormat(value.s, 'YYYY-MM-DD');
+        if (value.s && value.s !== 'undefined') info.tiempo = DateUtils.dateFormat(value.s, 'YYYY-MM-DD HH:mm:ss');
 
         return {
           coords: [value.g, value.t],
