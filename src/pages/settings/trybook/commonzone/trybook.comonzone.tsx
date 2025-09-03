@@ -1,8 +1,7 @@
-// UserResidencesPage.tsx
+// CommonZonesPage.tsx
 import { Table } from '@/components/common/table/table';
 import { FunctionComponent } from 'preact';
-import { columns } from './residence.columns';
-import { UserService } from '@/services/general/user';
+import { columns } from './comonzone.columns';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { ToastManager } from '@/utils/toast/toast-manager';
@@ -12,8 +11,9 @@ import { useTranslation } from 'react-i18next';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { CommonZoneService } from '@/services/trybook/commonzone';
 
-export const UserResidencesPage: FunctionComponent = () => {
+export const TrybookCommonZonesPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const rows = useSignal<any[]>([]);
   const loading = useSignal<boolean>(false);
@@ -21,7 +21,7 @@ export const UserResidencesPage: FunctionComponent = () => {
   const { selectedCompany } = useUserStore();
 
   useEffect(() => {
-    document.title = t('p_residence');
+    document.title = t('p_common_zone');
   }, [t]);
 
   useEffect(() => {
@@ -30,23 +30,24 @@ export const UserResidencesPage: FunctionComponent = () => {
 
   const fetchRows = async () => {
     loading.value = true;
-    const res = await UserService.getResidences();
+    const res = await CommonZoneService.getCommonZones();
+    console.log(res);
     if (res.getStatus()) rows.value = res.getMany();
     loading.value = false;
   };
 
-  const deleteRow = async (uuid: string) => {
-    const req = await UserService.deleteResidence(uuid);
+  const deleteRow = async (id: number) => {
+    const req = await CommonZoneService.deleteCommonZone(id);
     if (!req.getStatus()) return;
     ToastManager.success('s_deleted_success');
     fetchRows();
   };
 
-  const editRow = (uuid: string) => {
+  const editRow = (id: number) => {
     go({
-      to: `/users/residences/update/${uuid}`,
+      to: `/trybook/commonzone/update/${id}`,
       label: 'edit',
-      id: 'users:residences:state:update',
+      id: 'trybook:commonzones:state:update',
       base: 'setting',
     });
   };
@@ -54,13 +55,13 @@ export const UserResidencesPage: FunctionComponent = () => {
   const handleOnClick = async (action: IRowAction | any) => {
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
-        editRow(action.id as string);
+        editRow(action.id as number);
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: t('user.residence.showAlert.title'),
-          message: t('user.residence.showAlert.msg'),
-          onConfirm: () => deleteRow(action.id as string),
+          title: t('commonZone.showAlert.title'),
+          message: t('commonZone.showAlert.msg'),
+          onConfirm: () => deleteRow(action.id as number),
           onCancel: () => {},
         });
         break;

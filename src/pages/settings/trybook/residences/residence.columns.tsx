@@ -6,7 +6,7 @@ import { ButtonAction } from '@/components/common/button/column';
 export const columns: ColumnDef<any>[] = [
   {
     id: 'residence',
-    header: 'user.residence.table.residence',
+    header: 'trybook.residence.table.residence',
     size: 320,
     cell: (info) => {
       const r = info.row.original as any;
@@ -19,7 +19,7 @@ export const columns: ColumnDef<any>[] = [
   },
   {
     id: 'owner',
-    header: 'user.residence.table.owner',
+    header: 'trybook.residence.table.owner',
     size: 240,
     cell: (info) => {
       const u = (info.row.original as any).user;
@@ -29,7 +29,7 @@ export const columns: ColumnDef<any>[] = [
   },
   {
     id: 'place',
-    header: 'user.residence.table.place',
+    header: 'trybook.residence.table.place',
     size: 220,
     cell: (info) => {
       const row = info.row.original as any;

@@ -23,15 +23,6 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '328',
-      label: 'm_residence',
-      description: 'd_residence',
-      base,
-      to: PAGES_LIST_ROUTER.dashboard.setting.users.residences.base,
-      id: 'user:residences:state',
-      show: true,
-    },
-    {
       icon: '190',
       label: 'm_role',
       description: 'd_role',
