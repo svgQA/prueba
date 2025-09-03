@@ -61,7 +61,6 @@ export const page_en = {
   p_iot: 'TY IoT',
   p_channel: 'TY Channel',
   p_novelty: 'TY Novelty',
-  p_service: 'TY Sevices',
   // p_predefined: 'TY Predefined',
   p_predefined: 'TY Actions',
   p_programmed: 'TY Programed',
@@ -78,6 +77,7 @@ export const page_en = {
   p_round: 'TY Rounds',
   p_schedule: 'TY Schedules',
   p_task: 'TY Tasks',
+  p_service: 'TY Services',
   p_password: 'TY Change Password',
   p_smart_group: 'TY Smart Groups',
 };

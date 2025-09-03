@@ -81,7 +81,7 @@ export const ShiftSettingPage: FunctionComponent = () => {
         initialValues={initialValues.value}
         validate={(values) => {
           const errors: Partial<any> = {};
-          if (!values.name) errors.name = 'Campo obligatorio';
+          if (!values.name) errors.name = t('l_required_field');
 
           return errors;
         }}
@@ -91,15 +91,17 @@ export const ShiftSettingPage: FunctionComponent = () => {
             className='space-y-6'
             id='form-settings-shifts'
           >
-            <h2 className='text-lg font-bold'>Configuración General</h2>
+            <h2 className='text-lg font-bold'>
+              {t('l_general_configuration')}
+            </h2>
             <div className='grid grid-cols-1 gap-3'>
               <div className='col-span-3'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      label='Nombre'
-                      placeholder='Ingrese nombre...'
+                      label='name'
+                      placeholder='p_enter_name'
                       type='text'
                       meta={meta}
                     />
@@ -107,15 +109,17 @@ export const ShiftSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
             </div>
-            <h2 className='text-lg font-bold'>Configuración de Check-in</h2>
+            <h2 className='text-lg font-bold'>
+              {t('l_checkin_configuration')}
+            </h2>
             <div className='grid grid-cols-2 gap-3'>
               <div className='col-span-1'>
                 <Field<string> name='time_checkin_min'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      label='Rango mínimo de verificación'
-                      placeholder='Ingrese rango...'
+                      label='l_min_verification_range'
+                      placeholder='p_enter_range'
                       type='number'
                       min='0'
                       value={input.value}
@@ -130,8 +134,8 @@ export const ShiftSettingPage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      label='Tiempo máximo de verificación'
-                      placeholder='Ingrese tiempo máximo...'
+                      label='l_max_verification_time'
+                      placeholder='p_enter_max_time'
                       type='number'
                       min='0'
                       value={input.value}
@@ -141,15 +145,17 @@ export const ShiftSettingPage: FunctionComponent = () => {
                 </Field>
               </div>
             </div>
-            <h2 className='text-lg font-bold'>Configuración de Check-out</h2>
+            <h2 className='text-lg font-bold'>
+              {t('l_checkout_configuration')}
+            </h2>
             <div className='grid grid-cols-2 gap-3'>
               <div className='col-span-1'>
                 <Field<string> name='time_checkout_min'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      label='Tiempo mínimo de verificación'
-                      placeholder='Ingrese tiempo mínimo...'
+                      label='l_min_verification_time'
+                      placeholder='p_enter_min_time'
                       type='number'
                       min='0'
                       value={input.value}
@@ -164,8 +170,8 @@ export const ShiftSettingPage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      label='Tiempo máximo de verificación'
-                      placeholder='Ingrese tiempo máximo...'
+                      label='l_max_verification_time'
+                      placeholder='p_enter_max_time'
                       type='number'
                       min='0'
                       value={input.value}
