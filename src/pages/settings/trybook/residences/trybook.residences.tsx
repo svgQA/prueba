@@ -2,7 +2,6 @@
 import { Table } from '@/components/common/table/table';
 import { FunctionComponent } from 'preact';
 import { columns } from './residence.columns';
-import { UserService } from '@/services/general/user';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { ToastManager } from '@/utils/toast/toast-manager';
