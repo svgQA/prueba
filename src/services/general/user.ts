@@ -1,7 +1,10 @@
 import { type IOption } from '@/components/common/multi/interface';
 import { type IPagination } from '@/types';
 import { type IUserRequest, type IUserResponse } from '@/types/auth';
-import { IUserResidenceRequest, type IUserAreaRequest } from '@/types/user/user.request';
+import {
+  IUserResidenceRequest,
+  type IUserAreaRequest,
+} from '@/types/user/user.request';
 
 import {
   type IDocumentTypeResponse,
@@ -191,7 +194,7 @@ export class UserService extends BaseService {
 
   static async createResidence(data: IUserResidenceRequest) {
     const model: IMakeRequest = {
-      url: ['user','residence'],
+      url: ['user', 'residence'],
       method: REQUEST_METHODS.POST,
       data,
     };
@@ -200,7 +203,7 @@ export class UserService extends BaseService {
 
   static async getResidences(params: IPagination = { page: 1, items: 1000 }) {
     const model: IMakeRequest = {
-      url: ['user','residences'],
+      url: ['user', 'residences'],
       params: params as any,
     };
     return await super.make_request<any>(this.name, model);
@@ -208,7 +211,7 @@ export class UserService extends BaseService {
 
   static async getResidence(id: string) {
     const model: IMakeRequest = {
-      url: ['user','residence', String(id)],
+      url: ['user', 'residence', String(id)],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<any>(this.name, model);
@@ -216,7 +219,7 @@ export class UserService extends BaseService {
 
   static async updateResidence(id: string, data: IUserResidenceRequest) {
     const model: IMakeRequest = {
-      url: ['user','residence', String(id)],
+      url: ['user', 'residence', String(id)],
       method: REQUEST_METHODS.PUT,
       data,
     };
@@ -225,7 +228,7 @@ export class UserService extends BaseService {
 
   static async deleteResidence(id: string) {
     const model: IMakeRequest = {
-      url: ['user','residence', String(id)],
+      url: ['user', 'residence', String(id)],
       method: REQUEST_METHODS.DELETE,
     };
     return await super.make_request<any>(this.name, model);

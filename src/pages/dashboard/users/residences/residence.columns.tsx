@@ -13,7 +13,10 @@ export const columns: ColumnDef<any>[] = [
       const type = r.type === 'APARTMENT' ? 'Apto' : 'Casa';
       const hn = r.houseNumber ?? '';
       const blk = r.block ? ` - ${r.block}` : '';
-      const flr = r.type === 'APARTMENT' && r.floor && r.floor > 0 ? ` Piso ${r.floor}` : '';
+      const flr =
+        r.type === 'APARTMENT' && r.floor && r.floor > 0
+          ? ` Piso ${r.floor}`
+          : '';
       return <span>{`${type} ${hn}${flr}${blk}`}</span>;
     },
   },
@@ -46,9 +49,20 @@ export const columns: ColumnDef<any>[] = [
     cell: (info) => {
       const { uuid } = info.row.original as any;
       return (
-        <div className="w-full flex justify-center gap-1">
-          <ButtonAction id={uuid} type="shift" action={ROW_ACTIONS.UPDATE} icon="123" />
-          <ButtonAction id={uuid} type="shift" action={ROW_ACTIONS.DELETE} icon="053" color="!text-red-500" />
+        <div className='w-full flex justify-center gap-1'>
+          <ButtonAction
+            id={uuid}
+            type='shift'
+            action={ROW_ACTIONS.UPDATE}
+            icon='123'
+          />
+          <ButtonAction
+            id={uuid}
+            type='shift'
+            action={ROW_ACTIONS.DELETE}
+            icon='053'
+            color='!text-red-500'
+          />
         </div>
       );
     },

@@ -19,9 +19,9 @@ export interface IUserAreaRequest {
 
 export interface IUserResidenceRequest {
   type?: IOption;
-  houseNumber: string;   // ej. "12B", "101", "T3-402"
-  block?: string;        // opcional: torre/manzana/bloque
-  placeId: number;       // conjunto (Place) al que pertenece
-  userId: number;        // usuario asignado a la casa
+  houseNumber: string; // ej. "12B", "101", "T3-402"
+  block?: string; // opcional: torre/manzana/bloque
+  placeId: number; // conjunto (Place) al que pertenece
+  userId: number; // usuario asignado a la casa
   floor?: number;
 }

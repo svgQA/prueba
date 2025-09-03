@@ -17,6 +17,7 @@ export const description_es = {
   d_template: '',
   d_novelty: '',
   d_create: '',
+  d_webhook: '',
   d_scheduled_reports: '',
 };
 
@@ -39,5 +40,6 @@ export const description_en = {
   d_template: '',
   d_novelty: '',
   d_create: '',
+  d_webhook: '',
   d_scheduled_reports: '',
 };
