@@ -249,6 +249,10 @@ export const PAGES_LIST_ROUTER = {
           base: '/integration',
           to: '/setting/integration',
         },
+        webhook: {
+          base: '/webhook',
+          to: '/setting/webhook',
+        },
         voxline: {
           base: '/voxline',
           to: '/setting/voxline',

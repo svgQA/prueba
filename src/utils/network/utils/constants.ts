@@ -22,4 +22,6 @@ export const VOS_SERVICES = {
   module: default_service_url,
   role: default_service_url,
   access: default_service_url,
+  key: default_service_url,
+  webhook: default_service_url,
 };
