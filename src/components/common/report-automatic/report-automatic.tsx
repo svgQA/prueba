@@ -231,7 +231,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         <ExpandeableContent
           isOpen={isOpen}
           onClose={onClose}
-          width={`min-w-[800px] ${checkListSelected.value !== null ? 'min-h-[460px]' : ''}`}
+          width={`min-w-[800px] ${checkListSelected.value === SelectCheckType.CLIENTE ? 'min-h-[460px]' : ''}`}
           header={
             <h3>
               {modules === modulesReport.Memo
