@@ -40,7 +40,7 @@ export class WebSocketManager {
       },
     });
 
-    this.socket.onOpen(() => console.log('[WS] open'));
+    this.socket.onOpen(() => console.log('[WS] open: ', r));
     this.socket.onError((e: any) => console.warn('[WS] error', e));
     this.socket.onClose(() => console.log('[WS] close'));
 
@@ -121,6 +121,7 @@ export class WebSocketManager {
   }
 
   static add(name: SOCKET_MESSAGE_AREA, callback: (data: any) => void) {
+    console.log(`[WS] Adding listener for area: ${name}`);
     const existing = Array.from(this.listeners).find((l) => l.name === name);
     if (existing) this.listeners.delete(existing);
     this.listeners.add({ name, callback });
