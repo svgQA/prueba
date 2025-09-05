@@ -32,7 +32,7 @@ export const MapLibreShowPoints = ({
       container: mapContainerRef.current,
       style: getMapStyle(),
       center: [center.lng, center.lat],
-      zoom: 12,
+      // zoom: 12,
     });
     const map = mapRef.current;
     map.on('load', () => {
@@ -89,14 +89,14 @@ export const MapLibreShowPoints = ({
       if (radialPoint) {
         bounds.extend([radialPoint.position.lng, radialPoint.position.lat]);
       }
-      mapRef.current.fitBounds(bounds, {
-        padding: 50,
-        maxZoom: 12,
-        duration: 1000,
-      });
+      // mapRef.current.fitBounds(bounds, {
+      //   padding: 50,
+      //   // maxZoom: 12,
+      //   duration: 1000,
+      // });
     } else {
       mapRef.current.setCenter([center.lng, center.lat]);
-      mapRef.current.setZoom(12);
+      // mapRef.current.setZoom(12);
     }
   }, [points, isMapReady, userLocation]);
 

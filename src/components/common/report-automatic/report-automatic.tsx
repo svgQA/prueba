@@ -131,10 +131,10 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       SelectCheckType.CLIENTE && report
       ? ReportService.create_report_automatic(report)
       : ReportService.create_report_automatic_excel({
-        mod: modules,
-        startDate,
-        endDate,
-      }));
+          mod: modules,
+          startDate,
+          endDate,
+        }));
 
     if (reportResponse.getStatus()) {
       const info: any =
@@ -142,16 +142,18 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
           ? reportResponse.getOne()
           : reportResponse.getMany();
       checkListSelected.value === SelectCheckType.CLIENTE
-        ? await fileManager.downloadFile({ url: fileManager.getUrl(getTenant(), getCompanyId(), info) })
+        ? await fileManager.downloadFile({
+            url: fileManager.getUrl(getTenant(), getCompanyId(), info),
+          })
         : await fileManager.generateExcel(
-          [
-            {
-              header: getHeaderExcel(startDate, endDate),
-              data: info,
-            } as IExcelGenerate,
-          ],
-          'report'
-        );
+            [
+              {
+                header: getHeaderExcel(startDate, endDate),
+                data: info,
+              } as IExcelGenerate,
+            ],
+            'report'
+          );
       setIsOpen(false);
       form.reset();
     }
@@ -289,73 +291,79 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                       <div className='py-2 grid grid-cols-2 gap-3'>
                         {checkListSelected.value ===
                           SelectCheckType.CLIENTE && (
-                            <>
+                          <>
+                            <div class='col-span-1'>
+                              <Field<IOption> name='userId'>
+                                {({ input, meta }) => (
+                                  <SmartSelector
+                                    {...input}
+                                    meta={meta}
+                                    id='select-user'
+                                    icon='191'
+                                    label='h_user'
+                                    options={users.value}
+                                    menuPortalTarget={document.body}
+                                    placeholder='p_select'
+                                  />
+                                )}
+                              </Field>
+                            </div>
+                            {modules === modulesReport.Memo && (
                               <div class='col-span-1'>
-                                <Field<IOption> name='userId'>
+                                <Field<IOption> name='priority'>
                                   {({ input, meta }) => (
                                     <SmartSelector
                                       {...input}
                                       meta={meta}
-                                      id='select-user'
+                                      id='select-priority'
                                       icon='191'
-                                      label='h_user'
-                                      options={users.value}
+                                      label='h_priority'
+                                      options={priorities.value}
                                       menuPortalTarget={document.body}
                                       placeholder='p_select'
-                                    />
-                                  )}
-                                </Field>
-                              </div>
-                              {modules === modulesReport.Memo && (
-                                <div class='col-span-1'>
-                                  <Field<IOption> name='priority'>
-                                    {({ input, meta }) => (
-                                      <SmartSelector
-                                        {...input}
-                                        meta={meta}
-                                        id='select-priority'
-                                        icon='191'
-                                        label='h_priority'
-                                        options={priorities.value}
-                                        menuPortalTarget={document.body}
-                                        placeholder='p_select'
-                                        disabled={loading.value}
-                                      />
-                                    )}
-                                  </Field>
-                                </div>
-                              )}
-                              <div className='col-span-1'>
-                                <Field<string> name='title'>
-                                  {({ input, meta }) => (
-                                    <Input
-                                      {...input}
-                                      placeholder='h_title'
-                                      label='h_title'
-                                      meta={meta}
-                                      icon='120'
-                                      type='text'
                                       disabled={loading.value}
                                     />
                                   )}
                                 </Field>
                               </div>
-                              <div className={modules === modulesReport.Memo ? 'col-span-1' : 'col-span-2'}>
-                                <Field<string> name='subtitle'>
-                                  {({ input, meta }) => (
-                                    <Input
-                                      {...input}
-                                      placeholder='h_subtitle'
-                                      label='h_subtitle'
-                                      meta={meta}
-                                      icon='120'
-                                      type='text'
-                                      disabled={loading.value}
-                                    />
-                                  )}
-                                </Field>
-                              </div>
-                              {/*
+                            )}
+                            <div className='col-span-1'>
+                              <Field<string> name='title'>
+                                {({ input, meta }) => (
+                                  <Input
+                                    {...input}
+                                    placeholder='h_title'
+                                    label='h_title'
+                                    meta={meta}
+                                    icon='120'
+                                    type='text'
+                                    disabled={loading.value}
+                                  />
+                                )}
+                              </Field>
+                            </div>
+                            <div
+                              className={
+                                modules === modulesReport.Memo
+                                  ? 'col-span-1'
+                                  : 'col-span-2'
+                              }
+                            >
+                              <Field<string> name='subtitle'>
+                                {({ input, meta }) => (
+                                  <Input
+                                    {...input}
+                                    placeholder='h_subtitle'
+                                    label='h_subtitle'
+                                    meta={meta}
+                                    icon='120'
+                                    type='text'
+                                    disabled={loading.value}
+                                  />
+                                )}
+                              </Field>
+                            </div>
+                            {/*
                               <div className='col-span-2'>
                                 <Field<string> name='description'>
                                   {({ input, meta }) => (
@@ -372,8 +380,8 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                                 </Field>
                               </div>
                               */}
-                            </>
-                          )}
+                          </>
+                        )}
 
                         <div class='col-span-1'>
                           <DateField name='start' label='h_date_start' />
@@ -384,27 +392,27 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
 
                         {checkListSelected.value ===
                           SelectCheckType.CLIENTE && (
-                            <div class='col-span-1'>
-                              {/* Nuevo checkbox para enviar email */}
-                              <div className='col-span-2 flex items-center'>
-                                <Field<boolean> name='sendEmail' type='checkbox'>
-                                  {({ input }) => (
-                                    <label className='flex items-center gap-2'>
-                                      <input
-                                        type='checkbox'
-                                        name={input.name}
-                                        checked={input.checked}
-                                        onChange={input.onChange}
-                                        onBlur={input.onBlur}
-                                        onFocus={input.onFocus}
-                                      />
-                                      {t('¿Enviar email?')}
-                                    </label>
-                                  )}
-                                </Field>
-                              </div>
+                          <div class='col-span-1'>
+                            {/* Nuevo checkbox para enviar email */}
+                            <div className='col-span-2 flex items-center'>
+                              <Field<boolean> name='sendEmail' type='checkbox'>
+                                {({ input }) => (
+                                  <label className='flex items-center gap-2'>
+                                    <input
+                                      type='checkbox'
+                                      name={input.name}
+                                      checked={input.checked}
+                                      onChange={input.onChange}
+                                      onBlur={input.onBlur}
+                                      onFocus={input.onFocus}
+                                    />
+                                    {t('¿Enviar email?')}
+                                  </label>
+                                )}
+                              </Field>
                             </div>
-                          )}
+                          </div>
+                        )}
                       </div>
                     )}
                   </form>

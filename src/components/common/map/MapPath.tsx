@@ -74,7 +74,9 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
 
     // Nueva función para mostrar puntos de la ruta
     const ensureRoutePoints = () => {
-      const pointsSrc = map.getSource('route-points') as GeoJSONSource | undefined;
+      const pointsSrc = map.getSource('route-points') as
+        | GeoJSONSource
+        | undefined;
       const pointsData = {
         type: 'FeatureCollection' as const,
         features: trail.map((coord, index) => {
@@ -88,16 +90,16 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
               lat: coord[1],
               lng: coord[0],
               posicion: index,
-              ...(routePoint?.info || {})
+              ...(routePoint?.info || {}),
             },
-            geometry: { 
-              type: 'Point' as const, 
-              coordinates: coord 
+            geometry: {
+              type: 'Point' as const,
+              coordinates: coord,
             },
           };
-        })
+        }),
       };
-      
+
       if (!pointsSrc) {
         map.addSource('route-points', { type: 'geojson', data: pointsData });
         map.addLayer({
@@ -117,15 +119,18 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
         map.on('click', 'route-points-layer', (e: any) => {
           if (e.features && e.features.length > 0) {
             const feature = e.features[0];
-            const geometry = feature.geometry as { type: 'Point'; coordinates: number[] };
+            const geometry = feature.geometry as {
+              type: 'Point';
+              coordinates: number[];
+            };
             const coordinates = geometry.coordinates.slice();
-            const { 
-              lat, 
-              lng, 
-              action, 
-              // index, 
-              coordinates: _, 
-              ...info 
+            const {
+              lat,
+              lng,
+              action,
+              // index,
+              coordinates: _,
+              ...info
             } = feature.properties;
 
             // Asegurar que el popup aparezca en la coordenada correcta
@@ -134,15 +139,20 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
             }
 
             // Generar HTML dinámico para todas las propiedades de info
-            const infoHTML = info && typeof info === 'object' && Object.keys(info).length > 0
-              ? Object.entries(info)
-                  .map(([key, value]) => `<div><strong>${key}:</strong> ${value}</div>`)
-                  .join('')
-              : '';
+            const infoHTML =
+              info && typeof info === 'object' && Object.keys(info).length > 0
+                ? Object.entries(info)
+                    .map(
+                      ([key, value]) =>
+                        `<div><strong>${key}:</strong> ${value}</div>`
+                    )
+                    .join('')
+                : '';
 
             new maplibregl.Popup({ closeOnClick: true, closeButton: true })
               .setLngLat(coordinates as [number, number])
-              .setHTML(`
+              .setHTML(
+                `
                 <div style="padding: 8px; font-family: system-ui, sans-serif;">
                   <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">Punto 
                   ${
@@ -156,7 +166,8 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
                     ${infoHTML}
                   </div>
                 </div>
-              `)
+              `
+              )
               .addTo(map);
           } else {
             console.log('No features found in click event');
@@ -171,7 +182,6 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
         map.on('mouseleave' as any, 'route-points-layer', () => {
           map.getCanvas().style.cursor = '';
         });
-
       } else {
         pointsSrc.setData(pointsData);
       }
@@ -230,7 +240,7 @@ export const MapPath = ({ width = '400px', height = '80vh', route }: Props) => {
       stop: () => {
         stopped = true;
         currentMarker.remove();
-        
+
         // Limpiar eventos y capas de puntos al parar
         if (map.getLayer('route-points-layer')) {
           map.removeLayer('route-points-layer');

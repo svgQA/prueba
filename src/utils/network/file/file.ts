@@ -6,9 +6,12 @@ import { IPresignedRequest } from '@/types/file';
 import { cdn_service_url } from '@/env.config';
 
 export class fileManager {
-
-  static getUrl(tenantId: string, companyId: string, file: IPresignedRequest): string {
-    return `${cdn_service_url}/${tenantId}/${companyId}/${file.area}/${file.uuid}-${file.name}`
+  static getUrl(
+    tenantId: string,
+    companyId: string,
+    file: IPresignedRequest
+  ): string {
+    return `${cdn_service_url}/${tenantId}/${companyId}/${file.area}/${file.uuid}-${file.name}`;
   }
 
   static async downloadFile(
@@ -150,15 +153,15 @@ export class fileManager {
             row.fill =
               idx % 2 === 0
                 ? {
-                  type: 'pattern',
-                  pattern: 'solid',
-                  fgColor: { argb: 'FFFFFFFF' },
-                }
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FFFFFFFF' },
+                  }
                 : {
-                  type: 'pattern',
-                  pattern: 'solid',
-                  fgColor: { argb: 'FFF2F2F2' },
-                };
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FFF2F2F2' },
+                  };
             currentRow++;
           });
         }
