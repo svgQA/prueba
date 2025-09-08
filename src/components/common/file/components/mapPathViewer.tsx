@@ -15,28 +15,33 @@ const MapPathViewer = ({ src }: { src: string }) => {
     try {
       const response = await fetch(src);
       const data = await response.json();
-      const filteredData = data.filter((value: any) => {
-        return (
-          value?.h !== 'undefined' &&
-          value?.h &&
-          value?.g &&
-          value?.t &&
-          value?.e?.e &&
-          !value?.timestamp
-        );
-      });
 
-      points.value = filteredData.map((value: any) => {
+      if (!data || !Array.isArray(data)) return;
+      const model_data: RoutePoint[] = data.map((tm: any) => {
         let info: Record<string, any> = {};
-        if (value.s && value.s !== 'undefined')
-          info.tiempo = DateUtils.dateFormat(value.s, 'YYYY-MM-DD HH:mm:ss');
-
+        if (tm.s && tm.s !== 'undefined') {
+          info.tiempo = DateUtils.dateFormat(tm.s, 'YYYY-MM-DD HH:mm:ss');
+        }
         return {
-          coords: [value.g, value.t],
-          action: value.e.e,
+          coords: [tm.g, tm.t],
+          action: tm.e.e,
           info,
-        } as RoutePoint;
+        };
       });
+
+      // const filteredData = data.filter((value: any) => {
+      //   return (
+      //     value?.h !== 'undefined' &&
+      //     value?.h &&
+      //     value?.g &&
+      //     value?.t &&
+      //     value?.e?.e &&
+      //     !value?.timestamp
+      //   );
+      // });
+
+      console.log('DATA:', data);
+      points.value = model_data;
       if (points.value.length === 0) {
         message.value = 'No hay datos de ruta disponibles';
       }
