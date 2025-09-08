@@ -120,7 +120,9 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
                           validate={(value) => {
                             if (value && values.end) {
                               const startDate = DateUtils.dateToFrontend(value);
-                              const endDate = DateUtils.dateToFrontend(values.end);
+                              const endDate = DateUtils.dateToFrontend(
+                                values.end
+                              );
 
                               // Normaliza a solo fecha (sin hora)
                               const start = new Date(startDate);
@@ -145,7 +147,9 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
                           // type='date'
                           validate={(value) => {
                             if (value && values.start) {
-                              const startDate = DateUtils.dateToFrontend(values.start);
+                              const startDate = DateUtils.dateToFrontend(
+                                values.start
+                              );
                               const endDate = DateUtils.dateToFrontend(value);
 
                               // Normaliza a solo fecha (sin hora)
