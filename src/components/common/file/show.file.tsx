@@ -1,7 +1,6 @@
 import { IPresignedRequest } from '@/types/file';
 import { ShowFilesProps } from './utils/interface';
 import { useUserStore } from '@/store/slices';
-import { cdn_service_url } from '@/env.config';
 import {
   allowedAudioTypesConst,
   allowedDocumentTypesConst,
@@ -32,8 +31,7 @@ const showFiles = ({
   const [startIdx, setStartIdx] = useState(0);
 
   const getUrl = (file: IPresignedRequest) => {
-    const validation = `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
-    return validation;
+    return fileManager.getUrl(getTenant(), getCompanyId(), file);
   };
 
   useEffect(() => {

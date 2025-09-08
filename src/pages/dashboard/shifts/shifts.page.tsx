@@ -45,7 +45,6 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
-// import { AudioButton } from './audio/socket.button';
 import { getLocation } from '@/utils/utilities/location';
 import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 import { EventBus } from '@/utils/network/sse/event.bus';
@@ -716,7 +715,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         {currentView.value === VIEW_NAME.PLANNER && (
           <PlannerView services={memoizedServices} users={memoizedUsers} />
         )}
-        {currentView.value === VIEW_NAME.MAP && <LiveUserMap />}
+        {currentView.value === VIEW_NAME.MAP && <LiveUserMap unsearch />}
       </div>
 
       <TaskForm
