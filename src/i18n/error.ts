@@ -102,6 +102,8 @@ export const error_en = {
       actionNetwork: 'Retry',
       actionAuthorization: 'Refresh token',
     },
+    invalid_start_date: 'Start date must be before end date',
+    invalid_end_date: 'End date must be after start date',
   },
 };
 
@@ -211,5 +213,7 @@ export const error_es = {
       actionNetwork: 'Reintentar petición',
       actionAuthorization: 'Refrescar token',
     },
+    invalid_start_date: 'La fecha de inicio debe ser menor a la fecha de fin',
+    invalid_end_date: 'La fecha de fin debe ser mayor a la fecha de inicio',
   },
 };
