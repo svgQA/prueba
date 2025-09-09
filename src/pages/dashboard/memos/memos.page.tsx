@@ -43,7 +43,7 @@ import {
   SOCKET_MESSAGE_AREA,
   SOCKET_MESSAGE_EVENTS,
   MessageEvent,
-  MESSAGE_LISTENERS
+  MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
 
 enum VIEW_NAME {
@@ -109,9 +109,16 @@ export const MemosPage: FunctionComponent = () => {
   }, [selectedCompany, location, dateRangeFilters]);
 
   useEffect(() => {
-    WebSocketManager.add(SOCKET_MESSAGE_AREA.MEMOS, handleMessage, MESSAGE_LISTENERS.MEMOS);
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.MEMOS,
+      handleMessage,
+      MESSAGE_LISTENERS.MEMOS
+    );
     return () => {
-      WebSocketManager.remove(SOCKET_MESSAGE_AREA.MEMOS, MESSAGE_LISTENERS.MEMOS);
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.MEMOS,
+        MESSAGE_LISTENERS.MEMOS
+      );
     };
   }, []);
 
@@ -149,7 +156,7 @@ export const MemosPage: FunctionComponent = () => {
     if (name === SOCKET_MESSAGE_EVENTS.CREATE) {
       notificationBannerRef.current?.startBannerAnimation();
     }
-  }
+  };
 
   const fetchInitialData = async (
     rangeFilters?: { [key: string]: [string, string] } | null

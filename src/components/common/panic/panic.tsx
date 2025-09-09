@@ -20,7 +20,7 @@ import {
   SOCKET_MESSAGE_AREA,
   SOCKET_MESSAGE_EVENTS,
   MessageEvent,
-  MESSAGE_LISTENERS
+  MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
 
 const Panic = (_panic: IPanicProps) => {
@@ -40,9 +40,16 @@ const Panic = (_panic: IPanicProps) => {
   }, [selectedCompany]);
 
   useEffect(() => {
-    WebSocketManager.add(SOCKET_MESSAGE_AREA.PANIC, handleMessage, MESSAGE_LISTENERS.PANIC);
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.PANIC,
+      handleMessage,
+      MESSAGE_LISTENERS.PANIC
+    );
     return () => {
-      WebSocketManager.remove(SOCKET_MESSAGE_AREA.PANIC, MESSAGE_LISTENERS.PANIC);
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.PANIC,
+        MESSAGE_LISTENERS.PANIC
+      );
     };
   }, []);
 
@@ -54,9 +61,7 @@ const Panic = (_panic: IPanicProps) => {
 
       if (message.id) {
         notificationBannerRef.current?.startBannerAnimation();
-        const panic = allPanic.value.find(
-          (panic) => panic.id === message.id
-        );
+        const panic = allPanic.value.find((panic) => panic.id === message.id);
         _panic.emitPanic?.(panic as IPanic);
       }
     }

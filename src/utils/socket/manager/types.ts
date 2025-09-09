@@ -4,9 +4,9 @@ export enum SOCKET_MESSAGE_AREA {
   CHAT = 'CHAT',
   PANIC = 'PANIC',
   SHIFTS = 'SHIFTS',
-  ACCESS='ACCESS',
-  CORRESPONDENCE='CORRESPONDENCE',
-  FORM='FORM'
+  ACCESS = 'ACCESS',
+  CORRESPONDENCE = 'CORRESPONDENCE',
+  FORM = 'FORM',
 }
 
 export enum SOCKET_MESSAGE_EVENTS {
@@ -48,5 +48,5 @@ export enum MESSAGE_LISTENERS {
   TRACKING = 'tracking-listener',
   CHAT = 'chat-listener',
   FORM = 'form-listener',
-  MEMO_HISTORY = 'memo-history'
+  MEMO_HISTORY = 'memo-history',
 }

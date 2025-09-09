@@ -26,7 +26,7 @@ import {
   SOCKET_MESSAGE_AREA,
   SOCKET_MESSAGE_EVENTS,
   MessageEvent,
-  MESSAGE_LISTENERS
+  MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
 
 export const AccessPage: FunctionalComponent = () => {
@@ -58,9 +58,16 @@ export const AccessPage: FunctionalComponent = () => {
   };
 
   useEffect(() => {
-    WebSocketManager.add(SOCKET_MESSAGE_AREA.ACCESS, handleMessage, MESSAGE_LISTENERS.ACCESS);
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.ACCESS,
+      handleMessage,
+      MESSAGE_LISTENERS.ACCESS
+    );
     return () => {
-      WebSocketManager.remove(SOCKET_MESSAGE_AREA.ACCESS, MESSAGE_LISTENERS.ACCESS);
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.ACCESS,
+        MESSAGE_LISTENERS.ACCESS
+      );
     };
   }, []);
 

@@ -29,7 +29,7 @@ import {
   SOCKET_MESSAGE_AREA,
   SOCKET_MESSAGE_EVENTS,
   MessageEvent,
-  MESSAGE_LISTENERS
+  MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
 
 export const CorrespondencePage: FunctionalComponent = () => {
@@ -61,9 +61,16 @@ export const CorrespondencePage: FunctionalComponent = () => {
   };
 
   useEffect(() => {
-    WebSocketManager.add(SOCKET_MESSAGE_AREA.CORRESPONDENCE, handleMessage, MESSAGE_LISTENERS.CORRESPONDENCE);
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.CORRESPONDENCE,
+      handleMessage,
+      MESSAGE_LISTENERS.CORRESPONDENCE
+    );
     return () => {
-      WebSocketManager.remove(SOCKET_MESSAGE_AREA.CORRESPONDENCE, MESSAGE_LISTENERS.CORRESPONDENCE);
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.CORRESPONDENCE,
+        MESSAGE_LISTENERS.CORRESPONDENCE
+      );
     };
   }, []);
 

@@ -35,7 +35,7 @@ import {
   SOCKET_MESSAGE_AREA,
   MessageEvent,
   MESSAGE_LISTENERS,
-  SOCKET_MESSAGE_EVENTS
+  SOCKET_MESSAGE_EVENTS,
 } from '@/utils/socket/manager/types';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
@@ -51,15 +51,25 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   useEffect(() => {
     fetchInitialData();
-    WebSocketManager.add(SOCKET_MESSAGE_AREA.MEMOS, handleMessage, MESSAGE_LISTENERS.MEMO_HISTORY);
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.MEMOS,
+      handleMessage,
+      MESSAGE_LISTENERS.MEMO_HISTORY
+    );
     return () => {
-      WebSocketManager.remove(SOCKET_MESSAGE_AREA.MEMOS, MESSAGE_LISTENERS.MEMO_HISTORY);
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.MEMOS,
+        MESSAGE_LISTENERS.MEMO_HISTORY
+      );
     };
   }, []);
 
   const handleMessage = (event: InSocketMessage<MessageEvent>) => {
     const { type: name, message } = event.payload;
-    if (name === SOCKET_MESSAGE_EVENTS.CREATE_PARENT || name === SOCKET_MESSAGE_EVENTS.PANIC) {
+    if (
+      name === SOCKET_MESSAGE_EVENTS.CREATE_PARENT ||
+      name === SOCKET_MESSAGE_EVENTS.PANIC
+    ) {
       fetchInitialData();
     }
 
@@ -67,7 +77,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       if (memo.id !== Number(message.id)) return;
       status.value = message.state;
     }
-  }
+  };
 
   const fetchInitialData = async () => {
     const [responseMemos, responsePredefined, responsePanic] =
@@ -133,8 +143,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       showAlert({
         title: t('i_location_title'),
         message: t('i_location_message'),
-        onConfirm: () => { },
-        onCancel: () => { },
+        onConfirm: () => {},
+        onCancel: () => {},
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error('s_gps_error');
@@ -498,7 +508,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                   title: status.value || 'CREATED',
                   message: `${t('message.confirm')} ${status.value}`,
                   onConfirm: () => handleCheck(),
-                  onCancel: () => { },
+                  onCancel: () => {},
                 })
               }
             />

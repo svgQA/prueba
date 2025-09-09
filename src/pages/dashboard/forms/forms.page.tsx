@@ -33,7 +33,7 @@ import {
   SOCKET_MESSAGE_AREA,
   SOCKET_MESSAGE_EVENTS,
   MessageEvent,
-  MESSAGE_LISTENERS
+  MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
 
 export const FormsPage: FunctionComponent = () => {
@@ -57,7 +57,11 @@ export const FormsPage: FunctionComponent = () => {
   }, [selectedCompany, location]);
 
   useEffect(() => {
-    WebSocketManager.add(SOCKET_MESSAGE_AREA.FORM, handleMessage, MESSAGE_LISTENERS.FORM);
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.FORM,
+      handleMessage,
+      MESSAGE_LISTENERS.FORM
+    );
     return () => {
       WebSocketManager.remove(SOCKET_MESSAGE_AREA.FORM, MESSAGE_LISTENERS.FORM);
     };
@@ -260,22 +264,22 @@ export const FormsPage: FunctionComponent = () => {
         )}
         {(currentView.value === VIEW_NAME.INSPECT ||
           currentView.value === VIEW_NAME.REPORT) && (
-            <div className='max-h-screen'>
-              <div className='w-full py-1 pb-3 flex items-center justify-end'>
-                <h2 className='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
-                  {currentView.value === VIEW_NAME.INSPECT
-                    ? t('s_inspect_title')
-                    : t('s_title')}
-                </h2>
-              </div>
-              <FormResponseSettingPage
-                posFinishAction={handlePosFinishAction}
-                type={
-                  currentView.value === VIEW_NAME.INSPECT ? 'INSPECT' : 'VIEW'
-                }
-              />
+          <div className='max-h-screen'>
+            <div className='w-full py-1 pb-3 flex items-center justify-end'>
+              <h2 className='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
+                {currentView.value === VIEW_NAME.INSPECT
+                  ? t('s_inspect_title')
+                  : t('s_title')}
+              </h2>
             </div>
-          )}
+            <FormResponseSettingPage
+              posFinishAction={handlePosFinishAction}
+              type={
+                currentView.value === VIEW_NAME.INSPECT ? 'INSPECT' : 'VIEW'
+              }
+            />
+          </div>
+        )}
       </div>
     </Section>
   );

@@ -58,7 +58,7 @@ import {
   SOCKET_MESSAGE_AREA,
   SOCKET_MESSAGE_EVENTS,
   MessageEvent,
-  MESSAGE_LISTENERS
+  MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
 
 enum VIEW_NAME {
@@ -173,9 +173,16 @@ export const ShiftsPage: FunctionalComponent = () => {
   }, [shifts.value]);
 
   useEffect(() => {
-    WebSocketManager.add(SOCKET_MESSAGE_AREA.SHIFTS, handleMessage, MESSAGE_LISTENERS.SHIFTS);
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.SHIFTS,
+      handleMessage,
+      MESSAGE_LISTENERS.SHIFTS
+    );
     return () => {
-      WebSocketManager.remove(SOCKET_MESSAGE_AREA.SHIFTS, MESSAGE_LISTENERS.SHIFTS);
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.SHIFTS,
+        MESSAGE_LISTENERS.SHIFTS
+      );
     };
   }, []);
 
@@ -347,7 +354,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
     (_id: string | number) => {
@@ -552,7 +559,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           title: t('s_title_delete'),
           message: t('s_message'),
           onConfirm: () => deleteShift(params.id),
-          onCancel: () => { },
+          onCancel: () => {},
         });
         break;
       case ROW_ACTIONS.CHECK_IN:
