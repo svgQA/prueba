@@ -2,8 +2,22 @@ export enum SOCKET_MESSAGE_AREA {
   TRACKING = 'TRACKING',
   MEMOS = 'MEMOS',
   CHAT = 'CHAT',
-  MEMO = 'memo',
+  PANIC = 'PANIC',
+  SHIFTS = 'SHIFTS',
+  ACCESS='ACCESS',
+  CORRESPONDENCE='CORRESPONDENCE',
+  FORM='FORM'
 }
+
+export enum SOCKET_MESSAGE_EVENTS {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  UPDATE_CHECK = 'UPDATE_CHECK',
+  CREATE_PARENT = 'CREATE_PARENT',
+  DELETE = 'DELETE',
+  PANIC = 'PANIC',
+}
+
 export type OutSocketMessage = {
   area: SOCKET_MESSAGE_AREA;
   message: any;
@@ -18,3 +32,21 @@ export type InSocketMessage<T = any> = {
   };
   payload: T;
 };
+
+export interface MessageEvent {
+  type: string;
+  message: any;
+  notification?: any;
+}
+
+export enum MESSAGE_LISTENERS {
+  SHIFTS = 'shift-listener',
+  MEMOS = 'memo-listener',
+  PANIC = 'panic-listener',
+  ACCESS = 'access-listener',
+  CORRESPONDENCE = 'correspondence-listener',
+  TRACKING = 'tracking-listener',
+  CHAT = 'chat-listener',
+  FORM = 'form-listener',
+  MEMO_HISTORY = 'memo-history'
+}

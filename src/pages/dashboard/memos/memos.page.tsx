@@ -33,14 +33,18 @@ import { PanicService } from '@/services/memo/panic';
 import { getColumnsPanic } from './components/panic.columns';
 import { handleNotificationEvent } from '@/components/common/notifications/components/notification.event';
 import { modulesReport } from '@/types/form';
-import { SSE_EVENTS } from '@/utils/network/sse/base';
 
 /**
  * TODO: WebSocket
  */
 import { WebSocketManager } from '@/utils/socket/manager/manager';
-import { InSocketMessage, SOCKET_MESSAGE_AREA } from '@/utils/socket/manager/types';
-import { MessageEvent } from '@/types/live';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  SOCKET_MESSAGE_EVENTS,
+  MessageEvent,
+  MESSAGE_LISTENERS
+} from '@/utils/socket/manager/types';
 
 enum VIEW_NAME {
   TABLE,
@@ -105,9 +109,9 @@ export const MemosPage: FunctionComponent = () => {
   }, [selectedCompany, location, dateRangeFilters]);
 
   useEffect(() => {
-    WebSocketManager.add(SOCKET_MESSAGE_AREA.MEMO, handleMessage, 'memo-listener');
+    WebSocketManager.add(SOCKET_MESSAGE_AREA.MEMOS, handleMessage, MESSAGE_LISTENERS.MEMOS);
     return () => {
-      WebSocketManager.remove(SOCKET_MESSAGE_AREA.MEMO, 'memo-listener');
+      WebSocketManager.remove(SOCKET_MESSAGE_AREA.MEMOS, MESSAGE_LISTENERS.MEMOS);
     };
   }, []);
 
@@ -126,9 +130,9 @@ export const MemosPage: FunctionComponent = () => {
     const { type: name, message } = event.payload;
 
     if (
-      name === SSE_EVENTS.CREATE_PARENT ||
-      name === SSE_EVENTS.UPDATE ||
-      name === SSE_EVENTS.UPDATE_CHECK
+      name === SOCKET_MESSAGE_EVENTS.CREATE_PARENT ||
+      name === SOCKET_MESSAGE_EVENTS.UPDATE ||
+      name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK
     ) {
       const memoIndex = memos.value.findIndex((memo) => memo.id === message.id);
       if (memoIndex < 0) return;
@@ -142,7 +146,7 @@ export const MemosPage: FunctionComponent = () => {
       memos.value = [...memoCopy];
     }
 
-    if (name === SSE_EVENTS.CREATE) {
+    if (name === SOCKET_MESSAGE_EVENTS.CREATE) {
       notificationBannerRef.current?.startBannerAnimation();
     }
   }

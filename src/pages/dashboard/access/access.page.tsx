@@ -12,13 +12,22 @@ import { AccessesService } from '@/services/access/accesses';
 import { useSignal } from '@preact/signals';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { defaultSummary, IResponseSummary } from '@/services';
-// import { Button } from '@/components/common/button/button';
 import { AccessForm } from './components/access.upsert.form';
 import { IRowAction } from '@/components/common/table/interface';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/sse/event.bus';
 import { IAccess } from '@/types/access/accesses';
 import { modulesReport } from '@/types/form';
+
+/**
+ * TODO: WebSocket
+ */
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  SOCKET_MESSAGE_EVENTS,
+  MessageEvent,
+  MESSAGE_LISTENERS
+} from '@/utils/socket/manager/types';
 
 export const AccessPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -31,11 +40,6 @@ export const AccessPage: FunctionalComponent = () => {
   useEffect(() => {
     document.title = t('p_access');
     fetchInitialData();
-    // fetchSSE();
-    EventBus.on(SSE_TYPE.ACCESSES, handleAccessSSE);
-    return () => {
-      EventBus.off(SSE_TYPE.ACCESSES, handleAccessSSE);
-    };
   }, []);
 
   const fetchInitialData = async () => {
@@ -53,14 +57,20 @@ export const AccessPage: FunctionalComponent = () => {
     }
   };
 
-  // const fetchSSE = useCallback(async () => {
-  //   await SseManager.getQuery(['accesses', 'stream']);
-  // }, []);
+  useEffect(() => {
+    WebSocketManager.add(SOCKET_MESSAGE_AREA.ACCESS, handleMessage, MESSAGE_LISTENERS.ACCESS);
+    return () => {
+      WebSocketManager.remove(SOCKET_MESSAGE_AREA.ACCESS, MESSAGE_LISTENERS.ACCESS);
+    };
+  }, []);
 
-  const handleAccessSSE = async (event: IBaseSSE) => {
-    const { name, message } = event;
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { type: name, message } = event.payload;
 
-    if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
+    if (
+      name === SOCKET_MESSAGE_EVENTS.UPDATE ||
+      name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK
+    ) {
       const index = accesses.value.findIndex(
         (value: any) => value.id === message.id
       );
@@ -70,7 +80,7 @@ export const AccessPage: FunctionalComponent = () => {
       accesses.value = [...copy];
     }
 
-    if (name === SSE_EVENTS.CREATE) fetchInitialData();
+    if (name === SOCKET_MESSAGE_EVENTS.CREATE) fetchInitialData();
   };
 
   const toggleUpsertModal = () => {

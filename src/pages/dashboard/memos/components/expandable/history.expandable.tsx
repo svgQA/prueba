@@ -25,14 +25,18 @@ import { PanicService } from '@/services/memo/panic';
 import { Badge } from '@/components/common/badge/badge';
 import { useTranslation } from 'react-i18next';
 import { required } from '@/utils/utilities';
-import { SSE_EVENTS } from '@/utils/network/sse/base';
 
 /**
  * TODO: WebSocket
  */
 import { WebSocketManager } from '@/utils/socket/manager/manager';
-import { InSocketMessage, SOCKET_MESSAGE_AREA } from '@/utils/socket/manager/types';
-import { MessageEvent } from '@/types/live';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  MessageEvent,
+  MESSAGE_LISTENERS,
+  SOCKET_MESSAGE_EVENTS
+} from '@/utils/socket/manager/types';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const { t } = useTranslation();
@@ -47,19 +51,19 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   useEffect(() => {
     fetchInitialData();
-    WebSocketManager.add(SOCKET_MESSAGE_AREA.MEMO, handleMessage, 'memo-history');
+    WebSocketManager.add(SOCKET_MESSAGE_AREA.MEMOS, handleMessage, MESSAGE_LISTENERS.MEMO_HISTORY);
     return () => {
-      WebSocketManager.remove(SOCKET_MESSAGE_AREA.MEMO, 'memo-history');
+      WebSocketManager.remove(SOCKET_MESSAGE_AREA.MEMOS, MESSAGE_LISTENERS.MEMO_HISTORY);
     };
   }, []);
 
   const handleMessage = (event: InSocketMessage<MessageEvent>) => {
     const { type: name, message } = event.payload;
-    if (name === SSE_EVENTS.CREATE_PARENT || name === SSE_EVENTS.PANIC) {
+    if (name === SOCKET_MESSAGE_EVENTS.CREATE_PARENT || name === SOCKET_MESSAGE_EVENTS.PANIC) {
       fetchInitialData();
     }
 
-    if (name === SSE_EVENTS.UPDATE_CHECK) {
+    if (name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK) {
       if (memo.id !== Number(message.id)) return;
       status.value = message.state;
     }

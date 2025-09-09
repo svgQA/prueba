@@ -134,7 +134,8 @@ export const getColumns = (
         const rowData = info.row.original;
         return (
           <div className='w-full justify-center flex items-center'>
-            <Badge label={String(rowData.status)} width='w-24' />
+            {rowData.status}
+            {/* <Badge label={String(rowData.status)} width='w-24' /> */}
           </div>
         );
       },

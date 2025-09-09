@@ -1,7 +1,5 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { IPanic, IPanicProps } from './utils/interface';
-import { EventBus } from '@/utils/network/sse/event.bus';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 import { FloatBadge } from '../badge/float';
 import { Button } from '../button/button';
 import { useSignal } from '@preact/signals';
@@ -11,8 +9,19 @@ import { useUserStore } from '@/store/slices';
 import NotificationBanner from '../notifications/components/notification.banner';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '../Avatar';
-// import { handleSendNotificationEvent } from '../notifications/components/notification.event';
 import { useLocation } from 'wouter';
+
+/**
+ * TODO: WebSocket
+ */
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  SOCKET_MESSAGE_EVENTS,
+  MessageEvent,
+  MESSAGE_LISTENERS
+} from '@/utils/socket/manager/types';
 
 const Panic = (_panic: IPanicProps) => {
   const allPanic = useSignal<IPanic[]>([]);
@@ -28,26 +37,25 @@ const Panic = (_panic: IPanicProps) => {
   useEffect(() => {
     if (!selectedCompany) return;
     fetchPanic();
-    // fetchSSE();
-    EventBus.on(SSE_TYPE.PANIC, handlePanicSSE);
-    return () => {
-      EventBus.off(SSE_TYPE.PANIC, handlePanicSSE);
-    };
   }, [selectedCompany]);
 
-  // const fetchSSE = useCallback(
-  //   async () => await SseManager.getQuery(['panic', 'panic-button']),
-  //   []
-  // );
+  useEffect(() => {
+    WebSocketManager.add(SOCKET_MESSAGE_AREA.PANIC, handleMessage, MESSAGE_LISTENERS.PANIC);
+    return () => {
+      WebSocketManager.remove(SOCKET_MESSAGE_AREA.PANIC, MESSAGE_LISTENERS.PANIC);
+    };
+  }, []);
 
-  const handlePanicSSE = async (event: IBaseSSE) => {
-    if (event.name === SSE_EVENTS.PANIC) {
+  const handleMessage = async (event: InSocketMessage<MessageEvent>) => {
+    const { type: name, message } = event.payload;
+
+    if (name === SOCKET_MESSAGE_EVENTS.PANIC) {
       await fetchPanic();
 
-      if (event.message.id) {
+      if (message.id) {
         notificationBannerRef.current?.startBannerAnimation();
         const panic = allPanic.value.find(
-          (panic) => panic.id === event.message.id
+          (panic) => panic.id === message.id
         );
         _panic.emitPanic?.(panic as IPanic);
       }
