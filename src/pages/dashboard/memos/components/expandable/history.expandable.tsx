@@ -184,7 +184,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     if (values.date) extraData.time = values.date;
 
     const newMemo: Memo = {
-      ...lastMemo,
+      // ...lastMemo,
       description: values.message.trim() ? values.message : '...',
       priority:
         lastMemo.priority === 'Alta'
@@ -192,8 +192,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           : lastMemo.priority === 'Media'
             ? 4
             : 3,
-      updatedAt: DateUtils.dateToBackend(new Date()),
-      createdAt: DateUtils.dateToBackend(new Date()),
+      date: DateUtils.dateToBackend(new Date()),
+      latitude: lastMemo.latitude,
+      longitude: lastMemo.longitude,
       parentId: lastMemo.id,
       extraData: extraData,
       resource: files.value && files.value.length > 0 ? files.value : undefined,
@@ -292,20 +293,22 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                       )}
                       {memo.attachments && memo.attachments.length > 0 && (
                         <div className='mt-2 flex flex-wrap gap-2'>
-                          {memo.attachments.map((attachment, idx) => (
-                            <a
-                              key={idx}
-                              href={attachment.url}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                              className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
-                            >
-                              <span className='vox-icon size-sm vx-icon-311 px-1' />
-                              <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
-                                {attachment.name}
-                              </span>
-                            </a>
-                          ))}
+                          {memo.attachments.map(
+                            (attachment: any, idx: number) => (
+                              <a
+                                key={idx}
+                                href={attachment.url}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
+                              >
+                                <span className='vox-icon size-sm vx-icon-311 px-1' />
+                                <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
+                                  {attachment.name}
+                                </span>
+                              </a>
+                            )
+                          )}
                         </div>
                       )}
                     </div>
