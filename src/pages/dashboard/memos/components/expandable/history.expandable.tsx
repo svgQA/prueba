@@ -9,8 +9,6 @@ import { Button } from '@/components/common/button/button';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { FormattedDate } from '@/components/compose/forms';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/sse/event.bus';
 import {
   IOption,
   SmartSelector,
@@ -27,6 +25,14 @@ import { PanicService } from '@/services/memo/panic';
 import { Badge } from '@/components/common/badge/badge';
 import { useTranslation } from 'react-i18next';
 import { required } from '@/utils/utilities';
+import { SSE_EVENTS } from '@/utils/network/sse/base';
+
+/**
+ * TODO: WebSocket
+ */
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import { InSocketMessage, SOCKET_MESSAGE_AREA } from '@/utils/socket/manager/types';
+import { MessageEvent } from '@/types/live';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const { t } = useTranslation();
@@ -41,16 +47,14 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   useEffect(() => {
     fetchInitialData();
-    EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
-    EventBus.on(SSE_TYPE.PANIC, handleMemoSSE);
+    WebSocketManager.add(SOCKET_MESSAGE_AREA.MEMO, handleMessage, 'memo-history');
     return () => {
-      EventBus.off(SSE_TYPE.MEMO, handleMemoSSE);
-      EventBus.off(SSE_TYPE.PANIC, handleMemoSSE);
+      WebSocketManager.remove(SOCKET_MESSAGE_AREA.MEMO, 'memo-history');
     };
   }, []);
 
-  const handleMemoSSE = (event: IBaseSSE) => {
-    const { name, message } = event;
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { type: name, message } = event.payload;
     if (name === SSE_EVENTS.CREATE_PARENT || name === SSE_EVENTS.PANIC) {
       fetchInitialData();
     }
@@ -59,7 +63,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       if (memo.id !== Number(message.id)) return;
       status.value = message.state;
     }
-  };
+  }
 
   const fetchInitialData = async () => {
     const [responseMemos, responsePredefined, responsePanic] =
@@ -125,8 +129,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       showAlert({
         title: t('i_location_title'),
         message: t('i_location_message'),
-        onConfirm: () => {},
-        onCancel: () => {},
+        onConfirm: () => { },
+        onCancel: () => { },
       });
     } else if (error.code === error.POSITION_UNAVAILABLE) {
       ToastManager.error('s_gps_error');
@@ -193,7 +197,6 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const handleAttachmentUpload = (e: any) => {
     const fileInput: IPresignedRequest = e.target.value[0];
-    // console.log('fileInput', fileInput);
     files.value = [...files.value, fileInput];
   };
 
@@ -491,7 +494,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                   title: status.value || 'CREATED',
                   message: `${t('message.confirm')} ${status.value}`,
                   onConfirm: () => handleCheck(),
-                  onCancel: () => {},
+                  onCancel: () => { },
                 })
               }
             />
