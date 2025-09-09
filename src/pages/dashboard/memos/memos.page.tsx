@@ -8,8 +8,8 @@ import {
 } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import './utils/memos.css';
-import { useLocation } from 'wouter';
 
+import { useLocation } from 'wouter';
 import { UserService } from '@/services/general/user';
 import { IUserResponse } from '@/types/auth';
 import { useWebSocket } from '@/utils/socket';
@@ -26,8 +26,6 @@ import { ChatView } from './page/chat.page';
 import { useUserStore } from '@/store/slices';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { DateUtils } from '@/utils/utilities/dates';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/sse/event.bus';
 import { MapPath } from '@/components/common/map/MapPath';
 import { RoutePoint } from '@/services/general/tracking';
 import NotificationBanner from '@/components/common/notifications/components/notification.banner';
@@ -35,6 +33,14 @@ import { PanicService } from '@/services/memo/panic';
 import { getColumnsPanic } from './components/panic.columns';
 import { handleNotificationEvent } from '@/components/common/notifications/components/notification.event';
 import { modulesReport } from '@/types/form';
+import { SSE_EVENTS } from '@/utils/network/sse/base';
+
+/**
+ * TODO: WebSocket
+ */
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import { InSocketMessage, SOCKET_MESSAGE_AREA } from '@/utils/socket/manager/types';
+import { MessageEvent } from '@/types/live';
 
 enum VIEW_NAME {
   TABLE,
@@ -94,14 +100,16 @@ export const MemosPage: FunctionComponent = () => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
       fetchInitialData(dateRangeFilters);
-      // fetchSSE();
       selectedNotifier();
-      EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
-      return () => {
-        EventBus.off(SSE_TYPE.MEMO, handleMemoSSE);
-      };
     }
   }, [selectedCompany, location, dateRangeFilters]);
+
+  useEffect(() => {
+    WebSocketManager.add(SOCKET_MESSAGE_AREA.MEMO, handleMessage, 'memo-listener');
+    return () => {
+      WebSocketManager.remove(SOCKET_MESSAGE_AREA.MEMO, 'memo-listener');
+    };
+  }, []);
 
   const selectedNotifier = () => {
     handleNotificationEvent('notification-click', (id: any) => {
@@ -114,12 +122,8 @@ export const MemosPage: FunctionComponent = () => {
     });
   };
 
-  // const fetchSSE = useCallback(async () => {
-  //   await SseManager.getQuery(['memo', 'stream', 'history']);
-  // }, []);
-
-  const handleMemoSSE = async (event: IBaseSSE) => {
-    const { name, message } = event;
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { type: name, message } = event.payload;
 
     if (
       name === SSE_EVENTS.CREATE_PARENT ||
@@ -141,7 +145,7 @@ export const MemosPage: FunctionComponent = () => {
     if (name === SSE_EVENTS.CREATE) {
       notificationBannerRef.current?.startBannerAnimation();
     }
-  };
+  }
 
   const fetchInitialData = async (
     rangeFilters?: { [key: string]: [string, string] } | null

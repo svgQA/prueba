@@ -6,7 +6,10 @@ import {
 } from './types';
 import { tracking_service_url } from '@/env.config';
 
-type NamedListener = { name: string; callback: (data: any) => void };
+type NamedListener = {
+  name: string;
+  callback: { id: string; fn: (data: any) => void }[];
+};
 
 export class WebSocketManager {
   private static listeners: Set<NamedListener> = new Set();
@@ -65,7 +68,9 @@ export class WebSocketManager {
     this.channel.on('server_message', (msg: InSocketMessage) => {
       for (const l of this.listeners) {
         if (l.name !== msg.from.area) continue;
-        l.callback(msg);
+        for (const cb of l.callback) {
+          cb.fn(msg);
+        }
       }
     });
 
@@ -120,15 +125,30 @@ export class WebSocketManager {
     });
   }
 
-  static add(name: SOCKET_MESSAGE_AREA, callback: (data: any) => void) {
+  static add(
+    name: SOCKET_MESSAGE_AREA,
+    callback: (data: any) => void,
+    id: string
+  ) {
     console.log(`[WS] Adding listener for area: ${name}`);
+    // const existing = Array.from(this.listeners).find((l) => l.name === name);
+    // if (existing) this.listeners.delete(existing);
+    // this.listeners.add({ name,  callback: { id, fn: callback } });
     const existing = Array.from(this.listeners).find((l) => l.name === name);
-    if (existing) this.listeners.delete(existing);
-    this.listeners.add({ name, callback });
+    if (existing) {
+      existing.callback.push({ id, fn: callback });
+    } else {
+      this.listeners.add({ name, callback: [{ id, fn: callback }] });
+    }
   }
 
-  static remove(name: SOCKET_MESSAGE_AREA) {
+  static remove(name: SOCKET_MESSAGE_AREA, id: string) {
     const existing = Array.from(this.listeners).find((l) => l.name === name);
-    if (existing) this.listeners.delete(existing);
+    if (existing) {
+      existing.callback = existing.callback.filter((c) => c.id !== id);
+      if (existing.callback.length === 0) {
+        this.listeners.delete(existing);
+      }
+    }
   }
 }

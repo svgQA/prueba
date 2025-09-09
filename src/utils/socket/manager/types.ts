@@ -2,6 +2,7 @@ export enum SOCKET_MESSAGE_AREA {
   TRACKING = 'TRACKING',
   MEMOS = 'MEMOS',
   CHAT = 'CHAT',
+  MEMO = 'memo',
 }
 export type OutSocketMessage = {
   area: SOCKET_MESSAGE_AREA;
