@@ -56,7 +56,7 @@ import PanicModal from '@/components/common/panic/components/panic.modal';
 import { IPanic } from '@/components/common/panic/utils/interface';
 
 // import { IconsModal } from '../globals/icons/icons';
-import { SseManager } from '@/utils/network/sse/base';
+// import { SseManager } from '@/utils/network/sse/base';
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 
 /** ***********************************************************************
@@ -93,7 +93,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     useEffect(() => {
       if (selectedCompany) {
-        Promise.all([SseManager.getQuery(['events', 'stream'])]);
         WebSocketManager.connect(getTenant, getCompanyId, getToken);
       }
       return () => {
