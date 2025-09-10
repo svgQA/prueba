@@ -66,7 +66,6 @@ export class WebSocketManager {
       });
 
     this.channel.on('server_message', (msg: InSocketMessage) => {
-      console.log('[WS] server_message:', msg);
       for (const l of this.listeners) {
         if (l.name !== msg.from.area) continue;
         for (const cb of l.callback) {
