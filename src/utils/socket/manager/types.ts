@@ -7,6 +7,7 @@ export enum SOCKET_MESSAGE_AREA {
   ACCESS = 'ACCESS',
   CORRESPONDENCE = 'CORRESPONDENCE',
   FORM = 'FORM',
+  ALL = 'ALL',
 }
 
 export enum SOCKET_MESSAGE_EVENTS {
@@ -49,4 +50,5 @@ export enum MESSAGE_LISTENERS {
   CHAT = 'chat-listener',
   FORM = 'form-listener',
   MEMO_HISTORY = 'memo-history',
+  ALL = 'all-listener',
 }

@@ -4,14 +4,23 @@ import { Button } from '../button/button';
 import { INotification, INotificationsProps } from './utils/interface';
 import { useLocation } from 'wouter';
 import { localStorage } from '@/utils/storage';
-import { EventBus } from '@/utils/network/sse/event.bus';
-import { IBaseSSE, SSE_TYPE } from '@/utils/network/sse/base';
 import { SIDEBAR_MENUS } from '@/utils/menus/sidebar';
 import ExpanderNotification from './components/expander.notification';
 import { useSignal } from '@preact/signals';
 import { Badge } from '../badge/badge';
 // import { handleSendNotificationEvent } from './components/notification.event';
 // import { useTranslation } from 'react-i18next';
+
+/**
+ * TODO: WebSocket
+ */
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  MessageEvent,
+  MESSAGE_LISTENERS,
+} from '@/utils/socket/manager/types';
 
 const STORAGE_KEY = 'notifications';
 
@@ -34,24 +43,39 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
       : [];
     setLocalNotifications(initialNotifications);
     setNotifications(initialNotifications);
-    EventBus.on(SSE_TYPE.ALL, handleNotificationSSE);
+    // EventBus.on(SSE_TYPE.ALL, handleNotificationSSE);
+    // return () => {
+    //   EventBus.off(SSE_TYPE.ALL, handleNotificationSSE);
+    // };
+  }, []);
+
+  useEffect(() => {
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.ALL,
+      handleMessage,
+      MESSAGE_LISTENERS.ALL
+    );
     return () => {
-      EventBus.off(SSE_TYPE.ALL, handleNotificationSSE);
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.ALL,
+        MESSAGE_LISTENERS.ALL
+      );
     };
   }, []);
 
-  const handleNotificationSSE = (event: IBaseSSE) => {
-    const { type, message, notification } = event;
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { message, notification } = event.payload;
+    const { area } = event.from;
     if (!notification) return;
 
     let newNotification = {
       id: String(notifications.length + 1),
       id_message: message?.id,
-      label: type,
+      label: area,
       value: message,
       status: notification,
-      icon: SIDEBAR_MENUS.find((menu) => menu.label === type)?.icon,
-      redirect: SIDEBAR_MENUS.find((menu) => menu.id === type)?.to,
+      icon: SIDEBAR_MENUS.find((menu) => menu.label === area)?.icon,
+      redirect: SIDEBAR_MENUS.find((menu) => menu.id === area)?.to,
     };
 
     setNotifications((prevNotifications) => {
