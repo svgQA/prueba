@@ -238,7 +238,7 @@ const ShiftCard = ({
   longitude,
   file,
   disabled,
-  onCheck,
+  // onCheck,
   resource,
 }: IShiftCardProps) => {
   const { t } = useTranslation();

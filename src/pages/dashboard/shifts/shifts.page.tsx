@@ -48,7 +48,7 @@ import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 import { getLocation } from '@/utils/utilities/location';
 import { useUserStore } from '@/store/slices';
 import { modulesReport } from '@/types/form';
-import { merge } from 'lodash';
+// import { merge } from 'lodash';
 
 /**
  * TODO: WebSocket
