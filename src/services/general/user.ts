@@ -131,6 +131,13 @@ export class UserService extends BaseService {
     return await super.make_request<IOption>(this.name, model);
   }
 
+  static async get_clients_reports_simple_list() {
+    const model: IMakeRequest = {
+      url: ['user', 'client', 'simple', 'list', 'report'],
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
   static async getDocumentTypes() {
     const model: IMakeRequest = {
       url: ['user', 'documenttypes'],

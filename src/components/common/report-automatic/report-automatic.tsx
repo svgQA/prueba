@@ -59,7 +59,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   }, []);
 
   const getUsers = useCallback(async () => {
-    const usersResponse = await UserService.getListUsers();
+    const usersResponse = await UserService.get_clients_reports_simple_list();
     if (usersResponse.getStatus()) {
       users.value = usersResponse.getMany();
     }
