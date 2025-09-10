@@ -48,7 +48,7 @@ import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 import { getLocation } from '@/utils/utilities/location';
 import { useUserStore } from '@/store/slices';
 import { modulesReport } from '@/types/form';
-import { merge } from 'lodash';
+// import { merge } from 'lodash';
 
 /**
  * TODO: WebSocket
@@ -194,20 +194,20 @@ export const ShiftsPage: FunctionalComponent = () => {
       name === SOCKET_MESSAGE_EVENTS.UPDATE ||
       name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK
     ) {
-      // const shiftIndex = shifts.value.findIndex(
-      //   (shift) => Number(shift.id) === Number(message.id)
-      // );
-      // if (shiftIndex < 0) return;
-      // const shiftCopy: IShiftResponse[] = shifts.value;
-      // shiftCopy[shiftIndex] = message;
-      // shifts.value = [...shiftCopy];
-      shifts.value = shifts.value.map((shift) => {
-        if (Number(shift.id) !== Number(message.id)) return shift;
-        const updated = merge({}, shift, message);
-        if (message.checkIn === undefined) updated.checkIn = shift.checkIn;
-        if (message.checkOut === undefined) updated.checkOut = shift.checkOut;
-        return updated;
-      });
+      const shiftIndex = shifts.value.findIndex(
+        (shift) => Number(shift.id) === Number(message.id)
+      );
+      if (shiftIndex < 0) return;
+      const shiftCopy: IShiftResponse[] = shifts.value;
+      shiftCopy[shiftIndex] = message;
+      shifts.value = [...shiftCopy];
+      // shifts.value = shifts.value.map((shift) => {
+      //   if (Number(shift.id) !== Number(message.id)) return shift;
+      //   const updated = merge({}, shift, message);
+      //   if (message.checkIn === undefined) updated.checkIn = shift.checkIn;
+      //   if (message.checkOut === undefined) updated.checkOut = shift.checkOut;
+      //   return updated;
+      // });
     }
 
     if (name === SOCKET_MESSAGE_EVENTS.CREATE) {
@@ -599,14 +599,14 @@ export const ShiftsPage: FunctionalComponent = () => {
       ToastManager.success('s_created_success');
       // fetchInitialData();
       // TODO: Actualiza solo el shift afectado en shifts.value
-      shifts.value = shifts.value.map((shift) => {
-        if (shift.id !== shiftId) return shift;
-        if (type === 'CHECK_IN') {
-          return { ...shift, checkIn: checkData as any, };
-        } else {
-          return { ...shift, checkOut: checkData as any, };
-        }
-      });
+      // shifts.value = shifts.value.map((shift) => {
+      //   if (shift.id !== shiftId) return shift;
+      //   if (type === 'CHECK_IN') {
+      //     return { ...shift, checkIn: checkData as any, };
+      //   } else {
+      //     return { ...shift, checkOut: checkData as any, };
+      //   }
+      // });
     }
   };
 
