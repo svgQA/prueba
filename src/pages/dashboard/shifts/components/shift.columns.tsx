@@ -10,7 +10,7 @@ import { NColumnDef } from '@/components/common/table/type';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { FormattedDate, DateContrast } from '@/components/compose/forms';
 import { DateUtils } from '@/utils/utilities/dates';
-// import { Badge } from '@/components/common/badge/badge';
+import { Badge } from '@/components/common/badge/badge';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -134,8 +134,7 @@ export const getColumns = (
         const rowData = info.row.original;
         return (
           <div className='w-full justify-center flex items-center'>
-            {rowData.status}
-            {/* <Badge label={String(rowData.status)} width='w-24' /> */}
+            <Badge label={String(rowData.status)} width='w-24' />
           </div>
         );
       },
