@@ -12,12 +12,20 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
 
-import { columns } from './commonslot.columns';
+import { columns, type CommonSlotRow } from './commonslot.columns';
 import { CommonSlotService } from '@/services/trybook/comonslot';
+
+interface ListResponse<T> {
+  getStatus(): boolean;
+  getMany(): T[];
+}
+interface BasicResponse {
+  getStatus(): boolean;
+}
 
 export const TrybookCommonSlotsPage: FunctionComponent = () => {
   const { t } = useTranslation();
-  const rows = useSignal<any[]>([]);
+  const rows = useSignal<CommonSlotRow[]>([]);
   const loading = useSignal<boolean>(false);
   const { go } = useNavigation();
   const { selectedCompany } = useUserStore();
@@ -29,7 +37,7 @@ export const TrybookCommonSlotsPage: FunctionComponent = () => {
   const fetchRows = useCallback(async () => {
     loading.value = true;
     try {
-      const res = await CommonSlotService.getSlots();
+      const res = (await CommonSlotService.getSlots()) as unknown as ListResponse<CommonSlotRow>;
       if (res.getStatus()) rows.value = res.getMany();
     } catch {
       ToastManager.error('s_fetch_error');
@@ -43,7 +51,7 @@ export const TrybookCommonSlotsPage: FunctionComponent = () => {
   }, [selectedCompany, fetchRows]);
 
   const deleteRow = async (uuid: string) => {
-    const req = await CommonSlotService.deleteSlot(uuid);
+    const req = (await CommonSlotService.deleteSlot(uuid)) as unknown as BasicResponse;
     if (!req.getStatus()) return;
     ToastManager.success('s_deleted_success');
     void fetchRows();
@@ -58,7 +66,6 @@ export const TrybookCommonSlotsPage: FunctionComponent = () => {
     });
   };
 
-  // ✅ Firma exacta que espera la tabla: (action: IRowAction) => void
   const handleOnClick = (action: IRowAction): void => {
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
@@ -78,15 +85,17 @@ export const TrybookCommonSlotsPage: FunctionComponent = () => {
   };
 
   return (
-    <Table<any>
-      data={rows.value}
-      columns={columns}
-      showExpandableIcon={false}
-      onClickAction={handleOnClick}
-      pageSize={20}
-      isSettingTable
-      loading={loading.value}
-      absolute
-    />
+    <section>
+      <Table<CommonSlotRow>
+        data={rows.value}
+        columns={columns}
+        showExpandableIcon={false}
+        onClickAction={handleOnClick}
+        pageSize={20}
+        isSettingTable
+        loading={loading.value}
+        absolute
+      />
+    </section>
   );
 };
