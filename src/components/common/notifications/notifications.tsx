@@ -8,8 +8,6 @@ import { SIDEBAR_MENUS } from '@/utils/menus/sidebar';
 import ExpanderNotification from './components/expander.notification';
 import { useSignal } from '@preact/signals';
 import { Badge } from '../badge/badge';
-// import { handleSendNotificationEvent } from './components/notification.event';
-// import { useTranslation } from 'react-i18next';
 
 /**
  * TODO: WebSocket
@@ -34,7 +32,6 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [, navigate] = useLocation();
   const [notifications, setNotifications] = useState<INotification[]>([]);
-  // const { t } = useTranslation();
 
   useEffect(() => {
     const storedNotifications = localStorage.get<INotification[]>(STORAGE_KEY);
@@ -43,10 +40,6 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
       : [];
     setLocalNotifications(initialNotifications);
     setNotifications(initialNotifications);
-    // EventBus.on(SSE_TYPE.ALL, handleNotificationSSE);
-    // return () => {
-    //   EventBus.off(SSE_TYPE.ALL, handleNotificationSSE);
-    // };
   }, []);
 
   useEffect(() => {
