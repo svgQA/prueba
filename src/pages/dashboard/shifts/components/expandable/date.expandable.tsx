@@ -34,8 +34,8 @@ type StatusColor = 'error' | 'success' | 'warning' | 'info' | 'ternary';
 
 const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
   const { t } = useTranslation();
-  const [checkInData, setCheckInData] = useState(checkIn);
-  const [checkOutData, setCheckOutData] = useState(checkOut);
+  const [checkInData, _setCheckInData] = useState(checkIn);
+  const [checkOutData, _setCheckOutData] = useState(checkOut);
 
   const checkInStatus = useSignal<ICheckStatus>({
     message: t('l_check_pending'),
@@ -116,11 +116,11 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       type: checkData.type,
     };
 
-    if (checkData.type === 'CHECK_IN') {
-      setCheckInData(check);
-    } else {
-      setCheckOutData(check);
-    }
+    // if (checkData.type === 'CHECK_IN') {
+    //   setCheckInData(check);
+    // } else {
+    //   setCheckOutData(check);
+    // }
     onCheck(check);
   };
   useEffect(() => {
@@ -238,7 +238,7 @@ const ShiftCard = ({
   longitude,
   file,
   disabled,
-  onCheck,
+  // onCheck,
   resource,
 }: IShiftCardProps) => {
   const { t } = useTranslation();
@@ -291,19 +291,19 @@ const ShiftCard = ({
 
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
-      const { distance } = response.getOne();
+      // const { distance } = response.getOne();
       ToastManager.success(t('s_success'));
-      onCheck({
-        type: checkData.type,
-        time: checkData.date,
-        platform: checkData.platform,
-        distance: distance,
-        location: {
-          lat: checkData.latitude,
-          lng: checkData.longitude,
-        },
-        file: [],
-      });
+      // onCheck({
+      //   type: checkData.type,
+      //   time: checkData.date,
+      //   platform: checkData.platform,
+      //   distance: distance,
+      //   location: {
+      //     lat: checkData.latitude,
+      //     lng: checkData.longitude,
+      //   },
+      //   file: [],
+      // });
     }
   };
 

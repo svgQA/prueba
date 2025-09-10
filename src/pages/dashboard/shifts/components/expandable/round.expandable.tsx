@@ -10,6 +10,7 @@ import { MapPoint } from '@/components/common/map/utils/interface';
 interface PointStatus {
   point: string | number;
   total: number;
+  name: string;
   status: {
     valid: number;
     invalid: number;
@@ -98,11 +99,11 @@ const RoundInfo = ({
                 bg-gray-50 dark:bg-b-dark text-gray-700 dark:text-gray-300
                 '
               >
-                <div className='flex flex-row justify-between gap-1'>
-                  <Badge label={`${'h_point'}: ${point.point}`} status='info' />
-                  <span>
-                    {t('h_frequency')}: {frequency}
-                  </span>
+                <div className='flex flex-row justify-center gap-1'>
+                  <Badge
+                    label={`${point.name || t('h_point') + ': ' + point.point}`}
+                    status='info'
+                  />
                 </div>
 
                 <div className='flex flex-row m-2 justify-between gap-2'>
@@ -129,9 +130,12 @@ const RoundInfo = ({
                     <span className='font-thin text-sm text-center'>
                       {t('h_percentage')}
                     </span>
-                    <div className='bg-b-light-light dark:bg-b-dark-dark flex flex-row justify-center items-center px-2 rounded-md h-full'>
+                    <div className='bg-b-light-light dark:bg-b-dark-dark flex flex-col justify-center items-center p-1 rounded-md h-full'>
                       <Gauge progress={percent} size={14} color='teal' />
                     </div>
+                    <span className='text-xs'>
+                      {t('h_frequency')}: {frequency}
+                    </span>
                   </div>
                 </div>
               </div>

@@ -85,7 +85,8 @@ export const getColumns = (
       ),
     },
     {
-      id: 'time-start',
+      // id: 'time-start',
+      id: 'start',
       accessorKey: 'start',
       size: 150,
       clickable: true,
@@ -104,7 +105,8 @@ export const getColumns = (
       },
     },
     {
-      id: 'time-end',
+      // id: 'time-end',
+      id: 'end',
       accessorKey: 'end',
       size: 150,
       clickable: true,

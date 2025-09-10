@@ -61,9 +61,13 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   };
 
   useEffect(() => {
-    WebSocketManager.add(SOCKET_MESSAGE_AREA.TRACKING, handleLocation);
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.TRACKING,
+      handleLocation,
+      'tracking-map'
+    );
     return () => {
-      WebSocketManager.remove(SOCKET_MESSAGE_AREA.TRACKING);
+      WebSocketManager.remove(SOCKET_MESSAGE_AREA.TRACKING, 'tracking-map');
     };
   }, []);
 

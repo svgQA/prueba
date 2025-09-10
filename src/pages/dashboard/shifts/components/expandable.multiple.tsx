@@ -67,7 +67,7 @@ const getInfoContent = (
           roundName={service?.round?.name || t('no_round')}
         />
       );
-    case 'time-start':
+    case 'start':
       return (
         <DateInfo
           checkIn={shift.checkIn}
@@ -77,7 +77,7 @@ const getInfoContent = (
           onCheck={onCheck}
         />
       );
-    case 'time-end':
+    case 'end':
       return (
         <DateInfo
           checkIn={shift.checkIn}

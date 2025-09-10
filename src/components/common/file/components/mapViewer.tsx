@@ -12,7 +12,7 @@ const MapViewer = ({
   title?: string;
 }) => {
   const infoExpanded = (
-    <div className='w-1/2 mx-auto'>
+    <div className='w-full mx-auto flex flex-col items-center justify-center'>
       {title && (
         <div className='flex justify-center mb-4'>
           <span className={'text-xl font-bold text-white'}>{title}</span>
@@ -34,7 +34,7 @@ const MapViewer = ({
             : mapPoint?.position.lng || 0,
         }}
         height='78vh'
-        width='100%'
+        width='80vw'
       />
     </div>
   );
