@@ -10,7 +10,7 @@ import { NColumnDef } from '@/components/common/table/type';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { FormattedDate, DateContrast } from '@/components/compose/forms';
 import { DateUtils } from '@/utils/utilities/dates';
-import { Badge } from '@/components/common/badge/badge';
+// import { Badge } from '@/components/common/badge/badge';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -85,7 +85,8 @@ export const getColumns = (
       ),
     },
     {
-      id: 'time-start',
+      // id: 'time-start',
+      id: 'start',
       accessorKey: 'start',
       size: 150,
       clickable: true,
@@ -104,7 +105,8 @@ export const getColumns = (
       },
     },
     {
-      id: 'time-end',
+      // id: 'time-end',
+      id: 'end',
       accessorKey: 'end',
       size: 150,
       clickable: true,
@@ -132,7 +134,8 @@ export const getColumns = (
         const rowData = info.row.original;
         return (
           <div className='w-full justify-center flex items-center'>
-            <Badge label={String(rowData.status)} width='w-24' />
+            {rowData.status}
+            {/* <Badge label={String(rowData.status)} width='w-24' /> */}
           </div>
         );
       },

@@ -32,6 +32,15 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       show: true,
     },
     {
+      icon: '282',
+      label: 'm_webhook',
+      description: 'd_webhook',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.setting.webhook.base,
+      id: 'general:webhook:state',
+      show: true,
+    },
+    {
       icon: '092',
       label: 'm_module',
       description: 'd_module',

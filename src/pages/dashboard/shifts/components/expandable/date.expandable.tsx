@@ -196,6 +196,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         file={checkOutData?.file || []}
         disabled={shift?.status !== 'OPENED'}
         onCheck={handleCheck}
+        resource={shift.resource}
       />
     </div>
   );
@@ -218,6 +219,7 @@ interface IShiftCardProps {
   file: IPresignedRequest[];
   disabled: boolean;
   onCheck: (checkData: ICheckData) => void;
+  resource?: IPresignedRequest[];
 }
 
 const ShiftCard = ({
@@ -237,6 +239,7 @@ const ShiftCard = ({
   file,
   disabled,
   onCheck,
+  resource,
 }: IShiftCardProps) => {
   const { t } = useTranslation();
 
@@ -359,6 +362,12 @@ const ShiftCard = ({
             </div>
           </div>
 
+          {resource && (
+            <div className='flex flex-col items-center mr-4 w-full'>
+              <ShowFiles resources={resource} />
+            </div>
+          )}
+
           <Button
             label={btnLabel}
             icon={btnLabel === 'Check In' ? '023' : '024'}
@@ -377,7 +386,7 @@ const ShiftCard = ({
       </div>
 
       {/* Columna derecha - Mapa */}
-      <div className='flex-1 w-full max-h-96 overflow-hidden'>
+      <div className='flex-1 w-full max-h-[44vh] overflow-hidden'>
         <MapLibrePointsMap
           sendPoints={() => {}}
           name='Map'
@@ -400,7 +409,7 @@ const ShiftCard = ({
           radialPoint={null}
           errorRadialPoint=''
           radius={50}
-          draggable={true}
+          draggable={false}
           width='100%'
           clickPoint={() => {}}
         />

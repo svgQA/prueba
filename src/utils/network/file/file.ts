@@ -3,8 +3,17 @@ import { IExcelGenerate } from './interface';
 import ExcelJS from 'exceljs';
 import i18n from '@/i18n';
 import { IPresignedRequest } from '@/types/file';
+import { cdn_service_url } from '@/env.config';
 
 export class fileManager {
+  static getUrl(
+    tenantId: string,
+    companyId: string,
+    file: IPresignedRequest
+  ): string {
+    return `${cdn_service_url}/${tenantId}/${companyId}/${file.area}/${file.uuid}-${file.name}`;
+  }
+
   static async downloadFile(
     urlObj: { url: string },
     filename: string = 'Report.pdf'

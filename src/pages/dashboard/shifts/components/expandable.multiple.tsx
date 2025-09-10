@@ -8,6 +8,7 @@ import ShiftInfo from './expandable/shift.expandable';
 import ReportInfo from './expandable/report.expandable';
 import TaskInfo from './expandable/task.expandable';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
+import { useTranslation } from 'react-i18next';
 // import ReportInfo from './expandable/report.expandable';
 
 type Props = {
@@ -21,6 +22,7 @@ const getInfoContent = (
   shift: IShiftResponse,
   onCheck?: (parametro: any) => void
 ) => {
+  const { t } = useTranslation();
   const { service, employee, activityPct, roundPct, tasks, report, task } =
     shift;
 
@@ -62,10 +64,10 @@ const getInfoContent = (
           shift={shift.id}
           round={service?.round?.id}
           frequency={service?.round?.frequency || 0}
-          roundName={service?.round?.name || 'No tiene ronda'}
+          roundName={service?.round?.name || t('no_round')}
         />
       );
-    case 'time-start':
+    case 'start':
       return (
         <DateInfo
           checkIn={shift.checkIn}
@@ -75,7 +77,7 @@ const getInfoContent = (
           onCheck={onCheck}
         />
       );
-    case 'time-end':
+    case 'end':
       return (
         <DateInfo
           checkIn={shift.checkIn}
@@ -86,7 +88,7 @@ const getInfoContent = (
         />
       );
     default:
-      return <>No content</>;
+      return <>{t('no_content')}</>;
   }
 };
 

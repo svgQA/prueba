@@ -1,19 +1,14 @@
 // src/pages/dashboard/correspondence/correspondence.page.tsx
 
 import { FunctionalComponent } from 'preact';
-import { /*useCallback,*/ useEffect } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { CardData } from '@/components/compose/cards';
-// import { ExpandableCorrespondence } from '@/components/compose/table/expandable/correspondence';
-// import { Button } from '@/components/common/button/button';
 import { IRowAction } from '@/components/common/table/interface';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-
-import { EventBus } from '@/utils/network/sse/event.bus';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 
 import { defaultSummary, IResponseSummary } from '@/services';
 import { CorrespondenceService } from '@/services/access/correspondence';
@@ -23,6 +18,19 @@ import { useTranslation } from 'react-i18next';
 import { getColumns } from './components/correspondence.columns';
 import { ICorrespondence } from '@/types/access';
 import { CorrespondenceForm } from './components/upsert.form';
+import { modulesReport } from '@/types/form';
+
+/**
+ * TODO: WebSocket
+ */
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  SOCKET_MESSAGE_EVENTS,
+  MessageEvent,
+  MESSAGE_LISTENERS,
+} from '@/utils/socket/manager/types';
 
 export const CorrespondencePage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -35,11 +43,6 @@ export const CorrespondencePage: FunctionalComponent = () => {
   useEffect(() => {
     document.title = t('p_correspondence');
     fetchInitialData();
-    // fetchSSE();
-    EventBus.on(SSE_TYPE.CORRESPONDENCE, handleSSE);
-    return () => {
-      EventBus.off(SSE_TYPE.CORRESPONDENCE, handleSSE);
-    };
   }, []);
 
   const fetchInitialData = async () => {
@@ -57,14 +60,27 @@ export const CorrespondencePage: FunctionalComponent = () => {
     }
   };
 
-  // const fetchSSE = useCallback(async () => {
-  //   await SseManager.getQuery(['correspondences', 'stream']);
-  // }, []);
+  useEffect(() => {
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.CORRESPONDENCE,
+      handleMessage,
+      MESSAGE_LISTENERS.CORRESPONDENCE
+    );
+    return () => {
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.CORRESPONDENCE,
+        MESSAGE_LISTENERS.CORRESPONDENCE
+      );
+    };
+  }, []);
 
-  const handleSSE = async (event: IBaseSSE) => {
-    const { name, message } = event;
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { type: name, message } = event.payload;
 
-    if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
+    if (
+      name === SOCKET_MESSAGE_EVENTS.UPDATE ||
+      name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK
+    ) {
       const index = correspondence.value.findIndex(
         (value: any) => value.id === message.id
       );
@@ -74,7 +90,7 @@ export const CorrespondencePage: FunctionalComponent = () => {
       correspondence.value = [...copy];
     }
 
-    if (name === SSE_EVENTS.CREATE) fetchInitialData();
+    if (name === SOCKET_MESSAGE_EVENTS.CREATE) fetchInitialData();
   };
 
   const toggleUpsertModal = () => {
@@ -176,6 +192,7 @@ export const CorrespondencePage: FunctionalComponent = () => {
           // expandable={(row: ICorrespondence) => (
           //   <ExpandableCorrespondence row={row} />
           // )}
+          modules={modulesReport.Correspondence}
         />
       </div>
 

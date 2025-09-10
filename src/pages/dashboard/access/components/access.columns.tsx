@@ -26,7 +26,15 @@ export const getColumns = (
     id: 'name',
     accessorKey: 'name',
     size: 180,
-    header: 'h_name',
+    header: 'h_resident',
+    enableGrouping: true,
+  },
+  {
+    id: 'personName',
+    accessorKey: 'checkIn.personName',
+    size: 160,
+    // header: 'h_person_entry',
+    header: 'h_visit',
     enableGrouping: true,
   },
   {
@@ -36,10 +44,7 @@ export const getColumns = (
     header: 'h_entry_type',
     cell: (info) => {
       let entryType = info.getValue() as string;
-      const { plate } = info.row.original;
-      return entryType === 'VEHICLE'
-        ? i18n.t('vehicule') + ' ' + plate
-        : i18n.t('peatonal');
+      return entryType === 'VEHICLE' ? i18n.t('vehicule') : i18n.t('peatonal');
     },
   },
   {
@@ -47,13 +52,6 @@ export const getColumns = (
     accessorKey: 'checkIn.house',
     size: 140,
     header: 'h_house_number',
-    enableGrouping: true,
-  },
-  {
-    id: 'personName',
-    accessorKey: 'checkIn.personName',
-    size: 160,
-    header: 'h_person_entry',
     enableGrouping: true,
   },
   {
@@ -80,9 +78,33 @@ export const getColumns = (
     cell: (info) => {
       const signature = info.getValue() as string;
       return signature ? (
-        <span className='text-green-600'>✓ {i18n.t('yes')}</span>
+        <div
+          className='border rounded bg-white p-2 flex items-center justify-center cursor-pointer hover:bg-gray-50'
+          style={{ width: 60, height: 60 }}
+        >
+          <div
+            style={{ width: '100%', height: '100%' }}
+            dangerouslySetInnerHTML={{ __html: signature }}
+          />
+        </div>
       ) : (
         <span className='text-gray-400'>✗ {i18n.t('no')}</span>
+      );
+    },
+  },
+  {
+    id: 'plate',
+    accessorKey: 'plate',
+    size: 100,
+    header: 'h_plate',
+    cell: (info) => {
+      const plate = info.getValue() as string;
+      return (
+        <span
+          className={plate ? 'truncate max-w-[180px] block' : 'text-gray-400'}
+        >
+          {plate ? plate : `✗ ${i18n.t('no')}`}
+        </span>
       );
     },
   },

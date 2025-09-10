@@ -1,7 +1,6 @@
 import { IPresignedRequest } from '@/types/file';
 import { ShowFilesProps } from './utils/interface';
 import { useUserStore } from '@/store/slices';
-import { cdn_service_url } from '@/env.config';
 import {
   allowedAudioTypesConst,
   allowedDocumentTypesConst,
@@ -16,6 +15,7 @@ import { VideoPlayer } from './components/VideoPlayer';
 import MapViewer from './components/mapViewer';
 import MapPathViewer from './components/mapPathViewer';
 import { fileManager } from '@/utils/network/file/file';
+import { SvgViewer } from './components/svg.viewer';
 
 const showFiles = ({
   resources = [],
@@ -23,6 +23,7 @@ const showFiles = ({
   removeFile,
   mapPoint,
   disabled,
+  svg,
 }: ShowFilesProps) => {
   const { getTenant, getCompanyId } = useUserStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,8 +31,7 @@ const showFiles = ({
   const [startIdx, setStartIdx] = useState(0);
 
   const getUrl = (file: IPresignedRequest) => {
-    const validation = `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
-    return validation;
+    return fileManager.getUrl(getTenant(), getCompanyId(), file);
   };
 
   useEffect(() => {
@@ -137,6 +137,9 @@ const showFiles = ({
           transparent
           disabled={!showRight}
         ></Button>
+      )}
+      {typeof svg === 'string' && svg.trim() !== '' && svg.includes('<svg') && (
+        <SvgViewer src={svg} />
       )}
     </div>
   );

@@ -29,7 +29,7 @@ const ShiftInfo = ({
             </h2>
             <div className='flex flex-row gap-2 flex-wrap justify-end'>
               <Chip
-                label={`${t('h_progress')}: ${activityPct}%`}
+                label={`${'h_progress'}: ${activityPct}%`}
                 color='primary'
               />
             </div>

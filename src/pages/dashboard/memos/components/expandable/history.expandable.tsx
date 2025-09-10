@@ -9,8 +9,6 @@ import { Button } from '@/components/common/button/button';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { FormattedDate } from '@/components/compose/forms';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/sse/event.bus';
 import {
   IOption,
   SmartSelector,
@@ -28,6 +26,18 @@ import { Badge } from '@/components/common/badge/badge';
 import { useTranslation } from 'react-i18next';
 import { required } from '@/utils/utilities';
 
+/**
+ * TODO: WebSocket
+ */
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  MessageEvent,
+  MESSAGE_LISTENERS,
+  SOCKET_MESSAGE_EVENTS,
+} from '@/utils/socket/manager/types';
+
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const { t } = useTranslation();
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -41,21 +51,29 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   useEffect(() => {
     fetchInitialData();
-    EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
-    EventBus.on(SSE_TYPE.PANIC, handleMemoSSE);
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.MEMOS,
+      handleMessage,
+      MESSAGE_LISTENERS.MEMO_HISTORY
+    );
     return () => {
-      EventBus.off(SSE_TYPE.MEMO, handleMemoSSE);
-      EventBus.off(SSE_TYPE.PANIC, handleMemoSSE);
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.MEMOS,
+        MESSAGE_LISTENERS.MEMO_HISTORY
+      );
     };
   }, []);
 
-  const handleMemoSSE = (event: IBaseSSE) => {
-    const { name, message } = event;
-    if (name === SSE_EVENTS.CREATE_PARENT || name === SSE_EVENTS.PANIC) {
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { type: name, message } = event.payload;
+    if (
+      name === SOCKET_MESSAGE_EVENTS.CREATE_PARENT ||
+      name === SOCKET_MESSAGE_EVENTS.PANIC
+    ) {
       fetchInitialData();
     }
 
-    if (name === SSE_EVENTS.UPDATE_CHECK) {
+    if (name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK) {
       if (memo.id !== Number(message.id)) return;
       status.value = message.state;
     }
@@ -166,7 +184,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
     if (values.date) extraData.time = values.date;
 
     const newMemo: Memo = {
-      ...lastMemo,
+      // ...lastMemo,
       description: values.message.trim() ? values.message : '...',
       priority:
         lastMemo.priority === 'Alta'
@@ -174,8 +192,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           : lastMemo.priority === 'Media'
             ? 4
             : 3,
-      updatedAt: DateUtils.dateToBackend(new Date()),
-      createdAt: DateUtils.dateToBackend(new Date()),
+      date: DateUtils.dateToBackend(new Date()),
+      latitude: lastMemo.latitude,
+      longitude: lastMemo.longitude,
       parentId: lastMemo.id,
       extraData: extraData,
       resource: files.value && files.value.length > 0 ? files.value : undefined,
@@ -193,7 +212,6 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const handleAttachmentUpload = (e: any) => {
     const fileInput: IPresignedRequest = e.target.value[0];
-    // console.log('fileInput', fileInput);
     files.value = [...files.value, fileInput];
   };
 
@@ -275,20 +293,22 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                       )}
                       {memo.attachments && memo.attachments.length > 0 && (
                         <div className='mt-2 flex flex-wrap gap-2'>
-                          {memo.attachments.map((attachment, idx) => (
-                            <a
-                              key={idx}
-                              href={attachment.url}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                              className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
-                            >
-                              <span className='vox-icon size-sm vx-icon-311 px-1' />
-                              <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
-                                {attachment.name}
-                              </span>
-                            </a>
-                          ))}
+                          {memo.attachments.map(
+                            (attachment: any, idx: number) => (
+                              <a
+                                key={idx}
+                                href={attachment.url}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
+                              >
+                                <span className='vox-icon size-sm vx-icon-311 px-1' />
+                                <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
+                                  {attachment.name}
+                                </span>
+                              </a>
+                            )
+                          )}
                         </div>
                       )}
                     </div>

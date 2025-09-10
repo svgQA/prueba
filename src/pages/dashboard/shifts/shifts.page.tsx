@@ -45,12 +45,21 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
-// import { AudioButton } from './audio/socket.button';
 import { getLocation } from '@/utils/utilities/location';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/sse/event.bus';
 import { useUserStore } from '@/store/slices';
 import { modulesReport } from '@/types/form';
+
+/**
+ * TODO: WebSocket
+ */
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  SOCKET_MESSAGE_EVENTS,
+  MessageEvent,
+  MESSAGE_LISTENERS,
+} from '@/utils/socket/manager/types';
 
 enum VIEW_NAME {
   TABLE,
@@ -124,11 +133,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     if (selectedCompany) {
       handleGetShiftSummary();
       fetchInitialData(dateRangeFilters);
-      // fetchSSE();
-      EventBus.on(SSE_TYPE.SHIFT, handleMemoSSE);
-      return () => {
-        EventBus.off(SSE_TYPE.SHIFT, handleMemoSSE);
-      };
     }
   }, [selectedCompany, location, dateRangeFilters]);
 
@@ -168,10 +172,27 @@ export const ShiftsPage: FunctionalComponent = () => {
     setHasValidPlayer(result);
   }, [shifts.value]);
 
-  const handleMemoSSE = (event: IBaseSSE) => {
-    const { name, message } = event;
+  useEffect(() => {
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.SHIFTS,
+      handleMessage,
+      MESSAGE_LISTENERS.SHIFTS
+    );
+    return () => {
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.SHIFTS,
+        MESSAGE_LISTENERS.SHIFTS
+      );
+    };
+  }, []);
 
-    if (name === SSE_EVENTS.UPDATE || name === SSE_EVENTS.UPDATE_CHECK) {
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { type: name, message } = event.payload;
+
+    if (
+      name === SOCKET_MESSAGE_EVENTS.UPDATE ||
+      name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK
+    ) {
       const shiftIndex = shifts.value.findIndex(
         (shift) => Number(shift.id) === Number(message.id)
       );
@@ -181,7 +202,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       shifts.value = [...shiftCopy];
     }
 
-    if (name === SSE_EVENTS.CREATE) {
+    if (name === SOCKET_MESSAGE_EVENTS.CREATE) {
       fetchInitialData(dateRangeFilters);
     }
   };
@@ -446,7 +467,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         {/*
         <Button
           name='button-supervision'
-          label={t('shifts.remoteSupervision')}
+          label={t('l_remote_supervision')}
           className='bg-primary text-white py-1 rounded px-4'
           icon='079'
           iconSize='sm'
@@ -716,7 +737,7 @@ export const ShiftsPage: FunctionalComponent = () => {
         {currentView.value === VIEW_NAME.PLANNER && (
           <PlannerView services={memoizedServices} users={memoizedUsers} />
         )}
-        {currentView.value === VIEW_NAME.MAP && <LiveUserMap />}
+        {currentView.value === VIEW_NAME.MAP && <LiveUserMap unsearch />}
       </div>
 
       <TaskForm

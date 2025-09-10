@@ -8,6 +8,11 @@ import {
 export interface RoutePoint {
   coords: [number, number];
   action?: string;
+  info?: RouteInfo;
+}
+
+interface RouteInfo {
+  [key: string]: string | number | boolean;
 }
 
 export class TrackingService extends BaseService {

@@ -1,14 +1,11 @@
 export const buttons_es = {
   continue: 'Continuar',
-  edit: 'Editar',
-  delete: 'Eliminar',
-  cancel: 'Cancelar',
-  create: 'Crear',
+
   remote: 'Notificaciones / Supervisión',
-  save: 'Guardar',
+
   unsaved: 'No guardado',
   saving: 'Guardando...',
-  description: 'Descripción',
+
   condition: 'Condición',
   group: 'Grupo',
   new: 'Nuevo',
@@ -19,37 +16,30 @@ export const buttons_es = {
   next: 'Siguiente',
   previous: 'Anterior',
   finish: 'Finalizar',
-  send: 'Enviar',
-  page: 'Página',
-  of: 'de',
+
   restore: 'Restaurar',
   apply: 'Aplicar',
 };
 
 export const buttons_en = {
   continue: 'Continue',
-  edit: 'Edit',
-  delete: 'Delete',
-  cancel: 'Cancel',
-  create: 'Create',
+
   remote: 'Remote Supervision',
-  save: 'Save',
+
   unsaved: 'Unsaved',
   saving: 'Saving...',
-  description: 'Description',
+
   condition: 'Condition',
   group: 'Group',
   new: 'New',
   clean: 'Clean',
-  i_form: 'Form',
+  form: 'Form',
   type_task: 'Task Type',
   type_report: 'Report Type',
   next: 'Next',
   previous: 'Previous',
   finish: 'Finish',
-  send: 'Send',
-  page: 'Page',
-  of: 'of',
+
   restore: 'Restore',
   apply: 'Apply',
 };

@@ -5,6 +5,10 @@ import {
 import { IOption } from '@/components/common/smart-selector/smart-select';
 
 export interface Memo {
+  [key: string]: any;
+}
+/*
+export interface Memo {
   newMemo: import('/home/tryvoo/proyects/tryvoo/voxline-dashboard/src/types/file/service').IPresignedRequest;
   id: number;
   noveltyId?: number;
@@ -61,6 +65,7 @@ export interface Memo {
   relatedShiftId: number;
   panicUuid?: string;
 }
+*/
 
 export interface Novelty {
   id: number;

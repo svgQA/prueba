@@ -1,20 +1,20 @@
-import { tracking_service_url } from '@/env.config';
-import { useUserStore } from '@/store/slices';
-import io from 'socket.io-client';
 import { Search } from '@/components/common/search/search';
 import { ColumnFiltersState } from '@tanstack/react-table';
-import { Shift, User } from './types';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { Shift, TrackingPayload, User } from './types';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 import MapLibreShowPoints from '@/components/common/map/MapLibreShowPoints';
 import { useTranslation } from 'react-i18next';
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+} from '@/utils/socket/manager/types';
 
 const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   const [users, setUsers] = useState<User[]>([]);
-  const [_, setConnectionStatus] = useState<string>('Connecting...');
-  const socketRef = useRef<any>(null);
-  const { getToken, tenant } = useUserStore();
   const [searchFilters, setSearchFilters] = useState<ColumnFiltersState>([]);
   const { t } = useTranslation();
+
   const searchKeys = useMemo(
     () => [
       { id: 'name', label: t('h_name'), type: 'text' },
@@ -25,102 +25,50 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
     []
   );
 
-  const connect_socket = () => {
-    const socket = io(tracking_service_url, {
-      query: { token: getToken(), tenantId: tenant, using: 'web' },
-    });
-    socketRef.current = socket;
-    socket.on('connect', () => setConnectionStatus('Connected'));
-    socket.on('disconnect', disconnect_socket);
-    socket.on('connect_error', disconnect_socket);
-    socket.on('location-update', handle_location_update);
-    // socket.on('location-remove', handle_location_remove);
-    // socket.on('user-disconnected', handle_user_disconnected);
-    socket.on('all-locations', handle_all_locations);
-  };
+  const handleLocation = (message: InSocketMessage<TrackingPayload>) => {
+    const {
+      sub: id,
+      coords: { latitude: lat, longitude: lng },
+      name,
+    } = message.payload;
 
-  const disconnect_socket = () => {
-    if (socketRef.current) {
-      socketRef.current.removeAllListeners();
-      socketRef.current.disconnect();
-      socketRef.current = null;
-    }
-    setConnectionStatus('Disconnected');
-  };
+    setUsers((prev) => {
+      const i = prev.findIndex((u) => u.id === id);
 
-  /*
-const handle_location_remove = (user: User | User[]) => {
-  setUsers((prevUsers) => {
-    if (Array.isArray(user)) {
-      // Handle array of users
-      return user.reduce(
-        (acc, currentUser) => {
-          const index = acc.findIndex((u) => u.id === currentUser.id);
-          if (index !== -1) {
-            acc[index] = currentUser;
-          } else {
-            acc.push(currentUser);
-          }
-          return acc;
-        },
-        [...prevUsers]
-      );
-    } else {
-      // Handle single user
-      const index = prevUsers.findIndex((u) => u.id === user.id);
-      if (index !== -1) {
-        const updated = [...prevUsers];
-        updated[index] = user;
-        return updated;
-      } else {
-        return [...prevUsers, user];
+      if (i === -1) {
+        return [
+          ...prev,
+          {
+            id,
+            lat,
+            lng,
+            name,
+            type: 'provider',
+            token: '',
+            tenantId: 1,
+            userShifts: [],
+          } as User,
+        ];
       }
-    }
-  });
-};
 
-const handle_user_disconnected = (user: { id: string }) => {
-  setUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
-}
-*/
+      const u = prev[i];
+      if (u.lat === lat && u.lng === lng && u.name === name) return prev;
 
-  const handle_location_update = (user: User | User[]) => {
-    setUsers((prevUsers) => {
-      if (Array.isArray(user)) {
-        // Handle array of users
-        return user.reduce(
-          (acc, currentUser) => {
-            const index = acc.findIndex((u) => u.id === currentUser.id);
-            if (index !== -1) {
-              acc[index] = currentUser;
-            } else {
-              acc.push(currentUser);
-            }
-            return acc;
-          },
-          [...prevUsers]
-        );
-      } else {
-        // Handle single user
-        const index = prevUsers.findIndex((u) => u.id === user.id);
-        if (index !== -1) {
-          const updated = [...prevUsers];
-          updated[index] = user;
-          return updated;
-        } else {
-          return [...prevUsers, user];
-        }
-      }
+      const next = prev.slice();
+      next[i] = { ...u, lat, lng, name };
+      return next;
     });
-  };
-
-  const handle_all_locations = (allUsers: User[]) => {
-    setUsers(allUsers);
   };
 
   useEffect(() => {
-    connect_socket();
-    return () => disconnect_socket();
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.TRACKING,
+      handleLocation,
+      'tracking-map'
+    );
+    return () => {
+      WebSocketManager.remove(SOCKET_MESSAGE_AREA.TRACKING, 'tracking-map');
+    };
   }, []);
 
   const mapPoints = useMemo(() => {
@@ -186,7 +134,7 @@ const handle_user_disconnected = (user: { id: string }) => {
 
   return (
     <div>
-      <div className='w-full py-1 pb-3 flex items-center justify-end'>
+      <div className='w-full py-1 pb-3 flex items-center justify-end h-14'>
         {!unsearch && (
           <Search
             id='search-map'
@@ -198,14 +146,6 @@ const handle_user_disconnected = (user: { id: string }) => {
         )}
       </div>
 
-      {/* <MapLibrePointsMap
-        name='map-points'
-        pointsRef={mapPoints}
-        sendPoints={() => {}}
-        height='78vh'
-        disablePointSelection={true}
-        adminUser={true}
-      /> */}
       <MapLibreShowPoints
         name='map-points'
         pointsRef={mapPoints}
