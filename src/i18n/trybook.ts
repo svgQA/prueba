@@ -42,6 +42,99 @@ export const trybook_es = {
         floor: 'Ingrese el Piso...',
       },
     },
+
+    commonzone: {
+      success: 'Zona común creada exitosamente!',
+      update: 'Zona común actualizada exitosamente!',
+      title: 'Zonas comunes',
+      create: 'Nueva zona común',
+      edit: 'Editar zona común',
+      delete: 'Zona común eliminada exitosamente!',
+      showAlert: {
+        msg: '¿Estás seguro de querer eliminar la zona común?',
+        title: 'Eliminar zona común',
+      },
+      table: {
+        zone: 'Zona',
+        name: 'Nombre',
+        type: 'Tipo',
+        place: 'Conjunto',
+        slots: 'Cupos',
+        status: 'Estado',
+        actions: 'Acciones',
+      },
+      form: {
+        name: 'Nombre de la zona',
+        type: 'Tipo de zona',
+        place: 'Conjunto',
+        status: 'Estado',
+      },
+      placeholder: {
+        name: 'Ingrese el nombre de la zona...',
+        type: 'Seleccione el tipo...',
+        place: 'Seleccione el conjunto...',
+        slotsCount: 'Ingrese el número de cupos...',
+      },
+      types: {
+        PARKING: 'Parqueadero',
+        POOL: 'Piscina',
+        GYM: 'Gimnasio',
+        COURT: 'Cancha',
+        BBQ: 'BBQ',
+        MEETING: 'Sala de reuniones',
+        OTHER: 'Otro',
+      },
+      status: {
+        ACTIVE: 'Activa',
+        INACTIVE: 'Inactiva',
+      },
+    },
+
+    /** ───── Common Slot ───── */
+    commonslot: {
+      success: 'Cupo creado exitosamente!',
+      update: 'Cupo actualizado exitosamente!',
+      title: 'Cupos',
+      create: 'Nuevo cupo',
+      edit: 'Editar cupo',
+      delete: 'Cupo eliminado exitosamente!',
+      showAlert: {
+        msg: '¿Estás seguro de querer eliminar el cupo?',
+        title: 'Eliminar cupo',
+      },
+      table: {
+        code: 'Código',
+        zone: 'Zona',
+        place: 'Conjunto',
+        occupied: 'Ocupado',
+        status: 'Estado',
+        actions: 'Acciones',
+      },
+      form: {
+        code: 'Código del cupo',
+        zone: 'Zona',
+        status: 'Estado',
+        isOccupied: '¿Marcar como ocupado?',
+      },
+      placeholder: {
+        code: 'Ingrese el código del cupo...',
+        zone: 'Seleccione la zona...',
+        status: 'Seleccione el estado...',
+      },
+      status: {
+        ACTIVE: 'Activo',
+        INACTIVE: 'Inactivo',
+      },
+      occupied: {
+        YES: 'Sí',
+        NO: 'No',
+      },
+      actions: {
+        occupy: 'Ocupar',
+        free: 'Liberar',
+      },
+    },
+
     resourceZone: {
       success: 'Zona de recurso creada exitosamente!',
       update: 'Zona de recurso actualizada exitosamente!',
@@ -96,49 +189,6 @@ export const trybook_es = {
         OTHER: 'Otro',
       },
     },
-    commonslot: {
-      success: 'Cupo creado exitosamente!',
-      update: 'Cupo actualizado exitosamente!',
-      title: 'Cupos',
-      create: 'Nuevo cupo',
-      edit: 'Editar cupo',
-      delete: 'Cupo eliminado exitosamente!',
-      showAlert: {
-        msg: '¿Estás seguro de querer eliminar el cupo?',
-        title: 'Eliminar cupo',
-      },
-      table: {
-        code: 'Código',
-        zone: 'Zona',
-        place: 'Conjunto',
-        occupied: 'Ocupado',
-        status: 'Estado',
-        actions: 'Acciones',
-      },
-      form: {
-        code: 'Código del cupo',
-        zone: 'Zona',
-        status: 'Estado',
-        isOccupied: '¿Marcar como ocupado?',
-      },
-      placeholder: {
-        code: 'Ingrese el código del cupo...',
-        zone: 'Seleccione la zona...',
-        status: 'Seleccione el estado...',
-      },
-      status: {
-        ACTIVE: 'Activo',
-        INACTIVE: 'Inactivo',
-      },
-      occupied: {
-        YES: 'Sí',
-        NO: 'No',
-      },
-      actions: {
-        occupy: 'Ocupar',
-        free: 'Liberar',
-      },
-    },
   },
 };
 
@@ -186,6 +236,99 @@ export const trybook_en = {
         floor: 'Enter the floor...',
       },
     },
+
+    commonzone: {
+      success: 'Common zone created successfully!',
+      update: 'Common zone updated successfully!',
+      title: 'Common zones',
+      create: 'New common zone',
+      edit: 'Edit common zone',
+      delete: 'Common zone deleted successfully!',
+      showAlert: {
+        msg: 'Are you sure you want to delete the common zone?',
+        title: 'Delete common zone',
+      },
+      table: {
+        zone: 'Zone',
+        name: 'Name',
+        type: 'Type',
+        place: 'Complex',
+        slots: 'Slots',
+        status: 'Status',
+        actions: 'Actions',
+      },
+      form: {
+        name: 'Zone name',
+        type: 'Zone type',
+        place: 'Place',
+        status: 'Status',
+      },
+      placeholder: {
+        name: 'Enter the zone name...',
+        type: 'Select the type...',
+        place: 'Select the place...',
+        slotsCount: 'Enter the number of slots...',
+      },
+      types: {
+        PARKING: 'Parking',
+        POOL: 'Pool',
+        GYM: 'Gym',
+        COURT: 'Court',
+        BBQ: 'BBQ',
+        MEETING: 'Meeting room',
+        OTHER: 'Other',
+      },
+      status: {
+        ACTIVE: 'Active',
+        INACTIVE: 'Inactive',
+      },
+    },
+
+    /** ───── Common Slot ───── */
+    commonslot: {
+      success: 'Slot created successfully!',
+      update: 'Slot updated successfully!',
+      title: 'Slots',
+      create: 'New slot',
+      edit: 'Edit slot',
+      delete: 'Slot deleted successfully!',
+      showAlert: {
+        msg: 'Are you sure you want to delete the slot?',
+        title: 'Delete slot',
+      },
+      table: {
+        code: 'Code',
+        zone: 'Zone',
+        place: 'Complex',
+        occupied: 'Occupied',
+        status: 'Status',
+        actions: 'Actions',
+      },
+      form: {
+        code: 'Slot code',
+        zone: 'Zone',
+        status: 'Status',
+        isOccupied: 'Mark as occupied?',
+      },
+      placeholder: {
+        code: 'Enter the slot code...',
+        zone: 'Select the zone...',
+        status: 'Select the status...',
+      },
+      status: {
+        ACTIVE: 'Active',
+        INACTIVE: 'Inactive',
+      },
+      occupied: {
+        YES: 'Yes',
+        NO: 'No',
+      },
+      actions: {
+        occupy: 'Occupy',
+        free: 'Free',
+      },
+    },
+
     resourceZone: {
       success: 'Resource zone created successfully!',
       update: 'Resource zone updated successfully!',
@@ -238,49 +381,6 @@ export const trybook_en = {
         TOOL: 'Tool',
         GAME: 'Recreation',
         OTHER: 'Other',
-      },
-    },
-    commonslot: {
-      success: 'Slot created successfully!',
-      update: 'Slot updated successfully!',
-      title: 'Slots',
-      create: 'New slot',
-      edit: 'Edit slot',
-      delete: 'Slot deleted successfully!',
-      showAlert: {
-        msg: 'Are you sure you want to delete the slot?',
-        title: 'Delete slot',
-      },
-      table: {
-        code: 'Code',
-        zone: 'Zone',
-        place: 'Complex',
-        occupied: 'Occupied',
-        status: 'Status',
-        actions: 'Actions',
-      },
-      form: {
-        code: 'Slot code',
-        zone: 'Zone',
-        status: 'Status',
-        isOccupied: 'Mark as occupied?',
-      },
-      placeholder: {
-        code: 'Enter the slot code...',
-        zone: 'Select the zone...',
-        status: 'Select the status...',
-      },
-      status: {
-        ACTIVE: 'Active',
-        INACTIVE: 'Inactive',
-      },
-      occupied: {
-        YES: 'Yes',
-        NO: 'No',
-      },
-      actions: {
-        occupy: 'Occupy',
-        free: 'Free',
       },
     },
   },
