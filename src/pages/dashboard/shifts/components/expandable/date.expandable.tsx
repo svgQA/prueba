@@ -34,8 +34,8 @@ type StatusColor = 'error' | 'success' | 'warning' | 'info' | 'ternary';
 
 const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
   const { t } = useTranslation();
-  const [checkInData, _setCheckInData] = useState(checkIn);
-  const [checkOutData, _setCheckOutData] = useState(checkOut);
+  const [checkInData, setCheckInData] = useState(checkIn);
+  const [checkOutData, setCheckOutData] = useState(checkOut);
 
   const checkInStatus = useSignal<ICheckStatus>({
     message: t('l_check_pending'),
@@ -134,6 +134,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       shift.end,
       false
     );
+    setCheckInData(checkIn);
+    setCheckOutData(checkOut);
   }, [checkIn, checkOut, shift]);
 
   return (
