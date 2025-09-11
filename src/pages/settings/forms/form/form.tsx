@@ -169,7 +169,7 @@ export const FormSettingPage = () => {
 
   const handleRemoveUnfinishedForm = () => {
     showAlert({
-      title: 'Eliminar Formulario',
+      title: t('l_delete_form'),
       message: t('i_delete_form'),
       onConfirm: handleContinueUnfinishedForm,
       onCancel: () => {},

@@ -24,7 +24,7 @@ export const CardElement = ({
           <div className='text-sm border border-zinc-300 rounded-md p-2 mt-1'>
             <input
               type='text'
-              placeholder='Text input'
+              placeholder='p_text_input'
               disabled
               value={element.default}
             />
@@ -34,7 +34,7 @@ export const CardElement = ({
         return (
           <div className='text-sm border border-zinc-300 rounded-md p-2 mt-1'>
             <textarea
-              placeholder='Text area'
+              placeholder='p_text_area'
               className='w-full min-h-6'
               disabled
               value={element.default}
@@ -271,7 +271,9 @@ export const CardElement = ({
           <p
             className={`font-thin text-sm ${element.type === ELEMENT_TYPE.SECTION ? 'border-b-2 pb-3' : ''}`}
           >
-            {element.description ? element.description : 'Element Description'}
+            {element.description
+              ? element.description
+              : t('h_element_description')}
           </p>
         )}
         {renderPreviewElement()}

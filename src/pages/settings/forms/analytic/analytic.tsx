@@ -7,5 +7,5 @@ export const FormAnalyticSettingPage: FunctionComponent = () => {
   useEffect(() => {
     document.title = t('p_setting');
   }, []);
-  return <section>FORMS ANALYTIC SETTINGS</section>;
+  return <section>{t('i_forms_analytic_settings')}</section>;
 };

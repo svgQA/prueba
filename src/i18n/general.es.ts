@@ -32,22 +32,6 @@ export const general_es = {
       services: 'Servicios',
     },
   },
-  forms: {
-    pageTitle: 'TR - Servicio de Formularios',
-    cards: {},
-    columns: {
-      user: 'Usuario',
-      title: 'Título',
-      id: 'ID',
-      createdAt: 'Fecha de creación',
-      updatedAt: 'Última actualización',
-      status: 'Estado',
-      actions: 'Acciones',
-    },
-    buttons: {
-      continue: 'Continuar',
-    },
-  },
   history: {
     pageTitle: 'TR - Historial de Notificaciones',
     title: 'Historial de notificaciones',

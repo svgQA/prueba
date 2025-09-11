@@ -77,7 +77,7 @@ export function PdfmeEditor() {
         <Button
           onClick={handleExport}
           name='button-export-pdf'
-          label='Exportar PDF'
+          label='l_export_pdf'
           icon='034'
         />
         <Button

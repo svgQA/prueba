@@ -131,6 +131,7 @@ export const columns_es = {
   h_platform: 'Plataforma',
   h_token: 'Token',
   h_plate: 'Placa',
+  h_element_description: 'Descripción del elemento',
 };
 
 export const columns_en = {
@@ -266,4 +267,5 @@ export const columns_en = {
   h_platform: 'Platform',
   h_token: 'Token',
   h_plate: 'Plate',
+  h_element_description: 'Element description',
 };
