@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { Input } from '../input/input';
+import { useTranslation } from 'react-i18next';
 
 interface ColorPickerProps {
   id?: string;
@@ -23,14 +24,15 @@ export const ColorPicker: FunctionComponent<ColorPickerProps> = ({
   onChange,
   meta,
 }) => {
+  const { t } = useTranslation();
   return (
     <div>
       <Input
         id={id}
         name={name}
-        label={label}
+        label={t(label)}
         value={value}
-        placeholder={placeholder}
+        placeholder={t(placeholder)}
         type='color'
         onChange={(e) => {
           const target = e.target as HTMLInputElement;

@@ -6,6 +6,7 @@ import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
 import { DateUtils } from '@/utils/utilities/dates';
 import { SvgViewer } from '../file/components/svg.viewer';
+import { useTranslation } from 'react-i18next';
 
 export const Signature = ({
   name,
@@ -15,6 +16,7 @@ export const Signature = ({
   disabled,
   ...props
 }: SignatureProps) => {
+  const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
   const lastPoint = useRef<{ x: number; y: number } | null>(null);
@@ -170,7 +172,7 @@ export const Signature = ({
 
   return (
     <div className='flex flex-col gap-2 items-start w-full h-full'>
-      {label && <label className='mb-1 font-medium'>{label}</label>}
+      {label && <label className='mb-1 font-medium'>{t(label)}</label>}
       <div
         className='relative border rounded bg-white'
         style={{ width: 350, height: 150 }}

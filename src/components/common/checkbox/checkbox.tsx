@@ -1,5 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { type ICheckboxProps } from './interface';
+import { useTranslation } from 'react-i18next';
 
 export const Checkbox: FunctionComponent<ICheckboxProps> = ({
   onChange,
@@ -12,6 +13,7 @@ export const Checkbox: FunctionComponent<ICheckboxProps> = ({
   disabled,
   ...props
 }: ICheckboxProps) => {
+  const { t } = useTranslation();
   return (
     <div id={id} className='w-full my-1'>
       {label && (
@@ -19,7 +21,7 @@ export const Checkbox: FunctionComponent<ICheckboxProps> = ({
           for={`${id}-input`}
           className='capitalize block text-sm font-medium'
         >
-          {label}
+          {t(label)}
         </label>
       )}
       <div className='flex flex-col gap-2'>
@@ -39,7 +41,7 @@ export const Checkbox: FunctionComponent<ICheckboxProps> = ({
               {...props}
             />
             <label for={`${id}-${option.value}-ch`} className='text-sm'>
-              {option.label}
+              {t(option.label)}
             </label>
           </div>
         ))}
