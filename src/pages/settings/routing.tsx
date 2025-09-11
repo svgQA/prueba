@@ -82,6 +82,8 @@ import { CommonZoneCreatePage } from './trybook/commonzone/comonzone.create';
 import { CommonSlotCreatetPage } from './trybook/commonslot/commonslot.create';
 import { TrybookCommonSlotsPage } from './trybook/commonslot/trybook.commonslot';
 import { WebHookSettingPage } from './general/webhook/webhook';
+import { TrybookResourceZonesPage } from './trybook/resourcezone/trybook.resourcezone';
+import { ResourceZoneCreatePage } from './trybook/resourcezone/resourcezone.create';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -642,6 +644,20 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.trybook.commonSlots.update.to}
           component={lazy(() => Promise.resolve({ default: CommonSlotCreatetPage }))}
+        />
+
+        {/* OPCIONES RESOURCE ZONE */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.to}
+          component={lazy(() => Promise.resolve({ default: TrybookResourceZonesPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.create.to}
+          component={lazy(() => Promise.resolve({ default: ResourceZoneCreatePage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.update.to}
+          component={lazy(() => Promise.resolve({ default: ResourceZoneCreatePage }))}
         />
 
       </Suspense>

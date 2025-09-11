@@ -450,6 +450,18 @@ export const PAGES_LIST_ROUTER = {
             to: '/trybook/commonslot/update/:id',
           },
         },
+        resourceZones: {
+          base: '/resourcezone',
+          to: '/trybook/resourcezone',
+          create: {
+            base: '/create',
+            to: '/trybook/resourcezone/create',
+          },
+          update: {
+            base: '/update',
+            to: '/trybook/resourcezone/update/:id',
+          },
+        },
       },
     },
   },

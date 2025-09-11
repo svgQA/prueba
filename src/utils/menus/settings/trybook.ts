@@ -34,6 +34,15 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
             to: PAGES_LIST_ROUTER.dashboard.setting.trybook.commonSlots.base,
             show: true,
             id: 'trybook:commonslot:state',
-        }
+        },
+        {
+            icon: '195',    
+            label: 'm_resourcezone',
+            description: 'd_resourcezone',
+            base,
+            to: PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.base,
+            show: true,
+            id: 'trybook:resourcezone:state',
+        },
     ],
 };
