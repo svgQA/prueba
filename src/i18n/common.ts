@@ -56,7 +56,7 @@ export const common_es = {
   HIGH: 'Alta',
   MEDIUM: 'Media',
   LOW: 'Baja',
-  s_title: 'Formulario'
+  s_title: 'Formulario',
 };
 
 export const common_en = {
@@ -121,5 +121,5 @@ export const common_en = {
   HIGH: 'High',
   MEDIUM: 'Medium',
   LOW: 'Low',
-  s_title: 'Form'
+  s_title: 'Form',
 };

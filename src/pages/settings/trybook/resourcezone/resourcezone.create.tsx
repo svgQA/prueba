@@ -24,8 +24,8 @@ interface FormData {
   zoneId?: IOption;
 
   quantity?: number;
-  isBookable?: IOption;        // boolean via IOption
-  requiresApproval?: IOption;  // boolean via IOption
+  isBookable?: IOption; // boolean via IOption
+  requiresApproval?: IOption; // boolean via IOption
   minDurationMinutes?: number;
   maxDurationMinutes?: number;
   bufferMinutes?: number;
@@ -53,26 +53,32 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
   const { selectedCompany } = useUserStore();
 
   const zones: Signal<IOption[]> = useSignal([]);
-  const rawZones: Signal<Array<{ id: number; name: string; type: string; place?: { name?: string } }>> = useSignal([]);
+  const rawZones: Signal<
+    Array<{ id: number; name: string; type: string; place?: { name?: string } }>
+  > = useSignal([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const loading = useSignal<boolean>(false);
 
   // ← Solo zonas comunes cuyo type != 'PARKING'
- // ← reemplaza tu getZones por este (no filtra visualmente)
-const getZones = useCallback(async () => {
-  const req = await CommonZoneService.getCommonZones();
-  if (!req.getStatus()) return;
+  // ← reemplaza tu getZones por este (no filtra visualmente)
+  const getZones = useCallback(async () => {
+    const req = await CommonZoneService.getCommonZones();
+    if (!req.getStatus()) return;
 
-  const list = req.getMany() as Array<{ id: number; name: string; type: string; place?: { name?: string } }>;
-  rawZones.value = list;
+    const list = req.getMany() as Array<{
+      id: number;
+      name: string;
+      type: string;
+      place?: { name?: string };
+    }>;
+    rawZones.value = list;
 
-  // Mostramos todas, pero marcamos cuáles son PARKING para que el usuario lo vea.
-  zones.value = list.map((z) => ({
-    value: String(z.id),
-    label: `${z.name}${z.place?.name ? ' · ' + z.place.name : ''}${String(z.type).toUpperCase() === 'PARKING' ? ' (PARKING – no recursos)' : ''}`,
-  }));
-}, []);
-
+    // Mostramos todas, pero marcamos cuáles son PARKING para que el usuario lo vea.
+    zones.value = list.map((z) => ({
+      value: String(z.id),
+      label: `${z.name}${z.place?.name ? ' · ' + z.place.name : ''}${String(z.type).toUpperCase() === 'PARKING' ? ' (PARKING – no recursos)' : ''}`,
+    }));
+  }, []);
 
   const setInitialValues = useCallback(async () => {
     if (!id) return;
@@ -83,15 +89,27 @@ const getZones = useCallback(async () => {
     initialValues.value = {
       name: model.name,
       type: model.type
-        ? (TYPE_OPTIONS.find((o) => o.value === model.type) ?? { value: model.type, label: model.type })
+        ? (TYPE_OPTIONS.find((o) => o.value === model.type) ?? {
+            value: model.type,
+            label: model.type,
+          })
         : undefined,
       zoneId: model.zoneId
-        ? { value: model.zoneId, label: model.zone?.name ?? String(model.zoneId) }
+        ? {
+            value: model.zoneId,
+            label: model.zone?.name ?? String(model.zoneId),
+          }
         : undefined,
 
       quantity: model.quantity ?? 1,
-      isBookable: { value: !!model.isBookable as any, label: model.isBookable ? 'Sí' : 'No' },
-      requiresApproval: { value: !!model.requiresApproval as any, label: model.requiresApproval ? 'Sí' : 'No' },
+      isBookable: {
+        value: !!model.isBookable as any,
+        label: model.isBookable ? 'Sí' : 'No',
+      },
+      requiresApproval: {
+        value: !!model.requiresApproval as any,
+        label: model.requiresApproval ? 'Sí' : 'No',
+      },
       minDurationMinutes: model.minDurationMinutes ?? undefined,
       maxDurationMinutes: model.maxDurationMinutes ?? undefined,
       bufferMinutes: model.bufferMinutes ?? undefined,
@@ -123,7 +141,9 @@ const getZones = useCallback(async () => {
       return;
     }
     if (String(selectedZone.type).toUpperCase() === 'PARKING') {
-      ToastManager.error('La zona seleccionada no admite recursos (tipo PARKING).');
+      ToastManager.error(
+        'La zona seleccionada no admite recursos (tipo PARKING).'
+      );
       return;
     }
 
@@ -135,9 +155,15 @@ const getZones = useCallback(async () => {
       quantity: Number(model.quantity ?? 1),
       isBookable: !!(model.isBookable?.value as any),
       requiresApproval: !!(model.requiresApproval?.value as any),
-      minDurationMinutes: Number.isFinite(model.minDurationMinutes) ? Number(model.minDurationMinutes) : undefined,
-      maxDurationMinutes: Number.isFinite(model.maxDurationMinutes) ? Number(model.maxDurationMinutes) : undefined,
-      bufferMinutes: Number.isFinite(model.bufferMinutes) ? Number(model.bufferMinutes) : undefined,
+      minDurationMinutes: Number.isFinite(model.minDurationMinutes)
+        ? Number(model.minDurationMinutes)
+        : undefined,
+      maxDurationMinutes: Number.isFinite(model.maxDurationMinutes)
+        ? Number(model.maxDurationMinutes)
+        : undefined,
+      bufferMinutes: Number.isFinite(model.bufferMinutes)
+        ? Number(model.bufferMinutes)
+        : undefined,
 
       description: model.description?.trim() || undefined,
       image: model.image?.trim() || undefined,
@@ -160,30 +186,34 @@ const getZones = useCallback(async () => {
   };
 
   return (
-    <Section className="p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design">
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting, pristine }) => (
-          <form onSubmit={handleSubmit} className="space-y-6" id="form-resource-zone-create">
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-resource-zone-create'
+          >
             <StatusButton
               onClickClean={() => form.reset()}
               submitting={submitting || loading.value}
               pristine={pristine}
-              form="form-resource-zone-create"
+              form='form-resource-zone-create'
               label={id ? 'edit' : 'save'}
             />
 
-            <div className="grid grid-cols-4 gap-2">
+            <div className='grid grid-cols-4 gap-2'>
               {/* Nombre */}
-              <div className="col-span-2">
-                <Field<string> name="name" validate={required}>
+              <div className='col-span-2'>
+                <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder="trybook.resourceZone.placeholder.name"
-                      label="trybook.resourceZone.form.name"
-                      type="text"
+                      placeholder='trybook.resourceZone.placeholder.name'
+                      label='trybook.resourceZone.form.name'
+                      type='text'
                       meta={meta}
                     />
                   )}
@@ -191,16 +221,16 @@ const getZones = useCallback(async () => {
               </div>
 
               {/* Tipo */}
-              <div className="col-span-2">
-                <Field<IOption> name="type" validate={required}>
+              <div className='col-span-2'>
+                <Field<IOption> name='type' validate={required}>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder="trybook.resourceZone.placeholder.type"
-                      label="trybook.resourceZone.form.type"
-                      id="type"
-                      icon="tool"
+                      placeholder='trybook.resourceZone.placeholder.type'
+                      label='trybook.resourceZone.form.type'
+                      id='type'
+                      icon='tool'
                       options={TYPE_OPTIONS}
                       disabled={loading.value}
                     />
@@ -209,16 +239,16 @@ const getZones = useCallback(async () => {
               </div>
 
               {/* Zona común (filtrada != PARKING) */}
-              <div className="col-span-2">
-                <Field<IOption> name="zoneId" validate={required}>
+              <div className='col-span-2'>
+                <Field<IOption> name='zoneId' validate={required}>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder="trybook.resourceZone.placeholder.zone"
-                      label="trybook.resourceZone.form.zone"
-                      id="zoneId"
-                      icon="map"
+                      placeholder='trybook.resourceZone.placeholder.zone'
+                      label='trybook.resourceZone.form.zone'
+                      id='zoneId'
+                      icon='map'
                       options={zones.value}
                       disabled={loading.value}
                     />
@@ -227,32 +257,34 @@ const getZones = useCallback(async () => {
               </div>
 
               {/* Cantidad */}
-              <div className="col-span-2">
-                <Field<number> name="quantity">
+              <div className='col-span-2'>
+                <Field<number> name='quantity'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder="trybook.resourceZone.placeholder.quantity"
-                      label="trybook.resourceZone.form.quantity"
-                      type="number"
+                      placeholder='trybook.resourceZone.placeholder.quantity'
+                      label='trybook.resourceZone.form.quantity'
+                      type='number'
                       meta={meta}
-                      onInput={(e: any) => input.onChange(Number(e.currentTarget.value))}
+                      onInput={(e: any) =>
+                        input.onChange(Number(e.currentTarget.value))
+                      }
                     />
                   )}
                 </Field>
               </div>
 
               {/* Reservable */}
-              <div className="col-span-2">
-                <Field<IOption> name="isBookable">
+              <div className='col-span-2'>
+                <Field<IOption> name='isBookable'>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder="trybook.resourceZone.placeholder.isBookable"
-                      label="trybook.resourceZone.form.isBookable"
-                      id="isBookable"
-                      icon="calendar"
+                      placeholder='trybook.resourceZone.placeholder.isBookable'
+                      label='trybook.resourceZone.form.isBookable'
+                      id='isBookable'
+                      icon='calendar'
                       options={BOOL_OPTIONS}
                       disabled={loading.value}
                     />
@@ -261,16 +293,16 @@ const getZones = useCallback(async () => {
               </div>
 
               {/* Requiere aprobación */}
-              <div className="col-span-2">
-                <Field<IOption> name="requiresApproval">
+              <div className='col-span-2'>
+                <Field<IOption> name='requiresApproval'>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder="trybook.resourceZone.placeholder.requiresApproval"
-                      label="trybook.resourceZone.form.requiresApproval"
-                      id="requiresApproval"
-                      icon="shield"
+                      placeholder='trybook.resourceZone.placeholder.requiresApproval'
+                      label='trybook.resourceZone.form.requiresApproval'
+                      id='requiresApproval'
+                      icon='shield'
                       options={BOOL_OPTIONS}
                       disabled={loading.value}
                     />
@@ -279,60 +311,66 @@ const getZones = useCallback(async () => {
               </div>
 
               {/* Min/Max duración y buffer */}
-              <div className="col-span-2">
-                <Field<number> name="minDurationMinutes">
+              <div className='col-span-2'>
+                <Field<number> name='minDurationMinutes'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder="trybook.resourceZone.placeholder.minDuration"
-                      label="trybook.resourceZone.form.minDuration"
-                      type="number"
+                      placeholder='trybook.resourceZone.placeholder.minDuration'
+                      label='trybook.resourceZone.form.minDuration'
+                      type='number'
                       meta={meta}
-                      onInput={(e: any) => input.onChange(Number(e.currentTarget.value))}
+                      onInput={(e: any) =>
+                        input.onChange(Number(e.currentTarget.value))
+                      }
                     />
                   )}
                 </Field>
               </div>
 
-              <div className="col-span-2">
-                <Field<number> name="maxDurationMinutes">
+              <div className='col-span-2'>
+                <Field<number> name='maxDurationMinutes'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder="trybook.resourceZone.placeholder.maxDuration"
-                      label="trybook.resourceZone.form.maxDuration"
-                      type="number"
+                      placeholder='trybook.resourceZone.placeholder.maxDuration'
+                      label='trybook.resourceZone.form.maxDuration'
+                      type='number'
                       meta={meta}
-                      onInput={(e: any) => input.onChange(Number(e.currentTarget.value))}
+                      onInput={(e: any) =>
+                        input.onChange(Number(e.currentTarget.value))
+                      }
                     />
                   )}
                 </Field>
               </div>
 
-              <div className="col-span-2">
-                <Field<number> name="bufferMinutes">
+              <div className='col-span-2'>
+                <Field<number> name='bufferMinutes'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder="trybook.resourceZone.placeholder.buffer"
-                      label="trybook.resourceZone.form.buffer"
-                      type="number"
+                      placeholder='trybook.resourceZone.placeholder.buffer'
+                      label='trybook.resourceZone.form.buffer'
+                      type='number'
                       meta={meta}
-                      onInput={(e: any) => input.onChange(Number(e.currentTarget.value))}
+                      onInput={(e: any) =>
+                        input.onChange(Number(e.currentTarget.value))
+                      }
                     />
                   )}
                 </Field>
               </div>
 
               {/* Descripción */}
-              <div className="col-span-4">
-                <Field<string> name="description">
+              <div className='col-span-4'>
+                <Field<string> name='description'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder="trybook.resourceZone.placeholder.description"
-                      label="trybook.resourceZone.form.description"
-                      type="text"
+                      placeholder='trybook.resourceZone.placeholder.description'
+                      label='trybook.resourceZone.form.description'
+                      type='text'
                       meta={meta}
                     />
                   )}
@@ -340,28 +378,28 @@ const getZones = useCallback(async () => {
               </div>
 
               {/* Imagen / Ícono */}
-              <div className="col-span-2">
-                <Field<string> name="image">
+              <div className='col-span-2'>
+                <Field<string> name='image'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder="trybook.resourceZone.placeholder.image"
-                      label="trybook.resourceZone.form.image"
-                      type="text"
+                      placeholder='trybook.resourceZone.placeholder.image'
+                      label='trybook.resourceZone.form.image'
+                      type='text'
                       meta={meta}
                     />
                   )}
                 </Field>
               </div>
 
-              <div className="col-span-2">
-                <Field<string> name="icon">
+              <div className='col-span-2'>
+                <Field<string> name='icon'>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder="trybook.resourceZone.placeholder.icon"
-                      label="trybook.resourceZone.form.icon"
-                      type="text"
+                      placeholder='trybook.resourceZone.placeholder.icon'
+                      label='trybook.resourceZone.form.icon'
+                      type='text'
                       meta={meta}
                     />
                   )}

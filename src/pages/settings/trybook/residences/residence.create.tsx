@@ -15,8 +15,8 @@ import { useUserStore } from '@/store/slices';
 
 import { PlaceService } from '@/services';
 import { UserService } from '@/services/general/user';
-import { IUserResidenceRequest } from '@/types/user/user.request';
 import { ResidencesService } from '@/services/trybook/residences';
+import { IResidenceCreate } from '@/types/trybook/residences';
 
 type ResidenceType = 'HOUSE' | 'APARTMENT';
 
@@ -100,7 +100,7 @@ export const ResidenceCreatePage: FunctionComponent = () => {
 
   const onSubmit = async (model: FormData) => {
     // Construir payload según DTO nuevo
-    const payload: IUserResidenceRequest = {
+    const payload: IResidenceCreate = {
       type: (model.type?.value as ResidenceType) ?? 'HOUSE',
       houseNumber: String(model.houseNumber).trim(),
       block: model.block?.trim() || undefined,
@@ -161,10 +161,10 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        placeholder="trybook.residence.placeholder.type"
-                        label="trybook.residence.form.type"
-                        id="type"
-                        icon="home"
+                        placeholder='trybook.residence.placeholder.type'
+                        label='trybook.residence.form.type'
+                        id='type'
+                        icon='home'
                         options={TYPE_OPTIONS}
                         disabled={loading.value}
                       />
@@ -178,9 +178,9 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder="trybook.residence.placeholder.block"
-                        label="trybook.residence.form.block"
-                        type="text"
+                        placeholder='trybook.residence.placeholder.block'
+                        label='trybook.residence.form.block'
+                        type='text'
                         meta={meta}
                       />
                     )}
@@ -193,9 +193,9 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder="trybook.residence.placeholder.floor"
-                        label="trybook.residence.form.floor"
-                        type="number"
+                        placeholder='trybook.residence.placeholder.floor'
+                        label='trybook.residence.form.floor'
+                        type='number'
                         meta={meta}
                         disabled={!isApartment}
                         onInput={(e: any) =>
@@ -219,9 +219,9 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder="trybook.residence.placeholder.houseNumber"
-                        label="trybook.residence.form.houseNumber"
-                        type="text"
+                        placeholder='trybook.residence.placeholder.houseNumber'
+                        label='trybook.residence.form.houseNumber'
+                        type='text'
                         meta={meta}
                       />
                     )}
@@ -235,10 +235,10 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        placeholder="trybook.residence.placeholder.place"
-                        label="trybook.residence.form.place"
-                        id="placeId"
-                        icon="252"
+                        placeholder='trybook.residence.placeholder.place'
+                        label='trybook.residence.form.place'
+                        id='placeId'
+                        icon='252'
                         options={places.value}
                         disabled={loading.value}
                       />
@@ -253,10 +253,10 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        placeholder="trybook.residence.placeholder.user"
-                        label="trybook.residence.form.user"
-                        id="userId"
-                        icon="241"
+                        placeholder='trybook.residence.placeholder.user'
+                        label='trybook.residence.form.user'
+                        id='userId'
+                        icon='241'
                         options={users.value}
                         disabled={loading.value}
                       />

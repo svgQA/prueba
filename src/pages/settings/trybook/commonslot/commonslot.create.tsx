@@ -19,9 +19,9 @@ import { CommonZoneService } from '@/services/trybook/commonzone';
 import { CommonSlotService } from '@/services/trybook/comonslot';
 
 interface FormData {
-  zoneId?: IOption;        // { value: number, label: string }
+  zoneId?: IOption; // { value: number, label: string }
   code: string;
-  isOccupied?: IOption;    // { value: 1|0, label: string }
+  isOccupied?: IOption; // { value: 1|0, label: string }
 }
 
 const OCCUPIED_OPTIONS: IOption[] = [
@@ -45,7 +45,10 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
   // Cargar zonas para el selector
   const getZones = useCallback(async () => {
     // puedes pasar paginación si tu servicio lo requiere
-    const req = await CommonZoneService.getCommonZones({ page: 1, items: 1000 } as any);
+    const req = await CommonZoneService.getCommonZones({
+      page: 1,
+      items: 1000,
+    } as any);
     if (!req.getStatus()) return;
 
     const rows = req.getMany?.() ?? [];
@@ -64,12 +67,17 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
     const model = req.getOne();
     initialValues.value = {
       zoneId: model.zoneId
-        ? { value: model.zoneId, label: model.zone?.name ?? String(model.zoneId) }
+        ? {
+            value: model.zoneId,
+            label: model.zone?.name ?? String(model.zoneId),
+          }
         : undefined,
       code: model.code ?? '',
       isOccupied:
         typeof model.isOccupied === 'boolean'
-          ? (model.isOccupied ? OCCUPIED_OPTIONS[1] : OCCUPIED_OPTIONS[0])
+          ? model.isOccupied
+            ? OCCUPIED_OPTIONS[1]
+            : OCCUPIED_OPTIONS[0]
           : OCCUPIED_OPTIONS[0],
     };
   }, [uuid]);
@@ -111,32 +119,36 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className="p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design">
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting, pristine }) => (
-          <form onSubmit={handleSubmit} className="space-y-6" id="form-common-slot-upsert">
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-common-slot-upsert'
+          >
             <StatusButton
               onClickClean={() => form.reset()}
               submitting={submitting || loading.value}
               pristine={pristine}
-              form="form-common-slot-upsert"
+              form='form-common-slot-upsert'
               label={uuid ? 'edit' : 'save'}
             />
 
-            <div className="grid grid-cols-4 gap-2">
+            <div className='grid grid-cols-4 gap-2'>
               {/* Zona común */}
-              <div className="col-span-2">
-                <Field<IOption> name="zoneId" validate={required}>
+              <div className='col-span-2'>
+                <Field<IOption> name='zoneId' validate={required}>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder="trybook.commonslot.placeholder.zone"
-                      label="trybook.commonslot.form.zone"
-                      id="zoneId"
-                      icon="layers"
+                      placeholder='trybook.commonslot.placeholder.zone'
+                      label='trybook.commonslot.form.zone'
+                      id='zoneId'
+                      icon='layers'
                       options={zones.value}
                       disabled={loading.value}
                     />
@@ -145,14 +157,14 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
               </div>
 
               {/* Código del slot */}
-              <div className="col-span-2">
-                <Field<string> name="code" validate={required}>
+              <div className='col-span-2'>
+                <Field<string> name='code' validate={required}>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder="trybook.commonslot.placeholder.code"
-                      label="trybook.commonslot.form.code"
-                      type="text"
+                      placeholder='trybook.commonslot.placeholder.code'
+                      label='trybook.commonslot.form.code'
+                      type='text'
                       meta={meta}
                     />
                   )}
@@ -160,16 +172,16 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
               </div>
 
               {/* Estado de ocupación */}
-              <div className="col-span-2">
-                <Field<IOption> name="isOccupied">
+              <div className='col-span-2'>
+                <Field<IOption> name='isOccupied'>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder="trybook.commonslot.placeholder.status"
-                      label="trybook.commonslot.form.status"
-                      id="isOccupied"
-                      icon="toggle-right"
+                      placeholder='trybook.commonslot.placeholder.status'
+                      label='trybook.commonslot.form.status'
+                      id='isOccupied'
+                      icon='toggle-right'
                       options={OCCUPIED_OPTIONS}
                       disabled={loading.value}
                     />

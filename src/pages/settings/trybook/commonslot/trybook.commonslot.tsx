@@ -37,7 +37,8 @@ export const TrybookCommonSlotsPage: FunctionComponent = () => {
   const fetchRows = useCallback(async () => {
     loading.value = true;
     try {
-      const res = (await CommonSlotService.getSlots()) as unknown as ListResponse<CommonSlotRow>;
+      const res =
+        (await CommonSlotService.getSlots()) as unknown as ListResponse<CommonSlotRow>;
       if (res.getStatus()) rows.value = res.getMany();
     } catch {
       ToastManager.error('s_fetch_error');
@@ -51,7 +52,9 @@ export const TrybookCommonSlotsPage: FunctionComponent = () => {
   }, [selectedCompany, fetchRows]);
 
   const deleteRow = async (uuid: string) => {
-    const req = (await CommonSlotService.deleteSlot(uuid)) as unknown as BasicResponse;
+    const req = (await CommonSlotService.deleteSlot(
+      uuid
+    )) as unknown as BasicResponse;
     if (!req.getStatus()) return;
     ToastManager.success('s_deleted_success');
     void fetchRows();
@@ -75,7 +78,9 @@ export const TrybookCommonSlotsPage: FunctionComponent = () => {
         showAlert({
           title: t('trybook.commonslot.showAlert.title'),
           message: t('trybook.commonslot.showAlert.msg'),
-          onConfirm: () => { void deleteRow(String(action.id)); },
+          onConfirm: () => {
+            void deleteRow(String(action.id));
+          },
           onCancel: () => {},
         });
         break;

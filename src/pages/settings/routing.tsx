@@ -607,59 +607,98 @@ export const RoutingContent = memo(() => {
         {/* OPCIONES RECIDENCE */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.to}
-          component={lazy(() => Promise.resolve({ default: TrybookResidencesPage }))}
+          component={lazy(() =>
+            Promise.resolve({ default: TrybookResidencesPage })
+          )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.create.to}
-          component={lazy(() => Promise.resolve({ default: ResidenceCreatePage }))}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.create.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: ResidenceCreatePage })
+          )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.update.to}
-          component={lazy(() => Promise.resolve({ default: ResidenceCreatePage }))}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.update.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: ResidenceCreatePage })
+          )}
         />
 
         {/* OPCIONES COMMON ZONE */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.trybook.commonZones.to}
-          component={lazy(() => Promise.resolve({ default: TrybookCommonZonesPage }))}
+          component={lazy(() =>
+            Promise.resolve({ default: TrybookCommonZonesPage })
+          )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.commonZones.create.to}
-          component={lazy(() => Promise.resolve({ default: CommonZoneCreatePage }))}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.commonZones.create.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: CommonZoneCreatePage })
+          )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.commonZones.update.to}
-          component={lazy(() => Promise.resolve({ default: CommonZoneCreatePage }))}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.commonZones.update.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: CommonZoneCreatePage })
+          )}
         />
 
-         {/* OPCIONES COMMON SLOT */}
+        {/* OPCIONES COMMON SLOT */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.trybook.commonSlots.to}
-          component={lazy(() => Promise.resolve({ default: TrybookCommonSlotsPage }))}
+          component={lazy(() =>
+            Promise.resolve({ default: TrybookCommonSlotsPage })
+          )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.commonSlots.create.to}
-          component={lazy(() => Promise.resolve({ default: CommonSlotCreatetPage }))}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.commonSlots.create.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: CommonSlotCreatetPage })
+          )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.commonSlots.update.to}
-          component={lazy(() => Promise.resolve({ default: CommonSlotCreatetPage }))}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.commonSlots.update.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: CommonSlotCreatetPage })
+          )}
         />
 
         {/* OPCIONES RESOURCE ZONE */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.to}
-          component={lazy(() => Promise.resolve({ default: TrybookResourceZonesPage }))}
+          component={lazy(() =>
+            Promise.resolve({ default: TrybookResourceZonesPage })
+          )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.create.to}
-          component={lazy(() => Promise.resolve({ default: ResourceZoneCreatePage }))}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.create.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: ResourceZoneCreatePage })
+          )}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.update.to}
-          component={lazy(() => Promise.resolve({ default: ResourceZoneCreatePage }))}
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.update.to
+          }
+          component={lazy(() =>
+            Promise.resolve({ default: ResourceZoneCreatePage })
+          )}
         />
-
       </Suspense>
     </Router>
   );

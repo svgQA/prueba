@@ -35,7 +35,8 @@ export const TrybookCommonZonesPage: FunctionComponent = () => {
   const fetchRows = async () => {
     loading.value = true;
     try {
-      const res = (await CommonZoneService.getCommonZones()) as unknown as ListResponse<CommonZoneRow>;
+      const res =
+        (await CommonZoneService.getCommonZones()) as unknown as ListResponse<CommonZoneRow>;
       if (res.getStatus()) rows.value = res.getMany();
     } catch {
       ToastManager.error('s_fetch_error');
@@ -49,7 +50,9 @@ export const TrybookCommonZonesPage: FunctionComponent = () => {
   }, [selectedCompany]);
 
   const deleteRow = async (id: number) => {
-    const req = (await CommonZoneService.deleteCommonZone(id)) as unknown as BasicResponse;
+    const req = (await CommonZoneService.deleteCommonZone(
+      id
+    )) as unknown as BasicResponse;
     if (!req.getStatus()) return;
     ToastManager.success('s_deleted_success');
     void fetchRows();
@@ -73,7 +76,9 @@ export const TrybookCommonZonesPage: FunctionComponent = () => {
         showAlert({
           title: t('commonZone.showAlert.title'),
           message: t('commonZone.showAlert.msg'),
-          onConfirm: () => { void deleteRow(Number(action.id)); },
+          onConfirm: () => {
+            void deleteRow(Number(action.id));
+          },
           onCancel: () => {},
         });
         break;

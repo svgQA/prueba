@@ -78,9 +78,20 @@ export const columns: ColumnDef<CommonSlotRow>[] = [
     cell: ({ row }) => {
       const { uuid } = row.original;
       return (
-        <div className="w-full flex justify-center gap-1">
-          <ButtonAction id={String(uuid)} type="shift" action={ROW_ACTIONS.UPDATE} icon="123" />
-          <ButtonAction id={String(uuid)} type="shift" action={ROW_ACTIONS.DELETE} icon="053" color="!text-red-500" />
+        <div className='w-full flex justify-center gap-1'>
+          <ButtonAction
+            id={String(uuid)}
+            type='shift'
+            action={ROW_ACTIONS.UPDATE}
+            icon='123'
+          />
+          <ButtonAction
+            id={String(uuid)}
+            type='shift'
+            action={ROW_ACTIONS.DELETE}
+            icon='053'
+            color='!text-red-500'
+          />
         </div>
       );
     },

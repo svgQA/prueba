@@ -36,7 +36,8 @@ export const TrybookResidencesPage: FunctionComponent = () => {
   const fetchRows = async () => {
     loading.value = true;
     try {
-      const res = (await ResidencesService.getResidences()) as unknown as ListResponse<ResidenceRow>;
+      const res =
+        (await ResidencesService.getResidences()) as unknown as ListResponse<ResidenceRow>;
       if (res.getStatus()) rows.value = res.getMany();
     } catch {
       ToastManager.error('s_fetch_error');
@@ -50,7 +51,9 @@ export const TrybookResidencesPage: FunctionComponent = () => {
   }, [selectedCompany]);
 
   const deleteRow = async (uuid: string) => {
-    const req = (await ResidencesService.deleteResidence(uuid)) as unknown as BasicResponse;
+    const req = (await ResidencesService.deleteResidence(
+      uuid
+    )) as unknown as BasicResponse;
     if (!req.getStatus()) return;
     ToastManager.success('s_deleted_success');
     void fetchRows();
@@ -74,7 +77,9 @@ export const TrybookResidencesPage: FunctionComponent = () => {
         showAlert({
           title: t('user.residence.showAlert.title'),
           message: t('user.residence.showAlert.msg'),
-          onConfirm: () => { void deleteRow(String(action.id)); },
+          onConfirm: () => {
+            void deleteRow(String(action.id));
+          },
           onCancel: () => {},
         });
         break;

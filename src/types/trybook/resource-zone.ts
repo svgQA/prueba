@@ -21,9 +21,9 @@ export interface IResourceZoneItem {
 
   type: ResourceZoneType;
 
-  quantity?: number | null;           // total disponibles (si aplica)
-  isBookable?: boolean | null;        // se puede reservar
-  requiresApproval?: boolean | null;  // requiere aprobación
+  quantity?: number | null; // total disponibles (si aplica)
+  isBookable?: boolean | null; // se puede reservar
+  requiresApproval?: boolean | null; // requiere aprobación
   minDurationMinutes?: number | null;
   maxDurationMinutes?: number | null;
   bufferMinutes?: number | null;

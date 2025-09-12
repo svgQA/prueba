@@ -66,7 +66,7 @@ export const menus_en = {
   m_residence: 'Residence',
   m_commonzone: 'Common Zones',
   m_commonslot: 'Common Slots',
-  m_resourcezone: 'Resource Zones', 
+  m_resourcezone: 'Resource Zones',
   m_webhook: 'Webhooks',
   m_module: 'Modules',
   m_role: 'Roles',

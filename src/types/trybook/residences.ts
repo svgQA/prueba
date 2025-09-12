@@ -1,4 +1,3 @@
-
 /** Enums / básicos */
 export type ResidenceType = 'HOUSE' | 'APARTMENT';
 
@@ -15,7 +14,12 @@ export interface IResidenceItem {
   place?: { id: number; name: string | null } | null;
 
   userId: number;
-  user?: { id: number; name: string | null; surname: string | null; email?: string | null } | null;
+  user?: {
+    id: number;
+    name: string | null;
+    surname: string | null;
+    email?: string | null;
+  } | null;
 
   createdAt?: string;
   updatedAt?: string;
@@ -26,8 +30,8 @@ export interface IResidenceItem {
 export interface IResidenceCreate {
   type: ResidenceType;
   houseNumber: string;
-  block?: string | null;   // si no envías, el back suele normalizar a ""
-  floor?: number | null;   // para APARTMENT; para HOUSE puede ser 0
+  block?: string | null; // si no envías, el back suele normalizar a ""
+  floor?: number | null; // para APARTMENT; para HOUSE puede ser 0
   placeId: number;
   userId: number;
 }

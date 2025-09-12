@@ -49,10 +49,7 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
       MESSAGE_LISTENERS.ALL
     );
     return () => {
-      WebSocketManager.remove(
-        SOCKET_MESSAGE_AREA.ALL,
-        MESSAGE_LISTENERS.ALL
-      );
+      WebSocketManager.remove(SOCKET_MESSAGE_AREA.ALL, MESSAGE_LISTENERS.ALL);
     };
   }, []);
 

@@ -60,7 +60,7 @@ const resources = {
       ...hero_en,
       ...schedule_en,
       ...smartGroup_en,
-      ...trybook_en
+      ...trybook_en,
     },
   },
   es: {
@@ -90,7 +90,7 @@ const resources = {
       ...hero_es,
       ...schedule_es,
       ...smartGroup_es,
-      ...trybook_es
+      ...trybook_es,
     },
   },
 };

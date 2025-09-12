@@ -20,17 +20,17 @@ import { CommonZoneService } from '@/services/trybook/commonzone';
 type ZoneType = 'PARKING' | 'POOL' | 'GYM' | 'OTHER';
 
 interface FormData {
-  placeId?: IOption;     // { value: number, label: string }
+  placeId?: IOption; // { value: number, label: string }
   name: string;
-  type?: IOption;        // { value: ZoneType, label: string }
-  isActive?: IOption;    // { value: boolean, label: string }
+  type?: IOption; // { value: ZoneType, label: string }
+  isActive?: IOption; // { value: boolean, label: string }
 }
 
 const TYPE_OPTIONS: IOption[] = [
   { value: 'PARKING', label: 'Parqueadero' },
-  { value: 'POOL',    label: 'Piscina' },
-  { value: 'GYM',     label: 'Gimnasio' },
-  { value: 'OTHER',   label: 'Otro' },
+  { value: 'POOL', label: 'Piscina' },
+  { value: 'GYM', label: 'Gimnasio' },
+  { value: 'OTHER', label: 'Otro' },
 ];
 
 const ACTIVE_OPTIONS: IOption[] = [
@@ -70,15 +70,23 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
     const model = req.getOne();
     initialValues.value = {
       placeId: model.placeId
-        ? { value: model.placeId, label: model.place?.name ?? String(model.placeId) }
+        ? {
+            value: model.placeId,
+            label: model.place?.name ?? String(model.placeId),
+          }
         : undefined,
       name: model.name ?? '',
       type: model.type
-        ? TYPE_OPTIONS.find(o => o.value === model.type) ?? { value: model.type, label: model.type }
+        ? (TYPE_OPTIONS.find((o) => o.value === model.type) ?? {
+            value: model.type,
+            label: model.type,
+          })
         : undefined,
       isActive:
         typeof model.isActive === 'boolean'
-          ? (model.isActive ? ACTIVE_OPTIONS[0] : ACTIVE_OPTIONS[1])
+          ? model.isActive
+            ? ACTIVE_OPTIONS[0]
+            : ACTIVE_OPTIONS[1]
           : ACTIVE_OPTIONS[0],
     };
   }, [id]);
@@ -119,32 +127,36 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
   };
 
   return (
-    <Section className="p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design">
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting, pristine }) => (
-          <form onSubmit={handleSubmit} className="space-y-6" id="form-common-zone-upsert">
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-common-zone-upsert'
+          >
             <StatusButton
               onClickClean={() => form.reset()}
               submitting={submitting || loading.value}
               pristine={pristine}
-              form="form-common-zone-upsert"
+              form='form-common-zone-upsert'
               label={id ? 'edit' : 'save'}
             />
 
-            <div className="grid grid-cols-4 gap-2">
+            <div className='grid grid-cols-4 gap-2'>
               {/* Lugar */}
-              <div className="col-span-2">
-                <Field<IOption> name="placeId" validate={required}>
+              <div className='col-span-2'>
+                <Field<IOption> name='placeId' validate={required}>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder="trybook.commonzone.placeholder.place"
-                      label="trybook.commonzone.form.place"
-                      id="placeId"
-                      icon="252"
+                      placeholder='trybook.commonzone.placeholder.place'
+                      label='trybook.commonzone.form.place'
+                      id='placeId'
+                      icon='252'
                       options={places.value}
                       disabled={loading.value}
                     />
@@ -153,14 +165,14 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
               </div>
 
               {/* Nombre de la zona */}
-              <div className="col-span-2">
-                <Field<string> name="name" validate={required}>
+              <div className='col-span-2'>
+                <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder="trybook.commonzone.placeholder.name"
-                      label="trybook.commonzone.form.name"
-                      type="text"
+                      placeholder='trybook.commonzone.placeholder.name'
+                      label='trybook.commonzone.form.name'
+                      type='text'
                       meta={meta}
                     />
                   )}
@@ -168,16 +180,16 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
               </div>
 
               {/* Tipo */}
-              <div className="col-span-2">
-                <Field<IOption> name="type" validate={required}>
+              <div className='col-span-2'>
+                <Field<IOption> name='type' validate={required}>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder="trybook.commonzone.placeholder.type"
-                      label="trybook.commonzone.form.type"
-                      id="type"
-                      icon="layers"
+                      placeholder='trybook.commonzone.placeholder.type'
+                      label='trybook.commonzone.form.type'
+                      id='type'
+                      icon='layers'
                       options={TYPE_OPTIONS}
                       disabled={loading.value}
                     />
@@ -186,16 +198,16 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
               </div>
 
               {/* Estado (Activo/Inactivo) */}
-              <div className="col-span-2">
-                <Field<IOption> name="isActive">
+              <div className='col-span-2'>
+                <Field<IOption> name='isActive'>
                   {({ input, meta }) => (
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder="trybook.commonzone.placeholder.status"
-                      label="trybook.commonzone.form.status"
-                      id="isActive"
-                      icon="toggle-right"
+                      placeholder='trybook.commonzone.placeholder.status'
+                      label='trybook.commonzone.form.status'
+                      id='isActive'
+                      icon='toggle-right'
                       options={ACTIVE_OPTIONS}
                       disabled={loading.value}
                     />

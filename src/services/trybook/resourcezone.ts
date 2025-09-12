@@ -24,7 +24,7 @@ export class ResourceZoneService extends BaseService {
 
   /** GET /resource-zone */
   static async getResourceZones(
-    params: (IPagination & IResourceZoneQuery) = { page: 1, items: 1000 } as any
+    params: IPagination & IResourceZoneQuery = { page: 1, items: 1000 } as any
   ) {
     const model: IMakeRequest = {
       url: ['resource-zone'],
@@ -43,7 +43,9 @@ export class ResourceZoneService extends BaseService {
   }
 
   /** POST /resource-zone (uno o varios) */
-  static async createResourceZone(payload: IResourceZoneCreate | IResourceZoneCreate[]) {
+  static async createResourceZone(
+    payload: IResourceZoneCreate | IResourceZoneCreate[]
+  ) {
     const model: IMakeRequest = {
       url: ['resource-zone'],
       method: REQUEST_METHODS.POST,

@@ -35,7 +35,8 @@ export const TrybookResourceZonesPage: FunctionComponent = () => {
   const fetchRows = async () => {
     loading.value = true;
     try {
-      const res = (await ResourceZoneService.getResourceZones()) as unknown as ListResponse<ResourceZoneRow>;
+      const res =
+        (await ResourceZoneService.getResourceZones()) as unknown as ListResponse<ResourceZoneRow>;
       if (res.getStatus()) rows.value = res.getMany();
     } catch {
       ToastManager.error('s_fetch_error');
@@ -49,7 +50,9 @@ export const TrybookResourceZonesPage: FunctionComponent = () => {
   }, [selectedCompany]);
 
   const deleteRow = async (id: number) => {
-    const req = (await ResourceZoneService.deleteResourceZone(id)) as unknown as BasicResponse;
+    const req = (await ResourceZoneService.deleteResourceZone(
+      id
+    )) as unknown as BasicResponse;
     if (!req.getStatus()) return;
     ToastManager.success('s_deleted_success');
     void fetchRows();
@@ -73,7 +76,9 @@ export const TrybookResourceZonesPage: FunctionComponent = () => {
         showAlert({
           title: t('resourceZone.showAlert.title'),
           message: t('resourceZone.showAlert.msg'),
-          onConfirm: () => { void deleteRow(Number(action.id)); },
+          onConfirm: () => {
+            void deleteRow(Number(action.id));
+          },
           onCancel: () => {},
         });
         break;

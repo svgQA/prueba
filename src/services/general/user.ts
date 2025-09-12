@@ -1,9 +1,7 @@
 import { type IOption } from '@/components/common/multi/interface';
 import { type IPagination } from '@/types';
 import { type IUserRequest, type IUserResponse } from '@/types/auth';
-import {
-  type IUserAreaRequest,
-} from '@/types/user/user.request';
+import { type IUserAreaRequest } from '@/types/user/user.request';
 
 import {
   type IDocumentTypeResponse,
@@ -197,7 +195,6 @@ export class UserService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
-
 
   static async getDashboardStats() {
     const model: IMakeRequest = {
