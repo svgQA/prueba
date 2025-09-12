@@ -18,6 +18,7 @@ export const RoundsSettingPage: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
   const { go } = useNavigation();
   const { t } = useTranslation();
+
   useEffect(() => {
     document.title = t('p_round');
   }, []);
