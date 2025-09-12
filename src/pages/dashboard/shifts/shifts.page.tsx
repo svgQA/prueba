@@ -362,7 +362,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     toggleShiftModal();
   }, []);
 
-  const handleClick = useCallback((/* task: Task */) => { }, []);
+  const handleClick = useCallback((/* task: Task */) => {}, []);
 
   const handleUserDoubleClick = useCallback(
     (_id: string | number) => {
@@ -567,7 +567,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           title: t('s_title_delete'),
           message: t('s_message'),
           onConfirm: () => deleteShift(params.id),
-          onCancel: () => { },
+          onCancel: () => {},
         });
         break;
       case ROW_ACTIONS.CHECK_IN:
