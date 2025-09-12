@@ -264,7 +264,7 @@ export const MapLibrePointsMap = ({
     if (pointsAmount === 1) setPoints([]);
     const nextId = nextIdRef.current++;
     const newPoint: MapPoint = {
-      id: nextId,
+      id: nextId * -1,
       position: { lat, lng },
       name: t('maps.pointName') + ' ' + nextId,
     };
