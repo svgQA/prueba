@@ -155,6 +155,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       if (!request.getStatus()) return;
 
       const permissions = request.getOne();
+      if (!permissions.model || Object.keys(permissions.model).length === 0) return;
       setAllPermissions(permissions.model);
     };
 
