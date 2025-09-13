@@ -12,6 +12,7 @@ import {
 import { FormattedDate } from '@/components/compose/forms';
 import { Badge } from '@/components/common/badge/badge';
 import { useLocation } from 'wouter';
+
 export interface IReport {
   id: number;
   shiftId: number;
@@ -46,11 +47,12 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
   const { t } = useTranslation();
   const reports: IReport[] = directReports ?? data?.reports ?? [];
   const [selectedFormId, setSelectedFormId] = useState<number | null>(null);
-  const [expandedId, setExpandedId] = useState<number | null>(null);
+
+  const [expandedId, setExpandedId] = useState<string | number | null>(null);
   const [_, navigate] = useLocation();
 
-  const toggleDetails = (report: IReport) => {
-    setExpandedId(expandedId === report.id ? null : report.id);
+  const toggleDetails = (rowId: string | number, report: IReport) => {
+    setExpandedId((prev) => (prev === rowId ? null : rowId));
     onViewDetails?.(report);
   };
 
@@ -63,6 +65,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
       return;
     }
     if (!report?.responseId) return;
+
     const response = await FormService.get_one_response(report?.responseId);
     if (response.getStatus()) {
       const structure = response.getOne()?.structure;
@@ -95,17 +98,19 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
       </div>
 
       <div className='divide-y dark:divide-b-dark-light divide-b-light-dark'>
-        {reports?.map((report) => {
-          const isRequested = report.request;
+        {reports?.map((report, index) => {
+          const rowId: string | number =
+            report?.id ?? report?.responseId ?? `row-${index}`;
 
+          const isRequested = report.request;
           const hasAttachments = report.resource?.length > 0;
           const hasForm = !!report.form;
           const showToggle = hasAttachments || hasForm;
-          const isExpanded = expandedId === report.id;
+          const isExpanded = expandedId === rowId;
           const buttonLabel = isExpanded ? t('hide') : t('show');
 
           return (
-            <React.Fragment key={report.id}>
+            <React.Fragment key={rowId}>
               <div className='w-full overflow-x-auto'>
                 <div className='min-w-[1000px] grid grid-cols-12 gap-x-2 items-center py-2 text-sm'>
                   {/* Estado */}
@@ -175,7 +180,7 @@ const ReportInfo: React.FC<ReportInfoProps> = ({
                   {showToggle && (
                     <div className='col-span-1 text-right'>
                       <button
-                        onClick={() => toggleDetails(report)}
+                        onClick={() => toggleDetails(rowId, report)}
                         className='text-cyan-600 text-xs flex items-center justify-end border-none'
                       >
                         {buttonLabel}
