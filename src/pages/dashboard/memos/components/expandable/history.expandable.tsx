@@ -26,9 +26,6 @@ import { Badge } from '@/components/common/badge/badge';
 import { useTranslation } from 'react-i18next';
 import { required } from '@/utils/utilities';
 
-/**
- * TODO: WebSocket
- */
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import {
   InSocketMessage,
@@ -191,7 +188,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
       if (values.date) extraData.time = values.date;
 
       const newMemo: Memo = {
-        // ...lastMemo,
+        // ...lastMemo -> No poner, porque son cosas que no corresponde
+        // al memo que se desea crear, para eso existe la asociacion
         description: values.message.trim() ? values.message : '...',
         priority:
           lastMemo.priority === 'Alta'
@@ -200,6 +198,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               ? 4
               : 3,
         date: DateUtils.dateToBackend(new Date()),
+        // TODO: Corregir estas porque son las coordenadas del browser
         latitude: lastMemo.latitude,
         longitude: lastMemo.longitude,
         parentId: lastMemo.id,

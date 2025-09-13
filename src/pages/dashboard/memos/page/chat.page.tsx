@@ -289,15 +289,18 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     if (values.date) extraData.time = values.date;
 
     const newMemo: Memo = {
-      ...memo,
+      // ...memo -> No poner, porque son cosas que no corresponde
+      // al memo que se desea crear, para eso existe la asociacion
       description: values.description,
       priority:
         memo.priority === 'Alta' ? 5 : memo.priority === 'Media' ? 4 : 3,
-      updatedAt: DateUtils.dateToBackend(new Date()),
-      createdAt: DateUtils.dateToBackend(new Date()),
-      resource: files.value && files.value.length > 0 ? files.value : undefined,
+      date: DateUtils.dateToBackend(new Date()),
+      // TODO: Corregir estas porque son las coordenadas del browser
+      latitude: memo.latitude,
+      longitude: memo.longitude,
       parentId: memo.id,
       extraData: extraData,
+      resource: files.value && files.value.length > 0 ? files.value : undefined,
     };
 
     const response = await MemoService.createMemo(newMemo);
