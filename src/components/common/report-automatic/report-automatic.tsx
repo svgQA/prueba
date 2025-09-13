@@ -34,7 +34,7 @@ export enum SelectCheckType {
 
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const { t } = useTranslation();
-  const { selectedCompany } = useUserStore();
+  const { selectedCompany, getTenant, getCompanyId } = useUserStore();
 
   const [isOpen, setIsOpen] = useState(false);
   const loading = useSignal(false);
@@ -59,14 +59,14 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   }, []);
 
   const getUsers = useCallback(async () => {
-    const usersResponse = await UserService.getListUsers();
+    const usersResponse = await UserService.get_clients_reports_simple_list();
     if (usersResponse.getStatus()) {
       users.value = usersResponse.getMany();
     }
   }, []);
 
   const getFormatOptions = () => {
-    if (modules !== modulesReport.Memo) {
+    if (modules == modulesReport.Form) {
       checkListSelected.value = SelectCheckType.INTERNO;
       return;
     }
@@ -83,7 +83,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         label: 'Cliente',
         icon: '307',
         color: 'secondary',
-        disabled: true,
+        // disabled: true,
       },
     ];
   };
@@ -142,7 +142,9 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
           ? reportResponse.getOne()
           : reportResponse.getMany();
       checkListSelected.value === SelectCheckType.CLIENTE
-        ? await fileManager.downloadFile(info)
+        ? await fileManager.downloadFile({
+            url: fileManager.getUrl(getTenant(), getCompanyId(), info),
+          })
         : await fileManager.generateExcel(
             [
               {
@@ -164,7 +166,9 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     const headers: Record<modulesReport, string> = {
       [modulesReport.Memo]: t('t_memorandum'),
       [modulesReport.Shift]: t('t_shift'),
-      [modulesReport.Form]: t('t_form'),
+      [modulesReport.Form]: t('t_inspect'),
+      [modulesReport.Access]: t('t_access'),
+      [modulesReport.Correspondence]: t('t_inbox'),
     };
     const header = headers[modules];
     if (startDate && endDate)
@@ -229,7 +233,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         <ExpandeableContent
           isOpen={isOpen}
           onClose={onClose}
-          width='min-w-[800px]'
+          width={`min-w-[800px] ${checkListSelected.value === SelectCheckType.CLIENTE ? 'min-h-[460px]' : ''}`}
           header={
             <h3>
               {modules === modulesReport.Memo
@@ -239,7 +243,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
           }
           footer={footerContent}
         >
-          <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
+          <div className='px-4 py-6 flex flex-col w-full h-full'>
             <Form
               onSubmit={onSubmit}
               initialValues={{}}
@@ -304,23 +308,25 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                                 )}
                               </Field>
                             </div>
-                            <div class='col-span-1'>
-                              <Field<IOption> name='priority'>
-                                {({ input, meta }) => (
-                                  <SmartSelector
-                                    {...input}
-                                    meta={meta}
-                                    id='select-priority'
-                                    icon='191'
-                                    label='h_priority'
-                                    options={priorities.value}
-                                    menuPortalTarget={document.body}
-                                    placeholder='p_select'
-                                    disabled={loading.value}
-                                  />
-                                )}
-                              </Field>
-                            </div>
+                            {modules === modulesReport.Memo && (
+                              <div class='col-span-1'>
+                                <Field<IOption> name='priority'>
+                                  {({ input, meta }) => (
+                                    <SmartSelector
+                                      {...input}
+                                      meta={meta}
+                                      id='select-priority'
+                                      icon='191'
+                                      label='h_priority'
+                                      options={priorities.value}
+                                      menuPortalTarget={document.body}
+                                      placeholder='p_select'
+                                      disabled={loading.value}
+                                    />
+                                  )}
+                                </Field>
+                              </div>
+                            )}
                             <div className='col-span-1'>
                               <Field<string> name='title'>
                                 {({ input, meta }) => (
@@ -336,7 +342,13 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                                 )}
                               </Field>
                             </div>
-                            <div className='col-span-1'>
+                            <div
+                              className={
+                                modules === modulesReport.Memo
+                                  ? 'col-span-1'
+                                  : 'col-span-2'
+                              }
+                            >
                               <Field<string> name='subtitle'>
                                 {({ input, meta }) => (
                                   <Input

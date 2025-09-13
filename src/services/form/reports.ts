@@ -1,4 +1,5 @@
 import { IPagination } from '@/types';
+import { IPresignedRequest } from '@/types/file';
 import {
   ICReportAiRequest,
   IExcelGenerateRequest,
@@ -64,15 +65,15 @@ export class ReportService extends BaseService {
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<{ url: string }>(this.sname, model);
+    return await super.make_request<IPresignedRequest>(this.sname, model);
   }
 
   static async create_report_automatic_excel(data: IExcelGenerateRequest) {
     const model: IMakeRequest = {
-      url: ['reportIa', 'generate-excel-memo'],
+      url: ['reportIa', 'generate-excel'],
       method: REQUEST_METHODS.POST,
       data,
     };
-    return await super.make_request<any[]>(this.sname, model);
+    return await super.make_request<any>(this.sname, model);
   }
 }

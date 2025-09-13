@@ -123,8 +123,15 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
                               const endDate = DateUtils.dateToFrontend(
                                 values.end
                               );
-                              if (startDate && endDate && startDate > endDate) {
-                                return t('start_date_must_be_before_end_date');
+
+                              // Normaliza a solo fecha (sin hora)
+                              const start = new Date(startDate);
+                              const end = new Date(endDate);
+                              start.setHours(0, 0, 0, 0);
+                              end.setHours(0, 0, 0, 0);
+
+                              if (start > end) {
+                                return t('invalid_start_date');
                               }
                             }
                             return undefined;
@@ -144,8 +151,15 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
                                 values.start
                               );
                               const endDate = DateUtils.dateToFrontend(value);
-                              if (startDate && endDate && endDate < startDate) {
-                                return t('end_date_must_be_after_start_date');
+
+                              // Normaliza a solo fecha (sin hora)
+                              const start = new Date(startDate);
+                              const end = new Date(endDate);
+                              start.setHours(0, 0, 0, 0);
+                              end.setHours(0, 0, 0, 0);
+
+                              if (end < start) {
+                                return t('invalid_end_date');
                               }
                             }
                             return undefined;

@@ -116,11 +116,11 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       type: checkData.type,
     };
 
-    if (checkData.type === 'CHECK_IN') {
-      setCheckInData(check);
-    } else {
-      setCheckOutData(check);
-    }
+    // if (checkData.type === 'CHECK_IN') {
+    //   setCheckInData(check);
+    // } else {
+    //   setCheckOutData(check);
+    // }
     onCheck(check);
   };
   useEffect(() => {
@@ -134,6 +134,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       shift.end,
       false
     );
+    setCheckInData(checkIn);
+    setCheckOutData(checkOut);
   }, [checkIn, checkOut, shift]);
 
   return (
@@ -196,6 +198,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         file={checkOutData?.file || []}
         disabled={shift?.status !== 'OPENED'}
         onCheck={handleCheck}
+        resource={shift.resource}
       />
     </div>
   );
@@ -218,6 +221,7 @@ interface IShiftCardProps {
   file: IPresignedRequest[];
   disabled: boolean;
   onCheck: (checkData: ICheckData) => void;
+  resource?: IPresignedRequest[];
 }
 
 const ShiftCard = ({
@@ -236,7 +240,8 @@ const ShiftCard = ({
   longitude,
   file,
   disabled,
-  onCheck,
+  // onCheck,
+  resource,
 }: IShiftCardProps) => {
   const { t } = useTranslation();
 
@@ -288,19 +293,19 @@ const ShiftCard = ({
 
     const response = await ShiftService.createCheck(checkData, shiftId);
     if (response.getStatus()) {
-      const { distance } = response.getOne();
+      // const { distance } = response.getOne();
       ToastManager.success(t('s_success'));
-      onCheck({
-        type: checkData.type,
-        time: checkData.date,
-        platform: checkData.platform,
-        distance: distance,
-        location: {
-          lat: checkData.latitude,
-          lng: checkData.longitude,
-        },
-        file: [],
-      });
+      // onCheck({
+      //   type: checkData.type,
+      //   time: checkData.date,
+      //   platform: checkData.platform,
+      //   distance: distance,
+      //   location: {
+      //     lat: checkData.latitude,
+      //     lng: checkData.longitude,
+      //   },
+      //   file: [],
+      // });
     }
   };
 
@@ -359,6 +364,12 @@ const ShiftCard = ({
             </div>
           </div>
 
+          {resource && (
+            <div className='flex flex-col items-center mr-4 w-full'>
+              <ShowFiles resources={resource} />
+            </div>
+          )}
+
           <Button
             label={btnLabel}
             icon={btnLabel === 'Check In' ? '023' : '024'}
@@ -377,7 +388,7 @@ const ShiftCard = ({
       </div>
 
       {/* Columna derecha - Mapa */}
-      <div className='flex-1 w-full max-h-96 overflow-hidden'>
+      <div className='flex-1 w-full max-h-[44vh] overflow-hidden'>
         <MapLibrePointsMap
           sendPoints={() => {}}
           name='Map'
@@ -400,7 +411,7 @@ const ShiftCard = ({
           radialPoint={null}
           errorRadialPoint=''
           radius={50}
-          draggable={true}
+          draggable={false}
           width='100%'
           clickPoint={() => {}}
         />

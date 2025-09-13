@@ -9,8 +9,6 @@ import { Button } from '@/components/common/button/button';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { FormattedDate } from '@/components/compose/forms';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
-import { EventBus } from '@/utils/network/sse/event.bus';
 import {
   IOption,
   SmartSelector,
@@ -28,6 +26,15 @@ import { Badge } from '@/components/common/badge/badge';
 import { useTranslation } from 'react-i18next';
 import { required } from '@/utils/utilities';
 
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  MessageEvent,
+  MESSAGE_LISTENERS,
+  SOCKET_MESSAGE_EVENTS,
+} from '@/utils/socket/manager/types';
+
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const { t } = useTranslation();
   const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
@@ -37,25 +44,34 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const predefined: Signal<IOption[]> = useSignal([]);
   const panic = useSignal<IPanic[]>([]);
   const disable = memo.state === 'RESOLVED';
+  const loading = useSignal<boolean>(false);
   const status = useSignal<string | undefined>(memo.state);
 
   useEffect(() => {
     fetchInitialData();
-    EventBus.on(SSE_TYPE.MEMO, handleMemoSSE);
-    EventBus.on(SSE_TYPE.PANIC, handleMemoSSE);
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.MEMOS,
+      handleMessage,
+      MESSAGE_LISTENERS.MEMO_HISTORY
+    );
     return () => {
-      EventBus.off(SSE_TYPE.MEMO, handleMemoSSE);
-      EventBus.off(SSE_TYPE.PANIC, handleMemoSSE);
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.MEMOS,
+        MESSAGE_LISTENERS.MEMO_HISTORY
+      );
     };
   }, []);
 
-  const handleMemoSSE = (event: IBaseSSE) => {
-    const { name, message } = event;
-    if (name === SSE_EVENTS.CREATE_PARENT || name === SSE_EVENTS.PANIC) {
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { type: name, message } = event.payload;
+    if (
+      name === SOCKET_MESSAGE_EVENTS.CREATE_PARENT ||
+      name === SOCKET_MESSAGE_EVENTS.PANIC
+    ) {
       fetchInitialData();
     }
 
-    if (name === SSE_EVENTS.UPDATE_CHECK) {
+    if (name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK) {
       if (memo.id !== Number(message.id)) return;
       status.value = message.state;
     }
@@ -136,64 +152,76 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   };
 
   const handleCheck = async () => {
-    const position = await getLocation();
-    if (!position) return null;
+    try {
+      const position = await getLocation();
+      if (!position) return null;
 
-    const checkData = {
-      latitude: position.coords.latitude.toString(),
-      longitude: position.coords.longitude.toString(),
-      date: new Date().toISOString(),
-      platform: 'web',
-      type: btnLabel === 'SOLVE' ? 'SOLVE' : 'RESOLVED',
-    };
+      const checkData = {
+        latitude: position.coords.latitude.toString(),
+        longitude: position.coords.longitude.toString(),
+        date: new Date().toISOString(),
+        platform: 'web',
+        type: btnLabel === 'SOLVE' ? 'SOLVE' : 'RESOLVED',
+      };
 
-    // const response = await MemoService.createCheck(checkData, memo.id);
-    await MemoService.createCheck(checkData, memo.id);
+      const response = await MemoService.createCheck(checkData, memo.id);
+      // await MemoService.createCheck(checkData, memo.id);
 
-    // if (response.getStatus()) {
-    //   ToastManager.success(i18n.t('shift.expandable.date.success'));
-    // }
+      if (response.getStatus()) {
+        ToastManager.success(t('shift.expandable.date.success'));
+      }
+    } finally {
+      loading.value = false;
+    }
   };
 
   const handleSubmitMessage = async (values: any, form: any) => {
-    let lastMemo: Omit<Memo, 'resource'> = memo;
-    let extraData: ExtraData = { ...memo.extraData } as ExtraData;
+    loading.value = true;
+    try {
+      let lastMemo: Omit<Memo, 'resource'> = memo;
+      let extraData: ExtraData = { ...memo.extraData } as ExtraData;
 
-    if (!values.message.trim() && !values.predefined) return;
-    if (values.predefined && values.predefined.value !== 'other')
-      extraData.predefined = values.predefined;
-    if (values.duration) extraData.duration = values.duration;
-    if (values.date) extraData.time = values.date;
+      if (!values.message.trim() && !values.predefined) return;
+      if (values.predefined && values.predefined.value !== 'other')
+        extraData.predefined = values.predefined;
+      if (values.duration) extraData.duration = values.duration;
+      if (values.date) extraData.time = values.date;
 
-    const newMemo: Memo = {
-      ...lastMemo,
-      description: values.message.trim() ? values.message : '...',
-      priority:
-        lastMemo.priority === 'Alta'
-          ? 5
-          : lastMemo.priority === 'Media'
-            ? 4
-            : 3,
-      updatedAt: DateUtils.dateToBackend(new Date()),
-      createdAt: DateUtils.dateToBackend(new Date()),
-      parentId: lastMemo.id,
-      extraData: extraData,
-      resource: files.value && files.value.length > 0 ? files.value : undefined,
-    };
+      const newMemo: Memo = {
+        // ...lastMemo -> No poner, porque son cosas que no corresponde
+        // al memo que se desea crear, para eso existe la asociacion
+        description: values.message.trim() ? values.message : '...',
+        priority:
+          lastMemo.priority === 'Alta'
+            ? 5
+            : lastMemo.priority === 'Media'
+              ? 4
+              : 3,
+        date: DateUtils.dateToBackend(new Date()),
+        // TODO: Corregir estas porque son las coordenadas del browser
+        latitude: lastMemo.latitude,
+        longitude: lastMemo.longitude,
+        parentId: lastMemo.id,
+        extraData: extraData,
+        resource:
+          files.value && files.value.length > 0 ? files.value : undefined,
+      };
 
-    const response = await MemoService.createMemo(newMemo);
+      const response = await MemoService.createMemo(newMemo);
 
-    if (response.getStatus()) {
-      form.reset();
-      files.value = [];
-      fetchInitialData();
-      ToastManager.success('Se a envió la respuesta correctamente');
+      if (response.getStatus()) {
+        form.reset();
+        files.value = [];
+        fetchInitialData();
+        ToastManager.success('Se a envió la respuesta correctamente');
+      }
+    } finally {
+      loading.value = false;
     }
   };
 
   const handleAttachmentUpload = (e: any) => {
     const fileInput: IPresignedRequest = e.target.value[0];
-    // console.log('fileInput', fileInput);
     files.value = [...files.value, fileInput];
   };
 
@@ -226,7 +254,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                   </span>
                 </div>
                 <div className='rounded-lg px-3 py-2 relative'>
-                  {memo.resource && memo.resource.length > 0 && (
+                  {memo.resource && memo?.resource?.length > 0 && (
                     <div className='absolute top-0 right-0'>
                       <Button
                         name='memo-expand-data'
@@ -254,41 +282,43 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                           {memo.description}
                         </span>
                       </div>
-                      {memo.extraData && (
+                      {memo?.extraData && (
                         <div className='flex flex-wrap gap-2 text-xs text-t-light dark:text-t-dark'>
-                          {memo.extraData.duration && (
+                          {memo?.extraData?.duration && (
                             <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
                               <span className='vox-icon size-sm vx-icon-236 text-primary' />
-                              {memo.extraData.duration}
+                              {memo?.extraData?.duration}
                             </span>
                           )}
-                          {memo.extraData.time && (
+                          {memo?.extraData?.time && (
                             <span className='flex items-center gap-1 bg-b-white dark:bg-b-dark px-2 py-1 rounded-md'>
                               <span className='vox-icon size-sm vx-icon-237 text-primary' />
                               <FormattedDate
-                                date={memo.createdAt as string}
+                                date={memo?.createdAt as string}
                                 format='datetime'
                               />
                             </span>
                           )}
                         </div>
                       )}
-                      {memo.attachments && memo.attachments.length > 0 && (
+                      {memo?.attachments && memo?.attachments?.length > 0 && (
                         <div className='mt-2 flex flex-wrap gap-2'>
-                          {memo.attachments.map((attachment, idx) => (
-                            <a
-                              key={idx}
-                              href={attachment.url}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                              className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
-                            >
-                              <span className='vox-icon size-sm vx-icon-311 px-1' />
-                              <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
-                                {attachment.name}
-                              </span>
-                            </a>
-                          ))}
+                          {memo?.attachments.map(
+                            (attachment: any, idx: number) => (
+                              <a
+                                key={idx}
+                                href={attachment?.url}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='flex items-center p-1.5 bg-b-white dark:bg-b-dark rounded-md text-xs shadow-sm'
+                              >
+                                <span className='vox-icon size-sm vx-icon-311 px-1' />
+                                <span className='truncate max-w-[120px] text-t-light dark:text-t-dark'>
+                                  {attachment?.name}
+                                </span>
+                              </a>
+                            )
+                          )}
                         </div>
                       )}
                     </div>
@@ -300,7 +330,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               </div>
             </div>
           ))}
-          {memos.value.length === 0 && (
+          {memos?.value?.length === 0 && (
             <div className='flex justify-center items-center h-20'>
               <p className='text-gray-text-light dark:text-t-dark-light text-sm'>
                 {t('i_comment')}
@@ -468,7 +498,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
         </div>
 
         <div className='flex flex-col gap-2 w-2/12'>
-          {panic.value.length > 0 && (
+          {memo.panicUuuid && panic.value.length > 0 && (
             <Badge
               label='panic_button'
               icon='020'
@@ -479,7 +509,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
           )}
         </div>
 
-        <div className='flex items-center gap-4 w-4/12 flex-row justify-between px-3'>
+        <div className='flex items-center gap-4 w-5/12 flex-row justify-between px-3'>
           {status.value != 'IN_REVISION' && status.value != 'CREATED' && (
             <Button
               name='btn-check-memo'
@@ -494,6 +524,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                   onCancel: () => {},
                 })
               }
+              loading={loading.value}
             />
           )}
 
@@ -513,6 +544,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
             disabled={disable}
             label='send'
             icon='311'
+            loading={loading.value}
           />
         </div>
       </div>

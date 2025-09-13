@@ -32,3 +32,20 @@ export interface IUserAreaResponse {
   editedBy: string;
   deletedBy: string;
 }
+
+export interface IUserResidenceResponse {
+  id: number;
+  houseNumber: string;
+  block?: string | null;
+  placeId: number;
+  userId: number;
+  companyId: number;
+
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+
+  createdBy: string;
+  editedBy: string;
+  deletedBy: string;
+}

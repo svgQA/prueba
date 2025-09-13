@@ -1,7 +1,10 @@
 import { type IOption } from '@/components/common/multi/interface';
 import { type IPagination } from '@/types';
 import { type IUserRequest, type IUserResponse } from '@/types/auth';
-import { type IUserAreaRequest } from '@/types/user/user.request';
+import {
+  IUserResidenceRequest,
+  type IUserAreaRequest,
+} from '@/types/user/user.request';
 
 import {
   type IDocumentTypeResponse,
@@ -128,6 +131,13 @@ export class UserService extends BaseService {
     return await super.make_request<IOption>(this.name, model);
   }
 
+  static async get_clients_reports_simple_list() {
+    const model: IMakeRequest = {
+      url: ['user', 'client', 'simple', 'list', 'report'],
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
+
   static async getDocumentTypes() {
     const model: IMakeRequest = {
       url: ['user', 'documenttypes'],
@@ -184,6 +194,48 @@ export class UserService extends BaseService {
   static async deleteArea(id: number) {
     const model: IMakeRequest = {
       url: ['user', 'area', `${id}`],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async createResidence(data: IUserResidenceRequest) {
+    const model: IMakeRequest = {
+      url: ['user', 'residence'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getResidences(params: IPagination = { page: 1, items: 1000 }) {
+    const model: IMakeRequest = {
+      url: ['user', 'residences'],
+      params: params as any,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getResidence(id: string) {
+    const model: IMakeRequest = {
+      url: ['user', 'residence', String(id)],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateResidence(id: string, data: IUserResidenceRequest) {
+    const model: IMakeRequest = {
+      url: ['user', 'residence', String(id)],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteResidence(id: string) {
+    const model: IMakeRequest = {
+      url: ['user', 'residence', String(id)],
       method: REQUEST_METHODS.DELETE,
     };
     return await super.make_request<any>(this.name, model);

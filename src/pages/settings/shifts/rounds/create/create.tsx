@@ -49,6 +49,13 @@ interface ILocation {
   lng: number;
 }
 
+interface XPoint {
+  id: number;
+  position: { lat: number; lng: number };
+  name?: string;
+  tasks: any[];
+}
+
 export const RoundCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { id } = useParams(); // Obtiene el id de la URL
@@ -78,28 +85,23 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
     if (!points.value.length) {
       return ToastManager.warning('s_insert_points');
     } else {
-      model.points = points.value.map(
-        (point: {
-          id: number;
-          position: { lat: number; lng: number };
-          name?: string;
-          tasks: any[];
-        }) => {
-          const model = point.tasks
-            ? {
-                latitude: point.position.lat,
-                longitude: point.position.lng,
-                task: point.tasks,
-                name: point.name || `Point ${point.id}`,
-              }
-            : {
-                latitude: point.position.lat,
-                longitude: point.position.lng,
-                name: point.name || `Point ${point.id}`,
-              };
-          return model;
-        }
-      );
+      model.points = points.value.map((point: XPoint) => {
+        const model = point.tasks
+          ? {
+              id: point.id,
+              latitude: point.position.lat,
+              longitude: point.position.lng,
+              task: point.tasks,
+              name: point.name || `Point ${point.id}`,
+            }
+          : {
+              id: point.id,
+              latitude: point.position.lat,
+              longitude: point.position.lng,
+              name: point.name || `Point ${point.id}`,
+            };
+        return model;
+      });
     }
 
     if (id) {
@@ -132,11 +134,12 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       'description',
     ] as const;
     const request: any = await RoundService.getRoundById(id);
+
     points.value =
       request.model.points.map((point: any) => {
         count++;
         return {
-          id: count,
+          id: point.id, //  count,
           name: point.name || `Point ${count}`,
           position: {
             lat: point.latitude,

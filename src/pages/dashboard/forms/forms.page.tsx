@@ -1,5 +1,5 @@
 import { FormService, IResponseSummary } from '@/services';
-import { IResponseResponse } from '@/types/form';
+import { IResponseResponse, modulesReport } from '@/types/form';
 import { useSignal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
@@ -22,9 +22,19 @@ import {
 import { validateResponse } from '@/pages/settings/forms/response/store/response';
 import { useUserStore } from '@/store/slices';
 import { defaultSummary } from '../memos/memos.page';
-import { EventBus } from '@/utils/network/sse/event.bus';
-import { IBaseSSE, SSE_EVENTS, SSE_TYPE } from '@/utils/network/sse/base';
 import { handleNotificationEvent } from '@/components/common/notifications/components/notification.event';
+
+/**
+ * TODO: WebSocket
+ */
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  SOCKET_MESSAGE_EVENTS,
+  MessageEvent,
+  MESSAGE_LISTENERS,
+} from '@/utils/socket/manager/types';
 
 export const FormsPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -42,23 +52,25 @@ export const FormsPage: FunctionComponent = () => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
       getResponseHandler();
-      // fetchSSE();
-      EventBus.on(SSE_TYPE.RESPONSE, handleResponseSSE);
       selectedNotifier();
-      return () => {
-        EventBus.off(SSE_TYPE.RESPONSE, handleResponseSSE);
-      };
     }
   }, [selectedCompany, location]);
 
-  // const fetchSSE = useCallback(async () => {
-  //   await SseManager.getQuery(['response', 'stream', 'sse']);
-  // }, []);
+  useEffect(() => {
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.FORM,
+      handleMessage,
+      MESSAGE_LISTENERS.FORM
+    );
+    return () => {
+      WebSocketManager.remove(SOCKET_MESSAGE_AREA.FORM, MESSAGE_LISTENERS.FORM);
+    };
+  }, []);
 
-  const handleResponseSSE = async (event: IBaseSSE) => {
-    const { name, message } = event;
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { type: name, message } = event.payload;
 
-    if (name === SSE_EVENTS.UPDATE_CHECK) {
+    if (name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK) {
       const memoIndex = responses.value.findIndex(
         (data) => data.id === message.id
       );
@@ -69,7 +81,7 @@ export const FormsPage: FunctionComponent = () => {
       responses.value = [...copyResponses];
     }
 
-    if (name === SSE_EVENTS.CREATE) {
+    if (name === SOCKET_MESSAGE_EVENTS.CREATE) {
       getResponseHandler();
     }
   };
@@ -247,6 +259,7 @@ export const FormsPage: FunctionComponent = () => {
             rowClassName={(row: IResponseResponse) =>
               highlightedId === String(row.id) ? 'animate-highlight' : ''
             }
+            modules={modulesReport.Form}
           />
         )}
         {(currentView.value === VIEW_NAME.INSPECT ||

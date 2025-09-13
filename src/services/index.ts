@@ -7,6 +7,8 @@ export * from './general/ia';
 export * from './general/company';
 export * from './general/user';
 export * from './general/tracking';
+export * from './key/key';
+export * from './webhook/webhook';
 
 export * from './shift/gantt';
 export * from './shift/shift';

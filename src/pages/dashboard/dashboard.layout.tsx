@@ -55,8 +55,10 @@ import { useSignal } from '@preact/signals';
 import PanicModal from '@/components/common/panic/components/panic.modal';
 import { IPanic } from '@/components/common/panic/utils/interface';
 
-import { IconsModal } from '../globals/icons/icons';
-import { SseManager } from '@/utils/network/sse/base';
+// import { IconsModal } from '../globals/icons/icons';
+// import { SseManager } from '@/utils/network/sse/base';
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -91,9 +93,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     useEffect(() => {
       if (selectedCompany) {
-        // Promise.all([SseManager.getQuery(['company', 'stream', 'sse'])]);
-        Promise.all([SseManager.getQuery(['events', 'stream'])]);
+        WebSocketManager.connect(getTenant, getCompanyId, getToken);
       }
+      return () => {
+        WebSocketManager.disconnect();
+      };
     }, [selectedCompany]);
 
     const validateUser = async () => {
@@ -151,6 +155,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       if (!request.getStatus()) return;
 
       const permissions = request.getOne();
+      if (!permissions.model || Object.keys(permissions.model).length === 0)
+        return;
       setAllPermissions(permissions.model);
     };
 
@@ -284,7 +290,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
         <SettingsModal />
         <ToastContainer />
-        <IconsModal />
+        {/*<IconsModal />*/}
       </section>
     );
   }
