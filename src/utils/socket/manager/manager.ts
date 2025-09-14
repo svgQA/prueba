@@ -137,7 +137,7 @@ export class WebSocketManager {
     callback: (data: any) => void,
     id: string
   ) {
-    console.log(`[WS] Adding listener for area: ${name}`);
+    // console.log(`[WS] Adding listener for area: ${name}`);
     // const existing = Array.from(this.listeners).find((l) => l.name === name);
     // if (existing) this.listeners.delete(existing);
     // this.listeners.add({ name,  callback: { id, fn: callback } });
