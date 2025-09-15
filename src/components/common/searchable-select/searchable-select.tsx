@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 import { Input } from '@/components/common/input/input';
 import { IOption } from '@/components/common/multi/interface';
 import { FieldMetaState } from 'react-final-form';
+import { useTranslation } from 'react-i18next';
 
 interface SearchableSelectProps {
   value?: IOption[];
@@ -19,12 +20,13 @@ export const SearchableSelect: ComponentType<SearchableSelectProps> = ({
   value = [],
   onChange,
   label,
-  placeholder = 'Buscar usuarios...',
+  placeholder = 'p_search_users',
   meta,
   name,
   options,
   multiple = false,
 }) => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredOptions, setFilteredOptions] = useState<IOption[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -141,7 +143,7 @@ export const SearchableSelect: ComponentType<SearchableSelectProps> = ({
     <div className='relative' ref={dropdownRef}>
       <div className='mb-2 relative'>
         <label className='block text-sm font-medium text-gray-700'>
-          {label}
+          {t(label || '')}
         </label>
 
         {value.length > 0 && (
@@ -193,7 +195,7 @@ export const SearchableSelect: ComponentType<SearchableSelectProps> = ({
               setSearchTerm(e.currentTarget.value);
               setShowDropdown(true);
             }}
-            placeholder={placeholder}
+            placeholder={t(placeholder)}
             name={name}
           />
         </div>

@@ -7,6 +7,7 @@ import ShowFiles from '@/components/common/file/show.file';
 import { handleFileSaveWrapper } from '../file/utils/utils';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { AudioRecorderProps } from './utils/interface';
+import { useTranslation } from 'react-i18next';
 
 export const AudioRecorder = ({
   name,
@@ -17,6 +18,7 @@ export const AudioRecorder = ({
   area,
   page,
 }: AudioRecorderProps) => {
+  const { t } = useTranslation();
   const [recording, setRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
     null
@@ -89,7 +91,7 @@ export const AudioRecorder = ({
     <div className='flex flex-col items-start gap-2 w-full'>
       {label && (
         <label className='capitalize block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200'>
-          {label}
+          {t(label)}
         </label>
       )}
       <Button

@@ -7,6 +7,7 @@ import { IPresignedRequest } from '@/types/file';
 import ShowFiles from '@/components/common/file/show.file';
 import { DateUtils } from '@/utils/utilities/dates';
 import { handleFileSaveWrapper } from '../file/utils/utils';
+import { useTranslation } from 'react-i18next';
 
 export const QrCode = ({
   value,
@@ -16,6 +17,7 @@ export const QrCode = ({
   onChange,
   page,
 }: QrProps) => {
+  const { t } = useTranslation();
   const [scannedValue, setScannedValue] = useState<string | null>(null);
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -209,7 +211,7 @@ export const QrCode = ({
 
   return (
     <div className='w-full h-full flex flex-col items-center'>
-      {label && <label className='mb-2 font-medium'>{label}</label>}
+      {label && <label className='mb-2 font-medium'>{t(label)}</label>}
       {onChange && (
         <Button
           name='btn-response-qr'

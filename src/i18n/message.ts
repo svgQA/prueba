@@ -170,6 +170,7 @@ export const message_es = {
   i_structure: 'Debe tener al menos una sección',
   i_required: 'El campo es requerido',
   i_delete_form: '¿Estás seguro que quieres eliminar el formulario guardado?',
+  i_forms_analytic_settings: 'CONFIGURACIÓN DE ANÁLISIS DE FORMULARIOS',
 };
 
 export const message_en = {
@@ -340,4 +341,5 @@ export const message_en = {
   i_structure: 'Must have at least one section',
   i_required: 'The field is required',
   i_delete_form: 'Are you sure you want to delete the saved form?',
+  i_forms_analytic_settings: 'FORMS ANALYTIC SETTINGS',
 };

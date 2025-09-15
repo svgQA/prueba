@@ -60,6 +60,8 @@ export const placeholder_es = {
   p_enter_range: 'Ingrese rango...',
   p_enter_max_time: 'Ingrese tiempo máximo...',
   p_enter_min_time: 'Ingrese tiempo mínimo...',
+  p_text_input: 'Texto de entrada',
+  p_text_area: 'Texto de área',
 };
 
 export const placeholder_en = {
@@ -124,4 +126,6 @@ export const placeholder_en = {
   p_enter_range: 'Enter range...',
   p_enter_max_time: 'Enter maximum time...',
   p_enter_min_time: 'Enter minimum time...',
+  p_text_input: 'Text input',
+  p_text_area: 'Text area',
 };

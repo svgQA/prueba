@@ -341,7 +341,7 @@ export const FormElement = ({
                     ) : (
                       <MultipleInput
                         name='options'
-                        label='Options'
+                        label='l_options'
                         id={`mt-form-${question.id}-element-options`}
                         icon='123'
                         value={question.options}
@@ -383,7 +383,7 @@ export const FormElement = ({
               {question.type === ELEMENT_TYPE.DATE && (
                 <Input
                   name='default'
-                  label='Default'
+                  label='l_default_value'
                   type='date'
                   id={`in-date-form-${question.id}-element-default`}
                   value={question.default}
@@ -396,7 +396,7 @@ export const FormElement = ({
               {question.type === ELEMENT_TYPE.TIME && (
                 <Input
                   name='default'
-                  label='Default'
+                  label='l_default_value'
                   type='time'
                   id={`in-time-form-${question.id}-element-default`}
                   value={question.default}
@@ -428,7 +428,7 @@ export const FormElement = ({
               <>
                 <Input
                   name='min'
-                  label='Minimun'
+                  label='l_minimum'
                   type={question.type === ELEMENT_TYPE.TIME ? 'time' : 'date'}
                   value={question.min}
                   id={`in-time-form-${question.id}-element-min`}
@@ -457,7 +457,7 @@ export const FormElement = ({
               question.type === ELEMENT_TYPE.RATING) && (
               <Input
                 name='min'
-                label='Minimun'
+                label='l_minimum'
                 type='number'
                 id={`in-number-form-${question.id}-element-min`}
                 value={question.min}
@@ -475,7 +475,7 @@ export const FormElement = ({
               question.type === ELEMENT_TYPE.RATING) && (
               <Input
                 name='max'
-                label='Maximum'
+                label='l_maximum'
                 type='number'
                 id={`in-number-form-${question.id}-element-max`}
                 value={question.max}
@@ -493,7 +493,7 @@ export const FormElement = ({
               <Input
                 type='number'
                 name='size'
-                label='size'
+                label='p_size'
                 id={`in-number-form-${question.id}-element-size`}
                 value={question.size}
                 placeholder='p_size'
@@ -509,7 +509,7 @@ export const FormElement = ({
               <Input
                 type='number'
                 name='maxNumberFiles'
-                label='Number Files'
+                label='l_number_files'
                 id={`in-number-form-${question.id}-element-files`}
                 value={question.maxNumberFiles}
                 placeholder='p_number_files'
@@ -526,7 +526,7 @@ export const FormElement = ({
               <div className='col-span-2'>
                 <MultipleInput
                   name='tasks'
-                  label='Tasks'
+                  label='l_tasks'
                   id={`mt-form-${question.id}-element-tasks`}
                   icon='123'
                   value={question.tasks}

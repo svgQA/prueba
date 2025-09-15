@@ -4,6 +4,7 @@ import { Input } from '@/components/common/input/input';
 import { IOption } from '@/components/common/multi/interface';
 import { FieldMetaState } from 'react-final-form';
 import { createPortal } from 'preact/compat';
+import { useTranslation } from 'react-i18next';
 
 export interface CustomSelectorProps {
   value?: IOption[];
@@ -32,7 +33,7 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
   value = [],
   onChange,
   label,
-  placeholder = 'Buscar...',
+  placeholder = 'p_search',
   meta,
   name,
   options,
@@ -44,6 +45,7 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
   maxHeight = 'max-h-60',
   menuPortalTarget,
 }) => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredOptions, setFilteredOptions] = useState<IOption[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -245,7 +247,7 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
       <div className='mb-2 relative'>
         {label && (
           <label className='block text-sm font-medium text-gray-700'>
-            {label}
+            {t(label)}
           </label>
         )}
 
@@ -299,7 +301,7 @@ export const CustomSelector: ComponentType<CustomSelectorProps> = ({
               setShowDropdown(true);
             }}
             // onClick={() => setShowDropdown(true)}
-            placeholder={placeholder}
+            placeholder={t(placeholder)}
             name={name}
             {...meta}
           />

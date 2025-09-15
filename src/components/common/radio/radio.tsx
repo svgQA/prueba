@@ -1,5 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { type IRadioProps } from './interface';
+import { useTranslation } from 'react-i18next';
 
 export const Radio: FunctionComponent<IRadioProps> = ({
   onChange,
@@ -12,6 +13,7 @@ export const Radio: FunctionComponent<IRadioProps> = ({
   disabled,
   ...props
 }: IRadioProps) => {
+  const { t } = useTranslation();
   return (
     <div id={id} className='w-full my-1'>
       {label && (
@@ -19,7 +21,7 @@ export const Radio: FunctionComponent<IRadioProps> = ({
           for={`${id}-input`}
           className='capitalize block text-sm font-medium'
         >
-          {label}
+          {t(label)}
         </label>
       )}
       <div className='flex flex-col gap-2'>
@@ -38,7 +40,7 @@ export const Radio: FunctionComponent<IRadioProps> = ({
               {...props}
             />
             <label for={`${id}-${option.value}-ra`} className='text-sm'>
-              {option.label}
+              {t(option.label)}
             </label>
           </div>
         ))}
