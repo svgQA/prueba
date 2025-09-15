@@ -50,7 +50,6 @@ export const hasUserTenant = async (
   if (getLoaded()) return true;
 
   const user = await getUser(setToken);
-  console.log('user =>', user);
   const cognito = user?.sub || '';
   const tenant = user?.['custom:tenant'] || '';
   if (!user) return false;
