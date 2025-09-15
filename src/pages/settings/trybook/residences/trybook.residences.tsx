@@ -1,8 +1,7 @@
 // UserResidencesPage.tsx
 import { Table } from '@/components/common/table/table';
 import { FunctionComponent } from 'preact';
-import { columns } from './residence.columns';
-import { UserService } from '@/services/general/user';
+import { columns, type ResidenceRow } from './residence.columns';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { ToastManager } from '@/utils/toast/toast-manager';
@@ -12,10 +11,20 @@ import { useTranslation } from 'react-i18next';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { ResidencesService } from '@/services/trybook/residences';
 
-export const UserResidencesPage: FunctionComponent = () => {
+/* Tipos mínimos de respuesta */
+interface ListResponse<T> {
+  getStatus(): boolean;
+  getMany(): T[];
+}
+interface BasicResponse {
+  getStatus(): boolean;
+}
+
+export const TrybookResidencesPage: FunctionComponent = () => {
   const { t } = useTranslation();
-  const rows = useSignal<any[]>([]);
+  const rows = useSignal<ResidenceRow[]>([]);
   const loading = useSignal<boolean>(false);
   const { go } = useNavigation();
   const { selectedCompany } = useUserStore();
@@ -24,51 +33,63 @@ export const UserResidencesPage: FunctionComponent = () => {
     document.title = t('p_residence');
   }, [t]);
 
-  useEffect(() => {
-    if (selectedCompany) fetchRows();
-  }, [selectedCompany]);
-
   const fetchRows = async () => {
     loading.value = true;
-    const res = await UserService.getResidences();
-    if (res.getStatus()) rows.value = res.getMany();
-    loading.value = false;
+    try {
+      const res =
+        (await ResidencesService.getResidences()) as unknown as ListResponse<ResidenceRow>;
+      if (res.getStatus()) rows.value = res.getMany();
+    } catch {
+      ToastManager.error('s_fetch_error');
+    } finally {
+      loading.value = false;
+    }
   };
 
+  useEffect(() => {
+    if (selectedCompany) void fetchRows();
+  }, [selectedCompany]);
+
   const deleteRow = async (uuid: string) => {
-    const req = await UserService.deleteResidence(uuid);
+    const req = (await ResidencesService.deleteResidence(
+      uuid
+    )) as unknown as BasicResponse;
     if (!req.getStatus()) return;
     ToastManager.success('s_deleted_success');
-    fetchRows();
+    void fetchRows();
   };
 
   const editRow = (uuid: string) => {
     go({
-      to: `/users/residences/update/${uuid}`,
+      to: `/trybook/residence/update/${uuid}`,
       label: 'edit',
-      id: 'users:residences:state:update',
+      id: 'trybook:residence:state:update',
       base: 'setting',
     });
   };
 
-  const handleOnClick = async (action: IRowAction | any) => {
+  const handleOnClick = (action: IRowAction): void => {
     switch (action.action) {
       case ROW_ACTIONS.UPDATE:
-        editRow(action.id as string);
+        editRow(String(action.id));
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
           title: t('user.residence.showAlert.title'),
           message: t('user.residence.showAlert.msg'),
-          onConfirm: () => deleteRow(action.id as string),
+          onConfirm: () => {
+            void deleteRow(String(action.id));
+          },
           onCancel: () => {},
         });
+        break;
+      default:
         break;
     }
   };
 
   return (
-    <Table<any>
+    <Table<ResidenceRow>
       data={rows.value}
       columns={columns}
       showExpandableIcon={false}

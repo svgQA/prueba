@@ -35,18 +35,6 @@ export const PAGES_LIST_ROUTER = {
             to: '/users/areas/update/:id',
           },
         },
-        residences: {
-          base: '/residences',
-          to: '/users/residences',
-          create: {
-            base: '/create',
-            to: '/users/residences/create',
-          },
-          update: {
-            base: '/update',
-            to: '/users/residences/update/:id',
-          },
-        },
         roles: {
           base: '/roles',
           to: '/users/roles',
@@ -422,6 +410,57 @@ export const PAGES_LIST_ROUTER = {
         channels: {
           base: '/channels',
           to: '/iot/channels',
+        },
+      },
+      trybook: {
+        base: '/trybook',
+        residences: {
+          base: '/residence',
+          to: '/trybook/residence',
+          create: {
+            base: '/create',
+            to: '/trybook/residence/create',
+          },
+          update: {
+            base: '/update',
+            to: '/trybook/residence/update/:id',
+          },
+        },
+        commonZones: {
+          base: '/commonzone',
+          to: '/trybook/commonzone',
+          create: {
+            base: '/create',
+            to: '/trybook/commonzone/create',
+          },
+          update: {
+            base: '/update',
+            to: '/trybook/commonzone/update/:id',
+          },
+        },
+        commonSlots: {
+          base: '/commonslot',
+          to: '/trybook/commonslot',
+          create: {
+            base: '/create',
+            to: '/trybook/commonslot/create',
+          },
+          update: {
+            base: '/update',
+            to: '/trybook/commonslot/update/:id',
+          },
+        },
+        resourceZones: {
+          base: '/resourcezone',
+          to: '/trybook/resourcezone',
+          create: {
+            base: '/create',
+            to: '/trybook/resourcezone/create',
+          },
+          update: {
+            base: '/update',
+            to: '/trybook/resourcezone/update/:id',
+          },
         },
       },
     },

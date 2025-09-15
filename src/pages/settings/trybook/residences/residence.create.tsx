@@ -15,7 +15,8 @@ import { useUserStore } from '@/store/slices';
 
 import { PlaceService } from '@/services';
 import { UserService } from '@/services/general/user';
-import { IUserResidenceRequest } from '@/types/user/user.request';
+import { ResidencesService } from '@/services/trybook/residences';
+import { IResidenceCreate } from '@/types/trybook/residences';
 
 type ResidenceType = 'HOUSE' | 'APARTMENT';
 
@@ -55,7 +56,7 @@ export const ResidenceCreatePage: FunctionComponent = () => {
 
   const setInitialValues = useCallback(async () => {
     if (!uuid) return;
-    const req = await UserService.getResidence(uuid); // 👈 pide por uuid
+    const req = await ResidencesService.getResidence(uuid); // 👈 pide por uuid
     if (!req.getStatus()) return;
 
     const model = req.getOne();
@@ -99,7 +100,7 @@ export const ResidenceCreatePage: FunctionComponent = () => {
 
   const onSubmit = async (model: FormData) => {
     // Construir payload según DTO nuevo
-    const payload: IUserResidenceRequest = {
+    const payload: IResidenceCreate = {
       type: (model.type?.value as ResidenceType) ?? 'HOUSE',
       houseNumber: String(model.houseNumber).trim(),
       block: model.block?.trim() || undefined,
@@ -115,16 +116,16 @@ export const ResidenceCreatePage: FunctionComponent = () => {
     };
 
     const req = uuid
-      ? await UserService.updateResidence(uuid, payload) // 👈 update por uuid
-      : await UserService.createResidence(payload);
+      ? await ResidencesService.updateResidence(uuid, payload) // 👈 update por uuid
+      : await ResidencesService.createResidence(payload);
 
     if (!req.getStatus()) return;
 
     ToastManager.success(uuid ? 's_updated_success' : 's_created_success');
     go({
-      to: '/users/residences',
+      to: '/trybook/residence',
       label: 'residences',
-      id: 'user:residences:state',
+      id: 'user:residence:state',
       base: 'setting',
     });
   };
@@ -160,8 +161,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        placeholder='user.residence.placeholder.type'
-                        label='user.residence.form.type'
+                        placeholder='trybook.residence.placeholder.type'
+                        label='trybook.residence.form.type'
                         id='type'
                         icon='home'
                         options={TYPE_OPTIONS}
@@ -177,8 +178,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder='user.residence.placeholder.block'
-                        label='user.residence.form.block'
+                        placeholder='trybook.residence.placeholder.block'
+                        label='trybook.residence.form.block'
                         type='text'
                         meta={meta}
                       />
@@ -192,8 +193,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder='user.residence.placeholder.floor'
-                        label='user.residence.form.floor'
+                        placeholder='trybook.residence.placeholder.floor'
+                        label='trybook.residence.form.floor'
                         type='number'
                         meta={meta}
                         disabled={!isApartment}
@@ -218,8 +219,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder='user.residence.placeholder.houseNumber'
-                        label='user.residence.form.houseNumber'
+                        placeholder='trybook.residence.placeholder.houseNumber'
+                        label='trybook.residence.form.houseNumber'
                         type='text'
                         meta={meta}
                       />
@@ -234,8 +235,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        placeholder='user.residence.placeholder.place'
-                        label='user.residence.form.place'
+                        placeholder='trybook.residence.placeholder.place'
+                        label='trybook.residence.form.place'
                         id='placeId'
                         icon='252'
                         options={places.value}
@@ -252,8 +253,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        placeholder='user.residence.placeholder.user'
-                        label='user.residence.form.user'
+                        placeholder='trybook.residence.placeholder.user'
+                        label='trybook.residence.form.user'
                         id='userId'
                         icon='241'
                         options={users.value}
