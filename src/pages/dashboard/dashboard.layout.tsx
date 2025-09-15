@@ -26,7 +26,6 @@ import { UsersPage } from './users/users.page';
  ** ***********************************************************************/
 import {
   closeLoading,
-  getStatusSettingModal,
   openLoading,
   toggleSettingModal,
 } from '@/store/signals/modals';

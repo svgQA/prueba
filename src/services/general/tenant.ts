@@ -1,5 +1,4 @@
 import { BaseService } from '@/utils/network';
-import { type IOnboardingModel } from '@/store/signals/types';
 import {
   // type IInstance,
   // type IModule,
