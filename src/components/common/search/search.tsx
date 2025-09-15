@@ -107,6 +107,11 @@ export const Search = ({
               ? keys[selectedKeyIndex.value]
               : keys[0];
           if (!key) return;
+          if (key.type === 'date') {
+            isOpenRange.value = true;
+            columnSelected.value = key.id;
+            setFilterSelected(key, true);
+          }
           setFilterSelected(key);
         } else if (event.key === 'Tab') {
           event.preventDefault();
