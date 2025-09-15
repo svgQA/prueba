@@ -20,7 +20,9 @@ describe('Components | Common | Input', () => {
       />
     );
     expect(screen.getByText('test label')).toBeInTheDocument();
-    const field = screen.getByPlaceholderText('placeholder text') as HTMLInputElement;
+    const field = screen.getByPlaceholderText(
+      'placeholder text'
+    ) as HTMLInputElement;
     fireEvent.change(field, { target: { value: 'Hello' } });
     expect(handleChange).toHaveBeenCalled();
   });

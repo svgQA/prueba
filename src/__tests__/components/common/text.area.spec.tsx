@@ -20,7 +20,9 @@ describe('Components | Common | TextArea', () => {
       />
     );
     expect(screen.getByText('text label')).toBeInTheDocument();
-    const field = screen.getByPlaceholderText('write here') as HTMLTextAreaElement;
+    const field = screen.getByPlaceholderText(
+      'write here'
+    ) as HTMLTextAreaElement;
     fireEvent.change(field, { target: { value: 'hello' } });
     expect(handleChange).toHaveBeenCalled();
   });

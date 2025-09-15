@@ -10,7 +10,10 @@ describe('Components | Common | Checkbox', () => {
         id='test-checkbox'
         name='test'
         label='check label'
-        options={[{ label: 'One', value: '1' }, { label: 'Two', value: '2' }] }
+        options={[
+          { label: 'One', value: '1' },
+          { label: 'Two', value: '2' },
+        ]}
         value={{}}
         onChange={handleChange}
       />

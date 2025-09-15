@@ -5,7 +5,7 @@ import { Tooltip } from '@/components/common/tooltip/tooltip';
 describe('Components | Common | Tooltip', () => {
   it('shows tooltip when hovered', async () => {
     render(
-      <Tooltip text="Tooltip content">
+      <Tooltip text='Tooltip content'>
         <button>trigger</button>
       </Tooltip>
     );

@@ -10,7 +10,10 @@ describe('Components | Common | Radio', () => {
         id='test-radio'
         name='test'
         label='radio label'
-        options={[{ label: 'One', value: '1' }, { label: 'Two', value: '2' }] }
+        options={[
+          { label: 'One', value: '1' },
+          { label: 'Two', value: '2' },
+        ]}
         value='1'
         onChange={handleChange}
       />
