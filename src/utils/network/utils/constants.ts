@@ -10,7 +10,7 @@ export const VOX_DEFAULT_PATH = {
 };
 
 export const VOS_SERVICES = {
-  tenant: tenant_service_url,
+  tenants: tenant_service_url,
   ia: ia_service_url,
   shift: default_service_url,
   auth: default_service_url,
