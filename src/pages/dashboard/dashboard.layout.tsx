@@ -197,6 +197,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     };
 
     const getTenants = async () => {
+      const user = getUser();
+
+      if (user?.email != 'juanpablorodriguezfernandez93@gmail.com') {
+        return;
+      }
       const request = await TenantService.get_tenants();
       console.log(request);
       if (!request.getStatus()) return;
@@ -204,6 +209,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     };
 
     const getInstances = async () => {
+      const user = getUser();
+
+      if (user?.email != 'juanpablorodriguezfernandez93@gmail.com') {
+        return;
+      }
       const request = await TenantService.get_instances();
       if (!request.getStatus()) return;
       instances.value = request.getMany();
