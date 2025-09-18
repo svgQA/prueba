@@ -346,7 +346,7 @@ export const MapLibrePointsMap = ({
       allPoints.push(userLocation);
     }
 
-    allPoints.forEach((point, index) => {
+    allPoints.forEach((point, _index) => {
       if (
         !point ||
         !point.position ||
