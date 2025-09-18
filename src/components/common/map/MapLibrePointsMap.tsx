@@ -264,7 +264,8 @@ export const MapLibrePointsMap = ({
     if (pointsAmount === 1) setPoints([]);
     const nextId = nextIdRef.current++;
     const newPoint: MapPoint = {
-      id: nextId * -1,
+      // id: nextId * -1,
+      id: nextId,
       position: { lat, lng },
       name: t('maps.pointName') + ' ' + nextId,
     };
@@ -289,11 +290,16 @@ export const MapLibrePointsMap = ({
     el.setAttribute('data-index', (index + 1).toString());
 
     const isUserLocation = point.id === -1;
+    const isRadialPoint = radialPoint && point?.id === radialPoint?.id;
     const markerColor = isUserLocation
-      ? '#10B981'
-      : radialPoint && point?.id === radialPoint?.id
-        ? '#2563EB'
-        : '#EA4335';
+      ? '#10B981'  // Verde para ubicación del usuario
+      : isRadialPoint
+        ? '#2563EB'  // Azul para punto radial
+        : '#EA4335'; // Rojo para puntos normales
+
+    // Texto del marcador
+    const markerText = isUserLocation ? 'U' : (index + 1).toString();
+    const textX = isUserLocation ? 8 : (index + 1 >= 10 ? 5 : 10);
 
     el.innerHTML = `
     <div style="
@@ -308,14 +314,14 @@ export const MapLibrePointsMap = ({
         <circle fill="#FFFFFF" cx="12" cy="12" r="9" />
         <text
           fill="${markerColor}"
-          x="${isUserLocation ? 8 : index + 1 >= 10 ? 5 : 10}"
+          x="${textX}"
           y="12.5"
           fontFamily="Arial, sans-serif"
           fontSize="10"
           fontWeight="bold"
           textAnchor="middle"
           dy=".3em"
-        >${isUserLocation ? 'U' : index + 1}</text>
+        >${markerText}</text>
       </svg>
     </div>
   `;
@@ -350,7 +356,10 @@ export const MapLibrePointsMap = ({
         return;
       }
 
-      const markerEl = createMarkerElement(point, index);
+      // const markerEl = createMarkerElement(point, index);
+      // Para el userLocation, usar índice especial; para puntos normales, usar su posición en el array original
+      const markerIndex = point.id === -1 ? -1 : points.findIndex(p => p.id === point.id);
+      const markerEl = createMarkerElement(point, markerIndex);
       const isRadialPoint = radialPoint && point?.id === radialPoint?.id;
 
       const marker = new maplibregl.Marker({
