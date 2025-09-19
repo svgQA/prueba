@@ -1,29 +1,29 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/preact';
-import { Input } from '@/components/common/input/input';
+import { TextArea } from '@/components/common/text.area/text.area';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (str: string) => str }),
 }));
 
-describe('Components | Common | Input', () => {
+describe('Components | Common | TextArea', () => {
   it('renders label and handles input', () => {
     const handleChange = vi.fn();
     render(
-      <Input
-        id='test-input'
+      <TextArea
+        id='test-textarea'
         name='test'
-        label='test label'
-        placeholder='placeholder text'
+        label='text label'
+        placeholder='write here'
         value=''
         onChange={handleChange}
       />
     );
-    expect(screen.getByText('test label')).toBeInTheDocument();
+    expect(screen.getByText('text label')).toBeInTheDocument();
     const field = screen.getByPlaceholderText(
-      'placeholder text'
-    ) as HTMLInputElement;
-    fireEvent.change(field, { target: { value: 'Hello' } });
+      'write here'
+    ) as HTMLTextAreaElement;
+    fireEvent.change(field, { target: { value: 'hello' } });
     expect(handleChange).toHaveBeenCalled();
   });
 });
