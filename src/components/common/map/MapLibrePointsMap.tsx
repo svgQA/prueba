@@ -292,14 +292,14 @@ export const MapLibrePointsMap = ({
     const isUserLocation = point.id === -1;
     const isRadialPoint = radialPoint && point?.id === radialPoint?.id;
     const markerColor = isUserLocation
-      ? '#10B981'  // Verde para ubicación del usuario
+      ? '#10B981' // Verde para ubicación del usuario
       : isRadialPoint
-        ? '#2563EB'  // Azul para punto radial
+        ? '#2563EB' // Azul para punto radial
         : '#EA4335'; // Rojo para puntos normales
 
     // Texto del marcador
     const markerText = isUserLocation ? 'U' : (index + 1).toString();
-    const textX = isUserLocation ? 8 : (index + 1 >= 10 ? 5 : 10);
+    const textX = isUserLocation ? 8 : index + 1 >= 10 ? 5 : 10;
 
     el.innerHTML = `
     <div style="
@@ -358,7 +358,8 @@ export const MapLibrePointsMap = ({
 
       // const markerEl = createMarkerElement(point, index);
       // Para el userLocation, usar índice especial; para puntos normales, usar su posición en el array original
-      const markerIndex = point.id === -1 ? -1 : points.findIndex(p => p.id === point.id);
+      const markerIndex =
+        point.id === -1 ? -1 : points.findIndex((p) => p.id === point.id);
       const markerEl = createMarkerElement(point, markerIndex);
       const isRadialPoint = radialPoint && point?.id === radialPoint?.id;
 
