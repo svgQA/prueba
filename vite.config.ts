@@ -94,6 +94,9 @@ export default defineConfig(({ mode }) => {
             if (id.includes('pako')) {
               return '@pako-lib'; // 148.81 kB
             }
+            if (id.includes('phoenix')) {
+              return '@phoenix';
+            }
             if (id.includes('@pdfme/common')) {
               return '@pdfme/common'; // 148.81 kB
             }
@@ -105,6 +108,9 @@ export default defineConfig(({ mode }) => {
             }
             if (id.includes('@pdfme/ui')) {
               return '@pdfme/ui';
+            }
+            if (id.includes('@grafana')) {
+              return '@grafana';
             }
           },
         },
