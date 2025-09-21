@@ -16,7 +16,11 @@
 - [x] `TextArea` (placeholders, íconos, estados thin/disabled y validaciones)
 - [x] `Tooltip` (visibilidad por hover, posiciones y estilos dinámicos)
 - [x] `Badge` (traducción, iconografía, contador y eventos de click/remove)
+- [x] `SearchableSelect` (filtros, navegación con teclado, multiselección y atajo de seleccionar todos)
+- [x] `CustomSelector` (portales, chips removibles, select-all condicional y clases personalizadas)
+- [x] `Select` (traducciones, iconos inicial/final, bordes y mensajes de validación)
+- [x] `MultipleInput` (creación incremental, eliminación de chips, botón auxiliar y layout inferior)
 
 ## Pendiente
-- [ ] `SearchableSelect` y variantes de selector (multiselección, búsqueda y estados vacíos)
+- [ ] Selectores avanzados restantes (`select-check`, `smart-selector`, `user-selector`) y estados cruzados
 - [ ] Revisión de componentes restantes sin cobertura específica
