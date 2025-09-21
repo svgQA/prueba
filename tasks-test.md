@@ -20,7 +20,9 @@
 - [x] `CustomSelector` (portales, chips removibles, select-all condicional y clases personalizadas)
 - [x] `Select` (traducciones, iconos inicial/final, bordes y mensajes de validación)
 - [x] `MultipleInput` (creación incremental, eliminación de chips, botón auxiliar y layout inferior)
+- [x] `SelectCheck` (traducción de etiqueta, tamaños, colores activos y estados deshabilitados)
+- [x] `SmartSelector` (búsqueda, chips múltiples, select-all, botón auxiliar y validaciones)
+- [x] `UserSelector` (placeholder traducido y propagación completa de propiedades)
 
 ## Pendiente
-- [ ] Selectores avanzados restantes (`select-check`, `smart-selector`, `user-selector`) y estados cruzados
 - [ ] Revisión de componentes restantes sin cobertura específica
