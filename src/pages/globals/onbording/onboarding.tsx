@@ -3,9 +3,9 @@ import { useRef, useEffect, useCallback, useMemo } from 'preact/hooks';
 import { IOnboardingProps, DEFAULT_STEP, STEPS } from './utils';
 import { Form } from 'react-final-form';
 import { getUserId } from '@/store/slices';
-import { IOnboardingModel } from '@/store/signals/types';
-import { TenantService } from '@/services';
-import { closeOnBoardingModal } from '@/store/signals/modals';
+//import { IOnboardingModel } from '@/store/signals/types';
+//import { TenantService } from '@/services';
+//import { closeOnBoardingModal } from '@/store/signals/modals';
 import { OnBoardingSteps } from './components';
 import { useSignal } from '@preact/signals';
 import { ThemeButton } from '@/components/compose/button';
@@ -24,7 +24,7 @@ export const OnBordingModal = ({ closed, children }: IOnboardingProps) => {
     step.value = Math.max(step.value - 1, 1);
   }, []);
 
-  const onCreateTenant = useCallback(async (model: IOnboardingModel) => {
+  const onCreateTenant = useCallback(async () => {
     if (!admin_cognito.current) {
       admin_cognito.current = await getUserId();
     }
@@ -33,14 +33,14 @@ export const OnBordingModal = ({ closed, children }: IOnboardingProps) => {
       return console.error('No existe usuario valido con ese uuid');
     }
 
-    const response = await TenantService.create_tenant({
+    /*  const response = await TenantService.create_tenant({
       ...model,
-      admin_cognito: admin_cognito.current,
+      cognito: admin_cognito.current,
     });
 
     if (response.getStatus()) {
       closeOnBoardingModal();
-    }
+    }*/
   }, []);
 
   useEffect(() => {

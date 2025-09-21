@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'preact';
-
+import { useTranslation } from 'react-i18next';
 import { ROW_ACTIONS } from '../table/enum';
 
 interface IColumnButtonProps {
@@ -20,6 +20,7 @@ export const ButtonAction: FunctionComponent<IColumnButtonProps> = ({
   color = 'primary',
   label,
 }: IColumnButtonProps) => {
+  const { t } = useTranslation();
   return (
     <span
       className={
@@ -31,7 +32,7 @@ export const ButtonAction: FunctionComponent<IColumnButtonProps> = ({
       data-type={type}
       data-action={action}
     >
-      {label}
+      {label ? t(label) : ''}
     </span>
   );
 };

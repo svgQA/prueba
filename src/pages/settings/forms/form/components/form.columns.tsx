@@ -93,7 +93,7 @@ export const getColumns = (
       const { id, report } = info.row.original;
       const actions: IDropdownAction[] = [
         {
-          label: 'update',
+          label: 'l_update',
           icon: 'vox-icon vx-icon-123 text-primary',
           onClick: () => {
             onClickAction({
@@ -119,7 +119,7 @@ export const getColumns = (
             ]
           : []),
         {
-          label: 'delete',
+          label: 'l_delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
@@ -136,7 +136,7 @@ export const getColumns = (
         <div className='w-full flex justify-center items-center'>
           <Button
             name='continue'
-            label='response'
+            label='l_response'
             icon='030'
             unpadded
             onClick={() => {

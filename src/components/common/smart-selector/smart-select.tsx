@@ -43,7 +43,7 @@ export function SmartSelector<T = IOption>({
   options,
   multiple = false,
   allowAll = false,
-  placeholder = 'Buscar...',
+  placeholder = 'p_search',
   menuPortalTarget = null,
   label,
   id,

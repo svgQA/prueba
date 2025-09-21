@@ -71,7 +71,7 @@ export const ScheduleSelector: FunctionComponent<IScheduleSelectorProps> = ({
           for={`${id}-input`}
           className='capitalize block text-sm font-medium text-gray-700 dark:text-gray-200'
         >
-          {label}
+          {t(label)}
         </label>
       )}
       <div className='rounded-lg shadow-sm p-3 py-5 bg-b-light-light dark:bg-b-dark-light w-full'>

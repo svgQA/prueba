@@ -1,5 +1,6 @@
 import { type FunctionComponent } from 'preact';
 import { type IFloatBadgeProps } from './interface';
+import { useTranslation } from 'react-i18next';
 
 export const FloatBadge: FunctionComponent<IFloatBadgeProps> = ({
   label,
@@ -9,6 +10,7 @@ export const FloatBadge: FunctionComponent<IFloatBadgeProps> = ({
   color = 'bg-ternary dark:bg-primary',
   animate = false,
 }: IFloatBadgeProps) => {
+  const { t } = useTranslation();
   return (
     <div className='relative'>
       {label && (
@@ -17,7 +19,7 @@ export const FloatBadge: FunctionComponent<IFloatBadgeProps> = ({
             animate ? 'animate-notification-shake' : ''
           }`}
         >
-          {label}
+          {label ? t(String(label)) : ''}
         </span>
       )}
       {children}

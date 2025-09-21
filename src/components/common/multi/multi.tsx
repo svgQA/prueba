@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'preact/hooks';
 import { IMultiProps } from './interface';
 import { Chip } from '../chip/chip';
 import { Input } from '../input/input';
+import { useTranslation } from 'react-i18next';
 
 export const MultipleInput = ({
   value = [],
@@ -22,6 +23,7 @@ export const MultipleInput = ({
   meta,
   ...options
 }: IMultiProps) => {
+  const { t } = useTranslation();
   const [inputValue, setInputValue] = useState<string>('');
 
   const handleKeyDown = useCallback(
@@ -111,7 +113,7 @@ export const MultipleInput = ({
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder || 'Type and press Enter'}
+          placeholder={t(placeholder || 'p_type_and_press_enter')}
           thin
           button
           onClick={onSelect}

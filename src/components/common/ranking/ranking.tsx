@@ -1,6 +1,7 @@
 import { type FunctionComponent } from 'preact';
 import { memo } from 'preact/compat';
 import { useState, useEffect } from 'preact/hooks';
+import { useTranslation } from 'react-i18next';
 
 export interface IRankingProps {
   id: string;
@@ -27,6 +28,7 @@ export const Ranking: FunctionComponent<IRankingProps> = memo(
     dataPage,
     dataSection,
   }: IRankingProps) => {
+    const { t } = useTranslation();
     const [hoverValue, setHoverValue] = useState<number>(0);
     const [selectedValue, setSelectedValue] = useState<number>(value || 0);
 
@@ -59,7 +61,7 @@ export const Ranking: FunctionComponent<IRankingProps> = memo(
             htmlFor={`${id}-input`}
             className='block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2'
           >
-            {label}
+            {t(label)}
           </label>
         )}
         <div className='flex items-center space-x-1'>

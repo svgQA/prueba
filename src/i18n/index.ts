@@ -30,6 +30,7 @@ import { page_en, page_es } from './page';
 import { description_en, description_es } from './description';
 import { message_en, message_es } from './message';
 import { smartGroup_en, smartGroup_es } from './smart-group';
+import { trybook_en, trybook_es } from './trybook';
 
 const resources = {
   en: {
@@ -59,6 +60,7 @@ const resources = {
       ...hero_en,
       ...schedule_en,
       ...smartGroup_en,
+      ...trybook_en,
     },
   },
   es: {
@@ -88,6 +90,7 @@ const resources = {
       ...hero_es,
       ...schedule_es,
       ...smartGroup_es,
+      ...trybook_es,
     },
   },
 };

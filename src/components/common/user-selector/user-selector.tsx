@@ -3,14 +3,16 @@ import {
   CustomSelector,
   CustomSelectorProps,
 } from '@/components/common/custom-selector/custom-selector';
+import { useTranslation } from 'react-i18next';
 
 interface UserSelectorProps extends CustomSelectorProps {}
 
 export const UserSelector: ComponentType<UserSelectorProps> = (props) => {
+  const { t } = useTranslation();
   return (
     <CustomSelector
       {...props}
-      placeholder={props.placeholder || 'Buscar usuarios...'}
+      placeholder={t(props.placeholder || 'p_search_users')}
     />
   );
 };

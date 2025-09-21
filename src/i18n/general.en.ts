@@ -32,20 +32,6 @@ export const general_en = {
       services: 'Services',
     },
   },
-  forms: {
-    pageTitle: 'TR - Forms Service',
-    cards: {},
-    columns: {
-      id: 'ID',
-      createdAt: 'Creation date',
-      updatedAt: 'Last update',
-    },
-    buttons: {
-      continue: 'Continue',
-    },
-    title: 'Title',
-    Input: 'Input',
-  },
   history: {
     pageTitle: 'TR - Notification History',
     title: 'Notification history',
