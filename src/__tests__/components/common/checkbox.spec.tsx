@@ -2,6 +2,10 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/preact';
 import { Checkbox } from '@/components/common/checkbox/checkbox';
 
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (str: string) => str }),
+}));
+
 describe('Components | Common | Checkbox', () => {
   it('renders label and triggers change', () => {
     const handleChange = vi.fn();

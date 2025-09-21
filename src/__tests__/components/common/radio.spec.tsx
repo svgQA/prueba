@@ -2,6 +2,10 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/preact';
 import { Radio } from '@/components/common/radio/radio';
 
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (str: string) => str }),
+}));
+
 describe('Components | Common | Radio', () => {
   it('renders label and triggers change', () => {
     const handleChange = vi.fn();

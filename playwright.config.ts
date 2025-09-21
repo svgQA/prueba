@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: './tests/e2e',
   use: {
     baseURL: process.env.BASE_URL || 'https://dev.tryvoo.com',
     screenshot: 'only-on-failure',
