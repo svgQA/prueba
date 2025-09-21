@@ -3,6 +3,7 @@ import { Route, Router } from 'wouter';
 import { lazy, Suspense, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
+import { useTranslation } from 'react-i18next';
 
 /** ***********************************************************************
  * UTILS
@@ -67,6 +68,7 @@ import { Input } from '@/components/common/input/input';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
+    const { t } = useTranslation();
     const {
       setCompanies,
       companies,
@@ -185,14 +187,14 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const onTenantSubmit = async (values: any) => {
       const request = await TenantService.create_tenant(values);
       if (!request.getStatus()) return;
-      toast.success('Tenant creado correctamente');
+      toast.success('s_tenant_created');
       getTenants();
     };
 
     const onInstanceSubmit = async (values: any) => {
       const request = await TenantService.create_instance(values);
       if (!request.getStatus()) return;
-      toast.success('Instancia creada correctamente');
+      toast.success('s_instance_created');
       getInstances();
     };
 
@@ -240,25 +242,25 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
               className={`px-4 py-2 ${activeTab === 'tenant' ? 'border-b-2 border-primary' : ''}`}
               onClick={() => setActiveTab('tenant')}
             >
-              Crear tenant
+              {t('h_create_tenant')}
             </button>
             <button
               className={`px-4 py-2 ${activeTab === 'companies' ? 'border-b-2 border-primary' : ''}`}
               onClick={() => setActiveTab('companies')}
             >
-              Empresas
+              {t('h_companies')}
             </button>
             <button
               className={`px-4 py-2 ${activeTab === 'instance' ? 'border-b-2 border-primary' : ''}`}
               onClick={() => setActiveTab('instance')}
             >
-              Crear instancia
+              {t('h_create_instance')}
             </button>
             <button
               className={`px-4 py-2 ${activeTab === 'databases' ? 'border-b-2 border-primary' : ''}`}
               onClick={() => setActiveTab('databases')}
             >
-              Base de datos
+              {t('h_databases')}
             </button>
           </div>
 
@@ -270,7 +272,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                   <form onSubmit={handleSubmit} className='mb-8'>
                     <div className='grid grid-cols-2 gap-4'>
                       <div className='col-span-1'>
-                        <h1>[TENANT] Información del Tenant</h1>
+                        <h1>[TENANT] {t('h_tenant_info')}</h1>
                         <Field name='name'>
                           {({ input }) => (
                             <Input

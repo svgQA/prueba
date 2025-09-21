@@ -203,8 +203,8 @@ export const RolesUpsertPage = () => {
                       meta={meta}
                       name='name'
                       type='text'
-                      label={t('role.form.name')}
-                      placeholder={t('role.form.placeholderName')}
+                      label='l_name'
+                      placeholder='p_name_role'
                     />
                   )}
                 </Field>
@@ -216,10 +216,10 @@ export const RolesUpsertPage = () => {
                     <Input
                       {...input}
                       id='description'
-                      placeholder={'p_write'}
+                      placeholder='p_element_description'
                       meta={meta}
                       type='text'
-                      label={'description'}
+                      label='h_description'
                     />
                   )}
                 </Field>
@@ -227,7 +227,9 @@ export const RolesUpsertPage = () => {
             </div>
 
             <div className='col-span-2  max-h-[65vh] overflow-x-hidden vox-scroll-design'>
-              <h3 className='text-lg font-medium mb-4'>Módulos:</h3>
+              <h3 className='text-lg font-medium mb-4'>
+                {t('h_title_modules')}:
+              </h3>
               <div className='space-y-4'>
                 {modules.value?.map((module) => (
                   <ExpansionPanel
