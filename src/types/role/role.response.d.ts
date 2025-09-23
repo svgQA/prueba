@@ -49,6 +49,7 @@ export interface IPermission {
   moduleId: number;
   key: string;
   level: number;
+  mobile: boolean;
 }
 
 interface IPermissionSec {
