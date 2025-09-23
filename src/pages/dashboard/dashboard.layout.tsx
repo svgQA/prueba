@@ -45,7 +45,7 @@ import { hasUserTenant, useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
-import { CompanyService, PlaceService, TenantService } from '@/services';
+import { CompanyService, /*PlaceService,*/ TenantService } from '@/services';
 import Notifications from '@/components/common/notifications/notifications';
 import { RoleService } from '@/services/general/role';
 import Panic from '@/components/common/panic/panic';
@@ -86,7 +86,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       places,
       selectedPlace,
       setSelectedPlace,
-      setPlaces,
+      // setPlaces,
       getPlaceId
     } = useUserStore();
 
