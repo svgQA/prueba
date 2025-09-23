@@ -13,6 +13,8 @@ type State = {
   tenant: string;
   selectedCompany: IOption | null;
   loaded: boolean;
+  places: IOption[];
+  selectedPlace: IOption | null;
 };
 
 type Actions = {
@@ -34,6 +36,12 @@ type Actions = {
   setSelectedCompany: (id: number) => void;
   getSelectedCompany: () => IOption | null;
   cleanUserStore: () => void;
+  getPlace: (id: number) => IOption | null | undefined;
+  getPlaceId: () => string;
+  setPlaces: (places: IOption[]) => void;
+  getPlaces: () => IOption[];
+  setSelectedPlace: (id: number) => void;
+  getSelectedPlace: () => IOption | null;
 };
 
 export const useUserStore = create<State & Actions>((set, get) => ({
@@ -45,6 +53,8 @@ export const useUserStore = create<State & Actions>((set, get) => ({
   tenant: '',
   selectedCompany: null,
   loaded: false,
+  places: [],
+  selectedPlace: null,
   setLoaded: (loaded: boolean) => set({ loaded }),
   getLoaded: () => {
     const { loaded } = get();
@@ -147,6 +157,32 @@ export const useUserStore = create<State & Actions>((set, get) => ({
       selectedCompany: null,
       loaded: false,
     });
+  },
+  getPlaceId: () => {
+    const { selectedCompany } = get();
+    return String(selectedCompany?.value || '1');
+  },
+  getPlace: (id: number) => {
+    const { places } = get();
+    return places.find((place) => place.value === id);
+  },
+  getSelectedPlace: () => {
+    const { selectedPlace } = get();
+    return selectedPlace;
+  },
+  setSelectedPlace: (id: number) => {
+    const { places } = get();
+    const place = places.find((place) => place.value === id);
+    if (place) {
+      set({ selectedPlace: place });
+    } else {
+      set({ selectedPlace: places[0] });
+    }
+  },
+  setPlaces: (places: IOption[]) => set({ places }),
+  getPlaces: () => {
+    const { places } = get();
+    return places;
   },
 }));
 

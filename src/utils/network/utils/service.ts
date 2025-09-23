@@ -2,7 +2,7 @@ import { VOX_DEFAULT_PATH, VOS_SERVICES } from './constants';
 import { IMakeRequest, REQUEST_METHODS } from '../interface';
 import { GenericResponse } from './rest-factory';
 import { VoxServices } from '../types';
-import { company_header, tenant_header } from '@/env.config';
+import { company_header, place_header, tenant_header } from '@/env.config';
 import i18n from '@/i18n';
 import { VoxError } from '../error';
 import { ToastManager } from '@/utils/toast/toast-manager';
@@ -26,6 +26,7 @@ export class BaseService {
   protected static getTenant: () => string = () => '';
   protected static getToken: () => string = () => 'Bearer';
   protected static getCompany: () => string = () => '';
+  protected static getPlace: () => string | null = () => null;
 
   public static setLoading(onOpen: () => void, onClose: () => void) {
     this.openLoading = onOpen;
@@ -35,11 +36,13 @@ export class BaseService {
   public static setUser(
     getTenant: () => string,
     getToken: () => string,
-    getCompany: () => string
+    getCompany: () => string,
+    getPlace: () => string | null,
   ) {
     this.getTenant = getTenant;
     this.getToken = getToken;
     this.getCompany = getCompany;
+    this.getPlace = getPlace;
   }
 
   private static make_url(
@@ -96,6 +99,7 @@ export class BaseService {
     if (tenance) {
       const tenant = this.getTenant();
       const company = this.getCompany();
+      const place = this.getPlace();
 
       if (!tenant_header || !tenant) {
         // console.log('ERROR: ', model.url);
@@ -113,6 +117,7 @@ export class BaseService {
         ...model.headers,
         [tenant_header]: tenant,
         [company_header]: company,
+        [place_header]: place ? place : null,
       };
     }
     model.headers = {
