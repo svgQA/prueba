@@ -86,7 +86,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         label: role.role.name,
         value: role.role.id,
       }));
-      // console.log('roles =>', roles);
+
+      const places = user.userPlaces?.map((place) => ({
+        label: place.place.name,
+        value: place.place.id,
+      }));
 
       const userCompanies =
         user.companies?.map((comp) => ({
@@ -121,7 +125,10 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         companies: userCompanies,
         extraData: userExtraData,
         roles: roles,
+        places: places,
       };
+
+      if (user.userType) typeSelected.value = user.userType;
 
       // TODO: Luego validar las areas porque estas dependend
       // de cada empresa por eso debe ser un objeto mas general que esa area
@@ -523,7 +530,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                           requiredRole.value =
                             e.currentTarget.value !== 'CLIENT';
                           input.onChange(e);
-                          typeSelected.value =  e.currentTarget.value;
+                          typeSelected.value = e.currentTarget.value;
                         }}
                         optionValue='id'
                         optionLabel='name'
@@ -567,7 +574,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                           menuPortalTarget={document.body}
                           placeholder={t('user.create.form.placeholderPlaces')}
                           onChange={() => {}}
-                          disabled={true}
                         />
                       )}
                     </Field>

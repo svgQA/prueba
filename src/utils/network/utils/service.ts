@@ -21,8 +21,8 @@ export interface IRequestModelOutput {
 
 export class BaseService {
   protected static prefix: string = 'api';
-  protected static openLoading: () => void = () => {};
-  protected static closeLoading: () => void = () => {};
+  protected static openLoading: () => void = () => { };
+  protected static closeLoading: () => void = () => { };
   protected static getTenant: () => string = () => '';
   protected static getToken: () => string = () => 'Bearer';
   protected static getCompany: () => string = () => '';
@@ -112,12 +112,11 @@ export class BaseService {
         ToastManager.error('error.not_found_company');
         throw new Error('ERROR: not include company header');
       }
-
       model.headers = {
         ...model.headers,
         [tenant_header]: tenant,
         [company_header]: company,
-        [place_header]: place ? place : null,
+        [place_header]: place ? place : '',
       };
     }
     model.headers = {

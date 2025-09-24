@@ -37,7 +37,7 @@ type Actions = {
   getSelectedCompany: () => IOption | null;
   cleanUserStore: () => void;
   getPlace: (id: number) => IOption | null | undefined;
-  getPlaceId: () => string;
+  getPlaceId: () => string | null;
   setPlaces: (places: IOption[]) => void;
   getPlaces: () => IOption[];
   setSelectedPlace: (id: number) => void;
@@ -159,8 +159,8 @@ export const useUserStore = create<State & Actions>((set, get) => ({
     });
   },
   getPlaceId: () => {
-    const { selectedCompany } = get();
-    return String(selectedCompany?.value || '1');
+    const { selectedPlace } = get();
+    return selectedPlace?.value ? String(selectedPlace?.value) : null;
   },
   getPlace: (id: number) => {
     const { places } = get();
