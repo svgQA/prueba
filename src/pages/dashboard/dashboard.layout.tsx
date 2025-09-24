@@ -130,7 +130,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           getPermissions(),
           getTenants(),
           getInstances(),
-          getPlaces(),
+          // getPlaces(),
         ]);
       }
     };
@@ -153,6 +153,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           setSelectedCompany(Number(firstCompany));
         }
       }
+      getPlaces();
     };
 
     const getPlaces = async () => {
