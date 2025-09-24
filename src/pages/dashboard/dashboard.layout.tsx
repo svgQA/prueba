@@ -45,7 +45,7 @@ import { hasUserTenant, useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
-import { CompanyService, /*PlaceService,*/ TenantService } from '@/services';
+import { CompanyService, PlaceService, TenantService } from '@/services';
 import Notifications from '@/components/common/notifications/notifications';
 import { RoleService } from '@/services/general/role';
 import Panic from '@/components/common/panic/panic';
@@ -86,8 +86,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       places,
       selectedPlace,
       setSelectedPlace,
-      // setPlaces,
-      getPlaceId
+      setPlaces,
+      getPlaceId,
     } = useUserStore();
 
     const isModalOpen = useSignal<boolean>(false);
@@ -112,7 +112,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       return () => {
         WebSocketManager.disconnect();
       };
-    }, [selectedCompany]);
+    }, [selectedCompany, selectedPlace]);
 
     const validateUser = async () => {
       const result = await hasUserTenant(
@@ -130,7 +130,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           getPermissions(),
           getTenants(),
           getInstances(),
-          // getPlaces()
+          getPlaces(),
         ]);
       }
     };
@@ -155,25 +155,25 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       }
     };
 
-    // const getPlaces = async () => {
-    //   const places = await PlaceService.getSimpleList();
+    const getPlaces = async () => {
+      const places = await PlaceService.get_simple_list_admin_client();
 
-    //   if (!places.getStatus()) return;
-    //   const placesData = places.getMany();
+      if (!places.getStatus()) return;
+      const placesData = places.getMany();
 
-    //   if (placesData.length === 0) return;
-    //   setPlaces(placesData);
+      if (placesData.length === 0) return;
+      setPlaces(placesData);
 
-    //   const selectedPlace = await localStorage.get('place');
-    //   if (selectedPlace) {
-    //     setSelectedPlace(Number(selectedPlace));
-    //   } else {
-    //     if (placesData.length > 0) {
-    //       const firstPlace = placesData[0].value;
-    //       setSelectedPlace(Number(firstPlace));
-    //     }
-    //   }
-    // };
+      const selectedPlace = await localStorage.get('place');
+      if (selectedPlace) {
+        setSelectedPlace(Number(selectedPlace));
+      } else {
+        if (placesData.length > 0) {
+          const firstPlace = placesData[0].value;
+          setSelectedPlace(Number(firstPlace));
+        }
+      }
+    };
 
     const handleCompanyChange = (value: string | number) => {
       localStorage.set('company', value);
@@ -183,7 +183,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const handlePlaceChange = (value: string | number) => {
       localStorage.set('place', value);
       setSelectedPlace(Number(value));
-    }
+    };
 
     const handleUserAction = (value: string | number) => {
       if (value === 1) {
