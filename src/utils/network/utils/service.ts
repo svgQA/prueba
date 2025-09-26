@@ -21,8 +21,8 @@ export interface IRequestModelOutput {
 
 export class BaseService {
   protected static prefix: string = 'api';
-  protected static openLoading: () => void = () => { };
-  protected static closeLoading: () => void = () => { };
+  protected static openLoading: () => void = () => {};
+  protected static closeLoading: () => void = () => {};
   protected static getTenant: () => string = () => '';
   protected static getToken: () => string = () => 'Bearer';
   protected static getCompany: () => string = () => '';
@@ -37,7 +37,7 @@ export class BaseService {
     getTenant: () => string,
     getToken: () => string,
     getCompany: () => string,
-    getPlace: () => string | null,
+    getPlace: () => string | null
   ) {
     this.getTenant = getTenant;
     this.getToken = getToken;

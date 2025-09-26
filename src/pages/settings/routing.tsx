@@ -702,28 +702,18 @@ export const RoutingContent = memo(() => {
           )}
         />
 
-         {/* OPTIONS NEWS */}
+        {/* OPTIONS NEWS */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.trybook.news.to}
-          component={lazy(() =>
-            Promise.resolve({ default: NewsPage })
-          )}
+          component={lazy(() => Promise.resolve({ default: NewsPage }))}
         />
         <Route
-          path={
-            PAGES_LIST_ROUTER.dashboard.setting.trybook.news.create.to
-          }
-          component={lazy(() =>
-            Promise.resolve({ default: NewsForm })
-          )}
+          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.news.create.to}
+          component={lazy(() => Promise.resolve({ default: NewsForm }))}
         />
         <Route
-          path={
-            PAGES_LIST_ROUTER.dashboard.setting.trybook.news.update.to
-          }
-          component={lazy(() =>
-            Promise.resolve({ default: NewsForm })
-          )}
+          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.news.update.to}
+          component={lazy(() => Promise.resolve({ default: NewsForm }))}
         />
       </Suspense>
     </Router>

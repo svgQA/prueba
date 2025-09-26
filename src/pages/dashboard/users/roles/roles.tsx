@@ -68,8 +68,8 @@ export const UserRolesPage: FunctionComponent = () => {
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: t('role.alert.title'),
-          message: t('role.alert.message'),
+          title: t('h_title_role'),
+          message: t('i_message_role'),
           onConfirm: () => {
             deleteRole(action.id);
           },

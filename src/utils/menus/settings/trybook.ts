@@ -52,6 +52,6 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.trybook.news.base,
       show: true,
       id: 'trybook:notices:state',
-    }
+    },
   ],
 };

@@ -11,12 +11,10 @@ import { IUserAreaRequest } from '@/types/user/user.request';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { required } from '@/utils/utilities/validate';
-import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
 
 export const AreaCreatePage: FunctionComponent = () => {
-  const { t } = useTranslation();
   const { id } = useParams();
   const initialValues: Signal<Partial<IUserAreaRequest>> = useSignal({});
   const { go } = useNavigation();
@@ -78,9 +76,9 @@ export const AreaCreatePage: FunctionComponent = () => {
                     <Input
                       id='name'
                       name='name'
-                      placeholder={t('user.area.placeholder.name')}
+                      placeholder='p_name'
                       meta={meta}
-                      label={t('user.area.form.name')}
+                      label='l_name'
                       value={input.value}
                       onChange={input.onChange}
                     />
@@ -94,8 +92,8 @@ export const AreaCreatePage: FunctionComponent = () => {
                     <Input
                       id='description'
                       name='description'
-                      placeholder={t('user.area.placeholder.description')}
-                      label={t('user.area.form.description')}
+                      placeholder='p_description'
+                      label='h_description'
                       value={input.value}
                       meta={meta}
                       onChange={input.onChange}

@@ -303,8 +303,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
           form='user-form'
           label={
             getUserMode.value.mode === USER_MODE_SERVICE.CREATE
-              ? t('user.create.form.btnCreate')
-              : t('user.create.form.btnUpdate')
+              ? t('btnSave')
+              : t('btnUpdate')
           }
         />
       </div>
@@ -318,15 +318,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
               {/* Información Personal */}
               <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
                 <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                  {t('user.create.sections.personalInfo')}
+                  {t('h_personal_info')}
                 </h3>
                 <div className='grid grid-cols-1 xl:grid-cols-2 gap-4'>
                   <Field<string> name='name' validate={required}>
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder={t('user.create.placeholder.name')}
-                        label={t('user.create.form.name')}
+                        placeholder='l_name'
+                        label='l_name'
                         type='text'
                         icon='231'
                         meta={meta}
@@ -338,8 +338,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder={t('user.create.placeholder.surname')}
-                        label={t('user.create.form.surname')}
+                        placeholder='l_surname'
+                        label='l_surname'
                         type='text'
                         icon='231'
                         meta={meta}
@@ -354,8 +354,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder={t('user.create.placeholder.email')}
-                        label={t('user.create.form.email')}
+                        placeholder='p_email'
+                        label='l_email'
                         type='email'
                         icon='231'
                         meta={meta}
@@ -392,15 +392,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
               {/* Información de Documento */}
               <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
                 <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                  {t('user.create.sections.docInfo')}
+                  {t('h_doc_info')}
                 </h3>
                 <div className='grid grid-cols-1 gap-4'>
                   <Field<string> name='cardType' validate={required}>
                     {({ input, meta }) => (
                       <Select
                         {...input}
-                        placeholder={t('user.create.placeholder.cardType')}
-                        label={t('user.create.form.cardType')}
+                        placeholder='p_select_document_type'
+                        label='l_card_type'
                         name='cardType'
                         icon='231'
                         optionValue='id'
@@ -422,8 +422,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder={t('user.create.placeholder.cardId')}
-                        label={t('user.create.form.cardId')}
+                        placeholder='p_enter_document_number'
+                        label='l_card_id'
                         type='text'
                         icon='231'
                         meta={meta}
@@ -436,7 +436,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
               {/* Información de Ubicación */}
               <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
                 <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                  {t('user.create.sections.locationInfo')}
+                  {t('h_location_info')}
                 </h3>
                 <div className='grid grid-cols-1 xl:grid-cols-2 gap-4'>
                   <Field<IOption>
@@ -489,8 +489,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         {...input}
                         meta={meta}
                         id='municipalityId'
-                        label={t('user.create.form.municipality')}
-                        placeholder={t('user.create.placeholder.municipality')}
+                        label='l_municipality'
+                        placeholder='p_search'
                         icon='321'
                         options={municipalities.value}
                       />
@@ -501,8 +501,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder={t('user.create.placeholder.address')}
-                        label={t('user.create.form.address')}
+                        placeholder='p_address'
+                        label='l_address'
                         icon='321'
                         type='text'
                         meta={meta}
@@ -515,15 +515,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
               {/* Información de Usuario */}
               <div className='bg-b-light-light dark:bg-b-dark-light p-4 rounded-lg shadow-sm'>
                 <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
-                  {t('user.create.sections.userInfo')}
+                  {t('h_user_info')}
                 </h3>
                 <div className='grid grid-cols-1 gap-4'>
                   <Field<string> name='userType' validate={required}>
                     {({ input, meta }) => (
                       <Select
                         {...input}
-                        placeholder={t('user.create.placeholder.userType')}
-                        label={t('user.create.form.userType.label')}
+                        placeholder='p_select_user_type'
+                        label='l_user_type'
                         name='userType'
                         icon='231'
                         onChange={(e) => {
@@ -537,15 +537,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         options={[
                           {
                             id: 'USER',
-                            name: t('user.create.form.userType.USER'),
+                            name: t('l_operator'),
                           },
                           {
                             id: 'ADMIN',
-                            name: t('user.create.form.userType.ADMIN'),
+                            name: t('l_administrator'),
                           },
                           {
                             id: 'CLIENT',
-                            name: t('user.create.form.userType.CLIENT'),
+                            name: t('l_client'),
                           },
                           {
                             id: 'ADMIN_CLIENT',
@@ -587,13 +587,13 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         {...input}
                         meta={meta}
                         id='select-roles'
-                        label={t('user.create.form.role')}
+                        label='l_role'
                         icon='231'
                         options={roles.value}
                         multiple={true}
                         allowAll={true}
                         menuPortalTarget={document.body}
-                        placeholder={t('user.create.form.placeholderRole')}
+                        placeholder='p_select_role'
                         onChange={() => {}}
                       />
                     )}
@@ -605,13 +605,13 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         {...input}
                         meta={meta}
                         id='select-companies'
-                        label={t('user.create.form.company')}
+                        label='l_company'
                         icon='231'
                         options={companies.value}
                         multiple={true}
                         allowAll={true}
                         menuPortalTarget={document.body}
-                        placeholder={t('user.create.placeholder.company')}
+                        placeholder='p_company'
                         onChange={() => {}}
                       />
                     )}
@@ -622,7 +622,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                       image.value = e.target.value;
                     }}
                     value={image.value}
-                    label={t('user.create.form.image')}
+                    label='l_image'
                     accept='image/*'
                   />
                 </div>
