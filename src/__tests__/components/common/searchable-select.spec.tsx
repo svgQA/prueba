@@ -100,7 +100,9 @@ describe('Components | Common | SearchableSelect', () => {
 
     fireEvent.change(input, { target: { value: 'a' } });
     fireEvent.click(screen.getByRole('button', { name: 'Alpha' }));
-    expect(onValueChange).toHaveBeenLastCalledWith([{ label: 'Alpha', value: 1 }]);
+    expect(onValueChange).toHaveBeenLastCalledWith([
+      { label: 'Alpha', value: 1 },
+    ]);
     expect(screen.getByText('Alpha')).toBeInTheDocument();
 
     fireEvent.change(input, { target: { value: 'b' } });
@@ -113,7 +115,9 @@ describe('Components | Common | SearchableSelect', () => {
 
     const removeButtons = screen.getAllByRole('button', { name: '×' });
     fireEvent.click(removeButtons[0]);
-    expect(onValueChange).toHaveBeenLastCalledWith([{ label: 'Beta', value: 2 }]);
+    expect(onValueChange).toHaveBeenLastCalledWith([
+      { label: 'Beta', value: 2 },
+    ]);
     expect(screen.queryByText('Alpha')).not.toBeInTheDocument();
 
     fireEvent.change(input, { target: { value: 'a' } });
@@ -139,7 +143,9 @@ describe('Components | Common | SearchableSelect', () => {
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'a' } });
 
-    const deselectButton = screen.getByRole('button', { name: 'Deseleccionar todos' });
+    const deselectButton = screen.getByRole('button', {
+      name: 'Deseleccionar todos',
+    });
     fireEvent.click(deselectButton);
     expect(onValueChange).toHaveBeenLastCalledWith([]);
     expect(screen.queryByText('Alpha')).not.toBeInTheDocument();

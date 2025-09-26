@@ -57,7 +57,9 @@ describe('Components | Common | Radio', () => {
 
     fireEvent.click(first);
     expect(handleChange).toHaveBeenCalledTimes(1);
-    expect((handleChange.mock.calls[0][0].target as HTMLInputElement).value).toBe('first');
+    expect(
+      (handleChange.mock.calls[0][0].target as HTMLInputElement).value
+    ).toBe('first');
   });
 
   it('respects the required and disabled flags on each radio input', () => {
@@ -72,8 +74,8 @@ describe('Components | Common | Radio', () => {
       />
     );
 
-    const inputs = options.map((option) =>
-      screen.getByLabelText(`t:${option.label}`) as HTMLInputElement
+    const inputs = options.map(
+      (option) => screen.getByLabelText(`t:${option.label}`) as HTMLInputElement
     );
 
     for (const input of inputs) {

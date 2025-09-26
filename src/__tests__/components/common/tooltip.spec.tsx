@@ -77,7 +77,9 @@ describe('Components | Common | Tooltip', () => {
     const wrapper = trigger.parentElement!.parentElement as HTMLDivElement;
     fireEvent.mouseEnter(wrapper);
 
-    const tooltip = (await screen.findByText('positioned tooltip')) as HTMLDivElement;
+    const tooltip = (await screen.findByText(
+      'positioned tooltip'
+    )) as HTMLDivElement;
     await waitFor(() => {
       expect(tooltip.style.left).toBe(`${rect.width}px`);
       expect(tooltip.style.top).toBe('50%');

@@ -39,7 +39,9 @@ describe('Components | Common | Select', () => {
     expect(select.value).toBe('');
     expect(select.placeholder).toBeUndefined();
     expect(select.querySelectorAll('option')).toHaveLength(3);
-    expect(select.querySelector('option')?.textContent).toBe('t:select.placeholder');
+    expect(select.querySelector('option')?.textContent).toBe(
+      't:select.placeholder'
+    );
     expect(container.querySelector('.vx-icon-200')).toBeInTheDocument();
 
     fireEvent.change(select, { target: { value: 'closed' } });
@@ -57,10 +59,12 @@ describe('Components | Common | Select', () => {
         borderless
         optionValue='code'
         optionLabel='title'
-        options={[
-          { code: 'h', title: 'High' },
-          { code: 'l', title: 'Low' },
-        ] as any}
+        options={
+          [
+            { code: 'h', title: 'High' },
+            { code: 'l', title: 'Low' },
+          ] as any
+        }
         disabled
       />
     );

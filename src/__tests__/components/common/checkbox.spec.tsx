@@ -50,7 +50,9 @@ describe('Components | Common | Checkbox', () => {
     );
 
     const first = screen.getByLabelText('t:checkbox.first') as HTMLInputElement;
-    const second = screen.getByLabelText('t:checkbox.second') as HTMLInputElement;
+    const second = screen.getByLabelText(
+      't:checkbox.second'
+    ) as HTMLInputElement;
 
     expect(first.checked).toBe(false);
     expect(second.checked).toBe(true);
@@ -58,7 +60,9 @@ describe('Components | Common | Checkbox', () => {
 
     fireEvent.click(first);
     expect(handleChange).toHaveBeenCalledTimes(1);
-    expect((handleChange.mock.calls[0][0].target as HTMLInputElement).dataset.value).toBe('first');
+    expect(
+      (handleChange.mock.calls[0][0].target as HTMLInputElement).dataset.value
+    ).toBe('first');
   });
 
   it('applies required and disabled flags to every checkbox control', () => {
@@ -73,8 +77,8 @@ describe('Components | Common | Checkbox', () => {
       />
     );
 
-    const inputs = options.map((option) =>
-      screen.getByLabelText(`t:${option.label}`) as HTMLInputElement
+    const inputs = options.map(
+      (option) => screen.getByLabelText(`t:${option.label}`) as HTMLInputElement
     );
 
     for (const input of inputs) {

@@ -1,6 +1,9 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { SelectCheck, type IOptionCheck } from '@/components/common/select-check/select-check';
+import {
+  SelectCheck,
+  type IOptionCheck,
+} from '@/components/common/select-check/select-check';
 
 const tMock = vi.fn((key: string) => key);
 const useFieldMock = vi.fn();
@@ -96,9 +99,7 @@ describe('Components | Common | SelectCheck', () => {
     expect(activeCard?.className).toContain('bg-warning/10');
     expect(activeCard?.className).toContain('opacity-50');
 
-    rerender(
-      <SelectCheck name='status' options={options} loading={false} />
-    );
+    rerender(<SelectCheck name='status' options={options} loading={false} />);
 
     expect(screen.getByLabelText('Alpha')).not.toBeDisabled();
     expect(screen.getByLabelText('Gamma')).not.toBeDisabled();
@@ -109,9 +110,7 @@ describe('Components | Common | SelectCheck', () => {
     createFieldState('gamma');
     const options = createOptions();
 
-    render(
-      <SelectCheck name='status' options={options} size='lg' />
-    );
+    render(<SelectCheck name='status' options={options} size='lg' />);
 
     const betaRadio = screen.getByLabelText('Beta') as HTMLInputElement;
     expect(betaRadio).toBeDisabled();

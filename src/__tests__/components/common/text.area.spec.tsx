@@ -33,13 +33,7 @@ describe('Components | Common | TextArea', () => {
 
   it('renders a trailing icon when the end flag is provided', () => {
     const { container } = render(
-      <TextArea
-        id='textarea-trailing'
-        name='field'
-        icon='305'
-        end
-        value=''
-      />
+      <TextArea id='textarea-trailing' name='field' icon='305' end value='' />
     );
 
     const icons = container.querySelectorAll('.vx-icon-305');

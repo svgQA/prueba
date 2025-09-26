@@ -58,7 +58,9 @@ describe('Components | Common | Modal', () => {
 
     expect(screen.getByText('t:modal.header')).toBeInTheDocument();
     expect(screen.getByText('Modal body')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Confirmar' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Confirmar' })
+    ).toBeInTheDocument();
 
     const panel = wrapper.querySelector(':scope > div')!;
     expect(panel.className).toContain('w-96');
@@ -77,7 +79,9 @@ describe('Components | Common | Modal', () => {
       </Modal>
     );
 
-    const closeButton = container.querySelector('#setting-close-button') as HTMLButtonElement;
+    const closeButton = container.querySelector(
+      '#setting-close-button'
+    ) as HTMLButtonElement;
     fireEvent.click(closeButton);
 
     expect(onClose).toHaveBeenCalledTimes(1);
@@ -98,7 +102,9 @@ describe('Components | Common | Modal', () => {
     );
 
     const wrapper = container.querySelector('#modal-expand')!;
-    const expandButton = container.querySelector('#setting-expand-button') as HTMLButtonElement;
+    const expandButton = container.querySelector(
+      '#setting-expand-button'
+    ) as HTMLButtonElement;
 
     expect(expandButton.querySelector('.vx-icon-058')).toBeTruthy();
     expect(wrapper.className).toContain('p-7');

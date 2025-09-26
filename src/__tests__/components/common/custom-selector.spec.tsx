@@ -121,7 +121,9 @@ describe('Components | Common | CustomSelector', () => {
 
     const removeButtons = screen.getAllByRole('button', { name: '×' });
     fireEvent.click(removeButtons[0]);
-    expect(onValueChange).toHaveBeenLastCalledWith([{ label: 'Gamma', value: 3 }]);
+    expect(onValueChange).toHaveBeenLastCalledWith([
+      { label: 'Gamma', value: 3 },
+    ]);
     expect(screen.queryByText('Alpha')).not.toBeInTheDocument();
 
     fireEvent.change(input, { target: { value: 'a' } });

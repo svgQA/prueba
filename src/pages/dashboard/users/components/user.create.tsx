@@ -36,6 +36,7 @@ interface CreateUserProps {
 export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const documentTypes = useSignal<IDocumentTypeResponse[]>([]);
   const roles = useSignal<IOption[]>([]);
+  const places = useSignal<IOption[]>([]);
   // const countries = useSignal<ICountryResponse[]>([]);
   // const departments = useSignal<IDepartmentResponse[]>([]);
   // const municipalities = useSignal<IMunicipalityResponse[]>([]);
@@ -50,6 +51,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
   const image = useSignal<IPresignedRequest[]>([]);
   const requiredRole = useSignal<boolean>(true);
+  const typeSelected = useSignal<string | null>(null);
+
   useEffect(() => {
     // applyAllData();
     Promise.all([
@@ -59,6 +62,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       getCompanies(),
       getDepartments(),
       getRoles(),
+      getPlaces(),
     ]);
     // getCompanies();
     // getDepartments();
@@ -82,7 +86,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         label: role.role.name,
         value: role.role.id,
       }));
-      // console.log('roles =>', roles);
+
+      const places = user.userPlaces?.map((place) => ({
+        label: place.place.name,
+        value: place.place.id,
+      }));
 
       const userCompanies =
         user.companies?.map((comp) => ({
@@ -117,7 +125,10 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         companies: userCompanies,
         extraData: userExtraData,
         roles: roles,
+        places: places,
       };
+
+      if (user.userType) typeSelected.value = user.userType;
 
       // TODO: Luego validar las areas porque estas dependend
       // de cada empresa por eso debe ser un objeto mas general que esa area
@@ -175,6 +186,12 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       label: role.name,
       value: role.id,
     }));
+  };
+
+  const getPlaces = async () => {
+    const response = await PlaceService.getSimpleList();
+    if (!response.getStatus()) return;
+    places.value = response.getMany();
   };
 
   // TODO: @Estaban el solo debe asignar a las que tiene acceso,
@@ -513,6 +530,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                           requiredRole.value =
                             e.currentTarget.value !== 'CLIENT';
                           input.onChange(e);
+                          typeSelected.value = e.currentTarget.value;
                         }}
                         optionValue='id'
                         optionLabel='name'
@@ -529,11 +547,37 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                             id: 'CLIENT',
                             name: t('user.create.form.userType.CLIENT'),
                           },
+                          {
+                            id: 'ADMIN_CLIENT',
+                            name: t('user.create.form.userType.ADMIN_CLIENT'),
+                          },
                         ]}
                         meta={meta}
                       />
                     )}
                   </Field>
+                  {typeSelected.value === 'ADMIN_CLIENT' && (
+                    <Field<IOption[]>
+                      name='places'
+                      validate={requiredRole.value ? required : undefined}
+                    >
+                      {({ input, meta }) => (
+                        <SmartSelector
+                          {...input}
+                          meta={meta}
+                          id='select-places'
+                          label={t('user.create.form.places')}
+                          icon='231'
+                          options={places.value}
+                          multiple={true}
+                          allowAll={true}
+                          menuPortalTarget={document.body}
+                          placeholder={t('user.create.form.placeholderPlaces')}
+                          onChange={() => {}}
+                        />
+                      )}
+                    </Field>
+                  )}
                   <Field<IOption[]>
                     name='roles'
                     validate={requiredRole.value ? required : undefined}

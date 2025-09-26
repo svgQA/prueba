@@ -2,13 +2,25 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/preact';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 
-type MeasurementKey = 'clientWidth' | 'scrollWidth' | 'clientHeight' | 'scrollHeight';
+type MeasurementKey =
+  | 'clientWidth'
+  | 'scrollWidth'
+  | 'clientHeight'
+  | 'scrollHeight';
 
 const htmlElementPrototype = HTMLElement.prototype;
-const originalDescriptors: Partial<Record<MeasurementKey, PropertyDescriptor>> = {};
+const originalDescriptors: Partial<Record<MeasurementKey, PropertyDescriptor>> =
+  {};
 
 const saveOriginalDescriptors = () => {
-  (['clientWidth', 'scrollWidth', 'clientHeight', 'scrollHeight'] as MeasurementKey[]).forEach((key) => {
+  (
+    [
+      'clientWidth',
+      'scrollWidth',
+      'clientHeight',
+      'scrollHeight',
+    ] as MeasurementKey[]
+  ).forEach((key) => {
     if (!originalDescriptors[key]) {
       originalDescriptors[key] = Object.getOwnPropertyDescriptor(
         htmlElementPrototype,
@@ -19,7 +31,14 @@ const saveOriginalDescriptors = () => {
 };
 
 const restoreOriginalDescriptors = () => {
-  (['clientWidth', 'scrollWidth', 'clientHeight', 'scrollHeight'] as MeasurementKey[]).forEach((key) => {
+  (
+    [
+      'clientWidth',
+      'scrollWidth',
+      'clientHeight',
+      'scrollHeight',
+    ] as MeasurementKey[]
+  ).forEach((key) => {
     const descriptor = originalDescriptors[key];
     if (descriptor) {
       Object.defineProperty(htmlElementPrototype, key, descriptor);
@@ -63,7 +82,12 @@ describe('Components | Common | TextEllipsis', () => {
   });
 
   it('does not set a tooltip when the content fits within the bounds', async () => {
-    mockElementSize({ clientWidth: 120, scrollWidth: 120, clientHeight: 20, scrollHeight: 20 });
+    mockElementSize({
+      clientWidth: 120,
+      scrollWidth: 120,
+      clientHeight: 20,
+      scrollHeight: 20,
+    });
 
     render(<TextEllipsis text='Compact text' />);
 
@@ -75,13 +99,23 @@ describe('Components | Common | TextEllipsis', () => {
   });
 
   it('shows a tooltip and helper cursor when the content overflows', async () => {
-    mockElementSize({ clientWidth: 80, scrollWidth: 200, clientHeight: 20, scrollHeight: 40 });
+    mockElementSize({
+      clientWidth: 80,
+      scrollWidth: 200,
+      clientHeight: 20,
+      scrollHeight: 40,
+    });
 
     render(<TextEllipsis text='This content should overflow the container' />);
 
-    const element = screen.getByText('This content should overflow the container');
+    const element = screen.getByText(
+      'This content should overflow the container'
+    );
     await waitFor(() => {
-      expect(element).toHaveAttribute('title', 'This content should overflow the container');
+      expect(element).toHaveAttribute(
+        'title',
+        'This content should overflow the container'
+      );
       expect(element.className).toMatch(/cursor-help/);
     });
   });
@@ -101,7 +135,12 @@ describe('Components | Common | TextEllipsis', () => {
   });
 
   it('respects the tooltip flag even if the element overflows', async () => {
-    mockElementSize({ clientWidth: 60, scrollWidth: 180, clientHeight: 18, scrollHeight: 36 });
+    mockElementSize({
+      clientWidth: 60,
+      scrollWidth: 180,
+      clientHeight: 18,
+      scrollHeight: 36,
+    });
 
     render(<TextEllipsis text='Hidden tooltip' tooltip={false} />);
 

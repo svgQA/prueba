@@ -24,7 +24,9 @@ describe('Components | Common | CustomSwitcher', () => {
     expect(toggleButton).toBeInTheDocument();
 
     fireEvent.click(toggleButton);
-    expect(screen.getByRole('button', { name: /English/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /English/i })
+    ).toBeInTheDocument();
   });
 
   it('calls onChange with the selected option and closes the list', () => {
@@ -40,7 +42,9 @@ describe('Components | Common | CustomSwitcher', () => {
     fireEvent.click(englishOption);
 
     expect(handleChange).toHaveBeenCalledWith('en');
-    expect(screen.queryByRole('button', { name: /English/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /English/i })
+    ).not.toBeInTheDocument();
   });
 
   it('closes the dropdown when clicking outside', () => {
@@ -48,11 +52,15 @@ describe('Components | Common | CustomSwitcher', () => {
 
     const toggleButton = screen.getByRole('button', { name: /Español/i });
     fireEvent.click(toggleButton);
-    expect(screen.getByRole('button', { name: /English/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /English/i })
+    ).toBeInTheDocument();
 
     fireEvent.mouseDown(document.body);
 
-    expect(screen.queryByRole('button', { name: /English/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /English/i })
+    ).not.toBeInTheDocument();
   });
 
   it('applies the borderless styles to the trigger button', () => {

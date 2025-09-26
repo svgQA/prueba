@@ -28,13 +28,17 @@ describe('Components | Common | Badge', () => {
 
   it('translates the label, renders the icon and forwards click events', () => {
     const handleClick = vi.fn();
-    render(<Badge label='badge.label' icon='401' count={3} onClick={handleClick} />);
+    render(
+      <Badge label='badge.label' icon='401' count={3} onClick={handleClick} />
+    );
 
     expect(screen.getByTestId('ellipsis').textContent).toBe('3 t:badge.label');
     expect(tMock).toHaveBeenCalledWith('badge.label');
     expect(document.querySelector('.vx-icon-401')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByTestId('ellipsis').parentElement as HTMLElement);
+    fireEvent.click(
+      screen.getByTestId('ellipsis').parentElement as HTMLElement
+    );
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 

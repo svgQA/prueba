@@ -1,8 +1,17 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/preact';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { act } from 'preact/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { SmartSelector, type IOption } from '@/components/common/smart-selector/smart-select';
+import {
+  SmartSelector,
+  type IOption,
+} from '@/components/common/smart-selector/smart-select';
 
 const tMock = vi.fn((key: string) => key);
 const useFieldMock = vi.fn();
@@ -107,7 +116,6 @@ describe('Components | Common | SmartSelector', () => {
     await waitFor(() => {
       expect(handleChange).toHaveBeenLastCalledWith();
     });
-
   });
 
   it('allows multi-selection, chip removal and select-all override', async () => {
@@ -165,10 +173,7 @@ describe('Components | Common | SmartSelector', () => {
     expect(field.input.onChange).toHaveBeenCalledWith([options[0]]);
 
     act(() => {
-      const newSelection = [
-        ...(field.input.value as IOption[]),
-        options[1],
-      ];
+      const newSelection = [...(field.input.value as IOption[]), options[1]];
       field.input.onChange(newSelection);
       rerender(
         <SmartSelector
@@ -181,18 +186,13 @@ describe('Components | Common | SmartSelector', () => {
         />
       );
     });
-    expect(field.input.value).toEqual([
-      options[0],
-      options[1],
-    ]);
+    expect(field.input.value).toEqual([options[0], options[1]]);
     await waitFor(() => {
       expect(screen.getByText('Beta')).toBeInTheDocument();
     });
     expect(handleChange).toHaveBeenLastCalledWith([options[0]]);
 
-    const alphaChip = screen
-      .getByText('Alpha')
-      .closest('div');
+    const alphaChip = screen.getByText('Alpha').closest('div');
     const alphaRemove = alphaChip?.querySelector('.vx-icon-192');
     alphaRemove && fireEvent.click(alphaRemove);
     expect(field.input.onChange).toHaveBeenLastCalledWith([options[1]]);
@@ -225,7 +225,6 @@ describe('Components | Common | SmartSelector', () => {
     expect(field.input.onChange).toHaveBeenLastCalledWith([]);
     expect(handleChange).toHaveBeenCalledTimes(2);
     expect(handleChange).toHaveBeenLastCalledWith();
-
   });
 
   it('renders button actions, icons and validation feedback', () => {
@@ -254,14 +253,7 @@ describe('Components | Common | SmartSelector', () => {
     button && fireEvent.click(button);
     expect(handleClick).toHaveBeenCalledTimes(1);
 
-    rerender(
-      <SmartSelector
-        name='smart'
-        options={options}
-        icon='999'
-        end
-      />
-    );
+    rerender(<SmartSelector name='smart' options={options} icon='999' end />);
 
     const trailingIcon = container.querySelector('span.vx-icon-999');
     expect(trailingIcon).toBeInTheDocument();

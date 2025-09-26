@@ -462,6 +462,18 @@ export const PAGES_LIST_ROUTER = {
             to: '/trybook/resourcezone/update/:id',
           },
         },
+        news: {
+          base: '/news',
+          to: '/trybook/news',
+          create: {
+            base: '/create',
+            to: '/trybook/news/create',
+          },
+          update: {
+            base: '/update',
+            to: '/trybook/news/update/:id',
+          },
+        },
       },
     },
   },

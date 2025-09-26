@@ -83,7 +83,15 @@ describe('Components | Common | Input', () => {
     expect(container.querySelector('svg')).toBeInTheDocument();
 
     showPicker.mockClear();
-    rerender(<Input id='input-date' name='date' type='date' value='2024-01-01' disabled />);
+    rerender(
+      <Input
+        id='input-date'
+        name='date'
+        type='date'
+        value='2024-01-01'
+        disabled
+      />
+    );
     fireEvent.click(container.querySelector('input') as HTMLInputElement);
     expect(showPicker).not.toHaveBeenCalled();
 

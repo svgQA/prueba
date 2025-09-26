@@ -14,12 +14,7 @@ vi.mock('react-i18next', () => ({
 vi.mock('@/components/common/report-automatic/report-automatic', () => ({
   ReportAutomatic: (props: any) => {
     reportAutomaticMock(props);
-    return (
-      <div
-        data-testid='report-automatic'
-        data-modules={props.modules}
-      />
-    );
+    return <div data-testid='report-automatic' data-modules={props.modules} />;
   },
 }));
 
@@ -108,11 +103,13 @@ describe('Components | Common | Search', () => {
       <Search
         id='search-bar'
         keys={baseKeys}
-        value={[{
-          id: 'createdAt',
-          value: ['2024-01-01', '2024-01-31'],
-          type: 'date',
-        }]}
+        value={[
+          {
+            id: 'createdAt',
+            value: ['2024-01-01', '2024-01-31'],
+            type: 'date',
+          },
+        ]}
         onChange={handleChange}
         onRangeChange={handleRangeChange}
       />

@@ -5,19 +5,17 @@ import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 const changeLanguage = vi.fn();
 let currentLanguage = 'es-ES';
 
-const CustomSwitcherMock = vi.fn(
-  ({ value, onChange, borderless, options }) => (
-    <button
-      type='button'
-      data-testid='custom-switcher'
-      data-borderless={borderless}
-      onClick={() => onChange?.('en')}
-    >
-      {value}
-      {options?.map((option) => option.value).join(',')}
-    </button>
-  )
-);
+const CustomSwitcherMock = vi.fn(({ value, onChange, borderless, options }) => (
+  <button
+    type='button'
+    data-testid='custom-switcher'
+    data-borderless={borderless}
+    onClick={() => onChange?.('en')}
+  >
+    {value}
+    {options?.map((option) => option.value).join(',')}
+  </button>
+));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({

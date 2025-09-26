@@ -31,35 +31,66 @@ export const getColumns = (
   },
   {
     id: 'owner',
-    accessorKey: 'owner',
+    accessorKey: 'residence.user.name',
     size: 120,
     header: 'h_owner',
-    enableGrouping: true, // Podemos habilitar grouping por propietario
+    enableGrouping: true,
+    cell: (info) => {
+      const row = info.row.original;
+      const fullName =
+        `${row.residence?.user?.name || ''} ${row.residence?.user?.surname || ''}`.trim();
+      return fullName || '-';
+    },
   },
   {
     id: 'houseNumber',
-    accessorKey: 'houseNumber',
-    size: 120,
+    accessorKey: 'residence.houseNumber',
+    // size: 200,
     header: 'h_house_number',
-    enableGrouping: true, // Podemos agrupar por ubicación
+    enableGrouping: true,
+    cell: (info) => {
+      const row = info.row.original;
+      const location = [
+        row.residence?.houseNumber,
+        row.residence?.block && `Bloque ${row.residence.block}`,
+        row.residence?.floor !== undefined &&
+          row.residence?.floor !== null &&
+          `Piso ${row.residence.floor}`,
+      ]
+        .filter(Boolean)
+        .join(' - ');
+
+      return location || '-';
+    },
+  },
+  {
+    id: 'place',
+    accessorKey: 'residence.place.name',
+    // size: 120,
+    header: 'h_place',
+    enableGrouping: true,
+    cell: (info) => {
+      const row = info.row.original;
+      return row.residence?.place?.name || '-';
+    },
   },
   {
     id: 'whoPickedUp',
     accessorKey: 'whoPickedUp',
-    size: 120,
+    // size: 120,
     header: 'h_who_picked_up',
   },
   {
     id: 'packageType',
     accessorKey: 'packageType',
-    size: 120,
+    // size: 120,
     header: 'h_package_type',
     enableGrouping: true,
   },
   {
     id: 'observation',
     accessorKey: 'observation',
-    size: 200,
+    // size: 200,
     header: 'h_observation',
     cell: (info) => {
       const observation = info.getValue() as string;
@@ -75,7 +106,7 @@ export const getColumns = (
   {
     id: 'messageToOwner',
     accessorKey: 'messageToOwner',
-    size: 200,
+    // size: 200,
     header: 'h_message_to_owner',
     cell: (info) => {
       const message = info.getValue() as string;
@@ -88,24 +119,23 @@ export const getColumns = (
       );
     },
   },
-  {
-    id: 'notificar',
-    //accessorKey: 'notificar',
-    header: 'h_notification',
-    size: 120,
-    cell: (info) => {
-      return (
-        <span
-          className='vox-icon vx-icon-155 p-1 size-sm cursor-pointer'
-          onClick={() => info.row.toggleExpanded()}
-        />
-      );
-    },
-  },
+  // {
+  //   id: 'notificar',
+  //   header: 'h_notification',
+  //   size: 120,
+  //   cell: (info) => {
+  //     return (
+  //       <span
+  //         className='vox-icon vx-icon-155 p-1 size-sm cursor-pointer'
+  //         onClick={() => info.row.toggleExpanded()}
+  //       />
+  //     );
+  //   },
+  // },
   {
     id: 'status',
     accessorKey: 'status',
-    size: 120,
+    // size: 120,
     header: 'h_status',
     enableGrouping: true,
     meta: { headerAlign: 'center' },
@@ -114,9 +144,13 @@ export const getColumns = (
       let color = 'info';
 
       if (status === 'DELIVERED') {
-        color = 'error';
+        color = 'success';
       } else if (status === 'RECEIVED') {
         color = 'warning';
+      } else if (status === 'NOTIFIED') {
+        color = 'info';
+      } else if (status === 'IN_RECEPTION') {
+        color = 'error';
       }
 
       return (
@@ -132,7 +166,7 @@ export const getColumns = (
   {
     id: 'receivedAt',
     accessorKey: 'receivedAt',
-    size: 120,
+    // size: 120,
     header: 'h_received',
     cell: (info) => {
       return (
@@ -152,14 +186,14 @@ export const getColumns = (
     size: 20,
     header: 'h_action',
     cell: (info) => {
-      const { id } = info.row.original;
+      const { uuid } = info.row.original;
       const actions: IDropdownAction[] = [
         // {
         //   label: 'update',
         //   icon: 'vox-icon vx-icon-123 text-primary',
         //   onClick: () => {
         //     onClickAction({
-        //       id: String(id),
+        //       id: String(uuid),
         //       type: 'form',
         //       action: ROW_ACTIONS.UPDATE,
         //     });
@@ -171,7 +205,7 @@ export const getColumns = (
           color: 'text-red-600',
           onClick: () => {
             onClickAction({
-              id: String(id),
+              id: String(uuid),
               type: 'form',
               action: ROW_ACTIONS.DELETE,
             });

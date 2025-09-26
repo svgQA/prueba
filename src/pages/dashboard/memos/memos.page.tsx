@@ -61,7 +61,7 @@ export const defaultSummary = {
 
 export const MemosPage: FunctionComponent = () => {
   const { t } = useTranslation();
-  const { selectedCompany } = useUserStore();
+  const { selectedCompany, selectedPlace } = useUserStore();
   const [location] = useLocation();
   const [highlightedMemoId, setHighlightedMemoId] = useState<number | null>(
     null
@@ -106,7 +106,7 @@ export const MemosPage: FunctionComponent = () => {
       fetchInitialData(dateRangeFilters);
       selectedNotifier();
     }
-  }, [selectedCompany, location, dateRangeFilters]);
+  }, [selectedCompany, location, dateRangeFilters, selectedPlace]);
 
   useEffect(() => {
     WebSocketManager.add(
