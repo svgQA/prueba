@@ -19,6 +19,7 @@ export const description_es = {
   d_create: '',
   d_webhook: '',
   d_scheduled_reports: '',
+  d_news: '',
 };
 
 export const description_en = {
@@ -42,4 +43,5 @@ export const description_en = {
   d_create: '',
   d_webhook: '',
   d_scheduled_reports: '',
+  d_news: '',
 };

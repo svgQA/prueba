@@ -39,6 +39,9 @@ export const RolesUpsertPage = () => {
   const { go } = useNavigation();
   const modules: Signal<IListModuleResponse[]> = useSignal([]);
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
+  const [platformFilter, setPlatformFilter] = useState<
+    'all' | 'mobile' | 'web'
+  >('all');
   const initialValues: Signal<Partial<IRoleRequest>> = useSignal({});
 
   const { selectedCompany } = useUserStore();
@@ -179,6 +182,76 @@ export const RolesUpsertPage = () => {
     }));
   }
 
+  // Función para filtrar permisos por plataforma
+  const filterPermissionsByPlatform = (
+    permissions: RawPermission[]
+  ): RawPermission[] => {
+    if (platformFilter === 'all') return permissions;
+    return permissions.filter((permission) =>
+      platformFilter === 'mobile' ? permission.mobile : !permission.mobile
+    );
+  };
+
+  // Función para filtrar el árbol de permisos por plataforma
+  const filterPermissionTreeByPlatform = (
+    tree: PermissionTree[]
+  ): PermissionTree[] => {
+    if (platformFilter === 'all') return tree;
+
+    return tree
+      .map((group) => {
+        const filteredChildren = group.children
+          .map((child) => {
+            const filteredSubChildren = child.children.filter((subChild) => {
+              if (!subChild.permission) return true;
+              return platformFilter === 'mobile'
+                ? subChild.permission.mobile
+                : !subChild.permission.mobile;
+            });
+
+            return {
+              ...child,
+              children: filteredSubChildren,
+              permission:
+                child.permission &&
+                (platformFilter === 'mobile'
+                  ? child.permission.mobile
+                  : !child.permission.mobile)
+                  ? child.permission
+                  : undefined,
+            };
+          })
+          .filter((child) => child.permission || child.children.length > 0);
+
+        return {
+          ...group,
+          children: filteredChildren,
+        };
+      })
+      .filter((group) => group.children.length > 0);
+  };
+
+  // Función para obtener módulos filtrados por plataforma
+  const getFilteredModules = () => {
+    return modules.value
+      .map((module) => ({
+        ...module,
+        permissionsGrouped: {
+          flat: filterPermissionsByPlatform(
+            module.permissionsGrouped?.flat || []
+          ),
+          tree: filterPermissionTreeByPlatform(
+            module.permissionsGrouped?.tree || []
+          ),
+        },
+      }))
+      .filter(
+        (module) =>
+          module.permissionsGrouped.flat.length > 0 ||
+          module.permissionsGrouped.tree.length > 0
+      );
+  };
+
   return (
     <>
       <Form
@@ -227,11 +300,54 @@ export const RolesUpsertPage = () => {
             </div>
 
             <div className='col-span-2  max-h-[65vh] overflow-x-hidden vox-scroll-design'>
-              <h3 className='text-lg font-medium mb-4'>
-                {t('h_title_modules')}:
-              </h3>
+              <div className='flex justify-between items-center mb-4'>
+                <h3 className='text-lg font-medium'>{t('h_title_modules')}:</h3>
+
+                {/* Filtro de plataforma */}
+                <div className='flex items-center space-x-4'>
+                  <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    Filtrar por plataforma:
+                  </label>
+                  <div className='flex space-x-2'>
+                    <button
+                      type='button'
+                      onClick={() => setPlatformFilter('all')}
+                      className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                        platformFilter === 'all'
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      Todos
+                    </button>
+                    <button
+                      type='button'
+                      onClick={() => setPlatformFilter('web')}
+                      className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                        platformFilter === 'web'
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      Web
+                    </button>
+                    <button
+                      type='button'
+                      onClick={() => setPlatformFilter('mobile')}
+                      className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                        platformFilter === 'mobile'
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      Móvil
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <div className='space-y-4'>
-                {modules.value?.map((module) => (
+                {getFilteredModules()?.map((module) => (
                   <ExpansionPanel
                     title={module.name}
                     key={module.id}
@@ -312,9 +428,18 @@ export const RolesUpsertPage = () => {
                                     <span className='text-xs text-gray-500'>
                                       {permission.description}
                                     </span>
-                                    <span className='text-xs text-gray-500'>
+                                    <span className='text-xs text-gray-500 flex items-center gap-2'>
                                       <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
                                         {permission.key}
+                                      </span>
+                                      <span
+                                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                                          permission.mobile
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-purple-100 text-purple-800'
+                                        }`}
+                                      >
+                                        {permission.mobile ? 'Móvil' : 'Web'}
                                       </span>
                                     </span>
                                   </label>
@@ -364,9 +489,20 @@ export const RolesUpsertPage = () => {
                                             <span className='text-xs text-gray-500'>
                                               {child.permission?.description}
                                             </span>
-                                            <span className='text-xs text-gray-500'>
+                                            <span className='text-xs text-gray-500 flex items-center gap-2'>
                                               <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
                                                 {child.permission?.key}
+                                              </span>
+                                              <span
+                                                className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                                                  child.permission?.mobile
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-purple-100 text-purple-800'
+                                                }`}
+                                              >
+                                                {child.permission?.mobile
+                                                  ? 'Móvil'
+                                                  : 'Web'}
                                               </span>
                                             </span>
                                           </label>
@@ -408,9 +544,21 @@ export const RolesUpsertPage = () => {
                                                       ?.description
                                                   }
                                                 </span>
-                                                <span className='text-xs text-gray-500'>
+                                                <span className='text-xs text-gray-500 flex items-center gap-2'>
                                                   <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
                                                     {subChild.permission?.key}
+                                                  </span>
+                                                  <span
+                                                    className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                                                      subChild.permission
+                                                        ?.mobile
+                                                        ? 'bg-green-100 text-green-800'
+                                                        : 'bg-purple-100 text-purple-800'
+                                                    }`}
+                                                  >
+                                                    {subChild.permission?.mobile
+                                                      ? 'Móvil'
+                                                      : 'Web'}
                                                   </span>
                                                 </span>
                                               </label>

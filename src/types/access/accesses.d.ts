@@ -2,35 +2,52 @@ import { IUserRequest } from '@/types/auth';
 
 export interface IAccess {
   id: number;
+  uuid: string;
+  residenceUuid: string;
+  placeId: number;
+  placeName: string;
+  residentName: string;
+  residentSurname: string;
+  houseNumber: string;
+  block: string;
+  floor: number;
   name: string;
-  companyId: number;
+  entryType: string;
+  plate: string | null;
+  observations: string | null;
+  zoneId: number | null;
+  zoneType: string | null;
+  slotUuid: string | null;
+  slotCode: string | null;
+  slotIsOccupied: boolean | null;
+
   userId: number;
   user: IUserAccess;
+
   checkIn: ICheckInAccesses | null;
   checkOut: ICheckOutAccesses | null;
-  observations: string | null;
-  plate: string | null;
-  entryType: string;
+
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+
   createdBy: ICreatedBy | null;
   editedBy: IEditedBy | null;
   deletedBy: IDeletedBy | null;
 }
 
 export interface ICheckInAccesses {
-  time: string;
+  kind: string; // "PEATONAL" | "VEHICULAR" | etc.
+  time: string; // ISO date string
   house: string;
+  cardId: string;
   signature: string | null;
   personName: string;
 }
 
 export interface ICheckOutAccesses {
+  kind: string;
   time: string;
-  house: string;
-  signature: string | null;
-  personName: string;
 }
 
 export interface IUserAccess {

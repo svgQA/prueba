@@ -102,6 +102,7 @@ export const user_es = {
           USER: 'Operador',
           ADMIN: 'Administrador',
           CLIENT: 'Cliente',
+          ADMIN_CLIENT: 'Administrador Cliente',
         },
         company: 'Empresa',
         role: 'Rol',
@@ -115,6 +116,8 @@ export const user_es = {
         btnCreate: 'Crear',
         fileSelect: 'Seleccionar archivo',
         noFileSelected: 'Ningún archivo seleccionado',
+        places: 'Lugares',
+        placeholderPlaces: 'Seleccione un lugar...',
       },
       placeholder: {
         name: 'Ingrese el nombre...',
@@ -258,6 +261,7 @@ export const user_en = {
           USER: 'Operator',
           ADMIN: 'Administrator',
           CLIENT: 'Client',
+          ADMIN_CLIENT: 'Admin Client',
         },
         company: 'Company',
         role: 'Role',
@@ -271,6 +275,8 @@ export const user_en = {
         btnCreate: 'Create',
         fileSelect: 'Select file',
         noFileSelected: 'No file selected',
+        places: 'Places',
+        placeholderPlaces: 'Select places...',
       },
       placeholder: {
         name: 'Enter name...',

@@ -1,23 +1,56 @@
 export interface ICorrespondence {
-  id: number;
+  uuid: string;
   companyId: number;
+  residenceUuid: string;
   sender: string;
-  owner: string;
   receivedAt: string;
-  houseNumber: string;
-  status: CorrespondenceStatus;
-  receiverId: number | null;
   whoPickedUp: string;
   packageType: string;
   observation: string;
   messageToOwner: string;
+  status: CorrespondenceStatus;
+  receiverId: number | null;
+  receiver: any | null;
   out: ICorrespondenceOut | null;
+
+  // Relación con residence
+  residence: {
+    uuid: string;
+    type: ResidenceType;
+    houseNumber: string;
+    block: string;
+    floor: number;
+    place: {
+      id: number;
+      name: string;
+    };
+    user: {
+      id: number;
+      name: string;
+      surname: string;
+      email: string;
+      phone: string;
+    };
+  };
+
+  // Timestamps
   createdAt: string;
   updatedAt: string;
-  deletedAt?: string;
-  createdBy?: any;
-  editedBy?: any;
-  deletedBy?: any;
+  deletedAt?: string | null;
+
+  // Audit fields
+  createdBy?: {
+    id: number;
+    name: string;
+  } | null;
+  editedBy?: {
+    id: number;
+    name: string;
+  } | null;
+  deletedBy?: {
+    id: number;
+    name: string;
+  } | null;
 }
 
 export interface ICorrespondenceOut {
@@ -30,4 +63,10 @@ export enum CorrespondenceStatus {
   RECEIVED = 'RECEIVED',
   DELIVERED = 'DELIVERED',
   IN_RECEPTION = 'IN_RECEPTION',
+  NOTIFIED = 'NOTIFIED',
+}
+
+export enum ResidenceType {
+  HOUSE = 'HOUSE',
+  APARTMENT = 'APARTMENT',
 }

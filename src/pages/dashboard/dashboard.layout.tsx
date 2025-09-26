@@ -46,7 +46,7 @@ import { hasUserTenant, useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
-import { CompanyService, TenantService } from '@/services';
+import { CompanyService, PlaceService, TenantService } from '@/services';
 import Notifications from '@/components/common/notifications/notifications';
 import { RoleService } from '@/services/general/role';
 import Panic from '@/components/common/panic/panic';
@@ -85,6 +85,11 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       getToken,
       getCompanyId,
       getUser,
+      places,
+      selectedPlace,
+      setSelectedPlace,
+      setPlaces,
+      getPlaceId,
     } = useUserStore();
 
     const isModalOpen = useSignal<boolean>(false);
@@ -98,7 +103,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const instances = useSignal<any[]>([]);
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
-      BaseService.setUser(getTenant, getToken, getCompanyId);
+      BaseService.setUser(getTenant, getToken, getCompanyId, getPlaceId);
       validateUser();
     }, []);
 
@@ -109,7 +114,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       return () => {
         WebSocketManager.disconnect();
       };
-    }, [selectedCompany]);
+    }, [selectedCompany, selectedPlace]);
 
     const validateUser = async () => {
       const result = await hasUserTenant(
@@ -127,6 +132,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           getPermissions(),
           getTenants(),
           getInstances(),
+          // getPlaces(),
         ]);
       }
     };
@@ -149,11 +155,37 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           setSelectedCompany(Number(firstCompany));
         }
       }
+      getPlaces();
+    };
+
+    const getPlaces = async () => {
+      const places = await PlaceService.get_simple_list_admin_client();
+
+      if (!places.getStatus()) return;
+      const placesData = places.getMany();
+
+      if (placesData.length === 0) return;
+      setPlaces(placesData);
+
+      const selectedPlace = await localStorage.get('place');
+      if (selectedPlace) {
+        setSelectedPlace(Number(selectedPlace));
+      } else {
+        if (placesData.length > 0) {
+          const firstPlace = placesData[0].value;
+          setSelectedPlace(Number(firstPlace));
+        }
+      }
     };
 
     const handleCompanyChange = (value: string | number) => {
       localStorage.set('company', value);
       setSelectedCompany(Number(value));
+    };
+
+    const handlePlaceChange = (value: string | number) => {
+      localStorage.set('place', value);
+      setSelectedPlace(Number(value));
     };
 
     const handleUserAction = (value: string | number) => {
@@ -518,6 +550,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 value={selectedCompany?.value}
                 onChange={handleCompanyChange}
                 icon='023'
+                borderless
+              />
+              <CustomSwitcher
+                options={places}
+                value={selectedPlace?.value}
+                onChange={handlePlaceChange}
+                icon='103'
                 borderless
               />
               <div className='flex flex-row gap-4 items-center justify-center'>

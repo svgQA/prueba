@@ -84,6 +84,8 @@ import { TrybookCommonSlotsPage } from './trybook/commonslot/trybook.commonslot'
 import { WebHookSettingPage } from './general/webhook/webhook';
 import { TrybookResourceZonesPage } from './trybook/resourcezone/trybook.resourcezone';
 import { ResourceZoneCreatePage } from './trybook/resourcezone/resourcezone.create';
+import { NewsPage } from './trybook/news/news.page';
+import { NewsForm } from './trybook/news/components/news.upsert';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -698,6 +700,20 @@ export const RoutingContent = memo(() => {
           component={lazy(() =>
             Promise.resolve({ default: ResourceZoneCreatePage })
           )}
+        />
+
+        {/* OPTIONS NEWS */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.news.to}
+          component={lazy(() => Promise.resolve({ default: NewsPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.news.create.to}
+          component={lazy(() => Promise.resolve({ default: NewsForm }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.news.update.to}
+          component={lazy(() => Promise.resolve({ default: NewsForm }))}
         />
       </Suspense>
     </Router>
