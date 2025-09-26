@@ -276,8 +276,8 @@ export const RolesUpsertPage = () => {
                       meta={meta}
                       name='name'
                       type='text'
-                      label={t('role.form.name')}
-                      placeholder={t('role.form.placeholderName')}
+                      label='l_name'
+                      placeholder='p_name_role'
                     />
                   )}
                 </Field>
@@ -289,10 +289,10 @@ export const RolesUpsertPage = () => {
                     <Input
                       {...input}
                       id='description'
-                      placeholder={'p_write'}
+                      placeholder='p_element_description'
                       meta={meta}
                       type='text'
-                      label={'description'}
+                      label='h_description'
                     />
                   )}
                 </Field>
@@ -301,7 +301,7 @@ export const RolesUpsertPage = () => {
 
             <div className='col-span-2  max-h-[65vh] overflow-x-hidden vox-scroll-design'>
               <div className='flex justify-between items-center mb-4'>
-                <h3 className='text-lg font-medium'>Módulos:</h3>
+                <h3 className='text-lg font-medium'>{t('h_title_modules')}:</h3>
 
                 {/* Filtro de plataforma */}
                 <div className='flex items-center space-x-4'>
