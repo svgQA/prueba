@@ -1,11 +1,8 @@
 export const buttons_es = {
   continue: 'Continuar',
-
   remote: 'Notificaciones / Supervisión',
-
   unsaved: 'No guardado',
   saving: 'Guardando...',
-
   condition: 'Condición',
   group: 'Grupo',
   new: 'Nuevo',
@@ -16,19 +13,17 @@ export const buttons_es = {
   next: 'Siguiente',
   previous: 'Anterior',
   finish: 'Finalizar',
-
   restore: 'Restaurar',
   apply: 'Aplicar',
+  btnSave: 'Guardar',
+  btnUpdate: 'Actualizar',
 };
 
 export const buttons_en = {
   continue: 'Continue',
-
   remote: 'Remote Supervision',
-
   unsaved: 'Unsaved',
   saving: 'Saving...',
-
   condition: 'Condition',
   group: 'Group',
   new: 'New',
@@ -39,7 +34,8 @@ export const buttons_en = {
   next: 'Next',
   previous: 'Previous',
   finish: 'Finish',
-
   restore: 'Restore',
   apply: 'Apply',
+  btnSave: 'Save',
+  btnUpdate: 'Update',
 };

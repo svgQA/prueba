@@ -16,6 +16,9 @@ export const validation_es = {
   get_files: 'Agregar Archivos',
   shiftStart: 'Inicio del Turno',
   shiftEnd: 'Finalización del Turno',
+  password_strength:
+    'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial',
+  passwords_not_match: 'Las contraseñas no coinciden',
 };
 
 export const validation_en = {
@@ -36,4 +39,7 @@ export const validation_en = {
   get_files: 'Add Files',
   shiftStart: 'Shift Start',
   shiftEnd: 'Shift End',
+  password_strength:
+    'The password must be at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character',
+  passwords_not_match: 'The passwords do not match',
 };

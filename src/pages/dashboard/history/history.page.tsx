@@ -99,7 +99,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
           count={notificationsThisMonth.value}
           subtitle=''
           color='t-dark'
-          icon='calendar-days'
+          icon='0002'
         />
       </div>
       {/*       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>

@@ -81,8 +81,8 @@ export const UserSettingsPage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      label={t('h_name')}
-                      placeholder={t('p_write')}
+                      label='h_name'
+                      placeholder='p_write'
                       type='text'
                       meta={meta}
                     />
@@ -111,7 +111,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_roles'
                       name='allow_roles'
-                      label={t('m_role')}
+                      label='m_role'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -124,7 +124,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_users'
                       name='allow_users'
-                      label={t('h_user')}
+                      label='h_user'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -137,7 +137,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_groups'
                       name='allow_groups'
-                      label={t('group')}
+                      label='group'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -163,7 +163,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_positions'
                       name='allow_positions'
-                      label={t('h_location')}
+                      label='h_location'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -176,7 +176,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_permissions'
                       name='allow_permissions'
-                      label={t('h_permission')}
+                      label='h_permission'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -193,7 +193,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_update_password'
                       name='allow_update_password'
-                      label={t('m_password')}
+                      label='m_password'
                       value={input.checked}
                       onChange={input.onChange}
                     />
@@ -206,7 +206,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                     <Switch
                       id='allow_update_profile'
                       name='allow_update_profile'
-                      label={t('update')}
+                      label='update'
                       value={input.checked}
                       onChange={input.onChange}
                     />

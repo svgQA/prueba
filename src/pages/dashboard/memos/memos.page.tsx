@@ -311,21 +311,21 @@ export const MemosPage: FunctionComponent = () => {
         count={summary.total}
         subtitle=''
         color='t-dark'
-        icon='328' // 328
+        icon='0001'
       />
       <CardData
         title='h_memos_unresolved'
         count={calculatePercentage(summary)}
         subtitle=''
         color='t-dark'
-        icon='311' // 311
+        icon='311'
       />
       <CardData
         title='h_memos_resolved'
         count={calculatePercentage(summary, true)}
         subtitle=''
         color='t-dark'
-        icon='312' // 312
+        icon='000'
       />
     </div>
   );
