@@ -75,4 +75,9 @@ export const general_es = {
   users: {
     pageTitle: 'TR - Servicio de Usuarios',
   },
+  permissions: {
+    denied: 'Permiso denegado',
+    granted: 'Permiso concedido',
+    view_denied: 'No tienes permiso para ver esta sección',
+  }
 };

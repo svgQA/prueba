@@ -135,6 +135,7 @@ const SupervisorInfo = ({
                     onCancel: () => {},
                   })
                 }
+                permissions={{ name: 'memo', state: 'close' }}
               />
             )}
           </div>

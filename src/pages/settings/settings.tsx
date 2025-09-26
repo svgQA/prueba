@@ -15,6 +15,7 @@ import {
   toggleSettingModal,
 } from '@/store/signals/modals';
 import { IMenu } from '@/components/common/utils/interface';
+import { validateSettingModuleState } from '@/store/signals/access/permission';
 
 export const SettingsModal = () => {
   const { user } = useUserStore();
@@ -25,15 +26,34 @@ export const SettingsModal = () => {
   useEffect(() => {
     if (settings) {
       if (!current.to) {
-        let adminMenu;
-        for (const menus of MODAL_SIDEBAR_MENUS) {
-          adminMenu = menus.menus.find((menu) => menu.show);
-          if (adminMenu) break;
+        // let adminMenu;
+        // for (const menus of MODAL_SIDEBAR_MENUS) {
+        //   adminMenu = menus.menus.find((menu) => menu.show);
+        //   if (adminMenu) break;
+        // }
+        // if (adminMenu) {
+        //   go({
+        //     ...adminMenu,
+        //     to: `/setting${adminMenu.base}${adminMenu.to || '/'}`,
+        //   });
+        // }
+
+        // Find the first menu that has permissions
+        let firstAvailableMenu;
+
+        for (const menuGroup of MODAL_SIDEBAR_MENUS) {
+          if (menuGroup.show && validateSettingModuleState(menuGroup.id)) {
+            firstAvailableMenu = menuGroup.menus.find(
+              (menu) => menu.show && validateSettingModuleState(menu.id)
+            );
+            if (firstAvailableMenu) break;
+          }
         }
-        if (adminMenu) {
+
+        if (firstAvailableMenu) {
           go({
-            ...adminMenu,
-            to: `/setting${adminMenu.base}${adminMenu.to || '/'}`,
+            ...firstAvailableMenu,
+            to: `/setting${firstAvailableMenu.base}${firstAvailableMenu.to || '/'}`,
           });
         }
       } else {
