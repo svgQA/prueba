@@ -28,12 +28,15 @@ import { type IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { t } from 'i18next';
 import { RoleService } from '@/services/general/role';
+import { useUserStore } from '@/store/slices';
 interface CreateUserProps {
   onUserCreated?: (user: any) => void;
   user?: IUserResponse;
 }
 
 export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
+  const { user } = useUserStore();
+
   const documentTypes = useSignal<IDocumentTypeResponse[]>([]);
   const roles = useSignal<IOption[]>([]);
   const places = useSignal<IOption[]>([]);
@@ -293,6 +296,36 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     };
   };
 
+  const getTypesUsers = (): { id: string; name: string }[] => {
+    return [
+      ...(user?.userType === 'ADMIN_CLIENT'
+        ? [
+            {
+              id: 'CLIENT',
+              name: t('l_client'),
+            },
+          ]
+        : [
+          {
+              id: 'USER',
+              name: t('l_operator'),
+            },
+            {
+              id: 'ADMIN',
+              name: t('l_administrator'),
+            },
+            {
+              id: 'CLIENT',
+              name: t('l_client'),
+            },
+            {
+              id: 'ADMIN_CLIENT',
+              name: t('l_admin_client'),
+            },
+          ]),
+    ];
+  };
+
   return (
     <div className='flex flex-col'>
       <div className='absolute top-0 right-0 flex items-center justify-center bg-red gap-10 flex-row'>
@@ -534,24 +567,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         }}
                         optionValue='id'
                         optionLabel='name'
-                        options={[
-                          {
-                            id: 'USER',
-                            name: t('l_operator'),
-                          },
-                          {
-                            id: 'ADMIN',
-                            name: t('l_administrator'),
-                          },
-                          {
-                            id: 'CLIENT',
-                            name: t('l_client'),
-                          },
-                          {
-                            id: 'ADMIN_CLIENT',
-                            name: t('user.create.form.userType.ADMIN_CLIENT'),
-                          },
-                        ]}
+                        options={getTypesUsers()}
                         meta={meta}
                       />
                     )}

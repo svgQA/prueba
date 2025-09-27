@@ -24,6 +24,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { Table } from '@/components/common/table/table';
 import { setUser, USER_MODE_SERVICE } from './store/user.store';
 import { useUserStore } from '@/store/slices';
+import { allPermissions } from '@/store/signals/access/permission';
 
 enum VIEW_NAME {
   TABLE,
@@ -150,6 +151,7 @@ export const UsersPage: FunctionalComponent = () => {
           rounded={false}
           selected={currentView.value === VIEW_NAME.CREATE}
           icon='039'
+          permissions={{ name: 'user', state: 'upsert' }}
         />
         <div className='relative'>
           <Button
@@ -178,6 +180,7 @@ export const UsersPage: FunctionalComponent = () => {
       showSendModal.value,
       selectedUsers,
       hasValidPlayer,
+      allPermissions.value
     ]
   );
 

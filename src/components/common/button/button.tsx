@@ -2,7 +2,10 @@ import { type FunctionComponent } from 'preact';
 import { type IButtonProps } from './interface';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'preact/hooks';
-import { getCurrentPermissions } from '@/store/signals/access/permission';
+import {
+  // getCurrentPermissions,
+  getPermissionByModuleState,
+} from '@/store/signals/access/permission';
 
 export const Button: FunctionComponent<IButtonProps> = ({
   label,
@@ -30,6 +33,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   mode,
   keyName = '',
   transparent = false,
+  permissions,
 }: IButtonProps) => {
   const { t } = useTranslation();
   const getJustify = () => {
@@ -44,11 +48,13 @@ export const Button: FunctionComponent<IButtonProps> = ({
   };
 
   const allowButton = useMemo(() => {
-    if (keyName === '') return true;
-    const permissions = getCurrentPermissions();
-    if (Object.keys(permissions).length === 0) return true;
-    return permissions[keyName];
-  }, [keyName]);
+    // if (keyName === '') return true;
+    // const permissions = getCurrentPermissions();
+    // if (Object.keys(permissions).length === 0) return true;
+    // return permissions[keyName];
+    if(permissions === undefined) return true;
+    return getPermissionByModuleState(permissions.name, permissions.state);
+  }, [keyName, permissions]);
 
   const getBackgroundColor = () => {
     if (mode) {

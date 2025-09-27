@@ -11,7 +11,7 @@ export class CorrespondenceService extends BaseService {
 
   static async get_all(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
-      url: ['correspondences'],
+      url: ['Correspondence'],
       params: params as any,
     };
     return await super.make_request<any>(this.name, model);
@@ -19,7 +19,7 @@ export class CorrespondenceService extends BaseService {
 
   static async get_by_id(id: string) {
     const model: IMakeRequest = {
-      url: ['correspondences', id],
+      url: ['Correspondence', id],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<any>(this.name, model);
@@ -27,7 +27,7 @@ export class CorrespondenceService extends BaseService {
 
   static async createCorrespondence(data: any) {
     const model: IMakeRequest = {
-      url: ['correspondences'],
+      url: ['Correspondence'],
       method: REQUEST_METHODS.POST,
       data: data,
     };
@@ -36,7 +36,7 @@ export class CorrespondenceService extends BaseService {
 
   static async updateCorrespondence(id: string, data: any) {
     const model: IMakeRequest = {
-      url: ['correspondences', id],
+      url: ['Correspondence', id],
       method: REQUEST_METHODS.PUT,
       data: data,
     };
@@ -45,19 +45,19 @@ export class CorrespondenceService extends BaseService {
 
   static async deleteCorrespondence(id: string) {
     const model: IMakeRequest = {
-      url: ['correspondences', id],
+      url: ['Correspondence', id],
       method: REQUEST_METHODS.DELETE,
     };
     return await super.make_request(this.name, model);
   }
 
   /**
-   * Gets a summary of correspondences including total count, in progress and completed
+   * Gets a summary of Correspondence including total count, in progress and completed
    * @returns Summary object with total, progress and completed counts
    */
   static async getCorrespondenceSummary() {
     const model: IMakeRequest = {
-      url: ['correspondences', 'summary', 'stats'],
+      url: ['Correspondence', 'summary', 'stats'],
       method: REQUEST_METHODS.GET,
     };
 

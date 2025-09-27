@@ -45,6 +45,7 @@ import {
   MessageEvent,
   MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
+import { allPermissions } from '@/store/signals/access/permission';
 
 enum VIEW_NAME {
   TABLE,
@@ -265,6 +266,7 @@ export const MemosPage: FunctionComponent = () => {
           rounded={false}
           selected={currentView.value === VIEW_NAME.CHAT}
           icon='418'
+          permissions={{ name: 'memo', state: 'chat' }}
         />
         <Button
           name='button-change-panic'
@@ -297,7 +299,7 @@ export const MemosPage: FunctionComponent = () => {
         <Button name='button-change-scheduler' rounded={false} icon='314' /> */}
       </div>
     ),
-    [currentView.value]
+    [currentView.value, allPermissions.value]
   );
 
   /**
