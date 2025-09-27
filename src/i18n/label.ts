@@ -61,6 +61,7 @@ export const label_es = {
   l_latitude: 'Latitud',
   l_longitude: 'Longitud',
   l_client: 'Cliente',
+  l_admin_client: 'Administrador de clientes',
   l_contract: 'Contrato',
   l_round: 'Ronda',
 
@@ -208,6 +209,7 @@ export const label_en = {
   l_latitude: 'Latitude',
   l_longitude: 'Longitude',
   l_client: 'Client',
+  l_admin_client: 'Client administrator',
   l_contract: 'Contract',
   l_round: 'Round',
 
