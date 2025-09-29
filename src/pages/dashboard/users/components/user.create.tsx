@@ -572,7 +572,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                       />
                     )}
                   </Field>
-                  {typeSelected.value === 'ADMIN_CLIENT' && (
+                  {typeSelected.value === 'ADMIN_CLIENT' || typeSelected.value === 'CLIENT' && (
                     <Field<IOption[]>
                       name='places'
                       validate={requiredRole.value ? required : undefined}
@@ -582,13 +582,13 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                           {...input}
                           meta={meta}
                           id='select-places'
-                          label={t('user.create.form.places')}
+                          label={t('h_place')}
                           icon='231'
                           options={places.value}
                           multiple={true}
                           allowAll={true}
                           menuPortalTarget={document.body}
-                          placeholder={t('user.create.form.placeholderPlaces')}
+                          placeholder={t('h_place')}
                           onChange={() => {}}
                         />
                       )}
