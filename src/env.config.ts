@@ -17,6 +17,7 @@ export const {
   VITE_COMPANY_HEADER: company_header,
   VITE_PLACE_HEADER: place_header,
   VITE_CDN_SERVICE_URL: cdn_service_url,
+  VITE_APP_ENVIRONMENT: app_environment = 'qa',
 
   DEV: tryvoo_environment = false,
 } = import.meta.env;

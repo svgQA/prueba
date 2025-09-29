@@ -56,12 +56,11 @@ import { useSignal } from '@preact/signals';
 import PanicModal from '@/components/common/panic/components/panic.modal';
 import { IPanic } from '@/components/common/panic/utils/interface';
 
-// import { IconsModal } from '../globals/icons/icons';
-// import { SseManager } from '@/utils/network/sse/base';
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import { Modal } from '@/components/common/modal/modal';
 import { Field, Form } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
+import { FaroManager } from '@/utils/telemetry';
 
 /** ***********************************************************************
  * COMPONENT
@@ -85,6 +84,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       getToken,
       getCompanyId,
       getUser,
+      getCognito,
       places,
       selectedPlace,
       setSelectedPlace,
@@ -101,6 +101,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const openModalTenant = useSignal<boolean>(false);
     const tenants = useSignal<any[]>([]);
     const instances = useSignal<any[]>([]);
+
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
       BaseService.setUser(getTenant, getToken, getCompanyId, getPlaceId);
@@ -110,6 +111,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     useEffect(() => {
       if (selectedCompany) {
         WebSocketManager.connect(getTenant, getCompanyId, getToken);
+        FaroManager.connect(getTenant, getCompanyId, getToken, getCognito);
       }
       return () => {
         WebSocketManager.disconnect();
@@ -216,6 +218,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         return;
       setAllPermissions(permissions.model);
     };
+
     const onTenantSubmit = async (values: any) => {
       const request = await TenantService.create_tenant(values);
       if (!request.getStatus()) return;
@@ -237,7 +240,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         return;
       }
       const request = await TenantService.get_tenants();
-      console.log(request);
       if (!request.getStatus()) return;
       tenants.value = request.getMany();
     };
@@ -253,6 +255,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       instances.value = request.getMany();
     };
 
+    // TODO: Joshua debes llevarte esta mierda para otro lado.
     const modalTenant = (
       <Modal
         open={openModalTenant.value}
