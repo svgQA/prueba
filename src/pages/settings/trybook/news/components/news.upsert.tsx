@@ -23,7 +23,7 @@ export const NewsForm: FunctionComponent = () => {
   const [initialValues, setInitialValues] = useState<any>();
 
   useEffect(() => {
-    document.title = 'Zonas Comunes';
+    document.title = 'h_common_areas';
     fetchInitialValues();
   }, []);
 

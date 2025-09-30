@@ -29,5 +29,5 @@ export interface IButtonProps extends IComponentProps {
   mode?: 'primary' | 'secondary' | 'ternary' | 'danger';
   keyName?: string;
   transparent?: boolean;
-  permissions?: { name: string, state: string };
+  permissions?: { name: string; state: string };
 }

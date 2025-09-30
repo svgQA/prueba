@@ -44,7 +44,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [btnLabel, setBtnLabel] = useState('Check In');
   const predefined: Signal<IOption[]> = useSignal([]);
   const panic = useSignal<IPanic[]>([]);
-  const disable = memo.state === 'RESOLVED' || !getPermissionByModuleState('memo', 'close');
+  const disable =
+    memo.state === 'RESOLVED' || !getPermissionByModuleState('memo', 'close');
   const loading = useSignal<boolean>(false);
   const status = useSignal<string | undefined>(memo.state);
 

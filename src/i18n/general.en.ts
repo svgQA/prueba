@@ -73,6 +73,6 @@ export const general_en = {
   permissions: {
     denied: 'Permission denied',
     granted: 'Permission granted',
-    view_denied: 'You do not have permission to view this section', 
-  }
+    view_denied: 'You do not have permission to view this section',
+  },
 };

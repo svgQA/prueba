@@ -306,7 +306,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
             },
           ]
         : [
-          {
+            {
               id: 'USER',
               name: t('l_operator'),
             },

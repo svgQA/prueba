@@ -9,12 +9,10 @@ export const common_es = {
   EXTERNAL: 'Externo',
   CLOSED: 'Cerrado',
   SOLVE: 'Resolver',
-
   ADMIN: 'Administrador',
   USER: 'Empleado',
   CLIENT: 'Cliente',
   operative: 'Operativo',
-
   setting: 'Configuración',
   change_password: 'Cambiar Contraseña',
   monday: 'Lunes',
@@ -35,7 +33,6 @@ export const common_es = {
   'Invalid Date': 'No aplicable',
   hide: 'Ocultar',
   show: 'Mostrar',
-
   empty: 'Vacío',
   area: 'Área',
   profile: 'Perfil',
@@ -57,6 +54,10 @@ export const common_es = {
   MEDIUM: 'Media',
   LOW: 'Baja',
   s_title: 'Formulario',
+  all: 'Todos',
+  web: 'Web',
+  mobile: 'Móvil',
+  message: 'Mensaje',
 };
 
 export const common_en = {
@@ -122,4 +123,8 @@ export const common_en = {
   MEDIUM: 'Medium',
   LOW: 'Low',
   s_title: 'Form',
+  all: 'All',
+  web: 'Web',
+  mobile: 'Mobile',
+  message: 'Message',
 };

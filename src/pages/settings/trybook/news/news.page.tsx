@@ -56,8 +56,8 @@ export const NewsPage: FunctionalComponent = () => {
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: t('commonZone.showAlert.title'),
-          message: t('commonZone.showAlert.msg'),
+          title: t('i_showAlert_title_zone'),
+          message: t('i_showAlert_msg_zone'),
           onConfirm: () => {
             void deleteRow(String(action.id));
           },

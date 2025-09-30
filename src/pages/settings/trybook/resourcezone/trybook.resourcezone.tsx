@@ -74,8 +74,8 @@ export const TrybookResourceZonesPage: FunctionComponent = () => {
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: t('resourceZone.showAlert.title'),
-          message: t('resourceZone.showAlert.msg'),
+          title: t('i_showAlert_title_resource'),
+          message: t('i_showAlert_msg_resource'),
           onConfirm: () => {
             void deleteRow(Number(action.id));
           },

@@ -180,7 +180,7 @@ export const UsersPage: FunctionalComponent = () => {
       showSendModal.value,
       selectedUsers,
       hasValidPlayer,
-      allPermissions.value
+      allPermissions.value,
     ]
   );
 

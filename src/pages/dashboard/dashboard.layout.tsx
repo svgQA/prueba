@@ -310,8 +310,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                             <Input
                               {...input}
                               type='text'
-                              label='nombre*'
-                              placeholder='Empresa 7'
+                              label='l_name'
+                              placeholder='h_company'
                             />
                           )}
                         </Field>
@@ -319,8 +319,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                           {({ input }) => (
                             <Input
                               {...input}
-                              placeholder='Servicios de software'
-                              label='description*'
+                              placeholder='p_service_software'
+                              label='h_description'
                               type='text'
                             />
                           )}
@@ -329,7 +329,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                           {({ input }) => (
                             <Input
                               {...input}
-                              placeholder='Usuario Test'
+                              placeholder='p_usuario_test'
                               label='manager_name'
                               type='text'
                             />
@@ -340,7 +340,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                             <Input
                               {...input}
                               type='email'
-                              placeholder='usuariotest@gmail.com'
+                              placeholder='p_user_email'
                               label='manager_email'
                             />
                           )}
@@ -349,8 +349,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                           {({ input }) => (
                             <Input
                               {...input}
-                              placeholder='+573168410294'
-                              label='manager_phone'
+                              placeholder='p_manager_phone'
+                              label='l_manager_phone'
                               type='tel'
                             />
                           )}
@@ -358,14 +358,14 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                       </div>
 
                       <div className='col-span-1'>
-                        <h1>[OWNER] Información del Usuario</h1>
+                        <h1>[OWNER] {t('h_user_info')}</h1>
                         <Field name='email'>
                           {({ input }) => (
                             <Input
                               {...input}
                               type='email'
-                              placeholder='jhvargas563@gmail.com'
-                              label='Correo*'
+                              placeholder='p_owner_email'
+                              label='h_email'
                             />
                           )}
                         </Field>
@@ -373,8 +373,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                           {({ input }) => (
                             <Input
                               {...input}
-                              placeholder='+57316841294'
-                              label='Teléfono*'
+                              placeholder='p_owner_phone'
+                              label='h_phone'
                               type='tel'
                             />
                           )}
@@ -384,8 +384,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                             <Input
                               {...input}
                               type='text'
-                              placeholder='Tryvoo*1113697580'
-                              label='Contraseña*'
+                              placeholder='p_enter_password'
+                              label='l_password'
                             />
                           )}
                         </Field>
@@ -395,7 +395,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                       type='submit'
                       className='mt-4 px-4 py-2 bg-primary text-white rounded'
                     >
-                      Create Tenant
+                      {t('h_create_tenant')}
                     </button>
                   </form>
                 )}
@@ -412,9 +412,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                         {({ input }) => (
                           <Input
                             {...input}
-                            placeholder='Instance'
+                            placeholder='p_instance'
                             type='text'
-                            label='Nombre*'
+                            label='h_name'
                           />
                         )}
                       </Field>
@@ -433,7 +433,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                       type='submit'
                       className='mt-4 px-4 py-2 bg-primary text-white rounded'
                     >
-                      Create Instance
+                      {t('h_create_instance')}
                     </button>
                   </form>
                 )}
@@ -441,17 +441,17 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ) : activeTab === 'databases' ? (
             <div>
-              <h1>Instancias</h1>
+              <h1>{t('h_instances')}</h1>
               <table className='w-full border-collapse'>
                 <thead>
                   <tr>
                     <th className='border p-2'>ID</th>
-                    <th className='border p-2'>Name</th>
+                    <th className='border p-2'>{t('h_name')}</th>
                     <th className='border p-2'>URL</th>
-                    <th className='border p-2'>Count</th>
-                    <th className='border p-2'>Created At</th>
-                    <th className='border p-2'>Updated At</th>
-                    <th className='border p-2'>Status</th>
+                    <th className='border p-2'>{t('h_count')}</th>
+                    <th className='border p-2'>{t('h_created_at')}</th>
+                    <th className='border p-2'>{t('h_updated_at')}</th>
+                    <th className='border p-2'>{t('h_status')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -473,22 +473,24 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ) : activeTab === 'companies' ? (
             <div>
-              <h1>Empresas</h1>
+              <h1>{t('h_companies')}</h1>
               <table className='w-full border-collapse'>
                 <thead>
                   <tr>
                     <th className='border p-2'>ID</th>
-                    <th className='border p-2'>Name</th>
-                    <th className='border p-2'>Description</th>
-                    <th className='border p-2'>Manager Name</th>
-                    <th className='border p-2'>Manager Email</th>
-                    <th className='border p-2'>Manager Phone</th>
-                    <th className='border p-2'>External ID</th>
-                    <th className='border p-2'>Platform External ID</th>
-                    <th className='border p-2'>Instance ID</th>
-                    <th className='border p-2'>Status</th>
-                    <th className='border p-2'>Message</th>
-                    <th className='border p-2'>Date</th>
+                    <th className='border p-2'>{t('h_name')}</th>
+                    <th className='border p-2'>{t('h_description')}</th>
+                    <th className='border p-2'>{t('l_manager_name')}</th>
+                    <th className='border p-2'>{t('l_manager_email')}</th>
+                    <th className='border p-2'>{t('l_manager_phone')}</th>
+                    <th className='border p-2'>{t('h_external_id')}</th>
+                    <th className='border p-2'>
+                      {t('h_platform_external_id')}
+                    </th>
+                    <th className='border p-2'>{t('h_instance_id')}</th>
+                    <th className='border p-2'>{t('h_status')}</th>
+                    <th className='border p-2'>{t('message')}</th>
+                    <th className='border p-2'>{t('h_date')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -515,7 +517,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ) : (
             <div>
-              <h1>Base de datos</h1>
+              <h1>{t('h_databases')}</h1>
             </div>
           )}
         </div>
