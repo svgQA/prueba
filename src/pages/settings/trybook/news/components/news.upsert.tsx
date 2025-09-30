@@ -12,14 +12,18 @@ import { INews } from '@/types/trybook/news';
 import { Section } from '@/components/common/section/section';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { NewsService } from '@/services/trybook/news';
+import { IOption } from '@/components/common/multi/interface';
+import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { PlaceService } from '@/services';
 
 export const NewsForm: FunctionComponent = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();
   const { id } = useParams<{ id?: string }>();
-  const { selectedCompany } = useUserStore();
+  const { selectedCompany, user } = useUserStore();
 
   const loading = useSignal<boolean>(false);
+  const places = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<any>();
 
   useEffect(() => {
@@ -29,6 +33,7 @@ export const NewsForm: FunctionComponent = () => {
 
   useEffect(() => {
     fetchInitialValues();
+    getPlaces();
   }, [selectedCompany, id]);
 
   const fetchInitialValues = async () => {
@@ -47,11 +52,20 @@ export const NewsForm: FunctionComponent = () => {
     setInitialValues({
       name: initialData.name || '',
       description: initialData.description || '',
+      place: {
+        value: initialData.place?.id || '',
+        label: initialData.place?.name || '',
+      }
     });
   };
 
+  const getPlaces = async () => {
+    const response = await PlaceService.getSimpleList();
+    if (!response.getStatus()) return;
+    places.value = response.getMany();
+  };
+
   const handleSubmit = async (model: INews, _form?: any) => {
-    console.log('model', model);
     loading.value = true;
 
     let response = id
@@ -123,6 +137,25 @@ export const NewsForm: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
+              {user?.userType !== 'ADMIN_CLIENT' && (
+                <Field<IOption> name='place'>
+                  {({ input, meta }) => (
+                    <SmartSelector<IOption>
+                      {...input}
+                      meta={meta}
+                      id='select-place'
+                      label={t('h_place')}
+                      icon='231'
+                      options={places.value}
+                      multiple={false}
+                      allowAll={true}
+                      menuPortalTarget={document.body}
+                      placeholder={t('h_place')}
+                      onChange={() => {}}
+                    />
+                  )}
+                </Field>
+              )}
             </div>
           </form>
         )}

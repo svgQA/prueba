@@ -3,4 +3,4 @@
 bun run prettier
 bash .validation.sh
 bun run build
-bun run test
+bun run test:unit
