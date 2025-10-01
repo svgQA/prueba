@@ -26,7 +26,7 @@ export type ResidenceRow = {
 export const columns: ColumnDef<ResidenceRow>[] = [
   {
     id: 'residence',
-    header: 'trybook.residence.table.residence',
+    header: 'l_residence',
     size: 320,
     cell: ({ row }) => {
       const r = row.original;
@@ -42,7 +42,7 @@ export const columns: ColumnDef<ResidenceRow>[] = [
   },
   {
     id: 'owner',
-    header: 'trybook.residence.table.owner',
+    header: 'h_owner',
     size: 240,
     cell: ({ row }) => {
       const u = row.original.user;
@@ -52,7 +52,7 @@ export const columns: ColumnDef<ResidenceRow>[] = [
   },
   {
     id: 'place',
-    header: 'trybook.residence.table.place',
+    header: 'l_set_place',
     size: 220,
     cell: ({ row }) => {
       const r = row.original;

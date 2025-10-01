@@ -69,6 +69,9 @@ export const toast_es = {
   s_area_deleted: 'Área eliminada exitosamente',
   s_tenant_created: 'Tenant creado correctamente',
   s_instance_created: 'Instancia creada correctamente',
+  s_select_valid_zone: 'Seleccione una zona válida',
+  s_zone_not_support_resources:
+    'La zona seleccionada no admite recursos (tipo PARKING)',
 };
 
 export const toast_en = {
@@ -142,4 +145,7 @@ export const toast_en = {
   s_area_deleted: 'Area deleted successfully',
   s_tenant_created: 'Tenant created successfully',
   s_instance_created: 'Instance created successfully',
+  s_select_valid_zone: 'Select a valid zone',
+  s_zone_not_support_resources:
+    'The selected zone does not support resources (type PARKING)',
 };

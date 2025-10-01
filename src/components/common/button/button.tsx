@@ -52,7 +52,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
     // const permissions = getCurrentPermissions();
     // if (Object.keys(permissions).length === 0) return true;
     // return permissions[keyName];
-    if(permissions === undefined) return true;
+    if (permissions === undefined) return true;
     return getPermissionByModuleState(permissions.name, permissions.state);
   }, [keyName, permissions]);
 

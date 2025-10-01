@@ -306,7 +306,7 @@ export const RolesUpsertPage = () => {
                 {/* Filtro de plataforma */}
                 <div className='flex items-center space-x-4'>
                   <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>
-                    Filtrar por plataforma:
+                    {t('l_filter_platform')}:
                   </label>
                   <div className='flex space-x-2'>
                     <button
@@ -318,7 +318,7 @@ export const RolesUpsertPage = () => {
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                       }`}
                     >
-                      Todos
+                      {t('all')}
                     </button>
                     <button
                       type='button'
@@ -329,7 +329,7 @@ export const RolesUpsertPage = () => {
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                       }`}
                     >
-                      Web
+                      {t('web')}
                     </button>
                     <button
                       type='button'
@@ -340,7 +340,7 @@ export const RolesUpsertPage = () => {
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                       }`}
                     >
-                      Móvil
+                      {t('mobile')}
                     </button>
                   </div>
                 </div>

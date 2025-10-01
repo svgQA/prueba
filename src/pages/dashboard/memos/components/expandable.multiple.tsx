@@ -13,31 +13,22 @@ type Props = {
 const getInfoContent = ({ type, data, onStatusChange }: Props) => {
   switch (type) {
     case 'expandable':
-      if (!getPermissionByModuleState('memo', 'service:history')) return <>{i18n.t('permissions.view_denied')}</>;
-      return (
-        <SupervisorInfo
-          memo={data}
-          onStatusChange={onStatusChange}
-        />
-      );
+      if (!getPermissionByModuleState('memo', 'service:history'))
+        return <>{i18n.t('permissions.view_denied')}</>;
+      return <SupervisorInfo memo={data} onStatusChange={onStatusChange} />;
     case 'history':
-      if (!getPermissionByModuleState('memo', 'user:history')) return <>{i18n.t('permissions.view_denied')}</>;
+      if (!getPermissionByModuleState('memo', 'user:history'))
+        return <>{i18n.t('permissions.view_denied')}</>;
       return <HistoryInfo memo={data} />;
     default:
       return <>No content</>;
   }
 };
 
-export const ExpandableMultiple = ({
-  type,
-  data,
-  onStatusChange,
-}: Props) => {
+export const ExpandableMultiple = ({ type, data, onStatusChange }: Props) => {
   return (
     <div className='info-container'>
-      {type &&
-        data &&
-        getInfoContent({ type, data, onStatusChange })}
+      {type && data && getInfoContent({ type, data, onStatusChange })}
     </div>
   );
 };

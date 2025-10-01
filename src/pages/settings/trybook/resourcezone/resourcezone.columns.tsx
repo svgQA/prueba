@@ -36,7 +36,7 @@ const TYPE_LABEL: Record<ResourceZoneType, string> = {
 export const columns: ColumnDef<ResourceZoneRow>[] = [
   {
     id: 'name',
-    header: 'trybook.resourceZone.table.name',
+    header: 'l_name',
     size: 280,
     cell: ({ row }) => {
       const r = row.original;
@@ -52,7 +52,7 @@ export const columns: ColumnDef<ResourceZoneRow>[] = [
   },
   {
     id: 'zone',
-    header: 'trybook.resourceZone.table.zone',
+    header: 'h_common_area',
     size: 260,
     cell: ({ row }) => {
       const z = row.original.zone;
@@ -68,7 +68,7 @@ export const columns: ColumnDef<ResourceZoneRow>[] = [
   },
   {
     id: 'config',
-    header: 'trybook.resourceZone.table.config',
+    header: 'setting',
     size: 220,
     cell: ({ row }) => {
       const { quantity, isBookable, requiresApproval } = row.original;

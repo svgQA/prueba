@@ -75,8 +75,8 @@ export const TrybookResidencesPage: FunctionComponent = () => {
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: t('user.residence.showAlert.title'),
-          message: t('user.residence.showAlert.msg'),
+          title: t('i_showAlert_title_zone'),
+          message: t('i_showAlert_msg_zone'),
           onConfirm: () => {
             void deleteRow(String(action.id));
           },

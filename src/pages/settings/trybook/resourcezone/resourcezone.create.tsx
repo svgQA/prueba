@@ -137,13 +137,11 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
     const selectedZoneId = Number(model.zoneId?.value);
     const selectedZone = rawZones.value.find((z) => z.id === selectedZoneId);
     if (!selectedZone) {
-      ToastManager.error('Seleccione una zona válida.');
+      ToastManager.error('s_select_valid_zone');
       return;
     }
     if (String(selectedZone.type).toUpperCase() === 'PARKING') {
-      ToastManager.error(
-        'La zona seleccionada no admite recursos (tipo PARKING).'
-      );
+      ToastManager.error('s_zone_not_support_resources');
       return;
     }
 
@@ -211,8 +209,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='trybook.resourceZone.placeholder.name'
-                      label='trybook.resourceZone.form.name'
+                      placeholder='p_enter_name'
+                      label='l_name_resource'
                       type='text'
                       meta={meta}
                     />
@@ -227,8 +225,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='trybook.resourceZone.placeholder.type'
-                      label='trybook.resourceZone.form.type'
+                      placeholder='p_type'
+                      label='l_type_resource'
                       id='type'
                       icon='tool'
                       options={TYPE_OPTIONS}
@@ -245,8 +243,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='trybook.resourceZone.placeholder.zone'
-                      label='trybook.resourceZone.form.zone'
+                      placeholder='p_zone'
+                      label='h_common_area'
                       id='zoneId'
                       icon='map'
                       options={zones.value}
@@ -262,8 +260,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='trybook.resourceZone.placeholder.quantity'
-                      label='trybook.resourceZone.form.quantity'
+                      placeholder='p_quantity'
+                      label='l_quantity'
                       type='number'
                       meta={meta}
                       onInput={(e: any) =>
@@ -281,8 +279,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='trybook.resourceZone.placeholder.isBookable'
-                      label='trybook.resourceZone.form.isBookable'
+                      placeholder='p_isBookable'
+                      label='l_isBookable'
                       id='isBookable'
                       icon='calendar'
                       options={BOOL_OPTIONS}
@@ -299,8 +297,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='trybook.resourceZone.placeholder.requiresApproval'
-                      label='trybook.resourceZone.form.requiresApproval'
+                      placeholder='p_requiresApproval'
+                      label='l_requiresApproval'
                       id='requiresApproval'
                       icon='shield'
                       options={BOOL_OPTIONS}
@@ -316,8 +314,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='trybook.resourceZone.placeholder.minDuration'
-                      label='trybook.resourceZone.form.minDuration'
+                      placeholder='p_minDuration'
+                      label='l_minDuration'
                       type='number'
                       meta={meta}
                       onInput={(e: any) =>
@@ -333,8 +331,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='trybook.resourceZone.placeholder.maxDuration'
-                      label='trybook.resourceZone.form.maxDuration'
+                      placeholder='p_maxDuration'
+                      label='l_maxDuration'
                       type='number'
                       meta={meta}
                       onInput={(e: any) =>
@@ -350,8 +348,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='trybook.resourceZone.placeholder.buffer'
-                      label='trybook.resourceZone.form.buffer'
+                      placeholder='p_buffer'
+                      label='l_buffer'
                       type='number'
                       meta={meta}
                       onInput={(e: any) =>
@@ -368,8 +366,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='trybook.resourceZone.placeholder.description'
-                      label='trybook.resourceZone.form.description'
+                      placeholder='p_description_optional'
+                      label='h_description'
                       type='text'
                       meta={meta}
                     />
@@ -383,8 +381,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='trybook.resourceZone.placeholder.image'
-                      label='trybook.resourceZone.form.image'
+                      placeholder='p_image'
+                      label='l_image'
                       type='text'
                       meta={meta}
                     />
@@ -397,8 +395,8 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='trybook.resourceZone.placeholder.icon'
-                      label='trybook.resourceZone.form.icon'
+                      placeholder='p_icon'
+                      label='l_icon'
                       type='text'
                       meta={meta}
                     />

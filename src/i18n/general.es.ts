@@ -79,5 +79,5 @@ export const general_es = {
     denied: 'Permiso denegado',
     granted: 'Permiso concedido',
     view_denied: 'No tienes permiso para ver esta sección',
-  }
+  },
 };
