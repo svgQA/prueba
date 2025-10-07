@@ -19,6 +19,7 @@ import { getColumns } from './components/correspondence.columns';
 import { ICorrespondence } from '@/types/access';
 import { CorrespondenceForm } from './components/upsert.form';
 import { modulesReport } from '@/types/form';
+import { useUserStore } from '@/store/slices';
 
 /**
  * TODO: WebSocket
@@ -34,6 +35,7 @@ import {
 
 export const CorrespondencePage: FunctionalComponent = () => {
   const { t } = useTranslation();
+  const { selectedCompany, selectedPlace } = useUserStore();
 
   const correspondence = useSignal<ICorrespondence[]>([]);
   const summary = useSignal<IResponseSummary>(defaultSummary);
@@ -43,7 +45,7 @@ export const CorrespondencePage: FunctionalComponent = () => {
   useEffect(() => {
     document.title = t('p_correspondence');
     fetchInitialData();
-  }, []);
+  }, [selectedPlace, selectedCompany]);
 
   const fetchInitialData = async () => {
     const [correspondenceResponse, summaryResponse] = await Promise.all([

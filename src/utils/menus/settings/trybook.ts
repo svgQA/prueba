@@ -44,5 +44,14 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       show: true,
       id: 'trybook:resourcezone:state',
     },
+    {
+      icon: '386',
+      label: 'm_news',
+      description: 'd_news',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.trybook.news.base,
+      show: true,
+      id: 'trybook:notices:state',
+    },
   ],
 };

@@ -64,8 +64,8 @@ export const UserAreasPage: FunctionComponent = () => {
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: t('user.area.showAlert.title'),
-          message: t('user.area.showAlert.msg'),
+          title: t('l_delete_area'),
+          message: t('i_message_area'),
           onConfirm: () => deleteArea(action.id),
           onCancel: () => {},
         });

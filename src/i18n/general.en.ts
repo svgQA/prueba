@@ -70,4 +70,9 @@ export const general_en = {
   users: {
     pageTitle: 'TR - Users Service',
   },
+  permissions: {
+    denied: 'Permission denied',
+    granted: 'Permission granted',
+    view_denied: 'You do not have permission to view this section',
+  },
 };

@@ -1,9 +1,11 @@
 /// <reference types="vitest" />
-import { defineConfig, mergeConfig } from 'vite';
-import viteConfig from './vite.config';
+import baseConfig from './vite.config';
+import { defineConfig, mergeConfig } from 'vitest/config';
 
 export default mergeConfig(
-  viteConfig,
+  typeof baseConfig === 'function'
+    ? baseConfig({ mode: 'test', command: 'serve' })
+    : baseConfig,
   defineConfig({
     test: {
       globals: true,
@@ -18,8 +20,6 @@ export default mergeConfig(
               'preact/jsx-runtime',
               'preact/jsx-dev-runtime',
               'preact/test-utils',
-              // 'preact/compat',
-              // 'preact/hooks',
             ],
           },
         },

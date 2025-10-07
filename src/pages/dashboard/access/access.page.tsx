@@ -16,6 +16,7 @@ import { AccessForm } from './components/access.upsert.form';
 import { IRowAction } from '@/components/common/table/interface';
 import { IAccess } from '@/types/access/accesses';
 import { modulesReport } from '@/types/form';
+import { useUserStore } from '@/store/slices';
 
 /**
  * TODO: WebSocket
@@ -31,6 +32,7 @@ import {
 
 export const AccessPage: FunctionalComponent = () => {
   const { t } = useTranslation();
+  const { selectedCompany, selectedPlace } = useUserStore();
 
   const accesses = useSignal<IAccess[]>([]);
   const summary = useSignal<IResponseSummary>(defaultSummary);
@@ -40,7 +42,7 @@ export const AccessPage: FunctionalComponent = () => {
   useEffect(() => {
     document.title = t('p_access');
     fetchInitialData();
-  }, []);
+  }, [selectedPlace, selectedCompany]);
 
   const fetchInitialData = async () => {
     const [accessesresponse, summaryresponse] = await Promise.all([

@@ -161,8 +161,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        placeholder='trybook.residence.placeholder.type'
-                        label='trybook.residence.form.type'
+                        placeholder='p_select_type'
+                        label='l_type_residence'
                         id='type'
                         icon='home'
                         options={TYPE_OPTIONS}
@@ -178,8 +178,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder='trybook.residence.placeholder.block'
-                        label='trybook.residence.form.block'
+                        placeholder='p_block'
+                        label='l_block'
                         type='text'
                         meta={meta}
                       />
@@ -193,8 +193,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder='trybook.residence.placeholder.floor'
-                        label='trybook.residence.form.floor'
+                        placeholder='p_floor'
+                        label='l_floor'
                         type='number'
                         meta={meta}
                         disabled={!isApartment}
@@ -219,8 +219,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        placeholder='trybook.residence.placeholder.houseNumber'
-                        label='trybook.residence.form.houseNumber'
+                        placeholder='p_houseNumber'
+                        label='l_houseNumber'
                         type='text'
                         meta={meta}
                       />
@@ -235,8 +235,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        placeholder='trybook.residence.placeholder.place'
-                        label='trybook.residence.form.place'
+                        placeholder='p_place'
+                        label='l_set_place'
                         id='placeId'
                         icon='252'
                         options={places.value}
@@ -253,8 +253,8 @@ export const ResidenceCreatePage: FunctionComponent = () => {
                       <SmartSelector
                         {...input}
                         meta={meta}
-                        placeholder='trybook.residence.placeholder.user'
-                        label='trybook.residence.form.user'
+                        placeholder='p_user'
+                        label='l_user'
                         id='userId'
                         icon='241'
                         options={users.value}

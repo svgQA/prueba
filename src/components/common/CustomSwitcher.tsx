@@ -101,6 +101,7 @@ export const CustomSwitcher = ({
           {options.map((option) => (
             <button
               key={option.value}
+              data-testid={`opt-lang-${option.value}`}
               onClick={() => handleOptionChange(option.value)}
               className={`flex items-center w-full px-4 py-2.5 text-sm transition-colors duration-200 border-none ${
                 option.value === value

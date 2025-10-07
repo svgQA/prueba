@@ -637,7 +637,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           count={shiftSummary.value.total}
           subtitle=''
           color='t-dark'
-          icon='328'
+          icon='0001'
         />
 
         <CardData
@@ -653,7 +653,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           count={calculatePercentage(shiftSummary.value.completed)}
           subtitle=''
           color='t-dark'
-          icon='312'
+          icon='000'
         />
       </div>
 

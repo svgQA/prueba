@@ -223,7 +223,7 @@ export const FormsPage: FunctionComponent = () => {
           count={summary.value.total}
           subtitle='h_forms_subtitle'
           color='t-dark'
-          icon='328'
+          icon='0001'
         />
 
         <CardData
@@ -239,7 +239,7 @@ export const FormsPage: FunctionComponent = () => {
           count={calculatePercentage(summary.value, true)}
           subtitle='h_forms_archived_subtitle'
           color='t-dark'
-          icon='312'
+          icon='000'
         />
       </div>
 

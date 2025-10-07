@@ -24,16 +24,27 @@ export const getColumns = (
   },
   {
     id: 'name',
-    accessorKey: 'name',
+    accessorKey: 'residentName',
     size: 180,
     header: 'h_resident',
     enableGrouping: true,
+    cell: (info) => {
+      const { residentSurname } = info.row.original;
+      const name = info.getValue() as string;
+      return (
+        <span
+          className='truncate max-w-[160px] block'
+          title={`${name} ${residentSurname}`}
+        >
+          {name} {residentSurname}
+        </span>
+      );
+    },
   },
   {
     id: 'personName',
-    accessorKey: 'checkIn.personName',
+    accessorKey: 'name', // Cambiado de 'checkIn.personName' a 'name'
     size: 160,
-    // header: 'h_person_entry',
     header: 'h_visit',
     enableGrouping: true,
   },
@@ -49,10 +60,22 @@ export const getColumns = (
   },
   {
     id: 'houseNumber',
-    accessorKey: 'checkIn.house',
+    accessorKey: 'houseNumber', // Cambiado de 'checkIn.house' a 'houseNumber'
     size: 140,
     header: 'h_house_number',
     enableGrouping: true,
+    cell: (info) => {
+      const { placeName } = info.row.original;
+      const houseNumber = info.getValue() as string;
+      let houseInfo = houseNumber + (placeName ? ` - ${placeName}` : '');
+      return houseNumber ? (
+        <span className='truncate max-w-[120px] block' title={houseInfo}>
+          {houseInfo}
+        </span>
+      ) : (
+        <span className='text-gray-400'>-</span>
+      );
+    },
   },
   {
     id: 'observations',
@@ -72,11 +95,20 @@ export const getColumns = (
   },
   {
     id: 'signature',
-    accessorKey: 'checkIn.signature',
     size: 100,
     header: 'h_signature',
     cell: (info) => {
-      const signature = info.getValue() as string;
+      const { checkIn } = info.row.original;
+      let signature = null;
+
+      try {
+        const checkInData =
+          typeof checkIn === 'string' ? JSON.parse(checkIn) : checkIn;
+        signature = checkInData?.signature;
+      } catch (error) {
+        console.error('Error parsing checkIn:', error);
+      }
+
       return signature ? (
         <div
           className='border rounded bg-white p-2 flex items-center justify-center cursor-pointer hover:bg-gray-50'
@@ -110,23 +142,47 @@ export const getColumns = (
   },
   {
     id: 'checkIn',
-    accessorKey: 'checkIn.time',
     size: 140,
     header: 'h_check_in',
     cell: (info) => {
-      return (
-        <FormattedDate date={info.getValue() as string} format='datetime' />
+      const { checkIn } = info.row.original;
+      let checkInTime = null;
+
+      try {
+        const checkInData =
+          typeof checkIn === 'string' ? JSON.parse(checkIn) : checkIn;
+        checkInTime = checkInData?.time;
+      } catch (error) {
+        console.error('Error parsing checkIn:', error);
+      }
+
+      return checkInTime ? (
+        <FormattedDate date={checkInTime} format='datetime' />
+      ) : (
+        <span className='text-gray-400'>-</span>
       );
     },
   },
   {
     id: 'checkOut',
-    accessorKey: 'checkOut.time',
     size: 140,
     header: 'h_check_out',
     cell: (info) => {
-      return (
-        <FormattedDate date={info.getValue() as string} format='datetime' />
+      const { checkOut } = info.row.original;
+      let checkOutTime = null;
+
+      try {
+        const checkOutData =
+          typeof checkOut === 'string' ? JSON.parse(checkOut) : checkOut;
+        checkOutTime = checkOutData?.time;
+      } catch (error) {
+        console.error('Error parsing checkOut:', error);
+      }
+
+      return checkOutTime ? (
+        <FormattedDate date={checkOutTime} format='datetime' />
+      ) : (
+        <span className='text-gray-400'>-</span>
       );
     },
   },
@@ -135,26 +191,15 @@ export const getColumns = (
     size: 20,
     header: 'h_action',
     cell: (info) => {
-      const { id } = info.row.original;
+      const { uuid } = info.row.original; // Cambiado de 'id' a 'uuid'
       const actions: IDropdownAction[] = [
-        // {
-        //   label: 'update',
-        //   icon: 'vox-icon vx-icon-123 text-primary',
-        //   onClick: () => {
-        //     onClickAction({
-        //       id: String(id),
-        //       type: 'form',
-        //       action: ROW_ACTIONS.UPDATE,
-        //     });
-        //   },
-        // },
         {
           label: 'delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
             onClickAction({
-              id: String(id),
+              id: uuid, // Usando uuid en lugar de id
               type: 'form',
               action: ROW_ACTIONS.DELETE,
             });

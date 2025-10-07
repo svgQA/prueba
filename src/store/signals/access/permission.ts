@@ -8,6 +8,18 @@ export const getCurrentPermissions = () => {
   return currentPermissions.value;
 };
 
+export const getAllPermissions = () => {
+  return allPermissions.value;
+};
+
+export const getPermissionByModule = (name: string) => {
+  return allPermissions.value[name].permissions || null;
+};
+
+export const getPermissionByModuleState = (name: string, state: string) => {
+  return allPermissions.value[name]?.permissions?.[state] || null;
+};
+
 export const validateModuleState = (name: string) => {
   return (
     allPermissions.value[name] && allPermissions.value[name].permissions?.state

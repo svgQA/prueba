@@ -40,8 +40,8 @@ export const SIDEBAR_MENUS: IMenu[] = [
     to: PAGES_LIST_ROUTER.dashboard.correspondence,
     description: 'd_inbox',
     icon: '102',
-    id: 'inbox',
-    key: 'inbox',
+    id: 'correspondence',
+    key: 'correspondence',
   },
   {
     label: 't_user',

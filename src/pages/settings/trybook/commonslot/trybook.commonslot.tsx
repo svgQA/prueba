@@ -31,7 +31,7 @@ export const TrybookCommonSlotsPage: FunctionComponent = () => {
   const { selectedCompany } = useUserStore();
 
   useEffect(() => {
-    document.title = t('trybook.commonslot.title');
+    document.title = t('h_tickets');
   }, [t]);
 
   const fetchRows = useCallback(async () => {
@@ -76,8 +76,8 @@ export const TrybookCommonSlotsPage: FunctionComponent = () => {
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: t('trybook.commonslot.showAlert.title'),
-          message: t('trybook.commonslot.showAlert.msg'),
+          title: t('i_showAlert_title'),
+          message: t('i_showAlert_msg'),
           onConfirm: () => {
             void deleteRow(String(action.id));
           },

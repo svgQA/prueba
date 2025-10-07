@@ -19,6 +19,7 @@ import { ExpandeableContent } from './expandeable-content';
 import { useTranslation } from 'react-i18next';
 import { MentionOption } from '../mention-editor';
 import { selectPriority } from '@/pages/settings/memo/novelty/create/create';
+import { getPermissionByModuleState } from '@/store/signals/access/permission';
 
 interface ReportFinishedSubmit {
   form: any;
@@ -77,13 +78,14 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         label: 'Interno',
         icon: '306',
         color: 'primary',
+        disabled: !getPermissionByModuleState('memo', 'internal:report'),
       },
       {
         value: SelectCheckType.CLIENTE,
         label: 'Cliente',
         icon: '307',
         color: 'secondary',
-        // disabled: true,
+        disabled: !getPermissionByModuleState('memo', 'client:report'),
       },
     ];
   };

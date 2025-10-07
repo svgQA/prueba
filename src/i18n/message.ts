@@ -171,6 +171,18 @@ export const message_es = {
   i_required: 'El campo es requerido',
   i_delete_form: '¿Estás seguro que quieres eliminar el formulario guardado?',
   i_forms_analytic_settings: 'CONFIGURACIÓN DE ANÁLISIS DE FORMULARIOS',
+  i_message_role: '¿Estás seguro de querer eliminar este rol?',
+  i_message_area: '¿Estás seguro de querer eliminar el área?',
+  i_message_user: '¿Estás seguro de querer eliminar el usuario?',
+  i_message_assign_profile: '¿Estás seguro de querer asignar perfil a',
+  i_message_assign_profile_subtitle: 'El usuario podrá usar la aplicación.',
+  i_showAlert_msg: '¿Estás seguro de querer eliminar el cupo?',
+  i_showAlert_title: 'Eliminar cupo',
+  i_showAlert_msg_zone: '¿Estás seguro de querer eliminar la zona común?',
+  i_showAlert_title_zone: 'Eliminar zona común',
+  i_showAlert_msg_resource:
+    '¿Estás seguro de querer eliminar la zona de recurso?',
+  i_showAlert_title_resource: 'Eliminar zona de recurso',
 };
 
 export const message_en = {
@@ -342,4 +354,14 @@ export const message_en = {
   i_required: 'The field is required',
   i_delete_form: 'Are you sure you want to delete the saved form?',
   i_forms_analytic_settings: 'FORMS ANALYTIC SETTINGS',
+  i_message_role: 'Are you sure you want to delete this role?',
+  i_message_area: 'Are you sure you want to delete the area?',
+  i_message_user: 'Are you sure you want to delete the user?',
+  i_message_assign_profile: 'Are you sure you want to assign profile to',
+  i_message_assign_profile_subtitle:
+    'The user will be able to use the application.',
+  i_showAlert_msg: 'Are you sure you want to delete the ticket?',
+  i_showAlert_title: 'Delete ticket',
+  i_showAlert_msg_zone: 'Are you sure you want to delete the common zone?',
+  i_showAlert_title_zone: 'Delete common zone',
 };

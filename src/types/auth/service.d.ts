@@ -20,6 +20,7 @@ export interface IUserRequest extends IUser {
   readonly cardId?: string;
   readonly cardType?: CARD_ID_TYPE;
   readonly roles?: IOption[];
+  readonly places?: IOption[];
   extraData?: IExtraData;
 }
 export interface IExtraData {
@@ -56,6 +57,7 @@ export interface IUserResponse extends IUserRequest {
   deletedAt?: Date;
   companies: IRelationCompany[];
   roles: IRelationRole[];
+  userPlaces: IRelationPlace[];
 }
 
 export interface IJwtPayload {

@@ -16,6 +16,7 @@ import { useUserStore } from '@/store/slices';
 
 import { PlaceService } from '@/services';
 import { CommonZoneService } from '@/services/trybook/commonzone';
+import { useTranslation } from 'react-i18next';
 
 type ZoneType = 'PARKING' | 'POOL' | 'GYM' | 'OTHER';
 
@@ -39,6 +40,7 @@ const ACTIVE_OPTIONS: IOption[] = [
 ];
 
 export const CommonZoneCreatePage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const { go } = useNavigation();
   const { id } = useParams<{ id?: string }>(); // id numérico (CommonZone.id)
   const { selectedCompany } = useUserStore();
@@ -49,7 +51,7 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
 
   // título
   useEffect(() => {
-    document.title = 'Zonas Comunes';
+    document.title = t('h_common_areas');
   }, []);
 
   // Cargar places para selector
@@ -153,8 +155,8 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='trybook.commonzone.placeholder.place'
-                      label='trybook.commonzone.form.place'
+                      placeholder='p_place'
+                      label='l_set_place'
                       id='placeId'
                       icon='252'
                       options={places.value}
@@ -170,8 +172,8 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='trybook.commonzone.placeholder.name'
-                      label='trybook.commonzone.form.name'
+                      placeholder='p_zone_name'
+                      label='l_zone_name'
                       type='text'
                       meta={meta}
                     />
@@ -186,8 +188,8 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='trybook.commonzone.placeholder.type'
-                      label='trybook.commonzone.form.type'
+                      placeholder='p_type'
+                      label='l_zona_type'
                       id='type'
                       icon='layers'
                       options={TYPE_OPTIONS}
@@ -204,8 +206,8 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='trybook.commonzone.placeholder.status'
-                      label='trybook.commonzone.form.status'
+                      placeholder='p_select_state'
+                      label='l_status'
                       id='isActive'
                       icon='toggle-right'
                       options={ACTIVE_OPTIONS}

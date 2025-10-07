@@ -28,7 +28,7 @@ export type CommonSlotRow = {
 export const columns: ColumnDef<CommonSlotRow>[] = [
   {
     id: 'code',
-    header: 'trybook.commonslot.table.code',
+    header: 'l_code',
     size: 160,
     cell: ({ row }) => {
       const { code } = row.original;
@@ -37,7 +37,7 @@ export const columns: ColumnDef<CommonSlotRow>[] = [
   },
   {
     id: 'zone',
-    header: 'trybook.commonslot.table.zone',
+    header: 'l_zone',
     size: 220,
     cell: ({ row }) => {
       const r = row.original;
@@ -47,7 +47,7 @@ export const columns: ColumnDef<CommonSlotRow>[] = [
   },
   {
     id: 'place',
-    header: 'trybook.commonslot.table.place',
+    header: 'l_set_place',
     size: 220,
     cell: ({ row }) => {
       const r = row.original;
