@@ -15,6 +15,10 @@ import { NewsService } from '@/services/trybook/news';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { PlaceService } from '@/services';
+import { File } from '@/components/common/file/file';
+import { IPresignedRequest } from '@/types/file';
+import { MultipleInput } from '@/components/common/multi/multi';
+import { TextArea } from '@/components/common/text.area/text.area';
 
 export const NewsForm: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -22,9 +26,11 @@ export const NewsForm: FunctionComponent = () => {
   const { id } = useParams<{ id?: string }>();
   const { selectedCompany, user } = useUserStore();
 
+  const [initialValues, setInitialValues] = useState<any>();
   const loading = useSignal<boolean>(false);
   const places = useSignal<IOption[]>([]);
-  const [initialValues, setInitialValues] = useState<any>();
+  const files = useSignal<IPresignedRequest[]>([]);
+  const links = useSignal<IOption[]>([]);
 
   useEffect(() => {
     document.title = 'h_common_areas';
@@ -42,6 +48,8 @@ export const NewsForm: FunctionComponent = () => {
         name: '',
         description: '',
       });
+      files.value = [];
+      links.value = [];
       return;
     }
 
@@ -55,8 +63,14 @@ export const NewsForm: FunctionComponent = () => {
       place: {
         value: initialData.place?.id || '',
         label: initialData.place?.name || '',
-      }
+      },
     });
+
+    files.value = initialData.resource || [];
+    links.value =
+      initialData.keylinks.map((e: string, index: number) => {
+        return { label: e, value: index };
+      }) || [];
   };
 
   const getPlaces = async () => {
@@ -65,12 +79,22 @@ export const NewsForm: FunctionComponent = () => {
     places.value = response.getMany();
   };
 
-  const handleSubmit = async (model: INews, _form?: any) => {
+  const handleSubmit = async (model: any, _form?: any) => {
     loading.value = true;
+    let news: INews = {
+      name: model.name,
+      description: model.description,
+      place: model.place,
+      resource: files.value && files.value.length > 0 ? files.value : undefined,
+      keylinks:
+        links.value && links.value.length > 0
+          ? links.value.map((e) => e.label)
+          : undefined,
+    };
 
     let response = id
-      ? await NewsService.update(id, model)
-      : await NewsService.create(model);
+      ? await NewsService.update(id, news)
+      : await NewsService.create(news);
 
     if (!response.getStatus()) return;
     ToastManager.success(id ? 's_updated_success' : 's_created_success');
@@ -83,6 +107,11 @@ export const NewsForm: FunctionComponent = () => {
       base: 'setting',
     });
     loading.value = false;
+  };
+
+  const handleAttachmentUpload = (e: any) => {
+    const fileInput: IPresignedRequest = e.target.value[0];
+    files.value = [...files.value, fileInput];
   };
 
   return (
@@ -121,23 +150,7 @@ export const NewsForm: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div className='col-span-1'>
-                <Field<string> name='description'>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      placeholder={t('h_description')}
-                      label={t('h_description')}
-                      meta={meta}
-                      icon='120'
-                      type='text'
-                      disabled={loading.value}
-                      required
-                    />
-                  )}
-                </Field>
-              </div>
-              {user?.userType !== 'ADMIN_CLIENT' && (
+               {user?.userType !== 'ADMIN_CLIENT' && (
                 <Field<IOption> name='place'>
                   {({ input, meta }) => (
                     <SmartSelector<IOption>
@@ -156,6 +169,54 @@ export const NewsForm: FunctionComponent = () => {
                   )}
                 </Field>
               )}
+              <div className='col-span-2'>
+                <Field<string> name='description'>
+                  {({ input, meta }) => (
+                    <TextArea
+                      {...input}
+                      icon='120'
+                      type='text'
+                      min='3'
+                      max='300'
+                      placeholder={t('h_description')}
+                      label={t('h_description')}
+                      meta={meta}
+                      disabled={loading.value}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div className='col-span-1'>
+                <MultipleInput
+                  name='input-links'
+                  value={links.value}
+                  onChange={(value: IOption[], _name?: string) => {
+                    links.value = value;
+                  }}
+                  placeholder='p_select'
+                  label='h_links'
+                  buttonIcon='044'
+                  icon='086'
+                  bottom
+                />
+              </div>
+              <div className='col-span-1'>
+                <Field name='attachments'>
+                  {() => (
+                    <File
+                      name='attachments'
+                      onChange={handleAttachmentUpload}
+                      value={files.value}
+                      accept='image/*, video/*'
+                      label='h_attachment'
+                      area='trybook'
+                      showFiles={true}
+                      multiple={false}
+                      disabled={files.value.length === 1}
+                    />
+                  )}
+                </Field>
+              </div>
             </div>
           </form>
         )}

@@ -13,6 +13,7 @@ export const allowedAreaTypesConst = [
   'report',
   'shift',
   'user',
+  'trybook',
 ] as const;
 
 export const allowedAudioTypesConst = [
