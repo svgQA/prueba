@@ -156,6 +156,7 @@ export const columns_es = {
   tickets: 'Cupos',
   h_common_area: 'Zona común',
   h_common_areas: 'Zonas comunes',
+  h_links: 'Enlaces',
 };
 
 export const columns_en = {
@@ -315,4 +316,5 @@ export const columns_en = {
   tickets: 'Tickets',
   h_common_area: 'Common area',
   h_common_areas: 'Common areas',
+  h_links: 'Links',
 };
