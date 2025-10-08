@@ -474,6 +474,18 @@ export const PAGES_LIST_ROUTER = {
             to: '/trybook/news/update/:id',
           },
         },
+        accessBans: {
+          base: '/acessesban',
+          to: '/trybook/acessesban',
+          create: {
+            base: '/create',
+            to: '/trybook/acessesban/create',
+          },
+          update: {
+            base: '/update',
+            to: '/trybook/acessesban/update/:id',
+          },
+        },
       },
     },
   },

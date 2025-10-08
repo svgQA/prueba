@@ -5,4 +5,11 @@ export interface INews {
   name: string;
   description: string;
   place?: IOption;
+  links?: INewsLink[];
+  image?: string;
+}
+
+export interface INewsLink {
+  label: string;
+  url: string;
 }

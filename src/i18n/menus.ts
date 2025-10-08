@@ -82,6 +82,7 @@ export const menus_en = {
   m_memo: 'Memos',
   m_ai: 'AI',
   m_access: 'Access',
+  m_access_ban: 'Access Bans',
   m_payment: 'Payments',
   m_iot: 'IoT',
   m_sales: 'Sales',
