@@ -24,6 +24,10 @@
 - [Environment Configuration](#environment-configuration)
 - [Available Scripts](#available-scripts)
 - [Testing & Quality](#testing--quality)
+  - [Unit Testing](#unit-testing)
+  - [End-to-End Testing](#end-to-end-testing)
+  - [Static Analysis & Formatting](#static-analysis--formatting)
+  - [Testing Utilities](#testing-utilities)
 - [Project Structure](#project-structure)
 - [UI Naming Convention](#ui-naming-convention)
 
@@ -132,11 +136,43 @@ pipeline.
 > Replace `bun run` with `pnpm`, `npm run`, or `yarn` depending on your tooling preference.
 
 ## Testing & Quality
-- **Unit tests** – Cover UI components, hooks, and utilities with Vitest + Testing Library.
-- **End-to-end tests** – Validate core flows using Playwright in headless browsers.
-- **Static analysis** – ESLint, Prettier, and TypeScript keep the codebase consistent and type-safe.
-- **Telemetry validation** – Faro dashboards ensure errors and performance regressions are surfaced
-  before they impact operators.
+Testing is automated at multiple layers to ensure the dashboard remains reliable as new features are
+delivered. The following sections summarize what runs locally and in CI and how to reproduce those
+checks on your machine.
+
+### Unit Testing
+- **Scope** – UI components, hooks, Zustand stores, and pure utilities.
+- **Tooling** – [Vitest](https://vitest.dev/) with [Testing Library](https://testing-library.com/)
+  for DOM assertions and accessibility queries.
+- **How to run** – `bun run test:unit` (or replace `bun` with `pnpm`, `npm run`, or `yarn`).
+- **Watch mode** – Add `--watch` to keep Vitest running while editing files.
+- **Coverage** – `bun run test:cov` generates an HTML report in `coverage/` with branch, line, and
+  statement metrics; maintainers target ≥90% coverage for core modules.
+
+### End-to-End Testing
+- **Scope** – Critical journeys such as authentication, tenant switching, panic workflows, and
+  device management.
+- **Tooling** – [Playwright](https://playwright.dev/) with a project configuration located in
+  `playwright.config.ts`.
+- **How to run** – `bun run test:e2e` executes the suite in headless Chromium by default.
+- **Reports** – `bun run test:e2e:report` opens the most recent HTML report so you can inspect
+  screenshots, traces, and console logs.
+- **Environment** – Ensure the API server (default `http://localhost:3010`) is reachable and seeded
+  with test tenants before starting the suite.
+
+### Static Analysis & Formatting
+- **ESLint** – Run `npx eslint .` (or `pnpm exec eslint .`) to enforce coding standards; the
+  configuration lives in `.eslintrc.json`.
+- **TypeScript** – `npx tsc --noEmit` validates type safety without generating build output.
+- **Prettier** – `bun run prettier` formats files using the shared style guide.
+- **Commit hooks** – Husky pre-commit hooks re-run linting and formatting to keep diffs clean.
+
+### Testing Utilities
+- **Mock services** – Shared fixtures and test harnesses live under `src/__tests__/` for unit tests
+  and `tests/` for Playwright suites, keeping arrangements (API responses, Amplify auth state, etc.)
+  easy to reuse.
+- **CI insights** – Grafana Faro dashboards track runtime errors surfaced by automated tests and
+  production telemetry so regressions are detected quickly.
 
 ## Project Structure
 ```bash
@@ -167,7 +203,7 @@ consistent across teams. Element abbreviations:
 
 ## Pipeline QA
 
-Para que la automatización de GitHub Actions funcione correctamente en los pull requests dirigidos a la rama `QA`, asegúrate de que el workflow incluya los siguientes pasos principales:
+For GitHub Actions automation to run successfully on pull requests targeting the `QA` branch, make sure the workflow includes the following primary steps:
 
 ```yaml
 name: QA Validation
@@ -196,9 +232,9 @@ jobs:
       - run: pnpm run test:e2e
 ```
 
-Este pipeline instala las dependencias del proyecto, prepara los navegadores de Playwright y ejecuta las suites de pruebas unitarias, de cobertura y end-to-end definidas en el `package.json`.
+This pipeline installs project dependencies, prepares Playwright browsers, and runs the unit, coverage, and end-to-end suites defined in `package.json`.
 
-# NAMING ELEMENTS IN FRONTEND Only en ID
+## Frontend Element ID Abbreviations
 
 1. `input` → `inp`
 2. `checkbox` → `che`
