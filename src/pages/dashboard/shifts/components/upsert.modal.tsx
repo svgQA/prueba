@@ -56,6 +56,7 @@ export const TaskForm = ({
   const relatedShifts = useSignal<any[]>([]);
 
   const currentSchedule = useSignal<any>(null);
+  const loading = useSignal<boolean>(false);
 
   const handleOnClose = useCallback(() => {
     setTasksResponse([]);
@@ -149,6 +150,7 @@ export const TaskForm = ({
   }, [shiftId]);
 
   const getInitialData = async () => {
+    loading.value = true;
     if (!shiftId) return;
     const response = await ShiftService.get_shift(shiftId);
     if (!response.getStatus()) return;
@@ -177,6 +179,7 @@ export const TaskForm = ({
       // keywords: model.keywords.map((data) => ({ value: data, label: data })),
     });
     onTaskAdd(model.task);
+    loading.value = false;
   };
 
   const onChangeShift = async (id: number, start: string, end: string) => {
@@ -324,6 +327,7 @@ export const TaskForm = ({
               schedules={schedulesOptions}
               cleanServiceSelected={cleanServiceSelected}
               onChangeSchedule={onChangeSchedule}
+              disabled={loading}
             />
           )}
         />
@@ -335,6 +339,7 @@ export const TaskForm = ({
           type='GENERAL'
           add
           selector
+          disabled={loading.value}
         />
       </div>
     </Modal>

@@ -61,6 +61,12 @@ export enum modulesReport {
   Correspondence = 'Correspondence',
 }
 
+export enum ReportFilter {
+  SERVICE = 'SERVICE',
+  CLIENT = 'CLIENT',
+  CONTRACT = 'CONTRACT'
+}
+
 export enum ReportPeriod {
   DAILY = 'DAILY',
   WEEKLY = 'WEEKLY',
