@@ -21,6 +21,7 @@ export const MultipleInput = ({
   ellipse,
   scrollable,
   meta,
+  disabled,
   ...options
 }: IMultiProps) => {
   const { t } = useTranslation();
@@ -119,6 +120,7 @@ export const MultipleInput = ({
           onClick={onSelect}
           buttonIcon={buttonIcon}
           buttonType={buttonType}
+          disabled={disabled}
         />
       </div>
       {bottom && <div className='min-h-8'>{defaultChips}</div>}

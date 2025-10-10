@@ -13,7 +13,7 @@ import { Section } from '@/components/common/section/section';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { NewsService } from '@/services/trybook/news';
 import { IOption } from '@/components/common/multi/interface';
-import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+// import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { PlaceService } from '@/services';
 import { File } from '@/components/common/file/file';
 import { IPresignedRequest } from '@/types/file';
@@ -24,7 +24,7 @@ export const NewsForm: FunctionComponent = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();
   const { id } = useParams<{ id?: string }>();
-  const { selectedCompany, user } = useUserStore();
+  const { selectedCompany, /*user*/ } = useUserStore();
 
   const [initialValues, setInitialValues] = useState<any>();
   const loading = useSignal<boolean>(false);
@@ -134,7 +134,7 @@ export const NewsForm: FunctionComponent = () => {
               label={id ? 'edit' : 'save'}
             />
             <div className='grid grid-cols-2 gap-4'>
-              <div className='col-span-1'>
+              <div className='col-span-2'>
                 <Field<string> name='name'>
                   {({ input, meta }) => (
                     <Input
@@ -150,7 +150,7 @@ export const NewsForm: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-               {user?.userType !== 'ADMIN_CLIENT' && (
+               {/* {user?.userType !== 'ADMIN_CLIENT' && (
                 <Field<IOption> name='place'>
                   {({ input, meta }) => (
                     <SmartSelector<IOption>
@@ -168,7 +168,7 @@ export const NewsForm: FunctionComponent = () => {
                     />
                   )}
                 </Field>
-              )}
+              )} */}
               <div className='col-span-2'>
                 <Field<string> name='description'>
                   {({ input, meta }) => (

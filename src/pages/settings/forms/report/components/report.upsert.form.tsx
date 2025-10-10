@@ -9,7 +9,12 @@ import { useNavigation } from '@/utils/utilities/navigation';
 import { useSignal } from '@preact/signals';
 import { periodOptions } from '../utils/report.data';
 import { IOption } from '@/components/common/multi/interface';
-import { IModuleReport, IReport, modulesReport } from '@/types/form';
+import {
+  IModuleReport,
+  IReport,
+  modulesReport,
+  ReportFilter,
+} from '@/types/form';
 import { useUserStore } from '@/store/slices';
 import { ServiceService, UserService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
@@ -33,6 +38,7 @@ const ReportUpsertForm = () => {
   const periods = useSignal<IOption[]>(periodOptions);
   const emails = useSignal<IOption[]>([]);
   const users = useSignal<MentionOption[]>([]);
+  const filterReport = useSignal<IOption[]>([]);
   const [initialValues, setInitialValues] = useState<any>({});
 
   useEffect(() => {
@@ -44,6 +50,11 @@ const ReportUpsertForm = () => {
       Promise.all([getServices(), getUsers()]);
       modules.value = Object.values(modulesReport).map((mod, index) => ({
         label: mod,
+        value: index,
+      }));
+
+      filterReport.value = Object.values(ReportFilter).map((info, index) => ({
+        label: info,
         value: index,
       }));
     }
@@ -172,67 +183,91 @@ const ReportUpsertForm = () => {
             />
             <div className='flex flex-col justify-center border-t dark:border-t-light-dark py-2'>
               <div className='grid grid-cols-2 gap-3'>
-                <div className='col-span-1'>
-                  <Field<IOption> name='projects'>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        id='select-projects'
-                        icon='191'
-                        label='h_service'
-                        options={projects.value}
-                        menuPortalTarget={document.body}
-                        placeholder='p_select'
-                        disabled={loading.value}
-                        onChange={(option?: IOption) => {
-                          input.onChange(option);
-                          if (option && option.value) {
-                            getEmailsService(String(option.value));
-                          }
-                        }}
-                      />
-                    )}
-                  </Field>
-                </div>
                 <div class='col-span-1'>
-                  <Field<IOption> name='userId'>
+                  <Field<IOption> name='filter'>
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
                         meta={meta}
                         id='select-user'
                         icon='191'
-                        label='h_client'
-                        options={users.value}
+                        label='h_filter'
+                        options={filterReport.value}
                         menuPortalTarget={document.body}
                         placeholder='p_select'
                       />
                     )}
                   </Field>
                 </div>
-                <div className='col-span-1'>
-                  <Field<string> name='contract'>
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        placeholder='h_contract'
-                        label='h_contract'
-                        meta={meta}
-                        icon='120'
-                        type='text'
-                        disabled={loading.value}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div className='col-span-1'>
-                  <label
-                    htmlFor={`${id}-input`}
-                    className='capitalize block text-sm font-medium'
-                  >
-                    {t('h_modules')}
-                  </label>
+
+                {values.filter?.value !== undefined &&
+                  values.filter?.value === 0 && ( 
+                    <div className='col-span-1'>
+                      <Field<IOption> name='projects'>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            meta={meta}
+                            id='select-projects'
+                            icon='191'
+                            label='h_service'
+                            options={projects.value}
+                            menuPortalTarget={document.body}
+                            placeholder='p_select'
+                            disabled={loading.value}
+                            onChange={(option?: IOption) => {
+                              input.onChange(option);
+                              if (option && option.value) {
+                                getEmailsService(String(option.value));
+                              }
+                            }}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  )}
+
+                {values.filter?.value &&
+                  values.filter?.label === ReportFilter.CLIENT && (
+                    <div class='col-span-1'>
+                      <Field<IOption> name='userId'>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            meta={meta}
+                            id='select-user'
+                            icon='191'
+                            label='h_client'
+                            options={users.value}
+                            menuPortalTarget={document.body}
+                            placeholder='p_select'
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  )}
+
+                {values.filter?.value &&
+                  values.filter?.label === ReportFilter.CONTRACT && (
+                    <div className='col-span-1'>
+                      <Field<string> name='contract'>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            placeholder='h_contract'
+                            label='h_contract'
+                            meta={meta}
+                            icon='120'
+                            type='text'
+                            disabled={loading.value}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  )}
+                <div
+                  className={values.filter?.value ? 'col-span-2' : 'col-span-1'}
+                >
                   <Field<IOption[]> name='modules'>
                     {({ input }) => (
                       <MultiSelect
@@ -251,6 +286,7 @@ const ReportUpsertForm = () => {
                           );
                           input.onChange(selectedOptions);
                         }}
+                        label='h_modules'
                       />
                     )}
                   </Field>
