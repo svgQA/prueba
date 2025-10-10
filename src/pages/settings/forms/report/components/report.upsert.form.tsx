@@ -11,12 +11,15 @@ import { periodOptions } from '../utils/report.data';
 import { IOption } from '@/components/common/multi/interface';
 import { IModuleReport, IReport, modulesReport } from '@/types/form';
 import { useUserStore } from '@/store/slices';
-import { ServiceService } from '@/services';
+import { ServiceService, UserService } from '@/services';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { MultiSelect } from '../../create/MultiSelect';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'wouter';
 import { MultipleInput } from '@/components/common/multi/multi';
+import { MentionOption } from '@/components/common/mention-editor';
+import { DateField } from '@/components/compose/forms';
+import { DateUtils } from '@/utils/utilities/dates';
 
 const ReportUpsertForm = () => {
   const { t } = useTranslation();
@@ -29,6 +32,7 @@ const ReportUpsertForm = () => {
   const projects = useSignal<IOption[]>([]);
   const periods = useSignal<IOption[]>(periodOptions);
   const emails = useSignal<IOption[]>([]);
+  const users = useSignal<MentionOption[]>([]);
   const [initialValues, setInitialValues] = useState<any>({});
 
   useEffect(() => {
@@ -37,7 +41,7 @@ const ReportUpsertForm = () => {
 
   useEffect(() => {
     if (selectedCompany) {
-      Promise.all([getServices()]);
+      Promise.all([getServices(), getUsers()]);
       modules.value = Object.values(modulesReport).map((mod, index) => ({
         label: mod,
         value: index,
@@ -78,6 +82,13 @@ const ReportUpsertForm = () => {
     projects.value = request.getMany();
   }, []);
 
+  const getUsers = useCallback(async () => {
+    const usersResponse = await UserService.get_clients_reports_simple_list();
+    if (usersResponse.getStatus()) {
+      users.value = usersResponse.getMany();
+    }
+  }, []);
+
   const handleSubmit = async (model: any, _form?: any) => {
     loading.value = true;
     const selectedModules: IModuleReport[] = Array.isArray(model.modules)
@@ -96,10 +107,15 @@ const ReportUpsertForm = () => {
       period: model.period.label,
       extraData: {
         modules: selectedModules,
-        projects: Array.isArray(model.projects)
-          ? model.projects
-          : [model.projects],
+        ...(model.projects && {
+          projects: Array.isArray(model.projects)
+            ? model.projects
+            : [model.projects],
+        }),
         emails: model.emails.map((email: IOption) => email.label),
+        date_period: DateUtils.dateToBackend(model.date_period, 'date'),
+        contract: model.contract,
+        client_id: model.userId?.value,
       },
     };
 
@@ -140,7 +156,7 @@ const ReportUpsertForm = () => {
         mutators={{
           ...arrayMutators,
         }}
-        render={({ handleSubmit, form, submitting }) => (
+        render={({ handleSubmit, form, submitting, values }) => (
           <form
             onSubmit={handleSubmit}
             className='space-y-6'
@@ -175,6 +191,37 @@ const ReportUpsertForm = () => {
                             getEmailsService(String(option.value));
                           }
                         }}
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div class='col-span-1'>
+                  <Field<IOption> name='userId'>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        id='select-user'
+                        icon='191'
+                        label='h_client'
+                        options={users.value}
+                        menuPortalTarget={document.body}
+                        placeholder='p_select'
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div className='col-span-1'>
+                  <Field<string> name='contract'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder='h_contract'
+                        label='h_contract'
+                        meta={meta}
+                        icon='120'
+                        type='text'
+                        disabled={loading.value}
                       />
                     )}
                   </Field>
@@ -251,7 +298,7 @@ const ReportUpsertForm = () => {
                         meta={meta}
                         id='select-period'
                         icon='191'
-                        label='h_period'
+                        label='h_frequency'
                         options={periods.value}
                         menuPortalTarget={document.body}
                         placeholder='p_select'
@@ -260,6 +307,16 @@ const ReportUpsertForm = () => {
                     )}
                   </Field>
                 </div>
+                {values.period?.value && values.period?.label !== 'DAILY' && (
+                  <div className='col-span-1'>
+                    <DateField
+                      name='date_period'
+                      label='h_date'
+                      format='date'
+                      disabled={loading.value}
+                    />
+                  </div>
+                )}
                 <div className='col-span-1'>
                   <Field<IOption[]> name='emails'>
                     {({ input, meta }) => (
@@ -270,7 +327,7 @@ const ReportUpsertForm = () => {
                         onChange={(value: IOption[], _name?: string) => {
                           input.onChange(value);
                         }}
-                        placeholder='p_select'
+                        placeholder='h_emails'
                         label='h_emails'
                         buttonIcon='044'
                         icon='086'

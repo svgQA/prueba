@@ -43,6 +43,9 @@ export interface extraDataReport {
   modules: IModuleReport[];
   emails?: string[];
   projects?: IOption[];
+  date_period?: string | Date;
+  contract?: string;
+  client_id?: number;
 }
 
 export interface IModuleReport {
