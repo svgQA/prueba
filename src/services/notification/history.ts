@@ -137,7 +137,7 @@ export class NotificationHistoryService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  /** 
+  /**
    * 🔍 Obtener notificación por ID
    */
   static async get_by_id(id: string) {

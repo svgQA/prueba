@@ -572,28 +572,29 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                       />
                     )}
                   </Field>
-                  {typeSelected.value === 'ADMIN_CLIENT' || typeSelected.value === 'CLIENT' && (
-                    <Field<IOption[]>
-                      name='places'
-                      validate={requiredRole.value ? required : undefined}
-                    >
-                      {({ input, meta }) => (
-                        <SmartSelector
-                          {...input}
-                          meta={meta}
-                          id='select-places'
-                          label={t('h_place')}
-                          icon='231'
-                          options={places.value}
-                          multiple={true}
-                          allowAll={true}
-                          menuPortalTarget={document.body}
-                          placeholder={t('h_place')}
-                          onChange={() => {}}
-                        />
-                      )}
-                    </Field>
-                  )}
+                  {typeSelected.value === 'ADMIN_CLIENT' ||
+                    (typeSelected.value === 'CLIENT' && (
+                      <Field<IOption[]>
+                        name='places'
+                        validate={requiredRole.value ? required : undefined}
+                      >
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            meta={meta}
+                            id='select-places'
+                            label={t('h_place')}
+                            icon='231'
+                            options={places.value}
+                            multiple={true}
+                            allowAll={true}
+                            menuPortalTarget={document.body}
+                            placeholder={t('h_place')}
+                            onChange={() => {}}
+                          />
+                        )}
+                      </Field>
+                    ))}
                   <Field<IOption[]>
                     name='roles'
                     validate={requiredRole.value ? required : undefined}

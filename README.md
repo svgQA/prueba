@@ -165,6 +165,41 @@ voxline-dashboard/
 All DOM element IDs follow the pattern `vx-{element}-{page}-{name}` to keep selectors and telemetry
 consistent across teams. Element abbreviations:
 
+## Pipeline QA
+
+Para que la automatización de GitHub Actions funcione correctamente en los pull requests dirigidos a la rama `QA`, asegúrate de que el workflow incluya los siguientes pasos principales:
+
+```yaml
+name: QA Validation
+
+on:
+  pull_request:
+    branches:
+      - QA
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps
+      - run: pnpm run test:unit
+      - run: pnpm run test:cov
+      - run: pnpm run test:e2e
+```
+
+Este pipeline instala las dependencias del proyecto, prepara los navegadores de Playwright y ejecuta las suites de pruebas unitarias, de cobertura y end-to-end definidas en el `package.json`.
+
+# NAMING ELEMENTS IN FRONTEND Only en ID
+
 1. `input` → `inp`
 2. `checkbox` → `che`
 3. `radiobutton` → `rdb`

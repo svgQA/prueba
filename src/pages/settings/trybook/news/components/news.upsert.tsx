@@ -150,7 +150,7 @@ export const NewsForm: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-               {user?.userType !== 'ADMIN_CLIENT' && (
+              {user?.userType !== 'ADMIN_CLIENT' && (
                 <Field<IOption> name='place'>
                   {({ input, meta }) => (
                     <SmartSelector<IOption>
