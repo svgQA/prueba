@@ -31,11 +31,18 @@
 - [Project Structure](#project-structure)
 - [UI Naming Convention](#ui-naming-convention)
 
+## Extra Documentation
+
+- [Dates](./src/utils/utilities/README.md)
+- [Network](./src/utils/network/README.md)
+- [Toast](./src/utils/toast/README.md)
+- [Socket](./src/utils/socket/README.md)
+
 ## Overview
-Voxline Dashboard is the operations cockpit for Tryvoo, designed to orchestrate day-to-day
+Tryvoo Dashboard is the operations cockpit for Tryvoo, designed to orchestrate day-to-day
 services across tenants, locations, and workforce teams. The application consolidates real-time data,
 streamlines administrative tasks, and provides actionable insights so operations leaders can
-respond quickly to on-site situations. Built with Preact and AWS Amplify, Voxline delivers a fast,
+respond quickly to on-site situations. Built with Preact and AWS Amplify, Tryvoo delivers a fast,
 secure, and responsive experience across desktop environments.
 
 ## Key Capabilities
@@ -176,7 +183,7 @@ checks on your machine.
 
 ## Project Structure
 ```bash
-voxline-dashboard/
+Tryvoo-dashboard/
 ├── public/                # Static assets (favicons, marketing visuals, sounds)
 ├── src/
 │   ├── app.tsx            # Root application shell and Amplify integration
