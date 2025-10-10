@@ -21,7 +21,9 @@ describe('Components | Common | showAlert', () => {
     const modal = document.body.querySelector('.fixed.inset-0.z-50');
     expect(modal).toBeTruthy();
     expect(modal?.querySelector('h3')?.textContent).toBe('Important update');
-    expect(modal?.querySelector('p')?.textContent).toBe('Please confirm the action');
+    expect(modal?.querySelector('p')?.textContent).toBe(
+      'Please confirm the action'
+    );
     expect(onConfirm).not.toHaveBeenCalled();
     expect(onCancel).not.toHaveBeenCalled();
   });

@@ -1,7 +1,7 @@
 <p align="center">
   <img src="./public/image/image.svg" width="220" alt="Tryvoo logo" />
 </p>
-<h1 align="center">Voxline Dashboard</h1>
+<h1 align="center">Tryvoo Dashboard</h1>
 <p align="center">
   Control center for Tryvoo's multi-channel operations, providing teams with real-time visibility,
   automation, and collaboration tools across the entire service lifecycle.
