@@ -49,8 +49,7 @@ export const getColumns = (
             enableColumnFilter: user?.userType !== 'ADMIN_CLIENT',
           },
         ]
-      : []
-    ),
+      : []),
     {
       accessorKey: 'createdAt',
       id: 'createdAt',
