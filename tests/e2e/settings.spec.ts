@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { login, appUrl } from './utils';
+import { login, appUrl, ensureDashboardLoaded, translationRegex } from './utils';
 
 const credsProvided = !!(process.env.E2E_EMAIL && process.env.E2E_PASSWORD);
 
@@ -8,10 +8,25 @@ test.describe('Profile & settings', () => {
 
   test.beforeEach(async ({ page }) => {
     await login(page);
+    await ensureDashboardLoaded(page);
   });
 
-  test('shows settings page', async ({ page }) => {
-    await page.goto(`${appUrl}/dashboard/setting`);
-    await expect(page).toHaveTitle(/TY Configuración|TY Settings/);
+  test('opens settings modal from sidebar', async ({ page }) => {
+    await page.goto(`${appUrl}/dashboard`);
+    const settingsTrigger = page
+      .locator('#sidebar-nav')
+      .getByText(translationRegex('t_setting'));
+    await settingsTrigger.click();
+
+    const modal = page.locator('#setting-modal');
+    await expect(modal).toBeVisible();
+    await expect(modal.locator('#user-information')).toBeVisible();
+    await expect(
+      modal
+        .locator('button')
+        .filter({ has: page.locator('.vx-icon-080') })
+        .first()
+    ).toBeVisible();
+    await expect(modal.locator('button[name="setting-close"]')).toBeVisible();
   });
 });

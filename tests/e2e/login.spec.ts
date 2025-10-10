@@ -1,4 +1,9 @@
 import { test, expect } from '@playwright/test';
+import {
+  ensureDashboardLoaded,
+  expectSummaryCard,
+  translationRegex,
+} from './utils';
 
 const baseURL = process.env.BASE_URL || 'https://dev.tryvoo.com';
 
@@ -19,6 +24,19 @@ test.describe('Login flow', () => {
       .fill(email!);
     await page.locator('input[name="password"]').fill(password!);
     await page.locator('button[type="submit"]').click();
+    await ensureDashboardLoaded(page);
     await expect(page).toHaveURL(/dashboard/);
+
+    await expectSummaryCard(page, 'h_memos_total');
+
+    const userMenu = page.locator('button[name="user"]');
+    await userMenu.click();
+    await expect(
+      page
+        .locator('li')
+        .filter({ hasText: translationRegex('t_setting') })
+        .first()
+    ).toBeVisible();
+    await userMenu.click();
   });
 });
