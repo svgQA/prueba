@@ -24,7 +24,7 @@ export const NewsForm: FunctionComponent = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();
   const { id } = useParams<{ id?: string }>();
-  const { selectedCompany, /*user*/ } = useUserStore();
+  const { selectedCompany /*user*/ } = useUserStore();
 
   const [initialValues, setInitialValues] = useState<any>();
   const loading = useSignal<boolean>(false);
@@ -150,7 +150,7 @@ export const NewsForm: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-               {/* {user?.userType !== 'ADMIN_CLIENT' && (
+              {/* {user?.userType !== 'ADMIN_CLIENT' && (
                 <Field<IOption> name='place'>
                   {({ input, meta }) => (
                     <SmartSelector<IOption>

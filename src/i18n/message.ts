@@ -183,6 +183,7 @@ export const message_es = {
   i_showAlert_msg_resource:
     '¿Estás seguro de querer eliminar la zona de recurso?',
   i_showAlert_title_resource: 'Eliminar zona de recurso',
+  s_structure_success: 'Estructura acorde a lo esperado',
 };
 
 export const message_en = {
@@ -364,4 +365,5 @@ export const message_en = {
   i_showAlert_title: 'Delete ticket',
   i_showAlert_msg_zone: 'Are you sure you want to delete the common zone?',
   i_showAlert_title_zone: 'Delete common zone',
+  s_structure_success: 'Right structure format',
 };

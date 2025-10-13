@@ -490,9 +490,18 @@ export const FormResponseSettingPage: FunctionComponent<
 
   const handleGenerateReport = async () => {
     const id = getResponseMode.value?.id;
-    const reportResponse = await ReportService.generate_report_automatic_form(String(id));
-    if (!reportResponse.getStatus()) return ToastManager.error('s_download_file_error');
-    await fileManager.downloadFile({url: fileManager.getUrl(getTenant(), getCompanyId(), reportResponse.getOne())});
+    const reportResponse = await ReportService.generate_report_automatic_form(
+      String(id)
+    );
+    if (!reportResponse.getStatus())
+      return ToastManager.error('s_download_file_error');
+    await fileManager.downloadFile({
+      url: fileManager.getUrl(
+        getTenant(),
+        getCompanyId(),
+        reportResponse.getOne()
+      ),
+    });
   };
 
   return (

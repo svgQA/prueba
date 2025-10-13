@@ -142,7 +142,7 @@ export const FormsPage: FunctionComponent = () => {
       }
       case ROW_ACTIONS.REPORT: {
         setResponse(
-          { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id, hold: true},
+          { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.id, hold: true },
           response.structure
         );
         handleViewChange(VIEW_NAME.REPORT);

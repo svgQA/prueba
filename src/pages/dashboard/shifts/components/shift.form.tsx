@@ -32,7 +32,7 @@ export const ShiftFormContent = ({
   services = [],
   schedules = [],
   cleanServiceSelected,
-  disabled
+  disabled,
 }: Props) => {
   const inputKeywords = useSignal<IOption[]>([]);
   useShiftWatcher(onChangeShift);
@@ -152,11 +152,21 @@ export const ShiftFormContent = ({
         </div>
 
         <div class='col-span-1'>
-          <DateField name='start' label='h_date_start' validate={required} disabled={disabled?.value}/>
+          <DateField
+            name='start'
+            label='h_date_start'
+            validate={required}
+            disabled={disabled?.value}
+          />
         </div>
 
         <div class='col-span-1'>
-          <DateField name='end' label='h_date_end' validate={required} disabled={disabled?.value}/>
+          <DateField
+            name='end'
+            label='h_date_end'
+            validate={required}
+            disabled={disabled?.value}
+          />
         </div>
 
         <div class='col-span-1'>

@@ -201,7 +201,7 @@ const ReportUpsertForm = () => {
                 </div>
 
                 {values.filter?.value !== undefined &&
-                  values.filter?.value === 0 && ( 
+                  values.filter?.value === 0 && (
                     <div className='col-span-1'>
                       <Field<IOption> name='projects'>
                         {({ input, meta }) => (

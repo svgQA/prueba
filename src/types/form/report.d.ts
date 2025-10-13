@@ -64,7 +64,7 @@ export enum modulesReport {
 export enum ReportFilter {
   SERVICE = 'SERVICE',
   CLIENT = 'CLIENT',
-  CONTRACT = 'CONTRACT'
+  CONTRACT = 'CONTRACT',
 }
 
 export enum ReportPeriod {

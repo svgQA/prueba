@@ -65,7 +65,7 @@ export const Select = ({
           <option value=''>{t(placeholder || '')}</option>
           {options?.map((option) => (
             <option key={option[optionValue]} value={option[optionValue]}>
-              {option[optionLabel]}
+              {t(option[optionLabel])}
             </option>
           ))}
         </select>

@@ -1,5 +1,5 @@
-import { IOption } from "@/components/common/smart-selector/smart-select";
-import { IPresignedRequest } from "../file";
+import { IOption } from '@/components/common/smart-selector/smart-select';
+import { IPresignedRequest } from '../file';
 
 export interface INews {
   id?: number;
