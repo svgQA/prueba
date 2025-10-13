@@ -31,6 +31,9 @@ import { Signature } from '@/components/common/signature/signature';
 import { QrCode } from '@/components/common/qr/qrCode';
 import { Barcode } from '@/components/common/barcode/barcode';
 import { jsonToGzipBase64 } from '@/utils/utilities/blob';
+import { ReportService } from '@/services/form/reports';
+import { fileManager } from '@/utils/network/file/file';
+import { useUserStore } from '@/store/slices';
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
   type?: string;
@@ -41,6 +44,7 @@ export const FormResponseSettingPage: FunctionComponent<
 > = ({ posFinishAction, type }: IFormResponseSettingPageProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const { getTenant, getCompanyId } = useUserStore();
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev: any) =>
@@ -484,6 +488,22 @@ export const FormResponseSettingPage: FunctionComponent<
     posFinishAction();
   };
 
+  const handleGenerateReport = async () => {
+    const id = getResponseMode.value?.id;
+    const reportResponse = await ReportService.generate_report_automatic_form(
+      String(id)
+    );
+    if (!reportResponse.getStatus())
+      return ToastManager.error('s_download_file_error');
+    await fileManager.downloadFile({
+      url: fileManager.getUrl(
+        getTenant(),
+        getCompanyId(),
+        reportResponse.getOne()
+      ),
+    });
+  };
+
   return (
     <section className='pt-5 max-h-[72vh] overflow-auto vox-scroll-design'>
       {getResponse.value && (
@@ -493,6 +513,18 @@ export const FormResponseSettingPage: FunctionComponent<
               <h1 className='text-2xl font-bold mb-6'>
                 {getResponse.value.label}
               </h1>
+              {getResponseMode.value?.hold && (
+                <div className='mb-6 flex justify-end'>
+                  <Button
+                    type='button'
+                    onClick={handleGenerateReport}
+                    name='btn-response-preview'
+                    icon='411'
+                    label='h_generate_report'
+                    className='mb-4'
+                  />
+                </div>
+              )}
               {type !== 'VIEW' && (
                 <div className='flex flex-row gap-2'>
                   <Button

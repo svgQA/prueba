@@ -26,4 +26,5 @@ export interface IMultiProps {
   ellipse?: number;
   scrollable?: boolean;
   meta?: FieldMetaState<any>;
+  disabled?: boolean;
 }
