@@ -10,6 +10,10 @@ export const columns_es = {
   h_id: 'ID',
   h_permission: 'Permiso',
   h_description: 'Descripción',
+  h_image: 'Imagen',
+  h_links: 'Enlaces',
+  h_reason: 'Motivo',
+  h_expires: 'Expiración',
   h_user: 'Usuario',
   h_novelty: 'Novedad',
   h_percentage: 'Porcentaje',
@@ -157,7 +161,6 @@ export const columns_es = {
   tickets: 'Cupos',
   h_common_area: 'Zona común',
   h_common_areas: 'Zonas comunes',
-  h_links: 'Enlaces',
 };
 
 export const columns_en = {
@@ -200,6 +203,10 @@ export const columns_en = {
   h_company: 'Company',
   h_department: 'Department',
   h_city: 'City',
+  h_image: 'Image',
+  h_links: 'Links',
+  h_reason: 'Reason',
+  h_expires: 'Expires',
   h_country: 'Country',
   h_address: 'Address',
   h_progress: 'Progress',
@@ -318,5 +325,4 @@ export const columns_en = {
   tickets: 'Tickets',
   h_common_area: 'Common area',
   h_common_areas: 'Common areas',
-  h_links: 'Links',
 };
