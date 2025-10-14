@@ -20,8 +20,6 @@ import { IPresignedRequest } from '@/types/file';
 import { MultipleInput } from '@/components/common/multi/multi';
 import { TextArea } from '@/components/common/text.area/text.area';
 
-type LinkRow = { label: string; url: string };
-
 export const NewsForm: FunctionComponent = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();
@@ -34,17 +32,14 @@ export const NewsForm: FunctionComponent = () => {
   const files = useSignal<IPresignedRequest[]>([]);
   const links = useSignal<IOption[]>([]);
 
-  // imágenes y enlaces
-  const images = useSignal<IPresignedRequest[]>([]);
-  const [links, setLinks] = useState<LinkRow[]>([{ label: '', url: '' }]);
-
   useEffect(() => {
-    document.title = t('h_title_news');
+    document.title = 'h_common_areas';
     fetchInitialValues();
   }, []);
 
   useEffect(() => {
     fetchInitialValues();
+    getPlaces();
   }, [selectedCompany, id]);
 
   const fetchInitialValues = async () => {
@@ -101,12 +96,16 @@ export const NewsForm: FunctionComponent = () => {
       ? await NewsService.update(id, news)
       : await NewsService.create(news);
 
+    if (!response.getStatus()) return;
     ToastManager.success(id ? 's_updated_success' : 's_created_success');
-    setInitialValues({});
-    images.value = [];
-    setLinks([{ label: '', url: '' }]);
+    setInitialValues({} as INews);
 
-    go({ to: '/trybook/news', label: 'News', id: 'trybook:news:state', base: 'setting' });
+    go({
+      to: '/trybook/news',
+      label: 'News',
+      id: 'trybook:news:state',
+      base: 'setting',
+    });
     loading.value = false;
   };
 
@@ -134,7 +133,6 @@ export const NewsForm: FunctionComponent = () => {
               form='form-news-upsert'
               label={id ? 'edit' : 'save'}
             />
-
             <div className='grid grid-cols-2 gap-4'>
               <div className='col-span-2'>
                 <Field<string> name='name'>
