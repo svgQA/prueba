@@ -1,4 +1,3 @@
-// pages/trybook/access-bans/index.tsx
 import { FunctionalComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
@@ -8,13 +7,13 @@ import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { IRowAction } from '@/components/common/table/interface';
-import { getColumns } from './accessesbans.columns';
 
 import { IAccessBan } from '@/types/trybook/access-ban';
 import { AccessBansService } from '@/services/trybook/access-bans';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { showAlert } from '@/components/common/show-alert/show-alert';
+import { getColumns } from './accessesbans.columns';
 
 export const AccessBansPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -67,7 +66,7 @@ export const AccessBansPage: FunctionalComponent = () => {
       <div className='max-h-screen'>
         <Table<IAccessBan>
           data={rows.value}
-          columns={getColumns(({ id, action }) => onClickAction({ id, type: 'ban', action }))}
+          columns={getColumns(({ id, action }: { id: string; action: ROW_ACTIONS }) => onClickAction({ id, type: 'ban', action }))}
           pageSize={10}
           visibility={{ id: false }}
         />

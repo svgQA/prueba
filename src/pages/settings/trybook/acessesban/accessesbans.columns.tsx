@@ -1,4 +1,3 @@
-// pages/trybook/access-bans/components/access-bans.columns.tsx
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import {
@@ -14,15 +13,28 @@ export const getColumns = (
   return [
     { id: 'id', accessorKey: 'id', header: 'h_id', size: 70 },
 
+    // Muestra user (si interno) o username (si externo)
     {
-      id: 'user',
+      id: 'subject',
       header: 'h_user',
-      accessorFn: (row) =>
-        row.user
-          ? `${row.user.name}${row.user.surname ? ' ' + row.user.surname : ''}`
-          : row.userId ?? '-',
-      size: 220,
+      size: 260,
+      accessorFn: (row) => {
+        if (row.user) {
+          const full = `${row.user.name ?? ''}${row.user.surname ? ' ' + row.user.surname : ''}`.trim();
+          return full || row.userId || '-';
+        }
+        return row.username ?? '-';
+      },
       enableGrouping: true,
+    },
+
+    // cardId cuando sea externo (oculto si no hay)
+    {
+      id: 'cardId',
+      header: 'cardId',
+      size: 180,
+      accessorKey: 'cardId',
+      cell: (info) => info.getValue() ? String(info.getValue()) : '-',
     },
 
     {
@@ -31,6 +43,7 @@ export const getColumns = (
       header: 'h_reason',
       size: 220,
       enableGrouping: true,
+      cell: (info) => info.getValue() ? String(info.getValue()) : '-',
     },
 
     {
@@ -50,7 +63,7 @@ export const getColumns = (
       header: 'h_status',
       size: 100,
       cell: (info) => {
-        const v = info.getValue() as boolean;
+        const v = Boolean(info.getValue());
         return (
           <span className={v ? 'text-green-600' : 'text-gray-500'}>
             {v ? 'Activo' : 'Inactivo'}

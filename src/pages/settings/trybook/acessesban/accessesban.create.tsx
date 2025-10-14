@@ -1,4 +1,3 @@
-// pages/trybook/access-bans/form.tsx
 import { FunctionComponent } from 'preact';
 import { useEffect, useCallback } from 'preact/hooks';
 import { useParams } from 'wouter';
@@ -12,23 +11,30 @@ import { Input } from '@/components/common/input/input';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { IOption } from '@/components/common/multi/interface';
 
-import { IAccessBan, ICreateAccessBan } from '@/types/trybook/access-ban';
+import { ICreateAccessBan } from '@/types/trybook/access-ban';
 import { AccessBansService } from '@/services/trybook/access-bans';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { UserService } from '@/services';
-
 
 const ACTIVE_OPTIONS: IOption[] = [
   { value: 1, label: 'Activo' },
   { value: 0, label: 'Inactivo' },
 ];
 
+const SUBJECT_TYPE: IOption[] = [
+  { value: 'internal', label: 'Interno' },
+  { value: 'external', label: 'Externo' },
+];
+
 type FormData = {
-  user?: IOption;
+  subjectType: IOption;  // 'internal' | 'external'
+  user?: IOption;        // interno
+  cardId?: string;       // externo
+  username?: string;     // externo (UI: "name")
   reason?: string;
-  expiresAt?: string; // datetime-local
-  isActive?: IOption; // 1/0
+  expiresAt?: string;    // datetime-local
+  isActive?: IOption;    // 1/0
 };
 
 export const AccessBanForm: FunctionComponent = () => {
@@ -38,11 +44,11 @@ export const AccessBanForm: FunctionComponent = () => {
 
   const loading = useSignal<boolean>(false);
   const users = useSignal<IOption[]>([]);
-  const initialValues = useSignal<Partial<FormData>>({});
+  const initialValues = useSignal<Partial<FormData>>({
+    subjectType: SUBJECT_TYPE[0], // Interno por defecto
+    isActive: ACTIVE_OPTIONS[0],
+  });
 
-  // ───────────────────────────────────────────────
-  // Cargar usuarios para el selector (empleados + clientes)
-  // ───────────────────────────────────────────────
   const loadUsers = useCallback(async () => {
     const pool: IOption[] = [];
 
@@ -52,7 +58,6 @@ export const AccessBanForm: FunctionComponent = () => {
     const cli = await UserService.getListClients();
     if (cli.getStatus()) pool.push(...cli.getMany());
 
-    // dedupe por value
     const seen = new Set<any>();
     users.value = pool.filter((o) => {
       if (seen.has(o.value)) return false;
@@ -62,27 +67,28 @@ export const AccessBanForm: FunctionComponent = () => {
   }, []);
 
   const loadInitial = useCallback(async () => {
-    if (!id) {
-      initialValues.value = { isActive: ACTIVE_OPTIONS[0] };
-      return;
-    }
+    if (!id) return;
+
     const res = await AccessBansService.getAccessBan(id);
     if (!res.getStatus()) return;
 
-    const model = res.getOne() as IAccessBan;
+    const model = res.getOne() as any; // IAccessBan
+    const isInternal = !!model.userId;
+
     initialValues.value = {
-      user: model.userId
+      subjectType: isInternal ? SUBJECT_TYPE[0] : SUBJECT_TYPE[1],
+      user: isInternal
         ? {
             value: model.userId,
             label: model.user
-              ? `${model.user.name}${model.user.surname ? ' ' + model.user.surname : ''}`
+              ? `${model.user.name ?? ''}${model.user.surname ? ' ' + model.user.surname : ''}`.trim() || String(model.userId)
               : String(model.userId),
           }
         : undefined,
+      cardId: !isInternal ? (model.cardId ?? '') : '',
+      username: !isInternal ? (model.username ?? '') : '',
       reason: model.reason ?? '',
-      expiresAt: model.expiresAt
-        ? new Date(model.expiresAt).toISOString().slice(0, 16)
-        : '',
+      expiresAt: model.expiresAt ? new Date(model.expiresAt).toISOString().slice(0, 16) : '',
       isActive: model.isActive ? ACTIVE_OPTIONS[0] : ACTIVE_OPTIONS[1],
     };
   }, [id]);
@@ -102,8 +108,33 @@ export const AccessBanForm: FunctionComponent = () => {
   const onSubmit = async (data: FormData) => {
     loading.value = true;
 
+    const isInternal = data.subjectType?.value === 'internal';
+
+    // Validaciones UI
+    if (isInternal && !data.user?.value) {
+      ToastManager.error('Seleccione un usuario interno');
+      loading.value = false;
+      return;
+    }
+    if (!isInternal) {
+      if (!data.cardId?.trim()) {
+        ToastManager.error('cardId es obligatorio para externos');
+        loading.value = false;
+        return;
+      }
+      if (!data.username?.trim()) {
+        ToastManager.error('name es obligatorio para externos');
+        loading.value = false;
+        return;
+      }
+    }
+
+    // Si es EXTERNO: no enviar userId (queda undefined)
+    // Si es INTERNO: no enviar cardId/username
     const payload: ICreateAccessBan = {
-      userId: data.user?.value ? Number(data.user.value) : undefined,
+      userId: isInternal ? Number(data.user!.value) : undefined,
+      cardId: !isInternal ? data.cardId!.trim() : undefined,
+      username: !isInternal ? data.username!.trim() : undefined,
       reason: data.reason?.trim() || undefined,
       expiresAt: data.expiresAt ? new Date(data.expiresAt).toISOString() : undefined,
       isActive: data.isActive?.value === 1,
@@ -132,87 +163,155 @@ export const AccessBanForm: FunctionComponent = () => {
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
-        render={({ handleSubmit, form, submitting, pristine }) => (
-          <form className='space-y-6' id='form-access-ban-upsert' onSubmit={handleSubmit}>
-            <StatusButton
-              onClickClean={() => form.reset()}
-              submitting={submitting || loading.value}
-              pristine={pristine}
-              form='form-access-ban-upsert'
-              label={id ? 'edit' : 'save'}
-            />
+        enableReinitialize
+        render={({ handleSubmit, form, submitting, pristine, values }) => {
+          const isInternal = (values.subjectType?.value ?? 'internal') === 'internal';
 
-            <div className='grid grid-cols-4 gap-3'>
-              {/* Usuario (opcional) */}
-              <div className='col-span-2'>
-                <Field<IOption> name='user'>
-                  {({ input, meta }) => (
-                    <SmartSelector
-                      {...input}
-                      meta={meta}
-                      placeholder='h_user'
-                      label='h_user'
-                      id='user'
-                      icon='252'
-                      options={users.value}
-                      disabled={loading.value}
-                      allowAll
-                      menuPortalTarget={document.body}
-                    />
-                  )}
-                </Field>
-              </div>
+          return (
+            <form className='space-y-6' id='form-access-ban-upsert' onSubmit={handleSubmit}>
+              <StatusButton
+                onClickClean={() => form.reset()}
+                submitting={submitting || loading.value}
+                pristine={pristine}
+                form='form-access-ban-upsert'
+                label={id ? 'edit' : 'save'}
+              />
 
-              {/* Motivo */}
-              <div className='col-span-2'>
-                <Field<string> name='reason'>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      placeholder='h_reason'
-                      label='h_reason'
-                      type='text'
-                      meta={meta}
-                    />
-                  )}
-                </Field>
-              </div>
+              <div className='grid grid-cols-4 gap-3'>
+                {/* Interno / Externo */}
+                <div className='col-span-2'>
+                  <Field<IOption> name='subjectType' initialValue={SUBJECT_TYPE[0]}>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        placeholder='Tipo'
+                        label='Tipo'
+                        id='subjectType'
+                        icon='toggle-right'
+                        options={SUBJECT_TYPE}
+                        disabled={loading.value}
+                        allowAll={false}
+                        onChange={(opt?: IOption) => {
+                          input.onChange(opt);
+                          // limpiar campos al cambiar tipo
+                          if (opt?.value === 'internal') {
+                            form.change('cardId', '');
+                            form.change('username', '');
+                          } else {
+                            form.change('user', undefined);
+                          }
+                        }}
+                      />
+                    )}
+                  </Field>
+                </div>
 
-              {/* Expira */}
-              <div className='col-span-2'>
-                <Field<string> name='expiresAt'>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      placeholder='h_expires'
-                      label='h_expires'
-                      type='datetime-local'
-                      meta={meta}
-                    />
-                  )}
-                </Field>
-              </div>
+                {/* Interno: Usuario */}
+                {isInternal && (
+                  <div className='col-span-2'>
+                    <Field<IOption> name='user'>
+                      {({ input, meta }) => (
+                        <SmartSelector
+                          {...input}
+                          meta={meta}
+                          placeholder='h_user'
+                          label='h_user'
+                          id='user'
+                          icon='252'
+                          options={users.value}
+                          disabled={loading.value}
+                          allowAll
+                          menuPortalTarget={document.body}
+                        />
+                      )}
+                    </Field>
+                  </div>
+                )}
 
-              {/* Estado */}
-              <div className='col-span-2'>
-                <Field<IOption> name='isActive'>
-                  {({ input, meta }) => (
-                    <SmartSelector
-                      {...input}
-                      meta={meta}
-                      placeholder='p_select_state'
-                      label='l_status'
-                      id='isActive'
-                      icon='toggle-right'
-                      options={ACTIVE_OPTIONS}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
+                {/* Externo: cardId + name */}
+                {!isInternal && (
+                  <>
+                    <div className='col-span-2'>
+                      <Field<string> name='cardId'>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            placeholder='cardId'
+                            label='cardId'
+                            type='text'
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                    <div className='col-span-2'>
+                      <Field<string> name='username'>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            placeholder='name'
+                            label='name'
+                            type='text'
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  </>
+                )}
+
+                {/* Motivo */}
+                <div className='col-span-2'>
+                  <Field<string> name='reason'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder='h_reason'
+                        label='h_reason'
+                        type='text'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* Expira */}
+                <div className='col-span-2'>
+                  <Field<string> name='expiresAt'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        placeholder='h_expires'
+                        label='h_expires'
+                        type='datetime-local'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* Estado */}
+                <div className='col-span-2'>
+                  <Field<IOption> name='isActive' initialValue={ACTIVE_OPTIONS[0]}>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        placeholder='p_select_state'
+                        label='l_status'
+                        id='isActive'
+                        icon='toggle-right'
+                        options={ACTIVE_OPTIONS}
+                        disabled={loading.value}
+                      />
+                    )}
+                  </Field>
+                </div>
               </div>
-            </div>
-          </form>
-        )}
+            </form>
+          );
+        }}
       />
     </Section>
   );
