@@ -50,7 +50,9 @@ export const getColumns = (
   },
   {
     id: 'company',
-    accessorKey: 'companies',
+    // accessorKey: 'companies',
+    accessorFn: (row) =>
+      row.companies.map((company) => company.company.name).join(', '),
     size: 180,
     header: 'h_company',
     meta: { headerAlign: 'center' },

@@ -3,7 +3,7 @@ import { useShiftWatcher } from '../utils/wath.hook';
 import { required } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
 import { Input } from '@/components/common/input/input';
-import { useSignal } from '@preact/signals';
+import { useSignal, Signal } from '@preact/signals';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { useCallback } from 'preact/hooks';
@@ -20,6 +20,7 @@ interface Props {
   services?: IOption[];
   schedules?: IOption[];
   cleanServiceSelected: any;
+  disabled?: Signal<boolean>;
 }
 
 export const ShiftFormContent = ({
@@ -31,6 +32,7 @@ export const ShiftFormContent = ({
   services = [],
   schedules = [],
   cleanServiceSelected,
+  disabled,
 }: Props) => {
   const inputKeywords = useSignal<IOption[]>([]);
   useShiftWatcher(onChangeShift);
@@ -61,6 +63,7 @@ export const ShiftFormContent = ({
                 options={users || []}
                 menuPortalTarget={document.body}
                 placeholder='p_select'
+                disabled={disabled?.value}
               />
             )}
           </Field>
@@ -87,6 +90,7 @@ export const ShiftFormContent = ({
                   }
                   input.onChange(e);
                 }}
+                disabled={disabled?.value}
               />
             )}
           </Field>
@@ -114,6 +118,7 @@ export const ShiftFormContent = ({
                   }
                   input.onChange(e);
                 }}
+                disabled={disabled?.value}
               />
             )}
           </Field>
@@ -140,17 +145,28 @@ export const ShiftFormContent = ({
                     label: 'INTERNAL',
                   },
                 ]}
+                disabled={disabled?.value}
               />
             )}
           </Field>
         </div>
 
         <div class='col-span-1'>
-          <DateField name='start' label='h_date_start' validate={required} />
+          <DateField
+            name='start'
+            label='h_date_start'
+            validate={required}
+            disabled={disabled?.value}
+          />
         </div>
 
         <div class='col-span-1'>
-          <DateField name='end' label='h_date_end' validate={required} />
+          <DateField
+            name='end'
+            label='h_date_end'
+            validate={required}
+            disabled={disabled?.value}
+          />
         </div>
 
         <div class='col-span-1'>
@@ -165,6 +181,7 @@ export const ShiftFormContent = ({
                 type='number'
                 icon='325'
                 label='h_time_before'
+                disabled={disabled?.value}
               />
             )}
           </Field>
@@ -182,6 +199,7 @@ export const ShiftFormContent = ({
             buttonIcon='044'
             icon='086'
             bottom
+            disabled={disabled?.value}
           />
         </div>
 

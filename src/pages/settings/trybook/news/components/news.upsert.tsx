@@ -13,13 +13,12 @@ import { Section } from '@/components/common/section/section';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { NewsService } from '@/services/trybook/news';
 import { IOption } from '@/components/common/multi/interface';
-import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+// import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { PlaceService } from '@/services';
-
-// Archivos / imágenes
 import { File } from '@/components/common/file/file';
-import ShowFiles from '@/components/common/file/show.file';
 import { IPresignedRequest } from '@/types/file';
+import { MultipleInput } from '@/components/common/multi/multi';
+import { TextArea } from '@/components/common/text.area/text.area';
 
 type LinkRow = { label: string; url: string };
 
@@ -27,11 +26,13 @@ export const NewsForm: FunctionComponent = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();
   const { id } = useParams<{ id?: string }>();
-  const { selectedCompany, user } = useUserStore();
+  const { selectedCompany /*user*/ } = useUserStore();
 
+  const [initialValues, setInitialValues] = useState<any>();
   const loading = useSignal<boolean>(false);
   const places = useSignal<IOption[]>([]);
-  const [initialValues, setInitialValues] = useState<any>();
+  const files = useSignal<IPresignedRequest[]>([]);
+  const links = useSignal<IOption[]>([]);
 
   // imágenes y enlaces
   const images = useSignal<IPresignedRequest[]>([]);
@@ -46,94 +47,59 @@ export const NewsForm: FunctionComponent = () => {
     fetchInitialValues();
   }, [selectedCompany, id]);
 
+  const fetchInitialValues = async () => {
+    if (!id) {
+      setInitialValues({
+        name: '',
+        description: '',
+      });
+      files.value = [];
+      links.value = [];
+      return;
+    }
+
+    const response = await NewsService.get_by_id(id);
+    if (!response.getStatus()) return;
+    const initialData = response.getOne();
+
+    setInitialValues({
+      name: initialData.name || '',
+      description: initialData.description || '',
+      place: {
+        value: initialData.place?.id || '',
+        label: initialData.place?.name || '',
+      },
+    });
+
+    files.value = initialData.resource || [];
+    links.value =
+      initialData.keylinks.map((e: string, index: number) => {
+        return { label: e, value: index };
+      }) || [];
+  };
+
   const getPlaces = async () => {
     const response = await PlaceService.getSimpleList();
     if (!response.getStatus()) return;
     places.value = response.getMany();
   };
 
-  const safeParseArray = (value: any): any[] => {
-    try {
-      if (Array.isArray(value)) return value;
-      if (typeof value === 'string' && value.trim().length) {
-        const parsed = JSON.parse(value);
-        return Array.isArray(parsed) ? parsed : [];
-      }
-      return [];
-    } catch {
-      return [];
-    }
-  };
-
-  const fetchInitialValues = async () => {
-    await getPlaces(); // cargar lugares siempre
-
-    if (!id) {
-      setInitialValues({ name: '', description: '' });
-      images.value = [];
-      setLinks([{ label: '', url: '' }]);
-      return;
-    }
-
-    const response = await NewsService.get_by_id(id);
-    if (!response.getStatus()) return;
-    const data = response.getOne();
-
-    setInitialValues({
-      name: data?.name || '',
-      description: data?.description || '',
-      place: data?.place ? { value: data.place.id, label: data.place.name } : undefined,
-    });
-
-    images.value = safeParseArray(data?.image); // puede venir como string o array
-    const parsedLinks = safeParseArray(data?.link);
-    setLinks(parsedLinks.length ? parsedLinks : [{ label: '', url: '' }]);
-  };
-
-  // archivos/imágenes
-  const handleImageUpload = (e: any) => {
-    const fileInputs: IPresignedRequest[] = e?.target?.value ?? [];
-    if (!Array.isArray(fileInputs)) return;
-    images.value = [...images.value, ...fileInputs];
-  };
-  const removeImage = (uuid: string) => {
-    images.value = images.value.filter((f) => f.uuid !== uuid);
-  };
-
-  // enlaces
-  const updateLink = (idx: number, field: keyof LinkRow, value: string) => {
-    setLinks((prev) => {
-      const draft = [...prev];
-      draft[idx] = { ...draft[idx], [field]: value };
-      return draft;
-    });
-  };
-  const addLink = () => setLinks((p) => [...p, { label: '', url: '' }]);
-  const removeLink = (idx: number) =>
-    setLinks((p) => p.filter((_, i) => i !== idx));
-
-  const handleSubmit = async (model: INews, _form?: any) => {
+  const handleSubmit = async (model: any, _form?: any) => {
     loading.value = true;
-
-    // filtra enlaces vacíos y envía como string JSON (tipos backend ICNews)
-    const linksClean = links.filter((r) => (r.label?.trim() || r.url?.trim()));
-
-    const payload: any = {
+    let news: INews = {
       name: model.name,
       description: model.description,
-      place: user?.userType !== 'ADMIN_CLIENT' ? model.place : undefined,
-      image: JSON.stringify(images.value),   // <- string JSON
-      link: JSON.stringify(linksClean),      // <- string JSON
+      place: model.place,
+      resource: files.value && files.value.length > 0 ? files.value : undefined,
+      keylinks:
+        links.value && links.value.length > 0
+          ? links.value.map((e) => e.label)
+          : undefined,
     };
 
-    const response = id
-      ? await NewsService.update(id, payload)
-      : await NewsService.create(payload);
-
-    if (!response.getStatus()) {
-      loading.value = false;
-      return;
-    }
+    let response = id
+      ? await NewsService.update(id, news)
+      : await NewsService.create(news);
 
     ToastManager.success(id ? 's_updated_success' : 's_created_success');
     setInitialValues({});
@@ -142,6 +108,11 @@ export const NewsForm: FunctionComponent = () => {
 
     go({ to: '/trybook/news', label: 'News', id: 'trybook:news:state', base: 'setting' });
     loading.value = false;
+  };
+
+  const handleAttachmentUpload = (e: any) => {
+    const fileInput: IPresignedRequest = e.target.value[0];
+    files.value = [...files.value, fileInput];
   };
 
   return (
@@ -165,7 +136,7 @@ export const NewsForm: FunctionComponent = () => {
             />
 
             <div className='grid grid-cols-2 gap-4'>
-              <div className='col-span-1'>
+              <div className='col-span-2'>
                 <Field<string> name='name'>
                   {({ input, meta }) => (
                     <Input
@@ -181,119 +152,72 @@ export const NewsForm: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-
-              <div className='col-span-1'>
+              {/* {user?.userType !== 'ADMIN_CLIENT' && (
+                <Field<IOption> name='place'>
+                  {({ input, meta }) => (
+                    <SmartSelector<IOption>
+                      {...input}
+                      meta={meta}
+                      id='select-place'
+                      label={t('h_place')}
+                      icon='231'
+                      options={places.value}
+                      multiple={false}
+                      allowAll={true}
+                      menuPortalTarget={document.body}
+                      placeholder={t('h_place')}
+                      onChange={() => {}}
+                    />
+                  )}
+                </Field>
+              )} */}
+              <div className='col-span-2'>
                 <Field<string> name='description'>
                   {({ input, meta }) => (
-                    <Input
+                    <TextArea
                       {...input}
+                      icon='120'
+                      type='text'
+                      min='3'
+                      max='300'
                       placeholder={t('h_description')}
                       label={t('h_description')}
                       meta={meta}
-                      icon='120'
-                      type='text'
                       disabled={loading.value}
-                      required
                     />
                   )}
                 </Field>
               </div>
-
-              {user?.userType !== 'ADMIN_CLIENT' && (
-                <div className='col-span-2'>
-                  <Field<IOption> name='place'>
-                    {({ input, meta }) => (
-                      <SmartSelector<IOption>
-                        {...input}
-                        meta={meta}
-                        id='select-place'
-                        label={t('h_place')}
-                        icon='231'
-                        options={places.value}
-                        multiple={false}
-                        allowAll={true}
-                        menuPortalTarget={document.body}
-                        placeholder={t('h_place')}
-                        disabled={loading.value}
-                      />
-                    )}
-                  </Field>
-                </div>
-              )}
-
-              {/* Imágenes */}
-              <div className='col-span-2'>
-                <div className='mb-2 font-medium'>{t('h_image') ?? 'Imágenes'}</div>
-                <File
-                  name='images'
-                  onChange={handleImageUpload}
-                  value={[]}
-                  accept='image/*'
-                  multiple={true}
-                  label='h_image'
-                  area='news'
-                  showFiles={false}
-                  disabled={loading.value}
+              <div className='col-span-1'>
+                <MultipleInput
+                  name='input-links'
+                  value={links.value}
+                  onChange={(value: IOption[], _name?: string) => {
+                    links.value = value;
+                  }}
+                  placeholder='p_select'
+                  label='h_links'
+                  buttonIcon='044'
+                  icon='086'
+                  bottom
                 />
-                <div className='mt-2'>
-                  <ShowFiles resources={images.value} removeFile={removeImage} />
-                </div>
               </div>
-
-              {/* Enlaces */}
-              <div className='col-span-2'>
-                <div className='mb-2 font-medium'>{t('h_links') ?? 'Enlaces'}</div>
-                <div className='space-y-2'>
-                  {links.map((row, idx) => (
-                    <div key={idx} className='grid grid-cols-12 gap-2 items-end'>
-                      <div className='col-span-5'>
-                        <Input
-                          name={`links.${idx}.label`}
-                          value={row.label}
-                          onChange={(e: any) => updateLink(idx, 'label', e.target.value)}
-                          placeholder={t('h_title') ?? 'Título'}
-                          label={t('h_title') ?? 'Título'}
-                          icon='120'
-                          type='text'
-                          disabled={loading.value}
-                        />
-                      </div>
-                      <div className='col-span-6'>
-                        <Input
-                          name={`links.${idx}.url`}
-                          value={row.url}
-                          onChange={(e: any) => updateLink(idx, 'url', e.target.value)}
-                          placeholder='https://...'
-                          label='URL'
-                          icon='120'
-                          type='url'
-                          disabled={loading.value}
-                        />
-                      </div>
-                      <div className='col-span-1'>
-                        <button
-                          type='button'
-                          className='px-3 py-2 rounded-md bg-b-light dark:bg-b-dark text-sm'
-                          onClick={() => removeLink(idx)}
-                          disabled={loading.value || links.length === 1}
-                          title={t('remove') ?? 'Eliminar'}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  <div>
-                    <button
-                      type='button'
-                      className='px-3 py-2 rounded-md bg-primary text-white text-sm'
-                      onClick={addLink}
-                      disabled={loading.value}
-                    >
-                      {t('add') ?? 'Agregar enlace'}
-                    </button>
-                  </div>
-                </div>
+              <div className='col-span-1'>
+                <Field name='attachments'>
+                  {() => (
+                    <File
+                      name='attachments'
+                      onChange={handleAttachmentUpload}
+                      value={files.value}
+                      accept='image/*, video/*'
+                      label='h_attachment'
+                      area='trybook'
+                      showFiles={true}
+                      multiple={false}
+                      disabled={files.value.length === 1}
+                    />
+                  )}
+                </Field>
               </div>
             </div>
           </form>

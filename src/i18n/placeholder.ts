@@ -95,6 +95,7 @@ export const placeholder_es = {
   p_description_optional: 'Ingrese una descripción (opcional)...',
   p_image: 'URL de la imagen (opcional)...',
   p_icon: 'Nombre del ícono (opcional)...',
+  p_type_and_press_enter: 'Ingrese el tipo y presione Enter',
 };
 
 export const placeholder_en = {
@@ -194,4 +195,5 @@ export const placeholder_en = {
   p_description_optional: 'Enter a description (optional)...',
   p_image: 'Image URL (optional)...',
   p_icon: 'Icon name (optional)...',
+  p_type_and_press_enter: 'Enter the type and press Enter',
 };

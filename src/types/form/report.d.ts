@@ -43,6 +43,9 @@ export interface extraDataReport {
   modules: IModuleReport[];
   emails?: string[];
   projects?: IOption[];
+  date_period?: string | Date;
+  contract?: string;
+  client_id?: number;
 }
 
 export interface IModuleReport {
@@ -56,6 +59,12 @@ export enum modulesReport {
   Form = 'Form',
   Access = 'Access',
   Correspondence = 'Correspondence',
+}
+
+export enum ReportFilter {
+  SERVICE = 'SERVICE',
+  CLIENT = 'CLIENT',
+  CONTRACT = 'CONTRACT',
 }
 
 export enum ReportPeriod {

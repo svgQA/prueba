@@ -25,6 +25,7 @@ export const columns_es = {
   h_end: 'Fin',
   h_pat: 'Pat',
   h_report: 'Reporte',
+  h_generate_report: 'Generar reporte',
   h_round: 'Ronda',
   h_task: 'Tareas',
   h_identification: 'Identificador',
@@ -158,9 +159,6 @@ export const columns_es = {
   tickets: 'Cupos',
   h_common_area: 'Zona común',
   h_common_areas: 'Zonas comunes',
-  h_title_news: 'Noticias',
-  h_reason: 'Motivo',
-  h_expires: 'Expiración',
 };
 
 export const columns_en = {
@@ -194,6 +192,7 @@ export const columns_en = {
   h_end: 'End',
   h_solved: 'Solved',
   h_report: 'Report',
+  h_generate_report: 'Generate Report',
   h_round: 'Round',
   h_task: 'Tasks',
   h_identification: 'Identifier',
@@ -322,7 +321,4 @@ export const columns_en = {
   tickets: 'Tickets',
   h_common_area: 'Common area',
   h_common_areas: 'Common areas',
-  h_title_news: 'News',
-  h_reason: 'Reason',
-  h_expires: 'Expires',
 };
