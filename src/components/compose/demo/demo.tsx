@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/common/logo/logo';
 import './styles.css';
+import { Form, Field } from 'react-final-form';
+import { Input } from '@/components/common/input/input';
+import { TextArea } from '@/components/common/text.area/text.area';
+import { required } from '@/utils/utilities';
+import { TenantService } from '@/services/general/tenant';
+import { ToastManager } from '@/utils/toast/toast-manager';
 
 interface DemoFormData {
-  fullName: string;
-  company: string;
+  name: string;
+  surname: string;
   email: string;
   phone: string;
-  date: string;
-  time: string;
+  company_name: string;
+  company_description: string;
+  manager_name: string;
+  manager_surname: string;
+  manager_email: string;
+  manager_phone: string;
 }
 
 interface CustomDemoContainerProps {
@@ -52,7 +62,7 @@ const CustomDemoContainer = ({
       </div>
 
       <div
-        className={`bg-white flex items-center justify-center px-3 py-4 sm:px-4 sm:py-6 rounded-lg w-full md:w-[400px] md:min-h-[500px] ${formClassName}`}
+        className={`bg-white flex items-center justify-center px-6 py-6 sm:px-8 sm:py-8 rounded-lg w-full md:w-[600px] ${formClassName}`}
       >
         <div className='w-full h-full flex items-center justify-center'>
           {children}
@@ -64,34 +74,33 @@ const CustomDemoContainer = ({
 
 export const DemoForm = () => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState<DemoFormData>({
-    fullName: '',
-    company: '',
-    email: '',
-    phone: '',
-    date: '',
-    time: '',
-  });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target as HTMLInputElement;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const onSubmit = async (model: Record<string, any>, form: any) => {
+    /* 
+    const data = {
+      ...model,
+      phone:  `+57${model.phone}`,
+    };
+    const response = await TenantService.create_demo(data as DemoFormData);
+    if (response.getStatus()) {
+      ToastManager.success(
+        'Demo creado correctamente, se enviará un correo a los administradores para su aprobación'
+      );
+      form.restart();
+    }*/
+    responseMessage();
   };
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    // Aquí iría la lógica para enviar la solicitud de demo
-    setFormData({
-      fullName: '',
-      company: '',
-      email: '',
-      phone: '',
-      date: '',
-      time: '',
+  const responseMessage = async () => {
+    const response = await TenantService.response_demo({
+      id: 12,
+      state: true,
+      message: '',
+      email: 'joshua.henao@finturu.com',
     });
+    if (response.getStatus()) {
+      ToastManager.success('Demo respondido correctamente');
+    }
   };
 
   return (
@@ -99,137 +108,188 @@ export const DemoForm = () => {
       title={t('i_demo_title')}
       subtitle={t('i_demo_subtitle')}
     >
-      <div className='w-full px-2 sm:px-4'>
-        <div className='text-center mb-4'>
+      <div className='w-full px-4 sm:px-6'>
+        {/* <div className='text-center mb-4'>
           <h3 className='text-cyan-500 text-xl font-bold'>
             {t('i_demo_title')}
           </h3>
-        </div>
+        </div> */}
 
-        <form onSubmit={handleSubmit} className='space-y-4'>
-          <div className='space-y-2'>
-            <label
-              htmlFor='fullName'
-              className='block text-sm font-medium text-gray-700'
-            >
-              {t('l_name')}
-            </label>
-            <input
-              type='text'
-              id='fullName'
-              name='fullName'
-              value={formData.fullName}
-              onChange={handleInputChange}
-              placeholder={t('p_name')}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
-              required
-            />
-          </div>
+        <Form
+          onSubmit={(values, form) => onSubmit(values, form)}
+          validate={(values) => {
+            const errors: Partial<DemoFormData> = {};
+            if (!values.name) errors.name = 'field_required';
+            if (!values.email) errors.email = 'field_required';
+            if (!values.phone) errors.phone = 'field_required';
+            if (!values.company_name) errors.company_name = 'field_required';
+            if (!values.company_description)
+              errors.company_description = 'field_required';
+            return errors;
+          }}
+          render={({ handleSubmit, submitting }) => (
+            <form onSubmit={handleSubmit} className='space-y-4' id='form-demo'>
+              {/* Información Personal */}
+              <div className='space-y-3'>
+                <h4 className='text-cyan-500 text-xl font-bold'>
+                  Información Personal
+                </h4>
 
-          <div className='space-y-2'>
-            <label
-              htmlFor='company'
-              className='block text-sm font-medium text-gray-700'
-            >
-              {t('l_company')}
-            </label>
-            <input
-              type='text'
-              id='company'
-              name='company'
-              value={formData.company}
-              onChange={handleInputChange}
-              placeholder={t('p_company')}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
-              required
-            />
-          </div>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                  <Field<string> name='name' validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='text'
+                        placeholder='Nombre'
+                        label='Nombre*'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
 
-          <div className='space-y-2'>
-            <label
-              htmlFor='email'
-              className='block text-sm font-medium text-gray-700'
-            >
-              {t('l_email')}
-            </label>
-            <input
-              type='email'
-              id='email'
-              name='email'
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder={t('p_email')}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
-              required
-            />
-          </div>
+                  <Field<string> name='surname'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='text'
+                        placeholder='Apellido'
+                        label='Apellido'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
 
-          <div className='space-y-2'>
-            <label
-              htmlFor='phone'
-              className='block text-sm font-medium text-gray-700'
-            >
-              {t('l_phone')}
-            </label>
-            <input
-              type='tel'
-              id='phone'
-              name='phone'
-              value={formData.phone}
-              onChange={handleInputChange}
-              placeholder={t('p_phone')}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
-              required
-            />
-          </div>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                  <Field<string> name='email' validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='email'
+                        placeholder='Email'
+                        label='Email*'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
 
-          <div className='flex space-x-4'>
-            <div className='w-1/2 space-y-2'>
-              <label
-                htmlFor='date'
-                className='block text-sm font-medium text-gray-700'
+                  <Field<string> name='phone' validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='tel'
+                        placeholder='Teléfono'
+                        label='Teléfono*'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+              </div>
+
+              {/* Información de la Empresa */}
+              <div className='space-y-3'>
+                <h4 className='text-cyan-500 text-xl font-bold'>
+                  Información de la Empresa
+                </h4>
+
+                <Field<string> name='company_name' validate={required}>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      type='text'
+                      placeholder='Nombre de la Empresa'
+                      label='Nombre de la Empresa*'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+
+                <Field<string> name='company_description' validate={required}>
+                  {({ input, meta }) => (
+                    <TextArea
+                      {...input}
+                      min='3'
+                      max='500'
+                      placeholder='Descripción de la Empresa'
+                      label='Descripción de la Empresa*'
+                      type='text'
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+              </div>
+
+              {/* Información del Gerente */}
+              <div className='space-y-3'>
+                <h4 className='text-cyan-500 text-xl font-bold'>
+                  Información del Gerente
+                </h4>
+
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                  <Field<string> name='manager_name'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='text'
+                        placeholder='Nombre del Gerente'
+                        label='Nombre del Gerente'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+
+                  <Field<string> name='manager_surname'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='text'
+                        placeholder='Apellido del Gerente'
+                        label='Apellido del Gerente'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                  <Field<string> name='manager_email'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='email'
+                        placeholder='Email del Gerente'
+                        label='Email del Gerente'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+
+                  <Field<string> name='manager_phone'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='tel'
+                        placeholder='Teléfono del Gerente'
+                        label='Teléfono del Gerente'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+              </div>
+
+              <button
+                type='submit'
+                className='w-full mt-4 px-4 py-2 bg-cyan-500 text-white font-medium rounded-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-colors duration-200'
+                disabled={submitting}
               >
-                {t('l_date')}
-              </label>
-              <input
-                type='date'
-                id='date'
-                name='date'
-                value={formData.date}
-                onChange={handleInputChange}
-                placeholder={t('p_date')}
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
-                required
-              />
-            </div>
-            <div className='w-1/2 space-y-2'>
-              <label
-                htmlFor='time'
-                className='block text-sm font-medium text-gray-700'
-              >
-                {t('l_time')}
-              </label>
-              <input
-                type='time'
-                id='time'
-                name='time'
-                value={formData.time}
-                onChange={handleInputChange}
-                placeholder={t('p_time')}
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
-                required
-              />
-            </div>
-          </div>
-
-          <button
-            type='submit'
-            className='w-full mt-4 px-4 py-3 bg-cyan-500 text-white font-medium rounded-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500'
-          >
-            {t('i_demo_title')}
-          </button>
-        </form>
-
+                {submitting ? 'Enviando...' : 'Solicitar Demo'}
+              </button>
+            </form>
+          )}
+        />
         <div className='text-center mt-4 text-xs text-gray-500'>
           © {new Date().getFullYear()} Tryvoo
         </div>

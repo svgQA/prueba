@@ -2,7 +2,6 @@ import { type FunctionComponent } from 'preact';
 import { Route, Router } from 'wouter';
 import { lazy, Suspense, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
-import 'react-toastify/dist/ReactToastify.css';
 
 /** ***********************************************************************
  * UTILS
@@ -34,7 +33,7 @@ import {
  * COMMENTS
  ** ***********************************************************************/
 import { SettingsModal } from '../settings/settings';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
 import { HistoryNotificationsPage } from './history/history.page';
@@ -661,7 +660,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         </div>
 
         <SettingsModal />
-        <ToastContainer />
+       
         {/*<IconsModal />*/}
         {openModalTenant.value && modalTenant}
       </section>
