@@ -52,14 +52,11 @@ tests to keep regression risk low as new iterations ship.
 ## Completed Component Suites
 The following suites already run in CI; they are grouped by functional domain for faster discovery.
 
-### Inputs & Selectors
-- [x] `Input`, `TextArea`, `Checkbox`, `Radio`, `Slider`, `MultipleInput`, `Search`, `Select`, `SelectCheck`, `SearchableSelect`, `SmartSelector`, `CustomSelector`, `CustomSwitcher`, `LanguageSwitcher`, `UserSelector`, `Schedule Search` (search field inside `ScheduleSelector`) — focus on controlled states, accessibility attributes, translation keys, and keyboard flows. Tests live under `tests/unit/components/common/*.spec.tsx`.
-
-### Feedback & Overlays
-- [x] `Alert`, `ShowAlert`, `Badge`, `Card`, `Tooltip`, `Modal`, `ProgressBar`, `Loading`, `Dropdown`, `Button`, `Avatar`, `TextEllipsis` — covering visibility toggles, slots, status flags, iconography, and async fallbacks.
-
-### Compose Utilities & Pages
-- [x] `FormButton`, `ThemeButton`, `Toast` compose suites plus authentication and dashboard page smoke tests ensure routing and providers initialize correctly.
+| Status | Suite | Focus | Key Assertions | Location |
+| --- | --- | --- | --- | --- |
+| ✅ | Inputs & Selectors | `Input`, `TextArea`, `Checkbox`, `Radio`, `Slider`, `MultipleInput`, `Search`, `Select`, `SelectCheck`, `SearchableSelect`, `SmartSelector`, `CustomSelector`, `CustomSwitcher`, `LanguageSwitcher`, `UserSelector`, `Schedule Search` | Controlled state propagation, accessibility attributes, translation keys, and keyboard flows. | `tests/unit/components/common/*.spec.tsx` |
+| ✅ | Feedback & Overlays | `Alert`, `ShowAlert`, `Badge`, `Card`, `Tooltip`, `Modal`, `ProgressBar`, `Loading`, `Dropdown`, `Button`, `Avatar`, `TextEllipsis` | Visibility toggles, slot rendering, status flags, iconography, async fallbacks. | `tests/unit/components/common/*.spec.tsx` |
+| ✅ | Compose Utilities & Pages | `FormButton`, `ThemeButton`, `Toast`, authentication pages, dashboard shell | Routing initialization, provider wiring, smoke coverage for layout and theme toggles. | `tests/unit/components` & `tests/unit/pages` |
 
 These suites continue to pass and act as guardrails for future regressions.
 
@@ -68,44 +65,26 @@ The remaining work is ordered by impact. Each item includes the scenarios we exp
 that coverage is valuable.
 
 ### High Priority
-1. **Responsive Navbar shell** (`src/components/common/navbar/navbar.tsx`)
-   - *Goal:* Validate mobile menu toggling, service modal integration, translated labels, and CTA links for sign-in actions.
-   - *Why it matters:* The navbar controls tenant navigation, uses reactive signals for hamburger state, and conditionally renders `ModalServices` or `Link` targets; regressions here block users from core routes.【F:src/components/common/navbar/navbar.tsx†L1-L86】
-   - *Key scenarios to automate:*
-     - Toggling the hamburger button updates `isOpen` state classes and collapses after selecting a menu item.
-     - Buttons that call `onActionHandler` close the menu and propagate the identifier.
-     - "Services" menu renders `ModalServices` while other entries render `Link` components with correct routes.
-
-2. **Sidebar navigation with permissions** (`src/components/common/sidebar/sidebar.tsx`)
-   - *Goal:* Assert default routing, highlight state, permission gating via `validateModuleState`, and click callbacks when navigation is disabled.【F:src/components/common/sidebar/sidebar.tsx†L1-L91】
-   - *Why it matters:* Sidebar start-up logic auto-selects routes and respects signal-based redirects; missing coverage risks silent navigation failures when permission signals change.
-   - *Key scenarios to automate:*
-     - Initial effect selecting the first menu and honoring `getRedirectSettingModal` redirects when allowed.
-     - Menu item clicks fire `onHandlerClick` when `isNavigation` is false and update the selected highlight.
-     - Settings button visibility responds to `validateModuleState('setting')`.
-
-3. **Data table drag-and-drop grid** (`src/components/common/table/table.tsx` & subcomponents)
-   - *Goal:* Snapshot render for column layout, verify draggable headers/cells, bulk actions menu toggling, and empty-state messaging.【F:src/components/common/table/table.tsx†L1-L200】
-   - *Why it matters:* The table underpins reporting modules and coordinates drag interactions plus virtualization hints; a regression would cascade across analytics features.
-   - *Key scenarios to automate:*
-     - Rendering with default columns vs. customized column order persists across drag events.
-     - Action menu callbacks fire (export, selection) and respect disabled states.
-     - Empty datasets display placeholders instead of stale data rows.
+| Status | Component | Objective | Why It Matters | Key Scenarios |
+| --- | --- | --- | --- | --- |
+| [ ] | **Responsive Navbar shell**<br/>`src/components/common/navbar/navbar.tsx` | Validate mobile menu toggling, service modal integration, translated labels, and CTA links for sign-in actions. | Controls tenant navigation, uses reactive signals for hamburger state, and conditionally renders `ModalServices` or `Link` targets; regressions block access to core routes.【F:src/components/common/navbar/navbar.tsx†L1-L86】 | Toggle hamburger updates `isOpen` classes; action buttons invoke `onActionHandler` and close menu; non-service entries render `Link` with correct `to` props while service entry mounts `ModalServices`. |
+| [ ] | **Sidebar navigation with permissions**<br/>`src/components/common/sidebar/sidebar.tsx` | Assert default routing, highlight state, permission gating via `validateModuleState`, and click callbacks when navigation is disabled. | Sidebar start-up logic auto-selects routes and respects signal-based redirects; missing coverage risks silent navigation failures when permission signals change.【F:src/components/common/sidebar/sidebar.tsx†L1-L91】 | Initial effect selects first menu and honors `getRedirectSettingModal`; menu clicks fire `onHandlerClick` and update highlight; settings button visibility tracks `validateModuleState('setting')`. |
+| [ ] | **Data table drag-and-drop grid**<br/>`src/components/common/table/table.tsx` & children | Snapshot column layout, verify draggable headers/cells, bulk actions menu toggling, and empty-state messaging. | The table powers reporting modules and coordinates drag interactions plus virtualization hints; regressions cascade across analytics features.【F:src/components/common/table/table.tsx†L1-L200】 | Default vs. customized column order persists across drag events; action menus respect disabled states; empty datasets render placeholders instead of stale rows. |
 
 ### Medium Priority
-1. **Schedule Selector** (`src/components/common/schedule-selector/schedule-selector.tsx`)
-   - Cover search filtering, checkbox selection persistence, and translation-driven validation banners so scheduling workflows remain predictable.【F:src/components/common/schedule-selector/schedule-selector.tsx†L1-L119】
-2. **Timeline module** (`src/components/common/timeline`)
-   - Validate chronological ordering, status coloring, and icon rendering because incident timelines communicate SLA commitments.
-3. **Ranking widget** (`src/components/common/ranking`)
-   - Ensure scoring badges and progress bars react to input arrays and gracefully handle empty datasets.
-4. **Signature pad** (`src/components/common/signature`) & **File utilities** (`src/components/common/file`)
-   - Confirm canvas reset/export events and file upload validation since both feed legal audit trails.
+| Status | Component | Objective | Why It Matters |
+| --- | --- | --- | --- |
+| [ ] | **Schedule Selector**<br/>`src/components/common/schedule-selector/schedule-selector.tsx` | Cover search filtering, checkbox persistence, and translation-driven validation banners. | Keeps scheduling workflows predictable and guards translation regressions.【F:src/components/common/schedule-selector/schedule-selector.tsx†L1-L119】 |
+| [ ] | **Timeline module**<br/>`src/components/common/timeline` | Validate chronological ordering, status coloring, and icon rendering. | Incident timelines communicate SLA commitments and must remain accurate. |
+| [ ] | **Ranking widget**<br/>`src/components/common/ranking` | Ensure scoring badges and progress bars react to input arrays and empty datasets. | Drives leaderboard experiences that influence operational incentives. |
+| [ ] | **Signature pad & File utilities**<br/>`src/components/common/signature`, `src/components/common/file` | Confirm canvas reset/export events and file upload validation. | Both feed legal audit trails and require strict data integrity. |
 
 ### Foundational Enhancements
-- **Store-driven selectors:** Add explicit coverage for components reading from signals/Zustand (e.g., panic utilities, notifications) by mocking the stores to assert fallback behavior.
-- **Accessibility snapshots:** Extend existing suites with axe/role assertions to maintain the accessibility posture.
-- **Cross-browser quirks:** Incorporate tests around `MapLibre` wrappers and barcode/QR components using mocking to prevent regressions in build pipelines.
+| Status | Initiative | Objective | Why It Matters |
+| --- | --- | --- | --- |
+| [ ] | Store-driven selectors | Mock signals/Zustand stores to assert fallback behavior across panic utilities and notifications. | Prevents regressions in stateful widgets that rely on shared stores. |
+| [ ] | Accessibility snapshots | Add axe/role assertions to existing suites. | Maintains the dashboard's accessibility posture during rapid UI iterations. |
+| [ ] | Cross-browser quirks | Mock `MapLibre` wrappers and barcode/QR components. | Ensures build pipelines catch rendering differences before release. |
 
 ## Next Test Focus
 **Target Suite:** `Navbar` responsive behavior
