@@ -21,6 +21,10 @@ export const description_es = {
   d_webhook: '',
   d_scheduled_reports: '',
   d_news: '',
+  d_key: '',
+  d_commonzone: '',
+  d_commonslot: '',
+  d_resourcezone: '',
 };
 
 export const description_en = {
@@ -46,4 +50,8 @@ export const description_en = {
   d_webhook: '',
   d_scheduled_reports: '',
   d_news: '',
+  d_key: '',
+  d_commonzone: '',
+  d_commonslot: '',
+  d_resourcezone: '',
 };

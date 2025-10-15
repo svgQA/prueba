@@ -25,13 +25,14 @@ export const ClientsSettingPage: FunctionComponent = () => {
   const clients: Signal<IClientResponse[]> = useSignal([]);
   const loading = useSignal<boolean>(false);
   const { t } = useTranslation();
+
   useEffect(() => {
     document.title = t('p_client');
   }, []);
 
+  // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
   const { selectedCompany } = useUserStore();
   useEffect(() => {
-    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
       getClients();
     }
@@ -50,7 +51,7 @@ export const ClientsSettingPage: FunctionComponent = () => {
     go({
       to: `/users/clients/update/${id}`,
       label: 'edit',
-      id: 'memo:novelty:state:update', //TODO: Cambiar a client
+      id: 'memo:novelty:state:update', // TODO: Cambiar a client
       base: 'setting',
     });
   };

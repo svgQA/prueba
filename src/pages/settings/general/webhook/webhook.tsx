@@ -64,13 +64,6 @@ export const WebHookSettingPage: FunctionComponent = () => {
 
   return (
     <Section className='space-y-4'>
-      <Button
-        name='create-hook'
-        label='create'
-        icon='312'
-        type='submit'
-        form='form-create-webhook'
-      />
       <Form<IWebhookForm>
         onSubmit={onSubmit}
         initialValues={{
@@ -155,7 +148,20 @@ export const WebHookSettingPage: FunctionComponent = () => {
           </form>
         )}
       />
-      <Table data={hooks.value} columns={columns} loading={loading.value} />
+      <div className='nax-h-screen'>
+        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
+          <div className='flex flex-row items-center justify-between'>
+            <Button
+              name='create-hook'
+              label='create'
+              icon='212'
+              type='submit'
+              form='form-create-webhook'
+            />
+          </div>
+        </div>
+        <Table data={hooks.value} columns={columns} loading={loading.value} />
+      </div>
     </Section>
   );
 };
