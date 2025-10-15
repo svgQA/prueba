@@ -86,6 +86,10 @@ import { TrybookResourceZonesPage } from './trybook/resourcezone/trybook.resourc
 import { ResourceZoneCreatePage } from './trybook/resourcezone/resourcezone.create';
 import { NewsPage } from './trybook/news/news.page';
 import { NewsForm } from './trybook/news/components/news.upsert';
+import { AccessBansPage } from './trybook/acessesban/trybook.accessesban';
+import { AccessBanForm } from './trybook/acessesban/accessesban.create';
+import { ClientsSettingPage } from '../dashboard/users/clients/clients';
+import { ClientsCreateSettingPage } from '../dashboard/users/clients/create/create';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -483,6 +487,24 @@ export const RoutingContent = memo(() => {
           component={lazy(() => Promise.resolve({ default: RolesUpsertPage }))}
         />
         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.clients.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ClientsSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.clients.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ClientsCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.clients.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ClientsCreateSettingPage })
+          )}
+        />
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.create.to}
           component={lazy(() => Promise.resolve({ default: AreaCreatePage }))}
         />
@@ -714,6 +736,23 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.trybook.news.update.to}
           component={lazy(() => Promise.resolve({ default: NewsForm }))}
+        />
+        {/* OPCIONES ACCESS BANS */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.accessBans.to}
+          component={lazy(() => Promise.resolve({ default: AccessBansPage }))}
+        />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.accessBans.create.to
+          }
+          component={lazy(() => Promise.resolve({ default: AccessBanForm }))}
+        />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.accessBans.update.to
+          }
+          component={lazy(() => Promise.resolve({ default: AccessBanForm }))}
         />
       </Suspense>
     </Router>

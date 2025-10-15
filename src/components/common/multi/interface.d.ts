@@ -20,10 +20,11 @@ export interface IMultiProps {
   value?: IOption[] | ITask[];
   bottom?: boolean;
   placeholder?: string;
-  onSelect?: () => void;
+  onSelect?: (value: string) => void;
   getElement?: (value: IOption, index: number) => VNode;
   button?: boolean;
   ellipse?: number;
   scrollable?: boolean;
   meta?: FieldMetaState<any>;
+  disabled?: boolean;
 }

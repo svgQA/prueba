@@ -78,7 +78,9 @@ describe('Components | Common | Select', () => {
       (option) => option.getAttribute('value')
     );
     expect(optionValues).toEqual(['', 'h', 'l']);
-    expect(select.querySelector('option[value="h"]')?.textContent).toBe('High');
+    expect(select.querySelector('option[value="h"]')?.textContent).toBe(
+      't:High'
+    );
     expect(container.querySelector('.vx-icon-300')).toBeInTheDocument();
   });
 

@@ -42,6 +42,6 @@ export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.access.information.base,
       id: 'access:information:state',
       show: false,
-    },
+    }
   ],
 };
