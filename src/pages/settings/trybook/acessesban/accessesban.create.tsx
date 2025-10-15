@@ -28,13 +28,13 @@ const SUBJECT_TYPE: IOption[] = [
 ];
 
 type FormData = {
-  subjectType: IOption;  // 'internal' | 'external'
-  user?: IOption;        // interno
-  cardId?: string;       // externo
-  username?: string;     // externo (UI: "name")
+  subjectType: IOption; // 'internal' | 'external'
+  user?: IOption; // interno
+  cardId?: string; // externo
+  username?: string; // externo (UI: "name")
   reason?: string;
-  expiresAt?: string;    // datetime-local
-  isActive?: IOption;    // 1/0
+  expiresAt?: string; // datetime-local
+  isActive?: IOption; // 1/0
 };
 
 export const AccessBanForm: FunctionComponent = () => {
@@ -81,14 +81,17 @@ export const AccessBanForm: FunctionComponent = () => {
         ? {
             value: model.userId,
             label: model.user
-              ? `${model.user.name ?? ''}${model.user.surname ? ' ' + model.user.surname : ''}`.trim() || String(model.userId)
+              ? `${model.user.name ?? ''}${model.user.surname ? ' ' + model.user.surname : ''}`.trim() ||
+                String(model.userId)
               : String(model.userId),
           }
         : undefined,
       cardId: !isInternal ? (model.cardId ?? '') : '',
       username: !isInternal ? (model.username ?? '') : '',
       reason: model.reason ?? '',
-      expiresAt: model.expiresAt ? new Date(model.expiresAt).toISOString().slice(0, 16) : '',
+      expiresAt: model.expiresAt
+        ? new Date(model.expiresAt).toISOString().slice(0, 16)
+        : '',
       isActive: model.isActive ? ACTIVE_OPTIONS[0] : ACTIVE_OPTIONS[1],
     };
   }, [id]);
@@ -136,7 +139,9 @@ export const AccessBanForm: FunctionComponent = () => {
       cardId: !isInternal ? data.cardId!.trim() : undefined,
       username: !isInternal ? data.username!.trim() : undefined,
       reason: data.reason?.trim() || undefined,
-      expiresAt: data.expiresAt ? new Date(data.expiresAt).toISOString() : undefined,
+      expiresAt: data.expiresAt
+        ? new Date(data.expiresAt).toISOString()
+        : undefined,
       isActive: data.isActive?.value === 1,
     };
 
@@ -165,10 +170,15 @@ export const AccessBanForm: FunctionComponent = () => {
         initialValues={initialValues.value}
         enableReinitialize
         render={({ handleSubmit, form, submitting, pristine, values }) => {
-          const isInternal = (values.subjectType?.value ?? 'internal') === 'internal';
+          const isInternal =
+            (values.subjectType?.value ?? 'internal') === 'internal';
 
           return (
-            <form className='space-y-6' id='form-access-ban-upsert' onSubmit={handleSubmit}>
+            <form
+              className='space-y-6'
+              id='form-access-ban-upsert'
+              onSubmit={handleSubmit}
+            >
               <StatusButton
                 onClickClean={() => form.reset()}
                 submitting={submitting || loading.value}
@@ -180,7 +190,10 @@ export const AccessBanForm: FunctionComponent = () => {
               <div className='grid grid-cols-4 gap-3'>
                 {/* Interno / Externo */}
                 <div className='col-span-2'>
-                  <Field<IOption> name='subjectType' initialValue={SUBJECT_TYPE[0]}>
+                  <Field<IOption>
+                    name='subjectType'
+                    initialValue={SUBJECT_TYPE[0]}
+                  >
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
@@ -293,7 +306,10 @@ export const AccessBanForm: FunctionComponent = () => {
 
                 {/* Estado */}
                 <div className='col-span-2'>
-                  <Field<IOption> name='isActive' initialValue={ACTIVE_OPTIONS[0]}>
+                  <Field<IOption>
+                    name='isActive'
+                    initialValue={ACTIVE_OPTIONS[0]}
+                  >
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}

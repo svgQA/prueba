@@ -20,7 +20,8 @@ export const getColumns = (
       size: 260,
       accessorFn: (row) => {
         if (row.user) {
-          const full = `${row.user.name ?? ''}${row.user.surname ? ' ' + row.user.surname : ''}`.trim();
+          const full =
+            `${row.user.name ?? ''}${row.user.surname ? ' ' + row.user.surname : ''}`.trim();
           return full || row.userId || '-';
         }
         return row.username ?? '-';
@@ -34,7 +35,7 @@ export const getColumns = (
       header: 'cardId',
       size: 180,
       accessorKey: 'cardId',
-      cell: (info) => info.getValue() ? String(info.getValue()) : '-',
+      cell: (info) => (info.getValue() ? String(info.getValue()) : '-'),
     },
 
     {
@@ -43,7 +44,7 @@ export const getColumns = (
       header: 'h_reason',
       size: 220,
       enableGrouping: true,
-      cell: (info) => info.getValue() ? String(info.getValue()) : '-',
+      cell: (info) => (info.getValue() ? String(info.getValue()) : '-'),
     },
 
     {
@@ -52,9 +53,11 @@ export const getColumns = (
       header: 'h_expires',
       size: 160,
       cell: (info) =>
-        info.getValue()
-          ? <RelativeTime date={info.getValue() as string} />
-          : '-',
+        info.getValue() ? (
+          <RelativeTime date={info.getValue() as string} />
+        ) : (
+          '-'
+        ),
     },
 
     {
