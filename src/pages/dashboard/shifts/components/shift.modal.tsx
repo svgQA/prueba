@@ -25,7 +25,7 @@ export const ShiftForm = ({
   taskSelected,
   closed,
   onClose,
-  onSupervision,
+  // onSupervision,
   posAction,
 }: IShiftFormProps) => {
   const shift = useSignal<IShiftResponse>();
@@ -227,6 +227,7 @@ export const ShiftForm = ({
                   onClick={toggleReplicateClick}
                   className='mx-3 px-4 py-1 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-b-dark-dark border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                 />
+                {/*
                 <Button
                   name='button-supervision'
                   label='l_remote_supervision'
@@ -234,6 +235,7 @@ export const ShiftForm = ({
                   className='bg-primary text-white py-1 rounded px-4'
                   onClick={onSupervision}
                 />
+                */}
               </>
             )}
           </div>
