@@ -1,6 +1,5 @@
 import { type FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
-// import { Section } from '@/components/common/section/section';
 import { Form, Field } from 'react-final-form';
 import { CardAccess } from '@/components/compose/cards/company/cardAccess';
 import { Signal, useSignal } from '@preact/signals';
@@ -17,10 +16,14 @@ import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { required } from '@/utils/utilities';
 import { MultiSelect } from '../../forms/create/MultiSelect';
 import { showAlert } from '@/components/common/show-alert/show-alert';
+import { INPUT_TYPES } from '@/components/common/input/interface';
+import { validateContactByType, validateOptionalUrl } from './utils';
+
 interface IMultiSelect {
   id: number;
   name: string;
 }
+
 export const ResourceMemoSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const resources = useSignal<IResourceResponse[]>([]);
@@ -32,6 +35,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
   }, []);
 
   const { selectedCompany } = useUserStore();
+
   useEffect(() => {
     if (selectedCompany) {
       getResources();
@@ -52,12 +56,20 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
   };
 
   const onSubmit = async (values: IResourceRequest, form: any) => {
+    // Revalidación estricta del link según el tipo antes de enviar
+    const err = validateContactByType(values.link, values);
+    if (err) {
+      ToastManager.error(err);
+      return;
+    }
+
     const output = {
       ...values,
       type: values.type || 'WHATSAPP',
       image: values.image || '',
       icon: values.icon || '',
     };
+
     let response;
     if (values.id) {
       response = await GeneralService.updateResource(values.id, output);
@@ -65,6 +77,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
       response = await GeneralService.createResource(output);
     }
     if (!response.getStatus()) return;
+
     ToastManager.success(values.id ? 's_updated_success' : 's_created_success');
     getResources();
     form?.reset();
@@ -101,6 +114,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
           <div className='flex flex-row gap-2 justify-center flex-wrap overflow-y-auto vox-scroll-design h-[60vh]'>
             {resources.value.map((data) => (
               <CardAccess
+                key={data.id}
                 title={data.name}
                 subtitle={data.description}
                 icon={data.icon}
@@ -130,7 +144,8 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
               </div>
             )}
           </div>
-          <div className='min-w-[500px] h-[450px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
+
+          <div className='min-w-[600px] h-fit bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
             <Form
               onSubmit={onSubmit}
               initialValues={initialValues.value}
@@ -153,6 +168,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                       ? 'Editar Recurso'
                       : 'Nuevo Recurso'}
                   </h2>
+
                   <div className='flex flex-col gap-4'>
                     {/* Title field - full width */}
                     <div className='w-full'>
@@ -200,7 +216,11 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                               id='type'
                               name={input.name}
                               value={input.value}
-                              onChange={input.onChange}
+                              // @ts-ignore
+                              onChange={(nextVal: string) => {
+                                input.onChange(nextVal);
+                                form.change('link', '');
+                              }}
                               label='Tipo de comunicación'
                               options={[
                                 { value: 'WHATSAPP', label: 'WhatsApp' },
@@ -211,47 +231,81 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                             />
                           )}
                         </Field>
-
-                        <Field<string> name='link'>
-                          {({ input, meta }) => (
-                            <Input
-                              {...input}
-                              type='text'
-                              placeholder='URL del enlace'
-                              label='URL del enlace'
-                              meta={meta}
-                            />
-                          )}
-                        </Field>
                       </div>
 
-                      {/* Right column */}
                       <div className='space-y-4'>
-                        <Field<string> name='icon'>
+                        <Field<string>
+                          name='image'
+                          validate={validateOptionalUrl}
+                        >
                           {({ input, meta }) => (
                             <Input
                               {...input}
-                              type='text'
-                              placeholder='URL del icono'
-                              label='URL del icono'
+                              type='url'
+                              placeholder='URL de la imagen (PNG)'
+                              label='URL de la imagen (PNG)'
                               meta={meta}
-                            />
-                          )}
-                        </Field>
-                        <Field<string> name='image'>
-                          {({ input, meta }) => (
-                            <Input
-                              {...input}
-                              type='text'
-                              placeholder='URL de la imagen'
-                              label='URL de la imagen'
-                              meta={meta}
+                              onBlur={(e: any) => {
+                                const v = (e?.target?.value ?? '').trim();
+                                input.onBlur(e);
+                                form.change('image', v);
+                              }}
                             />
                           )}
                         </Field>
                       </div>
 
-                      <div className='w-full'>
+                      <div className='col-span-2'>
+                        <Field<string>
+                          name='link'
+                          validate={(value, allValues) =>
+                            validateContactByType(value, allValues)
+                          }
+                        >
+                          {({ input, meta }) => {
+                            const currentType =
+                              (form.getState().values?.type as string) ||
+                              'WHATSAPP';
+
+                            const { label, placeholder, typeAttr } =
+                              currentType === 'WHATSAPP'
+                                ? {
+                                    label:
+                                      'Número de WhatsApp (con indicativo E.164)',
+                                    placeholder: 'Ej: +34911222333',
+                                    typeAttr: 'tel',
+                                  }
+                                : currentType === 'EMAIL'
+                                  ? {
+                                      label: 'Correo electrónico',
+                                      placeholder: 'Ej: usuario@dominio.com',
+                                      typeAttr: 'email',
+                                    }
+                                  : {
+                                      label: 'URL del enlace',
+                                      placeholder: 'Ej: https://ejemplo.com',
+                                      typeAttr: 'url',
+                                    };
+
+                            return (
+                              <Input
+                                {...input}
+                                type={typeAttr as INPUT_TYPES}
+                                placeholder={placeholder}
+                                label={label}
+                                meta={meta}
+                                onBlur={(e: any) => {
+                                  const v = (e?.target?.value ?? '').trim();
+                                  input.onBlur(e);
+                                  form.change('link', v);
+                                }}
+                              />
+                            );
+                          }}
+                        </Field>
+                      </div>
+
+                      <div className='w-full col-span-2'>
                         <Field<number[]> name='groups'>
                           {({ input }) => (
                             <MultiSelect<IMultiSelect>
@@ -261,6 +315,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                               onChange={(selectedIds) => {
                                 form.change('groups', selectedIds as number[]);
                               }}
+                              label='Seleccione un grupo'
                               getLabel={(item) => item.name}
                               getId={(item) => item.id}
                               placeholder='Seleccione uno o más grupos inteligentes'

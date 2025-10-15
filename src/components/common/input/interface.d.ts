@@ -2,6 +2,24 @@ import { type TargetedEvent } from 'preact/compat';
 import { type IComponentProps } from '@/components/utils/interface';
 import { FieldMetaState } from 'react-final-form';
 
+export type INPUT_TYPES =
+  | 'text'
+  | 'password'
+  | 'number'
+  | 'tel'
+  | 'email'
+  | 'time'
+  | 'date'
+  | 'email'
+  | 'datetime-local'
+  | 'search'
+  | 'url'
+  | 'file'
+  | 'color'
+  | 'range'
+  | 'keywords'
+  | 'checkbox';
+
 export interface IInputProps<T> extends IComponentProps {
   name: string;
   onChange?: (event: TargetedEvent<HTMLInputElement>) => void;
@@ -25,22 +43,7 @@ export interface IInputProps<T> extends IComponentProps {
   unicon?: boolean;
   buttonForm?: string;
   buttonLabel?: string;
-  type?:
-    | 'text'
-    | 'password'
-    | 'number'
-    | 'tel'
-    | 'email'
-    | 'time'
-    | 'date'
-    | 'datetime-local'
-    | 'search'
-    | 'url'
-    | 'file'
-    | 'color'
-    | 'range'
-    | 'keywords'
-    | 'checkbox';
+  type?: INPUT_TYPES;
   meta?: FieldMetaState<T>;
   end?: boolean;
   buttonForm?: string;

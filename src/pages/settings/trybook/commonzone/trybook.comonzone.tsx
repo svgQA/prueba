@@ -91,9 +91,9 @@ export const TrybookCommonZonesPage: FunctionComponent = () => {
     <Table<CommonZoneRow>
       data={rows.value}
       columns={columns}
+      pageSize={10}
       showExpandableIcon={false}
       onClickAction={handleOnClick}
-      pageSize={20}
       isSettingTable
       loading={loading.value}
       absolute

@@ -148,7 +148,7 @@ export const WebHookSettingPage: FunctionComponent = () => {
           </form>
         )}
       />
-      <div className='nax-h-screen'>
+      <div className='max-h-screen'>
         <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
           <div className='flex flex-row items-center justify-between'>
             <Button

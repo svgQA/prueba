@@ -55,16 +55,20 @@ export const KeysSettingPage: FunctionalComponent = () => {
           onChange={(e) => (name.value = e.currentTarget.value)}
           placeholder='name'
         />
-        <div class='pb-2'>
-          <Button
-            name='create-key'
-            label='create'
-            icon='212'
-            onClick={createKey}
-          />
-        </div>
       </div>
-      <Table data={keys.value} columns={columns} loading={loading.value} />
+      <div className='max-h-screen'>
+        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
+          <div className='flex flex-row items-center justify-between'>
+            <Button
+              name='create-key'
+              label='create'
+              icon='212'
+              onClick={createKey}
+            />
+          </div>
+        </div>
+        <Table data={keys.value} columns={columns} loading={loading.value} />
+      </div>
     </Section>
   );
 };
