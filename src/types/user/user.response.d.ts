@@ -49,3 +49,11 @@ export interface IUserResidenceResponse {
   editedBy: string;
   deletedBy: string;
 }
+
+export interface IClientResponse {
+  id: number;
+  name: string;
+  description: string;
+  email: string;
+  phone: string;
+}

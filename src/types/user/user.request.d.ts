@@ -17,6 +17,14 @@ export interface IUserAreaRequest {
   companyId: number;
 }
 
+export interface IClientRequest {
+  name: string;
+  description?: string;
+  companyId: number;
+  email: string;
+  phone: string;
+}
+
 export interface IUserResidenceRequest {
   type?: IOption;
   houseNumber: string; // ej. "12B", "101", "T3-402"

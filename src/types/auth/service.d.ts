@@ -21,6 +21,7 @@ export interface IUserRequest extends IUser {
   readonly cardType?: CARD_ID_TYPE;
   readonly roles?: IOption[];
   readonly places?: IOption[];
+  readonly clients?: IOption[];
   extraData?: IExtraData;
 }
 export interface IExtraData {
