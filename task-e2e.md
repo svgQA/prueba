@@ -87,16 +87,18 @@ bun run test:e2e:report    # open the most recent HTML report with traces and sc
   dashboard readiness checks so every spec benefits from consistent waits and localized expectations.
 
 ## Upcoming Enhancements
-- [ ] **Cover tenant, company, and place switching.** Automate the selectors backed by `useUserStore`
-  and local storage to ensure context changes trigger WebSocket reconnections and persist across reloads.
-- [ ] **Validate the panic workflow end-to-end.** Seed or stub panic alerts, open the panic modal, and
-  assert status transitions (via `PanicService`) propagate to both the table and the real-time widget.
-- [ ] **Exercise notification authoring.** Drive the `HistoryForm` modal to create or edit a
-  notification and confirm the list refreshes, protecting the orchestration pipeline.
-- [ ] **Test memo resolution details.** Expand coverage for memo expandable panels to ensure panic vs.
-  novelty timelines render, matching the supervisor workflow in `memos.page.tsx`.
-- [ ] **Verify form response exports.** Trigger the download logic in `forms/response` to guarantee the
-  Excel/PDF utilities keep working after dependency upgrades.
+| Status | Initiative | Objective |
+| --- | --- | --- |
+| [ ] | **Cover tenant, company, and place switching.** | Ensure `useUserStore` selectors and local-storage hydration drive the correct WebSocket reconnections and persist the active context across reloads. |
+| [ ] | **Validate the panic workflow end-to-end.** | Simulate alerts through `PanicService`, confirm timeline/status transitions, and guarantee both the table and real-time widget react to updates. |
+| [ ] | **Exercise notification authoring.** | Run the `HistoryForm` modal to create and edit notifications, then assert the listing refreshes to safeguard the orchestration pipeline. |
+| [ ] | **Test memo resolution details.** | Expand memo expandable-panel coverage so panic vs. novelty timelines render with accurate translations and metadata. |
+| [ ] | **Verify form response exports.** | Trigger Excel/PDF downloads from `forms/response` to keep export utilities functioning across dependency changes. |
+| [ ] | **Validate memo chat live messaging.** | Use the `ChatView` WebSocket listener to send/receive messages, covering AI assistant defaults, reply threads, and pagination resets. |
+| [ ] | **Cover memo attachments & predefined replies.** | Attach files through the presigned upload flow and send predefined responses to confirm `PredefinedService` actions populate the composer. |
+| [ ] | **Assert form response WebSocket updates.** | Stub `SOCKET_MESSAGE_EVENTS.UPDATE_CHECK` and `CREATE` to verify the responses grid reorders rows and surfaces toast feedback without manual refresh. |
+| [ ] | **Audit notification history analytics.** | Validate cards and table actions in `history.page.tsx`, including create/update/delete paths and metric recalculations after each operation. |
+| [ ] | **Guard tenant-scoped settings modals.** | Switch companies and reopen settings-related modals (profile, language, response settings) to ensure cached data is invalidated per tenant selection. |
 
 ## Test Objective & Rationale
 These suites provide confidence that the dashboard remains operable for security, concierge, and field
