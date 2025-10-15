@@ -63,7 +63,7 @@ export const TrybookResidencesPage: FunctionComponent = () => {
     go({
       to: `/trybook/residence/update/${uuid}`,
       label: 'edit',
-      id: 'trybook:residence:state:update',
+      id: 'trybook:residences:state:update',
       base: 'setting',
     });
   };

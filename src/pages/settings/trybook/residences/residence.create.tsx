@@ -125,7 +125,7 @@ export const ResidenceCreatePage: FunctionComponent = () => {
     go({
       to: '/trybook/residence',
       label: 'residences',
-      id: 'user:residence:state',
+      id: 'trybook:residences:state',
       base: 'setting',
     });
   };
