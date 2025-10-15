@@ -56,7 +56,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
   };
 
   const onSubmit = async (values: IResourceRequest, form: any) => {
-    // Revalidación estricta del link según el tipo antes de enviar
+    // TODO: Revalidación estricta del link según el tipo antes de enviar
     const err = validateContactByType(values.link, values);
     if (err) {
       ToastManager.error(err);
