@@ -40,4 +40,12 @@ export const NEW_BLACK_LIST = [
   'general:company:state',
   'general:webhook:state',
   'security:keys:state',
+  'general:tools:state',
+  'shift:tools:state',
+  'user:tools:state',
+  'ia:tools:state',
+  'form:tools:state',
+  'memo:tools:state',
+  'notification:tools:state',
+  'trybook:tools:state',
 ];

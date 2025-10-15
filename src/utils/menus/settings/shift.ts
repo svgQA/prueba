@@ -9,6 +9,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
     to: PAGES_LIST_ROUTER.dashboard.setting.shifts.settings,
     label: 'setting',
     id: 'shift:tools:state',
+    show: true,
   },
   show: true,
   id: 'shift:state',
