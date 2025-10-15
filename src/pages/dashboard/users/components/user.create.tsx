@@ -50,7 +50,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const municipalities = useSignal<IOption[]>([]);
   const companies = useSignal<IOption[]>([]);
   const areas = useSignal<IOption[]>([]);
-
+  const clients = useSignal<IOption[]>([]);
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
   const image = useSignal<IPresignedRequest[]>([]);
   const requiredRole = useSignal<boolean>(true);
@@ -66,6 +66,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       getDepartments(),
       getRoles(),
       getPlaces(),
+      getClients(),
     ]);
     // getCompanies();
     // getDepartments();
@@ -165,6 +166,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     const response = await PlaceService.getCountriesList();
     if (!response.getStatus()) return;
     countries.value = response.getMany();
+  };
+
+  const getClients = async (): Promise<void> => {
+    const response = await UserService.getClients();
+    if (!response.getStatus()) return;
+    clients.value = response.getMany().map((client) => ({
+      label: client.name,
+      value: client.id,
+    }));
   };
 
   const getDepartments = async (): Promise<void> => {
@@ -274,6 +284,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     municipalities.value = [];
     departments.value = [];
     countries.value = [];
+    clients.value = [];
   };
 
   const cleanInitialValues = () => {
@@ -550,6 +561,24 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                 <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
                   {t('h_user_info')}
                 </h3>
+
+                <div className='grid grid-cols-1 gap-4'>
+                  <Field<IOption> name='clients'>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        id='clients'
+                        label='l_client'
+                        placeholder='p_select'
+                        icon='231'
+                        multiple={true}
+                        allowAll={true}
+                        options={clients.value}
+                      />
+                    )}
+                  </Field>
+                </div>
                 <div className='grid grid-cols-1 gap-4'>
                   <Field<string> name='userType' validate={required}>
                     {({ input, meta }) => (
