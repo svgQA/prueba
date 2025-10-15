@@ -48,6 +48,13 @@ export interface IRelationRole {
   };
 }
 
+export interface IRelationClient {
+  client: {
+    id: number;
+    name: string;
+  };
+}
+
 export interface IUserResponse extends IUserRequest {
   id: number;
   playerId?: string;
@@ -59,6 +66,7 @@ export interface IUserResponse extends IUserRequest {
   companies: IRelationCompany[];
   roles: IRelationRole[];
   userPlaces: IRelationPlace[];
+  clients: IRelationClient[];
 }
 
 export interface IJwtPayload {

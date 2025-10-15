@@ -34,6 +34,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
   const users = useSignal<IOption[]>([]);
+  const clients = useSignal<IOption[]>([]);
   const { go } = useNavigation();
   const { t } = useTranslation();
 
@@ -69,6 +70,15 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
 
     if (!request.getStatus()) return;
     users.value = request.getMany();
+  };
+
+  const getClients = async (): Promise<void> => {
+    const response = await UserService.getClients();
+    if (!response.getStatus()) return;
+    clients.value = response.getMany().map((client) => ({
+      label: client.name,
+      value: client.id,
+    }));
   };
 
   const setInitialValues = async () => {
@@ -107,7 +117,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
   useEffect(() => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
-      Promise.all([getUsers(), setInitialValues()]);
+      Promise.all([getUsers(), getClients(), setInitialValues()]);
     }
   }, [selectedCompany, location]);
 
@@ -153,7 +163,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         placeholder='p_select_client'
                         label='l_client'
                         icon='252'
-                        options={users.value}
+                        options={clients.value}
                       />
                       /*
                       <Select

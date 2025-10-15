@@ -96,6 +96,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         value: place.place.id,
       }));
 
+      const userClients = user.clients?.map((client) => ({
+        label: client.client.name,
+        value: client.client.id,
+      }));
+
       const userCompanies =
         user.companies?.map((comp) => ({
           label: comp.company.name,
@@ -130,6 +135,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         extraData: userExtraData,
         roles: roles,
         places: places,
+        clients: userClients,
       };
 
       if (user.userType) typeSelected.value = user.userType;
