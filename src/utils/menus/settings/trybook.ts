@@ -7,6 +7,12 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
   id: 'trybook:state',
+  setting: {
+    to: '/algo/',
+    label: 'setting',
+    id: 'trybook:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '328',
@@ -41,7 +47,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       description: 'd_resourcezone',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.base,
-      show: true,
+      show: false,
       id: 'trybook:resourcezone:state',
     },
     {

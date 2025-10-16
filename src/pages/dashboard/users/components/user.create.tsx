@@ -35,7 +35,7 @@ interface CreateUserProps {
 }
 
 export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
-  const { user } = useUserStore();
+  const {} = useUserStore();
 
   const documentTypes = useSignal<IDocumentTypeResponse[]>([]);
   const roles = useSignal<IOption[]>([]);
@@ -50,7 +50,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const municipalities = useSignal<IOption[]>([]);
   const companies = useSignal<IOption[]>([]);
   const areas = useSignal<IOption[]>([]);
-
+  const clients = useSignal<IOption[]>([]);
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
   const image = useSignal<IPresignedRequest[]>([]);
   const requiredRole = useSignal<boolean>(true);
@@ -66,6 +66,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       getDepartments(),
       getRoles(),
       getPlaces(),
+      getClients(),
     ]);
     // getCompanies();
     // getDepartments();
@@ -93,6 +94,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       const places = user.userPlaces?.map((place) => ({
         label: place.place.name,
         value: place.place.id,
+      }));
+
+      const userClients = user.clients?.map((client) => ({
+        label: client.client.name,
+        value: client.client.id,
       }));
 
       const userCompanies =
@@ -129,6 +135,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         extraData: userExtraData,
         roles: roles,
         places: places,
+        clients: userClients,
       };
 
       if (user.userType) typeSelected.value = user.userType;
@@ -165,6 +172,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     const response = await PlaceService.getCountriesList();
     if (!response.getStatus()) return;
     countries.value = response.getMany();
+  };
+
+  const getClients = async (): Promise<void> => {
+    const response = await UserService.getClients();
+    if (!response.getStatus()) return;
+    clients.value = response.getMany().map((client) => ({
+      label: client.name,
+      value: client.id,
+    }));
   };
 
   const getDepartments = async (): Promise<void> => {
@@ -274,6 +290,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     municipalities.value = [];
     departments.value = [];
     countries.value = [];
+    clients.value = [];
   };
 
   const cleanInitialValues = () => {
@@ -297,7 +314,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   };
 
   const getTypesUsers = (): { id: string; name: string }[] => {
-    return [
+    /*return [
       ...(user?.userType === 'ADMIN_CLIENT'
         ? [
             {
@@ -323,6 +340,17 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
               name: t('l_admin_client'),
             },
           ]),
+    ];*/
+
+    return [
+      {
+        id: 'INTERNAL',
+        name: t('l_internal'),
+      },
+      {
+        id: 'EXTERNAL_ACCESS',
+        name: t('l_external_access'),
+      },
     ];
   };
 
@@ -550,6 +578,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                 <h3 className='text-lg font-semibold mb-4 border-b border-b-light dark:border-b-dark pb-2'>
                   {t('h_user_info')}
                 </h3>
+
                 <div className='grid grid-cols-1 gap-4'>
                   <Field<string> name='userType' validate={required}>
                     {({ input, meta }) => (
@@ -572,6 +601,25 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                       />
                     )}
                   </Field>
+                  {typeSelected.value === 'EXTERNAL_ACCESS' && (
+                    <div className='grid grid-cols-1 gap-4'>
+                      <Field<IOption> name='clients'>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            meta={meta}
+                            id='clients'
+                            label='l_client'
+                            placeholder='p_select'
+                            icon='231'
+                            multiple={true}
+                            allowAll={true}
+                            options={clients.value}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  )}
                   {typeSelected.value === 'ADMIN_CLIENT' ||
                     (typeSelected.value === 'CLIENT' && (
                       <Field<IOption[]>

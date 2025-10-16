@@ -42,10 +42,7 @@ export const columns: ColumnDef<IProject>[] = [
       return (
         <div className='flex items-center gap-2'>
           <Avatar square size='sm' src={client?.image} />
-          <TextEllipsis
-            text={client?.name + ' ' + client?.surname}
-            maxWidth='300px'
-          />
+          <TextEllipsis text={client?.name} maxWidth='300px' />
         </div>
       );
     },

@@ -147,7 +147,7 @@ Testing is automated at multiple layers to ensure the dashboard remains reliable
 delivered. The following sections summarize what runs locally and in CI and how to reproduce those
 checks on your machine.
 
-### Unit Testing
+### [Unit Testing](./tasks-unit.md)
 - **Scope** – UI components, hooks, Zustand stores, and pure utilities.
 - **Tooling** – [Vitest](https://vitest.dev/) with [Testing Library](https://testing-library.com/)
   for DOM assertions and accessibility queries.
@@ -156,7 +156,7 @@ checks on your machine.
 - **Coverage** – `bun run test:cov` generates an HTML report in `coverage/` with branch, line, and
   statement metrics; maintainers target ≥90% coverage for core modules.
 
-### End-to-End Testing
+### [End-to-End Testing](./tasks-e2e.md)
 - **Scope** – Critical journeys such as authentication, tenant switching, panic workflows, and
   device management.
 - **Tooling** – [Playwright](https://playwright.dev/) with a project configuration located in

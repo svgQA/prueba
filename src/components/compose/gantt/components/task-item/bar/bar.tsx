@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { getProgressPoint } from '../../../helpers/bar-helper';
 import { BarDisplay } from './bar-display';
-import { BarDateHandle } from './bar-date-handle';
+// import { BarDateHandle } from './bar-date-handle';
 import { BarProgressHandle } from './bar-progress-handle';
 import { TaskItemProps } from '../task-item';
 import styles from './bar.module.css';
@@ -42,7 +42,6 @@ export const Bar: FunctionComponent<TaskItemProps> = ({
       <g className='handleGroup'>
         {isDateChangeable && (
           <g>
-            {/* left */}
             {/*
             <BarDateHandle
               x={task.x1 - 10}
@@ -56,8 +55,6 @@ export const Bar: FunctionComponent<TaskItemProps> = ({
                 onEventStart('start', task, e);
               }}
             />
-            */}
-            {/* right */}
             <BarDateHandle
               x={task.x2 - task.handleWidth - 1}
               y={task.y + 1}
@@ -70,6 +67,7 @@ export const Bar: FunctionComponent<TaskItemProps> = ({
                 onEventStart('end', task, e);
               }}
             />
+            */}
           </g>
         )}
         {isProgressChangeable && (

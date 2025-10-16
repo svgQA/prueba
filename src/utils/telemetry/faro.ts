@@ -16,6 +16,8 @@ export type FaroSetting = {
 };
 
 export class FaroManager {
+  private static initialized = false;
+
   static connect(
     tenant: () => string,
     company: () => string | undefined,
@@ -24,31 +26,35 @@ export class FaroManager {
   ) {
     const _token = token();
 
-    initializeFaro({
-      app: {
-        name: 'tryvoo-web',
-        version: __APP_VERSION__,
-        environment: app_environment,
-      },
-      transports: [
-        new FetchTransport({
-          url: `${default_service_url}/telemetry/faro/collect`,
-          requestOptions: {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: _token,
-              'voxline-tenant': tenant(),
-              'voxline-company': company() ?? '0',
+    if (!FaroManager.initialized) {
+      initializeFaro({
+        app: {
+          name: 'tryvoo-web',
+          version: __APP_VERSION__,
+          environment: app_environment,
+        },
+        transports: [
+          new FetchTransport({
+            url: `${default_service_url}/telemetry/faro/collect`,
+            requestOptions: {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: _token,
+                'voxline-tenant': tenant(),
+                'voxline-company': company() ?? '0',
+              },
             },
-          },
-        }),
-      ],
-      instrumentations: [
-        ...getWebInstrumentations(),
-        new TracingInstrumentation(),
-      ],
-    });
+          }),
+        ],
+        instrumentations: [
+          ...getWebInstrumentations(),
+          new TracingInstrumentation(),
+        ],
+      });
+
+      FaroManager.initialized = true;
+    }
 
     faro.api.setSession({
       attributes: {

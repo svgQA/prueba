@@ -47,6 +47,18 @@ export const PAGES_LIST_ROUTER = {
             to: '/users/roles/update/:id',
           },
         },
+        clients: {
+          base: '/clients',
+          to: '/users/clients',
+          create: {
+            base: '/create',
+            to: '/users/clients/create',
+          },
+          update: {
+            base: '/update',
+            to: '/users/clients/update/:id',
+          },
+        },
         groups: {
           base: '/groups',
           to: '/users/groups',

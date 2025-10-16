@@ -88,7 +88,7 @@ export const ShiftSettingPage: FunctionComponent = () => {
         render={({ handleSubmit, form, submitting, pristine }) => (
           <form
             onSubmit={handleSubmit}
-            className='space-y-6'
+            className='space-y-6 relative'
             id='form-settings-shifts'
           >
             <h2 className='text-lg font-bold'>
@@ -308,6 +308,7 @@ export const ShiftSettingPage: FunctionComponent = () => {
               submitting={submitting}
               pristine={pristine}
               form='form-settings-shifts'
+              top={false}
             />
           </form>
         )}
