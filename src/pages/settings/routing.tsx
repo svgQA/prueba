@@ -75,7 +75,7 @@ import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
 import { ResourceMemoSettingPage } from './memo/resource/resource';
 import { FormReportSettingPage } from './forms/report/report';
 import ReportUpsertForm from './forms/report/components/report.upsert.form';
-import { ResidenceCreatePage } from './trybook/residences/residence.create';
+import { SiteCreatePage } from './trybook/residences/residence.create';
 import { TrybookResidencesPage } from './trybook/residences/trybook.residences';
 import { TrybookCommonZonesPage } from './trybook/commonzone/trybook.comonzone';
 import { CommonZoneCreatePage } from './trybook/commonzone/comonzone.create';
@@ -620,7 +620,7 @@ export const RoutingContent = memo(() => {
             PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.create.to
           }
           component={lazy(() =>
-            Promise.resolve({ default: ResidenceCreatePage })
+            Promise.resolve({ default: SiteCreatePage })
           )}
         />
         <Route
@@ -628,7 +628,7 @@ export const RoutingContent = memo(() => {
             PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.update.to
           }
           component={lazy(() =>
-            Promise.resolve({ default: ResidenceCreatePage })
+            Promise.resolve({ default: SiteCreatePage })
           )}
         />
 

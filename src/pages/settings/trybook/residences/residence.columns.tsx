@@ -1,59 +1,78 @@
-// residence.columns.ts
+// site.columns.ts (antes residence.columns.ts)
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ButtonAction } from '@/components/common/button/column';
 
-export type ResidenceType = 'HOUSE' | 'APARTMENT';
+// Tipos de Site (ahora incluye OFFICE)
+export type SiteType = 'HOUSE' | 'APARTMENT' | 'OFFICE';
 
-export type ResidenceRow = {
+// Estructura de cada fila que llega del back
+export type SiteRow = {
   uuid: string;
 
-  type: ResidenceType;
+  type: SiteType;
   houseNumber?: string | null;
   block?: string | null;
   floor?: number | null;
 
   placeId?: number | null;
-  place?: { id?: number | null; name?: string | null } | null;
+  place?: {
+    id?: number | null;
+    name?: string | null;
+    type?: 'INDUSTRIAL' | 'RESIDENTIAL' | null; // opcional si lo traes
+  } | null;
 
-  user?: { id?: number; name?: string | null; surname?: string | null } | null;
+  // N:M: residents -> [{ user: { id, name, surname } }]
+  residents?: Array<{
+    user?: { id?: number; name?: string | null; surname?: string | null } | null;
+  }> | null;
 
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
 };
 
-export const columns: ColumnDef<ResidenceRow>[] = [
+const typeLabel = (t?: SiteType) =>
+  t === 'APARTMENT' ? 'Apto' : t === 'OFFICE' ? 'Oficina' : 'Casa';
+
+export const columns: ColumnDef<SiteRow>[] = [
   {
-    id: 'residence',
-    header: 'l_residence',
+    id: 'site',
+    header: 'l_residence', // si tu i18n sigue usando esta key, la dejo igual
     size: 320,
     cell: ({ row }) => {
       const r = row.original;
-      const type = r.type === 'APARTMENT' ? 'Apto' : 'Casa';
+      const t = typeLabel(r.type);
       const hn = r.houseNumber ?? '';
       const blk = r.block ? ` - ${r.block}` : '';
       const flr =
-        r.type === 'APARTMENT' && r.floor && r.floor > 0
+        r.type === 'APARTMENT' && typeof r.floor === 'number' && r.floor > 0
           ? ` Piso ${r.floor}`
           : '';
-      return <span>{`${type} ${hn}${flr}${blk}`}</span>;
+      return <span>{`${t} ${hn}${flr}${blk}`}</span>;
     },
   },
   {
-    id: 'owner',
+    id: 'owners',
     header: 'h_owner',
-    size: 240,
+    size: 260,
     cell: ({ row }) => {
-      const u = row.original.user;
-      const full = `${u?.name ?? ''} ${u?.surname ?? ''}`.trim();
-      return <span>{full || '-'}</span>;
+      const res = row.original.residents ?? [];
+      const names = res
+        .map((ru) => {
+          const u = ru?.user;
+          const full = `${u?.name ?? ''} ${u?.surname ?? ''}`.trim();
+          return full || null;
+        })
+        .filter(Boolean) as string[];
+
+      return <span>{names.length ? names.join(', ') : '-'}</span>;
     },
   },
   {
     id: 'place',
     header: 'l_set_place',
-    size: 220,
+    size: 240,
     cell: ({ row }) => {
       const r = row.original;
       const label = r.place?.name ?? String(r.placeId ?? '');
@@ -69,19 +88,19 @@ export const columns: ColumnDef<ResidenceRow>[] = [
     cell: ({ row }) => {
       const { uuid } = row.original;
       return (
-        <div className='w-full flex justify-center gap-1'>
+        <div className="w-full flex justify-center gap-1">
           <ButtonAction
             id={String(uuid)}
-            type='shift'
+            type="shift"             // lo dejo tal cual lo tenías
             action={ROW_ACTIONS.UPDATE}
-            icon='123'
+            icon="123"
           />
           <ButtonAction
             id={String(uuid)}
-            type='shift'
+            type="shift"
             action={ROW_ACTIONS.DELETE}
-            icon='053'
-            color='!text-red-500'
+            icon="053"
+            color="!text-red-500"
           />
         </div>
       );
