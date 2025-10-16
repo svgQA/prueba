@@ -314,7 +314,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   };
 
   const getTypesUsers = (): { id: string; name: string }[] => {
-    return [
+    /*return [
       ...(user?.userType === 'ADMIN_CLIENT'
         ? [
             {
@@ -340,6 +340,17 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
               name: t('l_admin_client'),
             },
           ]),
+    ];*/
+
+    return [
+      {
+        id: 'INTERNAL',
+        name: t('l_internal'),
+      },
+      {
+        id: 'EXTERNAL_ACCESS',
+        name: t('l_external_access'),
+      },
     ];
   };
 
@@ -569,23 +580,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                 </h3>
 
                 <div className='grid grid-cols-1 gap-4'>
-                  <Field<IOption> name='clients'>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        id='clients'
-                        label='l_client'
-                        placeholder='p_select'
-                        icon='231'
-                        multiple={true}
-                        allowAll={true}
-                        options={clients.value}
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div className='grid grid-cols-1 gap-4'>
                   <Field<string> name='userType' validate={required}>
                     {({ input, meta }) => (
                       <Select
@@ -607,6 +601,25 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                       />
                     )}
                   </Field>
+                  {typeSelected.value === 'EXTERNAL_ACCESS' && (
+                    <div className='grid grid-cols-1 gap-4'>
+                      <Field<IOption> name='clients'>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            meta={meta}
+                            id='clients'
+                            label='l_client'
+                            placeholder='p_select'
+                            icon='231'
+                            multiple={true}
+                            allowAll={true}
+                            options={clients.value}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  )}
                   {typeSelected.value === 'ADMIN_CLIENT' ||
                     (typeSelected.value === 'CLIENT' && (
                       <Field<IOption[]>

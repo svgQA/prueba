@@ -252,4 +252,11 @@ export class UserService extends BaseService {
     };
     return await super.make_request<any>(this.name, model);
   }
+
+  static async getAssociatedClients() {
+    const model: IMakeRequest = {
+      url: ['client', 'associated-clients'],
+    };
+    return await super.make_request<IClientResponse>(this.name, model);
+  }
 }
