@@ -55,7 +55,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       description: 'd_client',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.users.clients.base,
-      id: 'user:client:state',
+      id: 'trybook:notices:state', // TODO: Cambiar a client
       show: true,
     },
   ],

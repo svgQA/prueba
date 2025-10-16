@@ -47,7 +47,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       description: 'd_resourcezone',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.base,
-      show: true,
+      show: false,
       id: 'trybook:resourcezone:state',
     },
     {

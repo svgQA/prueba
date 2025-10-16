@@ -55,12 +55,14 @@ import { setAllPermissions } from '@/store/signals/access/permission';
 import { useSignal } from '@preact/signals';
 import PanicModal from '@/components/common/panic/components/panic.modal';
 import { IPanic } from '@/components/common/panic/utils/interface';
+import { UserService } from '@/services/general/user';
 
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import { Modal } from '@/components/common/modal/modal';
 import { Field, Form } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
 import { FaroManager } from '@/utils/telemetry';
+import { IClientResponse } from '@/types/user/user.response';
 
 /** ***********************************************************************
  * COMPONENT
@@ -91,6 +93,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setPlaces,
       getPlaceId,
     } = useUserStore();
+
+    const clients = useSignal<IClientResponse[]>([]);
 
     const isModalOpen = useSignal<boolean>(false);
     const modalPanic = useSignal<IPanic | undefined>(undefined);
@@ -158,6 +162,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         }
       }
       getPlaces();
+      getClients();
     };
 
     const getPlaces = async () => {
@@ -178,6 +183,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           setSelectedPlace(Number(firstPlace));
         }
       }
+    };
+
+    const getClients = async () => {
+      const request = await UserService.getAssociatedClients();
+
+      if (!request.getStatus()) return;
+      clients.value = request.getMany();
     };
 
     const handleCompanyChange = (value: string | number) => {
@@ -562,6 +574,16 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 value={selectedPlace?.value}
                 onChange={handlePlaceChange}
                 icon='103'
+                borderless
+              />
+              <CustomSwitcher
+                options={clients.value.map((client) => ({
+                  label: client.name,
+                  value: client.id,
+                }))}
+                value={clients.value[0]?.id}
+                onChange={() => {}}
+                icon='023'
                 borderless
               />
               <div className='flex flex-row gap-4 items-center justify-center'>
