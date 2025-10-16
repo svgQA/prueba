@@ -35,7 +35,7 @@ interface CreateUserProps {
 }
 
 export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
-  const { user } = useUserStore();
+  const {} = useUserStore();
 
   const documentTypes = useSignal<IDocumentTypeResponse[]>([]);
   const roles = useSignal<IOption[]>([]);
