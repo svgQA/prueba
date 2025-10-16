@@ -24,7 +24,6 @@ export const NewsForm: FunctionComponent = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();
   const { id } = useParams<{ id?: string }>();
-  const { selectedCompany /*user*/ } = useUserStore();
 
   const [initialValues, setInitialValues] = useState<any>();
   const loading = useSignal<boolean>(false);
@@ -37,9 +36,12 @@ export const NewsForm: FunctionComponent = () => {
     fetchInitialValues();
   }, []);
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    fetchInitialValues();
-    getPlaces();
+    if (selectedCompany) {
+      fetchInitialValues();
+      getPlaces();
+    }
   }, [selectedCompany, id]);
 
   const fetchInitialValues = async () => {

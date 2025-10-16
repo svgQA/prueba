@@ -66,7 +66,10 @@ export const AccessBansPage: FunctionalComponent = () => {
       <div className='max-h-screen'>
         <Table<IAccessBan>
           data={rows.value}
-          columns={getColumns(({ id, action }: { id: string; action: ROW_ACTIONS }) => onClickAction({ id, type: 'ban', action }))}
+          columns={getColumns(
+            ({ id, action }: { id: string; action: ROW_ACTIONS }) =>
+              onClickAction({ id, type: 'ban', action })
+          )}
           pageSize={10}
           visibility={{ id: false }}
         />

@@ -7,6 +7,12 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
   id: 'forms:state',
+  setting: {
+    to: '/algo/',
+    label: 'setting',
+    id: 'form:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '094',

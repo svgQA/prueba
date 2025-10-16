@@ -26,7 +26,7 @@ import { MentionOption } from '@/components/common/mention-editor';
 import { DateField } from '@/components/compose/forms';
 import { DateUtils } from '@/utils/utilities/dates';
 
-const ReportUpsertForm = () => {
+export const ReportUpsertForm = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const { selectedCompany } = useUserStore();
@@ -395,5 +395,3 @@ const ReportUpsertForm = () => {
     </div>
   );
 };
-
-export default ReportUpsertForm;

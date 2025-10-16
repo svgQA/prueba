@@ -6,6 +6,7 @@ import { BarTask } from '../../types/bar-task';
 import styles from './tooltip.module.css';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { Badge } from '@/components/common/badge/badge';
+import { useTranslation } from 'react-i18next';
 
 export type TooltipProps = {
   task: BarTask;
@@ -123,6 +124,7 @@ export const StandardTooltipContent = ({
     fontSize,
     fontFamily,
   };
+  const { t } = useTranslation();
 
   const formatDate = (date: Date | string) => {
     if (typeof date === 'string') {
@@ -156,7 +158,7 @@ export const StandardTooltipContent = ({
 
   return (
     <div
-      className='bg-white dark:bg-b-dark-dark rounded-lg shadow-lg p-2 max-w-3xl border-2 border-gray-200 dark:border-gray-700'
+      className='bg-white dark:bg-b-dark-dark rounded-lg shadow-lg p-2 max-w-3xl border-2 border-gray-200 dark:border-gray-700 z-10'
       style={style}
     >
       <div className='flex'>
@@ -168,12 +170,12 @@ export const StandardTooltipContent = ({
           <div className='space-y-4 text-sm text-gray-600 dark:text-gray-300'>
             <div className='flex gap-4'>
               <div>
-                <p className='font-medium'>Start Date</p>
+                <p className='font-medium'>{t('h_date_start')}</p>
                 <p>{formatDate(task.start)}</p>
               </div>
 
               <div>
-                <p className='font-medium'>End Date</p>
+                <p className='font-medium'>{t('h_date_end')}</p>
                 <p>{formatDate(task.end)}</p>
               </div>
             </div>
@@ -194,7 +196,7 @@ export const StandardTooltipContent = ({
           {range !== 0 && (
             <div>
               <p className='font-medium text-gray-700 dark:text-gray-200'>
-                Duration
+                {t('h_duration')}
               </p>
               <p className='text-gray-600 dark:text-gray-300'>
                 {~~(range / (1000 * 60 * 60))} hours

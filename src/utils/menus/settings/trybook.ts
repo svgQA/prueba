@@ -7,6 +7,12 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
   id: 'trybook:state',
+  setting: {
+    to: '/algo/',
+    label: 'setting',
+    id: 'trybook:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '328',
