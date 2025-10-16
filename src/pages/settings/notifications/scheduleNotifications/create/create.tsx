@@ -10,6 +10,7 @@ import { IOption } from '@/components/common/smart-selector/smart-select';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
+
 export const ScheduledNotificationForm = () => {
   const [templates, setTemplates] = useState<IOption[]>([]);
   const [pendingSubmission, setPendingSubmission] = useState(false);
@@ -239,5 +240,3 @@ export const ScheduledNotificationForm = () => {
     </>
   );
 };
-
-export default ScheduledNotificationForm;

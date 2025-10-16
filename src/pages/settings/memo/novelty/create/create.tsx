@@ -113,6 +113,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
               form='form-place-create'
               label={id ? 'edit' : 'save'}
             />
+
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-3'>
               <div class='col-span-2'>

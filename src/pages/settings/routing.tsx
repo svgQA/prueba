@@ -5,6 +5,7 @@ import { Suspense, lazy } from 'preact/compat';
 
 // import { FormInspectSettingPage } from './forms/inspect/inspect';
 // import { FormResponseSettingPage } from './forms/response/response';
+// import { FormAnalyticSettingPage } from './forms/analytic/analytic';
 import { UserCreateSettingPage } from './general/user/create/create';
 import { AnalyticAdminSettingPage } from './admin/analytic/analytic';
 import { DatabaseSettingPage } from './admin/database/database';
@@ -22,7 +23,6 @@ import { GroupSettingPage } from './security/groups/groups';
 import { PaymentHistorySettingPage } from './payment/history/history';
 import { PaymentSettingPage } from './payment/payment/payment';
 import { FormSettingPage } from './forms/form/form';
-// import { FormAnalyticSettingPage } from './forms/analytic/analytic';
 import { FormCreateSettingPage } from './forms/create/create';
 import { DevicesSettingPage } from './iot/devices/devices';
 import { IotSettingPage } from './iot/iot/iot';
@@ -65,7 +65,7 @@ import { ScheduledNotificationsPage } from './notifications/scheduleNotification
 import { TemplateNotificationPage } from './notifications/templateNotifications/templateNotifications';
 import { TemplateCreateForm } from './notifications/templateNotifications/create/create';
 import { AreaCreatePage } from '../dashboard/users/areas/area.create';
-import ScheduledNotificationForm from './notifications/scheduleNotifications/create/create';
+import { ScheduledNotificationForm } from './notifications/scheduleNotifications/create/create';
 import { TemplateNotificationEditPage } from './notifications/templateNotifications/update/update';
 import { ScheduledNotificationEditPage } from './notifications/scheduleNotifications/update/update';
 import { PredefinedSettingPage } from './memo/predefined/predefined';
@@ -74,7 +74,7 @@ import { GroupCreateSettingPage } from './security/groups/create/create';
 import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
 import { ResourceMemoSettingPage } from './memo/resource/resource';
 import { FormReportSettingPage } from './forms/report/report';
-import ReportUpsertForm from './forms/report/components/report.upsert.form';
+import { ReportUpsertForm } from './forms/report/components/report.upsert.form';
 import { ResidenceCreatePage } from './trybook/residences/residence.create';
 import { TrybookResidencesPage } from './trybook/residences/trybook.residences';
 import { TrybookCommonZonesPage } from './trybook/commonzone/trybook.comonzone';
@@ -737,6 +737,7 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.trybook.news.update.to}
           component={lazy(() => Promise.resolve({ default: NewsForm }))}
         />
+
         {/* OPCIONES ACCESS BANS */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.trybook.accessBans.to}

@@ -5,7 +5,6 @@ import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { required, lengthSize } from '@/utils/utilities';
 import { Select } from '@/components/common/select/select';
-// import { Section } from '@/components/common/section/section';
 import { useEffect, useState } from 'preact/hooks';
 import { useParams } from 'wouter';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
@@ -100,6 +99,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       ...(model.description == '' ? {} : { description: model.description }),
       code: Number(model.code),
       zipCode: model.zipCode,
+      type: model.type,
     };
 
     let request: any;
