@@ -1,0 +1,155 @@
+import { ColumnDef } from '@tanstack/react-table';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { IProject } from '../projects';
+import { Badge } from '@/components/common/badge/badge';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { Avatar } from '@/components/common/Avatar';
+import { FormattedDate } from '@/components/compose/forms';
+
+const status: { key: string; label: string; color: string }[] = [
+  {
+    key: 'IN_PROGRESS',
+    label: 'l_in_progress',
+    color: 'info',
+  },
+  { key: 'COMPLETED', label: 'COMPLETED', color: 'success' },
+  { key: 'PENDING', label: 'pending', color: 'error' },
+];
+const priorities: { key: string; label: string; color: string }[] = [
+  {
+    key: 'LOW',
+    label: 'l_low',
+    color: 'info',
+  },
+  { key: 'MEDIUM', label: 'l_medium', color: 'warning' },
+  { key: 'HIGH', label: 'l_high', color: 'error' },
+];
+
+export const columns: ColumnDef<IProject>[] = [
+  {
+    id: 'id',
+    accessorKey: 'id',
+    size: 60,
+    header: 'h_id',
+  },
+  {
+    id: 'client',
+    accessorKey: 'client',
+    size: 120,
+    header: 'h_client',
+    cell: (info) => {
+      const client = info.getValue() as any;
+      return (
+        <div className='flex items-center gap-2'>
+          <Avatar square size='sm' src={client?.image} />
+          <TextEllipsis
+            text={client?.name + ' ' + client?.surname}
+            maxWidth='300px'
+          />
+        </div>
+      );
+    },
+  },
+  {
+    id: 'name',
+    accessorKey: 'name',
+    size: 120,
+    header: 'h_name',
+  },
+  {
+    id: 'description',
+    accessorKey: 'description',
+    size: 120,
+    header: 'h_description',
+    cell: (info) => {
+      const description = info.getValue() as string;
+      return <TextEllipsis text={description} maxWidth='300px' />;
+    },
+  },
+  {
+    id: 'startDate',
+    accessorKey: 'startDate',
+    size: 70,
+    header: 'h_start',
+    cell: (info) => {
+      return <FormattedDate date={String(info.getValue())} format='datetime' />;
+    },
+  },
+  {
+    id: 'endDate',
+    accessorKey: 'endDate',
+    size: 70,
+    header: 'h_end',
+    cell: (info) => {
+      return <FormattedDate date={String(info.getValue())} format='datetime' />;
+    },
+  },
+  {
+    id: 'state',
+    accessorKey: 'state',
+    size: 50,
+    header: 'h_status',
+    cell: (info) => {
+      const value = info.getValue() as string;
+      const state = status.find((sta) => sta.key == value) || {
+        label: '',
+        color: 'info',
+      };
+      return (
+        <Badge
+          label={value}
+          status={state?.color as 'info' | 'error' | 'warning' | 'success'}
+          outline
+          full
+          size='xs'
+        />
+      );
+    },
+  },
+  {
+    id: 'priority',
+    accessorKey: 'priority',
+    size: 50,
+    header: 'h_priority',
+    cell: (info) => {
+      const value = info.getValue() as string;
+      const priority = priorities.find((sta) => sta.key == value) || {
+        label: '',
+        color: 'info',
+      };
+      return (
+        <Badge
+          label={value}
+          status={priority?.color as 'info' | 'error' | 'warning' | 'success'}
+          outline
+          full
+          size='xs'
+        />
+      );
+    },
+  },
+  {
+    id: 'actions',
+    size: 20,
+    header: 'h_action',
+    cell: (info) => {
+      const { id } = info.row.original;
+      return (
+        <div className='w-full flex justify-center'>
+          <span
+            className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
+            data-id={id}
+            data-type='place-update'
+            data-action={ROW_ACTIONS.UPDATE}
+          ></span>
+          <span
+            className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
+            data-id={id}
+            data-type='place-delete'
+            data-action={ROW_ACTIONS.DELETE}
+          ></span>
+        </div>
+      );
+    },
+  },
+];

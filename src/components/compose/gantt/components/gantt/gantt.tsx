@@ -1,0 +1,824 @@
+import { ComponentType } from 'preact';
+import { useSignal } from '@preact/signals';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'preact/hooks';
+import {
+  ViewMode,
+  GanttProps,
+  Task,
+  GeneralTask,
+} from '../../types/public-types';
+import { ganttDateRange, seedDates } from '../../helpers/date-helper';
+import { TaskListHeaderDefault } from '../task-list/task-list-header';
+import { TaskListTableDefault } from '../task-list/task-list-table';
+import { StandardTooltipContent, Tooltip } from '../other/tooltip';
+import { TaskListProps, TaskList } from '../task-list/task-list';
+import { TaskGantt } from './task-gantt';
+import { BarTask } from '../../types/bar-task';
+import { convertToBarTasks } from '../../helpers/bar-helper';
+import { GanttEvent } from '../../types/gantt-task-actions';
+import { DateSetup } from '../../types/date-setup';
+import styles from './gantt.module.css';
+import { TaskGanttContentProps } from './task-gantt-content';
+import { CalendarProps } from '../calendar/calendar';
+import { GridProps } from '../grid/grid';
+import { memo } from 'preact/compat';
+import { Search } from '@/components/common/search/search';
+import { ColumnFiltersState } from '@tanstack/react-table';
+import { ReplicateModal } from './replicate.modal';
+
+const GanttComponent: ComponentType<GanttProps> = ({
+  tasks: initialTasks,
+  users,
+  headerHeight = 50,
+  columnWidth = 60,
+  listCellWidth = '155px',
+  rowHeight = 50,
+  ganttHeight = 0,
+  viewMode = ViewMode.Day,
+  preStepsCount = 1,
+  locale = 'en-GB',
+  barFill = 60,
+  barCornerRadius = 3,
+  barProgressColor = '#a3a3ff',
+  barProgressSelectedColor = '#8282f5',
+  barBackgroundColor = '#b8c2cc',
+  barBackgroundSelectedColor = '#aeb8c2',
+  projectProgressColor = '#7db59a',
+  projectProgressSelectedColor = '#59a985',
+  projectBackgroundColor = '#fac465',
+  projectBackgroundSelectedColor = '#f7bb53',
+  milestoneBackgroundColor = '#f1c453',
+  milestoneBackgroundSelectedColor = '#f29e4c',
+  rtl = false,
+  handleWidth = 8,
+  timeStep = 300000,
+  arrowColor = 'grey',
+  fontFamily = 'Arial, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue',
+  fontSize = '14px',
+  arrowIndent = 20,
+  todayColor = 'rgba(252, 248, 227, 0.5)',
+  viewDate,
+  TooltipContent = StandardTooltipContent,
+  TaskListHeader = TaskListHeaderDefault,
+  TaskListTable = TaskListTableDefault,
+  onDateChange,
+  onProgressChange,
+  onDoubleClick,
+  onClick,
+  onDelete,
+  onSelect,
+  onExpanderClick,
+  onUserClick,
+  onUserDoubleClick,
+  unsearch,
+  group,
+  onReloadSignal,
+}) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const taskListRef = useRef<HTMLDivElement>(null);
+  const [dateSetup, setDateSetup] = useState<DateSetup>(() => {
+    const [startDate, endDate] = ganttDateRange(
+      initialTasks,
+      viewMode,
+      preStepsCount
+    );
+    return { viewMode, dates: seedDates(startDate, endDate, viewMode) };
+  });
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const currentViewDate = useSignal<Date | undefined>(undefined);
+  const taskListWidth = useSignal(0);
+  const svgContainerWidth = useSignal(0);
+  const svgContainerHeight = useSignal(ganttHeight);
+  const [barTasks, setBarTasks] = useState<BarTask[]>([]);
+  const [ganttEvent, setGanttEvent] = useState<GanttEvent>({
+    action: '',
+  });
+
+  const taskHeight = useMemo(
+    () => (rowHeight * barFill) / 100 + 16,
+    [rowHeight, barFill]
+  );
+
+  const [selectedTask, setSelectedTask] = useState<BarTask>();
+  const [failedTask, setFailedTask] = useState<BarTask | null>(null);
+
+  const svgWidth = dateSetup.dates.length * columnWidth;
+  const [ganttFullHeight, setGanttFullHeight] = useState(
+    initialTasks.users.length * rowHeight
+  );
+
+  const scrollY = useSignal(0);
+  const scrollX = useSignal(-1);
+  // const [ignoreScrollEvent, setIgnoreScrollEvent] = useState(false);
+
+  const [tasks, setTasks] = useState<GeneralTask>(initialTasks);
+  const [selectedUsers, setSelectedUsers] = useState<Set<string | number>>(
+    new Set()
+  );
+
+  const handleDateSubmit = (_start: string, _end: string) => {
+    // Aquí puedes manejar la lógica para las fechas seleccionadas
+  };
+
+  useEffect(() => {
+    const [startDate, endDate] = ganttDateRange(
+      initialTasks,
+      viewMode,
+      preStepsCount
+    );
+    let newDates = seedDates(startDate, endDate, viewMode);
+    if (rtl) {
+      newDates = newDates.reverse();
+      if (scrollX.value === -1) {
+        scrollX.value = newDates.length * columnWidth;
+      }
+    }
+    setDateSetup({ dates: newDates, viewMode });
+    setBarTasks(
+      convertToBarTasks(
+        initialTasks,
+        newDates,
+        columnWidth,
+        rowHeight,
+        taskHeight,
+        barCornerRadius,
+        handleWidth,
+        rtl,
+        barProgressColor,
+        barProgressSelectedColor,
+        barBackgroundColor,
+        barBackgroundSelectedColor,
+        projectProgressColor,
+        projectProgressSelectedColor,
+        projectBackgroundColor,
+        projectBackgroundSelectedColor,
+        milestoneBackgroundColor,
+        milestoneBackgroundSelectedColor
+      )
+    );
+    setGanttFullHeight(initialTasks.users.length * rowHeight);
+  }, [
+    initialTasks,
+    viewMode,
+    preStepsCount,
+    rowHeight,
+    barCornerRadius,
+    columnWidth,
+    taskHeight,
+    handleWidth,
+    barProgressColor,
+    barProgressSelectedColor,
+    barBackgroundColor,
+    barBackgroundSelectedColor,
+    projectProgressColor,
+    projectProgressSelectedColor,
+    projectBackgroundColor,
+    projectBackgroundSelectedColor,
+    milestoneBackgroundColor,
+    milestoneBackgroundSelectedColor,
+    rtl,
+    scrollX,
+  ]);
+
+  useEffect(() => {
+    if (
+      viewMode === dateSetup.viewMode &&
+      ((viewDate && !currentViewDate.value) ||
+        (viewDate && currentViewDate.value?.valueOf() !== viewDate.valueOf()))
+    ) {
+      const dates = dateSetup.dates;
+      const index = dates.findIndex(
+        (d, i) =>
+          viewDate.valueOf() >= d.valueOf() &&
+          i + 1 !== dates.length &&
+          viewDate.valueOf() < dates[i + 1].valueOf()
+      );
+      if (index === -1) {
+        return;
+      }
+      currentViewDate.value = viewDate;
+      scrollX.value = columnWidth * index;
+    }
+  }, [
+    viewDate,
+    columnWidth,
+    dateSetup.dates,
+    dateSetup.viewMode,
+    viewMode,
+    currentViewDate,
+  ]);
+
+  useEffect(() => {
+    const { changedTask, action } = ganttEvent;
+    if (changedTask) {
+      if (action === 'delete') {
+        setGanttEvent({ action: '' });
+        setBarTasks(barTasks.filter((t) => t.id !== changedTask.id));
+      } else if (
+        action === 'move' ||
+        action === 'end' ||
+        action === 'start' ||
+        action === 'progress'
+      ) {
+        const prevStateTask = barTasks.find((t) => t.id === changedTask.id);
+        if (
+          prevStateTask &&
+          (prevStateTask.start.getTime() !== changedTask.start.getTime() ||
+            prevStateTask.end.getTime() !== changedTask.end.getTime() ||
+            prevStateTask.progress !== changedTask.progress)
+        ) {
+          const newTaskList = barTasks.map((t) =>
+            t.id === changedTask.id ? changedTask : t
+          );
+          setBarTasks(newTaskList);
+        }
+      }
+    }
+  }, [ganttEvent, barTasks]);
+
+  useEffect(() => {
+    if (failedTask) {
+      setBarTasks(
+        barTasks.map((t) => (t.id !== failedTask.id ? t : failedTask))
+      );
+      setFailedTask(null);
+    }
+  }, [failedTask, barTasks]);
+
+  useEffect(() => {
+    if (!listCellWidth) {
+      taskListWidth.value = 0;
+    }
+    if (taskListRef.current) {
+      taskListWidth.value = taskListRef.current.offsetWidth;
+    }
+  }, [taskListRef, listCellWidth]);
+
+  useEffect(() => {
+    if (wrapperRef.current) {
+      svgContainerWidth.value =
+        wrapperRef.current.offsetWidth - taskListWidth.value;
+    }
+  }, [wrapperRef, taskListWidth]);
+
+  useEffect(() => {
+    if (ganttHeight) {
+      svgContainerHeight.value = ganttHeight + headerHeight;
+    } else {
+      svgContainerHeight.value =
+        initialTasks.users.length * rowHeight + headerHeight;
+    }
+  }, [ganttHeight, initialTasks, headerHeight, rowHeight]);
+
+  const handleWheel = useCallback(
+    (event: WheelEvent) => {
+      if (event.shiftKey || event.deltaX) {
+        const scrollMove = event.deltaX ? event.deltaX : event.deltaY;
+        let newScrollX = scrollX.value + scrollMove;
+        if (newScrollX < 0) {
+          newScrollX = 0;
+        } else if (newScrollX > svgWidth) {
+          newScrollX = svgWidth;
+        }
+        scrollX.value = newScrollX;
+        event.preventDefault();
+      } else if (ganttHeight) {
+        let newScrollY = scrollY.value + event.deltaY;
+        if (newScrollY < 0) {
+          newScrollY = 0;
+        } else if (newScrollY > ganttFullHeight - ganttHeight) {
+          newScrollY = ganttFullHeight - ganttHeight;
+        }
+        if (newScrollY !== scrollY.value) {
+          scrollY.value = newScrollY;
+          event.preventDefault();
+        }
+      }
+
+      // setIgnoreScrollEvent(true);
+    },
+    [scrollX, scrollY, svgWidth, ganttHeight, ganttFullHeight]
+  );
+
+  useEffect(() => {
+    wrapperRef.current?.addEventListener('wheel', handleWheel, {
+      passive: false,
+    });
+    return () => {
+      wrapperRef.current?.removeEventListener('wheel', handleWheel);
+    };
+  }, [handleWheel]);
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      event.preventDefault();
+      let newScrollY = scrollY.value;
+      let newScrollX = scrollX.value;
+      let isX = true;
+      switch (event.key) {
+        case 'Down':
+        case 'ArrowDown':
+          newScrollY += rowHeight;
+          isX = false;
+          break;
+        case 'Up':
+        case 'ArrowUp':
+          newScrollY -= rowHeight;
+          isX = false;
+          break;
+        case 'Left':
+        case 'ArrowLeft':
+          newScrollX -= columnWidth;
+          break;
+        case 'Right':
+        case 'ArrowRight':
+          newScrollX += columnWidth;
+          break;
+      }
+      if (isX) {
+        if (newScrollX < 0) {
+          newScrollX = 0;
+        } else if (newScrollX > svgWidth) {
+          newScrollX = svgWidth;
+        }
+        scrollX.value = newScrollX;
+      } else {
+        if (newScrollY < 0) {
+          newScrollY = 0;
+        } else if (newScrollY > ganttFullHeight - ganttHeight) {
+          newScrollY = ganttFullHeight - ganttHeight;
+        }
+        scrollY.value = newScrollY;
+      }
+      // setIgnoreScrollEvent(true);
+    },
+    [
+      scrollY,
+      scrollX,
+      rowHeight,
+      columnWidth,
+      svgWidth,
+      ganttFullHeight,
+      ganttHeight,
+    ]
+  );
+
+  const handleSelectedTask = useCallback(
+    (taskId: string | number) => {
+      const newSelectedTask = barTasks.find((t) => t.id === taskId);
+      const oldSelectedTask = barTasks.find(
+        (t) => !!selectedTask && t.id === selectedTask.id
+      );
+      if (onSelect) {
+        if (oldSelectedTask) {
+          onSelect(
+            {
+              ...oldSelectedTask,
+              start: oldSelectedTask.start.toString(),
+              end: oldSelectedTask.end.toString(),
+            },
+            false
+          );
+        }
+        if (newSelectedTask) {
+          onSelect(
+            {
+              ...newSelectedTask,
+              start: newSelectedTask.start.toString(),
+              end: newSelectedTask.end.toString(),
+            },
+            true
+          );
+        }
+      }
+      setSelectedTask(newSelectedTask);
+    },
+    [barTasks, selectedTask, onSelect]
+  );
+
+  const handleExpanderClick = useCallback(
+    (task: Task) => {
+      if (onExpanderClick && task.hideChildren !== undefined) {
+        onExpanderClick({ ...task, hideChildren: !task.hideChildren });
+      }
+    },
+    [onExpanderClick]
+  );
+
+  const handleUserClick = useCallback(
+    (user: string | number) => {
+      setSelectedUsers((prev) => {
+        const newSelected = new Set(prev);
+        if (newSelected.has(user)) {
+          newSelected.delete(user);
+        } else {
+          newSelected.add(user);
+        }
+        return newSelected;
+      });
+
+      // if (onUserClick) {
+      //   onUserClick(user);
+      // }
+    },
+    [onUserClick]
+  );
+
+  const handleUserDblClick = useCallback(
+    (user: string | number) => {
+      if (onUserDoubleClick) {
+        onUserDoubleClick(user);
+      }
+    },
+    [onUserClick]
+  );
+
+  const gridProps = useMemo<GridProps>(
+    () => ({
+      columnWidth,
+      svgWidth,
+      tasks: tasks,
+      rowHeight,
+      dates: dateSetup.dates,
+      todayColor,
+      rtl,
+    }),
+    [columnWidth, svgWidth, tasks, rowHeight, dateSetup.dates, todayColor, rtl]
+  );
+
+  const calendarProps = useMemo<CalendarProps>(
+    () => ({
+      dateSetup,
+      locale,
+      viewMode,
+      headerHeight,
+      columnWidth,
+      fontFamily,
+      fontSize,
+      rtl,
+    }),
+    [
+      dateSetup,
+      locale,
+      viewMode,
+      headerHeight,
+      columnWidth,
+      fontFamily,
+      fontSize,
+      rtl,
+    ]
+  );
+
+  const barProps = useMemo<TaskGanttContentProps>(
+    () => ({
+      tasks: barTasks,
+      dates: dateSetup.dates,
+      ganttEvent,
+      selectedTask,
+      rowHeight,
+      taskHeight,
+      columnWidth,
+      arrowColor,
+      timeStep,
+      fontFamily,
+      fontSize,
+      arrowIndent,
+      svgWidth,
+      rtl,
+      setGanttEvent,
+      setFailedTask,
+      setSelectedTask: handleSelectedTask,
+      onDateChange,
+      onProgressChange,
+      onDoubleClick,
+      onClick,
+      onDelete,
+    }),
+    [
+      barTasks,
+      dateSetup.dates,
+      ganttEvent,
+      selectedTask,
+      rowHeight,
+      taskHeight,
+      columnWidth,
+      arrowColor,
+      timeStep,
+      fontFamily,
+      fontSize,
+      arrowIndent,
+      svgWidth,
+      rtl,
+      handleSelectedTask,
+      onDateChange,
+      onProgressChange,
+      onDoubleClick,
+      onClick,
+      onDelete,
+    ]
+  );
+
+  const tableProps = useMemo<TaskListProps>(
+    () => ({
+      rowHeight,
+      rowWidth: listCellWidth,
+      fontFamily,
+      fontSize,
+      tasks: tasks,
+      locale,
+      headerHeight,
+      scrollY: scrollY.value,
+      ganttHeight,
+      horizontalContainerClass: styles.horizontalContainer,
+      selectedTask,
+      taskListRef,
+      setSelectedTask: handleSelectedTask,
+      onExpanderClick: handleExpanderClick,
+      TaskListHeader,
+      TaskListTable,
+      onUserClick: handleUserClick,
+      onUserDoubleClick: handleUserDblClick,
+      selectedUsers,
+    }),
+    [
+      rowHeight,
+      listCellWidth,
+      fontFamily,
+      fontSize,
+      tasks,
+      locale,
+      headerHeight,
+      scrollY,
+      ganttHeight,
+      selectedTask,
+      handleSelectedTask,
+      handleExpanderClick,
+      TaskListHeader,
+      TaskListTable,
+      handleUserClick,
+      handleUserDblClick,
+      selectedUsers,
+    ]
+  );
+
+  useEffect(() => {
+    if (columnFilters.length === 0) {
+      setTasks(initialTasks);
+      setGanttFullHeight(initialTasks.users.length * rowHeight);
+      // Actualizar barTasks con todas las tareas cuando no hay filtros
+      const [startDate, endDate] = ganttDateRange(
+        initialTasks,
+        viewMode,
+        preStepsCount
+      );
+      const newDates = rtl
+        ? seedDates(startDate, endDate, viewMode).reverse()
+        : seedDates(startDate, endDate, viewMode);
+      setBarTasks(
+        convertToBarTasks(
+          initialTasks,
+          newDates,
+          columnWidth,
+          rowHeight,
+          taskHeight,
+          barCornerRadius,
+          handleWidth,
+          rtl,
+          barProgressColor,
+          barProgressSelectedColor,
+          barBackgroundColor,
+          barBackgroundSelectedColor,
+          projectProgressColor,
+          projectProgressSelectedColor,
+          projectBackgroundColor,
+          projectBackgroundSelectedColor,
+          milestoneBackgroundColor,
+          milestoneBackgroundSelectedColor
+        )
+      );
+      return;
+    }
+
+    const userLevelFilters = columnFilters.filter((filter) =>
+      ['name', 'cardId'].includes(filter.id)
+    );
+
+    const taskLevelFilters = columnFilters.filter(
+      (filter) => !['name', 'cardId'].includes(filter.id)
+    );
+
+    let filteredUsers =
+      userLevelFilters.length > 0
+        ? initialTasks.users.filter((user) => {
+            return userLevelFilters.every((filter) => {
+              const filterValue = filter.value as string[];
+              const userValue = filter.id === 'name' ? user.name : user.cardId;
+
+              if (Array.isArray(filterValue)) {
+                return filterValue.some((val) =>
+                  String(userValue)
+                    .toLowerCase()
+                    .includes(String(val).toLowerCase())
+                );
+              }
+              return String(userValue)
+                .toLowerCase()
+                .includes(String(filterValue).toLowerCase());
+            });
+          })
+        : initialTasks.users;
+
+    filteredUsers =
+      taskLevelFilters.length > 0
+        ? filteredUsers.map((user) => {
+            const filteredTasks = user.tasks.filter((task) => {
+              return taskLevelFilters.every((filter) => {
+                const filterValue = filter.value as string[];
+                let taskValue = '';
+
+                switch (filter.id) {
+                  case 'task.service':
+                    taskValue = task.name;
+                    break;
+                  case 'task.contract':
+                    taskValue = task.contract;
+                    break;
+                  case 'task.client':
+                    taskValue = task.client;
+                    break;
+                  case 'task.status':
+                    taskValue = task.status;
+                    break;
+                  default:
+                    return true;
+                }
+
+                if (Array.isArray(filterValue)) {
+                  return filterValue.some((val) =>
+                    String(taskValue)
+                      .toLowerCase()
+                      .includes(String(val).toLowerCase())
+                  );
+                }
+                return String(taskValue)
+                  .toLowerCase()
+                  .includes(String(filterValue).toLowerCase());
+              });
+            });
+
+            return {
+              ...user,
+              tasks: filteredTasks,
+            };
+          })
+        : filteredUsers;
+
+    filteredUsers = filteredUsers.filter((user) => user.tasks.length);
+    const filteredTasks = {
+      ...initialTasks,
+      users: filteredUsers,
+    };
+
+    setTasks(filteredTasks);
+    setGanttFullHeight(filteredUsers.length * rowHeight + 10);
+
+    // Actualizar barTasks con las tareas filtradas
+    const [startDate, endDate] = ganttDateRange(
+      initialTasks,
+      viewMode,
+      preStepsCount
+    );
+    const newDates = rtl
+      ? seedDates(startDate, endDate, viewMode).reverse()
+      : seedDates(startDate, endDate, viewMode);
+    setBarTasks(
+      convertToBarTasks(
+        filteredTasks,
+        newDates,
+        columnWidth,
+        rowHeight,
+        taskHeight,
+        barCornerRadius,
+        handleWidth,
+        rtl,
+        barProgressColor,
+        barProgressSelectedColor,
+        barBackgroundColor,
+        barBackgroundSelectedColor,
+        projectProgressColor,
+        projectProgressSelectedColor,
+        projectBackgroundColor,
+        projectBackgroundSelectedColor,
+        milestoneBackgroundColor,
+        milestoneBackgroundSelectedColor
+      )
+    );
+  }, [
+    columnFilters,
+    initialTasks,
+    viewMode,
+    preStepsCount,
+    columnWidth,
+    rowHeight,
+    taskHeight,
+    barCornerRadius,
+    handleWidth,
+    rtl,
+    barProgressColor,
+    barProgressSelectedColor,
+    barBackgroundColor,
+    barBackgroundSelectedColor,
+    projectProgressColor,
+    projectProgressSelectedColor,
+    projectBackgroundColor,
+    projectBackgroundSelectedColor,
+    milestoneBackgroundColor,
+    milestoneBackgroundSelectedColor,
+  ]);
+
+  // const handleScrollY = useCallback((event: number) => {
+  //   scrollY.value = event;
+  // }, []);
+
+  const handleScrollX = useCallback((event: number) => {
+    scrollX.value = event;
+  }, []);
+
+  return (
+    <div>
+      {/* sticky top-[3.4rem] z-[8] */}
+      <div className='w-full py-1 pb-3 flex items-center justify-end gap-2'>
+        <ReplicateModal
+          selectedUsers={selectedUsers}
+          users={users}
+          onDateSubmit={handleDateSubmit}
+          onReloadSignal={() => {
+            setSelectedUsers(new Set());
+            onReloadSignal?.();
+          }}
+        />
+
+        {!unsearch && (
+          <Search
+            id='search-general'
+            name='search-general'
+            keys={[
+              { label: 'Nombre', id: 'name', type: 'text' },
+              { label: 'Estado', id: 'task.status', type: 'text' },
+              { label: 'Identificador', id: 'cardId', type: 'text' },
+              { label: 'Servicio', id: 'task.service', type: 'text' },
+              { label: 'Contrato', id: 'task.contract', type: 'text' },
+              { label: 'Cliente', id: 'task.client', type: 'text' },
+            ]}
+            onChange={setColumnFilters}
+            group={group}
+            grouping
+          />
+        )}
+      </div>
+      <div
+        className={`${styles.wrapper} border-2 border-gray-100 dark:border-b-dark-light rounded-xl`}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        ref={wrapperRef}
+      >
+        {listCellWidth && <TaskList {...tableProps} />}
+        <TaskGantt
+          gridProps={gridProps}
+          calendarProps={calendarProps}
+          barProps={barProps}
+          ganttHeight={ganttFullHeight}
+          scrollY={scrollY.value}
+          scrollX={scrollX.value}
+          onScrollX={handleScrollX}
+        />
+        {ganttEvent.changedTask && (
+          <Tooltip
+            arrowIndent={arrowIndent}
+            rowHeight={rowHeight}
+            svgContainerHeight={svgContainerHeight.value}
+            svgContainerWidth={svgContainerWidth.value}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+            scrollX={scrollX.value}
+            scrollY={scrollY.value}
+            task={ganttEvent.changedTask}
+            headerHeight={headerHeight}
+            taskListWidth={taskListWidth.value}
+            TooltipContent={TooltipContent}
+            rtl={rtl}
+            svgWidth={svgWidth}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export const Gantt = memo(GanttComponent);

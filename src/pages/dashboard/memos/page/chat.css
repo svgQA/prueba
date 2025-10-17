@@ -1,0 +1,15 @@
+/* styles.css */
+.container-chat {
+  @apply w-full h-full dark:bg-b-dark bg-b-light; /* Base colors modo claro/oscuro */
+
+  background-image: radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 0);
+  background-size: 16px 16px;
+  background-position: -2px -2px;
+}
+
+.dark .container-chat {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.05) 1.3px,
+    transparent 0
+  );
+}

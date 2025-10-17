@@ -1,0 +1,11 @@
+export enum ROW_ACTIONS {
+  UPDATE,
+  CREATE,
+  DELETE,
+  REPORT,
+  RESPONSE,
+  MESSAGE,
+  PROFILE,
+  CHECK_IN,
+  CHECK_OUT,
+}

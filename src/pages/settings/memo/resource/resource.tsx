@@ -1,0 +1,281 @@
+import { type FunctionComponent } from 'preact';
+import { useEffect } from 'preact/hooks';
+// import { Section } from '@/components/common/section/section';
+import { Form, Field } from 'react-final-form';
+import { CardAccess } from '@/components/compose/cards/company/cardAccess';
+import { Signal, useSignal } from '@preact/signals';
+import { IResourceRequest } from '@/types/memo/memo.request';
+import { IResourceResponse } from '@/types/memo/memo.response';
+import { GeneralService } from '@/services';
+import { useTranslation } from 'react-i18next';
+import { useUserStore } from '@/store/slices';
+import { StatusButton } from '../../components/custom.button';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { TextArea } from '@/components/common/text.area/text.area';
+import { Input } from '@/components/common/input/input';
+import { Dropdown } from '@/components/common/dropdown/dropdown';
+import { required } from '@/utils/utilities';
+import { MultiSelect } from '../../forms/create/MultiSelect';
+import { showAlert } from '@/components/common/show-alert/show-alert';
+interface IMultiSelect {
+  id: number;
+  name: string;
+}
+export const ResourceMemoSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
+  const resources = useSignal<IResourceResponse[]>([]);
+  const smartGroups = useSignal<{ name: string; id: number }[]>([]);
+  const initialValues: Signal<Partial<IResourceRequest>> = useSignal({});
+
+  useEffect(() => {
+    document.title = t('p_resource');
+  }, []);
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    if (selectedCompany) {
+      getResources();
+      getGroups();
+    }
+  }, [selectedCompany, location]);
+
+  const getGroups = async () => {
+    const response = await GeneralService.getSmartGroups();
+    if (!response.getStatus()) return;
+    smartGroups.value = response.getMany();
+  };
+
+  const getResources = async () => {
+    const response = await GeneralService.resource();
+    if (!response.getStatus()) return;
+    resources.value = response.getMany();
+  };
+
+  const onSubmit = async (values: IResourceRequest, form: any) => {
+    const output = {
+      ...values,
+      type: values.type || 'WHATSAPP',
+      image: values.image || '',
+      icon: values.icon || '',
+    };
+    let response;
+    if (values.id) {
+      response = await GeneralService.updateResource(values.id, output);
+    } else {
+      response = await GeneralService.createResource(output);
+    }
+    if (!response.getStatus()) return;
+    ToastManager.success(values.id ? 's_updated_success' : 's_created_success');
+    getResources();
+    form?.reset();
+    initialValues.value = {};
+  };
+
+  const handleEdit = (id: number) => {
+    const resource = resources.value.find((resource) => resource.id === id);
+    if (resource) {
+      initialValues.value = {
+        id: resource.id,
+        name: resource.name,
+        description: resource.description,
+        image: resource.image,
+        type: resource.type,
+        icon: resource.icon,
+        link: resource.link,
+        groups: resource.groups.map((group) => group.group.id),
+      };
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    const response = await GeneralService.deleteResource(id);
+    if (!response.getStatus()) return;
+    ToastManager.success('s_deleted_success');
+    getResources();
+  };
+
+  return (
+    <>
+      <div className='p-5 w-full'>
+        <div className='flex flex-row justify-between gap-2 items-start'>
+          <div className='flex flex-row gap-2 justify-center flex-wrap overflow-y-auto vox-scroll-design h-[60vh]'>
+            {resources.value.map((data) => (
+              <CardAccess
+                title={data.name}
+                subtitle={data.description}
+                icon={data.icon}
+                imageUrl={data.image}
+                type={data.type}
+                id={data.id}
+                link={data.link}
+                groups={data.groups}
+                updatedAt={data.updatedAt}
+                onEdit={() => handleEdit(data.id)}
+                onDelete={() =>
+                  showAlert({
+                    title: 'Eliminar Recurso',
+                    message: '¿Estás seguro de querer eliminar este recurso?',
+                    onConfirm: () => {
+                      handleDelete(data.id);
+                    },
+                    onCancel: () => {},
+                  })
+                }
+                selected={data.id === initialValues.value?.id}
+              />
+            ))}
+            {resources.value.length === 0 && (
+              <div className='text-center text-gray-500'>
+                No tienes recursos creados
+              </div>
+            )}
+          </div>
+          <div className='min-w-[500px] h-[450px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
+            <Form
+              onSubmit={onSubmit}
+              initialValues={initialValues.value}
+              render={({ handleSubmit, form, submitting, pristine }) => (
+                <form onSubmit={handleSubmit} id='form-resource-create'>
+                  <StatusButton
+                    onClickClean={() => {
+                      form.reset();
+                      if (initialValues.value.id) {
+                        initialValues.value = {};
+                      }
+                    }}
+                    submitting={initialValues.value.id ? false : submitting}
+                    pristine={initialValues.value.id ? false : pristine}
+                    form='form-resource-create'
+                    label={'Guardar'}
+                  />
+                  <h2 className='text-2xl font-bold'>
+                    {initialValues.value.id
+                      ? 'Editar Recurso'
+                      : 'Nuevo Recurso'}
+                  </h2>
+                  <div className='flex flex-col gap-4'>
+                    {/* Title field - full width */}
+                    <div className='w-full'>
+                      <Field<string> name='name' validate={required}>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            type='text'
+                            placeholder='Agregar Título'
+                            label='Título'
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+                    </div>
+
+                    {/* Description field - full width */}
+                    <div className='w-full'>
+                      <Field<string> name='description' validate={required}>
+                        {({ input, meta }) => (
+                          <TextArea
+                            {...input}
+                            id='Description'
+                            className='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-sm border border-gray-300 focus:border-cyan-500'
+                            placeholder='Descripción'
+                            label='Descripción'
+                            type='text'
+                            meta={meta}
+                          />
+                        )}
+                      </Field>
+                    </div>
+
+                    {/* Two-column layout for remaining fields */}
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                      {/* Left column */}
+                      <div className='space-y-4'>
+                        <Field<string>
+                          name='type'
+                          validate={required}
+                          initialValue='WHATSAPP'
+                        >
+                          {({ input, meta }) => (
+                            <Dropdown
+                              id='type'
+                              name={input.name}
+                              value={input.value}
+                              onChange={input.onChange}
+                              label='Tipo de comunicación'
+                              options={[
+                                { value: 'WHATSAPP', label: 'WhatsApp' },
+                                { value: 'EMAIL', label: 'Email' },
+                                { value: 'LINK', label: 'Link' },
+                              ]}
+                              meta={meta}
+                            />
+                          )}
+                        </Field>
+
+                        <Field<string> name='link'>
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              type='text'
+                              placeholder='URL del enlace'
+                              label='URL del enlace'
+                              meta={meta}
+                            />
+                          )}
+                        </Field>
+                      </div>
+
+                      {/* Right column */}
+                      <div className='space-y-4'>
+                        <Field<string> name='icon'>
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              type='text'
+                              placeholder='URL del icono'
+                              label='URL del icono'
+                              meta={meta}
+                            />
+                          )}
+                        </Field>
+                        <Field<string> name='image'>
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              type='text'
+                              placeholder='URL de la imagen'
+                              label='URL de la imagen'
+                              meta={meta}
+                            />
+                          )}
+                        </Field>
+                      </div>
+
+                      <div className='w-full'>
+                        <Field<number[]> name='groups'>
+                          {({ input }) => (
+                            <MultiSelect<IMultiSelect>
+                              {...input}
+                              options={smartGroups.value}
+                              selectedIds={input.value || []}
+                              onChange={(selectedIds) => {
+                                form.change('groups', selectedIds as number[]);
+                              }}
+                              getLabel={(item) => item.name}
+                              getId={(item) => item.id}
+                              placeholder='Seleccione uno o más grupos inteligentes'
+                            />
+                          )}
+                        </Field>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              )}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};

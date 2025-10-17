@@ -1,0 +1,38 @@
+.vox-scroll-design::-webkit-scrollbar {
+  width: 3px;
+  background-color: transparent;
+  position: absolute;
+  left: 0;
+  height: 3px;
+  margin-left: -3px;
+}
+
+.vox-scroll-design.scroll-x-md::-webkit-scrollbar {
+  height: 7px;
+  margin-bottom: -7px;
+}
+
+.vox-scroll-design.scroll-y-md::-webkit-scrollbar {
+  width: 7px;
+  margin-right: -7px;
+}
+
+.vox-scroll-design::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.6);
+  border-radius: 2em;
+  width: 20px;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 20px;
+}

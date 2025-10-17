@@ -1,0 +1,36 @@
+export enum ACTIVITY_STATUS {
+  CREATED,
+  OPENED,
+  CLOSED,
+  RESOLVED,
+}
+
+export enum TASK_STATUS {
+  CREATED,
+  RESOLVED,
+  CLOSED,
+}
+
+export enum ACTIVITY_TYPE {
+  EXTERNAL,
+  INTERNAL,
+}
+
+export enum PLACE_STATUS {
+  ACTIVE,
+  INACTIVE,
+  UNCER_REVIEW,
+}
+
+export enum PLACE_TYPES {
+  INDUSTRIAL,
+  RESIDENTIAL,
+  OTHER,
+}
+
+export enum SHIFT_STATUS {
+  CREATED = 'CREATED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CLOSED = 'CLOSED',
+}

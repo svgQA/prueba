@@ -1,0 +1,449 @@
+import { Signal, useSignal } from '@preact/signals';
+import { Form, Field } from 'react-final-form';
+import { FunctionComponent } from 'preact';
+import { Input } from '@/components/common/input/input';
+import { required } from '@/utils/utilities';
+import { Select } from '@/components/common/select/select';
+import { ShiftService } from '@/services/shift/shift';
+import { UserService } from '@/services/general/user';
+import { Section } from '@/components/common/section/section';
+import { ToastManager } from '@/utils/toast/toast-manager';
+import { useParams } from 'wouter';
+import { useEffect } from 'preact/hooks';
+import { omitBy, isNull, pick } from 'lodash';
+import arrayMutators from 'final-form-arrays';
+import { FieldArray } from 'react-final-form-arrays';
+import { ServiceService } from '@/services';
+import { DateField } from '@/components/compose/forms';
+import { StatusButton } from '@/pages/settings/components/custom.button';
+import { useNavigation } from '@/utils/utilities/navigation';
+import { useUserStore } from '@/store/slices';
+import { useTranslation } from 'react-i18next';
+
+interface ITask {
+  start: string;
+  status: string;
+  description: string;
+}
+
+interface FormData {
+  start: string;
+  end: string;
+  status: string;
+  type: string;
+  userId: string;
+  projectId: number;
+  placeId: number;
+  workstationId: number;
+  roundId: number;
+  externalId: string;
+  keywords: string[];
+  tasks: ITask[];
+}
+
+export const ActivityCreateSettingPage: FunctionComponent = () => {
+  const initialValues: Signal<Partial<FormData>> = useSignal({});
+  const inputKeywords = useSignal('');
+  const services = useSignal([]);
+  const users = useSignal([]);
+  const { navigateUpsert } = useNavigation();
+  const { t } = useTranslation();
+  const { id } = useParams(); // Obtiene el id de la URL
+
+  const onSubmit = async (model: FormData) => {
+    // const { start, end } = model;
+    let request;
+    let message: string;
+
+    // if (start) model.start = dayjs(start).toISOString();
+    // if (end) model.end = dayjs(end).toISOString();
+
+    if (!id) {
+      request = await ShiftService.createActivity(model);
+      message = 's_created_success';
+    } else {
+      request = await ShiftService.updateActivity(model, id);
+      message = 's_updated_success';
+    }
+
+    if (!request.getStatus()) return;
+    ToastManager.success(message);
+    navigateUpsert('/shifts/activity');
+  };
+
+  const setInitialValues = async () => {
+    if (!id) return;
+
+    const userKeys = [
+      'start',
+      'end',
+      'status',
+      'type',
+      'userId',
+      'serviceId',
+      'employeedId',
+      'externalId',
+      'keywords',
+    ] as const;
+
+    const request: any = await ShiftService.getActivityById(id);
+    const model = pick(omitBy(request.model, isNull), userKeys);
+    initialValues.value = model;
+  };
+
+  const getServices = async () => {
+    const request: any = await ServiceService.getServices();
+    services.value = request.data;
+  };
+
+  const getUsers = async () => {
+    const request: any = await UserService.get_all();
+    users.value = request.data.map((user: any) => {
+      return { ...user, fullname: `${user.name} ${user.surname}` };
+    });
+  };
+
+  const main = async () => {
+    await getServices();
+    await getUsers();
+    await setInitialValues();
+  };
+
+  const { selectedCompany } = useUserStore();
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      main();
+    }
+  }, [selectedCompany, location]);
+
+  return (
+    <Section>
+      <Form
+        onSubmit={onSubmit}
+        mutators={{
+          ...arrayMutators,
+        }}
+        initialValues={initialValues.value}
+        render={({ handleSubmit, form, submitting, values, pristine }) => (
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-shift-create'
+          >
+            {/** FORMULARIO PRINCIPAL */}
+            <div className='grid grid-cols-2 gap-3'>
+              <div class='col-span-1'>
+                {/*
+                <Field<string>
+                  name='start'
+                  validate={required}
+                  parse={(value) => (value ? dayjs(value).toISOString() : '')}
+                  format={(value) =>
+                    value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
+                  }
+                >
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      type='datetime-local'
+                      label={t('date_start')}
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+                */}
+                <DateField
+                  name='start'
+                  label={t('l_date_start')}
+                  validate={required}
+                />
+              </div>
+              <div class='col-span-1'>
+                <DateField
+                  name='end'
+                  label={t('l_date_end')}
+                  validate={required}
+                />
+                {/*
+                <Field<string>
+                  name='end'
+                  validate={required}
+                  parse={(value) => (value ? dayjs(value).toISOString() : '')}
+                  format={(value) =>
+                    value ? dayjs(value).format('YYYY-MM-DD HH:mm') : ''
+                  }
+                >
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      type='datetime-local'
+                      label={t('date_end')}
+                      meta={meta}
+                    />
+                  )}
+                </Field>
+                */}
+              </div>
+
+              <div class='col-span-1'>
+                <Field<string> name='status'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='p_select_state'
+                      label='l_status'
+                      name='status'
+                      icon='252'
+                      options={[
+                        { value: 'CREATED', label: t('CREATED') },
+                        { value: 'OPENED', label: t('OPENED') },
+                        { value: 'CLOSED', label: t('CLOSED') },
+                        { value: 'RESOLVED', label: t('RESOLVED') },
+                      ]}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field<string> name='type'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='p_select_type'
+                      label='l_type_ubication'
+                      name='type'
+                      icon='252'
+                      options={[
+                        { value: 'EXTERNAL', label: t('EXTERNAL') },
+                        { value: 'INTERNAL', label: t('INTERNAL') },
+                      ]}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field<string> name='employeedId'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='p_select_employee'
+                      label='user'
+                      name='employeedId'
+                      icon='252'
+                      options={users.value}
+                      optionValue='id'
+                      optionLabel='fullname'
+                      onChange={(e) => {
+                        const id = parseInt(e.currentTarget.value);
+                        input.onChange(id);
+                      }}
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1'>
+                <Field name='serviceId'>
+                  {({ input }) => (
+                    <Select
+                      {...input}
+                      placeholder='p_select_service'
+                      label='l_service'
+                      name='serviceId'
+                      icon='252'
+                      optionValue='id'
+                      optionLabel='description'
+                      options={services.value}
+                      onChange={(e) => {
+                        const id = parseInt(e.currentTarget.value);
+                        input.onChange(id);
+                      }}
+                    />
+                  )}
+                </Field>
+              </div>
+
+              <div class='col-span-1'>
+                <Field<string> name='externalId'>
+                  {({ input }) => (
+                    <Input {...input} type='text' label='l_external_code' />
+                  )}
+                </Field>
+              </div>
+              <div class='col-span-1 mt-4'>
+                <FieldArray<string> name='keywords'>
+                  {({ fields }) => (
+                    <div className='flex flex-col gap-2'>
+                      <div className='flex items-center border p-2 rounded-md'>
+                        <input
+                          value={inputKeywords.value}
+                          type='keywords'
+                          onChange={(e) =>
+                            (inputKeywords.value = e.currentTarget.value)
+                          }
+                          placeholder={t('p_write_keyword')}
+                          className='flex-grow p-2 border rounded-md'
+                        />
+                        <button
+                          type='button'
+                          className='ml-2 px-4 py-2 bg-blue-500 text-white rounded-md'
+                          onClick={() => {
+                            fields.push(inputKeywords.value);
+                            inputKeywords.value = '';
+                          }}
+                        >
+                          {t('add')}
+                        </button>
+                      </div>
+                      <div className='flex flex-wrap gap-2'>
+                        {values.keywords?.map(
+                          (keyword: string, index: number) => (
+                            <span
+                              key={index}
+                              className='px-3 py-1 bg-gray-200 rounded-md flex items-center'
+                            >
+                              {keyword}
+                              <button
+                                type='button'
+                                className='ml-2 text-red-500'
+                                onClick={() => {
+                                  fields.remove(index);
+                                }}
+                              >
+                                ×
+                              </button>
+                            </span>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </FieldArray>
+              </div>
+              {/* <div class='col-span-2'>
+                  <FieldArray name='tasks'>
+                    {({ fields }) => (
+                      <div>
+                        <h3 className='text-lg dark:text-white font-medium text-gray-900 text-center p5'>
+                          Añadir tareas al turno
+                          <Button
+                            icon='044'
+                            rounded
+                            id='menu-btn'
+                            name='menu'
+                            type='button'
+                            color='text-primary'
+                            onClick={() => fields.push({})}
+                          />
+                        </h3>
+                        {fields.map((name, index) => (
+                          <div
+                            key={index}
+                            className='rounde shadow p-2 border-2'
+                          >
+                            <div className='bg-gray-100 dark:bg-b-dark-light p-3 text-center'>
+                              <h2 className='text-xl font-semibold '>
+                                Tarea {index + 1}
+                              </h2>
+                            </div>
+                            <div className='grid grid-cols-2 gap-1'>
+                              <div className='col-span-1'>
+                                <Field<string>
+                                  name={`${name}.start`}
+                                  validate={required}
+                                  parse={(value) =>
+                                    value ? dayjs(value).toISOString() : ''
+                                  }
+                                  format={(value) =>
+                                    value
+                                      ? dayjs(value).format('YYYY-MM-DD HH:mm')
+                                      : ''
+                                  }
+                                >
+                                  {({ input, meta }) => (
+                                    <Input
+                                      {...input}
+                                      type='datetime-local'
+                                      id='task-start'
+                                      label={t('date_start')}
+                                      meta={meta}
+                                    />
+                                  )}
+                                </Field>
+                              </div>
+
+                              <div class='col-span-1'>
+                                <Field<string> name={`${name}.status`}>
+                                  {({ input }) => (
+                                    <Select
+                                      {...input}
+                                      placeholder={t('p_select_type')}
+                                      label={t('type')}
+                                      id='task-status'
+                                      name='type'
+                                      icon='252'
+                                      options={[
+                                        { value: 'CREATED', label: t('CREATED') },
+                                        {
+                                          value: 'RESOLVED',
+                                          label: t('RESOLVED'),
+                                        },
+                                        { value: 'CLOSED', label: t('CLOSED') },
+                                      ]}
+                                    />
+                                  )}
+                                </Field>
+                              </div>
+
+                              <div className='col-span-2'>
+                                <Field<string>
+                                  name={`${name}.description`}
+                                  validate={required}
+                                >
+                                  {({ input, meta }) => (
+                                    <TextArea
+                                      {...input}
+                                      id='task-description'
+                                      placeholder={t('p_enter_description')}
+                                      label={t('description')}
+                                      type='text'
+                                      meta={meta}
+                                    />
+                                  )}
+                                </Field>
+                              </div>
+                            </div>
+                            <button
+                              type='button'
+                              onClick={() => fields.remove(index)}
+                              className='mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700'
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </FieldArray>
+                </div> */}
+            </div>
+
+            {/* Botonera */}
+            <div className='w-full flex-row flex justify-end items-center'>
+              <StatusButton
+                onClickClean={() => {
+                  form.reset();
+                }}
+                submitting={submitting}
+                pristine={pristine}
+                form='form-shift-create'
+                label={id ? 'edit' : 'save'}
+              />
+            </div>
+          </form>
+        )}
+      />
+      {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
+    </Section>
+  );
+};

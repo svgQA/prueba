@@ -1,0 +1,37 @@
+.scrollWrapper {
+  overflow: auto;
+  max-width: 100%;
+  /*firefox*/
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+  /*iPad*/
+  background: transparent;
+  height: 0.7rem;
+}
+.scrollWrapper::-webkit-scrollbar {
+  height: 7px;
+  margin-bottom: -7px;
+}
+/*
+.scrollWrapper::-webkit-scrollbar-corner {
+  background: transparent;
+}
+*/
+.scrollWrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.6);
+  border-radius: 2em;
+  width: 20px;
+}
+/*
+.scrollWrapper::-webkit-scrollbar-thumb:hover {
+  border: 4px solid transparent;
+  background: rgba(0, 0, 0, 0.3);
+  background: var(--palette-black-alpha-30, rgba(0, 0, 0, 0.3));
+  background-clip: padding-box;
+}
+@media only screen and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) {
+}
+.scroll {
+  height: 1px;
+}
+*/

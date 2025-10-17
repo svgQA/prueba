@@ -1,0 +1,57 @@
+// export interface IResponse {
+//   [key: string]: unknown;
+// }
+
+import { IFormatError, IPageError } from './error.type';
+import { IElement, IFormat, IFormBase, IPage } from './form';
+
+export interface IRValueObject {
+  name: string;
+  type:
+    | 'jpg'
+    | 'jpeg'
+    | 'png'
+    | 'mp3'
+    | 'wav'
+    | 'ogg'
+    | 'aac'
+    | 'pdf'
+    | 'doc'
+    | 'docx'
+    | 'xls'
+    | 'xlsx'
+    | 'txt';
+  url?: string;
+  time?: number;
+  date?: Date;
+}
+
+export interface IRValueCheckbox {
+  [key: string]: boolean;
+}
+
+export interface IRElement extends IElement {
+  value?: any; // number | string | boolean | IRValueCheckbox | IRValueObject;
+  elements?: IRElement[];
+}
+
+export interface IRPage extends IPage {
+  elements: IRElement[];
+}
+
+export interface IResponse extends IFormat {
+  pages: IRPage[];
+}
+
+export interface IRElementError extends IRElement {
+  elements?: IRElementError[];
+  value_error?: string;
+}
+
+export interface IRPageError extends IPageError {
+  elements: IRElementError[];
+}
+
+export interface IResponseError extends IFormatError {
+  pages: IRPageError[];
+}

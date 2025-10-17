@@ -1,0 +1,60 @@
+@import url('./tryvoo/clean.css');
+@import url('./tryvoo/icons.css');
+@import url('./tryvoo/scroll.css');
+@import url('./tryvoo/inputs.css');
+@import url('./tryvoo/texts.css');
+@import url('./tryvoo/table.css');
+@import url('./tryvoo/forms.css');
+@import url('./tryvoo/button.css');
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.33%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 25s linear infinite;
+  width: fit-content;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+@keyframes notification-shake {
+  0%,
+  100% {
+    transform: translateX(0) scale(1);
+  }
+  25% {
+    transform: translateX(-3px) rotate(-3deg) scale(1.1);
+  }
+  75% {
+    transform: translateX(3px) rotate(3deg) scale(1.1);
+  }
+}
+
+.animate-notification-shake {
+  animation: notification-shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform-origin: center;
+}
+
+input[type='date']::-webkit-inner-spin-button,
+input[type='date']::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+input[type='datetime-local']::-webkit-inner-spin-button,
+input[type='datetime-local']::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

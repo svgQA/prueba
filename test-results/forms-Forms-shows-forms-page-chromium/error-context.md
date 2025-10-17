@@ -1,0 +1,123 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - list:
+    - link "Ŕ Memos":
+      - /url: /dashboard/
+      - text: Ŕ
+      - heading "Memos" [level=6]
+    - link "Ǖ Shift":
+      - /url: /dashboard/shifts
+      - text: Ǖ
+      - heading "Shift" [level=6]
+    - link "Ň Form":
+      - /url: /dashboard/forms
+      - text: Ň
+      - heading "Form" [level=6]
+    - link "Ū Access":
+      - /url: /dashboard/access
+      - text: Ū
+      - heading "Access" [level=6]
+    - link "ŭ Correspondence":
+      - /url: /dashboard/correspondence
+      - text: ŭ
+      - heading "Correspondence" [level=6]
+    - link "ǃ User":
+      - /url: /dashboard/users
+      - text: ǃ
+      - heading "User" [level=6]
+    - link "Ɠ Notifications":
+      - /url: /dashboard/history
+      - text: Ɠ
+      - heading "Notifications" [level=6]
+  - list:
+    - text: Ʀ
+    - heading "Settings" [level=6]
+- text: "0"
+- button "ě"
+- button "ŗ English":
+  - text: ŗ English
+  - img
+- button "Ğ Company 2 222":
+  - text: Ğ Company 2 222
+  - img
+- button "ȴ"
+- text: "0"
+- button "Ʉ"
+- button "Ʌ"
+- text: "\""
+- heading "Total Memos Today" [level=3]
+- paragraph
+- text: 3 Ⱦ
+- heading "Unresolved Memos" [level=3]
+- paragraph
+- text: 100% !
+- heading "Resolved Memos" [level=3]
+- paragraph
+- text: 0%
+- button "ɇ"
+- button "ʩ"
+- button "ɮ"
+- text: Ơ
+- textbox "Search"
+- button "Ǯ"
+- button "ȹ"
+- table:
+  - rowgroup:
+    - row "Ư User Novelty Description Status Priority History Created":
+      - cell "Ư":
+        - button "Ư"
+      - cell "User"
+      - cell "Novelty"
+      - cell "Description"
+      - cell "Status"
+      - cell "Priority"
+      - cell "History"
+      - cell "Created"
+  - rowgroup:
+    - row "Ĉ J Juan Pablo Fernandez Robo en el lugar Prueba offline Opened Alta - Ÿ 08/09/2025":
+      - cell "Ĉ"
+      - cell "J Juan Pablo Fernandez"
+      - cell "Robo en el lugar"
+      - cell "Prueba offline"
+      - cell "Opened"
+      - cell "Alta"
+      - cell "- Ÿ"
+      - cell "08/09/2025"
+    - row "Ĉ J Juan Pablo Fernandez Robo en el lugar Prueba offline Opened Alta 2 Ÿ 08/09/2025":
+      - cell "Ĉ"
+      - cell "J Juan Pablo Fernandez"
+      - cell "Robo en el lugar"
+      - cell "Prueba offline"
+      - cell "Opened"
+      - cell "Alta"
+      - cell "2 Ÿ"
+      - cell "08/09/2025"
+    - row "Ĉ J Juan Pablo Fernandez Sin Novedad 2da prueba offline Opened Baja - Ÿ 08/09/2025":
+      - cell "Ĉ"
+      - cell "J Juan Pablo Fernandez"
+      - cell "Sin Novedad"
+      - cell "2da prueba offline"
+      - cell "Opened"
+      - cell "Baja"
+      - cell "- Ÿ"
+      - cell "08/09/2025"
+- text: "Rows:"
+- combobox:
+  - option "10"
+  - option "20" [selected]
+  - option "30"
+  - option "50"
+  - option "100"
+- text: Ĉ 1-3 From 3 Elements
+- button "Ȥ" [disabled]
+- button "Ċ" [disabled]
+- button "1":
+  - paragraph: "1"
+- button "ċ" [disabled]
+- button "ȥ" [disabled]
+- text: "Page: 1 of 1"
+- status
+- region "Notifications Alt+T"
+```

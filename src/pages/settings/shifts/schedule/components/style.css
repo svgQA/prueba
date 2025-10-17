@@ -1,0 +1,7 @@
+.selected-cell {
+  @apply bg-primary bg-opacity-30 !border-primary-opacity-2 !border-x-2;
+}
+
+.general-cell {
+  @apply p-3 border-t border-l cursor-pointer transition-all hover:bg-primary-opacity border-b-light-dark dark:border-b-dark-light;
+}

@@ -1,0 +1,53 @@
+import { IModalSidebarMenu } from '@/components/compose/modal';
+import { PAGES_LIST_ROUTER } from '@/utils/routing';
+
+const base = PAGES_LIST_ROUTER.dashboard.setting.users.base;
+export const MODAL_SETTING_USER: IModalSidebarMenu = {
+  label: 'g_user',
+  base: PAGES_LIST_ROUTER.dashboard.setting.base,
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.users.settings.to,
+    label: 'setting',
+    id: 'user:tools:state',
+  },
+  show: true,
+  id: 'user:state',
+  menus: [
+    {
+      icon: '240',
+      label: 'm_area',
+      description: 'd_area',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.users.areas.base,
+      id: 'user:areas:state',
+      show: true,
+    },
+    {
+      icon: '190',
+      label: 'm_role',
+      description: 'd_role',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.users.roles.base,
+      id: 'user:roles:state',
+      show: true,
+    },
+    {
+      icon: '189',
+      label: 'm_group',
+      description: 'd_group',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.users.groups.base,
+      id: 'user:groups:state',
+      show: false,
+    },
+    {
+      icon: '063',
+      label: 'm_password',
+      description: 'd_password',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.users.password.base,
+      id: 'user:password:state',
+      show: true,
+    },
+  ],
+};

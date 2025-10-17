@@ -1,0 +1,136 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - img
+  - paragraph: Together with you!
+  - list:
+    - listitem:
+      - link "Our Products":
+        - /url: /dashboard
+    - listitem:
+      - link "About Us":
+        - /url: /dashboard
+    - listitem:
+      - link "Request a Demo":
+        - /url: /demo
+  - button "ŗ English":
+    - text: ŗ English
+    - img
+  - link "Ď Sign In":
+    - /url: /dashboard
+- heading "Transform Operations Management With Tryvoo" [level=1]
+- text: Optimize the management of activities, resources and assets, even without connectivity for your business
+- button "Schedule a Free Demo"
+- img "Tryvoo platform interface"
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- img
+- heading "Why Tryvoo?" [level=2]
+- text: Simplify. Optimize. Grow. 60% of companies in LATAM are looking for tools that improve traceability and reduce operational costs
+- paragraph: Tryvoo is leading this transformation, thanks to the complete digitization and automation of field activities, delivering intuitive solutions, accessible even without connection.
+- img "Fácil Gestión y Trazabilidad:"
+- heading "Fácil Gestión y Trazabilidad:" [level=3]
+- paragraph: "\"Control total sobre las operaciones en campo, con visibilidad y seguimiento en tiempo real.\""
+- img "Asistencia con IA:"
+- heading "Asistencia con IA:" [level=3]
+- paragraph: "\"Receive automatic recommendations and support for your operations directly in the field.\""
+- img "Offline Synchronization:"
+- heading "Offline Synchronization:" [level=3]
+- paragraph: "\"Continue managing even without internet, and data synchronizes when connection is restored.\""
+- img "Scalability:"
+- heading "Scalability:" [level=3]
+- paragraph: "\"Adaptable to any company size or industry, from surveillance to logistics.\""
+- button "Discover all possibilities":
+  - paragraph: Discover all possibilities
+- img "Real-Time Monitoring"
+- heading "Real-Time Monitoring" [level=3]
+- paragraph: Visualize task progress and asset status with automatic updates based on real-time data.
+- img "Offline Capabilities"
+- heading "Offline Capabilities" [level=3]
+- paragraph: Operators can continue working without connection, and all data syncs when internet connection is restored.
+- img "AI and Virtual Support"
+- heading "AI and Virtual Support" [level=3]
+- paragraph: Your virtual assistant to solve field problems, with recommendations based on data captured during operations.
+- img "Integration and Customization"
+- heading "Integration and Customization" [level=3]
+- paragraph: Easy integration with existing tools and a platform that adapts to the needs of each sector.
+- button "View details":
+  - paragraph: View details
+- text: Industry Solutions Tryvoo is optimized for different sectors.
+- img "Security"
+- heading "Security" [level=2]
+- paragraph: Manage security rounds, generate incident reports, and ensure complete control over operator activities.
+- img "Logistics"
+- heading "Logistics" [level=2]
+- paragraph: Track vehicles, monitor deliveries, and optimize route assignment to maximize efficiency.
+- img "Construction"
+- heading "Construction" [level=2]
+- paragraph: Coordinate field worker tasks, control resources, and track project progress.
+- img "Healthcare"
+- heading "Healthcare" [level=2]
+- paragraph: Manage health technicians, track home visits, and handle requests in real-time.
+- button "Start free trial!":
+  - paragraph: Start free trial!
+- text: About Us At Tryvoo, we understand the complexities of operating outside the office. At Tryvoo, we work to ensure your field team has the tools they need to achieve more, with safety and efficiency, anywhere.
+- img "cellphone"
+- text: Our Mission "To empower companies with tools to efficiently manage their field operations, providing total control of activities, resources, and assets, while ensuring security and traceability at all times." Our Values Innovation and continuous improvement. Security, traceability, and trust. Transparency in communication. Commitment to customers and collaborators. Our Plans Choose the perfect plan for your business and transform your field operations. Start with Tryvoo today! 7 Days Free
+- heading "Free Trial" [level=2]
+- paragraph: Start with 7 days and a basic plan
+- list:
+  - listitem: ĥ Limited operations management (up to 5 users).
+  - listitem: ĥ Real-time monitoring for a maximum of 3 assets.
+  - listitem: ĥ Limited virtual assistance (support only during business hours).
+  - listitem: "ĥ Integration with one external tool. Duration: 30-day free trial. Enterprise Plan (Intermediate)."
+  - listitem: ĥ For growing companies that need greater reach.
+- button "Start Trial"
+- text: $49 USD/month
+- heading "Enterprise Plan" [level=2]
+- paragraph: Get greater reach.
+- list:
+  - listitem: ĥ Operations management for up to 50 users.
+  - listitem: ĥ Real-time monitoring with unlimited assets.
+  - listitem: ĥ Complete offline functionality (automatic data synchronization).
+  - listitem: ĥ AI assistance (24/7 support).
+  - listitem: ĥ Integration with up to 3 external tools.
+  - listitem: ĥ Basic reporting dashboard for data analysis.
+- button "Start Plan"
+- text: $49 USD/month
+- heading "Premium Plan" [level=2]
+- paragraph: Advanced businesses
+- list:
+  - listitem: ĥ Unlimited users and scalable operations.
+  - listitem: ĥ Advanced monitoring with real-time reporting and predictive analysis.
+  - listitem: ĥ Advanced offline capabilities (support for multiple devices).
+  - listitem: ĥ Advanced AI with strategic recommendations and risk analysis.
+  - listitem: ĥ Unlimited integration with external tools.
+  - listitem: ĥ Advanced reporting dashboard with full customization.
+  - listitem: ĥ Priority 24/7 support with dedicated consultant.
+- button "Start Plan"
+- heading "Popular Sections" [level=2]
+- paragraph: Learn more about Tryvoo
+- heading "Contact Us" [level=3]
+- paragraph: 3157789022 - Popayán, Cauca
+- heading "Our Networks" [level=3]
+- img "ico-1"
+- img "ico-2"
+- img "ico-3"
+- text: We provide free advice! To help you start optimizing your business with agile tools that operate in any space and place
+- button "Start now and enjoy":
+  - paragraph: Start now and enjoy
+```

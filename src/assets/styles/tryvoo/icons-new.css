@@ -1,0 +1,462 @@
+@font-face {
+  font-family: vox-icons;
+  src: url(../fonts/icons.woff), url(../fonts/icons.woff2);
+}
+
+span.vox-icon {
+  font-family: vox-icons;
+  font-size: 1.5em;
+  @apply text-b-dark dark:text-primary font-extralight;
+}
+
+span.vx-icon {
+  font-family: vox-icons;
+  font-size: 1.5em;
+}
+
+.bg-primary,
+.bg-secondary,
+.bg-ternary,
+.bg-error {
+  @apply text-t-dark;
+  span.vox-icon {
+    @apply text-t-dark;
+  }
+}
+
+span.vox-icon.size-xs,
+span.vx-icon.size-xs {
+  font-size: 0.7em;
+}
+
+span.vox-icon.size-sm,
+span.vx-icon.size-sm {
+  font-size: 1em;
+}
+
+span.vox-icon.size-xsm,
+span.vx-icon.size-xsm {
+  font-size: 1.2em;
+}
+
+span.vox-icon.size-md,
+span.vx-icon.size-md {
+  font-size: 1.5em;
+}
+
+span.vox-icon.size-xl,
+span.vx-icon.size-xl {
+  font-size: 2em;
+}
+
+/* Navigation Icons */
+.vx-icon-chevron-down::before {
+  content: '\0108';
+} /* 001 */
+.vx-icon-chevron-up::before {
+  content: '\0109';
+} /* 002 */
+.vx-icon-arrow-left::before {
+  content: '\010A';
+} /* 003 */
+.vx-icon-arrow-right::before {
+  content: '\010B';
+} /* 004 */
+.vx-icon-expand::before {
+  content: '\010C';
+} /* 005 */
+.vx-icon-user-circle::before {
+  content: '\010D';
+} /* 006 */
+.vx-icon-user-settings::before {
+  content: '\010E';
+} /* 007 */
+.vx-icon-close::before {
+  content: '\010F';
+} /* 008 */
+.vx-icon-notification::before {
+  content: '\0039';
+} /* 009 */
+.vx-icon-bell::before {
+  content: '\003A';
+} /* 0091 */
+
+/* Status and Actions */
+.vx-icon-pulse::before {
+  content: '\0111';
+} /* 010 */
+.vx-icon-clock::before {
+  content: '\0112';
+} /* 011 */
+.vx-icon-sync::before {
+  content: '\0113';
+} /* 012 */
+.vx-icon-trash::before {
+  content: '\0114';
+} /* 013 */
+.vx-icon-check::before {
+  content: '\0115';
+} /* 014 */
+.vx-icon-code::before {
+  content: '\0116';
+} /* 015 */
+.vx-icon-list::before {
+  content: '\0117';
+} /* 016 */
+.vx-icon-bars::before {
+  content: '\0118';
+} /* 017 */
+.vx-icon-cube::before {
+  content: '\0119';
+} /* 018 */
+.vx-icon-box::before {
+  content: '\011A';
+} /* 019 */
+.vx-icon-grid::before {
+  content: '\011B';
+} /* 020 */
+
+/* Media and Files */
+.vx-icon-image::before {
+  content: '\011C';
+} /* 021 */
+.vx-icon-folder::before {
+  content: '\011D';
+} /* 022 */
+.vx-icon-document::before {
+  content: '\011E';
+} /* 023 */
+.vx-icon-calendar::before {
+  content: '\011F';
+} /* 024 */
+.vx-icon-chart::before {
+  content: '\0120';
+} /* 025 */
+.vx-icon-graph::before {
+  content: '\0121';
+} /* 026 */
+
+/* Communication */
+.vx-icon-message::before {
+  content: '\0122';
+} /* 027 */
+.vx-icon-chat::before {
+  content: '\0123';
+} /* 028 */
+.vx-icon-mail::before {
+  content: '\0124';
+} /* 029 */
+.vx-icon-send::before {
+  content: '\0125';
+} /* 030 */
+
+/* Interface Elements */
+.vx-icon-search::before {
+  content: '\0126';
+} /* 031 */
+.vx-icon-filter::before {
+  content: '\0127';
+} /* 032 */
+.vx-icon-settings::before {
+  content: '\0128';
+} /* 033 */
+.vx-icon-plus::before {
+  content: '\0129';
+} /* 034 */
+.vx-icon-minus::before {
+  content: '\012A';
+} /* 035 */
+.vx-icon-edit::before {
+  content: '\012B';
+} /* 036 */
+.vx-icon-check-circle::before {
+  content: '\012C';
+} /* 037 */
+.vx-icon-info::before {
+  content: '\012D';
+} /* 038 */
+.vx-icon-warning::before {
+  content: '\012E';
+} /* 039 */
+.vx-icon-question::before {
+  content: '\012F';
+} /* 040 */
+
+/* Device and Hardware */
+.vx-icon-mobile::before {
+  content: '\0130';
+} /* 041 */
+.vx-icon-desktop::before {
+  content: '\0131';
+} /* 042 */
+.vx-icon-wifi::before {
+  content: '\0132';
+} /* 043 */
+.vx-icon-bluetooth::before {
+  content: '\0133';
+} /* 044 */
+.vx-icon-battery::before {
+  content: '\0134';
+} /* 045 */
+.vx-icon-power::before {
+  content: '\0135';
+} /* 046 */
+
+/* Business and Finance */
+.vx-icon-chart-bar::before {
+  content: '\0136';
+} /* 047 */
+.vx-icon-pie-chart::before {
+  content: '\0137';
+} /* 048 */
+.vx-icon-clipboard::before {
+  content: '\0138';
+} /* 049 */
+.vx-icon-timer::before {
+  content: '\0139';
+} /* 050 */
+.vx-icon-target::before {
+  content: '\013A';
+} /* 051 */
+.vx-icon-tag::before {
+  content: '\013B';
+} /* 052 */
+
+/* Social and Sharing */
+.vx-icon-share::before {
+  content: '\013C';
+} /* 053 */
+.vx-icon-link::before {
+  content: '\013D';
+} /* 054 */
+.vx-icon-globe::before {
+  content: '\013E';
+} /* 055 */
+.vx-icon-download::before {
+  content: '\013F';
+} /* 056 */
+.vx-icon-upload::before {
+  content: '\0140';
+} /* 057 */
+.vx-icon-cloud::before {
+  content: '\0141';
+} /* 058 */
+
+/* Security */
+.vx-icon-lock::before {
+  content: '\0142';
+} /* 059 */
+.vx-icon-unlock::before {
+  content: '\0143';
+} /* 060 */
+.vx-icon-shield::before {
+  content: '\0144';
+} /* 061 */
+.vx-icon-key::before {
+  content: '\0145';
+} /* 062 */
+.vx-icon-eye::before {
+  content: '\0146';
+} /* 063 */
+.vx-icon-eye-off::before {
+  content: '\0147';
+} /* 064 */
+
+/* Documents and Text */
+.vx-icon-file::before {
+  content: '\0148';
+} /* 065 */
+.vx-icon-file-text::before {
+  content: '\0149';
+} /* 066 */
+.vx-icon-file-add::before {
+  content: '\014A';
+} /* 067 */
+.vx-icon-file-remove::before {
+  content: '\014B';
+} /* 068 */
+.vx-icon-file-download::before {
+  content: '\014C';
+} /* 069 */
+.vx-icon-file-upload::before {
+  content: '\014D';
+} /* 070 */
+
+/* Additional UI Elements */
+.vx-icon-menu::before {
+  content: '\014E';
+} /* 071 */
+.vx-icon-more::before {
+  content: '\014F';
+} /* 072 */
+.vx-icon-dots::before {
+  content: '\0150';
+} /* 073 */
+.vx-icon-refresh::before {
+  content: '\0151';
+} /* 074 */
+.vx-icon-folder-open::before {
+  content: '\0152';
+} /* 075 */
+.vx-icon-tools::before {
+  content: '\0153';
+} /* 076 */
+
+/* Data and Analytics */
+.vx-icon-database::before {
+  content: '\0154';
+} /* 077 */
+.vx-icon-server::before {
+  content: '\0155';
+} /* 078 */
+.vx-icon-code-branch::before {
+  content: '\0156';
+} /* 079 */
+.vx-icon-terminal::before {
+  content: '\0157';
+} /* 080 */
+.vx-icon-analytics::before {
+  content: '\0158';
+} /* 081 */
+.vx-icon-signal::before {
+  content: '\0159';
+} /* 082 */
+.vx-icon-pulse-line::before {
+  content: '\015A';
+} /* 083 */
+.vx-icon-activity::before {
+  content: '\015B';
+} /* 084 */
+.vx-icon-dots-vertical::before {
+  content: '\015C';
+} /* 085 */
+.vx-icon-dots-horizontal::before {
+  content: '\015D';
+} /* 086 */
+.vx-icon-menu-dots::before {
+  content: '\015E';
+} /* 087 */
+
+/* Search and Find */
+.vx-icon-zoom-in::before {
+  content: '\015F';
+} /* 088 */
+.vx-icon-zoom-out::before {
+  content: '\0160';
+} /* 089 */
+.vx-icon-search-plus::before {
+  content: '\0161';
+} /* 090 */
+.vx-icon-search-minus::before {
+  content: '\0162';
+} /* 091 */
+.vx-icon-filter-list::before {
+  content: '\0163';
+} /* 092 */
+.vx-icon-sort::before {
+  content: '\0164';
+} /* 093 */
+.vx-icon-sort-asc::before {
+  content: '\0165';
+} /* 094 */
+.vx-icon-sort-desc::before {
+  content: '\0166';
+} /* 095 */
+.vx-icon-filter-funnel::before {
+  content: '\0167';
+} /* 096 */
+
+/* Layout and Design */
+.vx-icon-layout-grid::before {
+  content: '\0168';
+} /* 097 */
+.vx-icon-layout-list::before {
+  content: '\0169';
+} /* 098 */
+.vx-icon-layout-cards::before {
+  content: '\016A';
+} /* 099 */
+.vx-icon-columns::before {
+  content: '\016B';
+} /* 100 */
+.vx-icon-rows::before {
+  content: '\016C';
+} /* 101 */
+.vx-icon-table::before {
+  content: '\016D';
+} /* 102 */
+
+/* Location and Maps */
+.vx-icon-location::before {
+  content: '\016E';
+} /* 103 */
+.vx-icon-map-marker::before {
+  content: '\016F';
+} /* 104 */
+.vx-icon-compass::before {
+  content: '\0170';
+} /* 105 */
+.vx-icon-map::before {
+  content: '\0171';
+} /* 106 */
+.vx-icon-direction::before {
+  content: '\0172';
+} /* 107 */
+.vx-icon-navigation::before {
+  content: '\0173';
+} /* 108 */
+
+/* Multimedia Controls */
+.vx-icon-play::before {
+  content: '\0174';
+} /* 109 */
+.vx-icon-pause::before {
+  content: '\0175';
+} /* 110 */
+.vx-icon-stop::before {
+  content: '\0176';
+} /* 111 */
+.vx-icon-forward::before {
+  content: '\0177';
+} /* 112 */
+.vx-icon-rewind::before {
+  content: '\0178';
+} /* 113 */
+.vx-icon-volume::before {
+  content: '\0179';
+} /* 114 */
+.vx-icon-mute::before {
+  content: '\017A';
+} /* 115 */
+.vx-icon-speaker::before {
+  content: '\017B';
+} /* 116 */
+
+/* Weather and Environment */
+.vx-icon-sun::before {
+  content: '\017C';
+} /* 117 */
+.vx-icon-moon::before {
+  content: '\017D';
+} /* 118 */
+.vx-icon-cloud-sun::before {
+  content: '\017E';
+} /* 119 */
+.vx-icon-cloud-moon::before {
+  content: '\017F';
+} /* 120 */
+.vx-icon-temperature::before {
+  content: '\0180';
+} /* 121 */
+.vx-icon-humidity::before {
+  content: '\0181';
+} /* 122 */
+.vx-icon-wind::before {
+  content: '\0182';
+} /* 123 */
+.vx-icon-rain::before {
+  content: '\0183';
+} /* 124 */
+.vx-icon-snow::before {
+  content: '\0184';
+} /* 125 */

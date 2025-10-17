@@ -1,0 +1,20 @@
+.vx-form-attrs {
+  @apply bg-b-light-light dark:bg-b-dark-light;
+}
+
+.vx-form-attrs-checkbox {
+  @apply flex flex-row flex-wrap content-center justify-between w-full py-2 px-4;
+  div {
+    @apply flex items-center;
+  }
+}
+
+.vx-form-attrs-fields {
+  @apply grid grid-cols-2 gap-3 px-3 py-2;
+}
+
+.vx-form-question {
+  td {
+    @apply py-2;
+  }
+}

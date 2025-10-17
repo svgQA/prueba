@@ -1,0 +1,107 @@
+table.elements {
+  @apply w-full overflow-x-auto;
+  thead {
+    th {
+      @apply h-11 dark:bg-b-dark-light bg-b-light-light shadow-[0_4px_6px_-4px_rgba(0,0,0,0.1)] shadow-white dark:shadow-gray-800;
+      &:first-child {
+        @apply rounded-tl-lg;
+      }
+      &:last-child {
+        @apply rounded-tr-lg;
+      }
+    }
+  }
+  tbody {
+    td {
+      @apply h-12;
+    }
+  }
+}
+
+.pagination-row {
+  @apply bottom-0 left-0 right-0 absolute rounded-b-lg dark:bg-b-dark-light bg-b-content shadow-black  text-t-light dark:text-t-dark border-t border-b-light-dark dark:border-b-dark-light z-[2];
+}
+
+/*
+.pagination-row {
+  @apply !bg-red-500;
+}
+.pagination-row td {
+  padding: 0 !important;
+}
+
+.pagination-row td > div {
+  width: 100%;
+}
+
+*/
+/*
+tr.no-bottom-border td {
+  border-bottom: none !important;
+}
+*/
+
+/*
+.pagination-row {
+  border-top: 1px solid #e5e7eb;
+}
+*/
+
+.pagination-row button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.pagination-row button span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 1;
+  font-size: 14px;
+}
+
+.pagination-row button span:first-child {
+  font-size: 16px;
+  margin-top: -1px; /* Ajuste fino para centrar verticalmente */
+}
+
+.pagination-row .inline-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  height: 28px;
+}
+
+/* table.info {
+  @apply border-collapse border-spacing-0;
+  thead {
+    @apply rounded-xl sticky top-0 py-1 z-10 bg-b-light-dark dark:bg-b-dark-light;
+    th {
+      @apply h-10 p-1 whitespace-nowrap relative text-center bg-b-light-dark dark:bg-b-dark-light;
+    }
+  }
+
+  thead th:first-child {
+    @apply rounded-tl-lg;
+  }
+
+  thead th:last-child {
+    @apply rounded-tr-lg;
+  }
+
+  thead th:last-child {
+    border-top-right-radius: 0.1em;
+  }
+
+  tbody {
+    td {
+      @apply h-10 p-1 border-b border-b-light-dark dark:border-b-dark-light items-center bg-b-light dark:bg-b-dark;
+    }
+  }
+} */

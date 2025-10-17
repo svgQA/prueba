@@ -1,0 +1,33 @@
+.navbar-services-button:hover > div {
+  @apply visible;
+}
+
+/*
+.navbar-services-button > div {
+  transition: visibility 0.3s ease-in-out;
+}
+*/
+
+/* Estilos para el scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Estilos para el submenú */
+.group:hover > div {
+  visibility: visible;
+  opacity: 1;
+  /*
+  transition:
+    visibility 0s,
+    opacity 0.3s linear;
+    */
+}
+
+.group > div {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    visibility 0s linear 0.3s,
+    opacity 0.3s linear;
+}

@@ -1,0 +1,46 @@
+/* .container-waves > .waves {
+  bottom: 0;
+  width: 100%;
+  height: 13em;
+}
+
+.container-waves > .waves > .parallax > use {
+  animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+}
+
+.container-waves > .waves > .parallax > use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 7s;
+}
+
+.container-waves > .waves > .parallax > use:nth-child(2) {
+  animation-delay: -3s;
+  animation-duration: 10s;
+}
+
+.container-waves > .waves > .parallax > use:nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 13s;
+}
+
+.container-waves > .waves > .parallax > use:nth-child(4) {
+  animation-delay: -5s;
+  animation-duration: 20s;
+}
+
+@keyframes move-forever {
+  0% {
+    transform: translate3d(-90px, 0, 0);
+  }
+  100% {
+    transform: translate3d(85px, 0, 0);
+  }
+} */
+
+.bg-we {
+  background-image: url('../../assets/image/we-background.png');
+  background-size: cover; /* Hace que la imagen cubra todo el contenedor */
+  background-position: center; /* Centra la imagen en el contenedor */
+  background-repeat: no-repeat; /* Evita que se repita la imagen */
+  /* height: 100%;  */
+}
