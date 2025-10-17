@@ -639,17 +639,13 @@ export const RoutingContent = memo(() => {
           path={
             PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.create.to
           }
-          component={lazy(() =>
-            Promise.resolve({ default: SiteCreatePage })
-          )}
+          component={lazy(() => Promise.resolve({ default: SiteCreatePage }))}
         />
         <Route
           path={
             PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.update.to
           }
-          component={lazy(() =>
-            Promise.resolve({ default: SiteCreatePage })
-          )}
+          component={lazy(() => Promise.resolve({ default: SiteCreatePage }))}
         />
 
         {/* OPCIONES COMMON ZONE */}

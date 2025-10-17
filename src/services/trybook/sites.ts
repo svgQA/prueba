@@ -1,6 +1,12 @@
 // services/trybook/residences.ts
 import { type IPagination } from '@/types';
-import { IResidenceCreate, IResidenceItem, IResidenceQuery, IResidenceUpdate, IResidenceOption } from '@/types/trybook/sites';
+import {
+  IResidenceCreate,
+  IResidenceItem,
+  IResidenceQuery,
+  IResidenceUpdate,
+  IResidenceOption,
+} from '@/types/trybook/sites';
 
 import { BaseService } from '@/utils/network';
 import {
