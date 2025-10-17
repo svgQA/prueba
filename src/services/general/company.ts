@@ -62,4 +62,11 @@ export class CompanyService extends BaseService {
     };
     return await super.make_request<IOption>(this.sname, model);
   }
+
+  static async getClientsSimple() {
+    const model: IMakeRequest = {
+      url: ['company', 'clients', 'simple'],
+    };
+    return await super.make_request<IOption>(this.sname, model);
+  }
 }

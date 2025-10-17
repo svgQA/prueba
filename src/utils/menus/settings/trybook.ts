@@ -21,7 +21,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.base,
       show: true,
-      id: 'trybook:residence:state',
+      id: 'trybook:residences:state',
     },
     {
       icon: '160',
