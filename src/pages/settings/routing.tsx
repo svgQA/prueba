@@ -90,6 +90,8 @@ import { AccessBansPage } from './trybook/acessesban/trybook.accessesban';
 import { AccessBanForm } from './trybook/acessesban/accessesban.create';
 import { ClientsSettingPage } from '../dashboard/users/clients/clients';
 import { ClientsCreateSettingPage } from '../dashboard/users/clients/create/create';
+import { StageForm } from './pqrs/stages/components/stages.upsert';
+import { StagePage } from './pqrs/stages/stage.page';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -754,6 +756,20 @@ export const RoutingContent = memo(() => {
             PAGES_LIST_ROUTER.dashboard.setting.trybook.accessBans.update.to
           }
           component={lazy(() => Promise.resolve({ default: AccessBanForm }))}
+        />
+
+        {/* OPTIONS STAGES */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.to}
+          component={lazy(() => Promise.resolve({ default: StagePage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.create.to}
+          component={lazy(() => Promise.resolve({ default: StageForm }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.update.to}
+          component={lazy(() => Promise.resolve({ default: StageForm }))}
         />
       </Suspense>
     </Router>
