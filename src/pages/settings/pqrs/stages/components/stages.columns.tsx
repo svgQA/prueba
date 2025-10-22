@@ -39,12 +39,12 @@ export const getColumns = (
       size: 160,
       header: 'h_execution_notes',
     },
-    {
-      id: 'outputFormat',
-      accessorKey: 'outputFormat',
-      size: 120,
-      header: 'h_output_format',
-    },
+    // {
+    //   id: 'outputFormat',
+    //   accessorKey: 'outputFormat',
+    //   size: 120,
+    //   header: 'h_output_format',
+    // },
     {
       id: 'status',
       accessorKey: 'status',

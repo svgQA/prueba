@@ -47,9 +47,9 @@ export const StagePage: FunctionalComponent = () => {
 
   const editRow = (id: number) => {
     go({
-      to: `/pqrs/stage/update/${id}`,
+      to: `/pqrs/stages/update/${id}`,
       label: 'edit',
-      id: 'pqrs:stage:state:update',
+      id: 'pqrs:stages:state:update',
       base: 'setting',
     });
   };

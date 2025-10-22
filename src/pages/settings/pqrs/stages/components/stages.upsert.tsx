@@ -220,6 +220,22 @@ export const StageForm: FunctionComponent = () => {
                 </Field>
               </div>
 
+              <div className='col-span-2'>
+                <Field<string> name='prompt'>
+                  {({ input, meta }) => (
+                    <TextArea
+                      {...input}
+                      icon='120'
+                      type='text'
+                      placeholder={t('h_prompt')}
+                      label={t('h_prompt')}
+                      meta={meta}
+                      disabled={loading.value}
+                    />
+                  )}
+                </Field>
+              </div>
+
               <div className='col-span-1'>
                 <Field<IOption> name='nextStageId'>
                   {({ input, meta }) => (
