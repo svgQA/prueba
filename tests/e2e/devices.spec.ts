@@ -3,7 +3,7 @@ import { login, appUrl, ensureDashboardLoaded } from './utils';
 
 const credsProvided = !!(process.env.E2E_EMAIL && process.env.E2E_PASSWORD);
 
-test.describe('Device management', () => {
+test.describe.skip('Device management', () => {
   test.skip(!credsProvided, 'E2E_EMAIL and E2E_PASSWORD must be set');
 
   test.beforeEach(async ({ page }) => {

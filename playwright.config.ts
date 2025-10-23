@@ -6,6 +6,7 @@ export default defineConfig({
     baseURL: process.env.BASE_URL || 'https://dev.tryvoo.com',
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
+    permissions: ['geolocation'],
   },
   projects: [
     {

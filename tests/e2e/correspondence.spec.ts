@@ -6,6 +6,7 @@ import {
   expectSummaryCard,
   expectTableHeaders,
   openSearchInput,
+  translationRegex,
 } from './utils';
 
 const credsProvided = !!(process.env.E2E_EMAIL && process.env.E2E_PASSWORD);
@@ -19,8 +20,9 @@ test.describe('Correspondence', () => {
   });
 
   test('displays correspondence summary and columns', async ({ page }) => {
-    await page.goto(`${appUrl}/dashboard/correspondence`);
-    await expect(page).toHaveTitle(/TY Correspondencia|TY Correspondence/);
+  await page.getByRole('link', { name: translationRegex('t_inbox') }).click();    await expect(page).toHaveTitle(/TY Correspondencia|TY Correspondence/);
+  await expect(page).toHaveURL(/.*correspondence/);
+  await expect(page).toHaveTitle(/TY Correspondencia|TY Correspondence/);
 
     for (const summaryKey of [
       'h_correspondence_total',

@@ -5,7 +5,7 @@ import {
   translationRegex,
 } from './utils';
 
-const baseURL = process.env.BASE_URL || 'https://dev.tryvoo.com';
+const baseURL = 'http://localhost:3050';
 
 /**
  * E2E test for login functionality.
@@ -18,6 +18,9 @@ test.describe('Login flow', () => {
     test.skip(!email || !password, 'E2E_EMAIL and E2E_PASSWORD must be set');
 
     await page.goto(baseURL);
+
+    await page.getByRole('link', { name: 'Sign In' }).click();
+    
     await page
       .locator('input[name="email"], input[name="username"]')
       .first()

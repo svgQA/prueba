@@ -19,7 +19,7 @@ test.describe('Memos', () => {
   });
 
   test('shows memos dashboard controls and allows switching views', async ({ page }) => {
-    await page.goto(`${appUrl}/dashboard`);
+    //await page.goto(`${appUrl}/dashboard`);
     await expect(page).toHaveTitle(/TY Chat/);
 
     for (const summaryKey of [
