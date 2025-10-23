@@ -7,6 +7,7 @@ export interface IOption {
   value: number | string;
   label: string;
   icon?: string;
+  type?: string;
 }
 
 export interface IMultiProps {

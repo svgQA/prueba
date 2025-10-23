@@ -135,4 +135,12 @@ export class PlaceService extends BaseService {
     };
     return await super.make_request(this.name, model);
   }
+
+  static async getSimpleListByClient(clientCompanyId: number) {
+    const model: IMakeRequest = {
+      url: ['place', 'client', `${clientCompanyId}`, 'simple', 'list'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request(this.name, model);
+  }
 }
