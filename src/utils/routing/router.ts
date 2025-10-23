@@ -499,6 +499,21 @@ export const PAGES_LIST_ROUTER = {
           },
         },
       },
+      pqrs: {
+        base: '/pqrs',
+        stages: {
+          base: '/stages',
+          to: '/pqrs/stages',
+          create: {
+            base: '/create',
+            to: '/pqrs/stages/create',
+          },
+          update: {
+            base: '/update',
+            to: '/pqrs/stages/update/:id',
+          },
+        },
+      },
     },
   },
 };

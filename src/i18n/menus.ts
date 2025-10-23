@@ -53,6 +53,8 @@ export const menus_es = {
   m_module: 'Módulos',
   m_scheduled_reports: 'Reportes Programados',
   m_news: 'Noticias',
+  g_pqrs: 'PQRS',
+  m_stage: 'Etapas',
 };
 
 export const menus_en = {
@@ -111,4 +113,6 @@ export const menus_en = {
   m_template: 'Templates',
   m_scheduled_reports: 'Scheduled Reports',
   m_news: 'News',
+  g_pqrs: 'PQRS',
+  m_stage: 'Stages',
 };
