@@ -143,5 +143,4 @@ export class PlaceService extends BaseService {
     };
     return await super.make_request(this.name, model);
   }
-
 }

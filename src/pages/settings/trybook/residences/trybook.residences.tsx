@@ -39,7 +39,7 @@ export const TrybookResidencesPage: FunctionComponent = () => {
       const res =
         (await SitesService.getSites()) as unknown as ListResponse<SiteRow>;
 
-        console.log(res)
+      console.log(res);
       if (res.getStatus()) rows.value = res.getMany();
     } catch {
       ToastManager.error('s_fetch_error');

@@ -24,7 +24,11 @@ export type SiteRow = {
 
   // N:M: residents -> [{ user: { id, name, surname } }]
   residents?: Array<{
-    user?: { id?: number; name?: string | null; surname?: string | null } | null;
+    user?: {
+      id?: number;
+      name?: string | null;
+      surname?: string | null;
+    } | null;
   }> | null;
 
   createdAt?: string;
@@ -88,19 +92,19 @@ export const columns: ColumnDef<SiteRow>[] = [
     cell: ({ row }) => {
       const { uuid } = row.original;
       return (
-        <div className="w-full flex justify-center gap-1">
+        <div className='w-full flex justify-center gap-1'>
           <ButtonAction
             id={String(uuid)}
-            type="shift"             // lo dejo tal cual lo tenías
+            type='shift' // lo dejo tal cual lo tenías
             action={ROW_ACTIONS.UPDATE}
-            icon="123"
+            icon='123'
           />
           <ButtonAction
             id={String(uuid)}
-            type="shift"
+            type='shift'
             action={ROW_ACTIONS.DELETE}
-            icon="053"
-            color="!text-red-500"
+            icon='053'
+            color='!text-red-500'
           />
         </div>
       );

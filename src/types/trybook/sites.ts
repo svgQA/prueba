@@ -15,9 +15,13 @@ export interface ISiteItem {
   floor: number | null;
 
   placeId: number;
-  place?: { id: number; name: string | null; type?: 'INDUSTRIAL' | 'RESIDENTIAL' | 'OTHER' } | null;
+  place?: {
+    id: number;
+    name: string | null;
+    type?: 'INDUSTRIAL' | 'RESIDENTIAL' | 'OTHER';
+  } | null;
 
-  /** 
+  /**
    * Dueño(s) / residentes cuando NO es oficina-industrial.
    * N:M ligero para frontend.
    */
@@ -54,9 +58,9 @@ export interface ISiteCreate {
    * - Si type === 'OFFICE' y el place es INDUSTRIAL => usar clientCompanyId
    * - En otro caso => userId o residentUserIds (opcional N:M)
    */
-  userId?: number;              // compat simple (uno)
-  residentUserIds?: number[];   // N:M
-  clientCompanyId?: number;     // cliente para oficina-industrial
+  userId?: number; // compat simple (uno)
+  residentUserIds?: number[]; // N:M
+  clientCompanyId?: number; // cliente para oficina-industrial
 }
 
 /** ================================
@@ -72,9 +76,9 @@ export interface ISiteQuery {
   items?: number;
   type?: SiteType;
   placeId?: number;
-  userId?: number;         // si filtras por algún residente
+  userId?: number; // si filtras por algún residente
   clientCompanyId?: number; // si filtras por cliente (oficina-industrial)
-  q?: string;              // búsqueda libre si tu API la soporta
+  q?: string; // búsqueda libre si tu API la soporta
 }
 
 /** ================================
