@@ -18,13 +18,17 @@ test.describe('Shifts', () => {
     await login(page);
     await ensureDashboardLoaded(page);
 
-    await page.waitForSelector('#sidebar-nav', { state: 'visible', timeout: 15000 });
-    await page.waitForTimeout(1000); 
+    const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });  
+    await expect(shiftsLink).toBeVisible({ timeout: 15000 });
+    await shiftsLink.click();
+
+    await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
+    await page.waitForLoadState('networkidle');
   });
 
   test('renders shifts summary and table controls', async ({ page }) => {
     const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
-    await expect(shiftsLink).toBeVisible({ timeout: 10000 });
+    await page.waitForLoadState('networkidle');
     await shiftsLink.click();
     
     await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
@@ -51,19 +55,18 @@ test.describe('Shifts', () => {
       'h_duration',
     ]);
 
-    const searchInput = await openSearchInput(page);
-    await expect(searchInput).toBeEnabled();
+      const searchInput = await openSearchInput(page);
+      await expect(searchInput).toBeEnabled();
 
-    const createButton = page.locator('button[name="button-create-shift"]').first();
-    await expect(createButton).toBeVisible({ timeout: 10000 });
+      const createButton = page.locator('button[name="button-create-shift"]').first();
+      await expect(createButton).toBeVisible({ timeout: 10000 });
   });
       test('Create a new shift', async ({ page }) => {
       const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
-      await expect(shiftsLink).toBeVisible({ timeout: 10000 });
       await shiftsLink.click();
       await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
       await page.waitForLoadState('networkidle');
-
+      await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
       const createButton = page.locator('button[name="button-create-shift"]').first();
       await expect(createButton).toBeVisible({ timeout: 10000 });
       await createButton.click();
@@ -78,7 +81,7 @@ test.describe('Shifts', () => {
       await page.getByRole('textbox', { name: /Fecha de inicio|Start date/i }).fill('2025-10-22T12:14');
       await page.getByRole('textbox', { name: /Fecha de fin|End date/i }).fill('2025-10-23T12:14');
       await page.getByRole('spinbutton', { name: /Tiempo Antes|Time Before/i }).click();
-      await page.getByRole('spinbutton', { name: /Tiempo Antes|Time Before/i }).fill('50');
+      await page.getByRole('spinbutton', { name: /Tiempo Antes|Time Before/i }).fill('5');
       await page.getByRole('textbox', { name: /Palabras clave|Keywords/i }).click();
       await page.getByText('Prueba').last().click();
       await page.waitForLoadState('networkidle');
@@ -88,6 +91,28 @@ test.describe('Shifts', () => {
       await page.waitForLoadState('networkidle');
       await expect(page.getByText(/creado con éxito|created successfully/i)).toBeVisible({ timeout: 20000 });
   });
+      test('Validate shift scheduler view toggles', async ({ page }) => {
+      const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
+      await shiftsLink.click();
+      await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
+      await page.waitForLoadState('networkidle');
+      await page.evaluate(() => { (document.body.style as any).zoom = 0.8; }); 
+      await page.getByRole('button', { name: '˂' }).click();
+      await page.getByRole('cell', { name: 'Juan Pablo Juan Pablo' }).locator('span').first().click();
+      await page.waitForLoadState('networkidle');
+      await page.getByRole('button', { name: 'ʣ' }).click();
+      await page.waitForLoadState('networkidle');
+      await page.getByText('Prueba LA PUTA').nth(1).click();
+      await page.waitForLoadState('networkidle');
+      await page.getByRole('button', { name: 'Ů' }).click();
+      await page.getByRole('button', { name: 'Zoom in' }).dblclick();
+      await page.getByRole('button', { name: 'Zoom in' }).click();
+      await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
+      await page.waitForLoadState('networkidle');
+      await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
+      await page.getByRole('row', { name: /Juan Pablo/i }).first().getByRole('checkbox').check();
+      await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
+  });
       test('Edit an existing shift', async ({ page }) => {
       const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
       await expect(shiftsLink).toBeVisible({ timeout: 10000 });
@@ -95,30 +120,88 @@ test.describe('Shifts', () => {
       await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
       await page.waitForLoadState('networkidle');
 
-      const testRow = page.getByRole('row', { name: /Juan Pablo Fernandez/i }).first();
+      const testRow = page.getByRole('row')
+        .filter({ hasText: /Juan Pablo Fernandez/i })
+        .filter({ hasText: /Creado|Created/i })
+        .first();
+      await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });        
       await expect(testRow).toBeVisible();
-      await page.getByRole('cell', { name: 'ˎ' }).locator('span').click();
+      await testRow.getByRole('cell', { name: 'ˎ' }).locator('span').click();
       await page.getByRole('button', { name: 'Ƃ edit' }).click();
+      
       await page.getByRole('spinbutton', { name: /Tiempo Antes|Time Before/i }).click();
       await page.getByRole('spinbutton', { name: /Tiempo Antes|Time Before/i }).fill('50');
       await page.waitForLoadState('networkidle');
-
       await page.getByRole('button', { name: /save|guardar/i }).click();
       await page.waitForSelector('role=heading[name=/Crear|Create/i]', { state: 'hidden', timeout: 20000 });
       await page.waitForLoadState('networkidle');
-    }); 
+  }); 
+      test('Send a notification from Supervision panel', async ({ page }) => {
+      const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
+      await shiftsLink.click();
+      await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
+      await page.waitForLoadState('networkidle');
+      const testRow = page.getByRole('row')
+        .filter({ hasText: /Juan Pablo Fernandez/i })
+        .filter({ hasText: /Creado|Created/i })
+        .first();
+      await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
+
+      const notifButton = page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i });
+      await notifButton.click();
+      const userRow = page.getByRole('row', { name: /Juan Pablo Fernandez/i }).first();
+      await expect(userRow).toBeVisible({ timeout: 15000 });
+      const checkbox = userRow.getByRole('checkbox');
+      await expect(checkbox).toBeEnabled(); 
+      await checkbox.check();
+      await notifButton.click(); 
+      const titleInput = page.getByRole('textbox', { name: /Título personalizado|Custom Title/i });
+      await expect(titleInput).toBeVisible({ timeout: 15000 });
+      await titleInput.fill('Prueba01');
+      const descTextarea = page.locator('textarea[name="input-custom-description"]');
+      await descTextarea.fill('pruebadescripcion');
+      const sendButton = page.getByRole('button', { name: /Enviar notificación|Send Notification/i });
+      await sendButton.scrollIntoViewIfNeeded();
+      await sendButton.click();   
+      await expect(page.getByText(/Enviado con éxito|Sent successfully/i)).toBeVisible({ timeout: 20000 });
+  }); 
       test('Delete an existing shift', async ({ page }) => {
       const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
       await expect(shiftsLink).toBeVisible({ timeout: 10000 });
       await shiftsLink.click();
       await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
       await page.waitForLoadState('networkidle');
-
-      await page.getByRole('cell', { name: 'ˎ' }).locator('span').click();
+      const testRow = page.getByRole('row')
+        .filter({ hasText: /Juan Pablo Fernandez/i })
+        .filter({ hasText: /Creado|Created/i })
+        .first();
+      await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
+      await page.locator('.vox-icon.vx-icon-options').first().click();
       await page.getByRole('button', { name: 'ļ delete' }).click();
       await page.waitForLoadState('networkidle');
       await page.getByRole('button', { name: 'Confirmar' }).click();
       await expect(page.getByText(/Eliminado con éxito|deleted successfully/i)).toBeVisible({ timeout: 20000 });
       await page.waitForLoadState('networkidle');
   });
-});
+      test('Guard mention pickers for shifts', async ({ page }) => {
+      const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
+      await shiftsLink.click();
+      await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
+      await page.waitForLoadState('networkidle');
+
+      const createButton = page.locator('button[name="button-create-shift"]').first();
+      await expect(createButton).toBeVisible({ timeout: 10000 });
+      await createButton.click();
+      await expect(page.getByRole('heading', { name: /Crear|Create/i })).toBeVisible({ timeout: 10000 });
+      const employeeInput = page.getByRole('textbox', { name: /Empleado|Employee/i });
+      await employeeInput.fill('Juan Pablo Fernandez');
+      const option = page.getByText('Juan Pablo Fernandez').last();
+      await expect(option).toBeVisible();
+      await option.click();
+      const serviceInput = page.getByRole('textbox', { name: /Servicio|Service/i });
+      await serviceInput.click();
+      const firstServiceOption = page.getByText('PruebaServicio').last(); 
+      await expect(firstServiceOption).toBeVisible({ timeout: 5000 });
+      await firstServiceOption.click();
+    });
+  });

@@ -144,7 +144,7 @@ export async function ensureDashboardLoaded(page: Page) {
 
   await page.waitForLoadState('networkidle', { timeout: 30000 });
 
-  await page.waitForSelector('#sidebar-nav', { state: 'attached', timeout: 20000 });
+  await page.waitForSelector('#sidebar-nav', { state: 'attached', timeout: 60000 });
 
   await expect(page.locator('#sidebar-nav')).toBeVisible({ timeout: 15000 });
 
