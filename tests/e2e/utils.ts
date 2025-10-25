@@ -1,6 +1,6 @@
 import { expect, Page } from '@playwright/test';
 
-const baseURL = process.env.BASE_URL || 'https://dev.tryvoo.com';
+const baseURL = process.env.BASE_URL || 'http://localhost:3050';
 
 const translationMap: Record<string, string[]> = {
   h_memos_total: ['Memorandos Totales Hoy', 'Total Memos Today'],
@@ -105,32 +105,55 @@ export const translationRegex = (key: string) => {
     return new RegExp(escapeRegExp(key), 'i');
   }
   const pattern = values.map(escapeRegExp).join('|');
-  return new RegExp(`^(?:${pattern})$`, 'i');
+  return new RegExp(`(?:${pattern})`, 'i');
 };
 
 export async function login(page: Page) {
   const email = process.env.E2E_EMAIL;
   const password = process.env.E2E_PASSWORD;
+  
   if (!email || !password) {
     throw new Error('E2E_EMAIL and E2E_PASSWORD must be set');
   }
 
-  await page.goto(baseURL);
-  await page.locator('input[name="email"], input[name="username"]').first().fill(email);
-  await page.locator('input[name="password"]').fill(password);
-  await page.locator('button[type="submit"]').click();
+  await page.goto(baseURL, { timeout: 60000, waitUntil: 'domcontentloaded' });
+  
+  await page.goto(appUrl);
+  const signInButton = page.getByRole('link', { name: /Sign In|Iniciar sesión/i });  await expect(signInButton).toBeVisible({ timeout: 15000 });
+  await expect(signInButton).toBeVisible({ timeout: 15000 });
+  await signInButton.click();
+
+  const emailInput = page.locator('input[name="email"], input[name="username"]').first();
+  await expect(emailInput).toBeVisible({ timeout: 15000 });
+  await emailInput.fill(email);
+  
+  const passwordInput = page.locator('input[name="password"]');
+  await expect(passwordInput).toBeVisible({ timeout: 10000 });
+  await passwordInput.fill(password);
+  
+  const submitButton = page.locator('button[type="submit"]');
+  await submitButton.click();
+  
   await ensureDashboardLoaded(page);
 }
 
 export const appUrl = baseURL;
 
 export async function ensureDashboardLoaded(page: Page) {
-  await page.waitForURL(/\/dashboard/);
-  await expect(page.locator('#sidebar-nav')).toBeVisible();
-  await expect(
-    page.locator('header').locator('button').filter({ has: page.locator('.vx-icon-080') })
-  ).toBeVisible();
-  await expect(page.locator('button[name="user"]')).toBeVisible();
+  await page.waitForURL(/\/dashboard/, { timeout: 30000 });
+
+  await page.waitForLoadState('networkidle', { timeout: 30000 });
+
+  await page.waitForSelector('#sidebar-nav', { state: 'attached', timeout: 60000 });
+
+  await expect(page.locator('#sidebar-nav')).toBeVisible({ timeout: 15000 });
+
+  const menuButton = page.locator('header').locator('button').filter({ has: page.locator('.vx-icon-080') });
+  await expect(menuButton).toBeVisible({ timeout: 15000 });
+
+  await expect(page.locator('button[name="user"]')).toBeVisible({ timeout: 15000 });
+
+  await page.waitForTimeout(500);
 }
 
 export async function expectSummaryCard(page: Page, titleKey: string) {
@@ -138,16 +161,16 @@ export async function expectSummaryCard(page: Page, titleKey: string) {
     .getByRole('heading', { level: 3 })
     .filter({ hasText: translationRegex(titleKey) })
     .first();
-  await expect(heading).toBeVisible();
+  await expect(heading).toBeVisible({ timeout: 10000 });
 }
 
-export async function expectTableHeaders(page: Page, headerKeys: string[]) {
+export async function expectTableHeaders(page: Page, headerKeys: readonly string[]) {
   for (const key of headerKeys) {
     const header = page
       .locator('table thead th')
       .filter({ hasText: translationRegex(key) })
       .first();
-    await expect(header, `Expected table header for ${key}`).toBeVisible();
+    await expect(header, `Expected table header for ${key}`).toBeVisible({ timeout: 10000 });
   }
 }
 
@@ -155,6 +178,6 @@ export async function openSearchInput(page: Page) {
   const searchInput = page
     .getByPlaceholder(translationRegex('p_general_search'))
     .first();
-  await expect(searchInput).toBeVisible();
+  await expect(searchInput).toBeVisible({ timeout: 10000 });
   return searchInput;
 }

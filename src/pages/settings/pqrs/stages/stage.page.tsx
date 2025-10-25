@@ -24,7 +24,7 @@ export const StagePage: FunctionalComponent = () => {
 
   const { selectedCompany } = useUserStore();
   useEffect(() => {
-    document.title = t('p_access'); 
+    document.title = t('p_access');
     if (selectedCompany) {
       fetchInitialData();
     }
