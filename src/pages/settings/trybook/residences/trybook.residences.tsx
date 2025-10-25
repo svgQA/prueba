@@ -1,7 +1,7 @@
 // UserResidencesPage.tsx
 import { Table } from '@/components/common/table/table';
 import { FunctionComponent } from 'preact';
-import { columns, type ResidenceRow } from './residence.columns';
+import { columns, type SiteRow } from './residence.columns';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { ToastManager } from '@/utils/toast/toast-manager';
@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
-import { ResidencesService } from '@/services/trybook/residences';
+import { SitesService } from '@/services/trybook/sites';
 
 /* Tipos mínimos de respuesta */
 interface ListResponse<T> {
@@ -24,7 +24,7 @@ interface BasicResponse {
 
 export const TrybookResidencesPage: FunctionComponent = () => {
   const { t } = useTranslation();
-  const rows = useSignal<ResidenceRow[]>([]);
+  const rows = useSignal<SiteRow[]>([]);
   const loading = useSignal<boolean>(false);
   const { go } = useNavigation();
   const { selectedCompany } = useUserStore();
@@ -37,7 +37,9 @@ export const TrybookResidencesPage: FunctionComponent = () => {
     loading.value = true;
     try {
       const res =
-        (await ResidencesService.getResidences()) as unknown as ListResponse<ResidenceRow>;
+        (await SitesService.getSites()) as unknown as ListResponse<SiteRow>;
+
+      console.log(res);
       if (res.getStatus()) rows.value = res.getMany();
     } catch {
       ToastManager.error('s_fetch_error');
@@ -51,7 +53,7 @@ export const TrybookResidencesPage: FunctionComponent = () => {
   }, [selectedCompany]);
 
   const deleteRow = async (uuid: string) => {
-    const req = (await ResidencesService.deleteResidence(
+    const req = (await SitesService.deleteSite(
       uuid
     )) as unknown as BasicResponse;
     if (!req.getStatus()) return;
@@ -63,7 +65,7 @@ export const TrybookResidencesPage: FunctionComponent = () => {
     go({
       to: `/trybook/residence/update/${uuid}`,
       label: 'edit',
-      id: 'trybook:residence:state:update',
+      id: 'trybook:residences:state:update',
       base: 'setting',
     });
   };
@@ -89,7 +91,7 @@ export const TrybookResidencesPage: FunctionComponent = () => {
   };
 
   return (
-    <Table<ResidenceRow>
+    <Table<SiteRow>
       data={rows.value}
       columns={columns}
       showExpandableIcon={false}

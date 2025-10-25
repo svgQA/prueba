@@ -24,4 +24,5 @@ export const VOS_SERVICES = {
   access: default_service_url,
   key: default_service_url,
   webhook: default_service_url,
+  pqrs: default_service_url,
 };

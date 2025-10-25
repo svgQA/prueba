@@ -161,6 +161,16 @@ export const columns_es = {
   tickets: 'Cupos',
   h_common_area: 'Zona común',
   h_common_areas: 'Zonas comunes',
+  h_stage_name: 'Nombre de la etapa',
+  h_goal: 'Objetivo',
+  h_execution_notes: 'Notas de ejecución',
+  h_output_format: 'Formato de salida',
+  h_stages: 'Etapas',
+  h_result_text: 'Texto de resultado',
+  h_next_stage: 'Siguiente etapa',
+  h_prev_stage: 'Etapa anterior',
+  h_error_stage: 'Etapa de error',
+  h_prompt: 'Prompt',
 };
 
 export const columns_en = {
@@ -326,4 +336,14 @@ export const columns_en = {
   tickets: 'Tickets',
   h_common_area: 'Common area',
   h_common_areas: 'Common areas',
+  h_stage_name: 'Stage Name',
+  h_goal: 'Goal',
+  h_execution_notes: 'Execution Notes',
+  h_output_format: 'Output Format',
+  h_stages: 'Stages',
+  h_result_text: 'Result Text',
+  h_next_stage: 'Next Stage',
+  h_prev_stage: 'Previous Stage',
+  h_error_stage: 'Error Stage',
+  h_prompt: 'Prompt',
 };

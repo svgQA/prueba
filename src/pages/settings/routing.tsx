@@ -75,7 +75,7 @@ import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
 import { ResourceMemoSettingPage } from './memo/resource/resource';
 import { FormReportSettingPage } from './forms/report/report';
 import { ReportUpsertForm } from './forms/report/components/report.upsert.form';
-import { ResidenceCreatePage } from './trybook/residences/residence.create';
+import { SiteCreatePage } from './trybook/residences/residence.create';
 import { TrybookResidencesPage } from './trybook/residences/trybook.residences';
 import { TrybookCommonZonesPage } from './trybook/commonzone/trybook.comonzone';
 import { CommonZoneCreatePage } from './trybook/commonzone/comonzone.create';
@@ -90,6 +90,8 @@ import { AccessBansPage } from './trybook/acessesban/trybook.accessesban';
 import { AccessBanForm } from './trybook/acessesban/accessesban.create';
 import { ClientsSettingPage } from '../dashboard/users/clients/clients';
 import { ClientsCreateSettingPage } from '../dashboard/users/clients/create/create';
+import { StageForm } from './pqrs/stages/components/stages.upsert';
+import { StagePage } from './pqrs/stages/stage.page';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -639,17 +641,13 @@ export const RoutingContent = memo(() => {
           path={
             PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.create.to
           }
-          component={lazy(() =>
-            Promise.resolve({ default: ResidenceCreatePage })
-          )}
+          component={lazy(() => Promise.resolve({ default: SiteCreatePage }))}
         />
         <Route
           path={
             PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.update.to
           }
-          component={lazy(() =>
-            Promise.resolve({ default: ResidenceCreatePage })
-          )}
+          component={lazy(() => Promise.resolve({ default: SiteCreatePage }))}
         />
 
         {/* OPCIONES COMMON ZONE */}
@@ -754,6 +752,20 @@ export const RoutingContent = memo(() => {
             PAGES_LIST_ROUTER.dashboard.setting.trybook.accessBans.update.to
           }
           component={lazy(() => Promise.resolve({ default: AccessBanForm }))}
+        />
+
+        {/* OPTIONS STAGES */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.to}
+          component={lazy(() => Promise.resolve({ default: StagePage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.create.to}
+          component={lazy(() => Promise.resolve({ default: StageForm }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.update.to}
+          component={lazy(() => Promise.resolve({ default: StageForm }))}
         />
       </Suspense>
     </Router>

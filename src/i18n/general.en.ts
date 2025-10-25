@@ -48,10 +48,10 @@ export const general_en = {
       cronExecution: 'Error executing cron manually',
     },
     success: {
-      cronExecuted: 'Cron executed manually 🚀', 
+      cronExecuted: 'Cron executed manually 🚀',
     },
     cards: {
-      notificationShifts: 'Notification Shifts', 
+      notificationShifts: 'Notification Shifts',
       openRate: 'Open Rate',
       monthlyNotifications: 'Monthly Notifications',
     },

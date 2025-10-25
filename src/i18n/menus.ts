@@ -49,12 +49,13 @@ export const menus_es = {
   m_predefined: 'Acciones',
   m_resource: 'Recursos',
   g_notification: 'Notificaciones',
-  g_trybook: 'Trybook',
   m_programmed: 'Programadas',
   m_template: 'Plantillas',
   m_module: 'Módulos',
   m_scheduled_reports: 'Reportes Programados',
   m_news: 'Noticias',
+  g_pqrs: 'PQRS',
+  m_stage: 'Etapas',
 };
 
 export const menus_en = {
@@ -113,4 +114,6 @@ export const menus_en = {
   m_template: 'Templates',
   m_scheduled_reports: 'Scheduled Reports',
   m_news: 'News',
+  g_pqrs: 'PQRS',
+  m_stage: 'Stages',
 };
