@@ -18,7 +18,7 @@ export const general_en = {
       view: {
         users: 'Memo by Users',
         services: 'Memo by Services',
-        select: 'Select by memo',
+        select: 'Select Memo',
       },
     },
     pagination: {
@@ -49,6 +49,11 @@ export const general_en = {
     },
     success: {
       cronExecuted: 'Cron executed manually 🚀',
+    },
+    cards: {
+      notificationShifts: 'Notification Shifts',
+      openRate: 'Open Rate',
+      monthlyNotifications: 'Monthly Notifications',
     },
     columns: {
       title: 'Title',

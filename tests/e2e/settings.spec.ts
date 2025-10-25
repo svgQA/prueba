@@ -11,12 +11,10 @@ test.describe('Profile & settings', () => {
     await ensureDashboardLoaded(page);
   });
 
-  test('opens settings modal from sidebar', async ({ page }) => {
-    await page.goto(`${appUrl}/dashboard`);
-    const settingsTrigger = page
-      .locator('#sidebar-nav')
-      .getByText(translationRegex('t_setting'));
-    await settingsTrigger.click();
+test('opens settings modal from user menu', async ({ page }) => {
+    await page.getByRole('button', { name: 'Ʌ' }).click();
+
+    await page.locator('#setting-dropdown-element').click();
 
     const modal = page.locator('#setting-modal');
     await expect(modal).toBeVisible();
@@ -29,4 +27,25 @@ test.describe('Profile & settings', () => {
     ).toBeVisible();
     await expect(modal.locator('button[name="setting-close"]')).toBeVisible();
   });
+
+
+  test('The settings modal updates when changing companies', async ({ page }) => {
+
+    await page.getByRole('button', { name: 'Ʌ' }).click();
+    await page.locator('#setting-dropdown-element').click();
+    await expect(page.locator('#setting-modal')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Ǉ' }).click();
+    const companyMenuButton = page.getByRole('button', { name: /Company 2 222/i });
+    await companyMenuButton.click();
+    await page.getByTestId('opt-lang-3').click(); 
+    await expect(page.getByRole('button', { name: /Company 3/i })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Ʌ' }).click();
+    await page.locator('#setting-dropdown-element').click();
+    await expect(page.locator('#setting-modal')).toBeVisible();
+
+    await expect(page.getByText('Company 3')).toBeVisible(); 
+  });
+
 });

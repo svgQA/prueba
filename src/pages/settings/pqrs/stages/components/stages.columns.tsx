@@ -1,7 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table';
 
 import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { DropdownActionsMenu, IDropdownAction } from '@/components/common/table/components/dropdown.actions.menu';
+import {
+  DropdownActionsMenu,
+  IDropdownAction,
+} from '@/components/common/table/components/dropdown.actions.menu';
 
 import { IStages } from '../utils/interface';
 

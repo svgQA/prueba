@@ -18,7 +18,7 @@ export const general_es = {
       view: {
         users: 'Memo por Usuarios',
         services: 'Memo por Servicios',
-        select: 'Seleccionar por memo',
+        select: 'Seleccionar Memo',
       },
     },
     pagination: {
@@ -36,9 +36,9 @@ export const general_es = {
     pageTitle: 'TR - Historial de Notificaciones',
     title: 'Historial de notificaciones',
     buttons: {
-      all: 'Todas',
-      read: 'Leídas',
-      unread: 'No Leídas',
+      all: 'Todos',
+      read: 'Leídos',
+      unread: 'No Leídos',
       reload: 'Recargar',
       executeReview: 'Ejecutar revisión',
     },

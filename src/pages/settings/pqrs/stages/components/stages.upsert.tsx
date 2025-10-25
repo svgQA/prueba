@@ -47,7 +47,7 @@ export const StageForm: FunctionComponent = () => {
     const response = await StageService.getSimpleList();
     if (!response.getStatus()) return;
     stageList.value = response.getMany();
-  }
+  };
 
   const fetchInitialValues = async () => {
     if (!id) {

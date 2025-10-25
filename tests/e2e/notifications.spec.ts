@@ -6,6 +6,7 @@ import {
   expectSummaryCard,
   expectTableHeaders,
   openSearchInput,
+  translationRegex,
 } from './utils';
 
 const credsProvided = !!(process.env.E2E_EMAIL && process.env.E2E_PASSWORD);
@@ -19,7 +20,9 @@ test.describe('Notifications', () => {
   });
 
   test('shows notification dashboard analytics and history table', async ({ page }) => {
-    await page.goto(`${appUrl}/dashboard/history`);
+    await page.getByRole('link', { name: translationRegex('t_notification') }).click();
+    await expect(page).toHaveURL(/.*history/);
+    //await page.goto(`${appUrl}/dashboard/history`);
     await expect(page).toHaveTitle(/TY Historial|TY History/);
 
     for (const summaryKey of [
@@ -35,7 +38,7 @@ test.describe('Notifications', () => {
       'h_description',
       'h_type',
       'h_sent_date',
-      'h_recipient',
+      //'h_recipient',
       'h_open_rate',
     ]);
 

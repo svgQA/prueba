@@ -6,6 +6,7 @@ import {
   expectSummaryCard,
   expectTableHeaders,
   openSearchInput,
+  translationRegex,
 } from './utils';
 
 const credsProvided = !!(process.env.E2E_EMAIL && process.env.E2E_PASSWORD);
@@ -18,8 +19,12 @@ test.describe('User management', () => {
     await ensureDashboardLoaded(page);
   });
 
-  test('shows user stats and management table', async ({ page }) => {
-    await page.goto(`${appUrl}/dashboard/users`);
+test('shows user stats and management table', async ({ page }) => {
+
+    await page.getByRole('link', { name: translationRegex('t_user') }).click();
+
+    await expect(page).toHaveURL(/.*users/);
+
     await expect(page).toHaveTitle(/TY Usuarios|TY Users/);
 
     for (const summaryKey of [

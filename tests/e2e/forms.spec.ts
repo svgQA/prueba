@@ -6,6 +6,7 @@ import {
   expectSummaryCard,
   expectTableHeaders,
   openSearchInput,
+  translationRegex,
 } from './utils';
 
 const credsProvided = !!(process.env.E2E_EMAIL && process.env.E2E_PASSWORD);
@@ -19,9 +20,9 @@ test.describe('Forms', () => {
   });
 
   test('renders forms metrics and disables unavailable views', async ({ page }) => {
-    await page.goto(`${appUrl}/dashboard/forms`);
-    await expect(page).toHaveTitle(/TY Formulario|TY Form/);
-
+  await page.getByRole('link', { name: translationRegex('t_inspect') }).click();
+  await expect(page).toHaveURL(/.*forms/);
+  await expect(page).toHaveTitle(/TY Formulario|TY Form/);
     for (const summaryKey of [
       'h_forms_total',
       'h_forms_active',
