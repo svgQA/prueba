@@ -723,6 +723,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               duration: false,
             }}
             modules={modulesReport.Shift}
+            fileName='shift'
           />
         )}
 

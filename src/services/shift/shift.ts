@@ -166,4 +166,12 @@ export class ShiftService extends BaseService {
       onError?.(error);
     }
   }
+
+  static async downloadFile() {
+    const model: IMakeRequest = {
+      url: ['activity', 'download'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request(this.name, model);
+  }
 }
