@@ -5,6 +5,7 @@ import { TargetedEvent } from 'preact/compat';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { ReportAutomatic } from '../report-automatic/report-automatic';
+import { FileControl } from '../file-control/file-control';
 import { RangeDateFilter } from '../table/components/range/range';
 
 export const Search = ({
@@ -20,6 +21,7 @@ export const Search = ({
   disabled = false,
   modules,
   onRangeChange,
+  fileName,
   // range
 }: ISearchProps) => {
   const { t } = useTranslation();
@@ -348,6 +350,7 @@ export const Search = ({
       {/* {table && range && <>{range}</>} */}
       {(table || grouping) && group && <>{group}</>}
       {table && modules && <ReportAutomatic modules={modules} />}
+      {fileName && <FileControl fileName={fileName} />}
 
       {keys.length > 0 && isDropdownOpen.value && (
         <div
