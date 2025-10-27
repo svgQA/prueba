@@ -50,6 +50,18 @@ span.vx-icon.size-xl {
   font-size: 2em;
 }
 
+.vx-icon-000::before {
+  content: '\0021';
+}
+
+.vx-icon-0001::before {
+  content: '\0022';
+}
+
+.vx-icon-0002::before {
+  content: '\0023';
+}
+
 .vx-icon-001::before {
   content: '\0108';
 }
@@ -1298,12 +1310,8 @@ span.vx-icon.size-xl {
   content: '\023E';
 }
 
-/* .vx-icon-312::before {
-  content: '\023F';
-} */
-
 .vx-icon-312::before {
-  content: '\0021';
+  content: '\023F';
 }
 
 .vx-icon-313::before {
@@ -1367,7 +1375,7 @@ span.vx-icon.size-xl {
 }
 
 .vx-icon-328::before {
-  content: '\024F';
+  content: '\024f';
 }
 
 .vx-icon-329::before {

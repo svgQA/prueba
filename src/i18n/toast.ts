@@ -62,6 +62,16 @@ export const toast_es = {
     'Error al crear plantilla. Asegúrate de que el JSON es válido.',
   s_error_send_prompt: 'Error al enviar el prompt',
   s_error_unknown: 'Error desconocido',
+  s_user_created: 'Usuario creado exitosamente',
+  s_user_updated: 'Usuario actualizado exitosamente',
+  s_area_created: 'Área creada exitosamente',
+  s_area_updated: 'Área actualizada exitosamente',
+  s_area_deleted: 'Área eliminada exitosamente',
+  s_tenant_created: 'Tenant creado correctamente',
+  s_instance_created: 'Instancia creada correctamente',
+  s_select_valid_zone: 'Seleccione una zona válida',
+  s_zone_not_support_resources:
+    'La zona seleccionada no admite recursos (tipo PARKING)',
 };
 
 export const toast_en = {
@@ -128,4 +138,14 @@ export const toast_en = {
     'Error creating template. Ensure the JSON is valid.',
   s_error_send_prompt: 'Error sending prompt',
   s_error_unknown: 'Unknown error',
+  s_user_created: 'User created successfully',
+  s_user_updated: 'User updated successfully',
+  s_area_created: 'Area created successfully',
+  s_area_updated: 'Area updated successfully',
+  s_area_deleted: 'Area deleted successfully',
+  s_tenant_created: 'Tenant created successfully',
+  s_instance_created: 'Instance created successfully',
+  s_select_valid_zone: 'Select a valid zone',
+  s_zone_not_support_resources:
+    'The selected zone does not support resources (type PARKING)',
 };

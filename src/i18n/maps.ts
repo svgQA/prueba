@@ -1,6 +1,7 @@
 export const maps_es = {
   maps: {
     pointName: 'Punto',
+
     connect: {
       success: 'Ubicación establecida correctamente',
       error: 'Error al obtener la ubicación',
@@ -23,6 +24,7 @@ export const maps_es = {
 export const maps_en = {
   maps: {
     pointName: 'Point',
+
     connect: {
       success: 'Location set correctly',
       error: 'Error while getting location',

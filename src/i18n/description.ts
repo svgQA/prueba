@@ -3,6 +3,7 @@ export const description_es = {
   d_group: '',
   d_area: '',
   d_role: '',
+  d_client: 'Clientes',
   d_password: '',
   d_round: '',
   d_place: '',
@@ -20,6 +21,11 @@ export const description_es = {
   d_webhook: '',
   d_scheduled_reports: '',
   d_news: '',
+  d_key: '',
+  d_commonzone: '',
+  d_commonslot: '',
+  d_resourcezone: '',
+  d_stages: '',
 };
 
 export const description_en = {
@@ -27,6 +33,7 @@ export const description_en = {
   d_group: '',
   d_area: '',
   d_role: '',
+  d_client: 'Clients',
   d_password: '',
   d_round: '',
   d_place: '',
@@ -44,4 +51,9 @@ export const description_en = {
   d_webhook: '',
   d_scheduled_reports: '',
   d_news: '',
+  d_key: '',
+  d_commonzone: '',
+  d_commonslot: '',
+  d_resourcezone: '',
+  d_stages: '',
 };

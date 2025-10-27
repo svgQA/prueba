@@ -115,7 +115,7 @@ export const UserPasswordPage: FunctionComponent = () => {
                       const passwordRegex =
                         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
                       if (!passwordRegex.test(value)) {
-                        return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial';
+                        return t('password_strength');
                       }
                     }}
                   >
@@ -138,7 +138,7 @@ export const UserPasswordPage: FunctionComponent = () => {
                     name='confirmPassword'
                     validate={(value) => {
                       if (value !== values.newPassword) {
-                        return 'Las contraseñas no coinciden';
+                        return t('passwords_not_match');
                       }
                     }}
                   >

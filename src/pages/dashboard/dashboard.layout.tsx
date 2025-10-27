@@ -2,6 +2,8 @@ import { type FunctionComponent } from 'preact';
 import { Route, Router } from 'wouter';
 import { lazy, Suspense, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
+import 'react-toastify/dist/ReactToastify.css';
+import { useTranslation } from 'react-i18next';
 
 /** ***********************************************************************
  * UTILS
@@ -53,19 +55,21 @@ import { setAllPermissions } from '@/store/signals/access/permission';
 import { useSignal } from '@preact/signals';
 import PanicModal from '@/components/common/panic/components/panic.modal';
 import { IPanic } from '@/components/common/panic/utils/interface';
+import { UserService } from '@/services/general/user';
 
-// import { IconsModal } from '../globals/icons/icons';
-// import { SseManager } from '@/utils/network/sse/base';
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import { Modal } from '@/components/common/modal/modal';
 import { Field, Form } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
+import { FaroManager } from '@/utils/telemetry';
+import { IClientResponse } from '@/types/user/user.response';
 
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
+    const { t } = useTranslation();
     const {
       setCompanies,
       companies,
@@ -82,12 +86,15 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       getToken,
       getCompanyId,
       getUser,
+      getCognito,
       places,
       selectedPlace,
       setSelectedPlace,
       setPlaces,
       getPlaceId,
     } = useUserStore();
+
+    const clients = useSignal<IClientResponse[]>([]);
 
     const isModalOpen = useSignal<boolean>(false);
     const modalPanic = useSignal<IPanic | undefined>(undefined);
@@ -98,6 +105,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const openModalTenant = useSignal<boolean>(false);
     const tenants = useSignal<any[]>([]);
     const instances = useSignal<any[]>([]);
+
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
       BaseService.setUser(getTenant, getToken, getCompanyId, getPlaceId);
@@ -107,6 +115,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     useEffect(() => {
       if (selectedCompany) {
         WebSocketManager.connect(getTenant, getCompanyId, getToken);
+        FaroManager.connect(getTenant, getCompanyId, getToken, getCognito);
       }
       return () => {
         WebSocketManager.disconnect();
@@ -153,6 +162,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         }
       }
       getPlaces();
+      getClients();
     };
 
     const getPlaces = async () => {
@@ -173,6 +183,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           setSelectedPlace(Number(firstPlace));
         }
       }
+    };
+
+    const getClients = async () => {
+      const request = await UserService.getAssociatedClients();
+
+      if (!request.getStatus()) return;
+      clients.value = request.getMany();
     };
 
     const handleCompanyChange = (value: string | number) => {
@@ -213,17 +230,18 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         return;
       setAllPermissions(permissions.model);
     };
+
     const onTenantSubmit = async (values: any) => {
       const request = await TenantService.create_tenant(values);
       if (!request.getStatus()) return;
-      toast.success('Tenant creado correctamente');
+      toast.success('s_tenant_created');
       getTenants();
     };
 
     const onInstanceSubmit = async (values: any) => {
       const request = await TenantService.create_instance(values);
       if (!request.getStatus()) return;
-      toast.success('Instancia creada correctamente');
+      toast.success('s_instance_created');
       getInstances();
     };
 
@@ -234,7 +252,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         return;
       }
       const request = await TenantService.get_tenants();
-      console.log(request);
       if (!request.getStatus()) return;
       tenants.value = request.getMany();
     };
@@ -250,6 +267,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       instances.value = request.getMany();
     };
 
+    // TODO: Joshua debes llevarte esta mierda para otro lado.
     const modalTenant = (
       <Modal
         open={openModalTenant.value}
@@ -271,25 +289,25 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
               className={`px-4 py-2 ${activeTab === 'tenant' ? 'border-b-2 border-primary' : ''}`}
               onClick={() => setActiveTab('tenant')}
             >
-              Crear tenant
+              {t('h_create_tenant')}
             </button>
             <button
               className={`px-4 py-2 ${activeTab === 'companies' ? 'border-b-2 border-primary' : ''}`}
               onClick={() => setActiveTab('companies')}
             >
-              Empresas
+              {t('h_companies')}
             </button>
             <button
               className={`px-4 py-2 ${activeTab === 'instance' ? 'border-b-2 border-primary' : ''}`}
               onClick={() => setActiveTab('instance')}
             >
-              Crear instancia
+              {t('h_create_instance')}
             </button>
             <button
               className={`px-4 py-2 ${activeTab === 'databases' ? 'border-b-2 border-primary' : ''}`}
               onClick={() => setActiveTab('databases')}
             >
-              Base de datos
+              {t('h_databases')}
             </button>
           </div>
 
@@ -301,14 +319,14 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                   <form onSubmit={handleSubmit} className='mb-8'>
                     <div className='grid grid-cols-2 gap-4'>
                       <div className='col-span-1'>
-                        <h1>[TENANT] Información del Tenant</h1>
+                        <h1>[TENANT] {t('h_tenant_info')}</h1>
                         <Field name='name'>
                           {({ input }) => (
                             <Input
                               {...input}
                               type='text'
-                              label='nombre*'
-                              placeholder='Empresa 7'
+                              label='l_name'
+                              placeholder='h_company'
                             />
                           )}
                         </Field>
@@ -316,8 +334,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                           {({ input }) => (
                             <Input
                               {...input}
-                              placeholder='Servicios de software'
-                              label='description*'
+                              placeholder='p_service_software'
+                              label='h_description'
                               type='text'
                             />
                           )}
@@ -326,7 +344,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                           {({ input }) => (
                             <Input
                               {...input}
-                              placeholder='Usuario Test'
+                              placeholder='p_usuario_test'
                               label='manager_name'
                               type='text'
                             />
@@ -337,7 +355,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                             <Input
                               {...input}
                               type='email'
-                              placeholder='usuariotest@gmail.com'
+                              placeholder='p_user_email'
                               label='manager_email'
                             />
                           )}
@@ -346,8 +364,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                           {({ input }) => (
                             <Input
                               {...input}
-                              placeholder='+573168410294'
-                              label='manager_phone'
+                              placeholder='p_manager_phone'
+                              label='l_manager_phone'
                               type='tel'
                             />
                           )}
@@ -355,14 +373,14 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                       </div>
 
                       <div className='col-span-1'>
-                        <h1>[OWNER] Información del Usuario</h1>
+                        <h1>[OWNER] {t('h_user_info')}</h1>
                         <Field name='email'>
                           {({ input }) => (
                             <Input
                               {...input}
                               type='email'
-                              placeholder='jhvargas563@gmail.com'
-                              label='Correo*'
+                              placeholder='p_owner_email'
+                              label='h_email'
                             />
                           )}
                         </Field>
@@ -370,8 +388,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                           {({ input }) => (
                             <Input
                               {...input}
-                              placeholder='+57316841294'
-                              label='Teléfono*'
+                              placeholder='p_owner_phone'
+                              label='h_phone'
                               type='tel'
                             />
                           )}
@@ -381,8 +399,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                             <Input
                               {...input}
                               type='text'
-                              placeholder='Tryvoo*1113697580'
-                              label='Contraseña*'
+                              placeholder='p_enter_password'
+                              label='l_password'
                             />
                           )}
                         </Field>
@@ -392,7 +410,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                       type='submit'
                       className='mt-4 px-4 py-2 bg-primary text-white rounded'
                     >
-                      Create Tenant
+                      {t('h_create_tenant')}
                     </button>
                   </form>
                 )}
@@ -409,9 +427,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                         {({ input }) => (
                           <Input
                             {...input}
-                            placeholder='Instance'
+                            placeholder='p_instance'
                             type='text'
-                            label='Nombre*'
+                            label='h_name'
                           />
                         )}
                       </Field>
@@ -430,7 +448,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                       type='submit'
                       className='mt-4 px-4 py-2 bg-primary text-white rounded'
                     >
-                      Create Instance
+                      {t('h_create_instance')}
                     </button>
                   </form>
                 )}
@@ -438,17 +456,17 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ) : activeTab === 'databases' ? (
             <div>
-              <h1>Instancias</h1>
+              <h1>{t('h_instances')}</h1>
               <table className='w-full border-collapse'>
                 <thead>
                   <tr>
                     <th className='border p-2'>ID</th>
-                    <th className='border p-2'>Name</th>
+                    <th className='border p-2'>{t('h_name')}</th>
                     <th className='border p-2'>URL</th>
-                    <th className='border p-2'>Count</th>
-                    <th className='border p-2'>Created At</th>
-                    <th className='border p-2'>Updated At</th>
-                    <th className='border p-2'>Status</th>
+                    <th className='border p-2'>{t('h_count')}</th>
+                    <th className='border p-2'>{t('h_created_at')}</th>
+                    <th className='border p-2'>{t('h_updated_at')}</th>
+                    <th className='border p-2'>{t('h_status')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -470,22 +488,24 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ) : activeTab === 'companies' ? (
             <div>
-              <h1>Empresas</h1>
+              <h1>{t('h_companies')}</h1>
               <table className='w-full border-collapse'>
                 <thead>
                   <tr>
                     <th className='border p-2'>ID</th>
-                    <th className='border p-2'>Name</th>
-                    <th className='border p-2'>Description</th>
-                    <th className='border p-2'>Manager Name</th>
-                    <th className='border p-2'>Manager Email</th>
-                    <th className='border p-2'>Manager Phone</th>
-                    <th className='border p-2'>External ID</th>
-                    <th className='border p-2'>Platform External ID</th>
-                    <th className='border p-2'>Instance ID</th>
-                    <th className='border p-2'>Status</th>
-                    <th className='border p-2'>Message</th>
-                    <th className='border p-2'>Date</th>
+                    <th className='border p-2'>{t('h_name')}</th>
+                    <th className='border p-2'>{t('h_description')}</th>
+                    <th className='border p-2'>{t('l_manager_name')}</th>
+                    <th className='border p-2'>{t('l_manager_email')}</th>
+                    <th className='border p-2'>{t('l_manager_phone')}</th>
+                    <th className='border p-2'>{t('h_external_id')}</th>
+                    <th className='border p-2'>
+                      {t('h_platform_external_id')}
+                    </th>
+                    <th className='border p-2'>{t('h_instance_id')}</th>
+                    <th className='border p-2'>{t('h_status')}</th>
+                    <th className='border p-2'>{t('message')}</th>
+                    <th className='border p-2'>{t('h_date')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -512,7 +532,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
             </div>
           ) : (
             <div>
-              <h1>Base de datos</h1>
+              <h1>{t('h_databases')}</h1>
             </div>
           )}
         </div>
@@ -554,6 +574,16 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 value={selectedPlace?.value}
                 onChange={handlePlaceChange}
                 icon='103'
+                borderless
+              />
+              <CustomSwitcher
+                options={clients.value.map((client) => ({
+                  label: client.name,
+                  value: client.id,
+                }))}
+                value={clients.value[0]?.id}
+                onChange={() => {}}
+                icon='023'
                 borderless
               />
               <div className='flex flex-row gap-4 items-center justify-center'>

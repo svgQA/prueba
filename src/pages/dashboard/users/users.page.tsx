@@ -24,6 +24,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { Table } from '@/components/common/table/table';
 import { setUser, USER_MODE_SERVICE } from './store/user.store';
 import { useUserStore } from '@/store/slices';
+import { allPermissions } from '@/store/signals/access/permission';
 
 enum VIEW_NAME {
   TABLE,
@@ -150,6 +151,7 @@ export const UsersPage: FunctionalComponent = () => {
           rounded={false}
           selected={currentView.value === VIEW_NAME.CREATE}
           icon='039'
+          permissions={{ name: 'user', state: 'upsert' }}
         />
         <div className='relative'>
           <Button
@@ -178,6 +180,7 @@ export const UsersPage: FunctionalComponent = () => {
       showSendModal.value,
       selectedUsers,
       hasValidPlayer,
+      allPermissions.value,
     ]
   );
 
@@ -237,8 +240,8 @@ export const UsersPage: FunctionalComponent = () => {
     switch (action.action) {
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: 'Eliminar Usuario',
-          message: `¿Está seguro que desea eliminar el usuario ${userFound.name} ${userFound.surname} - ${userFound.cardId}?`,
+          title: t('h_delete_user'),
+          message: `${t('i_message_user')} ${userFound.name} ${userFound.surname} - ${userFound.cardId}?`,
           onConfirm: () => deleteUser(userFound.id),
           onCancel: () => {},
         });
@@ -252,8 +255,8 @@ export const UsersPage: FunctionalComponent = () => {
           return ToastManager.warning('s_select_company');
         }
         showAlert({
-          title: 'Asignar perfil',
-          message: `¿Estás seguro que deseas asignar perfil a ${userFound.name} ${userFound.surname}?, Tenga en cuenta que el usuario ya podrá usar la aplicación.`,
+          title: t('h_assign_profile'),
+          message: `${t('i_message_assign_profile')} ${userFound.name} ${userFound.surname}?, ${t('i_message_assign_profile_subtitle')}`,
           onConfirm: () => setProfile(userFound.id, company),
           onCancel: () => {},
         });
@@ -277,23 +280,23 @@ export const UsersPage: FunctionalComponent = () => {
     <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
-          title={t('user.cards.total')}
+          title={t('l_total_users')}
           count={totalUsers.value}
-          subtitle={t('user.cards.totalSubtitle')}
+          subtitle={t('l_registered')}
           color='text-secondary'
           icon='users'
         />
         <CardData
-          title={t('user.cards.activeConnection')}
+          title={t('l_active_connection')}
           count={connectedUsers.value}
-          subtitle={t('user.cards.activeSubtitle')}
+          subtitle={t('l_connected_users')}
           color='text-primary'
           icon='user-active'
         />
         <CardData
-          title={t('user.cards.inactiveConnection')}
+          title={t('l_inactive_connection')}
           count={disconnectedUsers.value}
-          subtitle={t('user.cards.inactiveSubtitle')}
+          subtitle={t('l_disconnected_users')}
           color='text-error'
           icon='user-inactive'
         />

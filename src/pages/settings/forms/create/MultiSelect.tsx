@@ -8,6 +8,7 @@ export interface MultiSelectProps<T> {
   getLabel: (item: T) => string;
   getId: (item: T) => string | number;
   placeholder?: string;
+  label?: string;
 }
 
 export function MultiSelect<T>({
@@ -17,6 +18,7 @@ export function MultiSelect<T>({
   getLabel,
   getId,
   placeholder = 'p_select',
+  label,
 }: MultiSelectProps<T>) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -68,6 +70,11 @@ export function MultiSelect<T>({
 
   return (
     <div ref={containerRef} className='relative w-full'>
+      {label && (
+        <label className='capitalize block text-sm font-medium'>
+          {t(label)}
+        </label>
+      )}
       <div
         className='min-h-[40px] px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg flex flex-row items-center w-full
         bg-white dark:bg-b-dark-dark flex-wrap gap-1'

@@ -7,6 +7,12 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
   id: 'trybook:state',
+  setting: {
+    to: '/algo/',
+    label: 'setting',
+    id: 'trybook:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '328',
@@ -15,7 +21,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.base,
       show: true,
-      id: 'trybook:residence:state',
+      id: 'trybook:residences:state',
     },
     {
       icon: '160',
@@ -41,7 +47,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       description: 'd_resourcezone',
       base,
       to: PAGES_LIST_ROUTER.dashboard.setting.trybook.resourceZones.base,
-      show: true,
+      show: false,
       id: 'trybook:resourcezone:state',
     },
     {
@@ -52,6 +58,15 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       to: PAGES_LIST_ROUTER.dashboard.setting.trybook.news.base,
       show: true,
       id: 'trybook:notices:state',
-    }
+    },
+    {
+      icon: '150',
+      label: 'm_access_ban',
+      description: 'Access Bans',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.trybook.accessBans.base,
+      id: 'trybook:access-bans:state',
+      show: true,
+    },
   ],
 };

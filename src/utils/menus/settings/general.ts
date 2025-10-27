@@ -9,6 +9,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
     to: PAGES_LIST_ROUTER.dashboard.setting.setting.settings,
     label: 'setting',
     id: 'general:tools:state',
+    show: true,
   },
   show: true,
   id: 'general:state',

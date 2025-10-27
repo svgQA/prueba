@@ -111,7 +111,7 @@ export const CompanySettingPage: FunctionComponent = () => {
               />
             ))}
           </div>
-          <div className='min-w-[500px] h-[250px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
+          <div className='min-w-[500px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
             <Form<ICCompanyRequest | IUCompanyRequest>
               onSubmit={onSubmit}
               initialValues={
@@ -162,53 +162,61 @@ export const CompanySettingPage: FunctionComponent = () => {
                       {isEditing.value ? 'Editar Empresa' : 'Nueva Empresa'}
                     </h2>
                     <div className='grid grid-cols-2 gap-4'>
-                      <Field<string> name='name'>
-                        {({ input, meta }) => (
-                          <Input
-                            {...input}
-                            id='name'
-                            name='name'
-                            label='Nombre'
-                            meta={meta}
-                            type='text'
-                          />
-                        )}
-                      </Field>
-                      <Field<string> name='identification'>
-                        {({ input, meta }) => (
-                          <Input
-                            {...input}
-                            id='identification'
-                            label='Identificación (NIT)'
-                            meta={meta}
-                            type='text'
-                          />
-                        )}
-                      </Field>
-                      <Field<string> name='description'>
-                        {({ input, meta }) => (
-                          <Input
-                            {...input}
-                            id='description'
-                            name='description'
-                            label='Descripción'
-                            meta={meta}
-                            type='text'
-                          />
-                        )}
-                      </Field>
-                      <Field<string> name='address'>
-                        {({ input, meta }) => (
-                          <Input
-                            {...input}
-                            id='address'
-                            name='address'
-                            label='Dirección'
-                            meta={meta}
-                            type='text'
-                          />
-                        )}
-                      </Field>
+                      <div>
+                        <Field<string> name='name'>
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              id='name'
+                              name='name'
+                              label='Nombre'
+                              meta={meta}
+                              type='text'
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div>
+                        <Field<string> name='identification'>
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              id='identification'
+                              label='Identificación (NIT)'
+                              meta={meta}
+                              type='text'
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div className='col-span-2'>
+                        <Field<string> name='description'>
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              id='description'
+                              name='description'
+                              label='Descripción'
+                              meta={meta}
+                              type='text'
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <div className='col-span-2'>
+                        <Field<string> name='address'>
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              id='address'
+                              name='address'
+                              label='Dirección'
+                              meta={meta}
+                              type='text'
+                            />
+                          )}
+                        </Field>
+                      </div>
                     </div>
                   </div>
                 </form>

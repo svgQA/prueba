@@ -74,8 +74,8 @@ export const TrybookCommonZonesPage: FunctionComponent = () => {
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: t('commonZone.showAlert.title'),
-          message: t('commonZone.showAlert.msg'),
+          title: t('i_showAlert_title_zone'),
+          message: t('i_showAlert_msg_zone'),
           onConfirm: () => {
             void deleteRow(Number(action.id));
           },
@@ -91,9 +91,9 @@ export const TrybookCommonZonesPage: FunctionComponent = () => {
     <Table<CommonZoneRow>
       data={rows.value}
       columns={columns}
+      pageSize={10}
       showExpandableIcon={false}
       onClickAction={handleOnClick}
-      pageSize={20}
       isSettingTable
       loading={loading.value}
       absolute

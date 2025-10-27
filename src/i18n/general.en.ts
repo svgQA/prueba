@@ -18,7 +18,7 @@ export const general_en = {
       view: {
         users: 'Memo by Users',
         services: 'Memo by Services',
-        select: 'Select by memo',
+        select: 'Select Memo',
       },
     },
     pagination: {
@@ -50,6 +50,11 @@ export const general_en = {
     success: {
       cronExecuted: 'Cron executed manually 🚀',
     },
+    cards: {
+      notificationShifts: 'Notification Shifts',
+      openRate: 'Open Rate',
+      monthlyNotifications: 'Monthly Notifications',
+    },
     columns: {
       title: 'Title',
       description: 'Description',
@@ -69,5 +74,10 @@ export const general_en = {
   },
   users: {
     pageTitle: 'TR - Users Service',
+  },
+  permissions: {
+    denied: 'Permission denied',
+    granted: 'Permission granted',
+    view_denied: 'You do not have permission to view this section',
   },
 };

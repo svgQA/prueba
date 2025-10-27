@@ -24,14 +24,7 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
             <p className='text-xs pt-2'>{rol}</p>
           </div>
         </div>
-        <Badge
-          outline
-          label={company}
-          icon='012'
-          size='sm'
-          full
-          status='info'
-        />
+        <Badge outline label={company} size='sm' full status='info' />
       </div>
     </Card>
   );

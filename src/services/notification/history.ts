@@ -129,12 +129,45 @@ export class NotificationHistoryService extends BaseService {
   /**
    * 🗑 Eliminar notificación del historial
    */
-  static async deleteNotification(id: string): Promise<void> {
+  static async deleteNotification(id: string) {
     const model: IMakeRequest = {
       url: ['notifications', 'history', id],
       method: REQUEST_METHODS.DELETE,
     };
+    return await super.make_request(this.name, model);
+  }
 
-    await super.make_request(this.name, model);
+  /**
+   * 🔍 Obtener notificación por ID
+   */
+  static async get_by_id(id: string) {
+    const model: IMakeRequest = {
+      url: ['notifications', 'history', id],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  /** ✏️ Actualizar notificación
+   */
+  static async update(id: string, data: any) {
+    const model: IMakeRequest = {
+      url: ['notifications', 'history', id],
+      method: REQUEST_METHODS.PUT,
+      data: data,
+    };
+    return await super.make_request(this.name, model);
+  }
+
+  /**
+   * ➕ Crear nueva notificación
+   */
+  static async create(data: any) {
+    const model: IMakeRequest = {
+      url: ['notifications', 'history'],
+      method: REQUEST_METHODS.POST,
+      data: data,
+    };
+    return await super.make_request(this.name, model);
   }
 }

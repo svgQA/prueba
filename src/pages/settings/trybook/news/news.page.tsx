@@ -1,7 +1,6 @@
 import { FunctionalComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 
-import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { ExpandableAccess } from '@/components/compose/table/expandable/access';
 import { useTranslation } from 'react-i18next';
@@ -14,16 +13,20 @@ import { NewsService } from '@/services/trybook/news';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { showAlert } from '@/components/common/show-alert/show-alert';
+import { useUserStore } from '@/store/slices';
 
 export const NewsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();
   const news = useSignal<INews[]>([]);
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
     document.title = t('p_access');
-    fetchInitialData();
-  }, []);
+    if (selectedCompany) {
+      fetchInitialData();
+    }
+  }, [selectedCompany, location]);
 
   const fetchInitialData = async () => {
     const [newsResponse] = await Promise.all([NewsService.get_all()]);
@@ -56,8 +59,8 @@ export const NewsPage: FunctionalComponent = () => {
         break;
       case ROW_ACTIONS.DELETE:
         showAlert({
-          title: t('commonZone.showAlert.title'),
-          message: t('commonZone.showAlert.msg'),
+          title: t('i_showAlert_title_zone'),
+          message: t('i_showAlert_msg_zone'),
           onConfirm: () => {
             void deleteRow(String(action.id));
           },
@@ -68,18 +71,15 @@ export const NewsPage: FunctionalComponent = () => {
   };
 
   return (
-    <Section>
-      <div className='max-h-screen'>
-        <Table<INews>
-          data={news.value}
-          columns={getColumns(onClickAction)}
-          pageSize={10}
-          expandable={(row: INews) => <ExpandableAccess row={row} />}
-          visibility={{
-            id: false,
-          }}
-        />
-      </div>
-    </Section>
+    <Table<INews>
+      data={news.value}
+      columns={getColumns(onClickAction)}
+      pageSize={10}
+      expandable={(row: INews) => <ExpandableAccess row={row} />}
+      visibility={{
+        id: false,
+      }}
+      absolute
+    />
   );
 };

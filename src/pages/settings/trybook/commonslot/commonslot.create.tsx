@@ -145,8 +145,8 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='trybook.commonslot.placeholder.zone'
-                      label='trybook.commonslot.form.zone'
+                      placeholder='p_zone'
+                      label='l_zone'
                       id='zoneId'
                       icon='layers'
                       options={zones.value}
@@ -162,8 +162,8 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <Input
                       {...input}
-                      placeholder='trybook.commonslot.placeholder.code'
-                      label='trybook.commonslot.form.code'
+                      placeholder='p_code_ticket'
+                      label='l_code_ticket'
                       type='text'
                       meta={meta}
                     />
@@ -178,8 +178,8 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
                     <SmartSelector
                       {...input}
                       meta={meta}
-                      placeholder='trybook.commonslot.placeholder.status'
-                      label='trybook.commonslot.form.status'
+                      placeholder='p_select_state'
+                      label='l_status'
                       id='isOccupied'
                       icon='toggle-right'
                       options={OCCUPIED_OPTIONS}

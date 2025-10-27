@@ -34,6 +34,7 @@ import {
   MESSAGE_LISTENERS,
   SOCKET_MESSAGE_EVENTS,
 } from '@/utils/socket/manager/types';
+import { getPermissionByModuleState } from '@/store/signals/access/permission';
 
 const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const { t } = useTranslation();
@@ -43,7 +44,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   const [btnLabel, setBtnLabel] = useState('Check In');
   const predefined: Signal<IOption[]> = useSignal([]);
   const panic = useSignal<IPanic[]>([]);
-  const disable = memo.state === 'RESOLVED';
+  const disable =
+    memo.state === 'RESOLVED' || !getPermissionByModuleState('memo', 'close');
   const loading = useSignal<boolean>(false);
   const status = useSignal<string | undefined>(memo.state);
 
@@ -391,6 +393,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                               onChange={(value?: IOption) => {
                                 input.onChange(value);
                               }}
+                              disabled={disable}
                             />
                           )}
                         </Field>
@@ -437,6 +440,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                               label='h_attachment'
                               area='memo'
                               showFiles={false}
+                              disabled={disable}
                             />
                           )}
                         </Field>
@@ -453,6 +457,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                               onBlur={input.onBlur}
                               onFocus={input.onFocus}
                               placeholder='p_comment'
+                              disabled={disable}
                             />
                           )}
                         </Field>
@@ -525,6 +530,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                 })
               }
               loading={loading.value}
+              permissions={{ name: 'memo', state: 'close' }}
             />
           )}
 
@@ -545,6 +551,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
             label='send'
             icon='311'
             loading={loading.value}
+            permissions={{ name: 'memo', state: 'comment' }}
           />
         </div>
       </div>

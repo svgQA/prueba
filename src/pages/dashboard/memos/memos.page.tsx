@@ -45,6 +45,7 @@ import {
   MessageEvent,
   MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
+import { allPermissions } from '@/store/signals/access/permission';
 
 enum VIEW_NAME {
   TABLE,
@@ -265,6 +266,7 @@ export const MemosPage: FunctionComponent = () => {
           rounded={false}
           selected={currentView.value === VIEW_NAME.CHAT}
           icon='418'
+          permissions={{ name: 'memo', state: 'chat' }}
         />
         <Button
           name='button-change-panic'
@@ -297,7 +299,7 @@ export const MemosPage: FunctionComponent = () => {
         <Button name='button-change-scheduler' rounded={false} icon='314' /> */}
       </div>
     ),
-    [currentView.value]
+    [currentView.value, allPermissions.value]
   );
 
   /**
@@ -311,21 +313,21 @@ export const MemosPage: FunctionComponent = () => {
         count={summary.total}
         subtitle=''
         color='t-dark'
-        icon='328' // 328
+        icon='0001'
       />
       <CardData
         title='h_memos_unresolved'
         count={calculatePercentage(summary)}
         subtitle=''
         color='t-dark'
-        icon='311' // 311
+        icon='311'
       />
       <CardData
         title='h_memos_resolved'
         count={calculatePercentage(summary, true)}
         subtitle=''
         color='t-dark'
-        icon='312' // 312
+        icon='000'
       />
     </div>
   );

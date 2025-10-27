@@ -15,6 +15,7 @@ import { MODAL_SETTING_MEMO } from './memo';
 import { MODAL_SETTING_USER } from './user';
 import { MODAL_SETTING_NOTIFICATIONS } from './notifications';
 import { MODAL_SETTING_TRYBOOK } from './trybook';
+import { MODAL_SETTING_PQRS } from './pqrs';
 
 export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
   MODAL_SETTING_ADMIN,
@@ -32,10 +33,22 @@ export const MODAL_SIDEBAR_MENUS: IModalSidebarMenu[] = [
   MODAL_SETTING_ASSOCIATE,
   MODAL_SETTING_NOTIFICATIONS,
   MODAL_SETTING_TRYBOOK,
+  MODAL_SETTING_PQRS,
 ];
 
 export const NEW_BLACK_LIST = [
   'user:password:state',
   'memo:resources:state',
   'general:company:state',
+  'general:webhook:state',
+  'security:keys:state',
+  'general:tools:state',
+  'shift:tools:state',
+  'user:tools:state',
+  'ia:tools:state',
+  'form:tools:state',
+  'memo:tools:state',
+  'notification:tools:state',
+  'trybook:tools:state',
+  'pqrs:tools:state',
 ];

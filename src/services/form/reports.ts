@@ -76,4 +76,12 @@ export class ReportService extends BaseService {
     };
     return await super.make_request<any>(this.sname, model);
   }
+
+  static async generate_report_automatic_form(id: string) {
+    const model: IMakeRequest = {
+      url: ['reportIa', 'generate-form', `${id}`],
+      method: REQUEST_METHODS.POST,
+    };
+    return await super.make_request<IPresignedRequest>(this.sname, model);
+  }
 }

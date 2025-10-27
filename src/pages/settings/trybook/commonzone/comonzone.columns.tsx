@@ -29,7 +29,7 @@ const TYPE_LABEL: Record<CommonZoneType, string> = {
 export const columns: ColumnDef<CommonZoneRow>[] = [
   {
     id: 'name',
-    header: 'trybook.commonzone.table.name',
+    header: 'l_name',
     size: 260,
     cell: ({ row }) => {
       const { name } = row.original;
@@ -38,7 +38,7 @@ export const columns: ColumnDef<CommonZoneRow>[] = [
   },
   {
     id: 'type',
-    header: 'trybook.commonzone.table.type',
+    header: 'l_table_type',
     size: 160,
     cell: ({ row }) => {
       const k = row.original.type;
@@ -47,7 +47,7 @@ export const columns: ColumnDef<CommonZoneRow>[] = [
   },
   {
     id: 'place',
-    header: 'trybook.commonzone.table.place',
+    header: 'l_set_place',
     size: 220,
     cell: ({ row }) => {
       const r = row.original;

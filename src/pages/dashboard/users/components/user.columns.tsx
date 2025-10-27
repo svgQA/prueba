@@ -8,6 +8,8 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { Avatar } from '@/components/common/Avatar';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { getPermissionByModuleState } from '@/store/signals/access/permission';
+import i18n from '@/i18n';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -48,7 +50,9 @@ export const getColumns = (
   },
   {
     id: 'company',
-    accessorKey: 'companies',
+    // accessorKey: 'companies',
+    accessorFn: (row) =>
+      row.companies.map((company) => company.company.name).join(', '),
     size: 180,
     header: 'h_company',
     meta: { headerAlign: 'center' },
@@ -184,9 +188,23 @@ export const getColumns = (
       const isClient = userType === 'CLIENT' || cognitoId;
 
       const actions: IDropdownAction[] = [
-        ...(isClient
-          ? []
-          : [
+        // ...(isClient
+        //   ? []
+        //   : [
+        //       {
+        //         label: 'profile',
+        //         icon: 'vox-icon vx-icon-229 text-primary',
+        //         onClick: () => {
+        //           onClickAction({
+        //             id: String(id),
+        //             type: 'form',
+        //             action: ROW_ACTIONS.PROFILE,
+        //           });
+        //         },
+        //       },
+        //     ]),
+        ...(isClient && getPermissionByModuleState('user', 'profile')
+          ? [
               {
                 label: 'profile',
                 icon: 'vox-icon vx-icon-229 text-primary',
@@ -198,31 +216,49 @@ export const getColumns = (
                   });
                 },
               },
-            ]),
-        {
-          label: 'edit',
-          icon: 'vox-icon vx-icon-123 text-primary',
-          onClick: () => {
-            onClickAction({
-              id: String(id),
-              type: 'shift',
-              action: ROW_ACTIONS.UPDATE,
-            });
-          },
-        },
-        {
-          label: 'delete',
-          icon: 'vox-icon vx-icon-053 text-red-500',
-          color: 'text-red-600',
-          onClick: () => {
-            onClickAction({
-              id: String(id),
-              type: 'shift',
-              action: ROW_ACTIONS.DELETE,
-            });
-          },
-        },
+            ]
+          : []),
+        ...(getPermissionByModuleState('user', 'upsert')
+          ? [
+              {
+                label: 'edit',
+                icon: 'vox-icon vx-icon-123 text-primary',
+                onClick: () => {
+                  onClickAction({
+                    id: String(id),
+                    type: 'shift',
+                    action: ROW_ACTIONS.UPDATE,
+                  });
+                },
+              },
+            ]
+          : []),
+        ...(getPermissionByModuleState('user', 'delete')
+          ? [
+              {
+                label: 'delete',
+                icon: 'vox-icon vx-icon-053 text-red-500',
+                color: 'text-red-600',
+                onClick: () => {
+                  onClickAction({
+                    id: String(id),
+                    type: 'shift',
+                    action: ROW_ACTIONS.DELETE,
+                  });
+                },
+              },
+            ]
+          : []),
       ];
+
+      if (actions.length === 0) {
+        actions.push({
+          label: i18n.t('permissions.denied'),
+          icon: 'text-red-500',
+          color: 'text-red-600',
+          onClick: () => {},
+        });
+      }
 
       return (
         <div className='w-full flex justify-center'>

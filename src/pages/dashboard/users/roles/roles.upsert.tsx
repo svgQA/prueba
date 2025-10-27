@@ -276,8 +276,8 @@ export const RolesUpsertPage = () => {
                       meta={meta}
                       name='name'
                       type='text'
-                      label={t('role.form.name')}
-                      placeholder={t('role.form.placeholderName')}
+                      label='l_name'
+                      placeholder='p_name_role'
                     />
                   )}
                 </Field>
@@ -289,10 +289,10 @@ export const RolesUpsertPage = () => {
                     <Input
                       {...input}
                       id='description'
-                      placeholder={'p_write'}
+                      placeholder='p_element_description'
                       meta={meta}
                       type='text'
-                      label={'description'}
+                      label='h_description'
                     />
                   )}
                 </Field>
@@ -301,12 +301,12 @@ export const RolesUpsertPage = () => {
 
             <div className='col-span-2  max-h-[65vh] overflow-x-hidden vox-scroll-design'>
               <div className='flex justify-between items-center mb-4'>
-                <h3 className='text-lg font-medium'>Módulos:</h3>
+                <h3 className='text-lg font-medium'>{t('h_title_modules')}:</h3>
 
                 {/* Filtro de plataforma */}
                 <div className='flex items-center space-x-4'>
                   <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>
-                    Filtrar por plataforma:
+                    {t('l_filter_platform')}:
                   </label>
                   <div className='flex space-x-2'>
                     <button
@@ -318,7 +318,7 @@ export const RolesUpsertPage = () => {
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                       }`}
                     >
-                      Todos
+                      {t('all')}
                     </button>
                     <button
                       type='button'
@@ -329,7 +329,7 @@ export const RolesUpsertPage = () => {
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                       }`}
                     >
-                      Web
+                      {t('web')}
                     </button>
                     <button
                       type='button'
@@ -340,7 +340,7 @@ export const RolesUpsertPage = () => {
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                       }`}
                     >
-                      Móvil
+                      {t('mobile')}
                     </button>
                   </div>
                 </div>

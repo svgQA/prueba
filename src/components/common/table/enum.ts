@@ -8,4 +8,5 @@ export enum ROW_ACTIONS {
   PROFILE,
   CHECK_IN,
   CHECK_OUT,
+  VIEW,
 }
