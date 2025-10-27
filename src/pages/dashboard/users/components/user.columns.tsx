@@ -184,9 +184,8 @@ export const getColumns = (
     header: 'h_action',
     size: 20,
     cell: (info) => {
-      const { id, userType, cognitoId } = info.row.original;
-      const isClient = userType === 'CLIENT' || cognitoId;
-
+      const { id, userType } = info.row.original;
+      const isClient = userType != 'EXTERNAL' && userType != 'CLIENT';
       const actions: IDropdownAction[] = [
         // ...(isClient
         //   ? []
