@@ -26,6 +26,26 @@ export interface IUserResidenceRequest {
   floor?: number;
 }
 
+export interface ICDemoRequest {
+  email: string;
+  phone: string;
+  name: string;
+  surname?: string;
+  company_name: string;
+  company_description: string;
+  manager_name?: string;
+  manager_surname?: string;
+  manager_email?: string;
+  manager_phone?: string;
+}
+
+export interface ICResponseDemo {
+  id: number;
+  state: boolean;
+  message: string;
+  email: string;
+}
+
 export interface ICSuperTenantRequest {
   name: string;
   description: string;

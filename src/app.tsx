@@ -10,7 +10,10 @@ import { Amplify } from 'aws-amplify';
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import { CustomLoginPage } from '@/components/compose/login/custom';
 import { getIsInErrorState } from './store/signals/service/service.signals';
+import { ToastContainer } from 'react-toastify';
 import { ModalBaseService } from './components/compose/base-service/base-service';
+import 'react-toastify/dist/ReactToastify.css';
+
 Amplify.configure(AWS_AMPLIFY_SETTINGS);
 
 // Componente AuthenticatedContent que decide qué renderizar basado en el estado de autenticación
@@ -42,6 +45,7 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
         </Router>
       </Switch>
       <ModalBaseService isOpen={getIsInErrorState()} />
+      <ToastContainer />
     </section>
   );
 };
