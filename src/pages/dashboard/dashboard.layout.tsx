@@ -39,6 +39,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
 import { HistoryNotificationsPage } from './history/history.page';
+import { PqrsPage } from './pqrs/pqrs.page';
 import { WebSocketProvider } from '@/utils/socket';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
@@ -681,6 +682,14 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                   component={lazy(() =>
                     Promise.resolve({
                       default: HistoryNotificationsPage,
+                    })
+                  )}
+                />
+                <Route
+                  path={PAGES_LIST.PQRS}
+                  component={lazy(() =>
+                    Promise.resolve({
+                      default: PqrsPage,
                     })
                   )}
                 />
