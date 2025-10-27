@@ -76,7 +76,7 @@ export const DemoForm = () => {
   const { t } = useTranslation();
 
   const onSubmit = async (model: Record<string, any>, form: any) => {
-    /* 
+    
     const data = {
       ...model,
       phone:  `+57${model.phone}`,
@@ -87,19 +87,6 @@ export const DemoForm = () => {
         'Demo creado correctamente, se enviará un correo a los administradores para su aprobación'
       );
       form.restart();
-    }*/
-    responseMessage();
-  };
-
-  const responseMessage = async () => {
-    const response = await TenantService.response_demo({
-      id: 12,
-      state: true,
-      message: '',
-      email: 'joshua.henao@finturu.com',
-    });
-    if (response.getStatus()) {
-      ToastManager.success('Demo respondido correctamente');
     }
   };
 
