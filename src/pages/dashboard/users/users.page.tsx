@@ -344,6 +344,7 @@ export const UsersPage: FunctionalComponent = () => {
             onSelectionChange={(rows) => {
               setSelectedUsers(rows);
             }}
+            fileName='employee'
           />
         )}
       </div>

@@ -32,6 +32,14 @@ export class UserService extends BaseService {
     return await super.make_request<IUserResponse>(this.name, model);
   }
 
+  static async downloadFile() {
+    const model: IMakeRequest = {
+      url: ['user', 'download'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request(this.name, model);
+  }
+
   static async profile() {
     const model: IMakeRequest = {
       url: ['user', 'profile'],
