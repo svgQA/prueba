@@ -11,12 +11,15 @@ import { Input } from '@/components/common/input/input';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { IOption } from '@/components/common/multi/interface';
 
-import { ICreateAccessBan } from '@/types/trybook/access-ban';
+import { AccessBanType, ICreateAccessBan } from '@/types/trybook/access-ban';
 import { AccessBansService } from '@/services/trybook/access-bans';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { UserService } from '@/services';
 
+// ─────────────────────────────────────────────
+// Opciones UI
+// ─────────────────────────────────────────────
 const ACTIVE_OPTIONS: IOption[] = [
   { value: 1, label: 'Activo' },
   { value: 0, label: 'Inactivo' },
@@ -27,14 +30,21 @@ const SUBJECT_TYPE: IOption[] = [
   { value: 'external', label: 'Externo' },
 ];
 
+// Nuevo: tipo de ban (debe mapear con el enum AccessBanType del backend)
+const BAN_TYPE_OPTIONS: IOption[] = [
+  { value: 'BAN', label: 'Ban' },
+  { value: 'SPECIAL', label: 'Especial' },
+];
+
 type FormData = {
   subjectType: IOption; // 'internal' | 'external'
-  user?: IOption; // interno
-  cardId?: string; // externo
-  username?: string; // externo (UI: "name")
+  user?: IOption;       // interno
+  cardId?: string;      // externo
+  username?: string;    // externo
   reason?: string;
-  expiresAt?: string; // datetime-local
-  isActive?: IOption; // 1/0
+  expiresAt?: string;   // datetime-local
+  isActive?: IOption;   // 1/0
+  banType?: IOption;    // 'BAN' | 'SPECIAL'
 };
 
 export const AccessBanForm: FunctionComponent = () => {
@@ -45,10 +55,14 @@ export const AccessBanForm: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
   const users = useSignal<IOption[]>([]);
   const initialValues = useSignal<Partial<FormData>>({
-    subjectType: SUBJECT_TYPE[0], // Interno por defecto
-    isActive: ACTIVE_OPTIONS[0],
+    subjectType: SUBJECT_TYPE[0],   // Interno por defecto
+    isActive: ACTIVE_OPTIONS[0],    // Activo
+    banType: BAN_TYPE_OPTIONS[0],   // BAN por defecto
   });
 
+  // ─────────────────────────────────────────────
+  // Cargar usuarios (empleados + clientes => opciones únicas)
+  // ─────────────────────────────────────────────
   const loadUsers = useCallback(async () => {
     const pool: IOption[] = [];
 
@@ -66,13 +80,16 @@ export const AccessBanForm: FunctionComponent = () => {
     });
   }, []);
 
+  // ─────────────────────────────────────────────
+  // Cargar registro en edición
+  // ─────────────────────────────────────────────
   const loadInitial = useCallback(async () => {
     if (!id) return;
 
     const res = await AccessBansService.getAccessBan(id);
     if (!res.getStatus()) return;
 
-    const model = res.getOne() as any; // IAccessBan
+    const model = res.getOne() as any; // { id, userId, user, cardId, username, reason, expiresAt, isActive, type }
     const isInternal = !!model.userId;
 
     initialValues.value = {
@@ -93,6 +110,9 @@ export const AccessBanForm: FunctionComponent = () => {
         ? new Date(model.expiresAt).toISOString().slice(0, 16)
         : '',
       isActive: model.isActive ? ACTIVE_OPTIONS[0] : ACTIVE_OPTIONS[1],
+      banType:
+        BAN_TYPE_OPTIONS.find((o) => o.value === (model.type || 'BAN')) ??
+        BAN_TYPE_OPTIONS[0],
     };
   }, [id]);
 
@@ -106,8 +126,11 @@ export const AccessBanForm: FunctionComponent = () => {
   useEffect(() => {
     document.title = t('h_access_bans') || 'Access Bans';
     void getAll();
-  }, [getAll]);
+  }, [getAll, t]);
 
+  // ─────────────────────────────────────────────
+  // Submit
+  // ─────────────────────────────────────────────
   const onSubmit = async (data: FormData) => {
     loading.value = true;
 
@@ -132,17 +155,16 @@ export const AccessBanForm: FunctionComponent = () => {
       }
     }
 
-    // Si es EXTERNO: no enviar userId (queda undefined)
-    // Si es INTERNO: no enviar cardId/username
+    // Construir payload
     const payload: ICreateAccessBan = {
       userId: isInternal ? Number(data.user!.value) : undefined,
       cardId: !isInternal ? data.cardId!.trim() : undefined,
       username: !isInternal ? data.username!.trim() : undefined,
       reason: data.reason?.trim() || undefined,
-      expiresAt: data.expiresAt
-        ? new Date(data.expiresAt).toISOString()
-        : undefined,
+      expiresAt: data.expiresAt ? new Date(data.expiresAt).toISOString() : undefined,
       isActive: data.isActive?.value === 1,
+      // Nuevo: tipo de ban
+      type: (data.banType?.value as AccessBanType) ?? 'ban',
     };
 
     const req = id
@@ -163,6 +185,9 @@ export const AccessBanForm: FunctionComponent = () => {
     });
   };
 
+  // ─────────────────────────────────────────────
+  // UI
+  // ─────────────────────────────────────────────
   return (
     <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
       <Form
@@ -190,10 +215,7 @@ export const AccessBanForm: FunctionComponent = () => {
               <div className='grid grid-cols-4 gap-3'>
                 {/* Interno / Externo */}
                 <div className='col-span-2'>
-                  <Field<IOption>
-                    name='subjectType'
-                    initialValue={SUBJECT_TYPE[0]}
-                  >
+                  <Field<IOption> name='subjectType' initialValue={SUBJECT_TYPE[0]}>
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
@@ -215,6 +237,25 @@ export const AccessBanForm: FunctionComponent = () => {
                             form.change('user', undefined);
                           }
                         }}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* Tipo de ban (BAN / SPECIAL) */}
+                <div className='col-span-2'>
+                  <Field<IOption> name='banType' initialValue={BAN_TYPE_OPTIONS[0]}>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        placeholder='Tipo de ban'
+                        label='Tipo de ban'
+                        id='banType'
+                        icon='shield-alert'
+                        options={BAN_TYPE_OPTIONS}
+                        disabled={loading.value}
+                        allowAll={false}
                       />
                     )}
                   </Field>
@@ -306,10 +347,7 @@ export const AccessBanForm: FunctionComponent = () => {
 
                 {/* Estado */}
                 <div className='col-span-2'>
-                  <Field<IOption>
-                    name='isActive'
-                    initialValue={ACTIVE_OPTIONS[0]}
-                  >
+                  <Field<IOption> name='isActive' initialValue={ACTIVE_OPTIONS[0]}>
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}

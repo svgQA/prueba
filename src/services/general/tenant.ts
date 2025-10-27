@@ -80,6 +80,27 @@ export class TenantService extends BaseService {
     };
     return await super.make_request<any>(this.name, model, false);
   }
+  static async uploadFile(file: File, fileName: string) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('fileName', fileName);
+    const model: IMakeRequest = {
+      url: ['upload', 'file'],
+      method: REQUEST_METHODS.POST,
+      data: formData,
+      uncontent: true,
+    };
+    return await super.make_request(this.name, model);
+  }
+  static async get_uploads(fileName: 'shift' | 'employee') {
+    const model: IMakeRequest = {
+      url: ['upload'],
+      params: { fileName },
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request(this.name, model);
+  }
+
   // static async get_modules() {
   //   const model: IMakeRequest = {
   //     url: ['module'],
