@@ -31,6 +31,9 @@ export interface ICreateAccessBan {
   reason?: string | null;
   expiresAt?: string | null; // ISO
   isActive?: boolean;
+  type: AccessBanType;
 }
+
+export type AccessBanType = 'BAN' | 'SPECIAL';
 
 export type IUpdateAccessBan = Partial<ICreateAccessBan>;

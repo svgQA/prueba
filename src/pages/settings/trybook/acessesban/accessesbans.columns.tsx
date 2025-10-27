@@ -38,6 +38,7 @@ export const getColumns = (
       cell: (info) => (info.getValue() ? String(info.getValue()) : '-'),
     },
 
+    // Motivo
     {
       id: 'reason',
       accessorKey: 'reason',
@@ -47,6 +48,30 @@ export const getColumns = (
       cell: (info) => (info.getValue() ? String(info.getValue()) : '-'),
     },
 
+    // Tipo de ban (BAN / SPECIAL)
+    {
+      id: 'type',
+      accessorKey: 'type',
+      header: 'Tipo',
+      size: 120,
+      cell: (info) => {
+        const type = String(info.getValue() ?? 'BAN');
+        const color =
+          type === 'BAN'
+            ? 'text-red-600 bg-red-100 border border-red-200'
+            : 'text-blue-600 bg-blue-100 border border-blue-200';
+        const label = type === 'BAN' ? 'Ban' : 'Especial';
+        return (
+          <span
+            className={`px-2 py-1 rounded-md text-sm font-medium ${color}`}
+          >
+            {label}
+          </span>
+        ); 
+      },
+    },
+
+    // Expira
     {
       id: 'expiresAt',
       accessorKey: 'expiresAt',
@@ -60,6 +85,7 @@ export const getColumns = (
         ),
     },
 
+    // Estado
     {
       id: 'isActive',
       accessorKey: 'isActive',
@@ -75,6 +101,7 @@ export const getColumns = (
       },
     },
 
+    // Actualizado
     {
       id: 'updatedAt',
       accessorKey: 'updatedAt',
@@ -83,6 +110,7 @@ export const getColumns = (
       cell: (info) => <RelativeTime date={info.getValue() as string} />,
     },
 
+    // Acciones
     {
       id: 'action',
       header: 'h_action',
