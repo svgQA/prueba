@@ -1,4 +1,4 @@
-import { Signal, useSignal } from "@preact/signals";
+import { useSignal } from "@preact/signals";
 
 import { Card } from "@/components/common/card/card";
 import { Badge } from "@/components/common/badge/badge";
@@ -9,12 +9,11 @@ import { ICPqrsRequest } from "../utils/interface";
 import { PqrsModal } from "./pqrs.modal";
 
 export interface IProps {
-    draggedItem: Signal<ICPqrsRequest | null>;
     pqrs: ICPqrsRequest;
     index: number;
 }
 
-export const PqrsCards = ({ draggedItem, pqrs, index }: IProps) => {
+export const PqrsCards = ({ pqrs, index }: IProps) => {
     const openModal = useSignal<boolean>(false);
 
     const getPriorityVariant = (type?: string | null) => {
@@ -27,23 +26,19 @@ export const PqrsCards = ({ draggedItem, pqrs, index }: IProps) => {
         return variants[(type || "").toLowerCase()] || "default";
     };
 
-    const handleDragStart = (event: DragEvent, pqrsItem: ICPqrsRequest) => {
-        draggedItem.value = pqrsItem;
-        event.dataTransfer?.setData("text/plain", pqrsItem.id?.toString() ?? pqrsItem.extraData.accountNumber ?? "");
-        event.dataTransfer?.setDragImage(new Image(), 0, 0);
-    };
-
     return (
         <>
             <div
                 key={`pqrs-card-${index}`}
-                draggable
-                onDragStart={(event) => handleDragStart(event, pqrs)}
-                onClick={() => openModal.value = true}
                 class="cursor-pointer hover:shadow-lg transition-shadow duration-200"
             >
-                <Card color="mb-3 p-4 border border-gray-200 rounded-lg bg-white">
-                    <div class="space-y-3">
+                <Card
+                    color="mb-3 p-4 border border-gray-200 rounded-lg bg-white"
+                >
+                    <div
+                        class="space-y-3"
+                        onClick={() => openModal.value = true}
+                    >
                         <div class="flex justify-between items-start">
                             <div class="flex-1">
                                 <h4 class="font-medium text-gray-900 text-sm leading-tight">
@@ -75,11 +70,11 @@ export const PqrsCards = ({ draggedItem, pqrs, index }: IProps) => {
                         </div>
                     </div>
                 </Card>
+                <PqrsModal
+                    showModal={openModal}
+                    closeModal={() => openModal.value = false}
+                />
             </div>
-            <PqrsModal
-                showModal={openModal}
-                closeModal={() => openModal.value = false}
-            />
         </>
     );
 }

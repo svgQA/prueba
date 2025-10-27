@@ -24,7 +24,6 @@ export const PqrsPage: FunctionComponent = () => {
   const loading = useSignal<boolean>(true);
   const groupedPqrs = useSignal<Record<string, ICPqrsRequest[]>>({});
   const columns = useSignal<ColumnConfig[]>([]);
-  const draggedItem = useSignal<ICPqrsRequest | null>(null);
 
   useEffect(() => {
     Promise.all([fetchingAllData()]);
@@ -125,7 +124,6 @@ export const PqrsPage: FunctionComponent = () => {
                   return (
                     <PqrsCards
                       key={item.id}
-                      draggedItem={draggedItem}
                       pqrs={item}
                       index={index}
                     />
