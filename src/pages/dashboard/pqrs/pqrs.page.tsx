@@ -2,6 +2,15 @@ import { FunctionComponent } from "preact";
 import { useEffect } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  SOCKET_MESSAGE_EVENTS,
+  MessageEvent,
+  MESSAGE_LISTENERS,
+} from '@/utils/socket/manager/types';
+
 import { Button } from "@/components/common/button/button";
 import { Loading } from "@/components/common/loading/loading";
 
@@ -11,6 +20,7 @@ import { ICPqrsRequest } from "./utils/interface";
 import { StageService } from "@/services/pqrs/stage";
 import { PqrsCards } from "./components/pqrs.card";
 import { Badge } from "@/components/common/badge/badge";
+import { PqrsUpsert } from "./components/pqrs.upsert";
 
 interface ColumnConfig {
   id: string;
@@ -24,10 +34,30 @@ export const PqrsPage: FunctionComponent = () => {
   const loading = useSignal<boolean>(true);
   const groupedPqrs = useSignal<Record<string, ICPqrsRequest[]>>({});
   const columns = useSignal<ColumnConfig[]>([]);
+  const openModalUpsert = useSignal<boolean>(false);
 
   useEffect(() => {
     Promise.all([fetchingAllData()]);
   }, []);
+
+  useEffect(() => {
+    WebSocketManager.add(
+      SOCKET_MESSAGE_AREA.PQRS,
+      handleMessage,
+      MESSAGE_LISTENERS.PQRS_AI
+    );
+    return () => {
+      WebSocketManager.remove(
+        SOCKET_MESSAGE_AREA.PQRS,
+        MESSAGE_LISTENERS.PQRS_AI
+      );
+    };
+  }, []);
+
+   const handleMessage = async (event: InSocketMessage<MessageEvent>) => {
+      const { type: name } = event.payload;
+      if (name === SOCKET_MESSAGE_EVENTS.CHANGE_STATUS) await fetchingAllData();
+    };
 
   const fetchingAllData = async () => {
     await getPqrs();
@@ -46,6 +76,7 @@ export const PqrsPage: FunctionComponent = () => {
     loading.value = true;
     const responseStatus = await StageService.getStatusSimpleList();
     if (!responseStatus.getStatus()) return;
+    groupedPqrs.value = {};
 
     responseStatus.getMany().forEach((status) => {
       const normalizedStatus = status.label.toLowerCase();
@@ -87,23 +118,37 @@ export const PqrsPage: FunctionComponent = () => {
     }));
   };
 
+  const closeModalUpsert = async () => {
+    openModalUpsert.value = false;
+    await fetchingAllData();
+  }
+
   return (
-    <div class="p-6 h-full bg-gray-100">
+    <div class="p-6 h-full">
       <div class="mb-6">
         <div class="flex justify-between items-center mb-4">
           <h1 class="text-2xl font-bold text-gray-900">Gestión de PQRS</h1>
           <div class="flex gap-3">
             <Button
               name="btn-refresh"
-              onClick={() => Promise.all([fetchingAllData()])}
-              label="h_updated"
+              onClick={() => fetchingAllData()}
+              label="h_refresh"
+              icon='050'
+              iconSize='sm'
+            />
+            <Button
+              name="btn-upsert-pqrs"
+              onClick={() => openModalUpsert.value = true}
+              label="create"
+              icon='044'
+              iconSize='sm'
             />
           </div>
         </div>
       </div>
 
       <div
-        class="flex gap-6 overflow-x-auto pb-6">
+        class="flex gap-6 overflow-x-auto vox-scroll-design pb-6">
         {columns.value.map((column) => {
           const items = groupedPqrs.value[column.title] ?? [];
           return (
@@ -119,7 +164,7 @@ export const PqrsPage: FunctionComponent = () => {
                 <Badge label={`${items.length}`} />
               </div>
 
-              <div class="space-y-2 max-h-96 overflow-y-auto">
+              <div class="space-y-2 max-h-96 overflow-y-auto vox-scroll-design">
                 {items.map((item: ICPqrsRequest, index) => {
                   return (
                     <PqrsCards
@@ -139,6 +184,11 @@ export const PqrsPage: FunctionComponent = () => {
           );
         })}
       </div>
+
+      <PqrsUpsert
+        showModal={openModalUpsert}
+        closeModal={() => Promise.all([closeModalUpsert()])}
+      />
 
       {loading.value && (
         <div class="flex justify-center items-center h-96">

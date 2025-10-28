@@ -172,6 +172,7 @@ export const columns_es = {
   h_prev_stage: 'Etapa anterior',
   h_error_stage: 'Etapa de error',
   h_prompt: 'Prompt',
+  h_refresh: 'Actualizar',
 };
 
 export const columns_en = {
@@ -348,4 +349,5 @@ export const columns_en = {
   h_prev_stage: 'Previous Stage',
   h_error_stage: 'Error Stage',
   h_prompt: 'Prompt',
+  h_refresh: 'Refresh',
 };

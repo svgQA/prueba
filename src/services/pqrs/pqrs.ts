@@ -5,7 +5,6 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
-import { IStages } from '@/pages/settings/pqrs/stages/utils/interface';
 import { ICPqrsRequest } from '@/pages/dashboard/pqrs/utils/interface';
 
 export class PqrsService extends BaseService {
@@ -27,7 +26,7 @@ export class PqrsService extends BaseService {
     return await super.make_request<ICPqrsRequest>(this.name, model);
   }
 
-  static async create(data: IStages) {
+  static async create(data: ICPqrsRequest) {
     const model: IMakeRequest = {
       url: ['pqrs'],
       method: REQUEST_METHODS.POST,
@@ -36,7 +35,7 @@ export class PqrsService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async update(id: string, data: IStages) {
+  static async update(id: string, data: ICPqrsRequest) {
     const model: IMakeRequest = {
       url: ['pqrs', id],
       method: REQUEST_METHODS.PUT,
