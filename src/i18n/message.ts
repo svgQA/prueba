@@ -217,7 +217,7 @@ export const message_en = {
   i_scalability_subtitle:
     '"Adaptable to any company size or industry, from surveillance to logistics."',
   i_button: 'Discover all possibilities',
-  i_carousel_viewDetails: 'View more services',
+  i_carousel_viewDetails: 'View Details',
   i_carousel_monitoring_title: 'Real-Time Monitoring',
   i_carousel_monitoring_subtitle:
     'Visualize task progress and asset status with automatic updates based on real-time data.',
@@ -252,7 +252,7 @@ export const message_en = {
   i_footer_startButton: 'Start now and enjoy',
   i_services_title: 'Our Services',
   i_services_subtitle: 'Solutions for every need',
-  i_services_button: 'View details',
+  i_services_button: 'View More Services',
   i_services_monitoring_title: 'Real-Time Monitoring',
   i_services_monitoring_subtitle:
     'Visualize task progress and asset status with automatic updates based on real-time data.',

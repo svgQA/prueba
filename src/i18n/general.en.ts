@@ -73,7 +73,7 @@ export const general_en = {
     },
   },
   users: {
-    pageTitle: 'TR - Users Service',
+    pageTitle: 'TR - User Service',
   },
   permissions: {
     denied: 'Permission denied',
