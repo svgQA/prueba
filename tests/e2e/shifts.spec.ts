@@ -21,37 +21,92 @@ test.describe('Shifts', () => {
     await page.waitForLoadState('networkidle');
   });
   test('renders shifts summary and table controls', async ({ page }) => {
-    const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
-    await page.waitForLoadState('networkidle');
-    await shiftsLink.click();
-    await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
-    await page.waitForLoadState('networkidle');
-    
-    await expect(page).toHaveTitle(/TY Turnos|TY Shifts/, { timeout: 10000 });
-
-    for (const summaryKey of [
-      'h_shifts_total',
-      'h_shifts_in_progress',
-      'h_shifts_completed',
-    ]) {
-      await expectSummaryCard(page, summaryKey);
-    }
-
-    await expectTableHeaders(page, [
-      'h_user',
-      'h_service',
-      'h_contract',
-      'h_date',
-      'h_start',
-      'h_end',
-      'h_status',
-      'h_duration',
-    ]);
-      const searchInput = await openSearchInput(page);
-      await expect(searchInput).toBeEnabled();
-
-      const createButton = page.locator('button[name="button-create-shift"]').first();
-      await expect(createButton).toBeVisible({ timeout: 10000 });
+  const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
+  await page.waitForLoadState('networkidle');
+  await shiftsLink.click();
+  await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
+  await page.waitForLoadState('networkidle');
+  await expect(page).toHaveTitle(/TY Turnos|TY Shifts/, { timeout: 10000 });
+  for (const summaryKey of [
+  'h_shifts_total',
+  'h_shifts_in_progress',
+  'h_shifts_completed',
+  ]) {
+    await expectSummaryCard(page, summaryKey);
+  }
+  await expectTableHeaders(page, [
+  'h_user',
+  'h_service',
+  'h_contract',
+  'h_date',
+  'h_start',
+  'h_end',
+  'h_status',
+  'h_duration',
+  ]);
+  const searchInput = await openSearchInput(page);
+  await expect(searchInput).toBeEnabled();
+  const createButton = page.locator('button[name="button-create-shift"]').first();
+  await expect(createButton).toBeVisible({ timeout: 10000 });
+  });
+  test('Create Task Prerequisite 2', async ({ page }) => {
+  try {
+  test.setTimeout(60000); 
+  await page.getByRole('button', { name: 'Ʌ' }).click();
+  await page.locator('#setting-dropdown-element').click();
+  await page.getByRole('link', { name: /Clientes|Clients/i }).click();
+  await page.waitForURL(/.*clients/); 
+  await page.waitForLoadState('networkidle'); 
+  const newClientButton = page.locator('#trybook\\:notices\\:state\\:create');
+  await expect(newClientButton).toBeVisible({ timeout: 15000 });
+  await newClientButton.click();
+  const nombreInput = page.getByRole('textbox', { name: /Nombre Email Teléfono|Name Email Phone/i });
+  await expect(nombreInput).toBeVisible({ timeout: 10000 }); 
+  await nombreInput.fill('NuevoclientePrueba2');
+  const emailInput = page.getByRole('textbox', { name: /Ingrese email...|Enter email.../i });
+  await emailInput.fill('Clientedy594545r@gmail.com');
+  const telefonoInput = page.getByRole('textbox', { name: /Ingrese teléfono...|Enter phone number.../i });
+  await telefonoInput.fill('31124567');
+  const descripcionInput = page.getByRole('textbox', { name: /Ingrese Descripción...|Enter Description.../i });
+  await descripcionInput.fill('PruebaCliente');
+  await page.getByRole('button', { name: /Guardar|Save/i }).click();
+  await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
+  } catch (error) {
+  await page.screenshot({ path: `test-results/ERROR-CLIENT-SCREENSHOT.png`, fullPage: true });
+  throw error;
+  }
+  try {
+  test.setTimeout(12000); 
+  await page.getByRole('button', { name: 'Ʌ' }).click();
+  await page.locator('#setting-dropdown-element').click();
+  await page.getByRole('link', { name: /Rondas|Rounds/i }).click();
+  await page.waitForURL(/.*rounds/); 
+  await page.waitForLoadState('networkidle'); 
+  await page.getByRole('button', { name: /nuevo|new|create|añadir|add/i }).click({ timeout: 5000 });
+  await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
+  await page.getByRole('textbox', { name: /Nombre|Name/i }).fill('PruebaRonda01');
+  await page.waitForTimeout(500);
+  await page.getByRole('textbox', { name: /Ingrese descripción|Enter description/i }).fill('PruebaRonda05');
+  await page.waitForTimeout(500);
+  await page.getByRole('textbox', { name: /Ingrese radio|Enter radius/i }).fill('5');
+  await page.waitForTimeout(500);
+  await page.getByRole('textbox', { name: /Ingrese frecuencia|Enter frequency/i }).fill('4');
+  await page.waitForTimeout(500);
+  await page.waitForSelector('input[placeholder="6.246631"]', { state: 'visible', timeout: 5000 });
+  await page.getByPlaceholder('6.246631').click();
+  await page.getByPlaceholder('6.246631').fill('4.661597770072802');
+  await page.waitForSelector('input[placeholder="-"]', { state: 'visible', timeout: 5000 });
+  await page.getByPlaceholder('-').click();
+  await page.getByPlaceholder('-').fill('-74.11592502386705');
+  await page.getByRole('button', { name: 'Į Añadir' }).click();
+  await page.waitForTimeout(1000);
+  await page.getByRole('button', { name: /save|guardar/i }).click();
+  await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 10000 });
+  } catch (error) {
+    console.error('Error en test de rondas:', error);
+    await page.screenshot({ path: `test-results/ERROR-ROUNDS-SCREENSHOT.png`, fullPage: true });
+    throw error;
+  }
   });
   test('Create Place Prerequisite', async ({ page }) => {
   try {
@@ -117,39 +172,55 @@ test.describe('Shifts', () => {
   await page.waitForTimeout(1000);
   await page.getByRole('button', { name: /save|guardar/i }).click();
   await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
-} catch (error) {
+  } catch (error) {
   await page.screenshot({ path: `test-results/ERROR-PLACES-SCREENSHOT.png`, fullPage: true });
   throw error;
   }
-    });
-  test('Create Task Prerequisite 2', async ({ page }) => {
   try {
-  test.setTimeout(60000); 
-  await page.getByRole('button', { name: 'Ʌ' }).click();
-  await page.locator('#setting-dropdown-element').click();
-  await page.getByRole('link', { name: /Clientes|Clients/i }).click();
-  await page.waitForURL(/.*clients/); 
-  await page.waitForLoadState('networkidle'); 
-  const newClientButton = page.locator('#trybook\\:notices\\:state\\:create');
-  await expect(newClientButton).toBeVisible({ timeout: 15000 });
-  await newClientButton.click();
-  const nombreInput = page.getByRole('textbox', { name: /Nombre Email Teléfono|Name Email Phone/i });
-  await expect(nombreInput).toBeVisible({ timeout: 10000 }); 
-  await nombreInput.fill('NuevoclientePrueba');
-  const emailInput = page.getByRole('textbox', { name: /Ingrese email...|Enter email.../i });
-  await emailInput.fill('Clientedy595r@gmail.com');
-  const telefonoInput = page.getByRole('textbox', { name: /Ingrese teléfono...|Enter phone number.../i });
-  await telefonoInput.fill('31124567');
-  const descripcionInput = page.getByRole('textbox', { name: /Ingrese Descripción...|Enter Description.../i });
-  await descripcionInput.fill('PruebaCliente');
-  await page.getByRole('button', { name: /Guardar|Save/i }).click();
+  await page.getByRole('link', { name: /Contratos|Contracts/i }).click();
+  await page.waitForURL(/.*projects|.*contracts/); 
+  await page.waitForLoadState('networkidle');
+  await page.locator('a[href="/dashboard/setting/shifts/projects/create"]').click();
+  await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
+  const clientInput = page.getByRole('textbox', { name: /Seleccione cliente|Select client/i });
+  await expect(clientInput).toBeVisible({ timeout: 10000 });
+  await clientInput.fill('NuevoclientePrueba2');
+  const nombreInput = page.getByRole('textbox', { name: /Nombre|Name/i }); 
+  await expect(nombreInput).toBeVisible({ timeout: 5000 });
+  await nombreInput.fill('ContratoPrueba');
+  await page.getByText('NuevoclientePrueba').click();
+  const descripcionInput = page.getByPlaceholder(/Ingrese descripción...|Enter description/i);
+  await expect(descripcionInput).toBeVisible({ timeout: 5000 });
+  await descripcionInput.click();
+  await descripcionInput.fill('PruebaContrato');
+  const estadoLabel = page.getByLabel(/Estado|Status/i); 
+  const stateSelect = page.locator('select[name="state"]'); 
+  await expect(stateSelect).toBeVisible();
+  await stateSelect.selectOption('IN_PROGRESS');
+  await expect(estadoLabel).toBeVisible();
+  await estadoLabel.selectOption('HIGH');
+  const startDateInput = page.getByRole('textbox', { name: /Fecha inicio|Start date/i });
+  await expect(startDateInput).toBeVisible({ timeout: 5000 });
+  await descripcionInput.click();
+  await expect(startDateInput).toBeVisible();
+  await startDateInput.fill('2025-11-01T17:08');
+  const endDateInput = page.getByRole('textbox', { name: /Fecha fin|End date/i });
+  await expect(startDateInput).toBeVisible({ timeout: 5000 });
+  await descripcionInput.click();
+  await expect(endDateInput).toBeVisible();
+  await endDateInput.fill('2025-11-05T17:08');
+  await page.getByRole('button', { name: /save|guardar/i }).click();
   await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
   } catch (error) {
-  await page.screenshot({ path: `test-results/ERROR-CLIENT-SCREENSHOT.png`, fullPage: true });
+  await page.screenshot({ path: `test-results/ERROR-CONTRACTS-SCREENSHOT.png`, fullPage: true });
   throw error;
   }
+  });
+  test('Create Task Prerequisite 3', async ({ page }) => {
   try {
-  test.setTimeout(60000); 
+  test.setTimeout(120000); 
+  await page.getByRole('button', { name: 'Ʌ' }).click();
+  await page.locator('#setting-dropdown-element').click();
   await page.getByRole('link', { name: /Tareas|Tasks/i }).click();
   const taskSection = page.locator('div').filter({ hasText: /Tareas|Tasks/i }).nth(4); 
   const newTaskButton = page.locator('#shift\\:tasks\\:state\\:create');
@@ -165,55 +236,9 @@ test.describe('Shifts', () => {
   } catch (error) {
   await page.screenshot({ path: `test-results/ERROR-TASK-SCREENSHOT.png`, fullPage: true });
   throw error;
-      }
-  });
-  test('Create Contract Prerequisite', async ({ page }) => {
-  console.log('Creating Contract...');
-  try {
-  test.setTimeout(120000);
-  await page.locator('#user-menu-button').click(); 
-  await page.locator('#setting-dropdown-element').click();
-  await page.getByRole('link', { name: /Contratos|Contracts/i }).click();
-  await page.waitForURL(/.*projects|.*contracts/); 
-  await page.waitForLoadState('networkidle');
-  const newContractButton = page.locator('#shift\\:projects\\:state\\:create');
-  await expect(newContractButton).toBeVisible({ timeout: 15000 });
-  await newContractButton.click();
-  await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
-  const clientInput = page.getByRole('textbox', { name: /Seleccione cliente|Select client/i });
-  await expect(clientInput).toBeVisible({ timeout: 10000 });
-  await clientInput.fill('NuevoclientePrueba');
-  const nombreInput = page.getByRole('textbox', { name: /Nombre|Name/i }); 
-  await expect(nombreInput).toBeVisible({ timeout: 5000 });
-  await nombreInput.fill('ContratoPrueba');
-  await page.getByText('NuevoclientePrueba').click();
-  const descripcionInput = page.getByPlaceholder(/Ingrese descripción|Enter description/i);
-  await expect(descripcionInput).toBeVisible({ timeout: 5000 });
-  await descripcionInput.fill('PruebaContrato');
-  const estadoLabel = page.getByLabel(/Estado|Status/i); 
-  const stateSelect = page.locator('select[name="state"]'); 
-  await expect(stateSelect).toBeVisible();
-  await stateSelect.selectOption('IN_PROGRESS');
-  await expect(estadoLabel).toBeVisible();
-  await estadoLabel.selectOption('HIGH');
-  const startDateInput = page.getByRole('textbox', { name: /Fecha inicio|Start date/i });
-  await expect(startDateInput).toBeVisible();
-  await startDateInput.fill('2025-11-01T17:08');
-  const endDateInput = page.getByRole('textbox', { name: /Fecha fin|End date/i });
-  await expect(endDateInput).toBeVisible();
-  await endDateInput.fill('2025-11-05T17:08');
-  await page.getByRole('button', { name: /save|guardar/i }).click();
-  await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
-  } catch (error) {
-  await page.screenshot({ path: `test-results/ERROR-CONTRACTS-SCREENSHOT.png`, fullPage: true });
-  throw error;
-    }
-  });
-  test('Create Task Prerequisite 3', async ({ page }) => {
+  }
   test.setTimeout(60000); 
-    try { 
-  await page.getByRole('button', { name: 'Ʌ' }).click();
-  await page.locator('#setting-dropdown-element').click();
+  try { 
   await page.getByRole('link', { name: /Horarios|Schedules/i }).click();
   await page.waitForURL(/.*schedule/, { timeout: 15000 });
   await page.waitForLoadState('networkidle');
@@ -230,7 +255,7 @@ test.describe('Shifts', () => {
   } catch (error) {
   await page.screenshot({ path: `test-results/ERROR-SCHEDULE-SCREENSHOT.png`, fullPage: true });
   throw error;
-}
+  }
   try { 
   await page.getByRole('link', { name: 'š Services' }).click();
   await page.waitForURL(/.*service/, { timeout: 15000 });
@@ -242,13 +267,13 @@ test.describe('Shifts', () => {
   await page.waitForSelector('#shift\\:services\\:state\\:create', { 
   state: 'visible', 
   timeout: 10000 
-      });
+  });
   await page.locator('#shift\\:services\\:state\\:create').click();
-      }
+  }
   await page.waitForSelector('input[name*="nombre"], input[name*="name"]', { 
   state: 'visible',
   timeout: 10000  
-    });
+  });
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
   await page.getByRole('textbox', { name: /Nombre|Name/i }).fill('PruebaServicio2');
   await page.waitForTimeout(500);
@@ -268,7 +293,93 @@ test.describe('Shifts', () => {
   await page.screenshot({ path: `test-results/ERROR-SERVICE-SCREENSHOT.png`, fullPage: true });
   throw error;
     }
-      });
+  });
+  test('Create Role Prerequisite', async ({ page }) => {
+  try {
+  test.setTimeout(120000); 
+  await page.getByRole('button', { name: 'Ʌ' }).click();
+  await page.locator('#setting-dropdown-element').click();
+  await page.getByRole('link', { name: /Roles/i }).click();
+  await page.waitForURL(/.*roles/);
+  await page.waitForLoadState('networkidle');
+  const roleName = 'pruebarol';
+  const roleLocator = page.getByRole('cell', { name: roleName, exact: true });
+  const newRoleButton = page.locator('#user\\:roles\\:state\\:create');
+  await expect(newRoleButton).toBeVisible({ timeout: 15000 });
+  await newRoleButton.click();
+  const nombreInput = page.getByRole('textbox', { name: /Nombre|Name/i });
+  await expect(nombreInput).toBeVisible({ timeout: 10000 });
+  await nombreInput.fill('pruebarol');
+  const descripcionInput = page.getByRole('textbox', { name: /Descripción|Description/i });
+  await expect(descripcionInput).toBeVisible();
+  await descripcionInput.fill('rolprueba'); 
+  await page.locator('#form-role div').filter({ hasText: /^PQRS$/ }).getByRole('checkbox').check();
+  await page.locator('#form-role div').filter({ hasText: /^Notificaciones$/ }).getByRole('checkbox').check();
+  await page.locator('#form-role div').filter({ hasText: /^Memos$/ }).getByRole('checkbox').check();
+  await page.locator('#form-role div').filter({ hasText: /^Formularios$/ }).getByRole('checkbox').check();
+  await page.locator('#form-role div').filter({ hasText: /^Correspondencia$/ }).getByRole('checkbox').check();
+  const settingsCheckbox = page.locator('div').filter({ hasText: /^Configuración$/ }).getByRole('checkbox');
+  await page.getByRole('button', { name: /save|guardar/i }).click(); 
+  await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
+  await page.getByText(/Creado con éxito|Created successfully/i).click();
+  } catch (error) {
+  await page.screenshot({ path: `test-results/ERROR-ROLE-SCREENSHOT.png`, fullPage: true });
+  throw error;
+  }
+  try {
+  test.setTimeout(120000);
+  await page.getByRole('button', { name: 'Ǉ' }).click();
+  await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
+  await page.getByRole('link', { name: /Usuarios|Users/i }).click();
+  await page.waitForURL(/.*users/);
+  await page.waitForLoadState('networkidle');
+  await page.getByRole('button', { name: 'Į' }).click();
+  const nombreInput = page.locator('input[name="name"]');
+  await expect(nombreInput).toBeVisible({ timeout: 10000 });
+  await nombreInput.fill('usuarioprueba');
+  await page.locator('input[name="surname"]').fill('psc'); 
+  await page.locator('input[name="email"]').fill(`psc${Date.now()}@test.com`); 
+  await page.locator('input[name="phone"]').fill('+57132954789');
+  const docTypeSelect = page.locator('select[name="cardType"]');
+  await expect(docTypeSelect).toBeVisible({ timeout: 10000 });
+  await docTypeSelect.selectOption('1'); 
+  const docNumberInput = page.locator('input[name="cardId"]');
+  await expect(docNumberInput).toBeVisible();
+  await docNumberInput.fill('10548762'); 
+  const countryInput = page.getByRole('textbox', { name: /Country|País/i });
+  await expect(countryInput).toBeVisible();
+  await countryInput.fill('colombia');
+  await page.getByText('Colombia').click(); 
+  await page.waitForLoadState('networkidle', { timeout: 10000 }); 
+  const departmentInput = page.getByRole('textbox', { name: /Department|Departamento/i }); 
+  await departmentInput.fill('cauca');
+  await page.getByText('CAUCA', { exact: true }).click();
+  await page.waitForLoadState('networkidle', { timeout: 10000 });
+  const municipalityInput = page.getByRole('textbox', { name: /Municipality|Municipio/i });
+  await municipalityInput.fill('popay');
+  await page.getByText('POPAYÁN').click();
+  await page.waitForLoadState('networkidle', { timeout: 10000 });
+  await page.locator('input[name="address"]').fill('calle # 56 - 73');
+  const userTypeSelect = page.locator('select[name="userType"]');
+  await expect(userTypeSelect).toBeVisible();
+  await userTypeSelect.selectOption('INTERNAL'); 
+  const roleInput = page.locator('input[name="roles"]'); 
+  await expect(roleInput).toBeVisible();
+  await roleInput.click();
+  await roleInput.fill('pruebarol'); 
+  await page.getByText('pruebarol', { exact: true }).click()
+  const companyInput = page.locator('input[name="companies"]'); 
+  await expect(companyInput).toBeVisible();
+  await companyInput.click();
+  await companyInput.fill('Company 2');
+  await page.getByText('Company 2').nth(1).click(); 
+  await page.getByRole('button', { name: /Guardar|Save/i }).click();
+  await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
+  } catch (error) {
+  await page.screenshot({ path: `test-results/ERROR-USER-SCREENSHOT.png`, fullPage: true });
+  throw error;
+  }
+  });  
   test('Create a new shift', async ({ page }) => {
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
   const createButton = page.locator('button[name="button-create-shift"]').first();
@@ -276,7 +387,7 @@ test.describe('Shifts', () => {
   await createButton.click();
   await expect(page.getByRole('heading', { name: /Crear|Create/i })).toBeVisible({ timeout: 10000 });
   await page.getByRole('textbox', { name: /Empleado|Employee/i }).click();
-  await page.getByText('Juan Pablo Fernandez').last().click();
+  await page.getByText('usuarioprueba psc').last().click();
   await page.getByRole('textbox', { name: /Servicio|Service/i }).click();
   await page.getByText('PruebaServicio2').last().click();
   await page.getByRole('textbox', { name: /Horario|Schedule/i }).click();
@@ -299,7 +410,7 @@ test.describe('Shifts', () => {
   test('Validate shift scheduler view toggles', async ({ page }) => {
   await page.evaluate(() => { (document.body.style as any).zoom = 0.8; }); 
   await page.getByRole('button', { name: '˂' }).click();
-  await page.getByRole('cell', { name: 'Juan Pablo Fernandez' }).locator('span').first().click();
+  await page.getByRole('cell', { name: 'usuarioprueba psc' }).locator('span').first().click();
   await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: 'ʣ' }).click();
   await page.waitForLoadState('networkidle');
@@ -313,10 +424,10 @@ test.describe('Shifts', () => {
   await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
   await page.getByRole('row', { name: /Juan Pablo/i }).first().getByRole('checkbox').check();
   await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
-    });
+  });
   test('Edit an existing shift', async ({ page }) => {
   const testRow = page.getByRole('row')
-  .filter({ hasText: /Juan Pablo Fernandez/i })
+  .filter({ hasText: /usuarioprueba psc/i })
   .filter({ hasText: /Creado|Created/i })
   .first();
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });        
@@ -329,16 +440,16 @@ test.describe('Shifts', () => {
   await page.getByRole('button', { name: /save|guardar/i }).click();
   await page.waitForSelector('role=heading[name=/Crear|Create/i]', { state: 'hidden', timeout: 20000 });
   await page.waitForLoadState('networkidle');
-    }); 
+}); 
   test('Send a notification from Supervision panel', async ({ page }) => {
   const testRow = page.getByRole('row')
-  .filter({ hasText: /Juan Pablo Fernandez/i })
+  .filter({ hasText: /usuarioprueba psc/i })
   .filter({ hasText: /Creado|Created/i })
   .first();
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
   const notifButton = page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i });
   await notifButton.click();
-  const userRow = page.getByRole('row', { name: /Juan Pablo Fernandez/i }).first();
+  const userRow = page.getByRole('row', { name: /usuarioprueba psc/i }).first();
   await expect(userRow).toBeVisible({ timeout: 15000 });
   const checkbox = userRow.getByRole('checkbox');
   await expect(checkbox).toBeEnabled(); 
@@ -356,7 +467,7 @@ test.describe('Shifts', () => {
 }); 
   test('Delete an existing shift', async ({ page }) => {
   const testRow = page.getByRole('row')
-    .filter({ hasText: /Juan Pablo Fernandez/i })
+    .filter({ hasText: /usuarioprueba psc/i })
     .filter({ hasText: /Creado|Created/i })
     .first();
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
@@ -373,8 +484,8 @@ test.describe('Shifts', () => {
   await createButton.click();
   await expect(page.getByRole('heading', { name: /Crear|Create/i })).toBeVisible({ timeout: 10000 });
   const employeeInput = page.getByRole('textbox', { name: /Empleado|Employee/i });
-  await employeeInput.fill('Juan Pablo Fernandez');
-  const option = page.getByText('Juan Pablo Fernandez').last();
+  await employeeInput.fill('usuarioprueba psc');
+  const option = page.getByText('usuarioprueba psc').last();
   await expect(option).toBeVisible();
   await option.click();
   const serviceInput = page.getByRole('textbox', { name: /Servicio|Service/i });
@@ -382,5 +493,5 @@ test.describe('Shifts', () => {
   const firstServiceOption = page.getByText('PruebaServicio').last(); 
   await expect(firstServiceOption).toBeVisible({ timeout: 5000 });
   await firstServiceOption.click();
-});
   });
+});
