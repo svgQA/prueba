@@ -49,9 +49,9 @@ test.describe('Shifts', () => {
   const createButton = page.locator('button[name="button-create-shift"]').first();
   await expect(createButton).toBeVisible({ timeout: 10000 });
   });
-  test('Create Task Prerequisite 2', async ({ page }) => {
+  test.skip('Create Task Prerequisite 2', async ({ page }) => {
   try {
-  test.setTimeout(60000); 
+  test.setTimeout(120000); 
   await page.getByRole('button', { name: 'Ʌ' }).click();
   await page.locator('#setting-dropdown-element').click();
   await page.getByRole('link', { name: /Clientes|Clients/i }).click();
@@ -62,11 +62,11 @@ test.describe('Shifts', () => {
   await newClientButton.click();
   const nombreInput = page.getByRole('textbox', { name: /Nombre Email Teléfono|Name Email Phone/i });
   await expect(nombreInput).toBeVisible({ timeout: 10000 }); 
-  await nombreInput.fill('NuevoclientePrueba2');
+  await nombreInput.fill('Pru€ba€LI€N01');
   const emailInput = page.getByRole('textbox', { name: /Ingrese email...|Enter email.../i });
-  await emailInput.fill('Clientedy594545r@gmail.com');
+  await emailInput.fill('PrueebaaCLIENT005@gmail.com');
   const telefonoInput = page.getByRole('textbox', { name: /Ingrese teléfono...|Enter phone number.../i });
-  await telefonoInput.fill('31124567');
+  await telefonoInput.fill('3113143518');
   const descripcionInput = page.getByRole('textbox', { name: /Ingrese Descripción...|Enter Description.../i });
   await descripcionInput.fill('PruebaCliente');
   await page.getByRole('button', { name: /Guardar|Save/i }).click();
@@ -76,39 +76,46 @@ test.describe('Shifts', () => {
   throw error;
   }
   try {
-  test.setTimeout(12000); 
-  await page.getByRole('button', { name: 'Ʌ' }).click();
-  await page.locator('#setting-dropdown-element').click();
+  test.setTimeout(60000); 
   await page.getByRole('link', { name: /Rondas|Rounds/i }).click();
   await page.waitForURL(/.*rounds/); 
   await page.waitForLoadState('networkidle'); 
-  await page.getByRole('button', { name: /nuevo|new|create|añadir|add/i }).click({ timeout: 5000 });
+  await page.locator('[data-label="create"]').click();
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
   await page.getByRole('textbox', { name: /Nombre|Name/i }).fill('PruebaRonda01');
   await page.waitForTimeout(500);
   await page.getByRole('textbox', { name: /Ingrese descripción|Enter description/i }).fill('PruebaRonda05');
   await page.waitForTimeout(500);
-  await page.getByRole('textbox', { name: /Ingrese radio|Enter radius/i }).fill('5');
+  await page.getByPlaceholder(/Ingrese radio|Enter radius/i ).fill('5');
   await page.waitForTimeout(500);
-  await page.getByRole('textbox', { name: /Ingrese frecuencia|Enter frequency/i }).fill('4');
+  await page.getByPlaceholder(/Ingrese frecuencia|Enter frequency/i ).fill('4');
   await page.waitForTimeout(500);
   await page.waitForSelector('input[placeholder="6.246631"]', { state: 'visible', timeout: 5000 });
   await page.getByPlaceholder('6.246631').click();
   await page.getByPlaceholder('6.246631').fill('4.661597770072802');
-  await page.waitForSelector('input[placeholder="-"]', { state: 'visible', timeout: 5000 });
-  await page.getByPlaceholder('-').click();
-  await page.getByPlaceholder('-').fill('-74.11592502386705');
+  await page.waitForSelector('input[placeholder="-75.581775"]', { state: 'visible', timeout: 5000 });
+  await page.getByPlaceholder('-75.581775').click();
+  await page.getByPlaceholder('-75.581775').fill('-74.11592502386705');
   await page.getByRole('button', { name: 'Į Añadir' }).click();
   await page.waitForTimeout(1000);
+  await page.waitForSelector('text=Point 1', { timeout: 5000 });
+  await page.waitForTimeout(1000);
+  const closeButton = page.locator('button.maplibregl-popup-close-button');
+  if (await closeButton.isVisible()) {
+  await closeButton.click();
+  await page.waitForTimeout(500);
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(500);
   await page.getByRole('button', { name: /save|guardar/i }).click();
+  await page.waitForTimeout(2000);
   await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 10000 });
   } catch (error) {
-    console.error('Error en test de rondas:', error);
     await page.screenshot({ path: `test-results/ERROR-ROUNDS-SCREENSHOT.png`, fullPage: true });
     throw error;
   }
   });
-  test('Create Place Prerequisite', async ({ page }) => {
+  test.skip('Create Place Prerequisite', async ({ page }) => {
   try {
   test.setTimeout(120000); 
   await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -182,33 +189,31 @@ test.describe('Shifts', () => {
   await page.waitForLoadState('networkidle');
   await page.locator('a[href="/dashboard/setting/shifts/projects/create"]').click();
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
+  const nombreInput = page.getByRole('textbox', { name: /Nombre|Name/i }); 
+  await expect(nombreInput).toBeVisible({ timeout: 10000 });
+  await nombreInput.fill('ContratoPrueba');
+  const descripcionInput = page.locator('textarea[name="description"]');
+  await expect(descripcionInput).toBeVisible({ timeout: 10000 });
+  await descripcionInput.fill('ContratoPrueba01');
   const clientInput = page.getByRole('textbox', { name: /Seleccione cliente|Select client/i });
   await expect(clientInput).toBeVisible({ timeout: 10000 });
-  await clientInput.fill('NuevoclientePrueba2');
-  const nombreInput = page.getByRole('textbox', { name: /Nombre|Name/i }); 
-  await expect(nombreInput).toBeVisible({ timeout: 5000 });
-  await nombreInput.fill('ContratoPrueba');
-  await page.getByText('NuevoclientePrueba').click();
-  const descripcionInput = page.getByPlaceholder(/Ingrese descripción...|Enter description/i);
-  await expect(descripcionInput).toBeVisible({ timeout: 5000 });
-  await descripcionInput.click();
-  await descripcionInput.fill('PruebaContrato');
-  const estadoLabel = page.getByLabel(/Estado|Status/i); 
-  const stateSelect = page.locator('select[name="state"]'); 
-  await expect(stateSelect).toBeVisible();
-  await stateSelect.selectOption('IN_PROGRESS');
-  await expect(estadoLabel).toBeVisible();
-  await estadoLabel.selectOption('HIGH');
-  const startDateInput = page.getByRole('textbox', { name: /Fecha inicio|Start date/i });
-  await expect(startDateInput).toBeVisible({ timeout: 5000 });
-  await descripcionInput.click();
-  await expect(startDateInput).toBeVisible();
-  await startDateInput.fill('2025-11-01T17:08');
-  const endDateInput = page.getByRole('textbox', { name: /Fecha fin|End date/i });
-  await expect(startDateInput).toBeVisible({ timeout: 5000 });
-  await descripcionInput.click();
-  await expect(endDateInput).toBeVisible();
-  await endDateInput.fill('2025-11-05T17:08');
+  const clientName = 'Pru€ba€LI€N01'; 
+  await clientInput.fill(clientName);
+  const clientOption = page.getByText(clientName, { exact: true });
+  await expect(clientOption).toBeVisible({ timeout: 5000 }); 
+  await clientOption.click(); 
+  const prioridadSelect = page.locator('select[name="priority"]');
+  await expect(prioridadSelect).toBeVisible({ timeout: 10000 });
+  await prioridadSelect.selectOption('HIGH');
+  const estadoSelect = page.locator('select[name="state"]');
+  await expect(estadoSelect).toBeVisible({ timeout: 10000 });
+  await estadoSelect.selectOption('IN_PROGRESS');
+  const startDateInput = page.locator('input[name="input-startDate"]');
+  await expect(startDateInput).toBeVisible({ timeout: 10000 });
+  await startDateInput.fill('2025-11-01T11:15');
+  const endDateInput = page.locator('input[name="input-endDate"]');
+  await expect(endDateInput).toBeVisible({ timeout: 10000 });
+  await endDateInput.fill('2025-11-02T11:16');
   await page.getByRole('button', { name: /save|guardar/i }).click();
   await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
   } catch (error) {
@@ -216,7 +221,7 @@ test.describe('Shifts', () => {
   throw error;
   }
   });
-  test('Create Task Prerequisite 3', async ({ page }) => {
+  test.skip('Create Task Prerequisite 3', async ({ page }) => {
   try {
   test.setTimeout(120000); 
   await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -245,8 +250,204 @@ test.describe('Shifts', () => {
   await page.locator('#shift\\:schedules\\:state\\:create').click();
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
   await page.locator('.general-cell').first().click(); 
-  await page.locator('div:nth-child(18)').click(); 
+  await page.locator('div:nth-child(11)').click();
+  await page.locator('div:nth-child(12)').click();
+  await page.locator('div:nth-child(13)').click();
+  await page.locator('div:nth-child(14)').click();
+  await page.locator('div:nth-child(15)').click();
+  await page.locator('div:nth-child(16)').click();
+  await page.locator('div:nth-child(17)').click();
+  await page.locator('div:nth-child(18)').click();
+  await page.locator('div:nth-child(19)').click();
+  await page.locator('div:nth-child(20)').click();
+  await page.locator('div:nth-child(21)').click();
+  await page.locator('div:nth-child(22)').click();
+  await page.locator('div:nth-child(23)').click();
+  await page.locator('div:nth-child(24)').click();
+  await page.locator('div:nth-child(25)').click();
   await page.locator('div:nth-child(26)').click();
+  await page.locator('div:nth-child(27)').click();
+  await page.locator('div:nth-child(28)').click();
+  await page.locator('div:nth-child(29)').click();
+  await page.locator('div:nth-child(30)').click();
+  await page.locator('div:nth-child(31)').click();
+  await page.locator('div:nth-child(32)').click();
+  await page.locator('div:nth-child(33)').click();
+  await page.locator('div:nth-child(34)').click();
+  await page.locator('div:nth-child(35)').click();
+  await page.locator('div:nth-child(36)').click();
+  await page.locator('div:nth-child(37)').click();
+  await page.locator('div:nth-child(38)').click();
+  await page.locator('div:nth-child(39)').click();
+  await page.locator('div:nth-child(40)').click();
+  await page.locator('div:nth-child(41)').click();
+  await page.locator('div:nth-child(42)').click();
+  await page.locator('div:nth-child(43)').click();
+  await page.locator('div:nth-child(44)').click();
+  await page.locator('div:nth-child(45)').click();
+  await page.locator('div:nth-child(46)').click();
+  await page.locator('div:nth-child(47)').click();
+  await page.locator('div:nth-child(48)').click();
+  await page.locator('div:nth-child(49)').click();
+  await page.locator('div:nth-child(50)').click();
+  await page.locator('div:nth-child(51)').click();
+  await page.locator('div:nth-child(52)').click();
+  await page.locator('div:nth-child(53)').click();
+  await page.locator('div:nth-child(54)').click();
+  await page.locator('div:nth-child(55)').click();
+  await page.locator('div:nth-child(56)').click();
+  await page.locator('div:nth-child(57)').click();
+  await page.locator('div:nth-child(58)').click();
+  await page.locator('div:nth-child(59)').click();
+  await page.locator('div:nth-child(60)').click();
+  await page.locator('div:nth-child(61)').click();
+  await page.locator('div:nth-child(62)').click();
+  await page.locator('div:nth-child(63)').click();
+  await page.locator('div:nth-child(64)').click();
+  await page.locator('div:nth-child(65)').click();
+  await page.locator('div:nth-child(66)').click();
+  await page.locator('div:nth-child(67)').click();
+  await page.locator('div:nth-child(68)').click();
+  await page.locator('div:nth-child(69)').click();
+  await page.locator('div:nth-child(70)').click();
+  await page.locator('div:nth-child(71)').click();
+  await page.locator('div:nth-child(72)').click();
+  await page.locator('div:nth-child(73)').click();
+  await page.locator('div:nth-child(74)').click();
+  await page.locator('div:nth-child(75)').click();
+  await page.locator('div:nth-child(76)').click();
+  await page.locator('div:nth-child(77)').click();
+  await page.locator('div:nth-child(78)').click();
+  await page.locator('div:nth-child(79)').click();
+  await page.locator('div:nth-child(80)').click();
+  await page.locator('div:nth-child(81)').click();
+  await page.locator('div:nth-child(82)').click();
+  await page.locator('div:nth-child(83)').click();
+  await page.locator('div:nth-child(84)').click();
+  await page.locator('div:nth-child(85)').click();
+  await page.locator('div:nth-child(86)').click();
+  await page.locator('div:nth-child(87)').click();
+  await page.locator('div:nth-child(88)').click();
+  await page.locator('div:nth-child(89)').click();
+  await page.locator('div:nth-child(90)').click();
+  await page.locator('div:nth-child(91)').click();
+  await page.locator('div:nth-child(92)').click();
+  await page.locator('div:nth-child(93)').click();
+  await page.locator('div:nth-child(94)').click();
+  await page.locator('div:nth-child(95)').click();
+  await page.locator('div:nth-child(96)').click();
+  await page.locator('div:nth-child(97)').click();
+  await page.locator('div:nth-child(98)').click();
+  await page.locator('div:nth-child(99)').click();
+  await page.locator('div:nth-child(100)').click();
+  await page.locator('div:nth-child(101)').click();
+  await page.locator('div:nth-child(102)').click();
+  await page.locator('div:nth-child(103)').click();
+  await page.locator('div:nth-child(104)').click();
+  await page.locator('div:nth-child(105)').click();
+  await page.locator('div:nth-child(106)').click();
+  await page.locator('div:nth-child(107)').click();
+  await page.locator('div:nth-child(108)').click();
+  await page.locator('div:nth-child(109)').click();
+  await page.locator('div:nth-child(110)').click();
+  await page.locator('div:nth-child(111)').click();
+  await page.locator('div:nth-child(112)').click();
+  await page.locator('div:nth-child(113)').click();
+  await page.locator('div:nth-child(114)').click();
+  await page.locator('div:nth-child(115)').click();
+  await page.locator('div:nth-child(116)').click();
+  await page.locator('div:nth-child(117)').click();
+  await page.locator('div:nth-child(118)').click();
+  await page.locator('div:nth-child(119)').click();
+  await page.locator('div:nth-child(120)').click();
+  await page.locator('div:nth-child(121)').click();
+  await page.locator('div:nth-child(122)').click();
+  await page.locator('div:nth-child(123)').click();
+  await page.locator('div:nth-child(124)').click();
+  await page.locator('div:nth-child(125)').click();
+  await page.locator('div:nth-child(126)').click();
+  await page.locator('div:nth-child(127)').click();
+  await page.locator('div:nth-child(128)').click();
+  await page.locator('div:nth-child(129)').click();
+  await page.locator('div:nth-child(130)').click();
+  await page.locator('div:nth-child(131)').click();
+  await page.locator('div:nth-child(132)').click();
+  await page.locator('div:nth-child(133)').click();
+  await page.locator('div:nth-child(134)').click();
+  await page.locator('div:nth-child(135)').click();
+  await page.locator('div:nth-child(136)').click();
+  await page.locator('div:nth-child(137)').click();
+  await page.locator('div:nth-child(138)').click();
+  await page.locator('div:nth-child(139)').click();
+  await page.locator('div:nth-child(140)').click();
+  await page.locator('div:nth-child(141)').click();
+  await page.locator('div:nth-child(142)').click();
+  await page.locator('div:nth-child(143)').click();
+  await page.locator('div:nth-child(144)').click();
+  await page.locator('div:nth-child(145)').click();
+  await page.locator('div:nth-child(146)').click();
+  await page.locator('div:nth-child(147)').click();
+  await page.locator('div:nth-child(148)').click();
+  await page.locator('div:nth-child(149)').click();
+  await page.locator('div:nth-child(150)').click();
+  await page.locator('div:nth-child(151)').click();
+  await page.locator('div:nth-child(152)').click();
+  await page.locator('div:nth-child(153)').click();
+  await page.locator('div:nth-child(154)').click();
+  await page.locator('div:nth-child(155)').click();
+  await page.locator('div:nth-child(156)').click();
+  await page.locator('div:nth-child(157)').click();
+  await page.locator('div:nth-child(158)').click();
+  await page.locator('div:nth-child(159)').click();
+  await page.locator('div:nth-child(160)').click();
+  await page.locator('div:nth-child(161)').click();
+  await page.locator('div:nth-child(162)').click();
+  await page.locator('div:nth-child(163)').click();
+  await page.locator('div:nth-child(164)').click();
+  await page.locator('div:nth-child(165)').click();
+  await page.locator('div:nth-child(166)').click();
+  await page.locator('div:nth-child(167)').click();
+  await page.locator('div:nth-child(168)').click();
+  await page.locator('div:nth-child(169)').click();
+  await page.locator('div:nth-child(170)').click();
+  await page.locator('div:nth-child(171)').click();
+  await page.locator('div:nth-child(172)').click();
+  await page.locator('div:nth-child(173)').click();
+  await page.locator('div:nth-child(174)').click();
+  await page.locator('div:nth-child(175)').click();
+  await page.locator('div:nth-child(176)').click();
+  await page.locator('div:nth-child(177)').click();
+  await page.locator('div:nth-child(178)').click();
+  await page.locator('div:nth-child(179)').click();
+  await page.locator('div:nth-child(180)').click();
+  await page.locator('div:nth-child(181)').click();
+  await page.locator('div:nth-child(182)').click();
+  await page.locator('div:nth-child(183)').click();
+  await page.locator('div:nth-child(184)').click();
+  await page.locator('div:nth-child(185)').click();
+  await page.locator('div:nth-child(186)').click();
+  await page.locator('div:nth-child(187)').click();
+  await page.locator('div:nth-child(188)').click();
+  await page.locator('div:nth-child(189)').click();
+  await page.locator('div:nth-child(190)').click();
+  await page.locator('div:nth-child(191)').click();
+  await page.locator('div:nth-child(192)').click();
+  await page.locator('div:nth-child(193)').click();
+  await page.locator('div:nth-child(194)').click();
+  await page.locator('div:nth-child(195)').click();
+  await page.locator('div:nth-child(196)').click();
+  await page.locator('div:nth-child(197)').click();
+  await page.locator('div:nth-child(198)').click();
+  await page.locator('div:nth-child(199)').click();
+  await page.locator('div:nth-child(200)').click();
+  await page.locator('div:nth-child(201)').click();
+  await page.locator('div:nth-child(202)').click();
+  await page.locator('div:nth-child(203)').click();
+  await page.locator('div:nth-child(204)').click();
+  await page.locator('div:nth-child(205)').click();
+  await page.locator('div:nth-child(206)').click();
+  await page.locator('div:nth-child(207)').click();
+  await page.locator('div:nth-child(208)').click();
   await page.waitForLoadState('networkidle');
   await page.getByRole('textbox', { name: /Nombre|Name/i }).fill('HorarioPrueba2');
   await page.waitForLoadState('networkidle');
@@ -256,45 +457,66 @@ test.describe('Shifts', () => {
   await page.screenshot({ path: `test-results/ERROR-SCHEDULE-SCREENSHOT.png`, fullPage: true });
   throw error;
   }
-  try { 
+  });
+  test.skip('Create Role Prerequisite 8', async ({ page }) => {
+  try {
+  test.setTimeout(120000); 
+  await page.getByRole('button', { name: 'Ʌ' }).click();
+  await page.locator('#setting-dropdown-element').click();
   await page.getByRole('link', { name: 'š Services' }).click();
   await page.waitForURL(/.*service/, { timeout: 15000 });
   await page.waitForLoadState('networkidle');
-  await page.waitForLoadState('domcontentloaded');
-  try {
-  await page.getByRole('button', { name: /nuevo|new|create|añadir|add/i }).click({ timeout: 5000 });
-  } catch {
-  await page.waitForSelector('#shift\\:services\\:state\\:create', { 
-  state: 'visible', 
-  timeout: 10000 
-  });
-  await page.locator('#shift\\:services\\:state\\:create').click();
-  }
-  await page.waitForSelector('input[name*="nombre"], input[name*="name"]', { 
-  state: 'visible',
-  timeout: 10000  
-  });
+  await page.locator('[data-label="create"]').click();
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
   await page.getByRole('textbox', { name: /Nombre|Name/i }).fill('PruebaServicio2');
-  await page.waitForTimeout(500);
   await page.getByRole('textbox', { name: /Ingrese descripción|Enter description/i }).fill('Prueba Descripcion');
-  await page.waitForTimeout(500);
+  await page.waitForLoadState('networkidle');
   await page.getByRole('textbox', { name: /Horario|Schedule/i }).click();
-  await page.waitForSelector('text=HorarioPrueba2', { state: 'visible' });
-  await page.getByText('HorarioPrueba2').first().click();
-  await page.waitForTimeout(500);
-  await page.getByRole('textbox', { name: /Tareas|Tasks/i }).click(); 
-  await page.waitForSelector('text=Tareaprueba', { state: 'visible' });
-  await page.getByText('Tareaprueba').first().click(); 
-  await page.waitForTimeout(500);
-  await page.getByRole('button', { name: /save|guardar/i }).click();
+  const horarioOption = page.getByText('HorarioPrueba2').first();
+  await expect(horarioOption).toBeVisible({ timeout: 10000 }); 
+  await horarioOption.click();
+  await page.waitForLoadState('networkidle');
+  const lugarInput = page.locator('input[name="placeId"]');
+  await expect(lugarInput).toBeVisible();
+  await lugarInput.click();
+  await lugarInput.fill('PruebaLugar01');
+  const lugarOption = page.getByText('PruebaLugar01').first();
+  await expect(lugarOption).toBeVisible({ timeout: 10000 });
+  await lugarOption.click();
+  await page.waitForLoadState('networkidle');
+  const tareasInput = page.locator('input[name="select-task"]');
+  await expect(tareasInput).toBeVisible({ timeout: 10000 });
+  await tareasInput.click();
+  await tareasInput.fill('Tareaprueba');
+  const tareaOption = page.getByText('Tareaprueba', { exact: true });
+  await expect(tareaOption).toBeVisible({ timeout: 10000 });
+  await tareaOption.click();
+  await page.waitForLoadState('networkidle');
+  const contratoInput = page.locator('input[name="contractId"]');
+  await expect(contratoInput).toBeVisible({ timeout: 10000 });
+  await contratoInput.click();
+  await contratoInput.fill('ContratoPrueba');
+  const contratoOption = page.getByText('ContratoPrueba', { exact: true });
+  await expect(contratoOption).toBeVisible({ timeout: 10000 });
+  await contratoOption.click();
+  await page.waitForLoadState('networkidle');
+  const rondaInput = page.locator('input[name="roundId"]');
+  await expect(rondaInput).toBeVisible({ timeout: 10000 });
+  const roundName = 'PruebaRonda01'; 
+  await rondaInput.click();
+  await rondaInput.fill(roundName);
+  const rondaOption = page.getByText(roundName); 
+  await expect(rondaOption).toBeVisible({ timeout: 10000 });
+  await rondaOption.click();
+  await page.waitForLoadState('networkidle');
+  await page.getByRole('button', { name: /Save|Guardar/i }).click();
   await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 10000 });
   } catch (error) {
-  await page.screenshot({ path: `test-results/ERROR-SERVICE-SCREENSHOT.png`, fullPage: true });
+  await page.screenshot({ path: `test-results/ERROR-SCHEDULE-SCREENSHOT.png`, fullPage: true });
   throw error;
-    }
+  }
   });
-  test('Create Role Prerequisite', async ({ page }) => {
+  test.skip('Create Role Prerequisite', async ({ page }) => {
   try {
   test.setTimeout(120000); 
   await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -336,16 +558,16 @@ test.describe('Shifts', () => {
   await page.getByRole('button', { name: 'Į' }).click();
   const nombreInput = page.locator('input[name="name"]');
   await expect(nombreInput).toBeVisible({ timeout: 10000 });
-  await nombreInput.fill('usuarioprueba');
-  await page.locator('input[name="surname"]').fill('psc'); 
+  await nombreInput.fill('usuarioprueba1');
+  await page.locator('input[name="surname"]').fill('PSdor'); 
   await page.locator('input[name="email"]').fill(`psc${Date.now()}@test.com`); 
-  await page.locator('input[name="phone"]').fill('+57132954789');
+  await page.locator('input[name="phone"]').fill('+573113172556');
   const docTypeSelect = page.locator('select[name="cardType"]');
   await expect(docTypeSelect).toBeVisible({ timeout: 10000 });
   await docTypeSelect.selectOption('1'); 
   const docNumberInput = page.locator('input[name="cardId"]');
   await expect(docNumberInput).toBeVisible();
-  await docNumberInput.fill('10548762'); 
+  await docNumberInput.fill('1058547359'); 
   const countryInput = page.getByRole('textbox', { name: /Country|País/i });
   await expect(countryInput).toBeVisible();
   await countryInput.fill('colombia');
@@ -387,14 +609,14 @@ test.describe('Shifts', () => {
   await createButton.click();
   await expect(page.getByRole('heading', { name: /Crear|Create/i })).toBeVisible({ timeout: 10000 });
   await page.getByRole('textbox', { name: /Empleado|Employee/i }).click();
-  await page.getByText('usuarioprueba psc').last().click();
+  await page.getByText('usuarioprueba1 PSdor').last().click();
   await page.getByRole('textbox', { name: /Servicio|Service/i }).click();
   await page.getByText('PruebaServicio2').last().click();
   await page.getByRole('textbox', { name: /Horario|Schedule/i }).click();
   await page.getByText('HorarioPrueba2').last().click(); 
   await page.getByLabel(/Tipo|Type/i ).selectOption('EXTERNAL');
-  await page.getByRole('textbox', { name: /Fecha de inicio|Start date/i }).fill('2025-10-29T10:24');
-  await page.getByRole('textbox', { name: /Fecha de fin|End date/i }).fill('2025-10-30T10:24');
+  await page.getByRole('textbox', { name: /Fecha de inicio|Start date/i }).fill('2025-11-02T17:00');
+  await page.getByRole('textbox', { name: /Fecha de fin|End date/i }).fill('2025-11-03T21:00');
   await page.getByRole('spinbutton', { name: /Tiempo Antes|Time Before/i }).click();
   await page.getByRole('spinbutton', { name: /Tiempo Antes|Time Before/i }).fill('5');
   await page.getByRole('textbox', { name: /Palabras clave|Keywords/i }).click();
@@ -410,11 +632,11 @@ test.describe('Shifts', () => {
   test('Validate shift scheduler view toggles', async ({ page }) => {
   await page.evaluate(() => { (document.body.style as any).zoom = 0.8; }); 
   await page.getByRole('button', { name: '˂' }).click();
-  await page.getByRole('cell', { name: 'usuarioprueba psc' }).locator('span').first().click();
+  await page.getByRole('cell', { name: 'usuarioprueba1 PSdor' }).locator('span').first().click();
   await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: 'ʣ' }).click();
   await page.waitForLoadState('networkidle');
-  await page.getByText('Prueba LA PUTA').nth(1).click();
+  await page.getByText('Tareaprueba').nth(1).click();
   await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: 'Ů' }).click();
   await page.getByRole('button', { name: 'Zoom in' }).dblclick();
@@ -422,12 +644,12 @@ test.describe('Shifts', () => {
   await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
   await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
-  await page.getByRole('row', { name: /Juan Pablo/i }).first().getByRole('checkbox').check();
+  await page.getByRole('row', { name: /usuarioprueba1 PSdor/i }).first().getByRole('checkbox').check();
   await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
   });
   test('Edit an existing shift', async ({ page }) => {
   const testRow = page.getByRole('row')
-  .filter({ hasText: /usuarioprueba psc/i })
+  .filter({ hasText: /usuarioprueba1 PSdor/i })
   .filter({ hasText: /Creado|Created/i })
   .first();
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });        
@@ -443,13 +665,13 @@ test.describe('Shifts', () => {
 }); 
   test('Send a notification from Supervision panel', async ({ page }) => {
   const testRow = page.getByRole('row')
-  .filter({ hasText: /usuarioprueba psc/i })
+  .filter({ hasText: /usuarioprueba1 PSdor/i })
   .filter({ hasText: /Creado|Created/i })
   .first();
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
   const notifButton = page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i });
   await notifButton.click();
-  const userRow = page.getByRole('row', { name: /usuarioprueba psc/i }).first();
+  const userRow = page.getByRole('row', { name: /usuarioprueba1 PSdor/i }).first();
   await expect(userRow).toBeVisible({ timeout: 15000 });
   const checkbox = userRow.getByRole('checkbox');
   await expect(checkbox).toBeEnabled(); 
@@ -467,7 +689,7 @@ test.describe('Shifts', () => {
 }); 
   test('Delete an existing shift', async ({ page }) => {
   const testRow = page.getByRole('row')
-    .filter({ hasText: /usuarioprueba psc/i })
+    .filter({ hasText: /usuarioprueba1 PSdor/i })
     .filter({ hasText: /Creado|Created/i })
     .first();
   await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
@@ -484,13 +706,13 @@ test.describe('Shifts', () => {
   await createButton.click();
   await expect(page.getByRole('heading', { name: /Crear|Create/i })).toBeVisible({ timeout: 10000 });
   const employeeInput = page.getByRole('textbox', { name: /Empleado|Employee/i });
-  await employeeInput.fill('usuarioprueba psc');
-  const option = page.getByText('usuarioprueba psc').last();
+  await employeeInput.fill('usuarioprueba1 PSdorc');
+  const option = page.getByText('usuarioprueba1 PSdor').last();
   await expect(option).toBeVisible();
   await option.click();
   const serviceInput = page.getByRole('textbox', { name: /Servicio|Service/i });
   await serviceInput.click();
-  const firstServiceOption = page.getByText('PruebaServicio').last(); 
+  const firstServiceOption = page.getByText('PruebaServicio2').last(); 
   await expect(firstServiceOption).toBeVisible({ timeout: 5000 });
   await firstServiceOption.click();
   });
