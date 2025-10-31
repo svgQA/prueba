@@ -7,6 +7,7 @@ export enum SOCKET_MESSAGE_AREA {
   ACCESS = 'ACCESS',
   CORRESPONDENCE = 'CORRESPONDENCE',
   FORM = 'FORM',
+  PQRS = 'PQRS',
   ALL = 'ALL',
 }
 
@@ -17,6 +18,7 @@ export enum SOCKET_MESSAGE_EVENTS {
   CREATE_PARENT = 'CREATE_PARENT',
   DELETE = 'DELETE',
   PANIC = 'PANIC',
+  CHANGE_STATUS = 'CHANGE_STATUS',
 }
 
 export type OutSocketMessage = {
@@ -50,5 +52,6 @@ export enum MESSAGE_LISTENERS {
   CHAT = 'chat-listener',
   FORM = 'form-listener',
   MEMO_HISTORY = 'memo-history',
+  PQRS_AI = 'pqrs-ai-listener',
   ALL = 'all-listener',
 }

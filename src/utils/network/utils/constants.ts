@@ -1,4 +1,5 @@
 import {
+  ai_pqrs_service_url,
   default_service_url,
   ia_service_url,
   tenant_service_url,
@@ -25,4 +26,5 @@ export const VOS_SERVICES = {
   key: default_service_url,
   webhook: default_service_url,
   pqrs: default_service_url,
+  ai_pqrs: ai_pqrs_service_url,
 };
