@@ -105,7 +105,7 @@ export const menus_en = {
   g_form: 'Forms',
   m_form: 'Forms',
   m_inspect: 'Responses',
-  g_memo: 'Memos',
+  g_memo: 'Minutes',
   m_novelty: 'Novelties',
   m_predefined: 'Actions',
   m_resource: 'Resources',
