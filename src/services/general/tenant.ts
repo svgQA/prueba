@@ -9,7 +9,11 @@ import {
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
-import { ICSuperTenantRequest } from '@/types/tenant/tenant.request';
+import {
+  ICSuperTenantRequest,
+  ICDemoRequest,
+  ICResponseDemo,
+} from '@/types/tenant/tenant.request';
 
 export class TenantService extends BaseService {
   static name: VoxServices = 'tenants';
@@ -59,6 +63,23 @@ export class TenantService extends BaseService {
     return await super.make_request<IInstance>(this.name, model, false);
   }
 
+  static async create_demo(data: ICDemoRequest) {
+    const model: IMakeRequest = {
+      url: ['tenants', 'demo'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model, false);
+  }
+
+  static async response_demo(data: ICResponseDemo) {
+    const model: IMakeRequest = {
+      url: ['tenants', 'demo', 'response'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model, false);
+  }
   static async uploadFile(file: File, fileName: string) {
     const formData = new FormData();
     formData.append('file', file);
