@@ -23,6 +23,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
   const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
   const { id } = useParams();
+  const loading = useSignal<boolean>(false);
 
   const selectedCells = useSignal<{ [key: string]: boolean }>({});
   const handleClearSelection = () => {
@@ -34,6 +35,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   };
 
   const onSubmit = async (model: ICScheduleRequest) => {
+    loading.value = true;
     const hoursByDay: DaySelectedModel[] = getSelectedHoursByDay(
       DAYS_OF_WEEK,
       HOURS,
@@ -65,6 +67,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
       id: 'shift:schedules:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const setInitialValues = async () => {
@@ -128,6 +131,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                       placeholder='p_write'
                       label='h_name'
                       meta={meta}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>

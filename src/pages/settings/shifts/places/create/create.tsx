@@ -56,6 +56,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   const [mapZoom, setMapZoom] = useState(12);
   const { t } = useTranslation();
   const { id } = useParams(); // Obtiene el id de la URL
+  const loading = useSignal<boolean>(false);
 
   const sendPointsRef = (data: any) => {
     if (!data.length) return;
@@ -86,6 +87,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   };
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     const data = {
       name: model.name,
       address: model.address,
@@ -120,6 +122,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       id: 'shifts:places:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const onChangeDeparment = async (departmentId: number) => {
@@ -263,6 +266,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             type='number'
                             icon='123'
                             meta={meta}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -282,6 +286,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             label='l_name'
                             icon='123'
                             meta={meta}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -298,6 +303,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           type='text'
                           icon='123'
                           meta={meta}
+                          disabled={loading.value}
                         />
                       )}
                     </Field>
@@ -328,6 +334,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                               { value: 'OTHER', label: t('l_other') },
                             ]}
                             meta={meta}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -346,6 +353,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                               { value: 'UNCER_REVIEW', label: t('l_review') },
                             ]}
                             meta={meta}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -360,6 +368,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           type='text'
                           icon='123'
                           meta={meta}
+                          disabled={loading.value}
                         />
                       )}
                     </Field>
@@ -382,6 +391,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             icon='123'
                             options={countries.value}
                             meta={meta}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -401,6 +411,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                               input.onChange(e);
                             }}
                             meta={meta}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -422,6 +433,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                               }
                               input.onChange(e);
                             }}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -436,6 +448,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             icon='123'
                             type='number'
                             meta={meta}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -476,6 +489,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                                 Number(longitude) || 0
                               );
                             }}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -495,6 +509,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                                 Number(e.currentTarget.value)
                               );
                             }}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>

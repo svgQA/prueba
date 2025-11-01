@@ -65,6 +65,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   const places = useSignal<any>([]);
   const { go } = useNavigation();
   let lastPointsSerialized = JSON.stringify([]);
+  const loading = useSignal<boolean>(false);
 
   const sendPointsRef = (data: MapPoint[]) => {
     const serialized = JSON.stringify(data);
@@ -80,6 +81,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     let request;
     let message: string;
     if (!points.value.length) {
@@ -121,6 +123,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       id: 'shifts:rounds:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const setInitialValues = async () => {
@@ -225,6 +228,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                         placeholder='p_name'
                         label='l_name'
                         meta={meta}
+                        disabled={loading.value}
                       />
                     )}
                   </Field>
@@ -240,6 +244,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                         placeholder='p_element_description'
                         label='h_description'
                         meta={meta}
+                        disabled={loading.value}
                       />
                     )}
                   </Field>
@@ -263,6 +268,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                           id='input-code'
                           placeholder='p_frequency'
                           type='number'
+                        disabled={loading.value}
                         />
                       )}
                     </Field>
@@ -284,6 +290,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                           id='input-radius'
                           placeholder='p_radius'
                           type='number'
+                        disabled={loading.value}
                         />
                       )}
                     </Field>
