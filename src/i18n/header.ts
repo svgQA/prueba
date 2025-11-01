@@ -2,7 +2,7 @@ export const header_es = {
   t_memo: 'Memos',
   t_memorandum: 'Memorandos',
   t_shift: 'Turnos',
-  t_inspect: 'Formulario',
+  t_inspect: 'Formularios',
   t_user: 'Usuarios',
   t_notification: 'Notificaciones',
   t_setting: 'Configuraciones',
