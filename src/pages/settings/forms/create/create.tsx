@@ -46,6 +46,7 @@ import { localStorage } from '@/utils/storage';
 import { MultiSelect } from './MultiSelect';
 import { useSignal } from '@preact/signals';
 import { useUserStore } from '@/store/slices';
+import { Loading } from '@/components/common/loading/loading';
 const AUTO_SAVE_INTERVAL = 4000; // 4 seconds
 
 interface IMultiSelect {
@@ -60,6 +61,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   const group = useSignal<number[]>(getForm.value.groups);
   const smartGroups = useSignal<{ name: string; id: number }[]>([]);
   const { selectedCompany } = useUserStore();
+  const loading = useSignal<boolean>(false);
 
   useEffect(() => {
     document.title = t('p_setting');
@@ -132,9 +134,11 @@ export const FormCreateSettingPage: FunctionComponent = () => {
   };
 
   const saveFormat = async () => {
+    loading.value = true;
     const [message, error] = formValidation(getForm.value);
     if (error) {
       setSingleFormat(message);
+      loading.value = false;
       return ToastManager.error('s_general');
     }
 
@@ -158,6 +162,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
     localStorage.remove(FORM_AUTO_SAVE_KEY);
     setHasUnsavedChanges(false);
     navigate(PAGES_LIST_ROUTER.dashboard.setting.forms.form.to);
+    loading.value = false;
   };
 
   const addLelement = () => {
@@ -195,6 +200,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
 
   return (
     <>
+      {loading.value && <Loading />}
       <div className='absolute top-14 right-2'>
         <Button
           name='bnt-create-form'

@@ -9,23 +9,29 @@ import { navigate } from 'wouter/use-browser-location';
 import { Input } from '@/components/common/input/input';
 import { Button } from '@/components/common/button/button';
 import { useTranslation } from 'react-i18next';
+import { Section } from '@/components/common/section/section';
+import { useSignal } from '@preact/signals';
 
 export const UserCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
+  const loading = useSignal<boolean>(false);
+
   useEffect(() => {
     document.title = t('p_setting');
     getDocumentTypes();
   }, []);
 
   const onSubmit = async (values: IUserRequest) => {
+    loading.value = true;
     if (getUserMode.value.mode === USER_MODE_SERVICE.UPDATE) {
       const request = await UserService.update(values, 1);
-      if (!request.getStatus()) return;
+      if (!request.getStatus()) return loading.value = false;
     } else {
       const request = await UserService.create(values);
-      if (!request.getStatus()) return;
+      if (!request.getStatus()) return loading.value = false;
     }
     navigate('/dashboard/setting/setting');
+    loading.value = false;
   };
 
   const getDocumentTypes = async (): Promise<void> => {
@@ -33,6 +39,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
   };
 
   return (
+    <Section loading={loading.value}>
     <Form
       onSubmit={onSubmit}
       render={({ handleSubmit }) => (
@@ -161,6 +168,7 @@ export const UserCreateSettingPage: FunctionComponent = () => {
         </form>
       )}
     />
+    </Section>
   );
 };
 {

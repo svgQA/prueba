@@ -95,9 +95,10 @@ export const SiteCreatePage: FunctionComponent = () => {
   }, []);
 
   const setInitialValues = useCallback(async () => {
-    if (!uuid) return;
+    loading.value = true;
+    if (!uuid) return loading.value = false;
     const req = await SitesService.getSite(uuid);
-    if (!req.getStatus()) return;
+    if (!req.getStatus()) return loading.value = false;
     const model = req.getOne();
 
     // si es OFFICE, primero cargar places del cliente (industriales)
@@ -138,6 +139,7 @@ export const SiteCreatePage: FunctionComponent = () => {
           }
         : undefined,
     };
+    loading.value = false;
   }, [uuid, loadClientPlaces]);
 
   const bootstrap = useCallback(async () => {
@@ -153,6 +155,7 @@ export const SiteCreatePage: FunctionComponent = () => {
 
   // --- submit ---
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     const selectedType = (model.type?.value as SiteType) ?? 'HOUSE';
 
     // Reglas de oficina vs residenciales (solo con .type)
@@ -198,7 +201,7 @@ export const SiteCreatePage: FunctionComponent = () => {
       ? await SitesService.updateSite(uuid, payload)
       : await SitesService.createSite(payload);
 
-    if (!req.getStatus()) return;
+    if (!req.getStatus()) return loading.value = false;
 
     ToastManager.success(uuid ? 's_updated_success' : 's_created_success');
     go({
@@ -207,10 +210,11 @@ export const SiteCreatePage: FunctionComponent = () => {
       id: 'trybook:sites:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}

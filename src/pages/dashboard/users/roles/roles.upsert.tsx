@@ -19,6 +19,7 @@ import { ExpansionPanel } from '@/components/common/expansion-panels/expansion-p
 import { useUserStore } from '@/store/slices';
 // import { MODAL_SETTING_USER } from '@/utils/menus/settings/user';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { Section } from '@/components/common/section/section';
 
 interface RawPermission extends Omit<IPermission, 'moduleId'> {}
 
@@ -43,6 +44,7 @@ export const RolesUpsertPage = () => {
     'all' | 'mobile' | 'web'
   >('all');
   const initialValues: Signal<Partial<IRoleRequest>> = useSignal({});
+  const loading = useSignal<boolean>(false);
 
   const { selectedCompany } = useUserStore();
   useEffect(() => {
@@ -53,7 +55,8 @@ export const RolesUpsertPage = () => {
   }, [selectedCompany, location]);
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
 
     const request = await RoleService.getRoleById(id);
     const role = request.getOne();
@@ -68,6 +71,7 @@ export const RolesUpsertPage = () => {
       (permission: RolePermission) => permission.permissionId
     );
     setSelectedPermissions(permissions);
+    loading.value = false;
   };
 
   const handlePermissionToggle = (id: number, checked: boolean) => {
@@ -81,6 +85,7 @@ export const RolesUpsertPage = () => {
   };
 
   const onSubmit = async (form: IRoleRequest) => {
+    loading.value = true;
     if (!form.name || !form.description) {
       ToastManager.error('s_some_required');
       return;
@@ -102,7 +107,7 @@ export const RolesUpsertPage = () => {
       message = 's_created_success';
     }
 
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
     ToastManager.success(message);
     // go(MODAL_SETTING_USER.menus[1]);
     go({
@@ -111,6 +116,7 @@ export const RolesUpsertPage = () => {
       id: 'user:roles:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const getModules = async () => {
@@ -253,7 +259,7 @@ export const RolesUpsertPage = () => {
   };
 
   return (
-    <>
+    <Section loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -582,7 +588,7 @@ export const RolesUpsertPage = () => {
           </form>
         )}
       />
-    </>
+    </Section>
   );
 };
 
