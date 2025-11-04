@@ -45,6 +45,7 @@ export const NewsForm: FunctionComponent = () => {
   }, [selectedCompany, id]);
 
   const fetchInitialValues = async () => {
+    loading.value = true;
     if (!id) {
       setInitialValues({
         name: '',
@@ -52,6 +53,7 @@ export const NewsForm: FunctionComponent = () => {
       });
       files.value = [];
       links.value = [];
+      loading.value = false;
       return;
     }
 
@@ -73,6 +75,7 @@ export const NewsForm: FunctionComponent = () => {
       initialData.keylinks.map((e: string, index: number) => {
         return { label: e, value: index };
       }) || [];
+    loading.value = false;
   };
 
   const getPlaces = async () => {
@@ -117,7 +120,7 @@ export const NewsForm: FunctionComponent = () => {
   };
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         onSubmit={handleSubmit}
         initialValues={initialValues}

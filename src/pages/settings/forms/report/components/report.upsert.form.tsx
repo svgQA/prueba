@@ -25,6 +25,7 @@ import { MultipleInput } from '@/components/common/multi/multi';
 import { MentionOption } from '@/components/common/mention-editor';
 import { DateField } from '@/components/compose/forms';
 import { DateUtils } from '@/utils/utilities/dates';
+import { Section } from '@/components/common/section/section';
 
 export const ReportUpsertForm = () => {
   const { t } = useTranslation();
@@ -61,9 +62,10 @@ export const ReportUpsertForm = () => {
   }, [selectedCompany]);
 
   const fetchInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
     const response = await ReportService.get_report_by_id(Number(id));
-    if (!response.getStatus()) return;
+    if (!response.getStatus()) return loading.value = false;
     const initialData = response.getOne();
 
     setInitialValues({
@@ -85,6 +87,7 @@ export const ReportUpsertForm = () => {
           : null,
       emails: initialData.extraData?.emails,
     });
+    loading.value = false;
   };
 
   const getServices = useCallback(async () => {
@@ -133,7 +136,7 @@ export const ReportUpsertForm = () => {
     let response = id
       ? await ReportService.update_report(report, Number(id))
       : await ReportService.create_report(report);
-    if (!response.getStatus()) return;
+    if (!response.getStatus()) return loading.value = false;
     ToastManager.success(id ? 's_updated_success' : 's_created_success');
     navigateUpsert('/forms/report');
     loading.value = false;
@@ -160,7 +163,7 @@ export const ReportUpsertForm = () => {
   }, []);
 
   return (
-    <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>
+    <Section className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         onSubmit={handleSubmit}
         initialValues={initialValues}
@@ -392,6 +395,6 @@ export const ReportUpsertForm = () => {
           </form>
         )}
       />
-    </div>
+    </Section>
   );
 };

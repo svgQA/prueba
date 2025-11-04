@@ -85,7 +85,8 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
     const userKeys = [
       'name',
       'description',
@@ -114,6 +115,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
       ...model,
       clientId,
     };
+    loading.value = false;
   };
 
   const { selectedCompany } = useUserStore();
@@ -125,7 +127,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
   }, [selectedCompany, location]);
 
   return (
-    <Section className='pt-2'>
+    <Section className='pt-2' loading={loading.value}>
       <div>
         <Form
           onSubmit={onSubmit}

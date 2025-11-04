@@ -16,6 +16,7 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 import { DAYS_OF_WEEK, HOURS } from '../constant';
 import { DaySelectedModel } from '../type';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { Section } from '@/components/common/section/section';
 
 export const ScheduleCreateSettingPage: FunctionComponent = () => {
   // const { t } = useTranslation();
@@ -71,10 +72,11 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return   loading.value = false;
 
     const request = await ScheduleService.getScheduleById(id);
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
     const model = request.getOne();
 
     initialValues.value = {
@@ -93,6 +95,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
       {} as { [key: string]: { start: number; end: number }[] }
     );
     selectedCells.value = convertBlocksToCells(days);
+    loading.value = false;
   };
 
   useEffect(() => {
@@ -100,7 +103,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <>
+    <Section loading={loading.value}>
       <Form<ICScheduleRequest>
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -153,6 +156,6 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
           </form>
         )}
       />
-    </>
+    </Section>
   );
 };

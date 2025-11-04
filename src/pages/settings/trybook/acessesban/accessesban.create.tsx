@@ -84,10 +84,17 @@ export const AccessBanForm: FunctionComponent = () => {
   // Cargar registro en edición
   // ─────────────────────────────────────────────
   const loadInitial = useCallback(async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) {
+      loading.value = false;
+      return;
+    }
 
     const res = await AccessBansService.getAccessBan(id);
-    if (!res.getStatus()) return;
+    if (!res.getStatus()) {
+      loading.value = false;
+      return;
+    }
 
     const model = res.getOne() as any; // { id, userId, user, cardId, username, reason, expiresAt, isActive, type }
     const isInternal = !!model.userId;
@@ -114,6 +121,7 @@ export const AccessBanForm: FunctionComponent = () => {
         BAN_TYPE_OPTIONS.find((o) => o.value === (model.type || 'BAN')) ??
         BAN_TYPE_OPTIONS[0],
     };
+    loading.value = false;
   }, [id]);
 
   const getAll = useCallback(async () => {
@@ -133,7 +141,6 @@ export const AccessBanForm: FunctionComponent = () => {
   // ─────────────────────────────────────────────
   const onSubmit = async (data: FormData) => {
     loading.value = true;
-
     const isInternal = data.subjectType?.value === 'internal';
 
     // Validaciones UI
@@ -183,13 +190,14 @@ export const AccessBanForm: FunctionComponent = () => {
       id: 'trybook:access-bans:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   // ─────────────────────────────────────────────
   // UI
   // ─────────────────────────────────────────────
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -295,6 +303,7 @@ export const AccessBanForm: FunctionComponent = () => {
                             label='cardId'
                             type='text'
                             meta={meta}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -308,6 +317,7 @@ export const AccessBanForm: FunctionComponent = () => {
                             label='name'
                             type='text'
                             meta={meta}
+                            disabled={loading.value}
                           />
                         )}
                       </Field>
@@ -325,6 +335,7 @@ export const AccessBanForm: FunctionComponent = () => {
                         label='h_reason'
                         type='text'
                         meta={meta}
+                        disabled={loading.value}
                       />
                     )}
                   </Field>
@@ -340,6 +351,7 @@ export const AccessBanForm: FunctionComponent = () => {
                         label='h_expires'
                         type='datetime-local'
                         meta={meta}
+                        disabled={loading.value}
                       />
                     )}
                   </Field>

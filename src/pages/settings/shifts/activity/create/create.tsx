@@ -68,14 +68,15 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
       message = 's_updated_success';
     }
 
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
     ToastManager.success(message);
     navigateUpsert('/shifts/activity');
     loading.value = false;
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
 
     const userKeys = [
       'start',
@@ -92,6 +93,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
     const request: any = await ShiftService.getActivityById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
     initialValues.value = model;
+    loading.value = false;
   };
 
   const getServices = async () => {
@@ -121,7 +123,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
   }, [selectedCompany, location]);
 
   return (
-    <Section>
+    <Section loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         mutators={{

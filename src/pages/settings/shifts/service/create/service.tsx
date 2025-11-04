@@ -113,7 +113,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
 
     const userKeys = [
       'name',
@@ -175,6 +176,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       contractId,
       schedules,
     };
+    loading.value = false;
   };
 
   const getAllData = async () => {
@@ -207,7 +209,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className=' p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <Section className=' p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         mutators={{
           ...arrayMutators,

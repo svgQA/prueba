@@ -13,10 +13,12 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { useParams } from 'wouter';
+import { Loading } from '@/components/common/loading/loading';
 
 export const GroupCreateSettingPage: FunctionComponent = () => {
   const name = useSignal<string>('');
   const description = useSignal<string>('');
+  const loading = useSignal<boolean>(false);
   const { go } = useNavigation();
   const { id } = useParams();
   const { t } = useTranslation();
@@ -29,6 +31,7 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
   const [rootGroup, setRootGroup] = useState<Group>(createEmptyGroup());
 
   const saveGroup = async () => {
+    loading.value = true;
     if (
       !name.value ||
       name.value.length < 5 ||
@@ -60,21 +63,25 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
       id: 'security:groups:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const getSmartGroupById = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
     const response = await GeneralService.getSmartGroupById(id);
-    if (!response.getStatus()) return;
+    if (!response.getStatus()) return loading.value = false;
 
     const smartGroup = response.getOne();
     name.value = smartGroup.name;
     description.value = smartGroup.description;
     setRootGroup(smartGroup.model);
+    loading.value = false;
   };
 
   return (
     <div className='space-y-2 h-[65vh] overflow-y-auto vox-scroll-design'>
+      {loading.value && <Loading />}
       <div className='flex justify-end gap-4 absolute top-14 right-2'>
         <Button
           name='id-save-group'
@@ -105,7 +112,7 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
           <GroupBuilder
             group={rootGroup}
             onChange={setRootGroup}
-            onRemove={() => {}}
+            onRemove={() => { }}
           />
         </div>
       </div>

@@ -10,6 +10,7 @@ import { omitBy, isNull, pick } from 'lodash';
 import { PredefinedService } from '@/services/shift/predefined';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { Section } from '@/components/common/section/section';
 
 interface FormData {
   name: string;
@@ -21,8 +22,10 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
   const { go } = useNavigation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
+  const loading = useSignal<boolean>(false);
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     let request;
     let message: string;
 
@@ -34,7 +37,7 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
       message = 's_created_success';
     }
 
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
     ToastManager.success(message);
     go({
       to: '/memo/predefined',
@@ -42,14 +45,17 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
       id: 'memo:predefined:state',
       base: 'setting',
     });
+  loading.value = false;
   };
 
-  const setInitialValues = async () => {
-    if (!id) return;
+  const setInitialValues = async () => {  
+    loading.value = true;
+    if (!id) return loading.value = false;
     const userKeys = ['name'] as const;
     const request: any = await PredefinedService.getPredefinedById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
     initialValues.value = model;
+    loading.value = false;
   };
 
   useEffect(() => {
@@ -57,7 +63,7 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <>
+    <Section loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -100,6 +106,6 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
           </form>
         )}
       />
-    </>
+    </Section>
   );
 };

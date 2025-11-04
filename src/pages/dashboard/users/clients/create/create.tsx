@@ -16,6 +16,7 @@ import {
   SmartSelector,
 } from '@/components/common/smart-selector/smart-select';
 import { Button } from '@/components/common/button/button';
+import { Section } from '@/components/common/section/section';
 
 type FormData = {
   name: string;
@@ -48,11 +49,13 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
   const groups = useSignal<IOption[]>([]);
   const { id } = useParams();
 
+  const loading = useSignal<boolean>(false);
   const showUserForm = useSignal<boolean>(false);
   const usersList = useSignal<UserInList[]>([]);
   const searchTerm = useSignal<string>('');
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     let request;
     let message: string;
 
@@ -73,7 +76,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
       message = 's_created_success';
     }
 
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
     ToastManager.success(message);
     go({
       to: '/users/clients',
@@ -81,10 +84,11 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
       id: 'memo:novelty:state:update',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const setInitialValues = async () => {
-    console.log('setInitialValues', id);
+    loading.value = true;
     if (!id) return;
 
     const userKeys = [
@@ -118,6 +122,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
         phone: user.user.phone,
         address: user.user.address,
       })) || [];
+    loading.value = false;
   };
 
   const getGroups = async () => {
@@ -163,7 +168,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <div className='space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <Section className='space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -422,6 +427,6 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
           </div>
         )}
       </div>
-    </div>
+    </Section>
   );
 };

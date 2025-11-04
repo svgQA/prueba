@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { MapPoint } from '@/components/common/map/utils/interface';
+import { Section } from '@/components/common/section/section';
 
 interface IPoint {
   name: string;
@@ -90,18 +91,18 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       model.points = points.value.map((point: XPoint) => {
         const model = point.tasks
           ? {
-              id: point.id,
-              latitude: point.position.lat,
-              longitude: point.position.lng,
-              task: point.tasks,
-              name: point.name || `Point ${point.id}`,
-            }
+            id: point.id,
+            latitude: point.position.lat,
+            longitude: point.position.lng,
+            task: point.tasks,
+            name: point.name || `Point ${point.id}`,
+          }
           : {
-              id: point.id,
-              latitude: point.position.lat,
-              longitude: point.position.lng,
-              name: point.name || `Point ${point.id}`,
-            };
+            id: point.id,
+            latitude: point.position.lat,
+            longitude: point.position.lng,
+            name: point.name || `Point ${point.id}`,
+          };
         return model;
       });
     }
@@ -127,7 +128,11 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) {
+      loading.value = false;
+      return;
+    }
     let count = 0;
     const userKeys = [
       'name',
@@ -154,6 +159,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
 
     const model = pick(omitBy(request.model, isNull), userKeys);
     initialValues.value = model;
+    loading.value = false;
   };
 
   const getPlaces = async () => {
@@ -197,7 +203,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   }, [selectedCompany, location]);
 
   return (
-    <>
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         mutators={{
@@ -268,7 +274,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                           id='input-code'
                           placeholder='p_frequency'
                           type='number'
-                        disabled={loading.value}
+                          disabled={loading.value}
                         />
                       )}
                     </Field>
@@ -290,7 +296,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                           id='input-radius'
                           placeholder='p_radius'
                           type='number'
-                        disabled={loading.value}
+                          disabled={loading.value}
                         />
                       )}
                     </Field>
@@ -574,7 +580,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   draggable={true}
                   width='100%'
                   height='500px'
-                  clickPoint={() => {}}
+                  clickPoint={() => { }}
                   setName={true}
                 />
               </div>
@@ -582,6 +588,6 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
           </form>
         )}
       />
-    </>
+    </Section>
   );
 };

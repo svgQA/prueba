@@ -18,6 +18,7 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
 import { useTranslation } from 'react-i18next';
+import { Section } from '@/components/common/section/section';
 
 interface SelectOption extends IOption {
   latitude: string;
@@ -113,7 +114,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       request = await PlaceService.updatePlace(data, id);
       message = 's_updated_success';
     }
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
 
     ToastManager.success(message);
     go({
@@ -151,7 +152,8 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
 
     const request = await PlaceService.getPlaceById(id);
     let municipalityId = {
@@ -211,6 +213,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
         countryId,
       };
     }
+    loading.value = false;
   };
 
   const changeValue = (latitude: number, longitude: number) => {
@@ -226,7 +229,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   }, [selectedCompany, location]);
 
   return (
-    <>
+    <Section  loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -551,6 +554,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
           </form>
         )}
       />
-    </>
+    </Section>
   );
 };
