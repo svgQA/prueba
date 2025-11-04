@@ -352,7 +352,7 @@ export const Search = ({
       {(table || grouping) && group && <>{group}</>}
       {table && modules && <ReportAutomatic modules={modules} />}
       {fileName && <FileControl fileName={fileName} />}
-      {range && modules && <RangeExport modules={modules} />}
+      {range && modules && <RangeExport />}
 
       {keys.length > 0 && isDropdownOpen.value && (
         <div
