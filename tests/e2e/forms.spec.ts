@@ -17,9 +17,7 @@ test.describe('Forms', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
     await ensureDashboardLoaded(page);
-  });
-
-  test('renders forms metrics and disables unavailable views', async ({ page }) => {
+  }); test('renders forms metrics and disables unavailable views', async ({ page }) => {
   await page.getByRole('link', { name: translationRegex('t_inspect') }).click();
   await expect(page).toHaveURL(/.*forms/);
   await expect(page).toHaveTitle(/TY Formulario|TY Form/);
