@@ -21,6 +21,14 @@ export const file_es = {
   file_fileSize: 'MB',
   file_selectedFile: 'Archivo seleccionado',
   file_recentUploads: 'Archivos recientes',
+  file_export: 'Exportar',
+  file_exportSuccess: 'Exportación exitosa',
+  file_export_processing:
+    'Exportación en proceso, por la cantidad de datos puede tardar unos minutos, se enviara a  su correo electrónico',
+  file_exportError: 'Error en la exportación',
+  file_export_by_date_range: 'Exportar por rango de fechas',
+  file_clear: 'Limpiar',
+  file_invalid_date_range: 'Rango de fechas inválido',
 };
 
 export const file_en = {
@@ -45,4 +53,12 @@ export const file_en = {
   file_fileSize: 'MB',
   file_selectedFile: 'Selected file',
   file_recentUploads: 'Recent uploads',
+  file_export: 'Export',
+  file_exportSuccess: 'Export successful',
+  file_export_processing:
+    'Export processing, due to the amount of data it may take a few minutes, it will be sent to your email',
+  file_exportError: 'Export error',
+  file_export_by_date_range: 'Export by date range',
+  file_clear: 'Clear',
+  file_invalid_date_range: 'Invalid date range',
 };

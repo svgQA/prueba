@@ -95,6 +95,7 @@ export const Table = <T,>({
   modules,
   onRangeChange,
   fileName,
+  range,
 }: ITableProps<T>) => {
   const { t } = useTranslation();
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
@@ -871,6 +872,7 @@ export const Table = <T,>({
             modules={modules}
             onRangeChange={onRangeChange}
             fileName={fileName}
+            range={range}
           />
         )}
       </div>
