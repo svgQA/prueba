@@ -37,4 +37,5 @@ export interface ITableProps<T> {
   modules?: modulesReport;
   onRangeChange?: (range: { [key: string]: [string, string] } | null) => void;
   fileName?: 'shift' | 'employee';
+  range?: boolean;
 }

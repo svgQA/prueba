@@ -81,6 +81,19 @@ export class FormService extends BaseService {
     return await super.make_request<IResponseResponse>(this.sname, model);
   }
 
+  static async generateReportResponse(dates: {
+    startDate: string;
+    endDate: string;
+    formId?: number;
+  }) {
+    const model: IMakeRequest = {
+      url: ['response', 'generate_report'],
+      method: REQUEST_METHODS.GET,
+      params: dates,
+    };
+    return await super.make_request(this.sname, model);
+  }
+
   static async finish_response(data: UResponseRequest, id: string) {
     const model: IMakeRequest = {
       url: ['response', `${id}`, 'end'],

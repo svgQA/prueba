@@ -23,4 +23,5 @@ export interface ISearchProps extends IComponentProps {
   modules?: modulesReport;
   onRangeChange?: (range: { [key: string]: [string, string] } | null) => void;
   fileName?: 'shift' | 'employee';
+  range?: boolean;
 }
