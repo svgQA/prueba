@@ -16,6 +16,7 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 import { DAYS_OF_WEEK, HOURS } from '../constant';
 import { DaySelectedModel } from '../type';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { Section } from '@/components/common/section/section';
 
 export const ScheduleCreateSettingPage: FunctionComponent = () => {
   // const { t } = useTranslation();
@@ -23,6 +24,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
   const initialValues: Signal<Partial<ICScheduleRequest>> = useSignal({});
   const { id } = useParams();
+  const loading = useSignal<boolean>(false);
 
   const selectedCells = useSignal<{ [key: string]: boolean }>({});
   const handleClearSelection = () => {
@@ -34,6 +36,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   };
 
   const onSubmit = async (model: ICScheduleRequest) => {
+    loading.value = true;
     const hoursByDay: DaySelectedModel[] = getSelectedHoursByDay(
       DAYS_OF_WEEK,
       HOURS,
@@ -65,13 +68,15 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
       id: 'shift:schedules:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return   loading.value = false;
 
     const request = await ScheduleService.getScheduleById(id);
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
     const model = request.getOne();
 
     initialValues.value = {
@@ -90,6 +95,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
       {} as { [key: string]: { start: number; end: number }[] }
     );
     selectedCells.value = convertBlocksToCells(days);
+    loading.value = false;
   };
 
   useEffect(() => {
@@ -97,7 +103,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <>
+    <Section loading={loading.value}>
       <Form<ICScheduleRequest>
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -128,6 +134,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
                       placeholder='p_write'
                       label='h_name'
                       meta={meta}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
@@ -149,6 +156,6 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
           </form>
         )}
       />
-    </>
+    </Section>
   );
 };

@@ -50,6 +50,7 @@ export const StageForm: FunctionComponent = () => {
   };
 
   const fetchInitialValues = async () => {
+    loading.value = true;
     if (!id) {
       setInitialValues({
         stageName: '',
@@ -63,11 +64,11 @@ export const StageForm: FunctionComponent = () => {
         errorStageId: null,
         status: 'active',
       });
-      return;
+      return loading.value = false;
     }
 
     const response = await StageService.get_by_id(id);
-    if (!response.getStatus()) return;
+    if (!response.getStatus()) return loading.value = false;
     const initialData = response.getOne();
 
     setInitialValues({
@@ -82,6 +83,7 @@ export const StageForm: FunctionComponent = () => {
       errorStageId: initialData.errorStageId || null,
       status: initialData.status || 'active',
     });
+    loading.value = false;
   };
 
   const handleSubmit = async (model: any, _form?: any) => {
@@ -121,7 +123,7 @@ export const StageForm: FunctionComponent = () => {
   };
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         onSubmit={handleSubmit}
         initialValues={initialValues}

@@ -18,6 +18,7 @@ export const AreaCreatePage: FunctionComponent = () => {
   const { id } = useParams();
   const initialValues: Signal<Partial<IUserAreaRequest>> = useSignal({});
   const { go } = useNavigation();
+  const loading = useSignal<boolean>(false);
 
   const { selectedCompany } = useUserStore();
   useEffect(() => {
@@ -28,6 +29,7 @@ export const AreaCreatePage: FunctionComponent = () => {
   }, [selectedCompany, location]);
 
   const onSubmit = async (model: IUserAreaRequest) => {
+    loading.value = true;
     let request;
     let message: string;
 
@@ -39,7 +41,7 @@ export const AreaCreatePage: FunctionComponent = () => {
       message = 's_created_success';
     }
 
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
     ToastManager.success(message);
     go({
       to: '/users/areas',
@@ -47,23 +49,26 @@ export const AreaCreatePage: FunctionComponent = () => {
       id: 'user:areas:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
 
     const request = await UserService.getArea(id);
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
 
     const { name, description } = request.getOne();
     initialValues.value = {
       name,
       description,
     };
+    loading.value = false;
   };
 
   return (
-    <Section className='pt-2'>
+    <Section className='pt-2' loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={{ ...initialValues.value, companyId: 1 }}
