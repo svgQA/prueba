@@ -56,6 +56,7 @@ export const ScheduledNotificationForm = () => {
   };
 
   const handleSubmit = async (values: any) => {
+    loading.value = true;
     const {
       templateId,
       overrideTitle,
@@ -100,6 +101,7 @@ export const ScheduledNotificationForm = () => {
     } else {
       ToastManager.error('s_created_error');
     }
+    loading.value = false;
   };
 
   return (

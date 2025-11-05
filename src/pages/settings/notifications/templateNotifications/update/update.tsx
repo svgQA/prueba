@@ -6,21 +6,25 @@ import { ICreateNotificationTemplateDto } from '@/types/notification/ICreateNoti
 import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
+import { useSignal } from '@preact/signals';
+import { Section } from '@/components/common/section/section';
 
 export const TemplateNotificationEditPage = () => {
   const { id } = useParams<{ id: string }>();
   const [form, setForm] = useState<Partial<ICreateNotificationTemplateDto>>({});
   const [jsonError, setJsonError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const loading = useSignal<boolean>(false);
   const [_, navigate] = useLocation();
 
   useEffect(() => {
     if (!id) return;
     const fetchData = async () => {
+      loading.value = true;
       const res = await TemplateService.getTemplateById(id);
       if (res.getStatus()) {
         setForm(res.getOne());
       }
+      loading.value = false;
     };
     fetchData();
   }, [id]);
@@ -33,14 +37,14 @@ export const TemplateNotificationEditPage = () => {
   };
 
   const handleSubmit = async () => {
+    loading.value = true;
     if (jsonError) {
       alert('Corrige el JSON antes de guardar');
+      loading.value = false;
       return;
     }
 
-    setLoading(true);
     const res = await TemplateService.updateTemplate(id, form);
-    setLoading(false);
 
     if (res.getStatus()) {
       alert('Plantilla actualizada correctamente');
@@ -48,10 +52,11 @@ export const TemplateNotificationEditPage = () => {
     } else {
       alert('Error al actualizar la plantilla');
     }
+    loading.value = false;
   };
 
   return (
-    <>
+    <Section loading={loading.value}>
       <div className='flex justify-end gap-4 absolute top-14 right-2'>
         <Button
           name='save-template'
@@ -59,7 +64,7 @@ export const TemplateNotificationEditPage = () => {
           className='bg-primary text-white p-2'
           icon='022'
           onClick={handleSubmit}
-          disabled={loading}
+          disabled={loading.value}
         />
       </div>
       <h2 className='text-xl font-bold mb-4'>
@@ -95,6 +100,6 @@ export const TemplateNotificationEditPage = () => {
         />
         {jsonError && <p className='text-red-600 text-sm'>{jsonError}</p>}
       </div>
-    </>
+    </Section>
   );
 };
