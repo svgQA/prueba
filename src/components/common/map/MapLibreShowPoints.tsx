@@ -3,6 +3,7 @@ import maplibregl, { type Map as MaplibreMap } from 'maplibre-gl';
 import { IMapProps, MapPoint } from './utils/interface';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './utils/style.css';
+import { useTranslation } from 'react-i18next';
 
 export const MapLibreShowPoints = ({
   pointsRef = [],
@@ -19,6 +20,7 @@ export const MapLibreShowPoints = ({
   const [points, setPoints] = useState<MapPoint[]>([]);
   const [isMapReady, setIsMapReady] = useState(false);
   const [userLocation, setUserLocation] = useState<MapPoint | null>(null);
+  const { t } = useTranslation();
 
   const getMapStyle = () =>
     'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
@@ -53,6 +55,7 @@ export const MapLibreShowPoints = ({
       (position) => {
         setUserLocation({
           id: -1,
+          name: 'your location',
           position: {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -127,6 +130,26 @@ export const MapLibreShowPoints = ({
       : radialPoint && point?.id === radialPoint?.id
         ? '#2563EB'
         : '#EA4335';
+
+    const pointData = point as any;
+    const pointName = pointData?.name || (isUserLocation ? 'Tu ubicación' : `Punto ${index + 1}`);
+    const shiftId = pointData?.shift;
+    const serviceName = pointData?.service;
+    const contractName = pointData?.contract;
+    let tooltipContent = `<div style="font-weight: bold; margin-bottom: 2px;">${pointName}</div>`;
+    
+    if (shiftId && shiftId !== '') {
+      tooltipContent += `<div style="font-size: 10px; opacity: 0.9;">${t('h_shift')}: ${shiftId}</div>`;
+    }
+    
+    if (serviceName && serviceName !== '') {
+      tooltipContent += `<div style="font-size: 10px; opacity: 0.9;">${t('h_service')}: ${serviceName}</div>`;
+    }
+    
+    if (contractName && contractName !== '') {
+      tooltipContent += `<div style="font-size: 10px; opacity: 0.9;">${t('h_contract')}: ${contractName}</div>`;
+    }
+
     el.innerHTML = `
       <div style="position: relative; width: 24px; height: 38px; cursor: pointer;">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="38" viewBox="0 0 24 38">
@@ -134,8 +157,47 @@ export const MapLibreShowPoints = ({
           <circle fill="#FFFFFF" cx="12" cy="12" r="9" />
           <text fill="${markerColor}" x="${isUserLocation ? 8 : index + 1 >= 10 ? 5 : 10}" y="12.5" fontFamily="Arial, sans-serif" fontSize="10" fontWeight="bold" textAnchor="middle" dy=".3em">${isUserLocation ? 'U' : index + 1}</text>
         </svg>
+        <div class="tooltip" style="
+          position: absolute;
+          top: -10px;
+          left: 50%;
+          transform: translateX(-50%) translateY(-100%);
+          background: rgba(0, 0, 0, 0.9);
+          color: white;
+          padding: 6px 10px;
+          border-radius: 6px;
+          font-size: 12px;
+          white-space: nowrap;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.3s;
+          z-index: 1000;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        ">${tooltipContent}</div>
       </div>
     `;
+
+    const tooltipEl = el.querySelector('.tooltip') as HTMLElement;
+
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (tooltipEl) {
+        tooltipEl.style.opacity = tooltipEl.style.opacity === '1' ? '0' : '1';
+      }
+    });
+
+    el.addEventListener('mouseenter', () => {
+      if (tooltipEl) {
+        tooltipEl.style.opacity = '1';
+      }
+    });
+
+    el.addEventListener('mouseleave', () => {
+      if (tooltipEl) {
+        tooltipEl.style.opacity = '0';
+      }
+    });
+
     return el;
   };
 
