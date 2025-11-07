@@ -136,6 +136,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
         email: user.user.email,
         phone: user.user.phone,
         address: user.user.address,
+        oldUser: true,
       })) || [];
     loading.value = false;
   };
@@ -257,7 +258,6 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
     };
 
     usersList.value = [...usersList.value, newUser];
-    ToastManager.success('Usuario añadido correctamente');
     selectedUserId.value = '';
   };
 
