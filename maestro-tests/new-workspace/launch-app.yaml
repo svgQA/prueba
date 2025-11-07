@@ -1,0 +1,5 @@
+appId: com.inndico.voxline
+---
+- launchApp:
+    clearState: false
+- inspectScreen: {}
