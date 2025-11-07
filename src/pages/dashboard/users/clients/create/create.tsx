@@ -16,6 +16,9 @@ import {
   SmartSelector,
 } from '@/components/common/smart-selector/smart-select';
 import { Button } from '@/components/common/button/button';
+import { USER_TYPE } from '@/types/user/user.enum';
+import { Select } from '@/components/common/select/select';
+import { type TargetedEvent } from 'preact/compat';
 
 type FormData = {
   name: string;
@@ -35,6 +38,7 @@ type UserFormData = {
 
 type UserInList = {
   id: string;
+  oldUser: boolean;
   name: string;
   surname: string;
   phone: string;
@@ -48,9 +52,18 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
   const groups = useSignal<IOption[]>([]);
   const { id } = useParams();
 
+  const currentUsers = useSignal<IOption[]>([]);
+  const usersData = useSignal<any[]>([]);
+
   const showUserForm = useSignal<boolean>(false);
   const usersList = useSignal<UserInList[]>([]);
   const searchTerm = useSignal<string>('');
+  const selectedUserId = useSignal<string | number>('');
+  const clientEmail = useSignal<string>('');
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   const onSubmit = async (model: FormData) => {
     let request;
@@ -109,6 +122,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
       ),
     };
 
+    clientEmail.value = model.email || '';
+
     usersList.value =
       model.users?.map((user: any) => ({
         id: user.id.toString(),
@@ -133,13 +148,112 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
     showUserForm.value = !showUserForm.value;
   };
 
+  const getUsers = async () => {
+    const response = await UserService.get_all({
+      userType: USER_TYPE.EXTERNAL,
+      page: 1,
+      items: 1000,
+    });
+    if (!response.getStatus()) return;
+    const users = response.getMany();
+    usersData.value = users;
+    currentUsers.value = users.map((user) => ({
+      label: user.name,
+      value: user.id,
+    }));
+  };
+
+  const isEmailAlreadyInList = (email: string): boolean => {
+    const normalizedEmail = email.toLowerCase().trim();
+
+    if (
+      clientEmail.value &&
+      clientEmail.value.toLowerCase().trim() === normalizedEmail
+    ) {
+      return true;
+    }
+
+    return usersList.value.some(
+      (user) => user.email.toLowerCase().trim() === normalizedEmail
+    );
+  };
+
   const addUserToList = (userData: UserFormData) => {
+    if (isEmailAlreadyInList(userData.email)) {
+      const normalizedEmail = userData.email.toLowerCase().trim();
+      const isClientEmail =
+        clientEmail.value &&
+        clientEmail.value.toLowerCase().trim() === normalizedEmail;
+      ToastManager.warning(
+        isClientEmail
+          ? 'Este correo electrónico pertenece al cliente'
+          : 'Este correo electrónico ya está en la lista'
+      );
+      return;
+    }
+
     const newUser: UserInList = {
       id: Date.now().toString(),
+      oldUser: false,
       ...userData,
     };
     usersList.value = [...usersList.value, newUser];
     showUserForm.value = false;
+  };
+
+  const handleUserSelect = (event: TargetedEvent<HTMLSelectElement>) => {
+    const userId = event.currentTarget.value;
+    if (!userId) return;
+
+    selectedUserId.value = userId;
+
+    const userExists = usersList.value.some(
+      (user) => user.id === userId.toString()
+    );
+    if (userExists) {
+      ToastManager.warning('Este usuario ya está en la lista');
+      selectedUserId.value = '';
+      return;
+    }
+
+    const selectedUser = usersData.value.find(
+      (user) => user.id.toString() === userId.toString()
+    );
+
+    if (!selectedUser) {
+      ToastManager.error('Usuario no encontrado');
+      selectedUserId.value = '';
+      return;
+    }
+
+    const userEmail = selectedUser.email || '';
+    if (isEmailAlreadyInList(userEmail)) {
+      const normalizedEmail = userEmail.toLowerCase().trim();
+      const isClientEmail =
+        clientEmail.value &&
+        clientEmail.value.toLowerCase().trim() === normalizedEmail;
+      ToastManager.warning(
+        isClientEmail
+          ? 'Este correo electrónico pertenece al cliente'
+          : 'Este correo electrónico ya está en la lista'
+      );
+      selectedUserId.value = '';
+      return;
+    }
+
+    const newUser: UserInList = {
+      id: selectedUser.id.toString(),
+      oldUser: true,
+      name: selectedUser.name || '',
+      surname: selectedUser.surname || '',
+      phone: selectedUser.phone || '',
+      email: userEmail,
+      address: selectedUser.address || '',
+    };
+
+    usersList.value = [...usersList.value, newUser];
+    ToastManager.success('Usuario añadido correctamente');
+    selectedUserId.value = '';
   };
 
   const removeUserFromList = (userId: string) => {
@@ -173,129 +287,165 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
 
           return errors;
         }}
-        render={({ handleSubmit, form, submitting, pristine }) => (
-          <form
-            onSubmit={handleSubmit}
-            className='space-y-6'
-            id='form-place-create'
-          >
-            <StatusButton
-              onClickClean={() => {
-                () => form.reset();
-              }}
-              submitting={submitting}
-              pristine={pristine}
-              form='form-place-create'
-              label={id ? 'edit' : 'save'}
-            />
-            {/** FORMULARIO PRINCIPAL */}
-            <div className='grid grid-cols-3 gap-3'>
-              <div class='col-span-1'>
-                <Field<string> name='name' validate={required}>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      type='text'
-                      placeholder='Ingrese nombre...'
-                      label='Nombre'
-                      meta={meta}
-                    />
-                  )}
-                </Field>
-              </div>
-              <div class='col-span-1'>
-                <Field<string> name='email'>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      type='email'
-                      placeholder='Ingrese email...'
-                      label='Email'
-                      meta={meta}
-                    />
-                  )}
-                </Field>
-              </div>
+        render={({ handleSubmit, form, submitting, pristine, values }) => {
+          if (values.email && clientEmail.value !== values.email) {
+            clientEmail.value = values.email || '';
+          }
+          return (
+            <form
+              onSubmit={handleSubmit}
+              className='space-y-6'
+              id='form-place-create'
+            >
+              <StatusButton
+                onClickClean={() => {
+                  () => form.reset();
+                }}
+                submitting={submitting}
+                pristine={pristine}
+                form='form-place-create'
+                label={id ? 'edit' : 'save'}
+              />
+              <div className='grid grid-cols-3 gap-3'>
+                <div class='col-span-1'>
+                  <Field<string> name='name' validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='text'
+                        placeholder='Ingrese nombre...'
+                        label='Nombre'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div class='col-span-1'>
+                  <Field<string> name='email'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='email'
+                        placeholder='Ingrese email...'
+                        label='Email'
+                        meta={meta}
+                        onChange={(e) => {
+                          input.onChange(e);
+                          clientEmail.value = e.currentTarget.value;
+                        }}
+                      />
+                    )}
+                  </Field>
+                </div>
 
-              <div class='col-span-1'>
-                <Field<string> name='phone'>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      type='tel'
-                      placeholder='Ingrese teléfono...'
-                      label='Teléfono'
-                      meta={meta}
-                    />
-                  )}
-                </Field>
+                <div class='col-span-1'>
+                  <Field<string> name='phone'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='tel'
+                        placeholder='Ingrese teléfono...'
+                        label='Teléfono'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div class='col-span-3'>
+                  <Field<string> name='description'>
+                    {({ input, meta }) => (
+                      <TextArea
+                        {...input}
+                        min='3'
+                        max='300'
+                        placeholder='Ingrese Descripción...'
+                        label='Descripción'
+                        type='text'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div class='col-span-3'>
+                  <Field<IOption> name='groups'>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        id='groups'
+                        label='l_groups'
+                        placeholder='p_select'
+                        icon='231'
+                        multiple={true}
+                        allowAll={true}
+                        options={groups.value}
+                      />
+                    )}
+                  </Field>
+                </div>
               </div>
-              <div class='col-span-3'>
-                <Field<string> name='description'>
-                  {({ input, meta }) => (
-                    <TextArea
-                      {...input}
-                      min='3'
-                      max='300'
-                      placeholder='Ingrese Descripción...'
-                      label='Descripción'
-                      type='text'
-                      meta={meta}
-                    />
-                  )}
-                </Field>
-              </div>
-              <div class='col-span-3'>
-                <Field<IOption> name='groups'>
-                  {({ input, meta }) => (
-                    <SmartSelector
-                      {...input}
-                      meta={meta}
-                      id='groups'
-                      label='l_groups'
-                      placeholder='p_select'
-                      icon='231'
-                      multiple={true}
-                      allowAll={true}
-                      options={groups.value}
-                    />
-                  )}
-                </Field>
-              </div>
-            </div>
-          </form>
-        )}
+            </form>
+          );
+        }}
       />
 
-      {/* SECCIÓN DE USUARIOS */}
       <div className='mt-6 shadow-sm p-4 rounded-lg border bg-b-light-light dark:bg-b-dark-light '>
-        <div className='flex justify-between items-center mb-4'>
-          <h3 className='text-lg font-semibold text-gray-800'>
+        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4'>
+          <h3 className='text-lg font-semibold text-gray-800 dark:text-gray-200'>
             Usuarios del cliente
           </h3>
 
-          <Button
-            name='toggle-user-form'
-            onClick={toggleUserForm}
-            mode='primary'
-            label={showUserForm.value ? 'Ocultar Formulario' : 'Añadir Usuario'}
-          />
+          <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto'>
+            <div className='flex-1 sm:flex-initial sm:min-w-[300px]'>
+              <Select
+                name='users'
+                placeholder='Seleccionar usuario existente'
+                label=''
+                icon='252'
+                options={currentUsers.value}
+                optionValue='value'
+                optionLabel='label'
+                value={selectedUserId.value}
+                onChange={handleUserSelect}
+              />
+            </div>
+
+            <Button
+              name='toggle-user-form'
+              onClick={toggleUserForm}
+              mode='primary'
+              label={
+                showUserForm.value
+                  ? 'Ocultar Formulario'
+                  : 'Añadir Usuario Nuevo'
+              }
+            />
+          </div>
         </div>
 
-        {/* Formulario de Usuario */}
         {showUserForm.value && (
           <div className='mb-6 bg-white p-4 rounded-lg border border-gray-200 max-h-80 overflow-y-auto'>
             <Form
               onSubmit={(values: UserFormData) => {
                 addUserToList(values);
-                return {}; // Reset form
+                return {};
               }}
               validate={(values) => {
                 const errors: Partial<UserFormData> = {};
                 if (!values.name) errors.name = 'Campo obligatorio';
                 if (!values.surname) errors.surname = 'Campo obligatorio';
                 if (!values.phone) errors.phone = 'Campo obligatorio';
-                if (!values.email) errors.email = 'Campo obligatorio';
+                if (!values.email) {
+                  errors.email = 'Campo obligatorio';
+                } else if (isEmailAlreadyInList(values.email)) {
+                  const normalizedEmail = values.email.toLowerCase().trim();
+                  const isClientEmail =
+                    clientEmail.value &&
+                    clientEmail.value.toLowerCase().trim() === normalizedEmail;
+                  errors.email = isClientEmail
+                    ? 'Este correo electrónico pertenece al cliente'
+                    : 'Este correo electrónico ya está en la lista';
+                }
                 if (!values.address) errors.address = 'Campo obligatorio';
                 return errors;
               }}
@@ -374,10 +524,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
           </div>
         )}
 
-        {/* Lista de Usuarios */}
         {usersList.value.length > 0 && (
           <div className='space-y-3'>
-            {/* Buscador de usuarios */}
             <div className='mb-4'>
               <Input
                 name='search-users'
