@@ -29,6 +29,9 @@ export interface MapPoint {
   id: number;
   name?: string;
   position: { lat: number; lng: number };
+  shift?: string;
+  service?: string;
+  contract?: string;
 }
 
 export interface Marker {

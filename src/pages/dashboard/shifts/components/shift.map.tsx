@@ -177,10 +177,18 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
 
   const mapPoints = useMemo(() => {
     const points = getPointsByFilters();
-    return points?.map((user: any, index: number) => ({
-      id: index + 1,
-      position: { lat: user.lat!, lng: user.lng! },
-    }));
+    return points?.map((user: User, index: number) => {
+      const firstShift = user.userShifts && user.userShifts.length > 0 ? user.userShifts[0] : null;
+      
+      return {
+        id: index + 1,
+        name: user.name,
+        position: { lat: user.lat!, lng: user.lng! },
+        shift: firstShift?.id || '',
+        service: firstShift?.service?.name || '',
+        contract: firstShift?.service?.contract?.name || '',
+      };
+    });
   }, [users, searchFilters]);
 
   return (
