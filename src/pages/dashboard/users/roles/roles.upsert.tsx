@@ -259,7 +259,7 @@ export const RolesUpsertPage = () => {
   };
 
   return (
-    <Section loading={loading.value}>
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
