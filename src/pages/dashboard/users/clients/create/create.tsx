@@ -130,7 +130,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
 
     usersList.value =
       model.users?.map((user: any) => ({
-        id: user.id.toString(),
+        id: user.userId.toString(),
         name: user.user.name,
         surname: user.user.surname,
         email: user.user.email,
