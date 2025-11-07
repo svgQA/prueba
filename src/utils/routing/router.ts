@@ -15,6 +15,7 @@ export const PAGES_LIST_ROUTER = {
     users: '/users',
     devices: '/devices',
     history: '/history',
+    pqrs: '/pqrs',
     setting: {
       base: '/setting',
       users: {

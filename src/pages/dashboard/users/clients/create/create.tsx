@@ -19,6 +19,7 @@ import { Button } from '@/components/common/button/button';
 import { USER_TYPE } from '@/types/user/user.enum';
 import { Select } from '@/components/common/select/select';
 import { type TargetedEvent } from 'preact/compat';
+import { Section } from '@/components/common/section/section';
 
 type FormData = {
   name: string;
@@ -55,6 +56,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
   const currentUsers = useSignal<IOption[]>([]);
   const usersData = useSignal<any[]>([]);
 
+  const loading = useSignal<boolean>(false);
   const showUserForm = useSignal<boolean>(false);
   const usersList = useSignal<UserInList[]>([]);
   const searchTerm = useSignal<string>('');
@@ -66,6 +68,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     let request;
     let message: string;
 
@@ -86,7 +89,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
       message = 's_created_success';
     }
 
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return (loading.value = false);
     ToastManager.success(message);
     go({
       to: '/users/clients',
@@ -94,10 +97,11 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
       id: 'memo:novelty:state:update',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const setInitialValues = async () => {
-    console.log('setInitialValues', id);
+    loading.value = true;
     if (!id) return;
 
     const userKeys = [
@@ -133,6 +137,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
         phone: user.user.phone,
         address: user.user.address,
       })) || [];
+    loading.value = false;
   };
 
   const getGroups = async () => {
@@ -277,7 +282,10 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <div className='space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <Section
+      className='space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -570,6 +578,6 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
           </div>
         )}
       </div>
-    </div>
+    </Section>
   );
 };

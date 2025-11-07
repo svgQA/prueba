@@ -81,9 +81,10 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
   }, []);
 
   const setInitialValues = useCallback(async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
     const req = await ResourceZoneService.getResourceZone(Number(id));
-    if (!req.getStatus()) return;
+    if (!req.getStatus()) return loading.value = false;
 
     const model = req.getOne();
     initialValues.value = {
@@ -118,6 +119,7 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
       image: model.image ?? '',
       icon: model.icon ?? '',
     };
+    loading.value = false;
   }, [id]);
 
   const getAll = useCallback(async () => {
@@ -133,16 +135,17 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
   }, [selectedCompany, getAll]);
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     // Guard extra: la zona seleccionada NO puede ser de tipo PARKING
     const selectedZoneId = Number(model.zoneId?.value);
     const selectedZone = rawZones.value.find((z) => z.id === selectedZoneId);
     if (!selectedZone) {
       ToastManager.error('s_select_valid_zone');
-      return;
+      return loading.value = false;
     }
     if (String(selectedZone.type).toUpperCase() === 'PARKING') {
       ToastManager.error('s_zone_not_support_resources');
-      return;
+      return loading.value = false;
     }
 
     const payload = {
@@ -172,7 +175,7 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
       ? await ResourceZoneService.updateResourceZone(Number(id), payload)
       : await ResourceZoneService.createResourceZone(payload);
 
-    if (!req.getStatus()) return;
+    if (!req.getStatus()) return loading.value = false;
 
     ToastManager.success(id ? 's_updated_success' : 's_created_success');
     go({
@@ -181,10 +184,11 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
       id: 'trybook:resourcezone:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}

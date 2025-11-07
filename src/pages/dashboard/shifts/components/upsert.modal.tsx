@@ -24,6 +24,7 @@ import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { isStartAndEndInSchedules } from './validation';
 import { _onTaskAddWithId } from '@/pages/settings/shifts/task/create/utils';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
+import { Loading } from '@/components/common/loading/loading';
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -151,9 +152,9 @@ export const TaskForm = ({
 
   const getInitialData = async () => {
     loading.value = true;
-    if (!shiftId) return;
+    if (!shiftId) return loading.value = false;
     const response = await ShiftService.get_shift(shiftId);
-    if (!response.getStatus()) return;
+    if (!response.getStatus()) return loading.value = false;
     const model = response.getOne();
 
     await onChangeService(model.service.id, true);
@@ -273,6 +274,8 @@ export const TaskForm = ({
             </ul>
           </div>
         )}
+
+        {loading.value && <Loading />}
 
         {relatedShifts.value.length > 0 && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>

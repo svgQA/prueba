@@ -59,4 +59,11 @@ export class StageService extends BaseService {
     };
     return await super.make_request<IOption>(this.name, model);
   }
+
+  static async getStatusSimpleList() {
+    const model: IMakeRequest = {
+      url: ['stage', 'status', 'simple', 'list'],
+    };
+    return await super.make_request<IOption>(this.name, model);
+  }
 }

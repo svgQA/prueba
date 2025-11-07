@@ -10,6 +10,8 @@ import { IOption } from '@/components/common/smart-selector/smart-select';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { useSignal } from '@preact/signals';
+import { Section } from '@/components/common/section/section';
 
 export const ScheduledNotificationForm = () => {
   const [templates, setTemplates] = useState<IOption[]>([]);
@@ -17,6 +19,7 @@ export const ScheduledNotificationForm = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formValues, setFormValues] = useState<any>(null);
   const { go } = useNavigation();
+  const loading = useSignal<boolean>(false);
 
   const { t } = useTranslation();
   useEffect(() => {
@@ -24,13 +27,15 @@ export const ScheduledNotificationForm = () => {
   }, []);
 
   const fetchTemplates = async () => {
+    loading.value = true;
     const response = await TemplateService.getTemplates();
-    if (!response.getStatus()) return;
+    if (!response.getStatus()) return loading.value = false;
     const formatted = response.getMany().map((tpl: any) => ({
       label: tpl.title,
       value: tpl.id,
     }));
     setTemplates(formatted);
+    loading.value = false;
   };
 
   const { selectedCompany } = useUserStore();
@@ -51,6 +56,7 @@ export const ScheduledNotificationForm = () => {
   };
 
   const handleSubmit = async (values: any) => {
+    loading.value = true;
     const {
       templateId,
       overrideTitle,
@@ -95,10 +101,11 @@ export const ScheduledNotificationForm = () => {
     } else {
       ToastManager.error('s_created_error');
     }
+    loading.value = false;
   };
 
   return (
-    <>
+    <Section loading={loading.value}>
       {showConfirmModal && (
         <div className='fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center'>
           <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-md'>
@@ -237,6 +244,6 @@ export const ScheduledNotificationForm = () => {
           </form>
         )}
       />
-    </>
+    </Section>
   );
 };

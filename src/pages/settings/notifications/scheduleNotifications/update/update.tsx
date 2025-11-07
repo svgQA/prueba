@@ -6,16 +6,19 @@ import { IScheduleNotificationDto } from '@/types/notification/IScheduleNotifica
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { Button } from '@/components/common/button/button';
+import { useSignal } from '@preact/signals';
+import { Section } from '@/components/common/section/section';
 
 export const ScheduledNotificationEditPage = () => {
   const { id } = useParams<{ id: string }>();
   const [form, setForm] = useState<Partial<IScheduleNotificationDto>>({});
-  const [loading, setLoading] = useState(false);
+  const loading = useSignal<boolean>(false);
   const [_, navigate] = useLocation();
 
   useEffect(() => {
     if (!id) return;
     const fetch = async () => {
+      loading.value = true;
       const res = await SchedulerService.getById(id);
       if (res.getStatus()) {
         const data = res.getOne();
@@ -31,6 +34,7 @@ export const ScheduledNotificationEditPage = () => {
           attachmentUrl: data.attachmentUrl || '',
         });
       }
+      loading.value = false;
     };
     fetch();
   }, [id]);
@@ -40,9 +44,8 @@ export const ScheduledNotificationEditPage = () => {
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
+    loading.value = true;
     const res = await SchedulerService.updateScheduledNotification(id, form);
-    setLoading(false);
 
     if (res.getStatus()) {
       alert('Notificación actualizada correctamente');
@@ -50,17 +53,18 @@ export const ScheduledNotificationEditPage = () => {
     } else {
       alert('Error al actualizar la notificación');
     }
+    loading.value = false;
   };
 
   return (
-    <>
+    <Section loading={loading.value}>
       <div className='flex justify-end gap-4 absolute top-14 right-2'>
         <Button
           name='save-scheduled'
           label='save'
           icon='022'
           onClick={handleSubmit}
-          disabled={loading}
+          disabled={loading.value}
         />
       </div>
       <div className='space-y-4 grid grid-cols-2'>
@@ -151,6 +155,6 @@ export const ScheduledNotificationEditPage = () => {
           }}
         />
       </div>
-    </>
+    </Section>
   );
 };

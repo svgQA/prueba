@@ -260,6 +260,7 @@ export const FormsPage: FunctionComponent = () => {
               highlightedId === String(row.id) ? 'animate-highlight' : ''
             }
             modules={modulesReport.Form}
+            range={true}
           />
         )}
         {(currentView.value === VIEW_NAME.INSPECT ||

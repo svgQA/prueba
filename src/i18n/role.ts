@@ -13,7 +13,7 @@ export const role_es = {
       description: 'Descripción',
       placeholderDescription: 'Ingrese la descripción del rol...',
       requiredFields: 'Todos los campos son requeridos',
-      requiredPermissions: 'Debe seleccionar al menos una permiso',
+      requiredPermissions: 'Debe seleccionar al menos un permiso',
     },
   },
 };

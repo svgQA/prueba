@@ -6,6 +6,7 @@ import '@aws-amplify/ui-react/styles.css';
 import './styles.css';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
+// import i18n from '@/i18n';
 
 interface CustomLoginContainerProps {
   children: React.ReactNode;
@@ -120,6 +121,7 @@ const components = {
 export const CustomLoginPage = () => {
   const [_, navigate] = useLocation();
   const { route } = useAuthenticator((context) => [context.route]);
+  // const { t } = useTranslation();
 
   useEffect(() => {
     const handleFormSubmit = (event: Event) => {
@@ -159,6 +161,24 @@ export const CustomLoginPage = () => {
             return { errors: [] };
           },
         }}
+        formFields={{
+          signIn: {
+            username: {
+              // label: t('h_email'),
+              // placeholder: t('p_email'),
+              label: 'Correo electrónico',
+              placeholder: 'Introduce tu correo electrónico...',
+            },
+            password: {
+              // label: t('h_password'),
+              // placeholder: t('p_enter_password'),
+              label: 'Contraseña',
+              placeholder: 'Introduce tu contraseña...',
+            },
+          },
+        }}
+        // i18nIsDynamicList={true}
+        // key={i18n.language}
       />
     </CustomLoginContainer>
   );
