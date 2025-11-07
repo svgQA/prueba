@@ -15,13 +15,14 @@ import { ITask } from '@/pages/settings/shifts/task/create/interface';
 import { useSignal } from '@preact/signals';
 import { useUserStore } from '@/store/slices';
 import { required } from '@/utils/utilities/validate';
+import { Section } from '@/components/common/section/section';
 
 export const TemplateCreateForm = () => {
   const [useForm, _setUseForm] = useState(false);
   const [useTasks, _setUseTasks] = useState(false);
   const [forms, setForms] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
-  const [loading, _setLoading] = useState(false);
+  const loading = useSignal<boolean>(false);
   const [_, navigate] = useLocation();
 
   const redirectToList = () => {
@@ -35,6 +36,7 @@ export const TemplateCreateForm = () => {
   };
 
   const handleSubmit = async (values: any) => {
+    loading.value = true;
     const rawTasks = Array.isArray(tasksResponse.value)
       ? tasksResponse.value
       : [];
@@ -65,21 +67,26 @@ export const TemplateCreateForm = () => {
 
     ToastManager.success('s_send_success');
     redirectToList();
+    loading.value = false;
   };
 
   const { selectedCompany } = useUserStore();
   useEffect(() => {
     const fetchForms = async () => {
+      loading.value = true;
       const res = await FormService.getSimpleList();
       if (res.getStatus()) setForms(res.getMany());
+      loading.value = false;
     };
     if (useForm && forms.length === 0 && selectedCompany) fetchForms();
   }, [useForm, selectedCompany]);
 
   useEffect(() => {
     const fetchTasks = async () => {
+      loading.value = true;
       const res = await TaskService.getSimpleList();
       if (res.getStatus()) setTasks(res.getMany());
+      loading.value = false;
     };
     if (useTasks && tasks.length === 0 && selectedCompany) fetchTasks();
   }, [useTasks, selectedCompany]);
@@ -90,7 +97,7 @@ export const TemplateCreateForm = () => {
   };
 
   return (
-    <>
+    <Section  loading={loading.value}>
       <Form
         onSubmit={handleSubmit}
         render={({ handleSubmit }) => (
@@ -107,7 +114,7 @@ export const TemplateCreateForm = () => {
                 label='save'
                 type='submit'
                 icon='022'
-                disabled={loading}
+                disabled={loading.value}
               />
             </div>
 
@@ -154,6 +161,6 @@ export const TemplateCreateForm = () => {
           </form>
         )}
       />
-    </>
+    </Section>
   );
 };

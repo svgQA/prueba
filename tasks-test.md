@@ -23,6 +23,8 @@
 - [x] `SelectCheck` (traducción de etiqueta, tamaños, colores activos y estados deshabilitados)
 - [x] `SmartSelector` (búsqueda, chips múltiples, select-all, botón auxiliar y validaciones)
 - [x] `UserSelector` (placeholder traducido y propagación completa de propiedades)
+- [x] `ProgressBar` (ancho dinámico y etiqueta de porcentaje)
+- [x] `Slider` (traducción de etiqueta, onChange, valores ocultos y estados deshabilitados)
 
 ## Pendiente
 - [ ] Revisión de componentes restantes sin cobertura específica

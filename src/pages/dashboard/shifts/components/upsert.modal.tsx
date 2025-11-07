@@ -24,6 +24,7 @@ import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { isStartAndEndInSchedules } from './validation';
 import { _onTaskAddWithId } from '@/pages/settings/shifts/task/create/utils';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
+import { Loading } from '@/components/common/loading/loading';
 
 interface ITaskFormProps {
   closed?: boolean;
@@ -56,6 +57,7 @@ export const TaskForm = ({
   const relatedShifts = useSignal<any[]>([]);
 
   const currentSchedule = useSignal<any>(null);
+  const loading = useSignal<boolean>(false);
 
   const handleOnClose = useCallback(() => {
     setTasksResponse([]);
@@ -149,9 +151,10 @@ export const TaskForm = ({
   }, [shiftId]);
 
   const getInitialData = async () => {
-    if (!shiftId) return;
+    loading.value = true;
+    if (!shiftId) return loading.value = false;
     const response = await ShiftService.get_shift(shiftId);
-    if (!response.getStatus()) return;
+    if (!response.getStatus()) return loading.value = false;
     const model = response.getOne();
 
     await onChangeService(model.service.id, true);
@@ -177,6 +180,7 @@ export const TaskForm = ({
       // keywords: model.keywords.map((data) => ({ value: data, label: data })),
     });
     onTaskAdd(model.task);
+    loading.value = false;
   };
 
   const onChangeShift = async (id: number, start: string, end: string) => {
@@ -271,6 +275,8 @@ export const TaskForm = ({
           </div>
         )}
 
+        {loading.value && <Loading />}
+
         {relatedShifts.value.length > 0 && (
           <div className='mb-2 rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light'>
             <ul className='flex flex-wrap gap-1 justify-center'>
@@ -324,6 +330,7 @@ export const TaskForm = ({
               schedules={schedulesOptions}
               cleanServiceSelected={cleanServiceSelected}
               onChangeSchedule={onChangeSchedule}
+              disabled={loading}
             />
           )}
         />
@@ -335,6 +342,7 @@ export const TaskForm = ({
           type='GENERAL'
           add
           selector
+          disabled={loading.value}
         />
       </div>
     </Modal>

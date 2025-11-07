@@ -50,7 +50,9 @@ export const getColumns = (
   },
   {
     id: 'company',
-    accessorKey: 'companies',
+    // accessorKey: 'companies',
+    accessorFn: (row) =>
+      row.companies.map((company) => company.company.name).join(', '),
     size: 180,
     header: 'h_company',
     meta: { headerAlign: 'center' },
@@ -182,9 +184,8 @@ export const getColumns = (
     header: 'h_action',
     size: 20,
     cell: (info) => {
-      const { id, userType, cognitoId } = info.row.original;
-      const isClient = userType === 'CLIENT' || cognitoId;
-
+      const { id, userType } = info.row.original;
+      const isClient = userType != 'EXTERNAL' && userType != 'CLIENT';
       const actions: IDropdownAction[] = [
         // ...(isClient
         //   ? []

@@ -34,10 +34,13 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
   const users = useSignal<IOption[]>([]);
+  const clients = useSignal<IOption[]>([]);
   const { go } = useNavigation();
   const { t } = useTranslation();
+  const loading = useSignal<boolean>(false);
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     let request;
     let message: string;
 
@@ -62,6 +65,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
       id: 'shift:contracts:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const getUsers = async () => {
@@ -71,8 +75,18 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
     users.value = request.getMany();
   };
 
+  const getClients = async (): Promise<void> => {
+    const response = await UserService.getClients();
+    if (!response.getStatus()) return;
+    clients.value = response.getMany().map((client) => ({
+      label: client.name,
+      value: client.id,
+    }));
+  };
+
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
     const userKeys = [
       'name',
       'description',
@@ -101,18 +115,19 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
       ...model,
       clientId,
     };
+    loading.value = false;
   };
 
   const { selectedCompany } = useUserStore();
   useEffect(() => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
-      Promise.all([getUsers(), setInitialValues()]);
+      Promise.all([getUsers(), getClients(), setInitialValues()]);
     }
   }, [selectedCompany, location]);
 
   return (
-    <Section className='pt-2'>
+    <Section className='pt-2' loading={loading.value}>
       <div>
         <Form
           onSubmit={onSubmit}
@@ -140,6 +155,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         placeholder='p_name'
                         label='l_name'
                         meta={meta}
+                        disabled={loading.value}
                       />
                     )}
                   </Field>
@@ -153,7 +169,8 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         placeholder='p_select_client'
                         label='l_client'
                         icon='252'
-                        options={users.value}
+                        options={clients.value}
+                        disabled={loading.value}
                       />
                       /*
                       <Select
@@ -186,6 +203,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         label='description'
                         type='text'
                         meta={meta}
+                        disabled={loading.value}
                       />
                     )}
                   </Field>
@@ -204,6 +222,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                           { value: 'MEDIUM', label: t('l_medium') },
                           { value: 'LOW', label: t('l_low') },
                         ]}
+                        disabled={loading.value}
                       />
                     )}
                   </Field>
@@ -221,6 +240,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                           { value: 'COMPLETED', label: t('COMPLETED') },
                           { value: 'PENDING', label: t('pending') },
                         ]}
+                        disabled={loading.value}
                       />
                     )}
                   </Field>
@@ -231,6 +251,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                     name='startDate'
                     label='l_date_start'
                     validate={required}
+                    disabled={loading.value}
                   />
                 </div>
                 <div class='col-span-1'>
@@ -238,6 +259,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                     name='endDate'
                     label='l_date_end'
                     validate={required}
+                    disabled={loading.value}
                   />
                 </div>
               </div>

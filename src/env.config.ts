@@ -8,6 +8,7 @@ export const {
   VITE_MESSAGE_SERVICE_URL: message_service_url,
   VITE_TENANT_SERVICE_URL: tenant_service_url,
   VITE_TENANT_HEADER: tenant_header,
+  VITE_AI_PQRS_SERVICE_URL: ai_pqrs_service_url,
 
   VITE_AWS_COGNITO_USER_POOL_ID: aws_cognito_user_pool,
   VITE_AWS_COGNITO_CLIENT_ID: aws_cognito_client_id,

@@ -8,6 +8,7 @@ interface Props {
   label?: string;
   clear?: boolean;
   lock?: boolean;
+  top?: boolean;
 }
 
 export const StatusButton = ({
@@ -18,9 +19,12 @@ export const StatusButton = ({
   label = 'save',
   clear = false,
   lock = false,
+  top = true,
 }: Props) => {
   return (
-    <div className='flex justify-end space-x-4 absolute top-14 right-2'>
+    <div
+      className={`flex justify-end space-x-4 absolute ${top ? 'top-14' : 'bottom-0'} right-2`}
+    >
       <div className='w-full flex-row flex justify-end items-center gap-4'>
         <Button
           id='btn-clean'

@@ -41,7 +41,9 @@ export const AccessPage: FunctionalComponent = () => {
 
   useEffect(() => {
     document.title = t('p_access');
-    fetchInitialData();
+    if (selectedCompany) {
+      fetchInitialData();
+    }
   }, [selectedPlace, selectedCompany]);
 
   const fetchInitialData = async () => {

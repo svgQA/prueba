@@ -1,10 +1,12 @@
-import { useRef, useCallback, useMemo } from 'preact/hooks';
+import { useRef, useCallback, useMemo, useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import { IKey, ISearchProps } from './interface';
 import { TargetedEvent } from 'preact/compat';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { ReportAutomatic } from '../report-automatic/report-automatic';
+import { FileControl } from '../file-control/file-control';
+import { RangeExport } from '../range-export/range-export';
 import { RangeDateFilter } from '../table/components/range/range';
 
 export const Search = ({
@@ -20,7 +22,8 @@ export const Search = ({
   disabled = false,
   modules,
   onRangeChange,
-  // range
+  fileName,
+  range,
 }: ISearchProps) => {
   const { t } = useTranslation();
   const inputState = useSignal<string>('');
@@ -31,6 +34,10 @@ export const Search = ({
   const isDropdownOpen = useSignal<boolean>(false);
   const isOpenRange = useSignal<boolean>(false);
   const columnSelected = useSignal<string>('createdAt');
+
+  useEffect(() => {
+    searchArray.value = value;
+  }, [value]);
 
   const handleChangeInput = useCallback(
     (event: TargetedEvent<HTMLInputElement, Event>) => {
@@ -348,6 +355,8 @@ export const Search = ({
       {/* {table && range && <>{range}</>} */}
       {(table || grouping) && group && <>{group}</>}
       {table && modules && <ReportAutomatic modules={modules} />}
+      {fileName && <FileControl fileName={fileName} />}
+      {range && modules && <RangeExport />}
 
       {keys.length > 0 && isDropdownOpen.value && (
         <div

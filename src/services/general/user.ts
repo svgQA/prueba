@@ -1,12 +1,16 @@
 import { type IOption } from '@/components/common/multi/interface';
 import { type IPagination } from '@/types';
 import { type IUserRequest, type IUserResponse } from '@/types/auth';
-import { type IUserAreaRequest } from '@/types/user/user.request';
+import {
+  IClientRequest,
+  type IUserAreaRequest,
+} from '@/types/user/user.request';
 
 import {
   type IDocumentTypeResponse,
   type IDeleteUserResponse,
   type IUserAreaResponse,
+  type IClientResponse,
 } from '@/types/user/user.response';
 import { BaseService } from '@/utils/network';
 
@@ -26,6 +30,14 @@ export class UserService extends BaseService {
       data,
     };
     return await super.make_request<IUserResponse>(this.name, model);
+  }
+
+  static async downloadFile() {
+    const model: IMakeRequest = {
+      url: ['user', 'download'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request(this.name, model);
   }
 
   static async profile() {
@@ -206,5 +218,53 @@ export class UserService extends BaseService {
       connectedUsers: number;
       disconnectedUsers: number;
     }>(this.name, model);
+  }
+
+  static async createClient(data: IClientRequest) {
+    const model: IMakeRequest = {
+      url: ['client'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getClients(params: IPagination = { page: 1, items: 1000 }) {
+    const model: IMakeRequest = {
+      url: ['client'],
+      params: params as any,
+    };
+    return await super.make_request<IClientResponse>(this.name, model);
+  }
+
+  static async getClient(id: string) {
+    const model: IMakeRequest = {
+      url: ['client', id],
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async updateClient(id: string, data: IClientRequest) {
+    const model: IMakeRequest = {
+      url: ['client', id],
+      method: REQUEST_METHODS.PUT,
+      data,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async deleteClient(id: number) {
+    const model: IMakeRequest = {
+      url: ['client', `${id}`],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<any>(this.name, model);
+  }
+
+  static async getAssociatedClients() {
+    const model: IMakeRequest = {
+      url: ['client', 'associated-clients'],
+    };
+    return await super.make_request<IClientResponse>(this.name, model);
   }
 }

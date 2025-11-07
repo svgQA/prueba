@@ -1,11 +1,11 @@
 export const panic_es = {
   panic: {
     cards: {
-      totalToday: 'panics Totales Hoy',
-      unresolved: 'panics sin resolver',
-      resolved: 'panics Resueltos',
+      totalToday: 'Panics Totales Hoy',
+      unresolved: 'Panics Sin Resolver',
+      resolved: 'Panics Resueltos',
     },
-    title: 'Alerta de pánico',
+    title: 'Alerta de Pánico',
     body: '¿Quieres solucionar esta alerta de pánico?',
     success: 'Alerta de pánico solucionada',
     title_novelty: 'Memorando',
@@ -18,10 +18,10 @@ export const panic_en = {
   panic: {
     cards: {
       totalToday: 'Total panics Today',
-      unresolved: 'Unresolved panics',
-      resolved: 'Resolved panics',
+      unresolved: 'Unresolved Panics',
+      resolved: 'Resolved Panics',
     },
-    title: 'Panic alert',
+    title: 'Panic Alert',
     body: 'Do you want to solve this panic alert?',
     success: 'Panic alert solved',
     title_novelty: 'Memo',

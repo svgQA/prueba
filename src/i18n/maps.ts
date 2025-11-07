@@ -1,6 +1,7 @@
 export const maps_es = {
   maps: {
     pointName: 'Punto',
+
     connect: {
       success: 'Ubicación establecida correctamente',
       error: 'Error al obtener la ubicación',
@@ -23,16 +24,19 @@ export const maps_es = {
 export const maps_en = {
   maps: {
     pointName: 'Point',
+
     connect: {
       success: 'Location set correctly',
       error: 'Error while getting location',
+      success_point: 'Point updated successfully',
       error_location: 'Location information is not available',
       error_timeout: 'The timeout occurred while getting your location',
       error_unknown: 'An error occurred while getting your location',
       error_permission:
-        'You have disabled location access. To use this feature, you must enable it again.',
+        'You must authorize location access to use this feature.',
       error_point: 'Please enter valid coordinates',
       error_radial_point: 'Point of place should not be moved',
+      error_name: 'Name is required',
       error_delete_point: 'Point not found to delete',
       success_point_remove: 'Point removed correctly',
       success_create_point: 'Point created correctly',

@@ -92,6 +92,7 @@ export const TaskFormCreate = ({
       _task = {
         ...value,
         hourStart: DateUtils.createDateFromHour(value.hourStart, true),
+        id: value.id || Date.now(),
       };
     } else {
       const find = tasks.value.find((task) => task.id == value.value);
@@ -104,7 +105,7 @@ export const TaskFormCreate = ({
 
     if (!_task) return;
     onSubmit({
-      id: _task?.value,
+      id: _task?.value || _task?.id,
       formId: _task.formId?.value ?? _task.formId,
       type: _task.type?.value ?? _task.type,
       attachmentType: _task.attachmentType?.value ?? _task.attachmentType,

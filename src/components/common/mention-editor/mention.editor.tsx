@@ -121,7 +121,7 @@ export const MentionEditor = ({
         span.style.background = '#E6F4EA';
         span.style.color = '#137333';
         span.setAttribute('data-type', 'date');
-        span.setAttribute('data-value', option.value);
+        span.setAttribute('data-value', String(option.value));
       } else {
         const mentionOption = option as MentionOption;
         span.textContent = `@${mentionOption.label}`;

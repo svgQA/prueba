@@ -1,5 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { login, appUrl } from './utils';
+import {
+  login,
+  appUrl,
+  ensureDashboardLoaded,
+  expectSummaryCard,
+  expectTableHeaders,
+  openSearchInput,
+  translationRegex,
+} from './utils';
 
 const credsProvided = !!(process.env.E2E_EMAIL && process.env.E2E_PASSWORD);
 
@@ -8,10 +16,32 @@ test.describe('Notifications', () => {
 
   test.beforeEach(async ({ page }) => {
     await login(page);
+    await ensureDashboardLoaded(page);
   });
 
-  test('shows notification history', async ({ page }) => {
-    await page.goto(`${appUrl}/dashboard/history`);
+  test('shows notification dashboard analytics and history table', async ({ page }) => {
+    await page.getByRole('link', { name: translationRegex('t_notification') }).click();
+    await expect(page).toHaveURL(/.*history/);
+    //await page.goto(`${appUrl}/dashboard/history`);
     await expect(page).toHaveTitle(/TY Historial|TY History/);
+
+    for (const summaryKey of [
+      'history.cards.notificationShifts',
+      'history.cards.openRate',
+      'history.cards.monthlyNotifications',
+    ]) {
+      await expectSummaryCard(page, summaryKey);
+    }
+
+    await expectTableHeaders(page, [
+      'h_title',
+      'h_description',
+      'h_type',
+      'h_sent_date',
+      //'h_recipient',
+      'h_open_rate',
+    ]);
+
+    await openSearchInput(page);
   });
 });

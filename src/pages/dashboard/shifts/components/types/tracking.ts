@@ -21,4 +21,28 @@ export type TrackingPayload = {
   };
   name: string;
   sub: string;
+  shift?: {
+    id: string;
+    start: string;
+    end: string;
+    status: string;
+    service?: {
+      id: number;
+      name: string;
+      place?: {
+        id: number;
+        name: string;
+        address: string;
+      };
+      round?: {
+        id: number;
+        name: string;
+        radius: number;
+      };
+      contract?: {
+        id: number;
+        name: string;
+      };
+    };
+  };
 };

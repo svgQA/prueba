@@ -14,7 +14,7 @@ export type TaskItemProps = {
   arrowIndent: number;
   taskHeight: number;
   isProgressChangeable: boolean;
-  isDateChangeable: boolean;
+  isDateChangeable?: boolean;
   isDelete: boolean;
   isSelected: boolean;
   rtl: boolean;
@@ -34,7 +34,7 @@ export const TaskItem = (props: TaskItemProps) => {
     isDelete,
     isSelected,
     onEventStart,
-    isDateChangeable,
+    // isDateChangeable,
   } = {
     ...props,
   };
@@ -109,7 +109,7 @@ export const TaskItem = (props: TaskItemProps) => {
       {taskItem.value}
       <g
         className='cursor-move'
-        transform={`translate(${task.x1},${task.y})`}
+        transform={`translate(${task.x1 + 1.5},${task.y + 1.5})`}
         onKeyDown={(e: KeyboardEvent) => {
           e.preventDefault();
           e.stopPropagation();
@@ -125,11 +125,13 @@ export const TaskItem = (props: TaskItemProps) => {
           e.stopPropagation();
           onEventStart('mouseenter', task, e);
         }}
+        /*
         onMouseDown={(e: MouseEvent) => {
           e.preventDefault();
           e.stopPropagation();
           isDateChangeable && onEventStart('move', task, e);
         }}
+        */
         onMouseLeave={(e: MouseEvent) => {
           e.preventDefault();
           e.stopPropagation();
@@ -143,7 +145,7 @@ export const TaskItem = (props: TaskItemProps) => {
       >
         <rect
           width={30}
-          height={task.height}
+          height={task.height - 3}
           ry={task.barCornerRadius}
           rx={task.barCornerRadius}
           fill={getProcessColor()}

@@ -49,8 +49,10 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
   const { navigateUpsert } = useNavigation();
   const { t } = useTranslation();
   const { id } = useParams(); // Obtiene el id de la URL
+  const loading = useSignal<boolean>(false);
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     // const { start, end } = model;
     let request;
     let message: string;
@@ -66,13 +68,15 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
       message = 's_updated_success';
     }
 
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
     ToastManager.success(message);
     navigateUpsert('/shifts/activity');
+    loading.value = false;
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
 
     const userKeys = [
       'start',
@@ -89,6 +93,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
     const request: any = await ShiftService.getActivityById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
     initialValues.value = model;
+    loading.value = false;
   };
 
   const getServices = async () => {
@@ -118,7 +123,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
   }, [selectedCompany, location]);
 
   return (
-    <Section>
+    <Section loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         mutators={{
@@ -157,6 +162,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                   name='start'
                   label={t('l_date_start')}
                   validate={required}
+                  disabled={loading.value}
                 />
               </div>
               <div class='col-span-1'>
@@ -164,6 +170,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                   name='end'
                   label={t('l_date_end')}
                   validate={required}
+                  disabled={loading.value}
                 />
                 {/*
                 <Field<string>
@@ -201,6 +208,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                         { value: 'CLOSED', label: t('CLOSED') },
                         { value: 'RESOLVED', label: t('RESOLVED') },
                       ]}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
@@ -218,6 +226,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                         { value: 'EXTERNAL', label: t('EXTERNAL') },
                         { value: 'INTERNAL', label: t('INTERNAL') },
                       ]}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
@@ -238,6 +247,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                         const id = parseInt(e.currentTarget.value);
                         input.onChange(id);
                       }}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
@@ -258,6 +268,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                         const id = parseInt(e.currentTarget.value);
                         input.onChange(id);
                       }}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
@@ -266,7 +277,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
               <div class='col-span-1'>
                 <Field<string> name='externalId'>
                   {({ input }) => (
-                    <Input {...input} type='text' label='l_external_code' />
+                    <Input {...input} type='text' label='l_external_code' disabled={loading.value} />
                   )}
                 </Field>
               </div>
@@ -283,6 +294,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                           }
                           placeholder={t('p_write_keyword')}
                           className='flex-grow p-2 border rounded-md'
+                          disabled={loading.value}
                         />
                         <button
                           type='button'
@@ -291,6 +303,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
                             fields.push(inputKeywords.value);
                             inputKeywords.value = '';
                           }}
+                          disabled={loading.value}
                         >
                           {t('add')}
                         </button>

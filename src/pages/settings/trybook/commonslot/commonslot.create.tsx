@@ -60,9 +60,10 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
 
   // Setear valores iniciales en modo edición
   const setInitialValues = useCallback(async () => {
-    if (!uuid) return;
+    loading.value = true;
+    if (!uuid) return loading.value = false;
     const req = await CommonSlotService.getSlot(uuid);
-    if (!req.getStatus()) return;
+    if (!req.getStatus()) return loading.value = false;
 
     const model = req.getOne();
     initialValues.value = {
@@ -80,6 +81,7 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
             : OCCUPIED_OPTIONS[0]
           : OCCUPIED_OPTIONS[0],
     };
+    loading.value = false;
   }, [uuid]);
 
   const getAll = useCallback(async () => {
@@ -94,6 +96,7 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
   }, [selectedCompany, getAll]);
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     const payload = {
       zoneId: Number(model.zoneId?.value),
       code: String(model.code || '').trim(),
@@ -107,7 +110,7 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
       ? await CommonSlotService.updateSlot(uuid, payload as any)
       : await CommonSlotService.createSlot(payload as any);
 
-    if (!req.getStatus()) return;
+    if (!req.getStatus()) return loading.value = false;
 
     ToastManager.success(uuid ? 's_updated_success' : 's_created_success');
     go({
@@ -116,10 +119,11 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
       id: 'trybook:common-slot:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}

@@ -11,6 +11,8 @@ import { getColumns } from './components/history.columns';
 import { useTranslation } from 'react-i18next';
 import { NotificationHistoryService } from '@/services';
 import { useUserStore } from '@/store/slices';
+import { IRowAction } from '@/components/common/table/interface';
+import { HistoryForm } from './components/history.upsert';
 
 export const HistoryNotificationsPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -20,6 +22,8 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
   const notificationsThisMonth = useSignal<number>(0);
   const loading = useSignal<boolean>(false);
   const { selectedCompany } = useUserStore();
+  const showUpsertModal = useSignal<boolean>(false);
+  const idUpsert = useSignal<string>();
 
   useEffect(() => {
     document.title = t('p_history');
@@ -69,12 +73,36 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
     }
   }; */
 
-  const onClickAction = (_: {
-    id: string;
-    type: string;
-    action: ROW_ACTIONS;
-  }) => {
-    // Aquí abres modales, haces navigations, etc.
+  const toggleUpsertModal = () => {
+    showUpsertModal.value = !showUpsertModal.value;
+  };
+
+  const clearUpsertModal = () => {
+    idUpsert.value = undefined;
+    showUpsertModal.value = false;
+  };
+
+  const handleUpsert = (id?: string) => {
+    clearUpsertModal();
+    if (id) idUpsert.value = id;
+    toggleUpsertModal();
+  };
+
+  const deleteUpsert = async (id: string) => {
+    const response = await NotificationHistoryService.deleteNotification(id);
+    if (!response.getStatus()) return;
+    await fetchAll();
+  };
+
+  const onClickAction = async (action: IRowAction) => {
+    switch (action.action) {
+      case ROW_ACTIONS.UPDATE:
+        handleUpsert(String(action.id));
+        break;
+      case ROW_ACTIONS.DELETE:
+        deleteUpsert(String(action.id));
+        break;
+    }
   };
 
   return (
@@ -117,6 +145,16 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
         showExpandableIcon={false}
         loading={loading.value}
       />
+      {showUpsertModal.value && (
+        <HistoryForm
+          closed={showUpsertModal.value}
+          onClose={() => {
+            toggleUpsertModal();
+            fetchAll();
+          }}
+          id={idUpsert.value}
+        />
+      )}
     </Section>
   );
 };

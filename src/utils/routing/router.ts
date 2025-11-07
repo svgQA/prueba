@@ -15,6 +15,7 @@ export const PAGES_LIST_ROUTER = {
     users: '/users',
     devices: '/devices',
     history: '/history',
+    pqrs: '/pqrs',
     setting: {
       base: '/setting',
       users: {
@@ -45,6 +46,18 @@ export const PAGES_LIST_ROUTER = {
           update: {
             base: '/update',
             to: '/users/roles/update/:id',
+          },
+        },
+        clients: {
+          base: '/clients',
+          to: '/users/clients',
+          create: {
+            base: '/create',
+            to: '/users/clients/create',
+          },
+          update: {
+            base: '/update',
+            to: '/users/clients/update/:id',
           },
         },
         groups: {
@@ -472,6 +485,33 @@ export const PAGES_LIST_ROUTER = {
           update: {
             base: '/update',
             to: '/trybook/news/update/:id',
+          },
+        },
+        accessBans: {
+          base: '/acessesban',
+          to: '/trybook/acessesban',
+          create: {
+            base: '/create',
+            to: '/trybook/acessesban/create',
+          },
+          update: {
+            base: '/update',
+            to: '/trybook/acessesban/update/:id',
+          },
+        },
+      },
+      pqrs: {
+        base: '/pqrs',
+        stages: {
+          base: '/stages',
+          to: '/pqrs/stages',
+          create: {
+            base: '/create',
+            to: '/pqrs/stages/create',
+          },
+          update: {
+            base: '/update',
+            to: '/pqrs/stages/update/:id',
           },
         },
       },

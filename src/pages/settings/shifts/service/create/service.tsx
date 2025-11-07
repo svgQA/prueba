@@ -50,8 +50,10 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   const tasks = useSignal([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams();
+  const loading = useSignal<boolean>(false);
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     model.tasks = tasksResponse.value;
     model.hasRound = !!model.roundId;
 
@@ -77,6 +79,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       id: 'shift:services:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const getProjects = async () => {
@@ -110,7 +113,8 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
 
     const userKeys = [
       'name',
@@ -172,6 +176,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
       contractId,
       schedules,
     };
+    loading.value = false;
   };
 
   const getAllData = async () => {
@@ -204,7 +209,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className=' p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'>
+    <Section className=' p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form
         mutators={{
           ...arrayMutators,
@@ -235,6 +240,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       label='l_name'
                       type='text'
                       meta={meta}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
@@ -251,6 +257,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       id='contractId'
                       icon='241'
                       options={projects.value}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
@@ -267,6 +274,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       id='placeId'
                       icon='252'
                       options={places.value}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
@@ -282,6 +290,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       id='roundId'
                       icon='252'
                       options={rounds.value}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
@@ -298,6 +307,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       label='description'
                       type='text'
                       meta={meta}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
@@ -325,6 +335,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                   type='GENERAL'
                   divisor={false}
                   className='rounded-lg p-4 bg-b-light-light dark:bg-b-dark-light w-full'
+                  disabled={loading.value}
                 />
               </div>
             </div>

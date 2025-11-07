@@ -13,11 +13,11 @@ type Props = {
 const getInfoContent = ({ type, data, onStatusChange }: Props) => {
   switch (type) {
     case 'expandable':
-      if (!getPermissionByModuleState('memo', 'service:history'))
+      if (!getPermissionByModuleState('memo', 'chat'))
         return <>{i18n.t('permissions.view_denied')}</>;
       return <SupervisorInfo memo={data} onStatusChange={onStatusChange} />;
     case 'history':
-      if (!getPermissionByModuleState('memo', 'user:history'))
+      if (!getPermissionByModuleState('memo', 'chat'))
         return <>{i18n.t('permissions.view_denied')}</>;
       return <HistoryInfo memo={data} />;
     default:

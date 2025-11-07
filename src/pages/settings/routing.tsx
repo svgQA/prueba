@@ -5,6 +5,7 @@ import { Suspense, lazy } from 'preact/compat';
 
 // import { FormInspectSettingPage } from './forms/inspect/inspect';
 // import { FormResponseSettingPage } from './forms/response/response';
+// import { FormAnalyticSettingPage } from './forms/analytic/analytic';
 import { UserCreateSettingPage } from './general/user/create/create';
 import { AnalyticAdminSettingPage } from './admin/analytic/analytic';
 import { DatabaseSettingPage } from './admin/database/database';
@@ -22,7 +23,6 @@ import { GroupSettingPage } from './security/groups/groups';
 import { PaymentHistorySettingPage } from './payment/history/history';
 import { PaymentSettingPage } from './payment/payment/payment';
 import { FormSettingPage } from './forms/form/form';
-// import { FormAnalyticSettingPage } from './forms/analytic/analytic';
 import { FormCreateSettingPage } from './forms/create/create';
 import { DevicesSettingPage } from './iot/devices/devices';
 import { IotSettingPage } from './iot/iot/iot';
@@ -65,7 +65,7 @@ import { ScheduledNotificationsPage } from './notifications/scheduleNotification
 import { TemplateNotificationPage } from './notifications/templateNotifications/templateNotifications';
 import { TemplateCreateForm } from './notifications/templateNotifications/create/create';
 import { AreaCreatePage } from '../dashboard/users/areas/area.create';
-import ScheduledNotificationForm from './notifications/scheduleNotifications/create/create';
+import { ScheduledNotificationForm } from './notifications/scheduleNotifications/create/create';
 import { TemplateNotificationEditPage } from './notifications/templateNotifications/update/update';
 import { ScheduledNotificationEditPage } from './notifications/scheduleNotifications/update/update';
 import { PredefinedSettingPage } from './memo/predefined/predefined';
@@ -74,8 +74,8 @@ import { GroupCreateSettingPage } from './security/groups/create/create';
 import { RolesUpsertPage } from '../dashboard/users/roles/roles.upsert';
 import { ResourceMemoSettingPage } from './memo/resource/resource';
 import { FormReportSettingPage } from './forms/report/report';
-import ReportUpsertForm from './forms/report/components/report.upsert.form';
-import { ResidenceCreatePage } from './trybook/residences/residence.create';
+import { ReportUpsertForm } from './forms/report/components/report.upsert.form';
+import { SiteCreatePage } from './trybook/residences/residence.create';
 import { TrybookResidencesPage } from './trybook/residences/trybook.residences';
 import { TrybookCommonZonesPage } from './trybook/commonzone/trybook.comonzone';
 import { CommonZoneCreatePage } from './trybook/commonzone/comonzone.create';
@@ -86,6 +86,12 @@ import { TrybookResourceZonesPage } from './trybook/resourcezone/trybook.resourc
 import { ResourceZoneCreatePage } from './trybook/resourcezone/resourcezone.create';
 import { NewsPage } from './trybook/news/news.page';
 import { NewsForm } from './trybook/news/components/news.upsert';
+import { AccessBansPage } from './trybook/acessesban/trybook.accessesban';
+import { AccessBanForm } from './trybook/acessesban/accessesban.create';
+import { ClientsSettingPage } from '../dashboard/users/clients/clients';
+import { ClientsCreateSettingPage } from '../dashboard/users/clients/create/create';
+import { StageForm } from './pqrs/stages/components/stages.upsert';
+import { StagePage } from './pqrs/stages/stage.page';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -483,6 +489,24 @@ export const RoutingContent = memo(() => {
           component={lazy(() => Promise.resolve({ default: RolesUpsertPage }))}
         />
         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.clients.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ClientsSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.clients.create.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ClientsCreateSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.clients.update.to}
+          component={lazy(() =>
+            Promise.resolve({ default: ClientsCreateSettingPage })
+          )}
+        />
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.users.areas.create.to}
           component={lazy(() => Promise.resolve({ default: AreaCreatePage }))}
         />
@@ -617,17 +641,13 @@ export const RoutingContent = memo(() => {
           path={
             PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.create.to
           }
-          component={lazy(() =>
-            Promise.resolve({ default: ResidenceCreatePage })
-          )}
+          component={lazy(() => Promise.resolve({ default: SiteCreatePage }))}
         />
         <Route
           path={
             PAGES_LIST_ROUTER.dashboard.setting.trybook.residences.update.to
           }
-          component={lazy(() =>
-            Promise.resolve({ default: ResidenceCreatePage })
-          )}
+          component={lazy(() => Promise.resolve({ default: SiteCreatePage }))}
         />
 
         {/* OPCIONES COMMON ZONE */}
@@ -714,6 +734,38 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.trybook.news.update.to}
           component={lazy(() => Promise.resolve({ default: NewsForm }))}
+        />
+
+        {/* OPCIONES ACCESS BANS */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.trybook.accessBans.to}
+          component={lazy(() => Promise.resolve({ default: AccessBansPage }))}
+        />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.accessBans.create.to
+          }
+          component={lazy(() => Promise.resolve({ default: AccessBanForm }))}
+        />
+        <Route
+          path={
+            PAGES_LIST_ROUTER.dashboard.setting.trybook.accessBans.update.to
+          }
+          component={lazy(() => Promise.resolve({ default: AccessBanForm }))}
+        />
+
+        {/* OPTIONS STAGES */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.to}
+          component={lazy(() => Promise.resolve({ default: StagePage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.create.to}
+          component={lazy(() => Promise.resolve({ default: StageForm }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.update.to}
+          component={lazy(() => Promise.resolve({ default: StageForm }))}
         />
       </Suspense>
     </Router>

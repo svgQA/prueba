@@ -35,7 +35,8 @@ export class DateUtils {
    * @returns ISO string en UTC: 'YYYY-MM-DDTHH:mm:00.000Z'
    */
   static createDateFromHour(
-    hourString: string = '1970-01-01T24:00:00.000Z',
+    //hourString: string = '1970-01-01T24:00:00.000Z',
+    hourString: string = dayjs().tz(DateUtils.timeZone).toISOString(),
     back = false
   ): string {
     if (!hourString) return '23:59';
@@ -59,7 +60,8 @@ export class DateUtils {
   }
 
   static createDateFromHourBackend(
-    hourString: string = '1970-01-01T24:00:00.000Z',
+    // hourString: string = '1970-01-01T24:00:00.000Z',
+    hourString: string = dayjs().tz(DateUtils.timeZone).toISOString(),
     tz: string = dayjs.tz.guess() // si tu backend siempre manda TZ fija puedes ponerla aquí
   ): string {
     if (!hourString) return dayjs.utc().toISOString();

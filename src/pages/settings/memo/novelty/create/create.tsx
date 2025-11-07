@@ -18,6 +18,7 @@ import {
   SmartSelector,
 } from '@/components/common/smart-selector/smart-select';
 import { Checkbox } from '@/components/common/checkbox/checkbox';
+import { Section } from '@/components/common/section/section';
 interface FormData {
   name: string;
   description: string;
@@ -36,8 +37,10 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
   const priorities = useSignal<IOption[]>(selectPriority);
+  const loading = useSignal<boolean>(false);
 
   const onSubmit = async (model: FormData) => {
+    loading.value = true;
     let request;
     let message: string;
 
@@ -51,7 +54,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
       message = 's_created_success';
     }
 
-    if (!request.getStatus()) return;
+    if (!request.getStatus()) return loading.value = false;
     ToastManager.success(message);
     go({
       to: '/memo/novelty',
@@ -59,10 +62,12 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
       id: 'memo:novelty:state',
       base: 'setting',
     });
+    loading.value = false;
   };
 
   const setInitialValues = async () => {
-    if (!id) return;
+    loading.value = true;
+    if (!id) return loading.value = false;
 
     const userKeys = [
       'name',
@@ -79,6 +84,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
       ...model,
       priority: priority,
     };
+    loading.value = false;
   };
 
   useEffect(() => {
@@ -86,7 +92,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <>
+    <Section loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -113,6 +119,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
               form='form-place-create'
               label={id ? 'edit' : 'save'}
             />
+
             {/** FORMULARIO PRINCIPAL */}
             <div className='grid grid-cols-4 gap-3'>
               <div class='col-span-2'>
@@ -182,6 +189,6 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
           </form>
         )}
       />
-    </>
+    </Section>
   );
 };

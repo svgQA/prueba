@@ -100,7 +100,7 @@ export const FormElement = ({
           ToastManager.error('s_structure_error');
           return;
         }
-        ToastManager.success('s_estructure_success');
+        ToastManager.success('s_structure_success');
         updateForm(question.id, page, section)('options', data.slice(0, 10));
       })
       .catch(() => {
@@ -322,7 +322,7 @@ export const FormElement = ({
               )}
               {question.type === ELEMENT_TYPE.DROPDOWN && (
                 <div className='w-full flex flex-row items-center h-20'>
-                  <div class='w-full mr-4'>
+                  <div className='w-11/12 h-20'>
                     {question.isUrl ? (
                       <Input
                         label='l_list_url'
@@ -331,6 +331,7 @@ export const FormElement = ({
                         onChange={handleInputChange}
                         id={`se-form-${question.id}-element-options-url`}
                         icon='104'
+                        buttonIcon='210'
                         onClick={onTestUrl}
                         value={question.url}
                         button
@@ -354,7 +355,7 @@ export const FormElement = ({
                       />
                     )}
                   </div>
-                  <div className='pt-5'>
+                  <div className='h-20 flex w-1/12 justify-center'>
                     <Switch
                       label='URL'
                       value={question.isUrl}

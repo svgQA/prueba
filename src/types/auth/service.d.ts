@@ -21,6 +21,7 @@ export interface IUserRequest extends IUser {
   readonly cardType?: CARD_ID_TYPE;
   readonly roles?: IOption[];
   readonly places?: IOption[];
+  readonly clients?: IOption[];
   extraData?: IExtraData;
 }
 export interface IExtraData {
@@ -47,6 +48,13 @@ export interface IRelationRole {
   };
 }
 
+export interface IRelationClient {
+  client: {
+    id: number;
+    name: string;
+  };
+}
+
 export interface IUserResponse extends IUserRequest {
   id: number;
   playerId?: string;
@@ -58,6 +66,7 @@ export interface IUserResponse extends IUserRequest {
   companies: IRelationCompany[];
   roles: IRelationRole[];
   userPlaces: IRelationPlace[];
+  clients: IRelationClient[];
 }
 
 export interface IJwtPayload {

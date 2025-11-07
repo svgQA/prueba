@@ -183,6 +183,7 @@ export const message_es = {
   i_showAlert_msg_resource:
     '¿Estás seguro de querer eliminar la zona de recurso?',
   i_showAlert_title_resource: 'Eliminar zona de recurso',
+  s_structure_success: 'Estructura acorde a lo esperado',
 };
 
 export const message_en = {
@@ -195,7 +196,7 @@ export const message_en = {
     'Number of times each point in the round must be scanned. If there are 4 points and the frequency is 3, all 4 points must be scanned 3 times.',
   i_title: 'Transform Operations Management With Tryvoo',
   i_subtitle:
-    'Optimize the management of activities, resources and assets, even without',
+    'Optimize the management of activities, resources and assets, even without connectivity for your business.',
   i_demoButton: 'Schedule a Free Demo',
   i_pros_title: 'Why Tryvoo?',
   i_pros_subtitle: 'Simplify. Optimize. Grow.',
@@ -203,10 +204,10 @@ export const message_en = {
     '60% of companies in LATAM are looking for tools that improve traceability and reduce operational costs',
   i_pros_description:
     'Tryvoo is leading this transformation, thanks to the complete digitization and automation of field activities, delivering intuitive solutions, accessible even without connection.',
-  i_management_title: 'Fácil Gestión y Trazabilidad:',
+  i_management_title: 'Easy Management and Traceability:',
   i_management_subtitle:
-    '"Control total sobre las operaciones en campo, con visibilidad y seguimiento en tiempo real."',
-  i_ai_title: 'Asistencia con IA:',
+    '"Total control over field operations, with real-time visibility and tracking."',
+  i_ai_title: 'AI Assistance:',
   i_ai_subtitle:
     '"Receive automatic recommendations and support for your operations directly in the field."',
   i_offline_title: 'Offline Synchronization:',
@@ -216,7 +217,7 @@ export const message_en = {
   i_scalability_subtitle:
     '"Adaptable to any company size or industry, from surveillance to logistics."',
   i_button: 'Discover all possibilities',
-  i_carousel_viewDetails: 'View details',
+  i_carousel_viewDetails: 'View Details',
   i_carousel_monitoring_title: 'Real-Time Monitoring',
   i_carousel_monitoring_subtitle:
     'Visualize task progress and asset status with automatic updates based on real-time data.',
@@ -249,9 +250,9 @@ export const message_en = {
   i_footer_optimizeMessage:
     'To help you start optimizing your business with agile tools that operate in any space and place',
   i_footer_startButton: 'Start now and enjoy',
-  i_services_title: 'Featured Services',
-  i_services_subtitle: 'Everything you need in one platform',
-  i_services_button: 'View details',
+  i_services_title: 'Our Services',
+  i_services_subtitle: 'Solutions for every need',
+  i_services_button: 'View More Services',
   i_services_monitoring_title: 'Real-Time Monitoring',
   i_services_monitoring_subtitle:
     'Visualize task progress and asset status with automatic updates based on real-time data.',
@@ -363,5 +364,7 @@ export const message_en = {
   i_showAlert_msg: 'Are you sure you want to delete the ticket?',
   i_showAlert_title: 'Delete ticket',
   i_showAlert_msg_zone: 'Are you sure you want to delete the common zone?',
+  i_showAlert_msg_resource: 'Are you sure you want to delete the resource zone?',
   i_showAlert_title_zone: 'Delete common zone',
+  s_structure_success: 'Correct structure format',
 };

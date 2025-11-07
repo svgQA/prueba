@@ -35,10 +35,11 @@ import {
  * COMMENTS
  ** ***********************************************************************/
 import { SettingsModal } from '../settings/settings';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
 import { HistoryNotificationsPage } from './history/history.page';
+import { PqrsPage } from './pqrs/pqrs.page';
 import { WebSocketProvider } from '@/utils/socket';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
@@ -55,12 +56,14 @@ import { setAllPermissions } from '@/store/signals/access/permission';
 import { useSignal } from '@preact/signals';
 import PanicModal from '@/components/common/panic/components/panic.modal';
 import { IPanic } from '@/components/common/panic/utils/interface';
+import { UserService } from '@/services/general/user';
 
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import { Modal } from '@/components/common/modal/modal';
 import { Field, Form } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
 import { FaroManager } from '@/utils/telemetry';
+import { IClientResponse } from '@/types/user/user.response';
 
 /** ***********************************************************************
  * COMPONENT
@@ -91,6 +94,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setPlaces,
       getPlaceId,
     } = useUserStore();
+
+    const clients = useSignal<IClientResponse[]>([]);
 
     const isModalOpen = useSignal<boolean>(false);
     const modalPanic = useSignal<IPanic | undefined>(undefined);
@@ -158,6 +163,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         }
       }
       getPlaces();
+      getClients();
     };
 
     const getPlaces = async () => {
@@ -178,6 +184,13 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           setSelectedPlace(Number(firstPlace));
         }
       }
+    };
+
+    const getClients = async () => {
+      const request = await UserService.getAssociatedClients();
+
+      if (!request.getStatus()) return;
+      clients.value = request.getMany();
     };
 
     const handleCompanyChange = (value: string | number) => {
@@ -564,6 +577,16 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 icon='103'
                 borderless
               />
+              <CustomSwitcher
+                options={clients.value.map((client) => ({
+                  label: client.name,
+                  value: client.id,
+                }))}
+                value={clients.value[0]?.id}
+                onChange={() => {}}
+                icon='023'
+                borderless
+              />
               <div className='flex flex-row gap-4 items-center justify-center'>
                 <ThemeButton unpadded />
                 <Notifications icon='317' iconSize='xsm' />
@@ -662,13 +685,21 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                     })
                   )}
                 />
+                <Route
+                  path={PAGES_LIST.PQRS}
+                  component={lazy(() =>
+                    Promise.resolve({
+                      default: PqrsPage,
+                    })
+                  )}
+                />
               </Suspense>
             </Router>
           </WebSocketProvider>
         </div>
 
         <SettingsModal />
-        <ToastContainer />
+       
         {/*<IconsModal />*/}
         {openModalTenant.value && modalTenant}
       </section>
