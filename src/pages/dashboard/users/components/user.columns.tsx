@@ -184,7 +184,7 @@ export const getColumns = (
     header: 'h_action',
     size: 20,
     cell: (info) => {
-      const { id, userType } = info.row.original;
+      const { id, userType, cognitoId } = info.row.original;
       const isClient = userType != 'EXTERNAL' && userType != 'CLIENT';
       const actions: IDropdownAction[] = [
         // ...(isClient
@@ -202,7 +202,9 @@ export const getColumns = (
         //         },
         //       },
         //     ]),
-        ...(isClient && getPermissionByModuleState('user', 'profile')
+        ...(isClient &&
+        getPermissionByModuleState('user', 'profile') &&
+        !cognitoId
           ? [
               {
                 label: 'profile',
