@@ -44,7 +44,9 @@ export const CorrespondencePage: FunctionalComponent = () => {
 
   useEffect(() => {
     document.title = t('p_correspondence');
-    fetchInitialData();
+    if (selectedCompany) {
+      fetchInitialData();
+    }
   }, [selectedPlace, selectedCompany]);
 
   const fetchInitialData = async () => {
@@ -194,6 +196,11 @@ export const CorrespondencePage: FunctionalComponent = () => {
           // expandable={(row: ICorrespondence) => (
           //   <ExpandableCorrespondence row={row} />
           // )}
+          visibility={{
+            contract: false,
+            client: false,
+            service: false,
+          }}
           modules={modulesReport.Correspondence}
         />
       </div>

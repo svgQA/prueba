@@ -192,6 +192,9 @@ export const AccessPage: FunctionalComponent = () => {
           expandable={(row: IAccess) => <ExpandableAccess row={row} />}
           visibility={{
             id: false,
+            service: false,
+            contract: false,
+            client: false,
             updatedAt: false,
           }}
           modules={modulesReport.Access}

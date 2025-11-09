@@ -12,7 +12,7 @@ export class AccessesService extends BaseService {
 
   static async get_all(params: IPagination = { page: 1, items: 400 }) {
     const model: IMakeRequest = {
-      url: ['Accesses'],
+      url: ['accesses'],
       params: params as any,
     };
     return await super.make_request<any>(this.name, model);
@@ -20,7 +20,7 @@ export class AccessesService extends BaseService {
 
   static async get_by_id(id: string) {
     const model: IMakeRequest = {
-      url: ['Accesses', id],
+      url: ['accesses', id],
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<any>(this.name, model);
@@ -28,7 +28,7 @@ export class AccessesService extends BaseService {
 
   static async createAccesses(data: ICAccesses) {
     const model: IMakeRequest = {
-      url: ['Accesses'],
+      url: ['accesses'],
       method: REQUEST_METHODS.POST,
       data: data,
     };
@@ -37,7 +37,7 @@ export class AccessesService extends BaseService {
 
   static async updateAccesses(id: string, data: any) {
     const model: IMakeRequest = {
-      url: ['Accesses', id],
+      url: ['accesses', id],
       method: REQUEST_METHODS.PUT,
       data: data,
     };
@@ -46,7 +46,7 @@ export class AccessesService extends BaseService {
 
   static async deleteAccesses(id: string) {
     const model: IMakeRequest = {
-      url: ['Accesses', id],
+      url: ['accesses', id],
       method: REQUEST_METHODS.DELETE,
     };
     return await super.make_request(this.name, model);
@@ -58,7 +58,7 @@ export class AccessesService extends BaseService {
    */
   static async getAccessesSummary() {
     const model: IMakeRequest = {
-      url: ['Accesses/summary/stats'],
+      url: ['accesses/summary/stats'],
       method: REQUEST_METHODS.GET,
     };
 
