@@ -1,4 +1,4 @@
-import { useRef, useCallback, useMemo, useEffect } from 'preact/hooks';
+import { useRef, useCallback, useMemo } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import { IKey, ISearchProps } from './interface';
 import { TargetedEvent } from 'preact/compat';
@@ -34,10 +34,10 @@ export const Search = ({
   const isDropdownOpen = useSignal<boolean>(false);
   const isOpenRange = useSignal<boolean>(false);
   const columnSelected = useSignal<string>('createdAt');
-
-  useEffect(() => {
+  //TODO: Verificar si es necesario este useEffect, porque cuando se cambia el valor se borra del buscador automáticamente
+ /* useEffect(() => {
     searchArray.value = value;
-  }, [value]);
+  }, [value]);*/
 
   const handleChangeInput = useCallback(
     (event: TargetedEvent<HTMLInputElement, Event>) => {
@@ -370,6 +370,7 @@ export const Search = ({
           {keysList}
         </div>
       )}
+
 
       <RangeDateFilter
         isOpen={isOpenRange}
