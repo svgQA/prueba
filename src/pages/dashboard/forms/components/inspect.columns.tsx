@@ -38,6 +38,42 @@ export const getColumns = (
     },
   },
   {
+    id: 'service',
+    accessorKey: 'extraData.serviceName',
+    size: 180,
+    header: 'h_service',
+    enableGrouping: true,
+    meta: { headerAlign: 'center' },
+    cell: (info) => {
+      const service = String(info.getValue());
+      return <TextEllipsis text={service} maxWidth='250px' />;
+    },
+  },
+  {
+    id: 'contract',
+    accessorKey: 'extraData.contractName',
+    size: 120,
+    header: 'h_contract',
+    enableGrouping: true,
+    meta: { headerAlign: 'center' },
+    cell: (info) => {
+      const contract = String(info.getValue());
+      return <TextEllipsis text={contract} maxWidth='250px' />;
+    },
+  },
+  {
+    id: 'client',
+    accessorKey: 'extraData.clientName',
+    size: 120,
+    header: 'h_client',
+    enableGrouping: true,
+    meta: { headerAlign: 'center' },
+    cell: (info) => {
+      const client = String(info.getValue());
+      return <TextEllipsis text={client} maxWidth='250px' />;
+    },
+  },
+  {
     accessorKey: 'title',
     id: 'title',
     header: 'h_title',

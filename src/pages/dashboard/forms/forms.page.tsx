@@ -259,6 +259,11 @@ export const FormsPage: FunctionComponent = () => {
             rowClassName={(row: IResponseResponse) =>
               highlightedId === String(row.id) ? 'animate-highlight' : ''
             }
+            visibility={{
+              contract: false,
+              service: false,
+              client: false,
+            }}
             modules={modulesReport.Form}
             range={true}
           />
