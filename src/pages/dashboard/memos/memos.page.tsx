@@ -421,6 +421,9 @@ export const MemosPage: FunctionComponent = () => {
               noveltyDate: false,
               contact: false,
               updatedAt: false,
+              service: false,
+              contract: false,
+              client: false,
             }}
             searchable={{
               history: false,

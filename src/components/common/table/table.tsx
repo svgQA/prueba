@@ -480,7 +480,12 @@ export const Table = <T,>({
                           })()}
                           <span className='ml-2'>
                             {row.groupingColumnId
-                              ? `${row.getValue(row.groupingColumnId)} (${row.subRows.length})`
+                              ? `${(() => {
+                                  const value = row.getValue(row.groupingColumnId);
+                                  return value === undefined || value === null || value === '' 
+                                    ? t('l_no_has') 
+                                    : String(value);
+                                })()} (${row.subRows.length})`
                               : `(${row.subRows.length})`}
                           </span>
                         </span>
