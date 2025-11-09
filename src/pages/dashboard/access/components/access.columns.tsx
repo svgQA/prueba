@@ -8,6 +8,7 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { IAccess } from '@/types/access/accesses';
 import i18n from '@/i18n';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -21,6 +22,42 @@ export const getColumns = (
     accessorKey: 'id',
     size: 60,
     header: 'h_id',
+  },
+  {
+    id: 'service',
+    accessorKey: 'serviceName',
+    size: 180,
+    header: 'h_service',
+    enableGrouping: true,
+    meta: { headerAlign: 'center' },
+    cell: (info) => {
+      const service = String(info.getValue());
+      return <TextEllipsis text={service} maxWidth='250px' />;
+    },
+  },
+  {
+    id: 'contract',
+    accessorKey: 'contractName',
+    size: 120,
+    header: 'h_contract',
+    enableGrouping: true,
+    meta: { headerAlign: 'center' },
+    cell: (info) => {
+      const contract = String(info.getValue());
+      return <TextEllipsis text={contract} maxWidth='250px' />;
+    },
+  },
+  {
+    id: 'client',
+    accessorKey: 'clientName',
+    size: 120,
+    header: 'h_client',
+    enableGrouping: true,
+    meta: { headerAlign: 'center' },
+    cell: (info) => {
+      const client = String(info.getValue());
+      return <TextEllipsis text={client} maxWidth='250px' />;
+    },
   },
   {
     id: 'name',

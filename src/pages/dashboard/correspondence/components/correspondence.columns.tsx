@@ -10,6 +10,7 @@ import {
 import { ICorrespondence } from '@/types/access';
 import { Badge } from '@/components/common/badge/badge';
 import { RelativeTime } from '@/components/common/relative/relative';
+import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 
 /**
  * Columnas para la tabla de Correspondencia.
@@ -28,6 +29,42 @@ export const getColumns = (
     accessorKey: 'sender',
     size: 120,
     header: 'h_sender',
+  },
+  {
+    id: 'service',
+    accessorKey: 'serviceName',
+    size: 180,
+    header: 'h_service',
+    enableGrouping: true,
+    meta: { headerAlign: 'center' },
+    cell: (info) => {
+      const service = String(info.getValue());
+      return <TextEllipsis text={service} maxWidth='250px' />;
+    },
+  },
+  {
+    id: 'contract',
+    accessorKey: 'contractName',
+    size: 120,
+    header: 'h_contract',
+    enableGrouping: true,
+    meta: { headerAlign: 'center' },
+    cell: (info) => {
+      const contract = String(info.getValue());
+      return <TextEllipsis text={contract} maxWidth='250px' />;
+    },
+  },
+  {
+    id: 'client',
+    accessorKey: 'clientName',
+    size: 120,
+    header: 'h_client',
+    enableGrouping: true,
+    meta: { headerAlign: 'center' },
+    cell: (info) => {
+      const client = String(info.getValue());
+      return <TextEllipsis text={client} maxWidth='250px' />;
+    },
   },
   {
     id: 'owner',
