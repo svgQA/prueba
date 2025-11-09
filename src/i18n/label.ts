@@ -178,6 +178,7 @@ export const label_es = {
   l_maxDuration: 'Duración máxima (min)',
   l_buffer: 'Tiempo de limpieza (min)',
   l_icon: 'Ícono',
+  l_filter: 'Filtrar por',
 };
 
 export const label_en = {
@@ -358,4 +359,5 @@ export const label_en = {
   l_maxDuration: 'Maximum duration (min)',
   l_buffer: 'Cleaning time (min)',
   l_icon: 'Icon',
+  l_filter: 'Filter by',
 };

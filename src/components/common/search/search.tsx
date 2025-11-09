@@ -365,7 +365,7 @@ export const Search = ({
           onClick={handleClickKeys}
         >
           <h6 className='px-3 py-1 text-xs text-gray-500 dark:text-gray-400 font-medium uppercase'>
-            {t('common.search.filterBy')}
+            {t('l_filter')}
           </h6>
           {keysList}
         </div>
