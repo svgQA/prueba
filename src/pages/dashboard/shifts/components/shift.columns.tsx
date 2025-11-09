@@ -67,6 +67,7 @@ export const getColumns = (
       size: 120,
       header: 'h_contract',
       clickable: true,
+      enableGrouping: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const contract = String(info.getValue());

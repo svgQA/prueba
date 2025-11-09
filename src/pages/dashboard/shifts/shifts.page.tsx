@@ -719,7 +719,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               report: false,
               shift: false,
               round: false,
-              client: false,
+              task: false,
               duration: false,
             }}
             modules={modulesReport.Shift}

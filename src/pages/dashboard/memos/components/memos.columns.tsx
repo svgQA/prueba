@@ -47,6 +47,45 @@ export const getColumns = (
       },
     },
     {
+      id: 'service',
+      accessorKey: 'relatedShift.service.name',
+      size: 180,
+      header: 'h_service',
+      clickable: true,
+      enableGrouping: true,
+      meta: { headerAlign: 'center' },
+      cell: (info) => {
+        const service = String(info.getValue());
+        return <TextEllipsis text={service} maxWidth='250px' />;
+      },
+    },
+    {
+      id: 'contract',
+      accessorKey: 'relatedShift.service.contract.name',
+      size: 120,
+      header: 'h_contract',
+      clickable: true,
+      enableGrouping: true,
+      meta: { headerAlign: 'center' },
+      cell: (info) => {
+        const contract = String(info.getValue());
+        return <TextEllipsis text={contract} maxWidth='250px' />;
+      },
+    },
+    {
+      id: 'client',
+      accessorKey: 'relatedShift.service.contract.client.name',
+      size: 120,
+      clickable: true,
+      header: 'h_client',
+      enableGrouping: true,
+      meta: { headerAlign: 'center' },
+      cell: (info) => {
+        const client = String(info.getValue());
+        return <TextEllipsis text={client} maxWidth='250px' />;
+      },
+    },
+    {
       id: 'noveltyType',
       accessorFn: (row) => `${row?.novelty?.name}`,
       // accessorKey: 'novelty.name',
