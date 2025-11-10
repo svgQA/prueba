@@ -20,6 +20,7 @@ import { USER_TYPE } from '@/types/user/user.enum';
 import { Select } from '@/components/common/select/select';
 import { type TargetedEvent } from 'preact/compat';
 import { Section } from '@/components/common/section/section';
+import { useUserStore } from '@/store/slices';
 
 type FormData = {
   name: string;
@@ -62,10 +63,13 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
   const searchTerm = useSignal<string>('');
   const selectedUserId = useSignal<string | number>('');
   const clientEmail = useSignal<string>('');
+  const { selectedCompany } = useUserStore();
 
   useEffect(() => {
-    getUsers();
-  }, []);
+    if (selectedCompany) {
+      getUsers();
+    }
+  }, [selectedCompany]);
 
   const onSubmit = async (model: FormData) => {
     loading.value = true;
