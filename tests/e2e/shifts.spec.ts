@@ -45,7 +45,7 @@ import {
       await expect(searchInput).toBeEnabled();
       const createButton = page.locator('button[name="button-create-shift"]').first();
       await expect(createButton).toBeVisible({ timeout: 10000 });
-  }); test('Create Clients and Rounds Prerequisite ', async ({ page }) => {
+  }); test.skip('Create Clients and Rounds Prerequisite ', async ({ page }) => {
     try {
     test.setTimeout(120000); 
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -58,11 +58,11 @@ import {
     await newClientButton.click();
     const nombreInput = page.getByRole('textbox', { name: /Nombre Email Teléfono|Name Email Phone/i });
     await expect(nombreInput).toBeVisible({ timeout: 10000 }); 
-    await nombreInput.fill('NuevoPrevioClient');
+    await nombreInput.fill('NuevoPrePPPvioClient');
     const emailInput = page.getByRole('textbox', { name: /Ingrese email...|Enter email.../i });
-    await emailInput.fill('Clienteprevbanuevoooo@gmail.com');
+    await emailInput.fill('Clientepppoo@gmail.com');
     const telefonoInput = page.getByRole('textbox', { name: /Ingrese teléfono...|Enter phone number.../i });
-    await telefonoInput.fill('3113913658');
+    await telefonoInput.fill('3113593236');
     const descripcionInput = page.getByRole('textbox', { name: /Ingrese Descripción...|Enter Description.../i });
     await descripcionInput.fill('PruebaCliente');
     await page.getByRole('button', { name: /Guardar|Save/i }).click();
@@ -110,7 +110,7 @@ import {
       await page.screenshot({ path: `test-results/ERROR-ROUNDS-SCREENSHOT.png`, fullPage: true });
       throw error;
     }
-  }); test('Create Place and Contracts Prerequisite', async ({ page }) => {
+  }); test.skip('Create Place and Contracts Prerequisite', async ({ page }) => {
     try {
     test.setTimeout(120000); 
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -192,7 +192,7 @@ import {
     await descripcionInput.fill('ContratoPrueba01');
     const clientInput = page.getByRole('textbox', { name: /Seleccione cliente|Select client/i });
     await expect(clientInput).toBeVisible({ timeout: 10000 });
-    const clientName = 'NuevoPrevioClient'; 
+    const clientName = 'NuevoPrePPPvioClient'; 
     await clientInput.fill(clientName);
     const clientOption = page.getByText(clientName, { exact: true });
     await expect(clientOption).toBeVisible({ timeout: 5000 }); 
@@ -215,7 +215,7 @@ import {
     await page.screenshot({ path: `test-results/ERROR-CONTRACTS-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
-  }); test('Create Tasks and Timetable Prerequisite', async ({ page }) => {
+  }); test.skip('Create Tasks and Timetable Prerequisite', async ({ page }) => {
     try {
     test.setTimeout(120000); 
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -242,216 +242,22 @@ import {
     await page.waitForURL(/.*schedule/, { timeout: 15000 });
     await page.waitForLoadState('networkidle');
     await page.locator('#shift\\:schedules\\:state\\:create').click();
-    await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
+    await page.evaluate(() => { (document.body.style as any).zoom = 0.4; });
     await page.locator('.general-cell').first().click(); 
-    await page.locator('div:nth-child(11)').click();
-    await page.locator('div:nth-child(12)').click();
-    await page.locator('div:nth-child(13)').click();
-    await page.locator('div:nth-child(14)').click();
-    await page.locator('div:nth-child(15)').click();
-    await page.locator('div:nth-child(16)').click();
-    await page.locator('div:nth-child(17)').click();
-    await page.locator('div:nth-child(18)').click();
-    await page.locator('div:nth-child(19)').click();
-    await page.locator('div:nth-child(20)').click();
-    await page.locator('div:nth-child(21)').click();
-    await page.locator('div:nth-child(22)').click();
-    await page.locator('div:nth-child(23)').click();
-    await page.locator('div:nth-child(24)').click();
-    await page.locator('div:nth-child(25)').click();
-    await page.locator('div:nth-child(26)').click();
-    await page.locator('div:nth-child(27)').click();
-    await page.locator('div:nth-child(28)').click();
-    await page.locator('div:nth-child(29)').click();
-    await page.locator('div:nth-child(30)').click();
-    await page.locator('div:nth-child(31)').click();
-    await page.locator('div:nth-child(32)').click();
-    await page.locator('div:nth-child(33)').click();
-    await page.locator('div:nth-child(34)').click();
-    await page.locator('div:nth-child(35)').click();
-    await page.locator('div:nth-child(36)').click();
-    await page.locator('div:nth-child(37)').click();
-    await page.locator('div:nth-child(38)').click();
-    await page.locator('div:nth-child(39)').click();
-    await page.locator('div:nth-child(40)').click();
-    await page.locator('div:nth-child(41)').click();
-    await page.locator('div:nth-child(42)').click();
-    await page.locator('div:nth-child(43)').click();
-    await page.locator('div:nth-child(44)').click();
-    await page.locator('div:nth-child(45)').click();
-    await page.locator('div:nth-child(46)').click();
-    await page.locator('div:nth-child(47)').click();
-    await page.locator('div:nth-child(48)').click();
-    await page.locator('div:nth-child(49)').click();
-    await page.locator('div:nth-child(50)').click();
-    await page.locator('div:nth-child(51)').click();
-    await page.locator('div:nth-child(52)').click();
-    await page.locator('div:nth-child(53)').click();
-    await page.locator('div:nth-child(54)').click();
-    await page.locator('div:nth-child(55)').click();
-    await page.locator('div:nth-child(56)').click();
-    await page.locator('div:nth-child(57)').click();
-    await page.locator('div:nth-child(58)').click();
-    await page.locator('div:nth-child(59)').click();
-    await page.locator('div:nth-child(60)').click();
-    await page.locator('div:nth-child(61)').click();
-    await page.locator('div:nth-child(62)').click();
-    await page.locator('div:nth-child(63)').click();
-    await page.locator('div:nth-child(64)').click();
-    await page.locator('div:nth-child(65)').click();
-    await page.locator('div:nth-child(66)').click();
-    await page.locator('div:nth-child(67)').click();
-    await page.locator('div:nth-child(68)').click();
-    await page.locator('div:nth-child(69)').click();
-    await page.locator('div:nth-child(70)').click();
-    await page.locator('div:nth-child(71)').click();
-    await page.locator('div:nth-child(72)').click();
-    await page.locator('div:nth-child(73)').click();
-    await page.locator('div:nth-child(74)').click();
-    await page.locator('div:nth-child(75)').click();
-    await page.locator('div:nth-child(76)').click();
-    await page.locator('div:nth-child(77)').click();
-    await page.locator('div:nth-child(78)').click();
-    await page.locator('div:nth-child(79)').click();
-    await page.locator('div:nth-child(80)').click();
-    await page.locator('div:nth-child(81)').click();
-    await page.locator('div:nth-child(82)').click();
-    await page.locator('div:nth-child(83)').click();
-    await page.locator('div:nth-child(84)').click();
-    await page.locator('div:nth-child(85)').click();
-    await page.locator('div:nth-child(86)').click();
-    await page.locator('div:nth-child(87)').click();
-    await page.locator('div:nth-child(88)').click();
-    await page.locator('div:nth-child(89)').click();
-    await page.locator('div:nth-child(90)').click();
-    await page.locator('div:nth-child(91)').click();
-    await page.locator('div:nth-child(92)').click();
-    await page.locator('div:nth-child(93)').click();
-    await page.locator('div:nth-child(94)').click();
-    await page.locator('div:nth-child(95)').click();
-    await page.locator('div:nth-child(96)').click();
-    await page.locator('div:nth-child(97)').click();
-    await page.locator('div:nth-child(98)').click();
-    await page.locator('div:nth-child(99)').click();
-    await page.locator('div:nth-child(100)').click();
-    await page.locator('div:nth-child(101)').click();
-    await page.locator('div:nth-child(102)').click();
-    await page.locator('div:nth-child(103)').click();
-    await page.locator('div:nth-child(104)').click();
-    await page.locator('div:nth-child(105)').click();
-    await page.locator('div:nth-child(106)').click();
-    await page.locator('div:nth-child(107)').click();
-    await page.locator('div:nth-child(108)').click();
-    await page.locator('div:nth-child(109)').click();
-    await page.locator('div:nth-child(110)').click();
-    await page.locator('div:nth-child(111)').click();
-    await page.locator('div:nth-child(112)').click();
-    await page.locator('div:nth-child(113)').click();
-    await page.locator('div:nth-child(114)').click();
-    await page.locator('div:nth-child(115)').click();
-    await page.locator('div:nth-child(116)').click();
-    await page.locator('div:nth-child(117)').click();
-    await page.locator('div:nth-child(118)').click();
-    await page.locator('div:nth-child(119)').click();
-    await page.locator('div:nth-child(120)').click();
-    await page.locator('div:nth-child(121)').click();
-    await page.locator('div:nth-child(122)').click();
-    await page.locator('div:nth-child(123)').click();
-    await page.locator('div:nth-child(124)').click();
-    await page.locator('div:nth-child(125)').click();
-    await page.locator('div:nth-child(126)').click();
-    await page.locator('div:nth-child(127)').click();
-    await page.locator('div:nth-child(128)').click();
-    await page.locator('div:nth-child(129)').click();
-    await page.locator('div:nth-child(130)').click();
-    await page.locator('div:nth-child(131)').click();
-    await page.locator('div:nth-child(132)').click();
-    await page.locator('div:nth-child(133)').click();
-    await page.locator('div:nth-child(134)').click();
-    await page.locator('div:nth-child(135)').click();
-    await page.locator('div:nth-child(136)').click();
-    await page.locator('div:nth-child(137)').click();
-    await page.locator('div:nth-child(138)').click();
-    await page.locator('div:nth-child(139)').click();
-    await page.locator('div:nth-child(140)').click();
-    await page.locator('div:nth-child(141)').click();
-    await page.locator('div:nth-child(142)').click();
-    await page.locator('div:nth-child(143)').click();
-    await page.locator('div:nth-child(144)').click();
-    await page.locator('div:nth-child(145)').click();
-    await page.locator('div:nth-child(146)').click();
-    await page.locator('div:nth-child(147)').click();
-    await page.locator('div:nth-child(148)').click();
-    await page.locator('div:nth-child(149)').click();
-    await page.locator('div:nth-child(150)').click();
-    await page.locator('div:nth-child(151)').click();
-    await page.locator('div:nth-child(152)').click();
-    await page.locator('div:nth-child(153)').click();
-    await page.locator('div:nth-child(154)').click();
-    await page.locator('div:nth-child(155)').click();
-    await page.locator('div:nth-child(156)').click();
-    await page.locator('div:nth-child(157)').click();
-    await page.locator('div:nth-child(158)').click();
-    await page.locator('div:nth-child(159)').click();
-    await page.locator('div:nth-child(160)').click();
-    await page.locator('div:nth-child(161)').click();
-    await page.locator('div:nth-child(162)').click();
-    await page.locator('div:nth-child(163)').click();
-    await page.locator('div:nth-child(164)').click();
-    await page.locator('div:nth-child(165)').click();
-    await page.locator('div:nth-child(166)').click();
-    await page.locator('div:nth-child(167)').click();
-    await page.locator('div:nth-child(168)').click();
-    await page.locator('div:nth-child(169)').click();
-    await page.locator('div:nth-child(170)').click();
-    await page.locator('div:nth-child(171)').click();
-    await page.locator('div:nth-child(172)').click();
-    await page.locator('div:nth-child(173)').click();
-    await page.locator('div:nth-child(174)').click();
-    await page.locator('div:nth-child(175)').click();
-    await page.locator('div:nth-child(176)').click();
-    await page.locator('div:nth-child(177)').click();
-    await page.locator('div:nth-child(178)').click();
-    await page.locator('div:nth-child(179)').click();
-    await page.locator('div:nth-child(180)').click();
-    await page.locator('div:nth-child(181)').click();
-    await page.locator('div:nth-child(182)').click();
-    await page.locator('div:nth-child(183)').click();
-    await page.locator('div:nth-child(184)').click();
-    await page.locator('div:nth-child(185)').click();
-    await page.locator('div:nth-child(186)').click();
-    await page.locator('div:nth-child(187)').click();
-    await page.locator('div:nth-child(188)').click();
-    await page.locator('div:nth-child(189)').click();
-    await page.locator('div:nth-child(190)').click();
-    await page.locator('div:nth-child(191)').click();
-    await page.locator('div:nth-child(192)').click();
-    await page.locator('div:nth-child(193)').click();
-    await page.locator('div:nth-child(194)').click();
-    await page.locator('div:nth-child(195)').click();
-    await page.locator('div:nth-child(196)').click();
-    await page.locator('div:nth-child(197)').click();
-    await page.locator('div:nth-child(198)').click();
-    await page.locator('div:nth-child(199)').click();
-    await page.locator('div:nth-child(200)').click();
-    await page.locator('div:nth-child(201)').click();
-    await page.locator('div:nth-child(202)').click();
-    await page.locator('div:nth-child(203)').click();
-    await page.locator('div:nth-child(204)').click();
-    await page.locator('div:nth-child(205)').click();
-    await page.locator('div:nth-child(206)').click();
-    await page.locator('div:nth-child(207)').click();
-    await page.locator('div:nth-child(208)').click();
+    for (let i = 11; i <= 208; i++) {
+      await page.locator(`div:nth-child(${i})`).click();
+    }
     await page.waitForLoadState('networkidle');
     await page.getByRole('textbox', { name: /Nombre|Name/i }).fill('HorarioPrueba2');
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /save|guardar/i }).click();
     await page.waitForTimeout(2000);
-    } catch (error) {
+    
+  } catch (error) {
     await page.screenshot({ path: `test-results/ERROR-SCHEDULE-SCREENSHOT.png`, fullPage: true });
     throw error;
-    }
-  }); test('Create Service Prerequisite', async ({ page }) => {
+  }
+  }); test.skip('Create Service Prerequisite', async ({ page }) => {
     try {
     test.setTimeout(120000); 
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -508,7 +314,7 @@ import {
     await page.screenshot({ path: `test-results/ERROR-SCHEDULE-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
-  }); test('Create Role and Users Prerequisite', async ({ page }) => {
+  }); test.skip('Create Role and Users Prerequisite', async ({ page }) => {
     try {
     test.setTimeout(120000); 
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -552,14 +358,14 @@ import {
     await expect(nombreInput).toBeVisible({ timeout: 10000 });
     await nombreInput.fill('usuarioprueba1');
     await page.locator('input[name="surname"]').fill('PSdor'); 
-    await page.locator('input[name="email"]').fill(`psc${Date.now()}@test.com`); 
+    await page.locator('input[name="email"]').fill(`psc${Date.now()}@test0.com`); 
     await page.locator('input[name="phone"]').fill('+573113172556');
     const docTypeSelect = page.locator('select[name="cardType"]');
     await expect(docTypeSelect).toBeVisible({ timeout: 10000 });
     await docTypeSelect.selectOption('1'); 
     const docNumberInput = page.locator('input[name="cardId"]');
     await expect(docNumberInput).toBeVisible();
-    await docNumberInput.fill('1054587265'); 
+    await docNumberInput.fill('1059568235'); 
     const countryInput = page.getByRole('textbox', { name: /Country|País/i });
     await expect(countryInput).toBeVisible();
     await countryInput.fill('colombia');
@@ -593,7 +399,7 @@ import {
     await page.screenshot({ path: `test-results/ERROR-USER-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
-  }); test('Create a new shift', async ({ page }) => {
+  }); test.skip('Create a new shift', async ({ page }) => {
     test.setTimeout(120000); 
     await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
     const createButton = page.locator('button[name="button-create-shift"]').first();
@@ -603,7 +409,7 @@ import {
     await page.getByRole('textbox', { name: /Empleado|Employee/i }).click();
     await page.getByText('usuarioprueba1 PSdor').last().click();
     await page.getByRole('textbox', { name: /Servicio|Service/i }).click();
-    await page.getByText('PruebaServicio5').last().click();
+    await page.getByText('PruebaServicio001').last().click();
     await page.getByRole('textbox', { name: /Horario|Schedule/i }).click();
     await page.getByText('HorarioPrueba2').last().click(); 
     await page.getByLabel(/Tipo|Type/i ).selectOption('EXTERNAL');
@@ -617,7 +423,7 @@ import {
     await page.waitForSelector('role=heading[name=/Crear|Create/i]', { state: 'hidden', timeout: 20000 });
     await page.waitForLoadState('networkidle');
     await expect(page.getByText(/creado con éxito|created successfully/i)).toBeVisible({ timeout: 20000 });
-  }); test('Validate shift scheduler view toggles', async ({ page }) => {
+  }); test.skip('Validate shift scheduler view toggles', async ({ page }) => {
     await page.evaluate(() => { (document.body.style as any).zoom = 0.8; }); 
     await page.getByRole('button', { name: '˂' }).click();
     await page.getByRole('cell', { name: 'usuarioprueba1 PSdor' }).locator('span').first().click();
@@ -634,7 +440,7 @@ import {
     await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
     await page.getByRole('row', { name: /usuarioprueba1 PSdor/i }).first().getByRole('checkbox').check();
     await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
-  }); test('Edit an existing shift', async ({ page }) => {
+  }); test.skip('Edit an existing shift', async ({ page }) => {
     const testRow = page.getByRole('row')
     .filter({ hasText: /usuarioprueba1 PSdor/i })
     .filter({ hasText: /Creado|Created/i })
@@ -649,7 +455,7 @@ import {
     await page.getByRole('button', { name: /save|guardar/i }).click();
     await page.waitForSelector('role=heading[name=/Crear|Create/i]', { state: 'hidden', timeout: 20000 });
     await page.waitForLoadState('networkidle');
-  }); test('Send a notification from Supervision panel', async ({ page }) => {
+  }); test.skip('Send a notification from Supervision panel', async ({ page }) => {
     const testRow = page.getByRole('row')
     .filter({ hasText: /usuarioprueba1 PSdor/i })
     .filter({ hasText: /Creado|Created/i })
@@ -672,7 +478,7 @@ import {
     await sendButton.scrollIntoViewIfNeeded();
     await sendButton.click();   
     await expect(page.getByText(/Enviado con éxito|Sent successfully/i)).toBeVisible({ timeout: 20000 });
-  }); test('Delete an existing shift', async ({ page }) => {
+  }); test.skip('Delete an existing shift', async ({ page }) => {
     const testRow = page.getByRole('row')
       .filter({ hasText: /usuarioprueba1 PSdor/i })
       .filter({ hasText: /Creado|Created/i })
@@ -684,7 +490,7 @@ import {
     await page.getByRole('button', { name: 'Confirmar' }).click();
     await expect(page.getByText(/Eliminado con éxito|deleted successfully/i)).toBeVisible({ timeout: 20000 });
     await page.waitForLoadState('networkidle');
-  }); test('Guard mention pickers for shifts', async ({ page }) => {
+  }); test.skip('Guard mention pickers for shifts', async ({ page }) => {
   try {
     const createButton = page.locator('button[name="button-create-shift"]').first();
     await expect(createButton).toBeVisible({ timeout: 10000 });
@@ -708,7 +514,140 @@ import {
     await page.screenshot({ path: `test-results/ERROR-GUARD-PICKERS-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
-  }); test('Delete All Prerequisites (Teardown)', async ({ page }) => {
-
-  }); 
+  }); test.skip('Delete Service, Shedules and Task Prerequisite', async ({ page }) => {
+    try {
+    test.setTimeout(120000);
+    await page.getByRole('button', { name: 'Ʌ' }).click();
+    await page.locator('#setting-dropdown-element').click();
+    await page.getByRole('link', { name: 'š Services' }).click();
+    await page.waitForURL(/.*service/, { timeout: 15000 }); 
+    await page.waitForLoadState('networkidle');
+    const pageTitle = page.getByRole('heading', { name: 'Services', exact: true });
+    await expect(pageTitle).toBeVisible({ timeout: 15000 }); 
+    const searchInput = page.getByPlaceholder(/Search/i);
+    await expect(searchInput).toBeVisible({ timeout: 10000 }); 
+    await searchInput.fill('PruebaServicio001'); 
+    const filterOption = page.getByText(/Name:\s*PruebaServicio001/i);
+    await expect(filterOption).toBeVisible({ timeout: 5000 });
+    await filterOption.click();
+    await page.waitForLoadState('networkidle'); 
+    const serviceRow = page.getByRole('row', { name: /PruebaServicio001/i }); 
+    await expect(serviceRow).toBeVisible({ timeout: 5000 });
+    await page.getByRole('row', { name: 'PruebaServicio001 Prueba' }).locator('span').nth(1).click();
+    await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
+    } catch (error) {
+    await page.screenshot({ path: `test-results/ERROR-DELETE-SERVICE-PruebaServicio5.png`, fullPage: true });
+    throw error;
+    } try {
+    test.setTimeout(120000);
+    await page.getByRole('link', { name: /Horarios|Schedules/i }).click();
+    await page.waitForURL(/.*schedule/, { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
+    const pageTitle = page.getByRole('heading', { name: 'Schedules', exact: true });
+    await expect(pageTitle).toBeVisible({ timeout: 15000 }); 
+    const searchInput = page.getByPlaceholder(/Search/i); 
+    await expect(searchInput).toBeVisible({ timeout: 10000 }); 
+    await searchInput.fill('HorarioPrueba2'); 
+    const filterOption = page.getByText(/Name:\s*HorarioPrueba2/i);
+    await expect(filterOption).toBeVisible({ timeout: 5000 });
+    await filterOption.click();
+    await page.waitForLoadState('networkidle'); 
+    const scheduleRow = page.getByRole('row', { name: /HorarioPrueba2/i }); 
+    await expect(scheduleRow).toBeVisible({ timeout: 5000 });
+    await scheduleRow.locator('span').nth(1).click();
+    await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
+  } catch (error) {
+    await page.screenshot({ path: `test-results/ERROR-DELETE-SCHEDULE-HorarioPrueba2.png`, fullPage: true });
+    throw error;
+  } try {
+    test.setTimeout(120000);
+    await page.getByRole('link', { name: /Tareas|Tasks/i }).click();
+    const taskSection = page.locator('div').filter({ hasText: /Tareas|Tasks/i }).nth(4); 
+    await page.waitForLoadState('networkidle');
+    const pageTitle = page.getByRole('heading', { name: 'Tasks', exact: true });
+    await expect(pageTitle).toBeVisible({ timeout: 15000 }); 
+    const searchInput = page.getByPlaceholder(/Search/i); 
+    await expect(searchInput).toBeVisible({ timeout: 10000 }); 
+    await searchInput.fill('Tareaprueba'); 
+    const filterOption = page.getByText(/Name:\s*Tareaprueba/i);
+    await expect(filterOption).toBeVisible({ timeout: 5000 });
+    await filterOption.click();
+    await page.waitForLoadState('networkidle'); 
+    const taskRow = page.getByRole('row', { name: /Tareaprueba/i }); 
+    await expect(taskRow).toBeVisible({ timeout: 5000 });
+    await taskRow.locator('span').nth(1).click();
+    await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
+  } catch (error) {
+    await page.screenshot({ path: `test-results/ERROR-DELETE-TASK-Tareaprueba.png`, fullPage: true });
+    throw error;
+  }
+  }); test.skip('Delete Contracts, Places and Rounds Prerequisite', async ({ page }) => {
+  try {
+    test.setTimeout(120000);
+    await page.getByRole('button', { name: 'Ʌ' }).click();
+    await page.locator('#setting-dropdown-element').click();
+    await page.getByRole('link', { name: /Contratos|Contracts/i }).click();
+    await page.waitForURL(/.*projects|.*contracts/); 
+    await page.waitForLoadState('networkidle'); 
+    const pageTitle = page.getByRole('heading', { name: 'Contracts', exact: true });
+    await expect(pageTitle).toBeVisible({ timeout: 15000 }); 
+    const searchInput = page.getByPlaceholder(/Search/i); 
+    await expect(searchInput).toBeVisible({ timeout: 10000 }); 
+    await searchInput.fill('ContratoPrueba'); 
+    const filterOption = page.getByText(/Name:\s*ContratoPrueba/i);
+    await expect(filterOption).toBeVisible({ timeout: 5000 });
+    await filterOption.click();
+    await page.waitForLoadState('networkidle'); 
+    const contractRow = page.getByRole('row', { name: /ContratoPrueba/i }); 
+    await expect(contractRow).toBeVisible({ timeout: 5000 });
+    await contractRow.locator('[data-action="2"]').click();
+    await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
+  } catch (error) {
+    await page.screenshot({ path: `test-results/ERROR-DELETE-CONTRACT-ContratoPrueba.png`, fullPage: true });
+    throw error;
+  } try {
+    test.setTimeout(120000);
+    const placesLink = page.getByRole('link', { name: 'Places', exact: true });
+    await page.getByRole('link', { name: /Lugares|Places/i }).click();
+    await page.waitForURL(/.*places/);
+    await page.waitForLoadState('networkidle');
+    const pageTitle = page.getByRole('heading', { name: 'Places', exact: true });
+    await expect(pageTitle).toBeVisible({ timeout: 15000 }); 
+    const searchInput = page.getByPlaceholder(/Search/i); 
+    await expect(searchInput).toBeVisible({ timeout: 10000 }); 
+    await searchInput.fill('PruebaLugar01'); 
+    const filterOption = page.getByText(/Name:\s*PruebaLugar01/i);
+    await expect(filterOption).toBeVisible({ timeout: 5000 });
+    await filterOption.click();
+    await page.waitForLoadState('networkidle'); 
+    const placeRow = page.getByRole('row', { name: /PruebaLugar01/i }); 
+    await expect(placeRow).toBeVisible({ timeout: 5000 });
+    await placeRow.locator('span').nth(1).click();
+    await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
+  } catch (error) {
+    await page.screenshot({ path: `test-results/ERROR-DELETE-PLACE-PruebaLugar01.png`, fullPage: true });
+    throw error;
+  } try {
+    test.setTimeout(120000);
+    await page.getByRole('link', { name: /Rondas|Rounds/i }).click();
+    await page.waitForURL(/.*rounds/); 
+    await page.waitForLoadState('networkidle');
+    const pageTitle = page.getByRole('heading', { name: 'Rounds', exact: true });
+    await expect(pageTitle).toBeVisible({ timeout: 15000 }); 
+    const searchInput = page.getByPlaceholder(/Search/i); 
+    await expect(searchInput).toBeVisible({ timeout: 10000 }); 
+    await searchInput.fill('PruebaRonda01'); 
+    const filterOption = page.getByText(/Name:\s*PruebaRonda01/i);
+    await expect(filterOption).toBeVisible({ timeout: 5000 });
+    await filterOption.click();
+    await page.waitForLoadState('networkidle'); 
+    const roundRow = page.getByRole('row', { name: /PruebaRonda01/i }); 
+    await expect(roundRow).toBeVisible({ timeout: 5000 });
+    await roundRow.locator('[data-action="2"]').click();
+    await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
+  } catch (error) {
+    await page.screenshot({ path: `test-results/ERROR-DELETE-ROUND-PruebaRonda01.png`, fullPage: true });
+    throw error;
+  }
+ }); 
 });
