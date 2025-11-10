@@ -74,6 +74,11 @@ export const general_es = {
   },
   users: {
     pageTitle: 'TR - Servicio de Usuarios',
+    client: {
+      users_client: {
+        title: 'Usuarios del Cliente',
+      }
+    }
   },
   permissions: {
     denied: 'Permiso denegado',

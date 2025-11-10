@@ -21,6 +21,7 @@ import { Select } from '@/components/common/select/select';
 import { type TargetedEvent } from 'preact/compat';
 import { Section } from '@/components/common/section/section';
 import { useUserStore } from '@/store/slices';
+import { useTranslation } from 'react-i18next';
 
 type FormData = {
   name: string;
@@ -53,6 +54,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const groups = useSignal<IOption[]>([]);
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const currentUsers = useSignal<IOption[]>([]);
   const usersData = useSignal<any[]>([]);
@@ -316,7 +318,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                 submitting={submitting}
                 pristine={pristine}
                 form='form-place-create'
-                label={id ? 'edit' : 'save'}
+                label={id ? 'edit' : 'btnSave'}
               />
               <div className='grid grid-cols-3 gap-3'>
                 <div class='col-span-1'>
@@ -325,8 +327,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         type='text'
-                        placeholder='Ingrese nombre...'
-                        label='Nombre'
+                        placeholder='h_name'
+                        label='h_name'
                         meta={meta}
                       />
                     )}
@@ -338,8 +340,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         type='email'
-                        placeholder='Ingrese email...'
-                        label='Email'
+                        placeholder='h_email'
+                        label='h_email'
                         meta={meta}
                         onChange={(e) => {
                           input.onChange(e);
@@ -356,8 +358,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                       <Input
                         {...input}
                         type='tel'
-                        placeholder='Ingrese teléfono...'
-                        label='Teléfono'
+                        placeholder='h_phone'
+                        label='h_phone'
                         meta={meta}
                       />
                     )}
@@ -370,8 +372,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                         {...input}
                         min='3'
                         max='300'
-                        placeholder='Ingrese Descripción...'
-                        label='Descripción'
+                        placeholder='h_description'
+                        label='h_description'
                         type='text'
                         meta={meta}
                       />
@@ -404,15 +406,15 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
       <div className='mt-6 shadow-sm p-4 rounded-lg border bg-b-light-light dark:bg-b-dark-light '>
         <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4'>
           <h3 className='text-lg font-semibold text-gray-800 dark:text-gray-200'>
-            Usuarios del cliente
+            {t('users.client.users_client.title')}
           </h3>
 
           <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto'>
             <div className='flex-1 sm:flex-initial sm:min-w-[300px]'>
               <Select
                 name='users'
-                placeholder='Seleccionar usuario existente'
-                label=''
+                placeholder='h_user_existing'
+                label='h_user_existing'
                 icon='252'
                 options={currentUsers.value}
                 optionValue='value'
@@ -428,8 +430,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
               mode='primary'
               label={
                 showUserForm.value
-                  ? 'Ocultar Formulario'
-                  : 'Añadir Usuario Nuevo'
+                  ? 'h_hide_form'
+                  : 'h_add_user'
               }
             />
           </div>
@@ -444,21 +446,21 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
               }}
               validate={(values) => {
                 const errors: Partial<UserFormData> = {};
-                if (!values.name) errors.name = 'Campo obligatorio';
-                if (!values.surname) errors.surname = 'Campo obligatorio';
-                if (!values.phone) errors.phone = 'Campo obligatorio';
+                if (!values.name) errors.name = t('missing_required_field');
+                if (!values.surname) errors.surname = t('missing_required_field');
+                if (!values.phone) errors.phone = t('missing_required_field');
                 if (!values.email) {
-                  errors.email = 'Campo obligatorio';
+                  errors.email = t('missing_required_field');
                 } else if (isEmailAlreadyInList(values.email)) {
                   const normalizedEmail = values.email.toLowerCase().trim();
                   const isClientEmail =
                     clientEmail.value &&
                     clientEmail.value.toLowerCase().trim() === normalizedEmail;
                   errors.email = isClientEmail
-                    ? 'Este correo electrónico pertenece al cliente'
-                    : 'Este correo electrónico ya está en la lista';
+                    ? t('email_have_client')
+                    : t('email_already_in_list');
                 }
-                if (!values.address) errors.address = 'Campo obligatorio';
+                if (!values.address) errors.address = t('missing_required_field');
                 return errors;
               }}
               render={({ handleSubmit, submitting, pristine }) => (
@@ -469,8 +471,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                         <Input
                           {...input}
                           type='text'
-                          placeholder='Ingrese nombre...'
-                          label='Nombre'
+                          placeholder='h_name'
+                          label='h_name'
                           meta={meta}
                         />
                       )}
@@ -480,8 +482,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                         <Input
                           {...input}
                           type='text'
-                          placeholder='Ingrese apellido...'
-                          label='Apellido'
+                          placeholder='h_surname'
+                          label='h_surname'
                           meta={meta}
                         />
                       )}
@@ -491,8 +493,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                         <Input
                           {...input}
                           type='tel'
-                          placeholder='Ingrese teléfono...'
-                          label='Teléfono'
+                          placeholder='h_phone'
+                          label='h_phone'
                           meta={meta}
                         />
                       )}
@@ -502,8 +504,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                         <Input
                           {...input}
                           type='email'
-                          placeholder='Ingrese email...'
-                          label='Email'
+                          placeholder='h_email'
+                          label='h_email'
                           meta={meta}
                         />
                       )}
@@ -513,8 +515,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                         <Input
                           {...input}
                           type='text'
-                          placeholder='Ingrese dirección...'
-                          label='Dirección'
+                          placeholder='h_address'
+                          label='h_address'
                           meta={meta}
                         />
                       )}
@@ -525,7 +527,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                         type='submit'
                         mode='primary'
                         disabled={submitting || pristine}
-                        label='Agregar a la Lista'
+                        label='btnSave'
                         big={true}
                       />
                     </div>
@@ -542,8 +544,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
               <Input
                 name='search-users'
                 type='text'
-                placeholder='Buscar usuarios por nombre...'
-                label='Buscar usuarios'
+                placeholder='h_search_users'
+                label='h_search_users'
                 value={searchTerm.value}
                 onChange={(e) => (searchTerm.value = e.currentTarget.value)}
               />
@@ -572,7 +574,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                       name={`remove-user-${user.id}`}
                       onClick={() => removeUserFromList(user.id)}
                       mode='primary'
-                      label='Eliminar'
+                      label='clean'
                       big={true}
                     />
                   </div>
