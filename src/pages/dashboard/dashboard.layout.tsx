@@ -64,6 +64,7 @@ import { Field, Form } from 'react-final-form';
 import { Input } from '@/components/common/input/input';
 import { FaroManager } from '@/utils/telemetry';
 import { IClientResponse } from '@/types/user/user.response';
+import { USER_TYPE } from '@/types/user/user.enum';
 
 /** ***********************************************************************
  * COMPONENT
@@ -187,6 +188,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     };
 
     const getClients = async () => {
+      const user = getUser();
+      if (user?.userType !== USER_TYPE.EXTERNAL_ACCESS) return;
       const request = await UserService.getAssociatedClients();
 
       if (!request.getStatus()) return;
