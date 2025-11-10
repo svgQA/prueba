@@ -80,4 +80,8 @@ export const general_es = {
     granted: 'Permiso concedido',
     view_denied: 'No tienes permiso para ver esta sección',
   },
+  company: {
+    title_form: 'Nueva Empresa',
+    title_form_edit: 'Editar Empresa',
+  }
 };

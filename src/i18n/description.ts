@@ -26,6 +26,7 @@ export const description_es = {
   d_commonslot: '',
   d_resourcezone: '',
   d_stages: '',
+  d_residence: ''
 };
 
 export const description_en = {
@@ -56,4 +57,5 @@ export const description_en = {
   d_commonslot: '',
   d_resourcezone: '',
   d_stages: '',
+  d_residence: ''
 };

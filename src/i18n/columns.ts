@@ -174,6 +174,10 @@ export const columns_es = {
   h_error_stage: 'Etapa de error',
   h_prompt: 'Prompt',
   h_refresh: 'Actualizar',
+  h_sent: 'Enviado',
+  h_pending: 'Pendiente',
+  h_failed: 'Fallido',
+  h_filter: 'Filtrar',
 };
 
 export const columns_en = {
@@ -352,4 +356,8 @@ export const columns_en = {
   h_error_stage: 'Error Stage',
   h_prompt: 'Prompt',
   h_refresh: 'Refresh',
+  h_sent: 'Sent',
+  h_pending: 'Pending',
+  h_failed: 'Failed',
+  h_filter: 'Filter',
 };
