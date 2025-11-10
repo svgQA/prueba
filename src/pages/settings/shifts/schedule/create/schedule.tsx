@@ -103,7 +103,7 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section loading={loading.value}>
+    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
       <Form<ICScheduleRequest>
         onSubmit={onSubmit}
         initialValues={initialValues.value}

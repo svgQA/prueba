@@ -42,23 +42,6 @@ export const getColumns = (
       header: 'h_status',
       size: 140,
       cell: (info) => {
-        // const value = info.getValue() as string;
-        // let colorClass = 'bg-gray-border text-gray-text-dark';
-
-        // if (value === 'sent')
-        //   colorClass = 'bg-secondary text-white'; // Enviada -> Verde
-        // else if (value === 'pending')
-        //   colorClass = 'bg-primary text-white'; // Pendiente -> Azul
-        // else if (value === 'failed') colorClass = 'bg-error text-white'; // Fallida -> Rojo
-
-        // return (
-        //   <div
-        //     className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-semibold ${colorClass}`}
-        //   >
-        //     {value.charAt(0).toUpperCase() + value.slice(1)}
-        //   </div>
-        // );
-
         const rowData = info.row.original;
         let status: 'h_created' | 'h_pending' | 'h_failed' | 'h_sent' = 'h_created';
 
