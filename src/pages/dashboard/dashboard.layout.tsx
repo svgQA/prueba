@@ -65,6 +65,7 @@ import { Input } from '@/components/common/input/input';
 import { FaroManager } from '@/utils/telemetry';
 import { IClientResponse } from '@/types/user/user.response';
 import { USER_TYPE } from '@/types/user/user.enum';
+import { IDropdownOptions } from '@/components/common/dropdown/interface';
 
 /** ***********************************************************************
  * COMPONENT
@@ -97,7 +98,18 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     } = useUserStore();
 
     const clients = useSignal<IClientResponse[]>([]);
-
+    const options = useSignal<IDropdownOptions[]>([
+      {
+        label: 'setting',
+        value: 1,
+        icon: '158',
+      },
+      {
+        label: 'logout',
+        value: 2,
+        icon: '099',
+      },
+    ]);
     const isModalOpen = useSignal<boolean>(false);
     const modalPanic = useSignal<IPanic | undefined>(undefined);
     const [modalKey, setModalKey] = useState(0);
@@ -137,11 +149,24 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       if (result) {
         Promise.all([
           getCompanies(),
+          setTenantOption(),
           getPermissions(),
           getTenants(),
           getInstances(),
           // getPlaces(),
         ]);
+      }
+    };
+
+    const setTenantOption = () => {
+      const user = getUser();
+      console.log('user', user);
+      if (user?.email === 'juanpablorodriguezfernandez93@gmail.com') {
+        options.value.push({
+          label: 'tenant',
+          value: 3,
+          icon: '159',
+        });
       }
     };
 
@@ -213,14 +238,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         cleanUserStore();
         cleanUserStore();
         signOut?.();
-      }
-
-      const user = getUser();
-
-      if (
-        value === 3 &&
-        user?.email === 'juanpablorodriguezfernandez93@gmail.com'
-      ) {
+      } else if (value === 3) {
         openModalTenant.value = true;
       }
     };
@@ -594,23 +612,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 <ThemeButton unpadded />
                 <Notifications icon='317' iconSize='xsm' />
                 <Dropdown
-                  options={[
-                    {
-                      label: 'setting',
-                      value: 1,
-                      icon: '158',
-                    },
-                    {
-                      label: 'tenant',
-                      value: 3,
-                      icon: '159',
-                    },
-                    {
-                      label: 'logout',
-                      value: 2,
-                      icon: '099',
-                    },
-                  ]}
+                  options={options.value}
                   name='user'
                   icon='318'
                   iconSize='xsm'
@@ -702,7 +704,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         </div>
 
         <SettingsModal />
-       
+
         {/*<IconsModal />*/}
         {openModalTenant.value && modalTenant}
       </section>
