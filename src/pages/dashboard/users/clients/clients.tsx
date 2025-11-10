@@ -30,7 +30,6 @@ export const ClientsSettingPage: FunctionComponent = () => {
     document.title = t('p_client');
   }, []);
 
-  // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
   const { selectedCompany } = useUserStore();
   useEffect(() => {
     if (selectedCompany) {
