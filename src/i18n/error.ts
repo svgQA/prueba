@@ -104,6 +104,8 @@ export const error_en = {
     },
     invalid_start_date: 'Start date must be before end date',
     invalid_end_date: 'End date must be after start date',
+    email_have_client: 'This email belongs to the client',
+    email_already_in_list: 'This email is already in the list',
   },
 };
 
@@ -215,5 +217,7 @@ export const error_es = {
     },
     invalid_start_date: 'La fecha de inicio debe ser menor a la fecha de fin',
     invalid_end_date: 'La fecha de fin debe ser mayor a la fecha de inicio',
+    email_have_client: 'Este correo electrónico pertenece al cliente',
+    email_already_in_list: 'Este correo electrónico ya está en la lista',
   },
 };

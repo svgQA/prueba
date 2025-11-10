@@ -159,7 +159,7 @@ export const CompanySettingPage: FunctionComponent = () => {
                   />
                   <div className='flex flex-col justify-between gap-4'>
                     <h2 className='text-2xl font-bold'>
-                      {isEditing.value ? 'Editar Empresa' : 'Nueva Empresa'}
+                      {isEditing.value ? t('company.title_form_edit') : t('company.title_form')}
                     </h2>
                     <div className='grid grid-cols-2 gap-4'>
                       <div>
@@ -169,7 +169,7 @@ export const CompanySettingPage: FunctionComponent = () => {
                               {...input}
                               id='name'
                               name='name'
-                              label='Nombre'
+                              label='h_name'
                               meta={meta}
                               type='text'
                             />
@@ -182,7 +182,7 @@ export const CompanySettingPage: FunctionComponent = () => {
                             <Input
                               {...input}
                               id='identification'
-                              label='Identificación (NIT)'
+                              label='h_identification'
                               meta={meta}
                               type='text'
                             />
@@ -196,7 +196,7 @@ export const CompanySettingPage: FunctionComponent = () => {
                               {...input}
                               id='description'
                               name='description'
-                              label='Descripción'
+                              label='h_description'
                               meta={meta}
                               type='text'
                             />
@@ -210,7 +210,7 @@ export const CompanySettingPage: FunctionComponent = () => {
                               {...input}
                               id='address'
                               name='address'
-                              label='Dirección'
+                              label='h_address'
                               meta={meta}
                               type='text'
                             />

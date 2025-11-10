@@ -74,10 +74,19 @@ export const general_es = {
   },
   users: {
     pageTitle: 'TR - Servicio de Usuarios',
+    client: {
+      users_client: {
+        title: 'Usuarios del Cliente',
+      }
+    }
   },
   permissions: {
     denied: 'Permiso denegado',
     granted: 'Permiso concedido',
     view_denied: 'No tienes permiso para ver esta sección',
   },
+  company: {
+    title_form: 'Nueva Empresa',
+    title_form_edit: 'Editar Empresa',
+  }
 };

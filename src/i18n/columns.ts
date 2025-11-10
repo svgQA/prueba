@@ -174,6 +174,15 @@ export const columns_es = {
   h_error_stage: 'Etapa de error',
   h_prompt: 'Prompt',
   h_refresh: 'Actualizar',
+  h_sent: 'Enviado',
+  h_pending: 'Pendiente',
+  h_failed: 'Fallido',
+  h_filter: 'Filtrar',
+  h_user_existing: 'Seleccionar usuario existente',
+  h_hide_form: 'Ocultar formulario',
+  h_add_user: 'Añadir Usuario Nuevo',
+  h_surname: 'Apellido',
+  h_search_users: 'Buscar usuarios',
 };
 
 export const columns_en = {
@@ -352,4 +361,13 @@ export const columns_en = {
   h_error_stage: 'Error Stage',
   h_prompt: 'Prompt',
   h_refresh: 'Refresh',
+  h_sent: 'Sent',
+  h_pending: 'Pending',
+  h_failed: 'Failed',
+  h_filter: 'Filter',
+  h_user_existing: 'Select Existing User',
+  h_hide_form: 'Hide form',
+  h_add_user: 'Add New User',
+  h_surname: 'Last Name',
+  h_search_users: 'Search users',
 };

@@ -74,10 +74,19 @@ export const general_en = {
   },
   users: {
     pageTitle: 'TR - User Service',
+    client: {
+      users_client: {
+        title: 'Client Users',
+      }
+    }
   },
   permissions: {
     denied: 'Permission denied',
     granted: 'Permission granted',
     view_denied: 'You do not have permission to view this section',
   },
+  company: {
+    title_form: 'New Company',
+    title_form_edit: 'Edit Company',
+  }
 };

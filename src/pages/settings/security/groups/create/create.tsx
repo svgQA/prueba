@@ -94,15 +94,15 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
         <div className='pb-4'>
           <div className='flex flex-row justify-between items-end gap-3'>
             <Input
-              name='Nombre'
-              label='name'
+              name='name'
+              label='h_name'
               value={name.value}
               onChange={(e) => (name.value = e.currentTarget.value)}
             />
           </div>
           <TextArea
-            name='Nombre'
-            label='description'
+            name='description'
+            label='h_description'
             value={description.value}
             onChange={(e) => (description.value = e.currentTarget.value)}
           />
