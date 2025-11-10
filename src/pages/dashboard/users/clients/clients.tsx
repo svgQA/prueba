@@ -50,7 +50,7 @@ export const ClientsSettingPage: FunctionComponent = () => {
     go({
       to: `/users/clients/update/${id}`,
       label: 'edit',
-      id: 'memo:novelty:state:update', // TODO: Cambiar a client
+      id: 'user:client:upsert',
       base: 'setting',
     });
   };
