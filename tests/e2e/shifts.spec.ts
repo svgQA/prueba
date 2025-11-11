@@ -68,7 +68,6 @@ import {
     await page.getByRole('button', { name: /Guardar|Save/i }).click();
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
     } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-CLIENT-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
     try {
@@ -107,7 +106,6 @@ import {
     await page.waitForTimeout(2000);
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 10000 });
     } catch (error) {
-      await page.screenshot({ path: `test-results/ERROR-ROUNDS-SCREENSHOT.png`, fullPage: true });
       throw error;
     }
   }); test.skip('Create Place and Contracts Prerequisite', async ({ page }) => {
@@ -175,7 +173,6 @@ import {
     await page.getByRole('button', { name: /save|guardar/i }).click();
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
     } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-PLACES-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
     try {
@@ -212,7 +209,6 @@ import {
     await page.getByRole('button', { name: /save|guardar/i }).click();
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
     } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-CONTRACTS-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
   }); test.skip('Create Tasks and Timetable Prerequisite', async ({ page }) => {
@@ -233,7 +229,6 @@ import {
     await page.getByRole('button', { name: /save|guardar/i }).click();
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
     } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-TASK-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
     test.setTimeout(60000); 
@@ -254,7 +249,6 @@ import {
     await page.waitForTimeout(2000);
     
   } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-SCHEDULE-SCREENSHOT.png`, fullPage: true });
     throw error;
   }
   }); test.skip('Create Service Prerequisite', async ({ page }) => {
@@ -311,7 +305,6 @@ import {
     await page.getByRole('button', { name: /Save|Guardar/i }).click();
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 10000 });
     } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-SCHEDULE-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
   }); test.skip('Create Role and Users Prerequisite', async ({ page }) => {
@@ -343,7 +336,6 @@ import {
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
     await page.getByText(/Creado con éxito|Created successfully/i).click();
     } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-ROLE-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
     try {
@@ -396,7 +388,6 @@ import {
     await page.getByRole('button', { name: /Guardar|Save/i }).click();
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
     } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-USER-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
   }); test.skip('Create a new shift', async ({ page }) => {
@@ -511,7 +502,6 @@ import {
     await page.waitForLoadState('networkidle', { timeout: 5000 });
     await page.getByRole('button', { name: 'Ǉ' }).click(); 
     } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-GUARD-PICKERS-SCREENSHOT.png`, fullPage: true });
     throw error;
     }
   }); test.skip('Delete Service, Shedules and Task Prerequisite', async ({ page }) => {
@@ -536,7 +526,6 @@ import {
     await page.getByRole('row', { name: 'PruebaServicio001 Prueba' }).locator('span').nth(1).click();
     await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
     } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-DELETE-SERVICE-PruebaServicio5.png`, fullPage: true });
     throw error;
     } try {
     test.setTimeout(120000);
@@ -557,7 +546,6 @@ import {
     await scheduleRow.locator('span').nth(1).click();
     await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
   } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-DELETE-SCHEDULE-HorarioPrueba2.png`, fullPage: true });
     throw error;
   } try {
     test.setTimeout(120000);
@@ -578,7 +566,6 @@ import {
     await taskRow.locator('span').nth(1).click();
     await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
   } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-DELETE-TASK-Tareaprueba.png`, fullPage: true });
     throw error;
   }
   }); test.skip('Delete Contracts, Places and Rounds Prerequisite', async ({ page }) => {
@@ -603,7 +590,6 @@ import {
     await contractRow.locator('[data-action="2"]').click();
     await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
   } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-DELETE-CONTRACT-ContratoPrueba.png`, fullPage: true });
     throw error;
   } try {
     test.setTimeout(120000);
@@ -625,7 +611,6 @@ import {
     await placeRow.locator('span').nth(1).click();
     await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
   } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-DELETE-PLACE-PruebaLugar01.png`, fullPage: true });
     throw error;
   } try {
     test.setTimeout(120000);
@@ -646,7 +631,6 @@ import {
     await roundRow.locator('[data-action="2"]').click();
     await expect(page.getByText(/Deleted successfully/i)).toBeVisible({ timeout: 10000 });
   } catch (error) {
-    await page.screenshot({ path: `test-results/ERROR-DELETE-ROUND-PruebaRonda01.png`, fullPage: true });
     throw error;
   }
  }); 
