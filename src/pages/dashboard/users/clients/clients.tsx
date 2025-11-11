@@ -30,7 +30,6 @@ export const ClientsSettingPage: FunctionComponent = () => {
     document.title = t('p_client');
   }, []);
 
-  // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
   const { selectedCompany } = useUserStore();
   useEffect(() => {
     if (selectedCompany) {
@@ -51,7 +50,7 @@ export const ClientsSettingPage: FunctionComponent = () => {
     go({
       to: `/users/clients/update/${id}`,
       label: 'edit',
-      id: 'memo:novelty:state:update', // TODO: Cambiar a client
+      id: 'user:client:upsert',
       base: 'setting',
     });
   };

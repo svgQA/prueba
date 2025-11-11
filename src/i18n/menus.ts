@@ -56,6 +56,22 @@ export const menus_es = {
   m_news: 'Noticias',
   g_pqrs: 'PQRS',
   m_stage: 'Etapas',
+
+  //TODO: Revisar estos campos que son las key de rols, algunos ya estan
+  m_acces: 'Accesos',
+  m_checkin: 'Registro de entrada',
+  m_checkout: 'Registro de salida',
+  m_pqrs: 'PQRS',
+  m_status: 'Estados',
+  m_response: 'Respuestas',
+  m_internal: 'Interno',
+  m_history: 'Historico',
+  m_reports: 'Reportes',
+  m_tracking: 'Seguimiento',
+  m_tasks: 'Tareas',
+  m_profile: 'Perfil',
+  m_panic: 'Panico',
+  m_milestones: 'Hitos',
 };
 
 export const menus_en = {
@@ -116,4 +132,20 @@ export const menus_en = {
   m_news: 'News',
   g_pqrs: 'PQRS',
   m_stage: 'Stages',
+
+  //TODO: Revisit these fields that are the keys of roles, some are already present
+  m_acces: 'Accesses',
+  m_checkin: 'Check-in',
+  m_checkout: 'Check-out',
+  m_pqrs: 'PQRS',
+  m_status: 'Status',
+  m_response: 'Responses',
+  m_internal: 'Internal',
+  m_history: 'History',
+  m_reports: 'Reports',
+  m_tracking: 'Tracking',
+  m_tasks: 'Tasks',
+  m_profile: 'Profile',
+  m_panic: 'Panic',
+  m_milestones: 'Milestones',
 };

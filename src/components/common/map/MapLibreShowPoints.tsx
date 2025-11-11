@@ -55,7 +55,7 @@ export const MapLibreShowPoints = ({
       (position) => {
         setUserLocation({
           id: -1,
-          name: 'your location',
+          name: t('maps.admin_name'),
           position: {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -132,20 +132,20 @@ export const MapLibreShowPoints = ({
         : '#EA4335';
 
     const pointData = point as any;
-    const pointName = pointData?.name || (isUserLocation ? 'Tu ubicación' : `Punto ${index + 1}`);
+    const pointName = pointData?.name || (isUserLocation ? t('maps.admin_name') : t('maps.pointName') + `${index + 1}`);
     const shiftId = pointData?.shift;
     const serviceName = pointData?.service;
     const contractName = pointData?.contract;
     let tooltipContent = `<div style="font-weight: bold; margin-bottom: 2px;">${pointName}</div>`;
-    
+
     if (shiftId && shiftId !== '') {
       tooltipContent += `<div style="font-size: 10px; opacity: 0.9;">${t('h_shift')}: ${shiftId}</div>`;
     }
-    
+
     if (serviceName && serviceName !== '') {
       tooltipContent += `<div style="font-size: 10px; opacity: 0.9;">${t('h_service')}: ${serviceName}</div>`;
     }
-    
+
     if (contractName && contractName !== '') {
       tooltipContent += `<div style="font-size: 10px; opacity: 0.9;">${t('h_contract')}: ${contractName}</div>`;
     }
