@@ -3,9 +3,9 @@ export const file_es = {
   file_download: 'Descargar',
   file_modalTitle: 'Subir o Descargar Archivo',
   file_selectFile: 'Seleccionar archivo',
-  file_fileFormats: 'Formatos permitidos: .xlsx, .xls, .csv (máximo 10MB)',
+  file_fileFormats: 'Formatos permitidos: .xlsx (máximo 10MB)',
   file_invalidFileType:
-    'Tipo de archivo no válido. Solo se permiten archivos Excel (.xlsx, .xls) o CSV (.csv)',
+    'Tipo de archivo no válido. Solo se permiten archivos Excel (.xlsx)',
   file_fileTooLarge:
     'El archivo es demasiado grande. El tamaño máximo permitido es 10MB',
   file_noFileSelected: 'Por favor selecciona un archivo',
@@ -36,9 +36,9 @@ export const file_en = {
   file_download: 'Download',
   file_modalTitle: 'Upload or Download File',
   file_selectFile: 'Select file',
-  file_fileFormats: 'Allowed formats: .xlsx, .xls, .csv (max 10MB)',
+  file_fileFormats: 'Allowed formats: .xlsx (max 10MB)',
   file_invalidFileType:
-    'Invalid file type. Only Excel (.xlsx, .xls) or CSV (.csv) files are allowed',
+    'Invalid file type. Only Excel (.xlsx) files are allowed',
   file_fileTooLarge: 'File is too large. Maximum allowed size is 10MB',
   file_noFileSelected: 'Please select a file',
   file_uploadSuccess:
