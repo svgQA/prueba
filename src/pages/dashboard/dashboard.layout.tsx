@@ -160,7 +160,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     const setTenantOption = () => {
       const user = getUser();
-      console.log('user', user);
       if (user?.email === 'juanpablorodriguezfernandez93@gmail.com') {
         options.value.push({
           label: 'tenant',
